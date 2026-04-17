@@ -1,9 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /admin
-Disallow: /checkout
-
-Sitemap: https://www.smelloff.in/sitemap.xml
-
-# Smelloff — ODORSTRIKE
-# https://www.smelloff.in
