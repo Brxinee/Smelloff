@@ -1,4 +1,17 @@
 {
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "smelloff.in"
+        }
+      ],
+      "destination": "https://www.smelloff.in/$1",
+      "permanent": true
+    }
+  ],
   "cleanUrls": true,
   "trailingSlash": false
 }
