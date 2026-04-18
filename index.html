@@ -1745,37 +1745,131 @@
   /* P3: HAMBURGER + MOBILE MENU   */
   /* ============================= */
   .hamburger{
-    display:none;width:32px;height:32px;
+    display:none;width:40px;height:40px;
     background:none;border:none;cursor:pointer;
-    flex-direction:column;justify-content:center;align-items:center;gap:5px;
-    padding:4px;color:inherit;
+    flex-direction:column;justify-content:center;align-items:center;gap:6px;
+    padding:8px;position:relative;z-index:110;
   }
-  .hamburger span{display:block;width:20px;height:2px;background:currentColor;transition:all .2s}
-  @media(max-width:720px){
-    .hamburger{display:flex !important}
+  .hb-line{
+    display:block;width:22px;height:2px;
+    background:#B8FF57;border-radius:2px;
+    transform-origin:center;
+    transition:transform 400ms cubic-bezier(0.22,1,0.36,1),
+               opacity 400ms cubic-bezier(0.22,1,0.36,1),
+               width 400ms cubic-bezier(0.22,1,0.36,1);
   }
+  body.nav-open .hb-line:nth-child(1){transform:translateY(8px) rotate(45deg)}
+  body.nav-open .hb-line:nth-child(2){opacity:0;transform:scaleX(0)}
+  body.nav-open .hb-line:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+  @media(max-width:720px){.hamburger{display:flex !important}}
   @media(min-width:721px){.hamburger{display:none !important}}
+
+  /* Panel */
   .mobile-menu{
-    position:fixed;inset:0;
-    background:var(--bg);
-    z-index:55;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;
-    transform:translateX(100%);
-    transition:transform .3s ease;
+    position:fixed;inset:0;z-index:100;
+    background:#080808;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    transform:translateY(-100%);
+    transition:transform 500ms cubic-bezier(0.22,1,0.36,1);
   }
-  .mobile-menu.active{transform:translateX(0)}
-  .mobile-menu a{
-    font-family:'Fraunces',serif;font-weight:900;
-    font-size:clamp(32px,8vw,48px);
-    color:var(--text);text-decoration:none;letter-spacing:-.02em;
-    transition:color .2s;
+  .mobile-menu.active{transform:translateY(0)}
+  body.nav-open{overflow:hidden}
+
+  /* Grain overlay */
+  .mobile-menu::before{
+    content:'';position:absolute;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:200px 200px;
+    opacity:0.04;pointer-events:none;
+    mix-blend-mode:overlay;z-index:0;
   }
-  .mobile-menu a:hover{color:var(--acid)}
-  .mobile-menu-close{
-    position:absolute;top:20px;right:32px;
-    width:32px;height:32px;background:none;border:none;
-    color:var(--text);font-size:24px;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
+
+  /* Faded wordmark */
+  .menu-wordmark{
+    position:absolute;top:80px;right:-20px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14vw;
+    color:#B8FF57;opacity:0.06;
+    pointer-events:none;user-select:none;
+    line-height:1;z-index:0;white-space:nowrap;
+  }
+
+  /* Nav items */
+  .menu-items{
+    display:flex;flex-direction:column;gap:4px;
+    margin-top:120px;padding:0 32px;
+    position:relative;z-index:1;
+  }
+  .menu-item{
+    font-family:'Fraunces',serif;font-weight:600;
+    font-size:clamp(36px,10vw,72px);
+    color:#F5F5F0;text-decoration:none;
+    letter-spacing:-.02em;line-height:1.1;
+    padding:12px 0;
+    display:inline-flex;align-items:center;
+    position:relative;
+    opacity:0;transform:translateY(30px);
+    transition:opacity 600ms cubic-bezier(0.22,1,0.36,1),
+               transform 600ms cubic-bezier(0.22,1,0.36,1);
+    transition-delay:calc(150ms + var(--i,0) * 80ms);
+  }
+  .mobile-menu.active .menu-item{opacity:1;transform:translateY(0)}
+
+  /* Desktop hover */
+  @media(min-width:768px){
+    .menu-item::before{
+      content:'';position:absolute;bottom:8px;left:0;
+      width:100%;height:2px;background:#B8FF57;
+      transform:scaleX(0);transform-origin:left;
+      transition:transform 300ms ease-out;
+    }
+    .menu-item::after{
+      content:'→';color:#B8FF57;font-size:28px;
+      margin-left:12px;font-family:'DM Sans',sans-serif;
+      opacity:0;transform:translateX(-10px);display:inline-block;
+      transition:opacity 300ms ease-out,transform 300ms ease-out;
+    }
+    .menu-item:hover{
+      transform:translateX(12px) !important;
+      transition:transform 300ms ease-out !important;
+      transition-delay:0ms !important;
+    }
+    .menu-item:hover::before{transform:scaleX(1)}
+    .menu-item:hover::after{opacity:1;transform:translateX(0)}
+  }
+
+  /* Mobile tap */
+  @media(max-width:767px){
+    .menu-item:active{
+      transform:translateX(12px) !important;
+      background:rgba(184,255,87,0.08);
+      transition-delay:0ms !important;
+    }
+  }
+
+  /* Utility row */
+  .menu-utility{
+    position:absolute;bottom:100px;left:32px;right:32px;
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    z-index:1;
+  }
+  .menu-utility a{
+    font-family:'DM Sans',sans-serif;font-size:11px;
+    text-transform:uppercase;letter-spacing:.15em;
+    color:#666;text-decoration:none;
+  }
+  .menu-util-dot{
+    width:4px;height:4px;border-radius:50%;
+    background:#B8FF57;flex-shrink:0;
+  }
+
+  /* Sticky buy CTA */
+  .menu-buy-cta{
+    position:absolute;bottom:0;left:0;right:0;
+    background:#B8FF57;color:#080808;border:none;cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:16px;text-transform:uppercase;letter-spacing:.1em;
+    padding:20px;text-align:center;z-index:1;
   }
 
   /* ============================= */
@@ -1831,8 +1925,10 @@
 
 <nav>
   <div class="logo">SMELLOFF</div>
-  <button class="hamburger" aria-label="Open menu" onclick="document.getElementById('mobileMenu').classList.add('active');document.body.style.overflow='hidden'">
-    <span></span><span></span><span></span>
+  <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" onclick="openNav()">
+    <span class="hb-line"></span>
+    <span class="hb-line"></span>
+    <span class="hb-line"></span>
   </button>
   <div class="meta">
     <a href="#science">Science</a>
@@ -1844,13 +1940,23 @@
 </nav>
 
 <!-- MOBILE MENU (P3 #16) -->
-<div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-menu-close" aria-label="Close menu" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">✕</button>
-  <a href="#science" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">Science</a>
-  <a href="#buy" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">Pricing</a>
-  <a href="#faq" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">FAQ</a>
-  <a href="#reviews" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">Reviews</a>
-  <a href="/blog" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">Blogs</a>
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <div class="menu-wordmark" aria-hidden="true">SMELLOFF</div>
+  <nav class="menu-items" aria-label="Site navigation">
+    <a href="#science" class="menu-item" style="--i:0" onclick="closeNav()">Science</a>
+    <a href="#buy"     class="menu-item" style="--i:1" onclick="closeNav()">Pricing</a>
+    <a href="#faq"     class="menu-item" style="--i:2" onclick="closeNav()">FAQ</a>
+    <a href="#reviews" class="menu-item" style="--i:3" onclick="closeNav()">Reviews</a>
+    <a href="/blog"    class="menu-item" style="--i:4" onclick="closeNav()">Blogs</a>
+  </nav>
+  <div class="menu-utility">
+    <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener">Instagram @smell0ff</a>
+    <span class="menu-util-dot"></span>
+    <a href="mailto:xbrainee@gmail.com">xbrainee@gmail.com</a>
+  </div>
+  <button class="menu-buy-cta" onclick="closeNav();document.getElementById('buy').scrollIntoView({behavior:'smooth'})">
+    BUY ODORSTRIKE — ₹159 →
+  </button>
 </div>
 
 <!-- STICKY MOBILE BAR (P1 #6) -->
@@ -2792,12 +2898,87 @@
   }
   window.trackInitCheckout = trackInitCheckout;
 
-  // Escape key — close overlay + mobile menu
+  // =============================================
+  // NAV: open / close / focus trap
+  // =============================================
+  window.openNav = function() {
+    var menu = document.getElementById('mobileMenu');
+    var btn  = document.getElementById('hamburgerBtn');
+    var items = menu.querySelectorAll('.menu-item');
+    // Reset items so entry animation replays
+    items.forEach(function(el) { el.style.transitionDelay = ''; });
+    menu.classList.add('active');
+    menu.setAttribute('aria-hidden', 'false');
+    btn.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('nav-open');
+    // After all items have animated in, clear delays so hover is instant
+    var clearAfter = 150 + (items.length - 1) * 80 + 620;
+    setTimeout(function() {
+      items.forEach(function(el) { el.style.transitionDelay = '0ms'; });
+    }, clearAfter);
+    trapFocus(menu);
+  };
+
+  window.closeNav = function() {
+    var menu  = document.getElementById('mobileMenu');
+    var btn   = document.getElementById('hamburgerBtn');
+    var items = Array.from(menu.querySelectorAll('.menu-item'));
+    var count = items.length;
+    // Reverse stagger out (bottom-up)
+    items.forEach(function(el, i) {
+      var delay = (count - 1 - i) * 60;
+      el.style.transitionDelay = delay + 'ms';
+      el.style.transition = 'opacity 300ms ease-out, transform 300ms ease-out';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+    });
+    // Slide panel up after items clear
+    setTimeout(function() {
+      menu.classList.remove('active');
+      menu.setAttribute('aria-hidden', 'true');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('nav-open');
+      // Reset items for next open
+      setTimeout(function() {
+        items.forEach(function(el) {
+          el.style.transition = '';
+          el.style.transitionDelay = '';
+          el.style.opacity = '';
+          el.style.transform = '';
+        });
+      }, 520);
+    }, 400);
+  };
+
+  function trapFocus(el) {
+    var focusable = el.querySelectorAll('a[href], button:not([disabled])');
+    if (!focusable.length) return;
+    var first = focusable[0], last = focusable[focusable.length - 1];
+    function handler(e) {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+    el.addEventListener('keydown', handler);
+    // Remove trap when menu closes
+    var obs = new MutationObserver(function() {
+      if (!document.body.classList.contains('nav-open')) {
+        el.removeEventListener('keydown', handler);
+        obs.disconnect();
+      }
+    });
+    obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    setTimeout(function() { first.focus(); }, 520);
+  }
+
+  // Escape key — close overlay + nav
   document.addEventListener('keydown', function(e){
     if(e.key==='Escape'){
       closeCheckout();
-      var menu=document.getElementById('mobileMenu');
-      if(menu&&menu.classList.contains('active')){menu.classList.remove('active');document.body.style.overflow='';}
+      if(document.body.classList.contains('nav-open')) closeNav();
     }
   });
 
