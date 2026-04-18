@@ -1320,30 +1320,64 @@
     margin-bottom:20px;
   }
   .proof-visual{
-    height:120px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    flex-wrap:wrap;
+    height:220px;
+    position:relative;
     margin-bottom:20px;
+    border-radius:4px;
+    overflow:hidden;
+    background:
+      repeating-linear-gradient(0deg,transparent,transparent 7px,#1a1a1a 7px,#1a1a1a 8px),
+      repeating-linear-gradient(90deg,transparent,transparent 7px,#0f0f0f 7px,#0f0f0f 8px),
+      #080808;
   }
-  .odor-dot{
-    width:12px;height:12px;
-    border-radius:50%;
-    display:inline-block;
-    animation:drift 3s ease-in-out infinite;
+  .mol{
+    position:absolute;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
   }
-  .odor-dot:nth-child(2){animation-delay:.3s}
-  .odor-dot:nth-child(3){animation-delay:.6s}
-  .odor-dot:nth-child(4){animation-delay:.9s}
-  .odor-dot:nth-child(5){animation-delay:1.2s}
-  .odor-dot:nth-child(6){animation-delay:1.5s}
-  .odor-dot.active{background:var(--acid)}
-  .odor-dot.dead{background:#3a3a3a;opacity:.5}
-  @keyframes drift{
+  .mol svg{display:block;}
+  .mol-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px;
+    letter-spacing:.05em;
+    color:#d4c05a;
+    white-space:nowrap;
+  }
+  .mol-label.dimmed{color:#555;opacity:.7;}
+  .mol.floating{animation:mol-float 4s ease-in-out infinite;}
+  .mol.floating:nth-child(2){animation-delay:.8s;}
+  .mol.floating:nth-child(3){animation-delay:1.6s;}
+  .mol.floating:nth-child(4){animation-delay:2.4s;}
+  @keyframes mol-float{
     0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-6px)}
+    50%{transform:translateY(-4px)}
+  }
+  .stink-lines{
+    position:absolute;
+    top:-28px;
+    left:50%;
+    transform:translateX(-50%);
+    opacity:.35;
+    animation:stink-rise 3s ease-in-out infinite;
+  }
+  .mol.floating:nth-child(2) .stink-lines{animation-delay:.8s;}
+  .mol.floating:nth-child(3) .stink-lines{animation-delay:1.6s;}
+  .mol.floating:nth-child(4) .stink-lines{animation-delay:2.4s;}
+  @keyframes stink-rise{
+    0%{transform:translateX(-50%) translateY(0);opacity:.35;}
+    100%{transform:translateX(-50%) translateY(-14px);opacity:0;}
+  }
+  .zinc-hex{
+    animation:zinc-pulse 2s ease-in-out infinite;
+  }
+  .zinc-hex:nth-of-type(2){animation-delay:.4s;}
+  .zinc-hex:nth-of-type(3){animation-delay:.8s;}
+  .zinc-hex:nth-of-type(4){animation-delay:1.2s;}
+  @keyframes zinc-pulse{
+    0%,100%{filter:drop-shadow(0 0 3px #b8ff57);}
+    50%{filter:drop-shadow(0 0 8px #b8ff57) drop-shadow(0 0 14px rgba(184,255,87,.4));}
   }
   .proof-caption{
     font-family:'Fraunces',serif;
@@ -1757,32 +1791,134 @@
 <section class="proof">
   <div class="section-tag">The proof</div>
   <div class="proof-grid">
+
+    <!-- BEFORE side -->
     <div class="proof-side">
       <div class="proof-label">Before</div>
       <div class="proof-visual">
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
+
+        <!-- H₂S -->
+        <div class="mol floating" style="left:12%;top:18%;">
+          <div class="stink-lines">
+            <svg width="22" height="28" viewBox="0 0 22 28" fill="none">
+              <path d="M4 28 Q7 20 4 12 Q1 4 4 0" stroke="#d4c05a" stroke-width="1.2" stroke-dasharray="3 3"/>
+              <path d="M11 28 Q14 20 11 14 Q8 6 11 0" stroke="#d4c05a" stroke-width="1.2" stroke-dasharray="3 3"/>
+              <path d="M18 28 Q21 20 18 12 Q15 4 18 0" stroke="#d4c05a" stroke-width="1.2" stroke-dasharray="3 3"/>
+            </svg>
+          </div>
+          <svg width="32" height="28" viewBox="0 0 32 28">
+            <polygon points="16,1 29,8 29,22 16,29 3,22 3,8" fill="none" stroke="#d4c05a" stroke-width="1.5"/>
+          </svg>
+          <span class="mol-label">H₂S</span>
+        </div>
+
+        <!-- NH₃ -->
+        <div class="mol floating" style="left:38%;top:10%;">
+          <div class="stink-lines">
+            <svg width="22" height="28" viewBox="0 0 22 28" fill="none">
+              <path d="M4 28 Q7 20 4 12 Q1 4 4 0" stroke="#d4c05a" stroke-width="1.2" stroke-dasharray="3 3"/>
+              <path d="M11 28 Q14 20 11 14 Q8 6 11 0" stroke="#d4c05a" stroke-width="1.2" stroke-dasharray="3 3"/>
+            </svg>
+          </div>
+          <svg width="28" height="28" viewBox="0 0 28 28">
+            <circle cx="14" cy="14" r="11" fill="none" stroke="#d4c05a" stroke-width="1.5"/>
+            <circle cx="14" cy="14" r="5" fill="#d4c05a" opacity=".25"/>
+          </svg>
+          <span class="mol-label">NH₃</span>
+        </div>
+
+        <!-- C₅H₁₀O₂ -->
+        <div class="mol floating" style="left:63%;top:22%;">
+          <div class="stink-lines">
+            <svg width="22" height="28" viewBox="0 0 22 28" fill="none">
+              <path d="M4 28 Q7 20 4 12 Q1 4 4 0" stroke="#d4c05a" stroke-width="1.2" stroke-dasharray="3 3"/>
+              <path d="M11 28 Q14 20 11 14 Q8 6 11 0" stroke="#d4c05a" stroke-width="1.2" stroke-dasharray="3 3"/>
+              <path d="M18 28 Q21 20 18 12 Q15 4 18 0" stroke="#d4c05a" stroke-width="1.2" stroke-dasharray="3 3"/>
+            </svg>
+          </div>
+          <svg width="32" height="28" viewBox="0 0 32 28">
+            <polygon points="16,1 29,8 29,22 16,29 3,22 3,8" fill="none" stroke="#d4c05a" stroke-width="1.5"/>
+            <circle cx="16" cy="15" r="4" fill="#d4c05a" opacity=".2"/>
+          </svg>
+          <span class="mol-label">C₅H₁₀O₂</span>
+        </div>
+
+        <!-- CH₃SH -->
+        <div class="mol floating" style="left:82%;top:12%;">
+          <div class="stink-lines">
+            <svg width="18" height="28" viewBox="0 0 18 28" fill="none">
+              <path d="M4 28 Q7 20 4 12 Q1 4 4 0" stroke="#d4c05a" stroke-width="1.2" stroke-dasharray="3 3"/>
+              <path d="M12 28 Q15 20 12 12 Q9 4 12 0" stroke="#d4c05a" stroke-width="1.2" stroke-dasharray="3 3"/>
+            </svg>
+          </div>
+          <svg width="28" height="28" viewBox="0 0 28 28">
+            <circle cx="14" cy="14" r="11" fill="none" stroke="#d4c05a" stroke-width="1.5"/>
+          </svg>
+          <span class="mol-label">CH₃SH</span>
+        </div>
+
       </div>
-      <div class="proof-caption">Odor molecules floating free in fabric fibers</div>
+      <div class="proof-caption">Odor molecules escaping fabric fibers</div>
     </div>
+
+    <!-- AFTER side -->
     <div class="proof-side">
       <div class="proof-label">After ODORSTRIKE</div>
       <div class="proof-visual">
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
+
+        <!-- Zinc hex 1 — top-left fiber crossing -->
+        <div style="position:absolute;left:8%;top:16%;display:flex;flex-direction:column;align-items:center;gap:3px;">
+          <svg class="zinc-hex" width="38" height="34" viewBox="0 0 38 34">
+            <polygon points="19,1 35,10 35,28 19,37 3,28 3,10" fill="rgba(184,255,87,.12)" stroke="#b8ff57" stroke-width="1.8"/>
+            <!-- trapped NH₃ inside -->
+            <circle cx="19" cy="18" r="5" fill="#555" opacity=".4"/>
+            <text x="19" y="22" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6" fill="#555" opacity=".6">NH₃</text>
+          </svg>
+        </div>
+
+        <!-- Zinc hex 2 — top-center fiber crossing -->
+        <div style="position:absolute;left:36%;top:8%;display:flex;flex-direction:column;align-items:center;gap:3px;">
+          <svg class="zinc-hex" width="38" height="34" viewBox="0 0 38 34">
+            <polygon points="19,1 35,10 35,28 19,37 3,28 3,10" fill="rgba(184,255,87,.12)" stroke="#b8ff57" stroke-width="1.8"/>
+            <!-- trapped H₂S inside -->
+            <polygon points="19,9 27,14 27,24 19,29 11,24 11,14" fill="#555" opacity=".3"/>
+            <text x="19" y="23" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6" fill="#555" opacity=".6">H₂S</text>
+          </svg>
+        </div>
+
+        <!-- Zinc hex 3 — center-right fiber crossing -->
+        <div style="position:absolute;left:61%;top:20%;display:flex;flex-direction:column;align-items:center;gap:3px;">
+          <svg class="zinc-hex" width="44" height="38" viewBox="0 0 44 38">
+            <polygon points="22,1 41,11 41,31 22,41 3,31 3,11" fill="rgba(184,255,87,.12)" stroke="#b8ff57" stroke-width="1.8"/>
+            <!-- trapped C₅H₁₀O₂ -->
+            <circle cx="22" cy="21" r="7" fill="#555" opacity=".3"/>
+            <text x="22" y="25" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="5.5" fill="#555" opacity=".6">C₅H₁₀O₂</text>
+          </svg>
+        </div>
+
+        <!-- Zinc hex 4 — top-right -->
+        <div style="position:absolute;left:80%;top:10%;display:flex;flex-direction:column;align-items:center;gap:3px;">
+          <svg class="zinc-hex" width="38" height="34" viewBox="0 0 38 34">
+            <polygon points="19,1 35,10 35,28 19,37 3,28 3,10" fill="rgba(184,255,87,.12)" stroke="#b8ff57" stroke-width="1.8"/>
+            <!-- trapped CH₃SH -->
+            <circle cx="19" cy="18" r="5" fill="#555" opacity=".4"/>
+            <text x="19" y="22" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="5.5" fill="#555" opacity=".6">CH₃SH</text>
+          </svg>
+        </div>
+
+        <!-- Zinc hex 5 — lower-center -->
+        <div style="position:absolute;left:46%;top:52%;display:flex;flex-direction:column;align-items:center;gap:3px;">
+          <svg class="zinc-hex" width="38" height="34" viewBox="0 0 38 34">
+            <polygon points="19,1 35,10 35,28 19,37 3,28 3,10" fill="rgba(184,255,87,.12)" stroke="#b8ff57" stroke-width="1.8"/>
+          </svg>
+        </div>
+
       </div>
-      <div class="proof-caption">Captured. Neutralized. Gone.</div>
+      <div class="proof-caption">Captured at the fiber level. Neutralized.</div>
     </div>
+
   </div>
-  <p class="proof-footer">Odor molecules don't get masked. They get captured. Independent lab trials on zinc ricinoleate show measurable odor reduction on cotton, polyester, and wool blends within 60 seconds of application.</p>
+  <p class="proof-footer">Zinc ricinoleate bonds to odor molecules inside the fabric. No masking. No perfume. Just capture.</p>
 </section>
 
 <!-- WHEN & HOW - content block for SEO word count -->
