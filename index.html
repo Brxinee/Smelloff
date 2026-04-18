@@ -1769,6 +1769,10 @@
   .skip-link:focus{top:0}
   *:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
   .pay-opt:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
+  .hl{position:relative;color:#080808;display:inline-block;padding:0 .15em;isolation:isolate}
+  .hl::before{content:"";position:absolute;inset:.1em 0;background:#B8FF57;z-index:-1;transform-origin:left;animation:hl-swipe .7s cubic-bezier(.77,0,.18,1) .4s both}
+  @keyframes hl-swipe{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  @media(prefers-reduced-motion:reduce){.hl::before{animation:none;transform:scaleX(1)}}
 </style>
 </head>
 <body>
@@ -1814,7 +1818,7 @@
 
   <h1>
     They <em>don't</em><br>
-    notice the <span class="strike">smell.</span><br>
+    notice the <span class="hl">smell</span>.<br>
     They notice <em>you.</em>
   </h1>
 
