@@ -81,7 +81,7 @@
     META_PIXEL_ID: "1455100092891684",
     SHEETS_ENDPOINT: "https://script.google.com/macros/s/AKfycbxwCrRUS3jhQUEfD-MbI2uV9jUw0S986cfI0OTrjEcUacbS0ynhUQlTzmJfjZvq1IWCBQ/exec",
     WHATSAPP: "919392974031",
-    PRICES: { solo: 159, duo: 299, trio: 399 }
+    PRICES: { solo: 159, duo: 299, trio: 429 }
   };
 </script>
 
@@ -564,6 +564,14 @@
     font-size:clamp(48px,8vw,120px);
     line-height:.9;
     letter-spacing:-.04em;
+    margin-bottom:24px;
+  }
+  .obj-killer{
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;
+    color:#B8FF57;
+    text-align:center;
+    margin-top:12px;
     margin-bottom:24px;
   }
   .pricing .sub{
@@ -2171,30 +2179,32 @@
 <section class="pricing" id="buy">
   <div class="section-tag" style="justify-content:center">Buy</div>
   <h2>Pick your pocket count.</h2>
-  <p class="sub">Free shipping above ₹299. COD available across India.</p>
+  <p class="sub">Free shipping above ₹299. ₹79 shipping below. COD across India.</p>
+  <p class="obj-killer">50ml = ~40 sprays. Lasts 3–4 weeks of daily use.</p>
 
   <div class="price-grid">
     <div class="price-card">
       <div class="pack-size">SOLO</div>
-      <div class="mrp-strike">M.R.P. ₹199</div>
+      <div class="mrp-strike">M.R.P. ₹399</div>
       <h3>₹159</h3>
       <div class="per-unit">1 bottle · 50ml</div>
+      <div class="save">SAVE ₹240</div>
       <button onclick="openCheckout('solo')">Add to cart</button>
     </div>
     <div class="price-card featured">
       <div class="pack-size">DUO</div>
-      <div class="mrp-strike">M.R.P. ₹318</div>
+      <div class="mrp-strike">M.R.P. ₹749</div>
       <h3>₹299</h3>
       <div class="per-unit">2 bottles · ₹149 each</div>
-      <div class="save">SAVE ₹19</div>
+      <div class="save">SAVE ₹450</div>
       <button onclick="openCheckout('duo')">Add to cart</button>
     </div>
     <div class="price-card">
       <div class="pack-size">TRIO</div>
-      <div class="mrp-strike">M.R.P. ₹477</div>
-      <h3>₹399</h3>
-      <div class="per-unit">3 bottles · ₹133 each</div>
-      <div class="save">SAVE ₹78</div>
+      <div class="mrp-strike">M.R.P. ₹1,075</div>
+      <h3>₹429</h3>
+      <div class="per-unit">3 bottles · ₹143 each</div>
+      <div class="save">SAVE ₹646</div>
       <button onclick="openCheckout('trio')">Add to cart</button>
     </div>
   </div>
@@ -2324,9 +2334,17 @@
     <div id="checkoutForm">
       <div class="overlay-tag">Checkout · Smelloff</div>
       <h3 id="checkoutTitle">ODORSTRIKE Solo</h3>
-      <div class="summary">
+      <div class="summary" style="border-bottom:none;margin-bottom:0;">
         <span id="checkoutVariant">1 × 50ml</span>
         <span class="amt" id="checkoutAmount">₹159</span>
+      </div>
+      <div class="summary" style="border-top:none;margin-bottom:0;">
+        <span id="shippingLabel">Shipping</span>
+        <span id="checkoutShipping">₹79</span>
+      </div>
+      <div class="summary" style="border-top:2px solid var(--rule);">
+        <span>Total</span>
+        <span class="amt" id="checkoutTotal">₹238</span>
       </div>
 
       <!-- Auth -->
@@ -2444,13 +2462,19 @@
   let currentVariant = 'solo';
   let payMethod = 'prepaid';
 
+  function calcShipping(amount) { return amount >= 299 ? 0 : 79; }
+
   function openCheckout(variant) {
     currentVariant = variant;
     const v = VARIANTS[variant];
+    const shipping = calcShipping(v.amount);
+    const total = v.amount + shipping;
     document.getElementById('checkoutTitle').textContent = v.title;
     document.getElementById('checkoutVariant').textContent = v.units;
     document.getElementById('checkoutAmount').textContent = '₹' + v.amount;
-    document.getElementById('submitText').textContent = 'Place order · ₹' + v.amount;
+    document.getElementById('checkoutShipping').textContent = shipping === 0 ? 'FREE' : '₹' + shipping;
+    document.getElementById('checkoutTotal').textContent = '₹' + total;
+    document.getElementById('submitText').textContent = 'Place order · ₹' + total;
     document.getElementById('checkoutForm').style.display = 'block';
     document.getElementById('successScreen').style.display = 'none';
     document.getElementById('checkoutOverlay').classList.add('active');
@@ -2469,7 +2493,8 @@
       el.classList.toggle('active', el.dataset.method === method);
     });
     const v = VARIANTS[currentVariant];
-    const label = method === 'cod' ? 'Place COD order · ₹' + v.amount : 'Pay ₹' + v.amount;
+    const total = v.amount + calcShipping(v.amount);
+    const label = method === 'cod' ? 'Place COD order · ₹' + total : 'Pay ₹' + total;
     document.getElementById('submitText').textContent = label;
   }
 
@@ -2510,13 +2535,17 @@
   }
 
   function collectOrder(orderId, paymentId) {
+    const baseAmount = VARIANTS[currentVariant].amount;
+    const shipping = calcShipping(baseAmount);
     return {
       orderId,
       paymentId: paymentId || '',
       variant: currentVariant,
       product: VARIANTS[currentVariant].title,
       units: VARIANTS[currentVariant].units,
-      amount: VARIANTS[currentVariant].amount,
+      amount: baseAmount,
+      shipping: shipping,
+      total: baseAmount + shipping,
       paymentMethod: payMethod,
       name: document.getElementById('f_name').value.trim(),
       phone: document.getElementById('f_phone').value.trim(),
@@ -2607,15 +2636,17 @@
 
     if (!rzpKey) {
       btn.disabled = false;
-      btnText.textContent = 'Place order · ₹' + VARIANTS[currentVariant].amount;
+      btnText.textContent = 'Place order · ₹' + total;
       showError('Online payment not configured yet. Please choose Cash on Delivery or WhatsApp us at +91 93929 74031.');
       return;
     }
 
     const amt = VARIANTS[currentVariant].amount;
+    const shipping = calcShipping(amt);
+    const total = amt + shipping;
     const options = {
       key: rzpKey,
-      amount: amt * 100,
+      amount: total * 100,
       currency: 'INR',
       name: 'Smelloff',
       description: VARIANTS[currentVariant].title,
@@ -2635,7 +2666,7 @@
       modal: {
         ondismiss: function() {
           btn.disabled = false;
-          btnText.textContent = 'Pay ₹' + amt;
+          btnText.textContent = 'Pay ₹' + total;
         }
       }
     };
@@ -2644,13 +2675,13 @@
       const rzp = new Razorpay(options);
       rzp.on('payment.failed', function(response) {
         btn.disabled = false;
-        btnText.textContent = 'Pay ₹' + amt;
+        btnText.textContent = 'Pay ₹' + total;
         showError('Payment failed. Try again or WhatsApp us at +91 93929 74031.');
       });
       rzp.open();
     } catch (err) {
       btn.disabled = false;
-      btnText.textContent = 'Pay ₹' + amt;
+      btnText.textContent = 'Pay ₹' + total;
       showError('Could not open payment. Try COD or WhatsApp us.');
     }
   }
