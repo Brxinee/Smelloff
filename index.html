@@ -546,10 +546,26 @@
   .ingredient.hero-ingredient{
     background:var(--acid);
     color:var(--ink);
+    animation:heroPulse 3s ease-in-out infinite;
+  }
+  @keyframes heroPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(184,255,87,0)}
+    50%{box-shadow:0 0 40px 0 rgba(184,255,87,.25)}
   }
   .ingredient.hero-ingredient .pct{color:rgba(8,8,8,.6)}
   .ingredient.hero-ingredient h4{color:var(--ink)}
   .ingredient.hero-ingredient p{color:rgba(8,8,8,.7)}
+  .js-anim .ingredient{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}
+  .js-anim .ingredient.ing-visible{opacity:1;transform:translateY(0)}
+  .ingr-static{
+    font-family:'DM Sans',sans-serif;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:#888;
+    text-align:center;
+    margin-top:32px;
+  }
   @media(max-width:720px){
     .ingredients{grid-template-columns:1fr}
   }
@@ -697,26 +713,50 @@
   .reviews .section-tag{color:var(--muted)}
   .reviews .section-tag::before{background:var(--muted)}
   .review-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:32px;
-    margin-top:60px;
+    display:flex;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    gap:16px;
+    padding:60px 20px 24px;
+    margin:0 -20px;
+    scrollbar-width:none;
   }
+  .review-grid::-webkit-scrollbar{display:none}
   .review{
+    flex-shrink:0;
+    width:85vw;
+    max-width:380px;
+    scroll-snap-align:center;
     border:1px solid rgba(244,241,234,.15);
     padding:32px;
+    position:relative;
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(30px);
+    transition:opacity .7s ease,transform .7s ease;
   }
-  .stars{
-    color:var(--acid);
-    font-size:14px;
-    letter-spacing:2px;
-    margin-bottom:16px;
+  .review.rv-visible{opacity:1;transform:translateY(0)}
+  .review:nth-child(odd).rv-visible{transform:translateY(0) rotate(-.5deg)}
+  .review:nth-child(even).rv-visible{transform:translateY(0) rotate(.5deg)}
+  .review::before{
+    content:'\201C';
+    position:absolute;
+    top:-20px;left:12px;
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:180px;
+    color:#B8FF57;
+    opacity:.08;
+    z-index:0;
+    line-height:1;
+    pointer-events:none;
   }
   .review blockquote{
     font-family:'Fraunces',serif;
     font-size:20px;
     line-height:1.4;
     margin-bottom:24px;
+    position:relative;z-index:1;
   }
   .review cite{
     font-family:'JetBrains Mono',monospace;
@@ -725,9 +765,35 @@
     text-transform:uppercase;
     opacity:.6;
     font-style:normal;
+    position:relative;z-index:1;
   }
-  @media(max-width:720px){
-    .review-grid{grid-template-columns:1fr}
+  .review-dots{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-top:4px;
+  }
+  .review-dot{
+    width:6px;height:6px;
+    border-radius:50%;
+    background:#333;
+    transition:background .2s ease;
+    cursor:pointer;
+  }
+  .review-dot.active{background:#B8FF57;}
+  @keyframes livePulse{
+    0%,100%{opacity:1}
+    50%{opacity:.4}
+  }
+  .beta-tag::before{
+    content:'';
+    display:inline-block;
+    width:6px;height:6px;
+    border-radius:50%;
+    background:#B8FF57;
+    margin-right:6px;
+    vertical-align:middle;
+    animation:livePulse 1.5s ease-in-out infinite;
   }
 
   /* Final CTA */
@@ -1099,60 +1165,9 @@
   }
 
   /* ============================= */
-  /* P1: INCI ACCORDION            */
+  /* P1: REVIEWS — BETA TESTER     */
+  /* (INCI accordion removed)      */
   /* ============================= */
-  .inci-full{
-    margin-top:24px;
-    border-top:1px solid var(--rule);
-  }
-  .inci-toggle{
-    width:100%;
-    background:transparent;
-    border:none;
-    padding:16px 0;
-    cursor:pointer;
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    color:var(--muted);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    text-align:left;
-  }
-  .inci-toggle .arrow{
-    transition:transform .25s;
-    font-size:14px;
-  }
-  .inci-toggle.open .arrow{transform:rotate(180deg)}
-  .inci-list{
-    display:none;
-    padding:0 0 20px;
-    border-top:1px solid var(--rule);
-  }
-  .inci-list.open{display:block}
-  .inci-row{
-    display:grid;
-    grid-template-columns:60px 1fr auto;
-    gap:12px;
-    align-items:baseline;
-    padding:10px 0;
-    border-bottom:1px solid var(--rule);
-    font-size:13px;
-  }
-  .inci-row:last-child{border-bottom:none}
-  .inci-row .i-pct{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    color:var(--muted);
-    letter-spacing:.05em;
-  }
-  .inci-row .i-name{
-    font-family:'Fraunces',serif;
-    font-weight:900;
-    font-size:15px;
-  }
   .inci-row .i-role{
     font-family:'JetBrains Mono',monospace;
     font-size:10px;
@@ -1186,13 +1201,39 @@
   }
   .faq .section-tag{color:var(--muted)}
   .faq .section-tag::before{background:var(--muted)}
-  .faq-list{
-    max-width:800px;
+  .faq-list{max-width:800px;}
+  .faq-chips{
+    display:flex;
+    gap:8px;
+    margin-bottom:32px;
+    overflow-x:auto;
+    scrollbar-width:none;
   }
-  .faq-list details{
+  .faq-chips::-webkit-scrollbar{display:none}
+  .faq-chip{
+    font-family:'DM Sans',sans-serif;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    padding:6px 14px;
+    border:1px solid #333;
+    border-radius:20px;
+    background:transparent;
+    color:var(--muted);
+    cursor:pointer;
+    white-space:nowrap;
+    transition:all .2s ease;
+    flex-shrink:0;
+  }
+  .faq-chip.active{background:#B8FF57;color:#080808;border-color:#B8FF57;}
+  .faq-item{
     border-bottom:1px solid var(--rule);
+    border-left:3px solid transparent;
+    padding-left:0;
+    transition:border-left-color .25s ease,padding-left .25s ease;
   }
-  .faq-list summary{
+  .faq-item:hover,.faq-item.open{border-left-color:#B8FF57;padding-left:16px;}
+  .faq-q{
     padding:24px 0;
     cursor:pointer;
     font-family:'Fraunces',serif;
@@ -1200,34 +1241,35 @@
     font-size:clamp(18px,2.5vw,24px);
     letter-spacing:-.01em;
     line-height:1.3;
-    list-style:none;
     display:flex;
     justify-content:space-between;
     align-items:center;
     gap:16px;
     color:var(--text);
+    transition:transform .2s ease;
+    user-select:none;
   }
-  .faq-list summary::-webkit-details-marker{display:none}
-  .faq-list summary::after{
-    content:'+';
-    font-family:'JetBrains Mono',monospace;
-    font-size:20px;
-    font-weight:400;
-    color:var(--muted);
-    flex-shrink:0;
-    transition:transform .2s;
+  .faq-item:hover .faq-q{transform:translateX(8px);}
+  .faq-q svg{flex-shrink:0;transition:transform .3s ease;}
+  .faq-item.open .faq-q svg{transform:rotate(180deg);}
+  .faq-body{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows .4s ease;
   }
-  .faq-list details[open] summary::after{
-    content:'−';
-  }
-  .faq-list .faq-answer{
+  .faq-item.open .faq-body{grid-template-rows:1fr;}
+  .faq-body-inner{overflow:hidden;}
+  .faq-answer{
     padding:0 0 24px;
     font-size:15px;
     line-height:1.6;
     color:var(--muted);
     max-width:680px;
+    opacity:0;
+    transition:opacity .3s ease .1s;
   }
-  .faq-list .faq-answer a{color:var(--acid);text-decoration:none;border-bottom:1px solid rgba(184,255,87,.3)}
+  .faq-item.open .faq-answer{opacity:1;}
+  .faq-answer a{color:var(--acid);text-decoration:none;border-bottom:1px solid rgba(184,255,87,.3)}
   /* ============================= */
   /* P2: TRUST ROW (#11)           */
   /* ============================= */
@@ -1926,37 +1968,22 @@
 
   <div class="ingredients">
     <div class="ingredient hero-ingredient">
-      <div class="pct">1.5% — HERO ACTIVE</div>
+      <div class="pct" data-pct="1.5" data-suffix="% — HERO ACTIVE">1.5% — HERO ACTIVE</div>
       <h4>Zinc Ricinoleate</h4>
       <p>Doesn't mask. Binds to odor molecules and locks them down at the source. Used in medical settings for stoma care.</p>
     </div>
     <div class="ingredient">
-      <div class="pct">2.5% — CARRIER</div>
+      <div class="pct" data-pct="2.5" data-suffix="% — CARRIER">2.5% — CARRIER</div>
       <h4>Triethyl Citrate</h4>
       <p>A plant-derived odor neutralizer that breaks down the bacteria producing the smell in the first place.</p>
     </div>
     <div class="ingredient">
-      <div class="pct">20% — SOLVENT</div>
+      <div class="pct" data-pct="20" data-suffix="% — SOLVENT">20% — SOLVENT</div>
       <h4>Isopropyl Alcohol</h4>
       <p>Helps the formula dry in seconds without leaving a wet patch on your shirt or jacket.</p>
     </div>
   </div>
-
-  <!-- FULL INCI LIST (P1 #8) -->
-  <div class="inci-full">
-    <button class="inci-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
-      Full formulation — 7 ingredients <span class="arrow">▼</span>
-    </button>
-    <div class="inci-list">
-      <div class="inci-row"><span class="i-pct">73%</span><span class="i-name">Water</span><span class="i-role">Base</span></div>
-      <div class="inci-row"><span class="i-pct">20%</span><span class="i-name">Isopropyl Alcohol</span><span class="i-role">Solvent</span></div>
-      <div class="inci-row"><span class="i-pct">2.5%</span><span class="i-name">Triethyl Citrate</span><span class="i-role">Carrier</span></div>
-      <div class="inci-row"><span class="i-pct">1.5%</span><span class="i-name">Zinc Ricinoleate</span><span class="i-role">Hero Active</span></div>
-      <div class="inci-row"><span class="i-pct">1.2%</span><span class="i-name">Fragrance</span><span class="i-role">Scent</span></div>
-      <div class="inci-row"><span class="i-pct">1%</span><span class="i-name">Polysorbate 20</span><span class="i-role">Emulsifier</span></div>
-      <div class="inci-row"><span class="i-pct">0.8%</span><span class="i-name">Phenoxyethanol &amp; Ethylhexylglycerin</span><span class="i-role">Preservative</span></div>
-    </div>
-  </div>
+  <p class="ingr-static">+ 4 supporting actives. Full INCI on bottle label.</p>
 </section>
 
 <!-- BEFORE / AFTER PROOF (P2 #13) -->
@@ -2213,7 +2240,7 @@
 <!-- REVIEWS (P1 #9 — reframed as early testers) -->
 <section class="reviews" id="reviews">
   <div class="section-tag">Early testers say</div>
-  <div class="review-grid">
+  <div class="review-grid" id="reviewGrid">
     <div class="review">
       <div class="beta-tag">Beta tester</div>
       <blockquote>"Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched."</blockquote>
@@ -2230,44 +2257,103 @@
       <cite>— Karan, 29 / Delhi</cite>
     </div>
   </div>
+  <div class="review-dots" id="reviewDots">
+    <span class="review-dot active"></span>
+    <span class="review-dot"></span>
+    <span class="review-dot"></span>
+  </div>
 </section>
 
 <!-- FAQ (P1 #10) -->
 <section class="faq" id="faq">
   <div class="section-tag">Questions</div>
   <div class="faq-list">
-    <details>
-      <summary>Is ODORSTRIKE safe on skin?</summary>
-      <p class="faq-answer">No. ODORSTRIKE is formulated exclusively for fabric. It contains Isopropyl Alcohol (20%) which can irritate skin. Do not spray on skin, face, or eyes. If contact occurs, rinse with water.</p>
-    </details>
-    <details>
-      <summary>Will it stain my clothes?</summary>
-      <p class="faq-answer">No. The formula dries clear in under 10 seconds with zero residue. Works on cotton, polyester, denim, and wool. We recommend testing on a small hidden area first for delicate fabrics like silk.</p>
-    </details>
-    <details>
-      <summary>How many uses per bottle?</summary>
-      <p class="faq-answer">Approximately 250 sprays per 50ml bottle. At 2–3 sprays per use, that's roughly 80–125 uses — enough for 2–3 months of daily use.</p>
-    </details>
-    <details>
-      <summary>Does it work on dry-clean-only fabric?</summary>
-      <p class="faq-answer">We don't recommend it for dry-clean-only items, leather, or suede. The alcohol content could affect these materials. Stick to machine-washable fabrics.</p>
-    </details>
-    <details>
-      <summary>Is the fragrance strong?</summary>
-      <p class="faq-answer">Very subtle. The fragrance (1.2%) is designed to be barely noticeable — just enough to signal freshness without announcing itself. It fades within a minute, leaving your clothes smelling neutral.</p>
-    </details>
-    <details>
-      <summary>What's the shipping time?</summary>
-      <p class="faq-answer">3–5 business days for metros (Hyderabad, Bangalore, Delhi, Mumbai, Chennai, Pune). 5–7 days for tier 2/3 cities. Free shipping on orders above ₹299.</p>
-    </details>
-    <details>
-      <summary>Is COD available?</summary>
-      <p class="faq-answer">Yes. Cash on Delivery is available across India. COD orders are confirmed via a quick phone call before dispatch. Additional ₹30 COD handling fee applies.</p>
-    </details>
-    <details>
-      <summary>What's the return policy?</summary>
-      <p class="faq-answer">7-day no-questions-asked returns. Product must be at least 80% full. We arrange reverse pickup. Refund processed within 5–7 business days. See our <a href="/returns.html">full returns policy</a>.</p>
-    </details>
+    <div class="faq-chips">
+      <button class="faq-chip active" data-filter="all">All</button>
+      <button class="faq-chip" data-filter="product">Product</button>
+      <button class="faq-chip" data-filter="shipping">Shipping</button>
+      <button class="faq-chip" data-filter="safety">Safety</button>
+    </div>
+
+    <div class="faq-item" data-category="safety">
+      <div class="faq-q" onclick="toggleFaqItem(this.parentElement)">
+        Is ODORSTRIKE safe on skin?
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="#B8FF57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="faq-body"><div class="faq-body-inner">
+        <p class="faq-answer">No. ODORSTRIKE is formulated exclusively for fabric. It contains Isopropyl Alcohol (20%) which can irritate skin. Do not spray on skin, face, or eyes. If contact occurs, rinse with water.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item" data-category="safety">
+      <div class="faq-q" onclick="toggleFaqItem(this.parentElement)">
+        Will it stain my clothes?
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="#B8FF57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="faq-body"><div class="faq-body-inner">
+        <p class="faq-answer">No. The formula dries clear in under 10 seconds with zero residue. Works on cotton, polyester, denim, and wool. We recommend testing on a small hidden area first for delicate fabrics like silk.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item" data-category="product">
+      <div class="faq-q" onclick="toggleFaqItem(this.parentElement)">
+        How many uses per bottle?
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="#B8FF57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="faq-body"><div class="faq-body-inner">
+        <p class="faq-answer">Approximately 250 sprays per 50ml bottle. At 2–3 sprays per use, that's roughly 80–125 uses — enough for 2–3 months of daily use.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item" data-category="product">
+      <div class="faq-q" onclick="toggleFaqItem(this.parentElement)">
+        Does it work on dry-clean-only fabric?
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="#B8FF57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="faq-body"><div class="faq-body-inner">
+        <p class="faq-answer">We don't recommend it for dry-clean-only items, leather, or suede. The alcohol content could affect these materials. Stick to machine-washable fabrics.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item" data-category="product">
+      <div class="faq-q" onclick="toggleFaqItem(this.parentElement)">
+        Is the fragrance strong?
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="#B8FF57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="faq-body"><div class="faq-body-inner">
+        <p class="faq-answer">Very subtle. The fragrance (1.2%) is designed to be barely noticeable — just enough to signal freshness without announcing itself. It fades within a minute, leaving your clothes smelling neutral.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item" data-category="shipping">
+      <div class="faq-q" onclick="toggleFaqItem(this.parentElement)">
+        What's the shipping time?
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="#B8FF57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="faq-body"><div class="faq-body-inner">
+        <p class="faq-answer">3–5 business days for metros (Hyderabad, Bangalore, Delhi, Mumbai, Chennai, Pune). 5–7 days for tier 2/3 cities. Free shipping on orders above ₹299.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item" data-category="shipping">
+      <div class="faq-q" onclick="toggleFaqItem(this.parentElement)">
+        Is COD available?
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="#B8FF57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="faq-body"><div class="faq-body-inner">
+        <p class="faq-answer">Yes. Cash on Delivery is available across India. COD orders are confirmed via a quick phone call before dispatch. Additional ₹30 COD handling fee applies.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item" data-category="shipping">
+      <div class="faq-q" onclick="toggleFaqItem(this.parentElement)">
+        What's the return policy?
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6L8 11L13 6" stroke="#B8FF57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="faq-body"><div class="faq-body-inner">
+        <p class="faq-answer">7-day no-questions-asked returns. Product must be at least 80% full. We arrange reverse pickup. Refund processed within 5–7 business days. See our <a href="/returns.html">full returns policy</a>.</p>
+      </div></div>
+    </div>
   </div>
 </section>
 
@@ -2743,6 +2829,105 @@
     document.getElementById('ecSuccess').style.display = 'inline-block';
     console.log('[Smelloff] Waitlist:', email);
   };
+
+  // =============================================
+  // CHEMISTRY: ingredient scroll + pct counter
+  // =============================================
+  (function(){
+    document.documentElement.classList.add('js-anim');
+
+    // Ingredient card scroll-in
+    var ingrs = document.querySelectorAll('.ingredient');
+    if (ingrs.length && 'IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e, i){
+          if (e.isIntersecting) {
+            setTimeout(function(){ e.target.classList.add('ing-visible'); }, i * 150);
+            io.unobserve(e.target);
+          }
+        });
+      }, {threshold:0.2});
+      ingrs.forEach(function(el){ io.observe(el); });
+    }
+
+    // Percentage counter
+    function animatePct(el) {
+      var target = parseFloat(el.dataset.pct);
+      var suffix = el.dataset.suffix || '%';
+      var isInt = target % 1 === 0;
+      var duration = 800;
+      var start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var val = (target * eased);
+        el.textContent = (isInt ? Math.round(val) : val.toFixed(1)) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    var pcts = document.querySelectorAll('.ingredient .pct[data-pct]');
+    if (pcts.length && 'IntersectionObserver' in window) {
+      var pctIO = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) { animatePct(e.target); pctIO.unobserve(e.target); }
+        });
+      }, {threshold:0.2});
+      pcts.forEach(function(el){ pctIO.observe(el); });
+    }
+  })();
+
+  // =============================================
+  // REVIEWS: carousel dots + scroll-in animation
+  // =============================================
+  (function(){
+    var grid = document.getElementById('reviewGrid');
+    var dots = document.querySelectorAll('#reviewDots .review-dot');
+    var cards = grid ? grid.querySelectorAll('.review') : [];
+
+    // Scroll-in animation
+    if (cards.length && 'IntersectionObserver' in window) {
+      var rvIO = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) { e.target.classList.add('rv-visible'); rvIO.unobserve(e.target); }
+        });
+      }, {threshold:0.2});
+      cards.forEach(function(c){ rvIO.observe(c); });
+    }
+
+    // Dots update on scroll
+    if (grid && dots.length && 'IntersectionObserver' in window) {
+      var dotIO = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) {
+            var idx = Array.prototype.indexOf.call(cards, e.target);
+            dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+          }
+        });
+      }, {root: grid, threshold:0.5});
+      cards.forEach(function(c){ dotIO.observe(c); });
+    }
+  })();
+
+  // =============================================
+  // FAQ: toggle + filter chips
+  // =============================================
+  window.toggleFaqItem = function(item) {
+    item.classList.toggle('open');
+  };
+
+  document.querySelectorAll('.faq-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      document.querySelectorAll('.faq-chip').forEach(function(c){ c.classList.remove('active'); });
+      chip.classList.add('active');
+      var filter = chip.dataset.filter;
+      document.querySelectorAll('.faq-item').forEach(function(item){
+        item.style.display = (filter === 'all' || item.dataset.category === filter) ? '' : 'none';
+      });
+    });
+  });
 
   // Mobile sticky bar — show after scrolling past hero
   (function(){
