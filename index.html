@@ -1785,6 +1785,21 @@
     mix-blend-mode:overlay;z-index:0;
   }
 
+  /* Close button */
+  .menu-close{
+    position:absolute;top:20px;right:24px;
+    width:44px;height:44px;
+    background:none;border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    z-index:2;
+  }
+  .menu-close-line{
+    position:absolute;width:22px;height:2px;
+    background:#B8FF57;border-radius:2px;
+  }
+  .menu-close-line:first-child{transform:rotate(45deg)}
+  .menu-close-line:last-child{transform:rotate(-45deg)}
+
   /* Faded wordmark */
   .menu-wordmark{
     position:absolute;top:80px;right:-20px;
@@ -1940,7 +1955,11 @@
 </nav>
 
 <!-- MOBILE MENU (P3 #16) -->
-<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true" onclick="if(event.target===this)closeNav()">
+  <button class="menu-close" aria-label="Close menu" onclick="closeNav()">
+    <span class="menu-close-line"></span>
+    <span class="menu-close-line"></span>
+  </button>
   <div class="menu-wordmark" aria-hidden="true">SMELLOFF</div>
   <nav class="menu-items" aria-label="Site navigation">
     <a href="#science" class="menu-item" style="--i:0" onclick="closeNav()">Science</a>
@@ -2911,6 +2930,8 @@
     menu.setAttribute('aria-hidden', 'false');
     btn.setAttribute('aria-expanded', 'true');
     document.body.classList.add('nav-open');
+    // Push history state so back button closes the menu
+    history.pushState({ navOpen: true }, '');
     // After all items have animated in, clear delays so hover is instant
     var clearAfter = 150 + (items.length - 1) * 80 + 620;
     setTimeout(function() {
@@ -2980,6 +3001,11 @@
       closeCheckout();
       if(document.body.classList.contains('nav-open')) closeNav();
     }
+  });
+
+  // Android back button — close nav if open
+  window.addEventListener('popstate', function(e){
+    if(document.body.classList.contains('nav-open')) closeNav();
   });
 
   // Clear red border on input focus
