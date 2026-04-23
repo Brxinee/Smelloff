@@ -1,0 +1,32 @@
+{
+  "name": "Smelloff — ODORSTRIKE Fabric Odor Remover Spray",
+  "short_name": "Smelloff",
+  "description": "India's first pocket-sized fabric odor remover spray. 50ml, ₹159.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#080808",
+  "background_color": "#080808",
+  "lang": "en-IN",
+  "categories": ["shopping", "lifestyle", "health"],
+  "icons": [
+    {
+      "src": "/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

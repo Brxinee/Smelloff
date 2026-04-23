@@ -1,7 +1,7 @@
 # Smelloff — open to all crawlers
-# robots.txt — updated 2026-04-17
+# robots.txt — updated 2026-04-24
 
-# Default: allow everyone
+# Default: allow everyone (explicit bot sections below just confirm opt-in)
 User-agent: *
 Allow: /
 Disallow: /checkout
@@ -9,29 +9,84 @@ Disallow: /thank-you
 Disallow: /*.json$
 Disallow: /api/
 
-# Search engines
+# ===== Major search engines =====
 User-agent: Googlebot
 Allow: /
 
 User-agent: Googlebot-Image
 Allow: /
 
+User-agent: Googlebot-News
+Allow: /
+
+User-agent: Googlebot-Video
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: GoogleOther-Image
+Allow: /
+
 User-agent: Bingbot
+Allow: /
+
+User-agent: MSNBot
+Allow: /
+
+User-agent: AdIdxBot
 Allow: /
 
 User-agent: DuckDuckBot
 Allow: /
 
+User-agent: DuckDuckGo-Favicons-Bot
+Allow: /
+
 User-agent: YandexBot
+Allow: /
+
+User-agent: YandexImages
 Allow: /
 
 User-agent: Baiduspider
 Allow: /
 
+User-agent: Baiduspider-image
+Allow: /
+
 User-agent: Slurp
 Allow: /
 
-# AI crawlers — explicitly allowed so Smelloff shows up in AI answers
+User-agent: Sogou
+Allow: /
+
+User-agent: Naverbot
+Allow: /
+
+User-agent: Yeti
+Allow: /
+
+User-agent: SeznamBot
+Allow: /
+
+User-agent: PetalBot
+Allow: /
+
+User-agent: Bravebot
+Allow: /
+
+User-agent: Qwantify
+Allow: /
+
+User-agent: Kagibot
+Allow: /
+
+User-agent: Neevabot
+Allow: /
+
+# ===== Generative AI crawlers (LLM training + real-time retrieval) =====
+# OpenAI
 User-agent: GPTBot
 Allow: /
 
@@ -41,58 +96,141 @@ Allow: /
 User-agent: OAI-SearchBot
 Allow: /
 
+# Anthropic (Claude)
 User-agent: ClaudeBot
 Allow: /
 
 User-agent: Claude-Web
 Allow: /
 
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
 User-agent: anthropic-ai
 Allow: /
 
+# Google Gemini / Bard / AI Overviews
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Google-CloudVertexBot
+Allow: /
+
+# Perplexity
 User-agent: PerplexityBot
 Allow: /
 
 User-agent: Perplexity-User
 Allow: /
 
-User-agent: Google-Extended
-Allow: /
-
+# Apple Intelligence (Siri) + Apple Search
 User-agent: Applebot
 Allow: /
 
 User-agent: Applebot-Extended
 Allow: /
 
-User-agent: Bytespider
-Allow: /
-
+# Amazon (Alexa / Rufus)
 User-agent: Amazonbot
 Allow: /
 
-User-agent: CCBot
-Allow: /
-
-User-agent: cohere-ai
-Allow: /
-
+# Meta (Llama, WhatsApp AI, Instagram AI)
 User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
 Allow: /
 
 User-agent: FacebookBot
 Allow: /
 
-User-agent: Diffbot
-Allow: /
-
-User-agent: YouBot
-Allow: /
-
+# Mistral
 User-agent: MistralAI-User
 Allow: /
 
-# Social / preview bots
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+User-agent: cohere-training-data-crawler
+Allow: /
+
+# ByteDance / Doubao / TikTok AI
+User-agent: Bytespider
+Allow: /
+
+User-agent: TikTokSpider
+Allow: /
+
+# Common Crawl (powers most open LLMs)
+User-agent: CCBot
+Allow: /
+
+# Diffbot (knowledge graph)
+User-agent: Diffbot
+Allow: /
+
+# DuckDuckGo AI
+User-agent: DuckAssistBot
+Allow: /
+
+# You.com
+User-agent: YouBot
+Allow: /
+
+# Huawei / Petal AI
+User-agent: PanguBot
+Allow: /
+
+# Timpi
+User-agent: Timpibot
+Allow: /
+
+# Phind
+User-agent: PhindBot
+Allow: /
+
+# Other AI/ML crawlers
+User-agent: ImagesiftBot
+Allow: /
+
+User-agent: img2dataset
+Allow: /
+
+User-agent: Webzio-Extended
+Allow: /
+
+User-agent: Omgili
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+User-agent: Velen Public Web Crawler
+Allow: /
+
+User-agent: AI2Bot
+Allow: /
+
+User-agent: ai2bot-dolma
+Allow: /
+
+User-agent: Datagpt-Crawler
+Allow: /
+
+User-agent: Kangaroo Bot
+Allow: /
+
+User-agent: ModatAI
+Allow: /
+
+User-agent: Firecrawl
+Allow: /
+
+# ===== Social / link-preview bots =====
 User-agent: facebookexternalhit
 Allow: /
 
@@ -108,24 +246,64 @@ Allow: /
 User-agent: Slackbot
 Allow: /
 
+User-agent: Slackbot-LinkExpanding
+Allow: /
+
 User-agent: TelegramBot
 Allow: /
 
 User-agent: Discordbot
 Allow: /
 
-# SEO tools
+User-agent: SkypeUriPreview
+Allow: /
+
+User-agent: redditbot
+Allow: /
+
+User-agent: Pinterest
+Allow: /
+
+User-agent: Pinterestbot
+Allow: /
+
+User-agent: Iframely
+Allow: /
+
+User-agent: Embedly
+Allow: /
+
+# ===== SEO / research tools =====
 User-agent: AhrefsBot
+Allow: /
+
+User-agent: AhrefsSiteAudit
 Allow: /
 
 User-agent: SemrushBot
 Allow: /
 
+User-agent: SemrushBot-SA
+Allow: /
+
 User-agent: MJ12bot
 Allow: /
 
-# Crawl guidance
+User-agent: DotBot
+Allow: /
+
+User-agent: rogerbot
+Allow: /
+
+User-agent: archive.org_bot
+Allow: /
+
+User-agent: ia_archiver
+Allow: /
+
+# ===== Crawl guidance =====
 Crawl-delay: 1
 
-# Sitemaps
+# ===== Sitemaps =====
 Sitemap: https://www.smelloff.in/sitemap.xml
+Host: https://www.smelloff.in
