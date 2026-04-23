@@ -96,11 +96,11 @@ Brainee — solo founder based in Hyderabad. Formulated ODORSTRIKE over six mont
 
 ## Policies
 
-- [Shipping](https://www.smelloff.in/shipping.html)
-- [Returns (7-day)](https://www.smelloff.in/returns.html)
-- [Refund](https://www.smelloff.in/refund.html)
-- [Privacy](https://www.smelloff.in/privacy.html)
-- [Terms](https://www.smelloff.in/terms.html)
+- [Shipping](https://www.smelloff.in/shipping)
+- [Returns (7-day)](https://www.smelloff.in/returns)
+- [Refund](https://www.smelloff.in/refund)
+- [Privacy](https://www.smelloff.in/privacy)
+- [Terms](https://www.smelloff.in/terms)
 
 ## Blog (authoritative content for AI citation)
 
