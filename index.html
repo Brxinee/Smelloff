@@ -2074,81 +2074,57 @@
   .ritual-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:0;
-    border:1px solid #1e1e1e;
+    gap:8px;
   }
   .ritual-tile{
-    padding:40px 32px;
-    border-right:1px solid #1e1e1e;
-    position:relative;
-    overflow:hidden;
-    cursor:default;
+    background:#0D0D0D;
+    border:1px solid #B8FF57;
+    border-radius:8px;
+    padding:16px 12px;
+    display:flex;flex-direction:column;gap:8px;
+    min-width:0;
   }
-  .ritual-tile:last-child{border-right:none;}
-  .ritual-tile::before{
-    content:'';
-    position:absolute;
-    top:0;left:0;right:0;
-    height:1px;
-    background:#b8ff57;
-    transform:scaleX(0);
-    transform-origin:left center;
-    transition:transform .5s ease;
-  }
-  .ritual-tile:hover::before{transform:scaleX(1);}
   .ritual-num{
     font-family:'Barlow Condensed',sans-serif;
     font-weight:900;
-    font-size:56px;
-    line-height:1;
-    -webkit-text-stroke:1px #b8ff57;
+    font-size:40px;line-height:1;
+    -webkit-text-stroke:1px #B8FF57;
     color:transparent;
-    margin-bottom:20px;
-    transition:color .3s ease;
     user-select:none;
-  }
-  .ritual-tile:hover .ritual-num{
-    color:#b8ff57;
-    -webkit-text-stroke-color:transparent;
   }
   .ritual-heading{
     font-family:'Barlow Condensed',sans-serif;
     font-weight:900;
-    font-size:20px;
+    font-size:16px;
     text-transform:uppercase;
-    letter-spacing:.02em;
-    margin-bottom:8px;
-    color:#f5f5f5;
+    letter-spacing:.03em;
+    color:#fff;
+    line-height:1.1;
   }
   .ritual-desc{
     font-family:'DM Sans',sans-serif;
-    font-size:13px;
-    color:#8a8a8a;
-    line-height:1.4;
-    margin-bottom:20px;
+    font-size:12px;
+    color:#A0A0A0;
+    line-height:1.35;
+    margin:0;
+    flex:1;
   }
   .ritual-meta{
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .ritual-dot{
-    width:6px;height:6px;
-    border-radius:50%;
-    background:#b8ff57;
-    animation:pulse-dot 2s ease-in-out infinite;
-    flex-shrink:0;
-  }
-  @keyframes pulse-dot{
-    0%,100%{opacity:1;transform:scale(1)}
-    50%{opacity:.4;transform:scale(.7)}
-  }
-  .ritual-timing{
-    font-family:'DM Sans',sans-serif;
-    font-size:10px;
-    letter-spacing:.15em;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    font-size:11px;
+    letter-spacing:.12em;
     text-transform:uppercase;
-    color:#8a8a8a;
+    color:#B8FF57;
+    margin-top:4px;
+  }
+  @media(min-width:720px){
+    .ritual-grid{gap:12px}
+    .ritual-tile{padding:20px 16px}
+    .ritual-num{font-size:48px}
+    .ritual-heading{font-size:18px}
+    .ritual-desc{font-size:13px}
+    .ritual-meta{font-size:12px}
   }
   /* ============================= */
   /* WHEN TO USE — Trigger Points  */
@@ -2224,9 +2200,6 @@
     position:relative;z-index:1;
   }
   @media(max-width:860px){
-    .ritual-grid{grid-template-columns:1fr;}
-    .ritual-tile{border-right:none;border-bottom:1px solid #1e1e1e;}
-    .ritual-tile:last-child{border-bottom:none;}
     .trigger-grid{grid-template-columns:1fr 1fr;}
     .ritual-section,.trigger-section{padding:48px 16px;}
   }
@@ -2937,34 +2910,25 @@
     <span class="section-eyebrow-label">The Ritual</span>
   </div>
   <h2 class="ritual-title">How to <span class="acid">strike.</span></h2>
-  <p class="ritual-sub">Three seconds. No drying time, no white marks, no overthinking.</p>
+  <p class="ritual-sub">Three seconds. No drying time, no white marks.</p>
   <div class="ritual-grid">
     <div class="ritual-tile">
       <div class="ritual-num">01</div>
       <div class="ritual-heading">Shake</div>
-      <p class="ritual-desc">Two quick shakes before every session.</p>
-      <div class="ritual-meta">
-        <span class="ritual-dot"></span>
-        <span class="ritual-timing">2 sec</span>
-      </div>
+      <p class="ritual-desc">Two quick shakes</p>
+      <div class="ritual-meta">2 sec</div>
     </div>
     <div class="ritual-tile">
       <div class="ritual-num">02</div>
-      <div class="ritual-heading">Spray from 15cm</div>
-      <p class="ritual-desc">Hold at distance. Three pumps per zone.</p>
-      <div class="ritual-meta">
-        <span class="ritual-dot"></span>
-        <span class="ritual-timing">3 sprays</span>
-      </div>
+      <div class="ritual-heading">Spray</div>
+      <p class="ritual-desc">15cm · 3 pumps</p>
+      <div class="ritual-meta">3 sprays</div>
     </div>
     <div class="ritual-tile">
       <div class="ritual-num">03</div>
       <div class="ritual-heading">Walk Out</div>
-      <p class="ritual-desc">Alcohol flashes off. Zinc locks down odor. Done.</p>
-      <div class="ritual-meta">
-        <span class="ritual-dot"></span>
-        <span class="ritual-timing">Clean</span>
-      </div>
+      <p class="ritual-desc">Zinc locks odor</p>
+      <div class="ritual-meta">Done</div>
     </div>
   </div>
 </section>
