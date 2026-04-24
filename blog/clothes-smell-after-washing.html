@@ -305,7 +305,13 @@ a:hover{border-color:#B8FF57}
 
 footer{border-top:1px solid rgba(255,255,255,0.08);padding:40px 24px;text-align:center;color:#666;font-size:13px}
 footer a{color:#888}
-</style>
+.blog-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 24px}
+  .blog-footer .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(184,255,87,.15);font-family:DM Sans,sans-serif;font-size:11px;color:#666;text-align:center;letter-spacing:.02em;margin-top:4px}
+  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:DM Sans,sans-serif;font-size:13px}
+  .footer-links a{color:#888;text-decoration:none;transition:color .15s ease}
+  .footer-links a:hover{color:#fff}
+  @media(max-width:720px){.blog-footer{flex-direction:column;align-items:flex-start}.blog-footer .footer-bottom{text-align:left}}
+  </style>
 </head>
 <body>
 
@@ -314,7 +320,7 @@ footer a{color:#888}
 <nav class="nav">
   <div class="nav-inner">
     <a href="/" class="logo">SMELL<span>OFF</span></a>
-    <a href="/#buy" class="nav-cta">Shop ₹159</a>
+    <a href="/#buy" class="nav-cta">Shop ₹179</a>
   </div>
 </nav>
 
@@ -438,7 +444,7 @@ footer a{color:#888}
   <div class="product-cta">
     <div class="product-cta-text">
       <h4>ODORSTRIKE — Fabric odor killer</h4>
-      <p>Stops bacterial re-colonisation. <span class="price-old">₹199</span><strong style="color:#B8FF57">₹159 launch</strong></p>
+      <p>Stops bacterial re-colonisation. <span class="price-old">₹249</span><strong style="color:#B8FF57">₹179 launch</strong></p>
     </div>
     <a href="/#buy" class="btn" style="background:#B8FF57;color:#080808;padding:16px 28px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:15px;letter-spacing:0.12em;text-transform:uppercase;border-radius:2px;white-space:nowrap">Shop Now →</a>
   </div>
