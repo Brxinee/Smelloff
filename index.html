@@ -1345,89 +1345,6 @@
     .xs-card{width:clamp(240px,22vw,280px)}
   }
 
-  /* Blog teaser */
-  .blog-teaser{
-    padding:120px 32px;
-    border-bottom:1px solid var(--rule);
-  }
-  .blog-teaser-h2{
-    font-family:'Fraunces',serif;
-    font-weight:900;
-    font-size:clamp(40px,6vw,72px);
-    letter-spacing:-.03em;
-    line-height:.95;
-    margin-bottom:20px;
-    max-width:800px;
-  }
-  .blog-teaser-sub{
-    font-family:'Fraunces',serif;
-    font-style:italic;
-    color:var(--muted);
-    max-width:520px;
-    margin-bottom:48px;
-    font-size:18px;
-  }
-  .blog-teaser-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:16px;
-    margin-bottom:32px;
-  }
-  .bt-card{
-    display:block;
-    padding:32px 24px;
-    border:1px solid var(--rule);
-    text-decoration:none;
-    color:var(--text);
-    transition:border-color .25s ease,transform .25s ease;
-    background:rgba(244,241,234,.02);
-  }
-  .bt-card:hover{
-    border-color:var(--acid);
-    transform:translateY(-3px);
-  }
-  .bt-tag{
-    font-family:'JetBrains Mono',monospace;
-    font-size:10px;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    color:var(--acid);
-    display:block;
-    margin-bottom:16px;
-  }
-  .bt-card h3{
-    font-family:'Fraunces',serif;
-    font-weight:900;
-    font-size:22px;
-    line-height:1.2;
-    letter-spacing:-.01em;
-    margin-bottom:24px;
-    color:var(--text);
-  }
-  .bt-arrow{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    color:var(--muted);
-  }
-  .bt-card:hover .bt-arrow{color:var(--acid)}
-  .bt-all{
-    display:inline-block;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    color:var(--acid);
-    text-decoration:none;
-    border-bottom:1px solid var(--acid);
-    padding-bottom:4px;
-  }
-  @media(max-width:720px){
-    .blog-teaser-grid{grid-template-columns:1fr}
-    .blog-teaser{padding:80px 24px}
-  }
-
   /* Final CTA */
   .final{
     padding:160px 32px;
@@ -3236,31 +3153,6 @@
     </article>
 
   </div>
-</section>
-
-<!-- BLOG TEASER — internal linking for SEO -->
-<section class="blog-teaser">
-  <div class="section-tag">The science</div>
-  <h2 class="blog-teaser-h2">Why your clothes smell — even after washing.</h2>
-  <p class="blog-teaser-sub">Eight deep-dives on fabric odor, sweat chemistry, and what actually works. Written by the founder.</p>
-  <div class="blog-teaser-grid">
-    <a href="/blog/gym-clothes-smell-after-washing" class="bt-card">
-      <span class="bt-tag">Fabric care</span>
-      <h3>Why gym clothes smell after washing</h3>
-      <span class="bt-arrow">Read →</span>
-    </a>
-    <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="bt-card">
-      <span class="bt-tag">Ingredient science</span>
-      <h3>The one ingredient that actually kills odor</h3>
-      <span class="bt-arrow">Read →</span>
-    </a>
-    <a href="/blog/deodorant-vs-fabric-mist" class="bt-card">
-      <span class="bt-tag">Product education</span>
-      <h3>Deodorant vs fabric mist — what works</h3>
-      <span class="bt-arrow">Read →</span>
-    </a>
-  </div>
-  <a href="/blog" class="bt-all">See all 8 articles →</a>
 </section>
 
 <!-- FAQ -->
