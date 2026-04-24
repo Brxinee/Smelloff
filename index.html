@@ -3786,6 +3786,18 @@
   let currentVariant = 'solo';
   let payMethod = 'prepaid';
 
+  // Transactional email client (Resend via /api/send-email)
+  const SmelloffEmail = {
+    send: function(type, to, data) {
+      return fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: type, to: to, data: data || {} })
+      }).then(function(r){ return r.ok ? r.json() : r.json().then(function(e){ throw new Error(e.error || 'send failed'); }); });
+    }
+  };
+  window.SmelloffEmail = SmelloffEmail;
+
   function calcShipping(amount) { return amount >= 299 ? 0 : 79; }
 
   function openCheckout(variant) {
@@ -3956,6 +3968,15 @@
     if (payMethod === 'cod') {
       const order = collectOrder(orderId, 'COD');
       logOrderToSheets(order);
+      if (order.email) {
+        SmelloffEmail.send('orderConfirmation', order.email, {
+          orderId: order.orderId,
+          customerName: order.name || 'there',
+          amount: String(order.total),
+          address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '),
+          paymentMethod: 'Cash on Delivery'
+        }).catch(console.error);
+      }
       setTimeout(() => {
         btn.disabled = false;
         showSuccess(orderId, 'cod');
@@ -3995,6 +4016,15 @@
       handler: function(response) {
         const order = collectOrder(orderId, response.razorpay_payment_id);
         logOrderToSheets(order);
+        if (order.email) {
+          SmelloffEmail.send('orderConfirmation', order.email, {
+            orderId: order.orderId,
+            customerName: order.name || 'there',
+            amount: String(order.total),
+            address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '),
+            paymentMethod: 'Razorpay (Prepaid)'
+          }).catch(console.error);
+        }
         showSuccess(orderId, 'prepaid');
       },
       modal: {
@@ -4200,6 +4230,7 @@
     document.getElementById('emailForm').style.display = 'none';
     document.getElementById('ecSuccess').style.display = 'inline-block';
     console.log('[Smelloff] Waitlist:', email);
+    SmelloffEmail.send('welcomeEmail', email, { customerName: 'there' }).catch(console.error);
   };
 
   // =============================================
