@@ -11,6 +11,11 @@ const BORDER = '#1F1F1F';
 const HEADING_FONT = `'Barlow Condensed', 'Arial Black', Impact, sans-serif`;
 const BODY_FONT = `'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
 
+const LOGO_URL = 'https://www.smelloff.in/apple-touch-icon.png';
+const PRODUCT_IMG = 'https://www.smelloff.in/assets/odorstrike-bottle.png';
+const SUPPORT_EMAIL = 'smelloffsupport@gmail.com';
+const SITE_URL = 'https://www.smelloff.in';
+
 const escape = (s = '') =>
   String(s)
     .replace(/&/g, '&amp;')
@@ -36,13 +41,18 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
     <td align="center" style="padding:24px 16px;">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:${BLACK};border:1px solid ${BORDER};">
         <tr>
-          <td style="padding:28px 32px;border-bottom:1px solid ${BORDER};">
+          <td style="padding:24px 32px;border-bottom:1px solid ${BORDER};">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
-                <td style="font-family:${HEADING_FONT};font-weight:900;font-size:28px;letter-spacing:2px;color:${WHITE};text-transform:uppercase;">
+                <td width="44" style="vertical-align:middle;">
+                  <a href="${SITE_URL}" style="text-decoration:none;display:inline-block;">
+                    <img src="${LOGO_URL}" width="36" height="36" alt="Smelloff" style="display:block;border:0;border-radius:8px;">
+                  </a>
+                </td>
+                <td style="vertical-align:middle;font-family:${HEADING_FONT};font-weight:900;font-size:26px;letter-spacing:2px;color:${WHITE};text-transform:uppercase;padding-left:4px;">
                   SMELL<span style="color:${GREEN};">0</span>FF
                 </td>
-                <td align="right" style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;">
+                <td align="right" style="vertical-align:middle;font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;">
                   ODORSTRIKE
                 </td>
               </tr>
@@ -57,9 +67,9 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
         <tr>
           <td style="padding:28px 32px;border-top:1px solid ${BORDER};font-family:${BODY_FONT};font-size:12px;color:${GREY};line-height:1.6;">
             <p style="margin:0 0 8px 0;">Smelloff &middot; Hyderabad, India</p>
-            <p style="margin:0 0 8px 0;">Questions? <a href="mailto:hello@smelloff.in" style="color:${GREEN};text-decoration:none;">hello@smelloff.in</a></p>
+            <p style="margin:0 0 8px 0;">Questions? <a href="mailto:${SUPPORT_EMAIL}" style="color:${GREEN};text-decoration:none;">${SUPPORT_EMAIL}</a></p>
             <p style="margin:0;">
-              <a href="https://smelloff.in" style="color:${GREY};text-decoration:none;">smelloff.in</a>
+              <a href="${SITE_URL}" style="color:${GREY};text-decoration:none;">smelloff.in</a>
               &nbsp;&middot;&nbsp;
               <a href="https://instagram.com/smell0ff" style="color:${GREY};text-decoration:none;">@smell0ff</a>
             </p>
@@ -98,6 +108,15 @@ const button = (href, label) => `
 const divider = `<div style="height:1px;background-color:${BORDER};margin:24px 0;"></div>`;
 
 const accentBar = `<div style="width:48px;height:3px;background-color:${GREEN};margin:0 0 20px 0;"></div>`;
+
+const productImage = `
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;">
+  <tr>
+    <td align="center" style="background-color:#0F0F0F;padding:32px 24px;border:1px solid ${BORDER};">
+      <img src="${PRODUCT_IMG}" width="200" alt="ODORSTRIKE 50ml" style="display:block;border:0;max-width:200px;height:auto;">
+    </td>
+  </tr>
+</table>`;
 
 // ---------- TEMPLATES ----------
 
@@ -140,7 +159,7 @@ export function orderConfirmation({
 
     <p style="font-family:${HEADING_FONT};font-weight:900;font-size:18px;letter-spacing:1px;color:${GREEN};text-transform:uppercase;margin:0 0 8px 0;">What happens next</p>
     ${mutedPara('Dispatch in 24&ndash;48 hours. Tracking link lands in your inbox the moment it ships.')}
-    ${mutedPara('Need help? Just reply to this email or write to <a href="mailto:hello@smelloff.in" style="color:' + GREEN + ';text-decoration:none;">hello@smelloff.in</a>.')}
+    ${mutedPara('Need help? Just reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
   `;
   return {
     subject: `Order confirmed — #${orderId}`,
@@ -181,6 +200,7 @@ export function orderShipped({
 
     ${divider}
     ${mutedPara('Heads up: on delivery, one spritz on your shirt collar before stepping out. That&rsquo;s the move.')}
+    ${mutedPara('Questions? <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>')}
   `;
   return {
     subject: `Your ODORSTRIKE is on the way — #${orderId}`,
@@ -201,26 +221,28 @@ export function welcomeEmail({ customerName = 'there' } = {}) {
 
     ${mutedPara('ODORSTRIKE is a 50ml fabric-only odor killer. Not perfume. Not deodorant. One pocket-sized spray that neutralizes smell on clothes &mdash; sweat, smoke, food, gym, day-two shirts.')}
 
+    ${productImage}
+
     <div style="background-color:#0F0F0F;border:1px solid ${BORDER};padding:24px;margin:24px 0;text-align:center;">
-      <p style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:2px;text-transform:uppercase;margin:0 0 8px 0;">Launch Price</p>
-      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:48px;color:${GREEN};margin:0 0 4px 0;letter-spacing:-1px;">&#8377;159</p>
-      <p style="font-family:${BODY_FONT};font-size:12px;color:${GREY};margin:0;">Goes up to &#8377;179. First movers save.</p>
+      <p style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:2px;text-transform:uppercase;margin:0 0 8px 0;">ODORSTRIKE 50ml</p>
+      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:48px;color:${GREEN};margin:0 0 4px 0;letter-spacing:-1px;">&#8377;179</p>
+      <p style="font-family:${BODY_FONT};font-size:12px;color:${GREY};margin:0;">Free shipping above &#8377;299 &middot; COD available</p>
     </div>
 
-    ${button('https://smelloff.in', 'Claim Yours')}
+    ${button(SITE_URL, 'Shop Now')}
 
     ${divider}
-    ${mutedPara('Built in Hyderabad. Shipped pan-India. Questions? Just reply to this email.')}
+    ${mutedPara('Built in Hyderabad. Shipped pan-India. Questions? Just reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
   `;
   return {
     subject: 'Welcome to Smelloff',
-    html: shell(inner, 'Pocket-sized odor killer. Launch price locked.'),
+    html: shell(inner, 'Pocket-sized odor killer for your clothes.'),
   };
 }
 
 export function abandonedCart({
   customerName = 'there',
-  productUrl = 'https://smelloff.in',
+  productUrl = SITE_URL,
 } = {}) {
   const inner = `
     ${accentBar}
@@ -229,16 +251,18 @@ export function abandonedCart({
 
     ${mutedPara('50ml. Fabric-only. Kills odor on contact. No perfume cover-up. One spray and you&rsquo;re out the door.')}
 
+    ${productImage}
+
     <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
       <p style="font-family:${HEADING_FONT};font-weight:900;font-size:20px;color:${WHITE};text-transform:uppercase;letter-spacing:1px;margin:0 0 4px 0;">ODORSTRIKE 50ml</p>
       <p style="font-family:${BODY_FONT};font-size:13px;color:${GREY};margin:0 0 12px 0;">Pocket-sized odor killer for your clothes</p>
-      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:28px;color:${GREEN};margin:0;letter-spacing:-0.5px;">&#8377;159</p>
+      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:28px;color:${GREEN};margin:0;letter-spacing:-0.5px;">&#8377;179</p>
     </div>
 
     ${button(productUrl, 'Finish Order')}
 
     ${divider}
-    ${mutedPara('Launch pricing won&rsquo;t last. Once stock flips to &#8377;179, it stays there.')}
+    ${mutedPara('Need a hand? Reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
   `;
   return {
     subject: 'You left something behind.',

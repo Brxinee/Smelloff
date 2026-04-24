@@ -7,7 +7,7 @@ import {
 } from './email-templates.js';
 
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
-const REPLY_TO = 'hello@smelloff.in';
+const REPLY_TO = 'smelloffsupport@gmail.com';
 
 const TEMPLATES = {
   orderConfirmation,
