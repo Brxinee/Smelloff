@@ -337,85 +337,189 @@
 
   /* Hero */
   .hero{
-    min-height:100vh;
-    padding:120px 32px 60px;
+    position:relative;
+    min-height:85vh;
+    padding:128px 20px 40px;
+    display:flex;align-items:center;
+    overflow:hidden;
+    background:#080808;
+  }
+  .hero::before{
+    content:'';
+    position:absolute;top:50%;left:50%;
+    width:min(560px,92vw);aspect-ratio:1;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(184,255,87,.18) 0%,rgba(184,255,87,.06) 38%,transparent 72%);
+    pointer-events:none;z-index:0;
+    filter:blur(4px);
+  }
+  .hero-inner{
+    position:relative;z-index:1;
+    width:100%;max-width:1180px;margin:0 auto;
     display:grid;
     grid-template-columns:1fr;
-    align-content:space-between;
-    position:relative;
+    grid-template-areas:"text" "bottle" "action";
+    gap:24px;
   }
-  .hero-meta{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    letter-spacing:.2em;
+  .hero-text{grid-area:text;display:flex;flex-direction:column;gap:14px}
+  .hero-bottle{grid-area:bottle;display:flex;justify-content:center;align-items:center}
+  .hero-action{grid-area:action;display:flex;flex-direction:column;gap:14px}
+
+  .hero-headline{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    font-size:clamp(30px,8.5vw,68px);
+    line-height:.98;
+    letter-spacing:.005em;
     text-transform:uppercase;
-    display:flex;justify-content:space-between;
-    color:var(--muted);
+    color:#fff;
+    margin:0;
   }
-  .hero h1{
-    font-family:'Fraunces',serif;
-    font-weight:900;
-    font-size:clamp(64px, 16vw, 240px);
-    line-height:.85;
-    letter-spacing:-.04em;
-    margin:40px 0;
-  }
-  .hero h1 em{
-    font-style:italic;
-    font-weight:400;
-    color:var(--muted);
-  }
-  .hero h1 .strike{
-    background:var(--acid);
-    color:var(--ink);
-    padding:0 .1em;
-    display:inline-block;
-    transform:rotate(-1.5deg);
-  }
-  .hero-foot{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:40px;
-    align-items:end;
-    border-top:1px solid var(--rule);
-    padding-top:24px;
-  }
-  .hero-foot p{
-    font-family:'Fraunces',serif;
-    font-size:clamp(18px,1.6vw,24px);
-    line-height:1.3;
-    max-width:480px;
-  }
-  .hero-foot .price-block{
-    text-align:right;
-  }
-  .hero-foot .price-block .strike-price{
-    text-decoration:line-through;
-    color:var(--muted);
-    font-family:'JetBrains Mono',monospace;
-    font-size:14px;
-  }
-  .hero-foot .price-block .price{
-    font-family:'Fraunces',serif;
-    font-weight:900;
-    font-size:clamp(40px,5vw,72px);
-    line-height:1;
-    letter-spacing:-.03em;
-  }
-  .hero-seo-line{
+  .hero-headline .hh-line{display:block}
+  .hero-headline .hh-acid{color:#B8FF57}
+
+  .hero-sub{
     font-family:'DM Sans',sans-serif;
-    font-weight:500;
-    font-size:clamp(15px,1.6vw,18px);
-    color:var(--muted);
-    line-height:1.4;
-    margin-top:-20px;
-    margin-bottom:20px;
-    max-width:640px;
-    letter-spacing:.01em;
+    font-weight:400;
+    font-size:16px;
+    line-height:1.45;
+    color:#B0B0B0;
+    max-width:520px;
+    margin:0;
   }
-  @media(max-width:720px){
-    .hero-foot{grid-template-columns:1fr;gap:24px}
-    .hero-foot .price-block{text-align:left}
+
+  .hero-price{
+    display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  }
+  .hero-price .hp-now{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:44px;line-height:1;
+    color:#B8FF57;letter-spacing:.01em;
+  }
+  .hero-price .hp-was{
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;color:#fff;opacity:.6;
+    text-decoration:line-through;text-decoration-thickness:1.5px;
+  }
+  .hero-price .hp-off{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:12px;
+    color:#080808;background:#B8FF57;
+    padding:4px 8px;letter-spacing:.08em;
+    border-radius:2px;text-transform:uppercase;
+  }
+
+  .hero-cta{
+    display:flex;align-items:center;justify-content:center;
+    width:100%;height:56px;
+    background:#B8FF57;color:#080808;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:18px;
+    letter-spacing:.06em;text-transform:uppercase;
+    text-decoration:none;
+    border:none;border-radius:4px;
+    cursor:pointer;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .hero-cta:hover{background:#C7FF70}
+  .hero-cta:active{transform:scale(.985)}
+
+  .hero-trust{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    font-family:'DM Sans',sans-serif;
+    font-size:11px;font-weight:500;letter-spacing:.1em;
+    text-transform:uppercase;color:#888;
+    padding-top:4px;
+  }
+  .hero-trust .ht-item{display:inline-flex;align-items:center;gap:6px}
+  .hero-trust .ht-item svg{
+    width:14px;height:14px;
+    stroke:#B8FF57;fill:none;stroke-width:2;
+    stroke-linecap:round;stroke-linejoin:round;
+    flex-shrink:0;
+  }
+  .hero-trust .ht-sep{color:#333}
+
+  /* CSS bottle */
+  .hb-bottle{
+    position:relative;
+    height:clamp(220px,34vh,300px);
+    aspect-ratio:.48;
+    display:flex;flex-direction:column;align-items:center;
+    filter:drop-shadow(0 30px 50px rgba(0,0,0,.6));
+    animation:hero-float 5s ease-in-out infinite;
+  }
+  .hb-cap{
+    width:56%;height:13%;
+    background:linear-gradient(180deg,#252525 0%,#0a0a0a 100%);
+    border-radius:3px 3px 1px 1px;
+    border-top:1px solid #303030;
+  }
+  .hb-neck{
+    width:38%;height:3.5%;
+    background:linear-gradient(180deg,#141414 0%,#0a0a0a 100%);
+  }
+  .hb-body{
+    width:100%;flex:1;
+    background:linear-gradient(180deg,#121212 0%,#050505 55%,#121212 100%);
+    border-radius:10px 10px 6px 6px;
+    border:1px solid #1a1a1a;
+    box-shadow:inset 2px 0 8px rgba(255,255,255,.04),
+               inset -2px 0 8px rgba(0,0,0,.5),
+               inset 0 0 40px rgba(184,255,87,.07);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;
+  }
+  .hb-body::before{
+    content:'';position:absolute;
+    top:8%;left:8%;width:12%;height:68%;
+    background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);
+    border-radius:3px;pointer-events:none;
+  }
+  .hb-label{
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    transform:rotate(-90deg);white-space:nowrap;
+  }
+  .hb-brand{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:10px;letter-spacing:.32em;
+    color:rgba(255,255,255,.7);
+  }
+  .hb-product{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:clamp(14px,2.2vw,20px);letter-spacing:.15em;
+    color:#B8FF57;
+  }
+  .hb-vol{
+    font-family:'DM Sans',sans-serif;font-weight:500;
+    font-size:8px;letter-spacing:.25em;
+    color:rgba(255,255,255,.4);
+  }
+  @keyframes hero-float{
+    0%,100%{transform:translateY(-6px)}
+    50%{transform:translateY(6px)}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .hb-bottle{animation:none}
+  }
+
+  /* Desktop: copy left / bottle right */
+  @media(min-width:860px){
+    .hero{padding:140px 40px 64px;min-height:90vh}
+    .hero-inner{
+      grid-template-columns:1.1fr .9fr;
+      grid-template-areas:
+        "text   bottle"
+        "action bottle";
+      gap:28px 56px;
+      align-items:center;
+    }
+    .hero-text{gap:20px}
+    .hero-action{gap:18px}
+    .hb-bottle{height:clamp(280px,40vh,420px)}
+    .hero-cta{width:auto;min-width:320px;padding:0 40px;align-self:flex-start}
+    .hero-headline{font-size:clamp(40px,5.6vw,76px)}
+    .hero-price .hp-now{font-size:56px}
   }
 
   /* Marquee */
@@ -2155,10 +2259,6 @@
   .skip-link:focus{top:0}
   *:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
   .pay-opt:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
-  .hl{position:relative;color:#080808;display:inline-block;padding:0 .15em;isolation:isolate}
-  .hl::before{content:"";position:absolute;inset:.1em 0;background:#B8FF57;z-index:-1;transform-origin:left;animation:hl-swipe .7s cubic-bezier(.77,0,.18,1) .4s both}
-  @keyframes hl-swipe{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-  @media(prefers-reduced-motion:reduce){.hl::before{animation:none;transform:scaleX(1)}}
 </style>
 </head>
 <body>
@@ -2223,23 +2323,53 @@
 
 <!-- HERO -->
 <header class="hero">
-  <div class="hero-meta">
-    <span>SMELLOFF / 001 — ODORSTRIKE</span>
-    <span>EST. 2026 / HYDERABAD</span>
-  </div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1 class="hero-headline">
+        <span class="hh-line">People don't fear smelling bad.</span>
+        <span class="hh-line">They <span class="hh-acid">fear others noticing.</span></span>
+      </h1>
+      <p class="hero-sub">Pocket-sized odor killer for your clothes — anytime, anywhere.</p>
+      <h2 class="sr-only">India's first pocket fabric odor remover spray. Kills sweat smell on clothes in 8 seconds.</h2>
+    </div>
 
-  <h1>
-    They <em>don't</em><br>
-    notice the <span class="hl">smell</span>.<br>
-    They notice <em>you.</em>
-  </h1>
-  <h2 class="hero-seo-line">India's first pocket fabric odor remover spray. Kills sweat smell on clothes in 8 seconds.</h2>
+    <div class="hero-bottle" aria-hidden="true">
+      <div class="hb-bottle">
+        <div class="hb-cap"></div>
+        <div class="hb-neck"></div>
+        <div class="hb-body">
+          <div class="hb-label">
+            <div class="hb-brand">SMELLOFF</div>
+            <div class="hb-product">ODORSTRIKE</div>
+            <div class="hb-vol">50ML · FABRIC MIST</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <div class="hero-foot">
-    <p>A pocket-sized 50ml mist that erases odor from fabric on contact. Not a perfume. Not a deodorant. A fix.</p>
-    <div class="price-block">
-      <div class="strike-price">M.R.P. ₹199</div>
-      <div class="price">₹159</div>
+    <div class="hero-action">
+      <div class="hero-price">
+        <span class="hp-now">₹179</span>
+        <span class="hp-was">₹249</span>
+        <span class="hp-off">28% OFF</span>
+      </div>
+      <a href="#buy" class="hero-cta" onclick="trackInitCheckout()">Kill the smell — ₹179</a>
+      <div class="hero-trust">
+        <span class="ht-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"/><path d="m9 12 2 2 4-4"/></svg>
+          Fabric safe
+        </span>
+        <span class="ht-sep">|</span>
+        <span class="ht-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="9" width="10" height="12" rx="1"/><path d="M9 9V5h6v4"/><path d="M11 3h2"/></svg>
+          50ml pocket size
+        </span>
+        <span class="ht-sep">|</span>
+        <span class="ht-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M3 12h18"/></svg>
+          Made in India
+        </span>
+      </div>
     </div>
   </div>
 </header>
