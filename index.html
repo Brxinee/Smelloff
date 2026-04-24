@@ -194,16 +194,36 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">
 
-<!-- GA4 + Meta Pixel + Razorpay: deferred after first paint -->
+<!-- Preload LCP image (hero bottle) -->
+<link rel="preload" as="image" href="/assets/odorstrike-bottle.png" fetchpriority="high">
+
+<!-- Analytics (GA4 + Meta Pixel) — load only AFTER window 'load' fires.
+     Razorpay is NOT loaded here; it's injected on first openCheckout() call. -->
 <script>
-  function loadDeferred(){
+  function loadAnalytics(){
+    if(window.__smelloffAnalyticsLoaded)return;
+    window.__smelloffAnalyticsLoaded=true;
     var g=document.createElement('script');g.src='https://www.googletagmanager.com/gtag/js?id=G-1VFDLJLLC7';g.async=true;document.head.appendChild(g);
     g.onload=function(){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-1VFDLJLLC7');};
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
     fbq('init','1455100092891684');fbq('track','PageView');
-    var r=document.createElement('script');r.src='https://checkout.razorpay.com/v1/checkout.js';r.async=true;document.head.appendChild(r);
   }
-  if('requestIdleCallback' in window){requestIdleCallback(loadDeferred,{timeout:3000});}else{setTimeout(loadDeferred,2000);}
+  if(document.readyState==='complete'){loadAnalytics();}
+  else{window.addEventListener('load',loadAnalytics,{once:true});}
+
+  // Razorpay — load on demand (first BUY NOW click). Cached so we only load once.
+  window.loadRazorpay=function(){
+    if(window.__smelloffRazorpayPromise)return window.__smelloffRazorpayPromise;
+    window.__smelloffRazorpayPromise=new Promise(function(resolve,reject){
+      var r=document.createElement('script');
+      r.src='https://checkout.razorpay.com/v1/checkout.js';
+      r.async=true;
+      r.onload=resolve;
+      r.onerror=reject;
+      document.head.appendChild(r);
+    });
+    return window.__smelloffRazorpayPromise;
+  };
 </script>
 
 <style>
@@ -350,6 +370,60 @@
     border-radius:3px;
     font-size:9px;letter-spacing:.08em;
     line-height:1;
+  }
+
+  /* Hero skeleton — visible until body.loaded fires */
+  .hero-skeleton{
+    position:absolute;inset:0;z-index:3;
+    background:#080808;
+    pointer-events:none;
+    transition:opacity .3s ease, visibility 0s linear .3s;
+  }
+  body.loaded .hero-skeleton{opacity:0;visibility:hidden}
+  .hs-inner{
+    position:relative;width:100%;height:100%;
+    max-width:1180px;margin:0 auto;
+    padding:calc(128px + env(safe-area-inset-top, 0px)) 20px 40px;
+    display:grid;grid-template-columns:1fr;
+    grid-template-areas:"text" "bottle" "action";
+    gap:24px;align-content:center;
+  }
+  .hs-text{grid-area:text;display:flex;flex-direction:column;gap:10px}
+  .hs-bottle{
+    grid-area:bottle;justify-self:center;
+    height:clamp(220px,34vh,300px);aspect-ratio:.48;
+    background:#1a1a1a;border-radius:6px;
+    position:relative;overflow:hidden;
+  }
+  .hs-action{grid-area:action;display:flex;flex-direction:column;gap:12px}
+  .hs-block{background:#1a1a1a;border-radius:4px;position:relative;overflow:hidden}
+  .hs-block::after,.hs-bottle::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent 0%,rgba(184,255,87,.08) 50%,transparent 100%);
+    animation:hs-shimmer 1.5s linear infinite;
+  }
+  @keyframes hs-shimmer{
+    0%{transform:translateX(-100%)}
+    100%{transform:translateX(100%)}
+  }
+  .hs-h1{height:clamp(30px,8.5vw,68px);width:100%}
+  .hs-h2{height:clamp(30px,8.5vw,68px);width:82%}
+  .hs-sub{height:18px;width:72%;margin-top:6px}
+  .hs-price{height:44px;width:180px}
+  .hs-cta{height:56px;width:100%;max-width:360px;border-radius:4px}
+  @media(min-width:860px){
+    .hs-inner{
+      grid-template-columns:1.1fr .9fr;
+      grid-template-areas:"text bottle" "action bottle";
+      gap:28px 56px;
+      padding:calc(140px + env(safe-area-inset-top, 0px)) 40px 64px;
+    }
+    .hs-bottle{height:clamp(280px,40vh,420px)}
+    .hs-cta{width:320px;max-width:320px}
+    .hs-h1,.hs-h2{height:clamp(40px,5.6vw,76px)}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .hs-block::after,.hs-bottle::after{animation:none}
   }
 
   /* Hero */
@@ -1584,7 +1658,7 @@
     max-width:1120px;margin:0 auto;
     display:flex;justify-content:space-between;gap:10px;
     font-family:'DM Sans',sans-serif;font-size:11px;
-    color:#666;line-height:1.4;
+    color:#888;line-height:1.4;
     flex-wrap:wrap;
   }
 
@@ -2723,7 +2797,7 @@
   .menu-utility a svg{width:16px;height:16px;fill:currentColor}
   .menu-utility-label{
     font-family:'DM Sans',sans-serif;font-size:11px;
-    color:#666;letter-spacing:.08em;
+    color:#888;letter-spacing:.08em;
     margin-left:auto;
   }
 
@@ -2846,6 +2920,20 @@
 
 <!-- HERO -->
 <header class="hero">
+  <div class="hero-skeleton" aria-hidden="true">
+    <div class="hs-inner">
+      <div class="hs-text">
+        <div class="hs-block hs-h1"></div>
+        <div class="hs-block hs-h2"></div>
+        <div class="hs-block hs-sub"></div>
+      </div>
+      <div class="hs-bottle"></div>
+      <div class="hs-action">
+        <div class="hs-block hs-price"></div>
+        <div class="hs-block hs-cta"></div>
+      </div>
+    </div>
+  </div>
   <div class="hero-inner">
     <div class="hero-text">
       <h1 class="hero-headline">
@@ -3716,6 +3804,8 @@
     document.getElementById('checkoutOverlay').classList.add('active');
     document.body.style.overflow = 'hidden';
     trackInitCheckout();
+    // Preload Razorpay SDK so it's ready by the time user hits Pay.
+    if (typeof window.loadRazorpay === 'function') window.loadRazorpay().catch(function(){});
   }
 
   function closeCheckout() {
@@ -4750,6 +4840,9 @@
   <div class="cd-foot" id="cartDrawerFooter" style="display:none"></div>
 </aside>
 <div class="cart-toast" id="cartToast" role="status" aria-live="polite">Added to cart</div>
+
+<!-- Flip body to .loaded on next paint so the hero skeleton fades out -->
+<script>requestAnimationFrame(function(){document.body.classList.add('loaded');});</script>
 
 </body>
 </html>

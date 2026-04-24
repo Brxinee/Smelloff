@@ -52,15 +52,27 @@
       ]
     },
     {
+      "source": "/(.*\\.html)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
       "source": "/(favicon.ico|favicon-32.png|apple-touch-icon.png)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000, immutable" }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
       "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000, immutable" }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*\\.(?:css|js|mjs|png|jpg|jpeg|webp|svg|woff|woff2|ttf|otf|ico|gif|avif))",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
   ]
