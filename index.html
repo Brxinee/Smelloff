@@ -1640,39 +1640,65 @@
   /* ============================= */
   /* P1: STICKY MOBILE BUY BAR    */
   /* ============================= */
+  /* Mobile sticky buy bar — fade-in after hero */
   .mobile-bar{
     position:fixed;bottom:0;left:0;right:0;
     z-index:60;
-    background:var(--ink);
-    padding:12px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    transform:translateY(100%);
-    transition:transform .3s ease;
-    border-top:1px solid rgba(244,241,234,.1);
+    height:64px;
+    padding:0 14px;
+    background:#080808;
+    border-top:1px solid #1F1F1F;
+    display:flex;align-items:center;gap:12px;
+    opacity:0;pointer-events:none;
+    transition:opacity .28s ease;
   }
-  .mobile-bar.visible{transform:translateY(0)}
-  .mobile-bar .mb-label{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    letter-spacing:.1em;
-    color:var(--paper);
-    opacity:.8;
+  .mobile-bar.visible{opacity:1;pointer-events:auto}
+  .mobile-bar .mb-left{
+    display:flex;align-items:center;gap:10px;
+    flex:1;min-width:0;
+  }
+  .mobile-bar .mb-thumb{
+    width:28px;height:40px;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+    flex-shrink:0;
+  }
+  .mobile-bar .mb-thumb-cap{
+    width:55%;height:18%;
+    background:linear-gradient(180deg,#2a2a2a,#0a0a0a);
+    border-radius:2px 2px 0 0;
+  }
+  .mobile-bar .mb-thumb-body{
+    width:100%;flex:1;
+    background:linear-gradient(180deg,#141414,#050505);
+    border:1px solid #1a1a1a;
+    border-radius:3px 3px 2px 2px;
+    box-shadow:inset 0 0 6px rgba(184,255,87,.1);
+  }
+  .mobile-bar .mb-price{
+    display:flex;align-items:baseline;gap:6px;
+    min-width:0;
+  }
+  .mobile-bar .mb-now{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:22px;line-height:1;
+    color:#fff;letter-spacing:.01em;
+  }
+  .mobile-bar .mb-was{
+    font-family:'DM Sans',sans-serif;font-size:11px;
+    color:#888;text-decoration:line-through;
   }
   .mobile-bar .mb-btn{
-    background:var(--acid);
-    color:var(--ink);
-    border:none;
-    padding:12px 24px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    font-weight:500;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    cursor:pointer;
-    border-radius:2px;
+    width:50%;max-width:220px;height:44px;
+    background:#B8FF57;color:#080808;
+    border:none;border-radius:4px;cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:14px;
+    letter-spacing:.08em;text-transform:uppercase;
+    flex-shrink:0;
+    transition:background .15s ease;
   }
+  .mobile-bar .mb-btn:hover{background:#C7FF70}
+  .mobile-bar .mb-btn:active{transform:scale(.985)}
   @media(min-width:721px){.mobile-bar{display:none !important}}
 
   /* ============================= */
@@ -2508,9 +2534,18 @@
 </div>
 
 <!-- STICKY MOBILE BAR (P1 #6) -->
-<div class="mobile-bar" id="mobileBar">
-  <span class="mb-label">ODORSTRIKE 50ml · ₹159</span>
-  <button class="mb-btn" onclick="openCheckout('solo')">Buy now</button>
+<div class="mobile-bar" id="mobileBar" aria-hidden="true">
+  <div class="mb-left">
+    <div class="mb-thumb" aria-hidden="true">
+      <div class="mb-thumb-cap"></div>
+      <div class="mb-thumb-body"></div>
+    </div>
+    <div class="mb-price">
+      <span class="mb-now">₹179</span>
+      <span class="mb-was">₹249</span>
+    </div>
+  </div>
+  <button class="mb-btn" type="button" onclick="openCheckout('solo')">Add to cart</button>
 </div>
 
 <!-- HERO -->
@@ -4236,7 +4271,7 @@
     if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   };
 
-  // Mobile sticky bar — show after scrolling past hero
+  // Mobile sticky bar — fade in after scrolling past hero
   (function(){
     const bar = document.getElementById('mobileBar');
     const hero = document.querySelector('.hero');
@@ -4246,7 +4281,9 @@
       if (!ticking) {
         window.requestAnimationFrame(function(){
           const heroBottom = hero.getBoundingClientRect().bottom;
-          bar.classList.toggle('visible', heroBottom < 0);
+          const show = heroBottom < 0;
+          bar.classList.toggle('visible', show);
+          bar.setAttribute('aria-hidden', show ? 'false' : 'true');
           ticking = false;
         });
         ticking = true;
