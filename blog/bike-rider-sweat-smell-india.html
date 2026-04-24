@@ -101,7 +101,13 @@
   .blog-footer .footer-links{display:flex;gap:24px;flex-wrap:wrap}
   strong{color:var(--off-white);font-weight:700}
   @media(max-width:640px){.blog-nav{padding:0 20px}.article-wrap{padding:40px 20px 80px}.end-cta{padding:32px 24px}.zone-grid{grid-template-columns:1fr}.blog-footer{padding:32px 20px;flex-direction:column;align-items:flex-start}}
-</style>
+.blog-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 24px}
+  .blog-footer .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(184,255,87,.15);font-family:DM Sans,sans-serif;font-size:11px;color:#666;text-align:center;letter-spacing:.02em;margin-top:4px}
+  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:DM Sans,sans-serif;font-size:13px}
+  .footer-links a{color:#888;text-decoration:none;transition:color .15s ease}
+  .footer-links a:hover{color:#fff}
+  @media(max-width:720px){.blog-footer{flex-direction:column;align-items:flex-start}.blog-footer .footer-bottom{text-align:left}}
+  </style>
 </head>
 <body>
 
@@ -109,7 +115,7 @@
 
 <nav class="blog-nav">
   <a href="/" class="logo">Smelloff</a>
-  <a href="/#buy" class="buy-pill">BUY ₹159</a>
+  <a href="/#buy" class="buy-pill">BUY ₹179</a>
 </nav>
 
 <article class="article-wrap">
@@ -216,15 +222,15 @@
 
   <p>Fix the shirt. The commute becomes neutral. Your day starts at 9 AM like everyone else's — not 8:45 AM with an odor debt you're already trying to hide.</p>
 
-  <p>30 seconds. ₹159 for two months of daily use. The best ROI on commute comfort you'll ever find.</p>
+  <p>30 seconds. ₹179 for two months of daily use. The best ROI on commute comfort you'll ever find.</p>
 
   <div class="end-cta">
     <div class="cta-label">Built for Bike Commuters</div>
     <h4>ODORSTRIKE — Pocket Fabric Spray</h4>
     <p style="color:var(--grey);font-size:16px;margin-bottom:20px;">Fits in your bike helmet storage or backpack front pocket. 50ml, 250 sprays. Zero residue on office shirts.</p>
     <div class="price-row">
-      <span class="strike-price">₹199</span>
-      <span class="current-price">₹159</span>
+      <span class="strike-price">₹249</span>
+      <span class="current-price">₹179</span>
     </div>
     <a href="/#buy" class="buy-btn">BUY NOW →</a>
   </div>
@@ -236,13 +242,18 @@
 </article>
 
 <footer class="blog-footer">
-  <a href="/" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;letter-spacing:2px;color:var(--off-white);">SMELLOFF</a>
+  <a href="/" style="font-family:Barlow Condensed,sans-serif;font-weight:900;font-size:24px;letter-spacing:.06em;text-transform:uppercase;color:var(--off-white);position:relative;padding-right:.2em;text-decoration:none"><span style="position:relative">SMELLOFF<span style="position:absolute;top:-.06em;right:-.24em;width:.16em;height:.16em;background:var(--acid);border-radius:50%"></span></span></a>
   <div class="footer-links">
     <a href="/">Home</a>
     <a href="/blog">Blogs</a>
     <a href="/#buy">Buy ODORSTRIKE</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/shipping">Shipping</a>
+    <a href="/returns">Returns</a>
     <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener">Instagram</a>
   </div>
+  <div class="footer-bottom">&copy; 2026 SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad</div>
 </footer>
 
 <script>

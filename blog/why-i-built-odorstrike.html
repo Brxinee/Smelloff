@@ -135,7 +135,13 @@
   .blog-footer .footer-links{display:flex;gap:24px;flex-wrap:wrap}
   strong{color:var(--off-white);font-weight:700}
   @media(max-width:640px){.blog-nav{padding:0 20px}.article-wrap{padding:40px 20px 80px}.end-cta{padding:32px 24px}.blog-footer{padding:32px 20px;flex-direction:column;align-items:flex-start}}
-</style>
+.blog-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 24px}
+  .blog-footer .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(184,255,87,.15);font-family:DM Sans,sans-serif;font-size:11px;color:#666;text-align:center;letter-spacing:.02em;margin-top:4px}
+  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:DM Sans,sans-serif;font-size:13px}
+  .footer-links a{color:#888;text-decoration:none;transition:color .15s ease}
+  .footer-links a:hover{color:#fff}
+  @media(max-width:720px){.blog-footer{flex-direction:column;align-items:flex-start}.blog-footer .footer-bottom{text-align:left}}
+  </style>
 </head>
 <body>
 
@@ -143,7 +149,7 @@
 
 <nav class="blog-nav">
   <a href="/" class="logo">Smelloff</a>
-  <a href="/#buy" class="buy-pill">BUY ₹159</a>
+  <a href="/#buy" class="buy-pill">BUY ₹179</a>
 </nav>
 
 <article class="article-wrap">
@@ -217,11 +223,11 @@
 
   <h2>The Price</h2>
 
-  <p>₹159 for 50ml.</p>
+  <p>₹179 for 50ml.</p>
 
   <p>I spent a long time on this. The temptation with any D2C product is to position it as premium — high price, aspirational packaging, luxury market. But the problem ODORSTRIKE solves isn't a luxury problem. It's something every guy in a polyester shirt in a humid Indian city deals with every day. Including people who can't spend ₹500 on a spray.</p>
 
-  <p>₹159 is accessible. It's less than a movie ticket. It's one cold coffee. At 250+ sprays per bottle, it lasts months with daily use. The math works, the margin works, and most importantly — the price doesn't make someone think twice about using it when they actually need it.</p>
+  <p>₹179 is accessible. It's less than a movie ticket. It's one cold coffee. At 250+ sprays per bottle, it lasts months with daily use. The math works, the margin works, and most importantly — the price doesn't make someone think twice about using it when they actually need it.</p>
 
   <div class="pull-quote">
     "A product that sits on a shelf because it's too expensive to use freely isn't solving the problem. It's just a symbol of it."
@@ -237,7 +243,7 @@
 
   <p>I've shared this story because I think it matters to understand where products come from. ODORSTRIKE wasn't built as a business idea first. It was built as a solution to a problem I lived with for years, that I couldn't find a real answer to, and that I eventually realized I'd have to build myself.</p>
 
-  <p>If any of this resonates — if you've had that moment in an office bathroom, in a post-gym Uber, standing at a gate — this is what I made for you. Try it. <a href="/#buy" class="inline-cta">₹159, free shipping above ₹299.</a></p>
+  <p>If any of this resonates — if you've had that moment in an office bathroom, in a post-gym Uber, standing at a gate — this is what I made for you. Try it. <a href="/#buy" class="inline-cta">₹179, free shipping above ₹299.</a></p>
 
   <p>That's all I've got.</p>
 
@@ -248,8 +254,8 @@
     <h4>ODORSTRIKE — The Product I Had to Build</h4>
     <p style="color:var(--grey);font-size:16px;margin-bottom:20px;">50ml fabric odor mist. Zinc ricinoleate formula. Built and tested in Hyderabad. For the problem nobody else was solving.</p>
     <div class="price-row">
-      <span class="strike-price">₹199</span>
-      <span class="current-price">₹159</span>
+      <span class="strike-price">₹249</span>
+      <span class="current-price">₹179</span>
     </div>
     <a href="/#buy" class="buy-btn">BUY NOW →</a>
   </div>
@@ -261,13 +267,18 @@
 </article>
 
 <footer class="blog-footer">
-  <a href="/" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;letter-spacing:2px;color:var(--off-white);">SMELLOFF</a>
+  <a href="/" style="font-family:Barlow Condensed,sans-serif;font-weight:900;font-size:24px;letter-spacing:.06em;text-transform:uppercase;color:var(--off-white);position:relative;padding-right:.2em;text-decoration:none"><span style="position:relative">SMELLOFF<span style="position:absolute;top:-.06em;right:-.24em;width:.16em;height:.16em;background:var(--acid);border-radius:50%"></span></span></a>
   <div class="footer-links">
     <a href="/">Home</a>
     <a href="/blog">Blogs</a>
     <a href="/#buy">Buy ODORSTRIKE</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/shipping">Shipping</a>
+    <a href="/returns">Returns</a>
     <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener">Instagram</a>
   </div>
+  <div class="footer-bottom">&copy; 2026 SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad</div>
 </footer>
 
 <script>

@@ -417,7 +417,13 @@
     .end-cta { padding: 32px 24px; }
     .blog-footer { padding: 32px 20px; flex-direction: column; align-items: flex-start; }
   }
-</style>
+.blog-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 24px}
+  .blog-footer .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(184,255,87,.15);font-family:DM Sans,sans-serif;font-size:11px;color:#666;text-align:center;letter-spacing:.02em;margin-top:4px}
+  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:DM Sans,sans-serif;font-size:13px}
+  .footer-links a{color:#888;text-decoration:none;transition:color .15s ease}
+  .footer-links a:hover{color:#fff}
+  @media(max-width:720px){.blog-footer{flex-direction:column;align-items:flex-start}.blog-footer .footer-bottom{text-align:left}}
+  </style>
 </head>
 <body>
 
@@ -425,7 +431,7 @@
 
 <nav class="blog-nav">
   <a href="/" class="logo">Smelloff</a>
-  <a href="/#buy" class="buy-pill">BUY ₹159</a>
+  <a href="/#buy" class="buy-pill">BUY ₹179</a>
 </nav>
 
 <article class="article-wrap">
@@ -535,8 +541,8 @@
     <h4>ODORSTRIKE — Fabric Odor Mist</h4>
     <p style="color:var(--grey);font-size:16px;margin-bottom:20px;">50ml pocket-sized spray. Zinc ricinoleate formula. Works on polyester, cotton, linen — any fabric. No residue. Dries in under 10 seconds.</p>
     <div class="price-row">
-      <span class="strike-price">₹199</span>
-      <span class="current-price">₹159</span>
+      <span class="strike-price">₹249</span>
+      <span class="current-price">₹179</span>
     </div>
     <a href="/#buy" class="buy-btn">BUY NOW →</a>
   </div>
@@ -548,13 +554,18 @@
 </article>
 
 <footer class="blog-footer">
-  <a href="/" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;letter-spacing:2px;color:var(--off-white);">SMELLOFF</a>
+  <a href="/" style="font-family:Barlow Condensed,sans-serif;font-weight:900;font-size:24px;letter-spacing:.06em;text-transform:uppercase;color:var(--off-white);position:relative;padding-right:.2em;text-decoration:none"><span style="position:relative">SMELLOFF<span style="position:absolute;top:-.06em;right:-.24em;width:.16em;height:.16em;background:var(--acid);border-radius:50%"></span></span></a>
   <div class="footer-links">
     <a href="/">Home</a>
     <a href="/blog">Blogs</a>
     <a href="/#buy">Buy ODORSTRIKE</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/shipping">Shipping</a>
+    <a href="/returns">Returns</a>
     <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener">Instagram</a>
   </div>
+  <div class="footer-bottom">&copy; 2026 SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad</div>
 </footer>
 
 <script>
