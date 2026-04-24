@@ -178,6 +178,8 @@
     META_PIXEL_ID: "1455100092891684",
     SHEETS_ENDPOINT: "https://script.google.com/macros/s/AKfycbxwCrRUS3jhQUEfD-MbI2uV9jUw0S986cfI0OTrjEcUacbS0ynhUQlTzmJfjZvq1IWCBQ/exec",
     WHATSAPP: "919392974031",
+    UPI_ID: "9392974031-3@ybl",
+    UPI_NAME: "Smelloff",
     PRICES: { solo: 179, duo: 299 }
   };
 </script>
@@ -197,8 +199,7 @@
 <!-- Preload LCP image (hero bottle) -->
 <link rel="preload" as="image" href="/assets/odorstrike-bottle.png" fetchpriority="high">
 
-<!-- Analytics (GA4 + Meta Pixel) — load only AFTER window 'load' fires.
-     Razorpay is NOT loaded here; it's injected on first openCheckout() call. -->
+<!-- Analytics (GA4 + Meta Pixel) — load only AFTER window 'load' fires. -->
 <script>
   function loadAnalytics(){
     if(window.__smelloffAnalyticsLoaded)return;
@@ -210,20 +211,6 @@
   }
   if(document.readyState==='complete'){loadAnalytics();}
   else{window.addEventListener('load',loadAnalytics,{once:true});}
-
-  // Razorpay — load on demand (first BUY NOW click). Cached so we only load once.
-  window.loadRazorpay=function(){
-    if(window.__smelloffRazorpayPromise)return window.__smelloffRazorpayPromise;
-    window.__smelloffRazorpayPromise=new Promise(function(resolve,reject){
-      var r=document.createElement('script');
-      r.src='https://checkout.razorpay.com/v1/checkout.js';
-      r.async=true;
-      r.onload=resolve;
-      r.onerror=reject;
-      document.head.appendChild(r);
-    });
-    return window.__smelloffRazorpayPromise;
-  };
 </script>
 
 <style>
@@ -3718,7 +3705,7 @@
 
       <label>Payment</label>
       <div class="pay-toggle">
-        <div class="pay-opt active" data-method="prepaid" onclick="selectPay('prepaid')" tabindex="0" role="button" onkeydown="if(event.key==='Enter')selectPay('prepaid')">Pay online</div>
+        <div class="pay-opt active" data-method="prepaid" onclick="selectPay('prepaid')" tabindex="0" role="button" onkeydown="if(event.key==='Enter')selectPay('prepaid')">Pay via UPI</div>
         <div class="pay-opt" data-method="cod" onclick="selectPay('cod')" tabindex="0" role="button" onkeydown="if(event.key==='Enter')selectPay('cod')">Cash on delivery</div>
       </div>
 
@@ -3816,8 +3803,6 @@
     document.getElementById('checkoutOverlay').classList.add('active');
     document.body.style.overflow = 'hidden';
     trackInitCheckout();
-    // Preload Razorpay SDK so it's ready by the time user hits Pay.
-    if (typeof window.loadRazorpay === 'function') window.loadRazorpay().catch(function(){});
   }
 
   function closeCheckout() {
@@ -3985,69 +3970,59 @@
     }
 
     // ==============================
-    // RAZORPAY_KEY — paste live key below between the quotes
+    // UPI (PhonePe / GPay / Paytm — any UPI app) with auto-filled amount
     // ==============================
-    const rzpKey = "";
-
-    if (!rzpKey) {
-      btn.disabled = false;
-      btnText.textContent = 'Place order · ₹' + total;
-      showError('Online payment not configured yet. Please choose Cash on Delivery or WhatsApp us at +91 93929 74031.');
-      return;
-    }
-
     const amt = VARIANTS[currentVariant].amount;
     const shipping = calcShipping(amt);
     const total = amt + shipping;
-    const options = {
-      key: rzpKey,
-      amount: total * 100,
-      currency: 'INR',
-      name: 'Smelloff',
-      description: VARIANTS[currentVariant].title,
-      image: '/assets/favicon.ico',
-      prefill: {
-        name: document.getElementById('f_name').value.trim(),
-        email: document.getElementById('f_email').value.trim(),
-        contact: document.getElementById('f_phone').value.trim()
-      },
-      notes: { order_id: orderId, variant: currentVariant },
-      theme: { color: '#080808' },
-      handler: function(response) {
-        const order = collectOrder(orderId, response.razorpay_payment_id);
-        logOrderToSheets(order);
-        if (order.email) {
-          SmelloffEmail.send('orderConfirmation', order.email, {
-            orderId: order.orderId,
-            customerName: order.name || 'there',
-            amount: String(order.total),
-            address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '),
-            paymentMethod: 'Razorpay (Prepaid)'
-          }).catch(console.error);
-        }
-        showSuccess(orderId, 'prepaid');
-      },
-      modal: {
-        ondismiss: function() {
-          btn.disabled = false;
-          btnText.textContent = 'Pay ₹' + total;
-        }
-      }
-    };
 
-    try {
-      const rzp = new Razorpay(options);
-      rzp.on('payment.failed', function(response) {
-        btn.disabled = false;
-        btnText.textContent = 'Pay ₹' + total;
-        showError('Payment failed. Try again or WhatsApp us at +91 93929 74031.');
-      });
-      rzp.open();
-    } catch (err) {
-      btn.disabled = false;
-      btnText.textContent = 'Pay ₹' + total;
-      showError('Could not open payment. Try COD or WhatsApp us.');
+    const order = collectOrder(orderId, 'UPI_PENDING');
+    logOrderToSheets(order);
+    if (order.email) {
+      SmelloffEmail.send('orderConfirmation', order.email, {
+        orderId: order.orderId,
+        customerName: order.name || 'there',
+        amount: String(order.total),
+        address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '),
+        paymentMethod: 'UPI (' + CFG.UPI_ID + ')'
+      }).catch(console.error);
     }
+
+    const upiLink = buildUpiLink(total, orderId);
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = upiLink;
+    }
+    showUpiSuccess(orderId, total, upiLink);
+  }
+
+  function buildUpiLink(amount, orderId) {
+    const params = new URLSearchParams({
+      pa: CFG.UPI_ID,
+      pn: CFG.UPI_NAME,
+      am: String(amount),
+      cu: 'INR',
+      tn: 'Smelloff ' + orderId
+    });
+    return 'upi://pay?' + params.toString();
+  }
+
+  function showUpiSuccess(orderId, total, upiLink) {
+    document.getElementById('checkoutForm').style.display = 'none';
+    const s = document.getElementById('successScreen');
+    s.style.display = 'block';
+    document.getElementById('orderIdDisplay').textContent = orderId;
+    document.getElementById('successMsg').innerHTML =
+      'Pay <strong>₹' + total + '</strong> to UPI ID <strong>' + CFG.UPI_ID + '</strong>. ' +
+      '<a href="' + upiLink + '" style="color:var(--acid);font-weight:500">Open UPI app →</a><br>' +
+      'After paying, send a screenshot to WhatsApp and we\'ll ship within 48 hours.';
+    trackPurchase(VARIANTS[currentVariant].amount, orderId);
+    try {
+      const buyerEmail = (document.getElementById('f_email').value || '').trim().toLowerCase();
+      localStorage.setItem('smelloff_purchased', 'true');
+      if (buyerEmail) localStorage.setItem('smelloff_purchased_email', buyerEmail);
+      if (typeof window.clearCart === 'function') window.clearCart();
+    } catch (e) {}
   }
 
   // Close on overlay click (outside panel)
