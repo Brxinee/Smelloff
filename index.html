@@ -814,6 +814,59 @@
     .product-card{max-width:460px}
   }
 
+  /* What it does — benefit chips */
+  .benefits{
+    background:#080808;
+    padding:32px 20px 64px;
+    display:flex;flex-direction:column;align-items:center;gap:20px;
+  }
+  .benefits .bn-title{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    font-size:clamp(28px,5.5vw,42px);
+    letter-spacing:.03em;
+    color:#fff;
+    text-transform:uppercase;
+    margin:0;line-height:1;
+    display:inline-flex;align-items:center;gap:12px;
+    width:100%;max-width:920px;
+  }
+  .benefits .bn-dot{
+    display:inline-block;
+    width:12px;height:12px;
+    background:#B8FF57;
+    flex-shrink:0;
+  }
+  .benefits .bn-grid{
+    width:100%;max-width:920px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .benefits .bn-chip{
+    display:flex;align-items:center;gap:12px;
+    background:#111;
+    border:1px solid #222;
+    border-radius:8px;
+    padding:16px;
+  }
+  .benefits .bn-icon{
+    width:24px;height:24px;flex-shrink:0;
+    stroke:#B8FF57;fill:none;stroke-width:2;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  .benefits .bn-label{
+    font-family:'DM Sans',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    color:#fff;
+    line-height:1.25;
+  }
+  @media(min-width:860px){
+    .benefits{padding:56px 40px 96px;gap:28px}
+    .benefits .bn-grid{grid-template-columns:repeat(4,1fr);gap:16px}
+  }
+
   /* Testimonials */
   .reviews{
     background:#0c0c0c;
@@ -2572,6 +2625,43 @@
       <button class="pc-cta" onclick="openCheckout('solo')">Add to cart</button>
     </div>
   </article>
+</section>
+
+<!-- WHAT IT DOES -->
+<section class="benefits">
+  <h2 class="bn-title"><span class="bn-dot" aria-hidden="true"></span>What it does</h2>
+  <div class="bn-grid">
+    <div class="bn-chip">
+      <svg class="bn-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="7" cy="8" r="2.5"/>
+        <circle cx="17" cy="8" r="2.5"/>
+        <circle cx="12" cy="16" r="2.5"/>
+        <path d="M8.5 9.8 11 14.2M15.5 9.8 13 14.2M9 8h6"/>
+      </svg>
+      <span class="bn-label">Kills Odor Molecules</span>
+    </div>
+    <div class="bn-chip">
+      <svg class="bn-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2 4 5v7c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V5l-8-3z"/>
+        <path d="m9 12 2 2 4-4"/>
+      </svg>
+      <span class="bn-label">Fabric-Safe Formula</span>
+    </div>
+    <div class="bn-chip">
+      <svg class="bn-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 7v5l3 2"/>
+      </svg>
+      <span class="bn-label">Works in 10 Seconds</span>
+    </div>
+    <div class="bn-chip">
+      <svg class="bn-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 5h16v8a7 7 0 0 1-14 0V5z"/>
+        <path d="M9 5v3a3 3 0 0 0 6 0V5"/>
+      </svg>
+      <span class="bn-label">Pocket 50ml Size</span>
+    </div>
+  </div>
 </section>
 
 <!-- REVIEWS (P1 #9 — reframed as early testers) -->
