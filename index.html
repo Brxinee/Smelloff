@@ -538,33 +538,38 @@
     .hero-price .hp-now{font-size:56px}
   }
 
-  /* Marquee */
+  /* Marquee — single compact strip */
   .marquee{
-    background:var(--acid);
-    color:var(--ink);
-    padding:18px 0;
+    height:36px;
+    background:#B8FF57;
+    color:#080808;
     overflow:hidden;
-    border-top:none;
-    border-bottom:none;
+    display:flex;align-items:center;
   }
   .marquee-track{
     display:flex;
-    gap:48px;
-    animation:scroll 40s linear infinite;
+    gap:40px;
+    animation:scroll 15s linear infinite;
     white-space:nowrap;
-    font-family:'JetBrains Mono',monospace;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
     font-size:13px;
-    letter-spacing:.2em;
+    letter-spacing:.1em;
     text-transform:uppercase;
+    line-height:1;
+    will-change:transform;
   }
-  .marquee-track span{display:flex;align-items:center;gap:48px}
+  .marquee-track span{display:flex;align-items:center;gap:40px}
   .marquee-track span::after{
-    content:'●';
-    color:var(--ink);
+    content:'•';
+    color:#080808;
   }
   @keyframes scroll{
     from{transform:translateX(0)}
     to{transform:translateX(-50%)}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .marquee-track{animation:none}
   }
 
   /* Section base */
@@ -2021,25 +2026,6 @@
     .faq{padding:96px 40px}
   }
   /* ============================= */
-  /* P2: TRUST ROW (#11)           */
-  /* ============================= */
-  .trust-row{
-    padding:14px 32px;
-    border-bottom:1px solid var(--rule);
-    font-family:'JetBrains Mono',monospace;
-    font-size:10px;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    color:var(--muted);
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:8px 32px;
-    text-align:center;
-  }
-  .trust-row span{white-space:nowrap}
-
-  /* ============================= */
   /* HOW TO USE — Ritual           */
   /* ============================= */
   .ritual-section{
@@ -2792,43 +2778,25 @@
   </div>
 </header>
 
-<!-- TRUST ROW (P2 #11) -->
-<div class="trust-row">
-  <span>Free shipping above ₹299</span>
-  <span>·</span>
-  <span>COD across India</span>
-  <span>·</span>
-  <span>Ships in 48hr</span>
-  <span>·</span>
-  <span>Made in Hyderabad</span>
-</div>
-
-<!-- KEYWORD SEEDING ROW — SEO -->
-<div class="trust-row built-for-row">
-  <span>Fabric odor remover</span>
-  <span>·</span>
-  <span>Sweat smell on shirts</span>
-  <span>·</span>
-  <span>Gym clothes odor spray</span>
-  <span>·</span>
-  <span>Polyester shirt freshener</span>
-  <span>·</span>
-  <span>Jacket &amp; denim between washes</span>
-</div>
-
-<!-- MARQUEE -->
-<div class="marquee">
+<!-- MARQUEE — single compact strip -->
+<div class="marquee" aria-hidden="true">
   <div class="marquee-track">
-    <span>NO RESIDUE</span>
-    <span>FAST ACTING</span>
-    <span>FABRIC SAFE</span>
-    <span>50ML POCKET</span>
-    <span>MADE IN INDIA</span>
-    <span>NO RESIDUE</span>
-    <span>FAST ACTING</span>
-    <span>FABRIC SAFE</span>
-    <span>50ML POCKET</span>
-    <span>MADE IN INDIA</span>
+    <span>Free shipping above ₹299</span>
+    <span>Ships in 48hr from Hyderabad</span>
+    <span>COD across India</span>
+    <span>Fabric-safe formula</span>
+    <span>50ml pocket size</span>
+    <span>Launch price ₹179</span>
+    <span>Kills odor in 10 seconds</span>
+    <span>Made in India</span>
+    <span>Free shipping above ₹299</span>
+    <span>Ships in 48hr from Hyderabad</span>
+    <span>COD across India</span>
+    <span>Fabric-safe formula</span>
+    <span>50ml pocket size</span>
+    <span>Launch price ₹179</span>
+    <span>Kills odor in 10 seconds</span>
+    <span>Made in India</span>
   </div>
 </div>
 
