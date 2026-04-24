@@ -6,8 +6,6 @@ import {
   abandonedCart,
 } from './email-templates.js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
 const REPLY_TO = 'hello@smelloff.in';
 
@@ -34,6 +32,8 @@ export default async function handler(req, res) {
     console.error('RESEND_API_KEY missing');
     return res.status(500).json({ error: 'Email service not configured' });
   }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
     const body = req.body || {};
