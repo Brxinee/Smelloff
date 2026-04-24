@@ -1653,30 +1653,9 @@
     transition:opacity .28s ease;
   }
   .mobile-bar.visible{opacity:1;pointer-events:auto}
-  .mobile-bar .mb-left{
-    display:flex;align-items:center;gap:10px;
-    flex:1;min-width:0;
-  }
-  .mobile-bar .mb-thumb{
-    width:28px;height:40px;
-    display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
-    flex-shrink:0;
-  }
-  .mobile-bar .mb-thumb-cap{
-    width:55%;height:18%;
-    background:linear-gradient(180deg,#2a2a2a,#0a0a0a);
-    border-radius:2px 2px 0 0;
-  }
-  .mobile-bar .mb-thumb-body{
-    width:100%;flex:1;
-    background:linear-gradient(180deg,#141414,#050505);
-    border:1px solid #1a1a1a;
-    border-radius:3px 3px 2px 2px;
-    box-shadow:inset 0 0 6px rgba(184,255,87,.1);
-  }
   .mobile-bar .mb-price{
-    display:flex;align-items:baseline;gap:6px;
-    min-width:0;
+    display:flex;align-items:baseline;gap:8px;
+    flex:1;min-width:0;
   }
   .mobile-bar .mb-now{
     font-family:'Barlow Condensed',sans-serif;
@@ -2535,15 +2514,9 @@
 
 <!-- STICKY MOBILE BAR (P1 #6) -->
 <div class="mobile-bar" id="mobileBar" aria-hidden="true">
-  <div class="mb-left">
-    <div class="mb-thumb" aria-hidden="true">
-      <div class="mb-thumb-cap"></div>
-      <div class="mb-thumb-body"></div>
-    </div>
-    <div class="mb-price">
-      <span class="mb-now">₹179</span>
-      <span class="mb-was">₹249</span>
-    </div>
+  <div class="mb-price">
+    <span class="mb-now">₹179</span>
+    <span class="mb-was">₹249</span>
   </div>
   <button class="mb-btn" type="button" onclick="openCheckout('solo')">Add to cart</button>
 </div>
