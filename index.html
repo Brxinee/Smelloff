@@ -259,52 +259,81 @@
   /* Nav */
   nav{
     position:fixed;top:0;left:0;right:0;
-    padding:20px 32px;
-    display:flex;justify-content:space-between;align-items:center;
+    height:56px;padding:0 16px;
+    display:grid;
+    grid-template-columns:40px 1fr 40px;
+    align-items:center;
+    background:#080808;
+    border-bottom:1px solid #1a1a1a;
     z-index:50;
-    mix-blend-mode:difference;
-    color:#f4f1ea;
+    color:#fff;
   }
   nav .logo{
+    grid-column:2;justify-self:center;
     font-family:'Barlow Condensed',sans-serif;
     font-weight:900;
-    font-size:24px;
-    letter-spacing:3px;
+    font-size:22px;
+    letter-spacing:.08em;
     text-transform:uppercase;
-    position:relative;
     line-height:1;
-    padding-right:12px;
+    color:#fff;
   }
-  nav .logo::after{
-    content:'';
-    position:absolute;
-    top:-2px;right:0;
-    width:7px;height:7px;
-    background:var(--acid);
-    border-radius:50%;
+  .nav-cart{
+    grid-column:3;justify-self:end;
+    position:relative;
+    width:40px;height:40px;
+    background:none;border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    padding:0;color:#fff;
   }
-  nav .meta{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.15em;
-    display:flex;gap:32px;
+  .nav-cart svg{
+    width:22px;height:22px;
+    stroke:#fff;fill:none;stroke-width:2;
+    stroke-linecap:round;stroke-linejoin:round;
+    transition:stroke .2s;
   }
-  nav .meta a{color:inherit;text-decoration:none;opacity:.7;transition:opacity .2s}
-  nav .meta a:hover{opacity:1}
-  @media(max-width:720px){
-    nav .meta a:not(.cta){display:none}
-    nav{gap:12px}
+  .nav-cart:active svg{stroke:#B8FF57}
+  .nav-cart-count{
+    position:absolute;top:2px;right:2px;
+    min-width:16px;height:16px;padding:0 4px;
+    background:#B8FF57;color:#080808;
+    font-family:'DM Sans',sans-serif;
+    font-size:10px;font-weight:700;line-height:16px;
+    border-radius:8px;text-align:center;
+    box-sizing:border-box;
+    pointer-events:none;
   }
 
-  .cta-pill{
-    background:var(--acid);
-    color:var(--ink) !important;
-    padding:8px 16px;
-    border-radius:100px;
-    opacity:1 !important;
-    mix-blend-mode:normal;
+  /* Category pills row */
+  .cat-pills{
+    position:fixed;top:56px;left:0;right:0;z-index:49;
+    background:#080808;
+    border-bottom:1px solid #1a1a1a;
+    display:flex;gap:8px;
+    padding:10px 16px;
+    overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
   }
+  .cat-pills::-webkit-scrollbar{display:none;width:0;height:0}
+  .cat-pill{
+    flex:0 0 auto;
+    padding:8px 16px;
+    border:1px solid #fff;
+    border-radius:999px;
+    background:transparent;
+    color:#fff;
+    font-family:'DM Sans',sans-serif;
+    font-size:12px;font-weight:500;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    white-space:nowrap;
+    text-decoration:none;
+    transition:border-color .2s,color .2s;
+  }
+  .cat-pill.active,
+  .cat-pill:hover,
+  .cat-pill:focus-visible{border-color:#B8FF57;color:#B8FF57;outline:none}
 
   /* Hero */
   .hero{
@@ -1937,24 +1966,26 @@
   /* P3: HAMBURGER + MOBILE MENU   */
   /* ============================= */
   .hamburger{
-    display:none;width:40px;height:40px;
+    grid-column:1;justify-self:start;
+    width:40px;height:40px;
     background:none;border:none;cursor:pointer;
-    flex-direction:column;justify-content:center;align-items:center;gap:6px;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;
     padding:8px;position:relative;z-index:110;
   }
   .hb-line{
     display:block;width:22px;height:2px;
-    background:#B8FF57;border-radius:2px;
+    background:#fff;border-radius:2px;
     transform-origin:center;
     transition:transform 400ms cubic-bezier(0.22,1,0.36,1),
                opacity 400ms cubic-bezier(0.22,1,0.36,1),
+               background-color 200ms ease,
                width 400ms cubic-bezier(0.22,1,0.36,1);
   }
-  body.nav-open .hb-line:nth-child(1){transform:translateY(8px) rotate(45deg)}
+  .hamburger:active .hb-line{background:#B8FF57}
+  body.nav-open .hb-line{background:#B8FF57}
+  body.nav-open .hb-line:nth-child(1){transform:translateY(7px) rotate(45deg)}
   body.nav-open .hb-line:nth-child(2){opacity:0;transform:scaleX(0)}
-  body.nav-open .hb-line:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
-  @media(max-width:720px){.hamburger{display:flex !important}}
-  @media(min-width:721px){.hamburger{display:none !important}}
+  body.nav-open .hb-line:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
   /* Panel */
   .mobile-menu{
@@ -2008,16 +2039,18 @@
     position:relative;z-index:1;
   }
   .menu-item{
-    font-family:'Fraunces',serif;font-weight:600;
-    font-size:clamp(36px,10vw,72px);
-    color:#F5F5F0;text-decoration:none;
-    letter-spacing:-.02em;line-height:1.1;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:clamp(36px,10vw,64px);
+    color:#fff;text-decoration:none;
+    letter-spacing:.04em;line-height:1.05;
+    text-transform:uppercase;
     padding:12px 0;
     display:inline-flex;align-items:center;
     position:relative;
     opacity:0;transform:translateY(30px);
     transition:opacity 600ms cubic-bezier(0.22,1,0.36,1),
-               transform 600ms cubic-bezier(0.22,1,0.36,1);
+               transform 600ms cubic-bezier(0.22,1,0.36,1),
+               color 180ms ease;
     transition-delay:calc(150ms + var(--i,0) * 80ms);
   }
   .mobile-menu.active .menu-item{opacity:1;transform:translateY(0)}
@@ -2038,7 +2071,8 @@
     }
     .menu-item:hover{
       transform:translateX(12px) !important;
-      transition:transform 300ms ease-out !important;
+      color:#B8FF57;
+      transition:transform 300ms ease-out, color 180ms ease !important;
       transition-delay:0ms !important;
     }
     .menu-item:hover::before{transform:scaleX(1)}
@@ -2049,6 +2083,7 @@
   @media(max-width:767px){
     .menu-item:active{
       transform:translateX(12px) !important;
+      color:#B8FF57;
       background:rgba(184,255,87,0.08);
       transition-delay:0ms !important;
     }
@@ -2131,20 +2166,30 @@
 <a href="#buy" class="skip-link">Skip to products</a>
 
 <nav>
-  <div class="logo">SMELLOFF</div>
   <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" onclick="openNav()">
     <span class="hb-line"></span>
     <span class="hb-line"></span>
     <span class="hb-line"></span>
   </button>
-  <div class="meta">
-    <a href="#science">Science</a>
-    <a href="#buy">Pricing</a>
-    <a href="#faq">FAQ</a>
-    <a href="#reviews">Reviews</a>
-    <a href="#buy" class="cta-pill cta" onclick="trackInitCheckout()">Buy ₹159</a>
-  </div>
+  <div class="logo">SMELLOFF</div>
+  <button class="nav-cart" id="navCartBtn" aria-label="Cart" onclick="document.getElementById('buy').scrollIntoView({behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z"/>
+      <path d="M3 6h18"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
+    </svg>
+    <span class="nav-cart-count" id="navCartCount">0</span>
+  </button>
 </nav>
+
+<!-- CATEGORY PILLS -->
+<div class="cat-pills" id="catPills" role="navigation" aria-label="Page sections">
+  <a href="#buy" class="cat-pill active" data-target="buy">ODORSTRIKE</a>
+  <a href="#how-to-use" class="cat-pill" data-target="how-to-use">How It Works</a>
+  <a href="#science" class="cat-pill" data-target="science">Science</a>
+  <a href="#reviews" class="cat-pill" data-target="reviews">Reviews</a>
+  <a href="#faq" class="cat-pill" data-target="faq">FAQ</a>
+</div>
 
 <!-- MOBILE MENU (P3 #16) -->
 <div class="mobile-menu" id="mobileMenu" aria-hidden="true" onclick="if(event.target===this)closeNav()">
