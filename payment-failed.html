@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Payment Failed Policy — Smelloff</title>
+<meta name="description" content="What to do if your UPI payment for an ODORSTRIKE order fails, gets debited but not confirmed, or stays pending.">
+<link rel="canonical" href="https://www.smelloff.in/payment-failed">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#080808">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.smelloff.in/payment-failed">
+<meta property="og:title" content="Payment Failed Policy — Smelloff">
+<meta property="og:description" content="What to do if your UPI payment for an ODORSTRIKE order fails or stays pending.">
+<meta property="og:site_name" content="Smelloff">
+<meta property="og:image" content="https://www.smelloff.in/assets/og-image.jpg">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Payment Failed Policy — Smelloff">
+<meta name="twitter:description" content="What to do if your UPI payment for an ODORSTRIKE order fails or stays pending.">
+<link rel="icon" type="image/png" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{background:#080808;color:#E8E8E8;font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+  ::selection{background:#B8FF57;color:#080808}
+  .p-nav{position:sticky;top:0;z-index:50;height:calc(56px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 16px 0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:#080808;border-bottom:1px solid #1a1a1a}
+  .p-back{justify-self:start;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#888;text-decoration:none;padding:8px 10px}
+  .p-back:hover{color:#fff}
+  .p-logo{justify-self:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-decoration:none;position:relative;padding-right:10px;line-height:1}
+  .p-logo .p-dot{position:absolute;top:-2px;right:0;width:6px;height:6px;background:#B8FF57;border-radius:50%}
+  .p-nav-spacer{justify-self:end;width:40px}
+  .p-main{flex:1;width:100%;max-width:720px;margin:0 auto;padding:48px 20px 80px}
+  .p-eyebrow{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#B8FF57;margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
+  .p-eyebrow::before{content:'';width:18px;height:1.5px;background:#B8FF57}
+  .p-main h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(40px,8vw,64px);letter-spacing:.005em;line-height:.98;text-transform:uppercase;color:#fff;margin-bottom:28px}
+  .p-main h2{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:.04em;line-height:1.15;text-transform:uppercase;color:#fff;margin:36px 0 14px}
+  .p-main p{color:#C5C5C5;margin-bottom:14px;font-size:15px;line-height:1.7}
+  .p-main strong{color:#fff;font-weight:600}
+  .p-main ul{padding-left:20px;margin-bottom:14px}
+  .p-main li{margin-bottom:8px;color:#C5C5C5;font-size:15px;line-height:1.65}
+  .p-main li::marker{color:#B8FF57}
+  .p-main a.inline,.p-main p a,.p-main li a{color:#B8FF57;text-decoration:none;border-bottom:1px solid rgba(184,255,87,.3)}
+  .p-main a.inline:hover,.p-main p a:hover,.p-main li a:hover{border-bottom-color:#B8FF57}
+  .p-main .callout{background:#0D0D0D;border:1px solid #1F1F1F;border-left:3px solid #B8FF57;border-radius:6px;padding:14px 16px;margin:20px 0}
+  .p-main .callout p{margin:0;font-size:14px}
+  .p-meta{margin-top:48px;padding-top:20px;border-top:1px solid #1a1a1a;font-family:'DM Sans',sans-serif;font-size:12px;color:#666;line-height:1.6}
+  .p-footer{border-top:1px solid #1a1a1a;background:#080808;padding:36px 20px calc(20px + env(safe-area-inset-bottom,0px));text-align:center}
+  .p-footer-brand{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;letter-spacing:.06em;text-transform:uppercase;color:#fff;position:relative;display:inline-block;padding-right:.2em;margin-bottom:18px;line-height:1}
+  .p-footer-brand .p-dot{position:absolute;top:-.06em;right:0;width:.16em;height:.16em;background:#B8FF57;border-radius:50%}
+  .p-footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 20px;margin-bottom:22px}
+  .p-footer-links a{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#888;text-decoration:none;transition:color .15s ease}
+  .p-footer-links a:hover{color:#fff}
+  .p-footer-bottom{font-family:'DM Sans',sans-serif;font-size:11px;color:#666;padding-top:16px;border-top:1px solid rgba(184,255,87,.15);max-width:720px;margin:0 auto}
+  @media(min-width:720px){
+    .p-main{padding:72px 40px 96px}
+    .p-main h1{font-size:clamp(48px,6vw,72px)}
+    .p-main h2{font-size:22px}
+  }
+</style>
+</head>
+<body>
+<nav class="p-nav">
+  <a href="/" class="p-back">← Back</a>
+  <a href="/" class="p-logo">SMELLOFF<span class="p-dot" aria-hidden="true"></span></a>
+  <span class="p-nav-spacer"></span>
+</nav>
+
+<main class="p-main">
+  <div class="p-eyebrow">Policy · Payment Failed</div>
+  <h1>Payment Failed / Failed Transaction Policy</h1>
+
+  <p>At Smelloff, we currently accept payments via UPI (direct transfer to our UPI ID and QR code). Since payments are processed manually, here's what happens if something goes wrong:</p>
+
+  <h2>1. Money debited but order not confirmed</h2>
+  <p>If your UPI app shows the payment as successful but you didn't receive an order confirmation from us within 30 minutes:</p>
+  <ul>
+    <li>Email us at <a class="inline" href="mailto:support@smelloff.in">support@smelloff.in</a> with your UPI transaction ID (UTR), screenshot of the payment, and the phone number/email used to place the order.</li>
+    <li>We'll verify the payment against our records within 24 hours.</li>
+    <li>If confirmed, we'll process your order immediately. If the payment didn't reach us, we'll issue a full refund to your original UPI ID within 5–7 business days.</li>
+  </ul>
+
+  <h2>2. Payment failed at your end</h2>
+  <p>If your UPI app shows "Failed" or "Pending" and no money was debited, simply retry. No action needed from us.</p>
+
+  <h2>3. Payment stuck in "Pending"</h2>
+  <p>UPI pending transactions usually auto-resolve within 24–48 hours. If money is debited and stays pending beyond that, it auto-reverses to your account. If it doesn't, contact your bank — we cannot release a refund for a payment we never received.</p>
+
+  <h2>4. Duplicate payment</h2>
+  <p>If you accidentally paid twice for the same order, email us with both UTRs. We'll refund the duplicate amount within 5–7 business days.</p>
+
+  <h2>5. Wrong amount paid</h2>
+  <ul>
+    <li><strong>Paid less:</strong> We'll email you a request for the balance before dispatching.</li>
+    <li><strong>Paid more:</strong> We'll refund the excess within 5–7 business days.</li>
+  </ul>
+
+  <h2>Refund timeline</h2>
+  <p>All verified refunds are processed within 5–7 business days to your original UPI ID. Bank processing may take an additional 2–3 days.</p>
+
+  <h2>Contact for payment issues</h2>
+  <div class="callout">
+    <p><strong>Email:</strong> <a class="inline" href="mailto:support@smelloff.in">support@smelloff.in</a></p>
+    <p>Always include your UTR/transaction ID — we cannot trace payments without it.</p>
+  </div>
+
+  <div class="p-meta">
+    Smelloff · Jogdhande Nikhil Patil · Sanathnagar, Erragadda, Hyderabad<br>
+    Last updated: April 2026
+  </div>
+</main>
+
+<footer class="p-footer">
+  <div class="p-footer-brand">SMELLOFF<span class="p-dot" aria-hidden="true"></span></div>
+  <div class="p-footer-links">
+    <a href="/">Home</a>
+    <a href="/#buy">Buy ODORSTRIKE</a>
+    <a href="/blog">Blogs</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/shipping">Shipping</a>
+    <a href="/returns">Returns</a>
+    <a href="/refund">Refund</a>
+    <a href="/payment-failed">Payment Failed</a>
+  </div>
+  <div class="p-footer-bottom">
+    &copy; 2026 SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad
+  </div>
+</footer>
+</body>
+</html>

@@ -1900,6 +1900,250 @@
   @keyframes spin{to{transform:rotate(360deg)}}
 
   /* ============================= */
+  /* UPI PAYMENT BLOCK (QR + TIMER)*/
+  /* ============================= */
+  .upi-block{
+    margin:18px 0 14px;
+    padding:18px;
+    background:#0A0A0A;
+    border:1px solid #1F1F1F;
+    border-left:3px solid var(--acid);
+  }
+  .upi-block .qr-wrap{
+    display:flex;
+    justify-content:center;
+    margin-bottom:14px;
+  }
+  .upi-qr{
+    width:200px;height:200px;
+    background:#fff;
+    padding:10px;
+    display:block;
+  }
+  .upi-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 0;
+    border-bottom:1px solid #1A1A1A;
+    font-size:13px;
+  }
+  .upi-row:last-of-type{border-bottom:0}
+  .upi-row .lbl{
+    color:#888;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    font-size:11px;
+    font-weight:500;
+  }
+  .upi-row .val{
+    color:#fff;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:500;
+  }
+  .upi-row .val.acid{color:var(--acid)}
+  .upi-cta{
+    display:block;
+    width:100%;
+    margin-top:14px;
+    padding:12px 16px;
+    background:var(--acid);
+    color:var(--ink);
+    border:0;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-size:15px;
+    text-align:center;
+    text-decoration:none;
+    cursor:pointer;
+  }
+  .upi-cta:hover{background:#C7FF70}
+  .upi-timer{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    margin:14px 0 4px;
+    padding:10px;
+    background:#080808;
+    border:1px solid rgba(184,255,87,.18);
+  }
+  .upi-timer .t-lbl{
+    font-size:11px;
+    color:#888;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+  }
+  .upi-timer .t-val{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:18px;
+    color:var(--acid);
+    letter-spacing:.05em;
+  }
+  .upi-timer.expired{border-color:#ff6b6b}
+  .upi-timer.expired .t-val{color:#ff6b6b}
+  .upi-timer.warn .t-val{color:#FFB347}
+  .upi-policy-link{
+    display:block;
+    text-align:center;
+    margin-top:10px;
+    font-size:12px;
+    color:#888;
+    text-decoration:none;
+    letter-spacing:.02em;
+  }
+  .upi-policy-link a{
+    color:var(--acid);
+    text-decoration:none;
+    border-bottom:1px solid rgba(184,255,87,.3);
+  }
+  .upi-policy-link a:hover{border-bottom-color:var(--acid)}
+  .upi-help{
+    margin-top:14px;
+    padding:12px;
+    background:#0D0D0D;
+    border:1px dashed #2A2A2A;
+    font-size:12px;
+    color:#9A958D;
+    line-height:1.6;
+  }
+  .upi-help strong{color:#fff;font-weight:600}
+  .upi-help a{color:var(--acid);font-weight:500;text-decoration:none}
+  .upi-retry{
+    display:none;
+    width:100%;
+    margin-top:12px;
+    padding:10px 14px;
+    background:transparent;
+    border:1px solid var(--acid);
+    color:var(--acid);
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-size:13px;
+    cursor:pointer;
+  }
+  .upi-retry:hover{background:rgba(184,255,87,.08)}
+  .upi-retry.show{display:block}
+
+  /* ============================= */
+  /* POLICY OVERLAY (full-screen)  */
+  /* ============================= */
+  .policy-overlay{
+    position:fixed;inset:0;
+    background:#080808;
+    z-index:300;
+    display:none;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .policy-overlay.active{display:block}
+  .policy-overlay .po-nav{
+    position:sticky;top:0;z-index:5;
+    height:calc(56px + env(safe-area-inset-top,0px));
+    padding:env(safe-area-inset-top,0px) 16px 0;
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+    background:#080808;
+    border-bottom:1px solid #1A1A1A;
+  }
+  .policy-overlay .po-back{
+    background:transparent;border:0;cursor:pointer;
+    font-family:'DM Sans','Inter Tight',sans-serif;
+    font-size:13px;font-weight:500;color:#888;
+    padding:8px 10px;
+  }
+  .policy-overlay .po-back:hover{color:#fff}
+  .policy-overlay .po-logo{
+    justify-self:center;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:22px;
+    letter-spacing:.06em;text-transform:uppercase;
+    color:#fff;position:relative;padding-right:10px;line-height:1;
+  }
+  .policy-overlay .po-logo .po-dot{
+    position:absolute;top:-2px;right:0;
+    width:6px;height:6px;
+    background:var(--acid);border-radius:50%;
+  }
+  .policy-overlay .po-close{
+    justify-self:end;
+    background:transparent;border:0;cursor:pointer;
+    color:#888;font-size:24px;line-height:1;
+    width:40px;height:40px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .policy-overlay .po-close:hover{color:#fff}
+  .policy-overlay .po-main{
+    width:100%;max-width:720px;
+    margin:0 auto;
+    padding:48px 20px 80px;
+  }
+  .policy-overlay .po-eyebrow{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:11px;
+    letter-spacing:.18em;text-transform:uppercase;
+    color:var(--acid);margin-bottom:14px;
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .policy-overlay .po-eyebrow::before{
+    content:'';width:18px;height:1.5px;background:var(--acid);
+  }
+  .policy-overlay .po-main h1{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    font-size:clamp(36px,7vw,56px);
+    letter-spacing:.005em;line-height:.98;
+    text-transform:uppercase;color:#fff;
+    margin-bottom:24px;
+  }
+  .policy-overlay .po-main h2{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:20px;
+    letter-spacing:.04em;line-height:1.15;
+    text-transform:uppercase;color:#fff;
+    margin:32px 0 12px;
+  }
+  .policy-overlay .po-main p,
+  .policy-overlay .po-main li{
+    color:#C5C5C5;
+    font-family:'DM Sans','Inter Tight',sans-serif;
+    font-size:15px;line-height:1.7;
+    margin-bottom:12px;
+  }
+  .policy-overlay .po-main strong{color:#fff;font-weight:600}
+  .policy-overlay .po-main ul{padding-left:22px;margin-bottom:14px}
+  .policy-overlay .po-main li{margin-bottom:8px}
+  .policy-overlay .po-main li::marker{color:var(--acid)}
+  .policy-overlay .po-main a{
+    color:var(--acid);text-decoration:none;
+    border-bottom:1px solid rgba(184,255,87,.3);
+  }
+  .policy-overlay .po-main a:hover{border-bottom-color:var(--acid)}
+  .policy-overlay .po-callout{
+    background:#0D0D0D;
+    border:1px solid #1F1F1F;
+    border-left:3px solid var(--acid);
+    padding:14px 16px;margin:18px 0;
+  }
+  .policy-overlay .po-callout p{margin:0;font-size:14px}
+  .policy-overlay .po-meta{
+    margin-top:40px;padding-top:18px;
+    border-top:1px solid #1A1A1A;
+    font-size:12px;color:#666;line-height:1.6;
+  }
+  @media(min-width:720px){
+    .policy-overlay .po-main{padding:64px 40px 96px}
+    .policy-overlay .po-main h1{font-size:clamp(48px,6vw,64px)}
+    .policy-overlay .po-main h2{font-size:22px}
+  }
+
+  /* ============================= */
   /* P1: STICKY MOBILE BUY BAR    */
   /* ============================= */
   /* Mobile sticky buy bar — fade-in after hero */
@@ -3609,6 +3853,7 @@
         <li><a href="/shipping">Shipping</a></li>
         <li><a href="/returns">Returns</a></li>
         <li><a href="/refund">Refund Policy</a></li>
+        <li><a href="/payment-failed">Payment Failed Policy</a></li>
         <li><a href="/blog">Blogs</a></li>
       </ul>
     </div>
@@ -3719,14 +3964,107 @@
 
     <!-- Success state -->
     <div id="successScreen" class="success-screen" style="display:none">
-      <div class="overlay-tag">Order confirmed</div>
-      <h3>You're done.</h3>
+      <div class="overlay-tag" id="successTag">Order confirmed</div>
+      <h3 id="successHeading">You're done.</h3>
       <p id="successMsg">We'll ship your ODORSTRIKE within 48 hours.</p>
       <div class="order-id" id="orderIdDisplay"></div>
-      <p style="font-size:12px">Questions? WhatsApp <a href="https://wa.me/919392974031" style="color:var(--acid);font-weight:500">+91 93929 74031</a></p>
+
+      <!-- UPI payment block (only shown for UPI orders) -->
+      <div id="upiBlock" class="upi-block" style="display:none;text-align:left">
+        <div class="qr-wrap">
+          <img id="upiQR" class="upi-qr" alt="UPI QR code — scan to pay" src="" loading="lazy">
+        </div>
+        <div class="upi-row">
+          <span class="lbl">UPI ID</span>
+          <span class="val" id="upiIdShow">9392974031-3@ybl</span>
+        </div>
+        <div class="upi-row">
+          <span class="lbl">Amount</span>
+          <span class="val acid" id="upiAmountShow">₹0</span>
+        </div>
+        <div class="upi-row">
+          <span class="lbl">Note</span>
+          <span class="val" id="upiNoteShow">Smelloff</span>
+        </div>
+
+        <a id="upiOpenBtn" class="upi-cta" href="#">Open UPI app</a>
+
+        <div class="upi-timer" id="upiTimer" aria-live="polite">
+          <span class="t-lbl">Time left to pay</span>
+          <span class="t-val" id="upiTimerVal">10:00</span>
+        </div>
+
+        <button type="button" id="upiRetry" class="upi-retry" onclick="resetUpiTimer()">Restart payment session</button>
+
+        <div class="upi-policy-link">
+          Payment issue? <a href="#" onclick="openPaymentFailedOverlay();return false;">See our Payment Failed Policy</a>
+        </div>
+
+        <div class="upi-help">
+          <strong>After paying:</strong> send the payment screenshot + UTR to
+          <a href="https://wa.me/919392974031" target="_blank" rel="noopener">WhatsApp</a>
+          or reply to your order email. We dispatch within 48 hours of payment confirmation.
+        </div>
+      </div>
+
+      <p style="font-size:12px;margin-top:14px">Questions? WhatsApp <a href="https://wa.me/919392974031" style="color:var(--acid);font-weight:500">+91 93929 74031</a></p>
       <button class="submit-btn" onclick="closeCheckout()">Close</button>
     </div>
   </div>
+</div>
+
+<!-- ============================= -->
+<!-- PAYMENT FAILED POLICY OVERLAY -->
+<!-- ============================= -->
+<div class="policy-overlay" id="paymentFailedOverlay" role="dialog" aria-modal="true" aria-labelledby="pfTitle">
+  <nav class="po-nav">
+    <button type="button" class="po-back" onclick="closePaymentFailedOverlay()">← Back</button>
+    <span class="po-logo">SMELLOFF<span class="po-dot" aria-hidden="true"></span></span>
+    <button type="button" class="po-close" onclick="closePaymentFailedOverlay()" aria-label="Close">×</button>
+  </nav>
+  <main class="po-main">
+    <div class="po-eyebrow">Policy · Payment Failed</div>
+    <h1 id="pfTitle">Payment Failed / Failed Transaction Policy</h1>
+
+    <p>At Smelloff, we currently accept payments via UPI (direct transfer to our UPI ID and QR code). Since payments are processed manually, here's what happens if something goes wrong:</p>
+
+    <h2>1. Money debited but order not confirmed</h2>
+    <p>If your UPI app shows the payment as successful but you didn't receive an order confirmation from us within 30 minutes:</p>
+    <ul>
+      <li>Email us at <a href="mailto:support@smelloff.in">support@smelloff.in</a> with your UPI transaction ID (UTR), screenshot of the payment, and the phone number/email used to place the order.</li>
+      <li>We'll verify the payment against our records within 24 hours.</li>
+      <li>If confirmed, we'll process your order immediately. If the payment didn't reach us, we'll issue a full refund to your original UPI ID within 5–7 business days.</li>
+    </ul>
+
+    <h2>2. Payment failed at your end</h2>
+    <p>If your UPI app shows "Failed" or "Pending" and no money was debited, simply retry. No action needed from us.</p>
+
+    <h2>3. Payment stuck in "Pending"</h2>
+    <p>UPI pending transactions usually auto-resolve within 24–48 hours. If money is debited and stays pending beyond that, it auto-reverses to your account. If it doesn't, contact your bank — we cannot release a refund for a payment we never received.</p>
+
+    <h2>4. Duplicate payment</h2>
+    <p>If you accidentally paid twice for the same order, email us with both UTRs. We'll refund the duplicate amount within 5–7 business days.</p>
+
+    <h2>5. Wrong amount paid</h2>
+    <ul>
+      <li><strong>Paid less:</strong> We'll email you a request for the balance before dispatching.</li>
+      <li><strong>Paid more:</strong> We'll refund the excess within 5–7 business days.</li>
+    </ul>
+
+    <h2>Refund Timeline</h2>
+    <p>All verified refunds are processed within 5–7 business days to your original UPI ID. Bank processing may take an additional 2–3 days.</p>
+
+    <h2>Contact for Payment Issues</h2>
+    <div class="po-callout">
+      <p><strong>Email:</strong> <a href="mailto:support@smelloff.in">support@smelloff.in</a></p>
+      <p>Always include your UTR/transaction ID — we cannot trace payments without it.</p>
+    </div>
+
+    <div class="po-meta">
+      Smelloff · Sanathnagar, Erragadda, Hyderabad<br>
+      Last updated: April 2026
+    </div>
+  </main>
 </div>
 
 <!-- ============================= -->
@@ -3819,6 +4157,10 @@
   function closeCheckout() {
     document.getElementById('checkoutOverlay').classList.remove('active');
     document.body.style.overflow = '';
+    // Stop UPI countdown if it was running so it doesn't keep ticking in the background.
+    if (typeof stopUpiTimer === 'function') stopUpiTimer();
+    const upiBlock = document.getElementById('upiBlock');
+    if (upiBlock) upiBlock.style.display = 'none';
   }
 
   function selectPay(method) {
@@ -3935,6 +4277,9 @@
   function showSuccess(orderId, method) {
     document.getElementById('checkoutForm').style.display = 'none';
     document.getElementById('successScreen').style.display = 'block';
+    document.getElementById('successTag').textContent = 'Order confirmed';
+    document.getElementById('successHeading').textContent = "You're done.";
+    document.getElementById('upiBlock').style.display = 'none';
     document.getElementById('orderIdDisplay').textContent = orderId;
     document.getElementById('successMsg').textContent = method === 'cod'
       ? "We'll call to confirm your COD order, then ship within 48 hours."
@@ -4023,11 +4368,30 @@
     document.getElementById('checkoutForm').style.display = 'none';
     const s = document.getElementById('successScreen');
     s.style.display = 'block';
+    document.getElementById('successTag').textContent = 'Awaiting payment';
+    document.getElementById('successHeading').textContent = 'Scan & pay ₹' + total;
+    document.getElementById('successMsg').textContent = 'Open any UPI app (PhonePe, GPay, Paytm, BHIM) and scan the code below — amount is pre-filled.';
     document.getElementById('orderIdDisplay').textContent = orderId;
-    document.getElementById('successMsg').innerHTML =
-      'Pay <strong>₹' + total + '</strong> to UPI ID <strong>' + CFG.UPI_ID + '</strong>. ' +
-      '<a href="' + upiLink + '" style="color:var(--acid);font-weight:500">Open UPI app →</a><br>' +
-      'After paying, send a screenshot to WhatsApp and we\'ll ship within 48 hours.';
+
+    // Populate UPI block
+    document.getElementById('upiBlock').style.display = 'block';
+    document.getElementById('upiIdShow').textContent = CFG.UPI_ID;
+    document.getElementById('upiAmountShow').textContent = '₹' + total;
+    document.getElementById('upiNoteShow').textContent = 'Smelloff ' + orderId;
+    const openBtn = document.getElementById('upiOpenBtn');
+    openBtn.href = upiLink;
+    openBtn.textContent = 'Open UPI app · ₹' + total;
+
+    // Generate QR for the UPI deep link (any UPI app reads this).
+    const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=8&data=' + encodeURIComponent(upiLink);
+    const qrImg = document.getElementById('upiQR');
+    qrImg.src = qrSrc;
+    qrImg.onerror = function(){
+      qrImg.style.display = 'none';
+    };
+
+    startUpiTimer();
+
     trackPurchase(VARIANTS[currentVariant].amount, orderId);
     try {
       const buyerEmail = (document.getElementById('f_email').value || '').trim().toLowerCase();
@@ -4036,6 +4400,76 @@
       if (typeof window.clearCart === 'function') window.clearCart();
     } catch (e) {}
   }
+
+  // ==============================
+  // UPI PAYMENT TIMER (10 minutes)
+  // ==============================
+  let _upiTimerInterval = null;
+  const UPI_TIMER_SECONDS = 10 * 60;
+
+  function startUpiTimer() {
+    stopUpiTimer();
+    const el = document.getElementById('upiTimer');
+    const val = document.getElementById('upiTimerVal');
+    const retry = document.getElementById('upiRetry');
+    el.classList.remove('expired','warn');
+    retry.classList.remove('show');
+    let remaining = UPI_TIMER_SECONDS;
+    paintUpiTimer(remaining);
+    _upiTimerInterval = setInterval(function(){
+      remaining -= 1;
+      if (remaining <= 0) {
+        paintUpiTimer(0);
+        el.classList.add('expired');
+        val.textContent = 'EXPIRED';
+        retry.classList.add('show');
+        stopUpiTimer();
+        return;
+      }
+      paintUpiTimer(remaining);
+      el.classList.toggle('warn', remaining <= 120);
+    }, 1000);
+  }
+
+  function paintUpiTimer(remaining) {
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    document.getElementById('upiTimerVal').textContent =
+      String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  }
+
+  function stopUpiTimer() {
+    if (_upiTimerInterval) { clearInterval(_upiTimerInterval); _upiTimerInterval = null; }
+  }
+
+  window.resetUpiTimer = function(){ startUpiTimer(); };
+
+  // ==============================
+  // PAYMENT FAILED POLICY OVERLAY
+  // ==============================
+  let _pfPrevScroll = 0;
+  window.openPaymentFailedOverlay = function() {
+    _pfPrevScroll = window.scrollY || 0;
+    const o = document.getElementById('paymentFailedOverlay');
+    o.classList.add('active');
+    o.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  };
+  window.closePaymentFailedOverlay = function() {
+    document.getElementById('paymentFailedOverlay').classList.remove('active');
+    // If checkout overlay is still open, keep body locked.
+    const checkoutOpen = document.getElementById('checkoutOverlay').classList.contains('active');
+    if (!checkoutOpen) {
+      document.body.style.overflow = '';
+      window.scrollTo(0, _pfPrevScroll);
+    }
+  };
+  // ESC key closes the policy overlay (without dismissing the underlying checkout)
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && document.getElementById('paymentFailedOverlay').classList.contains('active')) {
+      window.closePaymentFailedOverlay();
+    }
+  });
 
   // Close on overlay click (outside panel)
   document.getElementById('checkoutOverlay').addEventListener('click', (e) => {
