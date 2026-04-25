@@ -1365,14 +1365,6 @@
     font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;
     color:#B0B0B0;margin:0 0 14px;
   }
-  .rv-google-btn{
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    width:100%;height:52px;
-    background:#fff;color:#080808;
-    border:none;border-radius:6px;cursor:pointer;
-    font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;
-  }
-  .rv-google-btn:hover{background:#e8e8e8}
   .rv-buy-btn{
     display:flex;align-items:center;justify-content:center;
     width:100%;height:52px;
@@ -1398,14 +1390,16 @@
     transition:border-color .2s ease;
   }
   .rv-textarea:focus{border-color:#B8FF57}
-  .rv-form-row{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-    margin:10px 0 14px;
-    font-family:'DM Sans',sans-serif;font-size:12px;color:#888;
+  .rv-name-input{
+    width:100%;height:44px;
+    background:#080808;
+    border:1px solid #333;border-radius:6px;
+    padding:0 12px;margin-bottom:10px;
+    font-family:'DM Sans',sans-serif;font-size:14px;color:#fff;
+    outline:none;transition:border-color .2s ease;
   }
-  .rv-form-row label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
-  .rv-form-row input[type=checkbox]{accent-color:#B8FF57;width:14px;height:14px}
-  .rv-form-user{color:#fff;font-weight:500}
+  .rv-name-input:focus{border-color:#B8FF57}
+  .rv-name-input::placeholder{color:#555}
   .rv-submit{
     width:100%;height:52px;
     background:#B8FF57;color:#080808;
@@ -1740,18 +1734,6 @@
     color:#777;text-decoration:line-through;
     margin-right:8px;
   }
-  .overlay .returning-row{
-    display:flex;justify-content:flex-end;
-    margin:0 0 8px;
-  }
-  .overlay .returning-link{
-    background:none;border:none;cursor:pointer;
-    color:#B8FF57;font-family:'DM Sans',sans-serif;
-    font-size:12px;font-weight:500;
-    text-decoration:underline;text-decoration-color:rgba(184,255,87,.4);
-    padding:4px 2px;
-  }
-  .overlay .returning-link:hover{text-decoration-color:#B8FF57}
   .overlay textarea{
     height:auto;min-height:64px;
     padding:12px 14px;line-height:1.4;
@@ -1926,36 +1908,6 @@
   .overlay .submit-btn:hover{background:#C7FF70}
   .overlay .submit-btn:active{transform:scale(.985)}
   .overlay .submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-  .overlay .auth-row{
-    display:flex;gap:10px;margin-bottom:16px;
-  }
-  .overlay .google-btn{
-    flex:1;height:48px;
-    background:#fff;color:#080808;
-    border:none;border-radius:6px;
-    font-family:'DM Sans',sans-serif;font-weight:600;
-    font-size:14px;letter-spacing:.01em;
-    cursor:pointer;
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    transition:background .15s ease;
-  }
-  .overlay .google-btn:hover{background:#e8e8e8}
-  .overlay .google-btn svg{width:18px;height:18px;flex-shrink:0}
-  .overlay .logged-in{
-    font-family:'DM Sans',sans-serif;
-    font-size:12px;font-weight:500;
-    color:#B8FF57;
-    margin-bottom:14px;
-    padding:10px 12px;
-    background:rgba(184,255,87,.08);
-    border:1px solid rgba(184,255,87,.25);
-    border-radius:6px;
-    display:inline-flex;align-items:center;gap:8px;
-  }
-  .overlay .logged-in::before{
-    content:'';width:8px;height:8px;border-radius:50%;background:#B8FF57;
-    flex-shrink:0;
-  }
   .overlay .error-msg{
     background:rgba(255,107,107,.1);
     color:#ff6b6b;
@@ -3441,7 +3393,7 @@
     </a>
     <span class="menu-utility-label">@smell0ff</span>
   </div>
-  <button class="menu-buy-cta" onclick="closeNav();openCheckout('solo')">
+  <button class="menu-buy-cta" onclick="closeNav();addToCart('solo')">
     Add to cart — ₹229 →
   </button>
 </div>
@@ -3455,7 +3407,7 @@
       <span class="mb-now">₹229</span>
     </div>
   </div>
-  <button class="mb-btn" type="button" onclick="openCheckout('solo')">ADD TO CART</button>
+  <button class="mb-btn" type="button" onclick="addToCart('solo')">ADD TO CART</button>
 </div>
 
 <!-- HERO -->
@@ -3507,7 +3459,7 @@
         <span class="hp-off">60% OFF</span>
       </div>
       <p class="hero-launch">Launch price · Limited to first 500 customers</p>
-      <a href="#buy" class="hero-cta" onclick="event.preventDefault();openCheckout('solo')">ADD TO CART — ₹229</a>
+      <a href="#buy" class="hero-cta" onclick="event.preventDefault();addToCart('solo')">ADD TO CART — ₹229</a>
       <div class="hero-trust">
         <span class="ht-item">✓ Free shipping</span>
         <span class="ht-sep">·</span>
@@ -3882,7 +3834,7 @@
         <span class="su-now">₹229</span>
       </div>
       <span class="su-badge">60% OFF</span>
-      <button class="su-cta" type="button" onclick="openCheckout('solo')">Add to cart</button>
+      <button class="su-cta" type="button" onclick="addToCart('solo')">Add to cart</button>
       <p class="su-foot">Try it. Carry it.</p>
     </article>
 
@@ -3905,7 +3857,7 @@
         <span class="su-now">₹399</span>
       </div>
       <span class="su-badge">60% OFF · Save ₹59</span>
-      <button class="su-cta" type="button" onclick="openCheckout('duo')">Add to cart</button>
+      <button class="su-cta" type="button" onclick="addToCart('duo')">Add to cart</button>
       <p class="su-foot">One for the bag. One for the desk.</p>
     </article>
 
@@ -3932,7 +3884,7 @@
         <span class="su-now">₹549</span>
       </div>
       <span class="su-badge">61% OFF · Save ₹138</span>
-      <button class="su-cta" type="button" onclick="openCheckout('trio')">Add to cart</button>
+      <button class="su-cta" type="button" onclick="addToCart('trio')">Add to cart</button>
       <p class="su-foot">What serious users run.</p>
     </article>
   </div>
@@ -3970,18 +3922,10 @@
     <h3 id="rvModalTitle">Write your review</h3>
 
     <div id="rvStepAuth" class="rv-step">
-      <p>Sign in with Google so we can verify your order.</p>
-      <button class="rv-google-btn" type="button" onclick="rvSignIn()">
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-        Continue with Google
-      </button>
-      <p class="rv-error" id="rvAuthError" style="display:none"></p>
-    </div>
-
-    <div id="rvStepBuy" class="rv-step" style="display:none">
-      <p>Only verified customers can post a review.</p>
-      <p style="font-size:13px">We couldn't find an order on <span id="rvBuyEmail" class="rv-form-user"></span>. Add ODORSTRIKE first — your review slot unlocks after checkout.</p>
+      <p>Only verified buyers can post a review.</p>
+      <p style="font-size:13px">Place an order first — your review slot unlocks automatically after checkout.</p>
       <a href="#buy" class="rv-buy-btn" onclick="closeReviewForm()">Add ODORSTRIKE — ₹229 →</a>
+      <p class="rv-error" id="rvAuthError" style="display:none"></p>
     </div>
 
     <div id="rvStepForm" class="rv-step" style="display:none">
@@ -3992,11 +3936,8 @@
         <button type="button" data-star="4" aria-label="4 stars">★</button>
         <button type="button" data-star="5" aria-label="5 stars">★</button>
       </div>
+      <input class="rv-name-input" id="rvName" type="text" placeholder="Your name (or leave blank to post anonymously)" maxlength="40" aria-label="Your name">
       <textarea class="rv-textarea" id="rvText" placeholder="Tell us what you thought about ODORSTRIKE — when did you use it, did it work?" maxlength="400" aria-label="Your review"></textarea>
-      <div class="rv-form-row">
-        <label><input type="checkbox" id="rvAnon"> Post as anonymous</label>
-        <span>Posting as <span class="rv-form-user" id="rvFormName">—</span></span>
-      </div>
       <button class="rv-submit" type="button" onclick="submitReview()">Post review</button>
       <p class="rv-error" id="rvFormError" style="display:none"></p>
     </div>
@@ -4130,7 +4071,7 @@
 <section class="final">
   <h2 class="final-title">Stop the smell. Before anyone notices.</h2>
   <p class="final-sub">Launch price ₹229. Free shipping. 7-day returns. Ships from Hyderabad in 48 hours.</p>
-  <a href="#buy" class="final-cta" onclick="event.preventDefault();openCheckout('solo')">ADD TO CART — ₹229</a>
+  <a href="#buy" class="final-cta" onclick="event.preventDefault();addToCart('solo')">ADD TO CART — ₹229</a>
   <p class="final-meta">Limited to first 500 launch customers · 347 spots remaining</p>
 </section>
 
@@ -4237,14 +4178,6 @@
         </div>
       </div>
 
-      <!-- Returning sign-in link -->
-      <div id="authSection" class="returning-row">
-        <button class="returning-link" type="button" onclick="signInGoogle()">Returning? Sign in</button>
-      </div>
-      <div id="loggedInSection" class="logged-in" style="display:none">
-        Signed in as <span id="loggedInEmail"></span>
-      </div>
-
       <!-- Details — phone first, email last/optional -->
       <label>Phone</label>
       <input type="tel" id="f_phone" required maxlength="10" pattern="[0-9]{10}" autocomplete="tel" placeholder="10-digit mobile">
@@ -4327,6 +4260,9 @@
 
       <!-- Optional UPI block (shown only when UPI was the chosen method) -->
       <div id="upiBlock" class="upi-block" style="display:none;text-align:left">
+        <div class="qr-wrap">
+          <img id="upiQR" class="upi-qr" alt="UPI QR code — scan to pay" src="" loading="lazy">
+        </div>
         <div class="upi-row">
           <span class="lbl">UPI ID</span>
           <span class="val" id="upiIdShow">9392974031-3@ybl</span>
@@ -4341,6 +4277,17 @@
         </div>
 
         <a id="upiOpenBtn" class="upi-cta" href="#">Open UPI app</a>
+
+        <div class="upi-timer" id="upiTimer" aria-live="polite">
+          <span class="t-lbl">Time left to pay</span>
+          <span class="t-val" id="upiTimerVal">10:00</span>
+        </div>
+
+        <button type="button" id="upiRetry" class="upi-retry" onclick="resetUpiTimer()">Restart payment session</button>
+
+        <div class="upi-policy-link">
+          Payment issue? <a href="#" onclick="openPaymentFailedOverlay();return false;">See our Payment Failed Policy</a>
+        </div>
 
         <div class="upi-help">
           <strong>After paying:</strong> send the payment screenshot + UTR to
@@ -4409,36 +4356,7 @@
   </main>
 </div>
 
-<!-- ============================= -->
-<!-- FIREBASE (lazy — loads on Google sign-in click) -->
-<!-- ============================= -->
-<script>
-  let _fbAuth=null,_fbProv=null;
-  async function _loadFB(){
-    if(_fbAuth)return;
-    const{initializeApp}=await import("https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js");
-    const{getAuth,GoogleAuthProvider,onAuthStateChanged}=await import("https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js");
-    const app=initializeApp({apiKey:"AIzaSyBxeQGT2P0CA-F_XGZYzqYGWHkj1LIZK1w",authDomain:"smelloff01.firebaseapp.com",projectId:"smelloff01",storageBucket:"smelloff01.firebasestorage.app",messagingSenderId:"718121546902",appId:"1:718121546902:web:0eba6c98f57ce50e19beb7",measurementId:"G-1VFDLJLLC7"});
-    _fbAuth=getAuth(app);_fbProv=new GoogleAuthProvider();
-    onAuthStateChanged(_fbAuth,function(u){
-      if(u){document.getElementById('f_email').value=u.email||'';document.getElementById('f_name').value=u.displayName||'';document.getElementById('authSection').style.display='none';document.getElementById('loggedInSection').style.display='block';document.getElementById('loggedInEmail').textContent=u.email;}
-    });
-  }
-  window.signInGoogle=async function(){
-    try{
-      var btn=document.querySelector('.google-btn');if(btn)btn.textContent='Loading...';
-      await _loadFB();
-      const{signInWithPopup}=await import("https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js");
-      const result=await signInWithPopup(_fbAuth,_fbProv);
-      const u=result.user;
-      document.getElementById('f_email').value=u.email||'';document.getElementById('f_name').value=u.displayName||'';
-      document.getElementById('authSection').style.display='none';document.getElementById('loggedInSection').style.display='block';document.getElementById('loggedInEmail').textContent=u.email;
-    }catch(err){
-      console.error('Sign in failed:',err);showError('Sign-in failed. You can still checkout as guest.');
-      var btn=document.querySelector('.google-btn');if(btn)btn.textContent='Continue with Google';
-    }
-  };
-</script>
+<!-- (Firebase removed — checkout is guest-only, reviews are unlocked by purchase flag) -->
 
 <!-- ============================= -->
 <!-- CHECKOUT LOGIC                -->
@@ -4511,6 +4429,8 @@
     document.body.style.overflow = '';
     const upiBlock = document.getElementById('upiBlock');
     if (upiBlock) upiBlock.style.display = 'none';
+    // Stop UPI countdown if it was running
+    if (typeof stopUpiTimer === 'function') stopUpiTimer();
     // Re-enable sticky buy bar on mobile
     var mb = document.getElementById('mobileBar');
     if (mb) mb.style.display = '';
@@ -4790,10 +4710,10 @@
     s.style.display = 'block';
     document.getElementById('successTag').textContent = 'Order placed';
     document.getElementById('successHeading').textContent = 'Pay ₹' + total + ' via UPI';
-    document.getElementById('successMsg').textContent = 'Tap "Open UPI app" below — amount is pre-filled. After paying, send screenshot + UTR to WhatsApp. Our team ships within 48hr of payment.';
+    document.getElementById('successMsg').textContent = 'Scan the QR or tap "Open UPI app" — amount is pre-filled. After paying, send screenshot + UTR to WhatsApp.';
     document.getElementById('orderIdDisplay').textContent = orderId;
 
-    // Populate UPI block (no QR, no timer — order persists)
+    // Populate UPI block (with QR + countdown)
     document.getElementById('upiBlock').style.display = 'block';
     document.getElementById('upiIdShow').textContent = CFG.UPI_ID;
     document.getElementById('upiAmountShow').textContent = '₹' + total;
@@ -4801,6 +4721,17 @@
     const openBtn = document.getElementById('upiOpenBtn');
     openBtn.href = upiLink;
     openBtn.textContent = 'Open UPI app · ₹' + total;
+
+    // QR for the UPI deep link (any UPI app reads this)
+    const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=8&data=' + encodeURIComponent(upiLink);
+    const qrImg = document.getElementById('upiQR');
+    if (qrImg) {
+      qrImg.style.display = '';
+      qrImg.src = qrSrc;
+      qrImg.onerror = function(){ qrImg.style.display = 'none'; };
+    }
+
+    startUpiTimer();
 
     trackPurchase(VARIANTS[currentVariant].amount, orderId);
     try {
@@ -4810,6 +4741,47 @@
       if (typeof window.clearCart === 'function') window.clearCart();
     } catch (e) {}
   }
+
+  // ==============================
+  // UPI PAYMENT TIMER (10 minutes)
+  // ==============================
+  let _upiTimerInterval = null;
+  const UPI_TIMER_SECONDS = 10 * 60;
+
+  function startUpiTimer() {
+    stopUpiTimer();
+    const el = document.getElementById('upiTimer');
+    const val = document.getElementById('upiTimerVal');
+    const retry = document.getElementById('upiRetry');
+    if (!el || !val) return;
+    el.classList.remove('expired','warn');
+    if (retry) retry.classList.remove('show');
+    let remaining = UPI_TIMER_SECONDS;
+    paintUpiTimer(remaining);
+    _upiTimerInterval = setInterval(function(){
+      remaining -= 1;
+      if (remaining <= 0) {
+        paintUpiTimer(0);
+        el.classList.add('expired');
+        val.textContent = 'EXPIRED';
+        if (retry) retry.classList.add('show');
+        stopUpiTimer();
+        return;
+      }
+      paintUpiTimer(remaining);
+      el.classList.toggle('warn', remaining <= 120);
+    }, 1000);
+  }
+  function paintUpiTimer(remaining) {
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    const t = document.getElementById('upiTimerVal');
+    if (t) t.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  }
+  function stopUpiTimer() {
+    if (_upiTimerInterval) { clearInterval(_upiTimerInterval); _upiTimerInterval = null; }
+  }
+  window.resetUpiTimer = function(){ startUpiTimer(); };
 
   // ==============================
   // PINCODE → CITY/STATE AUTOFILL (checkout)
@@ -4921,7 +4893,7 @@
   };
   window.buyBoxAdd = function(){
     var variant = _buyBoxQty === 3 ? 'trio' : _buyBoxQty === 2 ? 'duo' : 'solo';
-    if (typeof openCheckout === 'function') openCheckout(variant);
+    if (typeof window.addToCart === 'function') window.addToCart(variant);
   };
 
 
@@ -5338,15 +5310,18 @@
       });
     }
 
-    // --- Modal flow ---
+    // --- Modal flow (Firebase removed — gate by localStorage purchase flag) ---
     var selectedStars = 0;
-    var signedInUser = null;
 
     function showStep(id){
-      ['rvStepAuth','rvStepBuy','rvStepForm','rvStepDone'].forEach(function(s){
+      ['rvStepAuth','rvStepForm','rvStepDone'].forEach(function(s){
         var el = document.getElementById(s);
         if (el) el.style.display = (s === id) ? 'block' : 'none';
       });
+    }
+    function isPurchased(){
+      try { return localStorage.getItem('smelloff_purchased') === 'true'; }
+      catch(e){ return false; }
     }
 
     window.openReviewForm = function(){
@@ -5354,14 +5329,7 @@
       modal.classList.add('open');
       modal.setAttribute('aria-hidden','false');
       document.body.style.overflow = 'hidden';
-      // If Firebase already signed in from checkout, short-circuit
-      try {
-        if (typeof _fbAuth !== 'undefined' && _fbAuth && _fbAuth.currentUser) {
-          proceedWithUser(_fbAuth.currentUser);
-          return;
-        }
-      } catch (e) {}
-      showStep('rvStepAuth');
+      showStep(isPurchased() ? 'rvStepForm' : 'rvStepAuth');
     };
 
     window.closeReviewForm = function(){
@@ -5369,43 +5337,11 @@
       modal.classList.remove('open');
       modal.setAttribute('aria-hidden','true');
       document.body.style.overflow = '';
-      // reset form state
       selectedStars = 0;
       document.querySelectorAll('#rvStarPicker button').forEach(function(b){ b.classList.remove('filled'); });
       var ta = document.getElementById('rvText'); if (ta) ta.value = '';
-      var an = document.getElementById('rvAnon'); if (an) an.checked = false;
+      var nm = document.getElementById('rvName'); if (nm) nm.value = '';
       var err = document.getElementById('rvFormError'); if (err) err.style.display = 'none';
-    };
-
-    function proceedWithUser(user){
-      signedInUser = user;
-      var purchased = false;
-      try { purchased = localStorage.getItem('smelloff_purchased') === 'true'; } catch(e){}
-      if (!purchased) {
-        var emailEl = document.getElementById('rvBuyEmail');
-        if (emailEl) emailEl.textContent = user && user.email ? user.email : 'your account';
-        showStep('rvStepBuy');
-        return;
-      }
-      var nameEl = document.getElementById('rvFormName');
-      if (nameEl) nameEl.textContent = (user && user.displayName) ? user.displayName : (user.email ? user.email.split('@')[0] : 'Anonymous');
-      showStep('rvStepForm');
-    }
-
-    window.rvSignIn = async function(){
-      var errEl = document.getElementById('rvAuthError');
-      errEl.style.display = 'none';
-      try {
-        if (typeof _loadFB !== 'function') throw new Error('Auth not available');
-        await _loadFB();
-        const mod = await import("https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js");
-        const result = await mod.signInWithPopup(_fbAuth, _fbProv);
-        proceedWithUser(result.user);
-      } catch (err) {
-        console.error('[Smelloff] Review sign-in failed:', err);
-        errEl.textContent = 'Sign-in failed. Try again.';
-        errEl.style.display = 'block';
-      }
     };
 
     // Star picker
@@ -5419,35 +5355,22 @@
       });
     });
 
-    // Anonymous toggle updates display label
-    var anonEl = document.getElementById('rvAnon');
-    if (anonEl) {
-      anonEl.addEventListener('change', function(){
-        var nameEl = document.getElementById('rvFormName');
-        if (!nameEl || !signedInUser) return;
-        if (anonEl.checked) nameEl.textContent = 'Anonymous';
-        else nameEl.textContent = signedInUser.displayName || (signedInUser.email ? signedInUser.email.split('@')[0] : 'Anonymous');
-      });
-    }
-
     window.submitReview = function(){
       var errEl = document.getElementById('rvFormError');
       errEl.style.display = 'none';
       var text = (document.getElementById('rvText').value || '').trim();
+      var name = (document.getElementById('rvName').value || '').trim();
       if (selectedStars < 1) { errEl.textContent = 'Pick a star rating.'; errEl.style.display = 'block'; return; }
       if (text.length < 8) { errEl.textContent = 'Write at least a sentence.'; errEl.style.display = 'block'; return; }
 
-      var anonymous = document.getElementById('rvAnon').checked;
-      var displayName = anonymous ? 'Anonymous'
-        : (signedInUser && signedInUser.displayName ? signedInUser.displayName
-        : (signedInUser && signedInUser.email ? signedInUser.email.split('@')[0] : 'Anonymous'));
+      var displayName = name ? name : 'Anonymous';
 
       saveUserReview({
         name: displayName,
         rating: selectedStars,
         text: text,
         date: Date.now(),
-        anonymous: anonymous
+        anonymous: !name
       });
 
       renderSummary();
@@ -5614,6 +5537,9 @@
       save();
       showToast('Added to cart');
       trackAddToCartEvent(p);
+      // Auto-open the cart drawer so the user immediately sees what's in their cart.
+      // Conversion-friendlier than a 2-second toast that disappears.
+      if (typeof window.openCartDrawer === 'function') window.openCartDrawer();
     };
 
     window.removeFromCart = function(id){
