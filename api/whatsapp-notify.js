@@ -40,6 +40,16 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'WhatsApp not configured' });
   }
 
+  // Normalize recipient to E.164-without-plus that Meta expects.
+  // Strips +, spaces, hyphens. If it ends up as a bare 10-digit Indian
+  // mobile (starts 6-9), auto-prepend country code 91. This way both
+  // "9392974031" and "+91 93929 74031" land at "919392974031".
+  const recipient = (function(raw){
+    const digits = String(raw).replace(/[^\d]/g, '');
+    if (/^[6-9]\d{9}$/.test(digits)) return '91' + digits;
+    return digits;
+  })(WA_RECIPIENT);
+
   const body = req.body || {};
   const name          = body.name          || 'N/A';
   const phone         = body.phone         || 'N/A';
@@ -70,7 +80,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         messaging_product: 'whatsapp',
         recipient_type: 'individual',
-        to: WA_RECIPIENT,
+        to: recipient,
         type: 'text',
         text: { preview_url: false, body: text },
       }),
