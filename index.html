@@ -3589,7 +3589,7 @@
 <div class="sp-bar" aria-label="Social proof">
   <div class="sp-stats">
     <span class="sp-stat"><span class="sp-star">★</span> 4.8 / 5</span>
-    <span class="sp-stat">127+ verified buyers</span>
+    <span class="sp-stat"><span id="spCount">127</span>+ verified buyers</span>
     <span class="sp-stat">Made in Hyderabad 🇮🇳</span>
   </div>
   <p class="sp-quote">"Sprayed it on my shirt before a meeting. Nobody knew I'd been in traffic for an hour." — Karthik, Hyderabad</p>
@@ -3870,11 +3870,11 @@
     <div class="pc-body">
       <h3 class="pc-title">ODORSTRIKE Fabric Odor Mist</h3>
       <p class="pc-subtitle">50ml · Pocket size · Fabric only · Made in Hyderabad</p>
-      <a href="#reviews" class="pc-rating" aria-label="Rated 4.8 out of 5 from 127 verified reviews">
+      <a href="#reviews" class="pc-rating" id="pcRatingLink" aria-label="Rated 4.8 out of 5 from 127 verified reviews">
         <span class="pc-star" aria-hidden="true">★</span>
         <span><strong>4.8</strong></span>
         <span class="pc-rating-sep" aria-hidden="true">·</span>
-        <span>127 verified reviews</span>
+        <span><span id="pcReviewCount">127</span> verified reviews</span>
       </a>
       <div class="pc-price">
         <span class="pc-was">₹579</span>
@@ -3991,7 +3991,7 @@
         <span class="rv-score-num" id="rvScoreNum">4.8</span>
         <span class="rv-score-stars" id="rvScoreStars" aria-hidden="true"></span>
       </div>
-      <p class="rv-score-caption">out of 5 · 127 verified buyers</p>
+      <p class="rv-score-caption">out of 5 · <span id="rvCountCaption">127</span> verified buyers</p>
     </div>
 
     <div class="rv-dist" id="rvDist" aria-label="Star distribution"></div>
@@ -5358,6 +5358,15 @@
       score.textContent = avg.toFixed(1);
       stars.innerHTML = starString(Math.round(avg));
       count.textContent = totalCount;
+
+      var capCount = document.getElementById('rvCountCaption');
+      if (capCount) capCount.textContent = totalCount;
+      var pcCount = document.getElementById('pcReviewCount');
+      if (pcCount) pcCount.textContent = totalCount;
+      var spCount = document.getElementById('spCount');
+      if (spCount) spCount.textContent = totalCount;
+      var pcLink = document.getElementById('pcRatingLink');
+      if (pcLink) pcLink.setAttribute('aria-label', 'Rated ' + avg.toFixed(1) + ' out of 5 from ' + totalCount + ' verified reviews');
 
       // Distribution bars (seed + user-submitted)
       var bucket = { 5:_stats.dist[5], 4:_stats.dist[4], 3:_stats.dist[3], 2:_stats.dist[2], 1:_stats.dist[1] };
