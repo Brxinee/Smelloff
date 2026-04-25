@@ -4987,9 +4987,24 @@
     document.querySelectorAll('.pc-qty-btn').forEach(function(b){
       b.classList.toggle('active', parseInt(b.dataset.qty,10) === qty);
     });
+    var variant = qty === 3 ? 'trio' : qty === 2 ? 'duo' : 'solo';
+    var price = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES[variant]) || (qty === 3 ? 549 : qty === 2 ? 399 : 229);
+    var mrp   = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.MRP[variant])    || (qty === 3 ? 1399 : qty === 2 ? 999 : 579);
+    var save  = mrp - price;
+    var off   = Math.round((save / mrp) * 100);
+
+    var card = document.querySelector('.product-card') || document;
+    var was  = card.querySelector('.pc-was');
+    var now  = card.querySelector('.pc-now');
+    var offEl = card.querySelector('.pc-off');
+    var saveEl = card.querySelector('.pc-save');
+    if (was)   was.textContent   = '₹' + mrp;
+    if (now)   now.textContent   = '₹' + price;
+    if (offEl) offEl.textContent = off + '% OFF';
+    if (saveEl) saveEl.textContent = 'You save ₹' + save;
+
     var cta = document.getElementById('pcCta');
     var hint = document.getElementById('pcQtyHint');
-    var price = qty === 3 ? 549 : qty === 2 ? 399 : 229;
     if (cta) cta.textContent = 'ADD TO CART — ₹' + price;
     if (hint) {
       if (qty === 1) hint.textContent = 'Smart move — pick a bigger pack to save';
