@@ -87,31 +87,37 @@ export default async function handler(req, res) {
   let payload;
   if (WA_TEMPLATE_NAME) {
     // Template mode — works outside the 24-hour window.
-    // The template body in WhatsApp Manager must use {{1}}-{{6}} in this order:
+    // For our "new_order" template the body uses {{1}}-{{6}} in this order:
     //   {{1}} orderId, {{2}} amount, {{3}} paymentMethod,
     //   {{4}} name,    {{5}} phone,  {{6}} address
+    //
+    // Special case: Meta's built-in "hello_world" template takes no
+    // parameters at all, so we send it without a components block. Useful
+    // as a smoke test while a custom template is still pending review.
+    const isHelloWorld = WA_TEMPLATE_NAME.toLowerCase() === 'hello_world';
+    const template = {
+      name: WA_TEMPLATE_NAME,
+      language: { code: WA_TEMPLATE_LANG || 'en' },
+    };
+    if (!isHelloWorld) {
+      template.components = [{
+        type: 'body',
+        parameters: [
+          { type: 'text', text: orderId },
+          { type: 'text', text: amount },
+          { type: 'text', text: paymentMethod },
+          { type: 'text', text: name },
+          { type: 'text', text: phone },
+          { type: 'text', text: address },
+        ],
+      }];
+    }
     payload = {
       messaging_product: 'whatsapp',
       recipient_type: 'individual',
       to: recipient,
       type: 'template',
-      template: {
-        name: WA_TEMPLATE_NAME,
-        language: { code: WA_TEMPLATE_LANG || 'en' },
-        components: [
-          {
-            type: 'body',
-            parameters: [
-              { type: 'text', text: orderId },
-              { type: 'text', text: amount },
-              { type: 'text', text: paymentMethod },
-              { type: 'text', text: name },
-              { type: 'text', text: phone },
-              { type: 'text', text: address },
-            ],
-          },
-        ],
-      },
+      template,
     };
   } else {
     // Free-form text mode — only works inside the 24-hour customer service
