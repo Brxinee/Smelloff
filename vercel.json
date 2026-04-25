@@ -3,11 +3,34 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/(.+)/",
+      "has": [
+        { "type": "host", "value": "smelloff.in" }
+      ],
+      "destination": "https://www.smelloff.in/$1",
+      "permanent": true
+    },
+    {
       "source": "/(.*)",
       "has": [
         { "type": "host", "value": "smelloff.in" }
       ],
       "destination": "https://www.smelloff.in/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.+)\\.html",
+      "destination": "/$1",
+      "permanent": true
+    },
+    {
+      "source": "/index",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/index",
+      "destination": "/blog",
       "permanent": true
     }
   ],
