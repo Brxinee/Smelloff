@@ -4274,6 +4274,35 @@
     }
   }
 
+  // Fire-and-forget WhatsApp ping to merchant. Never blocks UX or breaks
+  // checkout — failures are logged to console only. Server endpoint reads
+  // WA_TOKEN/WA_PHONE_ID/WA_RECIPIENT from Vercel env (token never client-side).
+  function notifyWhatsApp(order) {
+    try {
+      const methodLabel =
+        order.paymentMethod === 'cod' ? 'Cash on Delivery'
+        : order.paymentMethod === 'prepaid' ? 'UPI (awaiting verification)'
+        : (order.paymentMethod || 'Unknown');
+      const fullAddress = [order.address, order.city, order.state, order.pincode]
+        .filter(Boolean).join(', ');
+      fetch('/api/whatsapp-notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:          order.name,
+          phone:         order.phone,
+          address:       fullAddress,
+          amount:        order.total,
+          paymentMethod: methodLabel,
+          orderId:       order.orderId,
+        }),
+        keepalive: true,
+      }).catch(function(e){ console.warn('[Smelloff] WhatsApp notify failed:', e); });
+    } catch (e) {
+      console.warn('[Smelloff] WhatsApp notify failed:', e);
+    }
+  }
+
   function showSuccess(orderId, method) {
     document.getElementById('checkoutForm').style.display = 'none';
     document.getElementById('successScreen').style.display = 'block';
@@ -4309,6 +4338,7 @@
     if (payMethod === 'cod') {
       const order = collectOrder(orderId, 'COD');
       logOrderToSheets(order);
+      notifyWhatsApp(order);
       if (order.email) {
         SmelloffEmail.send('orderConfirmation', order.email, {
           orderId: order.orderId,
@@ -4334,6 +4364,7 @@
 
     const order = collectOrder(orderId, 'UPI_PENDING');
     logOrderToSheets(order);
+    notifyWhatsApp(order);
     if (order.email) {
       SmelloffEmail.send('orderConfirmation', order.email, {
         orderId: order.orderId,
