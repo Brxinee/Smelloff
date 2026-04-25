@@ -2619,6 +2619,26 @@
     margin:0;
   }
   .faq-answer a{color:#B8FF57;text-decoration:none;border-bottom:1px solid rgba(184,255,87,.3)}
+  .faq-founder-row{
+    display:flex;align-items:flex-start;gap:14px;
+    padding:0 20px 20px;
+  }
+  .faq-founder-img{
+    width:56px;height:56px;flex-shrink:0;
+    padding:8px;
+    background:rgba(184,255,87,.08);
+    border:1px solid rgba(184,255,87,.25);
+    border-radius:50%;
+    filter:brightness(0) saturate(100%) invert(91%) sepia(58%) saturate(560%) hue-rotate(8deg);
+  }
+  .faq-founder-sig{
+    font-family:'DM Sans',sans-serif;font-style:italic;
+    font-size:13px;color:#B8FF57;
+    margin:8px 0 0;line-height:1.3;
+  }
+  @media(max-width:480px){
+    .faq-founder-row{flex-direction:column;gap:10px}
+  }
   @media(min-width:860px){
     .faq{padding:96px 40px}
   }
@@ -2758,6 +2778,15 @@
     transform:translateY(-3px);
   }
   .trigger-card:hover::after{opacity:1;}
+  .trigger-icon{
+    width:38px;height:38px;display:block;
+    margin-bottom:14px;
+    /* Tint black silhouette → acid green */
+    filter:brightness(0) saturate(100%) invert(91%) sepia(58%) saturate(560%) hue-rotate(8deg) brightness(102%) contrast(101%);
+    transition:transform .25s ease;
+    position:relative;z-index:1;
+  }
+  .trigger-card:hover .trigger-icon{transform:scale(1.08) rotate(-3deg)}
   .trigger-cat-row{
     display:flex;
     align-items:center;
@@ -2958,6 +2987,19 @@
     color:#fff;background:#111;
     border-bottom:1px solid #1f1f1f;
     justify-content:center;text-align:center;
+    flex-direction:column;gap:6px;padding:14px 8px;
+  }
+  .compare-col-icon{
+    width:28px;height:28px;display:block;margin:0 auto;
+    filter:invert(1) opacity(.78);
+  }
+  .compare-cell.os .compare-col-icon{
+    filter:brightness(0) saturate(100%) invert(91%) sepia(58%) saturate(560%) hue-rotate(8deg);
+  }
+  .compare-os-dot{
+    display:block;width:14px;height:14px;border-radius:50%;
+    background:#B8FF57;margin:0 auto 2px;
+    box-shadow:0 0 12px rgba(184,255,87,.4);
   }
   .compare-cell.os{
     background:rgba(184,255,87,.08);
@@ -3591,6 +3633,7 @@
   <p class="ritual-sub" style="margin-bottom:40px;">The moments nobody talks about but everybody knows.</p>
   <div class="trigger-grid">
     <div class="trigger-card">
+      <img src="/assets/icon-briefcase.png" alt="" class="trigger-icon">
       <div class="trigger-cat-row">
         <span class="trigger-diamond"></span>
         <span class="trigger-cat">Pre-Meeting</span>
@@ -3599,6 +3642,7 @@
       <p class="trigger-desc">Two sprays in the lift. Nobody notices the ride you took.</p>
     </div>
     <div class="trigger-card">
+      <img src="/assets/icon-dumbbell.png" alt="" class="trigger-icon">
       <div class="trigger-cat-row">
         <span class="trigger-diamond"></span>
         <span class="trigger-cat">Post-Gym</span>
@@ -3607,6 +3651,7 @@
       <p class="trigger-desc">Workout to work. Damp tee to decent in 20 seconds.</p>
     </div>
     <div class="trigger-card">
+      <img src="/assets/icon-calendar.png" alt="" class="trigger-icon">
       <div class="trigger-cat-row">
         <span class="trigger-diamond"></span>
         <span class="trigger-cat">Pre-Date</span>
@@ -3615,6 +3660,7 @@
       <p class="trigger-desc">Jacket's been on all day. Strike the collar. Reset.</p>
     </div>
     <div class="trigger-card">
+      <img src="/assets/icon-desk.png" alt="" class="trigger-icon">
       <div class="trigger-cat-row">
         <span class="trigger-diamond"></span>
         <span class="trigger-cat">Long Day</span>
@@ -3768,9 +3814,9 @@
   <h2 class="compare-title">Why not just spray deodorant?</h2>
   <div class="compare-table" role="table" aria-label="Deodorant vs perfume vs ODORSTRIKE">
     <div class="compare-cell row-h"></div>
-    <div class="compare-cell col-h">DEODORANT</div>
-    <div class="compare-cell col-h">PERFUME</div>
-    <div class="compare-cell col-h os">ODORSTRIKE</div>
+    <div class="compare-cell col-h"><img src="/assets/icon-deodorant.png" alt="" class="compare-col-icon"><span>DEODORANT</span></div>
+    <div class="compare-cell col-h"><img src="/assets/icon-perfume.png" alt="" class="compare-col-icon"><span>PERFUME</span></div>
+    <div class="compare-cell col-h os"><span class="compare-os-dot" aria-hidden="true"></span><span>ODORSTRIKE</span></div>
 
     <div class="compare-cell row-h">Where it goes</div>
     <div class="compare-cell" data-col="Deodorant">Skin</div>
@@ -4014,7 +4060,13 @@
         <span class="faq-icon" aria-hidden="true"></span>
       </button>
       <div class="faq-body"><div class="faq-body-inner">
-        <p class="faq-answer">Our team is a small Hyderabad crew, not a marketing-first company. Every bottle is hand-batched at our Sanathnagar facility. If it doesn't work for you, send it back within 7 days — bottle just needs to be 80% full. We refund within 5-7 days, no questions.</p>
+        <div class="faq-founder-row">
+          <img src="/assets/icon-founder.png" alt="" class="faq-founder-img">
+          <div>
+            <p class="faq-answer" style="margin:0">Our team is a small Hyderabad crew, not a marketing-first company. Every bottle is hand-batched at our Sanathnagar facility. If it doesn't work for you, send it back within 7 days — bottle just needs to be 80% full. We refund within 5-7 days, no questions.</p>
+            <p class="faq-founder-sig">— Brainee, Founder · Smelloff</p>
+          </div>
+        </div>
       </div></div>
     </div>
 
