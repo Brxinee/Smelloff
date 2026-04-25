@@ -6,6 +6,7 @@
 <title>Fabric Odor Remover Spray for Clothes ₹229 | ODORSTRIKE by Smelloff</title>
 <meta name="description" content="India's first pocket fabric odor remover. ODORSTRIKE kills sweat smell on shirts, gym clothes & jackets in 8 seconds. 50ml · ₹229 · Free shipping across India · COD available.">
 <meta name="theme-color" content="#080808">
+<style>html,body{background:#080808}body{margin:0}.hero-skeleton{position:absolute;inset:0;z-index:3;background:#080808;pointer-events:none;transition:opacity .3s ease,visibility 0s linear .3s}body.loaded .hero-skeleton{opacity:0;visibility:hidden}.hs-inner{position:relative;width:100%;height:100%;max-width:1180px;margin:0 auto;padding:128px 20px 40px;display:grid;grid-template-columns:1fr;grid-template-areas:"text" "bottle" "action";gap:24px;align-content:center}.hs-text{grid-area:text;display:flex;flex-direction:column;gap:10px}.hs-bottle{grid-area:bottle;justify-self:center;height:34vh;max-height:300px;min-height:220px;width:144px;background:#1a1a1a;border-radius:6px;position:relative;overflow:hidden}.hs-action{grid-area:action;display:flex;flex-direction:column;gap:12px}.hs-block{background:#1a1a1a;border-radius:4px;position:relative;overflow:hidden}.hs-block::after,.hs-bottle::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(184,255,87,.08) 50%,transparent 100%);animation:hs-shimmer 1.5s linear infinite}@keyframes hs-shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}.hs-h1,.hs-h2{height:48px;width:100%}.hs-h2{width:82%}.hs-sub{height:18px;width:72%;margin-top:6px}.hs-price{height:44px;width:180px}.hs-cta{height:56px;width:100%;max-width:360px;border-radius:4px}@media(prefers-reduced-motion:reduce){.hs-block::after,.hs-bottle::after{animation:none}}</style>
 
 <!-- Crawler directives: allow everyone, everywhere -->
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -5745,8 +5746,19 @@
 </aside>
 <div class="cart-toast" id="cartToast" role="status" aria-live="polite">Added to cart</div>
 
-<!-- Flip body to .loaded on next paint so the hero skeleton fades out -->
-<script>requestAnimationFrame(function(){document.body.classList.add('loaded');});</script>
+<!-- Flip body to .loaded once webfonts are ready so the skeleton actually covers FOIT -->
+<script>(function(){
+  var done=false;
+  function fade(){if(done)return;done=true;requestAnimationFrame(function(){document.body.classList.add('loaded');});}
+  if(document.fonts&&document.fonts.ready&&typeof document.fonts.ready.then==='function'){
+    document.fonts.ready.then(fade);
+    setTimeout(fade,2000);
+  }else{
+    if(document.readyState==='complete')fade();
+    else window.addEventListener('load',fade,{once:true});
+    setTimeout(fade,2000);
+  }
+})();</script>
 
 </body>
 </html>
