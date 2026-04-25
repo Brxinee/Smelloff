@@ -1829,6 +1829,99 @@
     margin:0 0 16px;
     color:#fff;
   }
+  .overlay .checkout-head{margin-bottom:14px}
+  .overlay .checkout-head h3{margin:0 0 8px}
+  .overlay .checkout-trust{
+    font-family:'DM Sans',sans-serif;font-size:12px;
+    color:#888;margin:0;line-height:1.4;
+  }
+  .overlay .summary .amt-was{
+    font-family:'DM Sans',sans-serif;font-size:12px;
+    color:#777;text-decoration:line-through;
+    margin-right:8px;
+  }
+  .overlay .returning-row{
+    display:flex;justify-content:flex-end;
+    margin:0 0 8px;
+  }
+  .overlay .returning-link{
+    background:none;border:none;cursor:pointer;
+    color:#B8FF57;font-family:'DM Sans',sans-serif;
+    font-size:12px;font-weight:500;
+    text-decoration:underline;text-decoration-color:rgba(184,255,87,.4);
+    padding:4px 2px;
+  }
+  .overlay .returning-link:hover{text-decoration-color:#B8FF57}
+  .overlay textarea{
+    height:auto;min-height:64px;
+    padding:12px 14px;line-height:1.4;
+    resize:vertical;
+  }
+  .overlay .lbl-optional{
+    color:#666;font-weight:400;letter-spacing:.04em;
+    text-transform:none;font-size:11px;
+  }
+  .overlay .pay-panel{
+    margin:10px 0 4px;
+    padding:14px;
+    background:#080808;
+    border:1px solid #1F1F1F;border-radius:6px;
+  }
+  .overlay .upi-inline{
+    display:flex;flex-direction:column;gap:6px;
+    margin-bottom:10px;
+  }
+  .overlay .upi-inline-row{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;
+  }
+  .overlay .upi-inline-lbl{
+    color:#888;font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:600;
+    min-width:60px;
+  }
+  .overlay .upi-inline-val{
+    font-family:'JetBrains Mono',monospace;color:#fff;
+    font-weight:500;font-size:13px;
+  }
+  .overlay .upi-inline-val.acid{color:#B8FF57}
+  .overlay .upi-copy{
+    background:transparent;border:1px solid #2a2a2a;
+    color:#B8FF57;cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:11px;
+    letter-spacing:.08em;text-transform:uppercase;
+    padding:5px 9px;border-radius:3px;
+    margin-left:auto;
+    transition:all .15s ease;
+  }
+  .overlay .upi-copy:hover{border-color:#B8FF57}
+  .overlay .upi-copy.copied{background:#B8FF57;color:#080808;border-color:#B8FF57}
+  .overlay .pay-help{
+    font-family:'DM Sans',sans-serif;font-size:12px;
+    color:#A0A0A0;line-height:1.45;margin:0 0 8px;
+  }
+  .overlay .wa-link{
+    display:inline-block;
+    color:#B8FF57;text-decoration:none;
+    font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+    border-bottom:1px solid rgba(184,255,87,.3);padding:2px 0;
+  }
+  .overlay .wa-link:hover{border-bottom-color:#B8FF57}
+  .overlay .pay-cod{
+    font-family:'DM Sans',sans-serif;font-size:14px;color:#fff;
+    margin:0;font-weight:500;
+  }
+  .overlay .success-reassure{
+    font-family:'DM Sans',sans-serif;font-size:13px;
+    color:#B8FF57;margin:8px 0 12px;font-weight:500;
+  }
+  /* Pincode-autofill flash border */
+  .overlay input.flash-acid,
+  .overlay textarea.flash-acid{
+    border-color:#B8FF57 !important;
+    transition:border-color .25s ease;
+  }
   .overlay .summary-card{
     background:#080808;
     border:1px solid #1F1F1F;
@@ -4182,59 +4275,51 @@
   <div class="overlay-panel">
     <button class="overlay-close" onclick="closeCheckout()" aria-label="Close">×</button>
     <div id="checkoutForm">
-      <div class="overlay-tag">Checkout</div>
-      <h3 id="checkoutTitle">ODORSTRIKE Solo</h3>
+      <div class="checkout-head">
+        <h3 id="checkoutTitle">Checkout</h3>
+        <p class="checkout-trust">🔒 Secure  ·  ✓ Free shipping  ·  ✓ 7-day returns</p>
+      </div>
+
       <div class="summary-card">
         <div class="summary">
           <span id="checkoutVariant">1 × 50ml</span>
-          <span class="amt" id="checkoutAmount">₹179</span>
+          <span>
+            <span class="amt-was" id="checkoutMRP">₹579</span>
+            <span class="amt" id="checkoutAmount">₹229</span>
+          </span>
         </div>
         <div class="summary">
-          <span id="shippingLabel">Shipping</span>
-          <span class="amt" id="checkoutShipping">₹79</span>
+          <span>Shipping</span>
+          <span class="amt" id="checkoutShipping">Free ✓</span>
         </div>
         <div class="summary total">
           <span>Total</span>
-          <span class="amt" id="checkoutTotal">₹258</span>
+          <span class="amt" id="checkoutTotal">₹229</span>
         </div>
       </div>
 
-      <!-- Auth -->
-      <div id="authSection">
-        <div class="overlay-tag" style="margin-bottom:8px">Optional · faster checkout</div>
-        <div class="auth-row">
-          <button class="google-btn" onclick="signInGoogle()">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
-            Continue with Google
-          </button>
-        </div>
+      <!-- Returning sign-in link -->
+      <div id="authSection" class="returning-row">
+        <button class="returning-link" type="button" onclick="signInGoogle()">Returning? Sign in</button>
       </div>
       <div id="loggedInSection" class="logged-in" style="display:none">
         Signed in as <span id="loggedInEmail"></span>
       </div>
 
-      <!-- Details -->
+      <!-- Details — phone first, email last/optional -->
+      <label>Phone</label>
+      <input type="tel" id="f_phone" required maxlength="10" pattern="[0-9]{10}" autocomplete="tel" placeholder="10-digit mobile">
+
       <label>Full name</label>
       <input type="text" id="f_name" required autocomplete="name">
 
-      <div class="row">
-        <div>
-          <label>Phone</label>
-          <input type="tel" id="f_phone" required maxlength="10" pattern="[0-9]{10}" autocomplete="tel">
-        </div>
-        <div>
-          <label>Email</label>
-          <input type="email" id="f_email" required autocomplete="email">
-        </div>
-      </div>
-
-      <label>Address (line 1 + line 2)</label>
-      <input type="text" id="f_addr" required autocomplete="street-address">
+      <label>Address</label>
+      <textarea id="f_addr" required autocomplete="street-address" rows="2" placeholder="House/flat no, street, area, landmark"></textarea>
 
       <div class="row-3">
         <div>
           <label>Pincode</label>
-          <input type="text" id="f_pin" required maxlength="6" pattern="[0-9]{6}" autocomplete="postal-code">
+          <input type="text" id="f_pin" required maxlength="6" pattern="[0-9]{6}" autocomplete="postal-code" inputmode="numeric">
         </div>
         <div>
           <label>City</label>
@@ -4246,17 +4331,49 @@
         </div>
       </div>
 
-      <label>Payment</label>
+      <label>Email <span class="lbl-optional">(optional — for receipt)</span></label>
+      <input type="email" id="f_email" autocomplete="email">
+
+      <label>Payment method</label>
       <div class="pay-toggle">
         <div class="pay-opt active" data-method="prepaid" onclick="selectPay('prepaid')" tabindex="0" role="button" onkeydown="if(event.key==='Enter')selectPay('prepaid')">Pay via UPI</div>
-        <div class="pay-opt" data-method="cod" onclick="selectPay('cod')" tabindex="0" role="button" onkeydown="if(event.key==='Enter')selectPay('cod')">Cash on delivery</div>
+        <div class="pay-opt" data-method="cod" onclick="selectPay('cod')" tabindex="0" role="button" onkeydown="if(event.key==='Enter')selectPay('cod')">Cash on Delivery</div>
+      </div>
+
+      <!-- UPI panel (shown when prepaid selected) -->
+      <div id="upiPayPanel" class="pay-panel">
+        <div class="upi-inline">
+          <div class="upi-inline-row">
+            <span class="upi-inline-lbl">UPI ID</span>
+            <span class="upi-inline-val" id="upiInlineId">9392974031-3@ybl</span>
+            <button type="button" class="upi-copy" id="upiCopyBtn" onclick="copyUpiId()">Tap to copy</button>
+          </div>
+          <div class="upi-inline-row">
+            <span class="upi-inline-lbl">Payee</span>
+            <span class="upi-inline-val">Smelloff</span>
+          </div>
+          <div class="upi-inline-row">
+            <span class="upi-inline-lbl">Amount</span>
+            <span class="upi-inline-val acid" id="upiAmountInline">₹229</span>
+          </div>
+        </div>
+        <p class="pay-help">
+          After paying, send screenshot + UTR to WhatsApp.
+          Our team dispatches within 48 hours of confirmation.
+        </p>
+        <a class="wa-link" href="https://wa.me/919392974031?text=Hi%2C%20I%20paid%20for%20ODORSTRIKE.%20UTR%3A%20" target="_blank" rel="noopener">WhatsApp us your UTR →</a>
+      </div>
+
+      <!-- COD panel (shown when cod selected) -->
+      <div id="codPayPanel" class="pay-panel" style="display:none">
+        <p class="pay-cod">₹0 advance · Pay when it arrives</p>
       </div>
 
       <div id="checkoutError" style="display:none" class="error-msg"></div>
-      <a href="https://wa.me/919392974031?text=Hi%2C%20my%20payment%20failed%20on%20smelloff.in.%20Order%20help%20please." class="wa-fallback" id="waFallback" style="display:none" target="_blank" rel="noopener">WhatsApp us for help →</a>
+      <a href="https://wa.me/919392974031?text=Hi%2C%20I%20need%20help%20with%20my%20ODORSTRIKE%20order." class="wa-fallback" id="waFallback" style="display:none" target="_blank" rel="noopener">WhatsApp us for help →</a>
 
       <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
-        <span id="submitText">Place order · ₹179</span>
+        <span id="submitText">OPEN UPI APP · ₹229</span>
       </button>
     </div>
 
@@ -4264,14 +4381,13 @@
     <div id="successScreen" class="success-screen" style="display:none">
       <div class="overlay-tag" id="successTag">Order confirmed</div>
       <h3 id="successHeading">You're done.</h3>
-      <p id="successMsg">We'll ship your ODORSTRIKE within 48 hours.</p>
+      <p id="successMsg">Our team ships your ODORSTRIKE within 48 hours.</p>
       <div class="order-id" id="orderIdDisplay"></div>
 
-      <!-- UPI payment block (only shown for UPI orders) -->
+      <p class="success-reassure">Check your phone — we just sent a WhatsApp confirmation.</p>
+
+      <!-- Optional UPI block (shown only when UPI was the chosen method) -->
       <div id="upiBlock" class="upi-block" style="display:none;text-align:left">
-        <div class="qr-wrap">
-          <img id="upiQR" class="upi-qr" alt="UPI QR code — scan to pay" src="" loading="lazy">
-        </div>
         <div class="upi-row">
           <span class="lbl">UPI ID</span>
           <span class="val" id="upiIdShow">9392974031-3@ybl</span>
@@ -4287,21 +4403,10 @@
 
         <a id="upiOpenBtn" class="upi-cta" href="#">Open UPI app</a>
 
-        <div class="upi-timer" id="upiTimer" aria-live="polite">
-          <span class="t-lbl">Time left to pay</span>
-          <span class="t-val" id="upiTimerVal">10:00</span>
-        </div>
-
-        <button type="button" id="upiRetry" class="upi-retry" onclick="resetUpiTimer()">Restart payment session</button>
-
-        <div class="upi-policy-link">
-          Payment issue? <a href="#" onclick="openPaymentFailedOverlay();return false;">See our Payment Failed Policy</a>
-        </div>
-
         <div class="upi-help">
           <strong>After paying:</strong> send the payment screenshot + UTR to
           <a href="https://wa.me/919392974031" target="_blank" rel="noopener">WhatsApp</a>
-          or reply to your order email. We dispatch within 48 hours of payment confirmation.
+          or reply to your order email. Our team dispatches within 48 hours of payment confirmation.
         </div>
       </div>
 
@@ -4471,6 +4576,10 @@
     var mb = document.getElementById('mobileBar');
     if (mb) mb.style.display = '';
   }
+  window.openCheckout = openCheckout;
+  window.closeCheckout = closeCheckout;
+  window.selectPay = selectPay;
+  window.submitOrder = submitOrder;
 
   function selectPay(method) {
     payMethod = method;
@@ -4505,18 +4614,20 @@
 
   function validateForm() {
     // Clear previous red borders
-    document.querySelectorAll('.overlay input').forEach(function(i){i.style.borderColor='';});
-    const fields = ['f_name','f_phone','f_email','f_addr','f_pin','f_city','f_state'];
+    document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(i){i.style.borderColor='';});
+    // Email is OPTIONAL — not in required list
+    const fields = ['f_phone','f_name','f_addr','f_pin','f_city','f_state'];
     for (const id of fields) {
       const el = document.getElementById(id);
-      if (!el.value.trim()) { el.style.borderColor='#ff6b6b'; el.focus(); showError('Please fill all fields.'); return false; }
+      if (!el.value.trim()) { el.style.borderColor='#ff6b6b'; el.focus(); showError('Please fill all required fields.'); return false; }
     }
     const phone = document.getElementById('f_phone').value.trim();
     if (!/^[6-9]\d{9}$/.test(phone)) { document.getElementById('f_phone').style.borderColor='#ff6b6b'; showError('Enter a valid 10-digit mobile number.'); return false; }
     const pin = document.getElementById('f_pin').value.trim();
     if (!/^\d{6}$/.test(pin)) { document.getElementById('f_pin').style.borderColor='#ff6b6b'; showError('Enter a valid 6-digit pincode.'); return false; }
+    // Email is OPTIONAL — only validate if non-empty
     const email = document.getElementById('f_email').value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('f_email').style.borderColor='#ff6b6b'; showError('Enter a valid email.'); return false; }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('f_email').style.borderColor='#ff6b6b'; showError('Enter a valid email or leave it blank.'); return false; }
     return true;
   }
 
@@ -4633,8 +4744,8 @@
     document.getElementById('upiBlock').style.display = 'none';
     document.getElementById('orderIdDisplay').textContent = orderId;
     document.getElementById('successMsg').textContent = method === 'cod'
-      ? "We'll call to confirm your COD order, then ship within 48 hours."
-      : "Payment received. We'll ship your ODORSTRIKE within 48 hours.";
+      ? "Our team will call to confirm your COD order, then ship within 48 hours."
+      : "Payment received. Our team ships your ODORSTRIKE within 48 hours.";
     trackPurchase(VARIANTS[currentVariant].amount, orderId);
     // Unlock review submission (client-side gate — not tamper-proof).
     try {
@@ -4656,6 +4767,7 @@
     btnText.innerHTML = '<span class="loader"></span>Processing...';
 
     const orderId = genOrderId();
+    const total = VARIANTS[currentVariant].amount;
 
     if (payMethod === 'cod') {
       const order = collectOrder(orderId, 'COD');
@@ -4673,17 +4785,11 @@
       setTimeout(() => {
         btn.disabled = false;
         showSuccess(orderId, 'cod');
-      }, 800);
+      }, 600);
       return;
     }
 
-    // ==============================
-    // UPI (PhonePe / GPay / Paytm — any UPI app) with auto-filled amount
-    // ==============================
-    const amt = VARIANTS[currentVariant].amount;
-    const shipping = calcShipping(amt);
-    const total = amt + shipping;
-
+    // UPI — no timer; order persists. User pays whenever.
     const order = collectOrder(orderId, 'UPI_PENDING');
     logOrderToSheets(order);
     notifyWhatsApp(order);
@@ -4706,13 +4812,35 @@
     }
   }
 
+  // Copy UPI ID to clipboard with brief "Copied ✓" confirmation
+  window.copyUpiId = async function() {
+    const id = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || '9392974031-3@ybl';
+    const btn = document.getElementById('upiCopyBtn');
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(id);
+      } else {
+        // Fallback for older browsers
+        const ta = document.createElement('textarea');
+        ta.value = id; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); ta.remove();
+      }
+      if (btn) {
+        btn.classList.add('copied');
+        const orig = btn.textContent;
+        btn.textContent = 'Copied ✓';
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+      }
+    } catch (e) { console.warn('[Smelloff] UPI copy failed:', e); }
+  };
+
   function buildUpiLink(amount, orderId) {
     const params = new URLSearchParams({
       pa: CFG.UPI_ID,
       pn: CFG.UPI_NAME,
       am: String(amount),
       cu: 'INR',
-      tn: 'Smelloff ' + orderId
+      tn: 'ODORSTRIKE-' + orderId
     });
     return 'upi://pay?' + params.toString();
   }
@@ -4721,29 +4849,19 @@
     document.getElementById('checkoutForm').style.display = 'none';
     const s = document.getElementById('successScreen');
     s.style.display = 'block';
-    document.getElementById('successTag').textContent = 'Awaiting payment';
-    document.getElementById('successHeading').textContent = 'Scan & pay ₹' + total;
-    document.getElementById('successMsg').textContent = 'Open any UPI app (PhonePe, GPay, Paytm, BHIM) and scan the code below — amount is pre-filled.';
+    document.getElementById('successTag').textContent = 'Order placed';
+    document.getElementById('successHeading').textContent = 'Pay ₹' + total + ' via UPI';
+    document.getElementById('successMsg').textContent = 'Tap "Open UPI app" below — amount is pre-filled. After paying, send screenshot + UTR to WhatsApp. Our team ships within 48hr of payment.';
     document.getElementById('orderIdDisplay').textContent = orderId;
 
-    // Populate UPI block
+    // Populate UPI block (no QR, no timer — order persists)
     document.getElementById('upiBlock').style.display = 'block';
     document.getElementById('upiIdShow').textContent = CFG.UPI_ID;
     document.getElementById('upiAmountShow').textContent = '₹' + total;
-    document.getElementById('upiNoteShow').textContent = 'Smelloff ' + orderId;
+    document.getElementById('upiNoteShow').textContent = 'ODORSTRIKE-' + orderId;
     const openBtn = document.getElementById('upiOpenBtn');
     openBtn.href = upiLink;
     openBtn.textContent = 'Open UPI app · ₹' + total;
-
-    // Generate QR for the UPI deep link (any UPI app reads this).
-    const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=8&data=' + encodeURIComponent(upiLink);
-    const qrImg = document.getElementById('upiQR');
-    qrImg.src = qrSrc;
-    qrImg.onerror = function(){
-      qrImg.style.display = 'none';
-    };
-
-    startUpiTimer();
 
     trackPurchase(VARIANTS[currentVariant].amount, orderId);
     try {
@@ -4755,47 +4873,44 @@
   }
 
   // ==============================
-  // UPI PAYMENT TIMER (10 minutes)
+  // PINCODE → CITY/STATE AUTOFILL (checkout)
+  // postalpincode.in is free, no API key. We never block checkout —
+  // any failure just leaves the fields empty for manual entry.
   // ==============================
-  let _upiTimerInterval = null;
-  const UPI_TIMER_SECONDS = 10 * 60;
+  (function(){
+    var pin  = document.getElementById('f_pin');
+    var city = document.getElementById('f_city');
+    var st   = document.getElementById('f_state');
+    if (!pin || !city || !st) return;
+    var inflight = null;
 
-  function startUpiTimer() {
-    stopUpiTimer();
-    const el = document.getElementById('upiTimer');
-    const val = document.getElementById('upiTimerVal');
-    const retry = document.getElementById('upiRetry');
-    el.classList.remove('expired','warn');
-    retry.classList.remove('show');
-    let remaining = UPI_TIMER_SECONDS;
-    paintUpiTimer(remaining);
-    _upiTimerInterval = setInterval(function(){
-      remaining -= 1;
-      if (remaining <= 0) {
-        paintUpiTimer(0);
-        el.classList.add('expired');
-        val.textContent = 'EXPIRED';
-        retry.classList.add('show');
-        stopUpiTimer();
-        return;
+    async function lookup(value){
+      try{
+        var res = await fetch('https://api.postalpincode.in/pincode/' + encodeURIComponent(value));
+        if (!res.ok) return;
+        var json = await res.json();
+        var entry = json && json[0];
+        if (!entry || entry.Status !== 'Success' || !entry.PostOffice || !entry.PostOffice.length) return;
+        var po = entry.PostOffice[0];
+        if (po.District) { city.value = po.District; flash(city); }
+        if (po.State)    { st.value   = po.State;    flash(st);   }
+      } catch(e){
+        console.warn('[Smelloff] Pincode lookup failed:', e);
       }
-      paintUpiTimer(remaining);
-      el.classList.toggle('warn', remaining <= 120);
-    }, 1000);
-  }
-
-  function paintUpiTimer(remaining) {
-    const m = Math.floor(remaining / 60);
-    const s = remaining % 60;
-    document.getElementById('upiTimerVal').textContent =
-      String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-  }
-
-  function stopUpiTimer() {
-    if (_upiTimerInterval) { clearInterval(_upiTimerInterval); _upiTimerInterval = null; }
-  }
-
-  window.resetUpiTimer = function(){ startUpiTimer(); };
+    }
+    function flash(el){
+      el.classList.add('flash-acid');
+      setTimeout(function(){ el.classList.remove('flash-acid'); }, 800);
+    }
+    pin.addEventListener('input', function(){
+      var v = (pin.value || '').trim();
+      if (v.length === 6 && /^\d{6}$/.test(v)) {
+        if (inflight) return;
+        inflight = true;
+        lookup(v).finally(function(){ inflight = null; });
+      }
+    });
+  })();
 
   // ==============================
   // PAYMENT FAILED POLICY OVERLAY
@@ -4870,40 +4985,6 @@
     if (typeof openCheckout === 'function') openCheckout(variant);
   };
 
-  // =============================================
-  // PINCODE CHECKER (UI only — fake 2s delay)
-  // =============================================
-  window.checkPincode = function(e){
-    if (e && e.preventDefault) e.preventDefault();
-    var input  = document.getElementById('pinInput');
-    var btn    = document.getElementById('pinBtn');
-    var result = document.getElementById('pinResult');
-    var pin    = (input.value || '').trim();
-
-    result.classList.remove('error');
-    input.classList.remove('invalid');
-
-    if (!/^\d{6}$/.test(pin)) {
-      input.classList.add('invalid');
-      result.textContent = 'Enter a valid 6-digit pincode.';
-      result.classList.add('error');
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Checking…';
-    result.textContent = '';
-
-    setTimeout(function(){
-      var d = new Date();
-      d.setDate(d.getDate() + 3);
-      var opts = { weekday:'short', day:'numeric', month:'short' };
-      var dateStr = d.toLocaleDateString('en-IN', opts);
-      result.textContent = 'Delivery by ' + dateStr;
-      btn.disabled = false;
-      btn.textContent = 'Check';
-    }, 2000);
-  };
 
   // =============================================
   // NAV: open / close / focus trap
@@ -4997,7 +5078,7 @@
   });
 
   // Clear red border on input focus
-  document.querySelectorAll('.overlay input').forEach(function(input){
+  document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(input){
     input.addEventListener('focus',function(){this.style.borderColor='';});
   });
 
