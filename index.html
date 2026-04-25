@@ -976,7 +976,7 @@
     text-transform:uppercase;
   }
   .product-card .pc-cta{
-    width:100%;height:52px;
+    width:100%;height:56px;
     background:#B8FF57;color:#080808;
     font-family:'Barlow Condensed',sans-serif;
     font-weight:900;font-size:16px;
@@ -988,6 +988,55 @@
   }
   .product-card .pc-cta:hover{background:#C7FF70}
   .product-card .pc-cta:active{transform:scale(.985)}
+  .product-card .pc-subtitle{
+    font-family:'DM Sans',sans-serif;font-size:14px;
+    color:#888;margin:0;line-height:1.3;
+  }
+  .product-card .pc-rating{
+    text-decoration:none;cursor:pointer;
+  }
+  .product-card .pc-rating:hover{opacity:.8}
+  .product-card .pc-now{font-size:36px;color:#B8FF57}
+  .product-card .pc-was{font-size:16px}
+  .product-card .pc-save{
+    font-family:'DM Sans',sans-serif;font-size:12px;
+    color:#888;margin:-4px 0 0;line-height:1;
+  }
+  .product-card .pc-qty-row{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+    margin-top:6px;
+  }
+  .product-card .pc-qty-btn{
+    height:42px;
+    background:#080808;border:1px solid #2a2a2a;border-radius:4px;
+    color:#fff;cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:16px;
+    letter-spacing:.04em;
+    transition:all .15s ease;
+  }
+  .product-card .pc-qty-btn:hover{border-color:#444}
+  .product-card .pc-qty-btn.active{
+    border-color:#B8FF57;color:#B8FF57;
+    background:rgba(184,255,87,.06);
+  }
+  .product-card .pc-qty-hint{
+    font-family:'DM Sans',sans-serif;font-size:12px;
+    color:#B8FF57;margin:-4px 0 0;line-height:1.3;
+    min-height:16px;
+  }
+  .product-card .pc-risk{
+    display:flex;flex-wrap:wrap;align-items:center;gap:6px;
+    font-family:'DM Sans',sans-serif;font-size:12px;
+    color:#888;line-height:1.4;
+    margin-top:6px;
+  }
+  .product-card .pc-risk-item{color:#888}
+  .product-card .pc-risk-sep{color:#333}
+  .product-card .pc-secure{
+    font-family:'DM Sans',sans-serif;font-size:11px;
+    color:#666;margin:0;text-align:center;line-height:1.3;
+  }
 
   @media(min-width:860px){
     .only-fix{padding:100px 40px}
@@ -2864,6 +2913,212 @@
   }
 
   /* ============================= */
+  /* WHY NOT DEODORANT? — comparison*/
+  /* ============================= */
+  .compare{
+    background:#080808;
+    padding:64px 20px;
+    display:flex;flex-direction:column;align-items:center;gap:28px;
+    border-bottom:1px solid #1a1a1a;
+  }
+  .compare-title{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    font-size:clamp(30px,6vw,48px);
+    letter-spacing:.02em;
+    color:#fff;
+    text-transform:uppercase;
+    margin:0;text-align:center;line-height:1;
+  }
+  .compare-table{
+    width:100%;max-width:920px;
+    display:grid;
+    grid-template-columns:1.2fr 1fr 1fr 1fr;
+    gap:0;
+    background:#0D0D0D;
+    border:1px solid #1F1F1F;
+    border-radius:8px;overflow:hidden;
+  }
+  .compare-cell{
+    padding:14px 12px;
+    font-family:'DM Sans',sans-serif;
+    font-size:13px;color:#C5C5C5;
+    line-height:1.45;
+    border-bottom:1px solid #1a1a1a;
+    display:flex;align-items:center;
+  }
+  .compare-cell.row-h{
+    color:#888;font-weight:600;font-size:12px;
+  }
+  .compare-cell.col-h{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+    color:#fff;background:#111;
+    border-bottom:1px solid #1f1f1f;
+    justify-content:center;text-align:center;
+  }
+  .compare-cell.os{
+    background:rgba(184,255,87,.08);
+    color:#fff;
+  }
+  .compare-cell.os.col-h{
+    color:#B8FF57;
+    border-left:2px solid #B8FF57;
+  }
+  .compare-cell.os.body{
+    border-left:2px solid #B8FF57;
+    font-weight:600;
+  }
+  .compare-line{
+    font-family:'DM Sans',sans-serif;font-style:italic;
+    font-size:16px;color:#BBB;line-height:1.55;
+    text-align:center;max-width:680px;margin:0;
+  }
+  @media(max-width:720px){
+    .compare-table{
+      grid-template-columns:1fr;
+      max-width:420px;
+    }
+    .compare-cell{padding:12px 14px}
+    .compare-cell.row-h{
+      background:#111;border-top:2px solid #1f1f1f;
+      padding-top:14px;
+    }
+    .compare-cell.col-h{display:none}
+    .compare-cell::before{
+      content:attr(data-col);
+      font-family:'Barlow Condensed',sans-serif;
+      font-weight:900;font-size:11px;letter-spacing:.1em;
+      text-transform:uppercase;color:#888;
+      min-width:90px;display:inline-block;flex-shrink:0;
+      margin-right:10px;
+    }
+    .compare-cell.row-h::before{display:none}
+    .compare-cell.os.body{border-left:none;border-top:1px solid rgba(184,255,87,.4)}
+  }
+
+  /* ============================= */
+  /* STOCK UP & SAVE — bundle cards */
+  /* ============================= */
+  .stockup{
+    background:#080808;
+    padding:64px 0 72px;
+    display:flex;flex-direction:column;gap:28px;
+  }
+  .stockup-head{
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    padding:0 20px;text-align:center;
+  }
+  .stockup-title{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    font-size:clamp(30px,6vw,48px);
+    letter-spacing:.02em;
+    color:#fff;
+    text-transform:uppercase;
+    margin:0;line-height:1;
+  }
+  .stockup-sub{
+    font-family:'DM Sans',sans-serif;
+    font-size:16px;color:#888;margin:0;
+    max-width:520px;line-height:1.45;
+  }
+  .stockup-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    max-width:1040px;margin:0 auto;
+    padding:0 32px;width:100%;
+  }
+  .su-card{
+    background:#0D0D0D;
+    border:1px solid #1F1F1F;
+    border-radius:10px;
+    padding:18px 16px 18px;
+    display:flex;flex-direction:column;gap:10px;
+    min-height:320px;position:relative;
+    transition:transform .2s ease, border-color .2s ease;
+  }
+  .su-card.featured{
+    border:2px solid #B8FF57;
+    transform:scale(1.03);
+    box-shadow:0 0 30px rgba(184,255,87,.08);
+  }
+  .su-tag{
+    position:absolute;top:-10px;left:50%;
+    transform:translateX(-50%);
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 10px;border-radius:3px;line-height:1;
+  }
+  .su-tag.popular{background:#B8FF57;color:#080808}
+  .su-tag.value{background:#fff;color:#080808}
+  .su-bottles{
+    height:120px;
+    display:flex;align-items:flex-end;justify-content:center;
+    gap:4px;background:radial-gradient(circle at center,#141414 0%,#050505 100%);
+    border-radius:6px;padding:10px;
+    margin-bottom:4px;
+  }
+  .su-bottles .hb-bottle{height:100%;animation:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+  .su-name{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:18px;letter-spacing:.04em;text-transform:uppercase;
+    color:#fff;line-height:1.1;margin:0;
+  }
+  .su-units{
+    font-family:'DM Sans',sans-serif;font-size:12px;
+    color:#888;margin:0;line-height:1;
+  }
+  .su-price{
+    display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+    margin-top:auto;
+  }
+  .su-was{font-family:'DM Sans',sans-serif;font-size:13px;color:#888;text-decoration:line-through}
+  .su-now{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;color:#B8FF57;line-height:1;letter-spacing:.01em}
+  .su-badge{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:10px;color:#B8FF57;letter-spacing:.08em;
+    text-transform:uppercase;line-height:1;
+  }
+  .su-cta{
+    width:100%;height:42px;
+    background:#B8FF57;color:#080808;
+    border:none;border-radius:4px;cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+    transition:background .15s ease;
+  }
+  .su-cta:hover{background:#C7FF70}
+  .su-foot{
+    font-family:'DM Sans',sans-serif;font-size:11px;
+    color:#888;margin:0;text-align:center;line-height:1.3;
+  }
+  .stockup-fine{
+    font-family:'DM Sans',sans-serif;font-style:italic;
+    font-size:14px;color:#888;text-align:center;
+    max-width:680px;margin:0 auto;padding:0 20px;
+  }
+  @media(max-width:720px){
+    .stockup-grid{
+      display:flex;
+      grid-template-columns:none;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      gap:12px;padding:8px 16px 16px;
+      scrollbar-width:none;
+      -webkit-overflow-scrolling:touch;
+    }
+    .stockup-grid::-webkit-scrollbar{display:none}
+    .su-card{
+      flex:0 0 78vw;max-width:300px;
+      scroll-snap-align:start;
+      min-height:300px;
+    }
+    .su-card.featured{transform:none}
+  }
+
+  /* ============================= */
   /* P2: INSTAGRAM ROW (#14)       */
   /* ============================= */
   .insta-row{
@@ -3337,6 +3592,50 @@
   </div>
 </section>
 
+<!-- WHEN IT HITS — Trigger Points (moved up: relate first) -->
+<section class="trigger-section" id="when-to-use">
+  <div class="section-eyebrow">
+    <div class="section-eyebrow-line"></div>
+    <span class="section-eyebrow-label">Trigger Points</span>
+  </div>
+  <h2 class="ritual-title">When it <span class="acid">hits.</span></h2>
+  <p class="ritual-sub" style="margin-bottom:40px;">The moments nobody talks about but everybody knows.</p>
+  <div class="trigger-grid">
+    <div class="trigger-card">
+      <div class="trigger-cat-row">
+        <span class="trigger-diamond"></span>
+        <span class="trigger-cat">Pre-Meeting</span>
+      </div>
+      <div class="trigger-heading">Before you walk in</div>
+      <p class="trigger-desc">Two sprays in the lift. Nobody notices the ride you took.</p>
+    </div>
+    <div class="trigger-card">
+      <div class="trigger-cat-row">
+        <span class="trigger-diamond"></span>
+        <span class="trigger-cat">Post-Gym</span>
+      </div>
+      <div class="trigger-heading">No time to shower</div>
+      <p class="trigger-desc">Workout to work. Damp tee to decent in 20 seconds.</p>
+    </div>
+    <div class="trigger-card">
+      <div class="trigger-cat-row">
+        <span class="trigger-diamond"></span>
+        <span class="trigger-cat">Pre-Date</span>
+      </div>
+      <div class="trigger-heading">Ten mins before she lands</div>
+      <p class="trigger-desc">Jacket's been on all day. Strike the collar. Reset.</p>
+    </div>
+    <div class="trigger-card">
+      <div class="trigger-cat-row">
+        <span class="trigger-diamond"></span>
+        <span class="trigger-cat">Long Day</span>
+      </div>
+      <div class="trigger-heading">Hour nine at the desk</div>
+      <p class="trigger-desc">Shirt's broadcasting. Fix it without leaving your seat.</p>
+    </div>
+  </div>
+</section>
+
 <!-- SCIENCE / HOW IT WORKS -->
 <section class="how-works" id="science">
   <h2 class="hw-title">How ODORSTRIKE kills smell</h2>
@@ -3475,48 +3774,41 @@
   </div>
 </section>
 
-<!-- WHEN TO USE -->
-<section class="trigger-section" id="when-to-use">
-  <div class="section-eyebrow">
-    <div class="section-eyebrow-line"></div>
-    <span class="section-eyebrow-label">Trigger Points</span>
+<!-- WHY NOT JUST DEODORANT? — comparison -->
+<section class="compare" id="vs-deodorant">
+  <h2 class="compare-title">Why not just spray deodorant?</h2>
+  <div class="compare-table" role="table" aria-label="Deodorant vs perfume vs ODORSTRIKE">
+    <div class="compare-cell row-h"></div>
+    <div class="compare-cell col-h">DEODORANT</div>
+    <div class="compare-cell col-h">PERFUME</div>
+    <div class="compare-cell col-h os">ODORSTRIKE</div>
+
+    <div class="compare-cell row-h">Where it goes</div>
+    <div class="compare-cell" data-col="Deodorant">Skin</div>
+    <div class="compare-cell" data-col="Perfume">Skin</div>
+    <div class="compare-cell os body" data-col="ODORSTRIKE">Fabric</div>
+
+    <div class="compare-cell row-h">What it does</div>
+    <div class="compare-cell" data-col="Deodorant">Masks body odor</div>
+    <div class="compare-cell" data-col="Perfume">Adds scent</div>
+    <div class="compare-cell os body" data-col="ODORSTRIKE">Kills odor molecules</div>
+
+    <div class="compare-cell row-h">Works on clothes?</div>
+    <div class="compare-cell" data-col="Deodorant">Stains fabric</div>
+    <div class="compare-cell" data-col="Perfume">Doesn't last</div>
+    <div class="compare-cell os body" data-col="ODORSTRIKE">Designed for fabric</div>
+
+    <div class="compare-cell row-h">Re-apply when sweating?</div>
+    <div class="compare-cell" data-col="Deodorant">Won't help (it's on fabric, not skin)</div>
+    <div class="compare-cell" data-col="Perfume">Faded already</div>
+    <div class="compare-cell os body" data-col="ODORSTRIKE">One spray, 8 sec</div>
+
+    <div class="compare-cell row-h">Pocket size?</div>
+    <div class="compare-cell" data-col="Deodorant">Bulky cans</div>
+    <div class="compare-cell" data-col="Perfume">Heavy bottles</div>
+    <div class="compare-cell os body" data-col="ODORSTRIKE">50ml — fits any pocket</div>
   </div>
-  <h2 class="ritual-title">When it <span class="acid">hits.</span></h2>
-  <p class="ritual-sub" style="margin-bottom:40px;">The moments nobody talks about but everybody knows.</p>
-  <div class="trigger-grid">
-    <div class="trigger-card">
-      <div class="trigger-cat-row">
-        <span class="trigger-diamond"></span>
-        <span class="trigger-cat">Pre-Meeting</span>
-      </div>
-      <div class="trigger-heading">Before you walk in</div>
-      <p class="trigger-desc">Two sprays in the lift. Nobody notices the ride you took.</p>
-    </div>
-    <div class="trigger-card">
-      <div class="trigger-cat-row">
-        <span class="trigger-diamond"></span>
-        <span class="trigger-cat">Post-Gym</span>
-      </div>
-      <div class="trigger-heading">No time to shower</div>
-      <p class="trigger-desc">Workout to work. Damp tee to decent in 20 seconds.</p>
-    </div>
-    <div class="trigger-card">
-      <div class="trigger-cat-row">
-        <span class="trigger-diamond"></span>
-        <span class="trigger-cat">Pre-Date</span>
-      </div>
-      <div class="trigger-heading">Ten mins before she lands</div>
-      <p class="trigger-desc">Jacket's been on all day. Strike the collar. Reset.</p>
-    </div>
-    <div class="trigger-card">
-      <div class="trigger-cat-row">
-        <span class="trigger-diamond"></span>
-        <span class="trigger-cat">Long Day</span>
-      </div>
-      <div class="trigger-heading">Hour nine at the desk</div>
-      <p class="trigger-desc">Shirt's broadcasting. Fix it without leaving your seat.</p>
-    </div>
-  </div>
+  <p class="compare-line">Deodorant covers your skin. ODORSTRIKE handles what your skin already left on your clothes.</p>
 </section>
 
 <section class="only-fix" id="buy">
@@ -3524,7 +3816,7 @@
 
   <article class="product-card">
     <div class="pc-media">
-      <span class="pc-tag">Launch offer</span>
+      <span class="pc-tag">LAUNCH PRICE · LIMITED</span>
       <div class="pc-image" aria-hidden="true">
         <div class="hb-bottle">
           <div class="hb-cap"></div>
@@ -3542,97 +3834,119 @@
 
     <div class="pc-body">
       <h3 class="pc-title">ODORSTRIKE Fabric Odor Mist</h3>
-      <div class="pc-rating" aria-label="Rated 4.8 out of 5 from 127 reviews">
+      <p class="pc-subtitle">50ml · Pocket size · Fabric only · Made in Hyderabad</p>
+      <a href="#reviews" class="pc-rating" aria-label="Rated 4.8 out of 5 from 127 verified reviews">
         <span class="pc-star" aria-hidden="true">★</span>
-        <span>4.8</span>
-        <span class="pc-rating-sep" aria-hidden="true">|</span>
-        <span>127 reviews</span>
-      </div>
+        <span><strong>4.8</strong></span>
+        <span class="pc-rating-sep" aria-hidden="true">·</span>
+        <span>127 verified reviews</span>
+      </a>
       <div class="pc-price">
-        <span class="pc-now">₹179</span>
-        <span class="pc-was">₹249</span>
-        <span class="pc-off">28% OFF</span>
+        <span class="pc-was">₹579</span>
+        <span class="pc-now">₹229</span>
+        <span class="pc-off">60% OFF</span>
       </div>
-      <button class="pc-cta" onclick="addToCart('solo')">Add to cart</button>
+      <p class="pc-save">You save ₹350</p>
+
+      <div class="pc-qty-row" role="radiogroup" aria-label="Quantity">
+        <button class="pc-qty-btn active" type="button" data-qty="1" onclick="selectQty(1)">1</button>
+        <button class="pc-qty-btn" type="button" data-qty="2" onclick="selectQty(2)">2</button>
+        <button class="pc-qty-btn" type="button" data-qty="3" onclick="selectQty(3)">3</button>
+      </div>
+      <p class="pc-qty-hint" id="pcQtyHint">Smart move — pick a bigger pack to save</p>
+
+      <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">ADD TO CART — ₹229</button>
+
+      <div class="pc-risk">
+        <span class="pc-risk-item">✓ 7-day money-back</span>
+        <span class="pc-risk-sep">·</span>
+        <span class="pc-risk-item">✓ Free shipping</span>
+        <span class="pc-risk-sep">·</span>
+        <span class="pc-risk-item">✓ COD available</span>
+        <span class="pc-risk-sep">·</span>
+        <span class="pc-risk-item">✓ Ships in 48hr</span>
+      </div>
+      <p class="pc-secure">🔒 Secure checkout · UPI / COD · No card stored</p>
     </div>
   </article>
 </section>
 
-<!-- PINCODE DELIVERY CHECKER -->
-<section class="pin-check">
-  <h2 class="pc-title">
-    <svg class="pc-truck" viewBox="0 0 28 24" aria-hidden="true">
-      <path d="M2 5h14v12H2z"/>
-      <path d="M16 10h6l3 3v4H16z"/>
-      <circle cx="8" cy="18" r="2"/>
-      <circle cx="20" cy="18" r="2"/>
-    </svg>
-    Check delivery date
-  </h2>
-
-  <form class="pin-form" onsubmit="checkPincode(event)" novalidate>
-    <input class="pin-input" id="pinInput" type="tel" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="Enter 6-digit pincode" autocomplete="postal-code" aria-label="6-digit pincode">
-    <button class="pin-btn" type="submit" id="pinBtn">Check</button>
-  </form>
-  <p class="pin-result" id="pinResult" aria-live="polite"></p>
-
-  <div class="pin-badges">
-    <div class="pin-badge">
-      <div class="pb-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M2 8h13v10H2z"/><path d="M15 11h5l3 3v4h-8z"/><circle cx="7" cy="18" r="1.8"/><circle cx="18" cy="18" r="1.8"/></svg>
-      </div>
-      <span class="pb-label">Fast shipping</span>
-    </div>
-    <div class="pin-badge">
-      <div class="pb-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M12 2 4 5v7c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
-      </div>
-      <span class="pb-label">Secured checkout</span>
-    </div>
-    <div class="pin-badge">
-      <div class="pb-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1"/><path d="M3 10h18"/><path d="M7 15h4"/></svg>
-      </div>
-      <span class="pb-label">COD available</span>
-    </div>
+<!-- STOCK UP & SAVE — bundle ladder -->
+<section class="stockup" id="stock-up">
+  <div class="stockup-head">
+    <h2 class="stockup-title">Stock up &amp; save</h2>
+    <p class="stockup-sub">Bigger packs. Bigger savings. Same molecular fix.</p>
   </div>
-</section>
+  <div class="stockup-grid">
+    <article class="su-card">
+      <div class="su-bottles" aria-hidden="true">
+        <div class="hb-bottle">
+          <div class="hb-cap"></div><div class="hb-neck"></div>
+          <div class="hb-body"><div class="hb-label"><div class="hb-brand">SMELLOFF</div><div class="hb-product">ODORSTRIKE</div><div class="hb-vol">50ML</div></div></div>
+        </div>
+      </div>
+      <h3 class="su-name">Starter Strike</h3>
+      <p class="su-units">1 × 50ml</p>
+      <div class="su-price">
+        <span class="su-was">₹579</span>
+        <span class="su-now">₹229</span>
+      </div>
+      <span class="su-badge">60% OFF</span>
+      <button class="su-cta" type="button" onclick="openCheckout('solo')">Add to cart</button>
+      <p class="su-foot">Try it. Carry it.</p>
+    </article>
 
-<!-- WHAT IT DOES -->
-<section class="benefits">
-  <h2 class="bn-title"><span class="bn-dot" aria-hidden="true"></span>What it does</h2>
-  <div class="bn-grid">
-    <div class="bn-chip">
-      <svg class="bn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="7" cy="8" r="2.5"/>
-        <circle cx="17" cy="8" r="2.5"/>
-        <circle cx="12" cy="16" r="2.5"/>
-        <path d="M8.5 9.8 11 14.2M15.5 9.8 13 14.2M9 8h6"/>
-      </svg>
-      <span class="bn-label">Kills Odor Molecules</span>
-    </div>
-    <div class="bn-chip">
-      <svg class="bn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 2 4 5v7c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V5l-8-3z"/>
-        <path d="m9 12 2 2 4-4"/>
-      </svg>
-      <span class="bn-label">Fabric-Safe Formula</span>
-    </div>
-    <div class="bn-chip">
-      <svg class="bn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="12" r="9"/>
-        <path d="M12 7v5l3 2"/>
-      </svg>
-      <span class="bn-label">Works in 10 Seconds</span>
-    </div>
-    <div class="bn-chip">
-      <svg class="bn-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 5h16v8a7 7 0 0 1-14 0V5z"/>
-        <path d="M9 5v3a3 3 0 0 0 6 0V5"/>
-      </svg>
-      <span class="bn-label">Pocket 50ml Size</span>
-    </div>
+    <article class="su-card featured">
+      <span class="su-tag popular">MOST POPULAR</span>
+      <div class="su-bottles" aria-hidden="true">
+        <div class="hb-bottle">
+          <div class="hb-cap"></div><div class="hb-neck"></div>
+          <div class="hb-body"><div class="hb-label"><div class="hb-brand">SMELLOFF</div><div class="hb-product">ODORSTRIKE</div><div class="hb-vol">50ML</div></div></div>
+        </div>
+        <div class="hb-bottle">
+          <div class="hb-cap"></div><div class="hb-neck"></div>
+          <div class="hb-body"><div class="hb-label"><div class="hb-brand">SMELLOFF</div><div class="hb-product">ODORSTRIKE</div><div class="hb-vol">50ML</div></div></div>
+        </div>
+      </div>
+      <h3 class="su-name">Double Strike</h3>
+      <p class="su-units">2 × 50ml</p>
+      <div class="su-price">
+        <span class="su-was">₹999</span>
+        <span class="su-now">₹399</span>
+      </div>
+      <span class="su-badge">60% OFF · Save ₹59</span>
+      <button class="su-cta" type="button" onclick="openCheckout('duo')">Add to cart</button>
+      <p class="su-foot">One for the bag. One for the desk.</p>
+    </article>
+
+    <article class="su-card">
+      <span class="su-tag value">BEST VALUE</span>
+      <div class="su-bottles" aria-hidden="true">
+        <div class="hb-bottle">
+          <div class="hb-cap"></div><div class="hb-neck"></div>
+          <div class="hb-body"><div class="hb-label"><div class="hb-brand">SMELLOFF</div><div class="hb-product">ODORSTRIKE</div><div class="hb-vol">50ML</div></div></div>
+        </div>
+        <div class="hb-bottle">
+          <div class="hb-cap"></div><div class="hb-neck"></div>
+          <div class="hb-body"><div class="hb-label"><div class="hb-brand">SMELLOFF</div><div class="hb-product">ODORSTRIKE</div><div class="hb-vol">50ML</div></div></div>
+        </div>
+        <div class="hb-bottle">
+          <div class="hb-cap"></div><div class="hb-neck"></div>
+          <div class="hb-body"><div class="hb-label"><div class="hb-brand">SMELLOFF</div><div class="hb-product">ODORSTRIKE</div><div class="hb-vol">50ML</div></div></div>
+        </div>
+      </div>
+      <h3 class="su-name">Triple Strike</h3>
+      <p class="su-units">3 × 50ml</p>
+      <div class="su-price">
+        <span class="su-was">₹1,399</span>
+        <span class="su-now">₹549</span>
+      </div>
+      <span class="su-badge">61% OFF · Save ₹138</span>
+      <button class="su-cta" type="button" onclick="openCheckout('trio')">Add to cart</button>
+      <p class="su-foot">What serious users run.</p>
+    </article>
   </div>
+  <p class="stockup-fine">Free shipping on every pack. COD available. 7-day returns if you're not impressed.</p>
 </section>
 
 <!-- REVIEWS -->
@@ -3702,93 +4016,6 @@
     </div>
   </div>
 </div>
-
-<!-- GOES WELL WITH — cross-sell strip -->
-<section class="xsell">
-  <h2 class="xs-title">Goes well with</h2>
-  <div class="xs-scroll" role="list">
-
-    <article class="xs-card" role="listitem">
-      <div class="xs-media">
-        <span class="xs-tag">Save ₹59</span>
-        <div class="xs-image xs-image-duo" aria-hidden="true">
-          <div class="hb-bottle">
-            <div class="hb-cap"></div>
-            <div class="hb-neck"></div>
-            <div class="hb-body">
-              <div class="hb-label">
-                <div class="hb-brand">SMELLOFF</div>
-                <div class="hb-product">ODORSTRIKE</div>
-                <div class="hb-vol">50ML</div>
-              </div>
-            </div>
-          </div>
-          <div class="hb-bottle">
-            <div class="hb-cap"></div>
-            <div class="hb-neck"></div>
-            <div class="hb-body">
-              <div class="hb-label">
-                <div class="hb-brand">SMELLOFF</div>
-                <div class="hb-product">ODORSTRIKE</div>
-                <div class="hb-vol">50ML</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="xs-body">
-        <h3 class="xs-card-title">ODORSTRIKE 2-Pack</h3>
-        <div class="xs-price">
-          <span class="xs-now">₹299</span>
-          <span class="xs-was">₹358</span>
-        </div>
-        <button class="xs-cta" type="button" onclick="addToCart('duo')">Add to cart</button>
-      </div>
-    </article>
-
-    <article class="xs-card" role="listitem">
-      <div class="xs-media">
-        <span class="xs-tag xs-tag-soon">Coming soon</span>
-        <div class="xs-placeholder" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <circle cx="6" cy="12" r="2.2"/>
-            <circle cx="18" cy="12" r="2.2"/>
-            <rect x="3.5" y="9.5" width="2.5" height="5" rx="0.5"/>
-            <rect x="18" y="9.5" width="2.5" height="5" rx="0.5"/>
-            <line x1="8.2" y1="12" x2="15.8" y2="12"/>
-            <line x1="2" y1="10.5" x2="2" y2="13.5"/>
-            <line x1="22" y1="10.5" x2="22" y2="13.5"/>
-          </svg>
-        </div>
-      </div>
-      <div class="xs-body">
-        <h3 class="xs-card-title">ODORSTRIKE Gym Bundle</h3>
-        <p class="xs-sub">Bottle + gym-bag clip + travel pouch</p>
-        <button class="xs-cta" type="button" disabled>Notify me</button>
-      </div>
-    </article>
-
-    <article class="xs-card" role="listitem">
-      <div class="xs-media">
-        <span class="xs-tag xs-tag-soon">Coming soon</span>
-        <div class="xs-placeholder" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <rect x="3" y="8" width="18" height="13" rx="1"/>
-            <path d="M3 12h18"/>
-            <path d="M12 8v13"/>
-            <path d="M8.5 8c-2 0-3-1-3-2.5S6.5 3 8.5 3c1.5 0 3 2 3.5 5 .5-3 2-5 3.5-5 2 0 3 1 3 2.5S17.5 8 15.5 8"/>
-          </svg>
-        </div>
-      </div>
-      <div class="xs-body">
-        <h3 class="xs-card-title">Smelloff Gift Card</h3>
-        <p class="xs-sub">Any amount, delivered instantly</p>
-        <button class="xs-cta" type="button" disabled>Notify me</button>
-      </div>
-    </article>
-
-  </div>
-</section>
 
 <!-- FAQ -->
 <section class="faq" id="faq">
@@ -4616,6 +4843,32 @@
     });
   }
   window.trackInitCheckout = trackInitCheckout;
+
+  // =============================================
+  // BUY-BOX QUANTITY SELECTOR
+  // =============================================
+  // Maps the 1/2/3 quantity buttons to solo/duo/trio variants
+  // and updates the CTA label + hint inline.
+  let _buyBoxQty = 1;
+  window.selectQty = function(qty){
+    _buyBoxQty = qty;
+    document.querySelectorAll('.pc-qty-btn').forEach(function(b){
+      b.classList.toggle('active', parseInt(b.dataset.qty,10) === qty);
+    });
+    var cta = document.getElementById('pcCta');
+    var hint = document.getElementById('pcQtyHint');
+    var price = qty === 3 ? 549 : qty === 2 ? 399 : 229;
+    if (cta) cta.textContent = 'ADD TO CART — ₹' + price;
+    if (hint) {
+      if (qty === 1) hint.textContent = 'Smart move — pick a bigger pack to save';
+      else if (qty === 2) hint.textContent = 'Smart move — save ₹59';
+      else hint.textContent = 'Best deal — save ₹138';
+    }
+  };
+  window.buyBoxAdd = function(){
+    var variant = _buyBoxQty === 3 ? 'trio' : _buyBoxQty === 2 ? 'duo' : 'solo';
+    if (typeof openCheckout === 'function') openCheckout(variant);
+  };
 
   // =============================================
   // PINCODE CHECKER (UI only — fake 2s delay)
