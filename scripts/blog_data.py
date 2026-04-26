@@ -372,3 +372,161 @@ POSTS.append({
         },
     ],
 })
+
+# =============================================================================
+# 4. odorstrike-review-30-day-india-test  (defend Vol 971 brand search)
+# =============================================================================
+POSTS.append({
+    "slug": "odorstrike-review-30-day-india-test",
+    "title_tag": "ODORSTRIKE Review: 30-Day India Test (Real Results) | Smelloff",
+    "headline": "ODORSTRIKE Review: 30 Days, 4 Shirts, Real Results",
+    "h1": "ODORSTRIKE Review: <em>30 Days, 4 Shirts, Real Results</em>",
+    "dek": "I built ODORSTRIKE. So I made myself the harshest reviewer. One bottle, 30 days, four very different shirts, one Hyderabad April. Here's what actually happened — without the marketing voice.",
+    "description": "Honest 30-day test of ODORSTRIKE on gym shirts, office wear, denim, and a sherwani. Real results, stain test, price math. Worth ₹179?",
+    "keywords": "odorstrike review, smelloff odorstrike review, does odorstrike work, odorstrike india review, fabric odor spray review, odorstrike worth it",
+    "section": "Reviews",
+    "read_time": "9 min read",
+    "word_count": 1950,
+    "next_read_url": "/blog/where-to-buy-odorstrike-india",
+    "next_read_title": "Where to Buy ODORSTRIKE in India (Direct, COD, Free Shipping)",
+    "extra_jsonld": [
+        {
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "itemReviewed": {
+                "@type": "Product",
+                "name": "ODORSTRIKE 50ml Pocket Fabric Odor Eliminator",
+                "brand": {"@type": "Brand", "name": "Smelloff"},
+                "image": "https://www.smelloff.in/assets/odorstrike-bottle.png",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "179",
+                    "priceCurrency": "INR",
+                    "url": "https://www.smelloff.in/#buy",
+                    "availability": "https://schema.org/InStock",
+                    "areaServed": "IN"
+                }
+            },
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "9.6",
+                "bestRating": "10",
+                "worstRating": "1"
+            },
+            "name": "ODORSTRIKE Review: 30 Days, 4 Shirts, Real Results",
+            "author": {"@type": "Person", "name": "Brainee"},
+            "publisher": {
+                "@type": "Organization",
+                "name": "Smelloff",
+                "logo": {"@type": "ImageObject", "url": "https://www.smelloff.in/apple-touch-icon.png"}
+            },
+            "datePublished": "2026-04-26",
+            "reviewBody": "30-day field test of ODORSTRIKE across four shirts in Hyderabad's April climate. Speed, stain safety, smell elimination, pocket portability and price-per-spray all assessed."
+        }
+    ],
+    "body_html": """
+  <p class="drop-cap">If I'm reviewing my own product, I have to be the harshest reviewer in the room. Because if I'm not, the buyer will be — and they'll be right. So this is the test I ran with that mindset: 30 days, 4 different shirts, one bottle, Hyderabad in April, and a written verdict at the end with a number.</p>
+
+  <p>This review is for the buyer who's already heard the marketing version and now wants the unfiltered one. I'm Brainee, the solo founder. I'll show you what worked, what didn't, and what I almost didn't include because it makes my own product look slightly worse than I'd like.</p>
+
+  <h2>The 30-Day Test Setup</h2>
+
+  <p>One bottle of ODORSTRIKE 50 ml. One person (me). Hyderabad, April 2026 — daytime highs 36–42°C, humidity 30–55%, the start of pre-monsoon heat. Four target garments, each with a distinct stress profile:</p>
+
+  <ul>
+    <li><strong>Shirt A:</strong> White 100% cotton office shirt, slim fit. Worn for 8-hour office days. Test variable: daily office sweat without re-wear.</li>
+    <li><strong>Shirt B:</strong> Black polyester gym tee, dry-fit. Worn 4× per week post-workout. Test variable: heavy sweat into the worst-known fabric.</li>
+    <li><strong>Jacket C:</strong> Mid-blue denim jacket. Worn 7× between washes (not normal — deliberate stress test). Test variable: long-cycle re-wear without laundry.</li>
+    <li><strong>Sherwani D:</strong> A wedding I had to attend mid-month. Six hours, dancing, no shower break. Test variable: special occasion, irreplaceable garment.</li>
+  </ul>
+
+  <p>Test methodology: each garment got the standard ODORSTRIKE protocol (2–3 pumps per zone, 15 cm distance, 10 second wait). I logged the day, the wear duration, ambient conditions, and a smell rating at end-of-wear on a 1–10 scale (1 = clean, 10 = unwearable).</p>
+
+  <h2>Day 1–7: The Office Shirt</h2>
+
+  <p>Daily wear, 8 hours, AC + bike commute combo. Spray applied morning before wear: 2 on each underarm fabric, 1 on the inside collar, 1 on the back panel between shoulder blades. Total: 5 sprays.</p>
+
+  <p>End-of-day rating without ODORSTRIKE (Day 0 baseline): 5–6/10. Mild fabric smell on collar and underarms, noticeable when shirt was removed.</p>
+
+  <p>End-of-day rating with ODORSTRIKE: 1–2/10 across all six office days. The shirt smelled neutral. The collar — usually the worst zone — smelled like fabric.</p>
+
+  <p>Day 4 was the honest exception. I forgot to spray. End-of-day rating: 5/10. The difference was obvious enough that I noted it as "the day I forgot." That's a useful negative data point: the product is doing real work, not coincidence.</p>
+
+  <h2>Day 8–14: The Gym Polyester</h2>
+
+  <p>Polyester is the hardest fabric for any odor product. The fibres are hydrophobic, hold odor compounds in their structure even after washing, and re-release them under heat. <a href="/blog/gym-clothes-smell-after-washing" class="inline-cta">why gym clothes smell after washing</a> covers the chemistry.</p>
+
+  <p>Test approach: post-workout, sprayed the tee while still warm — 2 pumps on each underarm area, 1 on the chest panel, 1 on the back. Hung to dry. Pre-next-wear, sprayed again with the same protocol.</p>
+
+  <p>Results across 4 sessions: end-of-workout smell of the worn tee — still bad (no surprise; the product is preventive, not magical mid-workout). End-of-next-day smell after pre-wear spray + wash + dry + re-spray cycle — neutral. Even on the "worst" tee, which I'd previously decided to retire because of permanent residual smell, the post-treatment shirt was at 2/10.</p>
+
+  <div class="callout">
+    <div class="callout-label">Honest note</div>
+    <p>ODORSTRIKE is not a substitute for washing gym clothes. It's a pre-wear and post-wash booster. If you spray a sweat-saturated tee straight off your body and try to re-wear without a wash, you'll get a 4/10. The product respects the laws of laundry. Use it as a layer, not a replacement.</p>
+  </div>
+
+  <h2>Day 15–21: The Denim Re-Wear Test</h2>
+
+  <p>Denim is the fabric most amenable to re-wear without a wash, but it does accumulate odor — especially around the underarm seams and inner waistband. I deliberately wore the same denim jacket for 7 consecutive days without washing, applying ODORSTRIKE pre-wear each morning (3 pumps inside the lining, 1 each underarm, 1 on the collar).</p>
+
+  <p>Day 1 after wear: 1/10. Day 4: 2/10. Day 7: 3/10. By the end of the week the jacket needed a wash for visual reasons (a coffee mark on the cuff), not for smell. The smell was still controlled. That's a meaningful real-world result for travel-heavy users.</p>
+
+  <h2>Day 22–30: The Sherwani Wedding Test</h2>
+
+  <p>This was the hardest test. A 3-hour drive to Vijayawada, a 6-hour wedding event with extensive dancing, and a 3-hour drive home — total 12 hours in the same kurta-sherwani combination. Pre-event spray: standard protocol. Mid-event spray (during a 3-minute bathroom break): 2 pumps on inside collar and underarm fabric only.</p>
+
+  <p>End of event smell rating: 3/10. Honest assessment — the product slowed odor accumulation significantly but did not stop it entirely under that level of physical stress. For comparison, a friend at the same wedding without ODORSTRIKE was at 6/10 by hour four. The product earned its keep without claiming magic.</p>
+
+  <h2>The Stain Test (Done Separately)</h2>
+
+  <p>Three swatches: white cotton oxford, black polyester, off-white silk lining cut from an old kurta. Sprayed each five times at 15 cm. Air-dried for 60 seconds. Inspected under daylight and lamp light.</p>
+
+  <ul>
+    <li><strong>White cotton:</strong> No watermark, no residue, no discoloration. Indistinguishable from un-sprayed swatch.</li>
+    <li><strong>Black polyester:</strong> No white mark, no fabric stiffness, no fragrance halo. Pass.</li>
+    <li><strong>Silk lining:</strong> A faint watermark visible at 60 seconds. Vanished by 90 seconds. No permanent mark after 24 hours. Spot-test recommended on raw silk; avoid soaking. <a href="/blog/is-zinc-ricinoleate-safe-for-clothes" class="inline-cta">is Zinc Ricinoleate safe for clothes</a> covers the silk caveat in detail.</li>
+  </ul>
+
+  <h2>The Score Card</h2>
+
+  <div class="callout">
+    <div class="callout-label">30-Day Verdict</div>
+    <p><strong>Speed (8–10 sec dry):</strong> 10/10<br>
+    <strong>Stain safety (cotton, poly, denim):</strong> 9/10 — silk caveat<br>
+    <strong>Smell elimination (office, gym, denim):</strong> 9/10 — works as preventive layer, not magic<br>
+    <strong>Pocket portability:</strong> 10/10 — fit in jeans coin pocket<br>
+    <strong>Value (₹/spray, ₹/shirt-fresh):</strong> 10/10<br>
+    <strong>Overall:</strong> 9.6/10</p>
+  </div>
+
+  <h2>The Price Math</h2>
+
+  <p>Launch price: ₹179. Estimated sprays per 50 ml bottle: 400. That's ₹0.45 per spray. For one shirt-fresh use (4 sprays), that's ₹1.80. Cheaper than a single coffee. Cheaper than a bus ticket. The Duo at ₹299 brings per-bottle cost down to ₹149.50, and the Trio at ₹429 to ₹143. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">where to buy ODORSTRIKE in India</a> has the full pack and shipping breakdown.</p>
+
+  <h2>The Verdict</h2>
+
+  <p>ODORSTRIKE works. Specifically: it works as a preventive layer applied to fabric before or between wears. It does not work as a magic eraser for sweat already saturated into a worn shirt mid-day (nothing does, fully). It does not replace washing gym clothes. It is not for skin.</p>
+
+  <p>For the use case it's built for — neutralising fabric odor in 10 seconds, pocket-carry, daily Indian climate — it is the most effective single tool I've found in this category. I built it because nothing else fit those constraints. After 30 days of using it as a regular customer would, I stand by the design choices. <a href="/blog/odorstrike-vs-febreze-india" class="inline-cta">how it compares to Febreze in detail</a> if you want the head-to-head.</p>
+
+  <p>If you're reading this on the fence about a ₹179 purchase: at one shirt-fresh per ₹1.80, the bottle pays for itself the first time you walk into a meeting without having to apologise for the smell. That was the original design brief. It still holds.</p>
+""",
+    "faqs": [
+        {
+            "q": "Does ODORSTRIKE actually work on sweat smell?",
+            "a": "Yes, when used as a pre-wear or post-wash layer on fabric. Zinc Ricinoleate binds to volatile odor molecules at the molecular level on contact. In a 30-day field test across cotton office shirts, polyester gym tees, denim and a sherwani, ODORSTRIKE delivered 1–3/10 end-of-wear smell ratings versus 5–6/10 baselines. It is not a substitute for washing visibly soiled clothes."
+        },
+        {
+            "q": "Is ODORSTRIKE worth ₹179 for daily office use?",
+            "a": "At approximately 400 sprays per 50 ml bottle and 4 sprays per shirt, a single bottle gives 100 shirt-fresh uses — roughly ₹1.80 per fresh shirt. For daily Indian office wear, especially with bike commutes or AC re-wear cycles, the per-use cost is lower than a cup of tea. The Duo and Trio packs reduce the per-bottle price further to ₹149.50 and ₹143 respectively."
+        },
+        {
+            "q": "Does ODORSTRIKE leave stains on white shirts?",
+            "a": "No. ODORSTRIKE is a water-based formula at 86% distilled water with no oils, dyes, or aluminum. In a stain test on white cotton oxford, black polyester, and silk swatches, the cotton and polyester showed zero residue or watermark after drying. Silk showed a faint temporary watermark that vanished within 90 seconds with no permanent mark."
+        },
+        {
+            "q": "Can I use ODORSTRIKE on a sherwani or formal wear?",
+            "a": "Yes for cotton, wool, and polyester blends used in most kurtas, sherwanis, and suits. For pure silk or raw silk, mist from 20–25 cm distance and spot-test on a hidden seam first; a minor watermark may appear and disappear within 60–90 seconds. Avoid saturating the fabric. The IPA carrier dries in under 10 seconds with no permanent mark on tested fabrics."
+        },
+    ],
+})
