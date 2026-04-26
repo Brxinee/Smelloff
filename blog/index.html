@@ -310,6 +310,74 @@
   }
   .b-mc-meta::after{content:'→';transition:transform .2s ease}
   .b-mc:hover .b-mc-meta::after{transform:translateX(3px)}
+
+  /* Category pills */
+  .b-cats{
+    max-width:1120px;margin:0 auto;padding:24px 20px 0;
+    display:flex;gap:8px;flex-wrap:wrap;
+  }
+  .b-cat-pill{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
+    letter-spacing:.16em;text-transform:uppercase;color:#888;
+    background:transparent;border:1px solid #1F1F1F;
+    padding:9px 14px;border-radius:100px;cursor:pointer;
+    transition:color .15s ease,border-color .15s ease,background .15s ease;
+  }
+  .b-cat-pill:hover{color:#fff;border-color:#B8FF57}
+  .b-cat-pill.active{background:#B8FF57;color:#080808;border-color:#B8FF57}
+
+  /* Section heading */
+  .b-section-head{
+    max-width:1120px;margin:0 auto;padding:36px 20px 14px;
+    display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  }
+  .b-section-tag{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;
+    letter-spacing:.2em;text-transform:uppercase;color:#fff;
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .b-section-tag::before{
+    content:'';width:18px;height:2px;background:#B8FF57;
+  }
+  .b-section-count{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
+    letter-spacing:.18em;text-transform:uppercase;color:#888;
+  }
+
+  /* Section containers */
+  .b-feature,.b-popular,.b-random{
+    max-width:1120px;margin:0 auto;padding:0 20px;
+  }
+  .b-posts{padding-top:0;padding-bottom:32px}
+  .b-grid-3{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:720px){.b-grid-3{grid-template-columns:1fr 1fr;gap:16px}}
+  @media(min-width:1100px){.b-grid-3{grid-template-columns:1fr 1fr 1fr}}
+
+  /* Pagination */
+  .b-pages{
+    max-width:1120px;margin:28px auto 0;padding:0 20px;
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+  }
+  .b-page-btn{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;color:#fff;
+    background:#080808;border:1px solid #B8FF57;padding:11px 18px;
+    border-radius:100px;cursor:pointer;
+    transition:background .15s ease,color .15s ease;
+  }
+  .b-page-btn:hover:not(:disabled){background:#B8FF57;color:#080808}
+  .b-page-btn:disabled{opacity:.3;cursor:not-allowed;border-color:#1F1F1F}
+  .b-page-info{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;color:#888;
+  }
+
+  /* Empty state when filter has no matches */
+  .b-empty{
+    max-width:1120px;margin:0 auto;padding:48px 20px;text-align:center;
+    color:#666;font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:14px;letter-spacing:.18em;text-transform:uppercase;
+  }
 </style>
 </head>
 <body>
@@ -487,314 +555,573 @@
 })();
 </script>
 
-<section class="b-posts">
-  <div class="b-posts-head">All posts · <span>29 articles</span></div>
+<nav class="b-cats" aria-label="Browse categories">
+  <button class="b-cat-pill active" data-cat="all" type="button">All</button>
+  <button class="b-cat-pill" data-cat="sweat" type="button">Sweat &amp; Odor</button>
+  <button class="b-cat-pill" data-cat="fabric" type="button">Fabric Care</button>
+  <button class="b-cat-pill" data-cat="gym" type="button">Gym &amp; Sport</button>
+  <button class="b-cat-pill" data-cat="work" type="button">Workwear</button>
+  <button class="b-cat-pill" data-cat="confidence" type="button">Confidence</button>
+  <button class="b-cat-pill" data-cat="science" type="button">Science</button>
+</nav>
 
+<section class="b-feature">
+  <div class="b-section-head"><span class="b-section-tag">Featured</span></div>
   <div class="b-grid">
-
-    <a href="/blog/best-fabric-odor-spray-india-2026-body-odor" class="b-card featured">
-      <div class="b-card-thumb b-thumb-1"><span class="b-thumb-cat">Buyer's Guide</span><span class="b-thumb-headline">Best fabric odor spray for body odor in India</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta">
-        <span class="b-card-cat">Buyer's Guide</span>
-        <span class="b-card-sep">·</span>
-        <span>11 min read</span>
-        <span class="b-card-sep">·</span>
-        <span>Apr 24, 2026</span>
+    <a href="/blog/best-fabric-odor-spray-india-2026-body-odor" class="b-card featured" data-cat="science">
+      <div class="b-card-thumb b-thumb-1">
+        <span class="b-thumb-cat">Buyer&#x27;s Guide</span>
+        <span class="b-thumb-headline">Best fabric odor spray for body odor in India</span>
       </div>
-      <h3>Best fabric odor spray for body odor in India</h3>
-      <p>6 products ranked honestly. Indian climate, Indian fabrics, Indian prices. No affiliate fluff.</p>
-      <span class="b-card-arrow">Read the ranking</span>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Buyer&#x27;s Guide</span>
+          <span class="b-card-sep">·</span>
+          <span>11 min read</span>
+        </div>
+        <h3>Best fabric odor spray for body odor in India</h3>
+        <p>6 products ranked honestly. Indian climate, Indian fabrics, Indian prices. No affiliate fluff.</p>
+        <span class="b-card-arrow">Read</span>
       </div>
     </a>
-
-    <a href="/blog/odorstrike-vs-febreze-india" class="b-card">
-      <div class="b-card-thumb b-thumb-2"><span class="b-thumb-cat">Comparison</span><span class="b-thumb-headline">ODORSTRIKE vs Febreze: which works better on Indian clothes?</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Comparison</span><span class="b-card-sep">·</span><span>8 min</span></div>
-      <h3>ODORSTRIKE vs Febreze: which works better on Indian clothes?</h3>
-      <p>Cotton in 40°C. Polyester in monsoon. Pocket mist vs home spray. The head-to-head that actually matters for Indian buyers.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/fix-shirt-odor-before-meeting" class="b-card">
-      <div class="b-card-thumb b-thumb-3"><span class="b-thumb-cat">Pre-Meeting</span><span class="b-thumb-headline">How to fix shirt odor fast before a meeting</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Pre-Meeting</span><span class="b-card-sep">·</span><span>6 min</span></div>
-      <h3>How to fix shirt odor fast before a meeting</h3>
-      <p>Meeting in 2 minutes. Shirt smells. The exact 60-second tactical fix — no shower, no change of clothes, no panic.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/is-zinc-ricinoleate-safe-for-clothes" class="b-card">
-      <div class="b-card-thumb b-thumb-4"><span class="b-thumb-cat">Ingredient Science</span><span class="b-thumb-headline">Is Zinc Ricinoleate safe for clothes?</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Ingredient Science</span><span class="b-card-sep">·</span><span>7 min</span></div>
-      <h3>Is Zinc Ricinoleate safe for clothes?</h3>
-      <p>The #1 objection, answered. Stain-tested on white cotton, black polyester, silk. pH breakdown. The real safety profile.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/gym-to-office-without-showering" class="b-card">
-      <div class="b-card-thumb b-thumb-5"><span class="b-thumb-cat">Gym-to-Office</span><span class="b-thumb-headline">Gym to office without showering</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Gym-to-Office</span><span class="b-card-sep">·</span><span>7 min</span></div>
-      <h3>Gym to office without showering</h3>
-      <p>The 4-minute reset system. What to carry, what to spray, what to skip. Built for Indian climate and Indian commutes.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/clothes-smell-after-washing" class="b-card">
-      <div class="b-card-thumb b-thumb-6"><span class="b-thumb-cat">Laundry Science</span><span class="b-thumb-headline">Why do my clothes smell even after washing?</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta">
-        <span class="b-card-cat">Laundry Science</span>
-        <span class="b-card-sep">·</span>
-        <span>7 min read</span>
-        <span class="b-card-sep">·</span>
-        <span>Apr 18, 2026</span>
-      </div>
-      <h3>Why do my clothes smell even after washing?</h3>
-      <p>You washed it. You dried it. You pulled it out of the cupboard a week later and it smells like a damp basement. It's not your nose. It's not the detergent brand — and once you know the real reason, you can't unsee it.</p>
-      <span class="b-card-arrow">Read the fix</span>
-      </div>
-    </a>
-
-    <a href="/blog/remove-sweat-smell-shirts-without-washing" class="b-card">
-      <div class="b-card-thumb b-thumb-1"><span class="b-thumb-cat">Fabric Care</span><span class="b-thumb-headline">Remove sweat smell from shirts without washing</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>8 min</span></div>
-      <h3>Remove sweat smell from shirts without washing</h3>
-      <p>You sprayed deodorant. You wore a fresh shirt. By 2pm your collar smells like a wet towel. How to actually kill the smell — not mask it.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/keep-gym-clothes-fresh-in-bag" class="b-card">
-      <div class="b-card-thumb b-thumb-2"><span class="b-thumb-cat">Gym Bag</span><span class="b-thumb-headline">How to keep gym clothes fresh in your bag</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Gym Bag</span><span class="b-card-sep">·</span><span>6 min</span></div>
-      <h3>How to keep gym clothes fresh in your bag</h3>
-      <p>Shower at the gym. Fresh clothes on. Toss the sweaty set into your bag. Five hours later your whole cubicle knows. The system for killing it.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/gym-clothes-smell-after-washing" class="b-card">
-      <div class="b-card-thumb b-thumb-3"><span class="b-thumb-cat">Fabric Care</span><span class="b-thumb-headline">Why gym clothes still smell after washing</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>7 min</span></div>
-      <h3>Why gym clothes still smell after washing</h3>
-      <p>You used extra detergent. You sun-dried. They still smell the moment they warm up. The hydrophobic polyester problem nobody explained.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/deodorant-vs-fabric-mist" class="b-card">
-      <div class="b-card-thumb b-thumb-4"><span class="b-thumb-cat">Product Ed.</span><span class="b-thumb-headline">Deodorant vs fabric mist: what actually kills odor</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Product Ed.</span><span class="b-card-sep">·</span><span>6 min</span></div>
-      <h3>Deodorant vs fabric mist: what actually kills odor</h3>
-      <p>Your deodorant works. It's solving the wrong problem. Your shirt holds 80% of the smell and deodorant can't touch it.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/why-indian-men-sweat-smell-more" class="b-card">
-      <div class="b-card-thumb b-thumb-5"><span class="b-thumb-cat">Body Science</span><span class="b-thumb-headline">Why Indian men sweat-smell more (it's not hygiene)</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Body Science</span><span class="b-card-sep">·</span><span>7 min</span></div>
-      <h3>Why Indian men sweat-smell more (it's not hygiene)</h3>
-      <p>Humidity + diet + synthetic shirts in 40°C — a perfect storm. None of it is your fault. What's actually happening.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="b-card">
-      <div class="b-card-thumb b-thumb-6"><span class="b-thumb-cat">Ingredient Science</span><span class="b-thumb-headline">The ingredient that actually kills fabric odor</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Ingredient Science</span><span class="b-card-sep">·</span><span>8 min</span></div>
-      <h3>The ingredient that actually kills fabric odor</h3>
-      <p>Not charcoal. Not baking soda. Not "natural enzymes." One compound binds odor molecules and deactivates them — most products don't use it.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/why-i-built-odorstrike" class="b-card">
-      <div class="b-card-thumb b-thumb-1"><span class="b-thumb-cat">Founder Story</span><span class="b-thumb-headline">Why I built ODORSTRIKE</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Founder Story</span><span class="b-card-sep">·</span><span>6 min</span></div>
-      <h3>Why I built ODORSTRIKE</h3>
-      <p>Six months formulating in Hyderabad. Dozens of failed prototypes. One specific problem I couldn't stop thinking about.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/best-fabric-odor-spray-india-2026" class="b-card">
-      <div class="b-card-thumb b-thumb-2"><span class="b-thumb-cat">Buyer's Guide</span><span class="b-thumb-headline">Best fabric odor spray in India 2026</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Buyer's Guide</span><span class="b-card-sep">·</span><span>9 min</span></div>
-      <h3>Best fabric odor spray in India 2026</h3>
-      <p>Perfume sprays, Febreze-style fresheners, charcoal mists, Zinc Ricinoleate — what each one does, what it doesn't.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/confidence-spray-pre-meeting-date" class="b-card">
-      <div class="b-card-thumb b-thumb-3"><span class="b-thumb-cat">Confidence</span><span class="b-thumb-headline">The confidence spray before every meeting, date, and inter…</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Confidence</span><span class="b-card-sep">·</span><span>6 min</span></div>
-      <h3>The confidence spray before every meeting, date, and interview</h3>
-      <p>The quietest confidence hack isn't cologne or a power pose. It's a 10-second fabric reset.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/hostel-clothes-smell-college-guide" class="b-card">
-      <div class="b-card-thumb b-thumb-4"><span class="b-thumb-cat">Hostel Guide</span><span class="b-thumb-headline">Hostel clothes smell: the college student's survival guide</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Hostel Guide</span><span class="b-card-sep">·</span><span>7 min</span></div>
-      <h3>Hostel clothes smell: the college student's survival guide</h3>
-      <p>Shared cupboard. Monsoon humidity. Dhobi twice a week. No dryer. The survival system for any Indian PG.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/indian-summer-sweat-smell-guide" class="b-card">
-      <div class="b-card-thumb b-thumb-5"><span class="b-thumb-cat">Seasonal</span><span class="b-thumb-headline">Beating Indian summer sweat smell (40°C survival guide)</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Seasonal</span><span class="b-card-sep">·</span><span>8 min</span></div>
-      <h3>Beating Indian summer sweat smell (40°C survival guide)</h3>
-      <p>April to June in most Indian cities is a sweat war most people are losing. The science and the daily routine.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/bike-rider-sweat-smell-india" class="b-card">
-      <div class="b-card-thumb b-thumb-6"><span class="b-thumb-cat">Commuter</span><span class="b-thumb-headline">Bike rider sweat smell: the 20-minute shirt problem</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Commuter</span><span class="b-card-sep">·</span><span>6 min</span></div>
-      <h3>Bike rider sweat smell: the 20-minute shirt problem</h3>
-      <p>Fresh shower, fresh shirt, 20-min ride. Walk into the office smelling like a gym session. The physics and the 30-second fix.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/how-to-not-smell-sweaty-at-work" class="b-card">
-      <div class="b-card-thumb b-thumb-1"><span class="b-thumb-cat">Office Playbook</span><span class="b-thumb-headline">How to not smell sweaty at work (the 11-hour office playbo…</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Office Playbook</span><span class="b-card-sep">·</span><span>7 min</span></div>
-      <h3>How to not smell sweaty at work (the 11-hour office playbook)</h3>
-      <p>Six checkpoints across the day, ninety seconds of effort. That's the whole playbook.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/alternative-to-deodorant-for-clothes-smell" class="b-card">
-      <div class="b-card-thumb b-thumb-2"><span class="b-thumb-cat">Category Education</span><span class="b-thumb-headline">The alternative to deodorant for clothes smell</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Category Education</span><span class="b-card-sep">·</span><span>8 min</span></div>
-      <h3>The alternative to deodorant for clothes smell</h3>
-      <p>Skin is 0.3% of the odor surface. Your shirt is the rest. Here's the deodorant alternative built for fabric — and why every Indian man needs one.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/spray-to-remove-sweat-smell-from-clothes-instantly" class="b-card">
-      <div class="b-card-thumb b-thumb-3"><span class="b-thumb-cat">Sweat Smell Removal</span><span class="b-thumb-headline">The spray that kills sweat smell in 10 seconds (tested)</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Sweat Smell Removal</span><span class="b-card-sep">·</span><span>8 min</span></div>
-      <h3>The spray that kills sweat smell in 10 seconds (tested)</h3>
-      <p>Five sprays. Five identical sweat-soaked shirts. One stopwatch. The honest head-to-head ranking with full methodology.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/best-deodorant-spray-for-clothes-not-skin" class="b-card">
-      <div class="b-card-thumb b-thumb-4"><span class="b-thumb-cat">Category Education</span><span class="b-thumb-headline">Best deodorant spray for clothes (not skin) in India</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Category Education</span><span class="b-card-sep">·</span><span>7 min</span></div>
-      <h3>Best deodorant spray for clothes (not skin) in India</h3>
-      <p>"Deodorant for clothes" is the wrong search — but the right instinct. The buyer's guide to the right product, named correctly.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/odorstrike-review-30-day-india-test" class="b-card">
-      <div class="b-card-thumb b-thumb-5"><span class="b-thumb-cat">Reviews</span><span class="b-thumb-headline">ODORSTRIKE Review: 30 days, 4 shirts, real results</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Reviews</span><span class="b-card-sep">·</span><span>9 min</span></div>
-      <h3>ODORSTRIKE Review: 30 days, 4 shirts, real results</h3>
-      <p>One bottle. Hyderabad April. Office cotton, gym polyester, denim, and a sherwani. Stain test, score card, founder-honest verdict.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/where-to-buy-odorstrike-india" class="b-card">
-      <div class="b-card-thumb b-thumb-6"><span class="b-thumb-cat">Buying Guide</span><span class="b-thumb-headline">Where to buy ODORSTRIKE in India (direct, COD, free shippi…</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Buying Guide</span><span class="b-card-sep">·</span><span>6 min</span></div>
-      <h3>Where to buy ODORSTRIKE in India (direct, COD, free shipping)</h3>
-      <p>Pricing, payment, shipping, returns — all in one page. Solo, Duo, Trio. Why D2C and not Amazon (yet).</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/mumbai-humidity-sweat-smell-survival-guide" class="b-card">
-      <div class="b-card-thumb b-thumb-1"><span class="b-thumb-cat">Geo-Specific</span><span class="b-thumb-headline">Mumbai humidity + sweat smell: the survival guide</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Geo-Specific</span><span class="b-card-sep">·</span><span>8 min</span></div>
-      <h3>Mumbai humidity + sweat smell: the survival guide</h3>
-      <p>85% humidity. Local trains. AC offices. Why Mumbai is the hardest Indian city for fabric odor — and the 5-tool survival kit.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/best-body-odor-remover-spray-for-men-india" class="b-card">
-      <div class="b-card-thumb b-thumb-2"><span class="b-thumb-cat">Buyer's Guide</span><span class="b-thumb-headline">Best body odor remover spray for men in India (2026)</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Buyer's Guide</span><span class="b-card-sep">·</span><span>8 min</span></div>
-      <h3>Best body odor remover spray for men in India (2026)</h3>
-      <p>Indian male body odor is a four-factor stack. Here's the men-specific buyer's playbook with the two-tool stack that actually addresses it.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/office-ac-trap-why-rewear-shirts-smell-worse" class="b-card">
-      <div class="b-card-thumb b-thumb-3"><span class="b-thumb-cat">Body Science</span><span class="b-thumb-headline">The office AC trap: why re-worn shirts smell worse in AC</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Body Science</span><span class="b-card-sep">·</span><span>8 min</span></div>
-      <h3>The office AC trap: why re-worn shirts smell worse in AC</h3>
-      <p>You're not smelling yesterday's sweat. You're smelling today's bacteria producing fresh odor from yesterday's residue. The 3-move fix.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/perfume-plus-sweat-chemical-reaction" class="b-card">
-      <div class="b-card-thumb b-thumb-4"><span class="b-thumb-cat">Myth-Bust</span><span class="b-thumb-headline">Perfume + sweat = a chemical reaction that smells worse</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Myth-Bust</span><span class="b-card-sep">·</span><span>7 min</span></div>
-      <h3>Perfume + sweat = a chemical reaction that smells worse</h3>
-      <p>Spraying cologne on a sweaty shirt is the most common Indian male grooming mistake. Three reactions, named, explained, fixed.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
-    <a href="/blog/why-deodorant-stops-working-after-3-hours" class="b-card">
-      <div class="b-card-thumb b-thumb-5"><span class="b-thumb-cat">Body Science</span><span class="b-thumb-headline">Why deodorant stops working after 3 hours</span></div>
-      <div class="b-card-body">
-      <div class="b-card-meta"><span class="b-card-cat">Body Science</span><span class="b-card-sep">·</span><span>7 min</span></div>
-      <h3>Why deodorant stops working after 3 hours</h3>
-      <p>The deodorant didn't fail. The smell moved. Hour-by-hour timeline of where odor migrates — and the fabric-side fix.</p>
-      <span class="b-card-arrow">Read</span>
-      </div>
-    </a>
-
   </div>
+</section>
+
+<section class="b-popular">
+  <div class="b-section-head"><span class="b-section-tag">Most Read</span></div>
+  <div class="b-grid b-grid-3">
+    <a href="/blog/fix-shirt-odor-before-meeting" class="b-card" data-cat="work">
+      <div class="b-card-thumb b-thumb-2">
+        <span class="b-thumb-cat">Pre-Meeting</span>
+        <span class="b-thumb-headline">How to fix shirt odor fast before a meeting</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Pre-Meeting</span>
+          <span class="b-card-sep">·</span>
+          <span>6 min</span>
+        </div>
+        <h3>How to fix shirt odor fast before a meeting</h3>
+        <p>Meeting in 2 minutes. Shirt smells. The exact 60-second tactical fix — no shower, no change of clothes, no panic.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/how-to-not-smell-sweaty-at-work" class="b-card" data-cat="work">
+      <div class="b-card-thumb b-thumb-3">
+        <span class="b-thumb-cat">Office Playbook</span>
+        <span class="b-thumb-headline">How to not smell sweaty at work (the 11-hour office playbo…</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Office Playbook</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min</span>
+        </div>
+        <h3>How to not smell sweaty at work (the 11-hour office playbook)</h3>
+        <p>Six checkpoints across the day, ninety seconds of effort. That&#x27;s the whole playbook.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/deodorant-vs-fabric-mist" class="b-card" data-cat="science">
+      <div class="b-card-thumb b-thumb-4">
+        <span class="b-thumb-cat">Product Ed.</span>
+        <span class="b-thumb-headline">Deodorant vs fabric mist: what actually kills odor</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Product Ed.</span>
+          <span class="b-card-sep">·</span>
+          <span>6 min</span>
+        </div>
+        <h3>Deodorant vs fabric mist: what actually kills odor</h3>
+        <p>Your deodorant works. It&#x27;s solving the wrong problem. Your shirt holds 80% of the smell and deodorant can&#x27;t touch it.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="b-posts" id="latestSection">
+  <div class="b-section-head">
+    <span class="b-section-tag">Latest reads</span>
+    <span class="b-section-count" id="latestCount">29 articles</span>
+  </div>
+  <div class="b-grid b-grid-3" id="latestGrid">
+    <a href="/blog/best-fabric-odor-spray-india-2026-body-odor" class="b-card" data-cat="science">
+      <div class="b-card-thumb b-thumb-1">
+        <span class="b-thumb-cat">Buyer&#x27;s Guide</span>
+        <span class="b-thumb-headline">Best fabric odor spray for body odor in India</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Buyer&#x27;s Guide</span>
+          <span class="b-card-sep">·</span>
+          <span>11 min read</span>
+        </div>
+        <h3>Best fabric odor spray for body odor in India</h3>
+        <p>6 products ranked honestly. Indian climate, Indian fabrics, Indian prices. No affiliate fluff.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/odorstrike-vs-febreze-india" class="b-card" data-cat="science">
+      <div class="b-card-thumb b-thumb-2">
+        <span class="b-thumb-cat">Comparison</span>
+        <span class="b-thumb-headline">ODORSTRIKE vs Febreze: which works better on Indian clothes?</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Comparison</span>
+          <span class="b-card-sep">·</span>
+          <span>8 min</span>
+        </div>
+        <h3>ODORSTRIKE vs Febreze: which works better on Indian clothes?</h3>
+        <p>Cotton in 40°C. Polyester in monsoon. Pocket mist vs home spray. The head-to-head that actually matters for Indian buyers.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/fix-shirt-odor-before-meeting" class="b-card" data-cat="work">
+      <div class="b-card-thumb b-thumb-3">
+        <span class="b-thumb-cat">Pre-Meeting</span>
+        <span class="b-thumb-headline">How to fix shirt odor fast before a meeting</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Pre-Meeting</span>
+          <span class="b-card-sep">·</span>
+          <span>6 min</span>
+        </div>
+        <h3>How to fix shirt odor fast before a meeting</h3>
+        <p>Meeting in 2 minutes. Shirt smells. The exact 60-second tactical fix — no shower, no change of clothes, no panic.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/is-zinc-ricinoleate-safe-for-clothes" class="b-card" data-cat="science">
+      <div class="b-card-thumb b-thumb-4">
+        <span class="b-thumb-cat">Ingredient Science</span>
+        <span class="b-thumb-headline">Is Zinc Ricinoleate safe for clothes?</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Ingredient Science</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min</span>
+        </div>
+        <h3>Is Zinc Ricinoleate safe for clothes?</h3>
+        <p>The #1 objection, answered. Stain-tested on white cotton, black polyester, silk. pH breakdown. The real safety profile.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/gym-to-office-without-showering" class="b-card" data-cat="gym">
+      <div class="b-card-thumb b-thumb-5">
+        <span class="b-thumb-cat">Gym-to-Office</span>
+        <span class="b-thumb-headline">Gym to office without showering</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Gym-to-Office</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min</span>
+        </div>
+        <h3>Gym to office without showering</h3>
+        <p>The 4-minute reset system. What to carry, what to spray, what to skip. Built for Indian climate and Indian commutes.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/clothes-smell-after-washing" class="b-card" data-cat="fabric">
+      <div class="b-card-thumb b-thumb-6">
+        <span class="b-thumb-cat">Laundry Science</span>
+        <span class="b-thumb-headline">Why do my clothes smell even after washing?</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Laundry Science</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min read</span>
+        </div>
+        <h3>Why do my clothes smell even after washing?</h3>
+        <p>You washed it. You dried it. You pulled it out of the cupboard a week later and it smells like a damp basement. It&#x27;s not your nose. It&#x27;s not the detergent brand — and once you know the real reason, you can&#x27;t unsee it.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/remove-sweat-smell-shirts-without-washing" class="b-card" data-cat="fabric">
+      <div class="b-card-thumb b-thumb-1">
+        <span class="b-thumb-cat">Fabric Care</span>
+        <span class="b-thumb-headline">Remove sweat smell from shirts without washing</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Fabric Care</span>
+          <span class="b-card-sep">·</span>
+          <span>8 min</span>
+        </div>
+        <h3>Remove sweat smell from shirts without washing</h3>
+        <p>You sprayed deodorant. You wore a fresh shirt. By 2pm your collar smells like a wet towel. How to actually kill the smell — not mask it.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/keep-gym-clothes-fresh-in-bag" class="b-card" data-cat="gym">
+      <div class="b-card-thumb b-thumb-2">
+        <span class="b-thumb-cat">Gym Bag</span>
+        <span class="b-thumb-headline">How to keep gym clothes fresh in your bag</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Gym Bag</span>
+          <span class="b-card-sep">·</span>
+          <span>6 min</span>
+        </div>
+        <h3>How to keep gym clothes fresh in your bag</h3>
+        <p>Shower at the gym. Fresh clothes on. Toss the sweaty set into your bag. Five hours later your whole cubicle knows. The system for killing it.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/gym-clothes-smell-after-washing" class="b-card" data-cat="fabric">
+      <div class="b-card-thumb b-thumb-3">
+        <span class="b-thumb-cat">Fabric Care</span>
+        <span class="b-thumb-headline">Why gym clothes still smell after washing</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Fabric Care</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min</span>
+        </div>
+        <h3>Why gym clothes still smell after washing</h3>
+        <p>You used extra detergent. You sun-dried. They still smell the moment they warm up. The hydrophobic polyester problem nobody explained.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/deodorant-vs-fabric-mist" class="b-card" data-cat="science">
+      <div class="b-card-thumb b-thumb-4">
+        <span class="b-thumb-cat">Product Ed.</span>
+        <span class="b-thumb-headline">Deodorant vs fabric mist: what actually kills odor</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Product Ed.</span>
+          <span class="b-card-sep">·</span>
+          <span>6 min</span>
+        </div>
+        <h3>Deodorant vs fabric mist: what actually kills odor</h3>
+        <p>Your deodorant works. It&#x27;s solving the wrong problem. Your shirt holds 80% of the smell and deodorant can&#x27;t touch it.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/why-indian-men-sweat-smell-more" class="b-card" data-cat="sweat">
+      <div class="b-card-thumb b-thumb-5">
+        <span class="b-thumb-cat">Body Science</span>
+        <span class="b-thumb-headline">Why Indian men sweat-smell more (it&#x27;s not hygiene)</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Body Science</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min</span>
+        </div>
+        <h3>Why Indian men sweat-smell more (it&#x27;s not hygiene)</h3>
+        <p>Humidity + diet + synthetic shirts in 40°C — a perfect storm. None of it is your fault. What&#x27;s actually happening.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="b-card" data-cat="science">
+      <div class="b-card-thumb b-thumb-6">
+        <span class="b-thumb-cat">Ingredient Science</span>
+        <span class="b-thumb-headline">The ingredient that actually kills fabric odor</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Ingredient Science</span>
+          <span class="b-card-sep">·</span>
+          <span>8 min</span>
+        </div>
+        <h3>The ingredient that actually kills fabric odor</h3>
+        <p>Not charcoal. Not baking soda. Not &quot;natural enzymes.&quot; One compound binds odor molecules and deactivates them — most products don&#x27;t use it.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/why-i-built-odorstrike" class="b-card" data-cat="confidence">
+      <div class="b-card-thumb b-thumb-1">
+        <span class="b-thumb-cat">Founder Story</span>
+        <span class="b-thumb-headline">Why I built ODORSTRIKE</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Founder Story</span>
+          <span class="b-card-sep">·</span>
+          <span>6 min</span>
+        </div>
+        <h3>Why I built ODORSTRIKE</h3>
+        <p>Six months formulating in Hyderabad. Dozens of failed prototypes. One specific problem I couldn&#x27;t stop thinking about.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/best-fabric-odor-spray-india-2026" class="b-card" data-cat="science">
+      <div class="b-card-thumb b-thumb-2">
+        <span class="b-thumb-cat">Buyer&#x27;s Guide</span>
+        <span class="b-thumb-headline">Best fabric odor spray in India 2026</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Buyer&#x27;s Guide</span>
+          <span class="b-card-sep">·</span>
+          <span>9 min</span>
+        </div>
+        <h3>Best fabric odor spray in India 2026</h3>
+        <p>Perfume sprays, Febreze-style fresheners, charcoal mists, Zinc Ricinoleate — what each one does, what it doesn&#x27;t.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/confidence-spray-pre-meeting-date" class="b-card" data-cat="confidence">
+      <div class="b-card-thumb b-thumb-3">
+        <span class="b-thumb-cat">Confidence</span>
+        <span class="b-thumb-headline">The confidence spray before every meeting, date, and inter…</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Confidence</span>
+          <span class="b-card-sep">·</span>
+          <span>6 min</span>
+        </div>
+        <h3>The confidence spray before every meeting, date, and interview</h3>
+        <p>The quietest confidence hack isn&#x27;t cologne or a power pose. It&#x27;s a 10-second fabric reset.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/hostel-clothes-smell-college-guide" class="b-card" data-cat="work">
+      <div class="b-card-thumb b-thumb-4">
+        <span class="b-thumb-cat">Hostel Guide</span>
+        <span class="b-thumb-headline">Hostel clothes smell: the college student&#x27;s survival guide</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Hostel Guide</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min</span>
+        </div>
+        <h3>Hostel clothes smell: the college student&#x27;s survival guide</h3>
+        <p>Shared cupboard. Monsoon humidity. Dhobi twice a week. No dryer. The survival system for any Indian PG.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/indian-summer-sweat-smell-guide" class="b-card" data-cat="fabric">
+      <div class="b-card-thumb b-thumb-5">
+        <span class="b-thumb-cat">Seasonal</span>
+        <span class="b-thumb-headline">Beating Indian summer sweat smell (40°C survival guide)</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Seasonal</span>
+          <span class="b-card-sep">·</span>
+          <span>8 min</span>
+        </div>
+        <h3>Beating Indian summer sweat smell (40°C survival guide)</h3>
+        <p>April to June in most Indian cities is a sweat war most people are losing. The science and the daily routine.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/bike-rider-sweat-smell-india" class="b-card" data-cat="gym">
+      <div class="b-card-thumb b-thumb-6">
+        <span class="b-thumb-cat">Commuter</span>
+        <span class="b-thumb-headline">Bike rider sweat smell: the 20-minute shirt problem</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Commuter</span>
+          <span class="b-card-sep">·</span>
+          <span>Bike rider sweat smell: the 20-minute shirt problem</span>
+        </div>
+        <h3>Bike rider sweat smell: the 20-minute shirt problem</h3>
+        <p>Fresh shower, fresh shirt, 20-min ride. Walk into the office smelling like a gym session. The physics and the 30-second fix.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/how-to-not-smell-sweaty-at-work" class="b-card" data-cat="work">
+      <div class="b-card-thumb b-thumb-1">
+        <span class="b-thumb-cat">Office Playbook</span>
+        <span class="b-thumb-headline">How to not smell sweaty at work (the 11-hour office playbo…</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Office Playbook</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min</span>
+        </div>
+        <h3>How to not smell sweaty at work (the 11-hour office playbook)</h3>
+        <p>Six checkpoints across the day, ninety seconds of effort. That&#x27;s the whole playbook.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/alternative-to-deodorant-for-clothes-smell" class="b-card" data-cat="fabric">
+      <div class="b-card-thumb b-thumb-2">
+        <span class="b-thumb-cat">Category Education</span>
+        <span class="b-thumb-headline">The alternative to deodorant for clothes smell</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Category Education</span>
+          <span class="b-card-sep">·</span>
+          <span>8 min</span>
+        </div>
+        <h3>The alternative to deodorant for clothes smell</h3>
+        <p>Skin is 0.3% of the odor surface. Your shirt is the rest. Here&#x27;s the deodorant alternative built for fabric — and why every Indian man needs one.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/spray-to-remove-sweat-smell-from-clothes-instantly" class="b-card" data-cat="sweat">
+      <div class="b-card-thumb b-thumb-3">
+        <span class="b-thumb-cat">Sweat Smell Removal</span>
+        <span class="b-thumb-headline">The spray that kills sweat smell in 10 seconds (tested)</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Sweat Smell Removal</span>
+          <span class="b-card-sep">·</span>
+          <span>8 min</span>
+        </div>
+        <h3>The spray that kills sweat smell in 10 seconds (tested)</h3>
+        <p>Five sprays. Five identical sweat-soaked shirts. One stopwatch. The honest head-to-head ranking with full methodology.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/best-deodorant-spray-for-clothes-not-skin" class="b-card" data-cat="fabric">
+      <div class="b-card-thumb b-thumb-4">
+        <span class="b-thumb-cat">Category Education</span>
+        <span class="b-thumb-headline">Best deodorant spray for clothes (not skin) in India</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Category Education</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min</span>
+        </div>
+        <h3>Best deodorant spray for clothes (not skin) in India</h3>
+        <p>&quot;Deodorant for clothes&quot; is the wrong search — but the right instinct. The buyer&#x27;s guide to the right product, named correctly.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/odorstrike-review-30-day-india-test" class="b-card" data-cat="science">
+      <div class="b-card-thumb b-thumb-5">
+        <span class="b-thumb-cat">Reviews</span>
+        <span class="b-thumb-headline">ODORSTRIKE Review: 30 days, 4 shirts, real results</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Reviews</span>
+          <span class="b-card-sep">·</span>
+          <span>9 min</span>
+        </div>
+        <h3>ODORSTRIKE Review: 30 days, 4 shirts, real results</h3>
+        <p>One bottle. Hyderabad April. Office cotton, gym polyester, denim, and a sherwani. Stain test, score card, founder-honest verdict.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/where-to-buy-odorstrike-india" class="b-card" data-cat="science">
+      <div class="b-card-thumb b-thumb-6">
+        <span class="b-thumb-cat">Buying Guide</span>
+        <span class="b-thumb-headline">Where to buy ODORSTRIKE in India (direct, COD, free shippi…</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Buying Guide</span>
+          <span class="b-card-sep">·</span>
+          <span>6 min</span>
+        </div>
+        <h3>Where to buy ODORSTRIKE in India (direct, COD, free shipping)</h3>
+        <p>Pricing, payment, shipping, returns — all in one page. Solo, Duo, Trio. Why D2C and not Amazon (yet).</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/mumbai-humidity-sweat-smell-survival-guide" class="b-card" data-cat="fabric">
+      <div class="b-card-thumb b-thumb-1">
+        <span class="b-thumb-cat">Geo-Specific</span>
+        <span class="b-thumb-headline">Mumbai humidity + sweat smell: the survival guide</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Geo-Specific</span>
+          <span class="b-card-sep">·</span>
+          <span>8 min</span>
+        </div>
+        <h3>Mumbai humidity + sweat smell: the survival guide</h3>
+        <p>85% humidity. Local trains. AC offices. Why Mumbai is the hardest Indian city for fabric odor — and the 5-tool survival kit.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/best-body-odor-remover-spray-for-men-india" class="b-card" data-cat="science">
+      <div class="b-card-thumb b-thumb-2">
+        <span class="b-thumb-cat">Buyer&#x27;s Guide</span>
+        <span class="b-thumb-headline">Best body odor remover spray for men in India (2026)</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Buyer&#x27;s Guide</span>
+          <span class="b-card-sep">·</span>
+          <span>8 min</span>
+        </div>
+        <h3>Best body odor remover spray for men in India (2026)</h3>
+        <p>Indian male body odor is a four-factor stack. Here&#x27;s the men-specific buyer&#x27;s playbook with the two-tool stack that actually addresses it.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/office-ac-trap-why-rewear-shirts-smell-worse" class="b-card" data-cat="sweat">
+      <div class="b-card-thumb b-thumb-3">
+        <span class="b-thumb-cat">Body Science</span>
+        <span class="b-thumb-headline">The office AC trap: why re-worn shirts smell worse in AC</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Body Science</span>
+          <span class="b-card-sep">·</span>
+          <span>8 min</span>
+        </div>
+        <h3>The office AC trap: why re-worn shirts smell worse in AC</h3>
+        <p>You&#x27;re not smelling yesterday&#x27;s sweat. You&#x27;re smelling today&#x27;s bacteria producing fresh odor from yesterday&#x27;s residue. The 3-move fix.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/perfume-plus-sweat-chemical-reaction" class="b-card" data-cat="sweat">
+      <div class="b-card-thumb b-thumb-4">
+        <span class="b-thumb-cat">Myth-Bust</span>
+        <span class="b-thumb-headline">Perfume + sweat = a chemical reaction that smells worse</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Myth-Bust</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min</span>
+        </div>
+        <h3>Perfume + sweat = a chemical reaction that smells worse</h3>
+        <p>Spraying cologne on a sweaty shirt is the most common Indian male grooming mistake. Three reactions, named, explained, fixed.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+    <a href="/blog/why-deodorant-stops-working-after-3-hours" class="b-card" data-cat="sweat">
+      <div class="b-card-thumb b-thumb-5">
+        <span class="b-thumb-cat">Body Science</span>
+        <span class="b-thumb-headline">Why deodorant stops working after 3 hours</span>
+      </div>
+      <div class="b-card-body">
+        <div class="b-card-meta">
+          <span class="b-card-cat">Body Science</span>
+          <span class="b-card-sep">·</span>
+          <span>7 min</span>
+        </div>
+        <h3>Why deodorant stops working after 3 hours</h3>
+        <p>The deodorant didn&#x27;t fail. The smell moved. Hour-by-hour timeline of where odor migrates — and the fabric-side fix.</p>
+        <span class="b-card-arrow">Read</span>
+      </div>
+    </a>
+  </div>
+  <div class="b-pages" id="pageNav">
+    <button class="b-page-btn" id="prevBtn" type="button">&larr; Prev</button>
+    <span class="b-page-info" id="pageInfo">Page 1</span>
+    <button class="b-page-btn" id="nextBtn" type="button">Next &rarr;</button>
+  </div>
+</section>
+
+<section class="b-random">
+  <div class="b-section-head"><span class="b-section-tag">You might also like</span></div>
+  <div class="b-grid b-grid-3" id="randomGrid"></div>
 </section>
 
 <footer class="p-footer">
@@ -825,5 +1152,85 @@
   </div>
 </footer>
 
+
+<script>
+(function(){
+  var grid = document.getElementById('latestGrid');
+  if(!grid) return;
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.b-card'));
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var pageInfo = document.getElementById('pageInfo');
+  var countEl = document.getElementById('latestCount');
+  var pageNav = document.getElementById('pageNav');
+  var pills = document.querySelectorAll('.b-cat-pill');
+
+  var PAGE_SIZE = 9;
+  var page = 1;
+  var cat = 'all';
+  var emptyEl = null;
+
+  function visible(){
+    return cards.filter(function(c){ return cat === 'all' || c.dataset.cat === cat; });
+  }
+  function render(){
+    var vis = visible();
+    var totalPages = Math.max(1, Math.ceil(vis.length / PAGE_SIZE));
+    if(page > totalPages) page = totalPages;
+    cards.forEach(function(c){ c.style.display = 'none'; });
+    var start = (page - 1) * PAGE_SIZE;
+    vis.slice(start, start + PAGE_SIZE).forEach(function(c){ c.style.display = ''; });
+    if(pageInfo) pageInfo.textContent = 'Page ' + page + ' of ' + totalPages;
+    if(countEl) countEl.textContent = vis.length + (vis.length === 1 ? ' article' : ' articles');
+    if(prevBtn) prevBtn.disabled = page <= 1;
+    if(nextBtn) nextBtn.disabled = page >= totalPages;
+    if(pageNav) pageNav.style.display = totalPages > 1 ? '' : 'none';
+    // Empty state
+    if(vis.length === 0){
+      if(!emptyEl){
+        emptyEl = document.createElement('div');
+        emptyEl.className = 'b-empty';
+        emptyEl.textContent = 'No articles in this category yet';
+        grid.parentNode.insertBefore(emptyEl, grid.nextSibling);
+      }
+      grid.style.display = 'none';
+    } else {
+      if(emptyEl){ emptyEl.remove(); emptyEl = null; }
+      grid.style.display = '';
+    }
+  }
+  pills.forEach(function(p){
+    p.addEventListener('click', function(){
+      pills.forEach(function(x){ x.classList.remove('active'); });
+      p.classList.add('active');
+      cat = p.dataset.cat;
+      page = 1;
+      render();
+    });
+  });
+  function scrollToLatest(){
+    var s = document.getElementById('latestSection');
+    if(s) window.scrollTo({ top: s.getBoundingClientRect().top + window.pageYOffset - 70, behavior: 'smooth' });
+  }
+  if(prevBtn) prevBtn.addEventListener('click', function(){ if(page > 1){ page--; render(); scrollToLatest(); }});
+  if(nextBtn) nextBtn.addEventListener('click', function(){ page++; render(); scrollToLatest(); });
+  render();
+
+  // Random picks: clone 3 random cards into the random grid
+  var randomGrid = document.getElementById('randomGrid');
+  if(randomGrid && cards.length){
+    var pool = cards.slice();
+    for(var i = pool.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+    }
+    pool.slice(0, 3).forEach(function(c){
+      var clone = c.cloneNode(true);
+      clone.style.display = '';
+      randomGrid.appendChild(clone);
+    });
+  }
+})();
+</script>
 </body>
 </html>
