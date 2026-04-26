@@ -204,7 +204,7 @@ def build_post(cfg):
 
 <nav class="blog-nav">
   <a href="/" class="logo">Smelloff</a>
-  <a href="/#buy" class="buy-pill">BUY ₹179</a>
+  <a href="/#buy" class="buy-pill">BUY ₹229</a>
 </nav>
 
 <article class="article-wrap">
@@ -227,8 +227,8 @@ def build_post(cfg):
     <h4>ODORSTRIKE — 50ml. Pocket. Pan-India.</h4>
     <p style="color:var(--grey);font-size:16px;margin-bottom:20px;">Zinc Ricinoleate + β-Cyclodextrin. Neutralises odor in 8–10 seconds. Made in Hyderabad. COD pan-India.</p>
     <div class="price-row">
-      <span class="strike-price">₹249</span>
-      <span class="current-price">₹179</span>
+      <span class="strike-price">₹579</span>
+      <span class="current-price">₹229</span>
     </div>
     <a href="/#buy" class="buy-btn">BUY NOW →</a>
   </div>

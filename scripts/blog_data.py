@@ -56,7 +56,7 @@ POSTS.append({
 
   <p>Globally, fabric odor mists have been around for over two decades — Febreze launched in the United States in 1996. The category was always built for the right problem (fabric, not skin), but for India it stayed niche, expensive, and shaped like a home cleaner: 300–500 ml bottles, heavy fragrance, pricing well above ₹300.</p>
 
-  <p>What didn't exist for the Indian market was a pocket-sized, fragrance-light, fabric-only mist priced for daily use. ODORSTRIKE was built specifically to fill that gap — 50 ml, ₹179 launch, formulated for Indian sweat, Indian fabrics, and Indian climate. Made in Hyderabad. Available pan-India with COD.</p>
+  <p>What didn't exist for the Indian market was a pocket-sized, fragrance-light, fabric-only mist priced for daily use. ODORSTRIKE was built specifically to fill that gap — 50 ml, ₹229 launch, formulated for Indian sweat, Indian fabrics, and Indian climate. Made in Hyderabad. Available pan-India with COD.</p>
 
   <div class="pull-quote">
     "It's not a deodorant. It's not a perfume. It's not a detergent. It's a fabric odor eliminator — a fourth category that a lot of Indian men don't yet know exists."
@@ -101,12 +101,12 @@ POSTS.append({
 
   <p>It's also not magic. <a href="/blog/why-indian-men-sweat-smell-more" class="inline-cta">why Indian climate makes this worse</a> — humidity, polyester, diet, apocrine activity — these are real, structural factors. A fabric mist is the most effective single tool against fabric odor that exists in the consumer category. It is not a tool against humidity itself.</p>
 
-  <p>But for what it's built for — neutralising odor in fabric in 10 seconds, in a pocket, for ₹179 — it is the alternative to deodorant for clothes smell. That's the answer to the search. And now you know why it exists.</p>
+  <p>But for what it's built for — neutralising odor in fabric in 10 seconds, in a pocket, for ₹229 — it is the alternative to deodorant for clothes smell. That's the answer to the search. And now you know why it exists.</p>
 """,
     "faqs": [
         {
             "q": "What is the alternative to deodorant for clothes smell?",
-            "a": "A fabric odor eliminator spray, also called a fabric mist. It is applied directly to clothing and neutralises odor molecules trapped in fabric fibres, rather than masking them or treating skin. ODORSTRIKE by Smelloff is India's pocket-sized example: 50 ml, Zinc Ricinoleate-based, ₹179, designed for Indian climate and fabrics."
+            "a": "A fabric odor eliminator spray, also called a fabric mist. It is applied directly to clothing and neutralises odor molecules trapped in fabric fibres, rather than masking them or treating skin. ODORSTRIKE by Smelloff is India's pocket-sized example: 50 ml, Zinc Ricinoleate-based, ₹229, designed for Indian climate and fabrics."
         },
         {
             "q": "Can a fabric spray replace deodorant?",
@@ -222,14 +222,14 @@ POSTS.append({
 
   <h2>The Verdict</h2>
 
-  <p>If you searched "spray to remove sweat smell from clothes instantly," the answer is a fabric odor mist with Zinc Ricinoleate. ODORSTRIKE is India's pocket-sized version — 50 ml, ₹179 launch (₹249 standard), made in Hyderabad, ships pan-India with COD. It dries in 10 seconds, neutralises rather than masks, and fits in any pocket.</p>
+  <p>If you searched "spray to remove sweat smell from clothes instantly," the answer is a fabric odor mist with Zinc Ricinoleate. ODORSTRIKE is India's pocket-sized version — 50 ml, ₹229 launch (₹579 MRP), made in Hyderabad, ships pan-India with COD. It dries in 10 seconds, neutralises rather than masks, and fits in any pocket.</p>
 
   <p>That's it. The category is small. The chemistry is settled. The tool exists. Use it before the next meeting.</p>
 """,
     "faqs": [
         {
             "q": "What spray removes sweat smell from clothes instantly?",
-            "a": "A fabric odor mist with Zinc Ricinoleate, such as ODORSTRIKE. Zinc Ricinoleate binds to volatile odor molecules on contact, neutralising them at the molecular level rather than masking with fragrance. ODORSTRIKE dries in 10 seconds on cotton and polyester, comes in a 50 ml pocket bottle, and is priced at ₹179 in India."
+            "a": "A fabric odor mist with Zinc Ricinoleate, such as ODORSTRIKE. Zinc Ricinoleate binds to volatile odor molecules on contact, neutralising them at the molecular level rather than masking with fragrance. ODORSTRIKE dries in 10 seconds on cotton and polyester, comes in a 50 ml pocket bottle, and is priced at ₹229 in India."
         },
         {
             "q": "Does Febreze remove sweat smell instantly?",
@@ -255,7 +255,7 @@ POSTS.append({
     "headline": "The Best Deodorant Spray for Clothes (Not Skin) in India",
     "h1": "The Best <em>Deodorant Spray</em> for Clothes (Not Skin) in India — 2026",
     "dek": "Most people search for a 'deodorant spray for clothes' because that's the closest mental model. The right tool actually has a different name — and a very different formula. Here's what to buy.",
-    "description": "Deodorants are for skin. Your shirt needs a different tool. Here's the best fabric-only deodorant spray in India — Zinc Ricinoleate, 50ml, ₹179.",
+    "description": "Deodorants are for skin. Your shirt needs a different tool. Here's the best fabric-only deodorant spray in India — Zinc Ricinoleate, 50ml, ₹229.",
     "keywords": "best deodorant spray for clothes not skin, deodorant for clothes india, fabric deodorant spray, clothes deodorant india, fabric odor mist, odorstrike",
     "section": "Category Education",
     "read_time": "7 min read",
@@ -302,14 +302,14 @@ POSTS.append({
     <li><strong>Carrier: 86% distilled water + 5% IPA.</strong> Flash-off in under 10 seconds on cotton. Penetrates fibre structure where odor compounds actually live.</li>
     <li><strong>Fragrance load: 1%.</strong> Light enough that the shirt smells neutral, not perfumed. Fades in 60 seconds.</li>
     <li><strong>Bottle: 50 ml. ~400–500 sprays. Pocket fit.</strong></li>
-    <li><strong>Price: ₹179 launch (₹249 standard). Pan-India COD. Free shipping above ₹299.</strong></li>
+    <li><strong>Price: ₹229 launch (₹579 MRP). Pan-India COD. Free shipping across India.</strong></li>
     <li><strong>Tested on:</strong> Cotton, polyester, denim, wool. Spot-test recommended on silk; not for leather or suede.</li>
   </ul>
 
   <p>The full ingredient breakdown is on <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="inline-cta">how Zinc Ricinoleate actually works</a>. The honest 30-day field test is on <a href="/blog/odorstrike-review-30-day-india-test" class="inline-cta">ODORSTRIKE Review</a>.</p>
 
   <div class="pull-quote">
-    "The category isn't deodorant for clothes. It's a fabric odor mist. The product that fits the use case in India in 2026 is ODORSTRIKE — pocket-sized, neutralisation-based, priced at ₹179."
+    "The category isn't deodorant for clothes. It's a fabric odor mist. The product that fits the use case in India in 2026 is ODORSTRIKE — pocket-sized, neutralisation-based, priced at ₹229."
   </div>
 
   <h2>Honourable Mentions — and Why They Don't Quite Fit</h2>
@@ -356,7 +356,7 @@ POSTS.append({
     "faqs": [
         {
             "q": "What is the best deodorant spray for clothes (not skin) in India?",
-            "a": "ODORSTRIKE by Smelloff is the closest fit in 2026. It is a fabric odor eliminator mist, 50 ml, ₹179, with Zinc Ricinoleate (1.5%) and β-Cyclodextrin actives. It dries in 10 seconds, leaves no stain or residue, fits in a pocket, and ships pan-India with COD. The category is technically called a fabric odor mist, not a deodorant."
+            "a": "ODORSTRIKE by Smelloff is the closest fit in 2026. It is a fabric odor eliminator mist, 50 ml, ₹229, with Zinc Ricinoleate (1.5%) and β-Cyclodextrin actives. It dries in 10 seconds, leaves no stain or residue, fits in a pocket, and ships pan-India with COD. The category is technically called a fabric odor mist, not a deodorant."
         },
         {
             "q": "Is there a deodorant for clothes only?",
@@ -382,7 +382,7 @@ POSTS.append({
     "headline": "ODORSTRIKE Review: 30 Days, 4 Shirts, Real Results",
     "h1": "ODORSTRIKE Review: <em>30 Days, 4 Shirts, Real Results</em>",
     "dek": "I built ODORSTRIKE. So I made myself the harshest reviewer. One bottle, 30 days, four very different shirts, one Hyderabad April. Here's what actually happened — without the marketing voice.",
-    "description": "Honest 30-day test of ODORSTRIKE on gym shirts, office wear, denim, and a sherwani. Real results, stain test, price math. Worth ₹179?",
+    "description": "Honest 30-day test of ODORSTRIKE on gym shirts, office wear, denim, and a sherwani. Real results, stain test, price math. Worth ₹229?",
     "keywords": "odorstrike review, smelloff odorstrike review, does odorstrike work, odorstrike india review, fabric odor spray review, odorstrike worth it",
     "section": "Reviews",
     "read_time": "9 min read",
@@ -400,7 +400,7 @@ POSTS.append({
                 "image": "https://www.smelloff.in/assets/odorstrike-bottle.png",
                 "offers": {
                     "@type": "Offer",
-                    "price": "179",
+                    "price": "229",
                     "priceCurrency": "INR",
                     "url": "https://www.smelloff.in/#buy",
                     "availability": "https://schema.org/InStock",
@@ -501,7 +501,7 @@ POSTS.append({
 
   <h2>The Price Math</h2>
 
-  <p>Launch price: ₹179. Estimated sprays per 50 ml bottle: 400. That's ₹0.45 per spray. For one shirt-fresh use (4 sprays), that's ₹1.80. Cheaper than a single coffee. Cheaper than a bus ticket. The Duo at ₹299 brings per-bottle cost down to ₹149.50, and the Trio at ₹429 to ₹143. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">where to buy ODORSTRIKE in India</a> has the full pack and shipping breakdown.</p>
+  <p>Launch price: ₹229. Estimated sprays per 50 ml bottle: 400. That's ₹0.57 per spray. For one shirt-fresh use (4 sprays), that's ₹2.29. Cheaper than a single coffee. Cheaper than a bus ticket. The Duo at ₹399 brings per-bottle cost down to ₹199.50, and the Trio at ₹549 to ₹183. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">where to buy ODORSTRIKE in India</a> has the full pack and shipping breakdown.</p>
 
   <h2>The Verdict</h2>
 
@@ -509,7 +509,7 @@ POSTS.append({
 
   <p>For the use case it's built for — neutralising fabric odor in 10 seconds, pocket-carry, daily Indian climate — it is the most effective single tool I've found in this category. I built it because nothing else fit those constraints. After 30 days of using it as a regular customer would, I stand by the design choices. <a href="/blog/odorstrike-vs-febreze-india" class="inline-cta">how it compares to Febreze in detail</a> if you want the head-to-head.</p>
 
-  <p>If you're reading this on the fence about a ₹179 purchase: at one shirt-fresh per ₹1.80, the bottle pays for itself the first time you walk into a meeting without having to apologise for the smell. That was the original design brief. It still holds.</p>
+  <p>If you're reading this on the fence about a ₹229 purchase: at one shirt-fresh per ₹2.29, the bottle pays for itself the first time you walk into a meeting without having to apologise for the smell. That was the original design brief. It still holds.</p>
 """,
     "faqs": [
         {
@@ -517,7 +517,7 @@ POSTS.append({
             "a": "Yes, when used as a pre-wear or post-wash layer on fabric. Zinc Ricinoleate binds to volatile odor molecules at the molecular level on contact. In a 30-day field test across cotton office shirts, polyester gym tees, denim and a sherwani, ODORSTRIKE delivered 1–3/10 end-of-wear smell ratings versus 5–6/10 baselines. It is not a substitute for washing visibly soiled clothes."
         },
         {
-            "q": "Is ODORSTRIKE worth ₹179 for daily office use?",
+            "q": "Is ODORSTRIKE worth ₹229 for daily office use?",
             "a": "At approximately 400 sprays per 50 ml bottle and 4 sprays per shirt, a single bottle gives 100 shirt-fresh uses — roughly ₹1.80 per fresh shirt. For daily Indian office wear, especially with bike commutes or AC re-wear cycles, the per-use cost is lower than a cup of tea. The Duo and Trio packs reduce the per-bottle price further to ₹149.50 and ₹143 respectively."
         },
         {
@@ -539,8 +539,8 @@ POSTS.append({
     "title_tag": "Where to Buy ODORSTRIKE in India 2026 | Smelloff",
     "headline": "Where to Buy ODORSTRIKE in India",
     "h1": "Where to Buy ODORSTRIKE in India <em>(Direct, COD, Free Shipping)</em>",
-    "dek": "Direct from smelloff.in. Pan-India COD. Free shipping above ₹299. Dispatch within 48 hours. Solo ₹179. Duo ₹299. Trio ₹429. Here's everything in one page.",
-    "description": "Buy ODORSTRIKE direct at smelloff.in — pan-India COD, free shipping above ₹299, dispatch within 48 hours. Solo ₹179, Duo ₹299, Trio ₹429.",
+    "dek": "Direct from smelloff.in. Pan-India COD. Free shipping across India. Dispatch within 48 hours. Solo ₹229. Duo ₹399. Trio ₹549. Here's everything in one page.",
+    "description": "Buy ODORSTRIKE direct at smelloff.in — pan-India COD, free shipping across India, dispatch within 48 hours. Solo ₹229, Duo ₹399, Trio ₹549.",
     "keywords": "where to buy odorstrike, buy odorstrike india, odorstrike price india, odorstrike cod, smelloff odorstrike buy, odorstrike 50ml price, fabric odor spray buy india",
     "section": "Buying Guide",
     "read_time": "6 min read",
@@ -560,7 +560,7 @@ POSTS.append({
                 {
                     "@type": "Offer",
                     "name": "Solo (50ml × 1)",
-                    "price": "179",
+                    "price": "229",
                     "priceCurrency": "INR",
                     "url": "https://www.smelloff.in/#buy",
                     "availability": "https://schema.org/InStock",
@@ -591,7 +591,7 @@ POSTS.append({
         }
     ],
     "body_html": """
-  <p class="drop-cap">If you searched "where to buy ODORSTRIKE in India," the answer is short: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. That's it. Direct from the brand, pan-India COD, free shipping above ₹299, dispatched within 48 hours. The rest of this page is the detail — pack sizes, payment options, shipping windows, returns, and the founder's note on why I'm direct-to-consumer for now.</p>
+  <p class="drop-cap">If you searched "where to buy ODORSTRIKE in India," the answer is short: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. That's it. Direct from the brand, pan-India COD, free shipping across India, dispatched within 48 hours. The rest of this page is the detail — pack sizes, payment options, shipping windows, returns, and the founder's note on why I'm direct-to-consumer for now.</p>
 
   <h2>Where to Buy Right Now</h2>
 
@@ -604,24 +604,24 @@ POSTS.append({
         <tr><th>Pack</th><th>Price</th><th>Per Bottle</th></tr>
       </thead>
       <tbody>
-        <tr><td>Solo (50 ml × 1)</td><td>₹179</td><td>₹179</td></tr>
-        <tr><td>Duo (50 ml × 2)</td><td>₹299</td><td>₹149.50</td></tr>
-        <tr><td>Trio (50 ml × 3)</td><td>₹429</td><td>₹143</td></tr>
+        <tr><td>Solo (50 ml × 1)</td><td>₹229</td><td>₹229</td></tr>
+        <tr><td>Duo (50 ml × 2)</td><td>₹399</td><td>₹199.50</td></tr>
+        <tr><td>Trio (50 ml × 3)</td><td>₹549</td><td>₹183</td></tr>
       </tbody>
     </table>
   </div>
 
-  <p>Standard MRP per bottle is ₹249. Launch pricing is ₹179 for Solo and bundle discounts on Duo/Trio. The Trio is the best per-bottle value at ₹143/bottle — useful if you ride to office daily or share with a partner.</p>
+  <p>Standard MRP per bottle is ₹579. Launch pricing is ₹229 for Solo and bundle discounts on Duo/Trio. The Trio is the best per-bottle value at ₹143/bottle — useful if you ride to office daily or share with a partner.</p>
 
   <h2>The Three Pack Sizes — Which One to Pick</h2>
 
-  <h3>Solo (50 ml × 1) — ₹179</h3>
+  <h3>Solo (50 ml × 1) — ₹229</h3>
   <p>For first-time buyers. One bottle of ODORSTRIKE delivers approximately 400 sprays — enough for 6 to 8 weeks of daily office use at 4 sprays per shirt. If you're testing the product or carry only one bag, this is the right entry point.</p>
 
-  <h3>Duo (50 ml × 2) — ₹299</h3>
+  <h3>Duo (50 ml × 2) — ₹399</h3>
   <p>The honest sweet spot. ₹149.50 per bottle. Keep one in your office drawer and one in your gym bag. Or share with a partner. Or carry one and have a backup at home. The Duo is the pack most repeat customers move to.</p>
 
-  <h3>Trio (50 ml × 3) — ₹429</h3>
+  <h3>Trio (50 ml × 3) — ₹549</h3>
   <p>Best per-bottle value at ₹143. Recommended for: heavy bike commuters, gym-to-office daily users, summer-onset stockup, or sharing across a household. One bottle each in office, gym bag, and travel kit is a clean setup.</p>
 
   <h2>Payment Options — UPI, Cards, COD</h2>
@@ -638,7 +638,7 @@ POSTS.append({
   <h2>Shipping Across India</h2>
 
   <ul>
-    <li><strong>Free shipping above ₹299.</strong> Both Duo and Trio qualify automatically. Solo at ₹179 has a flat ₹79 shipping fee.</li>
+    <li><strong>Free shipping across India.</strong> Both Duo and Trio qualify automatically. Solo at ₹229 has a flat ₹79 shipping fee.</li>
     <li><strong>Dispatch within 48 hours.</strong> Most orders dispatch the next business day from Hyderabad.</li>
     <li><strong>Delivery: 3–5 business days metro,</strong> 5–7 business days tier-2/tier-3 cities. Tracking link sent via WhatsApp and email at dispatch.</li>
     <li><strong>Carriers:</strong> Delhivery, Shadowfax, India Post (where private logistics don't reach). For tier-3 pin codes, India Post is often the fastest path.</li>
@@ -676,12 +676,12 @@ POSTS.append({
 
   <p>If you want the long-form story behind ODORSTRIKE before you buy, <a href="/blog/why-i-built-odorstrike" class="inline-cta">why I built ODORSTRIKE</a> covers it. If you want the unfiltered review, <a href="/blog/odorstrike-review-30-day-india-test" class="inline-cta">the 30-day field test</a> is the most useful next read.</p>
 
-  <p>Otherwise — you came here for a buy link. Here it is again: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. Pan-India COD. Free shipping above ₹299. Made in Hyderabad. Dispatched in 48 hours.</p>
+  <p>Otherwise — you came here for a buy link. Here it is again: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. Pan-India COD. Free shipping across India. Made in Hyderabad. Dispatched in 48 hours.</p>
 """,
     "faqs": [
         {
             "q": "Where can I buy ODORSTRIKE in India?",
-            "a": "ODORSTRIKE is sold direct at smelloff.in. Pan-India shipping with COD available, free shipping above ₹299, and dispatch within 48 hours from Hyderabad. The brand is not yet listed on Amazon, Flipkart, or Meesho — those listings, if any exist, are not authentic stock. Amazon listing is planned for Q3 2026."
+            "a": "ODORSTRIKE is sold direct at smelloff.in. Pan-India shipping with COD available, free shipping across India, and dispatch within 48 hours from Hyderabad. The brand is not yet listed on Amazon, Flipkart, or Meesho — those listings, if any exist, are not authentic stock. Amazon listing is planned for Q3 2026."
         },
         {
             "q": "Is ODORSTRIKE available on Amazon or Flipkart?",
@@ -790,7 +790,7 @@ POSTS.append({
 
   <p>I lived in Mumbai for two years before moving back to Hyderabad. The odor environment in BKC alone shaped about half the formulation choices in ODORSTRIKE — the 10-second flash-off (because you don't have 5 minutes between the lift and the meeting), the 50 ml pocket size (because Mumbai professionals carry minimal kit), the low fragrance load (because heavy fragrance + 85% humidity = headache). Every one of those choices is a Mumbai-shaped decision.</p>
 
-  <p>If you're a Mumbai professional reading this on a local train, the buy link is here: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. ₹179, COD, ships to your office in 3–4 days. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">full purchase details</a>.</p>
+  <p>If you're a Mumbai professional reading this on a local train, the buy link is here: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. ₹229, COD, ships to your office in 3–4 days. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">full purchase details</a>.</p>
 
   <p>The broader point: Mumbai's odor environment is a structural problem, not a personal failing. The right tools, in the right sequence, in the right pocket, makes the city manageable. None of this is about being cleaner. It's about being equipped.</p>
 """,
@@ -809,7 +809,7 @@ POSTS.append({
         },
         {
             "q": "What spray works best for Mumbai office sweat smell?",
-            "a": "A fabric odor mist with Zinc Ricinoleate is the right tool. ODORSTRIKE is purpose-built for Indian humidity — 50 ml pocket size, 10-second dry time, low fragrance load (1%), and a Zinc Ricinoleate + β-Cyclodextrin formula that neutralises odor on contact. Available pan-India direct at smelloff.in for ₹179 with COD."
+            "a": "A fabric odor mist with Zinc Ricinoleate is the right tool. ODORSTRIKE is purpose-built for Indian humidity — 50 ml pocket size, 10-second dry time, low fragrance load (1%), and a Zinc Ricinoleate + β-Cyclodextrin formula that neutralises odor on contact. Available pan-India direct at smelloff.in for ₹229 with COD."
         },
     ],
 })
@@ -823,7 +823,7 @@ POSTS.append({
     "headline": "The Best Body Odor Remover Spray for Men in India",
     "h1": "The Best Body Odor Remover Spray for Men in India <em>(2026)</em>",
     "dek": "Indian male body odor is a structural problem — climate, diet, fabric, biology. Most body-odor sprays sold in India treat skin only. Here's the men-specific guide that addresses the actual battlefield.",
-    "description": "Indian male body odor needs a fabric solution, not just skin. Tested fabric mists ranked: Zinc Ricinoleate, pocket size, ₹179, no stain. The men-specific guide.",
+    "description": "Indian male body odor needs a fabric solution, not just skin. Tested fabric mists ranked: Zinc Ricinoleate, pocket size, ₹229, no stain. The men-specific guide.",
     "keywords": "best body odor remover spray for men india, body odor spray men india, best body odor spray india, mens body odor spray, fabric odor spray for men, odorstrike men",
     "section": "Buyer's Guide",
     "read_time": "8 min read",
@@ -869,7 +869,7 @@ POSTS.append({
   <h2>The Categories You'll Find in India — Ranked</h2>
 
   <h3>1. Fabric Odor Mist (the right tool)</h3>
-  <p>Pocket-sized sprays formulated for fabric, with Zinc Ricinoleate or β-Cyclodextrin actives. ODORSTRIKE is the clearest Indian example — 50 ml, ₹179, both actives, made in Hyderabad. Addresses the fabric front decisively.</p>
+  <p>Pocket-sized sprays formulated for fabric, with Zinc Ricinoleate or β-Cyclodextrin actives. ODORSTRIKE is the clearest Indian example — 50 ml, ₹229, both actives, made in Hyderabad. Addresses the fabric front decisively.</p>
 
   <h3>2. Antiperspirant (the skin partner)</h3>
   <p>Aluminum-based products that physically block sweat ducts. Effective on skin, no claim on fabric. Major brands available in India: Nivea, Dove, Old Spice, Park Avenue. Use morning before wear. Not a body odor spray on its own — a complement.</p>
@@ -896,14 +896,14 @@ POSTS.append({
   <p>This is the most over-marketed category in India. Pick whatever your skin tolerates without irritation. Aluminum antiperspirants for sweat-blocking. Alcohol-based deodorants for skin-bacteria control. Roll-on, stick, spray — the format doesn't matter as long as you apply consistently in the morning.</p>
 
   <h3>Fabric-side: ODORSTRIKE</h3>
-  <p>50 ml pocket bottle, ₹179. Two actives — Zinc Ricinoleate (1.5%) for chemical binding of thiol/amine groups in odor molecules, β-Cyclodextrin (1.5%) for physical encapsulation. Distilled water + 5% IPA carrier dries in 10 seconds. Tested on cotton, polyester, denim, wool. Made in Hyderabad. Pan-India COD. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">where to buy</a>.</p>
+  <p>50 ml pocket bottle, ₹229. Two actives — Zinc Ricinoleate (1.5%) for chemical binding of thiol/amine groups in odor molecules, β-Cyclodextrin (1.5%) for physical encapsulation. Distilled water + 5% IPA carrier dries in 10 seconds. Tested on cotton, polyester, denim, wool. Made in Hyderabad. Pan-India COD. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">where to buy</a>.</p>
 
   <p>Apply: collar and underarm fabric of the shirt before wear. Mid-day reset before any 2–5 PM meeting. Post-gym before re-dressing. Pre-event for any 4+ hour commitment in formal wear.</p>
 
   <h2>The Use-Case Playbook (For Indian Men Specifically)</h2>
 
   <h3>Office worker, AC + bike commute</h3>
-  <p>Morning deodorant. ODORSTRIKE on shirt before wear (4 sprays). Mid-day reset after lunch. Total daily cost: ~₹2.50.</p>
+  <p>Morning deodorant. ODORSTRIKE on shirt before wear (4 sprays). Mid-day reset after lunch. Total daily cost: ~₹4.58.</p>
 
   <h3>Field/sales role, multiple meetings</h3>
   <p>Morning deodorant. ODORSTRIKE on shirt before first meeting. Re-spray collar between meetings (in car or bathroom). Spare shirt in laptop bag for monsoon emergency. <a href="/blog/how-to-not-smell-sweaty-at-work" class="inline-cta">the 9-to-6 protocol</a>.</p>
@@ -923,12 +923,12 @@ POSTS.append({
 
   <p>And a fabric mist is not a wash replacement. ODORSTRIKE is a between-wash and pre-wear tool. If a shirt has been sweated through for 8 hours of heavy activity, it needs the wash cycle. The mist makes wash-cycle-fresh shirts last longer through Indian climate; it doesn't extend laundered life indefinitely.</p>
 
-  <p>For the ₹179 entry — that's the buy link: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. Pan-India COD, free shipping above ₹299, dispatch in 48 hours from Hyderabad. The men-specific category gap exists. The product fits it. <a href="/blog/odorstrike-review-30-day-india-test" class="inline-cta">the 30-day field test</a> is the most useful next read.</p>
+  <p>For the ₹229 entry — that's the buy link: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. Pan-India COD, free shipping across India, dispatch in 48 hours from Hyderabad. The men-specific category gap exists. The product fits it. <a href="/blog/odorstrike-review-30-day-india-test" class="inline-cta">the 30-day field test</a> is the most useful next read.</p>
 """,
     "faqs": [
         {
             "q": "What is the best body odor remover spray for men in India?",
-            "a": "For Indian male body odor, use a two-tool stack: a deodorant or antiperspirant for skin in the morning, and a fabric odor mist for the shirt. ODORSTRIKE is India's pocket fabric mist — 50 ml, ₹179, Zinc Ricinoleate + β-Cyclodextrin. The fabric front handles the majority of body odor on Indian men, which lives in the shirt by mid-day."
+            "a": "For Indian male body odor, use a two-tool stack: a deodorant or antiperspirant for skin in the morning, and a fabric odor mist for the shirt. ODORSTRIKE is India's pocket fabric mist — 50 ml, ₹229, Zinc Ricinoleate + β-Cyclodextrin. The fabric front handles the majority of body odor on Indian men, which lives in the shirt by mid-day."
         },
         {
             "q": "Can a body spray remove sweat smell from clothes?",
@@ -1049,7 +1049,7 @@ POSTS.append({
 
   <p>The AC office isn't a bystander in your shirt's smell story. It's an active participant — every transition between AC and street resurrects bacterial activity in the fabric. Wash technology alone doesn't reach into polyester fibre structure or prevent indoor-drying recolonisation. A pocket fabric mist applied at the right two points (post-wash, pre-wear) breaks the cycle.</p>
 
-  <p>Once you know the sequence — first wear, AC dry, wash, indoor dry with bacterial bloom, second wear with reactivation — you can intervene at exactly the right step. <a href="/#buy" class="inline-cta">smelloff.in/#buy</a> for the 50 ml pocket bottle. ₹179. Pan-India COD.</p>
+  <p>Once you know the sequence — first wear, AC dry, wash, indoor dry with bacterial bloom, second wear with reactivation — you can intervene at exactly the right step. <a href="/#buy" class="inline-cta">smelloff.in/#buy</a> for the 50 ml pocket bottle. ₹229. Pan-India COD.</p>
 """,
     "faqs": [
         {
@@ -1306,13 +1306,13 @@ POSTS.append({
 
   <h2>The Daily Cost of Adding the Fabric Layer</h2>
 
-  <p>ODORSTRIKE 50 ml at ₹179 launch (₹249 standard). ~400 sprays per bottle. 4 sprays morning + 4 sprays mid-day = 8 sprays per day. That's 50 days per bottle, or ~₹3.60 per day for the fabric layer.</p>
+  <p>ODORSTRIKE 50 ml at ₹229 launch (₹579 MRP). ~400 sprays per bottle. 4 sprays morning + 4 sprays mid-day = 8 sprays per day. That's 50 days per bottle, or ~₹4.58 per day for the fabric layer.</p>
 
   <p>Compared to: 1 cup of office-canteen tea (₹15), 1 metro fare (₹20+), or replacing a sweat-discoloured shirt (₹800+) — the cost of breaking the 3 PM cycle is rounding error. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">where to buy</a>.</p>
 
   <h2>The Bottom Line</h2>
 
-  <p>Deodorant doesn't stop working. It ends its useful window in the morning, and the rest of the day's odor problem is happening on a surface deodorant was never designed to reach. The fix is to add the missing layer, not replace the working one. Morning skin → deodorant. All-day fabric → ODORSTRIKE pre-wear and mid-day reset. <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. ₹179. The 3 PM problem is structural and solvable.</p>
+  <p>Deodorant doesn't stop working. It ends its useful window in the morning, and the rest of the day's odor problem is happening on a surface deodorant was never designed to reach. The fix is to add the missing layer, not replace the working one. Morning skin → deodorant. All-day fabric → ODORSTRIKE pre-wear and mid-day reset. <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. ₹229. The 3 PM problem is structural and solvable.</p>
 """,
     "faqs": [
         {
