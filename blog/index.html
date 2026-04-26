@@ -142,87 +142,31 @@
 
   /* Card thumbnails — sharp CSS, brand palette only (#080808 + #B8FF57) */
   .b-card{padding:0;overflow:hidden}
+  /* Minimal thumbnail: matte black, centered category badge, single acid corner mark.
+     One consistent design across all cards — no busy patterns, no duplicate headline. */
   .b-card-thumb{
     position:relative;width:100%;aspect-ratio:5/3;
-    display:flex;flex-direction:column;justify-content:center;align-items:center;
-    text-align:center;gap:12px;
-    padding:18px 20px;
+    display:flex;align-items:center;justify-content:center;
     background:#080808;
     border-bottom:1px solid #1F1F1F;
-    overflow:hidden;
+  }
+  .b-card-thumb::before{
+    content:'';position:absolute;top:14px;left:14px;
+    width:8px;height:8px;background:#B8FF57;border-radius:50%;
   }
   .b-thumb-cat{
-    position:relative;z-index:2;display:inline-block;
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:10px;
-    letter-spacing:.22em;text-transform:uppercase;color:#080808;
-    background:#B8FF57;padding:5px 11px;border-radius:2px;
-  }
-  .b-thumb-headline{
-    position:relative;z-index:2;
     font-family:'Barlow Condensed',sans-serif;font-weight:900;
-    font-size:24px;line-height:1;letter-spacing:.005em;text-transform:uppercase;
-    color:#fff;
-    max-width:92%;
+    font-size:14px;letter-spacing:.28em;text-transform:uppercase;color:#fff;
+    border-bottom:2px solid #B8FF57;padding-bottom:6px;
   }
-  .b-card-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px}
-
-  /* 6 sharp variants — geometric, no blur, brand palette only */
-  /* T1 — twin acid stripes (top + bottom) */
-  .b-thumb-1{border-top:6px solid #B8FF57;border-bottom:6px solid #B8FF57}
-
-  /* T2 — corner triangle top-right + bottom-left */
-  .b-thumb-2::before{
-    content:'';position:absolute;top:0;right:0;
-    width:0;height:0;border-style:solid;
-    border-width:0 80px 80px 0;
-    border-color:transparent #B8FF57 transparent transparent;
-    z-index:0;
-  }
-  .b-thumb-2::after{
-    content:'';position:absolute;bottom:0;left:0;
-    width:0;height:0;border-style:solid;
-    border-width:80px 0 0 80px;
-    border-color:transparent transparent transparent #B8FF57;
-    z-index:0;
-  }
-
-  /* T3 — thick acid vertical bar on the left */
-  .b-thumb-3{border-left:14px solid #B8FF57;justify-content:center;align-items:center}
-
-  /* T4 — inset acid frame */
-  .b-thumb-4::before{
-    content:'';position:absolute;inset:14px;
-    border:2px solid #B8FF57;border-radius:3px;
-    pointer-events:none;
-  }
-
-  /* T5 — sharp dot grid */
-  .b-thumb-5{
-    background-color:#080808;
-    background-image:radial-gradient(#B8FF57 1.5px, transparent 1.6px);
-    background-size:18px 18px;background-position:0 0;
-  }
-  .b-thumb-5 .b-thumb-headline{
-    background:#080808;padding:6px 10px;border:1px solid #1F1F1F;
-  }
-
-  /* T6 — big bold acid number / corner mark */
-  .b-thumb-6::before{
-    content:'';position:absolute;inset:auto 0 0 0;height:12px;background:#B8FF57;
-  }
-  .b-thumb-6::after{
-    content:'';position:absolute;top:14px;right:14px;
-    width:18px;height:18px;background:#B8FF57;border-radius:50%;
-  }
-
-  /* Featured (top) card — wider thumb, larger headline */
+  .b-card-body{padding:18px 18px 18px;display:flex;flex-direction:column;gap:10px}
   .b-card.featured .b-card-thumb{aspect-ratio:16/7}
-  .b-card.featured .b-thumb-headline{font-size:34px;max-width:80%}
+  .b-card.featured .b-thumb-cat{font-size:16px}
 
   @media(min-width:720px){
-    .b-card-body{padding:18px 22px 22px}
-    .b-thumb-headline{font-size:26px}
-    .b-card.featured .b-thumb-headline{font-size:44px}
+    .b-card-body{padding:20px 22px 22px}
+    .b-thumb-cat{font-size:15px}
+    .b-card.featured .b-thumb-cat{font-size:18px}
   }
 
   /* Trending marquee — JS-driven, swipeable */
@@ -400,36 +344,36 @@
   <div class="b-marquee-viewport" id="marqueeVp">
     <div class="b-marquee-track" id="marqueeTrack">
       <a class="b-mc" href="/blog/best-fabric-odor-spray-india-2026-body-odor">
-        <div class="b-mc-thumb v1"><span class="b-mc-cat">Buyer's Guide</span><span class="b-mc-headline">Best fabric odor spray for body odor</span></div>
+        <div class="b-mc-thumb"><span class="b-mc-cat">Buyer's Guide</span></div>
         <div class="b-mc-meta">Read the ranking</div>
       </a>
       <a class="b-mc" href="/blog/where-to-buy-odorstrike-india">
-        <div class="b-mc-thumb v2"><span class="b-mc-cat">Where to buy</span><span class="b-mc-headline">Where to buy ODORSTRIKE in India</span></div>
+        <div class="b-mc-thumb"><span class="b-mc-cat">Where to buy</span></div>
         <div class="b-mc-meta">Stockist guide</div>
       </a>
       <a class="b-mc" href="/blog/odorstrike-review-30-day-india-test">
-        <div class="b-mc-thumb v3"><span class="b-mc-cat">Reviews</span><span class="b-mc-headline">ODORSTRIKE 30-day India test</span></div>
+        <div class="b-mc-thumb"><span class="b-mc-cat">Reviews</span></div>
         <div class="b-mc-meta">Read the review</div>
       </a>
       <a class="b-mc" href="/blog/fix-shirt-odor-before-meeting">
-        <div class="b-mc-thumb v4"><span class="b-mc-cat">Pre-Meeting</span><span class="b-mc-headline">Fix shirt odor in 60 seconds</span></div>
+        <div class="b-mc-thumb"><span class="b-mc-cat">Pre-Meeting</span></div>
         <div class="b-mc-meta">Read the fix</div>
       </a>
       <!-- duplicates for seamless loop (mirror the 4 above) -->
       <a class="b-mc" href="/blog/best-fabric-odor-spray-india-2026-body-odor" aria-hidden="true" tabindex="-1">
-        <div class="b-mc-thumb v1"><span class="b-mc-cat">Buyer's Guide</span><span class="b-mc-headline">Best fabric odor spray for body odor</span></div>
+        <div class="b-mc-thumb"><span class="b-mc-cat">Buyer's Guide</span></div>
         <div class="b-mc-meta">Read the ranking</div>
       </a>
       <a class="b-mc" href="/blog/where-to-buy-odorstrike-india" aria-hidden="true" tabindex="-1">
-        <div class="b-mc-thumb v2"><span class="b-mc-cat">Where to buy</span><span class="b-mc-headline">Where to buy ODORSTRIKE in India</span></div>
+        <div class="b-mc-thumb"><span class="b-mc-cat">Where to buy</span></div>
         <div class="b-mc-meta">Stockist guide</div>
       </a>
       <a class="b-mc" href="/blog/odorstrike-review-30-day-india-test" aria-hidden="true" tabindex="-1">
-        <div class="b-mc-thumb v3"><span class="b-mc-cat">Reviews</span><span class="b-mc-headline">ODORSTRIKE 30-day India test</span></div>
+        <div class="b-mc-thumb"><span class="b-mc-cat">Reviews</span></div>
         <div class="b-mc-meta">Read the review</div>
       </a>
       <a class="b-mc" href="/blog/fix-shirt-odor-before-meeting" aria-hidden="true" tabindex="-1">
-        <div class="b-mc-thumb v4"><span class="b-mc-cat">Pre-Meeting</span><span class="b-mc-headline">Fix shirt odor in 60 seconds</span></div>
+        <div class="b-mc-thumb"><span class="b-mc-cat">Pre-Meeting</span></div>
         <div class="b-mc-meta">Read the fix</div>
       </a>
     </div>
@@ -569,9 +513,8 @@
   <div class="b-section-head"><span class="b-section-tag">Featured</span></div>
   <div class="b-grid">
     <a href="/blog/best-fabric-odor-spray-india-2026-body-odor" class="b-card featured" data-cat="science">
-      <div class="b-card-thumb b-thumb-1">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Buyer&#x27;s Guide</span>
-        <span class="b-thumb-headline">Best fabric odor spray for body odor in India</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -591,9 +534,8 @@
   <div class="b-section-head"><span class="b-section-tag">Most Read</span></div>
   <div class="b-grid b-grid-3">
     <a href="/blog/fix-shirt-odor-before-meeting" class="b-card" data-cat="work">
-      <div class="b-card-thumb b-thumb-2">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Pre-Meeting</span>
-        <span class="b-thumb-headline">How to fix shirt odor fast before a meeting</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -607,9 +549,8 @@
       </div>
     </a>
     <a href="/blog/how-to-not-smell-sweaty-at-work" class="b-card" data-cat="work">
-      <div class="b-card-thumb b-thumb-3">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Office Playbook</span>
-        <span class="b-thumb-headline">How to not smell sweaty at work (the 11-hour office playbo…</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -623,9 +564,8 @@
       </div>
     </a>
     <a href="/blog/deodorant-vs-fabric-mist" class="b-card" data-cat="science">
-      <div class="b-card-thumb b-thumb-4">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Product Ed.</span>
-        <span class="b-thumb-headline">Deodorant vs fabric mist: what actually kills odor</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -648,9 +588,8 @@
   </div>
   <div class="b-grid b-grid-3" id="latestGrid">
     <a href="/blog/best-fabric-odor-spray-india-2026-body-odor" class="b-card" data-cat="science">
-      <div class="b-card-thumb b-thumb-1">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Buyer&#x27;s Guide</span>
-        <span class="b-thumb-headline">Best fabric odor spray for body odor in India</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -664,9 +603,8 @@
       </div>
     </a>
     <a href="/blog/odorstrike-vs-febreze-india" class="b-card" data-cat="science">
-      <div class="b-card-thumb b-thumb-2">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Comparison</span>
-        <span class="b-thumb-headline">ODORSTRIKE vs Febreze: which works better on Indian clothes?</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -680,9 +618,8 @@
       </div>
     </a>
     <a href="/blog/fix-shirt-odor-before-meeting" class="b-card" data-cat="work">
-      <div class="b-card-thumb b-thumb-3">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Pre-Meeting</span>
-        <span class="b-thumb-headline">How to fix shirt odor fast before a meeting</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -696,9 +633,8 @@
       </div>
     </a>
     <a href="/blog/is-zinc-ricinoleate-safe-for-clothes" class="b-card" data-cat="science">
-      <div class="b-card-thumb b-thumb-4">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Ingredient Science</span>
-        <span class="b-thumb-headline">Is Zinc Ricinoleate safe for clothes?</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -712,9 +648,8 @@
       </div>
     </a>
     <a href="/blog/gym-to-office-without-showering" class="b-card" data-cat="gym">
-      <div class="b-card-thumb b-thumb-5">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Gym-to-Office</span>
-        <span class="b-thumb-headline">Gym to office without showering</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -728,9 +663,8 @@
       </div>
     </a>
     <a href="/blog/clothes-smell-after-washing" class="b-card" data-cat="fabric">
-      <div class="b-card-thumb b-thumb-6">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Laundry Science</span>
-        <span class="b-thumb-headline">Why do my clothes smell even after washing?</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -744,9 +678,8 @@
       </div>
     </a>
     <a href="/blog/remove-sweat-smell-shirts-without-washing" class="b-card" data-cat="fabric">
-      <div class="b-card-thumb b-thumb-1">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Fabric Care</span>
-        <span class="b-thumb-headline">Remove sweat smell from shirts without washing</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -760,9 +693,8 @@
       </div>
     </a>
     <a href="/blog/keep-gym-clothes-fresh-in-bag" class="b-card" data-cat="gym">
-      <div class="b-card-thumb b-thumb-2">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Gym Bag</span>
-        <span class="b-thumb-headline">How to keep gym clothes fresh in your bag</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -776,9 +708,8 @@
       </div>
     </a>
     <a href="/blog/gym-clothes-smell-after-washing" class="b-card" data-cat="fabric">
-      <div class="b-card-thumb b-thumb-3">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Fabric Care</span>
-        <span class="b-thumb-headline">Why gym clothes still smell after washing</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -792,9 +723,8 @@
       </div>
     </a>
     <a href="/blog/deodorant-vs-fabric-mist" class="b-card" data-cat="science">
-      <div class="b-card-thumb b-thumb-4">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Product Ed.</span>
-        <span class="b-thumb-headline">Deodorant vs fabric mist: what actually kills odor</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -808,9 +738,8 @@
       </div>
     </a>
     <a href="/blog/why-indian-men-sweat-smell-more" class="b-card" data-cat="sweat">
-      <div class="b-card-thumb b-thumb-5">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Body Science</span>
-        <span class="b-thumb-headline">Why Indian men sweat-smell more (it&#x27;s not hygiene)</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -824,9 +753,8 @@
       </div>
     </a>
     <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="b-card" data-cat="science">
-      <div class="b-card-thumb b-thumb-6">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Ingredient Science</span>
-        <span class="b-thumb-headline">The ingredient that actually kills fabric odor</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -840,9 +768,8 @@
       </div>
     </a>
     <a href="/blog/why-i-built-odorstrike" class="b-card" data-cat="confidence">
-      <div class="b-card-thumb b-thumb-1">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Founder Story</span>
-        <span class="b-thumb-headline">Why I built ODORSTRIKE</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -856,9 +783,8 @@
       </div>
     </a>
     <a href="/blog/best-fabric-odor-spray-india-2026" class="b-card" data-cat="science">
-      <div class="b-card-thumb b-thumb-2">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Buyer&#x27;s Guide</span>
-        <span class="b-thumb-headline">Best fabric odor spray in India 2026</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -872,9 +798,8 @@
       </div>
     </a>
     <a href="/blog/confidence-spray-pre-meeting-date" class="b-card" data-cat="confidence">
-      <div class="b-card-thumb b-thumb-3">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Confidence</span>
-        <span class="b-thumb-headline">The confidence spray before every meeting, date, and inter…</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -888,9 +813,8 @@
       </div>
     </a>
     <a href="/blog/hostel-clothes-smell-college-guide" class="b-card" data-cat="work">
-      <div class="b-card-thumb b-thumb-4">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Hostel Guide</span>
-        <span class="b-thumb-headline">Hostel clothes smell: the college student&#x27;s survival guide</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -904,9 +828,8 @@
       </div>
     </a>
     <a href="/blog/indian-summer-sweat-smell-guide" class="b-card" data-cat="fabric">
-      <div class="b-card-thumb b-thumb-5">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Seasonal</span>
-        <span class="b-thumb-headline">Beating Indian summer sweat smell (40°C survival guide)</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -920,9 +843,8 @@
       </div>
     </a>
     <a href="/blog/bike-rider-sweat-smell-india" class="b-card" data-cat="gym">
-      <div class="b-card-thumb b-thumb-6">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Commuter</span>
-        <span class="b-thumb-headline">Bike rider sweat smell: the 20-minute shirt problem</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -936,9 +858,8 @@
       </div>
     </a>
     <a href="/blog/how-to-not-smell-sweaty-at-work" class="b-card" data-cat="work">
-      <div class="b-card-thumb b-thumb-1">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Office Playbook</span>
-        <span class="b-thumb-headline">How to not smell sweaty at work (the 11-hour office playbo…</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -952,9 +873,8 @@
       </div>
     </a>
     <a href="/blog/alternative-to-deodorant-for-clothes-smell" class="b-card" data-cat="fabric">
-      <div class="b-card-thumb b-thumb-2">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Category Education</span>
-        <span class="b-thumb-headline">The alternative to deodorant for clothes smell</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -968,9 +888,8 @@
       </div>
     </a>
     <a href="/blog/spray-to-remove-sweat-smell-from-clothes-instantly" class="b-card" data-cat="sweat">
-      <div class="b-card-thumb b-thumb-3">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Sweat Smell Removal</span>
-        <span class="b-thumb-headline">The spray that kills sweat smell in 10 seconds (tested)</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -984,9 +903,8 @@
       </div>
     </a>
     <a href="/blog/best-deodorant-spray-for-clothes-not-skin" class="b-card" data-cat="fabric">
-      <div class="b-card-thumb b-thumb-4">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Category Education</span>
-        <span class="b-thumb-headline">Best deodorant spray for clothes (not skin) in India</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -1000,9 +918,8 @@
       </div>
     </a>
     <a href="/blog/odorstrike-review-30-day-india-test" class="b-card" data-cat="science">
-      <div class="b-card-thumb b-thumb-5">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Reviews</span>
-        <span class="b-thumb-headline">ODORSTRIKE Review: 30 days, 4 shirts, real results</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -1016,9 +933,8 @@
       </div>
     </a>
     <a href="/blog/where-to-buy-odorstrike-india" class="b-card" data-cat="science">
-      <div class="b-card-thumb b-thumb-6">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Buying Guide</span>
-        <span class="b-thumb-headline">Where to buy ODORSTRIKE in India (direct, COD, free shippi…</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -1032,9 +948,8 @@
       </div>
     </a>
     <a href="/blog/mumbai-humidity-sweat-smell-survival-guide" class="b-card" data-cat="fabric">
-      <div class="b-card-thumb b-thumb-1">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Geo-Specific</span>
-        <span class="b-thumb-headline">Mumbai humidity + sweat smell: the survival guide</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -1048,9 +963,8 @@
       </div>
     </a>
     <a href="/blog/best-body-odor-remover-spray-for-men-india" class="b-card" data-cat="science">
-      <div class="b-card-thumb b-thumb-2">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Buyer&#x27;s Guide</span>
-        <span class="b-thumb-headline">Best body odor remover spray for men in India (2026)</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -1064,9 +978,8 @@
       </div>
     </a>
     <a href="/blog/office-ac-trap-why-rewear-shirts-smell-worse" class="b-card" data-cat="sweat">
-      <div class="b-card-thumb b-thumb-3">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Body Science</span>
-        <span class="b-thumb-headline">The office AC trap: why re-worn shirts smell worse in AC</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -1080,9 +993,8 @@
       </div>
     </a>
     <a href="/blog/perfume-plus-sweat-chemical-reaction" class="b-card" data-cat="sweat">
-      <div class="b-card-thumb b-thumb-4">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Myth-Bust</span>
-        <span class="b-thumb-headline">Perfume + sweat = a chemical reaction that smells worse</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -1096,9 +1008,8 @@
       </div>
     </a>
     <a href="/blog/why-deodorant-stops-working-after-3-hours" class="b-card" data-cat="sweat">
-      <div class="b-card-thumb b-thumb-5">
+      <div class="b-card-thumb">
         <span class="b-thumb-cat">Body Science</span>
-        <span class="b-thumb-headline">Why deodorant stops working after 3 hours</span>
       </div>
       <div class="b-card-body">
         <div class="b-card-meta">
@@ -1146,6 +1057,7 @@
     <a href="/shipping">Shipping</a>
     <a href="/returns">Returns</a>
     <a href="/refund">Refund</a>
+    <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener">Instagram</a>
   </div>
   <div class="p-footer-bottom">
     &copy; 2026 SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad
