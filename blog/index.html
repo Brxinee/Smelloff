@@ -366,7 +366,7 @@
     transition:background .15s ease,color .15s ease;
   }
   .b-page-btn:hover:not(:disabled){background:#B8FF57;color:#080808}
-  .b-page-btn:disabled{opacity:.3;cursor:not-allowed;border-color:#1F1F1F}
+  .b-page-btn:disabled{opacity:.3;cursor:not-allowed}
   .b-page-info{
     font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;
     letter-spacing:.16em;text-transform:uppercase;color:#888;
@@ -1199,6 +1199,24 @@
       grid.style.display = '';
     }
   }
+  function refreshRandom(){
+    var randomGrid = document.getElementById('randomGrid');
+    var randomSection = document.querySelector('.b-random');
+    if(!randomGrid || !randomSection) return;
+    randomGrid.innerHTML = '';
+    var pool = visible().slice();
+    if(pool.length === 0){ randomSection.style.display = 'none'; return; }
+    randomSection.style.display = '';
+    for(var i = pool.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+    }
+    pool.slice(0, Math.min(3, pool.length)).forEach(function(c){
+      var clone = c.cloneNode(true);
+      clone.style.display = '';
+      randomGrid.appendChild(clone);
+    });
+  }
   pills.forEach(function(p){
     p.addEventListener('click', function(){
       pills.forEach(function(x){ x.classList.remove('active'); });
@@ -1206,6 +1224,7 @@
       cat = p.dataset.cat;
       page = 1;
       render();
+      refreshRandom();
     });
   });
   function scrollToLatest(){
@@ -1215,21 +1234,7 @@
   if(prevBtn) prevBtn.addEventListener('click', function(){ if(page > 1){ page--; render(); scrollToLatest(); }});
   if(nextBtn) nextBtn.addEventListener('click', function(){ page++; render(); scrollToLatest(); });
   render();
-
-  // Random picks: clone 3 random cards into the random grid
-  var randomGrid = document.getElementById('randomGrid');
-  if(randomGrid && cards.length){
-    var pool = cards.slice();
-    for(var i = pool.length - 1; i > 0; i--){
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
-    }
-    pool.slice(0, 3).forEach(function(c){
-      var clone = c.cloneNode(true);
-      clone.style.display = '';
-      randomGrid.appendChild(clone);
-    });
-  }
+  refreshRandom();
 })();
 </script>
 </body>
