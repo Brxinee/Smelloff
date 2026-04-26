@@ -518,7 +518,7 @@ POSTS.append({
         },
         {
             "q": "Is ODORSTRIKE worth ₹229 for daily office use?",
-            "a": "At approximately 400 sprays per 50 ml bottle and 4 sprays per shirt, a single bottle gives 100 shirt-fresh uses — roughly ₹1.80 per fresh shirt. For daily Indian office wear, especially with bike commutes or AC re-wear cycles, the per-use cost is lower than a cup of tea. The Duo and Trio packs reduce the per-bottle price further to ₹149.50 and ₹143 respectively."
+            "a": "At approximately 400 sprays per 50 ml bottle and 4 sprays per shirt, a single bottle gives 100 shirt-fresh uses — roughly ₹2.29 per fresh shirt. For daily Indian office wear, especially with bike commutes or AC re-wear cycles, the per-use cost is lower than a cup of tea. The Duo and Trio packs reduce the per-bottle price further to ₹199.50 and ₹183 respectively."
         },
         {
             "q": "Does ODORSTRIKE leave stains on white shirts?",
@@ -611,7 +611,7 @@ POSTS.append({
     </table>
   </div>
 
-  <p>Standard MRP per bottle is ₹579. Launch pricing is ₹229 for Solo and bundle discounts on Duo/Trio. The Trio is the best per-bottle value at ₹143/bottle — useful if you ride to office daily or share with a partner.</p>
+  <p>Standard MRP per bottle is ₹579. Launch pricing is ₹229 for Solo and bundle discounts on Duo/Trio. The Trio is the best per-bottle value at ₹183/bottle — useful if you ride to office daily or share with a partner.</p>
 
   <h2>The Three Pack Sizes — Which One to Pick</h2>
 
@@ -619,10 +619,10 @@ POSTS.append({
   <p>For first-time buyers. One bottle of ODORSTRIKE delivers approximately 400 sprays — enough for 6 to 8 weeks of daily office use at 4 sprays per shirt. If you're testing the product or carry only one bag, this is the right entry point.</p>
 
   <h3>Duo (50 ml × 2) — ₹399</h3>
-  <p>The honest sweet spot. ₹149.50 per bottle. Keep one in your office drawer and one in your gym bag. Or share with a partner. Or carry one and have a backup at home. The Duo is the pack most repeat customers move to.</p>
+  <p>The honest sweet spot. ₹199.50 per bottle. Keep one in your office drawer and one in your gym bag. Or share with a partner. Or carry one and have a backup at home. The Duo is the pack most repeat customers move to.</p>
 
   <h3>Trio (50 ml × 3) — ₹549</h3>
-  <p>Best per-bottle value at ₹143. Recommended for: heavy bike commuters, gym-to-office daily users, summer-onset stockup, or sharing across a household. One bottle each in office, gym bag, and travel kit is a clean setup.</p>
+  <p>Best per-bottle value at ₹183. Recommended for: heavy bike commuters, gym-to-office daily users, summer-onset stockup, or sharing across a household. One bottle each in office, gym bag, and travel kit is a clean setup.</p>
 
   <h2>Payment Options — UPI, Cards, COD</h2>
 
