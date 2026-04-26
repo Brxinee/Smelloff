@@ -348,7 +348,10 @@ footer a{color:#888}
   .footer-links a{color:#888;text-decoration:none;transition:color .15s ease}
   .footer-links a:hover{color:#fff}
   @media(max-width:720px){.blog-footer{flex-direction:column;align-items:flex-start}.blog-footer .footer-bottom{text-align:left}}
-  </style>
+  
+/* footer rebalance */
+.blog-footer{border-top:1px solid #1a1a1a;padding:40px 20px;max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;flex-wrap:wrap}.blog-footer .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(184,255,87,.15);font-family:DM Sans,sans-serif;font-size:11px;color:#666;text-align:center;letter-spacing:.02em;margin-top:4px}.footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:DM Sans,sans-serif;font-size:13px;justify-content:center}.footer-links a{color:#888;text-decoration:none;transition:color .15s ease}.footer-links a:hover{color:#fff}.blog-footer{flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center}.bf-brand{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;letter-spacing:.06em;text-transform:uppercase;color:#E8E8E8;text-decoration:none;margin-bottom:4px}.bf-brand-inner{position:relative;padding-right:.2em}.bf-brand-dot{position:absolute;top:-.06em;right:0;width:.16em;height:.16em;background:#B8FF57;border-radius:50%}.footer-related{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;align-items:center;font-family:'DM Sans',sans-serif;font-size:12px;max-width:680px;margin:0 auto}.footer-related-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#666;margin-right:4px}.footer-related a{color:#a8a8a8;text-decoration:none;border-bottom:1px solid rgba(184,255,87,.18);padding-bottom:1px;transition:color .15s ease,border-color .15s ease}.footer-related a:hover{color:#fff;border-bottom-color:#B8FF57}.footer-policy{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-family:'DM Sans',sans-serif;font-size:11px}.footer-policy a{color:#666;text-decoration:none;letter-spacing:.02em;transition:color .15s ease}.footer-policy a:hover{color:#888}
+</style>
 </head>
 <body>
 
@@ -473,8 +476,31 @@ footer a{color:#888}
 
 <button class="save-pill" id="savePill" onclick="savePost()">★ Save for later</button>
 
-<footer>
-  <p>© 2026 Smelloff · <a href="/">smelloff.in</a> · <a href="https://instagram.com/smell0ff">@smell0ff</a></p>
+<footer class="blog-footer">
+  <a href="/" class="bf-brand"><span class="bf-brand-inner">SMELLOFF<span class="bf-brand-dot"></span></span></a>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/blog">All Guides</a>
+    <a href="/#buy">Buy ODORSTRIKE</a>
+    <a href="/#stock-up">Bundles</a>
+  </div>
+  <div class="footer-related">
+    <span class="footer-related-label">More guides</span>
+    <a href="/blog/best-fabric-odor-spray-india-2026-body-odor">Best fabric odor spray</a>
+    <a href="/blog/fix-shirt-odor-before-meeting">Fix shirt odor fast</a>
+    <a href="/blog/deodorant-vs-fabric-mist">Deodorant vs fabric mist</a>
+    <a href="/blog/where-to-buy-odorstrike-india">Where to buy</a>
+    <a href="/blog/odorstrike-review-30-day-india-test">30-day review</a>
+  </div>
+  <div class="footer-policy">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/shipping">Shipping</a>
+    <a href="/returns">Returns</a>
+    <a href="/refund">Refund</a>
+    <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener">Instagram</a>
+  </div>
+  <div class="footer-bottom">&copy; 2026 SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad</div>
 </footer>
 
 <script>
