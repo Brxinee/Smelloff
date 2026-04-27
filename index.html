@@ -228,6 +228,29 @@
   };
 </script>
 
+<!-- Attribution: capture utm_source on landing, persist across the session -->
+<script>
+  (function captureSource(){
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var utm = (params.get('utm_source') || '').toLowerCase().trim();
+      var map = {
+        'meta':'Meta','facebook':'Meta','fb':'Meta','instagram':'Meta','ig':'Meta',
+        'google':'Google','googleads':'Google','google_ads':'Google','adwords':'Google',
+        'organic':'Organic','seo':'Organic',
+        'direct':'Direct',
+        'influencer':'Influencer','creator':'Influencer',
+        'whatsapp':'WhatsApp','wa':'WhatsApp'
+      };
+      if (utm) {
+        localStorage.setItem('os_source', map[utm] || 'Direct');
+      } else if (!localStorage.getItem('os_source')) {
+        localStorage.setItem('os_source', 'Direct');
+      }
+    } catch (e) { /* localStorage may be blocked */ }
+  })();
+</script>
+
 <!-- Fonts: non-render-blocking -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4660,38 +4683,55 @@
   }
 
   function genOrderId() {
-    const d = new Date();
-    const ts = d.getFullYear().toString().slice(-2) + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
-    const rand = Math.random().toString(36).slice(2,6).toUpperCase();
-    return 'OS' + ts + '-' + rand;
+    var counter = 0;
+    try {
+      counter = parseInt(localStorage.getItem('os_order_counter') || '0', 10) || 0;
+      counter++;
+      localStorage.setItem('os_order_counter', String(counter));
+    } catch (e) {
+      counter = Math.floor(Math.random() * 9000) + 1000;
+    }
+    return 'OS-' + String(counter).padStart(4, '0');
   }
+
+  // Maps the in-page variant keys (solo/duo/trio + cart) to the backend schema
+  // (variant, variantLabel, units) — kept here so the rest of the UI stays stable.
+  const SHEET_VARIANT = {
+    solo: { variant: 'starter', label: 'Starter Strike — 1 × 50ml', bottles: 1 },
+    duo:  { variant: 'duo',     label: 'Duo Strike — 2 × 50ml',     bottles: 2 },
+    trio: { variant: 'squad',   label: 'Squad Strike — 3 × 50ml',   bottles: 3 }
+  };
 
   function collectOrder(orderId, paymentId) {
     const v = VARIANTS[currentVariant] || {};
-    const baseAmount = v.amount || 0;
-    // Quantity expressed for Sheets (bottles count)
-    const qtyMap = { solo: 1, duo: 2, trio: 3 };
-    const qty = qtyMap[currentVariant] || 1;
+    const baseAmount = Number(v.amount) || 0;
+    const shipping = Number(calcShipping(baseAmount)) || 0;
+    const sv = SHEET_VARIANT[currentVariant] || { variant: currentVariant, label: v.title || currentVariant, bottles: 1 };
+    const isCod = payMethod === 'cod';
+    let source = 'Direct';
+    try { source = localStorage.getItem('os_source') || 'Direct'; } catch (e) {}
     return {
       orderId,
-      paymentId: paymentId || '',
-      variant: currentVariant,
-      variantLabel: v.label || currentVariant,
-      product: v.title || '',
-      units: v.units || '',
-      quantity: qty,
-      amount: baseAmount,
-      shipping: 0,
-      total: baseAmount,
-      paymentMethod: payMethod,
       name: document.getElementById('f_name').value.trim(),
       phone: document.getElementById('f_phone').value.trim(),
       email: document.getElementById('f_email').value.trim(),
+      product: 'ODORSTRIKE Fabric Mist',
+      variant: sv.variant,
+      variantLabel: sv.label,
+      units: sv.bottles,
+      quantity: 1,
+      amount: baseAmount,
+      shipping: shipping,
+      total: baseAmount + shipping,
+      paymentMethod: isCod ? 'COD' : 'UPI',
+      paymentStatus: isCod ? 'PENDING' : (paymentId && paymentId.indexOf('pay_') === 0 ? 'PAID' : 'PENDING'),
+      paymentId: isCod ? '' : (paymentId && paymentId.indexOf('pay_') === 0 ? paymentId : ''),
       address: document.getElementById('f_addr').value.trim(),
-      pincode: document.getElementById('f_pin').value.trim(),
       city: document.getElementById('f_city').value.trim(),
       state: document.getElementById('f_state').value.trim(),
-      timestamp: new Date().toISOString()
+      pincode: document.getElementById('f_pin').value.trim(),
+      source: source,
+      notes: ''
     };
   }
 
