@@ -331,6 +331,59 @@ footer a{color:#888}
   .next-read a{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3vw,28px);color:#E8E8E8;text-decoration:none;line-height:1.2;display:flex;align-items:flex-start;gap:14px;justify-content:space-between;transition:color .2s}
   .next-read a:hover{color:#B8FF57}
   .next-arrow{color:#B8FF57;flex-shrink:0}
+
+  /* Keep-reading carousel (auto-scrolling, swipeable) */
+  .post-popular{
+    margin:48px -16px 8px;padding:24px 0;
+    background:#080808;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;
+    overflow:hidden;user-select:none;
+  }
+  .post-popular-label{
+    padding:0 20px 14px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;
+    letter-spacing:.22em;text-transform:uppercase;color:#B8FF57;
+    display:flex;align-items:center;gap:10px;
+  }
+  .post-popular-label::before{
+    content:'';width:6px;height:6px;border-radius:50%;background:#B8FF57;
+    box-shadow:0 0 10px #B8FF57;
+  }
+  .post-popular-viewport{overflow:hidden;cursor:grab;touch-action:pan-y}
+  .post-popular-viewport.dragging{cursor:grabbing}
+  .post-popular-track{
+    display:flex;gap:14px;width:max-content;padding:0 20px;
+    transform:translate3d(0,0,0);will-change:transform;
+  }
+  .post-pc{
+    flex-shrink:0;width:240px;
+    background:#080808;border:1px solid #1F1F1F;border-radius:10px;
+    text-decoration:none;color:#E8E8E8;overflow:hidden;
+    transition:border-color .2s ease,transform .2s ease;
+  }
+  .post-pc:hover{border-color:#B8FF57;transform:translateY(-2px)}
+  .post-pc-thumb{
+    position:relative;aspect-ratio:5/3;padding:14px 16px;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;gap:10px;background:#080808;
+  }
+  .post-pc-thumb::before{
+    content:'';position:absolute;top:12px;left:12px;
+    width:8px;height:8px;background:#B8FF57;border-radius:50%;
+  }
+  .post-pc-cat{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:9px;
+    letter-spacing:.22em;text-transform:uppercase;color:#080808;
+    background:#B8FF57;padding:4px 9px;border-radius:2px;
+  }
+  .post-pc-title{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;
+    line-height:1;letter-spacing:.005em;text-transform:uppercase;color:#fff;
+    max-width:90%;
+  }
+  @media(min-width:720px){
+    .post-popular{margin:56px -32px 8px}
+    .post-pc{width:280px}
+  }
 </style>
 </head>
 <body>
@@ -545,10 +598,26 @@ footer a{color:#888}
     <a href="/#buy" class="buy-btn">BUY NOW &rarr;</a>
   </div>
 
-  <div class="next-read">
-    <div class="next-read-label">Next Read</div>
-    <a href="/blog/gym-clothes-smell-after-washing">Why gym clothes still smell after washing<span class="next-arrow">&rarr;</span></a>
-  </div>
+  <section class="post-popular" aria-label="Keep reading">
+    <div class="post-popular-label">Keep reading</div>
+    <div class="post-popular-viewport" id="postPopularVp">
+      <div class="post-popular-track" id="postPopularTrack">
+      <a class="post-pc" href="/blog/best-fabric-odor-spray-india-2026-body-odor"><div class="post-pc-thumb"><span class="post-pc-cat">Buyer's Guide</span><span class="post-pc-title">Best fabric odor spray for body odor</span></div></a>
+      <a class="post-pc" href="/blog/fix-shirt-odor-before-meeting"><div class="post-pc-thumb"><span class="post-pc-cat">Pre-Meeting</span><span class="post-pc-title">Fix shirt odor in 60 seconds</span></div></a>
+      <a class="post-pc" href="/blog/deodorant-vs-fabric-mist"><div class="post-pc-thumb"><span class="post-pc-cat">Product Ed.</span><span class="post-pc-title">Deodorant vs fabric mist</span></div></a>
+      <a class="post-pc" href="/blog/where-to-buy-odorstrike-india"><div class="post-pc-thumb"><span class="post-pc-cat">Where to buy</span><span class="post-pc-title">Where to buy ODORSTRIKE in India</span></div></a>
+      <a class="post-pc" href="/blog/odorstrike-review-30-day-india-test"><div class="post-pc-thumb"><span class="post-pc-cat">Reviews</span><span class="post-pc-title">ODORSTRIKE 30-day India test</span></div></a>
+      <a class="post-pc" href="/blog/why-i-built-odorstrike"><div class="post-pc-thumb"><span class="post-pc-cat">Founder</span><span class="post-pc-title">Why I built ODORSTRIKE</span></div></a>
+      <!-- duplicates for seamless loop -->
+      <a class="post-pc" href="/blog/best-fabric-odor-spray-india-2026-body-odor" aria-hidden="true" tabindex="-1"><div class="post-pc-thumb"><span class="post-pc-cat">Buyer's Guide</span><span class="post-pc-title">Best fabric odor spray for body odor</span></div></a>
+      <a class="post-pc" href="/blog/fix-shirt-odor-before-meeting" aria-hidden="true" tabindex="-1"><div class="post-pc-thumb"><span class="post-pc-cat">Pre-Meeting</span><span class="post-pc-title">Fix shirt odor in 60 seconds</span></div></a>
+      <a class="post-pc" href="/blog/deodorant-vs-fabric-mist" aria-hidden="true" tabindex="-1"><div class="post-pc-thumb"><span class="post-pc-cat">Product Ed.</span><span class="post-pc-title">Deodorant vs fabric mist</span></div></a>
+      <a class="post-pc" href="/blog/where-to-buy-odorstrike-india" aria-hidden="true" tabindex="-1"><div class="post-pc-thumb"><span class="post-pc-cat">Where to buy</span><span class="post-pc-title">Where to buy ODORSTRIKE in India</span></div></a>
+      <a class="post-pc" href="/blog/odorstrike-review-30-day-india-test" aria-hidden="true" tabindex="-1"><div class="post-pc-thumb"><span class="post-pc-cat">Reviews</span><span class="post-pc-title">ODORSTRIKE 30-day India test</span></div></a>
+      <a class="post-pc" href="/blog/why-i-built-odorstrike" aria-hidden="true" tabindex="-1"><div class="post-pc-thumb"><span class="post-pc-cat">Founder</span><span class="post-pc-title">Why I built ODORSTRIKE</span></div></a>
+      </div>
+    </div>
+  </section>
 </article>
 
 <footer class="blog-footer">
@@ -587,5 +656,81 @@ window.addEventListener('scroll',()=>{
 }
 </script>
 
+
+<script>
+(function(){
+  var vp = document.getElementById('postPopularVp');
+  var track = document.getElementById('postPopularTrack');
+  if(!vp || !track) return;
+  var pos = 0, halfW = 0;
+  var dragging = false, dragStartX = 0, dragStartPos = 0;
+  var lastMoveX = 0, lastMoveT = 0, velocity = 0, dragMoved = false;
+  var paused = false, lastFrame = 0;
+  var SPEED = 0.04, DECAY = 0.92;
+  function measure(){ halfW = track.scrollWidth / 2; }
+  measure();
+  window.addEventListener('resize', measure);
+  setTimeout(measure, 600);
+  function setX(x){
+    if(halfW > 0){
+      while(x <= -halfW) x += halfW;
+      while(x > 0) x -= halfW;
+    }
+    pos = x;
+    track.style.transform = 'translate3d(' + x + 'px,0,0)';
+  }
+  setX(0);
+  function tick(t){
+    if(!lastFrame) lastFrame = t;
+    var dt = t - lastFrame; lastFrame = t;
+    if(!dragging && !paused){
+      if(Math.abs(velocity) > 0.005){
+        setX(pos + velocity * dt);
+        velocity *= Math.pow(DECAY, dt / 16.7);
+      } else { velocity = 0; setX(pos - SPEED * dt); }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  function onDown(e){
+    dragging = true; dragMoved = false; velocity = 0;
+    dragStartX = e.clientX; dragStartPos = pos;
+    lastMoveX = e.clientX; lastMoveT = performance.now();
+    vp.classList.add('dragging');
+    try { vp.setPointerCapture(e.pointerId); } catch(_) {}
+  }
+  function onMove(e){
+    if(!dragging) return;
+    var dx = e.clientX - dragStartX;
+    if(Math.abs(dx) > 4) dragMoved = true;
+    setX(dragStartPos + dx);
+    var now = performance.now(), dt = now - lastMoveT;
+    if(dt > 0) velocity = (e.clientX - lastMoveX) / dt;
+    lastMoveX = e.clientX; lastMoveT = now;
+  }
+  function onUp(e){
+    if(!dragging) return;
+    dragging = false; vp.classList.remove('dragging');
+    try { vp.releasePointerCapture(e.pointerId); } catch(_) {}
+    if(dragMoved){
+      var swallow = function(ev){ ev.preventDefault(); ev.stopPropagation(); vp.removeEventListener('click', swallow, true); };
+      vp.addEventListener('click', swallow, true);
+      setTimeout(function(){ vp.removeEventListener('click', swallow, true); }, 50);
+    }
+  }
+  vp.addEventListener('pointerdown', onDown);
+  vp.addEventListener('pointermove', onMove);
+  vp.addEventListener('pointerup', onUp);
+  vp.addEventListener('pointercancel', onUp);
+  vp.addEventListener('pointerleave', function(e){ if(dragging) onUp(e); });
+  vp.addEventListener('mouseenter', function(){ paused = true; });
+  vp.addEventListener('mouseleave', function(){ paused = false; });
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden){ paused = true; lastFrame = 0; }
+    else { paused = false; lastFrame = 0; }
+  });
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ SPEED = 0; }
+})();
+</script>
 </body>
 </html>
