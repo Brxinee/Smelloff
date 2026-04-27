@@ -207,8 +207,8 @@ export function welcomeEmail({ customerName = 'there' } = {}) {
 
     <div style="background-color:#0F0F0F;border:1px solid ${BORDER};padding:24px;margin:24px 0;text-align:center;">
       <p style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:2px;text-transform:uppercase;margin:0 0 8px 0;">ODORSTRIKE 50ml</p>
-      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:48px;color:${GREEN};margin:0 0 4px 0;letter-spacing:-1px;">&#8377;179</p>
-      <p style="font-family:${BODY_FONT};font-size:12px;color:${GREY};margin:0;">Free shipping above &#8377;299 &middot; COD available</p>
+      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:48px;color:${GREEN};margin:0 0 4px 0;letter-spacing:-1px;">&#8377;229</p>
+      <p style="font-family:${BODY_FONT};font-size:12px;color:${GREY};margin:0;">Free shipping across India &middot; COD available</p>
     </div>
 
     ${button(SITE_URL, 'Shop Now')}
@@ -236,7 +236,7 @@ export function abandonedCart({
     <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
       <p style="font-family:${HEADING_FONT};font-weight:900;font-size:20px;color:${WHITE};text-transform:uppercase;letter-spacing:1px;margin:0 0 4px 0;">ODORSTRIKE 50ml</p>
       <p style="font-family:${BODY_FONT};font-size:13px;color:${GREY};margin:0 0 12px 0;">Pocket-sized odor killer for your clothes</p>
-      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:28px;color:${GREEN};margin:0;letter-spacing:-0.5px;">&#8377;179</p>
+      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:28px;color:${GREEN};margin:0;letter-spacing:-0.5px;">&#8377;229</p>
     </div>
 
     ${button(productUrl, 'Finish Order')}
