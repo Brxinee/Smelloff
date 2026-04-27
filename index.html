@@ -4680,43 +4680,30 @@
   }
 
   function logOrderToSheets(order) {
-    const params = new URLSearchParams();
-    Object.keys(order).forEach(k => params.append(k, order[k] != null ? order[k] : ''));
-    const url = CFG.SHEETS_ENDPOINT + '?' + params.toString();
-
-    console.log('[Smelloff] Logging order to Sheets:', order.orderId, url.length + ' chars');
-
-    // Method 1: sendBeacon — survives page navigation, bypasses CORS
-    let beaconSent = false;
-    if (navigator.sendBeacon) {
-      try {
-        // Beacon with FormData (POST) — Apps Script doPost handles it
-        const fd = new FormData();
-        Object.keys(order).forEach(k => fd.append(k, order[k] != null ? order[k] : ''));
-        beaconSent = navigator.sendBeacon(CFG.SHEETS_ENDPOINT, fd);
-        console.log('[Smelloff] sendBeacon dispatched:', beaconSent);
-      } catch (e) {
-        console.warn('[Smelloff] sendBeacon failed:', e);
-      }
-    }
-
-    // Method 2: Image pixel — fires a GET, bypasses CORS, always works
-    // Runs in parallel as belt-and-braces backup
-    try {
-      const img = new Image();
-      img.onload = () => console.log('[Smelloff] Pixel logged:', order.orderId);
-      img.onerror = () => console.log('[Smelloff] Pixel fired (onerror is expected for non-image response):', order.orderId);
-      img.src = url;
-    } catch (e) {
-      console.warn('[Smelloff] Pixel fallback failed:', e);
-    }
-
-    // Method 3: fetch as last resort (if URL is too long for beacon+img and both fail)
-    if (!beaconSent && url.length < 8000) {
-      fetch(url, { method: 'GET', mode: 'no-cors', keepalive: true })
-        .then(() => console.log('[Smelloff] fetch backup completed'))
-        .catch(e => console.warn('[Smelloff] fetch backup failed:', e));
-    }
+    // Goes through our Vercel proxy (/api/log-order), which validates the
+    // payload and forwards to Apps Script with a shared secret. Same-origin,
+    // so no CORS dance; keepalive lets the request survive the UPI redirect.
+    console.log('[Smelloff] Logging order via proxy:', order.orderId);
+    return fetch('/api/log-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(order),
+      keepalive: true,
+    }).then(function(r){
+      return r.json().then(function(j){
+        if (!r.ok || !j.ok) {
+          console.error('[Smelloff] Order log rejected:', r.status, j);
+          throw new Error(j && j.error ? j.error : ('HTTP ' + r.status));
+        }
+        console.log('[Smelloff] Order logged:', j.orderId);
+        return j;
+      });
+    }).catch(function(e){
+      console.error('[Smelloff] Order log failed:', e);
+      // Don't rethrow — we still want the success screen to show; failure
+      // is visible in console + Vercel logs, and the customer can WhatsApp
+      // us with the order ID if it never arrives.
+    });
   }
 
   function showSuccess(orderId, method) {

@@ -177,7 +177,42 @@
 
 ---
 
-## 4. Decisions needed
+## 4. Sheets proxy — manual steps after deploy
+
+A `/api/log-order` Vercel proxy now sits between the browser and your
+Apps Script. To finish wiring it up (one-time, ~5 min):
+
+1. **Vercel → Project Settings → Environment Variables.** Add:
+   - `SHEETS_ENDPOINT` = your Apps Script `/exec` URL (the same one that
+     used to be in `window.SMELLOFF_CONFIG.SHEETS_ENDPOINT`)
+   - `SHEETS_SECRET` = a long random string (generate with
+     `openssl rand -hex 32` or any password manager)
+
+2. **Google Apps Script.** Open your `doPost(e)` and add a token check
+   at the top:
+
+   ```js
+   const REQUIRED_TOKEN = 'PASTE_SAME_VALUE_AS_SHEETS_SECRET';
+   function doPost(e) {
+     if (!e || !e.parameter || e.parameter.token !== REQUIRED_TOKEN) {
+       return ContentService
+         .createTextOutput(JSON.stringify({ ok:false, error:'forbidden' }))
+         .setMimeType(ContentService.MimeType.JSON);
+     }
+     // ... your existing logic stays exactly as-is
+   }
+   ```
+
+   Then **Deploy → Manage deployments → Edit → New version → Deploy**.
+
+3. After both steps are live, anyone hitting your Apps Script URL
+   directly (without going through `/api/log-order`) gets a 403. The
+   waitlist email-capture in the footer still posts directly to Sheets
+   for now — harden separately if/when you want.
+
+---
+
+## 5. Decisions needed
 
 1. **Launch price.** You told me ₹159 launch / ₹179 strike, but the codebase is uniformly `₹229` launch / `₹579` MRP (40+ references in HTML, schema, manifest, llms.txt, blogs). I'm **not** changing prices automatically — confirm whether you want me to update the entire codebase to ₹159/179 or keep the current ₹229/579 (which is what the site actually shows).
 2. **GST registration.** If registered, give me the GSTIN to surface on the footer + policy pages. If unregistered (under threshold), nothing to add.
