@@ -385,26 +385,48 @@
     -webkit-overflow-scrolling:touch;
     padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
   }
-  /* Inside the drawer the section heads and grids should respect the
-     narrower viewport: drop the wide page paddings and force grids
-     to single column. */
-  .b-drawer .b-section-head{
-    max-width:none;padding:24px 18px 10px;
-  }
-  .b-drawer .b-section-tag{font-size:14px;letter-spacing:.18em}
-  .b-drawer .b-section-count{font-size:10px}
-  .b-drawer .b-cats{padding:18px 18px 4px;max-width:none}
-  .b-drawer .b-feature,.b-drawer .b-popular,.b-drawer .b-random{
-    max-width:none;padding:0 14px;
-  }
-  .b-drawer .b-posts{padding:0 14px 28px}
-  .b-drawer .b-grid,.b-drawer .b-grid-3{
-    grid-template-columns:1fr !important;gap:12px;
-  }
-  .b-drawer .b-marquee{margin:0}
-  .b-drawer .b-pages{padding:0 18px;margin-top:18px}
-  /* Lock body scroll while the drawer is open */
   body.drawer-open{overflow:hidden}
+
+  /* Drawer nav (link list, not content) */
+  .b-drawer-head{
+    flex:0 0 auto;
+    padding:env(safe-area-inset-top,0px) 18px 0;
+    height:calc(56px + env(safe-area-inset-top,0px));
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid #1a1a1a;background:#080808;
+  }
+  .b-drawer-logo{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:22px;letter-spacing:.06em;text-transform:uppercase;
+    color:#fff;text-decoration:none;position:relative;padding-right:10px;
+  }
+  .b-drawer-dot{
+    position:absolute;top:-2px;right:0;
+    width:6px;height:6px;background:#B8FF57;border-radius:50%;
+  }
+  .b-drawer-nav{
+    display:flex;flex-direction:column;
+    padding:14px 0 calc(20px + env(safe-area-inset-bottom,0px));
+    overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto;
+  }
+  .b-drawer-link{
+    text-align:left;background:transparent;border:none;
+    padding:14px 22px;
+    font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;
+    color:#E8E8E8;text-decoration:none;cursor:pointer;
+    transition:background .15s ease,color .15s ease;
+    border-left:3px solid transparent;
+  }
+  .b-drawer-link:hover{background:#0F0F0F;color:#B8FF57;border-left-color:#B8FF57}
+  .b-drawer-link--cta{color:#B8FF57}
+  .b-drawer-cat.active{color:#B8FF57;border-left-color:#B8FF57;background:#0F0F0F}
+  .b-drawer-section-label{
+    margin:18px 22px 6px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
+    letter-spacing:.22em;text-transform:uppercase;color:#666;
+    border-top:1px solid #1a1a1a;padding-top:18px;
+  }
+  .b-drawer-section-label:first-of-type{border-top:none;padding-top:0;margin-top:18px}
 </style>
 </head>
 <body>
@@ -444,15 +466,6 @@
   </div>
 </section>
 
-
-
-<div class="b-drawer-backdrop" id="drawerBackdrop"></div>
-<aside class="b-drawer" id="blogDrawer" aria-hidden="true">
-  <div class="b-drawer-head">
-    <span class="b-drawer-title">Browse</span>
-    <button class="b-drawer-close" id="drawerClose" type="button" aria-label="Close menu">&times;</button>
-  </div>
-  <div class="b-drawer-body">
 <nav class="b-cats" aria-label="Browse categories">
   <button class="b-cat-pill active" data-cat="all" type="button">All</button>
   <button class="b-cat-pill" data-cat="sweat" type="button">Sweat &amp; Odor</button>
@@ -1129,9 +1142,33 @@
   <div class="b-section-head"><span class="b-section-tag">You might also like</span></div>
   <div class="b-grid b-grid-3" id="randomGrid"></div>
 </section>
-  </div>
-</aside>
 
+<div class="b-drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="b-drawer" id="blogDrawer" aria-hidden="true">
+  <div class="b-drawer-head">
+    <a href="/" class="b-drawer-logo">SMELLOFF<span class="b-drawer-dot" aria-hidden="true"></span></a>
+    <button class="b-drawer-close" id="drawerClose" type="button" aria-label="Close menu">&times;</button>
+  </div>
+  <nav class="b-drawer-nav" aria-label="Site menu">
+    <a href="/" class="b-drawer-link">Home</a>
+    <a href="/#buy" class="b-drawer-link b-drawer-link--cta">Shop ODORSTRIKE</a>
+    <a href="/blog" class="b-drawer-link">All Guides</a>
+
+    <div class="b-drawer-section-label">Browse by topic</div>
+    <button class="b-drawer-link b-drawer-cat" data-cat="all" type="button">All posts</button>
+    <button class="b-drawer-link b-drawer-cat" data-cat="sweat" type="button">Sweat &amp; Odor</button>
+    <button class="b-drawer-link b-drawer-cat" data-cat="fabric" type="button">Fabric Care</button>
+    <button class="b-drawer-link b-drawer-cat" data-cat="gym" type="button">Gym &amp; Sport</button>
+    <button class="b-drawer-link b-drawer-cat" data-cat="work" type="button">Workwear</button>
+    <button class="b-drawer-link b-drawer-cat" data-cat="confidence" type="button">Confidence</button>
+    <button class="b-drawer-link b-drawer-cat" data-cat="science" type="button">Science</button>
+
+    <div class="b-drawer-section-label">Connect</div>
+    <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener" class="b-drawer-link">Instagram</a>
+    <a href="https://wa.me/919392974031?text=Hi%20Smelloff" target="_blank" rel="noopener" class="b-drawer-link">WhatsApp</a>
+    <a href="mailto:smelloffsupport@gmail.com" class="b-drawer-link">Email Support</a>
+  </nav>
+</aside>
 
 <footer class="p-footer">
   <div class="p-footer-brand">SMELLOFF<span class="p-dot" aria-hidden="true"></span></div>
@@ -1277,6 +1314,49 @@
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && drawer.classList.contains('open')) close();
   });
+})();
+</script>
+
+
+<script>
+(function(){
+  var drawer = document.getElementById('blogDrawer');
+  var backdrop = document.getElementById('drawerBackdrop');
+  var btn = document.getElementById('blogMenuToggle');
+  var bodyPills = document.querySelectorAll('.b-posts ~ * .b-cat-pill, body > nav.b-cats .b-cat-pill, .b-cats .b-cat-pill');
+  if(!drawer) return;
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    if(backdrop) backdrop.classList.remove('open');
+    document.body.classList.remove('drawer-open');
+    if(btn){ btn.setAttribute('aria-expanded','false'); }
+    drawer.setAttribute('aria-hidden','true');
+  }
+  drawer.querySelectorAll('.b-drawer-cat').forEach(function(link){
+    link.addEventListener('click', function(){
+      var cat = link.dataset.cat;
+      // Update active state in drawer
+      drawer.querySelectorAll('.b-drawer-cat').forEach(function(x){ x.classList.remove('active'); });
+      link.classList.add('active');
+      // Trigger the matching body pill (if any) — uses existing filter JS
+      var bodyPill = document.querySelector('.b-cats .b-cat-pill[data-cat="' + cat + '"]');
+      if(bodyPill) bodyPill.click();
+      closeDrawer();
+      // Scroll to latest section
+      var s = document.getElementById('latestSection');
+      if(s){
+        setTimeout(function(){
+          window.scrollTo({ top: s.getBoundingClientRect().top + window.pageYOffset - 70, behavior: 'smooth' });
+        }, 320);
+      }
+    });
+  });
+  // Mark drawer category as active on initial load (mirror body pill state)
+  var initialActive = document.querySelector('.b-cats .b-cat-pill.active');
+  if(initialActive){
+    var match = drawer.querySelector('.b-drawer-cat[data-cat="' + initialActive.dataset.cat + '"]');
+    if(match) match.classList.add('active');
+  }
 })();
 </script>
 
