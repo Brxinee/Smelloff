@@ -427,6 +427,50 @@
     border-top:1px solid #1a1a1a;padding-top:18px;
   }
   .b-drawer-section-label:first-of-type{border-top:none;padding-top:0;margin-top:18px}
+
+  /* Section-jump pills on /blog body (replaces the old filter pills) */
+  .b-jumps{
+    max-width:1120px;margin:0 auto;padding:18px 20px 0;
+    display:flex;gap:8px;flex-wrap:wrap;
+  }
+  .b-jump-pill{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
+    letter-spacing:.2em;text-transform:uppercase;color:#888;
+    background:transparent;border:1px solid #1F1F1F;
+    padding:9px 16px;border-radius:100px;text-decoration:none;
+    transition:color .15s ease,border-color .15s ease,background .15s ease;
+  }
+  .b-jump-pill:hover{color:#080808;background:#B8FF57;border-color:#B8FF57}
+
+  /* Drawer categories as pills */
+  .b-drawer-cats{
+    display:flex;flex-wrap:wrap;gap:8px;
+    padding:0 22px 14px;
+  }
+  .b-drawer-cat{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
+    letter-spacing:.18em;text-transform:uppercase;color:#888;
+    background:transparent;border:1px solid #1F1F1F;
+    padding:9px 14px;border-radius:100px;cursor:pointer;
+    transition:color .15s ease,border-color .15s ease,background .15s ease;
+  }
+  .b-drawer-cat:hover{color:#fff;border-color:#B8FF57}
+  .b-drawer-cat.active{background:#B8FF57;color:#080808;border-color:#B8FF57}
+
+  /* Push social icons to bottom-center of drawer */
+  .b-drawer-spacer{flex:1 1 auto;min-height:18px}
+  .b-drawer-socials{
+    display:flex;justify-content:center;align-items:center;gap:18px;
+    padding:18px 22px calc(18px + env(safe-area-inset-bottom,0px));
+    border-top:1px solid #1a1a1a;
+  }
+  .b-drawer-socials a{
+    width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
+    border:1px solid #1F1F1F;border-radius:50%;
+    transition:border-color .15s ease,background .15s ease;
+  }
+  .b-drawer-socials a:hover{border-color:#B8FF57;background:#0F0F0F}
+  .b-drawer-socials img{width:22px;height:22px;display:block}
 </style>
 </head>
 <body>
@@ -444,6 +488,13 @@
   <h1>No fluff. Just the <span class="acid">real</span> science of smell.</h1>
   <p class="dek">Why your clothes still reek after washing, what deodorant can't fix, and what finally works. Written by the founder.</p>
 </header>
+
+<nav class="b-jumps" aria-label="Jump to section">
+  <a href="#popularSection" class="b-jump-pill" data-jump="popularSection">Most Read</a>
+  <a href="#latestSection" class="b-jump-pill" data-jump="latestSection">Latest reads</a>
+  <a href="#randomSection" class="b-jump-pill" data-jump="randomSection">You might also like</a>
+</nav>
+
 
 <section class="b-feature">
   <div class="b-section-head"><span class="b-section-tag">Featured</span></div>
@@ -465,16 +516,6 @@
     </a>
   </div>
 </section>
-
-<nav class="b-cats" aria-label="Browse categories">
-  <button class="b-cat-pill active" data-cat="all" type="button">All</button>
-  <button class="b-cat-pill" data-cat="sweat" type="button">Sweat &amp; Odor</button>
-  <button class="b-cat-pill" data-cat="fabric" type="button">Fabric Care</button>
-  <button class="b-cat-pill" data-cat="gym" type="button">Gym &amp; Sport</button>
-  <button class="b-cat-pill" data-cat="work" type="button">Workwear</button>
-  <button class="b-cat-pill" data-cat="confidence" type="button">Confidence</button>
-  <button class="b-cat-pill" data-cat="science" type="button">Science</button>
-</nav>
 
 <section class="b-marquee" aria-label="Trending guides">
   <div class="b-marquee-label">Trending now</div>
@@ -638,7 +679,7 @@
 
 
 
-<section class="b-popular">
+<section class="b-popular" id="popularSection">
   <div class="b-section-head"><span class="b-section-tag">Most Read</span></div>
   <div class="b-grid b-grid-3">
     <a href="/blog/fix-shirt-odor-before-meeting" class="b-card" data-cat="work">
@@ -1138,7 +1179,7 @@
   </div>
 </section>
 
-<section class="b-random">
+<section class="b-random" id="randomSection">
   <div class="b-section-head"><span class="b-section-tag">You might also like</span></div>
   <div class="b-grid b-grid-3" id="randomGrid"></div>
 </section>
@@ -1155,18 +1196,28 @@
     <a href="/blog" class="b-drawer-link">All Guides</a>
 
     <div class="b-drawer-section-label">Browse by topic</div>
-    <button class="b-drawer-link b-drawer-cat" data-cat="all" type="button">All posts</button>
-    <button class="b-drawer-link b-drawer-cat" data-cat="sweat" type="button">Sweat &amp; Odor</button>
-    <button class="b-drawer-link b-drawer-cat" data-cat="fabric" type="button">Fabric Care</button>
-    <button class="b-drawer-link b-drawer-cat" data-cat="gym" type="button">Gym &amp; Sport</button>
-    <button class="b-drawer-link b-drawer-cat" data-cat="work" type="button">Workwear</button>
-    <button class="b-drawer-link b-drawer-cat" data-cat="confidence" type="button">Confidence</button>
-    <button class="b-drawer-link b-drawer-cat" data-cat="science" type="button">Science</button>
+    <div class="b-drawer-cats">
+      <button class="b-drawer-cat active" data-cat="all" type="button">All</button>
+      <button class="b-drawer-cat" data-cat="sweat" type="button">Sweat &amp; Odor</button>
+      <button class="b-drawer-cat" data-cat="fabric" type="button">Fabric Care</button>
+      <button class="b-drawer-cat" data-cat="gym" type="button">Gym &amp; Sport</button>
+      <button class="b-drawer-cat" data-cat="work" type="button">Workwear</button>
+      <button class="b-drawer-cat" data-cat="confidence" type="button">Confidence</button>
+      <button class="b-drawer-cat" data-cat="science" type="button">Science</button>
+    </div>
 
-    <div class="b-drawer-section-label">Connect</div>
-    <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener" class="b-drawer-link">Instagram</a>
-    <a href="https://wa.me/919392974031?text=Hi%20Smelloff" target="_blank" rel="noopener" class="b-drawer-link">WhatsApp</a>
-    <a href="mailto:smelloffsupport@gmail.com" class="b-drawer-link">Email Support</a>
+    <div class="b-drawer-spacer"></div>
+    <div class="b-drawer-socials" aria-label="Connect with us">
+      <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener" aria-label="Instagram">
+        <img src="/assets/icon-instagram.png" alt="" width="40" height="40" loading="lazy">
+      </a>
+      <a href="https://wa.me/919392974031?text=Hi%20Smelloff" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <img src="/assets/icon-whatsapp.png" alt="" width="40" height="40" loading="lazy">
+      </a>
+      <a href="mailto:smelloffsupport@gmail.com" aria-label="Email Support">
+        <img src="/assets/icon-email.png" alt="" width="40" height="40" loading="lazy">
+      </a>
+    </div>
   </nav>
 </aside>
 
@@ -1216,6 +1267,13 @@
   var page = 1;
   var cat = 'all';
   var emptyEl = null;
+  // Expose setter so the drawer can drive the filter
+  window.__blogSetCat = function(next){
+    cat = next || 'all';
+    page = 1;
+    render();
+    refreshRandom();
+  };
 
   function visible(){
     return cards.filter(function(c){ return cat === 'all' || c.dataset.cat === cat; });
@@ -1335,14 +1393,10 @@
   drawer.querySelectorAll('.b-drawer-cat').forEach(function(link){
     link.addEventListener('click', function(){
       var cat = link.dataset.cat;
-      // Update active state in drawer
       drawer.querySelectorAll('.b-drawer-cat').forEach(function(x){ x.classList.remove('active'); });
       link.classList.add('active');
-      // Trigger the matching body pill (if any) — uses existing filter JS
-      var bodyPill = document.querySelector('.b-cats .b-cat-pill[data-cat="' + cat + '"]');
-      if(bodyPill) bodyPill.click();
+      if(typeof window.__blogSetCat === 'function') window.__blogSetCat(cat);
       closeDrawer();
-      // Scroll to latest section
       var s = document.getElementById('latestSection');
       if(s){
         setTimeout(function(){
@@ -1351,12 +1405,22 @@
       }
     });
   });
-  // Mark drawer category as active on initial load (mirror body pill state)
-  var initialActive = document.querySelector('.b-cats .b-cat-pill.active');
-  if(initialActive){
-    var match = drawer.querySelector('.b-drawer-cat[data-cat="' + initialActive.dataset.cat + '"]');
-    if(match) match.classList.add('active');
-  }
+  // (drawer 'All' is active by default; no body pills to mirror)
+})();
+</script>
+
+
+<script>
+(function(){
+  document.querySelectorAll('.b-jump-pill').forEach(function(p){
+    p.addEventListener('click', function(e){
+      var id = p.dataset.jump;
+      var t = id && document.getElementById(id);
+      if(!t) return;
+      e.preventDefault();
+      window.scrollTo({ top: t.getBoundingClientRect().top + window.pageYOffset - 70, behavior: 'smooth' });
+    });
+  });
 })();
 </script>
 
