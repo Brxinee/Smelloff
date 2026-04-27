@@ -128,7 +128,6 @@
   }
   @media(min-width:1100px){
     .b-grid{grid-template-columns:1fr 1fr 1fr}
-    .b-card.featured{grid-column:1 / -1}
   }
 
   /* Footer — same as policy pages */
@@ -215,24 +214,6 @@
     position:relative;overflow:hidden;
     background:#080808;
   }
-  /* Variant 1: top + bottom acid stripes */
-  .b-mc-thumb.v1{border-top:4px solid #B8FF57;border-bottom:4px solid #B8FF57}
-  /* Variant 2: bold acid corner triangle */
-  .b-mc-thumb.v2::before{
-    content:'';position:absolute;top:0;right:0;
-    width:0;height:0;
-    border-style:solid;border-width:0 64px 64px 0;
-    border-color:transparent #B8FF57 transparent transparent;
-    z-index:0;
-  }
-  /* Variant 3: thick acid left bar */
-  .b-mc-thumb.v3{border-left:8px solid #B8FF57}
-  /* Variant 4: acid frame outline */
-  .b-mc-thumb.v4::before{
-    content:'';position:absolute;inset:10px;
-    border:2px solid #B8FF57;border-radius:4px;
-    pointer-events:none;
-  }
   .b-mc-cat{
     position:relative;z-index:2;
     font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:10px;
@@ -254,21 +235,6 @@
   }
   .b-mc-meta::after{content:'→';transition:transform .2s ease}
   .b-mc:hover .b-mc-meta::after{transform:translateX(3px)}
-
-  /* Category pills */
-  .b-cats{
-    max-width:1120px;margin:0 auto;padding:24px 20px 0;
-    display:flex;gap:8px;flex-wrap:wrap;
-  }
-  .b-cat-pill{
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
-    letter-spacing:.16em;text-transform:uppercase;color:#888;
-    background:transparent;border:1px solid #1F1F1F;
-    padding:9px 14px;border-radius:100px;cursor:pointer;
-    transition:color .15s ease,border-color .15s ease,background .15s ease;
-  }
-  .b-cat-pill:hover{color:#fff;border-color:#B8FF57}
-  .b-cat-pill.active{background:#B8FF57;color:#080808;border-color:#B8FF57}
 
   /* Section heading */
   .b-section-head{
@@ -361,16 +327,15 @@
   @media(min-width:720px){
     .b-drawer{width:50vw;max-width:560px}
   }
+  body.drawer-open{overflow:hidden}
+
+  /* Drawer header (logo + close) */
   .b-drawer-head{
     flex:0 0 auto;
-    padding:env(safe-area-inset-top,0px) 16px 0;
+    padding:env(safe-area-inset-top,0px) 18px 0;
     height:calc(56px + env(safe-area-inset-top,0px));
     display:flex;align-items:center;justify-content:space-between;
     border-bottom:1px solid #1a1a1a;background:#080808;
-  }
-  .b-drawer-title{
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;
-    letter-spacing:.22em;text-transform:uppercase;color:#fff;
   }
   .b-drawer-close{
     width:40px;height:40px;padding:0;
@@ -379,22 +344,6 @@
     cursor:pointer;transition:border-color .15s ease,color .15s ease;
   }
   .b-drawer-close:hover{border-color:#B8FF57;color:#B8FF57}
-  .b-drawer-body{
-    flex:1 1 auto;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-    padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
-  }
-  body.drawer-open{overflow:hidden}
-
-  /* Drawer nav (link list, not content) */
-  .b-drawer-head{
-    flex:0 0 auto;
-    padding:env(safe-area-inset-top,0px) 18px 0;
-    height:calc(56px + env(safe-area-inset-top,0px));
-    display:flex;align-items:center;justify-content:space-between;
-    border-bottom:1px solid #1a1a1a;background:#080808;
-  }
   .b-drawer-logo{
     font-family:'Barlow Condensed',sans-serif;font-weight:900;
     font-size:22px;letter-spacing:.06em;text-transform:uppercase;
@@ -419,7 +368,6 @@
   }
   .b-drawer-link:hover{background:#0F0F0F;color:#B8FF57;border-left-color:#B8FF57}
   .b-drawer-link--cta{color:#B8FF57}
-  .b-drawer-cat.active{color:#B8FF57;border-left-color:#B8FF57;background:#0F0F0F}
   .b-drawer-section-label{
     margin:18px 22px 6px;
     font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
@@ -1316,7 +1264,6 @@
   var pageInfo = document.getElementById('pageInfo');
   var countEl = document.getElementById('latestCount');
   var pageNav = document.getElementById('pageNav');
-  var pills = document.querySelectorAll('.b-cat-pill');
 
   var PAGE_SIZE = 9;
   var page = 1;
@@ -1377,16 +1324,6 @@
       randomGrid.appendChild(clone);
     });
   }
-  pills.forEach(function(p){
-    p.addEventListener('click', function(){
-      pills.forEach(function(x){ x.classList.remove('active'); });
-      p.classList.add('active');
-      cat = p.dataset.cat;
-      page = 1;
-      render();
-      refreshRandom();
-    });
-  });
   function scrollToLatest(){
     var s = document.getElementById('latestSection');
     if(s) window.scrollTo({ top: s.getBoundingClientRect().top + window.pageYOffset - 70, behavior: 'smooth' });
@@ -1436,7 +1373,6 @@
   var drawer = document.getElementById('blogDrawer');
   var backdrop = document.getElementById('drawerBackdrop');
   var btn = document.getElementById('blogMenuToggle');
-  var bodyPills = document.querySelectorAll('.b-posts ~ * .b-cat-pill, body > nav.b-cats .b-cat-pill, .b-cats .b-cat-pill');
   if(!drawer) return;
   function closeDrawer(){
     drawer.classList.remove('open');
