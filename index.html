@@ -219,7 +219,9 @@
   window.SMELLOFF_CONFIG = {
     GA4_ID: "G-1VFDLJLLC7",
     META_PIXEL_ID: "1455100092891684",
-    SHEETS_ENDPOINT: "https://script.google.com/macros/s/AKfycbwvZamMivX4MF_jM83VjO3f8GDYmitlOxKkkXS2mSnivZ1wzps9ZolIQG2tvKMATIoh2Q/exec",
+    // Order logging is proxied through /api/log-order — the Apps Script
+    // URL lives in the Vercel env, not in client code.
+    ORDER_ENDPOINT: "/api/log-order",
     WHATSAPP: "919392974031",
     UPI_ID: "9392974031-3@ybl",
     UPI_NAME: "Smelloff",
@@ -4750,16 +4752,14 @@
     return true;
   }
 
+  // Order IDs are timestamp + random — every device generates a unique one.
+  // The previous localStorage counter started at 1 on every browser, so two
+  // devices would collide on OS-0001. The Sheet column is also indexed in
+  // Apps Script so it's the source of truth for the human-friendly order #.
   function genOrderId() {
-    var counter = 0;
-    try {
-      counter = parseInt(localStorage.getItem('os_order_counter') || '0', 10) || 0;
-      counter++;
-      localStorage.setItem('os_order_counter', String(counter));
-    } catch (e) {
-      counter = Math.floor(Math.random() * 9000) + 1000;
-    }
-    return 'OS-' + String(counter).padStart(4, '0');
+    var t = Date.now().toString(36).toUpperCase();
+    var r = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return 'OS-' + t + '-' + r;
   }
 
   // Maps the in-page variant keys (solo/duo/trio + cart) to the backend schema
@@ -4770,76 +4770,54 @@
     trio: { variant: 'squad',   label: 'Squad Strike — 3 × 50ml',   bottles: 3 }
   };
 
+  // Builds the order payload sent to /api/log-order. The proxy ignores
+  // any client-supplied amount/total/shipping and recomputes them from
+  // the variant — the price fields are kept here only as a UI mirror.
   function collectOrder(orderId, paymentId) {
     const v = VARIANTS[currentVariant] || {};
-    const baseAmount = Number(v.amount) || 0;
-    const shipping = Number(calcShipping(baseAmount)) || 0;
     const sv = SHEET_VARIANT[currentVariant] || { variant: currentVariant, label: v.title || currentVariant, bottles: 1 };
     const isCod = payMethod === 'cod';
     let source = 'Direct';
     try { source = localStorage.getItem('os_source') || 'Direct'; } catch (e) {}
-    return {
+
+    var payload = {
       orderId,
-      name: document.getElementById('f_name').value.trim(),
-      phone: document.getElementById('f_phone').value.trim(),
-      email: document.getElementById('f_email').value.trim(),
-      product: 'ODORSTRIKE Fabric Mist',
-      variant: sv.variant,
-      variantLabel: sv.label,
-      units: sv.bottles,
-      quantity: 1,
-      amount: baseAmount,
-      shipping: shipping,
-      total: baseAmount + shipping,
-      paymentMethod: isCod ? 'COD' : 'UPI',
-      paymentStatus: isCod ? 'PENDING' : (paymentId && paymentId.indexOf('pay_') === 0 ? 'PAID' : 'PENDING'),
-      paymentId: isCod ? '' : (paymentId && paymentId.indexOf('pay_') === 0 ? paymentId : ''),
+      name:    document.getElementById('f_name').value.trim(),
+      phone:   document.getElementById('f_phone').value.trim(),
+      email:   document.getElementById('f_email').value.trim(),
       address: document.getElementById('f_addr').value.trim(),
-      city: document.getElementById('f_city').value.trim(),
-      state: document.getElementById('f_state').value.trim(),
+      city:    document.getElementById('f_city').value.trim(),
+      state:   document.getElementById('f_state').value.trim(),
       pincode: document.getElementById('f_pin').value.trim(),
-      source: source,
-      notes: ''
+      variant: currentVariant,
+      paymentMethod: isCod ? 'COD' : 'UPI',
+      source: source
     };
+
+    if (currentVariant === 'cart') {
+      // The cart drawer module exposes the line items via window.getCartItems
+      try { payload.items = (typeof window.getCartItems === 'function') ? window.getCartItems() : []; }
+      catch (e) { payload.items = []; }
+    }
+    return payload;
   }
 
   function logOrderToSheets(order) {
-    const params = new URLSearchParams();
-    Object.keys(order).forEach(k => params.append(k, order[k] != null ? order[k] : ''));
-    const url = CFG.SHEETS_ENDPOINT + '?' + params.toString();
+    var url = (CFG.ORDER_ENDPOINT || '/api/log-order');
+    var body = JSON.stringify(order);
+    var headers = { 'Content-Type': 'application/json' };
 
-    console.log('[Smelloff] Logging order to Sheets:', order.orderId, url.length + ' chars');
-
-    // Method 1: sendBeacon — survives page navigation, bypasses CORS
-    let beaconSent = false;
+    // sendBeacon survives page navigation (UPI redirect) — preferred.
+    var sent = false;
     if (navigator.sendBeacon) {
       try {
-        // Beacon with FormData (POST) — Apps Script doPost handles it
-        const fd = new FormData();
-        Object.keys(order).forEach(k => fd.append(k, order[k] != null ? order[k] : ''));
-        beaconSent = navigator.sendBeacon(CFG.SHEETS_ENDPOINT, fd);
-        console.log('[Smelloff] sendBeacon dispatched:', beaconSent);
-      } catch (e) {
-        console.warn('[Smelloff] sendBeacon failed:', e);
-      }
+        var blob = new Blob([body], { type: 'application/json' });
+        sent = navigator.sendBeacon(url, blob);
+      } catch (e) { /* fall through to fetch */ }
     }
-
-    // Method 2: Image pixel — fires a GET, bypasses CORS, always works
-    // Runs in parallel as belt-and-braces backup
-    try {
-      const img = new Image();
-      img.onload = () => console.log('[Smelloff] Pixel logged:', order.orderId);
-      img.onerror = () => console.log('[Smelloff] Pixel fired (onerror is expected for non-image response):', order.orderId);
-      img.src = url;
-    } catch (e) {
-      console.warn('[Smelloff] Pixel fallback failed:', e);
-    }
-
-    // Method 3: fetch as last resort (if URL is too long for beacon+img and both fail)
-    if (!beaconSent && url.length < 8000) {
-      fetch(url, { method: 'GET', mode: 'no-cors', keepalive: true })
-        .then(() => console.log('[Smelloff] fetch backup completed'))
-        .catch(e => console.warn('[Smelloff] fetch backup failed:', e));
+    if (!sent) {
+      fetch(url, { method: 'POST', headers: headers, body: body, keepalive: true })
+        .catch(function(e){ console.warn('[Smelloff] log-order failed:', e); });
     }
   }
 
@@ -4892,9 +4870,7 @@
     trackPurchase(VARIANTS[currentVariant].amount, orderId);
     // Unlock review submission (client-side gate — not tamper-proof).
     try {
-      var buyerEmail = (document.getElementById('f_email').value || '').trim().toLowerCase();
       localStorage.setItem('smelloff_purchased', 'true');
-      if (buyerEmail) localStorage.setItem('smelloff_purchased_email', buyerEmail);
       // Clear cart after successful order so user doesn't see stale items
       if (typeof window.clearCart === 'function') window.clearCart();
     } catch (e) { /* localStorage may be blocked in private mode */ }
@@ -5023,9 +4999,7 @@
 
     trackPurchase(VARIANTS[currentVariant].amount, orderId);
     try {
-      const buyerEmail = (document.getElementById('f_email').value || '').trim().toLowerCase();
       localStorage.setItem('smelloff_purchased', 'true');
-      if (buyerEmail) localStorage.setItem('smelloff_purchased_email', buyerEmail);
       if (typeof window.clearCart === 'function') window.clearCart();
     } catch (e) {}
   }
@@ -5091,8 +5065,8 @@
         var entry = json && json[0];
         if (!entry || entry.Status !== 'Success' || !entry.PostOffice || !entry.PostOffice.length) return;
         var po = entry.PostOffice[0];
-        if (po.District) { city.value = po.District; flash(city); }
-        if (po.State)    { st.value   = po.State;    flash(st);   }
+        if (po.District) { city.value = String(po.District).slice(0, 60); flash(city); }
+        if (po.State)    { st.value   = String(po.State).slice(0, 60);    flash(st);   }
       } catch(e){
         console.warn('[Smelloff] Pincode lookup failed:', e);
       }
@@ -5312,19 +5286,17 @@
       return;
     }
     input.style.borderColor = '';
-    const url = CFG.SHEETS_ENDPOINT + '?email=' + encodeURIComponent(email);
-    // Fire via image pixel (most reliable cross-origin)
-    const img = new Image();
-    img.src = url;
-    // Also sendBeacon as backup
+    var url = (CFG.ORDER_ENDPOINT || '/api/log-order');
+    var body = JSON.stringify({ kind: 'waitlist', email: email });
     if (navigator.sendBeacon) {
-      const fd = new FormData();
-      fd.append('email', email);
-      navigator.sendBeacon(CFG.SHEETS_ENDPOINT, fd);
+      try { navigator.sendBeacon(url, new Blob([body], { type: 'application/json' })); }
+      catch (e) { /* fall through */ }
+    } else {
+      fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: body, keepalive:true })
+        .catch(function(e){ console.warn('[Smelloff] waitlist failed:', e); });
     }
     document.getElementById('emailForm').style.display = 'none';
     document.getElementById('ecSuccess').style.display = 'inline-block';
-    console.log('[Smelloff] Waitlist:', email);
     SmelloffEmail.send('welcomeEmail', email, { customerName: 'there' }).catch(console.error);
   };
 
@@ -5745,17 +5717,34 @@
       duo:  { id: 'duo',  name: 'Double Strike — 2 × 50ml',  price: 399, variant: 'duo'  },
       trio: { id: 'trio', name: 'Triple Strike — 3 × 50ml',  price: 549, variant: 'trio' }
     };
+    // Total bottles a single order can contain. The server enforces the same
+    // cap in /api/log-order — the client copy here is just so the UI can stop
+    // letting users tap "+" past the limit.
+    const MAX_QTY = 6;
 
     let cart = load();
 
+    // Pulls cart state from localStorage and rebuilds it through the SKU
+    // allowlist so a tampered localStorage entry can't introduce ghost SKUs,
+    // negative qty, or attacker-controlled price/name fields.
     function load(){
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return { items: [], count: 0 };
         const parsed = JSON.parse(raw);
-        parsed.items = Array.isArray(parsed.items) ? parsed.items : [];
-        parsed.count = parsed.items.reduce((a,i) => a + (i.qty||0), 0);
-        return parsed;
+        const rawItems = Array.isArray(parsed && parsed.items) ? parsed.items : [];
+        const seen = new Set();
+        const items = [];
+        for (const it of rawItems) {
+          const id = it && it.id;
+          const p = PRODUCTS[id];
+          if (!p || seen.has(id)) continue;
+          seen.add(id);
+          const qty = Math.max(1, Math.min(MAX_QTY, parseInt(it.qty, 10) || 0));
+          items.push({ id: p.id, name: p.name, price: p.price, variant: p.variant, qty });
+        }
+        const count = items.reduce((a,i) => a + i.qty, 0);
+        return { items, count };
       } catch(e) { return { items: [], count: 0 }; }
     }
 
@@ -5806,12 +5795,23 @@
           '<div class="cd-empty">' +
             '<p class="cd-empty-title">Your cart is empty</p>' +
             '<p class="cd-empty-sub">Add ODORSTRIKE to get started.</p>' +
-            '<button class="cd-empty-cta" type="button" onclick="closeCartDrawer();setTimeout(function(){document.getElementById(\'buy\').scrollIntoView({behavior:\'smooth\'})},320)">Shop now</button>' +
+            '<button class="cd-empty-cta" type="button" id="cdEmptyCta">Shop now</button>' +
           '</div>';
+        const emptyBtn = body.querySelector('#cdEmptyCta');
+        if (emptyBtn) emptyBtn.addEventListener('click', function(){
+          closeCartDrawer();
+          setTimeout(function(){
+            var el = document.getElementById('buy');
+            if (el) el.scrollIntoView({ behavior:'smooth' });
+          }, 320);
+        });
         foot.style.display = 'none';
         return;
       }
 
+      // Build cart rows with safe attribute interpolation (escapeHtml on
+      // every dynamic value) — no inline JS handlers, listeners are bound
+      // after the markup is in the DOM.
       body.innerHTML = cart.items.map(it =>
         '<div class="cd-line">' +
           '<div class="cd-thumb" aria-hidden="true"></div>' +
@@ -5820,15 +5820,19 @@
             '<div class="cd-price">₹' + it.price + '</div>' +
           '</div>' +
           '<div class="cd-qty" role="group" aria-label="Quantity">' +
-            '<button type="button" aria-label="Decrease quantity" onclick="updateCartQty(\'' + it.id + '\',-1)">−</button>' +
+            '<button type="button" class="cd-qty-dec" data-id="' + escapeHtml(it.id) + '" aria-label="Decrease quantity">−</button>' +
             '<span>' + it.qty + '</span>' +
-            '<button type="button" aria-label="Increase quantity" onclick="updateCartQty(\'' + it.id + '\',1)">+</button>' +
+            '<button type="button" class="cd-qty-inc" data-id="' + escapeHtml(it.id) + '" aria-label="Increase quantity">+</button>' +
           '</div>' +
-          '<button class="cd-remove" type="button" aria-label="Remove item" onclick="removeFromCart(\'' + it.id + '\')">' +
+          '<button class="cd-remove" type="button" data-id="' + escapeHtml(it.id) + '" aria-label="Remove item">' +
             '<svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>' +
           '</button>' +
         '</div>'
       ).join('');
+
+      body.querySelectorAll('.cd-qty-dec').forEach(b => b.addEventListener('click', () => updateCartQty(b.dataset.id, -1)));
+      body.querySelectorAll('.cd-qty-inc').forEach(b => b.addEventListener('click', () => updateCartQty(b.dataset.id, 1)));
+      body.querySelectorAll('.cd-remove').forEach(b => b.addEventListener('click', () => removeFromCart(b.dataset.id)));
 
       const subtotal = cart.items.reduce((a,i) => a + i.price * i.qty, 0);
       const total = subtotal;
@@ -5838,14 +5842,22 @@
         '<div class="cd-ship">' +
           '<span class="cd-ship-msg free">✓ Free shipping across India</span>' +
         '</div>' +
-        '<button class="cd-checkout" type="button" onclick="checkoutFromCart()">Checkout — ₹' + total + '</button>' +
-        '<button class="cd-continue" type="button" onclick="closeCartDrawer()">Continue shopping</button>';
+        '<button class="cd-checkout" type="button" id="cdCheckoutBtn">Checkout — ₹' + total + '</button>' +
+        '<button class="cd-continue" type="button" id="cdContinueBtn">Continue shopping</button>';
       foot.style.display = 'flex';
+
+      const coBtn = foot.querySelector('#cdCheckoutBtn');
+      if (coBtn) coBtn.addEventListener('click', () => checkoutFromCart());
+      const ctBtn = foot.querySelector('#cdContinueBtn');
+      if (ctBtn) ctBtn.addEventListener('click', () => closeCartDrawer());
     }
+
+    function totalQty(){ return cart.items.reduce((a,i) => a + i.qty, 0); }
 
     window.addToCart = function(variant){
       const p = PRODUCTS[variant];
       if (!p) return;
+      if (totalQty() >= MAX_QTY) { showToast('Max ' + MAX_QTY + ' bottles per order'); return; }
       const existing = cart.items.find(i => i.id === p.id);
       if (existing) existing.qty++;
       else cart.items.push({ id: p.id, name: p.name, price: p.price, variant: p.variant, qty: 1 });
@@ -5858,14 +5870,18 @@
     };
 
     window.removeFromCart = function(id){
+      if (!PRODUCTS[id]) return;
       cart.items = cart.items.filter(i => i.id !== id);
       save();
     };
 
     window.updateCartQty = function(id, delta){
+      if (!PRODUCTS[id]) return;
       const it = cart.items.find(i => i.id === id);
       if (!it) return;
-      it.qty += delta;
+      const d = delta > 0 ? 1 : -1;
+      if (d > 0 && totalQty() >= MAX_QTY) { showToast('Max ' + MAX_QTY + ' bottles per order'); return; }
+      it.qty += d;
       if (it.qty <= 0) cart.items = cart.items.filter(i => i.id !== id);
       save();
     };
@@ -5899,6 +5915,12 @@
       try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
       renderBadge();
       if (document.getElementById('cartDrawer').classList.contains('open')) renderDrawer();
+    };
+
+    // Read-only snapshot for /api/log-order to recompute the cart total.
+    // We send {id, qty} only — price is server-recomputed from the SKU table.
+    window.getCartItems = function(){
+      return cart.items.map(function(i){ return { id: i.id, qty: i.qty }; });
     };
 
     window.checkoutFromCart = function(){
