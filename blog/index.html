@@ -471,6 +471,43 @@
   }
   .b-drawer-socials a:hover{border-color:#B8FF57;background:#0F0F0F}
   .b-drawer-socials img{width:22px;height:22px;display:block}
+
+  /* Filter loading state — gives visual feedback when category changes
+     so users see something happen even though the palette is uniform. */
+  .b-loading{position:relative;pointer-events:none}
+  .b-loading::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:#B8FF57;
+    box-shadow:0 0 8px #B8FF57;
+    transform-origin:left center;
+    animation:b-load-bar 1s cubic-bezier(.2,.8,.2,1) forwards;
+    z-index:5;pointer-events:none;
+  }
+  .b-loading::after{
+    content:'';position:absolute;inset:0;
+    background:rgba(8,8,8,.55);
+    backdrop-filter:none;
+    z-index:4;pointer-events:none;
+    animation:b-load-fade 1s ease forwards;
+  }
+  @keyframes b-load-bar{
+    0%{transform:scaleX(0);opacity:1}
+    90%{transform:scaleX(1);opacity:1}
+    100%{transform:scaleX(1);opacity:0}
+  }
+  @keyframes b-load-fade{
+    0%{opacity:0}
+    20%{opacity:1}
+    80%{opacity:1}
+    100%{opacity:0}
+  }
+  .b-loading .b-grid,.b-loading .b-grid-3{opacity:.25;transition:opacity .25s ease}
+  .b-loading .b-section-head .b-section-tag::after{
+    content:' · loading…';
+    color:#B8FF57;font-size:11px;letter-spacing:.18em;margin-left:6px;
+    animation:b-load-pulse 1s ease-in-out infinite;
+  }
+  @keyframes b-load-pulse{0%,100%{opacity:.3}50%{opacity:1}}
 </style>
 </head>
 <body>
@@ -1395,12 +1432,22 @@
       var cat = link.dataset.cat;
       drawer.querySelectorAll('.b-drawer-cat').forEach(function(x){ x.classList.remove('active'); });
       link.classList.add('active');
-      if(typeof window.__blogSetCat === 'function') window.__blogSetCat(cat);
       closeDrawer();
-      var s = document.getElementById('latestSection');
-      if(s){
+      // 1-second loading state so the filter change is visible even
+      // though the palette is uniform across categories.
+      var posts = document.getElementById('latestSection');
+      var randomSec = document.querySelector('.b-random');
+      var popularSec = document.getElementById('popularSection');
+      [posts, randomSec, popularSec].forEach(function(el){
+        if(el){ el.classList.remove('b-loading'); /* re-trigger animation */ void el.offsetWidth; el.classList.add('b-loading'); }
+      });
+      setTimeout(function(){
+        if(typeof window.__blogSetCat === 'function') window.__blogSetCat(cat);
+        [posts, randomSec, popularSec].forEach(function(el){ if(el) el.classList.remove('b-loading'); });
+      }, 1000);
+      if(posts){
         setTimeout(function(){
-          window.scrollTo({ top: s.getBoundingClientRect().top + window.pageYOffset - 70, behavior: 'smooth' });
+          window.scrollTo({ top: posts.getBoundingClientRect().top + window.pageYOffset - 70, behavior: 'smooth' });
         }, 320);
       }
     });
