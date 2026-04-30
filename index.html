@@ -325,7 +325,7 @@
     grid-template-columns:40px 1fr 40px;
     align-items:center;
     background:#080808;
-    border-bottom:1px solid #1a1a1a;
+    border-bottom:1px solid var(--hairline);
     z-index:50;
     color:#fff;
   }
@@ -358,11 +358,12 @@
   }
   .nav-cart svg{
     width:22px;height:22px;
-    stroke:#fff;fill:none;stroke-width:2;
+    stroke:rgba(255,255,255,0.7);fill:none;stroke-width:2;
     stroke-linecap:round;stroke-linejoin:round;
     transition:stroke .2s;
   }
-  .nav-cart:active svg{stroke:#B8FF57}
+  .nav-cart:hover svg,
+  .nav-cart:active svg{stroke:var(--acid)}
   .nav-cart-count{
     position:absolute;top:2px;right:2px;
     min-width:16px;height:16px;padding:0 4px;
@@ -3370,7 +3371,7 @@
   }
   .hb-line{
     display:block;width:22px;height:2px;
-    background:#fff;border-radius:2px;
+    background:var(--acid);border-radius:2px;
     transform-origin:center;
     transition:transform 400ms cubic-bezier(0.22,1,0.36,1),
                opacity 400ms cubic-bezier(0.22,1,0.36,1),
@@ -3611,6 +3612,31 @@
     background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,0.025) 1px,transparent 0);
     background-size:3px 3px;
   }
+
+  /* GROOMR button system */
+  .btn-acid{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+    background:var(--acid);color:var(--ink);
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:1rem;letter-spacing:.05em;text-transform:uppercase;
+    padding:1rem 1.75rem;border:2px solid var(--acid);
+    text-decoration:none;cursor:pointer;
+    transition:background-color .15s ease,color .15s ease,box-shadow .15s ease;
+  }
+  .btn-acid:hover{
+    background:transparent;color:var(--acid);
+    box-shadow:0 0 0 1px var(--acid),0 0 30px rgba(184,255,87,0.4);
+  }
+  .btn-ghost{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+    background:transparent;color:#fff;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:1rem;letter-spacing:.05em;text-transform:uppercase;
+    padding:1rem 1.75rem;border:2px solid rgba(255,255,255,0.2);
+    text-decoration:none;cursor:pointer;
+    transition:border-color .15s ease,color .15s ease;
+  }
+  .btn-ghost:hover{border-color:var(--acid);color:var(--acid)}
 </style>
 </head>
 <body>
