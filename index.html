@@ -1797,7 +1797,7 @@
 
   /* BOTTOM strip */
   .sf-bottom{
-    border-top:1px solid rgba(184,255,87,.2);
+    border-top:1px solid var(--hairline);
     /* Extra bottom padding on mobile so the sticky buy bar (64px,
        position:fixed) doesn't hide the copyright. Also accounts for
        iOS home-indicator safe area. */
@@ -1807,6 +1807,50 @@
     font-family:'DM Sans',sans-serif;font-size:11px;
     color:#888;line-height:1.4;
     flex-wrap:wrap;
+  }
+
+  /* GROOMR giant wordmark band */
+  .sf-bigmark{
+    border-top:1px solid var(--hairline);
+    border-bottom:1px solid var(--hairline);
+    padding:24px 8px;
+    overflow:hidden;
+    text-align:center;
+    user-select:none;
+    line-height:.85;
+  }
+  .sf-bigmark-text{
+    display:inline-block;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    font-size:clamp(120px,18vw,280px);
+    letter-spacing:-.04em;
+    text-transform:uppercase;
+    color:var(--soot);
+    line-height:.85;
+    white-space:nowrap;
+  }
+  .sf-bigmark-bracket{color:var(--acid)}
+
+  /* Payment pills */
+  .sf-pay{
+    display:flex;flex-wrap:wrap;justify-content:center;
+    gap:8px;
+    padding:18px 20px;
+    max-width:1120px;margin:0 auto;
+  }
+  .sf-pill{
+    display:inline-flex;align-items:center;
+    padding:6px 14px;
+    border:1px solid var(--hairline);
+    border-radius:999px;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    font-size:11px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.6);
+    line-height:1.2;
   }
 
   @media(min-width:720px){
@@ -4481,6 +4525,11 @@
     </div>
   </div>
 
+  <!-- BIG WORDMARK BAND -->
+  <div class="sf-bigmark" aria-hidden="true">
+    <span class="sf-bigmark-text">SMELLOF<span class="sf-bigmark-bracket">[F]</span></span>
+  </div>
+
   <!-- MIDDLE: link columns (accordion on mobile) -->
   <div class="sf-links">
     <div class="sf-col">
@@ -4533,6 +4582,14 @@
         <li><a href="https://instagram.com/smell0ff" target="_blank" rel="noopener">@smell0ff</a></li>
       </ul>
     </div>
+  </div>
+
+  <!-- PAYMENT PILLS -->
+  <div class="sf-pay" aria-label="Accepted payment methods">
+    <span class="sf-pill">Razorpay</span>
+    <span class="sf-pill">UPI</span>
+    <span class="sf-pill">Cards</span>
+    <span class="sf-pill">COD</span>
   </div>
 
   <!-- BOTTOM strip -->
