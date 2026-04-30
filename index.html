@@ -248,8 +248,8 @@
 <!-- Fonts: non-render-blocking -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Fraunces:opsz,wght@9..144,900&family=JetBrains+Mono:wght@400&family=Inter+Tight:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Fraunces:opsz,wght@9..144,900&family=JetBrains+Mono:wght@400&family=Inter+Tight:wght@400;500&display=swap"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=DM+Sans:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=DM+Sans:wght@400;500;600;700&display=swap"></noscript>
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -274,19 +274,22 @@
 <style>
   :root{
     --ink:#080808;
-    --paper:#f4f1ea;
-    --acid:#b8ff57;
-    --rule:rgba(244,241,234,.12);
-    --muted:#9a958d;
+    --paper:#ffffff;
+    --acid:#B8FF57;
+    --rule:rgba(255,255,255,.08);
+    --muted:rgba(255,255,255,.4);
     --bg:#080808;
-    --text:#f4f1ea;
+    --text:#ffffff;
+    --smoke:#111111;
+    --soot:#1a1a1a;
+    --bone:#f5f5f5;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   body{
     background:var(--bg);
     color:var(--text);
-    font-family:'Inter Tight',sans-serif;
+    font-family:'DM Sans',system-ui,sans-serif;
     font-size:16px;
     line-height:1.5;
     overflow-x:hidden;
@@ -3560,13 +3563,42 @@
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1"/></noscript>
 <a href="#buy" class="skip-link">Skip to products</a>
 
-<nav>
+<!-- MARQUEE — top strip above navbar -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Free shipping across India</span>
+    <span>Ships in 48hr from Hyderabad</span>
+    <span>COD available</span>
+    <span>Fabric-safe formula</span>
+    <span>50ml pocket size</span>
+    <span>Launch price ₹229</span>
+    <span>Kills odor in 8 seconds</span>
+    <span>Made in Hyderabad</span>
+    <span>Free shipping across India</span>
+    <span>Ships in 48hr from Hyderabad</span>
+    <span>COD available</span>
+    <span>Fabric-safe formula</span>
+    <span>50ml pocket size</span>
+    <span>Launch price ₹229</span>
+    <span>Kills odor in 8 seconds</span>
+    <span>Made in Hyderabad</span>
+  </div>
+</div>
+
+<nav id="siteNav">
   <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" onclick="openNav()">
     <span class="hb-line"></span>
     <span class="hb-line"></span>
     <span class="hb-line"></span>
   </button>
-  <div class="logo">SMELLOFF</div>
+  <div class="logo">SMELLOF<span class="logo-acid">F</span></div>
+  <div class="nav-links" aria-label="Primary">
+    <a href="#buy">Shop</a>
+    <a href="#science">Science</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="#buy" class="nav-cta" onclick="event.preventDefault();addToCart('solo')">Shop Now</a>
   <button class="nav-cart" id="navCartBtn" aria-label="Open cart" onclick="openCartDrawer()">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z"/>
@@ -3631,7 +3663,12 @@
 </div>
 
 <!-- HERO -->
-<header class="hero">
+<header class="hero scanlines">
+  <span class="hero-bg-numeral" aria-hidden="true">01</span>
+  <span class="hero-crosshair tl" aria-hidden="true"></span>
+  <span class="hero-crosshair tr" aria-hidden="true"></span>
+  <span class="hero-crosshair bl" aria-hidden="true"></span>
+  <span class="hero-crosshair br" aria-hidden="true"></span>
   <div class="hero-skeleton" aria-hidden="true">
     <div class="hs-inner">
       <div class="hs-text">
@@ -3648,11 +3685,14 @@
   </div>
   <div class="hero-inner">
     <div class="hero-text">
-      <div class="hero-wordmark">SMELLOFF</div>
+      <div class="kicker-row">
+        <span class="kicker-bar" aria-hidden="true"></span>
+        <span class="kicker">Section 01 / The Strike</span>
+      </div>
       <div class="hero-category">India's first pocket fabric odor killer</div>
       <h1 class="hero-headline">
         <span class="hh-line">You don't fear smelling bad.</span>
-        <span class="hh-line">You <span class="hh-acid">fear someone noticing.</span></span>
+        <span class="hh-line">You <span class="hh-acid acid-glow">fear someone noticing.</span></span>
       </h1>
       <p class="hero-sub">Pocket-sized odor mist. Sprays on clothes. Kills smell in 8 seconds. Not a perfume. Not a deodorant.</p>
       <h2 class="sr-only">India's first pocket fabric odor remover spray. Kills sweat smell on clothes in 8 seconds.</h2>
@@ -3682,30 +3722,15 @@
       <a href="#buy" class="hero-cta" onclick="event.preventDefault();addToCart('solo')">ADD TO CART — ₹229</a>
       <a href="#when-to-use" class="hero-howlink">How it works ↓</a>
     </div>
+
+    <div class="hero-stats" aria-label="Trust signals">
+      <div class="hs-stat"><span class="hs-num">127+</span><span class="hs-lbl">Verified reviews</span></div>
+      <div class="hs-stat"><span class="hs-num">4.8★</span><span class="hs-lbl">Avg rating</span></div>
+      <div class="hs-stat"><span class="hs-num">48hr</span><span class="hs-lbl">Ships from Hyderabad</span></div>
+      <div class="hs-stat"><span class="hs-num">8sec</span><span class="hs-lbl">Odor neutralized</span></div>
+    </div>
   </div>
 </header>
-
-<!-- MARQUEE — single compact strip -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
-    <span>Free shipping across India</span>
-    <span>Ships in 48hr from Hyderabad</span>
-    <span>COD available</span>
-    <span>Fabric-safe formula</span>
-    <span>50ml pocket size</span>
-    <span>Launch price ₹229</span>
-    <span>Kills odor in 8 seconds</span>
-    <span>Made in Hyderabad</span>
-    <span>Free shipping across India</span>
-    <span>Ships in 48hr from Hyderabad</span>
-    <span>COD available</span>
-    <span>Fabric-safe formula</span>
-    <span>50ml pocket size</span>
-    <span>Launch price ₹229</span>
-    <span>Kills odor in 8 seconds</span>
-    <span>Made in Hyderabad</span>
-  </div>
-</div>
 
 <!-- SOCIAL PROOF BAR -->
 <div class="sp-bar" aria-label="Social proof">
@@ -3719,7 +3744,7 @@
 
 <!-- PROBLEM — compact -->
 <section class="problem">
-  <div class="section-tag">The problem</div>
+  <div class="section-tag">Section 02 / The Problem</div>
   <h2>
     <span>You don't fear smelling bad.</span>
     <span class="p-hl">You fear someone noticing.</span>
@@ -3749,7 +3774,7 @@
 <section class="trigger-section" id="when-to-use">
   <div class="section-eyebrow">
     <div class="section-eyebrow-line"></div>
-    <span class="section-eyebrow-label">Trigger Points</span>
+    <span class="section-eyebrow-label">Section 03 / Trigger Points</span>
   </div>
   <h2 class="ritual-title">When it <span class="acid">hits.</span></h2>
   <p class="ritual-sub" style="margin-bottom:40px;">The moments nobody talks about but everybody knows.</p>
@@ -3795,6 +3820,10 @@
 
 <!-- SCIENCE / HOW IT WORKS -->
 <section class="how-works" id="science">
+  <div class="kicker-row">
+    <span class="kicker-bar" aria-hidden="true"></span>
+    <span class="kicker">Section 04 / The Science</span>
+  </div>
   <h2 class="hw-title">How ODORSTRIKE kills smell</h2>
 
   <ol class="hw-steps">
@@ -3831,7 +3860,7 @@
 
 <!-- BEFORE / AFTER PROOF — compact card -->
 <section class="proof">
-  <div class="section-tag">The proof</div>
+  <div class="section-tag">Section 05 / The Proof</div>
   <h2 class="proof-headline">Captured at the fiber level.</h2>
 
   <div class="proof-card" aria-label="Before and after comparison">
@@ -3905,7 +3934,7 @@
 <section class="ritual-section" id="how-to-use">
   <div class="section-eyebrow">
     <div class="section-eyebrow-line"></div>
-    <span class="section-eyebrow-label">The Ritual</span>
+    <span class="section-eyebrow-label">Section 06 / The Ritual</span>
   </div>
   <h2 class="ritual-title">How to <span class="acid">strike.</span></h2>
   <p class="ritual-sub">Three seconds. No drying time, no white marks.</p>
@@ -3933,6 +3962,10 @@
 
 <!-- WHY NOT JUST DEODORANT? — comparison -->
 <section class="compare" id="vs-deodorant">
+  <div class="kicker-row">
+    <span class="kicker-bar" aria-hidden="true"></span>
+    <span class="kicker">Section 07 / vs Deodorant</span>
+  </div>
   <h2 class="compare-title">Why not just spray deodorant?</h2>
   <div class="compare-table" role="table" aria-label="Deodorant vs perfume vs ODORSTRIKE">
     <div class="compare-cell row-h"></div>
@@ -3969,6 +4002,11 @@
 </section>
 
 <section class="only-fix" id="buy">
+  <span class="bg-word" aria-hidden="true">STRIKE</span>
+  <div class="kicker-row">
+    <span class="kicker-bar" aria-hidden="true"></span>
+    <span class="kicker">Section 08 / The Goods</span>
+  </div>
   <h2 class="of-title">The only fix</h2>
 
   <article class="product-card">
@@ -4028,6 +4066,10 @@
 <!-- STOCK UP & SAVE — bundle ladder -->
 <section class="stockup" id="stock-up">
   <div class="stockup-head">
+    <div class="kicker-row">
+      <span class="kicker-bar" aria-hidden="true"></span>
+      <span class="kicker">Section 09 / Stack Up</span>
+    </div>
     <h2 class="stockup-title">Stock up &amp; save</h2>
     <p class="stockup-sub">Bigger packs. Bigger savings. Same molecular fix.</p>
   </div>
@@ -4105,6 +4147,11 @@
 
 <!-- REVIEWS -->
 <section class="reviews" id="reviews">
+  <span class="bg-word" aria-hidden="true">PROOF</span>
+  <div class="kicker-row">
+    <span class="kicker-bar" aria-hidden="true"></span>
+    <span class="kicker">Section 10 / The Receipts</span>
+  </div>
   <h2 class="rv-title"><span class="rv-title-star">★</span> 4.8 from <span id="rvCount">127</span> verified reviews</h2>
 
   <div class="rv-summary">
@@ -4163,6 +4210,10 @@
 
 <!-- FAQ -->
 <section class="faq" id="faq">
+  <div class="kicker-row">
+    <span class="kicker-bar" aria-hidden="true"></span>
+    <span class="kicker">Section 11 / Questions</span>
+  </div>
   <h2 class="faq-title">Questions<span class="faq-dot">.</span></h2>
   <div class="faq-list">
 
@@ -4221,6 +4272,12 @@
 
 <!-- FINAL CTA — dark band -->
 <section class="final">
+  <span class="bg-word" aria-hidden="true">GO</span>
+  <div class="kicker-row" style="justify-content:center;">
+    <span class="kicker-bar" aria-hidden="true"></span>
+    <span class="kicker">Section 12 / The Strike</span>
+    <span class="kicker-bar" aria-hidden="true"></span>
+  </div>
   <h2 class="final-title">Stop the smell. Before anyone notices.</h2>
   <p class="final-sub">Launch price ₹229. Free shipping. 7-day returns. Ships from Hyderabad in 48 hours.</p>
   <a href="#buy" class="final-cta" onclick="event.preventDefault();addToCart('solo')">ADD TO CART — ₹229</a>
@@ -4231,7 +4288,7 @@
   <!-- TOP: brand statement band -->
   <div class="sf-top">
     <div class="sf-top-inner">
-      <div class="sf-wordmark">SMELLOFF<span class="sf-dot" aria-hidden="true"></span></div>
+      <div class="sf-wordmark">SMELLOF<span class="sf-acid">F</span></div>
       <p class="sf-tagline">Pocket-sized odor killer for your clothes.</p>
 
       <form class="sf-newsletter" id="emailForm" onsubmit="submitWaitlist();return false;">
@@ -4306,6 +4363,16 @@
         <li><a href="https://instagram.com/smell0ff" target="_blank" rel="noopener">@smell0ff</a></li>
       </ul>
     </div>
+  </div>
+
+  <!-- PAYMENT PILLS -->
+  <div class="sf-pay" aria-label="Accepted payment methods">
+    <span class="sf-pay-pill">UPI</span>
+    <span class="sf-pay-pill">VISA</span>
+    <span class="sf-pay-pill">MC</span>
+    <span class="sf-pay-pill">RUPAY</span>
+    <span class="sf-pay-pill">AMEX</span>
+    <span class="sf-pay-pill">COD</span>
   </div>
 
   <!-- BOTTOM strip -->
