@@ -3701,6 +3701,42 @@
     transition:border-color .15s ease,color .15s ease;
   }
   .btn-ghost:hover{border-color:var(--acid);color:var(--acid)}
+
+  /* GROOMR section numbering — eyebrow + ghost numeral */
+  .sec-numbered{position:relative}
+  .sec-numbered > *:not(.sec-numeral){position:relative;z-index:1}
+  .sec-numeral{
+    position:absolute;
+    top:24px;left:-4px;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    font-size:clamp(120px,14vw,200px);
+    line-height:.85;
+    letter-spacing:-.04em;
+    color:var(--soot);
+    z-index:0;
+    pointer-events:none;
+    user-select:none;
+  }
+  .sec-eyebrow{
+    display:flex;align-items:center;gap:12px;
+    align-self:flex-start;
+    width:100%;
+    margin-bottom:8px;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    font-size:12px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--acid);
+    line-height:1;
+  }
+  .sec-eyebrow .sec-eyebrow-rule{
+    display:block;
+    width:32px;height:1px;
+    background:var(--acid);
+    flex:none;
+  }
 </style>
 </head>
 <body>
@@ -3965,7 +4001,12 @@
 </section>
 
 <!-- SCIENCE / HOW IT WORKS -->
-<section class="how-works" id="science">
+<section class="how-works sec-numbered" id="science">
+  <div class="sec-numeral" aria-hidden="true">02</div>
+  <div class="sec-eyebrow">
+    <span class="sec-eyebrow-rule" aria-hidden="true"></span>
+    <span>The Chemistry</span>
+  </div>
   <h2 class="hw-title">How ODORSTRIKE kills smell</h2>
 
   <ol class="hw-steps">
@@ -4001,7 +4042,12 @@
 </section>
 
 <!-- BEFORE / AFTER PROOF — compact card -->
-<section class="proof">
+<section class="proof sec-numbered">
+  <div class="sec-numeral" aria-hidden="true">04</div>
+  <div class="sec-eyebrow">
+    <span class="sec-eyebrow-rule" aria-hidden="true"></span>
+    <span>Field Reports</span>
+  </div>
   <div class="section-tag">The proof</div>
   <h2 class="proof-headline">Captured at the fiber level.</h2>
 
@@ -4073,7 +4119,12 @@
 </section>
 
 <!-- HOW TO USE -->
-<section class="ritual-section" id="how-to-use">
+<section class="ritual-section sec-numbered" id="how-to-use">
+  <div class="sec-numeral" aria-hidden="true">03</div>
+  <div class="sec-eyebrow">
+    <span class="sec-eyebrow-rule" aria-hidden="true"></span>
+    <span>Application</span>
+  </div>
   <div class="section-eyebrow">
     <div class="section-eyebrow-line"></div>
     <span class="section-eyebrow-label">The Ritual</span>
@@ -4333,7 +4384,12 @@
 </div>
 
 <!-- FAQ -->
-<section class="faq" id="faq">
+<section class="faq sec-numbered" id="faq">
+  <div class="sec-numeral" aria-hidden="true">05</div>
+  <div class="sec-eyebrow">
+    <span class="sec-eyebrow-rule" aria-hidden="true"></span>
+    <span>Questions</span>
+  </div>
   <h2 class="faq-title">Questions<span class="faq-dot">.</span></h2>
   <div class="faq-list">
 
