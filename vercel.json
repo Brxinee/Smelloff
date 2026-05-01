@@ -50,6 +50,16 @@
       "source": "/blog/index",
       "destination": "/blog",
       "permanent": true
+    },
+    {
+      "source": "/blog/best-fabric-odor-spray-india-2026",
+      "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor",
+      "permanent": true
+    },
+    {
+      "source": "/blog/where-to-buy-odorstrike-india",
+      "destination": "/",
+      "permanent": true
     }
   ],
   "headers": [
