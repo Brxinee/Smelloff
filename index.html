@@ -284,6 +284,8 @@
     --text:#f4f1ea;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  /* Global keyboard focus indicator (fills gaps; element-specific rules keep priority via specificity) */
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--acid);outline-offset:2px;border-radius:2px}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{
     background:var(--bg);
