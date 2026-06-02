@@ -44,6 +44,11 @@
 }
 </script>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;700&display=swap"></noscript>
+
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
@@ -191,6 +196,9 @@ p strong { color:#fafafa; }
   }
   .to-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
   .to-top:hover{background:#B8FF57;color:#080808}
+
+  /* Accessibility: visible keyboard focus (WCAG 2.4.7) */
+  a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid #B8FF57;outline-offset:2px;border-radius:2px}
 </style>
 <link rel="alternate" hreflang="en-IN" href="https://smelloff.in/blog/is-zinc-ricinoleate-safe-for-clothes">
 <link rel="alternate" hreflang="x-default" href="https://smelloff.in/blog/is-zinc-ricinoleate-safe-for-clothes">
