@@ -50,10 +50,7 @@
 }
 </script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=Fraunces:ital,wght@1,400;1,500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=Fraunces:ital,wght@1,400;1,500&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/fonts.css">
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -437,6 +434,11 @@ footer a{color:#888}
 
   <p class="lead">You washed it. You dried it. You pulled it out of the cupboard a week later and it smells like a damp basement. It's not your nose. It's not the detergent brand. It's something most people never diagnose — and once you know, <strong>you can't unsee it.</strong></p>
 
+  <div class="quick-answer" style="background:#111;border-left:3px solid #B8FF57;padding:18px 22px;margin:28px 0;border-radius:4px">
+    <p style="margin:0 0 8px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#B8FF57">Quick answer</p>
+    <p style="margin:0;color:#e8e8e8;font-size:16px;line-height:1.6"><strong style="color:#fff">Why do clothes still smell after washing?</strong> Odor compounds like isovaleric and butyric acid get trapped deep inside synthetic fibres and in biofilm built up inside the washing machine — water-based detergent can't fully reach them. Fix it by washing promptly, deep-cleaning the machine monthly, drying fully, and neutralising the fibres detergent misses with a fabric odor spray.</p>
+  </div>
+
   <!-- INTERACTIVE QUIZ -->
   <div class="quiz">
     <div class="quiz-title">Check Your Laundry IQ</div>
@@ -778,5 +780,6 @@ function sendChecklist(){
 })();
 </script>
 
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

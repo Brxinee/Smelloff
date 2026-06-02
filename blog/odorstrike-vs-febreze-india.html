@@ -44,10 +44,7 @@
 }
 </script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;700&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/fonts.css">
 
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -57,8 +54,6 @@ body {
   background:#080808; color:#fafafa; line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
-@font-face { font-family:'Barlow Condensed'; font-weight:900; font-style:normal; font-display:swap;
-  src: url('https://fonts.gstatic.com/s/barlowcondensed/v12/HTx3L3I-JCGChYJ8VI-L6OO_au7B6x3VWcfPNKRL.woff2') format('woff2'); }
 .blog-nav { position:sticky; top:0; background:rgba(8,8,8,0.95); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:max(16px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) 16px max(24px, env(safe-area-inset-left, 0px)); display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1a1a1a; z-index:100; }
 .blog-nav .logo { font-family:"Barlow Condensed",sans-serif; font-weight:900; font-size:22px; letter-spacing:3px; text-transform:uppercase; color:#fafafa; text-decoration:none; position:relative; padding-right:12px; }
 .blog-nav .logo::after { content:""; position:absolute; top:-2px; right:0; width:6px; height:6px; background:#B8FF57; border-radius:50%; }
@@ -501,5 +496,6 @@ document.querySelectorAll('.quiz-opts button').forEach(btn => {
 })();
 </script>
 
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

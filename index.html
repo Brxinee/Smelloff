@@ -82,7 +82,7 @@
   "description":"D2C men's grooming brand from Hyderabad. Maker of ODORSTRIKE — India's first pocket-sized fabric odor remover spray.",
   "slogan":"Pocket-sized odor killer for your clothes",
   "knowsAbout":["fabric odor","sweat smell","zinc pca","men's grooming","fabric care","polyester odor","gym clothes smell"],
-  "address":{"@type":"PostalAddress","streetAddress":"[VIRTUAL_OFFICE_ADDRESS_PENDING]","addressLocality":"Hyderabad","addressRegion":"Telangana","postalCode":"500018","addressCountry":"IN"},
+  "address":{"@type":"PostalAddress","addressLocality":"Hyderabad","addressRegion":"Telangana","postalCode":"500018","addressCountry":"IN"},
   "contactPoint":[{"@type":"ContactPoint","telephone":"+91-93929-74031","contactType":"customer service","email":"smelloffsupport@gmail.com","areaServed":"IN","availableLanguage":["English","Hindi","Telugu"]}],
   "sameAs":["https://instagram.com/smell0ff","https://wa.me/919392974031"]
 }
@@ -245,11 +245,10 @@
   })();
 </script>
 
-<!-- Fonts: non-render-blocking -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,900&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,900&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400&display=swap"></noscript>
+<!-- Fonts: self-hosted woff2 (latin/latin-ext subsets, font-display:swap) — removes render-blocking third-party request -->
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/barlow-condensed-normal-latin-900.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/dm-sans-normal-latin-400.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css">
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -285,6 +284,8 @@
     --text:#f4f1ea;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  /* Global keyboard focus indicator (fills gaps; element-specific rules keep priority via specificity) */
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--acid);outline-offset:2px;border-radius:2px}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{
     background:var(--bg);
@@ -6149,5 +6150,6 @@ window.createSupabaseOrder = function (opts) {
 })();
 </script>
 
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

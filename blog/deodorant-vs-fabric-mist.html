@@ -59,10 +59,7 @@
 </script>
 <!-- JSON-LD FAQ -->
 <!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;700&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/fonts.css">
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -225,6 +222,11 @@
     <h1>Deodorant vs Fabric Mist: <em>What Actually Kills Odor</em></h1>
     <p class="article-dek">You roll on deodorant every morning. You shower. You do everything right. And yet, by 3pm, your shirt betrays you. The problem isn't your skin. It never was.</p>
   </header>
+
+  <div class="quick-answer" style="background:#111;border-left:3px solid #B8FF57;padding:18px 22px;margin:28px 0;border-radius:4px">
+    <p style="margin:0 0 8px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#B8FF57">Quick answer</p>
+    <p style="margin:0;color:#e8e8e8;font-size:16px;line-height:1.6"><strong style="color:#fff">Deodorant or fabric mist — which actually kills clothing odor?</strong> They solve different problems. Deodorant treats skin (about 0.3% of the odor surface); a fabric mist treats the shirt that holds most of the smell. Deodorant masks and slows sweat on skin, while a fabric odor neutraliser breaks down odor molecules trapped in the fibres. Use both for complete odor control.</p>
+  </div>
 
   <p class="drop-cap">Think about this for a second. You apply deodorant to your armpits — maybe 6 square centimeters of skin. But you're wearing a shirt that covers 2000+ square centimeters of your upper body. That shirt has been absorbing your sweat, your skin oils, and every odor compound your body produces all day long. All of it. Into the fabric.</p>
 
@@ -483,5 +485,6 @@
 })();
 </script>
 
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

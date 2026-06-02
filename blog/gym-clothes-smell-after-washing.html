@@ -59,10 +59,7 @@
 </script>
 <!-- JSON-LD FAQ -->
 <!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;700&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/fonts.css">
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -506,6 +503,11 @@
     <p class="article-dek">If only your synthetic activewear smells — your Dri-Fit, Climalite, Decathlon polyester — and your cotton tees come out fine, the fabric is the variable. Polyester is hydrophobic and oleophilic. Detergent can't reach what your body left in there.</p>
   </header>
 
+  <div class="quick-answer" style="background:#111;border-left:3px solid #B8FF57;padding:18px 22px;margin:28px 0;border-radius:4px">
+    <p style="margin:0 0 8px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#B8FF57">Quick answer</p>
+    <p style="margin:0;color:#e8e8e8;font-size:16px;line-height:1.6"><strong style="color:#fff">Why do polyester gym clothes still smell after washing?</strong> Polyester is hydrophobic and oleophilic — it repels water but holds body oils, so water-based detergent can't reach the odor compounds locked in the fibres. The surface gets clean while the smell stays put and reactivates with body heat. Wash promptly in cooler water and neutralise the fibres with a fabric odor spray.</p>
+  </div>
+
   <p class="drop-cap">If you're wondering <a href="/blog/clothes-smell-after-washing" class="inline-cta">why all your clothes smell after washing</a>, that's a different post. This one is for the specific case where the cotton kurtas come out fine and the Dri-Fit, Climalite, or Decathlon poly shirt smells like the gym again the moment it warms up on your body. That's not your detergent. That's polyester chemistry — and it has a very specific fix.</p>
 
   <p>I learnt this the hard way. Wednesday evening, session at the gym near Banjara Hills, Nike Dri-Fit into the machine with twice the usual detergent, ceiling fan overnight. Morning: smelled fine. Twenty minutes into a grocery run, AC on, body warm — same sourness back. Like the wash never happened. The smell wasn't returning. It never left. The reason is two words: hydrophobic and oleophilic.</p>
@@ -771,5 +773,6 @@
 })();
 </script>
 
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

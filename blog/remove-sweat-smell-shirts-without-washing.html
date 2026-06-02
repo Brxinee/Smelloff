@@ -54,10 +54,7 @@
 </script>
 
 <!-- FAQ Schema -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=Fraunces:ital,wght@1,400;1,500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=Fraunces:ital,wght@1,400;1,500&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/fonts.css">
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -441,6 +438,11 @@ footer a{color:#888}
 
   <p class="lead">You sprayed deodorant. You wore a fresh shirt. By 2 PM, your collar smells like a wet towel left in the car. Washing isn't always an option — meetings, travel, hostel laundry rotations, or just plain laziness. Here's how to actually kill the smell. Not mask it. <strong>Kill it.</strong></p>
 
+  <div class="quick-answer" style="background:#111;border-left:3px solid #B8FF57;padding:18px 22px;margin:28px 0;border-radius:4px">
+    <p style="margin:0 0 8px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#B8FF57">Quick answer</p>
+    <p style="margin:0;color:#e8e8e8;font-size:16px;line-height:1.6"><strong style="color:#fff">How do you get sweat smell out of a shirt without washing it?</strong> Spray a fabric odor remover that neutralises rather than masks — such as ODORSTRIKE — onto the collar, underarms and chest, then wait about 10 seconds for it to dry. Target the fabric, not your skin. The trapped sweat odor is broken down at the molecular level, leaving the shirt wearable for hours.</p>
+  </div>
+
   <div class="myth-buster">
     <h2>🔬 Why your shirt smells even when you feel "clean"</h2>
     <p>Sweat itself is odorless. The stink comes from bacteria on your skin feeding on sweat and releasing volatile compounds — mostly <strong>isovaleric acid</strong> (the cheesy smell) and <strong>propanoic acid</strong>. Fabric traps these molecules in fibers. Deodorant covers skin, not cloth. That's why your shirt armpit stinks even after a shower.</p>
@@ -705,5 +707,6 @@ window.addEventListener('scroll',()=>{
 })();
 </script>
 
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

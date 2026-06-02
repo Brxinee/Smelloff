@@ -48,7 +48,7 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy", "value": "browsing-topics=(), interest-cohort=(), camera=(), microphone=(), geolocation=()" },
         { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://api.qrserver.com https://script.google.com https://www.google.com https://www.facebook.com https://www.google-analytics.com; connect-src 'self' https://script.google.com https://api.postalpincode.in https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://www.facebook.com https://connect.facebook.net https://www.googletagmanager.com https://tnuqjydmoxczdjnsgpci.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me" }
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://api.qrserver.com https://script.google.com https://www.google.com https://www.facebook.com https://www.google-analytics.com; connect-src 'self' https://script.google.com https://api.postalpincode.in https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://www.facebook.com https://connect.facebook.net https://www.googletagmanager.com https://tnuqjydmoxczdjnsgpci.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me" }
       ]
     },
     {
@@ -108,6 +108,13 @@
       "source": "/(.*\\.(?:css|js|mjs|png|jpg|jpeg|webp|svg|woff|woff2|ttf|otf|ico|gif|avif))",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Service-Worker-Allowed", "value": "/" }
       ]
     }
   ]
