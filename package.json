@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "Smelloff / ODORSTRIKE — pocket-sized fabric odor eliminator. Next.js storefront.",
+  "engines": {
+    "node": ">=18.18.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
