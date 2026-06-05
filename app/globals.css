@@ -7,6 +7,14 @@
    Document approved WCAG 2.2 AA combos in comments (see Part 2).
    ────────────────────────────────────────────────────────────── */
 :root {
+  /* Typography — self-contained system stacks (no build-time font fetch).
+     To use Clash Display + Satoshi, drop the woff2 into /public/fonts and
+     define @font-face here, then point these vars at the font families. */
+  --font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
   /* Surfaces */
   --bg: #ffffff; /* page background */
   --surface: #f4f7f6; /* alternating sections, cards (cool off-white) */

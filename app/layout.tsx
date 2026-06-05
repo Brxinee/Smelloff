@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { fontDisplay, fontBody } from "@/lib/fonts";
 import { SITE } from "@/lib/constants";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
@@ -51,10 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${fontDisplay.variable} ${fontBody.variable}`}
-    >
+    <html lang="en">
       <body className="flex min-h-screen flex-col">
         <JsonLdOrganization />
         <SkipLink />
