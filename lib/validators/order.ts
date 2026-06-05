@@ -32,6 +32,19 @@ export const cartItemSchema = z.object({
   image: z.string(),
 });
 
+/**
+ * Server-side order input. We deliberately accept ONLY the variant id and
+ * quantity from the client — price, label, size, name and image are always
+ * re-derived from the product catalog server-side (never trust client prices).
+ * Unknown keys (e.g. a tampered `price`) are stripped by zod and ignored.
+ */
+export const orderItemInputSchema = z.object({
+  variantId: z.string().min(1),
+  qty: z.number().int().positive().max(20),
+});
+
+export type OrderItemInput = z.infer<typeof orderItemInputSchema>;
+
 export const checkoutSchema = z.object({
   customer: customerSchema,
   items: z.array(cartItemSchema).min(1, "Your cart is empty"),

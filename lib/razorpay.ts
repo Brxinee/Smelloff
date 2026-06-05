@@ -48,6 +48,21 @@ export async function createRazorpayOrder(
   return (await res.json()) as RazorpayOrder;
 }
 
+/** Fetch an existing order from Razorpay (to confirm the amount actually paid). */
+export async function fetchRazorpayOrder(orderId: string): Promise<RazorpayOrder> {
+  if (!razorpayConfigured()) {
+    throw new Error("Razorpay is not configured");
+  }
+  const auth = Buffer.from(`${KEY_ID}:${KEY_SECRET}`).toString("base64");
+  const res = await fetch(`https://api.razorpay.com/v1/orders/${orderId}`, {
+    headers: { Authorization: `Basic ${auth}` },
+  });
+  if (!res.ok) {
+    throw new Error(`Razorpay fetch order failed: ${res.status}`);
+  }
+  return (await res.json()) as RazorpayOrder;
+}
+
 /** Verify the HMAC signature returned by Razorpay Checkout. */
 export function verifyRazorpaySignature(params: {
   orderId: string;

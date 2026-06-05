@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createRazorpayOrder, razorpayConfigured } from "@/lib/razorpay";
-import { cartItemSchema } from "@/lib/validators/order";
+import { orderItemInputSchema } from "@/lib/validators/order";
+import { repriceCart } from "@/lib/content";
+import { shippingFor } from "@/lib/constants";
 
 export const runtime = "nodejs";
 
 const bodySchema = z.object({
-  amount: z.number().int().positive(),
-  items: z.array(cartItemSchema).min(1),
+  // `amount` from the client is ignored — the total is computed server-side.
+  items: z.array(orderItemInputSchema).min(1),
 });
 
 export async function POST(req: Request) {
@@ -25,18 +27,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  // Recompute amount server-side from item prices — never trust the client total.
-  const computed = parsed.items.reduce((sum, i) => sum + i.price * i.qty, 0);
-  // Allow shipping/COD deltas but reject obviously tampered amounts.
-  if (parsed.amount < computed) {
-    return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
+  // Reprice every line from the catalog by variantId — never trust client prices.
+  let items;
+  try {
+    items = repriceCart(parsed.items);
+  } catch {
+    return NextResponse.json({ error: "Cart contains an invalid item" }, { status: 400 });
   }
 
+  const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const total = subtotal + shippingFor(subtotal);
+
   try {
-    const order = await createRazorpayOrder(
-      parsed.amount,
-      `sm_${Date.now()}`
-    );
+    const order = await createRazorpayOrder(total, `sm_${Date.now()}`);
     return NextResponse.json({
       id: order.id,
       amount: order.amount,

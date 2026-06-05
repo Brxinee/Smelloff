@@ -20,3 +20,9 @@ export const FLAT_SHIPPING = 49;
 export const COD_FEE = 30;
 
 export const RETURN_WINDOW_DAYS = 7;
+
+/** Shipping for a given subtotal — single source of truth (client + server). */
+export function shippingFor(subtotal: number): number {
+  if (subtotal <= 0) return 0;
+  return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : FLAT_SHIPPING;
+}
