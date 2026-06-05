@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ──────────────────────────────────────────────────────────────
+   Design tokens — light mode.
+   Document approved WCAG 2.2 AA combos in comments (see Part 2).
+   ────────────────────────────────────────────────────────────── */
+:root {
+  /* Surfaces */
+  --bg: #ffffff; /* page background */
+  --surface: #f4f7f6; /* alternating sections, cards (cool off-white) */
+  --surface-2: #e8edeb; /* panels, input fills */
+  --border: #d5dcd9; /* hairlines/dividers */
+
+  /* Text on white */
+  --ink: #11201e; /* primary  (~15:1, AAA) */
+  --ink-2: #3a4744; /* secondary (~8:1, AAA) */
+  --ink-3: #5a6864; /* muted/meta (~4.6:1, AA) */
+
+  /* Brand — teal */
+  --brand: #0f6e78; /* links/headers on white (~4.7:1, AA) */
+  --brand-strong: #0a5159; /* hover/active (~6.8:1, AAA) */
+  --brand-tint: #dcf0f1; /* teal wash bg (use --ink text on it) */
+  --on-brand: #ffffff; /* text on solid teal (~4.7:1, AA) */
+
+  /* Action — warm orange (primary CTA) */
+  --cta: #c94e12; /* button bg; white text (~5.0:1, AA) */
+  --cta-strong: #a83f0c; /* hover/active */
+  --cta-tint: #ffe7d8; /* sale/"save" flags bg (use --ink text) */
+  --on-cta: #ffffff;
+
+  /* Functional */
+  --success: #1b7f3b;
+  --error: #c0271e; /* AA on white */
+  --focus: #1565c0; /* focus ring, 3:1+ */
+  --price-strike: #7b857f;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+    font-size: 1rem; /* 16px min — also prevents iOS input zoom */
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display text-ink;
+    text-wrap: balance;
+  }
+
+  h1 {
+    @apply text-h1;
+  }
+  h2 {
+    @apply text-h2;
+  }
+  h3 {
+    @apply text-h3 font-semibold;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Color is never the sole signal — links are underlined */
+  a {
+    color: var(--brand);
+    text-underline-offset: 3px;
+  }
+  a:hover {
+    color: var(--brand-strong);
+  }
+
+  /* Visible focus ring everywhere (keyboard) */
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Respect reduced motion globally */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-px {
+    @apply mx-auto w-full max-w-[1200px] px-5 sm:px-6 lg:px-8;
+  }
+  .section-y {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+  /* Long-form readable measure for blog */
+  .prose-measure {
+    max-width: 68ch;
+  }
+}
+
+/* Hide scrollbars on the gallery thumbnail rail but keep scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

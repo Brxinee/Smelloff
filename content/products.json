@@ -1,0 +1,98 @@
+{
+  "odorstrike": {
+    "handle": "odorstrike",
+    "name": "ODORSTRIKE Fabric Mist — 50ml",
+    "descriptor": "Pocket-sized odor killer for your clothes.",
+    "summary": "A 50ml pocket spray that traps and neutralizes odor in fabric so clothes stay fresh between washes. For fabrics and clothing only. Not for application to skin.",
+    "variants": [
+      {
+        "id": "odorstrike-solo",
+        "label": "Solo",
+        "units": 1,
+        "size": "50ml",
+        "price": 229,
+        "compareAt": 229,
+        "highlighted": false
+      },
+      {
+        "id": "odorstrike-2pack",
+        "label": "2-Pack",
+        "units": 2,
+        "size": "50ml",
+        "price": 399,
+        "compareAt": 458,
+        "savingsLabel": "Save ₹59",
+        "highlighted": true
+      },
+      {
+        "id": "odorstrike-3pack",
+        "label": "3-Pack",
+        "units": 3,
+        "size": "50ml",
+        "price": 549,
+        "compareAt": 687,
+        "savingsLabel": "Save ₹138",
+        "highlighted": false
+      },
+      {
+        "id": "odorstrike-trial",
+        "label": "First-order trial",
+        "units": 1,
+        "size": "50ml",
+        "price": 179,
+        "compareAt": 229,
+        "savingsLabel": "Try for ₹179",
+        "trialOnly": true
+      },
+      {
+        "id": "odorstrike-100ml",
+        "label": "100ml Refill",
+        "units": 1,
+        "size": "100ml",
+        "price": 379,
+        "hidden": true
+      }
+    ],
+    "images": [
+      {
+        "src": "/images/odorstrike-bottle.png",
+        "alt": "ODORSTRIKE 50ml fabric mist bottle on a clean white background",
+        "primary": true
+      },
+      {
+        "src": "/images/odorstrike-bottle.png",
+        "alt": "ODORSTRIKE 50ml bottle held in hand showing pocket size reference"
+      },
+      {
+        "src": "/images/odorstrike-bottle.png",
+        "alt": "ODORSTRIKE being sprayed onto a shirt to refresh the fabric"
+      },
+      {
+        "src": "/images/odorstrike-bottle.png",
+        "alt": "ODORSTRIKE tucked into a gym bag pocket, ready to use anywhere"
+      },
+      {
+        "src": "/images/odorstrike-bottle.png",
+        "alt": "Diagram of how ODORSTRIKE traps odor molecules in fabric"
+      }
+    ],
+    "specs": [
+      { "label": "Volume", "value": "50 ml" },
+      { "label": "Format", "value": "Pocket fine-mist spray" },
+      { "label": "Approx. sprays", "value": "~300 sprays" },
+      { "label": "Use on", "value": "Fabric & clothing only" },
+      { "label": "Finish", "value": "Dries clean, no residue" }
+    ],
+    "ingredients": "Water, modified cyclodextrin (odor-trapping complex), solubiliser, fabric-safe fragrance, preservative. Free from harsh bleaches. For use on fabrics and clothing only. Not for application to skin.",
+    "info": {
+      "netQuantity": "Net quantity: 50 ml",
+      "manufacturer": "Manufactured by: [[FILL: Manufacturer name]], [[FILL: Manufacturer address]]",
+      "marketer": "Marketed by: Smelloff, Hyderabad, Telangana, India",
+      "address": "[[FILL: Full registered address, Hyderabad, Telangana]]",
+      "mrpNote": "MRP ₹229 (inclusive of all taxes)",
+      "manufactureDate": "Mfg: [[FILL: MM/YYYY]]",
+      "consumerCare": "Consumer care: hello@smelloff.in · WhatsApp [[FILL: number]]",
+      "countryOfOrigin": "Country of origin: Made in India"
+    }
+  }
+}

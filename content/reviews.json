@@ -1,0 +1,68 @@
+[
+  {
+    "id": "r1",
+    "name": "Rahul M.",
+    "rating": 5,
+    "title": "Saved my second-day shirt",
+    "body": "Wore the same shirt to office after gym and nobody noticed a thing. Two sprays and it's fresh. Fits in my jeans pocket too.",
+    "date": "2026-04-18",
+    "verified": true,
+    "location": "Hyderabad",
+    "helpful": 24
+  },
+  {
+    "id": "r2",
+    "name": "Arjun K.",
+    "rating": 5,
+    "title": "Polyester shirts finally usable",
+    "body": "My gym tees used to smell even after washing. A quick mist before I pack them and the funk is gone. Not a perfume — it just kills the smell.",
+    "date": "2026-04-02",
+    "verified": true,
+    "location": "Mumbai",
+    "helpful": 19
+  },
+  {
+    "id": "r3",
+    "name": "Sandeep R.",
+    "rating": 4,
+    "title": "Great for the commute",
+    "body": "Bike ride to work in Chennai humidity = sweaty back. One spray on the collar and underarm area of the shirt and I'm presentable. Wish the bottle was bigger.",
+    "date": "2026-03-21",
+    "verified": true,
+    "location": "Chennai",
+    "helpful": 12
+  },
+  {
+    "id": "r4",
+    "name": "Vivek P.",
+    "rating": 5,
+    "title": "Hostel life saver",
+    "body": "Can't wash clothes daily in hostel. This stretches my shirts to a third wear easily. Honest product, does exactly what it says.",
+    "date": "2026-03-10",
+    "verified": true,
+    "location": "Pune",
+    "helpful": 31
+  },
+  {
+    "id": "r5",
+    "name": "Imran S.",
+    "rating": 5,
+    "title": "Before dates, before meetings",
+    "body": "Keep it in my bag. Quick check before walking in anywhere. Confidence in a tiny bottle.",
+    "date": "2026-02-27",
+    "verified": true,
+    "location": "Bengaluru",
+    "helpful": 9
+  },
+  {
+    "id": "r6",
+    "name": "Naveen T.",
+    "rating": 4,
+    "title": "Works, just give it a minute",
+    "body": "Spray and wait a few seconds for it to dry. Then no smell. Field work in the sun and my uniform stays bearable.",
+    "date": "2026-02-15",
+    "verified": true,
+    "location": "Hyderabad",
+    "helpful": 7
+  }
+]
