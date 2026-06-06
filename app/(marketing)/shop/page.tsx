@@ -47,8 +47,10 @@ export default function ShopPage() {
             <article
               key={v.id}
               className={cn(
-                "flex flex-col rounded-2xl border-2 bg-bg p-6",
-                v.highlighted ? "border-brand shadow-card" : "border-border"
+                "card-hover group flex flex-col rounded-2xl border-2 bg-bg p-6",
+                v.highlighted
+                  ? "border-brand shadow-card ring-4 ring-[color:var(--ring-brand)]"
+                  : "border-border"
               )}
             >
               <Link
@@ -60,7 +62,7 @@ export default function ShopPage() {
                   alt={`ODORSTRIKE ${v.label}`}
                   fill
                   sizes="(max-width: 768px) 90vw, 30vw"
-                  className="object-contain p-6"
+                  className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
                 />
               </Link>
               {v.highlighted && (

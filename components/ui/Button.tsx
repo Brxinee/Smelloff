@@ -7,11 +7,12 @@ type Variant = "primary" | "secondary" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-xl font-display font-semibold transition-colors focus-visible:outline focus-visible:outline-2 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 rounded-xl font-display font-semibold transition-all duration-200 ease-out active:scale-[0.98] focus-visible:outline focus-visible:outline-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100";
 
 const variants: Record<Variant, string> = {
   // Primary CTA — the only thing that wears warm orange. Keep it scarce.
-  primary: "bg-cta text-on-cta hover:bg-cta-strong active:bg-cta-strong",
+  primary:
+    "bg-cta text-on-cta shadow-[0_6px_16px_-6px_rgba(201,78,18,0.6)] hover:bg-cta-strong hover:shadow-[0_10px_24px_-8px_rgba(201,78,18,0.7)]",
   // Secondary — outlined teal.
   secondary:
     "border-2 border-brand bg-transparent text-brand hover:bg-brand-tint",

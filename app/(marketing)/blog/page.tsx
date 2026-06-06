@@ -16,17 +16,17 @@ export const metadata: Metadata = {
 
 function PostCard({ post }: { post: BlogMeta }) {
   return (
-    <article className="flex flex-col overflow-hidden rounded-2xl border border-border bg-bg">
+    <article className="card-hover group flex flex-col overflow-hidden rounded-2xl border border-border bg-bg">
       <Link
         href={`/blog/${post.slug}`}
-        className="relative block aspect-[16/9] bg-surface"
+        className="relative block aspect-[16/9] overflow-hidden bg-surface"
       >
         <Image
           src={post.hero}
           alt={post.heroAlt}
           fill
           sizes="(max-width: 768px) 90vw, 30vw"
-          className="object-contain p-6"
+          className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
         />
       </Link>
       <div className="flex flex-1 flex-col p-5">

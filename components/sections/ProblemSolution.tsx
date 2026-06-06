@@ -1,3 +1,4 @@
+import { Zap, X } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
@@ -21,11 +22,14 @@ export function ProblemSolution() {
         </Reveal>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
           <Reveal>
-            <ul className="space-y-3 rounded-2xl bg-surface p-6">
+            <ul className="space-y-3 rounded-2xl border border-border bg-surface p-6">
               {problems.map((p) => (
-                <li key={p} className="flex gap-3 text-ink-2">
-                  <span aria-hidden className="text-error">
-                    ✕
+                <li key={p} className="flex items-start gap-3 text-ink-2">
+                  <span
+                    aria-hidden
+                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta-tint text-cta"
+                  >
+                    <X className="h-3 w-3" />
                   </span>
                   {p}
                 </li>
@@ -33,7 +37,10 @@ export function ProblemSolution() {
             </ul>
           </Reveal>
           <Reveal delay={0.1}>
-            <div className="rounded-2xl bg-brand-tint p-6">
+            <div className="relative h-full overflow-hidden rounded-2xl bg-brand-tint p-6">
+              <span className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand text-on-brand">
+                <Zap className="h-5 w-5" aria-hidden />
+              </span>
               <h3 id="prob-h" className="text-ink">
                 The 5-second fix
               </h3>

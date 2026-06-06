@@ -34,7 +34,7 @@ export function Newsletter() {
   return (
     <section className="section-y bg-bg" aria-labelledby="news-h">
       <Container>
-        <div className="mx-auto max-w-xl rounded-2xl border border-border bg-surface p-8 text-center">
+        <div className="surface-gradient mx-auto max-w-xl rounded-2xl border border-border p-8 text-center shadow-card">
           <h2 id="news-h" className="text-2xl">
             Launch offers, no spam
           </h2>

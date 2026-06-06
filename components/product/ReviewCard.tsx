@@ -5,7 +5,7 @@ import type { Review } from "@/types";
 
 export function ReviewCard({ review }: { review: Review }) {
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-border bg-bg p-5">
+    <article className="card-hover flex h-full flex-col rounded-2xl border border-border bg-bg p-5">
       <Rating value={review.rating} size={16} />
       <h3 className="mt-2 font-display text-base font-semibold text-ink">
         {review.title}

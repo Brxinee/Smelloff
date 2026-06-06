@@ -8,8 +8,14 @@ export function FounderNote() {
     <section className="section-y bg-surface" aria-labelledby="founder-h">
       <Container>
         <Reveal>
-          <div className="grid items-center gap-8 rounded-2xl bg-bg p-8 md:grid-cols-[160px_1fr]">
-            <div className="relative mx-auto h-32 w-32 overflow-hidden rounded-full bg-surface-2">
+          <div className="relative grid items-center gap-8 overflow-hidden rounded-2xl border border-border bg-bg p-8 shadow-card md:grid-cols-[160px_1fr]">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -right-2 -top-6 font-display text-[10rem] leading-none text-brand-tint"
+            >
+              &rdquo;
+            </span>
+            <div className="relative z-10 mx-auto h-32 w-32 overflow-hidden rounded-full bg-surface-2 ring-4 ring-brand-tint">
               <Image
                 src="/images/icon-founder.png"
                 alt="Smelloff founder"
@@ -18,10 +24,8 @@ export function FounderNote() {
                 className="object-cover"
               />
             </div>
-            <div>
-              <p className="font-display text-sm font-semibold uppercase tracking-wider text-brand">
-                From the founder
-              </p>
+            <div className="relative z-10">
+              <p className="eyebrow">From the founder</p>
               <h2 id="founder-h" className="mt-2 text-2xl">
                 I built this in {SITE.city} because I needed it.
               </h2>

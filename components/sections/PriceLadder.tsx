@@ -30,8 +30,10 @@ export function PriceLadder() {
             <Reveal key={v.id} delay={i * 0.1}>
               <div
                 className={cn(
-                  "flex h-full flex-col rounded-2xl border-2 bg-bg p-6",
-                  v.highlighted ? "border-brand shadow-card" : "border-border"
+                  "card-hover relative flex h-full flex-col rounded-2xl border-2 bg-bg p-6",
+                  v.highlighted
+                    ? "border-brand shadow-card ring-4 ring-[color:var(--ring-brand)]"
+                    : "border-border"
                 )}
               >
                 {v.highlighted && (

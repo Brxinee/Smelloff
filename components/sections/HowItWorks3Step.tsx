@@ -35,8 +35,8 @@ export function HowItWorks3Step({ withCta = true }: { withCta?: boolean }) {
         <ol className="mt-10 grid gap-6 md:grid-cols-3">
           {steps.map((s, i) => (
             <Reveal as="li" key={s.n} delay={i * 0.1}>
-              <div className="h-full rounded-2xl bg-bg p-6">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand font-display text-lg font-bold text-on-brand">
+              <div className="card-hover h-full rounded-2xl border border-border bg-bg p-6">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-brand font-display text-lg font-bold text-on-brand shadow-[0_6px_16px_-6px_rgba(15,110,120,0.7)]">
                   {s.n}
                 </span>
                 <h3 className="mt-4 text-ink">{s.title}</h3>

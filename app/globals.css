@@ -7,14 +7,6 @@
    Document approved WCAG 2.2 AA combos in comments (see Part 2).
    ────────────────────────────────────────────────────────────── */
 :root {
-  /* Typography — self-contained system stacks (no build-time font fetch).
-     To use Clash Display + Satoshi, drop the woff2 into /public/fonts and
-     define @font-face here, then point these vars at the font families. */
-  --font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-
   /* Surfaces */
   --bg: #ffffff; /* page background */
   --surface: #f4f7f6; /* alternating sections, cards (cool off-white) */
@@ -43,6 +35,10 @@
   --error: #c0271e; /* AA on white */
   --focus: #1565c0; /* focus ring, 3:1+ */
   --price-strike: #7b857f;
+
+  /* Premium accents */
+  --ring-brand: rgba(15, 110, 120, 0.14);
+  --shadow-color: 17, 32, 30;
 }
 
 @layer base {
@@ -59,6 +55,15 @@
     @apply bg-bg font-sans text-ink antialiased;
     font-size: 1rem; /* 16px min — also prevents iOS input zoom */
     line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "ss01", "cv01", "cv03";
+  }
+
+  /* Branded text selection */
+  ::selection {
+    background: var(--brand-tint);
+    color: var(--ink);
   }
 
   h1,
@@ -124,6 +129,45 @@
   /* Long-form readable measure for blog */
   .prose-measure {
     max-width: 68ch;
+  }
+
+  /* Eyebrow label above section headings */
+  .eyebrow {
+    @apply mb-3 inline-flex items-center gap-2 font-display text-xs font-semibold uppercase tracking-[0.14em] text-brand;
+  }
+
+  /* Card with a subtle lift + ring on hover */
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 1px 2px rgba(var(--shadow-color), 0.05),
+      0 16px 40px rgba(var(--shadow-color), 0.1);
+  }
+
+  /* Soft brand-tinted gradient surface */
+  .surface-gradient {
+    background:
+      radial-gradient(
+        120% 120% at 0% 0%,
+        var(--brand-tint) 0%,
+        transparent 55%
+      ),
+      var(--surface);
+  }
+
+  /* Hairline divider that fades at the edges */
+  .rule-fade {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--border) 20%,
+      var(--border) 80%,
+      transparent
+    );
   }
 }
 

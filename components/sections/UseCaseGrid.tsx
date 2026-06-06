@@ -26,8 +26,10 @@ export function UseCaseGrid() {
         <ul className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-5">
           {cases.map((c, i) => (
             <Reveal as="li" key={c.title} delay={i * 0.05}>
-              <div className="flex h-full flex-col items-center gap-2 rounded-2xl bg-surface p-5 text-center">
-                <c.icon className="h-7 w-7 text-brand" aria-hidden />
+              <div className="card-hover flex h-full flex-col items-center gap-2 rounded-2xl border border-border bg-surface p-5 text-center">
+                <span className="mb-1 flex h-12 w-12 items-center justify-center rounded-full bg-brand-tint">
+                  <c.icon className="h-6 w-6 text-brand" aria-hidden />
+                </span>
                 <h3 className="text-base text-ink">{c.title}</h3>
                 <p className="text-sm text-ink-2">{c.line}</p>
               </div>
