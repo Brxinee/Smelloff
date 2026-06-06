@@ -11,8 +11,8 @@ const steps = [
   },
   {
     n: "2",
-    title: "Cyclodextrin traps the odor",
-    body: "Ring-shaped molecules cage the odor compounds so they can't volatilize to your nose.",
+    title: "Zinc PCA neutralizes the odor",
+    body: "It binds the odor molecules in the fabric so they can't volatilize to your nose — neutralized, not masked.",
   },
   {
     n: "3",

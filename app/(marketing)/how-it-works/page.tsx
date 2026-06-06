@@ -39,13 +39,15 @@ export default function HowItWorksPage() {
         <section>
           <h2 className="text-2xl">2. How ODORSTRIKE works</h2>
           <p className="mt-3 text-ink-2">
-            ODORSTRIKE uses molecular encapsulation via{" "}
-            <strong className="text-ink">cyclodextrin</strong> — a ring-shaped,
-            starch-derived sugar with a water-repelling inner cavity. That cavity{" "}
-            <strong className="text-ink">traps and cages</strong> odor molecules
-            in a host–guest &quot;inclusion complex&quot; so they can&apos;t
-            volatilize to your nose. It captures and neutralizes the smell — it
-            doesn&apos;t mask it with perfume.
+            ODORSTRIKE&apos;s hero active is{" "}
+            <strong className="text-ink">Zinc PCA</strong> — a zinc complex used
+            in skin-safe odor control for decades. It{" "}
+            <strong className="text-ink">binds and neutralizes</strong> the
+            volatile odor molecules trapped in fabric so they can&apos;t
+            volatilize to your nose. A plant-derived{" "}
+            <strong className="text-ink">triethyl citrate</strong> helps break
+            down the sweat acids bacteria leave behind. Together they neutralize
+            the smell — they don&apos;t mask it with perfume.
           </p>
         </section>
 

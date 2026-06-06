@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Rating } from "@/components/ui/Rating";
 import { getDefaultProduct, getReviewStats } from "@/lib/content";
 
-const quickPoints = ["Fabric-only & skin-safe", "Dries clean, no residue", "~300 sprays"];
+const quickPoints = ["Fabric-only & skin-safe", "Dries clean, no residue", "~250 sprays"];
 
 export function Hero() {
   const product = getDefaultProduct();

@@ -1,5 +1,5 @@
 import { SITE } from "@/lib/constants";
-import type { Product, Review, BlogMeta } from "@/types";
+import type { Product, Review, BlogMeta, FaqItem } from "@/types";
 import { getReviewStats } from "@/lib/content";
 
 /** Renders a JSON-LD <script>. */
@@ -99,6 +99,22 @@ export function JsonLdBreadcrumb({
           position: i + 1,
           name: it.name,
           item: `${SITE.url}${it.url}`,
+        })),
+      }}
+    />
+  );
+}
+
+export function JsonLdFaq({ faq }: { faq: FaqItem[] }) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faq.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
         })),
       }}
     />

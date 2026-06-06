@@ -15,8 +15,15 @@ import {
   JsonLdProduct,
   JsonLdBreadcrumb,
   JsonLdReviews,
+  JsonLdFaq,
 } from "@/components/seo/JsonLd";
-import { getAllProducts, getProduct, getReviews, getReviewStats } from "@/lib/content";
+import {
+  getAllProducts,
+  getProduct,
+  getReviews,
+  getReviewStats,
+  getFaq,
+} from "@/lib/content";
 
 export function generateStaticParams() {
   return getAllProducts().map((p) => ({ handle: p.handle }));
@@ -56,6 +63,7 @@ export default function ProductPage({
     <>
       <JsonLdProduct product={product} />
       <JsonLdReviews reviews={reviews} />
+      <JsonLdFaq faq={getFaq()} />
       <JsonLdBreadcrumb
         items={[
           { name: "Home", url: "/" },

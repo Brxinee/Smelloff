@@ -3,7 +3,7 @@ Smelloff ("we", "us", "our") operates smelloff.in. This Privacy Policy explains 
 ## Information we collect
 
 -   **Personal:** name, email, phone number, shipping address, and pincode — collected when you place an order or sign up for updates
--   **Payment:** accepted via UPI (manual confirmation) or Cash on Delivery. We do not store card or UPI details on our servers
+-   **Payment:** processed via Razorpay (UPI, cards, netbanking, wallets) or Cash on Delivery. Card and UPI credentials are handled by Razorpay and never stored on our servers
 -   **Account:** if you sign in with Google, we receive your email address and display name via Firebase Authentication
 -   **Usage:** pages visited, device type, browser, referrer — via Google Analytics 4 and Meta Pixel, using anonymised cookies
 
@@ -28,10 +28,10 @@ We do not sell or rent your personal information to third parties.
 
 ## How payment works
 
-Smelloff accepts payments via **UPI** (manual confirmation) and **Cash on Delivery** only. There is no automated payment gateway.
+Smelloff accepts payments online via **Razorpay** and through **Cash on Delivery**.
 
--   **UPI:** You pay from any UPI app (GPay, PhonePe, Paytm, BHIM) to our UPI ID. You then send the payment screenshot and UTR (transaction reference) via WhatsApp. Our team confirms your order manually within 24 hours. Manual UPI confirmation means your order is checked by a human, not a bot — expect a 1–24 hour delay before dispatch.
--   **COD:** No advance payment. Pay ₹229 / ₹399 / ₹549 in cash to the delivery agent on arrival.
+-   **Online (Razorpay):** Pay by UPI (GPay, PhonePe, Paytm, BHIM), debit/credit card, netbanking or wallet through Razorpay's secure gateway. Payments are verified on our server before your order is confirmed. We never see or store your full card or UPI credentials — these are handled entirely by Razorpay.
+-   **COD:** No advance payment. Pay the order amount in cash to the delivery agent on arrival (a small COD fee, shown at checkout, may apply).
 
 ## Cookies
 
@@ -64,7 +64,7 @@ We use Google Analytics 4 and Meta Pixel for anonymised traffic analytics. These
 
 ## Security
 
-Your data is stored on secure servers (Google Sheets, Vercel). UPI payments are confirmed manually by our team within 24 hours of receiving your transaction ID. We take reasonable precautions but cannot guarantee absolute security against all threats.
+Your data is stored on secure servers (Google Sheets, Vercel). Online payments are processed and verified securely through Razorpay. We take reasonable precautions but cannot guarantee absolute security against all threats.
 
 ## Children
 

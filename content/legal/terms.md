@@ -18,16 +18,16 @@ All prices are listed in Indian Rupees (INR) and include applicable taxes (GST).
 
 ## Orders and payments
 
--   Orders are confirmed only after successful payment (prepaid) or phone verification (COD)
--   UPI payments are confirmed manually by our team — we do not store card or UPI details. Expect order confirmation within 24 hours of receiving your UTR (UPI transaction reference)
--   COD orders may be cancelled by us if the customer cannot be reached for phone verification
+-   Orders are confirmed after successful payment (prepaid via Razorpay) or order placement (COD)
+-   Online payments are processed and verified through Razorpay; we do not store card or UPI details
+-   COD orders may be cancelled by us if the customer cannot be reached for verification
 
 ## How payment works
 
-Smelloff accepts **UPI** (manual confirmation) and **Cash on Delivery** only. No automated payment gateway is used.
+Smelloff accepts payments online via **Razorpay** and through **Cash on Delivery**.
 
--   **UPI:** Pay from any UPI app to our UPI ID. Send the payment screenshot and UTR to WhatsApp. Order is confirmed manually within 24 hours and shipped within 48 hours of confirmation.
--   **COD:** No advance payment required. Pay cash to the delivery agent. Our team may call to verify COD orders before dispatch.
+-   **Online (Razorpay):** Pay by UPI, debit/credit card, netbanking or wallet. Payment is verified on our server before the order is confirmed, then shipped within 1–2 business days.
+-   **COD:** No advance payment required. Pay the order amount (plus any COD fee shown at checkout) in cash to the delivery agent. We may call to verify COD orders before dispatch.
 
 ## Shipping, returns, and refunds
 

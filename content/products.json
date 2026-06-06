@@ -79,11 +79,11 @@
     "specs": [
       { "label": "Volume", "value": "50 ml" },
       { "label": "Format", "value": "Pocket fine-mist spray" },
-      { "label": "Approx. sprays", "value": "~300 sprays" },
+      { "label": "Approx. sprays", "value": "~250 sprays" },
       { "label": "Use on", "value": "Fabric & clothing only" },
       { "label": "Finish", "value": "Dries clean, no residue" }
     ],
-    "ingredients": "Water, β-cyclodextrin (odor-trapping complex), zinc PCA (odor neutralizer), triethyl citrate (breaks down sweat acids), solubiliser, fabric-safe fragrance, preservative. Free from harsh bleaches. For use on fabrics and clothing only. Not for application to skin.",
+    "ingredients": "Water, isopropyl alcohol (fast-drying carrier), triethyl citrate (breaks down sweat acids), zinc PCA (binds & neutralizes odor molecules), fabric-safe fragrance, polysorbate 20, phenoxyethanol & ethylhexylglycerin (preservative). Free from harsh bleaches. For use on fabrics and clothing only. Not for application to skin.",
     "info": {
       "netQuantity": "Net quantity: 50 ml",
       "manufacturer": "Manufactured by: [[FILL: Manufacturer name]], [[FILL: Manufacturer address]]",
@@ -91,7 +91,7 @@
       "address": "[[FILL: Full registered address, Hyderabad, Telangana]]",
       "mrpNote": "MRP ₹229 (inclusive of all taxes)",
       "manufactureDate": "Mfg: [[FILL: MM/YYYY]]",
-      "consumerCare": "Consumer care: hello@smelloff.in · WhatsApp [[FILL: number]]",
+      "consumerCare": "Consumer care: smelloffsupport@gmail.com · WhatsApp +91 93929 74031",
       "countryOfOrigin": "Country of origin: Made in India"
     }
   }

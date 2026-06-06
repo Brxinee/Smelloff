@@ -9,14 +9,15 @@ import { FounderNote } from "@/components/sections/FounderNote";
 import { FaqAccordion } from "@/components/product/FaqAccordion";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { Newsletter } from "@/components/sections/Newsletter";
-import { JsonLdProduct } from "@/components/seo/JsonLd";
-import { getDefaultProduct } from "@/lib/content";
+import { JsonLdProduct, JsonLdFaq } from "@/components/seo/JsonLd";
+import { getDefaultProduct, getFaq } from "@/lib/content";
 
 export default function HomePage() {
   const product = getDefaultProduct();
   return (
     <>
       <JsonLdProduct product={product} />
+      <JsonLdFaq faq={getFaq()} />
       <Hero />
       <TrustBar />
       <ProblemSolution />

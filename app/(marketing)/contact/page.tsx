@@ -46,8 +46,8 @@ export default function ContactPage() {
           <div className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4">
             <Phone className="h-5 w-5 text-brand" aria-hidden />
             <span>
-              <span className="block font-semibold text-ink">Phone</span>
-              <span className="text-sm text-ink-2">[[FILL: phone number]]</span>
+              <span className="block font-semibold text-ink">Phone / WhatsApp</span>
+              <span className="text-sm text-ink-2">+91 93929 74031</span>
             </span>
           </div>
           <div className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4">

@@ -3,7 +3,7 @@ import { Droplets, Timer, SprayCan, Shirt } from "lucide-react";
 const benefits = [
   { icon: Droplets, label: "50ml pocket size" },
   { icon: Timer, label: "5-second fix" },
-  { icon: SprayCan, label: "~300 sprays" },
+  { icon: SprayCan, label: "~250 sprays" },
   { icon: Shirt, label: "Fabric-safe" },
 ];
 
