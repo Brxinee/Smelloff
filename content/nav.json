@@ -19,7 +19,8 @@
     "support": [
       { "label": "Contact", "href": "/contact" },
       { "label": "Shipping", "href": "/shipping" },
-      { "label": "Returns & Refund", "href": "/refund" },
+      { "label": "Returns", "href": "/returns" },
+      { "label": "Refund", "href": "/refund" },
       { "label": "FAQ", "href": "/product/odorstrike#faq" }
     ],
     "legal": [
