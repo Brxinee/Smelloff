@@ -75,7 +75,7 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body { font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; -webkit-font-smoothing:antialiased; }
-.blog-nav { position:sticky; top:0; background:rgba(8,8,8,0.95); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:max(16px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) 16px max(24px, env(safe-area-inset-left, 0px)); display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--rule); z-index:100; }
+.blog-nav { position:sticky; top:0; background:color-mix(in srgb, var(--bg) 95%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:max(16px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) 16px max(24px, env(safe-area-inset-left, 0px)); display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--rule); z-index:100; }
 .blog-nav .logo { font-family:"Barlow Condensed",sans-serif; font-weight:900; font-size:22px; letter-spacing:3px; text-transform:uppercase; color:var(--text); text-decoration:none; position:relative; padding-right:12px; }
 .blog-nav .logo::after { content:""; position:absolute; top:-2px; right:0; width:6px; height:6px; background:var(--accent); border-radius:50%; }
 .blog-nav .buy-pill { background:var(--accent); color:var(--bg); font-family:"DM Sans",sans-serif; font-weight:700; font-size:14px; padding:8px 18px; border-radius:100px; text-decoration:none; }

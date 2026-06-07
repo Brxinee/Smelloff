@@ -2299,8 +2299,8 @@
   .loader{
     display:inline-block;
     width:14px;height:14px;
-    border:2px solid rgba(8,8,8,.3);
-    border-top-color:var(--ink);
+    border:2px solid var(--rule);
+    border-top-color:var(--accent);
     border-radius:50%;
     animation:spin .7s linear infinite;
     vertical-align:middle;
@@ -2357,7 +2357,7 @@
   }
   .loading-screen .ls-sub{
     font-size:13px;
-    color:rgba(255,255,255,.6);
+    color:var(--text-secondary);
     margin-top:10px;
     letter-spacing:.5px;
   }
@@ -3566,7 +3566,7 @@
     text-transform:uppercase;
     padding:14px 0;
     display:flex;align-items:baseline;gap:14px;
-    border-bottom:1px solid rgba(255,255,255,.06);
+    border-bottom:1px solid var(--rule);
     position:relative;
     opacity:0;transform:translateY(20px);
     transition:opacity 500ms cubic-bezier(0.22,1,0.36,1),
@@ -6571,7 +6571,7 @@
     <p style="flex:1;font-size:13px;color:var(--text-secondary);line-height:1.5;margin:0;min-width:200px">We use analytics cookies (Google Analytics, Meta Pixel) to understand how you use our site. You can opt out — core shopping functions work either way. <a href="/privacy" style="color:var(--accent);text-decoration:none">Privacy Policy</a></p>
     <div style="display:flex;gap:10px;flex-shrink:0">
       <button onclick="window.smelloffSetConsent('accepted')" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--accent);color:var(--bg);border:none;padding:9px 18px;border-radius:4px;cursor:pointer">Accept all</button>
-      <button onclick="window.smelloffSetConsent('rejected')" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--text);border:1px solid rgba(255,255,255,.3);padding:9px 18px;border-radius:4px;cursor:pointer">Reject non-essential</button>
+      <button onclick="window.smelloffSetConsent('rejected')" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--text);border:1px solid var(--rule);padding:9px 18px;border-radius:4px;cursor:pointer">Reject non-essential</button>
     </div>
   </div>
 </div>

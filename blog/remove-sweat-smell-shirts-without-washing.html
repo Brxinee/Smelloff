@@ -82,9 +82,9 @@ body{
 /* Nav */
 .nav{
   position:sticky;top:0;z-index:100;
-  background:rgba(8,8,8,0.92);
+  background:color-mix(in srgb, var(--bg) 92%, transparent);
   backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(255,255,255,0.06);
+  border-bottom:1px solid var(--rule);
   padding:16px 24px;
 }
 .nav-inner{
@@ -121,7 +121,7 @@ h1{
 .meta{
   display:flex;gap:16px;color:var(--muted);font-size:14px;
   margin-bottom:40px;padding-bottom:24px;
-  border-bottom:1px solid rgba(255,255,255,0.08);
+  border-bottom:1px solid var(--rule);
 }
 .lead{
   font-size:20px;line-height:1.6;color:var(--text-secondary);
@@ -153,11 +153,11 @@ a:hover{border-color:var(--accent)}
 
 /* Step cards */
 .step-card{
-  border:1px solid rgba(255,255,255,0.08);
+  border:1px solid var(--rule);
   padding:28px;border-radius:2px;
   margin-bottom:20px;
   transition:transform 0.2s,border-color 0.2s;
-  background:rgba(255,255,255,0.015);
+  background:var(--rule);
 }
 .step-card:hover{
   transform:translateY(-2px);
@@ -261,7 +261,7 @@ a:hover{border-color:var(--accent)}
 /* Related */
 .related{
   margin-top:64px;padding-top:40px;
-  border-top:1px solid rgba(255,255,255,0.08);
+  border-top:1px solid var(--rule);
 }
 .related h3{
   font-size:14px;letter-spacing:0.2em;
@@ -271,7 +271,7 @@ a:hover{border-color:var(--accent)}
 .related-grid{display:grid;gap:12px}
 .related-link{
   display:block;padding:18px 20px;
-  border:1px solid rgba(255,255,255,0.08);
+  border:1px solid var(--rule);
   text-decoration:none;border-bottom:none;
   color:var(--text);transition:border-color 0.2s;
   font-family:'Barlow Condensed',sans-serif;
@@ -285,7 +285,7 @@ a:hover{border-color:var(--accent)}
 /* FAQ */
 .faq-section{margin-top:56px}
 .faq-item{
-  border-bottom:1px solid rgba(255,255,255,0.08);
+  border-bottom:1px solid var(--rule);
   padding:20px 0;cursor:pointer;
 }
 .faq-item summary{
@@ -307,7 +307,7 @@ a:hover{border-color:var(--accent)}
 
 /* Footer */
 footer{
-  border-top:1px solid rgba(255,255,255,0.08);
+  border-top:1px solid var(--rule);
   padding:40px 24px;text-align:center;
   color:var(--muted);font-size:13px;
 }
