@@ -389,7 +389,7 @@ document.querySelectorAll('.quiz-opts button').forEach(btn => {
       const moveCount = Object.values(picks).filter(v => v === 'move').length;
       const v = document.getElementById('qv');
       if (moveCount >= 2) {
-        v.innerHTML = '✓ <strong>ODORSTRIKE is your tool.</strong> You need pocket carry, no-fragrance neutralising, and Indian pricing. <a href="/#buy" style="color:#B8FF57;">Get it for ₹229 →</a>';
+        v.innerHTML = '✓ <strong>ODORSTRIKE is your tool.</strong> You need pocket carry, no-fragrance neutralising, and Indian pricing. <a href="/#buy" style="color:var(--accent);">Get it for ₹229 →</a>';
       } else {
         v.innerHTML = '→ <strong>Febreze fits your use case.</strong> You mostly need home fabric spray with fragrance. Keep Febreze. Pick up ODORSTRIKE too if you ever need a pocket version for gym/commute days.';
       }
