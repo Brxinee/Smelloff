@@ -4264,6 +4264,23 @@
   .wa-buy-strip .wa-text{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--gray);line-height:1.4}
   .wa-buy-strip .wa-text b{color:var(--white);font-weight:600}
   .wa-buy-strip:hover{border-color:#25D366}
+  /* S5 — comparison mobile tabs */
+  .compare-tabs{display:none;gap:8px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+  .compare-tab{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:10px 18px;min-height:44px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--gray);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+  .compare-tab.active{background:var(--green);color:var(--black);border-color:var(--green)}
+  @media(max-width:639px){
+    .compare-tabs{display:flex}
+    .compare-scroll-wrap{overflow:visible}
+    .compare-table{grid-template-columns:auto 1fr !important;min-width:0 !important;width:100%}
+    .compare-table[data-active="ODORSTRIKE"] [data-col="Deodorant"],
+    .compare-table[data-active="ODORSTRIKE"] [data-col="Perfume"],
+    .compare-table[data-active="Deodorant"] [data-col="ODORSTRIKE"],
+    .compare-table[data-active="Deodorant"] [data-col="Perfume"],
+    .compare-table[data-active="Perfume"] [data-col="ODORSTRIKE"],
+    .compare-table[data-active="Perfume"] [data-col="Deodorant"]{display:none}
+  }
+  /* S12 — checkout reassurance */
+  .checkout-reassure{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--gray);text-align:center;margin:0 0 10px;line-height:1.4}
   /* S7 — review scroll dots */
   .rv-dots{display:flex;gap:6px;justify-content:center;margin-top:12px}
   .rv-dots button{width:7px;height:7px;border-radius:50%;border:none;padding:0;background:var(--border);cursor:pointer;transition:background .15s,width .15s}
@@ -4526,12 +4543,17 @@
 <!-- WHY NOT JUST DEODORANT? — comparison -->
 <section class="compare" id="vs-deodorant">
   <h2 class="compare-title">Why not just spray deodorant?</h2>
+  <div class="compare-tabs" role="tablist" aria-label="Compare ODORSTRIKE against">
+    <button class="compare-tab active" type="button" role="tab" data-tab="ODORSTRIKE" aria-selected="true" onclick="compareTab(this)">ODORSTRIKE</button>
+    <button class="compare-tab" type="button" role="tab" data-tab="Deodorant" aria-selected="false" onclick="compareTab(this)">Deodorant</button>
+    <button class="compare-tab" type="button" role="tab" data-tab="Perfume" aria-selected="false" onclick="compareTab(this)">Perfume</button>
+  </div>
   <div class="compare-scroll-wrap">
-  <div class="compare-table" role="table" aria-label="Deodorant vs perfume vs ODORSTRIKE">
+  <div class="compare-table" role="table" aria-label="Deodorant vs perfume vs ODORSTRIKE" data-active="ODORSTRIKE">
     <div class="compare-cell row-h"></div>
-    <div class="compare-cell col-h"><img src="/assets/icon-deodorant.png" alt="Deodorant spray" class="compare-col-icon" width="28" height="28" loading="lazy" decoding="async"><span>DEODORANT<span class="compare-col-sub">for skin</span></span></div>
-    <div class="compare-cell col-h"><img src="/assets/icon-perfume.png" alt="Perfume bottle" class="compare-col-icon" width="28" height="28" loading="lazy" decoding="async"><span>PERFUME<span class="compare-col-sub">for scent</span></span></div>
-    <div class="compare-cell col-h os"><span class="compare-os-dot" aria-hidden="true"></span><span>ODORSTRIKE<span class="compare-col-sub">for clothes</span></span></div>
+    <div class="compare-cell col-h" data-col="Deodorant"><img src="/assets/icon-deodorant.png" alt="Deodorant spray" class="compare-col-icon" width="28" height="28" loading="lazy" decoding="async"><span>DEODORANT<span class="compare-col-sub">for skin</span></span></div>
+    <div class="compare-cell col-h" data-col="Perfume"><img src="/assets/icon-perfume.png" alt="Perfume bottle" class="compare-col-icon" width="28" height="28" loading="lazy" decoding="async"><span>PERFUME<span class="compare-col-sub">for scent</span></span></div>
+    <div class="compare-cell col-h os" data-col="ODORSTRIKE"><span class="compare-os-dot" aria-hidden="true"></span><span>ODORSTRIKE<span class="compare-col-sub">for clothes</span></span></div>
 
     <div class="compare-cell row-h">Where it goes</div>
     <div class="compare-cell" data-col="Deodorant">Skin</div>
@@ -4569,8 +4591,8 @@
     <div class="compare-cell os body" data-col="ODORSTRIKE">Your clothes smell better</div>
   </div>
   </div><!-- /.compare-scroll-wrap -->
-  <p class="compare-line">Deodorant covers your skin. ODORSTRIKE handles what your skin already left on your clothes.</p>
-  <p class="compare-line-em">Use both. Deodorant for you. ODORSTRIKE for your clothes. Now you're covered completely.</p>
+  <p class="compare-line-em">Use both. One for you. One for your clothes.</p>
+  <p class="compare-line">Deodorant stops your body from sweating. ODORSTRIKE removes what sweat already soaked into your shirt.</p>
 </section>
 
 <!-- SCIENCE / HOW IT WORKS -->
@@ -5166,9 +5188,6 @@
       <label for="f_name">Full name</label>
       <input type="text" id="f_name" required autocomplete="name" autocapitalize="words" spellcheck="false" enterkeyhint="next">
 
-      <label for="f_addr">Address</label>
-      <textarea id="f_addr" required autocomplete="street-address" rows="2" placeholder="House/flat no, street, area, landmark" autocapitalize="sentences" spellcheck="false" enterkeyhint="next"></textarea>
-
       <div class="row-3">
         <div>
           <label for="f_pin">Pincode</label>
@@ -5188,6 +5207,9 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="6" width="14" height="11" rx="1"/><path d="M15 9h4l3 3v5h-7z"/><circle cx="6" cy="18.5" r="1.6"/><circle cx="18" cy="18.5" r="1.6"/></svg>
         <span id="deliveryEstimateText"></span>
       </p>
+
+      <label for="f_addr">Address</label>
+      <textarea id="f_addr" required autocomplete="street-address" rows="2" placeholder="House/flat no, street, area, landmark" autocapitalize="sentences" spellcheck="false" enterkeyhint="next"></textarea>
 
       <label for="f_email">Email <span class="lbl-optional">(optional — for receipt)</span></label>
       <input type="email" id="f_email" autocomplete="email" inputmode="email" enterkeyhint="done">
@@ -5241,6 +5263,7 @@
       <div id="checkoutError" style="display:none" class="error-msg" role="alert" aria-live="assertive"></div>
       <a href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20tried%20to%20place%20an%20order%20on%20the%20website%20but%20it%20failed.%20Can%20you%20help%3F" class="wa-fallback" id="waFallback" style="display:none" target="_blank" rel="noopener">WhatsApp us for help →</a>
 
+      <p class="checkout-reassure">Your details are private and never shared. COD = pay nothing now.</p>
       <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
         <span id="submitText">OPEN UPI APP · ₹399</span>
       </button>
@@ -7086,9 +7109,43 @@ window.createSupabaseOrder = function (opts) {
     }
   }
 
+  /* S5 — comparison mobile tabs */
+  window.compareTab = function(btn){
+    var tab = btn.getAttribute('data-tab');
+    document.querySelectorAll('.compare-tab').forEach(function(t){
+      var a = t === btn; t.classList.toggle('active', a); t.setAttribute('aria-selected', a ? 'true' : 'false');
+    });
+    var tbl = document.querySelector('.compare-table');
+    if (tbl) tbl.setAttribute('data-active', tab);
+  };
+
+  /* S7 (RV3) — review scroll dots */
+  function initReviewDots(){
+    var scroll = document.getElementById('rvScroll'), dotsWrap = document.getElementById('rvDots');
+    if (!scroll || !dotsWrap) return;
+    function build(){
+      var cards = scroll.querySelectorAll('.rv-card');
+      if (!cards.length){ dotsWrap.innerHTML=''; return; }
+      if (dotsWrap.childElementCount !== cards.length){
+        dotsWrap.innerHTML = '';
+        cards.forEach(function(c,i){
+          var d = document.createElement('button'); d.type='button'; d.setAttribute('aria-label','Go to review '+(i+1));
+          d.addEventListener('click', function(){ c.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'}); });
+          dotsWrap.appendChild(d);
+        });
+      }
+      var center = scroll.scrollLeft + scroll.clientWidth/2, best=0, bestD=1e9;
+      cards.forEach(function(c,i){ var cc=c.offsetLeft+c.offsetWidth/2, dd=Math.abs(cc-center); if(dd<bestD){bestD=dd;best=i;} });
+      Array.prototype.forEach.call(dotsWrap.children, function(d,i){ d.classList.toggle('active', i===best); });
+    }
+    scroll.addEventListener('scroll', function(){ requestAnimationFrame(build); }, {passive:true});
+    try { new MutationObserver(build).observe(scroll, {childList:true}); } catch(e){}
+    build();
+  }
+
   function init(){
     initCountUp(); initReveal(); initTriggers(); svRender(); initProgress();
-    initHeroPhoto(); initGallery();
+    initHeroPhoto(); initGallery(); initReviewDots();
     if (typeof window.selectQty === "function") window.selectQty(1); /* sync MRP/discount/calc-CTA on load */
     var bs = document.getElementById('bottlesShipped');
     if (bs && BOTTLES_SHIPPED != null){ bs.textContent = ' · ' + BOTTLES_SHIPPED + ' bottles shipped'; bs.hidden = false; }
