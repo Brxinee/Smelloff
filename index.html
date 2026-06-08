@@ -2565,7 +2565,7 @@
   /* Mobile sticky buy bar — fade-in after 30vh scroll */
   .mobile-bar{
     position:fixed;bottom:0;left:0;right:0;
-    z-index:999;min-height:64px;box-sizing:border-box;
+    z-index:80;min-height:64px;box-sizing:border-box;
     padding:10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
     background:var(--bg);
     border-top:1px solid var(--rule);
@@ -4182,6 +4182,14 @@
     .pc-pack-card:active,.sv-btn:active{transform:none}
   }
   /* ═══════════ END PILLAR 2 ═══════════ */
+
+  /* ═══════════ CRO PILLAR 3 — CONVERSION ═══════════ */
+  .pc-price-row{align-items:center}
+  .price-mrp{font-family:'Inter Tight',sans-serif;font-size:18px;color:var(--gray);text-decoration:line-through;text-decoration-thickness:1.5px;font-weight:400}
+  .price-off{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--green);background:var(--green-dim);padding:4px 9px;border-radius:999px}
+  .ppc-mrp{color:var(--gray);text-decoration:line-through;text-decoration-thickness:1px;font-weight:400;margin-right:5px;font-size:.8em;opacity:.85}
+  /* ═══════════ END PILLAR 3 ═══════════ */
 </style>
 </head>
 <body>
@@ -4591,7 +4599,7 @@
 
   <article class="product-card">
     <div class="pc-media">
-      <span class="pc-tag">LAUNCH PRICE · LIMITED</span>
+      <span class="pc-tag">LAUNCH BATCH · PRICE GOES UP AFTER THIS RUN</span>
       <div class="pc-image" aria-hidden="true">
         <div class="hb-bottle">
           <div class="hb-cap"></div>
@@ -4612,30 +4620,33 @@
       <p class="pc-subtitle">50ml · Pocket size · Fabric only · Made in Hyderabad</p>
       <div class="pc-price-row">
         <span class="price-main" id="pcPriceMain">₹399</span>
-        <span class="price-label">launch price</span>
+        <s class="price-mrp" id="pcPriceMrp">₹999</s>
+        <span class="price-off" id="pcPriceOff">60% OFF</span>
       </div>
       <div class="pc-pack-selector" role="radiogroup" aria-label="Select pack">
         <div class="pc-pack-card" data-qty="1" role="radio" aria-checked="false" tabindex="0" onclick="selectQty(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectQty(1)}" style="position:relative">
           <span class="ppc-badge outline">STARTER</span>
           <span class="ppc-main">1 × 50ml</span>
-          <span class="ppc-price">₹229</span>
+          <span class="ppc-price"><s class="ppc-mrp">₹579</s>₹229</span>
           <span class="ppc-per">₹229/bottle</span>
-          <span class="ppc-hint">Try risk-free</span>
+          <span class="ppc-save">save ₹350 vs MRP</span>
         </div>
         <div class="pc-pack-card active" data-qty="2" role="radio" aria-checked="true" tabindex="0" onclick="selectQty(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectQty(2)}" style="position:relative">
           <span class="ppc-badge">MOST POPULAR</span>
           <span class="ppc-main">2 × 50ml</span>
-          <span class="ppc-price">₹399<span class="ppc-save">Save ₹59</span></span>
+          <span class="ppc-price"><s class="ppc-mrp">₹999</s>₹399</span>
           <span class="ppc-per">₹199/bottle</span>
+          <span class="ppc-save">save ₹600 vs MRP</span>
         </div>
         <div class="pc-pack-card" data-qty="3" role="radio" aria-checked="false" tabindex="0" onclick="selectQty(3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectQty(3)}" style="position:relative">
           <span class="ppc-badge outline">BEST VALUE</span>
           <span class="ppc-main">3 × 50ml</span>
-          <span class="ppc-price">₹549<span class="ppc-save">Save ₹138</span></span>
+          <span class="ppc-price"><s class="ppc-mrp">₹1399</s>₹549</span>
           <span class="ppc-per">₹183/bottle</span>
+          <span class="ppc-save">save ₹850 vs MRP</span>
         </div>
       </div>
-      <p class="pc-qty-hint" id="pcQtyHint">Perfect for sharing — gift one, keep one.</p>
+      <p class="pc-qty-hint" id="pcQtyHint">Smart pick — one for your bag, one for your desk.</p>
       <p class="pc-pricelock">Price locks at checkout. Free shipping on all orders.</p>
 
       <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">BUY — ₹399</button>
@@ -5894,6 +5905,13 @@
     var priceMain = document.getElementById('pcPriceMain');
     if (priceMain) priceMain.textContent = '₹' + price;
 
+    // CO1 — price anchoring: struck MRP + discount %
+    var mrp = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.MRP && window.SMELLOFF_CONFIG.MRP[variant]) || (qty === 3 ? 1399 : qty === 2 ? 999 : 579);
+    var off = Math.round((mrp - price) / mrp * 100);
+    var priceMrp = document.getElementById('pcPriceMrp'); if (priceMrp) priceMrp.textContent = '₹' + mrp;
+    var priceOff = document.getElementById('pcPriceOff'); if (priceOff) priceOff.textContent = off + '% OFF';
+    var svCtaPrice = document.getElementById('svCtaPrice'); if (svCtaPrice) svCtaPrice.textContent = '₹' + price;
+
     var perUse = document.getElementById('pcPerUse');
     if (perUse) perUse.textContent = '₹' + price + ' = ~' + sprays + ' sprays. Works out to ₹' + perSpray + ' per spray.';
 
@@ -5920,9 +5938,9 @@
     var finalCta = document.getElementById('finalCta');
     if (finalCta) finalCta.textContent = 'BUY — ₹' + price;
     if (hint) {
-      if (qty === 1) hint.textContent = 'One bottle. ~250 sprays. Try it risk-free.';
-      else if (qty === 2) hint.textContent = 'Perfect for sharing — gift one, keep one.';
-      else hint.textContent = 'Stock up or gift the set — great for gym bags & travel kits.';
+      if (qty === 1) hint.textContent = 'Add a 2nd bottle for +₹170 and save ₹600 vs MRP.';
+      else if (qty === 2) hint.textContent = 'Smart pick — one for your bag, one for your desk.';
+      else hint.textContent = 'Best value — ₹183/bottle. Stock up or gift the extras.';
     }
   };
   window.buyBoxAdd = function(){
@@ -6867,7 +6885,10 @@ window.createSupabaseOrder = function (opts) {
     upd();
   }
 
-  function init(){ initCountUp(); initReveal(); initTriggers(); svRender(); initProgress(); }
+  function init(){
+    initCountUp(); initReveal(); initTriggers(); svRender(); initProgress();
+    if (typeof window.selectQty === 'function') window.selectQty(2); /* sync MRP/discount/calc-CTA on load */
+  }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
