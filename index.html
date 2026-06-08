@@ -4190,6 +4190,38 @@
     color:var(--green);background:var(--green-dim);padding:4px 9px;border-radius:999px}
   .ppc-mrp{color:var(--gray);text-decoration:line-through;text-decoration-thickness:1px;font-weight:400;margin-right:5px;font-size:.8em;opacity:.85}
   /* ═══════════ END PILLAR 3 ═══════════ */
+
+  /* ═══════════ CRO PILLAR 4 — TRUST ═══════════ */
+  /* TR4 — review aggregate */
+  .rv-aggregate{display:flex;align-items:center;gap:14px;justify-content:center;margin:0 auto 6px}
+  .rv-agg-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:48px;line-height:1;color:var(--accent)}
+  .rv-agg-meta{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+  .rv-agg-stars{color:var(--accent);font-size:18px;letter-spacing:2px;line-height:1}
+  .rv-agg-count{font-family:'Inter Tight',sans-serif;font-size:12px;color:var(--gray)}
+  /* TR1 — dramatized guarantee */
+  .pc-guarantee{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-left:3px solid var(--accent);
+    border-radius:8px;padding:14px 16px;margin:0 0 14px}
+  .pcg-icon{width:26px;height:26px;flex-shrink:0;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+  .pcg-main{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:14px;color:var(--white);margin:0 0 3px;line-height:1.3}
+  .pcg-sub{font-family:'Inter Tight',sans-serif;font-size:12px;color:var(--gray);margin:0;line-height:1.4}
+  /* TR2 — COD zero-risk pill */
+  .cod-zero{display:inline-block;margin-left:6px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
+    letter-spacing:.05em;color:var(--green);background:var(--green-dim);padding:2px 8px;border-radius:999px;vertical-align:middle}
+  /* TR5 — ingredient & origin strip */
+  .ingredient-strip{display:flex;flex-wrap:wrap;gap:6px 8px;justify-content:center;margin:16px 0 0}
+  .ingredient-strip span{font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:500;color:var(--silver);
+    background:var(--bg-subtle);border:1px solid var(--border);border-radius:999px;padding:5px 11px;white-space:nowrap}
+  /* TR3 — founder block */
+  .founder{padding:56px 20px;max-width:640px;margin:0 auto}
+  .founder-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px 24px}
+  .founder-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+  .founder-story{font-family:'Inter Tight',sans-serif;font-size:15px;line-height:1.6;color:var(--text-secondary);margin:0 0 18px}
+  .founder-wa{display:inline-flex;align-items:center;gap:6px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:14px;
+    color:var(--green);text-decoration:none;border-bottom:1px solid rgba(var(--accent-rgb),.4);padding-bottom:2px}
+  .founder-wa:hover{color:var(--green-light)}
+  .founder-ig{display:inline-block;margin-top:14px;font-family:'Inter Tight',sans-serif;font-size:13px;color:var(--gray);text-decoration:none}
+  .founder-ig:hover{color:var(--accent)}
+  /* ═══════════ END PILLAR 4 ═══════════ */
 </style>
 </head>
 <body>
@@ -4290,9 +4322,9 @@
     <div class="hero-text">
       <div class="hero-category">Fabric odor spray · Made in Hyderabad</div>
       <h1 class="hero-headline"><span class="hh-line">DEO FOR YOUR PITS.</span><span class="hh-line">PERFUME FOR YOUR STYLE.</span><span class="hh-line"><span class="green">ODORSTRIKE</span> FOR YOUR SHIRT.</span></h1>
-      <div class="hero-rating" aria-label="Rated 5 out of 5 from 47 reviews">
+      <div class="hero-rating" aria-label="Rated 4.7 out of 5 from 3 reviews">
         <span class="hr-stars" aria-hidden="true">★★★★★</span>
-        <span class="hr-count">(47 reviews)</span>
+        <span class="hr-count">(3 reviews)</span>
       </div>
       <div class="hero-ticker" id="heroTicker" aria-live="off">
         <p class="ht-quote active">Wore the same shirt for 3 days. No one noticed. — Rahul M., Mumbai</p>
@@ -4510,7 +4542,13 @@
 <!-- REVIEWS (pulled up — social proof before the buy box) -->
 <section class="reviews" id="reviews">
   <h2 class="rv-title">What buyers say.</h2>
-  <p class="rv-count-badge">47 verified reviews</p>
+  <div class="rv-aggregate" id="rvAggregate">
+    <span class="rv-agg-num" id="rvAggNum">4.7</span>
+    <div class="rv-agg-meta">
+      <span class="rv-agg-stars" id="rvAggStars" aria-hidden="true">★★★★★</span>
+      <span class="rv-agg-count" id="rvAggCount">Based on 3 beta-tester reviews</span>
+    </div>
+  </div>
   <p class="rv-subtitle">3 testers used ODORSTRIKE for 8 weeks before public release. Their unedited feedback below — plus reviews from buyers as they post them.</p>
 
   <div class="rv-scroll-wrap">
@@ -4650,7 +4688,7 @@
       <p class="pc-pricelock">Price locks at checkout. Free shipping on all orders.</p>
 
       <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">BUY — ₹399</button>
-      <button class="pc-cod-cta" id="pcCodCta" onclick="buyBoxCod()">Order COD — pay on delivery</button>
+      <button class="pc-cod-cta" id="pcCodCta" onclick="buyBoxCod()">Order COD — pay on delivery <span class="cod-zero">₹0 today</span></button>
       <div class="cod-trust">
         <svg class="ct-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
         <div>
@@ -4658,11 +4696,24 @@
           <p class="ct-sub">Available across 27,000+ pincodes. 100% safe, zero risk.</p>
         </div>
       </div>
+      <div class="pc-guarantee">
+        <svg class="pcg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+        <div>
+          <p class="pcg-main">Smell the difference in 8 seconds — or your money back.</p>
+          <p class="pcg-sub">7-day no-questions refund. COD means you risk nothing today.</p>
+        </div>
+      </div>
       <div class="pc-trust-icons">
         <div class="pti-item"><span class="pti-icon">🛡️</span><span class="pti-label">7-day money-back</span></div>
         <div class="pti-item"><span class="pti-icon">🚚</span><span class="pti-label">Free shipping</span></div>
         <div class="pti-item"><span class="pti-icon">📞</span><span class="pti-label">COD available</span></div>
         <div class="pti-item"><span class="pti-icon">⏱️</span><span class="pti-label">Ships 48hr</span></div>
+      </div>
+      <div class="ingredient-strip" aria-label="Ingredients and origin">
+        <span>Zinc PCA + β-Cyclodextrin</span>
+        <span>Made in Hyderabad</span>
+        <span>Fabric-safe</span>
+        <span>No skin contact</span>
       </div>
     </div>
   </article>
@@ -4767,11 +4818,21 @@
 
     <div class="faq-item">
       <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Can I spray ODORSTRIKE on my skin?</span>
+        <span>Will it stain my clothes? (especially dark fabric)</span>
         <span class="faq-icon" aria-hidden="true"></span>
       </button>
       <div class="faq-body"><div class="faq-body-inner">
-        <p class="faq-answer">No — ODORSTRIKE is formulated for fabric only (cotton, polyester, denim, wool, synthetic blends). It's not tested for skin contact. Use your regular deodorant for that.</p>
+        <p class="faq-answer">No. ODORSTRIKE is water-soluble and dries clear — no white residue on dark fabric. Tested on black, navy, charcoal, and grey shirts across 30+ wash cycles. No marks, no stiffness, no colour change. Safe on dark cotton and polyester. When unsure, test on an inside seam first.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
+        <span>Can I spray it on my skin?</span>
+        <span class="faq-icon" aria-hidden="true"></span>
+      </button>
+      <div class="faq-body"><div class="faq-body-inner">
+        <p class="faq-answer">No — ODORSTRIKE is made for fabric only (cotton, polyester, denim, wool). It's not tested for skin contact. Keep using your deodorant for that. Use ODORSTRIKE on what your skin already left on your clothes.</p>
       </div></div>
     </div>
 
@@ -4782,16 +4843,6 @@
       </button>
       <div class="faq-body"><div class="faq-body-inner">
         <p class="faq-answer">No. Deodorant goes on skin, not fabric. Sweat odor doesn't live on your skin — it soaks into your shirt, jacket, and gym tee. Your morning shower won't fix what your shirt absorbed yesterday. ODORSTRIKE goes directly on fabric and neutralizes odor molecules in 8 seconds.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Will it stain my clothes? (especially dark fabric)</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body"><div class="faq-body-inner">
-        <p class="faq-answer">No. ODORSTRIKE is water-soluble and dries clear — no white residue on dark fabric. Tested on black, navy, charcoal, and grey shirts across 30+ wash cycles. No marks, no stiffness, no colour change. Safe on dark cotton and polyester. When unsure, test on an inside seam first.</p>
       </div></div>
     </div>
 
@@ -4903,6 +4954,16 @@
   <h2 class="final-title">Stop the smell. Before anyone notices.</h2>
   <p class="final-sub">Launch price ₹229. Free shipping. 7-day returns. Ships from Hyderabad in 48 hours.</p>
   <a href="#buy" class="final-cta" id="finalCta" onclick="event.preventDefault();buyBoxAdd()">BUY — ₹399</a>
+</section>
+
+<!-- TR3 — founder trust block -->
+<section class="founder">
+  <div class="founder-card">
+    <p class="founder-name">Brainee · Founder, Smelloff</p>
+    <p class="founder-story">I built ODORSTRIKE after a sweat-soaked shirt wrecked my confidence in a meeting that actually mattered. Deodorant is for skin — nothing fixed the smell already sitting in the fabric. So I made one thing that does, small enough to live in your pocket.</p>
+    <a class="founder-wa" href="https://wa.me/919392974031" target="_blank" rel="noopener">Questions before you buy? Chat with us →</a>
+    <a class="founder-ig" href="https://instagram.com/smell0ff" target="_blank" rel="noopener">@smell0ff on Instagram<span id="bottlesShipped" hidden></span></a>
+  </div>
 </section>
 
 <footer class="site-footer">
@@ -6197,6 +6258,27 @@
       renderCards();
     };
 
+    // TR4 — compute aggregate from REAL data (testers + buyer reviews); honest fallback labelling.
+    function renderAggregate(all){
+      var total = all.length;
+      if (!total) return;
+      var sum = all.reduce(function(a, r){ return a + (Number(r.r) || 0); }, 0);
+      var avg = sum / total;
+      var rounded = Math.round(avg);
+      var stars = '★★★★★'.slice(0, rounded) + '☆☆☆☆☆'.slice(0, 5 - rounded);
+      var buyers = _buyerReviews.length;
+      var num = document.getElementById('rvAggNum'); if (num) num.textContent = avg.toFixed(1);
+      var st = document.getElementById('rvAggStars'); if (st) st.textContent = stars;
+      var cnt = document.getElementById('rvAggCount');
+      if (cnt) cnt.textContent = buyers > 0
+        ? ('Based on ' + total + ' reviews · ' + buyers + ' verified ' + (buyers === 1 ? 'buyer' : 'buyers'))
+        : ('Based on ' + total + ' beta-tester reviews');
+      // keep the hero rating honest too (no fabricated counts)
+      var hc = document.querySelector('.hr-count'); if (hc) hc.textContent = '(' + total + (total === 1 ? ' review' : ' reviews') + ')';
+      var hs = document.querySelector('.hr-stars'); if (hs) hs.textContent = stars;
+      var hrow = document.querySelector('.hero-rating'); if (hrow) hrow.setAttribute('aria-label', 'Rated ' + avg.toFixed(1) + ' out of 5 from ' + total + ' reviews');
+    }
+
     function renderCards(){
       var wrap = document.getElementById('rvScroll');
       if (!wrap) return;
@@ -6220,6 +6302,8 @@
       // Buyer reviews first (newest), then testers as foundation.
       var all = buyers.concat(testers);
       var total = all.length;
+
+      renderAggregate(all);  // TR4 — real-data average + count
 
       var visible = _showAll ? all : all.slice(0, 6);
 
@@ -6787,6 +6871,8 @@ window.createSupabaseOrder = function (opts) {
 (function(){
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hasIO = 'IntersectionObserver' in window;
+  // TR7 — real number only. Leave null to keep the "bottles shipped" marker hidden.
+  var BOTTLES_SHIPPED = null;
 
   /* AT3 — count-up stats when .problem-stats scrolls into view */
   function initCountUp(){
@@ -6888,6 +6974,8 @@ window.createSupabaseOrder = function (opts) {
   function init(){
     initCountUp(); initReveal(); initTriggers(); svRender(); initProgress();
     if (typeof window.selectQty === 'function') window.selectQty(2); /* sync MRP/discount/calc-CTA on load */
+    var bs = document.getElementById('bottlesShipped');
+    if (bs && BOTTLES_SHIPPED != null){ bs.textContent = ' · ' + BOTTLES_SHIPPED + ' bottles shipped'; bs.hidden = false; }
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
