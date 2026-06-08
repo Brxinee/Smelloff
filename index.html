@@ -220,6 +220,12 @@
     SUPABASE_URL: 'https://tnuqjydmoxczdjnsgpci.supabase.co',
     SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudXFqeWRtb3hjemRqbnNncGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzI2NDgsImV4cCI6MjA5MzEwODY0OH0.6qyyo-1lpntK7FC3H9j_oqWp0W_R1XydVG_IxVUd6F4'
   };
+  // BUG: escapeHtml was defined twice (reviews + cart IIFEs) — single shared definition, available before both
+  window.escapeHtml = function(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  };
 </script>
 
 <!-- Attribution: capture utm_source on landing, persist across the session -->
@@ -5301,7 +5307,7 @@
   };
 
   let currentVariant = 'solo';
-  let payMethod = 'prepaid';
+  let payMethod = 'prepaid'; // matches the default-active .pay-opt[data-method="prepaid"] (UPI path = payMethod !== 'cod'); intentional, not ambiguous
 
   // Transactional email client (Resend via /api/send-email).
   // keepalive: true so the request survives page navigation (e.g. UPI redirect).
@@ -5999,7 +6005,7 @@
     var codCta = document.getElementById('pcCodCta');
     var hint = document.getElementById('pcQtyHint');
     if (cta) cta.textContent = 'BUY — ₹' + price;
-    if (codCta) codCta.setAttribute('data-price', price);
+    // BUG: data-price was written here but never read anywhere (buyBoxCod derives price from _buyBoxQty) — removed dead code
     // Sync mobile sticky bar price (button handler stays as mobileBarBuy)
     var mbNow = document.querySelector('.mobile-bar .mb-now');
     if (mbNow) mbNow.textContent = '₹' + price;
@@ -6197,8 +6203,9 @@
   // localStorage flag set at checkout success — functional but
   // client-side only, harden with order-ID lookup later if abuse appears.
   (function(){
-    var SUPA_URL = 'https://tnuqjydmoxczdjnsgpci.supabase.co';
-    var SUPA_KEY = 'sb_publishable_A2utDcKfxoVhJbbIPcr38Q_e2fmhq_f';
+    // BUG: reviews used a separate publishable key, not the anon JWT in SMELLOFF_CONFIG, so fetch/post ran on the wrong credentials
+    var SUPA_URL = (window.SMELLOFF_CONFIG || {}).SUPABASE_URL;
+    var SUPA_KEY = (window.SMELLOFF_CONFIG || {}).SUPABASE_KEY;
 
     // 3 launch testers — hardcoded, always shown.
     var TESTERS = [
@@ -6210,11 +6217,7 @@
     var _buyerReviews = [];
     var _showAll = false;
 
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, function(c){
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-      });
-    }
+    // escapeHtml now shared via window.escapeHtml (defined once in the config script)
     function starString(rating){
       var full = '★★★★★'.slice(0, rating);
       var empty = '★★★★★'.slice(rating);
@@ -6390,7 +6393,9 @@
       var modal = document.getElementById('rvModal');
       modal.classList.remove('open');
       modal.setAttribute('aria-hidden','true');
-      document.body.style.overflow = '';
+      // BUG: unconditionally unlocked body scroll even when the checkout overlay was still open
+      var coOpen = document.getElementById('checkoutOverlay');
+      if (!(coOpen && coOpen.classList.contains('active'))) document.body.style.overflow = '';
       selectedStars = 0;
       document.querySelectorAll('#rvStarPicker button').forEach(function(b){ b.classList.remove('filled'); });
       var ta = document.getElementById('rvText'); if (ta) ta.value = '';
@@ -6415,7 +6420,8 @@
       var name = (document.getElementById('rvName').value || '').trim();
       if (selectedStars < 1) { errEl.textContent = 'Pick a star rating.'; errEl.style.display = 'block'; return; }
       if (text.length < 8) { errEl.textContent = 'Write at least a sentence.'; errEl.style.display = 'block'; return; }
-      if (text.length > 600) { errEl.textContent = 'Keep it under 600 characters.'; errEl.style.display = 'block'; return; }
+      // BUG: JS allowed 600 chars while the textarea maxlength is 400 — limits now match
+      if (text.length > 400) { errEl.textContent = 'Keep it under 400 characters.'; errEl.style.display = 'block'; return; }
 
       var anonymous = !name;
       var displayName = name ? name.slice(0, 60) : 'Anonymous';
@@ -6427,7 +6433,9 @@
         name: displayName,
         rating: selectedStars,
         body: text,
-        anonymous: anonymous
+        anonymous: anonymous,
+        // BUG: city was omitted so every new buyer review saved a blank city; no form field exists at review time, so send null explicitly
+        city: null
       }).then(function(res){
         if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Post review'; }
         if (!res || !res.ok) {
@@ -6572,7 +6580,9 @@
       cart.count = cart.items.reduce((a,i) => a + (i.qty||0), 0);
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); } catch(e){}
       renderBadge();
-      if (document.getElementById('cartDrawer').classList.contains('open')) renderDrawer();
+      // BUG: threw TypeError when #cartDrawer was absent from the DOM
+      var cd = document.getElementById('cartDrawer');
+      if (cd && cd.classList.contains('open')) renderDrawer();
     }
 
     function renderBadge(){
@@ -6601,9 +6611,7 @@
       } catch(e) { console.warn('[Smelloff] AddToCart tracking failed:', e); }
     }
 
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
+    // escapeHtml now shared via window.escapeHtml (defined once in the config script)
 
     function renderDrawer(){
       const body = document.getElementById('cartDrawerBody');
@@ -6707,7 +6715,9 @@
       cart = { items: [], count: 0 };
       try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
       renderBadge();
-      if (document.getElementById('cartDrawer').classList.contains('open')) renderDrawer();
+      // BUG: threw TypeError when #cartDrawer was absent from the DOM
+      var cd = document.getElementById('cartDrawer');
+      if (cd && cd.classList.contains('open')) renderDrawer();
     };
 
     window.checkoutFromCart = function(){
@@ -6734,7 +6744,9 @@
 
     // Escape to close
     document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape' && document.getElementById('cartDrawer').classList.contains('open')) {
+      // BUG: threw TypeError when #cartDrawer was absent from the DOM
+      var cd = document.getElementById('cartDrawer');
+      if (e.key === 'Escape' && cd && cd.classList.contains('open')) {
         closeCartDrawer();
       }
     });
