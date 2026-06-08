@@ -213,7 +213,7 @@
     META_PIXEL_ID: "1455100092891684",
     SHEETS_ENDPOINT: "https://script.google.com/macros/s/AKfycbwvZamMivX4MF_jM83VjO3f8GDYmitlOxKkkXS2mSnivZ1wzps9ZolIQG2tvKMATIoh2Q/exec",
     WHATSAPP: "919392974031",
-    UPI_ID: "9392974031-3@ybl",
+    UPI_ID: "mr.brainy@ibl",
     UPI_NAME: "Smelloff",
     PRICES: { solo: 229, duo: 399, trio: 549 },
     MRP:    { solo: 579, duo: 999, trio: 1399 },
@@ -5152,7 +5152,7 @@
         <div class="upi-inline">
           <div class="upi-inline-row">
             <span class="upi-inline-lbl">UPI ID</span>
-            <span class="upi-inline-val" id="upiInlineId">9392974031-3@ybl</span>
+            <span class="upi-inline-val" id="upiInlineId">mr.brainy@ibl</span>
             <button type="button" class="upi-copy" id="upiCopyBtn" onclick="copyUpiId()">Tap to copy</button>
           </div>
           <div class="upi-inline-row">
@@ -5209,7 +5209,7 @@
         </div>
         <div class="upi-row">
           <span class="lbl">UPI ID</span>
-          <span class="val" id="upiIdShow">9392974031-3@ybl</span>
+          <span class="val" id="upiIdShow">mr.brainy@ibl</span>
         </div>
         <div class="upi-row">
           <span class="lbl">Amount</span>
@@ -5719,7 +5719,7 @@
 
   // Copy UPI ID to clipboard with brief "Copied ✓" confirmation
   window.copyUpiId = async function() {
-    const id = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || '9392974031-3@ybl';
+    const id = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || 'mr.brainy@ibl';
     const btn = document.getElementById('upiCopyBtn');
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
