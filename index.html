@@ -4036,6 +4036,72 @@
   @media(prefers-reduced-motion:reduce){
     body,nav,.overlay-panel,.product-card,.rv-card,.faq-item,section,.pc-pack-card,.cod-trust,.compare-cell,.compare-table{transition:none}
   }
+
+  /* ═══════════ CRO PILLAR 1 — ATTRACTION ═══════════ */
+  /* AT1 — staggered headline fade-up */
+  .hero-headline .hh-line{opacity:0;animation:heroFadeUp .6s ease-out both}
+  .hero-headline .hh-line:nth-child(1){animation-delay:.05s}
+  .hero-headline .hh-line:nth-child(2){animation-delay:.18s}
+  .hero-headline .hh-line:nth-child(3){animation-delay:.31s}
+
+  /* AT1 — hero CTA breathing glow (draws the eye to BUY) */
+  @keyframes ctaGlow{
+    0%,100%{box-shadow:0 0 0 0 rgba(var(--accent-rgb),.40)}
+    50%{box-shadow:0 0 24px 4px rgba(var(--accent-rgb),.55)}
+  }
+  .hero-cta{animation:heroFadeUp .6s ease-out .2s both, ctaGlow 3s ease-in-out 1.3s infinite}
+
+  /* AT1 — spray-burst mist from the nozzle (CSS only) */
+  .hb-spray{position:absolute;top:1%;left:50%;width:10px;height:10px;transform:translateX(-50%);pointer-events:none;z-index:3}
+  .hb-spray span{position:absolute;top:0;left:50%;width:7px;height:7px;border-radius:50%;
+    background:radial-gradient(circle,rgba(var(--accent-rgb),.9),rgba(var(--accent-rgb),0) 70%);opacity:0}
+  .hb-spray span:nth-child(1){--mx:0px;animation:hbMist 2.2s ease-out 1s 1 both}
+  .hb-spray span:nth-child(2){--mx:-15px;animation:hbMist 2.2s ease-out 1.1s 1 both}
+  .hb-spray span:nth-child(3){--mx:15px;animation:hbMist 2.2s ease-out 1.18s 1 both}
+  .hb-spray span:nth-child(4){--mx:-8px;animation:hbMist 2.2s ease-out 1.26s 1 both}
+  .hb-spray span:nth-child(5){--mx:9px;animation:hbMist 2.2s ease-out 1.32s 1 both}
+  .hb-bottle:hover .hb-spray span{animation:hbMist 1.8s ease-out 0s 1 both}
+  @keyframes hbMist{
+    0%{opacity:0;transform:translate(-50%,0) scale(.3)}
+    25%{opacity:.85}
+    100%{opacity:0;transform:translate(calc(-50% + var(--mx)),-48px) scale(2.4)}
+  }
+
+  /* AT2 — animated "8 seconds" proof badge */
+  .hero-8s{display:inline-flex;align-items:center;gap:10px;margin-top:14px}
+  @property --h8p{syntax:'<percentage>';inherits:false;initial-value:0%}
+  .hero-8s .h8-ring{position:relative;width:40px;height:40px;border-radius:50%;flex-shrink:0;
+    background:conic-gradient(var(--accent) var(--h8p,0%), var(--border) 0);
+    animation:h8fill 8s linear infinite}
+  .hero-8s .h8-ring::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--black)}
+  .hero-8s .h8-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;color:var(--accent)}
+  .hero-8s .h8-label{font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:600;color:var(--gray);letter-spacing:.02em}
+  @keyframes h8fill{0%{--h8p:0%}100%{--h8p:100%}}
+
+  /* AT4 (adapted — no .benefits section exists) — trigger-card hover lift */
+  .trigger-card{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+  .trigger-card:hover{transform:translateY(-4px);border-color:rgba(var(--accent-rgb),.4);box-shadow:0 10px 28px rgba(0,0,0,.45)}
+  .trigger-icon{transition:transform .18s ease}
+  .trigger-card:hover .trigger-icon{transform:scale(1.12)}
+
+  /* AT5 — section scroll-reveal (class added by JS only when it will be revealed) */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in-view{opacity:1;transform:none}
+
+  /* EN4 — global button press feedback */
+  button:active,.hero-cta:active,.pc-cta:active,.pc-cod-cta:active,.ppc:active{transform:scale(.98)}
+
+  @media(prefers-reduced-motion:reduce){
+    .hero-headline .hh-line{opacity:1;animation:none}
+    .hero-cta{animation:none}
+    .hb-spray span{animation:none;opacity:0}
+    .hero-8s .h8-ring{animation:none;background:conic-gradient(var(--accent) 100%,var(--border) 0)}
+    .reveal{opacity:1;transform:none;transition:none}
+    .trigger-card,.trigger-icon{transition:none}
+    button:active,.hero-cta:active,.pc-cta:active{transform:none}
+  }
+  /* ═══════════ END PILLAR 1 ═══════════ */
 </style>
 </head>
 <body>
@@ -4145,10 +4211,15 @@
         <p class="ht-quote">Keeps my formals fresh through back-to-back meetings. — Arjun S., Delhi</p>
       </div>
       <p class="hero-sub">The missing third spray. 50ml · ₹229 · Kills odor in 8 seconds.</p>
+      <div class="hero-8s" aria-label="Odor gone in 8 seconds">
+        <span class="h8-ring" aria-hidden="true"><span class="h8-num">8s</span></span>
+        <span class="h8-label">Odor gone in 8 seconds.</span>
+      </div>
     </div>
 
     <div class="hero-bottle" aria-hidden="true">
       <div class="hb-bottle">
+        <div class="hb-spray" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
         <div class="hb-cap"></div>
         <div class="hb-neck"></div>
         <div class="hb-body">
@@ -6564,5 +6635,60 @@ window.createSupabaseOrder = function (opts) {
 </script>
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+
+<!-- ═══════════ CRO ENHANCEMENTS (Pillar 1: attraction) ═══════════ -->
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasIO = 'IntersectionObserver' in window;
+
+  /* AT3 — count-up stats when .problem-stats scrolls into view */
+  function initCountUp(){
+    var wrap = document.querySelector('.problem-stats');
+    if(!wrap) return;
+    var nums = wrap.querySelectorAll('.p-stat-num');
+    function run(){
+      nums.forEach(function(el){
+        var node = el.firstChild;                       // leading text node, keeps .p-stat-unit span
+        if(!node || node.nodeType !== 3) return;
+        var target = parseInt(node.nodeValue, 10);
+        if(isNaN(target)) return;
+        if(reduce){ node.nodeValue = String(target); return; }
+        var start = null, dur = 1000;
+        function step(ts){
+          if(!start) start = ts;
+          var p = Math.min((ts - start)/dur, 1);
+          node.nodeValue = String(Math.round(p * target));
+          if(p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+    }
+    if(reduce || !hasIO){ run(); return; }
+    var o = new IntersectionObserver(function(es){
+      if(es[0].isIntersecting){ run(); o.disconnect(); }
+    }, { threshold: 0.4 });
+    o.observe(wrap);
+  }
+
+  /* AT5 — section scroll-reveal (only hide sections if we can/will reveal them) */
+  function initReveal(){
+    if(reduce || !hasIO) return;  // no JS-hiding when we won't animate → content always visible
+    var sel = '.problem,.trigger-section,.how-works,.compare,.only-fix,.reviews,.faq,.final';
+    var secs = document.querySelectorAll(sel);
+    if(!secs.length) return;
+    var o = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in-view'); o.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    secs.forEach(function(s){ s.classList.add('reveal'); o.observe(s); });
+  }
+
+  function init(){ initCountUp(); initReveal(); }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
 </body>
 </html>
