@@ -2565,7 +2565,7 @@
   /* Mobile sticky buy bar — fade-in after 30vh scroll */
   .mobile-bar{
     position:fixed;bottom:0;left:0;right:0;
-    z-index:999;min-height:64px;box-sizing:border-box;
+    z-index:80;min-height:64px;box-sizing:border-box;
     padding:10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
     background:var(--bg);
     border-top:1px solid var(--rule);
@@ -4036,9 +4036,203 @@
   @media(prefers-reduced-motion:reduce){
     body,nav,.overlay-panel,.product-card,.rv-card,.faq-item,section,.pc-pack-card,.cod-trust,.compare-cell,.compare-table{transition:none}
   }
+
+  /* ═══════════ CRO PILLAR 1 — ATTRACTION ═══════════ */
+  /* AT1 — staggered headline fade-up */
+  .hero-headline .hh-line{opacity:0;animation:heroFadeUp .6s ease-out both}
+  .hero-headline .hh-line:nth-child(1){animation-delay:.05s}
+  .hero-headline .hh-line:nth-child(2){animation-delay:.18s}
+  .hero-headline .hh-line:nth-child(3){animation-delay:.31s}
+
+  /* AT1 — hero CTA breathing glow (draws the eye to BUY) */
+  @keyframes ctaGlow{
+    0%,100%{box-shadow:0 0 0 0 rgba(var(--accent-rgb),.40)}
+    50%{box-shadow:0 0 24px 4px rgba(var(--accent-rgb),.55)}
+  }
+  .hero-cta{animation:heroFadeUp .6s ease-out .2s both, ctaGlow 3s ease-in-out 1.3s infinite}
+
+  /* AT1 — spray-burst mist from the nozzle (CSS only) */
+  .hb-spray{position:absolute;top:1%;left:50%;width:10px;height:10px;transform:translateX(-50%);pointer-events:none;z-index:3}
+  .hb-spray span{position:absolute;top:0;left:50%;width:7px;height:7px;border-radius:50%;
+    background:radial-gradient(circle,rgba(var(--accent-rgb),.9),rgba(var(--accent-rgb),0) 70%);opacity:0}
+  .hb-spray span:nth-child(1){--mx:0px;animation:hbMist 2.2s ease-out 1s 1 both}
+  .hb-spray span:nth-child(2){--mx:-15px;animation:hbMist 2.2s ease-out 1.1s 1 both}
+  .hb-spray span:nth-child(3){--mx:15px;animation:hbMist 2.2s ease-out 1.18s 1 both}
+  .hb-spray span:nth-child(4){--mx:-8px;animation:hbMist 2.2s ease-out 1.26s 1 both}
+  .hb-spray span:nth-child(5){--mx:9px;animation:hbMist 2.2s ease-out 1.32s 1 both}
+  .hb-bottle:hover .hb-spray span{animation:hbMist 1.8s ease-out 0s 1 both}
+  @keyframes hbMist{
+    0%{opacity:0;transform:translate(-50%,0) scale(.3)}
+    25%{opacity:.85}
+    100%{opacity:0;transform:translate(calc(-50% + var(--mx)),-48px) scale(2.4)}
+  }
+
+  /* AT2 — animated "8 seconds" proof badge */
+  .hero-8s{display:inline-flex;align-items:center;gap:10px;margin-top:14px}
+  @property --h8p{syntax:'<percentage>';inherits:false;initial-value:0%}
+  .hero-8s .h8-ring{position:relative;width:40px;height:40px;border-radius:50%;flex-shrink:0;
+    background:conic-gradient(var(--accent) var(--h8p,0%), var(--border) 0);
+    animation:h8fill 8s linear infinite}
+  .hero-8s .h8-ring::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--black)}
+  .hero-8s .h8-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;color:var(--accent)}
+  .hero-8s .h8-label{font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:600;color:var(--gray);letter-spacing:.02em}
+  @keyframes h8fill{0%{--h8p:0%}100%{--h8p:100%}}
+
+  /* AT4 (adapted — no .benefits section exists) — trigger-card hover lift */
+  .trigger-card{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+  .trigger-card:hover{transform:translateY(-4px);border-color:rgba(var(--accent-rgb),.4);box-shadow:0 10px 28px rgba(0,0,0,.45)}
+  .trigger-icon{transition:transform .18s ease}
+  .trigger-card:hover .trigger-icon{transform:scale(1.12)}
+
+  /* AT5 — section scroll-reveal (class added by JS only when it will be revealed) */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in-view{opacity:1;transform:none}
+
+  /* EN4 — global button press feedback */
+  button:active,.hero-cta:active,.pc-cta:active,.pc-cod-cta:active,.ppc:active{transform:scale(.98)}
+
+  @media(prefers-reduced-motion:reduce){
+    .hero-headline .hh-line{opacity:1;animation:none}
+    .hero-cta{animation:none}
+    .hb-spray span{animation:none;opacity:0}
+    .hero-8s .h8-ring{animation:none;background:conic-gradient(var(--accent) 100%,var(--border) 0)}
+    .reveal{opacity:1;transform:none;transition:none}
+    .trigger-card,.trigger-icon{transition:none}
+    button:active,.hero-cta:active,.pc-cta:active{transform:none}
+  }
+  /* ═══════════ END PILLAR 1 ═══════════ */
+
+  /* ═══════════ CRO PILLAR 2 — ENGAGEMENT ═══════════ */
+  /* EN5 — reading progress bar (sits just under the fixed nav, z below nav=50) */
+  .scroll-progress{position:fixed;left:0;top:calc(56px + env(safe-area-inset-top,0px));height:3px;width:0;
+    background:linear-gradient(90deg,var(--accent),var(--green-light));z-index:49;
+    transition:width .08s linear;pointer-events:none}
+
+  /* EN1 — interactive trigger cards */
+  .trigger-card{cursor:pointer}
+  .trigger-card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .trigger-fix{max-height:0;overflow:hidden;opacity:0;transition:max-height .3s ease,opacity .3s ease,margin-top .3s ease;margin-top:0}
+  .trigger-card.open .trigger-fix{max-height:200px;opacity:1;margin-top:12px}
+  .trigger-fix-line{font-family:'Inter Tight',sans-serif;font-size:13px;line-height:1.5;color:var(--text);
+    padding-top:12px;border-top:1px solid var(--border)}
+  .trigger-fix-line b{color:var(--accent)}
+  .trigger-add{display:inline-flex;align-items:center;gap:5px;margin-top:10px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);text-decoration:none}
+  .trigger-add:hover{color:var(--green-light)}
+  .trigger-tap-hint{font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--muted);margin-top:10px;letter-spacing:.04em}
+  .trigger-card.open .trigger-tap-hint{display:none}
+
+  /* EN2 — savings calculator */
+  .savings{padding:60px 20px;max-width:720px;margin:0 auto;text-align:center}
+  .sv-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(28px,7vw,40px);
+    line-height:1.05;color:var(--white);text-transform:uppercase;margin:0 0 8px}
+  .sv-sub{font-family:'Inter Tight',sans-serif;font-size:14px;color:var(--gray);margin:0 auto 26px;max-width:480px;line-height:1.5}
+  .sv-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px 22px;text-align:left}
+  .sv-q{font-family:'Inter Tight',sans-serif;font-size:15px;font-weight:600;color:var(--text);margin:0 0 18px;text-align:center}
+  .sv-stepper{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:6px}
+  .sv-btn{width:48px;height:48px;border-radius:12px;border:1px solid var(--border);background:var(--bg-subtle);
+    color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s,transform .12s}
+  .sv-btn:hover{border-color:var(--accent)}
+  .sv-btn:active{transform:scale(.94)}
+  .sv-val{min-width:96px;text-align:center}
+  .sv-val b{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:46px;line-height:1;color:var(--accent)}
+  .sv-val span{font-family:'Inter Tight',sans-serif;font-size:12px;color:var(--muted)}
+  .sv-out{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0 6px}
+  .sv-out-box{background:var(--bg-subtle);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+  .sv-out-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;color:var(--accent);line-height:1}
+  .sv-out-lbl{font-family:'Inter Tight',sans-serif;font-size:12px;color:var(--gray);margin-top:5px;line-height:1.3}
+  .sv-note{font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--muted);margin:14px 0 18px;line-height:1.45}
+  .sv-cta{display:inline-flex;align-items:center;justify-content:center;width:100%;height:54px;
+    background:var(--accent);color:var(--black);border:none;border-radius:8px;cursor:pointer;text-decoration:none;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:17px;letter-spacing:.04em;text-transform:uppercase;
+    transition:background .15s}
+  .sv-cta:hover{background:var(--green-light)}
+
+  /* EN3 — science molecule animation */
+  .hw-anim{position:relative;height:130px;margin:0 auto 32px;max-width:320px}
+  .hw-ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:96px;height:96px;border-radius:50%;
+    border:3px dashed var(--accent);animation:hwSpin 9s linear infinite}
+  .hw-ring::after{content:'';position:absolute;inset:14px;border-radius:50%;border:2px solid rgba(var(--accent-rgb),.3)}
+  .hw-ring-label{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:280px;text-align:center;white-space:nowrap;
+    font-family:'Inter Tight',sans-serif;font-size:10px;color:var(--gray);letter-spacing:.02em}
+  .hw-mol{position:absolute;left:4%;top:50%;width:16px;height:16px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%,#ff8c5a,#c23b1e);box-shadow:0 0 10px rgba(255,140,90,.6);
+    transform:translateY(-50%);animation:hwMol 4.5s ease-in-out infinite}
+  @keyframes hwSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+  @keyframes hwMol{
+    0%{left:4%;transform:translateY(-50%) scale(1);opacity:.35}
+    35%{left:50%;transform:translate(-50%,-50%) scale(1);opacity:1}
+    60%{left:50%;transform:translate(-50%,-50%) scale(.5);opacity:1;filter:grayscale(.8)}
+    100%{left:50%;transform:translate(-50%,-50%) scale(.4);opacity:0;filter:grayscale(1)}
+  }
+
+  /* EN4 — pack-card tactile feedback */
+  .pc-pack-card{transition:transform .15s ease,border-color .15s ease,background .15s ease}
+  .pc-pack-card:active{transform:scale(.98)}
+
+  @media(prefers-reduced-motion:reduce){
+    .scroll-progress{transition:none}
+    .trigger-fix{transition:none}
+    .hw-ring{animation:none}
+    .hw-mol{animation:none;left:50%;transform:translate(-50%,-50%) scale(.5);opacity:1;filter:grayscale(1)}
+    .pc-pack-card,.sv-btn{transition:none}
+    .pc-pack-card:active,.sv-btn:active{transform:none}
+  }
+  /* ═══════════ END PILLAR 2 ═══════════ */
+
+  /* ═══════════ CRO PILLAR 3 — CONVERSION ═══════════ */
+  .pc-price-row{align-items:center}
+  .price-mrp{font-family:'Inter Tight',sans-serif;font-size:18px;color:var(--gray);text-decoration:line-through;text-decoration-thickness:1.5px;font-weight:400}
+  .price-off{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--green);background:var(--green-dim);padding:4px 9px;border-radius:999px}
+  .ppc-mrp{color:var(--gray);text-decoration:line-through;text-decoration-thickness:1px;font-weight:400;margin-right:5px;font-size:.8em;opacity:.85}
+  /* ═══════════ END PILLAR 3 ═══════════ */
+
+  /* ═══════════ CRO PILLAR 4 — TRUST ═══════════ */
+  /* TR4 — review aggregate */
+  .rv-aggregate{display:flex;align-items:center;gap:14px;justify-content:center;margin:0 auto 6px}
+  .rv-agg-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:48px;line-height:1;color:var(--accent)}
+  .rv-agg-meta{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+  .rv-agg-stars{color:var(--accent);font-size:18px;letter-spacing:2px;line-height:1}
+  .rv-agg-count{font-family:'Inter Tight',sans-serif;font-size:12px;color:var(--gray)}
+  /* TR1 — dramatized guarantee */
+  .pc-guarantee{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-left:3px solid var(--accent);
+    border-radius:8px;padding:14px 16px;margin:0 0 14px}
+  .pcg-icon{width:26px;height:26px;flex-shrink:0;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+  .pcg-main{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:14px;color:var(--white);margin:0 0 3px;line-height:1.3}
+  .pcg-sub{font-family:'Inter Tight',sans-serif;font-size:12px;color:var(--gray);margin:0;line-height:1.4}
+  /* TR2 — COD zero-risk pill */
+  .cod-zero{display:inline-block;margin-left:6px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
+    letter-spacing:.05em;color:var(--green);background:var(--green-dim);padding:2px 8px;border-radius:999px;vertical-align:middle}
+  /* TR5 — ingredient & origin strip */
+  .ingredient-strip{display:flex;flex-wrap:wrap;gap:6px 8px;justify-content:center;margin:16px 0 0}
+  .ingredient-strip span{font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:500;color:var(--silver);
+    background:var(--bg-subtle);border:1px solid var(--border);border-radius:999px;padding:5px 11px;white-space:nowrap}
+  /* TR3 — founder block */
+  .founder{padding:56px 20px;max-width:640px;margin:0 auto}
+  .founder-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px 24px}
+  .founder-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+  .founder-story{font-family:'Inter Tight',sans-serif;font-size:15px;line-height:1.6;color:var(--text-secondary);margin:0 0 18px}
+  .founder-wa{display:inline-flex;align-items:center;gap:6px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:14px;
+    color:var(--green);text-decoration:none;border-bottom:1px solid rgba(var(--accent-rgb),.4);padding-bottom:2px}
+  .founder-wa:hover{color:var(--green-light)}
+  .founder-ig{display:inline-block;margin-top:14px;font-family:'Inter Tight',sans-serif;font-size:13px;color:var(--gray);text-decoration:none}
+  .founder-ig:hover{color:var(--accent)}
+  /* ═══════════ END PILLAR 4 ═══════════ */
+
+  /* ═══════════ CRO PILLAR 5 — PRODUCT PHOTO SLOTS (graceful fallback) ═══════════ */
+  .hero-photo{display:block;width:100%;max-width:300px;height:auto;margin:0 auto;border-radius:12px}
+  .pc-gallery{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 0;margin:0 0 8px}
+  .pc-gallery::-webkit-scrollbar{display:none}
+  .pc-gallery img{flex:0 0 86%;scroll-snap-align:center;width:86%;height:auto;border-radius:12px;object-fit:cover;background:var(--card)}
+  /* ═══════════ END PILLAR 5 ═══════════ */
 </style>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 <a href="#main" class="skip-link">Skip to main content</a>
 
 <nav>
@@ -4135,9 +4329,9 @@
     <div class="hero-text">
       <div class="hero-category">Fabric odor spray · Made in Hyderabad</div>
       <h1 class="hero-headline"><span class="hh-line">DEO FOR YOUR PITS.</span><span class="hh-line">PERFUME FOR YOUR STYLE.</span><span class="hh-line"><span class="green">ODORSTRIKE</span> FOR YOUR SHIRT.</span></h1>
-      <div class="hero-rating" aria-label="Rated 5 out of 5 from 47 reviews">
+      <div class="hero-rating" aria-label="Rated 4.7 out of 5 from 3 reviews">
         <span class="hr-stars" aria-hidden="true">★★★★★</span>
-        <span class="hr-count">(47 reviews)</span>
+        <span class="hr-count">(3 reviews)</span>
       </div>
       <div class="hero-ticker" id="heroTicker" aria-live="off">
         <p class="ht-quote active">Wore the same shirt for 3 days. No one noticed. — Rahul M., Mumbai</p>
@@ -4145,10 +4339,15 @@
         <p class="ht-quote">Keeps my formals fresh through back-to-back meetings. — Arjun S., Delhi</p>
       </div>
       <p class="hero-sub">The missing third spray. 50ml · ₹229 · Kills odor in 8 seconds.</p>
+      <div class="hero-8s" aria-label="Odor gone in 8 seconds">
+        <span class="h8-ring" aria-hidden="true"><span class="h8-num">8s</span></span>
+        <span class="h8-label">Odor gone in 8 seconds.</span>
+      </div>
     </div>
 
     <div class="hero-bottle" aria-hidden="true">
       <div class="hb-bottle">
+        <div class="hb-spray" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
         <div class="hb-cap"></div>
         <div class="hb-neck"></div>
         <div class="hb-body">
@@ -4223,6 +4422,11 @@
       </div>
       <div class="trigger-heading">You've been on the road since 8.</div>
       <p class="trigger-desc">Two sprays before the lift opens. Nobody clocks the commute.</p>
+      <div class="trigger-fix">
+        <p class="trigger-fix-line"><b>The fix:</b> 2 sprays on the collar + underarm seams before you walk in.</p>
+        <a href="#buy" class="trigger-add" onclick="event.stopPropagation()">Add ODORSTRIKE →</a>
+      </div>
+      <p class="trigger-tap-hint">Tap for the fix →</p>
     </div>
     <div class="trigger-card">
       <img src="/assets/icon-dumbbell.png" alt="Dumbbell — post-gym use case" class="trigger-icon" width="38" height="38" loading="lazy" decoding="async">
@@ -4232,6 +4436,11 @@
       </div>
       <div class="trigger-heading">Gym at 7, meeting at 9. No gap.</div>
       <p class="trigger-desc">Three sprays on the tee. Walk in clean.</p>
+      <div class="trigger-fix">
+        <p class="trigger-fix-line"><b>The fix:</b> 3 sprays across the tee, front and back. Dry in 8 seconds.</p>
+        <a href="#buy" class="trigger-add" onclick="event.stopPropagation()">Add ODORSTRIKE →</a>
+      </div>
+      <p class="trigger-tap-hint">Tap for the fix →</p>
     </div>
     <div class="trigger-card">
       <img src="/assets/icon-calendar.png" alt="Calendar — pre-date use case" class="trigger-icon" width="38" height="38" loading="lazy" decoding="async">
@@ -4241,6 +4450,11 @@
       </div>
       <div class="trigger-heading">She's ten minutes away.</div>
       <p class="trigger-desc">Jacket's been on since morning. Strike the collar. Reset.</p>
+      <div class="trigger-fix">
+        <p class="trigger-fix-line"><b>The fix:</b> strike the collar and cuffs — reset without changing.</p>
+        <a href="#buy" class="trigger-add" onclick="event.stopPropagation()">Add ODORSTRIKE →</a>
+      </div>
+      <p class="trigger-tap-hint">Tap for the fix →</p>
     </div>
     <div class="trigger-card">
       <img src="/assets/icon-desk.png" alt="Desk — long work day use case" class="trigger-icon" width="38" height="38" loading="lazy" decoding="async">
@@ -4250,6 +4464,11 @@
       </div>
       <div class="trigger-heading">Hour eight. AC off. Room closed.</div>
       <p class="trigger-desc">Shirt's working overtime. One spray, back to neutral.</p>
+      <div class="trigger-fix">
+        <p class="trigger-fix-line"><b>The fix:</b> one spray down the back panel. Neutral again.</p>
+        <a href="#buy" class="trigger-add" onclick="event.stopPropagation()">Add ODORSTRIKE →</a>
+      </div>
+      <p class="trigger-tap-hint">Tap for the fix →</p>
     </div>
   </div>
 </section>
@@ -4257,6 +4476,12 @@
 <!-- SCIENCE / HOW IT WORKS -->
 <section class="how-works" id="science">
   <h2 class="hw-title">How ODORSTRIKE kills smell</h2>
+
+  <div class="hw-anim" aria-hidden="true">
+    <div class="hw-mol"></div>
+    <div class="hw-ring"></div>
+    <span class="hw-ring-label">β-cyclodextrin traps &amp; locks the odor molecule</span>
+  </div>
 
   <ol class="hw-steps">
     <li class="hw-step">
@@ -4324,7 +4549,13 @@
 <!-- REVIEWS (pulled up — social proof before the buy box) -->
 <section class="reviews" id="reviews">
   <h2 class="rv-title">What buyers say.</h2>
-  <p class="rv-count-badge">47 verified reviews</p>
+  <div class="rv-aggregate" id="rvAggregate">
+    <span class="rv-agg-num" id="rvAggNum">4.7</span>
+    <div class="rv-agg-meta">
+      <span class="rv-agg-stars" id="rvAggStars" aria-hidden="true">★★★★★</span>
+      <span class="rv-agg-count" id="rvAggCount">Based on 3 beta-tester reviews</span>
+    </div>
+  </div>
   <p class="rv-subtitle">3 testers used ODORSTRIKE for 8 weeks before public release. Their unedited feedback below — plus reviews from buyers as they post them.</p>
 
   <div class="rv-scroll-wrap">
@@ -4386,13 +4617,35 @@
   <p class="compare-line-em">Use both. Deodorant for you. ODORSTRIKE for your clothes. Now you're covered completely.</p>
 </section>
 
+<!-- EN2 — interactive savings calculator -->
+<section class="savings" id="savings">
+  <div class="section-tag">The math</div>
+  <h2 class="sv-title">What ODORSTRIKE saves you</h2>
+  <p class="sv-sub">Every re-wash or dry-clean just to kill a smell costs money and a laundry cycle. One ₹229 bottle is roughly 250 sprays.</p>
+  <div class="sv-card">
+    <p class="sv-q">How many times a week do you re-wear or dry-clean to fight odor?</p>
+    <div class="sv-stepper">
+      <button class="sv-btn" type="button" aria-label="Decrease times per week" onclick="svStep(-1)">−</button>
+      <div class="sv-val"><b id="svCount">3</b><span>times / week</span></div>
+      <button class="sv-btn" type="button" aria-label="Increase times per week" onclick="svStep(1)">+</button>
+    </div>
+    <div class="sv-out">
+      <div class="sv-out-box"><div class="sv-out-num" id="svMoney">₹0</div><div class="sv-out-lbl">est. saved / month vs washing &amp; dry-clean</div></div>
+      <div class="sv-out-box"><div class="sv-out-num" id="svLoads">0</div><div class="sv-out-lbl">laundry loads skipped / month</div></div>
+    </div>
+    <p class="sv-note">Rough estimate — assumes ~₹40 per odor-driven wash/dry-clean and ~2 sprays per fix (250-spray bottle). Your numbers will vary.</p>
+    <a href="#buy" class="sv-cta" onclick="event.preventDefault();document.getElementById('buy').scrollIntoView({behavior:'smooth'})">Add ODORSTRIKE — <span id="svCtaPrice">₹229</span> →</a>
+  </div>
+</section>
+
 <span id="stock-up" aria-hidden="true" style="position:absolute;scroll-margin-top:80px"></span>
 <section class="only-fix" id="buy">
   <h2 class="of-title">The only fix</h2>
 
   <article class="product-card">
     <div class="pc-media">
-      <span class="pc-tag">LAUNCH PRICE · LIMITED</span>
+      <span class="pc-tag">LAUNCH BATCH · PRICE GOES UP AFTER THIS RUN</span>
+      <div class="pc-gallery" id="pcGallery" role="list" aria-label="Product photos" hidden></div>
       <div class="pc-image" aria-hidden="true">
         <div class="hb-bottle">
           <div class="hb-cap"></div>
@@ -4413,34 +4666,37 @@
       <p class="pc-subtitle">50ml · Pocket size · Fabric only · Made in Hyderabad</p>
       <div class="pc-price-row">
         <span class="price-main" id="pcPriceMain">₹399</span>
-        <span class="price-label">launch price</span>
+        <s class="price-mrp" id="pcPriceMrp">₹999</s>
+        <span class="price-off" id="pcPriceOff">60% OFF</span>
       </div>
       <div class="pc-pack-selector" role="radiogroup" aria-label="Select pack">
         <div class="pc-pack-card" data-qty="1" role="radio" aria-checked="false" tabindex="0" onclick="selectQty(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectQty(1)}" style="position:relative">
           <span class="ppc-badge outline">STARTER</span>
           <span class="ppc-main">1 × 50ml</span>
-          <span class="ppc-price">₹229</span>
+          <span class="ppc-price"><s class="ppc-mrp">₹579</s>₹229</span>
           <span class="ppc-per">₹229/bottle</span>
-          <span class="ppc-hint">Try risk-free</span>
+          <span class="ppc-save">save ₹350 vs MRP</span>
         </div>
         <div class="pc-pack-card active" data-qty="2" role="radio" aria-checked="true" tabindex="0" onclick="selectQty(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectQty(2)}" style="position:relative">
           <span class="ppc-badge">MOST POPULAR</span>
           <span class="ppc-main">2 × 50ml</span>
-          <span class="ppc-price">₹399<span class="ppc-save">Save ₹59</span></span>
+          <span class="ppc-price"><s class="ppc-mrp">₹999</s>₹399</span>
           <span class="ppc-per">₹199/bottle</span>
+          <span class="ppc-save">save ₹600 vs MRP</span>
         </div>
         <div class="pc-pack-card" data-qty="3" role="radio" aria-checked="false" tabindex="0" onclick="selectQty(3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectQty(3)}" style="position:relative">
           <span class="ppc-badge outline">BEST VALUE</span>
           <span class="ppc-main">3 × 50ml</span>
-          <span class="ppc-price">₹549<span class="ppc-save">Save ₹138</span></span>
+          <span class="ppc-price"><s class="ppc-mrp">₹1399</s>₹549</span>
           <span class="ppc-per">₹183/bottle</span>
+          <span class="ppc-save">save ₹850 vs MRP</span>
         </div>
       </div>
-      <p class="pc-qty-hint" id="pcQtyHint">Perfect for sharing — gift one, keep one.</p>
+      <p class="pc-qty-hint" id="pcQtyHint">Smart pick — one for your bag, one for your desk.</p>
       <p class="pc-pricelock">Price locks at checkout. Free shipping on all orders.</p>
 
       <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">BUY — ₹399</button>
-      <button class="pc-cod-cta" id="pcCodCta" onclick="buyBoxCod()">Order COD — pay on delivery</button>
+      <button class="pc-cod-cta" id="pcCodCta" onclick="buyBoxCod()">Order COD — pay on delivery <span class="cod-zero">₹0 today</span></button>
       <div class="cod-trust">
         <svg class="ct-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
         <div>
@@ -4448,11 +4704,24 @@
           <p class="ct-sub">Available across 27,000+ pincodes. 100% safe, zero risk.</p>
         </div>
       </div>
+      <div class="pc-guarantee">
+        <svg class="pcg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+        <div>
+          <p class="pcg-main">Smell the difference in 8 seconds — or your money back.</p>
+          <p class="pcg-sub">7-day no-questions refund. COD means you risk nothing today.</p>
+        </div>
+      </div>
       <div class="pc-trust-icons">
         <div class="pti-item"><span class="pti-icon">🛡️</span><span class="pti-label">7-day money-back</span></div>
         <div class="pti-item"><span class="pti-icon">🚚</span><span class="pti-label">Free shipping</span></div>
         <div class="pti-item"><span class="pti-icon">📞</span><span class="pti-label">COD available</span></div>
         <div class="pti-item"><span class="pti-icon">⏱️</span><span class="pti-label">Ships 48hr</span></div>
+      </div>
+      <div class="ingredient-strip" aria-label="Ingredients and origin">
+        <span>Zinc PCA + β-Cyclodextrin</span>
+        <span>Made in Hyderabad</span>
+        <span>Fabric-safe</span>
+        <span>No skin contact</span>
       </div>
     </div>
   </article>
@@ -4557,11 +4826,21 @@
 
     <div class="faq-item">
       <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Can I spray ODORSTRIKE on my skin?</span>
+        <span>Will it stain my clothes? (especially dark fabric)</span>
         <span class="faq-icon" aria-hidden="true"></span>
       </button>
       <div class="faq-body"><div class="faq-body-inner">
-        <p class="faq-answer">No — ODORSTRIKE is formulated for fabric only (cotton, polyester, denim, wool, synthetic blends). It's not tested for skin contact. Use your regular deodorant for that.</p>
+        <p class="faq-answer">No. ODORSTRIKE is water-soluble and dries clear — no white residue on dark fabric. Tested on black, navy, charcoal, and grey shirts across 30+ wash cycles. No marks, no stiffness, no colour change. Safe on dark cotton and polyester. When unsure, test on an inside seam first.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
+        <span>Can I spray it on my skin?</span>
+        <span class="faq-icon" aria-hidden="true"></span>
+      </button>
+      <div class="faq-body"><div class="faq-body-inner">
+        <p class="faq-answer">No — ODORSTRIKE is made for fabric only (cotton, polyester, denim, wool). It's not tested for skin contact. Keep using your deodorant for that. Use ODORSTRIKE on what your skin already left on your clothes.</p>
       </div></div>
     </div>
 
@@ -4572,16 +4851,6 @@
       </button>
       <div class="faq-body"><div class="faq-body-inner">
         <p class="faq-answer">No. Deodorant goes on skin, not fabric. Sweat odor doesn't live on your skin — it soaks into your shirt, jacket, and gym tee. Your morning shower won't fix what your shirt absorbed yesterday. ODORSTRIKE goes directly on fabric and neutralizes odor molecules in 8 seconds.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Will it stain my clothes? (especially dark fabric)</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body"><div class="faq-body-inner">
-        <p class="faq-answer">No. ODORSTRIKE is water-soluble and dries clear — no white residue on dark fabric. Tested on black, navy, charcoal, and grey shirts across 30+ wash cycles. No marks, no stiffness, no colour change. Safe on dark cotton and polyester. When unsure, test on an inside seam first.</p>
       </div></div>
     </div>
 
@@ -4693,6 +4962,16 @@
   <h2 class="final-title">Stop the smell. Before anyone notices.</h2>
   <p class="final-sub">Launch price ₹229. Free shipping. 7-day returns. Ships from Hyderabad in 48 hours.</p>
   <a href="#buy" class="final-cta" id="finalCta" onclick="event.preventDefault();buyBoxAdd()">BUY — ₹399</a>
+</section>
+
+<!-- TR3 — founder trust block -->
+<section class="founder">
+  <div class="founder-card">
+    <p class="founder-name">Brainee · Founder, Smelloff</p>
+    <p class="founder-story">I built ODORSTRIKE after a sweat-soaked shirt wrecked my confidence in a meeting that actually mattered. Deodorant is for skin — nothing fixed the smell already sitting in the fabric. So I made one thing that does, small enough to live in your pocket.</p>
+    <a class="founder-wa" href="https://wa.me/919392974031" target="_blank" rel="noopener">Questions before you buy? Chat with us →</a>
+    <a class="founder-ig" href="https://instagram.com/smell0ff" target="_blank" rel="noopener">@smell0ff on Instagram<span id="bottlesShipped" hidden></span></a>
+  </div>
 </section>
 
 <footer class="site-footer">
@@ -5695,6 +5974,13 @@
     var priceMain = document.getElementById('pcPriceMain');
     if (priceMain) priceMain.textContent = '₹' + price;
 
+    // CO1 — price anchoring: struck MRP + discount %
+    var mrp = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.MRP && window.SMELLOFF_CONFIG.MRP[variant]) || (qty === 3 ? 1399 : qty === 2 ? 999 : 579);
+    var off = Math.round((mrp - price) / mrp * 100);
+    var priceMrp = document.getElementById('pcPriceMrp'); if (priceMrp) priceMrp.textContent = '₹' + mrp;
+    var priceOff = document.getElementById('pcPriceOff'); if (priceOff) priceOff.textContent = off + '% OFF';
+    var svCtaPrice = document.getElementById('svCtaPrice'); if (svCtaPrice) svCtaPrice.textContent = '₹' + price;
+
     var perUse = document.getElementById('pcPerUse');
     if (perUse) perUse.textContent = '₹' + price + ' = ~' + sprays + ' sprays. Works out to ₹' + perSpray + ' per spray.';
 
@@ -5721,9 +6007,9 @@
     var finalCta = document.getElementById('finalCta');
     if (finalCta) finalCta.textContent = 'BUY — ₹' + price;
     if (hint) {
-      if (qty === 1) hint.textContent = 'One bottle. ~250 sprays. Try it risk-free.';
-      else if (qty === 2) hint.textContent = 'Perfect for sharing — gift one, keep one.';
-      else hint.textContent = 'Stock up or gift the set — great for gym bags & travel kits.';
+      if (qty === 1) hint.textContent = 'Add a 2nd bottle for +₹170 and save ₹600 vs MRP.';
+      else if (qty === 2) hint.textContent = 'Smart pick — one for your bag, one for your desk.';
+      else hint.textContent = 'Best value — ₹183/bottle. Stock up or gift the extras.';
     }
   };
   window.buyBoxAdd = function(){
@@ -5980,6 +6266,27 @@
       renderCards();
     };
 
+    // TR4 — compute aggregate from REAL data (testers + buyer reviews); honest fallback labelling.
+    function renderAggregate(all){
+      var total = all.length;
+      if (!total) return;
+      var sum = all.reduce(function(a, r){ return a + (Number(r.r) || 0); }, 0);
+      var avg = sum / total;
+      var rounded = Math.round(avg);
+      var stars = '★★★★★'.slice(0, rounded) + '☆☆☆☆☆'.slice(0, 5 - rounded);
+      var buyers = _buyerReviews.length;
+      var num = document.getElementById('rvAggNum'); if (num) num.textContent = avg.toFixed(1);
+      var st = document.getElementById('rvAggStars'); if (st) st.textContent = stars;
+      var cnt = document.getElementById('rvAggCount');
+      if (cnt) cnt.textContent = buyers > 0
+        ? ('Based on ' + total + ' reviews · ' + buyers + ' verified ' + (buyers === 1 ? 'buyer' : 'buyers'))
+        : ('Based on ' + total + ' beta-tester reviews');
+      // keep the hero rating honest too (no fabricated counts)
+      var hc = document.querySelector('.hr-count'); if (hc) hc.textContent = '(' + total + (total === 1 ? ' review' : ' reviews') + ')';
+      var hs = document.querySelector('.hr-stars'); if (hs) hs.textContent = stars;
+      var hrow = document.querySelector('.hero-rating'); if (hrow) hrow.setAttribute('aria-label', 'Rated ' + avg.toFixed(1) + ' out of 5 from ' + total + ' reviews');
+    }
+
     function renderCards(){
       var wrap = document.getElementById('rvScroll');
       if (!wrap) return;
@@ -6003,6 +6310,8 @@
       // Buyer reviews first (newest), then testers as foundation.
       var all = buyers.concat(testers);
       var total = all.length;
+
+      renderAggregate(all);  // TR4 — real-data average + count
 
       var visible = _showAll ? all : all.slice(0, 6);
 
@@ -6564,5 +6873,159 @@ window.createSupabaseOrder = function (opts) {
 </script>
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+
+<!-- ═══════════ CRO ENHANCEMENTS (Pillar 1: attraction) ═══════════ -->
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasIO = 'IntersectionObserver' in window;
+  // TR7 — real number only. Leave null to keep the "bottles shipped" marker hidden.
+  var BOTTLES_SHIPPED = null;
+
+  /* AT3 — count-up stats when .problem-stats scrolls into view */
+  function initCountUp(){
+    var wrap = document.querySelector('.problem-stats');
+    if(!wrap) return;
+    var nums = wrap.querySelectorAll('.p-stat-num');
+    function run(){
+      nums.forEach(function(el){
+        var node = el.firstChild;                       // leading text node, keeps .p-stat-unit span
+        if(!node || node.nodeType !== 3) return;
+        var target = parseInt(node.nodeValue, 10);
+        if(isNaN(target)) return;
+        if(reduce){ node.nodeValue = String(target); return; }
+        var start = null, dur = 1000;
+        function step(ts){
+          if(!start) start = ts;
+          var p = Math.min((ts - start)/dur, 1);
+          node.nodeValue = String(Math.round(p * target));
+          if(p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+    }
+    if(reduce || !hasIO){ run(); return; }
+    var o = new IntersectionObserver(function(es){
+      if(es[0].isIntersecting){ run(); o.disconnect(); }
+    }, { threshold: 0.4 });
+    o.observe(wrap);
+  }
+
+  /* AT5 — section scroll-reveal (only hide sections if we can/will reveal them) */
+  function initReveal(){
+    if(reduce || !hasIO) return;  // no JS-hiding when we won't animate → content always visible
+    var sel = '.problem,.trigger-section,.how-works,.compare,.savings,.only-fix,.reviews,.faq,.final';
+    var secs = document.querySelectorAll(sel);
+    if(!secs.length) return;
+    var o = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in-view'); o.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    secs.forEach(function(s){ s.classList.add('reveal'); o.observe(s); });
+  }
+
+  /* EN1 — interactive "find your moment" trigger cards */
+  function initTriggers(){
+    document.querySelectorAll('.trigger-card').forEach(function(card){
+      if(!card.querySelector('.trigger-fix')) return;
+      card.setAttribute('role','button');
+      card.setAttribute('tabindex','0');
+      card.setAttribute('aria-expanded','false');
+      function toggle(){
+        var open = card.classList.toggle('open');
+        card.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+      card.addEventListener('click', function(e){ if(e.target.closest('a')) return; toggle(); });
+      card.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+      });
+    });
+  }
+
+  /* EN2 — savings calculator (honest estimate) */
+  var SV = { count:3, COST_PER_FIX:40, SPRAYS_PER_FIX:2, BOTTLE_SPRAYS:250, WEEKS:4.3 };
+  function svBottlePrice(){
+    var c = window.SMELLOFF_CONFIG;
+    return (c && c.PRICES && c.PRICES.solo) ? c.PRICES.solo : 229;
+  }
+  function svRender(){
+    var money=document.getElementById('svMoney'), loads=document.getElementById('svLoads'), cnt=document.getElementById('svCount');
+    if(!money) return;
+    var monthlyFixes = Math.round(SV.count * SV.WEEKS);
+    var oldMonthly = monthlyFixes * SV.COST_PER_FIX;
+    var bottleFixes = SV.BOTTLE_SPRAYS / SV.SPRAYS_PER_FIX;          // ~125 fixes per bottle
+    var monthsPerBottle = bottleFixes / Math.max(monthlyFixes,1);
+    var osMonthly = svBottlePrice() / monthsPerBottle;
+    var saving = Math.max(Math.round(oldMonthly - osMonthly), 0);
+    if(cnt) cnt.textContent = SV.count;
+    money.textContent = '₹' + saving;
+    loads.textContent = monthlyFixes;
+  }
+  window.svStep = function(d){ SV.count = Math.min(14, Math.max(1, SV.count + d)); svRender(); };
+
+  /* EN5 — reading progress bar */
+  function initProgress(){
+    var bar = document.getElementById('scrollProgress');
+    if(!bar) return;
+    var ticking=false;
+    function upd(){
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = ((h>0 ? window.scrollY/h : 0)*100).toFixed(2) + '%';
+      ticking=false;
+    }
+    window.addEventListener('scroll', function(){ if(!ticking){ ticking=true; requestAnimationFrame(upd); } }, {passive:true});
+    window.addEventListener('resize', upd, {passive:true});
+    upd();
+  }
+
+  /* PH1 — product photos: probe via JS so a missing file never shows broken (CSS bottle stays) */
+  function probe(src, ok, fail){ var im = new Image(); im.onload = function(){ ok(); }; im.onerror = function(){ fail(); }; im.src = src; }
+  function initHeroPhoto(){
+    var wrap = document.querySelector('.hero-bottle'); if(!wrap) return;
+    var src = '/assets/product-hero.jpg';
+    probe(src, function(){
+      var img = document.createElement('img');
+      img.src = src; img.alt = 'ODORSTRIKE fabric odor spray bottle';
+      img.className = 'hero-photo'; img.loading = 'lazy'; img.decoding = 'async';
+      wrap.classList.add('has-photo'); wrap.appendChild(img);
+    }, function(){});
+  }
+  function initGallery(){
+    var gallery = document.getElementById('pcGallery'); if(!gallery) return;
+    var imgs = [
+      ['/assets/product-hero.jpg',   'ODORSTRIKE fabric odor spray bottle'],
+      ['/assets/product-pocket.jpg', 'ODORSTRIKE — pocket size'],
+      ['/assets/demo-no-stain.jpg',  'Sprayed on dark fabric — dries clear, no stain']
+    ];
+    var loaded = [], pending = imgs.length;
+    imgs.forEach(function(pair, i){
+      probe(pair[0], function(){ loaded.push(i); done(); }, function(){ done(); });
+    });
+    function done(){
+      if(--pending > 0) return;
+      if(!loaded.length) return;               // no real photos yet → CSS bottle stays
+      loaded.sort(function(a,b){return a-b;});
+      gallery.innerHTML = loaded.map(function(i){
+        return '<img src="'+imgs[i][0]+'" alt="'+imgs[i][1]+'" loading="lazy" decoding="async" role="listitem">';
+      }).join('');
+      gallery.hidden = false;
+      var media = gallery.closest('.pc-media');
+      var cssBottle = media && media.querySelector('.pc-image');
+      if(cssBottle) cssBottle.style.display = 'none';
+    }
+  }
+
+  function init(){
+    initCountUp(); initReveal(); initTriggers(); svRender(); initProgress();
+    initHeroPhoto(); initGallery();
+    if (typeof window.selectQty === 'function') window.selectQty(2); /* sync MRP/discount/calc-CTA on load */
+    var bs = document.getElementById('bottlesShipped');
+    if (bs && BOTTLES_SHIPPED != null){ bs.textContent = ' · ' + BOTTLES_SHIPPED + ' bottles shipped'; bs.hidden = false; }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
 </body>
 </html>
