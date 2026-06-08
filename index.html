@@ -4244,6 +4244,16 @@
   .hero-cod-line{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--gray);margin:8px 0 0;line-height:1.4}
   .hero-cod-link{background:none;border:none;padding:0;color:var(--gray);font:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
   .hero-cod-link:hover{color:var(--white)}
+  /* S3 — problem stat sources + answer-stat differentiation */
+  .p-stat-source{display:block;font-family:'DM Sans',sans-serif;font-size:10px;color:var(--gray);opacity:.6;margin-top:4px;line-height:1.3}
+  .p-stat-solve{border-top:2px solid var(--green);box-shadow:0 0 22px rgba(var(--accent-rgb),.14)}
+  /* S10 — final CTA */
+  .final-sub-2{font-family:'DM Sans',sans-serif;font-style:italic;color:var(--gray);font-size:14px;line-height:1.5;margin:6px 0 0}
+  .final-rating{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--gray);margin:18px 0 14px;line-height:1.4}
+  .final-rating .fr-stars{color:var(--green);letter-spacing:1px;margin-right:6px}
+  .final-cod-line{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--gray);margin:12px 0 0}
+  /* S13 — footer founder note */
+  .sf-founder-note{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--gray);text-align:center;line-height:1.5;margin:0 auto 14px;max-width:520px;padding:0 16px}
   /* ═══════════ END CX OVERHAUL ═══════════ */
 </style>
 </head>
@@ -4273,7 +4283,7 @@
 <!-- UTILITY PILLS -->
 <div class="cat-pills" id="catPills" role="navigation" aria-label="Shop shortcuts">
   <a href="#buy" class="cat-pill active" data-target="buy">Shop</a>
-  <a href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%27d%20like%20to%20track%20my%20order.%0AOrder%20ID%3A%20" class="cat-pill" target="_blank" rel="noopener">Track order</a>
+  <a href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%27d%20like%20to%20track%20my%20order.%0AOrder%20ID%3A%20" class="cat-pill" target="_blank" rel="noopener" title="Track your order on WhatsApp">Track my order</a>
   <a href="#reviews" class="cat-pill" data-target="reviews">Reviews</a>
 </div>
 
@@ -4314,12 +4324,12 @@
 <div class="mobile-bar" id="mobileBar" aria-hidden="true">
   <div class="mb-meta">
     <div class="mb-pills" role="radiogroup" aria-label="Select pack">
-      <button class="mb-pill" type="button" role="radio" aria-checked="false" data-qty="1" onclick="mobileBarPick(1)">1×</button>
-      <button class="mb-pill active" type="button" role="radio" aria-checked="true" data-qty="2" onclick="mobileBarPick(2)">2×</button>
+      <button class="mb-pill active" type="button" role="radio" aria-checked="true" data-qty="1" onclick="mobileBarPick(1)">1×</button>
+      <button class="mb-pill" type="button" role="radio" aria-checked="false" data-qty="2" onclick="mobileBarPick(2)">2×</button>
       <button class="mb-pill" type="button" role="radio" aria-checked="false" data-qty="3" onclick="mobileBarPick(3)">3×</button>
     </div>
     <div class="mb-price">
-      <span class="mb-now">₹399</span>
+      <span class="mb-now">₹229</span>
     </div>
   </div>
   <button class="mb-btn" type="button" onclick="mobileBarBuy()">BUY NOW</button>
@@ -4407,7 +4417,7 @@
 
 <!-- PROBLEM — compact -->
 <section class="problem">
-  <div class="section-tag">The problem</div>
+  <div class="section-tag">Why your shirt betrays you.</div>
   <h2>
     <span>You don't stink.</span>
     <span class="p-hl">Your shirt does.</span>
@@ -4417,10 +4427,12 @@
     <div class="p-stat">
       <div class="p-stat-num">11<span class="p-stat-unit">hr</span></div>
       <div class="p-stat-label">Hours sweat builds in your shirt</div>
+      <span class="p-stat-source">Across a typical day out</span>
     </div>
     <div class="p-stat">
       <div class="p-stat-num">4<span class="p-stat-unit">×</span></div>
       <div class="p-stat-label">Odor moments per workday</div>
+      <span class="p-stat-source">Commute · gym · lunch · meetings</span>
     </div>
     <div class="p-stat p-stat-solve">
       <div class="p-stat-num">8<span class="p-stat-unit">sec</span></div>
@@ -4659,19 +4671,19 @@
       <h3 class="pc-title">ODORSTRIKE Fabric Odor Mist</h3>
       <p class="pc-subtitle">50ml · Pocket size · Fabric only · Made in Hyderabad</p>
       <div class="pc-price-row">
-        <span class="price-main" id="pcPriceMain">₹399</span>
+        <span class="price-main" id="pcPriceMain">₹229</span>
         <s class="price-mrp" id="pcPriceMrp">₹999</s>
         <span class="price-off" id="pcPriceOff">60% OFF</span>
       </div>
       <div class="pc-pack-selector" role="radiogroup" aria-label="Select pack">
-        <div class="pc-pack-card" data-qty="1" role="radio" aria-checked="false" tabindex="0" onclick="selectQty(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectQty(1)}" style="position:relative">
+        <div class="pc-pack-card active" data-qty="1" role="radio" aria-checked="true" tabindex="0" onclick="selectQty(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectQty(1)}" style="position:relative">
           <span class="ppc-badge outline">STARTER</span>
           <span class="ppc-main">1 × 50ml</span>
           <span class="ppc-price"><s class="ppc-mrp">₹579</s>₹229</span>
           <span class="ppc-per">₹229/bottle</span>
           <span class="ppc-save">save ₹350 vs MRP</span>
         </div>
-        <div class="pc-pack-card active" data-qty="2" role="radio" aria-checked="true" tabindex="0" onclick="selectQty(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectQty(2)}" style="position:relative">
+        <div class="pc-pack-card" data-qty="2" role="radio" aria-checked="false" tabindex="0" onclick="selectQty(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectQty(2)}" style="position:relative">
           <span class="ppc-badge">MOST POPULAR</span>
           <span class="ppc-main">2 × 50ml</span>
           <span class="ppc-price"><s class="ppc-mrp">₹999</s>₹399</span>
@@ -4689,12 +4701,12 @@
       <p class="pc-qty-hint" id="pcQtyHint">Smart pick — one for your bag, one for your desk.</p>
       <p class="pc-pricelock">Price locks at checkout. Free shipping on all orders.</p>
 
-      <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">BUY — ₹399</button>
+      <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">BUY NOW — ₹229 →</button>
       <button class="pc-cod-cta" id="pcCodCta" onclick="buyBoxCod()">Order COD — pay on delivery <span class="cod-zero">₹0 today</span></button>
       <div class="cod-trust">
         <svg class="ct-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
         <div>
-          <p class="ct-main">No advance. Pay <span id="codTrustAmt">₹399</span> only when your package arrives at your door.</p>
+          <p class="ct-main">No advance. Pay <span id="codTrustAmt">₹229</span> only when your package arrives at your door.</p>
           <p class="ct-sub">Available across 27,000+ pincodes. 100% safe, zero risk.</p>
         </div>
       </div>
@@ -4817,16 +4829,16 @@
 <section class="ritual-section" id="how-to-use">
   <div class="section-eyebrow">
     <div class="section-eyebrow-line"></div>
-    <span class="section-eyebrow-label">The Ritual</span>
+    <span class="section-eyebrow-label">How to use it.</span>
   </div>
   <h2 class="ritual-title">How to <span class="acid">strike.</span></h2>
-  <p class="ritual-sub">Three seconds. No drying time, no white marks.</p>
+  <p class="ritual-sub">Three steps. Dries in 10 seconds. No white marks.</p>
   <div class="ritual-grid">
     <div class="ritual-tile">
       <div class="ritual-num">01</div>
       <div class="ritual-heading">Shake</div>
       <p class="ritual-desc">Two quick shakes</p>
-      <div class="ritual-meta">2 sec</div>
+      <div class="ritual-meta">2 shakes</div>
     </div>
     <div class="ritual-tile">
       <div class="ritual-num">02</div>
@@ -4838,7 +4850,7 @@
       <div class="ritual-num">03</div>
       <div class="ritual-heading">Walk Out</div>
       <p class="ritual-desc">Zinc locks odor</p>
-      <div class="ritual-meta">Done</div>
+      <div class="ritual-meta">10 sec dry</div>
     </div>
   </div>
 </section>
@@ -4983,9 +4995,12 @@
 
 <!-- FINAL CTA — dark band -->
 <section class="final">
-  <h2 class="final-title">Stop the smell. Before anyone notices.</h2>
-  <p class="final-sub">Launch price ₹229. Free shipping. 7-day returns. Ships from Hyderabad in 48 hours.</p>
-  <a href="#buy" class="final-cta" id="finalCta" onclick="event.preventDefault();buyBoxAdd()">BUY — ₹399</a>
+  <h2 class="final-title">You've read this far. Your shirt won't smell itself.</h2>
+  <p class="final-sub">Free shipping. 7-day money-back. COD available. Ships in 48 hours.</p>
+  <p class="final-sub-2">Smelloff is made in Hyderabad by one person. Every order matters.</p>
+  <div class="final-rating"><span class="fr-stars" aria-hidden="true">★★★★★</span> Loved by early buyers</div>
+  <a href="#buy" class="final-cta" id="finalCta" onclick="event.preventDefault();addToCart('solo')">TRY ODORSTRIKE — ₹229 →</a>
+  <p class="final-cod-line">or <button type="button" class="hero-cod-link" onclick="selectQty(1);buyBoxCod()">order COD — pay ₹0 today →</button></p>
 </section>
 
 <!-- TR3 — founder trust block -->
@@ -5006,7 +5021,7 @@
       <p class="sf-tagline">Pocket-sized odor killer for your clothes.</p>
 
       <form class="sf-newsletter" id="emailForm" onsubmit="submitWaitlist();return false;">
-        <input type="email" id="waitlistEmail" placeholder="Email for launch drops + 10% off" required aria-label="Email address">
+        <input type="email" id="waitlistEmail" placeholder="Email for restock alerts and care tips" required aria-label="Email address">
         <button type="submit">Join</button>
       </form>
       <div class="sf-newsletter-success" id="ecSuccess">You're in. Watch your inbox.</div>
@@ -5034,6 +5049,8 @@
       </button>
       <ul class="sf-col-list">
         <li><a href="#buy">ODORSTRIKE</a></li>
+        <li><a href="#how-to-use">How to use ODORSTRIKE</a></li>
+        <li><a href="#faq">FAQ</a></li>
       </ul>
     </div>
     <div class="sf-col">
@@ -5077,6 +5094,9 @@
       </ul>
     </div>
   </div>
+
+  <!-- Founder trust anchor -->
+  <p class="sf-founder-note">Made by Brainee in Hyderabad. ODORSTRIKE is a real product made by a real person.</p>
 
   <!-- BOTTOM strip -->
   <div class="sf-bottom">
@@ -5982,7 +6002,7 @@
   // =============================================
   // Maps the 1/2/3 quantity buttons to solo/duo/trio variants
   // and updates the CTA label + hint inline.
-  let _buyBoxQty = 2;
+  let _buyBoxQty = 1;
   window.selectQty = function(qty){
     _buyBoxQty = qty;
     document.querySelectorAll('.pc-pack-card').forEach(function(b){
@@ -6022,14 +6042,12 @@
     var cta = document.getElementById('pcCta');
     var codCta = document.getElementById('pcCodCta');
     var hint = document.getElementById('pcQtyHint');
-    if (cta) cta.textContent = 'BUY — ₹' + price;
+    if (cta) cta.textContent = 'BUY NOW — ₹' + price + ' →';
     // BUG: data-price was written here but never read anywhere (buyBoxCod derives price from _buyBoxQty) — removed dead code
     // Sync mobile sticky bar price (button handler stays as mobileBarBuy)
     var mbNow = document.querySelector('.mobile-bar .mb-now');
     if (mbNow) mbNow.textContent = '₹' + price;
-    // Sync final CTA
-    var finalCta = document.getElementById('finalCta');
-    if (finalCta) finalCta.textContent = 'BUY — ₹' + price;
+    // Final CTA stays the ₹229 solo entry hook (intentionally not synced to pack price)
     if (hint) {
       if (qty === 1) hint.textContent = 'Add a 2nd bottle for +₹170 and save ₹600 vs MRP.';
       else if (qty === 2) hint.textContent = 'Smart pick — one for your bag, one for your desk.';
@@ -7049,7 +7067,7 @@ window.createSupabaseOrder = function (opts) {
   function init(){
     initCountUp(); initReveal(); initTriggers(); svRender(); initProgress();
     initHeroPhoto(); initGallery();
-    if (typeof window.selectQty === 'function') window.selectQty(2); /* sync MRP/discount/calc-CTA on load */
+    if (typeof window.selectQty === "function") window.selectQty(1); /* sync MRP/discount/calc-CTA on load */
     var bs = document.getElementById('bottlesShipped');
     if (bs && BOTTLES_SHIPPED != null){ bs.textContent = ' · ' + BOTTLES_SHIPPED + ' bottles shipped'; bs.hidden = false; }
   }
