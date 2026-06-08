@@ -4222,6 +4222,13 @@
   .founder-ig{display:inline-block;margin-top:14px;font-family:'Inter Tight',sans-serif;font-size:13px;color:var(--gray);text-decoration:none}
   .founder-ig:hover{color:var(--accent)}
   /* ═══════════ END PILLAR 4 ═══════════ */
+
+  /* ═══════════ CRO PILLAR 5 — PRODUCT PHOTO SLOTS (graceful fallback) ═══════════ */
+  .hero-photo{display:block;width:100%;max-width:300px;height:auto;margin:0 auto;border-radius:12px}
+  .pc-gallery{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 0;margin:0 0 8px}
+  .pc-gallery::-webkit-scrollbar{display:none}
+  .pc-gallery img{flex:0 0 86%;scroll-snap-align:center;width:86%;height:auto;border-radius:12px;object-fit:cover;background:var(--card)}
+  /* ═══════════ END PILLAR 5 ═══════════ */
 </style>
 </head>
 <body>
@@ -4638,6 +4645,7 @@
   <article class="product-card">
     <div class="pc-media">
       <span class="pc-tag">LAUNCH BATCH · PRICE GOES UP AFTER THIS RUN</span>
+      <div class="pc-gallery" id="pcGallery" role="list" aria-label="Product photos" hidden></div>
       <div class="pc-image" aria-hidden="true">
         <div class="hb-bottle">
           <div class="hb-cap"></div>
@@ -6971,8 +6979,46 @@ window.createSupabaseOrder = function (opts) {
     upd();
   }
 
+  /* PH1 — product photos: probe via JS so a missing file never shows broken (CSS bottle stays) */
+  function probe(src, ok, fail){ var im = new Image(); im.onload = function(){ ok(); }; im.onerror = function(){ fail(); }; im.src = src; }
+  function initHeroPhoto(){
+    var wrap = document.querySelector('.hero-bottle'); if(!wrap) return;
+    var src = '/assets/product-hero.jpg';
+    probe(src, function(){
+      var img = document.createElement('img');
+      img.src = src; img.alt = 'ODORSTRIKE fabric odor spray bottle';
+      img.className = 'hero-photo'; img.loading = 'lazy'; img.decoding = 'async';
+      wrap.classList.add('has-photo'); wrap.appendChild(img);
+    }, function(){});
+  }
+  function initGallery(){
+    var gallery = document.getElementById('pcGallery'); if(!gallery) return;
+    var imgs = [
+      ['/assets/product-hero.jpg',   'ODORSTRIKE fabric odor spray bottle'],
+      ['/assets/product-pocket.jpg', 'ODORSTRIKE — pocket size'],
+      ['/assets/demo-no-stain.jpg',  'Sprayed on dark fabric — dries clear, no stain']
+    ];
+    var loaded = [], pending = imgs.length;
+    imgs.forEach(function(pair, i){
+      probe(pair[0], function(){ loaded.push(i); done(); }, function(){ done(); });
+    });
+    function done(){
+      if(--pending > 0) return;
+      if(!loaded.length) return;               // no real photos yet → CSS bottle stays
+      loaded.sort(function(a,b){return a-b;});
+      gallery.innerHTML = loaded.map(function(i){
+        return '<img src="'+imgs[i][0]+'" alt="'+imgs[i][1]+'" loading="lazy" decoding="async" role="listitem">';
+      }).join('');
+      gallery.hidden = false;
+      var media = gallery.closest('.pc-media');
+      var cssBottle = media && media.querySelector('.pc-image');
+      if(cssBottle) cssBottle.style.display = 'none';
+    }
+  }
+
   function init(){
     initCountUp(); initReveal(); initTriggers(); svRender(); initProgress();
+    initHeroPhoto(); initGallery();
     if (typeof window.selectQty === 'function') window.selectQty(2); /* sync MRP/discount/calc-CTA on load */
     var bs = document.getElementById('bottlesShipped');
     if (bs && BOTTLES_SHIPPED != null){ bs.textContent = ' · ' + BOTTLES_SHIPPED + ' bottles shipped'; bs.hidden = false; }
