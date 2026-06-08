@@ -4102,9 +4102,90 @@
     button:active,.hero-cta:active,.pc-cta:active{transform:none}
   }
   /* ═══════════ END PILLAR 1 ═══════════ */
+
+  /* ═══════════ CRO PILLAR 2 — ENGAGEMENT ═══════════ */
+  /* EN5 — reading progress bar (sits just under the fixed nav, z below nav=50) */
+  .scroll-progress{position:fixed;left:0;top:calc(56px + env(safe-area-inset-top,0px));height:3px;width:0;
+    background:linear-gradient(90deg,var(--accent),var(--green-light));z-index:49;
+    transition:width .08s linear;pointer-events:none}
+
+  /* EN1 — interactive trigger cards */
+  .trigger-card{cursor:pointer}
+  .trigger-card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .trigger-fix{max-height:0;overflow:hidden;opacity:0;transition:max-height .3s ease,opacity .3s ease,margin-top .3s ease;margin-top:0}
+  .trigger-card.open .trigger-fix{max-height:200px;opacity:1;margin-top:12px}
+  .trigger-fix-line{font-family:'Inter Tight',sans-serif;font-size:13px;line-height:1.5;color:var(--text);
+    padding-top:12px;border-top:1px solid var(--border)}
+  .trigger-fix-line b{color:var(--accent)}
+  .trigger-add{display:inline-flex;align-items:center;gap:5px;margin-top:10px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);text-decoration:none}
+  .trigger-add:hover{color:var(--green-light)}
+  .trigger-tap-hint{font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--muted);margin-top:10px;letter-spacing:.04em}
+  .trigger-card.open .trigger-tap-hint{display:none}
+
+  /* EN2 — savings calculator */
+  .savings{padding:60px 20px;max-width:720px;margin:0 auto;text-align:center}
+  .sv-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(28px,7vw,40px);
+    line-height:1.05;color:var(--white);text-transform:uppercase;margin:0 0 8px}
+  .sv-sub{font-family:'Inter Tight',sans-serif;font-size:14px;color:var(--gray);margin:0 auto 26px;max-width:480px;line-height:1.5}
+  .sv-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px 22px;text-align:left}
+  .sv-q{font-family:'Inter Tight',sans-serif;font-size:15px;font-weight:600;color:var(--text);margin:0 0 18px;text-align:center}
+  .sv-stepper{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:6px}
+  .sv-btn{width:48px;height:48px;border-radius:12px;border:1px solid var(--border);background:var(--bg-subtle);
+    color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s,transform .12s}
+  .sv-btn:hover{border-color:var(--accent)}
+  .sv-btn:active{transform:scale(.94)}
+  .sv-val{min-width:96px;text-align:center}
+  .sv-val b{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:46px;line-height:1;color:var(--accent)}
+  .sv-val span{font-family:'Inter Tight',sans-serif;font-size:12px;color:var(--muted)}
+  .sv-out{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0 6px}
+  .sv-out-box{background:var(--bg-subtle);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+  .sv-out-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;color:var(--accent);line-height:1}
+  .sv-out-lbl{font-family:'Inter Tight',sans-serif;font-size:12px;color:var(--gray);margin-top:5px;line-height:1.3}
+  .sv-note{font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--muted);margin:14px 0 18px;line-height:1.45}
+  .sv-cta{display:inline-flex;align-items:center;justify-content:center;width:100%;height:54px;
+    background:var(--accent);color:var(--black);border:none;border-radius:8px;cursor:pointer;text-decoration:none;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:17px;letter-spacing:.04em;text-transform:uppercase;
+    transition:background .15s}
+  .sv-cta:hover{background:var(--green-light)}
+
+  /* EN3 — science molecule animation */
+  .hw-anim{position:relative;height:130px;margin:0 auto 32px;max-width:320px}
+  .hw-ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:96px;height:96px;border-radius:50%;
+    border:3px dashed var(--accent);animation:hwSpin 9s linear infinite}
+  .hw-ring::after{content:'';position:absolute;inset:14px;border-radius:50%;border:2px solid rgba(var(--accent-rgb),.3)}
+  .hw-ring-label{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:280px;text-align:center;white-space:nowrap;
+    font-family:'Inter Tight',sans-serif;font-size:10px;color:var(--gray);letter-spacing:.02em}
+  .hw-mol{position:absolute;left:4%;top:50%;width:16px;height:16px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%,#ff8c5a,#c23b1e);box-shadow:0 0 10px rgba(255,140,90,.6);
+    transform:translateY(-50%);animation:hwMol 4.5s ease-in-out infinite}
+  @keyframes hwSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+  @keyframes hwMol{
+    0%{left:4%;transform:translateY(-50%) scale(1);opacity:.35}
+    35%{left:50%;transform:translate(-50%,-50%) scale(1);opacity:1}
+    60%{left:50%;transform:translate(-50%,-50%) scale(.5);opacity:1;filter:grayscale(.8)}
+    100%{left:50%;transform:translate(-50%,-50%) scale(.4);opacity:0;filter:grayscale(1)}
+  }
+
+  /* EN4 — pack-card tactile feedback */
+  .pc-pack-card{transition:transform .15s ease,border-color .15s ease,background .15s ease}
+  .pc-pack-card:active{transform:scale(.98)}
+
+  @media(prefers-reduced-motion:reduce){
+    .scroll-progress{transition:none}
+    .trigger-fix{transition:none}
+    .hw-ring{animation:none}
+    .hw-mol{animation:none;left:50%;transform:translate(-50%,-50%) scale(.5);opacity:1;filter:grayscale(1)}
+    .pc-pack-card,.sv-btn{transition:none}
+    .pc-pack-card:active,.sv-btn:active{transform:none}
+  }
+  /* ═══════════ END PILLAR 2 ═══════════ */
 </style>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 <a href="#main" class="skip-link">Skip to main content</a>
 
 <nav>
@@ -4294,6 +4375,11 @@
       </div>
       <div class="trigger-heading">You've been on the road since 8.</div>
       <p class="trigger-desc">Two sprays before the lift opens. Nobody clocks the commute.</p>
+      <div class="trigger-fix">
+        <p class="trigger-fix-line"><b>The fix:</b> 2 sprays on the collar + underarm seams before you walk in.</p>
+        <a href="#buy" class="trigger-add" onclick="event.stopPropagation()">Add ODORSTRIKE →</a>
+      </div>
+      <p class="trigger-tap-hint">Tap for the fix →</p>
     </div>
     <div class="trigger-card">
       <img src="/assets/icon-dumbbell.png" alt="Dumbbell — post-gym use case" class="trigger-icon" width="38" height="38" loading="lazy" decoding="async">
@@ -4303,6 +4389,11 @@
       </div>
       <div class="trigger-heading">Gym at 7, meeting at 9. No gap.</div>
       <p class="trigger-desc">Three sprays on the tee. Walk in clean.</p>
+      <div class="trigger-fix">
+        <p class="trigger-fix-line"><b>The fix:</b> 3 sprays across the tee, front and back. Dry in 8 seconds.</p>
+        <a href="#buy" class="trigger-add" onclick="event.stopPropagation()">Add ODORSTRIKE →</a>
+      </div>
+      <p class="trigger-tap-hint">Tap for the fix →</p>
     </div>
     <div class="trigger-card">
       <img src="/assets/icon-calendar.png" alt="Calendar — pre-date use case" class="trigger-icon" width="38" height="38" loading="lazy" decoding="async">
@@ -4312,6 +4403,11 @@
       </div>
       <div class="trigger-heading">She's ten minutes away.</div>
       <p class="trigger-desc">Jacket's been on since morning. Strike the collar. Reset.</p>
+      <div class="trigger-fix">
+        <p class="trigger-fix-line"><b>The fix:</b> strike the collar and cuffs — reset without changing.</p>
+        <a href="#buy" class="trigger-add" onclick="event.stopPropagation()">Add ODORSTRIKE →</a>
+      </div>
+      <p class="trigger-tap-hint">Tap for the fix →</p>
     </div>
     <div class="trigger-card">
       <img src="/assets/icon-desk.png" alt="Desk — long work day use case" class="trigger-icon" width="38" height="38" loading="lazy" decoding="async">
@@ -4321,6 +4417,11 @@
       </div>
       <div class="trigger-heading">Hour eight. AC off. Room closed.</div>
       <p class="trigger-desc">Shirt's working overtime. One spray, back to neutral.</p>
+      <div class="trigger-fix">
+        <p class="trigger-fix-line"><b>The fix:</b> one spray down the back panel. Neutral again.</p>
+        <a href="#buy" class="trigger-add" onclick="event.stopPropagation()">Add ODORSTRIKE →</a>
+      </div>
+      <p class="trigger-tap-hint">Tap for the fix →</p>
     </div>
   </div>
 </section>
@@ -4328,6 +4429,12 @@
 <!-- SCIENCE / HOW IT WORKS -->
 <section class="how-works" id="science">
   <h2 class="hw-title">How ODORSTRIKE kills smell</h2>
+
+  <div class="hw-anim" aria-hidden="true">
+    <div class="hw-mol"></div>
+    <div class="hw-ring"></div>
+    <span class="hw-ring-label">β-cyclodextrin traps &amp; locks the odor molecule</span>
+  </div>
 
   <ol class="hw-steps">
     <li class="hw-step">
@@ -4455,6 +4562,27 @@
   </div><!-- /.compare-scroll-wrap -->
   <p class="compare-line">Deodorant covers your skin. ODORSTRIKE handles what your skin already left on your clothes.</p>
   <p class="compare-line-em">Use both. Deodorant for you. ODORSTRIKE for your clothes. Now you're covered completely.</p>
+</section>
+
+<!-- EN2 — interactive savings calculator -->
+<section class="savings" id="savings">
+  <div class="section-tag">The math</div>
+  <h2 class="sv-title">What ODORSTRIKE saves you</h2>
+  <p class="sv-sub">Every re-wash or dry-clean just to kill a smell costs money and a laundry cycle. One ₹229 bottle is roughly 250 sprays.</p>
+  <div class="sv-card">
+    <p class="sv-q">How many times a week do you re-wear or dry-clean to fight odor?</p>
+    <div class="sv-stepper">
+      <button class="sv-btn" type="button" aria-label="Decrease times per week" onclick="svStep(-1)">−</button>
+      <div class="sv-val"><b id="svCount">3</b><span>times / week</span></div>
+      <button class="sv-btn" type="button" aria-label="Increase times per week" onclick="svStep(1)">+</button>
+    </div>
+    <div class="sv-out">
+      <div class="sv-out-box"><div class="sv-out-num" id="svMoney">₹0</div><div class="sv-out-lbl">est. saved / month vs washing &amp; dry-clean</div></div>
+      <div class="sv-out-box"><div class="sv-out-num" id="svLoads">0</div><div class="sv-out-lbl">laundry loads skipped / month</div></div>
+    </div>
+    <p class="sv-note">Rough estimate — assumes ~₹40 per odor-driven wash/dry-clean and ~2 sprays per fix (250-spray bottle). Your numbers will vary.</p>
+    <a href="#buy" class="sv-cta" onclick="event.preventDefault();document.getElementById('buy').scrollIntoView({behavior:'smooth'})">Add ODORSTRIKE — <span id="svCtaPrice">₹229</span> →</a>
+  </div>
 </section>
 
 <span id="stock-up" aria-hidden="true" style="position:absolute;scroll-margin-top:80px"></span>
@@ -6674,7 +6802,7 @@ window.createSupabaseOrder = function (opts) {
   /* AT5 — section scroll-reveal (only hide sections if we can/will reveal them) */
   function initReveal(){
     if(reduce || !hasIO) return;  // no JS-hiding when we won't animate → content always visible
-    var sel = '.problem,.trigger-section,.how-works,.compare,.only-fix,.reviews,.faq,.final';
+    var sel = '.problem,.trigger-section,.how-works,.compare,.savings,.only-fix,.reviews,.faq,.final';
     var secs = document.querySelectorAll(sel);
     if(!secs.length) return;
     var o = new IntersectionObserver(function(es){
@@ -6685,7 +6813,61 @@ window.createSupabaseOrder = function (opts) {
     secs.forEach(function(s){ s.classList.add('reveal'); o.observe(s); });
   }
 
-  function init(){ initCountUp(); initReveal(); }
+  /* EN1 — interactive "find your moment" trigger cards */
+  function initTriggers(){
+    document.querySelectorAll('.trigger-card').forEach(function(card){
+      if(!card.querySelector('.trigger-fix')) return;
+      card.setAttribute('role','button');
+      card.setAttribute('tabindex','0');
+      card.setAttribute('aria-expanded','false');
+      function toggle(){
+        var open = card.classList.toggle('open');
+        card.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+      card.addEventListener('click', function(e){ if(e.target.closest('a')) return; toggle(); });
+      card.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+      });
+    });
+  }
+
+  /* EN2 — savings calculator (honest estimate) */
+  var SV = { count:3, COST_PER_FIX:40, SPRAYS_PER_FIX:2, BOTTLE_SPRAYS:250, WEEKS:4.3 };
+  function svBottlePrice(){
+    var c = window.SMELLOFF_CONFIG;
+    return (c && c.PRICES && c.PRICES.solo) ? c.PRICES.solo : 229;
+  }
+  function svRender(){
+    var money=document.getElementById('svMoney'), loads=document.getElementById('svLoads'), cnt=document.getElementById('svCount');
+    if(!money) return;
+    var monthlyFixes = Math.round(SV.count * SV.WEEKS);
+    var oldMonthly = monthlyFixes * SV.COST_PER_FIX;
+    var bottleFixes = SV.BOTTLE_SPRAYS / SV.SPRAYS_PER_FIX;          // ~125 fixes per bottle
+    var monthsPerBottle = bottleFixes / Math.max(monthlyFixes,1);
+    var osMonthly = svBottlePrice() / monthsPerBottle;
+    var saving = Math.max(Math.round(oldMonthly - osMonthly), 0);
+    if(cnt) cnt.textContent = SV.count;
+    money.textContent = '₹' + saving;
+    loads.textContent = monthlyFixes;
+  }
+  window.svStep = function(d){ SV.count = Math.min(14, Math.max(1, SV.count + d)); svRender(); };
+
+  /* EN5 — reading progress bar */
+  function initProgress(){
+    var bar = document.getElementById('scrollProgress');
+    if(!bar) return;
+    var ticking=false;
+    function upd(){
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = ((h>0 ? window.scrollY/h : 0)*100).toFixed(2) + '%';
+      ticking=false;
+    }
+    window.addEventListener('scroll', function(){ if(!ticking){ ticking=true; requestAnimationFrame(upd); } }, {passive:true});
+    window.addEventListener('resize', upd, {passive:true});
+    upd();
+  }
+
+  function init(){ initCountUp(); initReveal(); initTriggers(); svRender(); initProgress(); }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
