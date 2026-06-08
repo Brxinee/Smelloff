@@ -4235,6 +4235,16 @@
   .pc-gallery::-webkit-scrollbar{display:none}
   .pc-gallery img{flex:0 0 86%;scroll-snap-align:center;width:86%;height:auto;border-radius:12px;object-fit:cover;background:var(--card)}
   /* ═══════════ END PILLAR 5 ═══════════ */
+
+  /* ═══════════ CX OVERHAUL ═══════════ */
+  /* S2 hero */
+  .hero-social{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--gray);margin:2px 0 2px;line-height:1.4}
+  .hero-social .hs-stars{color:var(--green);letter-spacing:1px;margin-right:6px}
+  .hero-sub{color:var(--white)} /* TP3 — reserve green for actionable elements */
+  .hero-cod-line{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--gray);margin:8px 0 0;line-height:1.4}
+  .hero-cod-link{background:none;border:none;padding:0;color:var(--gray);font:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+  .hero-cod-link:hover{color:var(--white)}
+  /* ═══════════ END CX OVERHAUL ═══════════ */
 </style>
 </head>
 <body>
@@ -4334,6 +4344,7 @@
   <div class="hero-inner">
     <div class="hero-text">
       <div class="hero-category">Fabric odor spray · Made in Hyderabad</div>
+      <div class="hero-social"><span class="hs-stars" aria-hidden="true">★★★★★</span> Loved by early buyers across India</div>
       <h1 class="hero-headline"><span class="hh-line">DEO FOR YOUR PITS.</span><span class="hh-line">PERFUME FOR YOUR STYLE.</span><span class="hh-line"><span class="green">ODORSTRIKE</span> FOR YOUR SHIRT.</span></h1>
       <div class="hero-rating" aria-label="Rated 4.7 out of 5 from 3 reviews">
         <span class="hr-stars" aria-hidden="true">★★★★★</span>
@@ -4344,7 +4355,7 @@
         <p class="ht-quote">Fixed my gym bag smell in seconds. — Priya K., Bangalore</p>
         <p class="ht-quote">Keeps my formals fresh through back-to-back meetings. — Arjun S., Delhi</p>
       </div>
-      <p class="hero-sub">The missing third spray. 50ml · ₹229 · Kills odor in 8 seconds.</p>
+      <p class="hero-sub">The missing third spray. 50ml. Kills odor in 8 seconds.</p>
       <div class="hero-8s" aria-label="Odor gone in 8 seconds">
         <span class="h8-ring" aria-hidden="true"><span class="h8-num">8s</span></span>
         <span class="h8-label">Odor gone in 8 seconds.</span>
@@ -4367,8 +4378,15 @@
     </div>
 
     <div class="hero-action">
-      <a href="#buy" class="hero-cta" onclick="event.preventDefault();addToCart('solo')">BUY — ₹229</a>
-      <p class="hero-trust-bar">COD available · Free shipping · 7-day returns</p>
+      <div class="hero-price">
+        <span class="hp-now">₹229</span>
+        <span class="hp-was">₹579</span>
+        <span class="hp-off">60% OFF</span>
+      </div>
+      <a href="#buy" class="hero-cta" onclick="event.preventDefault();addToCart('solo')">GET ODORSTRIKE — ₹229 →</a>
+      <p class="hero-cod-line">or <button type="button" class="hero-cod-link" onclick="selectQty(1);buyBoxCod()">order COD, pay on delivery →</button></p>
+      <p class="hero-trust-bar">₹0 advance on COD · Free delivery Pan-India · 7-day full refund</p>
+      <p class="hero-warning">⚠ For clothes only — not for skin</p>
     </div>
   </div>
 </header>
