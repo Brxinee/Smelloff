@@ -81,6 +81,14 @@
       ]
     },
     {
+      "source": "/llms-full.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" },
+        { "key": "X-Robots-Tag", "value": "index, follow" }
+      ]
+    },
+    {
       "source": "/manifest.json",
       "headers": [
         { "key": "Content-Type", "value": "application/manifest+json; charset=utf-8" },
