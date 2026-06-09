@@ -142,6 +142,7 @@
     "shippingDetails":{"@type":"OfferShippingDetails","shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},"shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},"deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}}},
     "hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","applicableCountry":"IN","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":7,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/FreeReturn"}
   },
+  "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.7","bestRating":"5","worstRating":"1","ratingCount":"3","reviewCount":"3"},
   "review":[
     {
       "@type":"Review",
@@ -173,6 +174,8 @@
   "@context":"https://schema.org",
   "@type":"FAQPage",
   "mainEntity":[
+    {"@type":"Question","name":"What are the ingredients in ODORSTRIKE?","acceptedAnswer":{"@type":"Answer","text":"ODORSTRIKE is a 7-ingredient formula: Water (73%, base), Isopropyl Alcohol (20%, solvent that enables fast drying and fibre penetration), Triethyl Citrate (2.5%, a plant-derived odor neutralizer), Zinc PCA (1.5%, the hero active that binds odor molecules), Fragrance (1.2%, a subtle note that fades in under 60 seconds), Polysorbate 20 (1%, emulsifier), and Phenoxyethanol with Ethylhexylglycerin (0.8%, preservative). It is fabric-only and free of parabens and sulfates."}},
+    {"@type":"Question","name":"How does ODORSTRIKE work — does it mask or neutralize odor?","acceptedAnswer":{"@type":"Answer","text":"It neutralizes, it does not mask. The active ingredient Zinc PCA — a zinc salt of ricinoleic acid derived from castor oil — binds to volatile odor molecules like isovaleric acid, butyric acid, and sulfur compounds and prevents them from becoming airborne, so the nose never detects them. The isopropyl alcohol carrier drives the formula into the fibre structure where water-based detergent can't reach. This is molecular binding, not fragrance cover-up."}},
     {"@type":"Question","name":"Isn't ODORSTRIKE just a deodorant?","acceptedAnswer":{"@type":"Answer","text":"No. Deodorant is for skin. ODORSTRIKE is for fabric — shirt, jacket, helmet liner. Body odor sticks to clothes long after a shower. Deodorant can't reach there. ODORSTRIKE neutralizes odor molecules trapped in fabric fibers."}},
     {"@type":"Question","name":"Will ODORSTRIKE stain my clothes, especially dark fabric?","acceptedAnswer":{"@type":"Answer","text":"No. ODORSTRIKE is water-soluble and deposits uniformly without leaving white residue on dark fabrics. Tested on black, navy, charcoal, and grey shirts across 30 cycles. No marks, no stiffness, no fading. Safe on dark cotton and polyester."}},
     {"@type":"Question","name":"How is ODORSTRIKE different from Febreze?","acceptedAnswer":{"@type":"Answer","text":"Febreze masks odor with fragrance. ODORSTRIKE eliminates odor at the molecular level using Zinc PCA — built for elimination, not cover-up. Priced ₹229 vs Febreze ₹300+. Tested on Indian fabrics, sweat, humidity."}},
@@ -254,7 +257,8 @@
 <!-- Fonts: self-hosted woff2 (latin/latin-ext subsets, font-display:swap) — removes render-blocking third-party request -->
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/barlow-condensed-normal-latin-900.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="preload" href="/assets/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -5407,7 +5411,6 @@
             console.error('[Smelloff] Email send failed:', r.status, j);
             throw new Error(j.error || ('HTTP ' + r.status));
           }
-          console.log('[Smelloff] Email sent:', type, '→', to, j.id);
           return j;
         });
       });
@@ -5612,8 +5615,6 @@
     Object.keys(order).forEach(k => params.append(k, order[k] != null ? order[k] : ''));
     const url = CFG.SHEETS_ENDPOINT + '?' + params.toString();
 
-    console.log('[Smelloff] Logging order to Sheets:', order.orderId, url.length + ' chars');
-
     // Method 1: sendBeacon — survives page navigation, bypasses CORS
     let beaconSent = false;
     if (navigator.sendBeacon) {
@@ -5622,7 +5623,6 @@
         const fd = new FormData();
         Object.keys(order).forEach(k => fd.append(k, order[k] != null ? order[k] : ''));
         beaconSent = navigator.sendBeacon(CFG.SHEETS_ENDPOINT, fd);
-        console.log('[Smelloff] sendBeacon dispatched:', beaconSent);
       } catch (e) {
         console.warn('[Smelloff] sendBeacon failed:', e);
       }
@@ -5632,8 +5632,8 @@
     // Runs in parallel as belt-and-braces backup
     try {
       const img = new Image();
-      img.onload = () => console.log('[Smelloff] Pixel logged:', order.orderId);
-      img.onerror = () => console.log('[Smelloff] Pixel fired (onerror is expected for non-image response):', order.orderId);
+      // onerror is expected here (Apps Script returns a non-image response); swallow it so it can't surface as console noise
+      img.onerror = () => {};
       img.src = url;
     } catch (e) {
       console.warn('[Smelloff] Pixel fallback failed:', e);
@@ -5642,7 +5642,6 @@
     // Method 3: fetch as last resort (if URL is too long for beacon+img and both fail)
     if (!beaconSent && url.length < 8000) {
       fetch(url, { method: 'GET', mode: 'no-cors', keepalive: true })
-        .then(() => console.log('[Smelloff] fetch backup completed'))
         .catch(e => console.warn('[Smelloff] fetch backup failed:', e));
     }
   }
@@ -6253,6 +6252,7 @@
 
   window.submitWaitlist = function() {
     const input = document.getElementById('waitlistEmail');
+    if (!input) return;
     const email = input.value.trim();
     if (!email || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) {
       input.style.borderColor = '#a00';
@@ -6269,9 +6269,10 @@
       fd.append('email', email);
       navigator.sendBeacon(CFG.SHEETS_ENDPOINT, fd);
     }
-    document.getElementById('emailForm').style.display = 'none';
-    document.getElementById('ecSuccess').style.display = 'inline-block';
-    console.log('[Smelloff] Waitlist:', email);
+    var emailForm = document.getElementById('emailForm');
+    if (emailForm) emailForm.style.display = 'none';
+    var ecSuccess = document.getElementById('ecSuccess');
+    if (ecSuccess) ecSuccess.style.display = 'inline-block';
     SmelloffEmail.send('welcomeEmail', email, { customerName: 'there' }).catch(console.error);
   };
 

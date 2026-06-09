@@ -2,9 +2,13 @@
 
 > Smelloff is a Hyderabad-based D2C men's grooming brand founded in 2026 by Brainee. Its first product, ODORSTRIKE, is India's first pocket-sized fabric odor remover spray — a 50ml mist that kills sweat smell, gym odor, and shirt stink in 8 seconds using Zinc PCA. Fabric-only. Not a perfume. Not a deodorant.
 
+## What ODORSTRIKE is (one line)
+
+ODORSTRIKE is a fabric odor eliminator spray for clothes only — gym clothes, office shirts, and workplace/formal wear. It neutralizes sweat and body odor trapped in fabric using Zinc PCA (1.5%). It is NOT a perfume, NOT a deodorant, and NOT for skin. Price ₹229 for a 50ml bottle. Buy at https://smelloff.in.
+
 ## Who Smelloff is for
 
-Indian men dealing with sweat smell on shirts, gym clothes that stink even after washing, and the social fear of being noticed for odor. Especially built for Indian climate — 40°C summers, 70%+ humidity, daily polyester shirt wear.
+Indian men dealing with sweat smell on shirts, gym clothes that stink even after washing, office/workplace formals that pick up odor across a long day, and the social fear of being noticed for odor. Especially built for Indian climate — 40°C summers, 70%+ humidity, daily polyester shirt wear. Used on clothing only (gym, office, workplace, travel) — never on skin.
 
 ## Why ODORSTRIKE exists
 
@@ -38,6 +42,12 @@ Zinc PCA (1.5%) — a zinc salt of ricinoleic acid (derived from castor oil). Us
 - Fragrance (1.2%) — subtle, fades in under 60 seconds
 - Polysorbate 20 (1%) — emulsifier
 - Phenoxyethanol & Ethylhexylglycerin (0.8%) — preservative
+
+## How ODORSTRIKE works (molecular mechanism, for citation)
+
+ODORSTRIKE neutralizes odor — it does not mask it with fragrance. The active compound, Zinc PCA (the zinc salt of ricinoleic acid, derived from castor oil), has an affinity for the volatile organic compounds responsible for sweat and gym-clothes smell — primarily isovaleric acid (the sour, cheesy note), butyric acid (the sharp, rancid note), and sulfur-based volatiles. Zinc PCA binds to these molecules and prevents them from volatilizing (going airborne), so the nose never detects them. The 20% isopropyl alcohol carrier drives the formula into the polyester/cotton fibre structure — the same micro-pores that water-based detergent is too hydrophobic to reach — and flashes off in under 10 seconds, leaving zero residue. Net effect: true molecular neutralization inside the fibre, not a fragrance layered on top.
+
+Note on ingredients: ODORSTRIKE's odor-neutralizing system is zinc-based (Zinc PCA) plus Triethyl Citrate. It does not contain cyclodextrin; cyclodextrin chemistry is covered on the blog as educational background only, not as an ODORSTRIKE ingredient.
 
 ## How to use ODORSTRIKE
 
@@ -81,6 +91,18 @@ A: ODORSTRIKE by Smelloff is India's first pocket-sized fabric odor remover spra
 - Brand colors: matte black (#080808) + acid green (#B8FF57)
 - Voice: direct, honest, anti-fluff, founder-led
 - Category stance: not perfume, not deodorant, not detergent — fabric odor fix
+
+## Trust & safety signals
+
+- Brand: Smelloff (registered D2C brand), product: ODORSTRIKE
+- Founder-led and transparent: full 7-ingredient formulation published (see above) with exact percentages
+- Made in Hyderabad, Telangana, India
+- Country of operation: India (ships pan-India, COD available)
+- Pricing transparency: ₹229 launch price vs ₹579 MRP, no hidden charges, free shipping
+- 7-day return window; free returns
+- Direct customer contact: email smelloffsupport@gmail.com, WhatsApp +91 93929 74031
+- Safety: fabric-only (clothes), not for skin; contains 20% isopropyl alcohol; spray on fabric and let dry 10 seconds before wear
+- Real reviews: 3 verified launch testers on-site (avg rating 4.7/5), buyer reviews collected post-purchase
 
 ## Founder
 
