@@ -54,7 +54,8 @@
 </script>
 
 <!-- FAQ Schema -->
-<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="preload" href="/assets/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
 <meta name="theme-color" content="#080808">
 
 <style>
@@ -601,11 +602,9 @@ footer a{color:var(--muted)}
 window.addEventListener('scroll',()=>{
   const h=document.documentElement;
   const scrolled=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
-  document.getElementById('progressBar').style.width=scrolled+'%';
-});
-
-// Save for later (simple localStorage flag),1500);
-}
+  const pb=document.getElementById('progressBar');
+  if(pb) pb.style.width=scrolled+'%';
+},{passive:true});
 </script>
 
 
