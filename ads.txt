@@ -1,0 +1,2 @@
+# Smelloff ads.txt — no authorized digital sellers configured yet
+# Add lines here only when running display/programmatic ads
