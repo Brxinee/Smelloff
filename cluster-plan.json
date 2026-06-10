@@ -1,0 +1,287 @@
+{
+ "clusters": [
+  {
+   "id": "commercial",
+   "name": "Buy & Reviews",
+   "color": "#B8FF57",
+   "pillar": {
+    "slug": "best-fabric-odor-spray-india-2026-body-odor",
+    "title": "Best Fabric Odor Spray for Body Odor in India",
+    "incoming": 28
+   },
+   "spokes": [
+    {
+     "slug": "best-deodorant-spray-for-clothes-not-skin",
+     "title": "Deodorant Spray for Clothes: 5 Indian Options Side-by-Side \u2014 2026",
+     "incoming": 5
+    },
+    {
+     "slug": "best-body-odor-remover-spray-for-men-india",
+     "title": "Indian Men's Body Odor: The 4-Factor Biology Guide (2026)",
+     "incoming": 5
+    },
+    {
+     "slug": "spray-to-remove-sweat-smell-from-clothes-instantly",
+     "title": "The Spray That Actually Kills Sweat Smell in 10 Seconds (Tested)",
+     "incoming": 9
+    },
+    {
+     "slug": "odorstrike-review-30-day-india-test",
+     "title": "ODORSTRIKE Review: 30 Days, 4 Shirts, Real Results",
+     "incoming": 48
+    },
+    {
+     "slug": "why-i-built-odorstrike",
+     "title": "Why I Built ODORSTRIKE: A Founder's Note",
+     "incoming": 30
+    }
+   ]
+  },
+  {
+   "id": "comparison",
+   "name": "Comparisons & Alternatives",
+   "color": "#7FD64A",
+   "pillar": {
+    "slug": "deodorant-vs-fabric-mist",
+    "title": "Deodorant vs Fabric Mist: What Actually Kills Odor",
+    "incoming": 34
+   },
+   "spokes": [
+    {
+     "slug": "odorstrike-vs-febreze-india",
+     "title": "ODORSTRIKE vs Febreze: Which Works Better on Indian Clothes?",
+     "incoming": 6
+    },
+    {
+     "slug": "does-febreze-work-on-sweat-smell-clothes",
+     "title": "Does Febreze Actually Work on Sweat Smell in Clothes?",
+     "incoming": 6
+    },
+    {
+     "slug": "why-deodorant-stops-working-after-3-hours",
+     "title": "Why Deodorant Stops Working After 3 Hours (And What Actually Helps)",
+     "incoming": 5
+    },
+    {
+     "slug": "alternative-to-deodorant-for-clothes-smell",
+     "title": "The Alternative to Deodorant for Clothes Smell (And Why You Need One)",
+     "incoming": 5
+    },
+    {
+     "slug": "perfume-plus-sweat-chemical-reaction",
+     "title": "Perfume + Sweat = a Chemical Reaction (That Smells Worse)",
+     "incoming": 5
+    },
+    {
+     "slug": "confidence-spray-pre-meeting-date",
+     "title": "The Confidence Spray: Before Every Meeting, Date, and Interview",
+     "incoming": 6
+    }
+   ]
+  },
+  {
+   "id": "science",
+   "name": "Ingredient Science",
+   "color": "#5BBF3F",
+   "pillar": {
+    "slug": "zinc-ricinoleate-fabric-odor-ingredient",
+    "title": "The Ingredient That Actually Kills Fabric Odor (Not What You Think)",
+    "incoming": 14
+   },
+   "spokes": [
+    {
+     "slug": "zinc-pca-fabric-odor-ingredient-guide",
+     "title": "Zinc PCA for Fabric Odor: What It Is and Why It Works",
+     "incoming": 4
+    },
+    {
+     "slug": "is-zinc-ricinoleate-safe-for-clothes",
+     "title": "Is Zinc Ricinoleate Safe for Clothes?",
+     "incoming": 6
+    },
+    {
+     "slug": "beta-cyclodextrin-odor-removal-science",
+     "title": "Beta-Cyclodextrin: How It Traps Odor Molecules in Fabric",
+     "incoming": 6
+    },
+    {
+     "slug": "what-is-fabric-odor-eliminator",
+     "title": "What Is a Fabric Odor Eliminator?",
+     "incoming": 8
+    },
+    {
+     "slug": "why-indian-men-sweat-smell-more",
+     "title": "Why Indian Men Sweat-Smell More (It's Not Hygiene)",
+     "incoming": 10
+    }
+   ]
+  },
+  {
+   "id": "washing",
+   "name": "Washing Problems",
+   "color": "#3FA834",
+   "pillar": {
+    "slug": "clothes-smell-after-washing",
+    "title": "Why Do My Clothes Smell Even After Washing?",
+    "incoming": 15
+   },
+   "spokes": [
+    {
+     "slug": "gym-clothes-smell-after-washing",
+     "title": "Why Polyester Gym Clothes Smell After Washing (Dri-Fit Science)",
+     "incoming": 12
+    },
+    {
+     "slug": "cotton-vs-polyester-which-smells-worse",
+     "title": "Cotton vs Polyester: Which Fabric Smells Worse and Why",
+     "incoming": 6
+    },
+    {
+     "slug": "shirt-smell-after-ironing",
+     "title": "Why Shirts Smell After Ironing (And How to Fix It)",
+     "incoming": 5
+    },
+    {
+     "slug": "how-to-remove-musty-smell-from-clothes-monsoon",
+     "title": "How to Remove the Musty Smell from Clothes in Monsoon",
+     "incoming": 6
+    },
+    {
+     "slug": "can-fabric-spray-replace-dry-cleaning",
+     "title": "Can a Fabric Spray Replace Dry Cleaning?",
+     "incoming": 7
+    },
+    {
+     "slug": "rewear-clothes-without-smelling",
+     "title": "How to Re-Wear Clothes Without Them Smelling",
+     "incoming": 6
+    }
+   ]
+  },
+  {
+   "id": "garments",
+   "name": "Garment How-Tos",
+   "color": "#2E8B2B",
+   "pillar": {
+    "slug": "remove-sweat-smell-shirts-without-washing",
+    "title": "How to Remove Sweat Smell from Shirts Without Washing",
+    "incoming": 14
+   },
+   "spokes": [
+    {
+     "slug": "how-to-remove-smell-from-jeans-without-washing",
+     "title": "How to Remove Smell from Jeans Without Washing",
+     "incoming": 4
+    },
+    {
+     "slug": "how-to-remove-smell-from-formal-trousers",
+     "title": "How to Remove Smell from Formal Trousers Without Dry Cleaning",
+     "incoming": 4
+    },
+    {
+     "slug": "how-to-remove-smell-from-hoodies-sweatshirts",
+     "title": "How to Remove Smell from Hoodies and Sweatshirts",
+     "incoming": 5
+    },
+    {
+     "slug": "how-to-remove-smell-from-winter-jackets-sweaters",
+     "title": "How to Remove Smell from Winter Jackets and Sweaters",
+     "incoming": 4
+    },
+    {
+     "slug": "how-to-keep-cotton-kurtas-fresh",
+     "title": "How to Keep Cotton Kurtas Fresh in Indian Heat",
+     "incoming": 5
+    },
+    {
+     "slug": "sherwani-bandhgala-smell-before-wedding",
+     "title": "How to Remove Smell from Sherwani or Bandhgala Before a Wedding",
+     "incoming": 4
+    },
+    {
+     "slug": "school-uniform-smell-india-guide",
+     "title": "How to Keep School Uniforms Smelling Fresh",
+     "incoming": 4
+    },
+    {
+     "slug": "cricket-jersey-smell-how-to-fix",
+     "title": "How to Fix Cricket Jersey Smell After a Match",
+     "incoming": 5
+    },
+    {
+     "slug": "how-long-does-fabric-spray-last-on-clothes",
+     "title": "How Long Does Fabric Spray Last on Clothes?",
+     "incoming": 5
+    }
+   ]
+  },
+  {
+   "id": "lifestyle",
+   "name": "Daily Life & Climate",
+   "color": "#1F7022",
+   "pillar": {
+    "slug": "how-to-not-smell-sweaty-at-work",
+    "title": "How to Not Smell Sweaty at Work (The 11-Hour Office Playbook)",
+    "incoming": 13
+   },
+   "spokes": [
+    {
+     "slug": "fix-shirt-odor-before-meeting",
+     "title": "How to Fix Shirt Odor Fast Before a Meeting",
+     "incoming": 31
+    },
+    {
+     "slug": "gym-to-office-without-showering",
+     "title": "Gym to Office Without Showering",
+     "incoming": 5
+    },
+    {
+     "slug": "keep-gym-clothes-fresh-in-bag",
+     "title": "How to Keep Gym Clothes Fresh in Your Bag",
+     "incoming": 5
+    },
+    {
+     "slug": "office-ac-trap-why-rewear-shirts-smell-worse",
+     "title": "The Office AC Trap (Why Re-Worn Shirts Smell Worse in AC)",
+     "incoming": 5
+    },
+    {
+     "slug": "bike-rider-sweat-smell-india",
+     "title": "Bike Rider Sweat Smell: The 20-Minute Shirt Problem",
+     "incoming": 5
+    },
+    {
+     "slug": "hostel-clothes-smell-college-guide",
+     "title": "Hostel Clothes Smell: The College Student's Survival Guide",
+     "incoming": 5
+    },
+    {
+     "slug": "travel-clothes-smell-india-guide",
+     "title": "How to Keep Clothes Fresh While Travelling in India",
+     "incoming": 4
+    },
+    {
+     "slug": "indian-summer-sweat-smell-guide",
+     "title": "How to Beat Indian Summer Sweat Smell (The 40\u00b0C Survival Guide)",
+     "incoming": 4
+    },
+    {
+     "slug": "mumbai-humidity-sweat-smell-survival-guide",
+     "title": "Mumbai Humidity + Sweat Smell (The Survival Guide)",
+     "incoming": 4
+    },
+    {
+     "slug": "bangalore-office-sweat-smell-guide",
+     "title": "The Bangalore Office Sweat-Smell Guide",
+     "incoming": 5
+    }
+   ]
+  }
+ ],
+ "meta": {
+  "posts": 47,
+  "clusters": 6,
+  "new_links_added": 135,
+  "orphans_after": 0
+ }
+}
