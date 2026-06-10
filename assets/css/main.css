@@ -308,7 +308,7 @@
   .hero-headline{
     font-family:'Barlow Condensed',sans-serif;
     font-weight:900;
-    font-size:clamp(52px,8.5vw,80px);
+    font-size:clamp(42px,8.5vw,80px);
     line-height:1.05;
     letter-spacing:.005em;
     text-transform:uppercase;
@@ -336,6 +336,15 @@
     color:var(--accent);
     max-width:520px;
     margin:0;
+  }
+  .hero-benefit{
+    font-family:'Inter Tight',sans-serif;
+    font-weight:600;
+    font-size:clamp(16px,2vw,19px);
+    line-height:1.4;
+    color:var(--text);
+    max-width:520px;
+    margin:14px 0 0;
   }
 
   .hero-trust-bar{
