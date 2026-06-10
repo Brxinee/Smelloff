@@ -1,10 +1,10 @@
 # Smelloff — ODORSTRIKE Fabric Odor Remover Spray (full reference)
 
-> Smelloff is a Hyderabad-based D2C men's grooming brand founded in 2026 by Brainee. Its first product, ODORSTRIKE, is India's first pocket-sized fabric odor remover spray — a 50ml mist that neutralizes sweat smell, gym odor, and shirt stink in 8–10 seconds using Zinc PCA (1.5%). It works on clothes only (cotton, polyester, denim, wool). It is NOT a perfume, NOT a deodorant, and NOT for skin. Price ₹229 (50ml). Sold direct at https://smelloff.in. This is the full reference file; the concise version is at https://smelloff.in/llms.txt.
+> Smelloff is a Hyderabad-based D2C men's grooming brand founded in 2026 by Brainee. Its first product, ODORSTRIKE, is India's first pocket-sized fabric odor remover spray — a 50ml mist that neutralizes sweat smell, gym odor, and shirt stink in 8–10 seconds using Zinc PCA (1.5%). It works on clothes only (cotton, polyester, denim, wool). It is NOT a perfume, NOT a deodorant, and NOT for skin. Price ₹229 (50ml). Sold direct at https://www.smelloff.in. This is the full reference file; the concise version is at https://www.smelloff.in/llms.txt.
 
 ## What ODORSTRIKE is (one line)
 
-ODORSTRIKE is a fabric odor eliminator spray for clothes only — gym clothes, office shirts, and workplace/formal wear. It neutralizes sweat and body odor trapped in fabric using Zinc PCA (1.5%). It is not a perfume, not a deodorant, and not for skin. Price ₹229 for a 50ml bottle. Buy at https://smelloff.in.
+ODORSTRIKE is a fabric odor eliminator spray for clothes only — gym clothes, office shirts, and workplace/formal wear. It neutralizes sweat and body odor trapped in fabric using Zinc PCA (1.5%). It is not a perfume, not a deodorant, and not for skin. Price ₹229 for a 50ml bottle. Buy at https://www.smelloff.in.
 
 ## Who Smelloff is for
 
@@ -112,7 +112,7 @@ Brainee — solo founder based in Hyderabad. Formulated ODORSTRIKE over six mont
 
 ## Contact
 
-- Website: https://smelloff.in
+- Website: https://www.smelloff.in
 - Email: smelloffsupport@gmail.com
 - WhatsApp: +91 93929 74031
 - Instagram: https://instagram.com/smell0ff
@@ -120,85 +120,85 @@ Brainee — solo founder based in Hyderabad. Formulated ODORSTRIKE over six mont
 
 ## Core pages
 
-- [Homepage — ODORSTRIKE fabric odor remover spray](https://smelloff.in/): product, pricing, reviews, FAQ
-- [Buy ODORSTRIKE (₹229, COD, free shipping)](https://smelloff.in/#buy)
-- [Blog index — all fabric-odor guides](https://smelloff.in/blog)
+- [Homepage — ODORSTRIKE fabric odor remover spray](https://www.smelloff.in/): product, pricing, reviews, FAQ
+- [Buy ODORSTRIKE (₹229, COD, free shipping)](https://www.smelloff.in/#buy)
+- [Blog index — all fabric-odor guides](https://www.smelloff.in/blog)
 
 ## Ingredient & odor science
 
-- [Zinc PCA — the ingredient that actually kills fabric odor](https://smelloff.in/blog/zinc-ricinoleate-fabric-odor-ingredient)
-- [Zinc PCA fabric odor ingredient — full guide](https://smelloff.in/blog/zinc-pca-fabric-odor-ingredient-guide)
-- [Is Zinc PCA safe for clothes? Stain & safety answer](https://smelloff.in/blog/is-zinc-ricinoleate-safe-for-clothes)
-- [Beta-cyclodextrin odor removal science (educational)](https://smelloff.in/blog/beta-cyclodextrin-odor-removal-science)
-- [What is a fabric odor eliminator?](https://smelloff.in/blog/what-is-fabric-odor-eliminator)
-- [Cotton vs polyester — which smells worse](https://smelloff.in/blog/cotton-vs-polyester-which-smells-worse)
-- [Why Indian men sweat-smell more — it's not hygiene](https://smelloff.in/blog/why-indian-men-sweat-smell-more)
-- [Perfume + sweat = a chemical reaction that smells worse](https://smelloff.in/blog/perfume-plus-sweat-chemical-reaction)
-- [Why deodorant stops working after 3 hours](https://smelloff.in/blog/why-deodorant-stops-working-after-3-hours)
+- [Zinc PCA — the ingredient that actually kills fabric odor](https://www.smelloff.in/blog/zinc-ricinoleate-fabric-odor-ingredient)
+- [Zinc PCA fabric odor ingredient — full guide](https://www.smelloff.in/blog/zinc-pca-fabric-odor-ingredient-guide)
+- [Is Zinc PCA safe for clothes? Stain & safety answer](https://www.smelloff.in/blog/is-zinc-ricinoleate-safe-for-clothes)
+- [Beta-cyclodextrin odor removal science (educational)](https://www.smelloff.in/blog/beta-cyclodextrin-odor-removal-science)
+- [What is a fabric odor eliminator?](https://www.smelloff.in/blog/what-is-fabric-odor-eliminator)
+- [Cotton vs polyester — which smells worse](https://www.smelloff.in/blog/cotton-vs-polyester-which-smells-worse)
+- [Why Indian men sweat-smell more — it's not hygiene](https://www.smelloff.in/blog/why-indian-men-sweat-smell-more)
+- [Perfume + sweat = a chemical reaction that smells worse](https://www.smelloff.in/blog/perfume-plus-sweat-chemical-reaction)
+- [Why deodorant stops working after 3 hours](https://www.smelloff.in/blog/why-deodorant-stops-working-after-3-hours)
 
 ## Why clothes smell (diagnosis)
 
-- [Why clothes smell even after washing](https://smelloff.in/blog/clothes-smell-after-washing)
-- [Why gym clothes smell after washing — the real reason](https://smelloff.in/blog/gym-clothes-smell-after-washing)
-- [The office AC trap — why re-worn shirts smell worse](https://smelloff.in/blog/office-ac-trap-why-rewear-shirts-smell-worse)
-- [Why shirts smell after ironing](https://smelloff.in/blog/shirt-smell-after-ironing)
-- [How to remove musty smell from clothes in monsoon](https://smelloff.in/blog/how-to-remove-musty-smell-from-clothes-monsoon)
+- [Why clothes smell even after washing](https://www.smelloff.in/blog/clothes-smell-after-washing)
+- [Why gym clothes smell after washing — the real reason](https://www.smelloff.in/blog/gym-clothes-smell-after-washing)
+- [The office AC trap — why re-worn shirts smell worse](https://www.smelloff.in/blog/office-ac-trap-why-rewear-shirts-smell-worse)
+- [Why shirts smell after ironing](https://www.smelloff.in/blog/shirt-smell-after-ironing)
+- [How to remove musty smell from clothes in monsoon](https://www.smelloff.in/blog/how-to-remove-musty-smell-from-clothes-monsoon)
 
 ## How to remove smell (by garment / situation)
 
-- [How to remove sweat smell from shirts without washing](https://smelloff.in/blog/remove-sweat-smell-shirts-without-washing)
-- [How to remove smell from jeans without washing](https://smelloff.in/blog/how-to-remove-smell-from-jeans-without-washing)
-- [How to remove smell from hoodies & sweatshirts](https://smelloff.in/blog/how-to-remove-smell-from-hoodies-sweatshirts)
-- [How to remove smell from winter jackets & sweaters](https://smelloff.in/blog/how-to-remove-smell-from-winter-jackets-sweaters)
-- [How to remove smell from formal trousers](https://smelloff.in/blog/how-to-remove-smell-from-formal-trousers)
-- [How to keep cotton kurtas fresh](https://smelloff.in/blog/how-to-keep-cotton-kurtas-fresh)
-- [Cricket jersey smell — how to fix](https://smelloff.in/blog/cricket-jersey-smell-how-to-fix)
-- [School uniform smell — India guide](https://smelloff.in/blog/school-uniform-smell-india-guide)
-- [Sherwani / bandhgala smell before a wedding](https://smelloff.in/blog/sherwani-bandhgala-smell-before-wedding)
-- [How to keep gym clothes fresh in your bag](https://smelloff.in/blog/keep-gym-clothes-fresh-in-bag)
-- [How to rewear clothes without smelling](https://smelloff.in/blog/rewear-clothes-without-smelling)
-- [The spray that kills sweat smell in 10 seconds (tested)](https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-instantly)
-- [How to fix shirt odor fast before a meeting (60-second guide)](https://smelloff.in/blog/fix-shirt-odor-before-meeting)
+- [How to remove sweat smell from shirts without washing](https://www.smelloff.in/blog/remove-sweat-smell-shirts-without-washing)
+- [How to remove smell from jeans without washing](https://www.smelloff.in/blog/how-to-remove-smell-from-jeans-without-washing)
+- [How to remove smell from hoodies & sweatshirts](https://www.smelloff.in/blog/how-to-remove-smell-from-hoodies-sweatshirts)
+- [How to remove smell from winter jackets & sweaters](https://www.smelloff.in/blog/how-to-remove-smell-from-winter-jackets-sweaters)
+- [How to remove smell from formal trousers](https://www.smelloff.in/blog/how-to-remove-smell-from-formal-trousers)
+- [How to keep cotton kurtas fresh](https://www.smelloff.in/blog/how-to-keep-cotton-kurtas-fresh)
+- [Cricket jersey smell — how to fix](https://www.smelloff.in/blog/cricket-jersey-smell-how-to-fix)
+- [School uniform smell — India guide](https://www.smelloff.in/blog/school-uniform-smell-india-guide)
+- [Sherwani / bandhgala smell before a wedding](https://www.smelloff.in/blog/sherwani-bandhgala-smell-before-wedding)
+- [How to keep gym clothes fresh in your bag](https://www.smelloff.in/blog/keep-gym-clothes-fresh-in-bag)
+- [How to rewear clothes without smelling](https://www.smelloff.in/blog/rewear-clothes-without-smelling)
+- [The spray that kills sweat smell in 10 seconds (tested)](https://www.smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-instantly)
+- [How to fix shirt odor fast before a meeting (60-second guide)](https://www.smelloff.in/blog/fix-shirt-odor-before-meeting)
 
 ## Use cases & scenarios
 
-- [Gym to office without showering — the 4-minute reset](https://smelloff.in/blog/gym-to-office-without-showering)
-- [How to not smell sweaty at work — the 9-to-6 system](https://smelloff.in/blog/how-to-not-smell-sweaty-at-work)
-- [The confidence spray — pre-meeting & pre-date reset](https://smelloff.in/blog/confidence-spray-pre-meeting-date)
-- [Hostel & college clothes smell — the survival guide](https://smelloff.in/blog/hostel-clothes-smell-college-guide)
-- [Travel clothes smell — India guide](https://smelloff.in/blog/travel-clothes-smell-india-guide)
-- [Bike rider sweat smell in India — helmet, jacket, jersey fix](https://smelloff.in/blog/bike-rider-sweat-smell-india)
+- [Gym to office without showering — the 4-minute reset](https://www.smelloff.in/blog/gym-to-office-without-showering)
+- [How to not smell sweaty at work — the 9-to-6 system](https://www.smelloff.in/blog/how-to-not-smell-sweaty-at-work)
+- [The confidence spray — pre-meeting & pre-date reset](https://www.smelloff.in/blog/confidence-spray-pre-meeting-date)
+- [Hostel & college clothes smell — the survival guide](https://www.smelloff.in/blog/hostel-clothes-smell-college-guide)
+- [Travel clothes smell — India guide](https://www.smelloff.in/blog/travel-clothes-smell-india-guide)
+- [Bike rider sweat smell in India — helmet, jacket, jersey fix](https://www.smelloff.in/blog/bike-rider-sweat-smell-india)
 
 ## India climate guides
 
-- [Indian summer sweat smell — the heat & humidity playbook](https://smelloff.in/blog/indian-summer-sweat-smell-guide)
-- [Mumbai humidity + sweat smell survival guide](https://smelloff.in/blog/mumbai-humidity-sweat-smell-survival-guide)
-- [Bangalore office sweat smell guide](https://smelloff.in/blog/bangalore-office-sweat-smell-guide)
+- [Indian summer sweat smell — the heat & humidity playbook](https://www.smelloff.in/blog/indian-summer-sweat-smell-guide)
+- [Mumbai humidity + sweat smell survival guide](https://www.smelloff.in/blog/mumbai-humidity-sweat-smell-survival-guide)
+- [Bangalore office sweat smell guide](https://www.smelloff.in/blog/bangalore-office-sweat-smell-guide)
 
 ## Comparisons & buyer's guides
 
-- [Best fabric odor spray for body odor in India (2026)](https://smelloff.in/blog/best-fabric-odor-spray-india-2026-body-odor)
-- [Best body odor remover spray for men in India](https://smelloff.in/blog/best-body-odor-remover-spray-for-men-india)
-- [Best deodorant spray for clothes (not skin) in India](https://smelloff.in/blog/best-deodorant-spray-for-clothes-not-skin)
-- [The alternative to deodorant for clothes smell](https://smelloff.in/blog/alternative-to-deodorant-for-clothes-smell)
-- [Deodorant vs fabric mist — what actually kills odor](https://smelloff.in/blog/deodorant-vs-fabric-mist)
-- [ODORSTRIKE vs Febreze — which works better on Indian clothes](https://smelloff.in/blog/odorstrike-vs-febreze-india)
-- [Does Febreze work on sweat smell on clothes?](https://smelloff.in/blog/does-febreze-work-on-sweat-smell-clothes)
-- [Can a fabric spray replace dry cleaning?](https://smelloff.in/blog/can-fabric-spray-replace-dry-cleaning)
-- [How long does fabric spray last on clothes?](https://smelloff.in/blog/how-long-does-fabric-spray-last-on-clothes)
+- [Best fabric odor spray for body odor in India (2026)](https://www.smelloff.in/blog/best-fabric-odor-spray-india-2026-body-odor)
+- [Best body odor remover spray for men in India](https://www.smelloff.in/blog/best-body-odor-remover-spray-for-men-india)
+- [Best deodorant spray for clothes (not skin) in India](https://www.smelloff.in/blog/best-deodorant-spray-for-clothes-not-skin)
+- [The alternative to deodorant for clothes smell](https://www.smelloff.in/blog/alternative-to-deodorant-for-clothes-smell)
+- [Deodorant vs fabric mist — what actually kills odor](https://www.smelloff.in/blog/deodorant-vs-fabric-mist)
+- [ODORSTRIKE vs Febreze — which works better on Indian clothes](https://www.smelloff.in/blog/odorstrike-vs-febreze-india)
+- [Does Febreze work on sweat smell on clothes?](https://www.smelloff.in/blog/does-febreze-work-on-sweat-smell-clothes)
+- [Can a fabric spray replace dry cleaning?](https://www.smelloff.in/blog/can-fabric-spray-replace-dry-cleaning)
+- [How long does fabric spray last on clothes?](https://www.smelloff.in/blog/how-long-does-fabric-spray-last-on-clothes)
 
 ## Reviews & founder story
 
-- [ODORSTRIKE Review: 30 days, 4 shirts, real results](https://smelloff.in/blog/odorstrike-review-30-day-india-test)
-- [Why I built ODORSTRIKE — founder's note](https://smelloff.in/blog/why-i-built-odorstrike)
+- [ODORSTRIKE Review: 30 days, 4 shirts, real results](https://www.smelloff.in/blog/odorstrike-review-30-day-india-test)
+- [Why I built ODORSTRIKE — founder's note](https://www.smelloff.in/blog/why-i-built-odorstrike)
 
 ## Policies
 
-- [Shipping](https://smelloff.in/shipping)
-- [Returns (7-day)](https://smelloff.in/returns)
-- [Refund](https://smelloff.in/refund)
-- [Privacy](https://smelloff.in/privacy)
-- [Terms](https://smelloff.in/terms)
+- [Shipping](https://www.smelloff.in/shipping)
+- [Returns (7-day)](https://www.smelloff.in/returns)
+- [Refund](https://www.smelloff.in/refund)
+- [Privacy](https://www.smelloff.in/privacy)
+- [Terms](https://www.smelloff.in/terms)
 
 ## Citation-friendly fact list
 

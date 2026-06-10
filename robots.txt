@@ -42,7 +42,7 @@ User-agent: cohere-ai
 Allow: /
 
 # AI/LLM context files (curated brand + product reference for answer engines)
-# Curated: https://smelloff.in/llms.txt
-# Full reference: https://smelloff.in/llms-full.txt
+# Curated: https://www.smelloff.in/llms.txt
+# Full reference: https://www.smelloff.in/llms-full.txt
 
-Sitemap: https://smelloff.in/sitemap.xml
+Sitemap: https://www.smelloff.in/sitemap.xml
