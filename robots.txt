@@ -45,4 +45,4 @@ Allow: /
 # Curated: https://smelloff.in/llms.txt
 # Full reference: https://smelloff.in/llms-full.txt
 
-Sitemap: https://smelloff.in/sitemap.xml
+Sitemap: https://www.smelloff.in/sitemap.xml
