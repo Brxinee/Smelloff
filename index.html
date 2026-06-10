@@ -26,7 +26,7 @@
   .to-top:hover{background:var(--accent);color:var(--bg)}
 
   @media(max-width:720px){
-    :root{--toTopBottom:88px}
+    :root{--toTopBottom:88px;--bg:#080808;--accent:#B8FF57;--accent-rgb:184,255,87;--bg-subtle:#1A1A1A}
   }
 </style>
 
@@ -300,6 +300,23 @@
 </script>
 
 <link rel="stylesheet" href="/assets/css/main.css?v=1">
+<script>
+/* Queue clicks that land before the deferred app.js/scroll-effects.js execute,
+   then replay them once the real window.* implementations are in place. */
+(function(){
+  var q=[];
+  ["addToCart", "buyBoxAdd", "buyBoxCod", "closeCartDrawer", "closeCheckout", "closeNav", "closePaymentFailedOverlay", "closeReviewForm", "compareTab", "copyUpiId", "mobileBarBuy", "mobileBarPick", "openCartDrawer", "openNav", "openPaymentFailedOverlay", "openReviewForm", "selectPay", "selectQty", "showAllReviews", "submitOrder", "submitReview", "submitWaitlist", "svStep", "toggleFaqItem", "toggleFooterCol"].forEach(function(n){
+    var stub=function(){q.push([n,Array.prototype.slice.call(arguments)]);};
+    stub.__stub=true; window[n]=stub;
+  });
+  document.addEventListener('DOMContentLoaded',function(){
+    q.splice(0).forEach(function(c){
+      var f=window[c[0]];
+      if(typeof f==='function'&&!f.__stub){try{f.apply(null,c[1]);}catch(e){}}
+    });
+  },{once:true});
+})();
+</script>
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
