@@ -299,7 +299,7 @@
   }
 </script>
 
-<link rel="stylesheet" href="/assets/css/main.css?v=2">
+<link rel="stylesheet" href="/assets/css/main.css?v=3">
 <script>
 /* Queue clicks that land before the deferred app.js/scroll-effects.js execute,
    then replay them once the real window.* implementations are in place. */
@@ -331,6 +331,14 @@
     </button>
   </div>
   <div class="logo">SMELLOFF</div>
+  <div class="nav-links" role="navigation" aria-label="Primary">
+    <a href="#buy">Shop</a>
+    <a href="#science">Science</a>
+    <a href="/reviews">Reviews</a>
+    <a href="/track-order">Track Order</a>
+    <a href="/blog">Blog</a>
+    <a href="/contact">Contact</a>
+  </div>
   <button class="nav-cart" id="navCartBtn" aria-label="Open cart" onclick="openCartDrawer()">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z"/>
@@ -344,7 +352,7 @@
 <!-- UTILITY PILLS -->
 <div class="cat-pills" id="catPills" role="navigation" aria-label="Shop shortcuts">
   <a href="#buy" class="cat-pill active" data-target="buy">Shop</a>
-  <a href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%27d%20like%20to%20track%20my%20order.%0AOrder%20ID%3A%20" class="cat-pill" target="_blank" rel="noopener" title="Track your order on WhatsApp">Track my order</a>
+  <a href="/track-order" class="cat-pill" title="Track your order">Track my order</a>
   <a href="#reviews" class="cat-pill" data-target="reviews">Reviews</a>
 </div>
 
@@ -363,6 +371,8 @@
     <a href="#reviews"     class="menu-item" data-num="04" style="--i:3" onclick="closeNav()">Reviews<span class="mi-arrow" aria-hidden="true">→</span></a>
     <a href="#faq"         class="menu-item" data-num="05" style="--i:4" onclick="closeNav()">FAQ<span class="mi-arrow" aria-hidden="true">→</span></a>
     <a href="/blog"        class="menu-item" data-num="06" style="--i:5" onclick="closeNav()">Blogs<span class="mi-arrow" aria-hidden="true">→</span></a>
+    <a href="/track-order" class="menu-item" data-num="07" style="--i:6" onclick="closeNav()">Track order<span class="mi-arrow" aria-hidden="true">→</span></a>
+    <a href="/contact"     class="menu-item" data-num="08" style="--i:7" onclick="closeNav()">Contact<span class="mi-arrow" aria-hidden="true">→</span></a>
   </div>
   <div class="menu-utility" aria-label="Social links">
     <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener" aria-label="Instagram @smell0ff">
@@ -1132,6 +1142,7 @@
       <ul class="sf-col-list">
         <li><a href="#buy">ODORSTRIKE</a></li>
         <li><a href="#how-to-use">How to use ODORSTRIKE</a></li>
+        <li><a href="/reviews">All reviews</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
     </div>
@@ -1156,7 +1167,8 @@
         <span class="sf-col-icon" aria-hidden="true"></span>
       </button>
       <ul class="sf-col-list">
-        <li><a href="mailto:smelloffsupport@gmail.com">Contact</a></li>
+        <li><a href="/track-order">Track your order</a></li>
+        <li><a href="/contact">Contact us</a></li>
         <li><a href="https://wa.me/919392974031" target="_blank" rel="noopener">WhatsApp</a></li>
         <li><a href="/shipping">Shipping</a></li>
         <li><a href="/returns">Returns</a></li>
@@ -1321,6 +1333,7 @@
       <h3 id="successHeading">You're done.</h3>
       <p id="successMsg">Our team ships your ODORSTRIKE within 48 hours.</p>
       <div class="order-id" id="orderIdDisplay" aria-label="Order ID"></div>
+      <a class="success-track-link" id="successTrackLink" href="/track-order" style="display:none">Track this order anytime →</a>
 
       <p class="success-reassure" id="successEmailNote" style="display:none">Check your email — we just sent your order confirmation.</p>
 
@@ -1420,7 +1433,7 @@
 <!-- ============================= -->
 <!-- CHECKOUT LOGIC                -->
 <!-- ============================= -->
-<script src="/assets/js/app.js?v=2" defer></script>
+<script src="/assets/js/app.js?v=3" defer></script>
 
 <!-- CART DRAWER + TOAST -->
 <div class="cart-backdrop" id="cartBackdrop" onclick="closeCartDrawer()"></div>
@@ -1487,18 +1500,21 @@
 <script>
 window.createSupabaseOrder = function (opts) {
   var SUPA_URL = (window.SMELLOFF_CONFIG || {}).SUPABASE_URL || '';
-  if (!opts.email || !SUPA_URL) return;
+  // Phone (not email) gates the mirror — email is optional at checkout, so
+  // every order lands in Supabase and is trackable on /track-order.
+  if (!opts.phone || !SUPA_URL) return;
   fetch(SUPA_URL + '/functions/v1/create-order', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      email:          opts.email,
+      email:          opts.email || null,
       phone:          opts.phone,
       items:          opts.items,
       amount:         Math.round(opts.amountRupees * 100),
       payment_method: opts.paymentMethod,
       address:        opts.address,
-      upi_ref:        opts.upiRef || null
+      upi_ref:        opts.upiRef || null,
+      order_code:     opts.orderCode || null
     }),
     keepalive: true
   }).catch(function (e) {

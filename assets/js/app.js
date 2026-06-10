@@ -288,6 +288,8 @@ const CFG = window.SMELLOFF_CONFIG;
     if (ub) ub.style.display = 'none';
     var oid = document.getElementById('orderIdDisplay');
     if (oid) oid.textContent = orderId;
+    var trk = document.getElementById('successTrackLink');
+    if (trk) { trk.href = '/track-order?code=' + encodeURIComponent(orderId); trk.style.display = 'inline-block'; }
 
     var amount = VARIANTS[currentVariant].amount;
     var name = (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
@@ -356,7 +358,8 @@ const CFG = window.SMELLOFF_CONFIG;
           items: [{ name: 'ODORSTRIKE Fabric Mist', variant: order.variant, label: order.variantLabel, quantity: order.units, price: order.amount }],
           amountRupees: order.total, paymentMethod: 'cod',
           address: { name: order.name, line: order.address, city: order.city, state: order.state, pincode: order.pincode },
-          upiRef: null
+          upiRef: null,
+          orderCode: order.orderId
         });
       }
       if (order.email) {
@@ -385,7 +388,8 @@ const CFG = window.SMELLOFF_CONFIG;
         items: [{ name: 'ODORSTRIKE Fabric Mist', variant: order.variant, label: order.variantLabel, quantity: order.units, price: order.amount }],
         amountRupees: order.total, paymentMethod: 'upi',
         address: { name: order.name, line: order.address, city: order.city, state: order.state, pincode: order.pincode },
-        upiRef: null // UTR is shared by customer via WhatsApp; matched manually
+        upiRef: null, // UTR is shared by customer via WhatsApp; matched manually
+        orderCode: order.orderId
       });
     }
     if (order.email) {
@@ -490,6 +494,8 @@ const CFG = window.SMELLOFF_CONFIG;
     document.getElementById('successHeading').textContent = 'Pay ₹' + total + ' via UPI';
     document.getElementById('successMsg').textContent = 'Order received. Send your UTR to WhatsApp to confirm. We\'ll ship within 48 hours of confirmation.';
     document.getElementById('orderIdDisplay').textContent = orderId;
+    var upiTrk = document.getElementById('successTrackLink');
+    if (upiTrk) { upiTrk.href = '/track-order?code=' + encodeURIComponent(orderId); upiTrk.style.display = 'inline-block'; }
 
     // Populate UPI block
     document.getElementById('upiBlock').style.display = 'block';

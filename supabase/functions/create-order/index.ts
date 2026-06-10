@@ -14,14 +14,17 @@ Deno.serve(async (req: Request) => {
 
   try {
     const body = await req.json();
-    const { email, phone, items, amount, payment_method, address, upi_ref } = body;
+    const { email, phone, items, amount, payment_method, address, upi_ref, order_code } = body;
 
-    if (!email || !phone || !items || !amount || !payment_method || !address) {
+    // Email is optional — phone is the primary identifier for guest checkout.
+    if (!phone || !items || !amount || !payment_method || !address) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    const code = String(order_code || "").trim().toUpperCase();
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -33,7 +36,7 @@ Deno.serve(async (req: Request) => {
     const { data, error } = await supabase
       .from("orders")
       .insert({
-        customer_email: email,
+        customer_email: email || null,
         customer_phone: phone,
         items,
         amount,          // already in paise from the browser
@@ -41,6 +44,7 @@ Deno.serve(async (req: Request) => {
         status,
         upi_ref: upi_ref || null,
         address,
+        order_code: /^SMF-\d{8}-\d{4}$/.test(code) ? code : null,
       })
       .select("id")
       .single();
