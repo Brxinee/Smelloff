@@ -66,6 +66,7 @@
 
   <!-- Policy pages -->
   <url><loc>https://www.smelloff.in/shipping</loc><lastmod>2026-05-15</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://www.smelloff.in/about</loc><lastmod>2026-06-10</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.smelloff.in/returns</loc><lastmod>2026-05-15</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
   <url><loc>https://www.smelloff.in/refund</loc><lastmod>2026-05-15</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.smelloff.in/privacy</loc><lastmod>2026-05-15</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>

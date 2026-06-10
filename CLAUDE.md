@@ -19,16 +19,16 @@ Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — India's first pocke
 - `/llms.txt`, `/llms-full.txt` — AI/LLM context files
 - `/sitemap.xml`, `/robots.txt`, `/manifest.json`
 
-## Known issues (from SEO audit, score 77/100)
-1. **www vs non-www canonical conflict** — server 308-redirects `smelloff.in` → `www.smelloff.in` but all canonicals/sitemap/JSON-LD use non-www
-2. **Future-dated sitemap entries** — ~10 blog URLs have lastmod dates that haven't occurred yet
-3. **Blog posts have zero images** — all 50+ posts are text-only
-4. **Article schema missing author** — no `Person` entity in blog post JSON-LD
-5. **Only 3 product reviews** — low social proof in Product schema
-6. **Blog not in site navigation** — /blog isn't linked from homepage nav
-7. **No contextual internal links** in blog posts (only nav/footer links)
-8. **Blog index missing ItemList schema**
-9. **Homepage HTML is 302KB** — large, inline scripts
+## SEO audit status (originally 77/100 — all 9 code-fixable issues resolved as of 2026-06-10)
+1. ~~www vs non-www canonical conflict~~ — **FIXED**: everything (canonicals, sitemap, JSON-LD, robots.txt Sitemap directive, llms.txt) uses `https://www.smelloff.in`
+2. ~~Future-dated sitemap entries~~ — **FIXED**: all lastmod dates are valid past dates
+3. ~~Blog posts have zero images~~ — **FIXED**: all posts have WebP hero images (1200×630) + og:image
+4. ~~Article schema missing author~~ — **FIXED**: all posts share one rich `Person` entity (Brainee, Founder, worksFor Smelloff, url → founder story post)
+5. **Only 3 product reviews** — needs real customers, not code; how-to-add instructions are in an HTML comment above the Product schema in index.html
+6. ~~Blog not in site navigation~~ — **FIXED**: /blog linked from homepage ("All Guides" + deep links)
+7. ~~No contextual internal links~~ — **FIXED**: posts cross-link contextually
+8. ~~Blog index missing ItemList schema~~ — **FIXED**
+9. ~~Homepage HTML was 302KB~~ — **FIXED**: main app JS (62.8KB) + scroll effects (8.5KB) externalized to `/assets/js/app.js` and `/assets/js/scroll-effects.js` (deferred); HTML now ~224KB. Consent-critical scripts (config, analytics loader, consent bar) intentionally remain inline — do not externalize them.
 
 ## What's working well (don't break)
 - Excellent robots.txt with all AI bots allowed

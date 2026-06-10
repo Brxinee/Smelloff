@@ -272,6 +272,17 @@
     max-width:1120px;margin:0 auto;padding:0 20px;
   }
   .b-posts{padding-top:0;padding-bottom:32px}
+  /* Topic hubs (cluster navigation) */
+  .b-topics{max-width:1120px;margin:0 auto;padding:0 20px 8px}
+  .b-topics-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:14px}
+  @media(min-width:720px){.b-topics-grid{grid-template-columns:1fr 1fr;gap:12px}}
+  @media(min-width:1100px){.b-topics-grid{grid-template-columns:1fr 1fr 1fr}}
+  .b-topic{display:block;background:var(--bg-surface);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;text-decoration:none;transition:border-color .15s ease,background .15s ease}
+  .b-topic:hover{border-color:var(--accent);background:var(--card-hover,var(--bg-surface))}
+  .b-topic-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:17px;letter-spacing:.05em;text-transform:uppercase;color:var(--text);display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .b-topic-count{font-size:11px;letter-spacing:.14em;color:var(--accent);white-space:nowrap}
+  .b-topic-desc{font-family:'Inter Tight',sans-serif;font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px}
+
   .b-grid-3{display:grid;grid-template-columns:1fr;gap:12px}
   @media(min-width:720px){.b-grid-3{grid-template-columns:1fr 1fr;gap:16px}}
   @media(min-width:1100px){.b-grid-3{grid-template-columns:1fr 1fr 1fr}}
@@ -843,6 +854,36 @@
         <p>Your deodorant works. It&#x27;s solving the wrong problem. Your shirt holds 80% of the smell and deodorant can&#x27;t touch it.</p>
         <span class="b-card-arrow">Read</span>
       </div>
+    </a>
+  </div>
+</section>
+
+<section class="b-topics" id="topicsSection" aria-label="Browse guides by topic">
+  <div class="b-section-head"><span class="b-section-tag">Browse by Topic</span></div>
+  <div class="b-topics-grid">
+    <a href="/blog/best-fabric-odor-spray-india-2026-body-odor" class="b-topic">
+      <span class="b-topic-name">Buy & Reviews <span class="b-topic-count">6 guides</span></span>
+      <span class="b-topic-desc">Which spray to buy, real 30-day test results, and the founder story.</span>
+    </a>
+    <a href="/blog/deodorant-vs-fabric-mist" class="b-topic">
+      <span class="b-topic-name">Comparisons <span class="b-topic-count">7 guides</span></span>
+      <span class="b-topic-desc">ODORSTRIKE vs Febreze, deodorant, perfume — what actually kills odor.</span>
+    </a>
+    <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="b-topic">
+      <span class="b-topic-name">Ingredient Science <span class="b-topic-count">6 guides</span></span>
+      <span class="b-topic-desc">Zinc PCA, zinc ricinoleate, beta-cyclodextrin — how neutralizers work.</span>
+    </a>
+    <a href="/blog/clothes-smell-after-washing" class="b-topic">
+      <span class="b-topic-name">Washing Problems <span class="b-topic-count">7 guides</span></span>
+      <span class="b-topic-desc">Why clothes smell even after washing, and what detergent can't fix.</span>
+    </a>
+    <a href="/blog/remove-sweat-smell-shirts-without-washing" class="b-topic">
+      <span class="b-topic-name">Garment How-Tos <span class="b-topic-count">10 guides</span></span>
+      <span class="b-topic-desc">Shirts, jeans, hoodies, kurtas, sherwanis — fix each without washing.</span>
+    </a>
+    <a href="/blog/how-to-not-smell-sweaty-at-work" class="b-topic">
+      <span class="b-topic-name">Daily Life & Climate <span class="b-topic-count">11 guides</span></span>
+      <span class="b-topic-desc">Office days, gym bags, bike commutes, monsoon, and 40°C summers.</span>
     </a>
   </div>
 </section>
@@ -1629,6 +1670,7 @@
     <a href="/blog/odorstrike-review-30-day-india-test">30-day review</a>
   </div>
   <div class="p-footer-policy">
+    <a href="/about">About</a>
     <a href="/privacy">Privacy</a>
     <a href="/terms">Terms</a>
     <a href="/shipping">Shipping</a>
