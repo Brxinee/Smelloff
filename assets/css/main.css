@@ -4016,3 +4016,25 @@
   .rv-dots button{width:7px;height:7px;border-radius:50%;border:none;padding:0;background:var(--border);cursor:pointer;transition:background .15s,width .15s}
   .rv-dots button.active{background:var(--green);width:18px;border-radius:4px}
   /* ═══════════ END CX OVERHAUL ═══════════ */
+
+  /* ═══════════ SITE STRUCTURE (desktop nav + track-order link) ═══════════ */
+  .nav-links{display:none}
+  @media(min-width:980px){
+    .hamburger,.nav-left{display:none}
+    nav .logo{grid-column:1;justify-self:start}
+    .nav-links{display:flex;grid-column:2;justify-self:center;gap:30px;align-items:center}
+    .nav-links a{
+      font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;
+      letter-spacing:.12em;text-transform:uppercase;color:var(--silver);
+      text-decoration:none;padding:8px 2px;line-height:1;
+    }
+    .nav-links a:hover{color:var(--green)}
+  }
+  .success-track-link{
+    display:inline-block;margin-top:10px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;
+    letter-spacing:.1em;text-transform:uppercase;
+    color:var(--green);text-decoration:none;
+    border:1px solid var(--green);border-radius:6px;padding:9px 16px;
+  }
+  .success-track-link:hover{background:var(--green-dim)}
