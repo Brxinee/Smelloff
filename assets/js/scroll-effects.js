@@ -109,7 +109,7 @@
     probe(src, function(){
       var img = document.createElement('img');
       img.src = src; img.alt = 'ODORSTRIKE fabric odor spray bottle';
-      img.className = 'hero-photo'; img.loading = 'lazy'; img.decoding = 'async';
+      img.className = 'hero-photo'; img.fetchPriority = 'high'; img.decoding = 'async';
       wrap.classList.add('has-photo'); wrap.appendChild(img);
     }, function(){});
   }

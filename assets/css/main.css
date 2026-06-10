@@ -9,7 +9,7 @@
 
     /* Text */
     --white:         #F5F5F5;
-    --gray:          #8C8C8C;
+    --gray:          #989898;
     --silver:        #BFC3C8;
 
     /* Accent */
@@ -308,7 +308,7 @@
   .hero-headline{
     font-family:'Barlow Condensed',sans-serif;
     font-weight:900;
-    font-size:clamp(52px,8.5vw,80px);
+    font-size:clamp(42px,8.5vw,80px);
     line-height:1.05;
     letter-spacing:.005em;
     text-transform:uppercase;
@@ -336,6 +336,15 @@
     color:var(--accent);
     max-width:520px;
     margin:0;
+  }
+  .hero-benefit{
+    font-family:'Inter Tight',sans-serif;
+    font-weight:600;
+    font-size:clamp(16px,2vw,19px);
+    line-height:1.4;
+    color:var(--text);
+    max-width:520px;
+    margin:14px 0 0;
   }
 
   .hero-trust-bar{
@@ -1388,8 +1397,8 @@
     max-height:90vh;overflow-y:auto;
   }
   .rv-modal-close{
-    position:absolute;top:10px;right:10px;
-    width:36px;height:36px;
+    position:absolute;top:6px;right:6px;
+    width:44px;height:44px;
     background:none;border:none;cursor:pointer;
     color:var(--muted);font-size:22px;line-height:1;
   }
@@ -2369,7 +2378,7 @@
     color:var(--text);margin:0;
   }
   .cd-close{
-    width:36px;height:36px;
+    width:44px;height:44px;
     background:none;border:none;cursor:pointer;
     position:relative;
     color:var(--accent);
@@ -3235,7 +3244,7 @@
   .menu-close{
     position:absolute;
     top:calc(20px + env(safe-area-inset-top, 0px));
-    right:24px;
+    right:max(24px, env(safe-area-inset-right, 0px));
     width:44px;height:44px;
     background:none;border:none;cursor:pointer;
     display:flex;align-items:center;justify-content:center;
@@ -3591,7 +3600,7 @@
     font-size:12px;letter-spacing:.04em;line-height:1;
     color:var(--muted);background:transparent;
     border:1px solid var(--rule);border-radius:999px;
-    padding:4px 10px;cursor:pointer;
+    padding:8px 12px;min-height:32px;cursor:pointer;
     transition:background .15s ease,color .15s ease,border-color .15s ease;
   }
   .mobile-bar .mb-pill.active{
@@ -3928,6 +3937,9 @@
   .pcg-icon{width:26px;height:26px;flex-shrink:0;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
   .pcg-main{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:14px;color:var(--white);margin:0 0 3px;line-height:1.3}
   .pcg-sub{font-family:'Inter Tight',sans-serif;font-size:12px;color:var(--gray);margin:0;line-height:1.4}
+  .pcg-sub.pcg-fraud{margin-top:6px}
+  .pcg-link{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(var(--accent-rgb),.35)}
+  .pcg-link:hover{border-bottom-color:var(--accent)}
   /* TR2 — COD zero-risk pill */
   .cod-zero{display:inline-block;margin-left:6px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
     letter-spacing:.05em;color:var(--green);background:var(--green-dim);padding:2px 8px;border-radius:999px;vertical-align:middle}

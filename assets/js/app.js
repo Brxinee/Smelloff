@@ -58,11 +58,11 @@ const CFG = window.SMELLOFF_CONFIG;
     // Hide sticky buy bar while overlay is open
     var mb = document.getElementById('mobileBar');
     if (mb) mb.style.display = 'none';
-    // Move focus into the overlay and trap it for keyboard/AT users
+    // Trap focus immediately so keyboard users can't tab into the page behind
+    trapFocusInOverlay();
     setTimeout(function() {
       var first = document.getElementById('f_phone');
       if (first) first.focus();
-      trapFocusInOverlay();
     }, 100);
     trackInitCheckout();
   }
@@ -1075,7 +1075,9 @@ const CFG = window.SMELLOFF_CONFIG;
       catch(e){ return false; }
     }
 
+    var _reviewTrigger = null;
     window.openReviewForm = function(){
+      _reviewTrigger = document.activeElement;
       var modal = document.getElementById('rvModal');
       modal.classList.add('open');
       modal.setAttribute('aria-hidden','false');
@@ -1182,6 +1184,8 @@ const CFG = window.SMELLOFF_CONFIG;
           sibling.classList.remove('open');
           var sb = sibling.querySelector('.faq-q');
           if (sb) sb.setAttribute('aria-expanded', 'false');
+          var sbody = sibling.querySelector('.faq-body');
+          if (sbody) sbody.setAttribute('aria-hidden', 'true');
         }
       });
     }
@@ -1189,6 +1193,8 @@ const CFG = window.SMELLOFF_CONFIG;
     item.classList.toggle('open', isOpen);
     var btn = item.querySelector('.faq-q');
     if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    var body = item.querySelector('.faq-body');
+    if (body) body.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
   };
 
   // Mobile sticky bar — slides up after scrolling 400px past the hero,
@@ -1381,7 +1387,9 @@ const CFG = window.SMELLOFF_CONFIG;
       save();
     };
 
+    var _cartTrigger = null;
     window.openCartDrawer = function(){
+      _cartTrigger = document.activeElement;
       renderDrawer();
       const drawer = document.getElementById('cartDrawer');
       const backdrop = document.getElementById('cartBackdrop');
@@ -1389,6 +1397,8 @@ const CFG = window.SMELLOFF_CONFIG;
       backdrop.classList.add('active');
       drawer.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+      var closeBtn = drawer.querySelector('.cd-close');
+      if (closeBtn) setTimeout(function(){ closeBtn.focus(); }, 50);
     };
 
     window.closeCartDrawer = function(){
@@ -1397,6 +1407,9 @@ const CFG = window.SMELLOFF_CONFIG;
       drawer.classList.remove('open');
       backdrop.classList.remove('active');
       drawer.setAttribute('aria-hidden', 'true');
+      if (_cartTrigger && typeof _cartTrigger.focus === 'function') {
+        setTimeout(function(){ try{_cartTrigger.focus({preventScroll:true});}catch(e){_cartTrigger.focus();} _cartTrigger = null; }, 50);
+      }
       // only release overflow if no other overlay is open
       if (!document.getElementById('checkoutOverlay').classList.contains('active') &&
           !document.getElementById('rvModal').classList.contains('open') &&
