@@ -1517,6 +1517,11 @@ window.createSupabaseOrder = function (opts) {
       order_code:     opts.orderCode || null
     }),
     keepalive: true
+  }).then(function (r) {
+    return r.ok ? r.json() : null;
+  }).then(function (d) {
+    // The order uuid unlocks verified-buyer reviews via the submit-review function.
+    if (d && d.id) { try { localStorage.setItem('smelloff_order_uuid', d.id); } catch (e) {} }
   }).catch(function (e) {
     console.warn('[Smelloff] Supabase order mirror failed:', e);
   });
