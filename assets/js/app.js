@@ -290,6 +290,7 @@ const CFG = window.SMELLOFF_CONFIG;
     if (oid) oid.textContent = orderId;
     var trk = document.getElementById('successTrackLink');
     if (trk) { trk.href = '/track-order?code=' + encodeURIComponent(orderId); trk.style.display = 'inline-block'; }
+    try { localStorage.setItem('smelloff_last_order', JSON.stringify({ code: orderId, ts: Date.now() })); } catch (e) {}
 
     var amount = VARIANTS[currentVariant].amount;
     var name = (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
@@ -496,6 +497,7 @@ const CFG = window.SMELLOFF_CONFIG;
     document.getElementById('orderIdDisplay').textContent = orderId;
     var upiTrk = document.getElementById('successTrackLink');
     if (upiTrk) { upiTrk.href = '/track-order?code=' + encodeURIComponent(orderId); upiTrk.style.display = 'inline-block'; }
+    try { localStorage.setItem('smelloff_last_order', JSON.stringify({ code: orderId, ts: Date.now() })); } catch (e) {}
 
     // Populate UPI block
     document.getElementById('upiBlock').style.display = 'block';
@@ -877,8 +879,22 @@ const CFG = window.SMELLOFF_CONFIG;
       return;
     }
     input.style.borderColor = '';
+    // Primary store: Supabase waitlist table (anon insert-only RLS).
+    if (CFG.SUPABASE_URL && CFG.SUPABASE_KEY) {
+      fetch(CFG.SUPABASE_URL + '/rest/v1/waitlist', {
+        method: 'POST',
+        headers: {
+          'apikey': CFG.SUPABASE_KEY,
+          'Authorization': 'Bearer ' + CFG.SUPABASE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email: email, source: 'footer' }),
+        keepalive: true
+      }).catch(function(){ /* sheets backup below still fires */ });
+    }
     const url = CFG.SHEETS_ENDPOINT + '?email=' + encodeURIComponent(email);
-    // Fire via image pixel (most reliable cross-origin)
+    // Backup: fire via image pixel (most reliable cross-origin)
     const img = new Image();
     img.src = url;
     // Also sendBeacon as backup
@@ -949,15 +965,12 @@ const CFG = window.SMELLOFF_CONFIG;
       .catch(function(){ return []; });
     }
 
+    // Reviews go through the submit-review edge function, which verifies the
+    // order id against the orders table — "Verified buyer" is real, not a flag.
     function postBuyerReview(row){
-      return fetch(SUPA_URL + '/rest/v1/reviews', {
+      return fetch(SUPA_URL + '/functions/v1/submit-review', {
         method: 'POST',
-        headers: {
-          'apikey': SUPA_KEY,
-          'Authorization': 'Bearer ' + SUPA_KEY,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(row)
       });
     }
@@ -1128,28 +1141,35 @@ const CFG = window.SMELLOFF_CONFIG;
       var anonymous = !name;
       var displayName = name ? name.slice(0, 60) : 'Anonymous';
 
+      var orderUuid = '';
+      try { orderUuid = localStorage.getItem('smelloff_order_uuid') || ''; } catch (e) {}
+      if (!orderUuid) {
+        errEl.textContent = 'Reviews are for verified buyers — we couldn’t find your purchase on this device.';
+        errEl.style.display = 'block';
+        return;
+      }
+
       var submitBtn = document.querySelector('#rvStepForm .rv-submit');
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Posting…'; }
 
       postBuyerReview({
+        order_id: orderUuid,
         name: displayName,
         rating: selectedStars,
         body: text,
-        anonymous: anonymous,
-        // BUG: city was omitted so every new buyer review saved a blank city; no form field exists at review time, so send null explicitly
-        city: null
+        anonymous: anonymous
       }).then(function(res){
         if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Post review'; }
         if (!res || !res.ok) {
-          return res.text().then(function(t){
-            errEl.textContent = 'Could not post your review. Please try again.';
+          return res.json().catch(function(){ return {}; }).then(function(j){
+            errEl.textContent = (j && j.error) || 'Could not post your review. Please try again.';
             errEl.style.display = 'block';
-            console.warn('[Smelloff] Review post failed:', res && res.status, t);
+            console.warn('[Smelloff] Review post failed:', res && res.status);
           });
         }
-        return res.json().then(function(rows){
-          if (Array.isArray(rows) && rows.length) {
-            _buyerReviews.unshift(rows[0]);
+        return res.json().then(function(j){
+          if (j && j.review) {
+            _buyerReviews.unshift(j.review);
             renderCards();
           }
           showStep('rvStepDone');
@@ -1465,4 +1485,22 @@ const CFG = window.SMELLOFF_CONFIG;
     });
 
     renderBadge();
+  })();
+
+  // =============================================
+  // ORDER RIBBON: if this device placed an order in the last 30 days,
+  // surface a slim "track it" ribbon under the nav (element lives in HTML).
+  // =============================================
+  (function () {
+    var el = document.getElementById('orderRibbon');
+    if (!el) return;
+    var rec = null;
+    try { rec = JSON.parse(localStorage.getItem('smelloff_last_order') || 'null'); } catch (e) {}
+    if (!rec || !rec.code || !/^SMF-\d{8}-\d{4}$/.test(rec.code)) return;
+    if (Date.now() - (rec.ts || 0) > 30 * 86400000) return;
+    var link = document.getElementById('orderRibbonLink');
+    if (link) link.href = '/track-order?code=' + encodeURIComponent(rec.code);
+    var code = document.getElementById('orderRibbonCode');
+    if (code) code.textContent = rec.code;
+    el.hidden = false;
   })();

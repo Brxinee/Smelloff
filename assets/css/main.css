@@ -4038,3 +4038,72 @@
     border:1px solid var(--green);border-radius:6px;padding:9px 16px;
   }
   .success-track-link:hover{background:var(--green-dim)}
+
+  /* ═══════════ PDP (/odorstrike) ═══════════ */
+  .pdp-head{padding:calc(96px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) 8px max(20px,env(safe-area-inset-left,0px));max-width:1080px;margin:0 auto}
+  .pdp-crumb{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--gray);margin-bottom:14px}
+  .pdp-crumb a{color:var(--gray);text-decoration:none}
+  .pdp-crumb a:hover{color:var(--green)}
+  .pdp-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(56px,9vw,110px);line-height:.92;letter-spacing:.005em;text-transform:uppercase;color:var(--white)}
+  .pdp-title .green{color:var(--green)}
+  .pdp-sub{color:var(--silver);font-size:15px;margin-top:10px}
+  .pdp-rating{margin-top:10px;font-size:14px;color:var(--silver)}
+  .pdp-rating .hr-stars{color:var(--green);letter-spacing:2px;margin-right:6px}
+  .trust-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .t-chip{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--silver);border:1px solid var(--border);border-radius:999px;padding:7px 13px;background:var(--card)}
+  .t-chip:nth-child(odd){color:var(--green);border-color:rgba(184,255,87,.35)}
+  @media(min-width:980px){
+    body.pdp .product-card .pc-media{position:sticky;top:80px;align-self:start}
+  }
+
+  /* ═══════════ REBUILD 2026-06: announcement, ribbon, chips, teasers ═══════════ */
+  /* Announcement bar — in flow below the fixed nav + pills chrome */
+  .announce{position:relative;height:34px;overflow:hidden;background:var(--green);margin-top:calc(98px + env(safe-area-inset-top,0px))}
+  .announce-inner span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--black);opacity:0;animation:announceCycle 12s linear infinite}
+  .announce-inner span:nth-child(2){animation-delay:4s}
+  .announce-inner span:nth-child(3){animation-delay:8s}
+  @keyframes announceCycle{0%{opacity:0}3%,28%{opacity:1}33%,100%{opacity:0}}
+  @media(prefers-reduced-motion:reduce){
+    .announce-inner span{animation:none}
+    .announce-inner span:first-child{opacity:1}
+  }
+  /* Hero no longer needs to clear the fixed chrome — the announce bar does */
+  .hero{padding-top:44px !important}
+  @media(min-width:880px){.hero{padding-top:56px !important}}
+
+  /* "Your order — track it" ribbon */
+  .order-ribbon{background:var(--card);border-bottom:1px solid var(--rule);text-align:center}
+  .order-ribbon a{display:block;padding:9px 16px;font-size:13px;color:var(--silver);text-decoration:none}
+  .order-ribbon b{color:var(--green);font-weight:600}
+  .order-ribbon a:hover{color:var(--white)}
+
+  /* Trust chips on home (component shared with PDP) */
+  .home-chips{justify-content:center;padding:18px max(16px,env(safe-area-inset-right,0px));margin-top:0;border-bottom:1px solid var(--bg-subtle)}
+
+  /* Hero type: bigger, tighter (Liquid Death energy) */
+  .hero-headline{font-size:clamp(48px,9.5vw,92px);line-height:.92}
+  @media(min-width:880px){.hero-headline{font-size:clamp(64px,6.4vw,110px)}}
+
+  /* Problem bento: stats + the two strongest trigger cards */
+  .trigger-grid.bento{display:grid;grid-template-columns:1fr;gap:14px;margin:44px auto 0;max-width:980px;text-align:left}
+  @media(min-width:720px){.trigger-grid.bento{grid-template-columns:1fr 1fr}}
+
+  /* Science teaser */
+  .hw-teaser{display:grid;grid-template-columns:1fr;gap:14px;max-width:760px;margin:36px auto 0}
+  @media(min-width:720px){.hw-teaser{grid-template-columns:1fr 1fr}}
+  .hw-ing-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px 20px;transition:border-color .15s ease}
+  .hw-ing-card:hover{border-color:var(--green)}
+  .hw-ing-name{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+  .hw-ing-card p{font-size:14px;color:var(--silver);line-height:1.6}
+  .hw-claim{text-align:center;font-size:15px;color:var(--text);margin:26px auto 8px;max-width:560px}
+  .hw-more,.faq-more,.rv-page-link,.buy-deep-link{display:block;width:fit-content;margin:18px auto 0;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);text-decoration:none;border:1px solid rgba(184,255,87,.4);border-radius:6px;padding:11px 18px;transition:background .15s ease}
+  .hw-more:hover,.faq-more:hover,.rv-page-link:hover,.buy-deep-link:hover{background:var(--green-dim)}
+  .buy-deep-link{margin-top:26px;text-align:center}
+
+  /* Founder note folded into the final band */
+  .final .founder-card{margin:40px auto 0;max-width:560px;text-align:left}
+
+  /* Generous section breathing on desktop */
+  @media(min-width:980px){
+    .problem,.how-works,.compare,.reviews,.faq{padding-top:120px;padding-bottom:120px}
+  }
