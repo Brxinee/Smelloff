@@ -4038,3 +4038,20 @@
     border:1px solid var(--green);border-radius:6px;padding:9px 16px;
   }
   .success-track-link:hover{background:var(--green-dim)}
+
+  /* ═══════════ PDP (/odorstrike) ═══════════ */
+  .pdp-head{padding:calc(96px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) 8px max(20px,env(safe-area-inset-left,0px));max-width:1080px;margin:0 auto}
+  .pdp-crumb{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--gray);margin-bottom:14px}
+  .pdp-crumb a{color:var(--gray);text-decoration:none}
+  .pdp-crumb a:hover{color:var(--green)}
+  .pdp-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(56px,9vw,110px);line-height:.92;letter-spacing:.005em;text-transform:uppercase;color:var(--white)}
+  .pdp-title .green{color:var(--green)}
+  .pdp-sub{color:var(--silver);font-size:15px;margin-top:10px}
+  .pdp-rating{margin-top:10px;font-size:14px;color:var(--silver)}
+  .pdp-rating .hr-stars{color:var(--green);letter-spacing:2px;margin-right:6px}
+  .trust-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .t-chip{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--silver);border:1px solid var(--border);border-radius:999px;padding:7px 13px;background:var(--card)}
+  .t-chip:nth-child(odd){color:var(--green);border-color:rgba(184,255,87,.35)}
+  @media(min-width:980px){
+    body.pdp .product-card .pc-media{position:sticky;top:80px;align-self:start}
+  }
