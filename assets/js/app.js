@@ -713,7 +713,7 @@ const CFG = window.SMELLOFF_CONFIG;
     if (mbNow) mbNow.textContent = '₹' + price;
     // Final CTA stays the ₹229 solo entry hook (intentionally not synced to pack price)
     if (hint) {
-      if (qty === 1) hint.textContent = 'Add a 2nd bottle for +₹170 and save ₹600 vs MRP.';
+      if (qty === 1) hint.textContent = 'Add a 2nd bottle for +₹170 — that\'s ₹199/bottle.';
       else if (qty === 2) hint.textContent = 'Smart pick — one for your bag, one for your desk.';
       else hint.textContent = 'Best value — ₹183/bottle. Stock up or gift the extras.';
     }
