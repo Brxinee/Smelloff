@@ -4058,7 +4058,7 @@
 
   /* ═══════════ REBUILD 2026-06: announcement, ribbon, chips, teasers ═══════════ */
   /* Announcement bar — in flow below the fixed nav + pills chrome */
-  .announce{position:relative;height:34px;overflow:hidden;background:var(--green);margin-top:calc(98px + env(safe-area-inset-top,0px))}
+  .announce{position:relative;height:34px;overflow:hidden;background:var(--green);margin-top:calc(108px + env(safe-area-inset-top,0px))}
   .announce-inner span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--black);opacity:0;animation:announceCycle 12s linear infinite}
   .announce-inner span:nth-child(2){animation-delay:4s}
   .announce-inner span:nth-child(3){animation-delay:8s}
