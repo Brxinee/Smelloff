@@ -29,6 +29,12 @@
         "source": "github",
         "repo": "anthropics/claude-code"
       }
+    },
+    "planning-with-files": {
+      "source": {
+        "source": "github",
+        "repo": "OthmanAdi/planning-with-files"
+      }
     }
   },
   "enabledPlugins": {
@@ -37,6 +43,7 @@
     "firecrawl@firecrawl": true,
     "ui-ux-pro-max@ui-ux-pro-max-skill": true,
     "code-review@claude-code-plugins": true,
-    "pr-review-toolkit@claude-code-plugins": true
+    "pr-review-toolkit@claude-code-plugins": true,
+    "planning-with-files@planning-with-files": true
   }
 }
