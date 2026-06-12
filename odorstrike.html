@@ -157,6 +157,12 @@
   })();
 </script>
 
+<!-- Resource hints: Supabase is fetched on load (reviews) → preconnect; pincode +
+     QR APIs are on-demand (checkout) → dns-prefetch. Analytics/Meta are
+     consent-gated and intentionally not hinted. -->
+<link rel="preconnect" href="https://tnuqjydmoxczdjnsgpci.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://api.postalpincode.in">
+<link rel="dns-prefetch" href="https://api.qrserver.com">
 <!-- Fonts: self-hosted woff2 (latin/latin-ext subsets, font-display:swap) — removes render-blocking third-party request -->
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/barlow-condensed-normal-latin-900.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
