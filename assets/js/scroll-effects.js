@@ -103,7 +103,9 @@
 
   /* PH1 — product photos: probe via JS so a missing file never shows broken (CSS bottle stays) */
   function probe(src, ok, fail){ var im = new Image(); im.onload = function(){ ok(); }; im.onerror = function(){ fail(); }; im.src = src; }
+  function photosReady(){ return !!(window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRODUCT_PHOTOS_READY); }
   function initHeroPhoto(){
+    if(!photosReady()) return;                 // skip probing missing files → no 404 console errors
     var wrap = document.querySelector('.hero-bottle'); if(!wrap) return;
     var src = '/assets/product-hero.jpg';
     probe(src, function(){
@@ -114,6 +116,7 @@
     }, function(){});
   }
   function initGallery(){
+    if(!photosReady()) return;                 // skip probing missing files → no 404 console errors
     var gallery = document.getElementById('pcGallery'); if(!gallery) return;
     var imgs = [
       ['/assets/product-hero.jpg',   'ODORSTRIKE fabric odor spray bottle'],
@@ -131,6 +134,8 @@
       gallery.innerHTML = loaded.map(function(i){
         return '<img src="'+imgs[i][0]+'" alt="'+imgs[i][1]+'" loading="lazy" decoding="async" role="listitem">';
       }).join('');
+      gallery.setAttribute('role','list');     // only a list once it actually has items
+      gallery.setAttribute('aria-label','Product photos');
       gallery.hidden = false;
       var media = gallery.closest('.pc-media');
       var cssBottle = media && media.querySelector('.pc-image');
