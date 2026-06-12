@@ -199,6 +199,10 @@
     UPI_NAME: "Smelloff",
     PRICES: { solo: 229, duo: 399, trio: 549 },
     MRP:    { solo: 579, duo: 999, trio: 1399 },
+    // Flip to true once real product photos exist at /assets/product-hero.jpg,
+    // product-pocket.jpg and demo-no-stain.jpg. Until then we skip probing them
+    // so missing files don't log 404s to the console (Lighthouse Best Practices).
+    PRODUCT_PHOTOS_READY: false,
     SUPABASE_URL: 'https://tnuqjydmoxczdjnsgpci.supabase.co',
     SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudXFqeWRtb3hjemRqbnNncGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzI2NDgsImV4cCI6MjA5MzEwODY0OH0.6qyyo-1lpntK7FC3H9j_oqWp0W_R1XydVG_IxVUd6F4'
   };
@@ -575,7 +579,7 @@
   <article class="product-card">
     <div class="pc-media">
       <span class="pc-tag">LAUNCH PRICE · MADE IN HYDERABAD</span>
-      <div class="pc-gallery" id="pcGallery" role="list" aria-label="Product photos" hidden></div>
+      <div class="pc-gallery" id="pcGallery" hidden></div>
       <div class="pc-image" aria-hidden="true">
         <div class="hb-bottle">
           <div class="hb-cap"></div>
@@ -713,7 +717,7 @@
     <button class="compare-tab" type="button" role="tab" data-tab="Perfume" aria-selected="false" onclick="compareTab(this)">Perfume</button>
   </div>
   <div class="compare-scroll-wrap">
-  <div class="compare-table" role="table" aria-label="Deodorant vs perfume vs ODORSTRIKE" data-active="ODORSTRIKE">
+  <div class="compare-table" data-active="ODORSTRIKE">
     <div class="compare-cell row-h"></div>
     <div class="compare-cell col-h" data-col="Deodorant"><img src="/assets/icon-deodorant.png" alt="Deodorant spray" class="compare-col-icon" width="28" height="28" loading="lazy" decoding="async"><span>DEODORANT<span class="compare-col-sub">for skin</span></span></div>
     <div class="compare-cell col-h" data-col="Perfume"><img src="/assets/icon-perfume.png" alt="Perfume bottle" class="compare-col-icon" width="28" height="28" loading="lazy" decoding="async"><span>PERFUME<span class="compare-col-sub">for scent</span></span></div>
