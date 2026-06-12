@@ -1,28 +1,33 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-
-function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
-}
+import {
+  clientKey,
+  jsonResponse,
+  preflight,
+  rateLimit,
+} from "../_shared/security.ts";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return preflight(req);
+  if (req.method !== "POST") {
+    return jsonResponse(req, { error: "Method not allowed" }, 405);
+  }
+
+  // Throttle review submissions: 10 / 10 min / IP.
+  if (!rateLimit(`submit-review:${clientKey(req)}`, 10, 10 * 60 * 1000)) {
+    return jsonResponse(req, { error: "Too many requests. Please slow down." }, 429);
   }
 
   try {
-    const b = await req.json();
+    let b: Record<string, unknown>;
+    try {
+      b = await req.json();
+    } catch {
+      return jsonResponse(req, { error: "Invalid request." }, 400);
+    }
+
     const orderId = String(b.order_id || "").trim();
     const rating = Number(b.rating);
     const body = String(b.body || "").trim();
@@ -30,18 +35,18 @@ Deno.serve(async (req: Request) => {
     const name = anonymous ? "Anonymous" : String(b.name || "").trim().slice(0, 60) || "Anonymous";
 
     if (!UUID_RE.test(orderId)) {
-      return json({ error: "Reviews are for verified buyers — we couldn't find your purchase on this device." }, 403);
+      return jsonResponse(req, { error: "Reviews are for verified buyers — we couldn't find your purchase on this device." }, 403);
     }
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
-      return json({ error: "Pick a star rating." }, 400);
+      return jsonResponse(req, { error: "Pick a star rating." }, 400);
     }
     if (body.length < 8 || body.length > 600) {
-      return json({ error: "Write at least a sentence (max 600 characters)." }, 400);
+      return jsonResponse(req, { error: "Write at least a sentence (max 600 characters)." }, 400);
     }
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
     // The order must exist — that's what makes "Verified buyer" real.
@@ -52,7 +57,7 @@ Deno.serve(async (req: Request) => {
       .maybeSingle();
 
     if (!order || order.status === "cancelled") {
-      return json({ error: "Reviews are for verified buyers — we couldn't match your purchase." }, 403);
+      return jsonResponse(req, { error: "Reviews are for verified buyers — we couldn't match your purchase." }, 403);
     }
 
     const addr = (order.address || {}) as Record<string, string>;
@@ -72,13 +77,13 @@ Deno.serve(async (req: Request) => {
     if (error) {
       // unique index on order_id: one review per order
       if (String(error.code) === "23505") {
-        return json({ error: "You've already reviewed this order — thank you!" }, 409);
+        return jsonResponse(req, { error: "You've already reviewed this order — thank you!" }, 409);
       }
       throw error;
     }
 
-    return json({ review: data });
+    return jsonResponse(req, { review: data });
   } catch (_e) {
-    return json({ error: "Could not post your review. Please try again." }, 500);
+    return jsonResponse(req, { error: "Could not post your review. Please try again." }, 500);
   }
 });
