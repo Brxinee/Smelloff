@@ -333,6 +333,26 @@ footer a{color:var(--muted)}
   .next-arrow{color:var(--accent);flex-shrink:0}
 
   /* Keep-reading carousel (auto-scrolling, swipeable) */
+  /* FAQ */
+  .faq-section{margin-top:56px}
+  .faq-item{
+    border-bottom:1px solid var(--rule);
+    padding:20px 0;cursor:pointer;
+  }
+  .faq-item summary{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;font-size:19px;color:var(--text);
+    list-style:none;cursor:pointer;
+    display:flex;justify-content:space-between;
+    align-items:center;
+  }
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{
+    content:'+';color:var(--accent);font-size:24px;
+    transition:transform 0.2s;
+  }
+  .faq-item[open] summary::after{transform:rotate(45deg)}
+  .faq-item p{margin-top:12px;color:var(--text-secondary)}
   .post-popular{
     margin:48px -16px 8px;padding:24px 0;
     background:var(--bg);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
@@ -576,6 +596,25 @@ footer a{color:var(--muted)}
   </div>
 
 
+  <section class="faq-section">
+    <h2>Frequently Asked</h2>
+    <details class="faq-item">
+      <summary>Why do clothes smell even after washing?</summary>
+      <p>Because detergent is water-based and can't reach the oils and bacteria buried in fabric micro-pores — especially in polyester. The wash removes surface dirt, but body heat reactivates the trapped odor compounds the moment you wear the shirt again.</p>
+    </details>
+    <details class="faq-item">
+      <summary>How do I remove a smell that washing can't fix?</summary>
+      <p>Use a fabric odor eliminator after the wash. ODORSTRIKE's Zinc PCA binds the odor molecules detergent leaves behind and deactivates them in 8–10 seconds — no rewash, no soaking, no masking fragrance.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Does washing clothes twice remove the smell?</summary>
+      <p>Rarely. A second water-based wash hits the same wall as the first: hydrophobic fibres repel water, so the odor source stays put. Targeted neutralization works; repetition doesn't.</p>
+    </details>
+  </section>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why do clothes smell even after washing?", "acceptedAnswer": {"@type": "Answer", "text": "Because detergent is water-based and can't reach the oils and bacteria buried in fabric micro-pores — especially in polyester. The wash removes surface dirt, but body heat reactivates the trapped odor compounds the moment you wear the shirt again."}}, {"@type": "Question", "name": "How do I remove a smell that washing can't fix?", "acceptedAnswer": {"@type": "Answer", "text": "Use a fabric odor eliminator after the wash. ODORSTRIKE's Zinc PCA binds the odor molecules detergent leaves behind and deactivates them in 8–10 seconds — no rewash, no soaking, no masking fragrance."}}, {"@type": "Question", "name": "Does washing clothes twice remove the smell?", "acceptedAnswer": {"@type": "Answer", "text": "Rarely. A second water-based wash hits the same wall as the first: hydrophobic fibres repel water, so the odor source stays put. Targeted neutralization works; repetition doesn't."}}]}
+</script>
   <section class="post-popular" aria-label="Keep reading">
     <div class="post-popular-label">Keep reading</div>
     <div class="post-popular-viewport" id="postPopularVp">

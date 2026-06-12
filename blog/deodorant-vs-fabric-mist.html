@@ -124,6 +124,26 @@
   @media(max-width:720px){.blog-footer{flex-direction:column;align-items:flex-start}.blog-footer .footer-bottom{text-align:left}}
   
   /* Keep-reading carousel (auto-scrolling, swipeable) */
+  /* FAQ */
+  .faq-section{margin-top:56px}
+  .faq-item{
+    border-bottom:1px solid var(--rule);
+    padding:20px 0;cursor:pointer;
+  }
+  .faq-item summary{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;font-size:19px;color:var(--text);
+    list-style:none;cursor:pointer;
+    display:flex;justify-content:space-between;
+    align-items:center;
+  }
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{
+    content:'+';color:var(--accent);font-size:24px;
+    transition:transform 0.2s;
+  }
+  .faq-item[open] summary::after{transform:rotate(45deg)}
+  .faq-item p{margin-top:12px;color:var(--text-secondary)}
   .post-popular{
     margin:48px -16px 8px;padding:24px 0;
     background:var(--bg);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
@@ -320,6 +340,25 @@
 
   <p>Two surfaces. Two products. Finally, actually fixed.</p>
 
+  <section class="faq-section">
+    <h2>Frequently Asked</h2>
+    <details class="faq-item">
+      <summary>What is the difference between a fabric odor spray and a deodorant?</summary>
+      <p>Deodorant works on skin; a fabric odor spray works on clothes. Skin is roughly 0.3% of the surface holding your odor — the shirt holds the rest. Deodorant prevents new odor on your body; a fabric spray like ODORSTRIKE neutralizes the smell already sitting in the fabric.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Can a fabric odor spray replace deodorant?</summary>
+      <p>No — and it isn't trying to. They are different categories: deodorant for skin, ODORSTRIKE for fabric only, never skin. Use both. Deodorant in the morning, fabric spray when the shirt — not the skin — starts to smell.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Why does my shirt smell even though I wear deodorant?</summary>
+      <p>Because deodorant never touches the shirt. Sweat soaks into the fabric, bacteria break it down there, and by mid-day the cloth itself is the odor source. That is a fabric problem, and it needs a fabric-level fix.</p>
+    </details>
+  </section>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the difference between a fabric odor spray and a deodorant?", "acceptedAnswer": {"@type": "Answer", "text": "Deodorant works on skin; a fabric odor spray works on clothes. Skin is roughly 0.3% of the surface holding your odor — the shirt holds the rest. Deodorant prevents new odor on your body; a fabric spray like ODORSTRIKE neutralizes the smell already sitting in the fabric."}}, {"@type": "Question", "name": "Can a fabric odor spray replace deodorant?", "acceptedAnswer": {"@type": "Answer", "text": "No — and it isn't trying to. They are different categories: deodorant for skin, ODORSTRIKE for fabric only, never skin. Use both. Deodorant in the morning, fabric spray when the shirt — not the skin — starts to smell."}}, {"@type": "Question", "name": "Why does my shirt smell even though I wear deodorant?", "acceptedAnswer": {"@type": "Answer", "text": "Because deodorant never touches the shirt. Sweat soaks into the fabric, bacteria break it down there, and by mid-day the cloth itself is the odor source. That is a fabric problem, and it needs a fabric-level fix."}}]}
+</script>
   <section class="post-popular" aria-label="Keep reading">
     <div class="post-popular-label">Keep reading</div>
     <div class="post-popular-viewport" id="postPopularVp">
