@@ -1,36 +1,41 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-
-function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
-}
+import {
+  clientKey,
+  jsonResponse,
+  preflight,
+  rateLimit,
+} from "../_shared/security.ts";
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return preflight(req);
+  if (req.method !== "POST") {
+    return jsonResponse(req, { error: "Method not allowed" }, 405);
+  }
+
+  // Throttle lookups so the code+phone pair can't be brute-forced: 15 / 10 min / IP.
+  if (!rateLimit(`track-order:${clientKey(req)}`, 15, 10 * 60 * 1000)) {
+    return jsonResponse(req, { error: "Too many requests. Please slow down." }, 429);
   }
 
   try {
-    const body = await req.json();
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return jsonResponse(req, { error: "Invalid request." }, 400);
+    }
+
     const code = String(body.order_code || "").trim().toUpperCase();
     const phone = String(body.phone || "").replace(/\D/g, "").slice(-10);
 
     if (!/^SMF-\d{8}-\d{4}$/.test(code) || phone.length !== 10) {
-      return json({ error: "Enter your order ID (SMF-…) and the 10-digit phone used at checkout." }, 400);
+      return jsonResponse(req, { error: "Enter your order ID (SMF-…) and the 10-digit phone used at checkout." }, 400);
     }
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
     const { data: order, error } = await supabase
@@ -43,13 +48,13 @@ Deno.serve(async (req: Request) => {
     // endpoint can't be used to probe which order codes exist.
     const orderPhone = String(order?.customer_phone || "").replace(/\D/g, "").slice(-10);
     if (error || !order || orderPhone !== phone) {
-      return json({ error: "No order found for that ID + phone combination. Check both and try again, or WhatsApp us." }, 404);
+      return jsonResponse(req, { error: "No order found for that ID + phone combination. Check both and try again, or WhatsApp us." }, 404);
     }
 
     // Sanitized response: no email, no street address — only what the customer
     // needs to see the order's progress.
     const addr = (order.address || {}) as Record<string, string>;
-    return json({
+    return jsonResponse(req, {
       order_code: order.order_code,
       placed_at: order.created_at,
       status: order.status,
@@ -63,6 +68,6 @@ Deno.serve(async (req: Request) => {
       tracking_url: order.tracking_url,
     });
   } catch (_e) {
-    return json({ error: "Something went wrong. Try again in a minute." }, 500);
+    return jsonResponse(req, { error: "Something went wrong. Try again in a minute." }, 500);
   }
 });

@@ -23,7 +23,29 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.smelloff.in',
 ]);
 
+// Best-effort in-memory rate limiter (per warm lambda instance). Keeps this
+// transactional-email endpoint from being abused as an open relay/spam vector.
+const RATE_LIMIT = 12;
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const rlBuckets = new Map();
+
+function rateLimited(key) {
+  const now = Date.now();
+  const b = rlBuckets.get(key);
+  if (!b || now >= b.resetAt) {
+    rlBuckets.set(key, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    if (rlBuckets.size > 5000) {
+      for (const [k, v] of rlBuckets) if (now >= v.resetAt) rlBuckets.delete(k);
+    }
+    return false;
+  }
+  if (b.count >= RATE_LIMIT) return true;
+  b.count++;
+  return false;
+}
+
 export default async function handler(req, res) {
+  res.setHeader('X-Powered-By', 'Smelloff');
   const origin = req.headers.origin;
   if (origin && ALLOWED_ORIGINS.has(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -35,6 +57,12 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const fwd = req.headers['x-forwarded-for'] || '';
+  const ip = (Array.isArray(fwd) ? fwd[0] : String(fwd).split(',')[0]).trim() || 'unknown';
+  if (rateLimited(ip)) {
+    return res.status(429).json({ error: 'Too many requests. Please slow down.' });
   }
 
   if (!process.env.RESEND_API_KEY) {
@@ -74,12 +102,12 @@ export default async function handler(req, res) {
 
     if (result.error) {
       console.error('Resend error:', result.error);
-      return res.status(500).json({ error: result.error.message });
+      return res.status(502).json({ error: 'Email could not be sent.' });
     }
 
     return res.status(200).json({ id: result.data?.id, ok: true });
   } catch (err) {
     console.error('send-email error:', err);
-    return res.status(500).json({ error: err.message || 'Send failed' });
+    return res.status(500).json({ error: 'Email could not be sent.' });
   }
 }
