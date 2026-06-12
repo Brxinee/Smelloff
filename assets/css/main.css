@@ -665,6 +665,57 @@
     .p-stat-label{font-size:12px}
   }
 
+  /* Villain — eliminate vs mask (the one bold "masks vs kills" statement) */
+  .villain{
+    background:var(--bg);
+    padding:56px 20px;
+    border-bottom:none;
+    display:flex;flex-direction:column;align-items:flex-start;gap:18px;
+    max-width:1120px;margin:0 auto;
+  }
+  .villain-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);margin:0;
+    display:flex;align-items:center;gap:12px;
+  }
+  .villain-eyebrow::before{content:'';width:32px;height:1px;background:var(--muted)}
+  .villain-headline{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;
+    font-size:clamp(34px,9vw,72px);
+    line-height:.96;letter-spacing:-.01em;
+    text-transform:uppercase;color:var(--text);
+    margin:0;max-width:840px;
+  }
+  .villain-headline .vl-line{display:block}
+  .villain-headline .vl-strike{
+    color:var(--muted);
+    text-decoration:line-through;
+    text-decoration-color:rgba(var(--accent-rgb),.6);
+    text-decoration-thickness:3px;
+  }
+  .villain-headline .vl-kill{color:var(--accent)}
+  .villain-sub{
+    font-family:'Inter Tight',sans-serif;
+    font-size:clamp(15px,2vw,18px);line-height:1.55;
+    color:var(--text-secondary);margin:0;max-width:600px;
+  }
+  .villain-cta{
+    display:inline-flex;align-items:center;justify-content:center;
+    height:52px;padding:0 30px;
+    background:var(--accent);color:var(--bg);
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900;font-size:16px;letter-spacing:.06em;text-transform:uppercase;
+    text-decoration:none;border-radius:4px;
+    transition:background .15s ease, transform .15s ease;
+  }
+  .villain-cta:hover{background:var(--accent-hover)}
+  .villain-cta:active{transform:scale(.985)}
+  @media(min-width:860px){
+    .villain{padding:88px 40px;gap:22px}
+  }
+
   /* How it works — 4 step block */
   .how-works{
     background:var(--bg);
