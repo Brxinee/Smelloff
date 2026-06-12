@@ -720,13 +720,21 @@ function diagnose(){
   }
 }
 
-// Checklist email (placeholder — wire to Google Sheets webhook)
+// Checklist email — capture to the same backends the main site uses
+// (Supabase waitlist primary + Google Sheets webhook backup) before confirming.
 function sendChecklist(){
-  const email=document.getElementById('checklistEmail').value;
-  if(!email||!email.includes('@')){alert('Valid email please.');return}
-  // TODO: fetch to Google Sheets webhook
+  var input=document.getElementById('checklistEmail');
+  var email=(input&&input.value||'').trim();
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('Valid email please.');return}
+  var SUPA_URL='https://tnuqjydmoxczdjnsgpci.supabase.co';
+  var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudXFqeWRtb3hjemRqbnNncGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzI2NDgsImV4cCI6MjA5MzEwODY0OH0.6qyyo-1lpntK7FC3H9j_oqWp0W_R1XydVG_IxVUd6F4';
+  var SHEETS='https://script.google.com/macros/s/AKfycbwvZamMivX4MF_jM83VjO3f8GDYmitlOxKkkXS2mSnivZ1wzps9ZolIQG2tvKMATIoh2Q/exec';
+  try{
+    fetch(SUPA_URL+'/rest/v1/waitlist',{method:'POST',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({email:email,source:'blog-checklist'}),keepalive:true}).catch(function(){});
+  }catch(e){}
+  try{ new Image().src=SHEETS+'?email='+encodeURIComponent(email); }catch(e){}
   document.getElementById('emailStatus').style.display='block';
-  document.getElementById('checklistEmail').value='';
+  if(input) input.value='';
 }
 </script>
 
