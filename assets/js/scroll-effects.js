@@ -36,7 +36,7 @@
   /* AT5 — section scroll-reveal (only hide sections if we can/will reveal them) */
   function initReveal(){
     if(reduce || !hasIO) return;  // no JS-hiding when we won't animate → content always visible
-    var sel = '.problem,.villain,.trigger-section,.how-works,.compare,.savings,.only-fix,.reviews,.faq,.final';
+    var sel = '.problem,.trigger-section,.how-works,.compare,.savings,.only-fix,.reviews,.faq,.final';
     var secs = document.querySelectorAll(sel);
     if(!secs.length) return;
     var o = new IntersectionObserver(function(es){
