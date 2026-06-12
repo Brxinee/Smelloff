@@ -113,18 +113,20 @@
 {"@context":"https://schema.org","@type":"WebPage","name":"Smelloff ODORSTRIKE — Fabric Odor Remover Spray","url":"https://www.smelloff.in/","description":"India's first pocket-sized fabric odor eliminator mist. Kills smell on contact. Not a perfume, not a deodorant.","inLanguage":"en-IN","isPartOf":{"@type":"WebSite","name":"Smelloff","url":"https://www.smelloff.in"},"about":{"@type":"Thing","name":"Fabric Odor Elimination"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://www.smelloff.in/assets/odorstrike-bottle.png"}}
 </script>
 <!-- JSON-LD Product (expanded for AI & SERP) -->
-<!-- HOW TO ADD A REAL CUSTOMER REVIEW (keep schema + page in sync):
-     1. In the "review" array inside this Product schema, copy an existing
-        Review object, update author name / datePublished / ratingValue /
-        reviewBody, and append it (must stay valid JSON - no trailing comma).
-     2. Recompute "aggregateRating": ratingValue = average of all review
-        ratings (1 decimal); bump ratingCount and reviewCount by 1 each.
-     3. Add the same review to the TESTERS array in /assets/js/app.js so it
-        renders in the on-page carousel, and update the visible aggregate
-        text in the #reviews section ("Based on N reviews").
+<!-- HOW TO KEEP THE PRODUCT RATING IN SYNC (no individual Review markup here):
+     Google flags self-hosted individual Review objects nested in a Product
+     ("Multiple reviews without aggregateRating object" in the Review-snippets
+     report), so this schema carries ONLY "aggregateRating" — that is what
+     renders the SERP star rating. Do NOT re-add a "review" array here.
+     To update the rating:
+     1. Add/curate the review in the TESTERS array in /assets/js/app.js so it
+        renders in the on-page carousel (this is the visible, real review).
+     2. Recompute "aggregateRating": ratingValue = average of all visible
+        ratings (1 decimal); bump ratingCount and reviewCount to match the
+        number of reviews actually shown on the page.
+     3. Update the visible aggregate text in the #reviews section.
      Buyer reviews submitted via the on-site form are stored in Supabase and
-     render automatically - only add curated ones to this schema. Never add
-     fabricated reviews (Google penalty risk). -->
+     render automatically. Never add fabricated reviews (Google penalty risk). -->
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -141,43 +143,35 @@
   "material":"Zinc PCA, Triethyl Citrate, Isopropyl Alcohol",
   "sku":"OS-001-50ML",
   "mpn":"SMLF-ODST-50",
-  "offers":{
-    "@type":"AggregateOffer",
-    "priceCurrency":"INR",
-    "lowPrice":"229",
-    "highPrice":"549",
-    "offerCount":"3",
-    "availability":"https://schema.org/InStock",
-    "itemCondition":"https://schema.org/NewCondition",
-    "url":"https://www.smelloff.in/#buy",
-    "priceValidUntil":"2026-12-31",
-    "shippingDetails":{"@type":"OfferShippingDetails","shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},"shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},"deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}}},
-    "hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","applicableCountry":"IN","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":7,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/FreeReturn"}
-  },
-  "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.7","bestRating":"5","worstRating":"1","ratingCount":"3","reviewCount":"3"},
-  "review":[
+  "offers":[
     {
-      "@type":"Review",
-      "author":{"@type":"Person","name":"Rohit S."},
-      "datePublished":"2026-03-18",
-      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5","worstRating":"1"},
-      "reviewBody":"Bike rider in Hyderabad heat — 2 sprays on the collar before leaving and the shirt smells neutral after a 40-min ride. Fits in my back pocket. Game changer."
+      "@type":"Offer",
+      "name":"ODORSTRIKE 50ml — Single Bottle",
+      "sku":"OS-001-50ML",
+      "priceCurrency":"INR",
+      "price":"229",
+      "availability":"https://schema.org/InStock",
+      "itemCondition":"https://schema.org/NewCondition",
+      "url":"https://www.smelloff.in/#buy",
+      "priceValidUntil":"2026-12-31",
+      "shippingDetails":{"@type":"OfferShippingDetails","shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},"shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},"deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}}},
+      "hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","applicableCountry":"IN","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":7,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/FreeReturn"}
     },
     {
-      "@type":"Review",
-      "author":{"@type":"Person","name":"Aarav M."},
-      "datePublished":"2026-02-27",
-      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5","worstRating":"1"},
-      "reviewBody":"Used it on a polyester gym tee that already smelled even after washing. Sprayed it, waited 10 seconds — odor gone. Not masked. Actually gone."
-    },
-    {
-      "@type":"Review",
-      "author":{"@type":"Person","name":"Priya K."},
-      "datePublished":"2026-01-14",
-      "reviewRating":{"@type":"Rating","ratingValue":"4","bestRating":"5","worstRating":"1"},
-      "reviewBody":"Works on cotton kurtas and office shirts. Doesn't replace washing for heavy stains, but for re-wear days it's perfect. Pocket size is the real win."
+      "@type":"AggregateOffer",
+      "priceCurrency":"INR",
+      "lowPrice":"229",
+      "highPrice":"549",
+      "offerCount":"3",
+      "availability":"https://schema.org/InStock",
+      "itemCondition":"https://schema.org/NewCondition",
+      "url":"https://www.smelloff.in/#buy",
+      "priceValidUntil":"2026-12-31",
+      "shippingDetails":{"@type":"OfferShippingDetails","shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},"shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},"deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}}},
+      "hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","applicableCountry":"IN","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":7,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/FreeReturn"}
     }
-  ]
+  ],
+  "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.7","bestRating":"5","worstRating":"1","ratingCount":"3","reviewCount":"3"}
 }
 </script>
 <!-- JSON-LD FAQPage -->
