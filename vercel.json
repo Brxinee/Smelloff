@@ -1,20 +1,31 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false,
+  "trailingSlash": true,
   "redirects": [
     {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "smelloff.in"
+        }
+      ],
+      "destination": "https://www.smelloff.in/$1",
+      "permanent": true
+    },
+    {
       "source": "/policies/:slug(privacy|terms|returns|refund|shipping|payment-failed)",
-      "destination": "/:slug",
+      "destination": "/:slug/",
       "permanent": true
     },
     {
       "source": "/policies/:slug(privacy|terms|returns|refund|shipping|payment-failed)\\.html",
-      "destination": "/:slug",
+      "destination": "/:slug/",
       "permanent": true
     },
     {
       "source": "/(.+)\\.html",
-      "destination": "/$1",
+      "destination": "/$1/",
       "permanent": true
     },
     {
@@ -24,12 +35,12 @@
     },
     {
       "source": "/blog/index",
-      "destination": "/blog",
+      "destination": "/blog/",
       "permanent": true
     },
     {
       "source": "/blog/best-fabric-odor-spray-india-2026",
-      "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor",
+      "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor/",
       "permanent": true
     },
     {
@@ -73,7 +84,7 @@
       ]
     },
     {
-      "source": "/payment-failed",
+      "source": "/payment-failed/",
       "headers": [
         {
           "key": "X-Robots-Tag",

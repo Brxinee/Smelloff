@@ -1,6 +1,6 @@
 # Smelloff — ODORSTRIKE Fabric Odor Remover Spray
 
-> ODORSTRIKE by Smelloff is India's first pocket-sized fabric odor remover spray — a 50ml mist (₹229) that neutralizes sweat smell, gym odor, and shirt stink in 8–10 seconds using Zinc PCA (1.5%). It is for clothes only (cotton, polyester, denim, wool) — NOT a perfume, NOT a deodorant, NOT for skin. D2C brand founded in 2026 by Brainee in Hyderabad, India. Sold direct at https://www.smelloff.in.
+> ODORSTRIKE by Smelloff is India's first pocket-sized fabric odor remover spray — a 50ml mist (₹229) that neutralizes sweat smell, gym odor, and shirt stink in 8–10 seconds using Zinc PCA (1.5%). It is for clothes only (cotton, polyester, denim, wool) — NOT a perfume, NOT a deodorant, NOT for skin. D2C brand founded in 2026 by Brainee in Hyderabad, India. Sold direct at https://www.smelloff.in/.
 
 ODORSTRIKE treats the fabric, not the skin. It does not mask odor with fragrance — its active ingredient Zinc PCA binds to the volatile odor molecules in sweat (isovaleric acid, butyric acid, sulfur compounds) and stops them going airborne, while a 20% isopropyl-alcohol carrier drives the formula into fibre micro-pores that water-based detergent can't reach. This is molecular neutralization, not cover-up. The full reference (every fact, ingredient and guide) is at https://www.smelloff.in/llms-full.txt.
 
@@ -39,25 +39,25 @@ Paraben-free, sulfate-free. Contains no cyclodextrin (that chemistry is blog bac
 
 ## How ODORSTRIKE compares
 
-- **vs Febreze:** Febreze is a room/fabric freshener that masks odor with fragrance and cyclodextrin; ODORSTRIKE neutralizes sweat-smell molecules (isovaleric/butyric acid) in fabric with Zinc PCA. ODORSTRIKE is pocket-sized (50ml, ₹229) vs Febreze's large home bottles (₹300+). Detailed comparison: https://www.smelloff.in/blog/odorstrike-vs-febreze-india
-- **vs deodorant:** Deodorant is for skin; ODORSTRIKE is for fabric. They are different categories, not substitutes — by mid-day the shirt smells, not the skin. See https://www.smelloff.in/blog/deodorant-vs-fabric-mist
-- **vs perfume:** Perfume layered over sweat creates a worse combined smell; ODORSTRIKE removes the base odor first. See https://www.smelloff.in/blog/perfume-plus-sweat-chemical-reaction
-- **vs re-washing:** Detergent can't penetrate hydrophobic polyester micro-fibres, which is why gym clothes smell again after washing. See https://www.smelloff.in/blog/gym-clothes-smell-after-washing
+- **vs Febreze:** Febreze is a room/fabric freshener that masks odor with fragrance and cyclodextrin; ODORSTRIKE neutralizes sweat-smell molecules (isovaleric/butyric acid) in fabric with Zinc PCA. ODORSTRIKE is pocket-sized (50ml, ₹229) vs Febreze's large home bottles (₹300+). Detailed comparison: https://www.smelloff.in/blog/odorstrike-vs-febreze-india/
+- **vs deodorant:** Deodorant is for skin; ODORSTRIKE is for fabric. They are different categories, not substitutes — by mid-day the shirt smells, not the skin. See https://www.smelloff.in/blog/deodorant-vs-fabric-mist/
+- **vs perfume:** Perfume layered over sweat creates a worse combined smell; ODORSTRIKE removes the base odor first. See https://www.smelloff.in/blog/perfume-plus-sweat-chemical-reaction/
+- **vs re-washing:** Detergent can't penetrate hydrophobic polyester micro-fibres, which is why gym clothes smell again after washing. See https://www.smelloff.in/blog/gym-clothes-smell-after-washing/
 
 ## Core pages
 
 - [Homepage — product, pricing, reviews, FAQ](https://www.smelloff.in/)
 - [Buy ODORSTRIKE — ₹229, COD, free shipping](https://www.smelloff.in/#buy)
-- [All fabric-odor guides (blog index)](https://www.smelloff.in/blog)
-- [Zinc PCA — the ingredient that kills fabric odor](https://www.smelloff.in/blog/zinc-ricinoleate-fabric-odor-ingredient)
-- [Why gym clothes smell after washing](https://www.smelloff.in/blog/gym-clothes-smell-after-washing)
-- [How to remove sweat smell from shirts without washing](https://www.smelloff.in/blog/remove-sweat-smell-shirts-without-washing)
-- [Deodorant vs fabric mist — what actually kills odor](https://www.smelloff.in/blog/deodorant-vs-fabric-mist)
-- [ODORSTRIKE Review: 30 days, real results](https://www.smelloff.in/blog/odorstrike-review-30-day-india-test)
+- [All fabric-odor guides (blog index)](https://www.smelloff.in/blog/)
+- [Zinc PCA — the ingredient that kills fabric odor](https://www.smelloff.in/blog/zinc-ricinoleate-fabric-odor-ingredient/)
+- [Why gym clothes smell after washing](https://www.smelloff.in/blog/gym-clothes-smell-after-washing/)
+- [How to remove sweat smell from shirts without washing](https://www.smelloff.in/blog/remove-sweat-smell-shirts-without-washing/)
+- [Deodorant vs fabric mist — what actually kills odor](https://www.smelloff.in/blog/deodorant-vs-fabric-mist/)
+- [ODORSTRIKE Review: 30 days, real results](https://www.smelloff.in/blog/odorstrike-review-30-day-india-test/)
 
 ## Contact
 
-- Website: https://www.smelloff.in
+- Website: https://www.smelloff.in/
 - Email: smelloffsupport@gmail.com
 - WhatsApp: +91 93929 74031
 - Instagram: https://instagram.com/smell0ff
@@ -66,8 +66,8 @@ Paraben-free, sulfate-free. Contains no cyclodextrin (that chemistry is blog bac
 ## Optional
 
 - [Full reference file (all facts, science & guides)](https://www.smelloff.in/llms-full.txt)
-- [Best fabric odor spray for body odor in India (2026)](https://www.smelloff.in/blog/best-fabric-odor-spray-india-2026-body-odor)
-- [ODORSTRIKE vs Febreze](https://www.smelloff.in/blog/odorstrike-vs-febreze-india)
-- [Is Zinc PCA safe for clothes?](https://www.smelloff.in/blog/is-zinc-ricinoleate-safe-for-clothes)
-- [Why I built ODORSTRIKE — founder's note](https://www.smelloff.in/blog/why-i-built-odorstrike)
-- [Shipping](https://www.smelloff.in/shipping) · [Returns](https://www.smelloff.in/returns) · [Refund](https://www.smelloff.in/refund) · [Privacy](https://www.smelloff.in/privacy) · [Terms](https://www.smelloff.in/terms)
+- [Best fabric odor spray for body odor in India (2026)](https://www.smelloff.in/blog/best-fabric-odor-spray-india-2026-body-odor/)
+- [ODORSTRIKE vs Febreze](https://www.smelloff.in/blog/odorstrike-vs-febreze-india/)
+- [Is Zinc PCA safe for clothes?](https://www.smelloff.in/blog/is-zinc-ricinoleate-safe-for-clothes/)
+- [Why I built ODORSTRIKE — founder's note](https://www.smelloff.in/blog/why-i-built-odorstrike/)
+- [Shipping](https://www.smelloff.in/shipping/) · [Returns](https://www.smelloff.in/returns/) · [Refund](https://www.smelloff.in/refund/) · [Privacy](https://www.smelloff.in/privacy/) · [Terms](https://www.smelloff.in/terms/)

@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ODORSTRIKE Reviews — What Buyers Say | Smelloff</title>
 <meta name="description" content="Every ODORSTRIKE review in one place — beta testers and verified buyers across India. Real feedback on gym clothes, office shirts, commutes and monsoon smell.">
-<link rel="canonical" href="https://www.smelloff.in/reviews">
+<link rel="canonical" href="https://www.smelloff.in/reviews/">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
 <meta name="theme-color" content="#080808">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://www.smelloff.in/reviews">
+<meta property="og:url" content="https://www.smelloff.in/reviews/">
 <meta property="og:title" content="ODORSTRIKE Reviews — What Buyers Say">
 <meta property="og:description" content="Real reviews from beta testers and verified buyers across India.">
 <meta property="og:site_name" content="Smelloff">
@@ -19,7 +19,7 @@
 <meta name="twitter:title" content="ODORSTRIKE Reviews — What Buyers Say">
 <meta name="twitter:description" content="Real reviews from beta testers and verified buyers across India.">
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "WebPage", "name": "ODORSTRIKE Reviews", "url": "https://www.smelloff.in/reviews", "description": "All ODORSTRIKE reviews from beta testers and verified buyers across India.", "inLanguage": "en-IN", "isPartOf": {"@type": "WebSite", "name": "Smelloff", "url": "https://www.smelloff.in"}, "about": {"@type": "Product", "@id": "https://www.smelloff.in/#odorstrike", "name": "ODORSTRIKE Fabric Odor Remover Spray"}, "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.smelloff.in/"}, {"@type": "ListItem", "position": 2, "name": "Reviews", "item": "https://www.smelloff.in/reviews"}]}}
+{"@context": "https://schema.org", "@type": "WebPage", "name": "ODORSTRIKE Reviews", "url": "https://www.smelloff.in/reviews/", "description": "All ODORSTRIKE reviews from beta testers and verified buyers across India.", "inLanguage": "en-IN", "isPartOf": {"@type": "WebSite", "name": "Smelloff", "url": "https://www.smelloff.in"}, "about": {"@type": "Product", "@id": "https://www.smelloff.in/#odorstrike", "name": "ODORSTRIKE Fabric Odor Remover Spray"}, "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.smelloff.in/"}, {"@type": "ListItem", "position": 2, "name": "Reviews", "item": "https://www.smelloff.in/reviews/"}]}}
 </script>
 <link rel="icon" type="image/png" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -102,7 +102,7 @@
 </main>
 
 <footer>
-  <a href="/">Home</a><a href="/track-order">Track Order</a><a href="/contact">Contact</a><a href="/blog">Blog</a><a href="/privacy">Privacy</a>
+  <a href="/">Home</a><a href="/track-order/">Track Order</a><a href="/contact/">Contact</a><a href="/blog/">Blog</a><a href="/privacy/">Privacy</a>
   <div style="margin-top:10px">© 2026 Smelloff · Made in Hyderabad</div>
 </footer>
 
@@ -151,7 +151,7 @@
 
   render(TESTERS, 0);
 
-  fetch(SUPA_URL + '/rest/v1/reviews?select=name,rating,body,city,anonymous,created_at&order=created_at.desc&limit=200', {
+  fetch(SUPA_URL + '/rest/v1/reviews/?select=name,rating,body,city,anonymous,created_at&order=created_at.desc&limit=200', {
     headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
   })
   .then(function(r){ return r.ok ? r.json() : []; })
