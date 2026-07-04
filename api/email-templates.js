@@ -1,12 +1,14 @@
 // Email templates for ODORSTRIKE / Smelloff
 // All CSS inlined for email client compatibility
-// Brand: matte black #080808, acid green #B8FF57
+// Brand: light theme — white #FFFFFF, ink #111111, acid green #B8FF57
 
-const BLACK = '#080808';
+const BLACK = '#FFFFFF';   // page/card background (legacy name)
+const INK = '#111111';     // primary text
 const GREEN = '#B8FF57';
-const WHITE = '#FFFFFF';
-const GREY = '#9A9A9A';
-const BORDER = '#1F1F1F';
+const GREEN_INK = '#3D7A00'; // contrast-safe green for text on white
+const WHITE = '#111111';   // primary text (legacy name)
+const GREY = '#6B6B6B';
+const BORDER = '#EAEAEA';
 
 const HEADING_FONT = `'Barlow Condensed', 'Arial Black', Impact, sans-serif`;
 const BODY_FONT = `'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
@@ -27,8 +29,8 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="dark">
-<meta name="supported-color-schemes" content="dark">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
 <title>ODORSTRIKE</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
@@ -43,7 +45,7 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td style="vertical-align:middle;font-family:${HEADING_FONT};font-weight:900;font-size:28px;letter-spacing:3px;color:${WHITE};text-transform:uppercase;line-height:1;">
-                  <a href="${SITE_URL}" style="color:${WHITE};text-decoration:none;">SMELLOFF</a><span style="display:inline-block;width:8px;height:8px;background-color:${GREEN};border-radius:50%;vertical-align:top;margin-left:4px;margin-top:2px;">&nbsp;</span>
+                  <a href="${SITE_URL}" style="color:${WHITE};text-decoration:none;">SMELLOFF</a><span style="display:inline-block;width:8px;height:8px;background-color:${GREEN_INK};border-radius:50%;vertical-align:top;margin-left:4px;margin-top:2px;">&nbsp;</span>
                 </td>
                 <td align="right" style="vertical-align:middle;font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;">
                   ODORSTRIKE
@@ -60,7 +62,7 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
         <tr>
           <td style="padding:28px 32px;border-top:1px solid ${BORDER};font-family:${BODY_FONT};font-size:12px;color:${GREY};line-height:1.6;">
             <p style="margin:0 0 8px 0;">Smelloff &middot; Hyderabad, India</p>
-            <p style="margin:0 0 8px 0;">Questions? <a href="mailto:${SUPPORT_EMAIL}" style="color:${GREEN};text-decoration:none;">${SUPPORT_EMAIL}</a></p>
+            <p style="margin:0 0 8px 0;">Questions? <a href="mailto:${SUPPORT_EMAIL}" style="color:${GREEN_INK};text-decoration:none;">${SUPPORT_EMAIL}</a></p>
             <p style="margin:0;">
               <a href="${SITE_URL}" style="color:${GREY};text-decoration:none;">smelloff.in</a>
               &nbsp;&middot;&nbsp;
@@ -90,8 +92,8 @@ const mutedPara = (text) =>
 const button = (href, label) => `
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;">
   <tr>
-    <td style="background-color:${GREEN};">
-      <a href="${href}" style="display:inline-block;padding:16px 32px;font-family:${HEADING_FONT};font-weight:900;font-size:16px;letter-spacing:2px;color:${BLACK};text-decoration:none;text-transform:uppercase;">
+    <td style="background-color:${GREEN_INK};">
+      <a href="${href}" style="display:inline-block;padding:16px 32px;font-family:${HEADING_FONT};font-weight:900;font-size:16px;letter-spacing:2px;color:${INK};text-decoration:none;text-transform:uppercase;">
         ${label} &rarr;
       </a>
     </td>
@@ -100,7 +102,7 @@ const button = (href, label) => `
 
 const divider = `<div style="height:1px;background-color:${BORDER};margin:24px 0;"></div>`;
 
-const accentBar = `<div style="width:48px;height:3px;background-color:${GREEN};margin:0 0 20px 0;"></div>`;
+const accentBar = `<div style="width:48px;height:3px;background-color:${GREEN_INK};margin:0 0 20px 0;"></div>`;
 
 // ---------- TEMPLATES ----------
 
@@ -116,7 +118,7 @@ export function orderConfirmation({
     ${heading('Order<br>Confirmed.')}
     ${para(`Hey ${escape(customerName)}, your ODORSTRIKE is locked in. We&rsquo;re packing it now.`)}
 
-    <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
+    <div style="background-color:#F5F5F5;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
       <p style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;margin:0 0 6px 0;">Order ID</p>
       <p style="font-family:${HEADING_FONT};font-weight:900;font-size:22px;color:${WHITE};letter-spacing:1px;margin:0 0 16px 0;">#${escape(orderId)}</p>
 
@@ -141,7 +143,7 @@ export function orderConfirmation({
 
     ${divider}
 
-    <p style="font-family:${HEADING_FONT};font-weight:900;font-size:18px;letter-spacing:1px;color:${GREEN};text-transform:uppercase;margin:0 0 8px 0;">What happens next</p>
+    <p style="font-family:${HEADING_FONT};font-weight:900;font-size:18px;letter-spacing:1px;color:${GREEN_INK};text-transform:uppercase;margin:0 0 8px 0;">What happens next</p>
     ${mutedPara('Dispatch in 24&ndash;48 hours. Tracking link lands in your inbox the moment it ships.')}
     ${mutedPara('Need help? Just reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
   `;
@@ -163,7 +165,7 @@ export function orderShipped({
     ${heading('It&rsquo;s on<br>the way.')}
     ${para(`${escape(customerName)}, your ODORSTRIKE just left the warehouse.`)}
 
-    <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
+    <div style="background-color:#F5F5F5;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;padding:4px 0;">Order</td>
@@ -175,7 +177,7 @@ export function orderShipped({
         </tr>
         <tr>
           <td style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;padding:4px 0;">Tracking</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${GREEN};padding:4px 0;letter-spacing:1px;">${escape(trackingId)}</td>
+          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${GREEN_INK};padding:4px 0;letter-spacing:1px;">${escape(trackingId)}</td>
         </tr>
       </table>
     </div>
@@ -200,14 +202,14 @@ export function welcomeEmail({ customerName = 'there' } = {}) {
 
     <p style="font-family:${HEADING_FONT};font-weight:900;font-size:26px;line-height:1.15;color:${WHITE};margin:32px 0 16px 0;letter-spacing:-0.3px;">
       People don&rsquo;t fear smelling bad.<br>
-      <span style="color:${GREEN};">They fear others noticing.</span>
+      <span style="color:${GREEN_INK};">They fear others noticing.</span>
     </p>
 
     ${mutedPara('ODORSTRIKE is a 50ml fabric-only odor killer. Not perfume. Not deodorant. One pocket-sized spray that neutralizes smell on clothes &mdash; sweat, smoke, food, gym, day-two shirts.')}
 
-    <div style="background-color:#0F0F0F;border:1px solid ${BORDER};padding:24px;margin:24px 0;text-align:center;">
+    <div style="background-color:#F5F5F5;border:1px solid ${BORDER};padding:24px;margin:24px 0;text-align:center;">
       <p style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:2px;text-transform:uppercase;margin:0 0 8px 0;">ODORSTRIKE 50ml</p>
-      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:48px;color:${GREEN};margin:0 0 4px 0;letter-spacing:-1px;">&#8377;179</p>
+      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:48px;color:${GREEN_INK};margin:0 0 4px 0;letter-spacing:-1px;">&#8377;179</p>
       <p style="font-family:${BODY_FONT};font-size:12px;color:${GREY};margin:0;">Free shipping above &#8377;299 &middot; COD available</p>
     </div>
 
@@ -233,10 +235,10 @@ export function abandonedCart({
 
     ${mutedPara('50ml. Fabric-only. Kills odor on contact. No perfume cover-up. One spray and you&rsquo;re out the door.')}
 
-    <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
+    <div style="background-color:#F5F5F5;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
       <p style="font-family:${HEADING_FONT};font-weight:900;font-size:20px;color:${WHITE};text-transform:uppercase;letter-spacing:1px;margin:0 0 4px 0;">ODORSTRIKE 50ml</p>
       <p style="font-family:${BODY_FONT};font-size:13px;color:${GREY};margin:0 0 12px 0;">Pocket-sized odor killer for your clothes</p>
-      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:28px;color:${GREEN};margin:0;letter-spacing:-0.5px;">&#8377;179</p>
+      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:28px;color:${GREEN_INK};margin:0;letter-spacing:-0.5px;">&#8377;179</p>
     </div>
 
     ${button(productUrl, 'Finish Order')}

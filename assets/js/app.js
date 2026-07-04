@@ -159,16 +159,16 @@ const CFG = window.SMELLOFF_CONFIG;
     for (const id of fields) {
       const el = document.getElementById(id);
       if (!el) { showError('Please fill all required fields.'); return false; }
-      if (!el.value.trim()) { el.style.borderColor='#ff6b6b'; el.focus(); showError('Please fill all required fields.'); return false; }
+      if (!el.value.trim()) { el.style.borderColor='#EF4444'; el.focus(); showError('Please fill all required fields.'); return false; }
     }
     const phone = document.getElementById('f_phone').value.trim();
-    if (!/^[6-9]\d{9}$/.test(phone)) { document.getElementById('f_phone').style.borderColor='#ff6b6b'; showError('Enter a valid 10-digit mobile number.'); return false; }
+    if (!/^[6-9]\d{9}$/.test(phone)) { document.getElementById('f_phone').style.borderColor='#EF4444'; showError('Enter a valid 10-digit mobile number.'); return false; }
     const pin = document.getElementById('f_pin').value.trim();
-    if (!/^\d{6}$/.test(pin)) { document.getElementById('f_pin').style.borderColor='#ff6b6b'; showError('Enter a valid 6-digit pincode.'); return false; }
+    if (!/^\d{6}$/.test(pin)) { document.getElementById('f_pin').style.borderColor='#EF4444'; showError('Enter a valid 6-digit pincode.'); return false; }
     // Email is OPTIONAL — only validate if non-empty
     const emailEl = document.getElementById('f_email');
     const email = emailEl ? emailEl.value.trim() : '';
-    if (email && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) { if (emailEl) emailEl.style.borderColor='#ff6b6b'; showError('Enter a valid email or leave it blank.'); return false; }
+    if (email && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) { if (emailEl) emailEl.style.borderColor='#EF4444'; showError('Enter a valid email or leave it blank.'); return false; }
     return true;
   }
 
@@ -875,7 +875,7 @@ const CFG = window.SMELLOFF_CONFIG;
     if (!input) return;
     const email = input.value.trim();
     if (!email || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) {
-      input.style.borderColor = '#a00';
+      input.style.borderColor = '#EF4444';
       return;
     }
     input.style.borderColor = '';
