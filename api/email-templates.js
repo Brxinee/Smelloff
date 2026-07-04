@@ -1,11 +1,11 @@
 // Email templates for ODORSTRIKE / Smelloff
 // All CSS inlined for email client compatibility
-// Brand: light theme — white #FFFFFF, ink #111111, acid green #B8FF57
+// Brand: light theme — white #FFFFFF, ink #18181B, fresh blue #0D5EA8
 
 const BLACK = '#FFFFFF';   // page/card background (legacy name)
 const INK = '#111111';     // primary text
-const GREEN = '#B8FF57';
-const GREEN_INK = '#3D7A00'; // contrast-safe green for text on white
+const GREEN = '#0D5EA8';   // primary accent (legacy name)
+const GREEN_INK = '#0D5EA8'; // accent as text on white
 const WHITE = '#111111';   // primary text (legacy name)
 const GREY = '#6B6B6B';
 const BORDER = '#EAEAEA';
@@ -93,7 +93,7 @@ const button = (href, label) => `
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;">
   <tr>
     <td style="background-color:${GREEN_INK};">
-      <a href="${href}" style="display:inline-block;padding:16px 32px;font-family:${HEADING_FONT};font-weight:900;font-size:16px;letter-spacing:2px;color:${INK};text-decoration:none;text-transform:uppercase;">
+      <a href="${href}" style="display:inline-block;padding:16px 32px;font-family:${HEADING_FONT};font-weight:900;font-size:16px;letter-spacing:2px;color:#FFFFFF;text-decoration:none;text-transform:uppercase;">
         ${label} &rarr;
       </a>
     </td>

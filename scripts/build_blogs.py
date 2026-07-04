@@ -19,16 +19,16 @@ DATE_PRETTY = "April 26, 2026"
 OG_IMAGE = f"{SITE}/assets/og-image.jpg"
 
 
-CSS = """  :root { --black:#FFFFFF; --off-white:#111111; --acid:#B8FF57; --acid-ink:#3D7A00; --grey:#6B6B6B; --line:#EAEAEA; }
+CSS = """  :root { --black:#FAFAF8; --off-white:#18181B; --acid:#0D5EA8; --acid-ink:#0D5EA8; --grey:#63636B; --line:#E7E7E4; }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{background:var(--black);color:var(--off-white);font-family:'DM Sans',sans-serif;font-size:18px;line-height:1.75;-webkit-font-smoothing:antialiased;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;touch-action:pan-x pan-y}
-  ::selection{background:var(--acid);color:#111111}
+  body{background:var(--black);color:var(--off-white);font-family:'Poppins','DM Sans',sans-serif;font-size:18px;line-height:1.75;-webkit-font-smoothing:antialiased;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;touch-action:pan-x pan-y}
+  ::selection{background:var(--acid);color:#FFFFFF}
   #progress-bar{position:fixed;top:0;left:0;height:2px;width:0%;background:var(--acid);z-index:200;transition:width .1s linear}
-  .blog-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between}
+  .blog-nav{position:sticky;top:0;z-index:100;background:rgba(250,250,248,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between}
   .blog-nav .logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:3px;text-transform:uppercase;color:var(--off-white);text-decoration:none;position:relative;padding-right:12px}
   .blog-nav .logo::after{content:'';position:absolute;top:-2px;right:0;width:6px;height:6px;background:var(--acid);border-radius:50%}
-  .blog-nav .buy-pill{background:var(--acid);color:#111111;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;padding:8px 18px;border-radius:100px;text-decoration:none}
+  .blog-nav .buy-pill{background:var(--acid);color:#FFFFFF;font-family:'Poppins','DM Sans',sans-serif;font-weight:700;font-size:14px;padding:8px 18px;border-radius:100px;text-decoration:none}
   .article-wrap{max-width:680px;margin:0 auto;padding:60px 32px 100px}
   .article-header{margin-bottom:48px}
   .article-meta{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
@@ -38,7 +38,7 @@ CSS = """  :root { --black:#FFFFFF; --off-white:#111111; --acid:#B8FF57; --acid-
   h1 em{font-style:italic;color:var(--grey)}
   .article-dek{font-family:'Fraunces',serif;font-style:italic;color:var(--grey);font-size:20px;line-height:1.5;border-top:1px solid var(--line);padding-top:24px;margin-top:24px}
   h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,3.5vw,34px);letter-spacing:-.01em;line-height:1.2;color:var(--off-white);margin:52px 0 20px}
-  h3{font-family:'DM Sans',sans-serif;font-weight:700;font-size:20px;color:var(--off-white);margin:36px 0 14px}
+  h3{font-family:'Poppins','DM Sans',sans-serif;font-weight:700;font-size:20px;color:var(--off-white);margin:36px 0 14px}
   p{margin-bottom:24px;color:var(--off-white)}
   p:last-child{margin-bottom:0}
   .drop-cap::first-letter{font-family:'Fraunces',serif;font-weight:600;font-size:68px;line-height:.85;float:left;margin-right:8px;margin-top:6px;color:var(--acid-ink)}
@@ -60,7 +60,7 @@ CSS = """  :root { --black:#FFFFFF; --off-white:#111111; --acid:#B8FF57; --acid-
   .end-cta .price-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px}
   .end-cta .strike-price{font-size:16px;color:var(--grey);text-decoration:line-through}
   .end-cta .current-price{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;color:var(--off-white)}
-  .end-cta .buy-btn{display:inline-block;background:var(--acid);color:#111111;font-family:'DM Sans',sans-serif;font-weight:700;font-size:16px;padding:14px 32px;border-radius:100px;text-decoration:none;letter-spacing:.02em}
+  .end-cta .buy-btn{display:inline-block;background:var(--acid);color:#FFFFFF;font-family:'Poppins','DM Sans',sans-serif;font-weight:700;font-size:16px;padding:14px 32px;border-radius:100px;text-decoration:none;letter-spacing:.02em}
   .next-read{border-top:1px solid var(--line);padding-top:40px;margin-top:60px}
   .next-read-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:16px}
   .next-read a{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3vw,28px);color:var(--off-white);text-decoration:none;line-height:1.2;transition:color .2s}
@@ -74,7 +74,7 @@ CSS = """  :root { --black:#FFFFFF; --off-white:#111111; --acid:#B8FF57; --acid-
   .blog-footer{border-top:1px solid var(--line);padding:40px 32px;max-width:680px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px 24px}
   .blog-footer a{font-size:14px;color:var(--grey);text-decoration:none;transition:color .2s}
   .blog-footer a:hover{color:var(--acid-ink)}
-  .blog-footer .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(184,255,87,.15);font-family:DM Sans,sans-serif;font-size:11px;color:#666;text-align:center;letter-spacing:.02em;margin-top:4px}
+  .blog-footer .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(13,94,168,.15);font-family:DM Sans,sans-serif;font-size:11px;color:#666;text-align:center;letter-spacing:.02em;margin-top:4px}
   .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:DM Sans,sans-serif;font-size:13px}
   .footer-links a{color:#6B6B6B;text-decoration:none;transition:color .15s ease}
   .footer-links a:hover{color:#111}

@@ -14,7 +14,7 @@
     width:48px;height:48px;
     background:var(--bg);color:var(--ink);
     border:1px solid var(--rule);border-radius:50%;
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;
+    font-family:'Poppins','Barlow Condensed',sans-serif;font-weight:900;font-size:22px;
     line-height:1;cursor:pointer;
     display:flex;align-items:center;justify-content:center;
     opacity:0;pointer-events:none;transform:translateY(8px);
@@ -23,10 +23,10 @@
     box-shadow:0 4px 16px rgba(0,0,0,.12);
   }
   .to-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
-  .to-top:hover{background:var(--accent);color:var(--ink)}
+  .to-top:hover{background:var(--accent);color:var(--on-accent)}
 
   @media(max-width:720px){
-    :root{--toTopBottom:88px;--bg:#FFFFFF;--accent:#B8FF57;--accent-rgb:184,255,87;--bg-subtle:#F5F5F5}
+    :root{--toTopBottom:88px;--bg:#FAFAF8;--accent:#0D5EA8;--accent-rgb:13,94,168;--bg-subtle:#F1F1EE}
   }
 </style>
 
@@ -246,8 +246,8 @@
 <link rel="dns-prefetch" href="https://api.postalpincode.in">
 <link rel="dns-prefetch" href="https://api.qrserver.com">
 <!-- Fonts: self-hosted woff2 (latin/latin-ext subsets, font-display:swap) — removes render-blocking third-party request -->
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/barlow-condensed-normal-latin-900.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/poppins-normal-latin-800.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/poppins-normal-latin-400.woff2" crossorigin>
 <link rel="preload" href="/assets/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
 
@@ -278,7 +278,7 @@
   }
 </script>
 
-<link rel="stylesheet" href="/assets/css/main.css?v=7">
+<link rel="stylesheet" href="/assets/css/main.css?v=8">
 <script>
 /* Queue clicks that land before the deferred app.js/scroll-effects.js execute,
    then replay them once the real window.* implementations are in place. */
@@ -1242,11 +1242,11 @@
 </script>
 
 <!-- DPDP Consent Bar -->
-<div id="smelloff-consent-bar" role="dialog" aria-label="Cookie and tracking consent" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--bg-surface);border-top:1px solid var(--rule);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));font-family:'DM Sans','Inter Tight',sans-serif">
+<div id="smelloff-consent-bar" role="dialog" aria-label="Cookie and tracking consent" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--bg-surface);border-top:1px solid var(--rule);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));font-family:'Poppins','DM Sans',sans-serif">
   <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <p style="flex:1;font-size:13px;color:var(--text-secondary);line-height:1.5;margin:0;min-width:200px">We use analytics cookies (Google Analytics, Meta Pixel) to understand how you use our site. You can opt out — core shopping functions work either way. <a href="/privacy/" style="color:var(--green-ink,#3D7A00);text-decoration:underline;text-decoration-color:var(--accent)">Privacy Policy</a></p>
+    <p style="flex:1;font-size:13px;color:var(--text-secondary);line-height:1.5;margin:0;min-width:200px">We use analytics cookies (Google Analytics, Meta Pixel) to understand how you use our site. You can opt out — core shopping functions work either way. <a href="/privacy/" style="color:var(--accent,#0D5EA8);text-decoration:underline;text-decoration-color:var(--accent)">Privacy Policy</a></p>
     <div style="display:flex;gap:10px;flex-shrink:0">
-      <button onclick="window.smelloffSetConsent('accepted')" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--accent);color:var(--ink,#111111);border:none;padding:9px 18px;border-radius:4px;cursor:pointer">Accept all</button>
+      <button onclick="window.smelloffSetConsent('accepted')" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--accent);color:#FFFFFF;border:none;padding:9px 18px;border-radius:4px;cursor:pointer">Accept all</button>
       <button onclick="window.smelloffSetConsent('rejected')" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--text);border:1px solid var(--rule);padding:9px 18px;border-radius:4px;cursor:pointer">Reject non-essential</button>
     </div>
   </div>
