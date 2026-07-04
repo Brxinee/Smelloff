@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Track Your Order — ODORSTRIKE Delivery Status | Smelloff</title>
 <meta name="description" content="Track your ODORSTRIKE order live. Enter your order ID (SMF-…) and phone number to see payment status, dispatch and courier tracking. Ships from Hyderabad in 48 hours.">
-<link rel="canonical" href="https://www.smelloff.in/track-order">
+<link rel="canonical" href="https://www.smelloff.in/track-order/">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
 <meta name="theme-color" content="#080808">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://www.smelloff.in/track-order">
+<meta property="og:url" content="https://www.smelloff.in/track-order/">
 <meta property="og:title" content="Track Your ODORSTRIKE Order — Smelloff">
 <meta property="og:description" content="Enter your order ID and phone number to see live order status and courier tracking.">
 <meta property="og:site_name" content="Smelloff">
@@ -19,7 +19,7 @@
 <meta name="twitter:title" content="Track Your ODORSTRIKE Order — Smelloff">
 <meta name="twitter:description" content="Live order status and courier tracking for ODORSTRIKE orders.">
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "WebPage", "name": "Track Your Order", "url": "https://www.smelloff.in/track-order", "description": "Track your ODORSTRIKE order: payment status, dispatch and courier tracking.", "inLanguage": "en-IN", "isPartOf": {"@type": "WebSite", "name": "Smelloff", "url": "https://www.smelloff.in"}, "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.smelloff.in/"}, {"@type": "ListItem", "position": 2, "name": "Track Order", "item": "https://www.smelloff.in/track-order"}]}}
+{"@context": "https://schema.org", "@type": "WebPage", "name": "Track Your Order", "url": "https://www.smelloff.in/track-order/", "description": "Track your ODORSTRIKE order: payment status, dispatch and courier tracking.", "inLanguage": "en-IN", "isPartOf": {"@type": "WebSite", "name": "Smelloff", "url": "https://www.smelloff.in"}, "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.smelloff.in/"}, {"@type": "ListItem", "position": 2, "name": "Track Order", "item": "https://www.smelloff.in/track-order/"}]}}
 </script>
 <link rel="icon" type="image/png" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -127,12 +127,12 @@
   <aside class="t-help">
     <p><b style="color:var(--text)">Can't find your order ID?</b> It's on the order-confirmation screen, in your confirmation email, and in the WhatsApp message you sent us.</p>
     <p>Orders placed before June 2026 aren't searchable here yet — <a href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%27d%20like%20to%20track%20my%20order.%0AOrder%20ID%3A%20" target="_blank" rel="noopener">track via WhatsApp</a> instead.</p>
-    <p>Anything else? <a href="/contact">Contact us</a> · <a href="/shipping">Shipping policy</a> · <a href="/returns">Returns</a></p>
+    <p>Anything else? <a href="/contact/">Contact us</a> · <a href="/shipping/">Shipping policy</a> · <a href="/returns/">Returns</a></p>
   </aside>
 </main>
 
 <footer>
-  <a href="/">Home</a><a href="/contact">Contact</a><a href="/shipping">Shipping</a><a href="/returns">Returns</a><a href="/privacy">Privacy</a>
+  <a href="/">Home</a><a href="/contact/">Contact</a><a href="/shipping/">Shipping</a><a href="/returns/">Returns</a><a href="/privacy/">Privacy</a>
   <div style="margin-top:10px">© 2026 Smelloff · Made in Hyderabad</div>
 </footer>
 
@@ -167,7 +167,7 @@
     }
 
     btn.disabled = true; btn.textContent = 'Checking…';
-    fetch(SUPA_URL + '/functions/v1/track-order', {
+    fetch(SUPA_URL + '/functions/v1/track-order/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ order_code: code, phone: phone })
