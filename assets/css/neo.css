@@ -952,6 +952,34 @@ nav.pdp-crumb{
 /* Founder section (PDP standalone) — black, merges with .final above */
 .founder{background:var(--nb-black);padding:0 20px 74px;margin:0;max-width:none}
 
+/* ── PDP description + BUY IT NOW (video reference) ────────────── */
+.pc-desc{
+  font-family:var(--nb-body);font-size:14.5px;line-height:1.6;color:var(--nb-ink);
+  margin:14px 0 0;
+}
+.nb-buy-now{
+  width:100%;margin-top:14px;
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:19px;letter-spacing:.08em;
+  background:var(--nb-acid);color:var(--nb-ink);
+  border:var(--nb-bw) solid var(--nb-ink);border-radius:999px;
+  padding:17px 20px;cursor:pointer;box-shadow:var(--nb-shadow);
+  transition:transform .12s ease,box-shadow .12s ease;
+}
+.nb-buy-now:active{transform:translate(6px,6px);box-shadow:0 0 0 #000}
+
+/* ── FAQ page hero band ────────────────────────────────────────── */
+.faq-hero{
+  background:var(--nb-paper);color:var(--nb-ink);text-align:center;
+  padding:calc(96px + env(safe-area-inset-top,0px)) 20px 8px;
+}
+.faq-hero .nb-eyebrow{color:var(--nb-muted)}
+.faq-hero-title{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:clamp(48px,12vw,96px);line-height:.92;color:var(--nb-ink);margin:0;
+}
+.faq-hero-sub{font-family:var(--nb-body);font-size:15px;color:var(--nb-muted);max-width:480px;margin:14px auto 0}
+
 /* ── Quantity stepper (replaces the pack/combo selector) ───────── */
 .nb-qty{display:flex;align-items:center;gap:14px;margin:18px 0 0;flex-wrap:wrap}
 .nb-qty-label{

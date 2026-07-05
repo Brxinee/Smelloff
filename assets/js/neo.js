@@ -73,6 +73,13 @@
     if (typeof window.selectQty === 'function') window.selectQty(_nbQty);
   };
 
+  /* BUY IT NOW — straight to checkout with the stepper quantity */
+  window.nbBuyNow = function(){
+    var v = _nbQty === 3 ? 'trio' : _nbQty === 2 ? 'duo' : 'solo';
+    if (typeof window.openCheckout === 'function') window.openCheckout(v);
+    else if (typeof window.addToCart === 'function') window.addToCart(v);
+  };
+
   function init(){
     if (document.querySelector('.nb-qty-stepper')) window.nbQtyStep(0);
     var name  = document.getElementById('nbGoodsName');
