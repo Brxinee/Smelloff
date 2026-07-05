@@ -813,14 +813,6 @@ html{overflow-x:clip}
   font-size:15px;letter-spacing:.1em;
   box-shadow:3px 3px 0 rgba(184,255,87,.3);
 }
-.nb-footer-word{
-  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
-  font-size:clamp(72px,27vw,380px);line-height:.82;letter-spacing:-.01em;
-  color:var(--nb-acid);text-align:center;
-  padding:40px 0 0;
-  -webkit-user-select:none;user-select:none;pointer-events:none;
-  overflow:hidden;white-space:nowrap;
-}
 /* keep the wordmark clear of the sticky mobile buy bar */
 @media(max-width:768px){
   .site-footer{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
