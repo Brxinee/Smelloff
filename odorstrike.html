@@ -72,29 +72,6 @@
   "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.7","bestRating":"5","worstRating":"1","ratingCount":"3","reviewCount":"3"}
 }
 </script>
-<!-- JSON-LD FAQPage -->
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {"@type":"Question","name":"What are the ingredients in ODORSTRIKE?","acceptedAnswer":{"@type":"Answer","text":"ODORSTRIKE is a 7-ingredient formula: Water (73%, base), Isopropyl Alcohol (20%, solvent that enables fast drying and fibre penetration), Triethyl Citrate (2.5%, a plant-derived odor neutralizer), Zinc PCA (1.5%, the hero active that binds odor molecules), Fragrance (1.2%, a subtle note that fades in under 60 seconds), Polysorbate 20 (1%, emulsifier), and Phenoxyethanol with Ethylhexylglycerin (0.8%, preservative). It is fabric-only and free of parabens and sulfates."}},
-    {"@type":"Question","name":"How does ODORSTRIKE work — does it mask or neutralize odor?","acceptedAnswer":{"@type":"Answer","text":"It neutralizes, it does not mask. The active ingredient Zinc PCA — a zinc salt of ricinoleic acid derived from castor oil — binds to volatile odor molecules like isovaleric acid, butyric acid, and sulfur compounds and prevents them from becoming airborne, so the nose never detects them. The isopropyl alcohol carrier drives the formula into the fibre structure where water-based detergent can't reach. This is molecular binding, not fragrance cover-up."}},
-    {"@type":"Question","name":"Isn't ODORSTRIKE just a deodorant?","acceptedAnswer":{"@type":"Answer","text":"No. Deodorant is for skin. ODORSTRIKE is for fabric — shirt, jacket, helmet liner. Body odor sticks to clothes long after a shower. Deodorant can't reach there. ODORSTRIKE neutralizes odor molecules trapped in fabric fibers."}},
-    {"@type":"Question","name":"Will ODORSTRIKE stain my clothes, especially dark fabric?","acceptedAnswer":{"@type":"Answer","text":"No. ODORSTRIKE is water-soluble and deposits uniformly without leaving white residue on dark fabrics. Tested on black, navy, charcoal, and grey shirts across 30 cycles. No marks, no stiffness, no fading. Safe on dark cotton and polyester."}},
-    {"@type":"Question","name":"How is ODORSTRIKE different from Febreze?","acceptedAnswer":{"@type":"Answer","text":"Febreze masks odor with fragrance. ODORSTRIKE eliminates odor at the molecular level using Zinc PCA — built for elimination, not cover-up. Priced ₹229 vs Febreze ₹300+. Tested on Indian fabrics, sweat, humidity."}},
-    {"@type":"Question","name":"Can I use ODORSTRIKE on gym clothes and polyester?","acceptedAnswer":{"@type":"Answer","text":"Yes, and it's especially effective here. Polyester is hydrophobic — water-based washing can't penetrate the micro-fibers where odor compounds hide. ODORSTRIKE's alcohol carrier gets in where detergent can't. It was built for gym clothes."}},
-    {"@type":"Question","name":"Is COD available? How fast does ODORSTRIKE ship?","acceptedAnswer":{"@type":"Answer","text":"Yes, Cash on Delivery is available pan-India. Orders ship from Hyderabad within 48 hours. Metro cities: 3–5 days delivery. Tier 2 and Tier 3 cities: 5–7 days. 7-day return window applies to all orders."}},
-    {"@type":"Question","name":"How long does the effect of ODORSTRIKE last?","acceptedAnswer":{"@type":"Answer","text":"6–8 hours under normal office or commute conditions. After heavy gym or long bike rides, re-spritz worn areas. The 50ml bottle gives ~250 sprays — most users get 4–6 weeks per bottle."}},
-    {"@type":"Question","name":"Can I use ODORSTRIKE on shoes, helmets, or car seats?","acceptedAnswer":{"@type":"Answer","text":"Yes — fabric-lined shoes (not leather or suede), helmet foam liners, and car fabric seats. Avoid leather, suede, and dry-clean-only materials. When unsure, test on an inside seam first."}},
-    {"@type":"Question","name":"Does ODORSTRIKE replace washing?","acceptedAnswer":{"@type":"Answer","text":"No. ODORSTRIKE neutralizes odor molecules but doesn't clean dirt, oils, or stains. Use it to extend wear between washes — not as a substitute for regular laundering."}},
-    {"@type":"Question","name":"Is ODORSTRIKE safe to inhale?","acceptedAnswer":{"@type":"Answer","text":"Spray on fabric, not toward your face. The 5% isopropyl alcohol evaporates in under 10 seconds. Once dry, the fabric is safe to wear. ODORSTRIKE is fabric-only — not for skin or inhalation."}},
-    {"@type":"Question","name":"Does ODORSTRIKE work in monsoon humidity?","acceptedAnswer":{"@type":"Answer","text":"Yes. Monsoon humidity accelerates bacterial growth in fabric — exactly what causes musty smell. ODORSTRIKE's Zinc PCA formula is effective in high humidity. Spray before stepping out or after getting caught in rain."}},
-    {"@type":"Question","name":"What fabrics is ODORSTRIKE safe on?","acceptedAnswer":{"@type":"Answer","text":"ODORSTRIKE works on cotton, polyester, denim, nylon, and wool blends. Do not use on leather, suede, silk, or dry-clean-only garments. When unsure, test on an inside seam first."}},
-    {"@type":"Question","name":"How long does one bottle of ODORSTRIKE last?","acceptedAnswer":{"@type":"Answer","text":"One 50ml bottle gives roughly 250 sprays — about ₹0.92 per spray. Most users get 4–6 weeks per bottle with daily use."}}
-  ]
-}
-</script>
 <!-- JSON-LD HowTo -->
 <script type="application/ld+json">
 {
@@ -198,7 +175,7 @@
 </script>
 
 <link rel="stylesheet" href="/assets/css/main.css?v=6">
-<link rel="stylesheet" href="/assets/css/neo.css?v=5">
+<link rel="stylesheet" href="/assets/css/neo.css?v=6">
 <script>
 /* Queue clicks that land before the deferred app.js/scroll-effects.js execute,
    then replay them once the real window.* implementations are in place. */
@@ -246,6 +223,7 @@
     <a href="#buy">Shop</a>
     <a href="#science">Science</a>
     <a href="/reviews/">Reviews</a>
+    <a href="/faq/">FAQ</a>
     <a href="/track-order/">Track Order</a>
     <a href="/blog/">Blog</a>
     <a href="/contact/">Contact</a>
@@ -280,8 +258,9 @@
       <a href="/reviews/"     class="menu-item" style="--i:1" onclick="closeNav()">Reviews</a>
       <a href="/blog/"        class="menu-item" style="--i:2" onclick="closeNav()">Blog</a>
       <a href="/track-order/" class="menu-item" style="--i:3" onclick="closeNav()">Track Order</a>
-      <a href="/about/"       class="menu-item" style="--i:4" onclick="closeNav()">About</a>
-      <a href="/contact/"     class="menu-item" style="--i:5" onclick="closeNav()">Contact</a>
+      <a href="/faq/"        class="menu-item" style="--i:4" onclick="closeNav()">FAQ</a>
+      <a href="/about/"       class="menu-item" style="--i:5" onclick="closeNav()">About</a>
+      <a href="/contact/"     class="menu-item" style="--i:6" onclick="closeNav()">Contact</a>
     </div>
     <form class="menu-search" role="search" action="https://www.google.com/search" method="get" target="_blank" rel="noopener" onsubmit="this.q.value='site:smelloff.in '+this.q.value">
       <input type="search" name="q" placeholder="Search" aria-label="Search smelloff.in" autocomplete="off">
@@ -345,6 +324,7 @@
     <div class="pc-body">
       <h3 class="pc-title">ODORSTRIKE Fabric Odor Mist</h3>
       <p class="pc-subtitle">50ml · Pocket size · Fabric only · Made in Hyderabad</p>
+      <p class="pc-desc">India’s first pocket-sized fabric odor eliminator. Two sprays kill sweat smell trapped in your shirt, tee or jacket in 8 seconds — no washing, no masking, zero residue. Not a perfume. Not a deodorant. For clothes only.</p>
       <div class="pc-price-row">
         <span class="price-main" id="pcPriceMain">₹229</span>
         <s class="price-mrp" id="pcPriceMrp">₹579</s>
@@ -361,69 +341,10 @@
       </div>
 
       <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">ADD TO CART — ₹229 →</button>
+      <button class="nb-buy-now" id="pcBuyNow" type="button" onclick="nbBuyNow()">BUY IT NOW</button>
     </div>
   </article>
 
-  <!-- Expandable info cards below product card -->
-  <div class="pc-info-accordion">
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>How to pay</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer" style="font-weight:600;color:var(--text);margin-bottom:8px">UPI (recommended)</p>
-        <ol style="padding-left:18px;margin-bottom:14px">
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Tap BUY → enter your address.</li>
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Choose UPI. Copy our UPI ID or open your UPI app via the button.</li>
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Pay from any UPI app — GPay, PhonePe, Paytm, BHIM.</li>
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Send the payment screenshot + UTR to our WhatsApp (link shown after you tap BUY).</li>
-          <li style="color:var(--text-secondary);font-size:14px">We confirm your order within 24 hours and ship within 48.</li>
-        </ol>
-        <p class="faq-answer" style="font-size:13px;color:var(--muted);margin-bottom:14px">Manual UPI confirmation means your order is checked by a human, not a bot. Expect a 1–24 hour delay before dispatch.</p>
-        <p class="faq-answer" style="font-weight:600;color:var(--text);margin-bottom:8px">Cash on Delivery</p>
-        <ol style="padding-left:18px;margin-bottom:14px">
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Tap BUY → enter your address.</li>
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Choose COD. No advance payment.</li>
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Pay cash to the delivery agent on arrival.</li>
-          <li style="color:var(--text-secondary);font-size:14px">7-day return window if the bottle is 80%+ full and in original packaging.</li>
-        </ol>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>About ODORSTRIKE</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">ODORSTRIKE is a 50ml pocket-sized fabric odor eliminator made by Smelloff in Hyderabad. Two active ingredients: Zinc PCA neutralizes odor-causing bacteria byproducts at the molecular level; β-Cyclodextrin traps and cages volatile odor compounds in fabric fibers. Not a perfume. Not a deodorant. Not a detergent. Works on cotton, polyester, denim, and wool in 8 seconds with zero residue. ₹229 for ~250 sprays — about ₹0.92 per spray.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Will it stain dark clothes?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">No. ODORSTRIKE is water-soluble and dries clear — no white residue on dark fabric. Tested on black, navy, charcoal, and grey shirts across 30+ wash cycles: no marks, no stiffness, no colour change. When unsure, test on an inside seam first.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>What actually kills sweat smell on fabric?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">Fabric odor sprays with Zinc PCA bind to odor molecules in fabric fibers and deactivate them at the molecular level — neutralization, not masking. Deodorant treats skin; it can't reach the odor trapped in your shirt. ODORSTRIKE goes directly on the fabric and works in 8 seconds.</p>
-        <p class="faq-answer" style="margin-top:10px"><strong style="color:var(--text)">Why do gym clothes smell after washing?</strong> Polyester is hydrophobic — water and detergent can't penetrate the micro-fibers where odor compounds hide. The surface gets clean; the inside stays rank. A fabric-specific odor neutralizer reaches where detergent can't.</p>
-      </div></div>
-    </div>
-
-  </div>
 </section>
 
 <!-- BENEFITS — crossed-circle icons on acid slab -->
@@ -505,99 +426,9 @@
 </a>
 
 
-<!-- SCIENCE / HOW IT WORKS -->
-<section class="how-works" id="science">
-  <h2 class="hw-title">How ODORSTRIKE kills smell</h2>
-
-  <div class="hw-anim" aria-hidden="true">
-    <div class="hw-mol"></div>
-    <div class="hw-ring"></div>
-    <span class="hw-ring-label">β-cyclodextrin traps &amp; locks the odor molecule</span>
-  </div>
-
-  <ol class="hw-steps">
-    <li class="hw-step">
-      <div class="hw-num">01</div>
-      <div class="hw-content">
-        <h3 class="hw-step-title">Spray on smelly fabric</h3>
-        <p class="hw-step-desc">Mist shirt collars, jacket cuffs, gym shorts — anywhere odor lives.</p>
-      </div>
-    </li>
-    <li class="hw-step">
-      <div class="hw-num">02</div>
-      <div class="hw-content">
-        <h3 class="hw-step-title">β-Cyclodextrin traps odor molecules</h3>
-        <p class="hw-step-desc">Ring-shaped molecules cage volatile odor compounds at the fiber level.</p>
-      </div>
-    </li>
-    <li class="hw-step">
-      <div class="hw-num">03</div>
-      <div class="hw-content">
-        <h3 class="hw-step-title">Zinc PCA neutralizes odor bacteria byproducts</h3>
-        <p class="hw-step-desc">Binds to the bacterial byproducts that cause smell — not masking, eliminating.</p>
-      </div>
-    </li>
-    <li class="hw-step">
-      <div class="hw-num">04</div>
-      <div class="hw-content">
-        <h3 class="hw-step-title">Fabric stays fresh, no residue</h3>
-        <p class="hw-step-desc">Dries in seconds. No stain, no perfume, no trace — just clean.</p>
-      </div>
-    </li>
-  </ol>
-</section>
 
 
-<!-- REVIEWS (pulled up — social proof before the buy box) -->
-<section class="ritual-section" id="how-to-use">
-  <div class="section-eyebrow">
-    <div class="section-eyebrow-line"></div>
-    <span class="section-eyebrow-label">How to use it.</span>
-  </div>
-  <h2 class="ritual-title">How to <span class="acid">strike.</span></h2>
-  <p class="ritual-sub">Three steps. Dries in 10 seconds. No white marks.</p>
-  <div class="ritual-grid">
-    <div class="ritual-tile">
-      <div class="ritual-num">01</div>
-      <div class="ritual-heading">Shake</div>
-      <p class="ritual-desc">Two quick shakes</p>
-      <div class="ritual-meta">2 shakes</div>
-    </div>
-    <div class="ritual-tile">
-      <div class="ritual-num">02</div>
-      <div class="ritual-heading">Spray</div>
-      <p class="ritual-desc">15cm · 3 pumps</p>
-      <div class="ritual-meta">3 sprays</div>
-    </div>
-    <div class="ritual-tile">
-      <div class="ritual-num">03</div>
-      <div class="ritual-heading">Walk Out</div>
-      <p class="ritual-desc">Zinc locks odor</p>
-      <div class="ritual-meta">10 sec dry</div>
-    </div>
-  </div>
-</section>
 
-<!-- EN2 — interactive savings calculator -->
-<section class="savings" id="savings">
-  <div class="section-tag">The math</div>
-  <h2 class="sv-title">What ODORSTRIKE saves you</h2>
-  <p class="sv-sub">Every re-wash or dry-clean just to kill a smell costs money and a laundry cycle. One ₹229 bottle is roughly 250 sprays.</p>
-  <div class="sv-card">
-    <p class="sv-q">How many times a week do you re-wear or dry-clean to fight odor?</p>
-    <div class="sv-stepper">
-      <button class="sv-btn" type="button" aria-label="Decrease times per week" onclick="svStep(-1)">−</button>
-      <div class="sv-val"><b id="svCount">3</b><span>times / week</span></div>
-      <button class="sv-btn" type="button" aria-label="Increase times per week" onclick="svStep(1)">+</button>
-    </div>
-    <div class="sv-out">
-      <div class="sv-out-box"><div class="sv-out-num" id="svMoney">₹0</div><div class="sv-out-lbl">est. saved / month vs washing &amp; dry-clean</div></div>
-      <div class="sv-out-box"><div class="sv-out-num" id="svLoads">0</div><div class="sv-out-lbl">laundry loads skipped / month</div></div>
-    </div>
-    <p class="sv-note">Rough estimate — assumes ~₹40 per odor-driven wash/dry-clean and ~2 sprays per fix (250-spray bottle). Your numbers will vary.</p>
-    <a href="#buy" class="sv-cta" onclick="event.preventDefault();document.getElementById('buy').scrollIntoView({behavior:'smooth'})">BUY NOW — <span id="svCtaPrice">₹229</span> →</a>
-  </div>
-</section>
 
 
 <!-- WORD ON THE STREET — testimonial slab -->
@@ -641,143 +472,6 @@
 </section>
 
 
-<!-- FAQ -->
-<section class="faq" id="faq">
-  <h2 class="faq-title">Questions<span class="faq-dot">.</span></h2>
-  <div class="faq-list">
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Will it stain my clothes? (especially dark fabric)</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">No. ODORSTRIKE is water-soluble and dries clear — no white residue on dark fabric. Tested on black, navy, charcoal, and grey shirts across 30+ wash cycles. No marks, no stiffness, no colour change. Safe on dark cotton and polyester. When unsure, test on an inside seam first.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Can I spray it on my skin?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">No — ODORSTRIKE is made for fabric only (cotton, polyester, denim, wool). It's not tested for skin contact. Keep using your deodorant for that. Use ODORSTRIKE on what your skin already left on your clothes.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Isn't this just a deodorant?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">No. Deodorant goes on skin, not fabric. Sweat odor doesn't live on your skin — it soaks into your shirt, jacket, and gym tee. Your morning shower won't fix what your shirt absorbed yesterday. ODORSTRIKE goes directly on fabric and neutralizes odor molecules in 8 seconds.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>How is it different from Febreze?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">Different approach entirely. Febreze uses fragrance to mask odor. ODORSTRIKE uses Zinc PCA and β-Cyclodextrin to neutralize odor molecules at the molecular level — elimination, not cover-up, no fragrance added. Priced at ₹229 vs Febreze at ₹300+. Formulated for Indian fabrics, sweat patterns, and humidity.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Can I use it on gym clothes / polyester?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">Yes, and it's especially effective on polyester. Polyester is hydrophobic — water-based washing can't penetrate the micro-fibers where odor compounds hide. The surface gets clean; the inside stays rank. ODORSTRIKE's alcohol carrier reaches where detergent can't. It was built specifically for gym clothes and synthetic fabrics.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Is COD available? How fast does it ship?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">Yes, Cash on Delivery is available pan-India. Orders ship from Hyderabad within 48 hours of confirmation. Metro delivery: 3–5 days. Tier 2 and Tier 3 cities: 5–7 days. A 7-day return window applies to all orders — bottle must be 80%+ full and in original packaging.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>How long does the effect last?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">6–10 hours under office or commute conditions, depending on the smell and bacteria level. In heavy heat, humidity, or after gym, re-spritz the collar and armpit zones. One 50ml bottle gives ~250 sprays — most daily users get 4–6 weeks per bottle. The 3-pack is better value if you use it every day.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Can I use it on shoes, helmets, or car seats?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">Yes — fabric-lined shoes (not leather or suede), helmet foam liners, and fabric car seats. These trap odor exactly like shirts do, and ODORSTRIKE works the same way. Avoid leather, suede, silk, and dry-clean-only materials. When unsure, spray one pump on an inside seam and wait 30 seconds.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Does it replace washing?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">No. ODORSTRIKE neutralizes odor molecules trapped in fabric, but it does not remove dirt, oils, or stains. Think of it as an odor reset between washes — not a substitute for laundry. Use it to extend wear on clean clothes. Wash normally when the fabric has visible dirt or stains.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Is it safe to inhale?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">Yes, once dry. Spray on fabric, not toward your face — the isopropyl alcohol carrier evaporates in under 10 seconds. Don't inhale directly during spraying. Once the fabric is dry it's safe to wear against skin. ODORSTRIKE is designed for fabric only, not for direct skin contact or inhalation.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>Does it work in monsoon humidity?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">Yes. Monsoon humidity accelerates bacterial growth in fabric — exactly what causes that damp, musty smell. ODORSTRIKE's Zinc PCA formula works in high humidity. Spray on clothes before stepping out or after getting caught in rain. Particularly effective in humid cities like Mumbai, Chennai, and Hyderabad during June–September.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>What fabrics is it safe on?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">Yes for cotton, polyester, denim, nylon, and wool blends — the fabrics most Indian wardrobes are built from. Do not use on leather, suede, silk, or dry-clean-only garments. When unsure, spray one pump on an inside seam, let dry, and check before spraying the full garment.</p>
-      </div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" type="button" aria-expanded="false" onclick="toggleFaqItem(this.parentElement)">
-        <span>How long does one bottle last?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-body" aria-hidden="true"><div class="faq-body-inner">
-        <p class="faq-answer">One 50ml bottle gives roughly 250 sprays — about ₹0.92 per spray. Most users get 4–6 weeks per bottle with daily use. If you ride, gym, or work in AC-corporate conditions, it pays for itself in laundry cycles skipped.</p>
-      </div></div>
-    </div>
-
-  </div>
-</section>
 
 <!-- FINAL CTA — dark band -->
 <section class="final">
@@ -1129,7 +823,7 @@
 <!-- CHECKOUT LOGIC                -->
 <!-- ============================= -->
 <script src="/assets/js/app.js?v=7" defer></script>
-<script src="/assets/js/neo.js?v=3" defer></script>
+<script src="/assets/js/neo.js?v=4" defer></script>
 
 <!-- CART DRAWER + TOAST -->
 <div class="cart-backdrop" id="cartBackdrop" onclick="closeCartDrawer()"></div>
