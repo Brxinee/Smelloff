@@ -1079,6 +1079,77 @@ nav.pdp-crumb{
 .mobile-bar .nb-qty-btn{width:38px;height:38px;font-size:20px}
 .mobile-bar .nb-qty-val{min-width:28px;font-size:17px}
 
+/* ── CART DRAWER + CHECKOUT — light re-skin ────────────────────────
+   main.css paints these with the shared CSS variables, so flipping
+   the variables *scoped to these containers* re-themes every inner
+   element without re-declaring each rule. Neo touches layered on. */
+.cart-drawer,.overlay-panel{
+  --bg:#FAFAF7;--bg-surface:#FFFFFF;--bg-subtle:#EFEFE8;
+  --text:#0A0A0A;--text-secondary:#33332F;--muted:#5A5A54;
+  --rule:#C9C9C0;--card:#FFFFFF;--border:#C9C9C0;--border-subtle:#E8E8E1;
+  --silver:#33332F;--gray:#5A5A54;--shadow:rgba(0,0,0,.10);
+  /* acid text on white is unreadable — darken accent-as-text inside
+     these light containers (explicit acid fills above are unaffected) */
+  --accent:#3A7A00;--acid:#3A7A00;--green:#3A7A00;
+  --accent-hover:#2F6400;--accent-light:rgba(184,255,87,.30);
+  background:#FAFAF7;color:#0A0A0A;
+}
+.cart-drawer{border-left:3px solid #000}
+.cart-drawer .cd-head{border-bottom:2.5px solid #0A0A0A}
+.cart-drawer .cd-checkout{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;letter-spacing:.06em;
+  background:var(--nb-acid);color:var(--nb-ink);
+  border:2.5px solid var(--nb-ink);border-radius:999px;
+  box-shadow:var(--nb-shadow-sm);
+}
+.cart-drawer .cd-checkout:active{transform:translate(4px,4px);box-shadow:0 0 0 #000}
+.cart-drawer .cd-continue{
+  background:transparent;color:var(--nb-ink);
+  border:2px solid var(--nb-ink);border-radius:999px;
+}
+.overlay-panel{border:3px solid #000;box-shadow:8px 8px 0 rgba(0,0,0,.85)}
+.overlay .submit-btn{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;letter-spacing:.06em;
+  background:var(--nb-acid);color:var(--nb-ink);
+  border:2.5px solid var(--nb-ink);border-radius:999px;
+  box-shadow:var(--nb-shadow-sm);
+}
+.overlay .submit-btn:active{transform:translate(4px,4px);box-shadow:0 0 0 #000}
+.overlay input,.overlay select,.overlay textarea{
+  background:#fff;color:var(--nb-ink);border:2px solid var(--nb-ink);border-radius:10px;
+}
+.overlay input::placeholder,.overlay textarea::placeholder{color:#8C8C86}
+.overlay .pay-opt{background:#fff;border:2px solid var(--nb-ink);border-radius:12px;color:var(--nb-ink)}
+.overlay .pay-opt.active{background:var(--nb-acid);border-color:var(--nb-ink)}
+.overlay .summary-card{background:#fff;border:2px solid var(--nb-ink);border-radius:12px}
+.overlay .upi-cta,.overlay .wa-btn{
+  background:var(--nb-acid);color:var(--nb-ink);
+  border:2px solid var(--nb-ink);border-radius:999px;box-shadow:3px 3px 0 #000;
+}
+.cart-toast{
+  background:var(--nb-acid);color:var(--nb-ink);
+  border:2.5px solid var(--nb-ink);border-radius:999px;
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;letter-spacing:.06em;
+  box-shadow:var(--nb-shadow-sm);
+}
+
+/* ── Consent bar — light (inline styles need !important) ───────── */
+#smelloff-consent-bar{
+  background:#FAFAF7!important;
+  border-top:3px solid #000!important;
+}
+#smelloff-consent-bar p{color:#33332F!important}
+#smelloff-consent-bar a{color:#0A0A0A!important;text-decoration:underline!important}
+#smelloff-consent-bar button:first-child{
+  background:var(--nb-acid)!important;color:var(--nb-ink)!important;
+  border:2px solid var(--nb-ink)!important;border-radius:999px!important;
+  box-shadow:2px 2px 0 #000!important;
+}
+#smelloff-consent-bar button:last-child{
+  background:transparent!important;color:var(--nb-ink)!important;
+  border:2px solid var(--nb-ink)!important;border-radius:999px!important;
+}
+
 /* ── Motion safety ─────────────────────────────────────────────── */
 @media(prefers-reduced-motion:reduce){
   .nb-btn,.nb-circ,.nb-sticker,.nb-gcard,.pc-pack-card,.product-card .pc-cta,.pc-cod-cta,.final-cta,.mobile-menu{transition:none}
