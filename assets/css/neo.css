@@ -131,7 +131,11 @@ body > nav{
   border-bottom:var(--nb-bw) solid #000;
   grid-template-columns:auto 1fr auto;
 }
-body > nav .logo{color:#fff}
+body > nav .logo{color:#fff;display:flex;align-items:center;padding-right:0}
+body > nav .logo::after{content:none} /* green dot is baked into the logo image */
+body > nav .logo img{display:block;width:auto;height:24px}
+.sf-wordmark img{display:block;width:auto;height:38px;margin:0 auto}
+.sf-wordmark .sf-dot{display:none}
 .nav-actions{grid-column:3;justify-self:end;display:flex;align-items:center;gap:2px}
 .nav-cart{grid-column:auto}
 .nav-search{
