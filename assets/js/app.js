@@ -706,7 +706,7 @@ const CFG = window.SMELLOFF_CONFIG;
     var cta = document.getElementById('pcCta');
     var codCta = document.getElementById('pcCodCta');
     var hint = document.getElementById('pcQtyHint');
-    if (cta) cta.textContent = 'BUY NOW — ₹' + price + ' →';
+    if (cta) cta.textContent = 'ADD TO CART — ₹' + price + ' →';
     // BUG: data-price was written here but never read anywhere (buyBoxCod derives price from _buyBoxQty) — removed dead code
     // Sync mobile sticky bar price (button handler stays as mobileBarBuy)
     var mbNow = document.querySelector('.mobile-bar .mb-now');

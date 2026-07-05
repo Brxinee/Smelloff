@@ -6,27 +6,31 @@
 <title>ODORSTRIKE Fabric Odor Spray for Clothes ₹229 | Smelloff</title>
 <meta name="description" content="ODORSTRIKE by Smelloff is a pocket fabric odor spray for clothes. Not perfume. Not deodorant. Not body spray. Kills sweat smell in 8 seconds. 50ml · ₹229.">
 <meta name="theme-color" content="#080808">
-<style>html,body{background:var(--bg)}body{margin:0}.hero-skeleton{position:absolute;inset:0;z-index:3;background:var(--bg);pointer-events:none;transition:opacity .3s ease,visibility 0s linear .3s}body.loaded .hero-skeleton{opacity:0;visibility:hidden}.hs-inner{position:relative;width:100%;height:100%;max-width:1180px;margin:0 auto;padding:128px 20px 40px;display:grid;grid-template-columns:1fr;grid-template-areas:"text" "bottle" "action";gap:24px;align-content:center}.hs-text{grid-area:text;display:flex;flex-direction:column;gap:10px}.hs-bottle{grid-area:bottle;justify-self:center;height:34vh;max-height:300px;min-height:220px;width:144px;background:var(--bg-subtle);border-radius:6px;position:relative;overflow:hidden}.hs-action{grid-area:action;display:flex;flex-direction:column;gap:12px}.hs-block{background:var(--bg-subtle);border-radius:4px;position:relative;overflow:hidden}.hs-block::after,.hs-bottle::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(var(--accent-rgb),.08) 50%,transparent 100%);animation:hs-shimmer 1.5s linear infinite}@keyframes hs-shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}.hs-h1,.hs-h2{height:48px;width:100%}.hs-h2{width:82%}.hs-sub{height:18px;width:72%;margin-top:6px}.hs-price{height:44px;width:180px}.hs-cta{height:56px;width:100%;max-width:360px;border-radius:4px}@media(prefers-reduced-motion:reduce){.hs-block::after,.hs-bottle::after{animation:none}}
+<style>
+  /* Neo-brutalist critical CSS — full skin lives in /assets/css/neo.css */
+  :root{--nb-paper:#FAFAF7;--nb-ink:#0A0A0A;--nb-acid:#B8FF57;--nb-black:#080808}
+  html{background:var(--nb-black)}
+  body{margin:0;background:var(--nb-paper)}
   /* Back-to-top floating button */
   .to-top{
     position:fixed;
     right:20px;bottom:var(--toTopBottom,24px);
     width:48px;height:48px;
-    background:var(--bg);color:var(--accent);
-    border:1px solid var(--accent);border-radius:50%;
+    background:var(--nb-paper);color:var(--nb-ink);
+    border:2.5px solid var(--nb-ink);border-radius:50%;
     font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;
     line-height:1;cursor:pointer;
     display:flex;align-items:center;justify-content:center;
     opacity:0;pointer-events:none;transform:translateY(8px);
     transition:opacity .25s ease,transform .25s ease,background .15s ease,color .15s ease;
     z-index:60;
-    box-shadow:0 4px 16px rgba(0,0,0,.45);
+    box-shadow:3px 3px 0 #000;
   }
   .to-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
-  .to-top:hover{background:var(--accent);color:var(--bg)}
+  .to-top:hover{background:var(--nb-acid);color:var(--nb-ink)}
 
   @media(max-width:720px){
-    :root{--toTopBottom:88px;--bg:#080808;--accent:#B8FF57;--accent-rgb:184,255,87;--bg-subtle:#1A1A1A}
+    :root{--toTopBottom:88px}
   }
 </style>
 
@@ -247,6 +251,7 @@
 <link rel="dns-prefetch" href="https://api.qrserver.com">
 <!-- Fonts: self-hosted woff2 (latin/latin-ext subsets, font-display:swap) — removes render-blocking third-party request -->
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/barlow-condensed-normal-latin-900.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/dm-sans-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
 <link rel="preload" href="/assets/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
@@ -279,6 +284,7 @@
 </script>
 
 <link rel="stylesheet" href="/assets/css/main.css?v=6">
+<link rel="stylesheet" href="/assets/css/neo.css?v=1">
 <script>
 /* Queue clicks that land before the deferred app.js/scroll-effects.js execute,
    then replay them once the real window.* implementations are in place. */
@@ -312,28 +318,29 @@
   <div class="logo">SMELLOFF</div>
   <div class="nav-links" role="navigation" aria-label="Primary">
     <a href="/odorstrike/">Shop</a>
-    <a href="#science">Science</a>
+    <a href="/odorstrike/#science">Science</a>
     <a href="/reviews/">Reviews</a>
     <a href="/track-order/">Track Order</a>
     <a href="/blog/">Blog</a>
     <a href="/contact/">Contact</a>
   </div>
-  <button class="nav-cart" id="navCartBtn" aria-label="Open cart" onclick="openCartDrawer()">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z"/>
-      <path d="M3 6h18"/>
-      <path d="M16 10a4 4 0 0 1-8 0"/>
-    </svg>
-    <span class="nav-cart-count" id="navCartCount">0</span>
-  </button>
+  <div class="nav-actions">
+    <a class="nav-search" href="/blog/" aria-label="Search our guides">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="m21 21-4.3-4.3"/>
+      </svg>
+    </a>
+    <button class="nav-cart" id="navCartBtn" aria-label="Open cart" onclick="openCartDrawer()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z"/>
+        <path d="M3 6h18"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span class="nav-cart-count" id="navCartCount">0</span>
+    </button>
+  </div>
 </nav>
-
-<!-- UTILITY PILLS -->
-<div class="cat-pills" id="catPills" role="navigation" aria-label="Shop shortcuts">
-  <a href="#buy" class="cat-pill active" data-target="buy">Shop</a>
-  <a href="/track-order/" class="cat-pill" title="Track your order">Track my order</a>
-  <a href="#reviews" class="cat-pill" data-target="reviews">Reviews</a>
-</div>
 
 <!-- ANNOUNCEMENT BAR (rotating, pure CSS) -->
 <div class="announce" role="region" aria-label="Store announcements">
@@ -360,7 +367,7 @@
   <div class="menu-items" role="navigation" aria-label="Site navigation">
     <a href="/odorstrike/"  class="menu-item" data-num="01" style="--i:0" onclick="closeNav()">ODORSTRIKE<span class="mi-arrow" aria-hidden="true">→</span></a>
     <a href="/odorstrike/#how-to-use" class="menu-item" data-num="02" style="--i:1" onclick="closeNav()">How to strike<span class="mi-arrow" aria-hidden="true">→</span></a>
-    <a href="#science"     class="menu-item" data-num="03" style="--i:2" onclick="closeNav()">How ODORSTRIKE kills smell<span class="mi-arrow" aria-hidden="true">→</span></a>
+    <a href="/odorstrike/#science" class="menu-item" data-num="03" style="--i:2" onclick="closeNav()">How ODORSTRIKE kills smell<span class="mi-arrow" aria-hidden="true">→</span></a>
     <a href="#reviews"     class="menu-item" data-num="04" style="--i:3" onclick="closeNav()">Reviews<span class="mi-arrow" aria-hidden="true">→</span></a>
     <a href="#faq"         class="menu-item" data-num="05" style="--i:4" onclick="closeNav()">FAQ<span class="mi-arrow" aria-hidden="true">→</span></a>
     <a href="/blog/"        class="menu-item" data-num="06" style="--i:5" onclick="closeNav()">Blogs<span class="mi-arrow" aria-hidden="true">→</span></a>
@@ -399,77 +406,80 @@
   <button class="mb-btn" type="button" onclick="mobileBarBuy()">BUY NOW</button>
 </div>
 
-<!-- HERO -->
-<header class="hero" id="main">
-  <div class="hero-skeleton" aria-hidden="true">
-    <div class="hs-inner">
-      <div class="hs-text">
-        <div class="hs-block hs-h1"></div>
-        <div class="hs-block hs-h2"></div>
-        <div class="hs-block hs-sub"></div>
-      </div>
-      <div class="hs-bottle"></div>
-      <div class="hs-action">
-        <div class="hs-block hs-price"></div>
-        <div class="hs-block hs-cta"></div>
-      </div>
-    </div>
-  </div>
-  <div class="hero-inner">
-    <div class="hero-text">
-      <div class="hero-category">Fabric odor spray · Made in Hyderabad</div>
-      <div class="hero-social hero-rating" role="img" aria-label="Rated 4.7 out of 5 by early buyers"><span class="hs-stars hr-stars" aria-hidden="true">★</span> <span class="hr-count">4.7 — rated by early buyers across India</span></div>
-      <h1 class="hero-headline"><span class="hh-line">DEO FOR YOUR PITS.</span><span class="hh-line">PERFUME FOR YOUR STYLE.</span><span class="hh-line"><span class="green">ODORSTRIKE</span> FOR YOUR SHIRT.</span></h1>
-      <p class="hero-benefit">Kills sweat smell on clothes in 8 seconds — no washing, no masking.</p>
-      <div class="hero-ticker" id="heroTicker" aria-live="off">
-        <p class="ht-quote active">Wore the same shirt for 3 days. No one noticed. — Rahul M., Mumbai</p>
-        <p class="ht-quote">Fixed my gym bag smell in seconds. — Priya K., Bangalore</p>
-        <p class="ht-quote">Keeps my formals fresh through back-to-back meetings. — Arjun S., Delhi</p>
-      </div>
-      <p class="hero-sub">The missing third spray. 50ml. Fits your pocket.</p>
-      <div class="hero-8s" role="img" aria-label="Odor gone in 8 seconds">
-        <span class="h8-ring" aria-hidden="true"><span class="h8-num">8s</span></span>
-        <span class="h8-label">Odor gone in 8 seconds.</span>
-      </div>
-    </div>
+<!-- Shared SVG shapes: starburst sticker + wavy divider -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="nbStar" viewBox="0 0 100 100">
+      <polygon points="50.0,1.5 60.4,12.4 75.0,8.0 78.3,22.5 92.5,25.8 88.2,40.0 98.5,50.0 88.2,60.0 92.5,74.2 78.3,77.5 75.0,92.0 60.4,87.6 50.0,98.5 39.6,87.6 25.0,92.0 21.7,77.5 7.5,74.2 11.8,60.0 1.5,50.0 11.8,40.0 7.5,25.8 21.7,22.5 25.0,8.0 39.6,12.4"/>
+    </symbol>
+    <symbol id="nbWave" viewBox="0 0 1440 24" preserveAspectRatio="none">
+      <path d="M0,24 L0,14 Q20,-7 40,14 Q60,25.2 80,14 Q100,-7 120,14 Q140,25.2 160,14 Q180,-7 200,14 Q220,25.2 240,14 Q260,-7 280,14 Q300,25.2 320,14 Q340,-7 360,14 Q380,25.2 400,14 Q420,-7 440,14 Q460,25.2 480,14 Q500,-7 520,14 Q540,25.2 560,14 Q580,-7 600,14 Q620,25.2 640,14 Q660,-7 680,14 Q700,25.2 720,14 Q740,-7 760,14 Q780,25.2 800,14 Q820,-7 840,14 Q860,25.2 880,14 Q900,-7 920,14 Q940,25.2 960,14 Q980,-7 1000,14 Q1020,25.2 1040,14 Q1060,-7 1080,14 Q1100,25.2 1120,14 Q1140,-7 1160,14 Q1180,25.2 1200,14 Q1220,-7 1240,14 Q1260,25.2 1280,14 Q1300,-7 1320,14 Q1340,25.2 1360,14 Q1380,-7 1400,14 Q1420,25.2 1440,14 L1440,24 Z"/>
+    </symbol>
+  </defs>
+</svg>
 
-    <div class="hero-bottle" aria-hidden="true">
-      <div class="hb-bottle">
-        <div class="hb-spray" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-        <div class="hb-cap"></div>
-        <div class="hb-neck"></div>
-        <div class="hb-body">
-          <div class="hb-label">
-            <div class="hb-brand">SMELLOFF</div>
-            <div class="hb-product">ODORSTRIKE</div>
-            <div class="hb-vol">50ML · FABRIC MIST</div>
-          </div>
+<!-- HERO — acid green slab, giant headline overlapping framed product shot -->
+<header class="nb-hero" id="main">
+  <div class="nb-hero-inner">
+    <p class="nb-hero-eyebrow">Smell Proof. Always.</p>
+    <div class="nb-hero-stage">
+      <h1 class="hero-headline">SMELL OFF<span class="sr-only"> — ODORSTRIKE fabric odor spray for clothes. Kills sweat smell in 8 seconds. No one will know.</span></h1>
+      <div class="nb-hero-media">
+        <div class="nb-frame nb-hero-frame">
+          <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 50ml fabric odor eliminator mist bottle" width="800" height="800" fetchpriority="high" decoding="async">
+        </div>
+        <div class="nb-sticker nb-sticker--yellow nb-sticker--hero1" aria-hidden="true">
+          <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
+          <span>New!</span>
+        </div>
+        <div class="nb-sticker nb-sticker--hero2" aria-hidden="true">
+          <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
+          <span>8 hrs protection</span>
+        </div>
+        <div class="nb-sticker nb-sticker--black nb-sticker--hero3" aria-hidden="true">
+          <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
+          <span>Made in India</span>
         </div>
       </div>
     </div>
-
-    <div class="hero-action">
-      <div class="hero-price">
-        <span class="hp-now">₹229</span>
-        <span class="hp-was">₹579</span>
-        <span class="hp-off">60% OFF</span>
-      </div>
-      <a href="#buy" class="hero-cta" onclick="event.preventDefault();addToCart('solo')">BUY NOW — ₹229 →</a>
-      <p class="hero-cod-line">or <button type="button" class="hero-cod-link" onclick="selectQty(1);buyBoxCod()">order COD, pay on delivery →</button></p>
-      <p class="hero-trust-bar">₹0 advance on COD · Free delivery Pan-India · 7-day full refund</p>
-      <p class="hero-warning">For clothes only — not for skin</p>
-    </div>
+    <p class="hero-sub">Odor defense for the everyday hustle.</p>
+    <p class="nb-hero-hook">No one will know. ODORSTRIKE kills sweat smell on clothes in 8 seconds — not a perfume, not a deodorant. 50ml · ₹229 · COD available.</p>
+    <div class="hero-rating" role="img" aria-label="Rated 4.7 out of 5 by early buyers"><span class="hr-stars" aria-hidden="true">★★★★★</span> <span class="hr-count">4.7 — rated by early buyers</span></div>
+    <a href="#buy" class="nb-btn nb-hero-cta">Shop Now</a>
+    <p class="nb-hero-note">For clothes only — not for skin · Free shipping pan-India</p>
   </div>
 </header>
+<div class="nb-wave nb-wave--flip" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
 
-<!-- TRUST CHIPS (Koparo-style, right after hero) -->
-<div class="trust-chips home-chips" role="group" aria-label="Why buy direct">
-  <span class="t-chip">✓ COD available</span>
-  <span class="t-chip">✓ UPI accepted</span>
-  <span class="t-chip">✓ 3–5 day delivery</span>
-  <span class="t-chip">✓ Made in India</span>
-  <span class="t-chip">✓ 7-day refund</span>
-</div>
+<!-- BENEFITS — circle line-icon grid -->
+<section class="nb-benefits" aria-label="Why ODORSTRIKE works">
+  <ul class="nb-benefits-grid">
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 6 6.8 6 10a6 6 0 0 1-12 0c0-3.2 3-6.4 6-10z"/><path d="m5 20 14-15"/></svg></span>
+      <span class="nb-blabel">Zero Residue</span>
+    </li>
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 3h4"/><path d="M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="m5 20 14-15"/></svg></span>
+      <span class="nb-blabel">Glycerine-Free</span>
+    </li>
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 4 4 7l2 4 2-1v9h8v-9l2 1 2-4-5-3a3 3 0 0 1-6 0z"/><path d="m9.5 13 2 2 3.5-3.5"/></svg></span>
+      <span class="nb-blabel">Fabric-Safe</span>
+    </li>
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 8h6v13H9z"/><path d="M10 8V5h4v3"/><path d="M10 3h4"/><path d="M17 6c1.5 0 2.5-1 2.5-2M17 9c2.5 0 4-1.5 4-3.5"/><path d="m5 20 14-15"/></svg></span>
+      <span class="nb-blabel">No Cover-Up Perfume</span>
+    </li>
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
+      <span class="nb-blabel">8HR Protection</span>
+    </li>
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M7 14h10"/><path d="M7 14c0-2 2-3 5-3s5 1 5 3"/></svg></span>
+      <span class="nb-blabel">Pocket-Sized</span>
+    </li>
+  </ul>
+</section>
 
 <!-- EDUCATION STRIP — "Not a deodorant" (P5) -->
 <div class="marquee" role="img" aria-label="ODORSTRIKE is for clothes, not skin — not a perfume, not a deodorant">
@@ -485,67 +495,73 @@
   </div>
 </div>
 
-<!-- PROBLEM — compact -->
-<section class="problem">
-  <div class="section-tag">Why your shirt betrays you.</div>
-  <h2>
-    <span>You don't stink.</span>
-    <span class="p-hl">Your shirt does.</span>
-  </h2>
-
-  <div class="problem-stats">
-    <div class="p-stat">
-      <div class="p-stat-num">11<span class="p-stat-unit">hr</span></div>
-      <div class="p-stat-label">Hours sweat builds in your shirt</div>
-      <span class="p-stat-source">Across a typical day out</span>
-    </div>
-    <div class="p-stat">
-      <div class="p-stat-num">4<span class="p-stat-unit">×</span></div>
-      <div class="p-stat-label">Odor moments per workday</div>
-      <span class="p-stat-source">Commute · gym · lunch · meetings</span>
-    </div>
-    <div class="p-stat p-stat-solve">
-      <div class="p-stat-num">8<span class="p-stat-unit">sec</span></div>
-      <div class="p-stat-label">Seconds for ODORSTRIKE to fix it</div>
-    </div>
+<!-- OUR GOODS — product carousel -->
+<section class="nb-goods" id="goods" aria-label="Shop ODORSTRIKE packs">
+  <h2 class="nb-h2">Our Goods</h2>
+  <div class="nb-goods-track" id="nbGoodsTrack">
+    <article class="nb-gcard" data-name="ODORSTRIKE — Starter" data-price="₹229" data-desc="One 50ml pocket bottle. ~250 sprays of instant fabric odor defense.">
+      <div class="nb-frame nb-gframe">
+        <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE single bottle — 50ml fabric odor mist, ₹229" width="800" height="800" loading="lazy" decoding="async">
+      </div>
+      <div class="nb-sticker nb-sticker--yellow" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
+        <span>New!</span>
+      </div>
+      <button class="nb-btn nb-btn--acid nb-gcard-cta" type="button" onclick="selectQty(1);addToCart('solo')">Add to Cart — ₹229</button>
+    </article>
+    <article class="nb-gcard" data-name="ODORSTRIKE — 2-Pack" data-price="₹399" data-desc="One for your bag, one for your desk. ₹199 a bottle — our best seller.">
+      <div class="nb-frame nb-gframe">
+        <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 2-pack — two 50ml bottles, ₹399" width="800" height="800" loading="lazy" decoding="async">
+        <span class="nb-qtyflag" aria-hidden="true">2×</span>
+      </div>
+      <div class="nb-sticker nb-sticker--alt" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
+        <span>Best seller</span>
+      </div>
+      <button class="nb-btn nb-btn--acid nb-gcard-cta" type="button" onclick="selectQty(2);addToCart('duo')">Add to Cart — ₹399</button>
+    </article>
+    <article class="nb-gcard" data-name="ODORSTRIKE — 3-Pack" data-price="₹549" data-desc="Stock up or gift the extras. ₹183 a bottle — the best value.">
+      <div class="nb-frame nb-gframe">
+        <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 3-pack — three 50ml bottles, ₹549" width="800" height="800" loading="lazy" decoding="async">
+        <span class="nb-qtyflag" aria-hidden="true">3×</span>
+      </div>
+      <div class="nb-sticker nb-sticker--black" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
+        <span>Best value</span>
+      </div>
+      <button class="nb-btn nb-btn--acid nb-gcard-cta" type="button" onclick="selectQty(3);addToCart('trio')">Add to Cart — ₹549</button>
+    </article>
+    <article class="nb-gcard nb-gcard--dark" data-name="HELMET STRIKE" data-price="Coming soon" data-desc="Odor defense for helmet liners. Join the waitlist and be first in line.">
+      <div class="nb-frame nb-gframe nb-gframe--text">
+        <span class="nb-gframe-word" aria-hidden="true">Helmet<br>Strike</span>
+      </div>
+      <div class="nb-badge-circ" aria-hidden="true">Coming<br>Soon</div>
+      <a class="nb-btn nb-btn--ghost nb-gcard-cta" href="#emailForm">Join Waitlist</a>
+    </article>
   </div>
-
-  <div class="trigger-grid bento" id="when-to-use">
-    <div class="trigger-card">
-      <img src="/assets/icon-briefcase.png" alt="Briefcase — pre-meeting use case" class="trigger-icon" width="38" height="38" loading="lazy" decoding="async">
-      <div class="trigger-cat-row">
-        <span class="trigger-diamond"></span>
-        <span class="trigger-cat">Pre-Meeting</span>
-      </div>
-      <div class="trigger-heading">You've been on the road since 8.</div>
-      <p class="trigger-desc">Two sprays before the lift opens. Nobody clocks the commute.</p>
-      <div class="trigger-fix">
-        <p class="trigger-fix-line"><b>The fix:</b> 2 sprays on the collar + underarm seams before you walk in.</p>
-        <a href="#buy" class="trigger-add" onclick="event.stopPropagation()">Buy — ₹229 →</a>
-      </div>
-      <p class="trigger-tap-hint">Tap for the fix →</p>
-    </div>
-    <div class="trigger-card">
-      <img src="/assets/icon-dumbbell.png" alt="Dumbbell — post-gym use case" class="trigger-icon" width="38" height="38" loading="lazy" decoding="async">
-      <div class="trigger-cat-row">
-        <span class="trigger-diamond"></span>
-        <span class="trigger-cat">Post-Gym</span>
-      </div>
-      <div class="trigger-heading">Gym at 7, meeting at 9. No gap.</div>
-      <p class="trigger-desc">Three sprays on the tee. Walk in clean.</p>
-      <div class="trigger-fix">
-        <p class="trigger-fix-line"><b>The fix:</b> 3 sprays across the tee, front and back. Dry in 8 seconds.</p>
-        <a href="#buy" class="trigger-add" onclick="event.stopPropagation()">Buy — ₹229 →</a>
-      </div>
-      <p class="trigger-tap-hint">Tap for the fix →</p>
-    </div>
+  <div class="nb-goods-caption" aria-live="polite">
+    <p class="nb-goods-name" id="nbGoodsName">ODORSTRIKE — Starter</p>
+    <p class="nb-goods-price" id="nbGoodsPrice">₹229</p>
+    <p class="nb-goods-desc" id="nbGoodsDesc">One 50ml pocket bottle. ~250 sprays of instant fabric odor defense.</p>
+  </div>
+  <div class="nb-arrows">
+    <button class="nb-circ" id="nbGoodsPrev" type="button" aria-label="Previous product"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></button>
+    <button class="nb-circ" id="nbGoodsNext" type="button" aria-label="Next product"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
   </div>
 </section>
 
+<!-- PROBLEM — compact black slab -->
+<section class="problem nb-problem">
+  <p class="nb-eyebrow">The Problem</p>
+  <h2>You don't stink.<br><span class="nb-acid-text">Your shirt does.</span></h2>
+  <p class="nb-problem-sub">Deo is for skin. Perfume is for scent. The smell lives in your fabric — ODORSTRIKE kills it there, in 8 seconds. No washing, no masking.</p>
+</section>
 
-<!-- WHY NOT JUST DEODORANT? — comparison -->
-<section class="reviews" id="reviews">
-  <h2 class="rv-title">What buyers say.</h2>
+<!-- WORD ON THE STREET — testimonial slab (acid green, wavy edges) -->
+<div class="nb-wave" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
+<section class="reviews nb-reviews" id="reviews">
+  <h2 class="nb-h2">Word on the Street</h2>
+  <div class="nb-stars-row" aria-hidden="true">★★★★★</div>
   <div class="rv-aggregate" id="rvAggregate" role="img" aria-label="Rated 4.7 out of 5, based on 3 beta-tester reviews">
     <span class="rv-agg-num" id="rvAggNum">4.7</span>
     <div class="rv-agg-meta">
@@ -553,41 +569,79 @@
       <span class="rv-agg-count" id="rvAggCount">Based on 3 beta-tester reviews</span>
     </div>
   </div>
-  <p class="rv-subtitle">3 testers used ODORSTRIKE for 8 weeks before public release. Their unedited feedback below — plus reviews from buyers as they post them.</p>
-
-  <button class="rv-write-btn" type="button" onclick="openReviewForm()">Bought ODORSTRIKE? Write a review →</button>
+  <p class="rv-subtitle">3 testers used ODORSTRIKE for 8 weeks before public release. Unedited feedback — plus buyer reviews as they post them.</p>
 
   <div class="rv-scroll-wrap">
     <div class="rv-scroll" id="rvScroll" role="list"></div>
     <div class="rv-dots" id="rvDots" aria-hidden="true"></div>
   </div>
+  <div class="nb-arrows nb-arrows--rev">
+    <button class="nb-circ nb-circ--paper" id="nbRevPrev" type="button" aria-label="Previous review"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></button>
+    <button class="nb-circ nb-circ--paper" id="nbRevNext" type="button" aria-label="Next review"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+  </div>
 
+  <button class="rv-write-btn nb-btn nb-btn--ghost" type="button" onclick="openReviewForm()">Bought ODORSTRIKE? Write a review</button>
   <button class="rv-readall" id="rvReadAllBtn" type="button" onclick="showAllReviews()" style="display:none">Read all reviews →</button>
   <a class="rv-page-link" href="/reviews/">Browse every review — unedited →</a>
+</section>
+<div class="nb-wave nb-wave--flip" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
+
+<!-- HOW WE STACK UP — comparison table -->
+<section class="compare nb-compare" id="vs-deodorant">
+  <h2 class="nb-h2">How We Stack Up</h2>
+  <p class="nb-scroll-hint">Scroll left to right<span aria-hidden="true">⟵&nbsp;&nbsp;⟶</span></p>
+  <div class="nb-table-scroll" tabindex="0" role="region" aria-label="ODORSTRIKE versus regular deodorants comparison table">
+    <table class="nb-table">
+      <thead>
+        <tr>
+          <th scope="col"><span class="sr-only">Feature</span></th>
+          <th scope="col" class="nb-t-us">SMELLOFF</th>
+          <th scope="col">Regular Deos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Works on fabric mid-wear</th>
+          <td class="nb-t-us"><svg viewBox="0 0 24 24" role="img" aria-label="Yes"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 2.5 2.5L16 9.5"/></svg></td>
+          <td><svg viewBox="0 0 24 24" role="img" aria-label="No"><circle cx="12" cy="12" r="10"/><path d="m8.5 8.5 7 7M15.5 8.5l-7 7"/></svg></td>
+        </tr>
+        <tr>
+          <th scope="row">Zero residue on dark clothes</th>
+          <td class="nb-t-us"><svg viewBox="0 0 24 24" role="img" aria-label="Yes"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 2.5 2.5L16 9.5"/></svg></td>
+          <td><svg viewBox="0 0 24 24" role="img" aria-label="No"><circle cx="12" cy="12" r="10"/><path d="m8.5 8.5 7 7M15.5 8.5l-7 7"/></svg></td>
+        </tr>
+        <tr>
+          <th scope="row">Kills odor (doesn't mask it)</th>
+          <td class="nb-t-us"><svg viewBox="0 0 24 24" role="img" aria-label="Yes"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 2.5 2.5L16 9.5"/></svg></td>
+          <td><svg viewBox="0 0 24 24" role="img" aria-label="No"><circle cx="12" cy="12" r="10"/><path d="m8.5 8.5 7 7M15.5 8.5l-7 7"/></svg></td>
+        </tr>
+        <tr>
+          <th scope="row">Pocket-sized (50ml)</th>
+          <td class="nb-t-us"><svg viewBox="0 0 24 24" role="img" aria-label="Yes"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 2.5 2.5L16 9.5"/></svg></td>
+          <td><svg viewBox="0 0 24 24" role="img" aria-label="No"><circle cx="12" cy="12" r="10"/><path d="m8.5 8.5 7 7M15.5 8.5l-7 7"/></svg></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <span id="stock-up" aria-hidden="true" style="position:absolute;scroll-margin-top:80px"></span>
 <section class="only-fix" id="buy">
-  <h2 class="of-title">ODORSTRIKE</h2>
-  <p class="of-subtitle">Fabric Odor Eliminator · 50ml pocket spray</p>
+  <h2 class="of-title">Product of the Month</h2>
+  <p class="of-subtitle">ODORSTRIKE · Fabric Odor Eliminator · 50ml pocket spray</p>
 
   <article class="product-card">
     <div class="pc-media">
       <span class="pc-tag">LAUNCH PRICE · MADE IN HYDERABAD</span>
-      <div class="pc-gallery" id="pcGallery" hidden></div>
-      <div class="pc-image" aria-hidden="true">
-        <div class="hb-bottle">
-          <div class="hb-cap"></div>
-          <div class="hb-neck"></div>
-          <div class="hb-body">
-            <div class="hb-label">
-              <div class="hb-brand">SMELLOFF</div>
-              <div class="hb-product">ODORSTRIKE</div>
-              <div class="hb-vol">50ML · FABRIC MIST</div>
-            </div>
-          </div>
-        </div>
+      <div class="nb-sticker nb-sticker--yellow nb-sticker--potm" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
+        <span>New!</span>
       </div>
+      <div class="pc-gallery" id="pcGallery" hidden></div>
+      <div class="nb-potm-img">
+        <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 50ml fabric odor eliminator mist — product of the month" width="800" height="800" loading="lazy" decoding="async">
+      </div>
+      <div class="pc-image" aria-hidden="true"></div>
     </div>
 
     <div class="pc-body">
@@ -620,7 +674,7 @@
       </div>
       <p class="pc-qty-hint" id="pcQtyHint">Add a 2nd bottle for +₹170 — that's ₹199/bottle.</p>
 
-      <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">BUY NOW — ₹229 →</button>
+      <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">ADD TO CART — ₹229 →</button>
       <button class="pc-cod-cta" id="pcCodCta" onclick="buyBoxCod()">Order COD — pay on delivery <span class="cod-zero">₹0 today</span></button>
       <div class="cod-trust">
         <svg class="ct-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -688,90 +742,12 @@
   </div>
 </div>
 
-<!-- COD STRIP -->
-<div class="cod-strip" role="group" aria-label="Cash on Delivery available">
-  <img src="/assets/icon-cod.png" alt="Cash on Delivery" width="22" height="22" loading="lazy" decoding="async">
-  <span>₹0 upfront. Pay the delivery person. 7-day returns.</span>
-</div>
-
 <!-- S8 — WhatsApp buy entry -->
 <a class="wa-buy-strip" href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20want%20to%20order%20ODORSTRIKE.%20Please%20help%20me%20place%20an%20order." target="_blank" rel="noopener noreferrer" aria-label="Order ODORSTRIKE on WhatsApp">
   <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.3 0-.4.1-.5l.4-.5.3-.4v-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c.6.3 1.1.4 1.5.5a3.6 3.6 0 0 0 1.6.1c.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg>
   <span class="wa-text">Prefer to order on WhatsApp? <b>Chat with us →</b></span>
 </a>
 
-<!-- HOW TO USE -->
-<section class="compare" id="vs-deodorant">
-  <h2 class="compare-title">Why not just spray deodorant?</h2>
-  <div class="compare-tabs" role="tablist" aria-label="Compare ODORSTRIKE against">
-    <button class="compare-tab active" type="button" role="tab" data-tab="ODORSTRIKE" aria-selected="true" onclick="compareTab(this)">ODORSTRIKE</button>
-    <button class="compare-tab" type="button" role="tab" data-tab="Deodorant" aria-selected="false" onclick="compareTab(this)">Deodorant</button>
-    <button class="compare-tab" type="button" role="tab" data-tab="Perfume" aria-selected="false" onclick="compareTab(this)">Perfume</button>
-  </div>
-  <div class="compare-scroll-wrap">
-  <div class="compare-table" data-active="ODORSTRIKE">
-    <div class="compare-cell row-h"></div>
-    <div class="compare-cell col-h" data-col="Deodorant"><img src="/assets/icon-deodorant.png" alt="Deodorant spray" class="compare-col-icon" width="28" height="28" loading="lazy" decoding="async"><span>DEODORANT<span class="compare-col-sub">for skin</span></span></div>
-    <div class="compare-cell col-h" data-col="Perfume"><img src="/assets/icon-perfume.png" alt="Perfume bottle" class="compare-col-icon" width="28" height="28" loading="lazy" decoding="async"><span>PERFUME<span class="compare-col-sub">for scent</span></span></div>
-    <div class="compare-cell col-h os" data-col="ODORSTRIKE"><span class="compare-os-dot" aria-hidden="true"></span><span>ODORSTRIKE<span class="compare-col-sub">for clothes</span></span></div>
-
-    <div class="compare-cell row-h">Where it goes</div>
-    <div class="compare-cell" data-col="Deodorant">Skin</div>
-    <div class="compare-cell" data-col="Perfume">Skin</div>
-    <div class="compare-cell os body" data-col="ODORSTRIKE">Fabric</div>
-
-    <div class="compare-cell row-h">What it does</div>
-    <div class="compare-cell" data-col="Deodorant">Covers skin odor, not fabric</div>
-    <div class="compare-cell" data-col="Perfume">Adds scent</div>
-    <div class="compare-cell os body" data-col="ODORSTRIKE">Kills odor molecules</div>
-
-    <div class="compare-cell row-h">Works on clothes?</div>
-    <div class="compare-cell" data-col="Deodorant">Leaves marks on dark fabric</div>
-    <div class="compare-cell" data-col="Perfume">Fades in 1–2 hours</div>
-    <div class="compare-cell os body" data-col="ODORSTRIKE">Built for fabric, zero stain</div>
-
-    <div class="compare-cell row-h">Re-apply when sweating?</div>
-    <div class="compare-cell" data-col="Deodorant">Useless — odor is in the fabric now</div>
-    <div class="compare-cell" data-col="Perfume">Faded already</div>
-    <div class="compare-cell os body" data-col="ODORSTRIKE">One spray, 8 sec</div>
-
-    <div class="compare-cell row-h">Masks or eliminates?</div>
-    <div class="compare-cell" data-col="Deodorant">Masks</div>
-    <div class="compare-cell" data-col="Perfume">Masks</div>
-    <div class="compare-cell os body" data-col="ODORSTRIKE">Eliminates</div>
-
-    <div class="compare-cell row-h">Pocket size?</div>
-    <div class="compare-cell" data-col="Deodorant">Bulky cans</div>
-    <div class="compare-cell" data-col="Perfume">Heavy bottles</div>
-    <div class="compare-cell os body" data-col="ODORSTRIKE">50ml — fits any pocket</div>
-
-    <div class="compare-cell row-h">Result</div>
-    <div class="compare-cell" data-col="Deodorant">You smell better</div>
-    <div class="compare-cell" data-col="Perfume">You smell scented</div>
-    <div class="compare-cell os body" data-col="ODORSTRIKE">Your clothes smell better</div>
-  </div>
-  </div><!-- /.compare-scroll-wrap -->
-  <p class="compare-line-em">Use both. One for you. One for your clothes.</p>
-  <p class="compare-line">Deodorant stops your body from sweating. ODORSTRIKE removes what sweat already soaked into your shirt.</p>
-</section>
-
-<!-- SCIENCE / HOW IT WORKS -->
-<section class="how-works" id="science">
-  <h2 class="hw-title">How ODORSTRIKE kills smell</h2>
-
-  <div class="hw-anim" aria-hidden="true">
-    <div class="hw-mol"></div>
-    <div class="hw-ring"></div>
-    <span class="hw-ring-label">β-cyclodextrin traps &amp; locks the odor molecule</span>
-  </div>
-
-  <div class="hw-teaser">
-    <div class="hw-ing-card"><span class="hw-ing-name">Zinc PCA</span><p>Binds odor molecules at the molecular level — neutralized, not masked.</p></div>
-    <div class="hw-ing-card"><span class="hw-ing-name">β-Cyclodextrin</span><p>Ring-shaped molecules cage volatile odor compounds in the fibre.</p></div>
-  </div>
-  <p class="hw-claim">Spray. 8 seconds. Odor gone — no residue, no perfume cloud.</p>
-  <a class="hw-more" href="/odorstrike/#science">The full science, step by step →</a>
-</section>
 
 
 <!-- FAQ -->
@@ -1187,7 +1163,8 @@
 <!-- ============================= -->
 <!-- CHECKOUT LOGIC                -->
 <!-- ============================= -->
-<script src="/assets/js/app.js?v=5" defer></script>
+<script src="/assets/js/app.js?v=6" defer></script>
+<script src="/assets/js/neo.js?v=1" defer></script>
 
 <!-- CART DRAWER + TOAST -->
 <div class="cart-backdrop" id="cartBackdrop" onclick="closeCartDrawer()"></div>
