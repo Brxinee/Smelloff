@@ -165,6 +165,7 @@
 <link rel="dns-prefetch" href="https://api.qrserver.com">
 <!-- Fonts: self-hosted woff2 (latin/latin-ext subsets, font-display:swap) — removes render-blocking third-party request -->
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/barlow-condensed-normal-latin-900.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/dm-sans-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
 <link rel="preload" href="/assets/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
@@ -197,6 +198,7 @@
 </script>
 
 <link rel="stylesheet" href="/assets/css/main.css?v=6">
+<link rel="stylesheet" href="/assets/css/neo.css?v=2">
 <script>
 /* Queue clicks that land before the deferred app.js/scroll-effects.js execute,
    then replay them once the real window.* implementations are in place. */
@@ -219,6 +221,18 @@
 <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 <a href="#buy" class="skip-link">Skip to product</a>
 
+<!-- Shared SVG shapes: starburst sticker + wavy divider -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="nbStar" viewBox="0 0 100 100">
+      <polygon points="50.0,1.5 60.4,12.4 75.0,8.0 78.3,22.5 92.5,25.8 88.2,40.0 98.5,50.0 88.2,60.0 92.5,74.2 78.3,77.5 75.0,92.0 60.4,87.6 50.0,98.5 39.6,87.6 25.0,92.0 21.7,77.5 7.5,74.2 11.8,60.0 1.5,50.0 11.8,40.0 7.5,25.8 21.7,22.5 25.0,8.0 39.6,12.4"/>
+    </symbol>
+    <symbol id="nbWave" viewBox="0 0 1440 24" preserveAspectRatio="none">
+      <path d="M0,24 L0,14 Q20,-7 40,14 Q60,25.2 80,14 Q100,-7 120,14 Q140,25.2 160,14 Q180,-7 200,14 Q220,25.2 240,14 Q260,-7 280,14 Q300,25.2 320,14 Q340,-7 360,14 Q380,25.2 400,14 Q420,-7 440,14 Q460,25.2 480,14 Q500,-7 520,14 Q540,25.2 560,14 Q580,-7 600,14 Q620,25.2 640,14 Q660,-7 680,14 Q700,25.2 720,14 Q740,-7 760,14 Q780,25.2 800,14 Q820,-7 840,14 Q860,25.2 880,14 Q900,-7 920,14 Q940,25.2 960,14 Q980,-7 1000,14 Q1020,25.2 1040,14 Q1060,-7 1080,14 Q1100,25.2 1120,14 Q1140,-7 1160,14 Q1180,25.2 1200,14 Q1220,-7 1240,14 Q1260,25.2 1280,14 Q1300,-7 1320,14 Q1340,25.2 1360,14 Q1380,-7 1400,14 Q1420,25.2 1440,14 L1440,24 Z"/>
+    </symbol>
+  </defs>
+</svg>
+
 <nav>
   <div class="nav-left">
     <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" onclick="openNav()">
@@ -236,14 +250,22 @@
     <a href="/blog/">Blog</a>
     <a href="/contact/">Contact</a>
   </div>
-  <button class="nav-cart" id="navCartBtn" aria-label="Open cart" onclick="openCartDrawer()">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z"/>
-      <path d="M3 6h18"/>
-      <path d="M16 10a4 4 0 0 1-8 0"/>
-    </svg>
-    <span class="nav-cart-count" id="navCartCount">0</span>
-  </button>
+  <div class="nav-actions">
+    <a class="nav-search" href="/blog/" aria-label="Search our guides">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="m21 21-4.3-4.3"/>
+      </svg>
+    </a>
+    <button class="nav-cart" id="navCartBtn" aria-label="Open cart" onclick="openCartDrawer()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z"/>
+        <path d="M3 6h18"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span class="nav-cart-count" id="navCartCount">0</span>
+    </button>
+  </div>
 </nav>
 
 <!-- MOBILE MENU -->
@@ -320,20 +342,15 @@
   <article class="product-card">
     <div class="pc-media">
       <span class="pc-tag">LAUNCH PRICE · MADE IN HYDERABAD</span>
-      <div class="pc-gallery" id="pcGallery" role="list" aria-label="Product photos" hidden></div>
-      <div class="pc-image" aria-hidden="true">
-        <div class="hb-bottle">
-          <div class="hb-cap"></div>
-          <div class="hb-neck"></div>
-          <div class="hb-body">
-            <div class="hb-label">
-              <div class="hb-brand">SMELLOFF</div>
-              <div class="hb-product">ODORSTRIKE</div>
-              <div class="hb-vol">50ML · FABRIC MIST</div>
-            </div>
-          </div>
-        </div>
+      <div class="nb-sticker nb-sticker--yellow nb-sticker--potm" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
+        <span>New!</span>
       </div>
+      <div class="pc-gallery" id="pcGallery" role="list" aria-label="Product photos" hidden></div>
+      <div class="nb-potm-img">
+        <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 50ml fabric odor eliminator mist bottle" width="800" height="800" fetchpriority="high" decoding="async">
+      </div>
+      <div class="pc-image" aria-hidden="true"></div>
     </div>
 
     <div class="pc-body">
@@ -366,7 +383,7 @@
       </div>
       <p class="pc-qty-hint" id="pcQtyHint">Add a 2nd bottle for +₹170 — that's ₹199/bottle.</p>
 
-      <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">BUY NOW — ₹229 →</button>
+      <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">ADD TO CART — ₹229 →</button>
       <button class="pc-cod-cta" id="pcCodCta" onclick="buyBoxCod()">Order COD — pay on delivery <span class="cod-zero">₹0 today</span></button>
       <div class="cod-trust">
         <svg class="ct-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -458,6 +475,43 @@
   </div>
 </section>
 
+<!-- BENEFITS — crossed-circle icons on acid slab -->
+<div class="nb-wave" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
+<section class="nb-benefits nb-benefits--acid" aria-label="Why ODORSTRIKE works">
+  <ul class="nb-benefits-grid">
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 6 6.8 6 10a6 6 0 0 1-12 0c0-3.2 3-6.4 6-10z"/><path d="m5 20 14-15"/></svg></span>
+      <span class="nb-blabel">Zero Residue</span>
+    </li>
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 3h4"/><path d="M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="m5 20 14-15"/></svg></span>
+      <span class="nb-blabel">Glycerine-Free</span>
+    </li>
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 4 4 7l2 4 2-1v9h8v-9l2 1 2-4-5-3a3 3 0 0 1-6 0z"/><path d="m9.5 13 2 2 3.5-3.5"/></svg></span>
+      <span class="nb-blabel">Fabric-Safe</span>
+    </li>
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 8h6v13H9z"/><path d="M10 8V5h4v3"/><path d="M10 3h4"/><path d="M17 6c1.5 0 2.5-1 2.5-2M17 9c2.5 0 4-1.5 4-3.5"/><path d="m5 20 14-15"/></svg></span>
+      <span class="nb-blabel">No Cover-Up Perfume</span>
+    </li>
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
+      <span class="nb-blabel">8HR Protection</span>
+    </li>
+    <li>
+      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M7 14h10"/><path d="M7 14c0-2 2-3 5-3s5 1 5 3"/></svg></span>
+      <span class="nb-blabel">Pocket-Sized</span>
+    </li>
+  </ul>
+</section>
+<div class="nb-wave nb-wave--flip" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
+
+<!-- STATEMENT SLAB -->
+<section class="nb-quote" aria-label="What ODORSTRIKE is">
+  <p class="nb-eyebrow">No One Will Know.</p>
+  <p class="nb-quote-line">Not a perfume. Not a deodorant.<br><span class="nb-acid-text">Odor defense for the everyday hustle.</span></p>
+</section>
 
 <!-- REVIEW MODAL -->
 <div class="rv-modal" id="rvModal" role="dialog" aria-modal="true" aria-labelledby="rvModalTitle" aria-hidden="true" onclick="if(event.target===this)closeReviewForm()">
@@ -601,9 +655,11 @@
 </section>
 
 
-<!-- WHY NOT JUST DEODORANT? — comparison -->
-<section class="reviews" id="reviews">
-  <h2 class="rv-title">What buyers say.</h2>
+<!-- WORD ON THE STREET — testimonial slab -->
+<div class="nb-wave" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
+<section class="reviews nb-reviews" id="reviews">
+  <h2 class="nb-h2">Word on the Street</h2>
+  <div class="nb-stars-row" aria-hidden="true">★★★★★</div>
   <div class="rv-aggregate" id="rvAggregate" role="img" aria-label="Rated 4.7 out of 5, based on 3 beta-tester reviews">
     <span class="rv-agg-num" id="rvAggNum">4.7</span>
     <div class="rv-agg-meta">
@@ -611,17 +667,66 @@
       <span class="rv-agg-count" id="rvAggCount">Based on 3 beta-tester reviews</span>
     </div>
   </div>
-  <p class="rv-subtitle">3 testers used ODORSTRIKE for 8 weeks before public release. Their unedited feedback below — plus reviews from buyers as they post them.</p>
-
-  <button class="rv-write-btn" type="button" onclick="openReviewForm()">Bought ODORSTRIKE? Write a review →</button>
+  <p class="rv-subtitle">3 testers used ODORSTRIKE for 8 weeks before public release. Unedited feedback — plus buyer reviews as they post them.</p>
 
   <div class="rv-scroll-wrap">
     <div class="rv-scroll" id="rvScroll" role="list"></div>
     <div class="rv-dots" id="rvDots" aria-hidden="true"></div>
   </div>
+  <div class="nb-arrows nb-arrows--rev">
+    <button class="nb-circ nb-circ--paper" id="nbRevPrev" type="button" aria-label="Previous review"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></button>
+    <button class="nb-circ nb-circ--paper" id="nbRevNext" type="button" aria-label="Next review"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+  </div>
 
+  <button class="rv-write-btn nb-btn nb-btn--ghost" type="button" onclick="openReviewForm()">Bought ODORSTRIKE? Write a review</button>
   <button class="rv-readall" id="rvReadAllBtn" type="button" onclick="showAllReviews()" style="display:none">Read all reviews →</button>
   <a class="rv-page-link" href="/reviews/">Browse every review — unedited →</a>
+</section>
+<div class="nb-wave nb-wave--flip" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
+
+<!-- YOU MAY ALSO LIKE -->
+<section class="nb-goods" id="more-goods" aria-label="You may also like">
+  <h2 class="nb-h2">You May Also Like</h2>
+  <div class="nb-goods-track" id="nbGoodsTrack">
+    <article class="nb-gcard" data-name="ODORSTRIKE — 2-Pack" data-price="₹399" data-desc="One for your bag, one for your desk. ₹199 a bottle — our best seller.">
+      <div class="nb-frame nb-gframe">
+        <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 2-pack — two 50ml bottles, ₹399" width="800" height="800" loading="lazy" decoding="async">
+        <span class="nb-qtyflag" aria-hidden="true">2×</span>
+      </div>
+      <div class="nb-sticker nb-sticker--alt" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
+        <span>Best seller</span>
+      </div>
+      <button class="nb-btn nb-btn--acid nb-gcard-cta" type="button" onclick="selectQty(2);addToCart('duo')">Add to Cart — ₹399</button>
+    </article>
+    <article class="nb-gcard" data-name="ODORSTRIKE — 3-Pack" data-price="₹549" data-desc="Stock up or gift the extras. ₹183 a bottle — the best value.">
+      <div class="nb-frame nb-gframe">
+        <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 3-pack — three 50ml bottles, ₹549" width="800" height="800" loading="lazy" decoding="async">
+        <span class="nb-qtyflag" aria-hidden="true">3×</span>
+      </div>
+      <div class="nb-sticker nb-sticker--black" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
+        <span>Best value</span>
+      </div>
+      <button class="nb-btn nb-btn--acid nb-gcard-cta" type="button" onclick="selectQty(3);addToCart('trio')">Add to Cart — ₹549</button>
+    </article>
+    <article class="nb-gcard nb-gcard--dark" data-name="HELMET STRIKE" data-price="Coming soon" data-desc="Odor defense for helmet liners. Join the waitlist and be first in line.">
+      <div class="nb-frame nb-gframe nb-gframe--text">
+        <span class="nb-gframe-word" aria-hidden="true">Helmet<br>Strike</span>
+      </div>
+      <div class="nb-badge-circ" aria-hidden="true">Coming<br>Soon</div>
+      <a class="nb-btn nb-btn--ghost nb-gcard-cta" href="#emailForm">Join Waitlist</a>
+    </article>
+  </div>
+  <div class="nb-goods-caption" aria-live="polite">
+    <p class="nb-goods-name" id="nbGoodsName">ODORSTRIKE — 2-Pack</p>
+    <p class="nb-goods-price" id="nbGoodsPrice">₹399</p>
+    <p class="nb-goods-desc" id="nbGoodsDesc">One for your bag, one for your desk. ₹199 a bottle — our best seller.</p>
+  </div>
+  <div class="nb-arrows">
+    <button class="nb-circ" id="nbGoodsPrev" type="button" aria-label="Previous product"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></button>
+    <button class="nb-circ" id="nbGoodsNext" type="button" aria-label="Next product"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+  </div>
 </section>
 
 
@@ -879,6 +984,9 @@
   <div class="sf-bottom" style="font-size:11px;color:var(--muted);border-top:1px solid var(--bg-subtle);padding-top:12px;margin-top:0;text-align:center">
     Grievance Officer: Jogdhande Nikhil Patil &middot; <a href="mailto:smelloffsupport@gmail.com" style="color:var(--muted);text-decoration:none">smelloffsupport@gmail.com</a> &middot; Response within 15 days as per Consumer Protection (E-Commerce) Rules 2020
   </div>
+
+  <!-- Giant brand wordmark (Shapes-style footer sign-off) -->
+  <div class="nb-footer-word" aria-hidden="true">SMELLOFF</div>
 </footer>
 
 
@@ -1112,7 +1220,8 @@
 <!-- ============================= -->
 <!-- CHECKOUT LOGIC                -->
 <!-- ============================= -->
-<script src="/assets/js/app.js?v=5" defer></script>
+<script src="/assets/js/app.js?v=6" defer></script>
+<script src="/assets/js/neo.js?v=1" defer></script>
 
 <!-- CART DRAWER + TOAST -->
 <div class="cart-backdrop" id="cartBackdrop" onclick="closeCartDrawer()"></div>
