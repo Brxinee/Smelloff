@@ -68,7 +68,7 @@
     if (per){
       var prices = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES) || { solo:229, duo:399, trio:549 };
       var total = _nbQty === 3 ? prices.trio : _nbQty === 2 ? prices.duo : prices.solo;
-      per.textContent = '₹' + Math.round(total / _nbQty) + ' per bottle' + (_nbQty >= 3 ? ' · max 3 per order' : '');
+      per.textContent = '₹' + Math.floor(total / _nbQty) + ' per bottle' + (_nbQty >= 3 ? ' · max 3 per order' : '');
     }
     if (typeof window.selectQty === 'function') window.selectQty(_nbQty);
   };

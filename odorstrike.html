@@ -361,32 +361,6 @@
       </div>
 
       <button class="pc-cta" id="pcCta" onclick="buyBoxAdd()">ADD TO CART — ₹229 →</button>
-      <button class="pc-cod-cta" id="pcCodCta" onclick="buyBoxCod()">Order COD — pay on delivery <span class="cod-zero">₹0 today</span></button>
-      <div class="cod-trust">
-        <svg class="ct-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
-        <div>
-          <p class="ct-main">Pay <span id="codTrustAmt">₹229</span> on delivery — no advance.</p>
-        </div>
-      </div>
-      <div class="pc-guarantee">
-        <svg class="pcg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
-        <div>
-          <p class="pcg-main">Works in 8 seconds — or your money back.</p>
-          <p class="pcg-sub"><a href="/returns/" class="pcg-link">7-day no-questions refund.</a></p>
-        </div>
-      </div>
-      <div class="pc-trust-icons">
-        <div class="pti-item"><span class="pti-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg></span><span class="pti-label">7-day money-back</span></div>
-        <div class="pti-item"><span class="pti-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 3h13v13H1z"/><path d="M14 8h4l3 3v5h-7"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></span><span class="pti-label">Free shipping</span></div>
-        <div class="pti-item"><span class="pti-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span><span class="pti-label">COD available</span></div>
-        <div class="pti-item"><span class="pti-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="pti-label">Ships 48hr</span></div>
-      </div>
-      <div class="ingredient-strip" role="group" aria-label="Ingredients and origin">
-        <span>Zinc PCA + β-Cyclodextrin</span>
-        <span>Made in Hyderabad</span>
-        <span>Fabric-safe</span>
-        <span>No skin contact</span>
-      </div>
     </div>
   </article>
 
@@ -522,12 +496,6 @@
       <button class="rv-submit" type="button" onclick="closeReviewForm()">Close</button>
     </div>
   </div>
-</div>
-
-<!-- COD STRIP -->
-<div class="cod-strip" role="group" aria-label="Cash on Delivery available">
-  <img src="/assets/icon-cod.png" alt="Cash on Delivery" width="22" height="22" loading="lazy" decoding="async">
-  <span>₹0 upfront. Pay the delivery person. 7-day returns.</span>
 </div>
 
 <!-- S8 — WhatsApp buy entry -->
@@ -826,7 +794,6 @@
   <p class="final-sub-2">Smelloff is made in Hyderabad by one person. Every order matters.</p>
   <div class="final-rating"><span class="fr-stars" aria-hidden="true">★★★★★</span> Loved by early buyers</div>
   <a href="#buy" class="final-cta" id="finalCta" onclick="event.preventDefault();addToCart('solo')">BUY NOW — ₹229 →</a>
-  <p class="final-cod-line">or <button type="button" class="hero-cod-link" onclick="selectQty(1);buyBoxCod()">order COD — pay ₹0 today →</button></p>
 </section>
 
 <!-- TR3 — founder trust block -->
@@ -1172,7 +1139,7 @@
 <!-- CHECKOUT LOGIC                -->
 <!-- ============================= -->
 <script src="/assets/js/app.js?v=7" defer></script>
-<script src="/assets/js/neo.js?v=2" defer></script>
+<script src="/assets/js/neo.js?v=3" defer></script>
 
 <!-- CART DRAWER + TOAST -->
 <div class="cart-backdrop" id="cartBackdrop" onclick="closeCartDrawer()"></div>
