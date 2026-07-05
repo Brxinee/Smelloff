@@ -2,7 +2,7 @@
    Safe-by-design: only same-origin GET requests are handled.
    Cross-origin (Supabase, analytics, Meta, Google Apps Script) and /api/
    are never intercepted, so the checkout/payment flow is untouched. */
-const VERSION = 'smelloff-v16';
+const VERSION = 'smelloff-v17';
 const STATIC_CACHE = 'static-' + VERSION;
 const PAGE_CACHE = 'pages-' + VERSION;
 
@@ -10,7 +10,7 @@ const PAGE_CACHE = 'pages-' + VERSION;
 const PRECACHE = [
   '/',
   '/assets/css/main.css?v=6',
-  '/assets/css/neo.css?v=7',
+  '/assets/css/neo.css?v=8',
   '/assets/js/app.js?v=7',
   '/assets/js/neo.js?v=4',
   '/assets/js/scroll-effects.js?v=2',
