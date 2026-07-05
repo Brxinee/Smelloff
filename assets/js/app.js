@@ -1,8 +1,8 @@
 const CFG = window.SMELLOFF_CONFIG;
   const VARIANTS = {
-    solo: { title: 'Starter Strike — ODORSTRIKE', units: '1 × 50ml', amount: CFG.PRICES.solo, mrp: CFG.MRP.solo, label: 'solo' },
-    duo:  { title: 'Double Strike — ODORSTRIKE',  units: '2 × 50ml', amount: CFG.PRICES.duo,  mrp: CFG.MRP.duo,  label: 'duo'  },
-    trio: { title: 'Triple Strike — ODORSTRIKE',  units: '3 × 50ml', amount: CFG.PRICES.trio, mrp: CFG.MRP.trio, label: 'trio' }
+    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: CFG.PRICES.solo, mrp: CFG.MRP.solo, label: 'solo' },
+    duo:  { title: 'ODORSTRIKE 50ml × 2',  units: '2 × 50ml', amount: CFG.PRICES.duo,  mrp: CFG.MRP.duo,  label: 'duo'  },
+    trio: { title: 'ODORSTRIKE 50ml × 3',  units: '3 × 50ml', amount: CFG.PRICES.trio, mrp: CFG.MRP.trio, label: 'trio' }
   };
 
   let currentVariant = 'solo';
@@ -184,9 +184,9 @@ const CFG = window.SMELLOFF_CONFIG;
   // Maps the in-page variant keys (solo/duo/trio + cart) to the backend schema
   // (variant, variantLabel, units) — kept here so the rest of the UI stays stable.
   const SHEET_VARIANT = {
-    solo: { variant: 'starter', label: 'Starter Strike — 1 × 50ml', bottles: 1 },
-    duo:  { variant: 'duo',     label: 'Duo Strike — 2 × 50ml',     bottles: 2 },
-    trio: { variant: 'squad',   label: 'Squad Strike — 3 × 50ml',   bottles: 3 }
+    solo: { variant: 'starter', label: 'ODORSTRIKE — 1 × 50ml', bottles: 1 },
+    duo:  { variant: 'duo',     label: 'ODORSTRIKE — 2 × 50ml',     bottles: 2 },
+    trio: { variant: 'squad',   label: 'ODORSTRIKE — 3 × 50ml',   bottles: 3 }
   };
 
   function collectOrder(orderId, paymentId) {
@@ -1284,9 +1284,9 @@ const CFG = window.SMELLOFF_CONFIG;
   (function(){
     const STORAGE_KEY = 'smelloff_cart';
     const PRODUCTS = {
-      solo: { id: 'solo', name: 'Starter Strike — 1 × 50ml', price: 229, variant: 'solo' },
-      duo:  { id: 'duo',  name: 'Double Strike — 2 × 50ml',  price: 399, variant: 'duo'  },
-      trio: { id: 'trio', name: 'Triple Strike — 3 × 50ml',  price: 549, variant: 'trio' }
+      solo: { id: 'solo', name: 'ODORSTRIKE 50ml × 1', price: 229, variant: 'solo' },
+      duo:  { id: 'duo',  name: 'ODORSTRIKE 50ml × 2',  price: 399, variant: 'duo'  },
+      trio: { id: 'trio', name: 'ODORSTRIKE 50ml × 3',  price: 549, variant: 'trio' }
     };
 
     let cart = load();

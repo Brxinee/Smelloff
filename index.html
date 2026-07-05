@@ -284,7 +284,7 @@
 </script>
 
 <link rel="stylesheet" href="/assets/css/main.css?v=6">
-<link rel="stylesheet" href="/assets/css/neo.css?v=3">
+<link rel="stylesheet" href="/assets/css/neo.css?v=4">
 <script>
 /* Queue clicks that land before the deferred app.js/scroll-effects.js execute,
    then replay them once the real window.* implementations are in place. */
@@ -383,10 +383,10 @@
 <!-- STICKY MOBILE BAR -->
 <div class="mobile-bar" id="mobileBar" aria-hidden="true">
   <div class="mb-meta">
-    <div class="mb-pills" role="radiogroup" aria-label="Select pack">
-      <button class="mb-pill active" type="button" role="radio" aria-checked="true" data-qty="1" onclick="mobileBarPick(1)">1×</button>
-      <button class="mb-pill" type="button" role="radio" aria-checked="false" data-qty="2" onclick="mobileBarPick(2)">2×</button>
-      <button class="mb-pill" type="button" role="radio" aria-checked="false" data-qty="3" onclick="mobileBarPick(3)">3×</button>
+    <div class="nb-qty-stepper" role="group" aria-label="Quantity">
+      <button type="button" class="nb-qty-btn" data-step="-1" aria-label="Decrease quantity" onclick="nbQtyStep(-1)" disabled>&minus;</button>
+      <span class="nb-qty-val" aria-live="polite">1</span>
+      <button type="button" class="nb-qty-btn" data-step="1" aria-label="Increase quantity" onclick="nbQtyStep(1)">+</button>
     </div>
     <div class="mb-price">
       <span class="mb-now">₹229</span>
@@ -498,33 +498,7 @@
         <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
         <span>New!</span>
       </div>
-      <button class="nb-btn nb-btn--acid nb-gcard-cta" type="button" onclick="selectQty(1);addToCart('solo')">Add to Cart — ₹229</button>
-    </article>
-    <article class="nb-gcard" data-name="ODORSTRIKE — 2-Pack" data-price="₹399" data-desc="One for your bag, one for your desk. ₹199 a bottle — our best seller.">
-      <a class="nb-gcard-link" href="/odorstrike/" aria-label="ODORSTRIKE 2-pack — view product page">
-        <div class="nb-frame nb-gframe">
-          <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 2-pack — two 50ml bottles, ₹399" width="800" height="800" loading="lazy" decoding="async">
-          <span class="nb-qtyflag" aria-hidden="true">2×</span>
-        </div>
-      </a>
-      <div class="nb-sticker nb-sticker--alt" aria-hidden="true">
-        <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
-        <span>Best seller</span>
-      </div>
-      <button class="nb-btn nb-btn--acid nb-gcard-cta" type="button" onclick="selectQty(2);addToCart('duo')">Add to Cart — ₹399</button>
-    </article>
-    <article class="nb-gcard" data-name="ODORSTRIKE — 3-Pack" data-price="₹549" data-desc="Stock up or gift the extras. ₹183 a bottle — the best value.">
-      <a class="nb-gcard-link" href="/odorstrike/" aria-label="ODORSTRIKE 3-pack — view product page">
-        <div class="nb-frame nb-gframe">
-          <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 3-pack — three 50ml bottles, ₹549" width="800" height="800" loading="lazy" decoding="async">
-          <span class="nb-qtyflag" aria-hidden="true">3×</span>
-        </div>
-      </a>
-      <div class="nb-sticker nb-sticker--black" aria-hidden="true">
-        <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
-        <span>Best value</span>
-      </div>
-      <button class="nb-btn nb-btn--acid nb-gcard-cta" type="button" onclick="selectQty(3);addToCart('trio')">Add to Cart — ₹549</button>
+      <button class="nb-btn nb-btn--acid nb-gcard-cta" type="button" onclick="addToCart('solo')">Add to Cart — ₹229</button>
     </article>
     <article class="nb-gcard nb-gcard--dark" data-name="HELMET STRIKE" data-price="Coming soon" data-desc="Odor defense for helmet liners. Join the waitlist and be first in line.">
       <div class="nb-frame nb-gframe nb-gframe--text">
@@ -1080,8 +1054,8 @@
 <!-- ============================= -->
 <!-- CHECKOUT LOGIC                -->
 <!-- ============================= -->
-<script src="/assets/js/app.js?v=6" defer></script>
-<script src="/assets/js/neo.js?v=1" defer></script>
+<script src="/assets/js/app.js?v=7" defer></script>
+<script src="/assets/js/neo.js?v=2" defer></script>
 
 <!-- CART DRAWER + TOAST -->
 <div class="cart-backdrop" id="cartBackdrop" onclick="closeCartDrawer()"></div>

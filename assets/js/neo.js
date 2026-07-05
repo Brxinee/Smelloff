@@ -55,7 +55,26 @@
     centered();
   }
 
+  /* Quantity stepper — replaces the pack/combo selector. Qty 1–3 maps to
+     the existing solo/duo/trio variants via window.selectQty, so pricing,
+     cart, checkout and tracking stay untouched. */
+  var _nbQty = 1;
+  window.nbQtyStep = function(d){
+    _nbQty = Math.min(3, Math.max(1, _nbQty + d));
+    document.querySelectorAll('.nb-qty-val').forEach(function(v){ v.textContent = _nbQty; });
+    document.querySelectorAll('.nb-qty-btn[data-step="-1"]').forEach(function(b){ b.disabled = _nbQty <= 1; });
+    document.querySelectorAll('.nb-qty-btn[data-step="1"]').forEach(function(b){ b.disabled = _nbQty >= 3; });
+    var per = document.getElementById('nbQtyPer');
+    if (per){
+      var prices = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES) || { solo:229, duo:399, trio:549 };
+      var total = _nbQty === 3 ? prices.trio : _nbQty === 2 ? prices.duo : prices.solo;
+      per.textContent = '₹' + Math.round(total / _nbQty) + ' per bottle' + (_nbQty >= 3 ? ' · max 3 per order' : '');
+    }
+    if (typeof window.selectQty === 'function') window.selectQty(_nbQty);
+  };
+
   function init(){
+    if (document.querySelector('.nb-qty-stepper')) window.nbQtyStep(0);
     var name  = document.getElementById('nbGoodsName');
     var price = document.getElementById('nbGoodsPrice');
     var desc  = document.getElementById('nbGoodsDesc');
