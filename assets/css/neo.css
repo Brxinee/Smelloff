@@ -685,16 +685,81 @@ h1.hero-headline{
 .founder-story{font-family:var(--nb-body);font-size:13.5px;line-height:1.6;color:#CFCFC9;margin:0}
 .founder-wa,.founder-ig{display:inline-block;margin:12px 14px 0 0;font-family:var(--nb-body);font-size:13px;font-weight:700;color:#fff;text-decoration:underline;text-underline-offset:3px}
 
-/* ── FOOTER ────────────────────────────────────────────────────── */
-.site-footer{background:var(--nb-black);border-top:var(--nb-bw) solid var(--nb-acid)}
-.sf-wordmark{font-family:var(--nb-head);font-weight:900;color:#fff}
-.sf-newsletter input{border:2.5px solid var(--nb-ink);border-radius:10px}
-.sf-newsletter button{
-  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;letter-spacing:.08em;
-  background:var(--nb-acid);color:var(--nb-ink);border:2.5px solid var(--nb-ink);
-  border-radius:10px;box-shadow:3px 3px 0 #000;
+/* ── FOOTER (Shapes reference, red → black) ────────────────────── */
+.site-footer.nb-footer{
+  background:var(--nb-black);color:#fff;
+  border-top:none;padding:34px 0 0;margin:0;
 }
-.sf-col-title{font-family:var(--nb-head);font-weight:900;letter-spacing:.1em}
+.nb-f-inner{max-width:680px;margin:0 auto;padding:0 24px}
+.nb-f-intro{font-family:var(--nb-body);font-size:15px;line-height:1.6;color:#EDEDE8;margin:0}
+.nb-f-socials{display:flex;gap:18px;align-items:center;margin:22px 0 0}
+.nb-f-socials img{display:block;width:30px;height:30px}
+/* <nav> element — undo main.css's bare `nav{position:fixed}` */
+.nb-f-links{
+  position:static;top:auto;left:auto;right:auto;height:auto;z-index:auto;
+  background:none;border:none;padding:0;
+  display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:34px 0 0;
+}
+.nb-f-links ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.nb-f-links a{
+  font-family:var(--nb-body);font-size:16px;color:#fff;text-decoration:none;
+}
+.nb-f-links a:hover{color:var(--nb-acid)}
+.nb-f-nl-title{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:clamp(24px,6vw,32px);letter-spacing:.02em;line-height:1;
+  color:#fff;margin:40px 0 0;
+}
+.nb-f-nl-sub{font-family:var(--nb-body);font-size:13.5px;color:#BDBDB6;margin:8px 0 0}
+.nb-f-nl{display:flex;flex-direction:column;gap:12px;margin:16px 0 0}
+.nb-f-nl input{
+  width:100%;background:transparent;color:#fff;
+  border:2.5px solid #fff;border-radius:999px;
+  font-family:var(--nb-body);font-size:15px;padding:14px 20px;outline:none;
+}
+.nb-f-nl input::placeholder{color:#CFCFC9}
+.nb-f-nl input:focus{border-color:var(--nb-acid)}
+.nb-f-nl button{
+  width:100%;
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:16px;letter-spacing:.08em;
+  background:#fff;color:var(--nb-ink);
+  border:2.5px solid #fff;border-radius:999px;
+  padding:14px 20px;cursor:pointer;
+  box-shadow:4px 4px 0 rgba(184,255,87,.35);
+  transition:transform .12s ease,box-shadow .12s ease;
+}
+.nb-f-nl button:active{transform:translate(4px,4px);box-shadow:0 0 0 transparent}
+.nb-footer .sf-newsletter-success{color:var(--nb-acid);font-family:var(--nb-body);font-size:13px;margin-top:10px}
+.nb-f-legal{font-family:var(--nb-body);font-size:13px;color:#BDBDB6;margin:34px 0 0;line-height:1.6}
+.nb-f-legal a{color:#BDBDB6}
+.nb-f-legal--fine{font-size:11px;margin:10px 0 0;color:#8C8C86}
+.nb-f-pay{display:flex;gap:10px;align-items:center;margin:22px 0 0;flex-wrap:wrap}
+.nb-f-pay-chip{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:#fff;border-radius:6px;padding:6px 10px;min-height:30px;
+}
+.nb-f-pay-chip img{display:block;height:16px;width:auto}
+.nb-f-pay-cod{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:11px;letter-spacing:.06em;color:var(--nb-ink);
+}
+/* Giant brand sign-off (reference: HELLA GOODS) — real logo artwork */
+.nb-f-word{
+  display:block;width:min(94%,1100px);height:auto;
+  margin:44px auto 0;padding:0 0 26px;
+  pointer-events:none;-webkit-user-select:none;user-select:none;
+}
+@media(min-width:820px){
+  .nb-f-inner{max-width:880px}
+  .nb-f-nl{flex-direction:row}
+  .nb-f-nl input{flex:1}
+  .nb-f-nl button{width:auto;padding:14px 34px}
+}
+/* keep the sign-off clear of the sticky buy bar */
+@media(max-width:768px){
+  .site-footer.nb-footer{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
 
 /* ── Sticky mobile bar ─────────────────────────────────────────── */
 .mobile-bar{
