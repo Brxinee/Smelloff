@@ -960,6 +960,36 @@ nav.pdp-crumb{
 /* Founder section (PDP standalone) — black, merges with .final above */
 .founder{background:var(--nb-black);padding:0 20px 74px;margin:0;max-width:none}
 
+/* ── Quantity stepper (replaces the pack/combo selector) ───────── */
+.nb-qty{display:flex;align-items:center;gap:14px;margin:18px 0 0;flex-wrap:wrap}
+.nb-qty-label{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:14px;letter-spacing:.12em;color:var(--nb-ink);
+}
+.nb-qty-stepper{
+  display:inline-flex;align-items:center;
+  background:#fff;border:2.5px solid var(--nb-ink);border-radius:999px;
+  box-shadow:var(--nb-shadow-sm);overflow:hidden;
+}
+.nb-qty-btn{
+  width:52px;height:52px;flex:none;
+  background:none;border:none;cursor:pointer;
+  font-family:var(--nb-body);font-size:26px;font-weight:700;line-height:1;
+  color:var(--nb-ink);display:flex;align-items:center;justify-content:center;
+}
+.nb-qty-btn:disabled{opacity:.25;cursor:default}
+.nb-qty-btn:not(:disabled):active{background:var(--nb-acid)}
+.nb-qty-val{
+  min-width:44px;text-align:center;
+  font-family:var(--nb-head);font-weight:900;font-size:22px;color:var(--nb-ink);
+  -webkit-user-select:none;user-select:none;
+}
+.nb-qty-per{font-family:var(--nb-body);font-size:12.5px;color:var(--nb-muted)}
+/* compact variant inside the sticky mobile bar */
+.mobile-bar .nb-qty-stepper{box-shadow:none;border-width:2px}
+.mobile-bar .nb-qty-btn{width:38px;height:38px;font-size:20px}
+.mobile-bar .nb-qty-val{min-width:28px;font-size:17px}
+
 /* ── Motion safety ─────────────────────────────────────────────── */
 @media(prefers-reduced-motion:reduce){
   .nb-btn,.nb-circ,.nb-sticker,.nb-gcard,.pc-pack-card,.product-card .pc-cta,.pc-cod-cta,.final-cta,.mobile-menu{transition:none}
