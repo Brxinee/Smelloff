@@ -1,0 +1,135 @@
+/* ═══════════════════════════════════════════════════════════════
+   SMELLOFF — NEO-LITE (secondary pages: policies, blog, reviews,
+   track-order, contact, 404). Loads AFTER each page's inline styles
+   and re-skins them to the neo-brutalist paper theme by flipping the
+   shared :root aliases, then restyling the shared chrome (p-* nav /
+   footer, blog-* nav / footer, cards, CTAs).
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  /* palette flip: dark → paper */
+  --bg:#FAFAF7;
+  --bg-surface:#FFFFFF;
+  --bg-subtle:#EFEFE8;
+  --text:#0A0A0A;
+  --text-secondary:#33332F;
+  --muted:#5A5A54;
+  --rule:#DCDCD4;
+  --overlay:rgba(0,0,0,.5);
+  --shadow:rgba(0,0,0,.12);
+  /* raw names some rules use directly */
+  --card:#FFFFFF;
+  --card-hover:#F4F4EE;
+  --border:#DCDCD4;
+  --border-subtle:#E8E8E1;
+  --silver:#33332F;
+  --gray:#5A5A54;
+  /* blog-post token set */
+  --off-white:#0A0A0A;
+  --line:#DCDCD4;
+  --cream:#33332F;
+  /* neo tokens */
+  --nb-ink:#0A0A0A;
+  --nb-acid:#B8FF57;
+  --nb-black:#080808;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans','Inter Tight',sans-serif}
+::selection{background:var(--nb-acid);color:var(--nb-ink)}
+
+/* ── Top bar (p-nav / blog-nav): stays black like the main site ── */
+.p-nav,.blog-nav{
+  background:var(--nb-black);
+  border-bottom:3px solid #000;
+}
+.p-nav a,.blog-nav a{color:#fff}
+.blog-nav{background:var(--nb-black)!important;backdrop-filter:none}
+.blog-nav .logo{color:#fff!important}
+.buy-pill{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;
+  letter-spacing:.08em;
+  background:var(--nb-acid)!important;color:var(--nb-ink)!important;
+  border:2px solid var(--nb-ink)!important;border-radius:999px!important;
+  box-shadow:3px 3px 0 #000;
+}
+.drop-cap::first-letter{color:var(--nb-ink)!important}
+.p-back,.b-back{color:#BDBDB6}
+.p-back:hover,.b-back:hover{color:#fff}
+.p-logo,.b-logo{color:#fff}
+.p-logo .p-dot{background:var(--nb-acid)}
+.p-cta,.b-buy-btn{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;
+  letter-spacing:.08em;
+  background:var(--nb-acid)!important;color:var(--nb-ink)!important;
+  border:2px solid var(--nb-ink);border-radius:999px;
+  box-shadow:3px 3px 0 #000;
+}
+.p-cta:hover{background:var(--nb-acid)}
+
+/* ── Content typography ────────────────────────────────────────── */
+.p-main h1,.p-main h2{color:var(--nb-ink)}
+.p-eyebrow{color:var(--nb-ink)}
+.p-eyebrow::before{background:var(--nb-ink)}
+.p-main li::marker{color:var(--nb-ink)}
+.p-main a.inline,.p-main p a,.p-main li a{
+  color:var(--nb-ink);border-bottom-color:rgba(10,10,10,.35);
+}
+.p-main a.inline:hover,.p-main p a:hover,.p-main li a:hover{border-bottom-color:var(--nb-ink)}
+.p-main .callout{
+  background:#fff;border:2.5px solid var(--nb-ink);border-left-width:2.5px;
+  border-radius:12px;box-shadow:4px 4px 0 #000;
+}
+
+/* ── Forms (track-order, contact, reviews) ─────────────────────── */
+main input[type="text"],main input[type="tel"],main input[type="email"],
+main input[type="search"],main textarea,main select{
+  background:#fff;color:var(--nb-ink);
+  border:2px solid var(--nb-ink);border-radius:10px;
+}
+main input::placeholder,main textarea::placeholder{color:#8C8C86}
+main button[type="submit"],.c-btn,.agg-cta,.to-btn{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;
+  letter-spacing:.08em;
+  background:var(--nb-acid);color:var(--nb-ink);
+  border:2.5px solid var(--nb-ink);border-radius:999px;
+  box-shadow:3px 3px 0 #000;cursor:pointer;
+  transition:transform .12s ease,box-shadow .12s ease;
+}
+main button[type="submit"]:active,.c-btn:active,.agg-cta:active,.to-btn:active{
+  transform:translate(3px,3px);box-shadow:0 0 0 #000;
+}
+
+/* ── Cards (blog index, contact, reviews) ──────────────────────── */
+.b-card,.c-card,.rv-card,.b-topic,.b-mc{
+  background:#fff;
+  border:2.5px solid var(--nb-ink);border-radius:12px;
+  box-shadow:4px 4px 0 #000;
+}
+.b-card:hover,.b-topic:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 #000}
+.b-thumb-cat,.b-card-cat,.b-section-tag,.article-category{
+  color:var(--nb-ink);
+}
+
+/* ── Footers (p-footer / blog-footer): black slab ──────────────── */
+.p-footer,.blog-footer{
+  background:var(--nb-black);
+  border-top:none;color:#BDBDB6;
+}
+.p-footer a,.blog-footer a{color:#BDBDB6}
+.p-footer a:hover,.blog-footer a:hover{color:#fff}
+.p-footer-brand,.bf-brand,.bf-brand-inner{color:#fff}
+.p-footer-brand .p-dot,.bf-brand-dot{background:var(--nb-acid)}
+.p-footer-guides a{color:#BDBDB6;border-bottom-color:rgba(184,255,87,.35)}
+.p-footer-guides a:hover{color:#fff;border-bottom-color:var(--nb-acid)}
+.p-footer-guides-label{color:#8C8C86}
+.p-footer-bottom{color:#8C8C86;border-top-color:rgba(255,255,255,.14)}
+.p-footer-links a,.p-footer-policy a{color:#BDBDB6}
+
+/* Acid accents that sat on dark backgrounds need help on paper */
+.b-eyebrow{color:var(--nb-ink)}
+.b-hero h1 .acid,.acid{-webkit-text-stroke:1.5px var(--nb-ink);paint-order:stroke fill}
+.b-feature .b-mc,.b-feature article,.b-feature a{border-color:var(--nb-ink)}
+
+/* Focus ring readable on paper */
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,
+textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid var(--nb-ink);
+}
