@@ -563,6 +563,7 @@ h1.hero-headline{
 .cod-trust{display:flex;gap:10px;align-items:center;margin:16px 0 0;background:none;border:none;padding:0}
 .cod-trust .ct-icon{width:20px;height:20px;stroke:var(--nb-ink);fill:none;stroke-width:2;flex:none}
 .cod-trust .ct-main{font-family:var(--nb-body);font-size:13.5px;color:var(--nb-ink);margin:0}
+.cod-trust .ct-main span,#codTrustAmt{color:var(--nb-ink);font-weight:700}
 .pc-guarantee{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;background:none;border:none;padding:0}
 .pc-guarantee .pcg-icon{width:20px;height:20px;stroke:var(--nb-ink);fill:none;stroke-width:2;flex:none}
 .pcg-main{font-family:var(--nb-body);font-size:13.5px;font-weight:700;color:var(--nb-ink);margin:0}
@@ -606,7 +607,8 @@ h1.hero-headline{
   font-family:var(--nb-body);font-size:14px;text-decoration:none;
 }
 .wa-buy-strip .wa-icon{width:20px;height:20px;fill:var(--nb-ink);flex:none}
-.wa-buy-strip .wa-text b{font-weight:700}
+.wa-buy-strip .wa-text{color:var(--nb-ink)}
+.wa-buy-strip .wa-text b{font-weight:700;color:var(--nb-ink);text-decoration:underline;text-underline-offset:3px}
 
 /* ── FAQ ───────────────────────────────────────────────────────── */
 .faq{background:var(--nb-paper);color:var(--nb-ink);padding:56px 20px 70px;max-width:none;margin:0}
@@ -724,7 +726,207 @@ h1.hero-headline{
 /* Anchored sections clear the fixed nav */
 #buy,#reviews,#faq,#goods,#vs-deodorant,#main{scroll-margin-top:calc(64px + env(safe-area-inset-top,0px))}
 
+/* ── Viewport-fit hardening ────────────────────────────────────────
+   The closed cart drawer sits off-canvas via translateX(100%); on
+   mobile that widened the document and let the page pan sideways.
+   Hide it while closed, and clip any residual horizontal overflow. */
+html{overflow-x:clip}
+.cart-drawer{
+  visibility:hidden;
+  transition:transform .3s cubic-bezier(.22,1,.36,1),visibility 0s linear .3s;
+}
+.cart-drawer.open{visibility:visible;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+
+/* ═══════════ V2 — PDP re-skin, white drawer menu, footer wordmark ═══════════ */
+
+/* ── Mobile menu → white drawer (slides in from the left) ──────── */
+.mobile-menu{
+  background:var(--nb-paper);
+  transform:translateX(-100%);
+}
+.mobile-menu.active{transform:translateX(0)}
+.mobile-menu::before{content:none}
+.menu-close-line{background:var(--nb-ink)}
+.menu-wordmark{display:none}
+.menu-tagline{color:var(--nb-muted)}
+.menu-items{border-color:rgba(10,10,10,.12)}
+.mobile-menu .menu-item{
+  color:var(--nb-ink);
+  border-color:rgba(10,10,10,.12);
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+}
+.mobile-menu .menu-item::before{color:var(--nb-muted)}
+.mobile-menu .mi-arrow{color:var(--nb-ink)}
+.menu-utility-label{color:var(--nb-muted)}
+.menu-buy-cta{
+  background:var(--nb-acid);color:var(--nb-ink);
+  border:var(--nb-bw) solid var(--nb-ink);border-radius:999px;
+  font-family:var(--nb-head);font-weight:900;letter-spacing:.08em;
+  box-shadow:var(--nb-shadow-sm);
+}
+.menu-buy-cta:active{transform:translate(4px,4px);box-shadow:0 0 0 #000}
+
+/* ── Footer: neo newsletter pills + giant wordmark ─────────────── */
+.sf-newsletter{gap:10px}
+.sf-newsletter input{
+  background:#fff;color:var(--nb-ink);
+  border:2.5px solid var(--nb-ink);border-radius:999px;padding:13px 18px;
+  font-family:var(--nb-body);
+}
+.sf-newsletter input::placeholder{color:var(--nb-muted)}
+.sf-newsletter button{
+  border-radius:999px;padding:13px 26px;
+  font-size:15px;letter-spacing:.1em;
+  box-shadow:3px 3px 0 rgba(184,255,87,.3);
+}
+.nb-footer-word{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:clamp(72px,27vw,380px);line-height:.82;letter-spacing:-.01em;
+  color:var(--nb-acid);text-align:center;
+  padding:40px 0 0;
+  -webkit-user-select:none;user-select:none;pointer-events:none;
+  overflow:hidden;white-space:nowrap;
+}
+/* keep the wordmark clear of the sticky mobile buy bar */
+@media(max-width:768px){
+  .site-footer{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ── Homepage goods cards → PDP links ──────────────────────────── */
+.nb-gcard-link{display:block;text-decoration:none;color:inherit}
+.nb-goods-name a{color:inherit;text-decoration:none}
+@media(hover:hover){.nb-gcard-link:hover .nb-frame{transform:translate(2px,2px);box-shadow:4px 4px 0 #000}}
+.nb-gcard .nb-frame{transition:transform .12s ease,box-shadow .12s ease}
+
+/* ── Acid benefits slab (PDP) ──────────────────────────────────── */
+.nb-benefits--acid{background:var(--nb-acid)}
+.nb-benefits--acid .nb-bicon{background:var(--nb-acid);border-width:3px}
+
+/* ── Black statement/quote slab ────────────────────────────────── */
+.nb-quote{
+  background:var(--nb-black);color:#fff;
+  padding:64px 20px 68px;text-align:center;margin:0;max-width:none;
+}
+.nb-quote .nb-eyebrow{color:var(--nb-acid)}
+.nb-quote h2,.nb-quote p.nb-quote-line{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:clamp(34px,7.4vw,72px);line-height:.95;color:#fff;margin:0 auto;max-width:900px;
+}
+.nb-quote .nb-acid-text{color:var(--nb-acid)}
+
+/* ── PDP header band ───────────────────────────────────────────── */
+body.pdp{background:var(--nb-paper)}
+.pdp-head{background:var(--nb-paper);color:var(--nb-ink)}
+/* main.css's bare `nav{position:fixed}` also catches this breadcrumb
+   <nav> — put it back into normal flow */
+nav.pdp-crumb{
+  position:static;height:auto;width:auto;padding:0;
+  background:none;border:none;display:flex;grid-template-columns:none;
+}
+.pdp-crumb,.pdp-crumb a{color:var(--nb-muted)}
+.pdp-title{color:var(--nb-ink)}
+.pdp-title .green{color:var(--nb-acid);-webkit-text-stroke:2px var(--nb-ink)}
+.pdp-sub{color:var(--nb-muted)}
+.pdp-rating{color:var(--nb-ink)}
+.pdp-rating .hr-stars{color:var(--nb-ink)}
+.trust-chips .t-chip,.trust-chips .t-chip:nth-child(odd){
+  background:#fff;color:var(--nb-ink);border:2px solid var(--nb-ink);
+  font-family:var(--nb-head);font-weight:900;
+}
+
+/* PDP info accordion under the buy box — remap dark-theme vars used
+   by inline styles inside these cards so text stays readable on white */
+.pc-info-accordion{
+  max-width:520px;margin:26px auto 0;
+  display:flex;flex-direction:column;gap:14px;
+}
+.faq-item{--text:var(--nb-ink);--text-secondary:#33332F;--muted:var(--nb-muted);--accent:var(--nb-ink)}
+@media(min-width:900px){.pc-info-accordion{max-width:960px}}
+
+/* COD strip (PDP) */
+.cod-strip{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:#fff;color:var(--nb-ink);
+  border:var(--nb-bw) solid var(--nb-ink);border-radius:999px;
+  box-shadow:var(--nb-shadow-sm);
+  max-width:440px;margin:34px auto 18px;padding:12px 20px;
+  font-family:var(--nb-body);font-size:13.5px;font-weight:700;
+}
+
+/* Science — black slab */
+.how-works{background:var(--nb-black);color:#fff;padding:64px 20px 70px;margin:0;max-width:none}
+.hw-title{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:clamp(34px,8vw,64px);line-height:.95;color:#fff;text-align:center;margin:0 0 26px;
+}
+.how-works .hw-claim{color:var(--nb-acid)}
+.how-works .hw-more{color:#fff}
+
+/* Ritual (how to use) — paper */
+.ritual-section{background:var(--nb-paper);color:var(--nb-ink);padding:56px 20px 64px;margin:0;max-width:none}
+.ritual-title{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:clamp(34px,8vw,64px);line-height:.95;color:var(--nb-ink);text-align:center;margin:0 0 6px;
+}
+.ritual-title .acid{color:var(--nb-acid);-webkit-text-stroke:2px var(--nb-ink)}
+.ritual-sub{text-align:center;color:var(--nb-muted);font-family:var(--nb-body);margin:0 0 26px}
+.ritual-section .section-eyebrow{justify-content:center}
+.ritual-section .section-eyebrow-label{color:var(--nb-muted)}
+.ritual-section .section-eyebrow-line{background:var(--nb-ink)}
+.ritual-grid{max-width:680px;margin:0 auto}
+.ritual-tile{
+  background:#fff;border:2.5px solid var(--nb-ink);border-radius:var(--nb-r-sm);
+  box-shadow:var(--nb-shadow-sm);color:var(--nb-ink);
+}
+.ritual-num{color:var(--nb-muted)}
+.ritual-heading{font-family:var(--nb-head);font-weight:900;text-transform:uppercase;color:var(--nb-ink)}
+.ritual-desc{color:var(--nb-muted)}
+.ritual-meta{
+  font-family:var(--nb-head);font-weight:900;letter-spacing:.08em;
+  background:var(--nb-acid);color:var(--nb-ink);border:2px solid var(--nb-ink);
+  border-radius:999px;padding:4px 10px;
+}
+
+/* Savings calculator — paper */
+.savings{background:var(--nb-paper);color:var(--nb-ink);padding:56px 20px 64px;margin:0;max-width:none}
+.savings .section-tag{color:var(--nb-muted)}
+.sv-title{
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:clamp(30px,7vw,54px);line-height:.95;color:var(--nb-ink);text-align:center;margin:0 0 8px;
+}
+.sv-sub{text-align:center;color:var(--nb-muted);font-family:var(--nb-body);max-width:520px;margin:0 auto 24px}
+.sv-card{
+  background:#fff;border:var(--nb-bw) solid var(--nb-ink);border-radius:var(--nb-r);
+  box-shadow:var(--nb-shadow);color:var(--nb-ink);max-width:520px;margin:0 auto;
+}
+.sv-q{color:var(--nb-ink)}
+.sv-btn{
+  background:var(--nb-acid);color:var(--nb-ink);
+  border:2.5px solid var(--nb-ink);border-radius:50%;
+  box-shadow:3px 3px 0 #000;
+}
+.sv-btn:active{transform:translate(3px,3px);box-shadow:0 0 0 #000}
+.sv-val{color:var(--nb-ink)}
+.sv-val span{color:var(--nb-muted)}
+.sv-out-box{background:var(--nb-paper);border:2px solid var(--nb-ink);border-radius:10px}
+.sv-out-num{font-family:var(--nb-head);font-weight:900;color:var(--nb-ink)}
+.sv-out-lbl{color:var(--nb-muted)}
+.sv-note{color:var(--nb-muted)}
+.sv-cta{
+  display:block;text-align:center;
+  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
+  font-size:17px;letter-spacing:.08em;
+  background:var(--nb-acid);color:var(--nb-ink);
+  border:var(--nb-bw) solid var(--nb-ink);border-radius:999px;
+  padding:15px 20px;text-decoration:none;box-shadow:var(--nb-shadow-sm);
+  transition:transform .12s ease,box-shadow .12s ease;
+}
+.sv-cta:active{transform:translate(4px,4px);box-shadow:0 0 0 #000}
+
+/* Founder section (PDP standalone) — black, merges with .final above */
+.founder{background:var(--nb-black);padding:0 20px 74px;margin:0;max-width:none}
+
 /* ── Motion safety ─────────────────────────────────────────────── */
 @media(prefers-reduced-motion:reduce){
-  .nb-btn,.nb-circ,.nb-sticker,.nb-gcard,.pc-pack-card,.product-card .pc-cta,.pc-cod-cta,.final-cta{transition:none}
+  .nb-btn,.nb-circ,.nb-sticker,.nb-gcard,.pc-pack-card,.product-card .pc-cta,.pc-cod-cta,.final-cta,.mobile-menu{transition:none}
 }
