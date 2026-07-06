@@ -4,6 +4,14 @@
    and re-skins them to the neo-brutalist paper theme by flipping the
    shared :root aliases, then restyling the shared chrome (p-* nav /
    footer, blog-* nav / footer, cards, CTAs).
+
+   CORE COLOR RULE (site-wide): acid green #B8FF57 is a
+   DARK-BACKGROUND-ONLY color. On paper it may appear ONLY as:
+   - a solid chip/highlight background WITH #080808 text on top
+   - borders, underlines, dots/bars, marker-highlights behind ink text
+   It must NEVER be a text color on paper. The "green-on-paper
+   remediation" section at the bottom enforces this for every inline
+   style block that still declares green text.
    ═══════════════════════════════════════════════════════════════ */
 :root{
   /* palette flip: dark → paper */
@@ -35,14 +43,28 @@
 body{background:var(--bg);color:var(--text);font-family:'DM Sans','Inter Tight',sans-serif}
 ::selection{background:var(--nb-acid);color:var(--nb-ink)}
 
-/* ── Top bar (p-nav / blog-nav): stays black like the main site ── */
-.p-nav,.blog-nav{
+/* Anchor jumps + sticky nav: keep targets clear of the fixed black bar */
+html{scroll-padding-top:88px}
+
+/* ── Top bar (p-nav / blog-nav / b-nav): solid black like the main site ── */
+.p-nav,.blog-nav,.b-nav{
   background:var(--nb-black);
   border-bottom:3px solid var(--nb-ink);
 }
 .p-nav a,.blog-nav a{color:#fff}
 .blog-nav{background:var(--nb-black)!important;backdrop-filter:none}
 .blog-nav .logo{color:#fff!important}
+/* Blog navs use the same wordmark image as the homepage nav */
+.blog-nav .logo img,.b-logo img,.nav .logo img{display:block;width:auto;height:24px}
+.blog-nav .logo::after{content:none} /* green dot is baked into the logo image */
+.blog-nav .logo{padding-right:0}
+.b-nav{background:var(--nb-black)!important}
+.b-nav .b-logo{color:#fff!important}
+.b-nav .b-back{color:#BDBDB6}
+.b-nav .b-back:hover{color:#fff}
+.b-menu-toggle{border-color:#3A3A36}
+.b-menu-toggle span{background:#fff}
+.b-menu-toggle:hover{border-color:var(--nb-acid)}
 .buy-pill{
   font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;
   letter-spacing:.08em;
@@ -98,12 +120,18 @@ main button[type="submit"]:active,.c-btn:active,.agg-cta:active,.to-btn:active{
 }
 
 /* ── Cards (blog index, contact, reviews) ──────────────────────── */
-.b-card,.c-card,.rv-card,.b-topic,.b-mc{
+.b-card,.c-card,.rv-card,.b-topic,.b-mc,.post-pc{
   background:#fff;
   border:2.5px solid var(--nb-ink);border-radius:12px;
   box-shadow:4px 4px 0 var(--nb-ink);
 }
-.b-card:hover,.b-topic:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--nb-ink)}
+/* Neo-brutalist hover: card lifts, hard ink shadow grows, border flips acid */
+.b-card:hover,.b-topic:hover,.b-mc:hover,.post-pc:hover{
+  transform:translate(-2px,-2px);
+  box-shadow:6px 6px 0 var(--nb-ink);
+  border-color:var(--nb-acid);
+  background:#fff;
+}
 .b-thumb-cat,.b-card-cat,.b-section-tag,.article-category{
   color:var(--nb-ink);
 }
@@ -125,7 +153,13 @@ main button[type="submit"]:active,.c-btn:active,.agg-cta:active,.to-btn:active{
 
 /* Acid accents that sat on dark backgrounds need help on paper */
 .b-eyebrow{color:var(--nb-ink)}
-.b-hero h1 .acid,.acid{-webkit-text-stroke:1.5px var(--nb-ink);paint-order:stroke fill}
+/* Highlighted word in headings: acid marker behind ink text (no stroke hacks) */
+.b-hero h1 .acid,.acid{
+  -webkit-text-stroke:0;paint-order:normal;
+  background:var(--nb-acid);color:var(--nb-ink);
+  padding:0 .12em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
 .b-feature .b-mc,.b-feature article,.b-feature a{border-color:var(--nb-ink)}
 
 /* Focus ring readable on paper */
@@ -133,3 +167,218 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,
 textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{
   outline:2px solid var(--nb-ink);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   GREEN-ON-PAPER REMEDIATION + shared utilities
+   Every selector below still declares acid green TEXT in some page's
+   inline <style>. On paper that fails contrast (~1.4:1), so each is
+   re-inked here. Green survives only as chip backgrounds, borders,
+   underlines, dots and bars. Define once, reuse everywhere — do not
+   add new one-off green text colors in page HTML.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* — Utilities — */
+.highlight-green{
+  background:var(--nb-acid);color:var(--nb-ink);
+  padding:.02em .18em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.underline-green{
+  color:var(--nb-ink);
+  text-decoration:underline;text-decoration-thickness:3px;
+  text-decoration-color:var(--nb-acid);text-underline-offset:3px;
+}
+.underline-green:hover{background:var(--nb-acid);color:var(--nb-ink);text-decoration-color:var(--nb-ink)}
+.border-green-left{border-left:4px solid var(--nb-acid);padding-left:16px}
+
+/* — Post header: dek/subtitle become ink with an acid blockquote bar — */
+.article-dek,.subtitle{
+  color:var(--nb-ink);
+  border-left:4px solid var(--nb-acid);
+  padding:4px 0 4px 18px;
+  border-top:none;
+}
+
+/* — Labels, eyebrows, prices, stats: ink instead of acid text — */
+.article-category,.callout-label,.callout th,
+.end-cta .cta-label,.end-cta .cta-label,
+.post-popular-label,.b-marquee-label,
+.b-posts-head span,.b-topic-count,.b-buy-label,
+.cat-card.winner .cat-label,
+.step-num,.kit-num,.tl-time,.rank-price,
+.city .ct,.zone .zt,.hour-block .hour-tag,.moment-block .mt,
+.scenario-card h4,
+.intro strong,.pro strong,.win,.compare-table .yes,
+.comparison-header .with,.comparison-row .with,.verdict-table th,
+.quiz-result.green h4,
+.nf-label,.c-card .c-k,.c-done h2,.agg-num{
+  color:var(--nb-ink);
+}
+/* label dots keep the acid, lose the glow (blurs on paper) */
+.post-popular-label::before,.b-marquee-label::before{box-shadow:none}
+
+/* — Box headings ("The short answer" etc.): ink + thick acid underline — */
+.tldr h3,.timer-box h3,.cta-card h3,.test-box h3,.quiz h3,
+.checklist-interactive h3,.nuclear-fix h3,.rule h3{
+  color:var(--nb-ink);
+  text-decoration:underline;text-decoration-thickness:4px;
+  text-decoration-color:var(--nb-acid);text-underline-offset:6px;
+}
+
+/* — Content links: ink + thick acid underline; hover = acid marker — */
+article a{color:var(--nb-ink)}
+article p a,article li a,.related a,.inline-cta,
+.t-track-box a,.t-help a,.c-note a{
+  color:var(--nb-ink)!important;
+  text-decoration:underline!important;text-decoration-thickness:3px;
+  text-decoration-color:var(--nb-acid);text-underline-offset:3px;
+  border-bottom:none!important;
+}
+article p a:hover,article li a:hover,.related a:hover,.inline-cta:hover,
+.t-track-box a:hover,.t-help a:hover,.c-note a:hover{
+  background:var(--nb-acid);color:var(--nb-ink)!important;
+  text-decoration-color:var(--nb-ink);
+}
+/* button-shaped links opt back out of the underline treatment */
+article a.buy-btn,article a.btn,.cta-card a,article a.post-pc,article a.b-mc{
+  text-decoration:none!important;background-clip:padding-box;
+}
+.cta-card a{background:var(--nb-acid);color:var(--nb-ink);border:2px solid var(--nb-ink);box-shadow:3px 3px 0 var(--nb-ink)}
+.end-cta .buy-btn{border:2px solid var(--nb-ink);box-shadow:3px 3px 0 var(--nb-ink);color:var(--nb-ink)}
+.timer-btn{color:var(--nb-ink);border:2px solid var(--nb-ink);box-shadow:3px 3px 0 var(--nb-ink)}
+
+/* — "READ →" / next-read arrows: ink text, acid underline — */
+.b-card-arrow{
+  color:var(--nb-ink);
+  border-bottom:3px solid var(--nb-acid);
+  padding-bottom:2px;align-self:flex-start;
+}
+.b-mc-meta{color:var(--nb-ink)}
+.next-read a:hover{color:var(--nb-ink)}
+.next-read .next-arrow,.next-arrow{color:var(--nb-ink)}
+.b-drawer-guide-link:hover .b-drawer-guide-arrow,
+.b-drawer-guide-link:active .b-drawer-guide-arrow{color:var(--nb-ink)}
+.nf-popular a:hover{color:var(--nb-ink)}
+.nf-popular a .arrow{color:var(--nb-ink)}
+.nf-btn.ghost:hover{color:var(--nb-ink);border-color:var(--nb-ink)}
+.related-link .arrow{color:var(--nb-ink)}
+.related-link:hover{border-color:var(--nb-acid)}
+.b-drawer-close:hover{color:var(--nb-ink);border-color:var(--nb-ink)}
+.b-drawer-link:hover{color:var(--nb-ink)}
+.b-drawer-link--cta{
+  color:var(--nb-ink);font-weight:700;
+  text-decoration:underline;text-decoration-thickness:3px;
+  text-decoration-color:var(--nb-acid);text-underline-offset:3px;
+}
+.b-drawer-nl-success{background:var(--nb-acid);color:var(--nb-ink);padding:8px 12px;border-radius:6px;font-weight:700}
+.b-loading .b-section-head .b-section-tag::after{color:var(--muted)}
+
+/* — Chips/pills: acid background always carries INK text, never white — */
+.b-cta,.b-mc-cat,.post-pc-cat,.b-buy-btn,.b-drawer-nl-btn,
+.b-jump-pill:hover,.b-drawer-cat.active,.b-page-btn:hover:not(:disabled),
+.filter-bar button.active,.quiz-opts button.picked,
+.check-item.done .box,.quiz-option input:checked + span,
+.rank-card.winner .rank-badge,.end-cta .buy-btn{
+  color:var(--nb-ink);
+}
+.step .time{background:var(--nb-acid);color:var(--nb-ink);font-weight:700}
+.badge.safe{background:var(--nb-acid);color:var(--nb-ink)}
+.rank-badge{background:var(--nb-ink);color:var(--nb-acid)}
+.rank-card.winner .rank-badge{background:var(--nb-acid);color:var(--nb-ink);border:2px solid var(--nb-ink)}
+.rc-badge{background:var(--nb-acid);color:var(--nb-ink)}
+.filter-bar button.active{background:var(--nb-acid);border:2px solid var(--nb-ink)}
+.agg-cta:hover{background:var(--nb-acid)}
+/* current price: acid chip behind ink numerals */
+.end-cta .current-price{
+  color:var(--nb-ink);background:var(--nb-acid);
+  padding:2px 12px;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+
+/* — Filter / jump pills: ink border + ink text; active = acid chip — */
+.b-jump-pill{color:var(--nb-ink);border:2px solid var(--nb-ink);background:transparent}
+.b-jump-pill:hover{background:var(--nb-acid);color:var(--nb-ink);border-color:var(--nb-ink)}
+.b-drawer-cat{color:var(--nb-ink);border:2px solid var(--nb-ink)}
+.b-drawer-cat:hover{border-color:var(--nb-ink);background:var(--nb-acid);color:var(--nb-ink)}
+.b-drawer-cat.active{background:var(--nb-acid);border-color:var(--nb-ink)}
+.b-page-btn{color:var(--nb-ink);border:2px solid var(--nb-ink)}
+.b-page-btn:hover:not(:disabled){background:var(--nb-acid)}
+
+/* — Card thumbnails: matte black placeholder slabs (never dead cream) — */
+.b-card-thumb,.b-mc-thumb,.post-pc-thumb{background:var(--nb-black)}
+.b-card-thumb{border-bottom:2.5px solid var(--nb-ink)}
+.b-thumb-cat{color:#fff;border-bottom-color:var(--nb-acid)}
+.b-mc-headline,.post-pc-title,.b-buy-heading{color:#fff}
+.b-buy-price{color:#BFC3C8}
+.b-buy-label{color:var(--nb-acid)}
+.b-mc-cat,.post-pc-cat{background:var(--nb-acid);color:var(--nb-ink)}
+
+/* — Card thumbnails with a real hero image — */
+.b-card-thumb--img{padding:0}
+.b-card-thumb--img img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;
+}
+.b-card-thumb--img::before{display:none}
+.b-card-thumb--img .b-thumb-cat{
+  position:absolute;left:12px;bottom:12px;z-index:2;
+  background:var(--nb-acid);color:var(--nb-ink);
+  border:2px solid var(--nb-ink);
+  padding:4px 10px;font-size:12px;letter-spacing:.18em;
+}
+
+/* — Callouts: paper card, hard ink frame, acid only as the left marker — */
+.callout,.tldr,.timer-box,.cta-card,.quick-answer{
+  background:var(--bg-surface);
+  border:2px solid var(--nb-ink);
+  border-left:4px solid var(--nb-acid);
+  border-radius:10px;
+  box-shadow:4px 4px 0 var(--nb-ink);
+}
+.cat-card,.rank-card,.step{border:2px solid var(--nb-ink);border-radius:10px}
+.cat-card.winner,.rank-card.winner{border-color:var(--nb-ink);border-left:4px solid var(--nb-acid)}
+
+/* verdict chips need dark-enough text on paper */
+.cat-card .v-skip{background:rgba(179,38,30,.10);color:#8F2020}
+.cat-card .v-situational{background:rgba(150,120,20,.12);color:#6E5A0E}
+
+/* — Reviews: stars & aggregates go ink on paper — */
+.agg-stars,.rc-stars{color:var(--nb-ink)}
+.rc-stars .dim{color:#C9C9C0}
+
+/* — Contact: keep hover on paper (was flipping the card dark) — */
+.c-card:hover{background:var(--card-hover)}
+
+/* — Misc pieces that inherited green text — */
+.checklist-interactive h3{color:var(--nb-ink)}
+.nuclear-fix li::marker{color:var(--nb-ink)}
+.pro li::before{color:var(--nb-ink)}
+.cta-card .price-live{color:var(--nb-ink)}
+.kicker{color:var(--nb-ink)}
+.timeline-title{color:var(--nb-ink)}
+.timeline-step .time{color:var(--nb-ink)}
+.step-card .num{color:var(--nb-ink);border-color:var(--nb-ink);background:var(--nb-acid)}
+
+/* — Legacy `.nav` header (3 older posts): same black slab as blog-nav — */
+.nav{background:var(--nb-black);backdrop-filter:none;border-bottom:3px solid var(--nb-ink)}
+.nav .logo{color:#fff;border-bottom:none;text-decoration:none}
+.nav .logo span{color:var(--nb-acid)}
+.nav-cta{color:var(--nb-ink);border:2px solid var(--nb-ink);box-shadow:3px 3px 0 var(--nb-ink)}
+.reason-card .badge{background:var(--nb-ink);color:var(--nb-acid);border-color:var(--nb-ink)}
+.download-card{background:var(--bg-surface);border:2px solid var(--nb-ink);border-radius:10px;box-shadow:4px 4px 0 var(--nb-ink)}
+.download-card h3{
+  color:var(--nb-ink);
+  text-decoration:underline;text-decoration-thickness:4px;
+  text-decoration-color:var(--nb-acid);text-underline-offset:6px;
+}
+
+/* — Back-to-top: ink slab with acid arrow (acid-on-dark is legal) — */
+.to-top{
+  background:var(--nb-ink);color:var(--nb-acid);
+  border:2px solid var(--nb-ink);
+  box-shadow:3px 3px 0 rgba(8,8,8,.25);
+}
+.to-top:hover{background:var(--nb-acid);color:var(--nb-ink)}
+
+/* — Reading rhythm: keep body copy inside a comfortable measure — */
+.article-wrap p,.container p{max-width:68ch}
