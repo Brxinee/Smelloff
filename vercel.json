@@ -93,6 +93,15 @@
       ]
     },
     {
+      "source": "/(terms|privacy|refund|returns|shipping)/",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
+        }
+      ]
+    },
+    {
       "source": "/sitemap.xml",
       "headers": [
         {
