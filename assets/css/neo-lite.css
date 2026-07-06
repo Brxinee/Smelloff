@@ -54,6 +54,10 @@ html{scroll-padding-top:88px}
 .p-nav a,.blog-nav a{color:#fff}
 .blog-nav{background:var(--nb-black)!important;backdrop-filter:none}
 .blog-nav .logo{color:#fff!important}
+/* Blog navs use the same wordmark image as the homepage nav */
+.blog-nav .logo img,.b-logo img,.nav .logo img{display:block;width:auto;height:24px}
+.blog-nav .logo::after{content:none} /* green dot is baked into the logo image */
+.blog-nav .logo{padding-right:0}
 .b-nav{background:var(--nb-black)!important}
 .b-nav .b-logo{color:#fff!important}
 .b-nav .b-back{color:#BDBDB6}
@@ -357,7 +361,7 @@ article a.buy-btn,article a.btn,.cta-card a,article a.post-pc,article a.b-mc{
 
 /* — Legacy `.nav` header (3 older posts): same black slab as blog-nav — */
 .nav{background:var(--nb-black);backdrop-filter:none;border-bottom:3px solid var(--nb-ink)}
-.nav .logo{color:#fff}
+.nav .logo{color:#fff;border-bottom:none;text-decoration:none}
 .nav .logo span{color:var(--nb-acid)}
 .nav-cta{color:var(--nb-ink);border:2px solid var(--nb-ink);box-shadow:3px 3px 0 var(--nb-ink)}
 .reason-card .badge{background:var(--nb-ink);color:var(--nb-acid);border-color:var(--nb-ink)}

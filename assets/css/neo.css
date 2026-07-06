@@ -130,8 +130,11 @@ body{background:var(--nb-paper);font-family:var(--nb-body)}
 body > nav{
   background:var(--nb-black);
   border-bottom:var(--nb-bw) solid var(--nb-ink);
-  grid-template-columns:auto 1fr auto;
+  /* equal 1fr side columns so the centre (logo) column is truly centred
+     even though the right action group is wider than the hamburger */
+  grid-template-columns:1fr auto 1fr;
 }
+body > nav .nav-left{justify-self:start}
 body > nav .logo{color:var(--nb-white);display:flex;align-items:center;padding-right:0}
 body > nav .logo::after{content:none} /* green dot is baked into the logo image */
 body > nav .logo img{display:block;width:auto;height:24px}
@@ -457,6 +460,18 @@ h1.hero-headline{
 .nb-table tbody tr:last-child th{border-bottom-left-radius:var(--nb-r-sm)}
 .nb-table tbody tr:last-child td:last-child{border-bottom-right-radius:var(--nb-r-sm)}
 @media(min-width:820px){.nb-table-scroll{padding:10px 40px 18px}}
+/* Below 560px the 3-column table compresses to fit the viewport outright —
+   no sideways scrolling, nothing cut off */
+@media(max-width:560px){
+  .nb-table{min-width:0}
+  .nb-table th,.nb-table td{padding:12px 8px;border-left-width:2px;border-top-width:2px}
+  .nb-table tr th:last-child,.nb-table tr td:last-child{border-right-width:2px}
+  .nb-table tr:last-child th,.nb-table tr:last-child td{border-bottom-width:2px}
+  .nb-table thead th{font-size:14px;padding:14px 6px;letter-spacing:.02em;line-height:1.1}
+  .nb-table tbody th{min-width:0;font-size:13px;line-height:1.3;padding-left:10px}
+  .nb-table td svg{width:24px;height:24px}
+  .nb-compare .nb-scroll-hint{display:none}
+}
 
 /* ── PRODUCT OF THE MONTH (#buy) ───────────────────────────────── */
 .only-fix{background:var(--nb-paper);padding:60px 20px 70px;max-width:none;margin:0}
@@ -757,11 +772,6 @@ h1.hero-headline{
   .nb-f-nl input{flex:1}
   .nb-f-nl button{width:auto;padding:14px 34px}
 }
-/* keep the sign-off clear of the sticky buy bar */
-@media(max-width:768px){
-  .site-footer.nb-footer{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
-}
-
 /* ── Sticky mobile bar ─────────────────────────────────────────── */
 .mobile-bar{
   background:var(--nb-paper);
@@ -1172,4 +1182,3 @@ nav.pdp-crumb{
   z-index:60;
 }
 .to-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
-@media(max-width:720px){:root{--toTopBottom:88px}}
