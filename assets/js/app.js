@@ -875,7 +875,7 @@ const CFG = window.SMELLOFF_CONFIG;
     if (!input) return;
     const email = input.value.trim();
     if (!email || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) {
-      input.style.borderColor = '#a00';
+      input.style.borderColor = '#ff6b6b';
       return;
     }
     input.style.borderColor = '';
