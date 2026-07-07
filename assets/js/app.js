@@ -1042,7 +1042,7 @@ const CFG = window.SMELLOFF_CONFIG;
       }
 
       visible.forEach(function(rv){
-        var card = document.createElement('article');
+        var card = document.createElement('div');
         card.className = 'rv-card';
         card.setAttribute('role','listitem');
         var nameLine = escapeHtml(rv.n) + (rv.c ? ' · ' + escapeHtml(rv.c) : '');
