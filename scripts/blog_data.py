@@ -414,7 +414,7 @@ POSTS.append({
                 "worstRating": "1"
             },
             "name": "ODORSTRIKE Review: 30 Days, 4 Shirts, Real Results",
-            "author": {"@type": "Person", "name": "Brainee"},
+            "author": {"@type": "Person", "name": "Jogdhande Nikhil Patil"},
             "publisher": {
                 "@type": "Organization",
                 "name": "Smelloff",
@@ -427,7 +427,7 @@ POSTS.append({
     "body_html": """
   <p class="drop-cap">If I'm reviewing my own product, I have to be the harshest reviewer in the room. Because if I'm not, the buyer will be — and they'll be right. So this is the test I ran with that mindset: 30 days, 4 different shirts, one bottle, Hyderabad in April, and a written verdict at the end with a number.</p>
 
-  <p>This review is for the buyer who's already heard the marketing version and now wants the unfiltered one. I'm Brainee, the solo founder. I'll show you what worked, what didn't, and what I almost didn't include because it makes my own product look slightly worse than I'd like.</p>
+  <p>This review is for the buyer who's already heard the marketing version and now wants the unfiltered one. I'm Jogdhande Nikhil Patil, the solo founder. I'll show you what worked, what didn't, and what I almost didn't include because it makes my own product look slightly worse than I'd like.</p>
 
   <h2>The 30-Day Test Setup</h2>
 
@@ -672,7 +672,7 @@ POSTS.append({
 
   <h2>The Founder Note</h2>
 
-  <p>I'm Brainee. Smelloff is solo-run from Sanathnagar, Hyderabad. I formulate, write, ship, and reply to support emails personally — usually within a few hours. If you have a question that this page doesn't answer, message <a href="https://wa.me/919392974031" class="inline-cta">+91 93929 74031</a> on WhatsApp. The reply will be from me.</p>
+  <p>I'm Jogdhande Nikhil Patil. Smelloff is solo-run from Sanathnagar, Hyderabad. I formulate, write, ship, and reply to support emails personally — usually within a few hours. If you have a question that this page doesn't answer, message <a href="https://wa.me/919392974031" class="inline-cta">+91 93929 74031</a> on WhatsApp. The reply will be from me.</p>
 
   <p>If you want the long-form story behind ODORSTRIKE before you buy, <a href="/blog/why-i-built-odorstrike" class="inline-cta">why I built ODORSTRIKE</a> covers it. If you want the unfiltered review, <a href="/blog/odorstrike-review-30-day-india-test" class="inline-cta">the 30-day field test</a> is the most useful next read.</p>
 

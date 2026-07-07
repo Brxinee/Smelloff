@@ -51,7 +51,7 @@ Find every blog post HTML file. In each one, locate the `<script type="applicati
 ```json
 "author": {
   "@type": "Person",
-  "name": "Brainee",
+  "name": "Jogdhande Nikhil Patil",
   "url": "https://www.smelloff.in/blog/why-i-built-odorstrike",
   "jobTitle": "Founder",
   "worksFor": {

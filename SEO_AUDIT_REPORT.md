@@ -190,7 +190,7 @@ Key gaps identified and addressed:
 | llms.txt explicitly permits LLM use | ✅ |
 | robots.txt explicitly allows all major AI crawlers | ✅ Fixed |
 | Product schema description: dense factual paragraph | ✅ Fixed |
-| Founder byline in footer / Organization schema | ✅ (Organization schema has founder: Brainee) |
+| Founder byline in footer / Organization schema | ✅ (Organization schema has founder: Jogdhande Nikhil Patil) |
 | NAP (Name/Address/Phone) consistent | ✅ (footer + Organization schema + llms.txt all match) |
 | Transparent ingredient list | ✅ (in llms.txt; partially on homepage via HowTo schema) |
 

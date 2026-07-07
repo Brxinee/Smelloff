@@ -107,7 +107,7 @@ Recommendation: Extract critical inline JS into deferred external scripts to red
 
 ### ✅ E-E-A-T Signals — Above Average for a New Brand
 
-- Founder name ("Brainee") present in Organization schema and blog
+- Founder name ("Jogdhande Nikhil Patil") present in Organization schema and blog
 - Detailed ingredient science with percentages (Zinc PCA 1.5%, IPA 20%, etc.)
 - Specific product claims with mechanism explained (molecular binding, not masking)
 - FAQPage with 14 questions covering safety, usage, comparisons
@@ -281,7 +281,7 @@ These don't affect SEO rankings but represent operational security exposure.
 | # | Issue | Fix |
 |---|-------|-----|
 | 3 | Blog posts have no images | Add 1 hero image per post, with descriptive alt text + OG image meta |
-| 4 | Article schema missing author | Add `"author": {"@type": "Person", "name": "Brainee", "url": "https://www.smelloff.in/blog/why-i-built-odorstrike"}` to all Article schemas |
+| 4 | Article schema missing author | Add `"author": {"@type": "Person", "name": "Jogdhande Nikhil Patil", "url": "https://www.smelloff.in/blog/why-i-built-odorstrike"}` to all Article schemas |
 | 5 | Only 3 product reviews | Add review collection flow post-purchase (WhatsApp follow-up, email) |
 | 6 | Zero backlinks | Start outreach: 3 grooming blogs + 1 PR pitch + 5 Reddit/Quora answers/week |
 | 7 | Blog has no contextual internal links | Add 2–3 contextual links per blog post to related posts and `/#buy` |
