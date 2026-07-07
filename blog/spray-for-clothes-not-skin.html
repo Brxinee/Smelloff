@@ -239,7 +239,7 @@ p strong { color:var(--text); }
 const timer = document.getElementById('timer');
 const btn = document.getElementById('startBtn');
 let interval;
-btn.addEventListener('click', () => {
+if (btn && timer) btn.addEventListener('click', () => {
   if (btn.textContent.includes('Start')) {
     let t = 60;
     btn.textContent = 'Running...';
