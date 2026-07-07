@@ -116,7 +116,7 @@ def render_article_jsonld(cfg):
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": cfg["headline"],
-        "author": {"@type": "Person", "name": "Brainee"},
+        "author": {"@type": "Person", "name": "Jogdhande Nikhil Patil"},
         "publisher": {
             "@type": "Organization",
             "name": "Smelloff",
@@ -162,7 +162,7 @@ def build_post(cfg):
 <title>{title_tag}</title>
 <meta name="description" content="{desc}">
 <meta name="keywords" content="{keywords}">
-<meta name="author" content="Brainee">
+<meta name="author" content="Jogdhande Nikhil Patil">
 <link rel="canonical" href="{url}">
 <meta name="robots" content="index, follow, max-image-preview:large">
 
@@ -172,7 +172,7 @@ def build_post(cfg):
 <meta property="og:description" content="{desc}">
 <meta property="og:site_name" content="Smelloff">
 <meta property="og:image" content="{OG_IMAGE}">
-<meta property="article:author" content="Brainee">
+<meta property="article:author" content="Jogdhande Nikhil Patil">
 <meta property="article:published_time" content="{DATE}">
 <meta property="article:section" content="{section}">
 

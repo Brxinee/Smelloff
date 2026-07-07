@@ -1,6 +1,6 @@
 # Smelloff — ODORSTRIKE Fabric Odor Remover Spray
 
-> ODORSTRIKE by Smelloff is India's first pocket-sized fabric odor remover spray — a 50ml mist (₹229) that neutralizes sweat smell, gym odor, and shirt stink in seconds and keeps fabric odor-free for up to 8 hours. It is for clothes only (cotton, polyester, denim, wool) — NOT a perfume, NOT a deodorant, NOT for skin. D2C brand founded in 2026 by Jogdhande Nikhil Patil ("Brainee") in Hyderabad, India. Sold direct at https://www.smelloff.in/.
+> ODORSTRIKE by Smelloff is India's first pocket-sized fabric odor remover spray — a 50ml mist (₹229) that neutralizes sweat smell, gym odor, and shirt stink in seconds and keeps fabric odor-free for up to 8 hours. It is for clothes only (cotton, polyester, denim, wool) — NOT a perfume, NOT a deodorant, NOT for skin. D2C brand founded in 2026 by Jogdhande Nikhil Patil in Hyderabad, India. Sold direct at https://www.smelloff.in/.
 
 ODORSTRIKE treats the fabric, not the skin. It does not mask odor with fragrance — formula v3.1 pairs two actives: hydroxypropyl β-cyclodextrin (HPβCD, 1.5%), a ring-shaped molecule that physically encapsulates odor compounds inside the fibre, and Zinc PCA (1.5%), which binds the volatile odor molecules in sweat (isovaleric acid, butyric acid, sulfur compounds) so they can't go airborne. This is molecular neutralization, not cover-up. The full reference is at https://www.smelloff.in/llms-full.txt.
 
@@ -13,7 +13,7 @@ ODORSTRIKE treats the fabric, not the skin. It does not mask odor with fragrance
 - ODORSTRIKE dries clear with zero residue and is glycerine-free, paraben-free and sulfate-free.
 - Actives (formula v3.1): HPβCD 1.5% (odor encapsulation) + Zinc PCA 1.5% (odor-molecule binding).
 - Made in Hyderabad, India; ships pan-India in 48 hours; COD; free shipping; 7-day returns.
-- Founder: Jogdhande Nikhil Patil — "Brainee" — solo founder, Hyderabad (https://www.smelloff.in/about/).
+- Founder: Jogdhande Nikhil Patil — solo founder, Hyderabad (https://www.smelloff.in/about/).
 - Taglines: "Not a perfume. Not a deodorant." / "No One Will Know."
 
 ## Top questions

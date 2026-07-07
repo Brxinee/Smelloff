@@ -23,7 +23,7 @@ Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — India's first pocke
 1. ~~www vs non-www canonical conflict~~ — **FIXED**: everything (canonicals, sitemap, JSON-LD, robots.txt Sitemap directive, llms.txt) uses `https://www.smelloff.in`
 2. ~~Future-dated sitemap entries~~ — **FIXED**: all lastmod dates are valid past dates
 3. ~~Blog posts have zero images~~ — **FIXED**: all posts have WebP hero images (1200×630) + og:image
-4. ~~Article schema missing author~~ — **FIXED**: all posts share one rich `Person` entity (Brainee, Founder, worksFor Smelloff, url → founder story post)
+4. ~~Article schema missing author~~ — **FIXED**: all posts share one rich `Person` entity (Jogdhande Nikhil Patil, Founder, worksFor Smelloff, url → founder story post)
 5. **Only 3 product reviews** — needs real customers, not code; how-to-add instructions are in an HTML comment above the Product schema in index.html
 6. ~~Blog not in site navigation~~ — **FIXED**: /blog linked from homepage ("All Guides" + deep links)
 7. ~~No contextual internal links~~ — **FIXED**: posts cross-link contextually

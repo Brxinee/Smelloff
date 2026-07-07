@@ -1,6 +1,6 @@
 # Smelloff — ODORSTRIKE Fabric Odor Remover Spray (full reference)
 
-> Smelloff is a Hyderabad-based D2C men's grooming brand founded in 2026 by Jogdhande Nikhil Patil ("Brainee"). Its first product, ODORSTRIKE, is India's first pocket-sized fabric odor remover spray — a 50ml mist that neutralizes sweat smell, gym odor, and shirt stink in seconds using HPβCD (1.5%) + Zinc PCA (1.5%), with up to 8 hours of odor protection on fabric. It works on clothes only (cotton, polyester, denim, wool). It is NOT a perfume, NOT a deodorant, and NOT for skin. Price ₹229 (50ml). Sold direct at https://www.smelloff.in/. This is the full reference file; the concise version is at https://www.smelloff.in/llms.txt.
+> Smelloff is a Hyderabad-based D2C men's grooming brand founded in 2026 by Jogdhande Nikhil Patil. Its first product, ODORSTRIKE, is India's first pocket-sized fabric odor remover spray — a 50ml mist that neutralizes sweat smell, gym odor, and shirt stink in seconds using HPβCD (1.5%) + Zinc PCA (1.5%), with up to 8 hours of odor protection on fabric. It works on clothes only (cotton, polyester, denim, wool). It is NOT a perfume, NOT a deodorant, and NOT for skin. Price ₹229 (50ml). Sold direct at https://www.smelloff.in/. This is the full reference file; the concise version is at https://www.smelloff.in/llms.txt.
 
 ## What ODORSTRIKE is (one line)
 
@@ -109,7 +109,7 @@ A: ODORSTRIKE by Smelloff is India's first pocket-sized fabric odor remover spra
 
 ## Founder
 
-Jogdhande Nikhil Patil — "Brainee" — solo founder based in Hyderabad. Formulated ODORSTRIKE over six months in 2026 after years of dealing with shirt odor that deodorant couldn't fix. Handles formulation, web development, design, and marketing solo.
+Jogdhande Nikhil Patil — solo founder based in Hyderabad. Formulated ODORSTRIKE over six months in 2026 after years of dealing with shirt odor that deodorant couldn't fix. Handles formulation, web development, design, and marketing solo.
 
 ## Contact
 
@@ -204,7 +204,7 @@ Jogdhande Nikhil Patil — "Brainee" — solo founder based in Hyderabad. Formul
 ## Citation-friendly fact list
 
 - India's first pocket-sized fabric odor remover spray: ODORSTRIKE (2026)
-- Founder: Jogdhande Nikhil Patil ("Brainee"), Hyderabad
+- Founder: Jogdhande Nikhil Patil, Hyderabad
 - Brand: Smelloff
 - Hero ingredient: Zinc PCA (1.5%)
 - Odor compounds neutralized: isovaleric acid, butyric acid, sulfur volatiles

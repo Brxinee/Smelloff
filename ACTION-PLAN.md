@@ -63,7 +63,7 @@ Add to every blog post's Article JSON-LD:
 ```json
 "author": {
   "@type": "Person",
-  "name": "Brainee",
+  "name": "Jogdhande Nikhil Patil",
   "url": "https://www.smelloff.in/blog/why-i-built-odorstrike",
   "jobTitle": "Founder",
   "worksFor": {"@type": "Organization", "name": "Smelloff"}
@@ -130,7 +130,7 @@ Current: 302KB. Target: under 150KB.
 
 ### 11. Create an About Page
 URL: `/about`  
-Content: Founder story (Brainee), why Smelloff was built, Hyderabad origin, brand mission.  
+Content: Founder story (Jogdhande Nikhil Patil), why Smelloff was built, Hyderabad origin, brand mission.  
 This is a strong E-E-A-T signal for a new brand — Google wants to know who is behind the product.
 
 ### 12. Update llms.txt with Competitor Context
