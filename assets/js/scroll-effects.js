@@ -132,9 +132,9 @@
       if(!loaded.length) return;               // no real photos yet → CSS bottle stays
       loaded.sort(function(a,b){return a-b;});
       gallery.innerHTML = loaded.map(function(i){
-        return '<img src="'+imgs[i][0]+'" alt="'+imgs[i][1]+'" loading="lazy" decoding="async" role="listitem">';
+        return '<img src="'+imgs[i][0]+'" alt="'+imgs[i][1]+'" loading="lazy" decoding="async">';
       }).join('');
-      gallery.setAttribute('role','list');     // only a list once it actually has items
+      gallery.setAttribute('role','group');    // labelled group of product photos (imgs carry alt text)
       gallery.setAttribute('aria-label','Product photos');
       gallery.hidden = false;
       var media = gallery.closest('.pc-media');

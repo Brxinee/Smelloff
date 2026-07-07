@@ -216,6 +216,8 @@ h1.hero-headline{
   margin:14px 0 0;font-family:var(--nb-body);font-size:13px;font-weight:700;color:var(--nb-ink);
 }
 .nb-hero .hr-stars{color:var(--nb-ink);letter-spacing:2px;font-size:15px}
+/* count text sits on the acid-green hero — force ink for WCAG contrast (main.css defaults it to white) */
+.nb-hero .hero-rating .hr-count{color:var(--nb-ink);opacity:.9}
 .nb-hero-cta{margin-top:22px;min-width:min(320px,80vw);background:var(--nb-paper)}
 .nb-hero-note{font-size:12.5px;margin:14px 0 0;color:var(--nb-ink);opacity:.7}
 @media(min-width:820px){
@@ -935,6 +937,8 @@ nav.pdp-crumb{
 .pdp-sub{color:var(--nb-muted)}
 .pdp-rating{color:var(--nb-ink)}
 .pdp-rating .hr-stars{color:var(--nb-ink)}
+/* count text sits on the light PDP header — force ink for WCAG contrast (main.css defaults it to white) */
+.pdp-rating .hr-count{color:var(--nb-ink);opacity:.9}
 .trust-chips .t-chip,.trust-chips .t-chip:nth-child(odd){
   background:var(--nb-white);color:var(--nb-ink);border:2px solid var(--nb-ink);
   font-family:var(--nb-head);font-weight:900;
