@@ -14,7 +14,7 @@
       "permanent": true
     },
     {
-      "source": "/policies/:slug(privacy|terms|returns|refund|shipping|payment-failed)",
+      "source": "/policies/:slug(privacy|terms|returns|refund|shipping|payment-failed)/",
       "destination": "/:slug/",
       "permanent": true
     },
@@ -39,22 +39,22 @@
       "permanent": true
     },
     {
-      "source": "/blog/best-fabric-odor-spray-india-2026",
+      "source": "/blog/best-fabric-odor-spray-india-2026/",
       "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor/",
       "permanent": true
     },
     {
-      "source": "/blog/shirt-odor-spray",
+      "source": "/blog/shirt-odor-spray/",
       "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor/",
       "permanent": true
     },
     {
-      "source": "/blog/pocket-odor-spray-for-clothes",
+      "source": "/blog/pocket-odor-spray-for-clothes/",
       "destination": "/odorstrike/",
       "permanent": true
     },
     {
-      "source": "/blog/where-to-buy-odorstrike-india",
+      "source": "/blog/where-to-buy-odorstrike-india/",
       "destination": "/",
       "permanent": true
     }
