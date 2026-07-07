@@ -59,6 +59,11 @@
   .b-nav{position:sticky;top:0;z-index:50;height:calc(56px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:var(--bg);border-bottom:1px solid var(--rule)}
   .b-back{justify-self:start;font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;padding:8px 10px}
   .b-back:hover{color:var(--text)}
+  .b-nav-spacer{justify-self:start}
+  .b-nav-actions{justify-self:end;display:flex;align-items:center;gap:10px}
+  .b-buy-pill{background:var(--accent);color:var(--bg);font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;padding:8px 16px;border-radius:100px;text-decoration:none;white-space:nowrap;box-shadow:3px 3px 0 rgba(0,0,0,.35);transition:transform .12s ease,box-shadow .12s ease}
+  .b-buy-pill:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(0,0,0,.45)}
+  @media(max-width:420px){.b-buy-pill{font-size:12px;padding:7px 12px}}
   .b-logo{justify-self:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);text-decoration:none;position:relative;padding-right:10px;line-height:1}
   .b-logo .p-dot{position:absolute;top:-2px;right:0;width:6px;height:6px;background:var(--accent);border-radius:50%}
   .b-cta{justify-self:end;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:8px 14px;border-radius:4px;text-decoration:none;transition:background .15s ease}
@@ -614,11 +619,14 @@
 <body>
 
 <nav class="b-nav">
-  <a href="/" class="b-back">← Back</a>
+  <span class="b-nav-spacer" aria-hidden="true"></span>
   <a href="/" class="b-logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=1" alt="SMELLOFF" width="1200" height="261" decoding="async"></a>
-  <button class="b-menu-toggle" id="blogMenuToggle" type="button" aria-label="Open menu" aria-controls="blogDrawer" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="b-nav-actions">
+    <a href="/odorstrike/" class="b-buy-pill">BUY ₹229</a>
+    <button class="b-menu-toggle" id="blogMenuToggle" type="button" aria-label="Open menu" aria-controls="blogDrawer" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
 <header class="b-hero">
@@ -1679,35 +1687,67 @@
   </nav>
 </aside>
 
-<footer class="p-footer">
-  <div class="p-footer-brand">SMELLOFF<span class="p-dot" aria-hidden="true"></span></div>
-  <div class="p-footer-links">
-    <a href="/">Home</a>
-    <a href="/odorstrike/">Buy ODORSTRIKE</a>
-    <a href="/odorstrike/">Bundles</a>
-    <a href="/blog/">All Guides</a>
+<style>
+  /* Canonical footer — explicitly DARK so it is byte-for-byte identical to every
+     post's footer even though the blog index itself uses a light/cream theme.
+     Literal colors (not theme tokens) keep it dark; acid-on-black is compliant. */
+  .blog-footer{border-top:1px solid #1A1A1A;background:#080808;padding:56px 32px 40px;margin:0;text-align:left}
+  .blog-footer .footer-grid{max-width:1040px;margin:0 auto;display:grid;gap:36px 24px;grid-template-columns:1fr}
+  @media(min-width:720px){.blog-footer .footer-grid{grid-template-columns:1.4fr 1fr 1fr 1fr}}
+  .blog-footer .bf-brand{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;letter-spacing:.06em;text-transform:uppercase;color:#F5F5F5;text-decoration:none;margin-bottom:12px}
+  .blog-footer .bf-brand-inner{position:relative;padding-right:.2em}
+  .blog-footer .bf-brand-dot{position:absolute;top:-.06em;right:0;width:.16em;height:.16em;background:#B8FF57;border-radius:50%}
+  .blog-footer .bf-desc{font-family:'Inter Tight',sans-serif;font-size:13px;line-height:1.6;color:#BFC3C8;max-width:32ch;margin:0 0 6px}
+  .blog-footer .bf-tag{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#B8FF57;margin:0 0 14px}
+  .blog-footer .bf-ig{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-family:'Inter Tight',sans-serif;font-size:13px;color:#BFC3C8;text-decoration:none;border-bottom:1px solid rgba(184,255,87,.4);transition:color .15s ease}
+  .blog-footer .bf-ig:hover{color:#F5F5F5}
+  .blog-footer .footer-col{display:flex;flex-direction:column;align-items:flex-start}
+  .blog-footer .footer-col-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8C8C8C;margin-bottom:14px}
+  .blog-footer .footer-col a{display:flex;align-items:center;min-height:44px;font-family:'Inter Tight',sans-serif;font-size:14px;color:#BFC3C8;text-decoration:none;transition:color .15s ease}
+  .blog-footer .footer-col a:hover{color:#B8FF57}
+  .blog-footer .footer-bottom{max-width:1040px;margin:36px auto 0;padding-top:20px;border-top:1px solid rgba(184,255,87,.15);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;font-family:'Inter Tight',sans-serif;font-size:11px;color:#8C8C8C;letter-spacing:.02em}
+  .blog-footer .footer-top{background:transparent;color:#B8FF57;border:1px solid #B8FF57;border-radius:50%;width:44px;height:44px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .15s ease,color .15s ease}
+  .blog-footer .footer-top:hover{background:#B8FF57;color:#080808}
+  @media(max-width:640px){.blog-footer{padding:44px 20px 32px}}
+</style>
+<footer class="blog-footer" aria-labelledby="footer-brand">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="bf-brand" id="footer-brand"><span class="bf-brand-inner">SMELLOFF<span class="bf-brand-dot"></span></span></a>
+      <p class="bf-desc">Fabric-only odor elimination mist. Made in Hyderabad.</p>
+      <p class="bf-tag">Smell Proof. Always.</p>
+      <a class="bf-ig" href="https://instagram.com/smell0ff" target="_blank" rel="noopener">Instagram ↗</a>
+    </div>
+    <nav class="footer-col" aria-label="Shop">
+      <p class="footer-col-label">Shop</p>
+      <a href="/">Home</a>
+      <a href="/odorstrike/">Buy ODORSTRIKE</a>
+      <a href="/odorstrike/">Bundles</a>
+    </nav>
+    <nav class="footer-col" aria-label="Guides">
+      <p class="footer-col-label">Guides</p>
+      <a href="/blog/">All Guides</a>
+      <a href="/blog/best-fabric-odor-spray-india-2026-body-odor/">Best fabric odor spray</a>
+      <a href="/blog/fix-shirt-odor-before-meeting/">Fix shirt odor fast</a>
+      <a href="/blog/deodorant-vs-fabric-mist/">Deodorant vs fabric mist</a>
+      <a href="/blog/odorstrike-review-30-day-india-test/">30-day review</a>
+    </nav>
+    <nav class="footer-col" aria-label="Company">
+      <p class="footer-col-label">Company</p>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+      <a href="/shipping/">Shipping</a>
+      <a href="/returns/">Returns</a>
+      <a href="/refund/">Refund</a>
+    </nav>
   </div>
-  <div class="p-footer-guides">
-    <span class="p-footer-guides-label">Popular reads</span>
-    <a href="/blog/best-fabric-odor-spray-india-2026-body-odor/">Compare fabric odor sprays</a>
-    <a href="/blog/fix-shirt-odor-before-meeting/">Fix shirt odor fast</a>
-    <a href="/blog/deodorant-vs-fabric-mist/">Deodorant vs fabric mist</a>
-    <a href="/blog/odorstrike-vs-febreze-india/">ODORSTRIKE vs Febreze</a>
-    <a href="/blog/odorstrike-review-30-day-india-test/">30-day review</a>
-  </div>
-  <div class="p-footer-policy">
-    <a href="/about/">About</a>
-    <a href="/privacy/">Privacy</a>
-    <a href="/terms/">Terms</a>
-    <a href="/shipping/">Shipping</a>
-    <a href="/returns/">Returns</a>
-    <a href="/refund/">Refund</a>
-    <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener">Instagram</a>
-  </div>
-  <div class="p-footer-bottom">
-    &copy; 2026 SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad
+  <div class="footer-bottom">
+    <span>&copy; <span id="year">2026</span> SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad</span>
+    <button class="footer-top" type="button" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&uarr;</button>
   </div>
 </footer>
+<script>(function(){var y=document.getElementById('year');if(y){y.textContent=new Date().getFullYear();}})();</script>
 
 
 <script>
@@ -1911,7 +1951,7 @@
 })();
 </script>
 
-<button class="to-top" id="toTopBtn" type="button" aria-label="Scroll to top"><span aria-hidden="true">&uarr;</span></button>
+<!-- floating back-to-top removed: the footer's back-to-top control is canonical -->
 
 <script>
 (function(){

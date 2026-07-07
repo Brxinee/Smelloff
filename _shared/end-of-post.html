@@ -1,0 +1,42 @@
+<!-- CANONICAL END-OF-POST STACK — same modules, same order, every post.
+     Order:
+       1. (optional) .bottom-line conclusion  — lives in the article body, kept if present
+       2. .end-cta  Product CTA card (2b)      — ALWAYS present; only {SPEC} varies per post
+       3. .read-next Read Next (2c)            — OPTIONAL single hero; omit if no sensible next post
+       4. .related-guides 3-card grid (2d)     — ALWAYS present; 3 topically-relevant cards
+     Styling lives in /assets/css/blog.css. All links are static <a> tags. -->
+
+<!-- 2b — Product CTA card -->
+<div class="end-cta">
+  <div class="cta-label">Meet the Fix</div>
+  <h4>ODORSTRIKE — Fabric Odor Mist</h4>
+  <p class="cta-spec">{SPEC}</p>
+  <div class="price-row">
+    <span class="strike-price">₹579</span>
+    <span class="current-price">₹229</span>
+  </div>
+  <a href="/odorstrike/" class="buy-btn">BUY NOW →</a>
+</div>
+
+<!-- 2c — Read Next (single, optional) -->
+<section class="read-next" aria-labelledby="read-next-heading">
+  <p class="eyebrow" id="read-next-heading">Read Next</p>
+  <a class="read-next__card" href="{HREF}">
+    <span class="read-next__title">{TITLE}</span>
+    <span class="read-next__arrow" aria-hidden="true">→</span>
+  </a>
+</section>
+
+<!-- 2d — Related Guides (exactly 3 cards, topically relevant) -->
+<section class="related-guides" aria-labelledby="related-heading">
+  <p class="eyebrow" id="related-heading">Related Guides</p>
+  <ul class="guide-grid">
+    <li>
+      <a class="guide-card" href="{HREF}">
+        <span class="guide-card__title">{TITLE}</span>
+        <span class="guide-card__arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    <!-- ×3 -->
+  </ul>
+</section>
