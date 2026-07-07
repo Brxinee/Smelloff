@@ -138,6 +138,20 @@ strong{color:var(--off-white);font-weight:700}
 .faq-item[open] summary::after{transform:rotate(45deg)}
 .faq-item p{margin-top:12px;color:var(--text-secondary)}
 
+/* ---------------- FAQ (AEO/GEO block — namespaced under .faq) ---------------- */
+.faq{margin:64px 0 0;border-top:2px solid var(--rule);padding-top:4px}
+.faq h2#faq-heading{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(28px,4.4vw,40px);line-height:1.02;letter-spacing:.01em;text-transform:uppercase;color:var(--off-white);margin:34px 0 26px}
+.faq details{background:var(--card);border:2px solid var(--border);border-radius:0;box-shadow:5px 5px 0 rgba(var(--accent-rgb),.22);margin:0 0 18px;transition:box-shadow .12s ease,border-color .12s ease}
+.faq details[open]{border-color:var(--acid);box-shadow:6px 6px 0 var(--acid)}
+.faq summary{list-style:none;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(19px,2.4vw,22px);line-height:1.14;letter-spacing:.005em;color:var(--off-white)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';flex:0 0 auto;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;line-height:.9;color:var(--acid);transition:transform .2s ease}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq summary:hover{color:var(--acid)}
+.faq .faq-a{padding:2px 20px 20px;border-top:2px solid var(--border)}
+.faq .faq-a p{margin:16px 0 0;font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.7;color:var(--text-secondary)}
+.faq .faq-a a{color:var(--acid);text-decoration:underline;text-underline-offset:2px}
+
 /* ---------------- Back-to-top floating button ---------------- */
 .to-top{position:fixed;right:20px;bottom:var(--toTopBottom,24px);width:48px;height:48px;background:var(--bg);color:var(--accent);border:1px solid var(--accent);border-radius:50%;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease,background .15s ease,color .15s ease;z-index:60;box-shadow:0 4px 16px rgba(0,0,0,.45)}
 .to-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
