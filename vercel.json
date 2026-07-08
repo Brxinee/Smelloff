@@ -1,31 +1,21 @@
 {
   "cleanUrls": true,
-  "trailingSlash": true,
+  "trailingSlash": false,
   "redirects": [
     {
       "source": "/(.*)",
       "has": [
         {
           "type": "host",
-          "value": "smelloff.in"
+          "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://www.smelloff.in/$1",
+      "destination": "https://smelloff.in/$1",
       "permanent": true
     },
     {
-      "source": "/policies/:slug(privacy|terms|returns|refund|shipping|payment-failed)/",
-      "destination": "/:slug/",
-      "permanent": true
-    },
-    {
-      "source": "/policies/:slug(privacy|terms|returns|refund|shipping|payment-failed)\\.html",
-      "destination": "/:slug/",
-      "permanent": true
-    },
-    {
-      "source": "/(.+)\\.html",
-      "destination": "/$1/",
+      "source": "/policies/:slug(privacy|terms|returns|refund|shipping|payment-failed)",
+      "destination": "/:slug",
       "permanent": true
     },
     {
@@ -35,26 +25,26 @@
     },
     {
       "source": "/blog/index",
-      "destination": "/blog/",
+      "destination": "/blog",
       "permanent": true
     },
     {
-      "source": "/blog/best-fabric-odor-spray-india-2026/",
-      "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor/",
+      "source": "/blog/best-fabric-odor-spray-india-2026",
+      "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor",
       "permanent": true
     },
     {
-      "source": "/blog/shirt-odor-spray/",
-      "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor/",
+      "source": "/blog/shirt-odor-spray",
+      "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor",
       "permanent": true
     },
     {
-      "source": "/blog/pocket-odor-spray-for-clothes/",
-      "destination": "/odorstrike/",
+      "source": "/blog/pocket-odor-spray-for-clothes",
+      "destination": "/odorstrike",
       "permanent": true
     },
     {
-      "source": "/blog/where-to-buy-odorstrike-india/",
+      "source": "/blog/where-to-buy-odorstrike-india",
       "destination": "/",
       "permanent": true
     }
@@ -94,7 +84,7 @@
       ]
     },
     {
-      "source": "/payment-failed/",
+      "source": "/payment-failed",
       "headers": [
         {
           "key": "X-Robots-Tag",
@@ -103,7 +93,7 @@
       ]
     },
     {
-      "source": "/(terms|privacy|refund|returns|shipping)/",
+      "source": "/(terms|privacy|refund|returns|shipping)",
       "headers": [
         {
           "key": "X-Robots-Tag",
