@@ -24,6 +24,11 @@
       "permanent": true
     },
     {
+      "source": "/odorstrike",
+      "destination": "/#buy",
+      "permanent": false
+    },
+    {
       "source": "/blog/index",
       "destination": "/blog",
       "permanent": true
@@ -40,7 +45,7 @@
     },
     {
       "source": "/blog/pocket-odor-spray-for-clothes",
-      "destination": "/odorstrike",
+      "destination": "/#buy",
       "permanent": true
     },
     {
