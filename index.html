@@ -283,8 +283,8 @@
   }
 </script>
 
-<link rel="stylesheet" href="/assets/css/main.css?v=6">
-<link rel="stylesheet" href="/assets/css/neo.css?v=12">
+<link rel="stylesheet" href="/assets/css/main.css?v=7">
+<link rel="stylesheet" href="/assets/css/neo.css?v=14">
 <script>
 /* Queue clicks that land before the deferred app.js/scroll-effects.js execute,
    then replay them once the real window.* implementations are in place. */
@@ -382,139 +382,203 @@
   </div>
 </div>
 
-<!-- Shared SVG shapes: starburst sticker + wavy divider -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <symbol id="nbStar" viewBox="0 0 100 100">
-      <polygon points="50.0,1.5 60.4,12.4 75.0,8.0 78.3,22.5 92.5,25.8 88.2,40.0 98.5,50.0 88.2,60.0 92.5,74.2 78.3,77.5 75.0,92.0 60.4,87.6 50.0,98.5 39.6,87.6 25.0,92.0 21.7,77.5 7.5,74.2 11.8,60.0 1.5,50.0 11.8,40.0 7.5,25.8 21.7,22.5 25.0,8.0 39.6,12.4"/>
-    </symbol>
-    <symbol id="nbWave" viewBox="0 0 1440 24" preserveAspectRatio="none">
-      <path d="M0,24 L0,14 Q20,-7 40,14 Q60,25.2 80,14 Q100,-7 120,14 Q140,25.2 160,14 Q180,-7 200,14 Q220,25.2 240,14 Q260,-7 280,14 Q300,25.2 320,14 Q340,-7 360,14 Q380,25.2 400,14 Q420,-7 440,14 Q460,25.2 480,14 Q500,-7 520,14 Q540,25.2 560,14 Q580,-7 600,14 Q620,25.2 640,14 Q660,-7 680,14 Q700,25.2 720,14 Q740,-7 760,14 Q780,25.2 800,14 Q820,-7 840,14 Q860,25.2 880,14 Q900,-7 920,14 Q940,25.2 960,14 Q980,-7 1000,14 Q1020,25.2 1040,14 Q1060,-7 1080,14 Q1100,25.2 1120,14 Q1140,-7 1160,14 Q1180,25.2 1200,14 Q1220,-7 1240,14 Q1260,25.2 1280,14 Q1300,-7 1320,14 Q1340,25.2 1360,14 Q1380,-7 1400,14 Q1420,25.2 1440,14 L1440,24 Z"/>
-    </symbol>
-  </defs>
-</svg>
+<!-- ═══════════ SO2 LANDING — Smelloff2 blueprint ═══════════ -->
 
-<!-- HERO — acid green slab, giant headline overlapping framed product shot -->
-<header class="nb-hero" id="main">
-  <div class="nb-hero-inner">
-    <p class="nb-hero-eyebrow">Smell Proof. Always.</p>
-    <div class="nb-hero-stage">
-      <h1 class="hero-headline">SMELL OFF<span class="sr-only"> — ODORSTRIKE fabric odor spray for clothes. Kills sweat smell in 8 seconds. No one will know.</span></h1>
-      <div class="nb-hero-media">
-        <div class="nb-frame nb-hero-frame">
-          <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 50ml fabric odor eliminator mist bottle" width="800" height="800" fetchpriority="high" decoding="async">
-        </div>
-        <div class="nb-sticker nb-sticker--yellow nb-sticker--hero1" aria-hidden="true">
-          <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
-          <span>New!</span>
-        </div>
-        <div class="nb-sticker nb-sticker--hero2" aria-hidden="true">
-          <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
-          <span>8 hrs protection</span>
-        </div>
-        <div class="nb-sticker nb-sticker--black nb-sticker--hero3" aria-hidden="true">
-          <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
-          <span>Made in India</span>
-        </div>
+<!-- 1 · HERO -->
+<header class="so2 so2-hero" id="main">
+  <div class="so2-wrap">
+    <div class="so2-hero-copy">
+      <p class="so2-eyebrow">A Smelloff product · Made in India</p>
+      <h1 class="hero-headline so2-display so2-h-xl">Smell Proof.<br>Always.<span class="sr-only"> ODORSTRIKE — fabric odor spray for clothes. Kills sweat smell in 8 seconds. No one will know.</span></h1>
+      <p class="hero-sub so2-lead">No one will know. A 50ml pocket mist that kills odor on fabric — shirts, jackets, jeans — for up to 8 hours.</p>
+      <p class="so2-tagline">Smell Khatam. Confidence Qaayam.</p>
+      <div class="hero-rating" role="img" aria-label="Rated 4.7 out of 5 by early buyers"><span class="hr-stars" aria-hidden="true">★★★★★</span> <span class="hr-count">4.7 — rated by early buyers</span></div>
+      <div class="so2-cta-row">
+        <a href="#buy" class="so2-btn" data-testid="hero-buy-button">Shop ODORSTRIKE →</a>
+        <a href="#how" class="so2-btn so2-btn--ghost" data-testid="hero-how-it-works-button">How it works</a>
+      </div>
+      <p class="so2-note">For clothes only — not for skin · Free shipping pan-India · COD available</p>
+    </div>
+    <div class="so2-hero-media">
+      <div class="so2-frame" data-testid="hero-product-image">
+        <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 50ml fabric odor eliminator mist bottle" width="800" height="800" fetchpriority="high" decoding="async">
       </div>
     </div>
-    <p class="hero-sub">Odor defense for the everyday hustle.</p>
-    <p class="nb-hero-hook">No one will know. ODORSTRIKE kills sweat smell on clothes in 8 seconds — not a perfume, not a deodorant. 50ml · ₹229 · COD available.</p>
-    <div class="hero-rating" role="img" aria-label="Rated 4.7 out of 5 by early buyers"><span class="hr-stars" aria-hidden="true">★★★★★</span> <span class="hr-count">4.7 — rated by early buyers</span></div>
-    <a href="/odorstrike" class="nb-btn nb-hero-cta">Shop Now</a>
-    <p class="nb-hero-note">For clothes only — not for skin · Free shipping pan-India</p>
   </div>
 </header>
-<div class="nb-wave nb-wave--flip" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
 
-<!-- BENEFITS — circle line-icon grid -->
-<section class="nb-benefits" aria-label="Why ODORSTRIKE works">
-  <ul class="nb-benefits-grid">
-    <li>
-      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c3 3.6 6 6.8 6 10a6 6 0 0 1-12 0c0-3.2 3-6.4 6-10z"/><path d="m5 20 14-15"/></svg></span>
-      <span class="nb-blabel">Zero Residue</span>
-    </li>
-    <li>
-      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 3h4"/><path d="M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="m5 20 14-15"/></svg></span>
-      <span class="nb-blabel">Glycerine-Free</span>
-    </li>
-    <li>
-      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 4 4 7l2 4 2-1v9h8v-9l2 1 2-4-5-3a3 3 0 0 1-6 0z"/><path d="m9.5 13 2 2 3.5-3.5"/></svg></span>
-      <span class="nb-blabel">Fabric-Safe</span>
-    </li>
-    <li>
-      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 8h6v13H9z"/><path d="M10 8V5h4v3"/><path d="M10 3h4"/><path d="M17 6c1.5 0 2.5-1 2.5-2M17 9c2.5 0 4-1.5 4-3.5"/><path d="m5 20 14-15"/></svg></span>
-      <span class="nb-blabel">No Cover-Up Perfume</span>
-    </li>
-    <li>
-      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
-      <span class="nb-blabel">8HR Protection</span>
-    </li>
-    <li>
-      <span class="nb-bicon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M7 14h10"/><path d="M7 14c0-2 2-3 5-3s5 1 5 3"/></svg></span>
-      <span class="nb-blabel">Pocket-Sized</span>
-    </li>
-  </ul>
+<!-- 2 · PROBLEM -->
+<section class="problem so2" id="problem">
+  <div class="so2-wrap so2-grid so2-grid--start">
+    <div>
+      <p class="so2-eyebrow">The Real Fear</p>
+      <h2 class="so2-display so2-h-lg">You don&rsquo;t fear<br>smelling bad.<br>You fear<br>someone<br>noticing.</h2>
+    </div>
+    <div>
+      <ul class="so2-bullets">
+        <li><span class="num">01</span><span>Commute sweat + damp fabric.</span></li>
+        <li><span class="num">02</span><span>Gym tees that hold yesterday.</span></li>
+        <li><span class="num">03</span><span>Smoke and food smells that cling.</span></li>
+      </ul>
+      <p class="so2-note">Deo is for skin. Perfume is for scent. The smell lives in your fabric — ODORSTRIKE kills it there, in 8 seconds. No washing, no masking.</p>
+    </div>
+  </div>
 </section>
 
-<!-- EDUCATION STRIP — "Not a deodorant" (P5) -->
-<div class="marquee" role="img" aria-label="ODORSTRIKE is for clothes, not skin — not a perfume, not a deodorant">
-  <div class="marquee-track" aria-hidden="true">
-    <span>For Clothes</span>
-    <span>Not Skin</span>
-    <span>Not A Perfume</span>
-    <span>Not A Deodorant</span>
-    <span>For Clothes</span>
-    <span>Not Skin</span>
-    <span>Not A Perfume</span>
-    <span>Not A Deodorant</span>
+<!-- 3 · PRODUCT REVEAL -->
+<section class="so2" id="reveal">
+  <div class="so2-wrap so2-grid">
+    <div>
+      <p class="so2-eyebrow">Meet</p>
+      <h2 class="so2-display so2-h-xl">ODORSTRIKE.</h2>
+      <p class="so2-lead">A 50ml pocket mist engineered to eliminate odor on fabric. Not a perfume. Not a deodorant. A precise tool.</p>
+      <div class="so2-tags">
+        <span class="so2-tag">50ml</span>
+        <span class="so2-tag">Pocket-size</span>
+        <span class="so2-tag">Fabric-only</span>
+        <span class="so2-tag so2-tag--accent">8 hours</span>
+      </div>
+    </div>
+    <div>
+      <div class="so2-frame so2-frame--square">
+        <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 50ml pocket fabric odor eliminator — front of bottle" width="800" height="800" loading="lazy" decoding="async">
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- OUR GOODS — product carousel -->
-<section class="nb-goods" id="goods" aria-label="Shop ODORSTRIKE packs">
-  <h2 class="nb-h2">Our Goods</h2>
-  <div class="nb-goods-track" id="nbGoodsTrack">
-    <article class="nb-gcard" data-name="ODORSTRIKE — Starter" data-price="₹229" data-desc="One 50ml pocket bottle. ~250 sprays of instant fabric odor defense.">
-      <a class="nb-gcard-link" href="/odorstrike" aria-label="ODORSTRIKE single bottle — view product page">
-        <div class="nb-frame nb-gframe">
-          <img src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE single bottle — 50ml fabric odor mist, ₹229" width="800" height="800" loading="lazy" decoding="async">
+<!-- 4 · HOW IT WORKS -->
+<section class="so2" id="how">
+  <div class="so2-wrap">
+    <p class="so2-eyebrow">How it works</p>
+    <h2 class="so2-display so2-h-md">Four steps.<br>No jargon.</h2>
+    <div class="so2-steps">
+      <div class="so2-step">
+        <span class="num">01</span>
+        <div><h3 class="so2-step-title">Trap</h3><p class="so2-step-desc">Captures odor molecules.</p></div>
+      </div>
+      <div class="so2-step">
+        <span class="num">02</span>
+        <div><h3 class="so2-step-title">Neutralize</h3><p class="so2-step-desc">Cancels them at the source.</p></div>
+      </div>
+      <div class="so2-step">
+        <span class="num">03</span>
+        <div><h3 class="so2-step-title">Prevent</h3><p class="so2-step-desc">Stops new odor forming.</p></div>
+      </div>
+      <div class="so2-step">
+        <span class="num">04</span>
+        <div><h3 class="so2-step-title">Anti-Regrowth</h3><p class="so2-step-desc">Fresh fabric for hours.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · WHY DIFFERENT -->
+<section class="so2 compare" id="vs-deodorant">
+  <div class="so2-wrap">
+    <p class="so2-eyebrow">Why it&rsquo;s different</p>
+    <h2 class="so2-display so2-h-md">Not a perfume.<br>Not a deo.</h2>
+    <p class="so2-lead" style="max-width:54ch">Perfumes mask. Deodorants target skin. ODORSTRIKE is a fabric-first fix that stops the source — not the symptom.</p>
+    <div class="so2-compare">
+      <div class="so2-compare-col">
+        <p class="so2-compare-label">Perfume / Deo</p>
+        <ul>
+          <li class="neg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Masks smell with fragrance</span></li>
+          <li class="neg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Sticky residue</span></li>
+          <li class="neg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Overpowering scent cloud</span></li>
+          <li class="neg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Sprayed on skin</span></li>
+        </ul>
+      </div>
+      <div class="so2-compare-col">
+        <p class="so2-compare-label so2-compare-label--accent">ODORSTRIKE</p>
+        <ul>
+          <li class="pos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Kills odor on fabric</span></li>
+          <li class="pos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Zero residue</span></li>
+          <li class="pos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Neutral, clean</span></li>
+          <li class="pos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Sprayed on fabric</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · BUY CARDS -->
+<section class="so2" id="buy" aria-label="Buy ODORSTRIKE packs">
+  <div class="so2-wrap">
+    <p class="so2-eyebrow">Buy</p>
+    <h2 class="so2-display so2-h-md">Pick your pack.</h2>
+    <p class="so2-lead" style="max-width:46ch">Free shipping across India. COD available. Try one — or stock up.</p>
+    <div class="so2-cards">
+      <article class="so2-card" data-testid="buy-card" data-variant="solo">
+        <h3 class="so2-card-title">1 Pack</h3>
+        <p class="so2-card-sub">50ml bottle · ~250 sprays</p>
+        <div class="so2-card-price-row">
+          <span class="so2-card-price">₹229</span>
+          <span class="so2-card-mrp">₹579</span>
         </div>
-      </a>
-      <div class="nb-sticker nb-sticker--yellow" aria-hidden="true">
-        <svg viewBox="0 0 100 100"><use href="#nbStar"/></svg>
-        <span>New!</span>
-      </div>
-      <button class="nb-btn nb-btn--acid nb-gcard-cta" type="button" onclick="addToCart('solo')">Add to Cart — ₹229</button>
-    </article>
-    <article class="nb-gcard nb-gcard--dark" data-name="HELMET STRIKE" data-price="Coming soon" data-desc="Odor defense for helmet liners. Join the waitlist and be first in line.">
-      <div class="nb-frame nb-gframe nb-gframe--text">
-        <span class="nb-gframe-word" aria-hidden="true">Helmet<br>Strike</span>
-      </div>
-      <div class="nb-badge-circ" aria-hidden="true">Coming<br>Soon</div>
-      <a class="nb-btn nb-btn--ghost nb-gcard-cta" href="#emailForm">Join Waitlist</a>
-    </article>
-  </div>
-  <div class="nb-goods-caption" aria-live="polite">
-    <p class="nb-goods-name"><a href="/odorstrike" id="nbGoodsName">ODORSTRIKE — Starter</a></p>
-    <p class="nb-goods-price" id="nbGoodsPrice">₹229</p>
-    <p class="nb-goods-desc" id="nbGoodsDesc">One 50ml pocket bottle. ~250 sprays of instant fabric odor defense.</p>
-  </div>
-  <div class="nb-arrows">
-    <button class="nb-circ" id="nbGoodsPrev" type="button" aria-label="Previous product"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></button>
-    <button class="nb-circ" id="nbGoodsNext" type="button" aria-label="Next product"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+        <button class="so2-btn" type="button" onclick="addToCart('solo')" data-testid="buy-card-add-to-cart-button" data-sku="solo">Add to cart</button>
+        <button class="so2-btn so2-btn--ghost" type="button" onclick="openCheckout('solo')" data-testid="buy-card-buy-now-button">Buy now →</button>
+      </article>
+      <article class="so2-card so2-card--featured" data-testid="buy-card" data-variant="duo">
+        <span class="so2-card-tag">Most Popular</span>
+        <h3 class="so2-card-title">2 Pack</h3>
+        <p class="so2-card-sub">2 × 50ml bottles</p>
+        <div class="so2-card-price-row">
+          <span class="so2-card-price">₹399</span>
+          <span class="so2-card-per">₹200 / bottle</span>
+          <span class="so2-card-mrp">₹999</span>
+        </div>
+        <button class="so2-btn" type="button" onclick="addToCart('duo')" data-testid="buy-card-add-to-cart-button" data-sku="duo">Add to cart</button>
+        <button class="so2-btn so2-btn--ghost" type="button" onclick="openCheckout('duo')" data-testid="buy-card-buy-now-button">Buy now →</button>
+      </article>
+      <article class="so2-card" data-testid="buy-card" data-variant="trio">
+        <span class="so2-card-tag">Best Value</span>
+        <h3 class="so2-card-title">3 Pack</h3>
+        <p class="so2-card-sub">3 × 50ml bottles</p>
+        <div class="so2-card-price-row">
+          <span class="so2-card-price">₹549</span>
+          <span class="so2-card-per">₹183 / bottle</span>
+          <span class="so2-card-mrp">₹1,399</span>
+        </div>
+        <button class="so2-btn" type="button" onclick="addToCart('trio')" data-testid="buy-card-add-to-cart-button" data-sku="trio">Add to cart</button>
+        <button class="so2-btn so2-btn--ghost" type="button" onclick="openCheckout('trio')" data-testid="buy-card-buy-now-button">Buy now →</button>
+      </article>
+    </div>
   </div>
 </section>
 
-<!-- PROBLEM — compact black slab -->
-<section class="problem nb-problem">
-  <p class="nb-eyebrow">The Problem</p>
-  <h2>You don't stink.<br><span class="nb-acid-text">Your shirt does.</span></h2>
-  <p class="nb-problem-sub">Deo is for skin. Perfume is for scent. The smell lives in your fabric — ODORSTRIKE kills it there, in 8 seconds. No washing, no masking.</p>
+<!-- 7 · TRUST STRIP -->
+<section class="so2-trust" aria-label="Why buy from Smelloff">
+  <div class="so2-trust-wrap">
+    <div class="so2-trust-item">Made in India</div>
+    <div class="so2-trust-item">Zero Residue</div>
+    <div class="so2-trust-item">Fabric-Safe</div>
+    <div class="so2-trust-item">COD Available</div>
+    <div class="so2-trust-item">Ships in 48h</div>
+  </div>
+</section>
+
+<!-- 8 · COMING SOON -->
+<section class="so2" id="coming-soon" style="border-top:none">
+  <div class="so2-wrap">
+    <p class="so2-eyebrow">Next drops</p>
+    <h2 class="so2-display so2-h-md">Same tech.<br>New targets.</h2>
+    <div class="so2-soon">
+      <div class="so2-soon-card">
+        <h3 class="so2-soon-name">Helmet Strike</h3>
+        <p class="so2-soon-tease">The sweat lives inside your helmet. Not for long.</p>
+        <span class="so2-soon-chip">Coming soon</span><a class="so2-soon-wait" href="#emailForm">Join the waitlist →</a>
+      </div>
+      <div class="so2-soon-card">
+        <h3 class="so2-soon-name">Shoe Strike</h3>
+        <p class="so2-soon-tease">You already know. Fix it before anyone else does.</p>
+        <span class="so2-soon-chip">Coming soon</span><a class="so2-soon-wait" href="#emailForm">Join the waitlist →</a>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- WORD ON THE STREET — testimonial slab (acid green, wavy edges) -->
-<div class="nb-wave" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
 <section class="reviews nb-reviews" id="reviews">
   <h2 class="nb-h2">Word on the Street</h2>
   <div class="nb-stars-row" aria-hidden="true">★★★★★</div>
@@ -532,48 +596,6 @@
   <button class="rv-readall" id="rvReadAllBtn" type="button" onclick="showAllReviews()" style="display:none">Read all reviews →</button>
   <a class="rv-page-link" href="/reviews">Browse every review — unedited →</a>
 </section>
-<div class="nb-wave nb-wave--flip" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
-
-<!-- HOW WE STACK UP — comparison table -->
-<section class="compare nb-compare" id="vs-deodorant">
-  <h2 class="nb-h2">How We Stack Up</h2>
-  <p class="nb-scroll-hint">Scroll left to right<span aria-hidden="true">⟵&nbsp;&nbsp;⟶</span></p>
-  <div class="nb-table-scroll" tabindex="0" role="region" aria-label="ODORSTRIKE versus regular deodorants comparison table">
-    <table class="nb-table">
-      <thead>
-        <tr>
-          <th scope="col"><span class="sr-only">Feature</span></th>
-          <th scope="col" class="nb-t-us">SMELLOFF</th>
-          <th scope="col">Regular Deos</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">Works on fabric mid-wear</th>
-          <td class="nb-t-us"><svg viewBox="0 0 24 24" role="img" aria-label="Yes"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 2.5 2.5L16 9.5"/></svg></td>
-          <td><svg viewBox="0 0 24 24" role="img" aria-label="No"><circle cx="12" cy="12" r="10"/><path d="m8.5 8.5 7 7M15.5 8.5l-7 7"/></svg></td>
-        </tr>
-        <tr>
-          <th scope="row">Zero residue on dark clothes</th>
-          <td class="nb-t-us"><svg viewBox="0 0 24 24" role="img" aria-label="Yes"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 2.5 2.5L16 9.5"/></svg></td>
-          <td><svg viewBox="0 0 24 24" role="img" aria-label="No"><circle cx="12" cy="12" r="10"/><path d="m8.5 8.5 7 7M15.5 8.5l-7 7"/></svg></td>
-        </tr>
-        <tr>
-          <th scope="row">Kills odor (doesn't mask it)</th>
-          <td class="nb-t-us"><svg viewBox="0 0 24 24" role="img" aria-label="Yes"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 2.5 2.5L16 9.5"/></svg></td>
-          <td><svg viewBox="0 0 24 24" role="img" aria-label="No"><circle cx="12" cy="12" r="10"/><path d="m8.5 8.5 7 7M15.5 8.5l-7 7"/></svg></td>
-        </tr>
-        <tr>
-          <th scope="row">Pocket-sized (50ml)</th>
-          <td class="nb-t-us"><svg viewBox="0 0 24 24" role="img" aria-label="Yes"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 2.5 2.5L16 9.5"/></svg></td>
-          <td><svg viewBox="0 0 24 24" role="img" aria-label="No"><circle cx="12" cy="12" r="10"/><path d="m8.5 8.5 7 7M15.5 8.5l-7 7"/></svg></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-
 
 <!-- REVIEW MODAL -->
 <div class="rv-modal" id="rvModal" role="dialog" aria-modal="true" aria-labelledby="rvModalTitle" aria-hidden="true" onclick="if(event.target===this)closeReviewForm()">
@@ -701,70 +723,82 @@
 
 
 
-<div class="nb-wave nb-wave--black" aria-hidden="true"><svg viewBox="0 0 1440 24" preserveAspectRatio="none"><use href="#nbWave"/></svg></div>
-<footer class="site-footer nb-footer">
-  <div class="nb-f-inner">
-    <p class="nb-f-intro">Pocket-sized odor killer for your clothes. Made by Jogdhande Nikhil Patil in Hyderabad — a real product by a real person.</p>
-
-    <div class="nb-f-socials">
-      <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener" aria-label="Instagram @smell0ff">
-        <img src="/assets/icon-instagram.png" alt="Instagram" width="32" height="32" loading="lazy" decoding="async">
-      </a>
-      <a href="mailto:smelloffsupport@gmail.com" aria-label="Email Smelloff support">
-        <img src="/assets/icon-email.png" alt="Email" width="32" height="32" loading="lazy" decoding="async">
-      </a>
-      <a href="https://wa.me/919392974031?text=Hi%20Smelloff%21%20I%20have%20a%20question%20about%20ODORSTRIKE." target="_blank" rel="noopener" aria-label="WhatsApp Smelloff">
-        <img src="/assets/icon-whatsapp.png" alt="WhatsApp" width="32" height="32" loading="lazy" decoding="async">
-      </a>
+<footer class="site-footer so2-footer">
+  <div class="so2-f-grid">
+    <div>
+      <p class="so2-f-brand">SMELLOFF<span class="dot">.</span></p>
+      <p class="so2-f-blurb">Pocket-sized odor killer for your clothes. Made by Jogdhande Nikhil Patil in Hyderabad — a real product by a real person.</p>
+      <div class="so2-f-socials">
+        <a href="https://instagram.com/smell0ff" target="_blank" rel="noopener" aria-label="Instagram @smell0ff">
+          <img src="/assets/icon-instagram.png" alt="Instagram" width="32" height="32" loading="lazy" decoding="async">
+        </a>
+        <a href="mailto:smelloffsupport@gmail.com" aria-label="Email Smelloff support">
+          <img src="/assets/icon-email.png" alt="Email" width="32" height="32" loading="lazy" decoding="async">
+        </a>
+        <a href="https://wa.me/919392974031?text=Hi%20Smelloff%21%20I%20have%20a%20question%20about%20ODORSTRIKE." target="_blank" rel="noopener" aria-label="WhatsApp Smelloff">
+          <img src="/assets/icon-whatsapp.png" alt="WhatsApp" width="32" height="32" loading="lazy" decoding="async">
+        </a>
+      </div>
     </div>
-
-    <nav class="nb-f-links" aria-label="Footer">
-      <ul>
-        <li><a href="/odorstrike">Shop</a></li>
+    <nav aria-label="Shop">
+      <p class="so2-f-label">Shop</p>
+      <ul class="so2-f-list">
+        <li><a href="/odorstrike">ODORSTRIKE</a></li>
+        <li><a href="#coming-soon">Coming soon</a></li>
         <li><a href="/reviews">Reviews</a></li>
+        <li><a href="/track-order">Track order</a></li>
         <li><a href="/blog">Blog</a></li>
-        <li><a href="/faq">FAQ</a></li>
         <li><a href="/about">About</a></li>
       </ul>
-      <ul>
-        <li><a href="/track-order">Track Order</a></li>
+    </nav>
+    <nav aria-label="Support and legal">
+      <p class="so2-f-label">Support</p>
+      <ul class="so2-f-list">
+        <li><a href="/faq">FAQ</a></li>
         <li><a href="/shipping">Shipping</a></li>
         <li><a href="/returns">Returns</a></li>
         <li><a href="/refund">Refund</a></li>
         <li><a href="/contact">Contact</a></li>
-      </ul>
-      <ul>
-        <li><a href="/blog/best-fabric-odor-spray-india-2026-body-odor">Best Fabric Odor Spray 2026</a></li>
-        <li><a href="/blog/deodorant-vs-fabric-mist">Deodorant vs Fabric Spray</a></li>
-        <li><a href="/blog/best-deodorant-spray-for-clothes-not-skin">Spray for Clothes, Not Skin</a></li>
-        <li><a href="/blog/why-i-built-odorstrike">Founder Story</a></li>
-      </ul>
-      <ul>
-        <li><a href="/blog/gym-clothes-smell-after-washing">Gym Clothes Still Smell?</a></li>
-        <li><a href="/blog/why-indian-men-sweat-smell-more">Why Sweat Smell Hits Harder</a></li>
-        <li><a href="/blog/perfume-plus-sweat-chemical-reaction">The Perfume + Sweat Mistake</a></li>
-        <li><a href="/blog/beta-cyclodextrin-odor-removal-science">The Odor Science</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
       </ul>
     </nav>
-
-    <h2 class="nb-f-nl-title">Sign up to our newsletter</h2>
-    <p class="nb-f-nl-sub">Restock alerts, care tips and first look at new products.</p>
-    <form class="nb-f-nl" id="emailForm" onsubmit="submitWaitlist();return false;">
-      <input type="email" id="waitlistEmail" placeholder="email@example.com" required aria-label="Email address">
-      <button type="submit">Subscribe</button>
-    </form>
-    <div class="sf-newsletter-success" id="ecSuccess">You&rsquo;re in. Watch your inbox.</div>
-
-    <p class="nb-f-legal">&copy; 2026, Smelloff &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; Made in Hyderabad, India</p>
-    <p class="nb-f-legal nb-f-legal--fine">MFG: Smelloff, Hyderabad, Telangana &middot; Grievance Officer: Jogdhande Nikhil Patil &middot; <a href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a> &middot; Response within 15 days as per Consumer Protection (E-Commerce) Rules 2020</p>
-
-    <div class="nb-f-pay" aria-label="Payment methods">
-      <span class="nb-f-pay-chip"><img src="/assets/upi.png" alt="UPI" width="51" height="18" loading="lazy" decoding="async"></span>
-      <span class="nb-f-pay-chip nb-f-pay-cod">Cash on Delivery</span>
+    <div>
+      <p class="so2-f-label">Get notified</p>
+      <form class="so2-f-nl" id="emailForm" onsubmit="submitWaitlist();return false;">
+        <input type="email" id="waitlistEmail" placeholder="you@email.com" required aria-label="Email address">
+        <button type="submit">Notify me</button>
+      </form>
+      <div class="sf-newsletter-success so2-f-contact" id="ecSuccess">You&rsquo;re in. Watch your inbox.</div>
+      <p class="so2-f-contact">Restock alerts, care tips and first look at new products.</p>
+      <p class="so2-f-contact"><a href="mailto:smelloffsupport@gmail.com" style="color:inherit">smelloffsupport@gmail.com</a></p>
     </div>
   </div>
 
-  <img class="nb-f-word" src="/assets/brand/logo-smelloff-white.png?v=1" alt="" aria-hidden="true" width="1200" height="261" loading="lazy" decoding="async">
+  <div class="so2-f-guides">
+    <p class="so2-f-label">Guides</p>
+    <ul>
+      <li><a href="/blog/best-fabric-odor-spray-india-2026-body-odor">Best Fabric Odor Spray 2026</a></li>
+      <li><a href="/blog/deodorant-vs-fabric-mist">Deodorant vs Fabric Spray</a></li>
+      <li><a href="/blog/best-deodorant-spray-for-clothes-not-skin">Spray for Clothes, Not Skin</a></li>
+      <li><a href="/blog/why-i-built-odorstrike">Founder Story</a></li>
+      <li><a href="/blog/gym-clothes-smell-after-washing">Gym Clothes Still Smell?</a></li>
+      <li><a href="/blog/why-indian-men-sweat-smell-more">Why Sweat Smell Hits Harder</a></li>
+      <li><a href="/blog/perfume-plus-sweat-chemical-reaction">The Perfume + Sweat Mistake</a></li>
+      <li><a href="/blog/beta-cyclodextrin-odor-removal-science">The Odor Science</a></li>
+    </ul>
+  </div>
+
+  <div class="so2-f-bottom">
+    <div class="so2-f-bottom-wrap">
+      <div>&copy; 2026 Smelloff. All rights reserved. &middot; Made in Hyderabad, India &middot; smelloff.in</div>
+      <div class="so2-f-fine">MFG: Smelloff, Hyderabad, Telangana &middot; Grievance Officer: Jogdhande Nikhil Patil &middot; <a href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a> &middot; Response within 15 days as per Consumer Protection (E-Commerce) Rules 2020</div>
+      <div class="so2-f-pay" aria-label="Payment methods">
+        <span class="so2-f-pay-chip"><img src="/assets/upi.png" alt="UPI" width="51" height="18" loading="lazy" decoding="async"></span>
+        <span class="so2-f-pay-chip">Cash on Delivery</span>
+      </div>
+    </div>
+  </div>
 </footer>
 
 <!-- ============================= -->
@@ -1140,6 +1174,6 @@ window.createSupabaseOrder = function (opts) {
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 
 <!-- ═══════════ CRO ENHANCEMENTS (Pillar 1: attraction) ═══════════ -->
-<script src="/assets/js/scroll-effects.js?v=3" defer></script>
+<script src="/assets/js/scroll-effects.js?v=4" defer></script>
 </body>
 </html>
