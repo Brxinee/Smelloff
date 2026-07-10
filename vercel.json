@@ -29,6 +29,16 @@
       "permanent": false
     },
     {
+      "source": "/blog/zinc-ricinoleate-fabric-odor-ingredient",
+      "destination": "/blog/zinc-pca-fabric-odor-ingredient-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/is-zinc-ricinoleate-safe-for-clothes",
+      "destination": "/blog/zinc-pca-fabric-odor-ingredient-guide",
+      "permanent": true
+    },
+    {
       "source": "/blog/index",
       "destination": "/blog",
       "permanent": true
