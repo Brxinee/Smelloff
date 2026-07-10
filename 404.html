@@ -34,6 +34,7 @@
     flex-direction: column;
   }
   ::selection { background: var(--acid); color: var(--black); }
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
   /* NAV */
   .blog-nav {
@@ -72,9 +73,10 @@
   .blog-nav .buy-pill {
     background: var(--acid);
     color: var(--black);
-    font-family: 'Inter Tight',sans-serif;
-    font-weight: 700;
-    font-size: 14px;
+    font-family: 'JetBrains Mono',monospace;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: .12em;
     padding: 8px 18px;
     border-radius: 100px;
     text-decoration: none;
@@ -98,8 +100,8 @@
   }
   .nf-code .dot { color: var(--acid); }
   .nf-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 400;
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -132,9 +134,11 @@
     display: inline-block;
     background: var(--acid);
     color: var(--black);
-    font-family: 'Inter Tight', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
     padding: 12px 24px;
     border-radius: 100px;
     text-decoration: none;
@@ -149,8 +153,8 @@
   .nf-btn.ghost:hover { border-color: var(--acid); color: var(--acid); }
 
   .nf-popular-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 400;
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -193,7 +197,7 @@
   .bf-brand{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);text-decoration:none;margin-bottom:4px}
   .bf-brand-inner{position:relative;padding-right:.2em}
   .bf-brand-dot{position:absolute;top:-.06em;right:0;width:.16em;height:.16em;background:var(--accent);border-radius:50%}
-  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font-family:'Inter Tight',sans-serif;font-size:13px}
+  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
   .footer-links a{color:var(--muted);text-decoration:none;transition:color .15s ease}
   .footer-links a:hover{color:var(--text)}
   .footer-policy{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-family:'Inter Tight',sans-serif;font-size:11px}
@@ -209,13 +213,12 @@
     .blog-footer { padding: 32px 20px; }
   }
 </style>
-<link rel="stylesheet" href="/assets/css/neo-lite.css?v=6">
 </head>
 <body>
 
 <nav class="blog-nav">
   <a href="/" class="logo">Smelloff</a>
-  <a href="/odorstrike" class="buy-pill">BUY ₹229</a>
+  <a href="/#buy" class="buy-pill">BUY ₹229</a>
 </nav>
 
 <main class="nf-wrap">
@@ -227,7 +230,7 @@
   <div class="nf-links">
     <a href="/" class="nf-btn">Home</a>
     <a href="/blog" class="nf-btn ghost">All Guides</a>
-    <a href="/odorstrike" class="nf-btn ghost">Buy ODORSTRIKE — ₹229</a>
+    <a href="/#buy" class="nf-btn ghost">Buy ODORSTRIKE — ₹229</a>
   </div>
 
   <div class="nf-popular-label">Popular guides</div>
@@ -243,8 +246,7 @@
   <div class="footer-links">
     <a href="/">Home</a>
     <a href="/blog">All Guides</a>
-    <a href="/odorstrike">Buy ODORSTRIKE</a>
-    <a href="/odorstrike">Bundles</a>
+    <a href="/#buy">Buy ODORSTRIKE</a>
   </div>
   <div class="footer-policy">
     <a href="/about">About</a>

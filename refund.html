@@ -75,20 +75,58 @@
   /* Accessibility: visible keyboard focus (WCAG 2.4.7) */
   a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 </style>
-<link rel="stylesheet" href="/assets/css/neo-lite.css?v=6">
 <link rel="alternate" hreflang="en-IN" href="https://smelloff.in/refund">
 <link rel="alternate" hreflang="x-default" href="https://smelloff.in/refund">
+<style>
+  /* ── Iconic design restoration (homepage design language) ─────────────
+     Overrides the neo chrome below with the original dark Fraunces look:
+     serif display headings, JetBrains Mono labels, acid-green accents,
+     grain overlay. Page components keep their own styles + behavior. */
+  :root{--paper:#f4f1ea;--text:#f4f1ea;--muted:#9a958d;--rule:rgba(244,241,234,.12);--acid:#b8ff57;--accent:#b8ff57;--text-secondary:#c9c5bd}
+  body{font-family:'Inter Tight',sans-serif}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  ::selection{background:var(--acid);color:#080808}
+  .p-nav{position:static;display:flex;height:auto;justify-content:space-between;align-items:center;padding:24px 32px;background:var(--bg);border-bottom:1px solid var(--rule)}
+  .p-logo{font-family:'Fraunces',serif;font-weight:900;font-size:22px;letter-spacing:-.02em;text-transform:none;padding-right:0;color:var(--text)}
+  .p-logo .p-dot,.p-footer-brand .p-dot{position:static;display:inline;width:auto;height:auto;background:transparent;border-radius:0;color:var(--acid)}
+  .p-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:0}
+  .p-back:hover{color:var(--text)}
+  .p-main{max-width:760px;padding:80px 32px 120px}
+  .p-eyebrow{font-family:'JetBrains Mono',monospace;font-weight:400;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+  .p-eyebrow::before{content:'';width:32px;height:1px;background:var(--muted)}
+  .p-main h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(44px,6.5vw,88px);line-height:.95;letter-spacing:-.03em;text-transform:none;margin-bottom:40px;color:var(--text)}
+  .p-main h1 .h1-dot{color:var(--acid)}
+  .p-main h2{font-family:'Fraunces',serif;font-weight:900;font-size:28px;letter-spacing:-.02em;text-transform:none;margin:40px 0 12px;line-height:1.2;color:var(--text)}
+  .p-main h3{font-family:'Fraunces',serif;font-weight:900;letter-spacing:-.01em;text-transform:none;color:var(--text)}
+  .p-main p{color:var(--text);font-size:16px}
+  .p-main .p-sub{color:var(--muted)}
+  .p-main li{color:var(--text);font-size:16px}
+  .p-main li::marker{color:var(--acid)}
+  .p-main a.inline,.p-main p a,.p-main li a{color:var(--text);font-weight:500;text-decoration:underline;text-decoration-color:var(--acid);text-decoration-thickness:3px;text-underline-offset:3px;border-bottom:none}
+  .p-main a.inline:hover,.p-main p a:hover,.p-main li a:hover{color:var(--acid)}
+  .p-main .callout{background:rgba(184,255,87,.08);border:none;border-left:4px solid var(--acid);border-radius:0;padding:24px;margin:24px 0}
+  .p-main .callout p{color:var(--text);font-size:15px}
+  .p-meta{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-top:60px;padding-top:24px;border-top:1px solid var(--rule);line-height:1.8}
+  .p-footer{border-top:1px solid var(--rule)}
+  .p-footer-brand{font-family:'Fraunces',serif;font-weight:900;font-size:28px;letter-spacing:-.02em;text-transform:none}
+  .p-footer-links a,.p-footer-policy a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text);opacity:.8;border-bottom:none}
+  .p-footer-links a:hover,.p-footer-policy a:hover{color:var(--acid);opacity:1}
+  .p-footer-guides a{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom-color:rgba(184,255,87,.25)}
+  .p-footer-guides a:hover{color:var(--acid);border-bottom-color:var(--acid)}
+  .p-footer-guides-label{font-family:'JetBrains Mono',monospace;font-weight:400}
+  .p-footer-bottom{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  .p-cta{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:11px;letter-spacing:.15em;background:var(--acid);color:#080808;border-radius:100px;padding:8px 16px}
+</style>
 </head>
 <body>
 <nav class="p-nav">
-  <a href="/" class="p-back">← Back</a>
-  <a href="/" class="p-logo">SMELLOFF<span class="p-dot" aria-hidden="true"></span></a>
-  <a href="/odorstrike" class="p-cta">Buy ₹229</a>
+  <a href="/" class="p-logo">smelloff<span class="p-dot" aria-hidden="true">.</span></a>
+  <a href="/" class="p-back">← Back to home</a>
 </nav>
 
 <main class="p-main">
   <div class="p-eyebrow">Policy · Refund</div>
-  <h1>Refund</h1>
+  <h1>Refund<span class="h1-dot">.</span></h1>
 
   <p>Refunds are processed for valid returns, cancellations, and failed payments. Below are the specific terms.</p>
 
@@ -127,11 +165,10 @@
 </main>
 
 <footer class="p-footer">
-  <div class="p-footer-brand">SMELLOFF<span class="p-dot" aria-hidden="true"></span></div>
+  <div class="p-footer-brand">smelloff<span class="p-dot" aria-hidden="true">.</span></div>
   <div class="p-footer-links">
     <a href="/">Home</a>
-    <a href="/odorstrike">Buy ODORSTRIKE</a>
-    <a href="/odorstrike">Bundles</a>
+    <a href="/#buy">Buy ODORSTRIKE</a>
     <a href="/blog">All Guides</a>
   </div>
   <div class="p-footer-guides">
@@ -139,7 +176,7 @@
     <a href="/blog/best-fabric-odor-spray-india-2026-body-odor">Best fabric odor spray</a>
     <a href="/blog/fix-shirt-odor-before-meeting">Fix shirt odor fast</a>
     <a href="/blog/deodorant-vs-fabric-mist">Deodorant vs fabric mist</a>
-    <a href="/odorstrike">Buy ODORSTRIKE</a>
+    <a href="/#buy">Buy ODORSTRIKE</a>
     <a href="/blog/odorstrike-review-30-day-india-test">30-day review</a>
   </div>
   <div class="p-footer-policy">
