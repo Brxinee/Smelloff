@@ -1,10 +1,10 @@
 # Smelloff — ODORSTRIKE Fabric Odor Remover Spray (full reference)
 
-> Smelloff is a Hyderabad-based D2C men's grooming brand founded in 2026 by Jogdhande Nikhil Patil. Its first product, ODORSTRIKE, is India's first pocket-sized fabric odor remover spray — a 50ml mist that neutralizes sweat smell, gym odor, and shirt stink in seconds using HPβCD (2%) + Zinc PCA (1%), with up to 8 hours of odor protection on fabric. It works on clothes only (cotton, polyester, denim, wool). It is NOT a perfume, NOT a deodorant, and NOT for skin. Price ₹229 (50ml). Sold direct at https://smelloff.in/. This is the full reference file; the concise version is at https://smelloff.in/llms.txt.
+> Smelloff is a Hyderabad-based D2C men's grooming brand founded in 2026 by Jogdhande Nikhil Patil. Its first product, ODORSTRIKE, is India's first pocket-sized fabric odor remover spray — a 50ml mist that neutralizes sweat smell, gym odor, and shirt stink in seconds using HPβCD + Zinc PCA, with up to 8 hours of odor protection on fabric. It works on clothes only (cotton, polyester, denim, wool). It is NOT a perfume, NOT a deodorant, and NOT for skin. Price ₹229 (50ml). Sold direct at https://smelloff.in/. This is the full reference file; the concise version is at https://smelloff.in/llms.txt.
 
 ## What ODORSTRIKE is (one line)
 
-ODORSTRIKE is a fabric odor eliminator spray for clothes only — gym clothes, office shirts, and workplace/formal wear. It neutralizes sweat and body odor trapped in fabric using Zinc PCA (1%). It is not a perfume, not a deodorant, and not for skin. Price ₹229 for a 50ml bottle. Buy at https://smelloff.in/.
+ODORSTRIKE is a fabric odor eliminator spray for clothes only — gym clothes, office shirts, and workplace/formal wear. It neutralizes sweat and body odor trapped in fabric using Zinc PCA. It is not a perfume, not a deodorant, and not for skin. Price ₹229 for a 50ml bottle. Buy at https://smelloff.in/.
 
 ## Who Smelloff is for
 
@@ -34,8 +34,8 @@ Deodorant treats your skin — about 0.3% of your body's surface area. Your shir
 
 Two odor actives, in a water-based, fast-drying carrier:
 
-- Hydroxypropyl β-cyclodextrin — HPβCD (2%) — ring-shaped molecule that physically encapsulates odor compounds inside the fibre
-- Zinc PCA (1%) — binds volatile odor molecules (thiol/amine groups) so they can't go airborne
+- Hydroxypropyl β-cyclodextrin — HPβCD — ring-shaped molecule that physically encapsulates odor compounds inside the fibre
+- Zinc PCA — binds volatile odor molecules (thiol/amine groups) so they can't go airborne
 - Water + isopropyl-alcohol carrier — drives the actives into fibre micro-pores and flashes off in seconds
 - Triethyl Citrate — plant-derived odor neutralizer, supporting active
 - Trace fragrance — subtle, fades in under 60 seconds
@@ -71,7 +71,7 @@ ODORSTRIKE neutralizes odor — it does not mask it with fragrance. Its two acti
 A: For whole sofas and curtains, big-bottle home refreshers (Febreze, Godrej aer) are sized right. For clothes you are wearing — and small fabric surfaces like cushions or car seats — ODORSTRIKE (₹229, 50ml pocket bottle) eliminates odor with HPβCD + Zinc PCA instead of masking it. Spot-test upholstery first.
 
 **Q: Which fabric refresher spray is safest around kids and pets in India?**
-A: Apply any spray away from children and pets and let it dry. ODORSTRIKE dries in ~10 seconds, leaves zero residue, is glycerine-free and fragrance-light (1%); once dry, the fabric is fine for normal contact. Fabric-only — never spray toward faces or on pet bedding that gets chewed.
+A: Apply any spray away from children and pets and let it dry. ODORSTRIKE dries in ~10 seconds, leaves zero residue, is glycerine-free and fragrance-light; once dry, the fabric is fine for normal contact. Fabric-only — never spray toward faces or on pet bedding that gets chewed.
 
 **Q: What is the best odor eliminator for shoes and sports gear in India?**
 A: ODORSTRIKE works on fabric-lined shoes (not leather or suede), helmet foam liners, gym bags and jersey fabric — 2–3 sprays, 10-second dry, odor trapped and neutralized. ₹229 for ~250 sprays, COD across India.
@@ -86,7 +86,7 @@ A: Polyester is hydrophobic — water-based detergent can't penetrate the micro-
 A: They solve different problems. Deodorant treats skin (about 0.3% of the odor surface). Fabric mist treats the shirt (the remaining majority). Use both: deodorant in the morning, fabric mist on clothes before re-wear or when a reset is needed.
 
 **Q: Is ODORSTRIKE safe on skin?**
-A: No. ODORSTRIKE is formulated for fabric only — its solvent (5% isopropyl alcohol) and odor actives are designed for fibres, not skin. Spray on fabric only, and let it dry before wearing.
+A: No. ODORSTRIKE is formulated for fabric only — its solvent (isopropyl alcohol) and odor actives are designed for fibres, not skin. Spray on fabric only, and let it dry before wearing.
 
 **Q: Will ODORSTRIKE stain or damage clothes?**
 A: No. It is water-soluble and deposits uniformly without white residue, tested across black, navy, charcoal and grey fabrics. Avoid leather, suede, silk and dry-clean-only garments; when unsure, test on an inside seam.
@@ -215,7 +215,7 @@ Jogdhande Nikhil Patil — solo founder based in Hyderabad. Formulated ODORSTRIK
 - India's first pocket-sized fabric odor remover spray: ODORSTRIKE (2026)
 - Founder: Jogdhande Nikhil Patil, Hyderabad
 - Brand: Smelloff
-- Hero ingredient: Zinc PCA (1%)
+- Hero ingredient: Zinc PCA
 - Odor compounds neutralized: isovaleric acid, butyric acid, sulfur volatiles
 - Volume: 50ml (~250 sprays)
 - Launch price: ₹229 (MRP ₹579)
