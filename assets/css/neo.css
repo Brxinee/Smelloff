@@ -1332,3 +1332,179 @@ h1.hero-headline{-webkit-text-stroke:0;color:var(--nb-ink)}
 .nb-f-nl input,.sf-newsletter input{background:var(--nb-surface);color:var(--nb-ink);border:1px solid var(--nb-line)}
 .nb-f-nl input::placeholder,.sf-newsletter input::placeholder{color:var(--nb-muted)}
 .nb-f-nl button,.sf-newsletter button{background:var(--nb-acid);color:#080808;border:1px solid var(--nb-acid)}
+
+/* ═══════════════════════════════════════════════════════════════
+   SO2 — SMELLOFF2 LANDING LAYOUT (9-section blueprint)
+   Mirrors the Smelloff2 React landing: 1200px container, generous
+   section rhythm, hairline separators, one acid accent per view,
+   Barlow Condensed 900 uppercase display + DM Sans body.
+   ═══════════════════════════════════════════════════════════════ */
+.so2{border-top:1px solid var(--nb-line);background:#080808}
+.so2-wrap{max-width:1200px;margin:0 auto;padding:96px 16px}
+@media(min-width:768px){.so2-wrap{padding:128px 24px}}
+.so2-eyebrow{font-family:var(--nb-body);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--nb-muted);margin:0}
+.so2-display{font-family:var(--nb-head);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.95;color:#fff;margin:16px 0 0}
+.so2-display .acid{color:var(--nb-acid);background:none;padding:0}
+.so2-h-xl{font-size:clamp(52px,9vw,104px);line-height:.9}
+.so2-h-lg{font-size:clamp(44px,7.5vw,88px)}
+.so2-h-md{font-size:clamp(44px,6.5vw,80px)}
+.so2-lead{font-family:var(--nb-body);font-size:16px;line-height:1.6;color:rgba(255,255,255,.85);max-width:46ch;margin:24px 0 0}
+@media(min-width:768px){.so2-lead{font-size:18px}}
+.so2-tagline{font-family:var(--nb-body);font-size:14px;font-style:italic;color:var(--nb-muted);margin:14px 0 0}
+.so2-note{font-family:var(--nb-body);font-size:12.5px;color:var(--nb-muted);margin:14px 0 0}
+
+/* Buttons — Smelloff2 primary (acid, inverts on hover) + ghost */
+.so2-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;
+  background:var(--nb-acid);color:#080808;font-family:var(--nb-body);font-size:14px;font-weight:500;
+  border:1px solid transparent;border-radius:2px;cursor:pointer;text-decoration:none;text-align:center;
+  transition:background-color .18s ease,color .18s ease,border-color .18s ease}
+.so2-btn:hover{background:transparent;color:var(--nb-acid);border-color:var(--nb-acid)}
+.so2-btn--ghost{background:transparent;color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.2)}
+.so2-btn--ghost:hover{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.so2-cta-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:32px}
+
+/* Two-column section grid */
+.so2-grid{display:grid;gap:40px;align-items:center}
+@media(min-width:900px){.so2-grid{grid-template-columns:1fr 1fr}}
+.so2-grid--start{align-items:start}
+
+/* Hero */
+.so2-hero{border-top:none}
+.so2-hero .so2-wrap{padding-top:40px;padding-bottom:72px;display:grid;gap:40px;align-items:center;min-height:88vh}
+@media(min-width:900px){.so2-hero .so2-wrap{grid-template-columns:1fr 1fr;padding-top:80px;padding-bottom:96px}}
+.so2-hero-copy{order:2}
+.so2-hero-media{order:1}
+@media(min-width:900px){.so2-hero-copy{order:1}.so2-hero-media{order:2}}
+.so2-frame{aspect-ratio:4/5;border:1px solid var(--nb-line);background:#080808;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.so2-frame img{width:100%;height:100%;object-fit:contain;display:block}
+.so2-frame--square{aspect-ratio:1/1}
+.so2-hero .hero-rating{display:flex;align-items:center;gap:8px;margin:18px 0 0;font-family:var(--nb-body);font-size:13px;color:var(--nb-muted)}
+.so2-hero .hr-stars{color:var(--nb-acid);letter-spacing:2px}
+
+/* Problem — numbered bullets */
+.so2-bullets{list-style:none;margin:40px 0 0;padding:0;display:flex;flex-direction:column;gap:16px;font-family:var(--nb-body);color:rgba(255,255,255,.85)}
+@media(min-width:900px){.so2-bullets{margin:16px 0 0;padding-left:24px;border-left:1px solid var(--nb-line)}}
+.so2-bullets li{display:flex;gap:16px;font-size:16px;line-height:1.6}
+.so2-bullets .num{color:var(--nb-muted);font-family:'JetBrains Mono',monospace;font-size:14px;padding-top:2px}
+
+/* Spec tags */
+.so2-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}
+.so2-tag{display:inline-flex;align-items:center;border:1px solid rgba(255,255,255,.15);border-radius:2px;
+  padding:5px 10px;font-family:var(--nb-body);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+.so2-tag--accent{border-color:rgba(184,255,87,.6);color:var(--nb-acid)}
+
+/* How it works — 4-cell hairline grid */
+.so2-steps{display:grid;gap:1px;background:var(--nb-line);border:1px solid var(--nb-line);margin-top:56px}
+@media(min-width:768px){.so2-steps{grid-template-columns:repeat(4,1fr)}}
+.so2-step{background:#080808;padding:24px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between}
+@media(min-width:768px){.so2-step{padding:32px}}
+.so2-step .num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--nb-muted)}
+.so2-step-title{font-family:var(--nb-head);font-weight:900;text-transform:uppercase;font-size:28px;line-height:1;color:#fff;margin:24px 0 0}
+@media(min-width:768px){.so2-step-title{font-size:32px}}
+.so2-step-desc{font-family:var(--nb-body);font-size:14px;color:rgba(255,255,255,.7);margin:12px 0 0}
+
+/* Why different — comparison panels */
+.so2-compare{display:grid;border:1px solid var(--nb-line);margin-top:48px}
+@media(min-width:768px){.so2-compare{grid-template-columns:1fr 1fr}}
+.so2-compare-col{padding:24px}
+@media(min-width:768px){.so2-compare-col{padding:32px}}
+.so2-compare-col:first-child{border-bottom:1px solid var(--nb-line)}
+@media(min-width:768px){.so2-compare-col:first-child{border-bottom:none;border-right:1px solid var(--nb-line)}}
+.so2-compare-label{font-family:var(--nb-body);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.so2-compare-label--accent{color:var(--nb-acid)}
+.so2-compare ul{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+.so2-compare li{display:flex;align-items:flex-start;gap:12px;font-family:var(--nb-body);font-size:14px;line-height:1.55}
+.so2-compare .neg{color:rgba(255,255,255,.7)}
+.so2-compare .pos{color:#fff}
+.so2-compare svg{width:16px;height:16px;flex:none;margin-top:2px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.so2-compare .neg svg{stroke:rgba(255,255,255,.4)}
+.so2-compare .pos svg{stroke:var(--nb-acid)}
+
+/* Buy cards */
+.so2-cards{display:grid;gap:16px;margin-top:48px}
+@media(min-width:900px){.so2-cards{grid-template-columns:repeat(3,1fr)}}
+.so2-card{position:relative;border:1px solid var(--nb-line);background:#080808;padding:24px}
+@media(min-width:768px){.so2-card{padding:32px}}
+.so2-card--featured{border-color:rgba(184,255,87,.4);background:#0A0A0A}
+.so2-card-tag{position:absolute;top:-11px;left:24px;display:inline-flex;align-items:center;padding:2px 8px;
+  font-family:var(--nb-body);font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+.so2-card--featured .so2-card-tag{background:var(--nb-acid);color:#080808}
+.so2-card-title{font-family:var(--nb-head);font-weight:900;text-transform:uppercase;font-size:36px;line-height:1;color:#fff;margin:0}
+.so2-card-sub{font-family:var(--nb-body);font-size:14px;color:rgba(255,255,255,.6);margin:12px 0 0}
+.so2-card-price-row{display:flex;align-items:baseline;gap:10px;margin:32px 0 0;flex-wrap:wrap}
+.so2-card-price{font-family:var(--nb-head);font-weight:900;font-size:44px;line-height:1;color:#fff}
+.so2-card-per{font-family:var(--nb-body);font-size:12px;color:var(--nb-muted)}
+.so2-card-mrp{font-family:var(--nb-body);font-size:13px;color:var(--nb-muted);text-decoration:line-through}
+.so2-card .so2-btn{width:100%;margin-top:32px}
+.so2-card .so2-btn--ghost{margin-top:12px}
+
+/* Trust strip */
+.so2-trust{border-top:1px solid var(--nb-line);border-bottom:1px solid var(--nb-line);background:#080808}
+.so2-trust-wrap{max-width:1200px;margin:0 auto;padding:24px 16px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(min-width:768px){.so2-trust-wrap{grid-template-columns:repeat(5,1fr);padding:32px 24px}}
+.so2-trust-item{font-family:var(--nb-body);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);text-align:center}
+@media(min-width:768px){.so2-trust-item{text-align:left;font-size:13px}}
+
+/* Coming soon cards */
+.so2-soon{display:grid;gap:16px;margin-top:48px}
+@media(min-width:768px){.so2-soon{grid-template-columns:1fr 1fr}}
+.so2-soon-card{border:1px solid var(--nb-line);padding:24px;position:relative}
+@media(min-width:768px){.so2-soon-card{padding:40px}}
+.so2-soon-name{font-family:var(--nb-head);font-weight:900;text-transform:uppercase;font-size:36px;line-height:1;color:#fff;margin:0}
+@media(min-width:768px){.so2-soon-name{font-size:44px}}
+.so2-soon-tease{font-family:var(--nb-body);font-size:15px;line-height:1.6;color:rgba(255,255,255,.7);max-width:42ch;margin:16px 0 0}
+.so2-soon-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.2);padding:5px 12px;margin-top:32px;
+  font-family:var(--nb-body);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+.so2-soon-wait{display:inline-block;margin:32px 0 0 14px;font-family:var(--nb-body);font-size:12px;color:var(--nb-muted);text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(255,255,255,.3)}
+.so2-soon-wait:hover{color:#fff;text-decoration-color:var(--nb-acid)}
+
+/* Footer — Smelloff2 4-column */
+.so2-footer{border-top:1px solid var(--nb-line);background:#080808;margin-top:0}
+.so2-f-grid{max-width:1200px;margin:0 auto;padding:56px 16px;display:grid;gap:40px}
+@media(min-width:768px){.so2-f-grid{grid-template-columns:repeat(4,1fr);padding:56px 24px}}
+.so2-f-brand{font-family:var(--nb-head);font-weight:900;text-transform:uppercase;font-size:24px;line-height:1;color:#fff}
+.so2-f-brand .dot{color:var(--nb-acid)}
+.so2-f-blurb{font-family:var(--nb-body);font-size:14px;line-height:1.6;color:var(--nb-muted);max-width:28ch;margin:12px 0 0}
+.so2-f-socials{display:flex;gap:14px;align-items:center;margin:20px 0 0}
+.so2-f-socials img{display:block;width:26px;height:26px;opacity:.85}
+.so2-f-label{font-family:var(--nb-body);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0}
+.so2-f-list{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.so2-f-list a{font-family:var(--nb-body);font-size:14px;color:rgba(255,255,255,.8);text-decoration:none}
+.so2-f-list a:hover{text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(255,255,255,.4)}
+.so2-f-nl{display:flex;margin:12px 0 0}
+.so2-f-nl input{height:44px;flex:1;min-width:0;background:#0C0C0C;border:1px solid rgba(255,255,255,.15);border-right:0;border-radius:0;
+  color:#fff;font-family:var(--nb-body);font-size:14px;padding:0 12px;outline:none}
+.so2-f-nl input::placeholder{color:rgba(255,255,255,.25)}
+.so2-f-nl input:focus{border-color:var(--nb-acid)}
+.so2-f-nl button{height:44px;padding:0 16px;background:var(--nb-acid);color:#080808;border:none;border-radius:0;
+  font-family:var(--nb-body);font-size:14px;font-weight:500;cursor:pointer}
+.so2-f-contact{font-family:var(--nb-body);font-size:12px;color:var(--nb-muted);margin:12px 0 0}
+.so2-f-guides{max-width:1200px;margin:0 auto;padding:0 16px 40px}
+@media(min-width:768px){.so2-f-guides{padding:0 24px 48px}}
+.so2-f-guides ul{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 24px}
+.so2-f-guides a{font-family:var(--nb-body);font-size:13px;color:var(--nb-muted);text-decoration:none}
+.so2-f-guides a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(184,255,87,.5)}
+.so2-f-bottom{border-top:1px solid var(--nb-line)}
+.so2-f-bottom-wrap{max-width:1200px;margin:0 auto;padding:20px 16px;display:flex;flex-direction:column;gap:10px;
+  font-family:var(--nb-body);font-size:12px;color:var(--nb-muted)}
+@media(min-width:768px){.so2-f-bottom-wrap{padding:20px 24px}}
+.so2-f-bottom-wrap a{color:var(--nb-muted)}
+.so2-f-bottom-wrap a:hover{color:#fff}
+.so2-f-fine{font-size:11px;line-height:1.6}
+.so2-f-pay{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.so2-f-pay-chip{display:inline-flex;align-items:center;justify-content:center;background:#0F0F0F;border:1px solid var(--nb-line);border-radius:2px;padding:5px 10px;min-height:28px;
+  font-family:var(--nb-body);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+.so2-f-pay-chip img{display:block;height:14px;width:auto;filter:invert(1) brightness(1.6)}
+
+/* Reviews section heading restyle (keeps rv-* internals) */
+.nb-reviews .nb-h2{font-size:clamp(44px,7.5vw,88px);letter-spacing:-.02em}
+
+/* Mobile: keep WhatsApp strip clear */
+.so2 + .wa-buy-strip{margin-top:60px}
+
+/* Keep anchored sections clear of fixed nav */
+#how,#coming-soon,#reveal{scroll-margin-top:calc(64px + env(safe-area-inset-top,0px))}
+
+/* Footer <nav> columns — undo main.css's bare `nav{position:fixed}` */
+.so2-footer nav{position:static;top:auto;left:auto;right:auto;height:auto;z-index:auto;
+  padding:0;background:none;border:none;display:block;grid-template-columns:none}
