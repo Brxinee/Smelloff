@@ -248,7 +248,7 @@ h1.hero-headline{
 .nb-benefits-grid li{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
 .nb-bicon{
   width:72px;height:72px;border-radius:50%;
-  border:2.5px solid var(--nb-line);background:var(--nb-surface);
+  border:1px solid var(--nb-line);background:var(--nb-surface);
   display:flex;align-items:center;justify-content:center;
 }
 .nb-bicon svg{width:34px;height:34px;stroke:var(--nb-ink);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -451,7 +451,7 @@ h1.hero-headline{
 }
 @media(min-width:960px){.nb-table{margin:0 auto}}
 .nb-table th,.nb-table td{
-  border:1.5px solid var(--nb-line);
+  border:1px solid var(--nb-line);
   border-left-width:3px;border-top-width:3px;
   padding:18px 16px;text-align:center;vertical-align:middle;
   background:var(--nb-surface);
@@ -513,7 +513,7 @@ h1.hero-headline{
 .product-card .pc-media::before{content:none}
 .product-card .pc-tag{
   background:var(--nb-acid);color:var(--nb-ink);
-  border:2px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   font-size:11px;padding:6px 10px;
 }
 .product-card .pc-qty-hint{color:var(--nb-muted);font-size:12.5px;margin:12px 0 0;text-align:center}
@@ -543,12 +543,12 @@ h1.hero-headline{
 .price-mrp{font-family:var(--nb-body);font-size:16px;color:var(--nb-muted)}
 .price-off{
   font-family:var(--nb-head);font-weight:900;font-size:14px;letter-spacing:.06em;
-  background:var(--nb-yellow);color:var(--nb-ink);border:2px solid var(--nb-line);
+  background:var(--nb-yellow);color:var(--nb-ink);border:1px solid var(--nb-line);
   border-radius:2px;padding:4px 8px;
 }
 .pc-pack-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 0}
 .pc-pack-card{
-  background:var(--nb-surface);border:2.5px solid var(--nb-line);border-radius:var(--nb-r-sm);
+  background:var(--nb-surface);border:1px solid var(--nb-line);border-radius:var(--nb-r-sm);
   color:var(--nb-ink);padding:26px 8px 12px;text-align:center;cursor:pointer;
   display:flex;flex-direction:column;gap:3px;position:relative;
   box-shadow:none;
@@ -559,7 +559,7 @@ h1.hero-headline{
 .ppc-badge{
   position:absolute;top:-12px;left:50%;transform:translateX(-50%);
   white-space:nowrap;background:var(--nb-chip);color:var(--nb-acid);
-  border:2px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   font-family:var(--nb-head);font-weight:900;font-size:10.5px;letter-spacing:.08em;
   padding:4px 9px;
 }
@@ -617,7 +617,7 @@ h1.hero-headline{
 }
 .ingredient-strip span{
   font-family:var(--nb-body);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-  color:var(--nb-ink);border:1.5px solid var(--nb-line);border-radius:2px;padding:5px 10px;background:var(--nb-surface);
+  color:var(--nb-ink);border:1px solid var(--nb-line);border-radius:2px;padding:5px 10px;background:var(--nb-surface);
 }
 .buy-deep-link{
   display:block;text-align:center;margin:26px auto 0;max-width:520px;
@@ -655,7 +655,7 @@ h1.hero-headline{
 .faq-dot{color:var(--nb-acid);-webkit-text-stroke:0}
 .faq-list{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
 .faq-item{
-  background:var(--nb-surface);border:2.5px solid var(--nb-line);border-radius:var(--nb-r-sm);
+  background:var(--nb-surface);border:1px solid var(--nb-line);border-radius:var(--nb-r-sm);
   box-shadow:none;overflow:hidden;
 }
 .faq-q{
@@ -709,7 +709,7 @@ h1.hero-headline{
 .final .hero-cod-link{background:none;border:none;color:var(--nb-acid);font-size:13px;cursor:pointer;text-decoration:underline;padding:0;font-family:var(--nb-body)}
 .founder-card{
   max-width:520px;margin:40px auto 0;text-align:left;
-  background:#111;border:2.5px solid #2A2A2A;border-radius:var(--nb-r-sm);
+  background:#111;border:1px solid #2A2A2A;border-radius:var(--nb-r-sm);
   box-shadow:none;padding:22px;
 }
 .founder-name{font-family:var(--nb-head);font-weight:900;text-transform:uppercase;font-size:15px;letter-spacing:.08em;color:var(--nb-acid);margin:0 0 8px}
@@ -745,7 +745,7 @@ h1.hero-headline{
 .nb-f-nl{display:flex;flex-direction:column;gap:12px;margin:16px 0 0}
 .nb-f-nl input{
   width:100%;background:transparent;color:var(--nb-white);
-  border:2.5px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   font-family:var(--nb-body);font-size:15px;padding:14px 20px;outline:none;
 }
 .nb-f-nl input::placeholder{color:#CFCFC9}
@@ -755,7 +755,7 @@ h1.hero-headline{
   font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
   font-size:16px;letter-spacing:.08em;
   background:var(--nb-surface);color:var(--nb-ink);
-  border:2.5px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   padding:14px 20px;cursor:pointer;
   box-shadow:none;
   transition:transform .12s ease,box-shadow .12s ease;
@@ -794,14 +794,14 @@ h1.hero-headline{
   color:var(--nb-ink);
 }
 .mobile-bar .mb-pill{
-  border:2px solid var(--nb-line);background:var(--nb-surface);color:var(--nb-ink);
+  border:1px solid var(--nb-line);background:var(--nb-surface);color:var(--nb-ink);
   font-weight:700;
 }
 .mobile-bar .mb-pill.active{background:var(--nb-chip);color:var(--nb-acid)}
 .mobile-bar .mb-now{color:var(--nb-ink);font-family:var(--nb-head);font-weight:900}
 .mobile-bar .mb-btn{
   background:var(--nb-acid);color:var(--nb-ink);
-  border:2.5px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   font-family:var(--nb-head);font-weight:900;letter-spacing:.08em;
   box-shadow:none;
 }
@@ -810,7 +810,7 @@ h1.hero-headline{
 /* Back-to-top */
 .to-top{
   background:var(--nb-paper);color:var(--nb-ink);
-  border:2.5px solid var(--nb-line);
+  border:1px solid var(--nb-line);
   box-shadow:none;
 }
 .to-top:hover{background:var(--nb-acid);color:var(--nb-ink)}
@@ -879,7 +879,7 @@ html{overflow-x:clip}
 .menu-search{
   display:flex;align-items:center;gap:10px;
   margin-top:44px;
-  border:2.5px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   padding:4px 8px 4px 20px;background:var(--nb-surface);
 }
 .menu-search input{
@@ -899,7 +899,7 @@ html{overflow-x:clip}
 .sf-newsletter{gap:10px}
 .sf-newsletter input{
   background:var(--nb-surface);color:var(--nb-ink);
-  border:2.5px solid var(--nb-line);border-radius:2px;padding:13px 18px;
+  border:1px solid var(--nb-line);border-radius:2px;padding:13px 18px;
   font-family:var(--nb-body);
 }
 .sf-newsletter input::placeholder{color:var(--nb-muted)}
@@ -910,7 +910,7 @@ html{overflow-x:clip}
 }
 /* keep the wordmark clear of the sticky mobile buy bar */
 @media(max-width:768px){
-  .site-footer{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .site-footer.nb-footer{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 }
 
 /* ── Homepage goods cards → PDP links ──────────────────────────── */
@@ -953,7 +953,7 @@ nav.pdp-crumb{
 /* count text sits on the light PDP header — force ink for WCAG contrast (main.css defaults it to white) */
 .pdp-rating .hr-count{color:var(--nb-ink);opacity:.9}
 .trust-chips .t-chip,.trust-chips .t-chip:nth-child(odd){
-  background:var(--nb-surface);color:var(--nb-ink);border:2px solid var(--nb-line);
+  background:var(--nb-surface);color:var(--nb-ink);border:1px solid var(--nb-line);
   font-family:var(--nb-head);font-weight:900;
 }
 
@@ -998,7 +998,7 @@ nav.pdp-crumb{
 .ritual-section .section-eyebrow-line{background:var(--nb-chip)}
 .ritual-grid{max-width:680px;margin:0 auto}
 .ritual-tile{
-  background:var(--nb-surface);border:2.5px solid var(--nb-line);border-radius:var(--nb-r-sm);
+  background:var(--nb-surface);border:1px solid var(--nb-line);border-radius:var(--nb-r-sm);
   box-shadow:none;color:var(--nb-ink);
 }
 .ritual-num{color:var(--nb-muted)}
@@ -1006,7 +1006,7 @@ nav.pdp-crumb{
 .ritual-desc{color:var(--nb-muted)}
 .ritual-meta{
   font-family:var(--nb-head);font-weight:900;letter-spacing:.08em;
-  background:var(--nb-acid);color:var(--nb-ink);border:2px solid var(--nb-line);
+  background:var(--nb-acid);color:var(--nb-ink);border:1px solid var(--nb-line);
   border-radius:2px;padding:4px 10px;
 }
 
@@ -1025,13 +1025,13 @@ nav.pdp-crumb{
 .sv-q{color:var(--nb-ink)}
 .sv-btn{
   background:var(--nb-acid);color:var(--nb-ink);
-  border:2.5px solid var(--nb-line);border-radius:50%;
+  border:1px solid var(--nb-line);border-radius:50%;
   box-shadow:none;
 }
 .sv-btn:active{transform:none;box-shadow:none}
 .sv-val{color:var(--nb-ink)}
 .sv-val span{color:var(--nb-muted)}
-.sv-out-box{background:var(--nb-paper);border:2px solid var(--nb-line);border-radius:2px}
+.sv-out-box{background:var(--nb-paper);border:1px solid var(--nb-line);border-radius:2px}
 .sv-out-num{font-family:var(--nb-head);font-weight:900;color:var(--nb-ink)}
 .sv-out-lbl{color:var(--nb-muted)}
 .sv-note{color:var(--nb-muted)}
@@ -1085,7 +1085,7 @@ nav.pdp-crumb{
 }
 .nb-qty-stepper{
   display:inline-flex;align-items:center;
-  background:var(--nb-surface);border:2.5px solid var(--nb-line);border-radius:2px;
+  background:var(--nb-surface);border:1px solid var(--nb-line);border-radius:2px;
   box-shadow:none;overflow:hidden;
 }
 .nb-qty-btn{
@@ -1107,76 +1107,47 @@ nav.pdp-crumb{
 .mobile-bar .nb-qty-btn{width:38px;height:38px;font-size:20px}
 .mobile-bar .nb-qty-val{min-width:28px;font-size:17px}
 
-/* ── CART DRAWER + CHECKOUT — light re-skin ────────────────────────
-   main.css paints these with the shared CSS variables, so flipping
-   the variables *scoped to these containers* re-themes every inner
-   element without re-declaring each rule. Neo touches layered on. */
-.cart-drawer,.overlay-panel{
-  --bg:#FAFAF7;--bg-surface:var(--nb-white);--bg-subtle:#EFEFE8;
-  --text:var(--nb-ink);--text-secondary:#33332F;--muted:var(--nb-muted);
-  --rule:#C9C9C0;--card:var(--nb-white);--border:#C9C9C0;--border-subtle:#E8E8E1;
-  --silver:#33332F;--gray:var(--nb-muted);--shadow:rgba(0,0,0,.10);
-  /* acid text on white is unreadable — darken accent-as-text inside
-     these light containers (explicit acid fills above are unaffected) */
-  --accent:#3A7A00;--acid:#3A7A00;--green:#3A7A00;
-  --accent-hover:#2F6400;--accent-light:rgba(184,255,87,.30);
-  background:#FAFAF7;color:var(--nb-ink);
-}
-.cart-drawer{border-left:3px solid var(--nb-line)}
-.cart-drawer .cd-head{border-bottom:2.5px solid var(--nb-line)}
+/* (old light cart/checkout re-skin removed — dark theme lives in the SO2 remediation block below) */
+.cart-drawer{border-left:1px solid var(--nb-line)}
+.cart-drawer .cd-head{border-bottom:1px solid var(--nb-line)}
 .cart-drawer .cd-checkout{
   font-family:var(--nb-head);font-weight:900;text-transform:uppercase;letter-spacing:.06em;
   background:var(--nb-acid);color:var(--nb-ink);
-  border:2.5px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   box-shadow:none;
 }
 .cart-drawer .cd-checkout:active{transform:none;box-shadow:none}
 .cart-drawer .cd-continue{
   background:transparent;color:var(--nb-ink);
-  border:2px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
 }
-.overlay-panel{border:3px solid var(--nb-line);box-shadow:none}
+.overlay-panel{border:1px solid var(--nb-line);box-shadow:none}
 .overlay .submit-btn{
   font-family:var(--nb-head);font-weight:900;text-transform:uppercase;letter-spacing:.06em;
   background:var(--nb-acid);color:var(--nb-ink);
-  border:2.5px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   box-shadow:none;
 }
 .overlay .submit-btn:active{transform:none;box-shadow:none}
 .overlay input,.overlay select,.overlay textarea{
-  background:var(--nb-surface);color:var(--nb-ink);border:2px solid var(--nb-line);border-radius:2px;
+  background:var(--nb-surface);color:var(--nb-ink);border:1px solid var(--nb-line);border-radius:2px;
 }
 .overlay input::placeholder,.overlay textarea::placeholder{color:#6B6B64}
-.overlay .pay-opt{background:var(--nb-surface);border:2px solid var(--nb-line);border-radius:2px;color:var(--nb-ink)}
+.overlay .pay-opt{background:var(--nb-surface);border:1px solid var(--nb-line);border-radius:2px;color:var(--nb-ink)}
 .overlay .pay-opt.active{background:var(--nb-acid);border-color:var(--nb-line)}
-.overlay .summary-card{background:var(--nb-surface);border:2px solid var(--nb-line);border-radius:2px}
+.overlay .summary-card{background:var(--nb-surface);border:1px solid var(--nb-line);border-radius:2px}
 .overlay .upi-cta,.overlay .wa-btn{
   background:var(--nb-acid);color:var(--nb-ink);
-  border:2px solid var(--nb-line);border-radius:2px;box-shadow:none;
+  border:1px solid var(--nb-line);border-radius:2px;box-shadow:none;
 }
 .cart-toast{
   background:var(--nb-acid);color:var(--nb-ink);
-  border:2.5px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   font-family:var(--nb-head);font-weight:900;text-transform:uppercase;letter-spacing:.06em;
   box-shadow:none;
 }
 
-/* ── Consent bar — light (inline styles need !important) ───────── */
-#smelloff-consent-bar{
-  background:#FAFAF7!important;
-  border-top:3px solid var(--nb-line)!important;
-}
-#smelloff-consent-bar p{color:#33332F!important}
-#smelloff-consent-bar a{color:var(--nb-ink)!important;text-decoration:underline!important}
-#smelloff-consent-bar button:first-child{
-  background:var(--nb-acid)!important;color:var(--nb-ink)!important;
-  border:2px solid var(--nb-line)!important;border-radius:2px!important;
-  box-shadow:none;
-}
-#smelloff-consent-bar button:last-child{
-  background:transparent!important;color:var(--nb-ink)!important;
-  border:2px solid var(--nb-line)!important;border-radius:2px!important;
-}
+/* (old light consent bar removed — dark version below) */
 
 /* ── Motion safety ─────────────────────────────────────────────── */
 @media(prefers-reduced-motion:reduce){
@@ -1270,7 +1241,9 @@ h1.hero-headline{-webkit-text-stroke:0;color:var(--nb-ink)}
 .nb-btn--acid,.pc-cod-cta,.final-cta,.sv-cta,.sv-btn,.nb-buy-now,.buy-pill,.ritual-meta,
 .cta-card a,.cart-drawer .cd-checkout,.overlay .submit-btn,.overlay .upi-cta,.overlay .wa-btn,
 .cart-toast,.mobile-bar .mb-btn,.price-off,.step .time,.badge.safe,.rc-badge,.pc-tag,
-.trust-chips .t-chip,.mobile-bar .mb-pill.active{color:#080808}
+.mobile-bar .mb-pill.active{color:#080808}
+/* trust chips sit on a DARK surface — white text (was wrongly in the acid list) */
+.trust-chips .t-chip,.trust-chips .t-chip:nth-child(odd){color:#FFFFFF}
 .pc-tag{background:var(--nb-acid)}
 .mobile-bar .mb-pill.active{background:var(--nb-acid)}
 .price-off{background:var(--nb-acid)}

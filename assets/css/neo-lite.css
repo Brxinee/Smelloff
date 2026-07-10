@@ -54,7 +54,7 @@ html{scroll-padding-top:88px}
 /* ── Top bar (p-nav / blog-nav / b-nav): solid black like the main site ── */
 .p-nav,.blog-nav,.b-nav{
   background:var(--nb-black);
-  border-bottom:3px solid var(--nb-line);
+  border-bottom:1px solid var(--nb-line);
 }
 .p-nav a,.blog-nav a{color:#fff}
 .blog-nav{background:var(--nb-black)!important;backdrop-filter:none}
@@ -74,7 +74,7 @@ html{scroll-padding-top:88px}
   font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;
   letter-spacing:.08em;
   background:var(--nb-acid)!important;color:var(--nb-ink)!important;
-  border:2px solid var(--nb-line)!important;border-radius:2px!important;
+  border:1px solid var(--nb-line)!important;border-radius:2px!important;
   box-shadow:none;
 }
 .drop-cap::first-letter{color:var(--nb-ink)!important}
@@ -86,7 +86,7 @@ html{scroll-padding-top:88px}
   font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;
   letter-spacing:.08em;
   background:var(--nb-acid)!important;color:var(--nb-ink)!important;
-  border:2px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   box-shadow:none;
 }
 .p-cta:hover{background:var(--nb-acid)}
@@ -101,7 +101,7 @@ html{scroll-padding-top:88px}
 }
 .p-main a.inline:hover,.p-main p a:hover,.p-main li a:hover{border-bottom-color:var(--nb-line)}
 .p-main .callout{
-  background:var(--nb-surface);border:2.5px solid var(--nb-line);border-left-width:2.5px;
+  background:var(--nb-surface);border:1px solid var(--nb-line);border-left:3px solid var(--nb-acid);
   border-radius:2px;box-shadow:none;
 }
 
@@ -109,14 +109,14 @@ html{scroll-padding-top:88px}
 main input[type="text"],main input[type="tel"],main input[type="email"],
 main input[type="search"],main textarea,main select{
   background:var(--nb-surface);color:var(--nb-ink);
-  border:2px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
 }
 main input::placeholder,main textarea::placeholder{color:#6B6B64}
 main button[type="submit"],.c-btn,.agg-cta,.to-btn{
   font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;
   letter-spacing:.08em;
   background:var(--nb-acid);color:var(--nb-ink);
-  border:2.5px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   box-shadow:none;cursor:pointer;
   transition:transform .12s ease,box-shadow .12s ease;
 }
@@ -127,7 +127,7 @@ main button[type="submit"]:active,.c-btn:active,.agg-cta:active,.to-btn:active{
 /* ── Cards (blog index, contact, reviews) ──────────────────────── */
 .b-card,.c-card,.rv-card,.b-topic,.b-mc,.post-pc{
   background:var(--nb-surface);
-  border:2.5px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:2px;
   box-shadow:none;
 }
 /* Neo-brutalist hover: card lifts, hard ink shadow grows, border flips acid */
@@ -248,14 +248,14 @@ article p a:hover,article li a:hover,.related a:hover,.inline-cta:hover,
 article a.buy-btn,article a.btn,.cta-card a,article a.post-pc,article a.b-mc{
   text-decoration:none!important;background-clip:padding-box;
 }
-.cta-card a{background:var(--nb-acid);color:var(--nb-ink);border:2px solid var(--nb-line);box-shadow:none}
-.end-cta .buy-btn{border:2px solid var(--nb-line);box-shadow:none;color:var(--nb-ink)}
-.timer-btn{color:var(--nb-ink);border:2px solid var(--nb-line);box-shadow:none}
+.cta-card a{background:var(--nb-acid);color:var(--nb-ink);border:1px solid var(--nb-line);box-shadow:none}
+.end-cta .buy-btn{border:1px solid var(--nb-line);box-shadow:none;color:var(--nb-ink)}
+.timer-btn{color:var(--nb-ink);border:1px solid var(--nb-line);box-shadow:none}
 
 /* — "READ →" / next-read arrows: ink text, acid underline — */
 .b-card-arrow{
   color:var(--nb-ink);
-  border-bottom:3px solid var(--nb-acid);
+  border-bottom:1px solid var(--nb-acid);
   padding-bottom:2px;align-self:flex-start;
 }
 .b-mc-meta{color:var(--nb-ink)}
@@ -289,9 +289,9 @@ article a.buy-btn,article a.btn,.cta-card a,article a.post-pc,article a.b-mc{
 .step .time{background:var(--nb-acid);color:var(--nb-ink);font-weight:700}
 .badge.safe{background:var(--nb-acid);color:var(--nb-ink)}
 .rank-badge{background:var(--nb-chip);color:var(--nb-acid)}
-.rank-card.winner .rank-badge{background:var(--nb-acid);color:var(--nb-ink);border:2px solid var(--nb-line)}
+.rank-card.winner .rank-badge{background:var(--nb-acid);color:var(--nb-ink);border:1px solid var(--nb-line)}
 .rc-badge{background:var(--nb-acid);color:var(--nb-ink)}
-.filter-bar button.active{background:var(--nb-acid);border:2px solid var(--nb-line)}
+.filter-bar button.active{background:var(--nb-acid);border:1px solid var(--nb-line)}
 .agg-cta:hover{background:var(--nb-acid)}
 /* current price: acid chip behind ink numerals */
 .end-cta .current-price{
@@ -301,17 +301,17 @@ article a.buy-btn,article a.btn,.cta-card a,article a.post-pc,article a.b-mc{
 }
 
 /* — Filter / jump pills: ink border + ink text; active = acid chip — */
-.b-jump-pill{color:var(--nb-ink);border:2px solid var(--nb-line);background:transparent}
+.b-jump-pill{color:var(--nb-ink);border:1px solid var(--nb-line);background:transparent}
 .b-jump-pill:hover{background:var(--nb-acid);color:var(--nb-ink);border-color:var(--nb-line)}
-.b-drawer-cat{color:var(--nb-ink);border:2px solid var(--nb-line)}
+.b-drawer-cat{color:var(--nb-ink);border:1px solid var(--nb-line)}
 .b-drawer-cat:hover{border-color:var(--nb-line);background:var(--nb-acid);color:var(--nb-ink)}
 .b-drawer-cat.active{background:var(--nb-acid);border-color:var(--nb-line)}
-.b-page-btn{color:var(--nb-ink);border:2px solid var(--nb-line)}
+.b-page-btn{color:var(--nb-ink);border:1px solid var(--nb-line)}
 .b-page-btn:hover:not(:disabled){background:var(--nb-acid)}
 
 /* — Card thumbnails: matte black placeholder slabs (never dead cream) — */
 .b-card-thumb,.b-mc-thumb,.post-pc-thumb{background:var(--nb-black)}
-.b-card-thumb{border-bottom:2.5px solid var(--nb-line)}
+.b-card-thumb{border-bottom:1px solid var(--nb-line)}
 .b-thumb-cat{color:#fff;border-bottom-color:var(--nb-acid)}
 .b-mc-headline,.post-pc-title,.b-buy-heading{color:#fff}
 .b-buy-price{color:#BFC3C8}
@@ -328,24 +328,24 @@ article a.buy-btn,article a.btn,.cta-card a,article a.post-pc,article a.b-mc{
 .b-card-thumb--img .b-thumb-cat{
   position:absolute;left:12px;bottom:12px;z-index:2;
   background:var(--nb-acid);color:var(--nb-ink);
-  border:2px solid var(--nb-line);
+  border:1px solid var(--nb-line);
   padding:4px 10px;font-size:12px;letter-spacing:.18em;
 }
 
 /* — Callouts: paper card, hard ink frame, acid only as the left marker — */
 .callout,.tldr,.timer-box,.cta-card,.quick-answer{
   background:var(--bg-surface);
-  border:2px solid var(--nb-line);
+  border:1px solid var(--nb-line);
   border-left:4px solid var(--nb-acid);
   border-radius:2px;
   box-shadow:none;
 }
-.cat-card,.rank-card,.step{border:2px solid var(--nb-line);border-radius:2px}
+.cat-card,.rank-card,.step{border:1px solid var(--nb-line);border-radius:2px}
 .cat-card.winner,.rank-card.winner{border-color:var(--nb-line);border-left:4px solid var(--nb-acid)}
 
 /* verdict chips need dark-enough text on paper */
-.cat-card .v-skip{background:rgba(179,38,30,.10);color:#8F2020}
-.cat-card .v-situational{background:rgba(150,120,20,.12);color:#6E5A0E}
+.cat-card .v-skip{background:rgba(255,77,77,.12);color:#FF4D4D}
+.cat-card .v-situational{background:rgba(255,204,102,.12);color:#FFCC66}
 
 /* — Reviews: stars & aggregates go ink on paper — */
 .agg-stars,.rc-stars{color:var(--nb-ink)}
@@ -365,12 +365,12 @@ article a.buy-btn,article a.btn,.cta-card a,article a.post-pc,article a.b-mc{
 .step-card .num{color:var(--nb-ink);border-color:var(--nb-line);background:var(--nb-acid)}
 
 /* — Legacy `.nav` header (3 older posts): same black slab as blog-nav — */
-.nav{background:var(--nb-black);backdrop-filter:none;border-bottom:3px solid var(--nb-line)}
+.nav{background:var(--nb-black);backdrop-filter:none;border-bottom:1px solid var(--nb-line)}
 .nav .logo{color:#fff;border-bottom:none;text-decoration:none}
 .nav .logo span{color:var(--nb-acid)}
-.nav-cta{color:var(--nb-ink);border:2px solid var(--nb-line);box-shadow:none}
+.nav-cta{color:var(--nb-ink);border:1px solid var(--nb-line);box-shadow:none}
 .reason-card .badge{background:var(--nb-chip);color:var(--nb-acid);border-color:var(--nb-line)}
-.download-card{background:var(--bg-surface);border:2px solid var(--nb-line);border-radius:2px;box-shadow:none}
+.download-card{background:var(--bg-surface);border:1px solid var(--nb-line);border-radius:2px;box-shadow:none}
 .download-card h3{
   color:var(--nb-ink);
   text-decoration:underline;text-decoration-thickness:4px;
@@ -380,7 +380,7 @@ article a.buy-btn,article a.btn,.cta-card a,article a.post-pc,article a.b-mc{
 /* — Back-to-top: ink slab with acid arrow (acid-on-dark is legal) — */
 .to-top{
   background:var(--nb-chip);color:var(--nb-acid);
-  border:2px solid var(--nb-line);
+  border:1px solid var(--nb-line);
   box-shadow:none;
 }
 .to-top:hover{background:var(--nb-acid);color:var(--nb-ink)}
