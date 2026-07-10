@@ -192,19 +192,7 @@ body > nav .logo img{display:block;width:auto;height:24px}
   transform:rotate(-1.5deg);
 }
 .nb-hero-stage{position:relative;width:min(420px,88vw);margin:6px auto 0}
-h1.hero-headline{
-  position:relative;z-index:3;
-  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
-  font-size:clamp(84px,26vw,240px);
-  line-height:.82;letter-spacing:-.01em;color:var(--nb-ink);
-  margin:0 0 -0.36em;
-  text-align:center;
-  pointer-events:none;
-  /* acid rim: invisible on the green slab, keeps the overlapping glyphs
-     legible where they break over the dark product photo */
-  -webkit-text-stroke:0;
-  paint-order:stroke fill;
-}
+/* (legacy nb-hero h1 rules removed — so2 hero owns .hero-headline now) */
 .nb-hero-media{position:relative;z-index:2}
 .nb-hero-frame{
   border-radius:2px;
@@ -215,11 +203,6 @@ h1.hero-headline{
 .nb-sticker--hero1{top:26%;right:-26px;transform:rotate(12deg)}
 .nb-sticker--hero2{bottom:-26px;left:-22px;width:108px;height:108px}
 .nb-sticker--hero3{top:38%;left:-30px;transform:rotate(-16deg);width:88px;height:88px;display:none}
-.hero-sub{
-  font-family:var(--nb-head);font-weight:900;text-transform:uppercase;
-  font-size:clamp(20px,5.4vw,32px);line-height:1.05;letter-spacing:.03em;
-  color:var(--nb-ink);margin:34px 0 0;max-width:560px;
-}
 .nb-hero-hook{
   font-family:var(--nb-body);font-size:15px;line-height:1.5;color:var(--nb-ink);
   margin:12px 0 0;max-width:460px;opacity:.85;
@@ -1188,7 +1171,6 @@ nav.pdp-crumb{
 /* — HERO: dark surface, product-forward, single acid CTA — */
 .nb-hero{background:#080808;color:var(--nb-ink);border-bottom:1px solid var(--nb-line)}
 .nb-hero-eyebrow{background:transparent;color:var(--nb-muted);border:1px solid var(--nb-line);box-shadow:none}
-h1.hero-headline{-webkit-text-stroke:0;color:var(--nb-ink)}
 .hero-sub,.nb-hero-hook,.nb-hero .hero-rating,.nb-hero .hr-stars,.nb-hero .hero-rating .hr-count{color:var(--nb-ink)}
 .nb-hero-hook{color:var(--nb-muted)}
 .nb-hero-note{color:var(--nb-muted)}
@@ -1481,3 +1463,30 @@ h1.hero-headline{-webkit-text-stroke:0;color:var(--nb-ink)}
 /* Footer <nav> columns — undo main.css's bare `nav{position:fixed}` */
 .so2-footer nav{position:static;top:auto;left:auto;right:auto;height:auto;z-index:auto;
   padding:0;background:none;border:none;display:block;grid-template-columns:none}
+
+/* ═══ SO2 legacy-collision neutralizers + mobile rhythm (viewer QA pass) ═══ */
+
+/* main.css .problem (flex column + own padding) leaks into the so2 problem
+   section — reset the section shell; .so2-wrap owns the layout */
+section.problem.so2{display:block;padding:0;margin:0;max-width:none;gap:0;border-bottom:none}
+/* main.css `.problem h2` (0,1,1) outguns .so2-display (0,1,0) — re-assert */
+.problem.so2 h2.so2-display{
+  font-size:clamp(44px,7.5vw,88px);line-height:.95;letter-spacing:-.02em;
+  text-transform:uppercase;color:#fff;margin:16px 0 0;max-width:none}
+
+/* Hero: no fixed min-height on small screens (was stretching the section) */
+.so2-hero .so2-wrap{min-height:0}
+@media(min-width:900px){.so2-hero .so2-wrap{min-height:86vh}}
+
+/* Tighter mobile rhythm — desktop keeps the 128px cadence */
+@media(max-width:767px){
+  .so2-wrap{padding:64px 16px}
+  .so2-hero .so2-wrap{padding-top:24px;padding-bottom:56px}
+  .so2-step{min-height:150px;padding:20px}
+  .so2-step-title{margin-top:16px}
+  .so2-steps,.so2-compare,.so2-cards,.so2-soon{margin-top:36px}
+}
+
+/* Product frames: crop into the bottle render (the source PNG is mostly
+   black padding with the bottle top-left) */
+.so2-frame img{object-fit:cover;object-position:37% 43%}
