@@ -18,8 +18,9 @@ serif display, acid-green #B8FF57 highlights, JetBrains Mono labels) from the
 April 2026 codebase, paired with current-correct data:
 - **₹229 solo (50ml) is the ONLY SKU. No duo/trio/bundles anywhere.** `/odorstrike` redirects to `/#buy`.
 - Claim: "up to 8 hours odor protection on fabric". Glycerine-free, zero residue.
-- 4-layer mechanism: TRAP HPβCD 2% · NEUTRALIZE Zinc PCA 1% · PREVENT Triethyl Citrate 3% · ANTI-REGROWTH Zinc Gluconate 0.5% (Formula v3.1).
+- 4-layer mechanism: TRAP HPβCD · NEUTRALIZE Zinc PCA · PREVENT Triethyl Citrate · ANTI-REGROWTH Zinc Gluconate (Formula v3.1).
 - NEVER list Zinc Ricinoleate, Sodium Bicarbonate, or Glycerine as ingredients.
+- **NEVER publish formula percentages/concentrations anywhere** (site, schema, llms.txt, blog). Ingredient NAMES are public; exact amounts are a trade secret. Say "exact concentrations are proprietary" if asked.
 - `index.html` is fully self-contained (single-file CSS/JS incl. checkout: UPI + COD + Supabase mirror + Sheets logging + Resend email + consent-gated analytics). It does NOT use `/assets/js/app.js` or `/assets/css/neo.css` — other pages (faq, reviews) still do.
 - Canonical domain is `https://smelloff.in` (non-www; www redirects).
 
