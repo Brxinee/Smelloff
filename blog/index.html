@@ -198,15 +198,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
     .b-card.featured .b-thumb-cat{font-size:18px}
   }
 
-  /* Trending marquee — JS-driven, swipeable */
+  /* Trending — normal static grid */
   .b-marquee{
     border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
-    background:var(--bg);padding:24px 0;
-    position:relative;overflow:hidden;
-    user-select:none;
+    background:var(--bg);padding:32px 0;
+    position:relative;
   }
   .b-marquee-label{
-    max-width:1120px;margin:0 auto 14px;padding:0 20px;
+    max-width:1120px;margin:0 auto 16px;padding:0 20px;
     font-family:'JetBrains Mono',monospace;font-weight:400;font-size:12px;
     letter-spacing:.22em;text-transform:uppercase;color:var(--accent);
     display:flex;align-items:center;gap:10px;
@@ -217,19 +216,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
     animation:b-pulse 1.6s ease-in-out infinite;
   }
   @keyframes b-pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .b-marquee-viewport{
-    overflow:hidden;cursor:grab;
-    touch-action:pan-y;
-  }
-  .b-marquee-viewport.dragging{cursor:grabbing}
-  .b-marquee-track{
-    display:flex;gap:14px;width:max-content;
-    will-change:transform;
-    transform:translate3d(0,0,0);
-    padding:0 20px;
+  .b-marquee-grid{
+    max-width:1120px;margin:0 auto;padding:0 20px;
+    display:grid;grid-template-columns:1fr;gap:12px;
   }
   .b-mc{
-    flex-shrink:0;width:280px;
     background:var(--bg);border:1px solid var(--rule);border-radius:10px;
     text-decoration:none;color:var(--text);
     overflow:hidden;display:flex;flex-direction:column;
@@ -265,6 +256,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
   }
   .b-mc-meta::after{content:'→';transition:transform .2s ease}
   .b-mc:hover .b-mc-meta::after{transform:translateX(3px)}
+  @media(min-width:640px){
+    .b-marquee-grid{grid-template-columns:1fr 1fr;gap:14px}
+  }
+  @media(min-width:1000px){
+    .b-marquee-grid{grid-template-columns:repeat(4,1fr)}
+  }
 
   /* Section heading */
   .b-section-head{
@@ -686,146 +683,26 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
 
 <section class="b-marquee" aria-label="Trending guides">
   <div class="b-marquee-label">Trending now</div>
-  <div class="b-marquee-viewport" id="marqueeVp">
-    <div class="b-marquee-track" id="marqueeTrack">
-      <a class="b-mc" href="/blog/odorstrike-vs-febreze-india">
-        <div class="b-mc-thumb"><span class="b-mc-cat">Comparison</span><span class="b-mc-headline">ODORSTRIKE vs Febreze on Indian clothes</span></div>
-        <div class="b-mc-meta">Read the head-to-head</div>
-      </a>
-      <a class="b-mc" href="/blog/odorstrike-review-30-day-india-test">
-        <div class="b-mc-thumb"><span class="b-mc-cat">Reviews</span><span class="b-mc-headline">ODORSTRIKE 30-day India test</span></div>
-        <div class="b-mc-meta">Read the review</div>
-      </a>
-      <a class="b-mc" href="/blog/gym-to-office-without-showering">
-        <div class="b-mc-thumb"><span class="b-mc-cat">Gym-to-Office</span><span class="b-mc-headline">Gym to office without showering</span></div>
-        <div class="b-mc-meta">Read the fix</div>
-      </a>
-      <a class="b-mc" href="/blog/keep-gym-clothes-fresh-in-bag">
-        <div class="b-mc-thumb"><span class="b-mc-cat">Gym Bag</span><span class="b-mc-headline">Keep gym clothes fresh in your bag</span></div>
-        <div class="b-mc-meta">Read the guide</div>
-      </a>
-    </div>
+  <div class="b-marquee-grid">
+    <a class="b-mc" href="/blog/odorstrike-vs-febreze-india">
+      <div class="b-mc-thumb"><span class="b-mc-cat">Comparison</span><span class="b-mc-headline">ODORSTRIKE vs Febreze on Indian clothes</span></div>
+      <div class="b-mc-meta">Read the head-to-head</div>
+    </a>
+    <a class="b-mc" href="/blog/odorstrike-review-30-day-india-test">
+      <div class="b-mc-thumb"><span class="b-mc-cat">Reviews</span><span class="b-mc-headline">ODORSTRIKE 30-day India test</span></div>
+      <div class="b-mc-meta">Read the review</div>
+    </a>
+    <a class="b-mc" href="/blog/gym-to-office-without-showering">
+      <div class="b-mc-thumb"><span class="b-mc-cat">Gym-to-Office</span><span class="b-mc-headline">Gym to office without showering</span></div>
+      <div class="b-mc-meta">Read the fix</div>
+    </a>
+    <a class="b-mc" href="/blog/keep-gym-clothes-fresh-in-bag">
+      <div class="b-mc-thumb"><span class="b-mc-cat">Gym Bag</span><span class="b-mc-headline">Keep gym clothes fresh in your bag</span></div>
+      <div class="b-mc-meta">Read the guide</div>
+    </a>
   </div>
 </section>
 
-<script>
-(function(){
-  var vp = document.getElementById('marqueeVp');
-  var track = document.getElementById('marqueeTrack');
-  if(!vp || !track) return;
-
-  var pos = 0;            // current translateX in px (negative = scrolled left)
-  var halfW = 0;          // full track width — resets scroll to start when reached
-  var dragging = false;
-  var dragStartX = 0;
-  var dragStartPos = 0;
-  var lastMoveX = 0;
-  var lastMoveT = 0;
-  var velocity = 0;       // px/ms from drag
-  var dragMoved = false;
-  var resumeT = 0;
-  var paused = false;
-  var lastFrame = 0;
-  var SPEED = 0.04;       // px/ms ~ 40 px/sec auto-scroll
-  var DECAY = 0.92;       // velocity decay per frame after release
-
-  function measure(){
-    halfW = track.scrollWidth;
-  }
-  measure();
-  window.addEventListener('resize', measure);
-  // Re-measure once fonts/images settle
-  setTimeout(measure, 600);
-
-  function setX(x){
-    // Normalize to [-halfW, 0]
-    if(halfW > 0){
-      while(x <= -halfW) x += halfW;
-      while(x > 0) x -= halfW;
-    }
-    pos = x;
-    track.style.transform = 'translate3d(' + x + 'px,0,0)';
-  }
-  setX(0);
-
-  function tick(t){
-    if(!lastFrame) lastFrame = t;
-    var dt = t - lastFrame;
-    lastFrame = t;
-    if(!dragging && !paused){
-      if(Math.abs(velocity) > 0.005){
-        // Glide from drag release
-        setX(pos + velocity * dt);
-        velocity *= Math.pow(DECAY, dt / 16.7);
-      } else {
-        velocity = 0;
-        setX(pos - SPEED * dt);
-      }
-    }
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-
-  function onDown(e){
-    dragging = true;
-    dragMoved = false;
-    velocity = 0;
-    dragStartX = e.clientX;
-    dragStartPos = pos;
-    lastMoveX = e.clientX;
-    lastMoveT = performance.now();
-    vp.classList.add('dragging');
-    try { vp.setPointerCapture(e.pointerId); } catch(_) {}
-  }
-  function onMove(e){
-    if(!dragging) return;
-    var dx = e.clientX - dragStartX;
-    if(Math.abs(dx) > 4) dragMoved = true;
-    setX(dragStartPos + dx);
-    var now = performance.now();
-    var dt = now - lastMoveT;
-    if(dt > 0) velocity = (e.clientX - lastMoveX) / dt;
-    lastMoveX = e.clientX;
-    lastMoveT = now;
-  }
-  function onUp(e){
-    if(!dragging) return;
-    dragging = false;
-    vp.classList.remove('dragging');
-    try { vp.releasePointerCapture(e.pointerId); } catch(_) {}
-    // If we actually dragged, swallow the click that follows
-    if(dragMoved){
-      var swallow = function(ev){
-        ev.preventDefault();
-        ev.stopPropagation();
-        vp.removeEventListener('click', swallow, true);
-      };
-      vp.addEventListener('click', swallow, true);
-      setTimeout(function(){ vp.removeEventListener('click', swallow, true); }, 50);
-    }
-  }
-  vp.addEventListener('pointerdown', onDown);
-  vp.addEventListener('pointermove', onMove);
-  vp.addEventListener('pointerup', onUp);
-  vp.addEventListener('pointercancel', onUp);
-  vp.addEventListener('pointerleave', function(e){ if(dragging) onUp(e); });
-
-  // Pause auto-scroll when hovered (desktop), resume on leave
-  vp.addEventListener('mouseenter', function(){ paused = true; });
-  vp.addEventListener('mouseleave', function(){ paused = false; });
-
-  // Pause when tab hidden so we don't pile up RAF deltas
-  document.addEventListener('visibilitychange', function(){
-    if(document.hidden){ paused = true; lastFrame = 0; }
-    else { paused = false; lastFrame = 0; }
-  });
-
-  // Respect reduced-motion: stop auto-scroll, leave drag interactive
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    SPEED = 0;
-  }
-})();
-</script>
 
 
 
