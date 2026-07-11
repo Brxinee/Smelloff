@@ -27,7 +27,7 @@ CSS = """  :root { --black:#080808; --off-white:#EDEAE0; --acid:#B8FF57; --grey:
   #progress-bar{position:fixed;top:0;left:0;height:2px;width:0%;background:var(--acid);z-index:200;transition:width .1s linear}
   .blog-nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between}
   .blog-nav .logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:3px;text-transform:uppercase;color:var(--off-white);text-decoration:none;position:relative;padding-right:12px}
-  .blog-nav .logo::after{content:'';position:absolute;top:-2px;right:0;width:6px;height:6px;background:var(--acid);border-radius:50%}
+  .blog-nav .logo::after{content:none} /* acid dot baked into logo image */
   .blog-nav .buy-pill{background:var(--acid);color:var(--black);font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;padding:8px 18px;border-radius:100px;text-decoration:none}
   .article-wrap{max-width:680px;margin:0 auto;padding:60px 32px 100px}
   .article-header{margin-bottom:48px}
@@ -206,7 +206,7 @@ def build_post(cfg):
 <div id="progress-bar"></div>
 
 <nav class="blog-nav">
-  <a href="/" class="logo">Smelloff</a>
+  <a href="/" class="logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:20px;width:auto;display:block"></a>
   <a href="/#buy" class="buy-pill">BUY ₹229</a>
 </nav>
 
@@ -243,7 +243,7 @@ def build_post(cfg):
 </article>
 
 <footer class="blog-footer">
-  <a href="/" style="font-family:Barlow Condensed,sans-serif;font-weight:900;font-size:24px;letter-spacing:.06em;text-transform:uppercase;color:var(--off-white);position:relative;padding-right:.2em;text-decoration:none"><span style="position:relative">SMELLOFF<span style="position:absolute;top:-.06em;right:-.24em;width:.16em;height:.16em;background:var(--acid);border-radius:50%"></span></span></a>
+  <a href="/" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:24px;width:auto;display:block;margin:0 auto"></a>
   <div class="footer-links">
     <a href="/">Home</a>
     <a href="/blog">Blogs</a>
