@@ -2706,6 +2706,7 @@ window.createSupabaseOrder = function (opts) {
       var first = document.getElementById('f_phone');
       if (first) first.focus();
     }, 100);
+    trackAddToCart();
     trackInitCheckout();
   }
 
@@ -2773,8 +2774,8 @@ window.createSupabaseOrder = function (opts) {
     const label = method === 'cod' ? 'Place COD order · ₹' + total : 'Open UPI app · ₹' + total;
     document.getElementById('submitText').textContent = label;
     // AddPaymentInfo event
-    if (typeof fbq !== 'undefined') fbq('track', 'AddPaymentInfo', { payment_type: method });
-    if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method });
+    if (typeof fbq !== 'undefined') { var _api = fbContents(total); _api.payment_type = method; fbq('track', 'AddPaymentInfo', _api); }
+    if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: total, items: gaItems(total) });
   }
 
   function showError(msg) {
@@ -3278,14 +3279,61 @@ window.createSupabaseOrder = function (opts) {
   // ==============================
   // ANALYTICS EVENTS
   // ==============================
-  function trackInitCheckout() {
-    if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout');
-    if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout');
+  // Single-SKU catalogue identity — shared across every GA4 + Meta Pixel event
+  // so price/product data is always structured (fixes Meta "same price
+  // information" diagnostics and enables value optimisation + dynamic ads).
+  var OS_SKU  = 'OS-001-50ML';
+  var OS_NAME = 'ODORSTRIKE Fabric Odor Mist';
+  function osValue() {
+    var v = VARIANTS[currentVariant] && VARIANTS[currentVariant].amount;
+    if (typeof v !== 'number' || !(v > 0)) {
+      v = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES && window.SMELLOFF_CONFIG.PRICES.solo) || 229;
+    }
+    return Number(v);
   }
+  // GA4 ecommerce items array
+  function gaItems(value, qty) {
+    qty = qty || 1;
+    return [{ item_id: OS_SKU, item_name: OS_NAME, price: Number(value), quantity: qty }];
+  }
+  // Meta Pixel content payload (numeric value > 0, per-item contents, num_items)
+  function fbContents(value, qty) {
+    qty = qty || 1;
+    value = Number(value);
+    return {
+      value: value, currency: 'INR',
+      content_ids: [OS_SKU], content_type: 'product', content_name: OS_NAME,
+      contents: [{ id: OS_SKU, quantity: qty, item_price: value / qty }],
+      num_items: qty
+    };
+  }
+
+  function trackAddToCart() {
+    var v = osValue();
+    if (typeof fbq !== 'undefined') fbq('track', 'AddToCart', fbContents(v));
+    if (typeof gtag !== 'undefined') gtag('event', 'add_to_cart', { currency: 'INR', value: v, items: gaItems(v) });
+  }
+  window.trackAddToCart = trackAddToCart;
+
+  function trackInitCheckout() {
+    var v = osValue();
+    if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', fbContents(v));
+    if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', { currency: 'INR', value: v, items: gaItems(v) });
+  }
+
+  // Idempotency guard: a page reload or duplicate success render must never
+  // double-count the same order. Meta additionally dedupes on eventID.
+  var _purchasedOrders = {};
   function trackPurchase(amount, orderId) {
-    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: amount, currency: 'INR' });
+    amount = Number(amount) || osValue();
+    if (orderId && _purchasedOrders[orderId]) return;
+    if (orderId) _purchasedOrders[orderId] = true;
+    if (typeof fbq !== 'undefined') {
+      if (orderId) fbq('track', 'Purchase', fbContents(amount), { eventID: 'purchase_' + orderId });
+      else fbq('track', 'Purchase', fbContents(amount));
+    }
     if (typeof gtag !== 'undefined') gtag('event', 'purchase', {
-      transaction_id: orderId, value: amount, currency: 'INR'
+      transaction_id: orderId, value: amount, currency: 'INR', items: gaItems(amount)
     });
   }
   window.trackInitCheckout = trackInitCheckout;
@@ -3299,9 +3347,9 @@ window.createSupabaseOrder = function (opts) {
       if (fired) return;
       if (entries[0].isIntersecting) {
         fired = true;
-        var vcPrice = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES.solo) || 229;
-        if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', { content_name: 'ODORSTRIKE', value: vcPrice, currency: 'INR' });
-        if (typeof gtag !== 'undefined') gtag('event', 'view_item', { currency: 'INR', value: vcPrice, items: [{ item_id: 'OS-001-50ML', item_name: 'ODORSTRIKE Fabric Odor Mist' }] });
+        var vcPrice = osValue();
+        if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', fbContents(vcPrice));
+        if (typeof gtag !== 'undefined') gtag('event', 'view_item', { currency: 'INR', value: vcPrice, items: gaItems(vcPrice) });
         obs.disconnect();
       }
     }, { threshold: 0.3 });
