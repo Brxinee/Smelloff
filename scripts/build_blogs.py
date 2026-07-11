@@ -195,6 +195,9 @@ def build_post(cfg):
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
+<!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
+<script src="/assets/js/consent-analytics.js" defer></script>
+
 <style>
 {CSS}</style>
 </head>
