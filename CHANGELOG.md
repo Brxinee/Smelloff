@@ -2,6 +2,36 @@
 
 ---
 
+## 2026-07-11 — Order tracking: timestamped timeline
+
+Branch: `claude/order-tracking-audit-2hwah2`
+
+Audited the customer Track-Order flow (`/track-order` → `track-order` edge
+function → `orders` table) end-to-end. Baseline worked (code+phone lookup,
+phone-gated so codes can't be enumerated) but the timeline could only show the
+*current* stage — never when each stage happened, and no "last updated" or ETA.
+
+**Database** (`supabase/migrations/20260711_order_status_history.sql`)
+- Added `orders.status_history jsonb` (a `[{status, at}]` trail) and
+  `orders.updated_at timestamptz`.
+- Added a `BEFORE INSERT/UPDATE` trigger (`orders_track_status`) that seeds the
+  trail on insert and appends a timestamped entry on every status change, and
+  bumps `updated_at` on status/courier/tracking changes. Admin-agnostic — the
+  trail is correct however status is updated (dashboard, function, raw SQL).
+- Backfilled existing rows from `status` @ `created_at`.
+
+**Edge function** (`supabase/functions/track-order/index.ts`, redeployed v2)
+- Returns `status_history`, `updated_at` (still sanitized — no email/street).
+
+**Front-end** (`track-order.html`)
+- Each timeline step now shows the date + time it happened.
+- Added a "Last updated" line and an "Estimated delivery" window
+  (dispatch + 2–5 days, or placed + 3–7 days; "Arriving today" once out for
+  delivery; "Delivered <date>" once delivered).
+- Shows shipping state next to city.
+
+---
+
 ## 2026-05-12 — Full SEO + GEO + AEO Audit
 
 Branch: `claude/seo-geo-aeo-audit-6D4Nq`

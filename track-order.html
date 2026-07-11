@@ -69,6 +69,12 @@
   .t-step-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
   .t-step.done .t-step-name,.t-step.current .t-step-name{color:var(--text)}
   .t-step-desc{font-size:13px;color:var(--muted);margin-top:2px}
+  .t-step-time{display:none;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--accent);margin-top:4px}
+  .t-step.done .t-step-time,.t-step.current .t-step-time{display:block}
+  .t-eta{display:none;align-items:baseline;gap:10px;flex-wrap:wrap;background:var(--green-dim);border:1px solid rgba(var(--accent-rgb),.35);border-radius:8px;padding:12px 16px;margin-bottom:18px}
+  .t-eta .lbl{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .t-eta .val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:17px;letter-spacing:.02em;color:var(--text)}
+  .t-updated{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:-8px 0 18px}
   .t-track-box{display:none;background:var(--green-dim);border:1px solid rgba(var(--accent-rgb),.35);border-radius:8px;padding:14px 16px;margin-bottom:18px}
   .t-track-box p{font-size:14px;color:var(--text-secondary);margin-bottom:4px}
   .t-track-box b{color:var(--text)}
@@ -150,7 +156,9 @@
   <section class="t-result" id="trackResult" aria-live="polite">
     <div class="t-code" id="rCode"></div>
     <p class="t-meta" id="rMeta"></p>
+    <p class="t-updated" id="rUpdated"></p>
     <div class="t-cancel-banner" id="rCancelled">This order was cancelled. If you paid by UPI, the refund is processed manually within 5–7 business days — WhatsApp us with your UTR if it hasn't arrived.</div>
+    <div class="t-eta" id="rEta"><span class="lbl">Estimated delivery</span><span class="val" id="rEtaVal"></span></div>
     <ol class="t-steps" id="rSteps">
       <li class="t-step" data-step="placed"><span class="t-dot" aria-hidden="true"></span><div><div class="t-step-name">Order placed</div><div class="t-step-desc" id="dPlaced">We've received your order.</div></div></li>
       <li class="t-step" data-step="confirmed"><span class="t-dot" aria-hidden="true"></span><div><div class="t-step-name">Confirmed</div><div class="t-step-desc">Payment/COD verified by our team.</div></div></li>
@@ -235,9 +243,16 @@
     document.getElementById('rCode').textContent = o.order_code;
     var placed = o.placed_at ? new Date(o.placed_at) : null;
     var pm = o.payment_method === 'cod' ? 'Cash on Delivery' : 'UPI';
+    var place = o.city ? (o.city + (o.state ? ', ' + o.state : '')) : '';
     document.getElementById('rMeta').textContent =
-      (placed ? 'Placed ' + placed.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) + ' · ' : '') + pm +
-      (o.city ? ' · Ships to ' + o.city : '');
+      (placed ? 'Placed ' + fmtDate(placed, true) + ' · ' : '') + pm +
+      (place ? ' · Ships to ' + place : '');
+
+    // Timestamped trail from the server: status → when it happened.
+    var statusTime = {};
+    (Array.isArray(o.status_history) ? o.status_history : []).forEach(function(h){
+      if (h && h.status && h.at) statusTime[h.status] = new Date(h.at);
+    });
 
     var cancelled = o.status === 'cancelled';
     show(document.getElementById('rCancelled'), cancelled);
@@ -251,10 +266,50 @@
     var lis = document.querySelectorAll('#rSteps .t-step');
     lis.forEach(function(li, i){
       li.classList.remove('done','current');
-      if (cancelled) return;
-      if (i < idx) li.classList.add('done');
-      if (i === idx) li.classList.add(idx === STEPS.length - 1 ? 'done' : 'current');
+      if (!cancelled) {
+        if (i < idx) li.classList.add('done');
+        if (i === idx) li.classList.add(idx === STEPS.length - 1 ? 'done' : 'current');
+      }
+      // Per-step timestamp — created once, reused if the user tracks again.
+      var box = li.querySelector('.t-step-time');
+      if (!box) { box = document.createElement('div'); box.className = 't-step-time'; li.querySelector('div').appendChild(box); }
+      var step = li.getAttribute('data-step');
+      var t = statusTime[step] || (step === 'placed' ? statusTime.upi_pending : null);
+      box.textContent = t ? (fmtDate(t, false) + ' · ' + fmtTime(t)) : '';
     });
+
+    // "Last updated" line.
+    var upd = o.updated_at ? new Date(o.updated_at) : null;
+    document.getElementById('rUpdated').textContent =
+      upd ? ('Last updated ' + fmtDate(upd, false) + ' · ' + fmtTime(upd)) : '';
+
+    // Estimated delivery — a friendly window derived from the trail.
+    var eta = document.getElementById('rEta');
+    var etaVal = document.getElementById('rEtaVal');
+    var etaLbl = eta.querySelector('.lbl');
+    if (cancelled) {
+      eta.style.display = 'none';
+    } else if (o.status === 'delivered') {
+      var dt = statusTime.delivered;
+      etaLbl.textContent = 'Status';
+      etaVal.textContent = dt ? ('Delivered ' + fmtDate(dt, true)) : 'Delivered';
+      eta.style.display = 'flex';
+    } else {
+      etaLbl.textContent = 'Estimated delivery';
+      var dispatched = statusTime.dispatched || statusTime.out_for_delivery;
+      if (o.status === 'out_for_delivery') {
+        etaVal.textContent = 'Arriving today';
+        eta.style.display = 'flex';
+      } else if (dispatched) {
+        etaVal.textContent = fmtDate(addDays(dispatched, 2), false) + ' – ' + fmtDate(addDays(dispatched, 5), false);
+        eta.style.display = 'flex';
+      } else if (placed && o.status !== 'upi_pending') {
+        etaVal.textContent = fmtDate(addDays(placed, 3), false) + ' – ' + fmtDate(addDays(placed, 7), false);
+        eta.style.display = 'flex';
+      } else {
+        eta.style.display = 'none';
+      }
+    }
 
     var hasTracking = !!(o.tracking_id || o.courier);
     show(document.getElementById('rTrackBox'), hasTracking);
@@ -285,6 +340,18 @@
     return String(s).replace(/[&<>"']/g, function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
     });
+  }
+
+  function fmtDate(d, withYear){
+    return d.toLocaleDateString('en-IN', withYear
+      ? { day:'numeric', month:'short', year:'numeric' }
+      : { day:'numeric', month:'short' });
+  }
+  function fmtTime(d){
+    return d.toLocaleTimeString('en-IN', { hour:'numeric', minute:'2-digit' });
+  }
+  function addDays(d, n){
+    var x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x;
   }
 
   // Auto-track when arriving from the checkout success screen with a code
