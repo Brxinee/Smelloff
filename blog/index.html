@@ -180,6 +180,15 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
     border-bottom:2px solid var(--accent);padding-bottom:6px;
   }
   .b-card-body{padding:18px 18px 18px;display:flex;flex-direction:column;gap:10px}
+  /* Image thumbnails: crop the photo to the card's banner ratio so cards stay short.
+     Without this the raw 1200x630 image renders at full height and makes the card enormous. */
+  .b-card-thumb--img{overflow:hidden}
+  .b-card-thumb--img img{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;display:block;
+  }
+  .b-card-thumb--img .b-thumb-cat{display:none}
+  .b-card-thumb--img::before{z-index:1}
   .b-card.featured .b-card-thumb{aspect-ratio:16/7}
   .b-card.featured .b-thumb-cat{font-size:16px}
 
