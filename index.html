@@ -304,6 +304,7 @@
   @media(max-width:720px){
     nav .meta a:not(.cta){display:none}
     nav{gap:12px}
+    nav .hamburger{margin-left:auto}
   }
 
   .cta-pill{
@@ -314,6 +315,107 @@
     opacity:1 !important;
     mix-blend-mode:normal;
   }
+
+  /* ============================= */
+  /* CART — nav button + drawer    */
+  /* ============================= */
+  .cart-btn{
+    background:var(--acid);color:var(--ink) !important;
+    border:none;padding:8px 14px;border-radius:100px;
+    opacity:1 !important;mix-blend-mode:normal;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;line-height:1;
+  }
+  .cart-btn .cart-ico{width:16px;height:16px;display:block}
+  .cart-btn .cart-count{
+    background:var(--ink);color:var(--acid);border-radius:100px;
+    min-width:18px;height:18px;padding:0 5px;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:700;letter-spacing:0;
+  }
+  .cart-btn .cart-count[data-empty="1"]{display:none}
+
+  .cart-overlay{
+    position:fixed;inset:0;background:rgba(8,8,8,.7);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    z-index:190;display:none;
+  }
+  .cart-overlay.active{display:block}
+  .cart-drawer{
+    position:absolute;top:0;right:0;bottom:0;
+    width:100%;max-width:400px;
+    background:#111;border-left:1px solid rgba(244,241,234,.08);
+    display:flex;flex-direction:column;
+    transform:translateX(100%);transition:transform .3s ease;
+  }
+  .cart-overlay.active .cart-drawer{transform:translateX(0)}
+  .cart-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 24px;border-bottom:1px solid var(--rule);
+  }
+  .cart-head h3{
+    font-family:'Fraunces',serif;font-weight:900;font-size:22px;
+    letter-spacing:-.01em;color:var(--text);margin:0;
+  }
+  .cart-close{
+    width:32px;height:32px;background:transparent;border:1px solid var(--rule);
+    color:var(--text);cursor:pointer;font-size:18px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .cart-body{flex:1;overflow-y:auto;padding:24px}
+  .cart-empty{
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;
+    color:var(--muted);text-align:center;padding:48px 0;text-transform:uppercase;
+  }
+  .cart-line{display:flex;gap:16px;align-items:flex-start}
+  .cart-line-img{
+    width:64px;height:64px;flex-shrink:0;border-radius:3px;
+    background:#080808;border:1px solid var(--rule);object-fit:contain;padding:4px;
+  }
+  .cart-line-info{flex:1;min-width:0}
+  .cart-line-name{
+    font-family:'Fraunces',serif;font-weight:900;font-size:16px;
+    color:var(--text);margin-bottom:4px;line-height:1.15;
+  }
+  .cart-line-unit{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    color:var(--muted);margin-bottom:12px;
+  }
+  .cart-stepper{display:flex;align-items:center;border:1px solid var(--rule);width:max-content;border-radius:3px;overflow:hidden}
+  .cart-stepper button{
+    width:32px;height:32px;background:transparent;border:none;color:var(--text);
+    font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  .cart-stepper button:hover{background:rgba(244,241,234,.06)}
+  .cart-stepper .qty-val{
+    min-width:40px;text-align:center;
+    font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text);
+    border-left:1px solid var(--rule);border-right:1px solid var(--rule);
+    line-height:32px;
+  }
+  .cart-remove{
+    background:none;border:none;color:var(--muted);cursor:pointer;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;
+    text-transform:uppercase;text-decoration:underline;padding:0;margin-top:12px;
+  }
+  .cart-remove:hover{color:var(--text)}
+  .cart-foot{border-top:1px solid var(--rule);padding:20px 24px}
+  .cart-subtotal{
+    display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .cart-subtotal .cart-sub-amt{font-size:22px;color:var(--acid);font-weight:500;font-family:'Fraunces',serif}
+  .cart-ship-note{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;
+    color:var(--muted);margin-bottom:16px;
+  }
+  .cart-checkout{
+    width:100%;background:var(--acid);color:var(--ink);border:none;
+    padding:15px;font-family:'JetBrains Mono',monospace;font-size:12px;
+    font-weight:500;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;
+  }
+  .cart-checkout:disabled{opacity:.4;cursor:not-allowed}
 
   /* Hero */
   .hero{
@@ -1970,7 +2072,10 @@
     <a href="#buy">Pricing</a>
     <a href="#faq">FAQ</a>
     <a href="#reviews">Reviews</a>
-    <a href="#buy" class="cta-pill cta">Buy ₹229</a>
+    <button class="cart-btn cta" id="cartBtn" onclick="openCartDrawer()" aria-label="Open cart">
+      <svg class="cart-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      Cart<span class="cart-count" id="cartCount" data-empty="1">0</span>
+    </button>
   </div>
 </nav>
 
@@ -1987,7 +2092,42 @@
 <!-- STICKY MOBILE BAR -->
 <div class="mobile-bar" id="mobileBar">
   <span class="mb-label">ODORSTRIKE 50ml · ₹229</span>
-  <button class="mb-btn" onclick="openCheckout('solo')">Buy now</button>
+  <button class="mb-btn" onclick="buyNow()">Buy now</button>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="if(event.target===this)closeCartDrawer()">
+  <aside class="cart-drawer" role="dialog" aria-label="Your cart" aria-modal="true">
+    <div class="cart-head">
+      <h3>Your cart</h3>
+      <button class="cart-close" aria-label="Close cart" onclick="closeCartDrawer()">✕</button>
+    </div>
+    <div class="cart-body">
+      <div class="cart-empty" id="cartEmpty">Your cart is empty</div>
+      <div class="cart-line" id="cartLine" style="display:none">
+        <img class="cart-line-img" src="/assets/odorstrike-bottle.png" alt="ODORSTRIKE 50ml" loading="lazy" onerror="this.style.display='none'">
+        <div class="cart-line-info">
+          <div class="cart-line-name">ODORSTRIKE 50ml</div>
+          <div class="cart-line-unit">₹229 · 1 × 50ml</div>
+          <div class="cart-stepper">
+            <button type="button" aria-label="Decrease quantity" onclick="cartDec()">−</button>
+            <span class="qty-val" id="cartQtyVal">1</span>
+            <button type="button" aria-label="Increase quantity" onclick="cartInc()">+</button>
+          </div>
+          <br>
+          <button class="cart-remove" onclick="cartRemove()">Remove</button>
+        </div>
+      </div>
+    </div>
+    <div class="cart-foot" id="cartFoot" style="display:none">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <span class="cart-sub-amt" id="cartSubtotal">₹229</span>
+      </div>
+      <div class="cart-ship-note">Free shipping across India</div>
+      <button class="cart-checkout" id="cartCheckoutBtn" onclick="checkoutFromCart()">Checkout · <span id="cartCheckoutAmt">₹229</span></button>
+    </div>
+  </aside>
 </div>
 
 <!-- HERO -->
@@ -2254,7 +2394,7 @@
       <h3>₹229</h3>
       <div class="per-unit">1 bottle · ~250 sprays · up to 8hr protection</div>
       <div class="save">60% OFF</div>
-      <button onclick="openCheckout('solo')">Buy now</button>
+      <button onclick="buyNow()">Buy now</button>
     </div>
   </div>
   <p class="pay-modes">UPI accepted · Cash on Delivery · ₹0 advance on COD</p>
@@ -2332,7 +2472,7 @@
 <!-- FINAL CTA -->
 <section class="final">
   <h2>Stop being<br>noticed.</h2>
-  <button onclick="openCheckout('solo')">Get ODORSTRIKE — ₹229</button>
+  <button onclick="buyNow()">Get ODORSTRIKE — ₹229</button>
 </section>
 
 <!-- EMAIL CAPTURE -->
@@ -2652,6 +2792,83 @@ window.createSupabaseOrder = function (opts) {
 
   let currentVariant = 'solo';
   let payMethod = 'prepaid'; // matches the default-active .pay-opt[data-method="prepaid"]
+  // Quantity being checked out — sourced from the cart. Unit price stays ₹229
+  // (single SKU); the order pipeline multiplies by this.
+  let cartQty = 1;
+  function unitPrice() { return Number(VARIANTS[currentVariant].amount) || 0; }
+
+  // ============================================================
+  // CART — single-SKU (ODORSTRIKE 50ml), quantity persists in localStorage.
+  // Buy CTAs add to the cart and open the drawer; checkout reads cart qty.
+  // ============================================================
+  var CART_KEY = 'smelloff_cart_v1';
+  function getCartQty() {
+    try { var n = parseInt(localStorage.getItem(CART_KEY), 10); return n > 0 ? n : 0; }
+    catch (e) { return 0; }
+  }
+  function setCartQty(n) {
+    n = Math.max(0, Math.min(99, parseInt(n, 10) || 0));
+    try { localStorage.setItem(CART_KEY, String(n)); } catch (e) {}
+    renderCart();
+  }
+  function renderCart() {
+    var qty = getCartQty();
+    var badge = document.getElementById('cartCount');
+    if (badge) { badge.textContent = String(qty); badge.setAttribute('data-empty', qty > 0 ? '0' : '1'); }
+    var empty = document.getElementById('cartEmpty');
+    var line = document.getElementById('cartLine');
+    var foot = document.getElementById('cartFoot');
+    var hasItems = qty > 0;
+    if (empty) empty.style.display = hasItems ? 'none' : 'block';
+    if (line) line.style.display = hasItems ? 'flex' : 'none';
+    if (foot) foot.style.display = hasItems ? 'block' : 'none';
+    if (hasItems) {
+      var price = (CFG.PRICES && CFG.PRICES.solo) || 229;
+      var sub = price * qty;
+      var qv = document.getElementById('cartQtyVal'); if (qv) qv.textContent = String(qty);
+      var st = document.getElementById('cartSubtotal'); if (st) st.textContent = '₹' + sub;
+      var ca = document.getElementById('cartCheckoutAmt'); if (ca) ca.textContent = '₹' + sub;
+      var unit = document.querySelector('#cartLine .cart-line-unit');
+      if (unit) unit.textContent = '₹' + price + ' · ' + qty + ' × 50ml';
+    }
+  }
+  function openCartDrawer() {
+    renderCart();
+    var ov = document.getElementById('cartOverlay');
+    if (ov) ov.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCartDrawer() {
+    var ov = document.getElementById('cartOverlay');
+    if (ov) ov.classList.remove('active');
+    if (!document.getElementById('checkoutOverlay').classList.contains('active')) {
+      document.body.style.overflow = '';
+    }
+  }
+  // A "Buy" CTA now adds one unit (if the cart is empty) and opens the cart.
+  function buyNow() {
+    if (getCartQty() < 1) setCartQty(1);
+    else renderCart();
+    trackAddToCart();
+    openCartDrawer();
+  }
+  function cartInc() { setCartQty(getCartQty() + 1); }
+  function cartDec() { var q = getCartQty(); if (q <= 1) setCartQty(0); else setCartQty(q - 1); }
+  function cartRemove() { setCartQty(0); }
+  function checkoutFromCart() {
+    var q = getCartQty();
+    if (q < 1) return;
+    cartQty = q;
+    closeCartDrawer();
+    openCheckout('solo');
+  }
+  window.openCartDrawer = openCartDrawer;
+  window.closeCartDrawer = closeCartDrawer;
+  window.buyNow = buyNow;
+  window.cartInc = cartInc;
+  window.cartDec = cartDec;
+  window.cartRemove = cartRemove;
+  window.checkoutFromCart = checkoutFromCart;
 
   // Transactional email client (Resend via /api/send-email).
   // keepalive: true so the request survives page navigation (e.g. UPI redirect).
@@ -2683,11 +2900,14 @@ window.createSupabaseOrder = function (opts) {
   function openCheckout(variant) {
     _checkoutTrigger = document.activeElement;
     currentVariant = variant;
+    // Sync quantity from the cart (default to 1 for any direct/legacy call).
+    if (getCartQty() > 0) cartQty = getCartQty();
+    if (!(cartQty > 0)) cartQty = 1;
     const v = VARIANTS[variant];
-    const total = v.amount;
+    const total = v.amount * cartQty;
     document.getElementById('checkoutTitle').textContent = v.title;
-    document.getElementById('checkoutVariant').textContent = v.units;
-    document.getElementById('checkoutAmount').textContent = '₹' + v.amount;
+    document.getElementById('checkoutVariant').textContent = cartQty + ' × 50ml';
+    document.getElementById('checkoutAmount').textContent = '₹' + v.amount + (cartQty > 1 ? ' × ' + cartQty : '');
     document.getElementById('checkoutTotal').textContent = '₹' + total;
     var shipEl = document.getElementById('checkoutShipping');
     if (shipEl) shipEl.textContent = 'Free ✓';
@@ -2709,7 +2929,6 @@ window.createSupabaseOrder = function (opts) {
       var first = document.getElementById('f_phone');
       if (first) first.focus();
     }, 100);
-    trackAddToCart();
     trackInitCheckout();
   }
 
@@ -2770,15 +2989,15 @@ window.createSupabaseOrder = function (opts) {
     if (upiPanel) upiPanel.style.display = method === 'cod' ? 'none' : 'block';
     if (codPanel) codPanel.style.display = method === 'cod' ? 'block' : 'none';
     const v = VARIANTS[currentVariant];
-    const total = v.amount;
+    const total = v.amount * cartQty;
     // Reflect amount in inline UPI panel
     var upiAmtInline = document.getElementById('upiAmountInline');
     if (upiAmtInline) upiAmtInline.textContent = '₹' + total;
     const label = method === 'cod' ? 'Place COD order · ₹' + total : 'Open UPI app · ₹' + total;
     document.getElementById('submitText').textContent = label;
     // AddPaymentInfo event
-    if (typeof fbq !== 'undefined') { var _api = fbContents(total); _api.payment_type = method; fbq('track', 'AddPaymentInfo', _api); }
-    if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: total, items: gaItems(total) });
+    if (typeof fbq !== 'undefined') { var _api = fbContents(total, cartQty); _api.payment_type = method; fbq('track', 'AddPaymentInfo', _api); }
+    if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: total, items: gaItems(v.amount, cartQty) });
   }
 
   function showError(msg) {
@@ -2835,7 +3054,8 @@ window.createSupabaseOrder = function (opts) {
 
   function collectOrder(orderId, paymentId) {
     const v = VARIANTS[currentVariant] || {};
-    const baseAmount = Number(v.amount) || 0;
+    const qty = cartQty > 0 ? cartQty : 1;
+    const baseAmount = (Number(v.amount) || 0) * qty;
     const shipping = Number(calcShipping(baseAmount)) || 0;
     const sv = SHEET_VARIANT[currentVariant] || { variant: currentVariant, label: v.title || currentVariant, bottles: 1 };
     const isCod = payMethod === 'cod';
@@ -2848,9 +3068,9 @@ window.createSupabaseOrder = function (opts) {
       email: document.getElementById('f_email').value.trim(),
       product: 'ODORSTRIKE Fabric Mist',
       variant: sv.variant,
-      variantLabel: sv.label,
-      units: sv.bottles,
-      quantity: 1,
+      variantLabel: qty > 1 ? ('ODORSTRIKE — ' + qty + ' × 50ml') : sv.label,
+      units: sv.bottles * qty,
+      quantity: qty,
       amount: baseAmount,
       shipping: shipping,
       total: baseAmount + shipping,
@@ -2936,7 +3156,7 @@ window.createSupabaseOrder = function (opts) {
     if (trk) { trk.href = '/track-order?code=' + encodeURIComponent(orderId); trk.style.display = 'inline-block'; }
     try { localStorage.setItem('smelloff_last_order', JSON.stringify({ code: orderId, ts: Date.now() })); } catch (e) {}
 
-    var amount = VARIANTS[currentVariant].amount;
+    var amount = VARIANTS[currentVariant].amount * cartQty;
     var name = (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
     var phone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || '';
 
@@ -2968,7 +3188,8 @@ window.createSupabaseOrder = function (opts) {
       );
     }
 
-    trackPurchase(VARIANTS[currentVariant].amount, orderId);
+    trackPurchase(amount, orderId);
+    setCartQty(0);
     // Unlock review submission (client-side gate — not tamper-proof).
     try {
       var buyerEmail = (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
@@ -2990,7 +3211,7 @@ window.createSupabaseOrder = function (opts) {
     btnText.innerHTML = '<span class="loader"></span>Processing...';
 
     const orderId = genOrderId();
-    const total = VARIANTS[currentVariant].amount;
+    const total = VARIANTS[currentVariant].amount * cartQty;
 
     if (payMethod === 'cod') {
       const order = collectOrder(orderId, 'COD');
@@ -2998,7 +3219,7 @@ window.createSupabaseOrder = function (opts) {
       if (typeof window.createSupabaseOrder === 'function') {
         window.createSupabaseOrder({
           email: order.email, phone: order.phone,
-          items: [{ name: 'ODORSTRIKE Fabric Mist', variant: order.variant, label: order.variantLabel, quantity: order.units, price: order.amount }],
+          items: [{ name: 'ODORSTRIKE Fabric Mist', variant: order.variant, label: order.variantLabel, quantity: order.quantity, price: unitPrice() }],
           amountRupees: order.total, paymentMethod: 'cod',
           address: { name: order.name, line: order.address, city: order.city, state: order.state, pincode: order.pincode },
           upiRef: null,
@@ -3028,7 +3249,7 @@ window.createSupabaseOrder = function (opts) {
     if (typeof window.createSupabaseOrder === 'function') {
       window.createSupabaseOrder({
         email: order.email, phone: order.phone,
-        items: [{ name: 'ODORSTRIKE Fabric Mist', variant: order.variant, label: order.variantLabel, quantity: order.units, price: order.amount }],
+        items: [{ name: 'ODORSTRIKE Fabric Mist', variant: order.variant, label: order.variantLabel, quantity: order.quantity, price: unitPrice() }],
         amountRupees: order.total, paymentMethod: 'upi',
         address: { name: order.name, line: order.address, city: order.city, state: order.state, pincode: order.pincode },
         upiRef: null, // UTR is shared by customer via WhatsApp; matched manually
@@ -3179,7 +3400,8 @@ window.createSupabaseOrder = function (opts) {
       qrImg.onerror = function(){ qrImg.style.display = 'none'; };
     }
 
-    trackPurchase(VARIANTS[currentVariant].amount, orderId);
+    trackPurchase(total, orderId);
+    setCartQty(0);
     try {
       const buyerEmail = (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
       localStorage.setItem('smelloff_purchased', 'true');
@@ -3366,11 +3588,16 @@ window.createSupabaseOrder = function (opts) {
         window.closePaymentFailedOverlay();
         return;
       }
+      var cartOv=document.getElementById('cartOverlay');
+      if(cartOv&&cartOv.classList.contains('active')){closeCartDrawer();return;}
       closeCheckout();
       var menu=document.getElementById('mobileMenu');
       if(menu&&menu.classList.contains('active')){menu.classList.remove('active');document.body.style.overflow='';}
     }
   });
+
+  // Reflect any persisted cart quantity in the nav badge on load.
+  renderCart();
 
   // Clear red border on input focus
   document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(input){
