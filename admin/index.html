@@ -479,6 +479,13 @@ $('#login-form').addEventListener('submit', async e => {
 $('#logout').onclick = () => showLogin();
 
 async function boot() {
+  // Mark this browser as the owner's so the storefront's analytics beacon skips
+  // it — your own visits never inflate visitor/pageview/realtime counts. Same
+  // origin as smelloff.in, so the flag is visible to the site's tracker. Cleared
+  // from Settings if you ever want your own visits counted.
+  if (localStorage.getItem('smelloff_owner') !== '0') {
+    try { localStorage.setItem('smelloff_owner', '1'); } catch {}
+  }
   $('#login').classList.remove('on'); $('#app').classList.add('on');
   navRender();
   route();
@@ -927,6 +934,11 @@ RENDER.settings = async () => {
         <p style="color:var(--ink-2)">Signed in until <span class="mono">${esc(exp)}</span> (12h sessions).</p>
         <p class="note" style="margin-top:8px">Sessions are HMAC-signed server tokens — change <code class="k">ADMIN_PASSWORD</code> (and <code class="k">ADMIN_SESSION_SECRET</code> if set) in Vercel to revoke all of them.</p>
         <div style="margin-top:12px"><button class="btn ghost sm" id="s-logout">Log out on this device</button></div></div>
+      <div class="card"><h3>My own visits</h3>
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer">
+          <input type="checkbox" id="s-exclude" style="width:auto;margin-top:3px" ${localStorage.getItem('smelloff_owner')!=='0'?'checked':''}>
+          <span style="color:var(--ink-2)">Don't count my visits in Analytics<div class="note" style="margin-top:3px">When on, your browsing of smelloff.in (and the admin) is excluded from visitor, pageview and live counts on this browser. Recommended.</div></span>
+        </label></div>
       <div class="card"><h3>Quick links</h3>
         <div class="stack" style="gap:8px">
           <a href="https://smelloff.in" target="_blank" rel="noopener">smelloff.in — storefront ↗</a>
@@ -944,6 +956,10 @@ RENDER.settings = async () => {
         </div></div>
     </div>`;
   $('#s-logout').onclick = () => showLogin();
+  $('#s-exclude').onchange = (e) => {
+    try { localStorage.setItem('smelloff_owner', e.target.checked ? '1' : '0'); } catch {}
+    toast(e.target.checked ? 'Your visits are now excluded.' : 'Your visits will now be counted.');
+  };
 };
 
 /* ---------------- csv ---------------- */
