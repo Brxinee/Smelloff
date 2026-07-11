@@ -154,7 +154,9 @@
     <ol class="t-steps" id="rSteps">
       <li class="t-step" data-step="placed"><span class="t-dot" aria-hidden="true"></span><div><div class="t-step-name">Order placed</div><div class="t-step-desc" id="dPlaced">We've received your order.</div></div></li>
       <li class="t-step" data-step="confirmed"><span class="t-dot" aria-hidden="true"></span><div><div class="t-step-name">Confirmed</div><div class="t-step-desc">Payment/COD verified by our team.</div></div></li>
+      <li class="t-step" data-step="packed"><span class="t-dot" aria-hidden="true"></span><div><div class="t-step-name">Picked &amp; packed</div><div class="t-step-desc">Your ODORSTRIKE is packed and ready to ship.</div></div></li>
       <li class="t-step" data-step="dispatched"><span class="t-dot" aria-hidden="true"></span><div><div class="t-step-name">Dispatched</div><div class="t-step-desc">Shipped from Hyderabad — courier details below.</div></div></li>
+      <li class="t-step" data-step="out_for_delivery"><span class="t-dot" aria-hidden="true"></span><div><div class="t-step-name">Out for delivery</div><div class="t-step-desc">On the way to you — keep your phone handy.</div></div></li>
       <li class="t-step" data-step="delivered"><span class="t-dot" aria-hidden="true"></span><div><div class="t-step-name">Delivered</div><div class="t-step-desc">Enjoy the fresh shirt energy.</div></div></li>
     </ol>
     <div class="t-track-box" id="rTrackBox">
@@ -180,7 +182,7 @@
 <script>
 (function(){
   var SUPA_URL = 'https://tnuqjydmoxczdjnsgpci.supabase.co';
-  var STEPS = ['placed','confirmed','dispatched','delivered'];
+  var STEPS = ['placed','confirmed','packed','dispatched','out_for_delivery','delivered'];
 
   // Pre-fill order code from /track-order?code=SMF-…
   try {
