@@ -43,7 +43,7 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td style="vertical-align:middle;font-family:${HEADING_FONT};font-weight:900;font-size:28px;letter-spacing:3px;color:${WHITE};text-transform:uppercase;line-height:1;">
-                  <a href="${SITE_URL}" style="color:${WHITE};text-decoration:none;">SMELLOFF</a><span style="display:inline-block;width:8px;height:8px;background-color:${GREEN};border-radius:50%;vertical-align:top;margin-left:4px;margin-top:2px;">&nbsp;</span>
+                  <a href="${SITE_URL}" style="text-decoration:none;"><img src="${SITE_URL}/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" height="24" style="height:24px;width:auto;display:block;border:0"></a>
                 </td>
                 <td align="right" style="vertical-align:middle;font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;">
                   ODORSTRIKE

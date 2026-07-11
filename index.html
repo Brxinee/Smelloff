@@ -893,14 +893,7 @@
     line-height:1;
     padding-right:14px;
   }
-  footer .brand::after{
-    content:'';
-    position:absolute;
-    top:-2px;right:0;
-    width:8px;height:8px;
-    background:var(--acid);
-    border-radius:50%;
-  }
+  footer .brand::after{content:none} /* acid dot baked into logo image */
   footer h5{
     font-size:11px;
     letter-spacing:.2em;
@@ -2352,7 +2345,7 @@
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="brand">SMELLOFF</div>
+      <div class="brand"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:28px;width:auto;display:block"></div>
       <p style="opacity:.6;margin-top:8px">Pocket-sized odor killer<br>for your clothes.</p>
     </div>
     <div>
