@@ -479,6 +479,7 @@ export default async function handler(req, res) {
       case 'config':
         return res.status(200).json({
           supabase: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+          analytics: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
           ga4: ga4Configured(),
           resend: Boolean(process.env.RESEND_API_KEY),
         });
@@ -488,6 +489,18 @@ export default async function handler(req, res) {
 
       case 'ga4':
         return res.status(200).json(await gaRun(String(body.report || ''), body.days));
+
+      case 'analytics': {
+        // First-party site analytics — one aggregated report from page_views.
+        const days = Math.min(Math.max(Number(body.days) || 28, 1), 365);
+        const { data } = await sb('rpc/site_analytics', { method: 'POST', body: { p_days: days } });
+        return res.status(200).json(data);
+      }
+
+      case 'analytics_realtime': {
+        const { data } = await sb('rpc/site_realtime', { method: 'POST', body: {} });
+        return res.status(200).json({ active: Number(data) || 0 });
+      }
 
       case 'list': {
         const table = String(body.table || '');

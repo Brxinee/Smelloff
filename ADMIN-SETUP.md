@@ -28,7 +28,8 @@ repo to maintain.**
 | Piece | What it is |
 |---|---|
 | `admin/index.html` | The entire dashboard — one self-contained file (inline CSS/JS, brand fonts, hand-rolled SVG charts). Hash-routed SPA. |
-| `api/admin.js` | One Vercel serverless function. Password login → signed 12-hour session token; then Supabase CRUD (service-role), computed business stats, and a GA4 Data API proxy. All server-side — no secrets ever reach the browser. |
+| `api/admin.js` | One Vercel serverless function. Password login → signed 12-hour session token; then Supabase CRUD (service-role), computed business stats, first-party site-analytics reports, and an optional GA4 Data API proxy. All server-side — no secrets ever reach the browser. |
+| `api/track.js` | The cookieless analytics beacon. Every page on the site posts its path here; the server derives device + country + a daily-rotating **anonymous** visitor hash and stores a row in `page_views`. No cookie, no client storage, no personal data at rest. |
 | `vercel.json` | Rewrites `admin.smelloff.in/` → the dashboard, and marks `/admin` + `/api/admin` `noindex` / `no-store`. |
 
 Security model: the browser only ever holds a short-lived HMAC session token.
@@ -50,45 +51,54 @@ redeploy.
 | `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase → Project Settings → API → **service_role** secret. (Server-only — never expose this publicly.) |
 | `SUPABASE_URL` | optional | Defaults to the project URL already baked in. Only set to override. |
 | `ADMIN_SESSION_SECRET` | optional | Extra secret for signing sessions. If omitted it's derived from `ADMIN_PASSWORD` (so changing the password logs everyone out). Set it if you want to rotate sessions independently. |
-| `GA4_PROPERTY_ID` | for Analytics | Your GA4 **numeric** property ID (see step 2). |
-| `GA4_SERVICE_ACCOUNT_JSON` | for Analytics | The full JSON key file contents for a Google service account (see step 2). |
+| `GA4_PROPERTY_ID` | optional | Only if you *also* want Google Analytics wired in (see §2b). Not needed — the built-in analytics need no Google. |
+| `GA4_SERVICE_ACCOUNT_JSON` | optional | Only for the GA4 option in §2b. |
+| `ANALYTICS_SALT` | optional | A random secret used to hash visitor IDs. If unset it's derived from the service-role key — fine to leave unset. |
 
 > `RESEND_API_KEY` is already set for the storefront's transactional email — the
 > Settings page just reports whether it's connected.
 
 The dashboard works the moment `ADMIN_PASSWORD` + `SUPABASE_SERVICE_ROLE_KEY` are
-set. GA4 is optional and can be added later — until then the Analytics tab shows
-the setup instructions instead of erroring.
+set — **and that includes analytics** (see §2). Nothing else is required.
 
 ---
 
-## 2. Connecting Google Analytics 4 (optional but recommended)
+## 2. Analytics — built in, free, no Google
 
-This lets the dashboard pull GA4 numbers directly, so you get a cleaner report
-than the GA web UI without leaving Mission Control.
+The **Analytics** tab runs on your own first-party data. Every page on the site
+sends a tiny, **cookieless** beacon to `/api/track`; the server stores an
+anonymised row in the `page_views` table (created by the
+`20260711_first_party_analytics.sql` migration, already applied). The tab then
+shows visitors, pageviews, a daily trend, traffic sources, top pages, devices,
+countries, and a live "active right now" counter.
+
+**There is nothing to set up.** As soon as `SUPABASE_SERVICE_ROLE_KEY` is in
+Vercel (§1), analytics work. No Google account, no service account, no credit
+card, no cookie banner needed for it.
+
+**Privacy:** no cookie or browser storage is used, and no personal data is kept.
+"Visitors" are counted with a one-way hash of *(day + IP + browser + secret
+salt)* that rotates every day and is never reversible to an IP or a person —
+the same privacy-first model tools like Plausible use. Bots are filtered out.
+
+### 2b. (Optional) Also wire in Google Analytics
+
+You do **not** need this — it's only if you specifically want GA4's numbers
+inside the dashboard too. Note: Google's free "Starter tier" now blocks the
+service-account setup below unless you add a payment method, so most people
+should just use the built-in analytics above.
 
 1. **Google Cloud Console** → create or pick a project.
-2. **APIs & Services → Library** → search **"Google Analytics Data API"** →
-   **Enable**.
-3. **APIs & Services → Credentials → Create credentials → Service account.**
-   Give it a name (e.g. `smelloff-analytics`), create it.
-4. Open the new service account → **Keys → Add key → Create new key → JSON**.
-   A `.json` file downloads. Keep it safe.
-5. **GA4 → Admin → Property access management** (the property for
-   `G-S1MJ58PD89`) → **+** → add the service account's email (looks like
-   `smelloff-analytics@your-project.iam.gserviceaccount.com`) with the
-   **Viewer** role.
-6. Find your **numeric property ID**: GA4 → Admin → **Property details** → the
-   number near the top (e.g. `398765432`). This is *not* the `G-XXXX`
-   measurement ID.
-7. In Vercel, set:
-   - `GA4_PROPERTY_ID` = that number.
-   - `GA4_SERVICE_ACCOUNT_JSON` = paste the **entire contents** of the JSON key
-     file (Vercel accepts multi-line values).
-8. **Redeploy.** Open the Analytics tab — data should appear.
-
-Nothing about GA4 is stored in the repo; the service account only has read-only
-access to your analytics.
+2. **APIs & Services → Library** → **"Google Analytics Data API"** → **Enable**.
+3. **APIs & Services → Credentials → Create credentials → Service account** →
+   name it (e.g. `smelloff-analytics`) → create.
+4. The service account → **Keys → Add key → Create new key → JSON** → download.
+5. **GA4 → Admin → Property access management** → **+** → add the service
+   account email with the **Viewer** role.
+6. **GA4 → Admin → Property details** → copy the **numeric property ID**.
+7. In Vercel set `GA4_PROPERTY_ID` (the number) and `GA4_SERVICE_ACCOUNT_JSON`
+   (the whole JSON file), then redeploy. The Settings tab will show GA4 as
+   connected.
 
 ---
 

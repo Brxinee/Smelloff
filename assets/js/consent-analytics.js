@@ -98,4 +98,23 @@
   } else {
     init();
   }
+
+  // First-party, cookieless pageview beacon → /api/track. Stores nothing on the
+  // device and sends no personal data (the server derives an anonymous, daily-
+  // rotating visitor hash), so it runs regardless of the analytics-consent
+  // choice above. Fire-and-forget; never blocks or errors the page.
+  (function sendPageview() {
+    try {
+      var p = location.pathname || '/';
+      if (/^\/(admin|api)(\/|$)/.test(p)) return;
+      if (window.__smelloffPV) return;
+      window.__smelloffPV = true;
+      fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p: p, r: document.referrer || '' }),
+        keepalive: true
+      }).catch(function () {});
+    } catch (e) {}
+  })();
 })();
