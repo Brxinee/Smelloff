@@ -653,10 +653,23 @@ const CFG = window.SMELLOFF_CONFIG;
     if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout');
     if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout');
   }
+  var _purchasedOrders = {};
   function trackPurchase(amount, orderId) {
-    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: amount, currency: 'INR' });
+    amount = Number(amount);
+    if (orderId && _purchasedOrders[orderId]) return;
+    if (orderId) _purchasedOrders[orderId] = true;
+    var contents = {
+      value: amount, currency: 'INR',
+      content_ids: ['OS-001-50ML'], content_type: 'product', content_name: 'ODORSTRIKE Fabric Odor Mist',
+      contents: [{ id: 'OS-001-50ML', quantity: 1, item_price: amount }], num_items: 1
+    };
+    if (typeof fbq !== 'undefined') {
+      if (orderId) fbq('track', 'Purchase', contents, { eventID: 'purchase_' + orderId });
+      else fbq('track', 'Purchase', contents);
+    }
     if (typeof gtag !== 'undefined') gtag('event', 'purchase', {
-      transaction_id: orderId, value: amount, currency: 'INR'
+      transaction_id: orderId, value: amount, currency: 'INR',
+      items: [{ item_id: 'OS-001-50ML', item_name: 'ODORSTRIKE Fabric Odor Mist', price: amount, quantity: 1 }]
     });
   }
   window.trackInitCheckout = trackInitCheckout;
