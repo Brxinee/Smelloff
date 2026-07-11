@@ -31,6 +31,7 @@ April 2026 codebase, paired with current-correct data:
 - `/shipping`, `/returns`, `/refund`, `/privacy`, `/terms` — policy pages
 - `/llms.txt`, `/llms-full.txt` — AI/LLM context files
 - `/sitemap.xml`, `/robots.txt`, `/manifest.json`
+- `/admin` — private admin dashboard ("Mission Control"), served at `admin.smelloff.in` (noindex, password-gated). Single self-contained SPA `admin/index.html` + one serverless function `api/admin.js` (session login, Supabase service-role CRUD over orders/reviews/messages/waitlist/blog_comments, computed business stats, GA4 Data API proxy). Setup + env vars in `ADMIN-SETUP.md`. Secrets (`ADMIN_PASSWORD`, `SUPABASE_SERVICE_ROLE_KEY`, `GA4_*`) live only in Vercel env — never in the client. Reuses brand fonts/colors; charts follow the validated dark-mode dataviz palette.
 
 ## SEO audit status (originally 77/100 — all 9 code-fixable issues resolved as of 2026-06-10)
 1. ~~www vs non-www canonical conflict~~ — **FIXED**: everything (canonicals, sitemap, JSON-LD, robots.txt Sitemap directive, llms.txt) uses `https://www.smelloff.in`

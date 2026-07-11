@@ -4,7 +4,7 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /admin/
+Disallow: /admin
 Disallow: /outreach/
 
 # Explicitly allow AI and search-AI bots (do NOT block these)
