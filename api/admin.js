@@ -193,7 +193,9 @@ async function listRows({ table, limit, offset, filters, search }) {
 // ---------------------------------------------------------------------------
 // Business stats, computed from the orders table
 // ---------------------------------------------------------------------------
-const REVENUE_STATUSES = new Set(['placed', 'confirmed', 'dispatched', 'delivered']);
+const REVENUE_STATUSES = new Set([
+  'placed', 'confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered',
+]);
 
 async function computeStats() {
   const [ordersRes, reviewCount, newMsgCount, waitlistCount, pendingComments] =

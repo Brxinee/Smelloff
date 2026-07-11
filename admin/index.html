@@ -231,15 +231,22 @@ const fmtDT = (iso) => new Date(iso).toLocaleString('en-IN',{day:'numeric',month
 const mmss = (sec) => { const s=Math.round(Number(sec)||0); return `${Math.floor(s/60)}m ${String(s%60).padStart(2,'0')}s`; };
 
 const PALETTE = ['#67A522','#3987E5','#D55181','#C98500','#199E70','#9085E9'];
+// Fulfillment pipeline, in order. `flow` marks the happy-path stages that
+// advance an order (used for the "advance status" quick action + timeline);
+// upi_pending and cancelled sit outside that linear flow.
 const STATUS_META = {
-  placed:      {label:'PLACED',      color:'#3987E5'},
-  upi_pending: {label:'UPI PENDING', color:'#C98500'},
-  confirmed:   {label:'CONFIRMED',   color:'#199E70'},
-  dispatched:  {label:'DISPATCHED',  color:'#9085E9'},
-  delivered:   {label:'DELIVERED',   color:'#67A522'},
-  cancelled:   {label:'CANCELLED',   color:'#D55181'},
+  placed:           {label:'PLACED',           color:'#3987E5', flow:true},
+  upi_pending:      {label:'UPI PENDING',      color:'#C98500'},
+  confirmed:        {label:'CONFIRMED',        color:'#199E70', flow:true},
+  packed:           {label:'PACKED',           color:'#9085E9', flow:true},
+  dispatched:       {label:'DISPATCHED',       color:'#4F9BE0', flow:true},
+  out_for_delivery: {label:'OUT FOR DELIVERY', color:'#EC835A', flow:true},
+  delivered:        {label:'DELIVERED',        color:'#67A522', flow:true},
+  cancelled:        {label:'CANCELLED',        color:'#D55181'},
 };
 const ORDER_STATUSES = Object.keys(STATUS_META);
+// The linear happy-path order used by the "→ Advance" button.
+const FLOW = ['placed','confirmed','packed','dispatched','out_for_delivery','delivered'];
 
 /* ---------------- api ---------------- */
 const TOK_KEY = 'smf_admin_session';
@@ -563,6 +570,22 @@ function statusPill(st) {
   const m = STATUS_META[st] || {label: String(st).toUpperCase(), color:'var(--muted)'};
   return `<span class="pill"><i style="background:${m.color}"></i>${esc(m.label)}</span>`;
 }
+// The next happy-path stage for a one-tap advance (UPI pending → confirmed first).
+function nextFlow(status) {
+  if (status === 'upi_pending') return 'confirmed';
+  const i = FLOW.indexOf(status);
+  return (i >= 0 && i < FLOW.length - 1) ? FLOW[i + 1] : null;
+}
+function titleCase(s){ return s.charAt(0) + s.slice(1).toLowerCase(); }
+async function advanceOrder(o, after) {
+  const nx = nextFlow(o.status);
+  if (!nx) return;
+  try {
+    await api('update', { table:'orders', id:o.id, patch:{ status:nx } });
+    toast(`${o.order_code || o.id.slice(0,8)} → ${STATUS_META[nx].label}`);
+    statsCache = null; refreshBadges(); after && after();
+  } catch (e) { toast(e.message, 'bad'); }
+}
 function orderQty(o){ return (Array.isArray(o.items)?o.items:[]).reduce((a,i)=>a+(Number(i&&i.quantity)||0),0) || 1; }
 
 function ordersTable(rows, {compact=false}={}) {
@@ -576,11 +599,17 @@ function ordersTable(rows, {compact=false}={}) {
     <td class="num">${orderQty(o)}</td>
     <td class="num">${inr((o.amount||0)/100)}</td>
     <td class="mono" style="font-size:11px;text-transform:uppercase">${esc(o.payment_method||'')}</td>
-    <td>${statusPill(o.status)}</td></tr>`).join('')}</tbody></table>`;
+    <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${statusPill(o.status)}${
+      (!compact && nextFlow(o.status)) ? `<button class="btn ghost sm adv" data-adv="${i}" title="Mark as ${esc(STATUS_META[nextFlow(o.status)].label)}">→ ${esc(titleCase(STATUS_META[nextFlow(o.status)].label))}</button>` : ''
+    }</div></td></tr>`).join('')}</tbody></table>`;
 }
 function wireOrderRows(rows, after) {
   $$('#view tbody tr').forEach(tr => {
-    if (tr.dataset.i !== undefined && rows[+tr.dataset.i]) tr.onclick = () => orderModal(rows[+tr.dataset.i], after);
+    const o = tr.dataset.i !== undefined ? rows[+tr.dataset.i] : null;
+    if (!o) return;
+    tr.onclick = () => orderModal(o, after);
+    const adv = $('.adv', tr);
+    if (adv) adv.onclick = (e) => { e.stopPropagation(); advanceOrder(o, after); };
   });
 }
 
@@ -909,7 +938,8 @@ RENDER.settings = async () => {
         <div class="donut-legend">
           ${ORDER_STATUSES.map(s=>`<span class="li"><i style="background:${STATUS_META[s].color}"></i>${STATUS_META[s].label}<b style="font-size:11px;color:var(--muted)">${({
             placed:'COD order received', upi_pending:'awaiting UPI payment check', confirmed:'payment verified',
-            dispatched:'handed to courier — add tracking', delivered:'customer has it', cancelled:'excluded from revenue'})[s]}</b></span>`).join('')}
+            packed:'picked & packed, ready to ship', dispatched:'handed to courier — add tracking',
+            out_for_delivery:'on the way to the customer', delivered:'customer has it', cancelled:'excluded from revenue'})[s]}</b></span>`).join('')}
         </div></div>
     </div>`;
   $('#s-logout').onclick = () => showLogin();
