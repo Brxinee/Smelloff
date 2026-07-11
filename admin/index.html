@@ -729,95 +729,95 @@ function orderModal(o, after) {
       catch(e){ toast(e.message,'bad'); } });
 }
 
-/* ---------------- analytics (GA4) ---------------- */
-let gaDays = 28, gaTimer = null;
+/* ---------------- analytics (first-party, cookieless) ---------------- */
+let anDays = 28, anTimer = null;
+const DEVICE_COLOR = { mobile:'#3987E5', desktop:'#199E70', tablet:'#9085E9', other:'#C98500' };
+const DEVICE_LABEL = { mobile:'Mobile', desktop:'Desktop', tablet:'Tablet', other:'Other' };
+const flagEmoji = (cc) => (cc && /^[A-Z]{2}$/.test(cc))
+  ? String.fromCodePoint(...[...cc].map(c => 127397 + c.charCodeAt(0))) : '🌐';
+// Zero-fill a daily series across the selected window so the line is continuous.
+function zeroFillDaily(daily, days) {
+  const map = new Map(daily.map(d => [d.date, d]));
+  const out = []; const now = Date.now(); const DAY = 864e5;
+  for (let i = days - 1; i >= 0; i--) {
+    const key = new Date(now - i * DAY).toISOString().slice(0, 10);
+    const d = map.get(key) || { date: key, views: 0, visitors: 0 };
+    out.push(d);
+  }
+  return out;
+}
 
 RENDER.analytics = async () => {
-  const cfg = await api('config');
-  if (!cfg.ga4) {
-    $('#view').innerHTML = `<div class="card" style="max-width:720px">
-      <h3>Google Analytics — not connected yet</h3>
-      <p style="color:var(--ink-2)">The dashboard reads GA4 directly through Google's Data API with a service account (no more logging into GA). One-time setup:</p>
-      <ol class="setup-steps">
-        <li>Google Cloud Console → create/select a project → enable the <b>Google Analytics Data API</b>.</li>
-        <li>IAM &amp; Admin → Service Accounts → create one → add a JSON key and download it.</li>
-        <li>GA4 Admin → Property access management → add the service account email as <b>Viewer</b>.</li>
-        <li>Vercel → Project → Settings → Environment Variables:<br>
-          <code class="k">GA4_PROPERTY_ID</code> = numeric property ID (GA4 Admin → Property details)<br>
-          <code class="k">GA4_SERVICE_ACCOUNT_JSON</code> = full contents of the JSON key file</li>
-        <li>Redeploy, then reload this page.</li>
-      </ol>
-      <p class="note" style="margin-top:12px">Full walkthrough lives in <span class="mono">ADMIN-SETUP.md</span> in the repo.</p>
-    </div>`;
-    return;
-  }
   $('#view').innerHTML = `
-    <div class="toolbar"><div class="chips" id="ga-range">
-      <button class="chip ${gaDays===7?'on':''}" data-d="7">7D</button>
-      <button class="chip ${gaDays===28?'on':''}" data-d="28">28D</button>
-      <button class="chip ${gaDays===90?'on':''}" data-d="90">90D</button></div>
+    <div class="toolbar"><div class="chips" id="an-range">
+      <button class="chip ${anDays===7?'on':''}" data-d="7">7D</button>
+      <button class="chip ${anDays===28?'on':''}" data-d="28">28D</button>
+      <button class="chip ${anDays===90?'on':''}" data-d="90">90D</button></div>
       <span class="spacer" style="flex:1"></span>
-      <span class="label" id="ga-live"><span class="dot-live"></span> — right now</span></div>
-    <div id="ga-body"><div class="empty">Loading GA4 reports…</div></div>`;
-  $('#ga-range').onclick = e => {
+      <span class="label" id="an-live"><span class="dot-live"></span> — right now</span></div>
+    <div id="an-body"><div class="empty">Loading analytics…</div></div>`;
+  $('#an-range').onclick = e => {
     const b = e.target.closest('.chip'); if (!b) return;
-    gaDays = +b.dataset.d;
-    $$('#ga-range .chip').forEach(c=>c.classList.toggle('on', c===b));
-    loadGa();
+    anDays = +b.dataset.d;
+    $$('#an-range .chip').forEach(c=>c.classList.toggle('on', c===b));
+    loadAn();
   };
   const loadRealtime = async () => {
     try {
-      const rt = await api('ga4', { report:'realtime' });
-      const n = rt.rows.reduce((a,r)=>a+r.activeUsers,0);
-      const by = rt.rows.map(r=>`${r.deviceCategory} ${r.activeUsers}`).join(' · ');
-      $('#ga-live').innerHTML = `<span class="dot-live"></span> ${n} active now${by?` (${esc(by)})`:''}`;
-    } catch { $('#ga-live').textContent = 'realtime unavailable'; }
+      const rt = await api('analytics_realtime');
+      $('#an-live').innerHTML = `<span class="dot-live"></span> ${fmtN(rt.active)} active in last 5 min`;
+    } catch { $('#an-live').textContent = 'realtime unavailable'; }
   };
-  const loadGa = async () => {
-    $('#ga-body').innerHTML = '<div class="empty">Loading GA4 reports…</div>';
+  const loadAn = async () => {
+    $('#an-body').innerHTML = '<div class="empty">Loading analytics…</div>';
+    redrawFns = redrawFns.filter(()=>true);
     try {
-      const [tot, ts, pages, channels, devices, cities] = await Promise.all([
-        api('ga4',{report:'totals',days:gaDays}), api('ga4',{report:'timeseries',days:gaDays}),
-        api('ga4',{report:'pages',days:gaDays}), api('ga4',{report:'channels',days:gaDays}),
-        api('ga4',{report:'devices',days:gaDays}), api('ga4',{report:'cities',days:gaDays}),
-      ]);
-      const T = tot.rows[0] || {};
-      const dLab = d => `${d.slice(6,8)} ${new Date(d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8)).toLocaleDateString('en-IN',{month:'short'})}`;
-      $('#ga-body').innerHTML = `
-        <div class="statgrid" style="margin-bottom:14px">
-          <div class="s"><div class="k">Users</div><div class="v">${fmtN(T.activeUsers)}</div></div>
-          <div class="s"><div class="k">New users</div><div class="v">${fmtN(T.newUsers)}</div></div>
-          <div class="s"><div class="k">Sessions</div><div class="v">${fmtN(T.sessions)}</div></div>
-          <div class="s"><div class="k">Pageviews</div><div class="v">${fmtN(T.screenPageViews)}</div></div>
-          <div class="s"><div class="k">Engagement</div><div class="v">${Math.round((T.engagementRate||0)*100)}%</div></div>
-          <div class="s"><div class="k">Avg session</div><div class="v">${mmss(T.averageSessionDuration)}</div></div>
-          <div class="s"><div class="k">Bounce</div><div class="v">${Math.round((T.bounceRate||0)*100)}%</div></div>
+      const a = await api('analytics', { days: anDays });
+      const T = a.totals || { views:0, visitors:0, viewsPrev:0, visitorsPrev:0 };
+      const delta = (cur, prev) => {
+        if (!prev) return cur ? '<span class="up">new</span>' : '';
+        const pct = Math.round(100*(cur-prev)/prev);
+        return `<span class="${pct>=0?'up':'down'}">${pct>=0?'▲':'▼'} ${Math.abs(pct)}%</span>`;
+      };
+      const vpv = T.visitors ? (T.views / T.visitors).toFixed(1) : '0';
+      const series = zeroFillDaily(a.daily || [], anDays);
+      const lab = d => new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+      const empty = (T.views === 0);
+      $('#an-body').innerHTML = `
+        ${empty ? `<div class="card" style="margin-bottom:14px;border-color:rgba(184,255,87,.35)">
+          <h3 style="color:var(--accent)">Collecting your traffic</h3>
+          <p style="color:var(--ink-2)">Your site is now recording visits privately into your own database — no Google, no cookies. As soon as people browse smelloff.in, their visits show up here. Open the storefront in another tab to see the live counter tick up.</p></div>` : ''}
+        <div class="grid cols-4" style="margin-bottom:14px">
+          <div class="card tile"><h3>Visitors · ${anDays}d</h3><div class="v">${fmtN(T.visitors)}</div><div class="d">${delta(T.visitors,T.visitorsPrev)} vs prior ${anDays}d</div></div>
+          <div class="card tile"><h3>Pageviews · ${anDays}d</h3><div class="v">${fmtN(T.views)}</div><div class="d">${delta(T.views,T.viewsPrev)} vs prior ${anDays}d</div></div>
+          <div class="card tile"><h3>Views / visitor</h3><div class="v">${vpv}</div><div class="d">how deep they browse</div></div>
+          <div class="card tile"><h3>Top source</h3><div class="v" style="font-size:22px">${esc((a.referrers&&a.referrers[0]&&a.referrers[0].host)||'—')}</div><div class="d">${a.referrers&&a.referrers[0]?fmtN(a.referrers[0].views)+' views':'no referrers yet'}</div></div>
         </div>
-        <div class="card" style="margin-bottom:14px"><h3>Users · Sessions · Pageviews</h3><div class="chart" id="ga-ts"></div></div>
+        <div class="card" style="margin-bottom:14px"><h3>Visitors &amp; pageviews per day</h3><div class="chart" id="an-ts"></div></div>
         <div class="grid cols-2" style="margin-bottom:14px">
-          <div class="card"><h3>Traffic channels · sessions</h3><div class="chart" id="ga-ch"></div></div>
-          <div class="card"><h3>Devices · sessions</h3><div id="ga-dev"></div></div>
+          <div class="card"><h3>Traffic sources</h3><div class="chart" id="an-ref"></div></div>
+          <div class="card"><h3>Devices</h3><div id="an-dev"></div></div>
         </div>
         <div class="grid cols-2">
-          <div class="card"><h3>Top pages</h3><div class="tbl-wrap"><table><thead><tr><th>Page</th><th class="num">Views</th><th class="num">Users</th><th class="num">Avg time</th></tr></thead>
-            <tbody>${pages.rows.map(p=>`<tr><td class="mono" style="font-size:12px;word-break:break-all">${esc(p.pagePath)}</td><td class="num">${fmtN(p.screenPageViews)}</td><td class="num">${fmtN(p.activeUsers)}</td><td class="num">${mmss(p.averageSessionDuration)}</td></tr>`).join('') || '<tr><td colspan="4" class="empty">No data</td></tr>'}</tbody></table></div></div>
-          <div class="card"><h3>Top cities · users</h3><div class="tbl-wrap"><table><thead><tr><th>City</th><th>Region</th><th class="num">Users</th><th class="num">Sessions</th></tr></thead>
-            <tbody>${cities.rows.map(c=>`<tr><td>${esc(c.city||'(not set)')}</td><td style="color:var(--muted)">${esc(c.region||'')}</td><td class="num">${fmtN(c.activeUsers)}</td><td class="num">${fmtN(c.sessions)}</td></tr>`).join('') || '<tr><td colspan="4" class="empty">No data</td></tr>'}</tbody></table></div></div>
-        </div>`;
-      lineChart($('#ga-ts'), [
-        {name:'Users',     color:'#3987E5', values: ts.rows.map(r=>({x:dLab(r.date), y:r.activeUsers}))},
-        {name:'Sessions',  color:'#199E70', values: ts.rows.map(r=>({x:dLab(r.date), y:r.sessions}))},
-        {name:'Pageviews', color:'#D55181', values: ts.rows.map(r=>({x:dLab(r.date), y:r.screenPageViews}))},
+          <div class="card"><h3>Top pages</h3><div class="tbl-wrap"><table><thead><tr><th>Page</th><th class="num">Views</th><th class="num">Visitors</th></tr></thead>
+            <tbody>${(a.topPages||[]).map(p=>`<tr><td class="mono" style="font-size:12px;word-break:break-all"><a href="${esc(p.path)}" target="_blank" rel="noopener">${esc(p.path)}</a></td><td class="num">${fmtN(p.views)}</td><td class="num">${fmtN(p.visitors)}</td></tr>`).join('') || '<tr><td colspan="3" class="empty">No data yet</td></tr>'}</tbody></table></div></div>
+          <div class="card"><h3>Countries</h3><div class="tbl-wrap"><table><thead><tr><th>Country</th><th class="num">Visitors</th><th class="num">Views</th></tr></thead>
+            <tbody>${(a.countries||[]).map(c=>`<tr><td>${flagEmoji(c.country)} <span class="mono" style="font-size:12px">${esc(c.country)}</span></td><td class="num">${fmtN(c.visitors)}</td><td class="num">${fmtN(c.views)}</td></tr>`).join('') || '<tr><td colspan="3" class="empty">No data yet</td></tr>'}</tbody></table></div></div>
+        </div>
+        <p class="note" style="margin-top:14px">Private, cookieless analytics stored in your own database. Visitors are counted with a daily-rotating anonymous key — no personal data, no Google. <a href="https://analytics.google.com" target="_blank" rel="noopener">Google Analytics</a> still runs separately for consented visitors.</p>`;
+      lineChart($('#an-ts'), [
+        {name:'Visitors',  color:'#B8FF57', values: series.map(d=>({x:lab(d.date), y:d.visitors}))},
+        {name:'Pageviews', color:'#3987E5', values: series.map(d=>({x:lab(d.date), y:d.views}))},
       ], {height:230});
-      hbars($('#ga-ch'), channels.rows.map(c=>({label:c.sessionDefaultChannelGroup, value:c.sessions})), {color:'#3987E5'});
-      donut($('#ga-dev'), devices.rows.slice(0,4).map((d,i)=>({label:d.deviceCategory, value:d.sessions, color:PALETTE[(i+1)%6]})), {centerLabel:'sessions'});
+      hbars($('#an-ref'), (a.referrers||[]).map(r=>({label:r.host, value:r.views})), {color:'#3987E5'});
+      donut($('#an-dev'), (a.devices||[]).map(d=>({label:DEVICE_LABEL[d.device]||d.device, value:d.views, color:DEVICE_COLOR[d.device]||'#898781'})), {centerLabel:'views'});
     } catch (e) {
-      if (e.message !== 'auth') $('#ga-body').innerHTML = `<div class="err-box">${esc(e.message)}</div>`;
+      if (e.message !== 'auth') $('#an-body').innerHTML = `<div class="err-box">${esc(e.message)}</div>`;
     }
   };
-  loadGa(); loadRealtime();
-  gaTimer = setInterval(loadRealtime, 60000);
-  viewCleanup = () => clearInterval(gaTimer);
+  loadAn(); loadRealtime();
+  anTimer = setInterval(loadRealtime, 30000);
+  viewCleanup = () => clearInterval(anTimer);
 };
 
 /* ---------------- reviews ---------------- */
@@ -918,7 +918,8 @@ RENDER.settings = async () => {
       <div class="card"><h3>Connections</h3>
         <table><tbody>
           <tr><td>Supabase (orders &amp; data)</td><td class="mono" style="font-size:12px">${flag(cfg.supabase)}</td></tr>
-          <tr><td>Google Analytics 4 (Data API)</td><td class="mono" style="font-size:12px">${flag(cfg.ga4)}</td></tr>
+          <tr><td>First-party analytics (cookieless)</td><td class="mono" style="font-size:12px">${flag(cfg.analytics)}</td></tr>
+          <tr><td>Google Analytics 4 (optional)</td><td class="mono" style="font-size:12px">${flag(cfg.ga4)}</td></tr>
           <tr><td>Resend (transactional email)</td><td class="mono" style="font-size:12px">${flag(cfg.resend)}</td></tr>
         </tbody></table>
         <p class="note" style="margin-top:12px">Configure in Vercel → Project → Settings → Environment Variables. Setup steps: <span class="mono">ADMIN-SETUP.md</span>.</p></div>
