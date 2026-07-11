@@ -169,6 +169,18 @@ code.k{font-family:var(--mono);font-size:12px;background:var(--surface-2);border
 .statgrid .s{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .statgrid .s .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .statgrid .s .v{font-size:19px;font-variant-numeric:tabular-nums;margin-top:2px}
+/* products */
+.pthumb{width:44px;height:44px;border-radius:8px;object-fit:cover;background:var(--surface-2);border:1px solid var(--line);flex:none;display:block}
+.pthumb.ph{display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:18px;color:var(--muted)}
+.stockpill{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums}
+.stockpill.low{color:var(--warn)} .stockpill.out{color:var(--crit)} .stockpill.untracked{color:var(--muted)}
+.strike{color:var(--muted);text-decoration:line-through;font-size:11px}
+.vhead{display:flex;align-items:center;justify-content:space-between;margin:4px 0 8px}
+.vrow{display:grid;grid-template-columns:1.5fr .9fr .8fr 1.1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.vrow input{padding:7px 9px;font-size:13px}
+.vrow .rm{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:7px;width:30px;height:30px;flex:none}
+.vrow .rm:hover{border-color:rgba(208,59,59,.5);color:#f08a8a}
+@media(max-width:560px){.vrow{grid-template-columns:1fr 1fr;position:relative}.vrow .rm{position:absolute;top:0;right:0;width:24px;height:24px}}
 .dot-live{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;animation:pulse 1.6s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 </style>
@@ -418,6 +430,7 @@ function hbars(el, items, { money=false, color='#3987E5' } = {}) {
 const VIEWS = {
   overview:  { title:'Overview',   icon:'◎' },
   orders:    { title:'Orders',     icon:'▤' },
+  products:  { title:'Products',   icon:'◈' },
   customers: { title:'Customers',  icon:'☺' },
   analytics: { title:'Analytics',  icon:'∿' },
   reviews:   { title:'Reviews',    icon:'★' },
@@ -499,6 +512,7 @@ async function refreshBadges() {
     const c = statsCache.counts;
     navRender({
       orders:   statsCache.pendingUpi ? { n: statsCache.pendingUpi, hot:true } : null,
+      products: c.lowStock ? { n: c.lowStock, hot:true } : null,
       messages: c.newMessages ? { n: c.newMessages, hot:true } : null,
       comments: c.pendingComments ? { n: c.pendingComments, hot:true } : null,
       reviews:  c.reviews ? { n: c.reviews } : null,
@@ -783,6 +797,199 @@ RENDER.customers = async () => {
     ['name','phone','email','city','state','orders','cancelled','units','total_spent_inr','items_ordered','payment','first_order','last_order'],
     customerRows.map(c=>[c.name,c.phone,c.email,c.city,c.state,c.orders,c.cancelled,c.units,c.spent,c.items,c.payment,c.firstOrder,c.lastOrder]));
 };
+
+/* ---------------- products ---------------- */
+const productState = { search:'', active:'' };
+
+// Stock display: null/blank = untracked (∞), 0 = out, ≤5 = low (amber).
+function stockCell(p) {
+  if (p.stock === null || p.stock === undefined || p.stock === '')
+    return '<span class="stockpill untracked">∞ untracked</span>';
+  const n = Number(p.stock);
+  const cls = n <= 0 ? 'out' : n <= 5 ? 'low' : '';
+  return `<span class="stockpill ${cls}">${n <= 0 ? 'out of stock' : n + ' in stock'}</span>`;
+}
+function productThumb(p) {
+  return p.image_url
+    ? `<img class="pthumb" src="${esc(p.image_url)}" alt="">`
+    : `<div class="pthumb ph">◈</div>`;
+}
+
+function productsTable(rows) {
+  if (!rows.length) return '<div class="empty">No products match. Click “+ New product” to add one.</div>';
+  return `<table><thead><tr><th></th><th>Product</th><th class="num">Price</th><th>Stock</th><th class="num">Variants</th><th>Status</th></tr></thead>
+  <tbody>${rows.map((p,i)=>`<tr data-i="${i}" style="cursor:pointer">
+    <td style="width:52px">${productThumb(p)}</td>
+    <td><div style="font-weight:600">${esc(p.name)}</div>
+      <div class="mono" style="font-size:11px;color:var(--muted)">${esc(p.slug||'—')}${p.sku?` · ${esc(p.sku)}`:''}</div></td>
+    <td class="num">${inr((p.price||0)/100)}${p.compare_at_price?`<div class="strike">${inr(p.compare_at_price/100)}</div>`:''}</td>
+    <td>${stockCell(p)}</td>
+    <td class="num">${Array.isArray(p.variants)&&p.variants.length?p.variants.length:'—'}</td>
+    <td><span class="pill"><i style="background:${p.active?'var(--good)':'var(--muted)'}"></i>${p.active?'ACTIVE':'INACTIVE'}</span></td>
+  </tr>`).join('')}</tbody></table>`;
+}
+function wireProductRows(rows, after) {
+  // Swap a broken/empty image for the ◈ placeholder tile.
+  $$('#p-table img.pthumb').forEach(img => img.onerror = () => {
+    const ph = document.createElement('div'); ph.className = 'pthumb ph'; ph.textContent = '◈';
+    img.replaceWith(ph);
+  });
+  $$('#p-table tbody tr').forEach(tr => {
+    const p = tr.dataset.i !== undefined ? rows[+tr.dataset.i] : null;
+    if (!p) return;
+    tr.onclick = () => productModal(p, after);
+  });
+}
+
+RENDER.products = async () => {
+  $('#topbar-extra').innerHTML = `<button class="btn sm" id="add-product">+ New product</button>`;
+  $('#view').innerHTML = `
+    <div class="toolbar">
+      <input type="search" id="p-search" placeholder="Search name / slug / SKU…" value="${esc(productState.search)}">
+      <select id="p-active">
+        <option value="">All products</option>
+        <option value="true" ${productState.active==='true'?'selected':''}>Active only</option>
+        <option value="false" ${productState.active==='false'?'selected':''}>Inactive only</option>
+      </select>
+    </div>
+    <div class="card"><div class="tbl-wrap" id="p-table"><div class="empty">Loading…</div></div></div>`;
+
+  let rows = [];
+  const load = async () => {
+    $('#p-table').innerHTML = '<div class="empty">Loading…</div>';
+    const r = await api('list', { table:'products', limit:200,
+      search: productState.search, filters: { active: productState.active } });
+    rows = r.rows;
+    $('#p-table').innerHTML = productsTable(rows);
+    wireProductRows(rows, load);
+  };
+  let deb;
+  $('#p-search').oninput = e => { clearTimeout(deb); deb = setTimeout(()=>{ productState.search = e.target.value; load(); }, 350); };
+  $('#p-active').onchange = e => { productState.active = e.target.value; load(); };
+  $('#add-product').onclick = () => productModal(null, load);
+  await load();
+};
+
+// One editable variant row inside the modal. Prices shown in ₹, stored in paise.
+function variantRow(v={}) {
+  return `<div class="vrow">
+    <input class="v-name" placeholder="Variant (e.g. 100ml)" value="${esc(v.name||'')}">
+    <input class="v-price" type="number" min="0" step="1" placeholder="₹ price" value="${v.price!=null?v.price/100:''}">
+    <input class="v-stock" type="number" step="1" placeholder="stock" value="${v.stock!=null?esc(v.stock):''}">
+    <input class="v-sku" placeholder="SKU" value="${esc(v.sku||'')}">
+    <button type="button" class="rm" title="Remove variant">✕</button>
+  </div>`;
+}
+
+function productModal(p, after) {
+  const isNew = !p;
+  p = p || { active:true, price:0, stock:null, variants:[], sort_order:0 };
+  const variants = Array.isArray(p.variants) ? p.variants : [];
+  openModal(`
+    <h2>${isNew ? 'New product' : `Edit <span class="mono" style="font-size:15px">${esc(p.name)}</span>`}</h2>
+    ${isNew ? '' : `<p class="note" style="margin:-8px 0 14px">Added ${fmtDate(p.created_at)} · id <span class="mono">${esc(p.id)}</span></p>`}
+    <div class="frow">
+      <label><span>Name</span><input id="pf-name" value="${esc(p.name||'')}" placeholder="Product name"></label>
+      <label><span>Slug (URL)</span><input id="pf-slug" value="${esc(p.slug||'')}" placeholder="odorstrike"></label>
+    </div>
+    <div class="frow">
+      <label><span>Price (₹)</span><input id="pf-price" type="number" min="0" step="1" value="${(p.price||0)/100}"></label>
+      <label><span>Compare-at / MRP (₹)</span><input id="pf-cmp" type="number" min="0" step="1" value="${p.compare_at_price?p.compare_at_price/100:''}" placeholder="optional"></label>
+    </div>
+    <div class="frow">
+      <label><span>SKU</span><input id="pf-sku" value="${esc(p.sku||'')}" placeholder="e.g. ODS-50"></label>
+      <label><span>Stock (blank = untracked)</span><input id="pf-stock" type="number" step="1" value="${p.stock!=null?esc(p.stock):''}" placeholder="untracked"></label>
+    </div>
+    <div class="frow">
+      <label><span>Image URL</span><input id="pf-img" value="${esc(p.image_url||'')}" placeholder="https://…"></label>
+      <label><span>Status</span><select id="pf-active">
+        <option value="true" ${p.active!==false?'selected':''}>Active (visible)</option>
+        <option value="false" ${p.active===false?'selected':''}>Inactive (hidden)</option></select></label>
+    </div>
+    <div class="frow one"><label><span>Description</span><textarea id="pf-desc" rows="3">${esc(p.description||'')}</textarea></label></div>
+    <div class="frow one"><div>
+      <div class="vhead"><span class="label">Variants (optional)</span><button type="button" class="btn ghost sm" id="pf-addv">+ Add variant</button></div>
+      <div id="pf-vrows">${variants.map(variantRow).join('')}</div>
+      <p class="note" id="pf-vnote" style="${variants.length?'display:none':''}">No variants — sells as a single option at the price above.</p>
+    </div></div>
+    <div class="frow"><label><span>Sort order (lower shows first)</span><input id="pf-sort" type="number" step="1" value="${Number(p.sort_order)||0}"></label></div>
+    <div class="actions">
+      ${isNew ? '' : `<button class="btn danger left" id="pf-delete">Delete product</button>`}
+      <button class="btn ghost" id="pf-cancel">Cancel</button>
+      <button class="btn" id="pf-save">${isNew?'Create product':'Save changes'}</button>
+    </div>`);
+
+  const vrows = $('#pf-vrows');
+  const syncNote = () => { $('#pf-vnote').style.display = vrows.children.length ? 'none' : ''; };
+  const wireRm = () => $$('.vrow .rm', vrows).forEach(b => b.onclick = () => { b.closest('.vrow').remove(); syncNote(); });
+  $('#pf-addv').onclick = () => { vrows.insertAdjacentHTML('beforeend', variantRow()); syncNote(); wireRm(); };
+  wireRm();
+
+  // Whole-number helper: '' → null (untracked); anything non-integer → throws label.
+  const intOrNull = (raw, label) => {
+    const s = String(raw).trim();
+    if (s === '') return null;
+    const n = Number(s);
+    if (!Number.isInteger(n)) throw new Error(`${label} must be a whole number.`);
+    return n;
+  };
+
+  $('#pf-cancel').onclick = closeModal;
+  $('#pf-save').onclick = async () => {
+    const name = $('#pf-name').value.trim();
+    if (!name) return toast('Product needs a name.', 'bad');
+    const priceR = Number($('#pf-price').value);
+    if (!Number.isFinite(priceR) || priceR < 0) return toast('Enter a valid price.', 'bad');
+    const cmpRaw = $('#pf-cmp').value.trim();
+    if (cmpRaw && (!Number.isFinite(Number(cmpRaw)) || Number(cmpRaw) < 0)) return toast('Compare-at price is invalid.', 'bad');
+
+    let stock, variantsOut = [];
+    try {
+      stock = intOrNull($('#pf-stock').value, 'Stock');
+      // Collect variant rows, skipping any that are entirely blank.
+      for (const row of $$('.vrow', vrows)) {
+        const vn = $('.v-name', row).value.trim();
+        const vp = $('.v-price', row).value.trim();
+        const vs = $('.v-stock', row).value.trim();
+        const vk = $('.v-sku', row).value.trim();
+        if (!vn && !vp && !vs && !vk) continue;
+        if (!vn) throw new Error('Every variant needs a name.');
+        if (vp && (!Number.isFinite(Number(vp)) || Number(vp) < 0)) throw new Error('A variant price is invalid.');
+        variantsOut.push({
+          name: vn,
+          price: vp ? Math.round(Number(vp)*100) : Math.round(priceR*100),
+          stock: intOrNull(vs, 'Variant stock'),
+          sku: vk || null,
+        });
+      }
+    } catch (e) { return toast(e.message, 'bad'); }
+
+    const slug = $('#pf-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g,'-').replace(/^-+|-+$/g,'');
+    const payload = {
+      name,
+      slug: slug || null,
+      description: $('#pf-desc').value.trim() || null,
+      price: Math.round(priceR*100),
+      compare_at_price: cmpRaw ? Math.round(Number(cmpRaw)*100) : null,
+      sku: $('#pf-sku').value.trim() || null,
+      stock,
+      image_url: $('#pf-img').value.trim() || null,
+      active: $('#pf-active').value === 'true',
+      variants: variantsOut,
+      sort_order: Math.round(Number($('#pf-sort').value) || 0),
+    };
+    try {
+      if (isNew) await api('create', { table:'products', row: payload });
+      else await api('update', { table:'products', id: p.id, patch: payload });
+      closeModal(); toast(isNew?'Product created.':'Product saved.'); statsCache = null; refreshBadges(); after && after();
+    } catch (e) { toast(e.message, 'bad'); }
+  };
+
+  if (!isNew) $('#pf-delete').onclick = () => confirmBox(
+    `Delete “${p.name}” permanently? This can't be undone.`,
+    async () => { try { await api('delete', { table:'products', id:p.id }); toast('Product deleted.'); statsCache=null; refreshBadges(); after && after(); }
+      catch(e){ toast(e.message,'bad'); } });
+}
 
 /* ---------------- analytics (first-party, cookieless) ---------------- */
 let anDays = 28, anTimer = null;

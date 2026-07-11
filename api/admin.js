@@ -59,6 +59,19 @@ const TABLES = {
     search: ['author_name', 'body', 'post_slug'],
     filters: ['approved', 'post_slug'],
   },
+  products: {
+    select:
+      'id,created_at,name,slug,description,price,compare_at_price,sku,stock,image_url,active,variants,sort_order',
+    writable: [
+      'name', 'slug', 'description', 'price', 'compare_at_price', 'sku',
+      'stock', 'image_url', 'active', 'variants', 'sort_order',
+    ],
+    search: ['name', 'slug', 'sku'],
+    filters: ['active'],
+    // Catalog is hand-ordered (sort_order), newest first as a tiebreak — unlike
+    // the other tables which are purely reverse-chronological.
+    order: 'sort_order.asc,created_at.desc',
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -170,7 +183,7 @@ async function listRows({ table, limit, offset, filters, search }) {
   const cfg = TABLES[table];
   const params = new URLSearchParams();
   params.set('select', cfg.select);
-  params.set('order', 'created_at.desc');
+  params.set('order', cfg.order || 'created_at.desc');
   params.set('limit', String(Math.min(Math.max(Number(limit) || 50, 1), 500)));
   params.set('offset', String(Math.max(Number(offset) || 0, 0)));
   if (filters && typeof filters === 'object') {
@@ -198,13 +211,16 @@ const REVENUE_STATUSES = new Set([
 ]);
 
 async function computeStats() {
-  const [ordersRes, reviewCount, newMsgCount, waitlistCount, pendingComments] =
+  const [ordersRes, reviewCount, newMsgCount, waitlistCount, pendingComments, lowStock] =
     await Promise.all([
       sb('orders?select=created_at,amount,status,payment_method,address,customer_phone,items&order=created_at.desc&limit=5000'),
       countRows('reviews'),
       countRows('contact_messages', 'status=eq.new'),
       countRows('waitlist'),
       countRows('blog_comments', 'approved=eq.false'),
+      // Active products with tracked stock at or below the low-stock threshold.
+      // Wrapped so a missing products table (pre-migration) never breaks stats.
+      countRows('products', 'active=eq.true&stock=lte.5').catch(() => 0),
     ]);
   const orders = ordersRes.data;
 
@@ -276,6 +292,7 @@ async function computeStats() {
       newMessages: newMsgCount,
       waitlist: waitlistCount,
       pendingComments,
+      lowStock,
     },
   };
 }
