@@ -418,6 +418,7 @@ function hbars(el, items, { money=false, color='#3987E5' } = {}) {
 const VIEWS = {
   overview:  { title:'Overview',   icon:'◎' },
   orders:    { title:'Orders',     icon:'▤' },
+  customers: { title:'Customers',  icon:'☺' },
   analytics: { title:'Analytics',  icon:'∿' },
   reviews:   { title:'Reviews',    icon:'★' },
   messages:  { title:'Messages',   icon:'✉' },
@@ -735,6 +736,53 @@ function orderModal(o, after) {
     async () => { try { await api('delete', { table:'orders', id:o.id }); toast('Order deleted.'); statsCache=null; refreshBadges(); after && after(); }
       catch(e){ toast(e.message,'bad'); } });
 }
+
+/* ---------------- customers (rolled up by phone) ---------------- */
+let customerRows = [];
+RENDER.customers = async () => {
+  $('#topbar-extra').innerHTML = `<button class="btn ghost sm" id="cust-csv">⭳ Download CSV</button>`;
+  $('#view').innerHTML = `
+    <div class="toolbar">
+      <input type="search" id="cust-search" placeholder="Search name / phone / email / city…">
+      <span class="spacer" style="flex:1"></span>
+      <span class="note" id="cust-count"></span>
+    </div>
+    <div class="card"><div class="tbl-wrap" id="cust-table"><div class="empty">Loading customers…</div></div></div>
+    <p class="note" style="margin-top:10px">Every person who has ordered, rolled up by phone number. Spend excludes cancelled orders. Tap a phone to open WhatsApp.</p>`;
+  const data = await api('customers');
+  customerRows = data.customers || [];
+  const waLink = (phone) => {
+    const digits = String(phone).replace(/\D/g,'').slice(-10);
+    return digits.length === 10 ? `https://wa.me/91${digits}` : null;
+  };
+  const render = (rows) => {
+    $('#cust-count').textContent = `${rows.length} customer${rows.length===1?'':'s'}`;
+    if (!rows.length) { $('#cust-table').innerHTML = '<div class="empty">No customers match.</div>'; return; }
+    $('#cust-table').innerHTML = `<table><thead><tr>
+      <th>Customer</th><th>Phone</th><th>City</th><th class="num">Orders</th><th class="num">Units</th><th class="num">Spent</th><th>What they ordered</th><th>Last order</th></tr></thead>
+      <tbody>${rows.map(c=>{ const wa = waLink(c.phone); return `<tr>
+        <td>${esc(c.name||'—')}${c.email?`<div class="mono" style="font-size:11px;color:var(--muted)">${esc(c.email)}</div>`:''}</td>
+        <td class="mono" style="font-size:12.5px">${wa?`<a href="${wa}" target="_blank" rel="noopener">${esc(c.phone)}</a>`:esc(c.phone)}</td>
+        <td>${esc(c.city||'—')}</td>
+        <td class="num">${fmtN(c.orders)}${c.cancelled?`<div class="note" style="font-size:10px">${c.cancelled} cancelled</div>`:''}</td>
+        <td class="num">${fmtN(c.units)}</td>
+        <td class="num">${inr(c.spent)}</td>
+        <td style="max-width:260px;color:var(--ink-2);font-size:12.5px">${esc(c.items||'—')}</td>
+        <td class="mono" style="font-size:11.5px;color:var(--muted)">${fmtDate(c.lastOrder)}</td>
+      </tr>`;}).join('')}</tbody></table>`;
+  };
+  render(customerRows);
+  let deb;
+  $('#cust-search').oninput = e => { clearTimeout(deb); deb = setTimeout(()=>{
+    const q = e.target.value.trim().toLowerCase();
+    const rows = !q ? customerRows : customerRows.filter(c =>
+      `${c.name} ${c.phone} ${c.email} ${c.city} ${c.state}`.toLowerCase().includes(q));
+    render(rows);
+  }, 200); };
+  $('#cust-csv').onclick = () => downloadCsv('odorstrike-customers.csv',
+    ['name','phone','email','city','state','orders','cancelled','units','total_spent_inr','items_ordered','payment','first_order','last_order'],
+    customerRows.map(c=>[c.name,c.phone,c.email,c.city,c.state,c.orders,c.cancelled,c.units,c.spent,c.items,c.payment,c.firstOrder,c.lastOrder]));
+};
 
 /* ---------------- analytics (first-party, cookieless) ---------------- */
 let anDays = 28, anTimer = null;
