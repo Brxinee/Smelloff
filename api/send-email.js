@@ -2,8 +2,13 @@ import { Resend } from 'resend';
 import {
   orderConfirmation,
   orderShipped,
+  outForDelivery,
+  orderDelivered,
   welcomeEmail,
   abandonedCart,
+  paymentReminder,
+  orderCancelled,
+  refundProcessed,
 } from './email-templates.js';
 
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
@@ -12,8 +17,13 @@ const REPLY_TO = 'smelloffsupport@gmail.com';
 const TEMPLATES = {
   orderConfirmation,
   orderShipped,
+  outForDelivery,
+  orderDelivered,
   welcomeEmail,
   abandonedCart,
+  paymentReminder,
+  orderCancelled,
+  refundProcessed,
 };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
