@@ -62,14 +62,7 @@
     position: relative;
     padding-right: 12px;
   }
-  .blog-nav .logo::after {
-    content: '';
-    position: absolute;
-    top: -2px; right: 0;
-    width: 6px; height: 6px;
-    background: var(--acid);
-    border-radius: 50%;
-  }
+  .blog-nav .logo::after{content:none} /* dot baked into logo image */
   .blog-nav .buy-pill {
     background: var(--acid);
     color: var(--black);
@@ -219,7 +212,7 @@
 <body>
 
 <nav class="blog-nav">
-  <a href="/" class="logo">Smelloff</a>
+  <a href="/" class="logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:20px;width:auto;display:block"></a>
   <a href="/#buy" class="buy-pill">BUY ₹229</a>
 </nav>
 
@@ -244,7 +237,7 @@
 </main>
 
 <footer class="blog-footer">
-  <a href="/" class="bf-brand"><span class="bf-brand-inner">SMELLOFF<span class="bf-brand-dot"></span></span></a>
+  <a href="/" class="bf-brand" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:24px;width:auto;display:block;margin:0 auto"></a>
   <div class="footer-links">
     <a href="/">Home</a>
     <a href="/blog">All Guides</a>

@@ -287,14 +287,7 @@
     line-height:1;
     padding-right:12px;
   }
-  nav .logo::after{
-    content:'';
-    position:absolute;
-    top:-2px;right:0;
-    width:7px;height:7px;
-    background:var(--acid);
-    border-radius:50%;
-  }
+  nav .logo::after{content:none} /* acid dot is baked into the logo image */
   nav .meta{
     font-family:'JetBrains Mono',monospace;
     font-size:11px;
@@ -1971,7 +1964,7 @@
 <a href="#buy" class="skip-link">Skip to products</a>
 
 <nav>
-  <div class="logo">SMELLOFF</div>
+  <div class="logo"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:24px;width:auto;display:block"></div>
   <button class="hamburger" aria-label="Open menu" onclick="document.getElementById('mobileMenu').classList.add('active');document.body.style.overflow='hidden'">
     <span></span><span></span><span></span>
   </button>
@@ -2557,7 +2550,7 @@
 <div class="policy-overlay" id="paymentFailedOverlay" role="dialog" aria-modal="true" aria-labelledby="pfTitle">
   <nav class="po-nav">
     <button type="button" class="po-back" onclick="closePaymentFailedOverlay()">← Back</button>
-    <span class="po-logo">SMELLOFF<span class="po-dot" aria-hidden="true"></span></span>
+    <span class="po-logo"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:16px;width:auto;display:block"></span>
     <button type="button" class="po-close" onclick="closePaymentFailedOverlay()" aria-label="Close">×</button>
   </nav>
   <main class="po-main">
