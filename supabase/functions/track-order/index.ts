@@ -40,7 +40,7 @@ Deno.serve(async (req: Request) => {
 
     const { data: order, error } = await supabase
       .from("orders")
-      .select("order_code, created_at, status, payment_method, amount, items, tracking_id, courier, tracking_url, customer_phone, address")
+      .select("order_code, created_at, updated_at, status, status_history, payment_method, amount, items, tracking_id, courier, tracking_url, customer_phone, address")
       .eq("order_code", code)
       .maybeSingle();
 
@@ -52,12 +52,16 @@ Deno.serve(async (req: Request) => {
     }
 
     // Sanitized response: no email, no street address — only what the customer
-    // needs to see the order's progress.
+    // needs to see the order's progress. status_history is a timestamped trail
+    // ([{status, at}]) so the timeline can show WHEN each stage happened.
     const addr = (order.address || {}) as Record<string, string>;
+    const history = Array.isArray(order.status_history) ? order.status_history : [];
     return jsonResponse(req, {
       order_code: order.order_code,
       placed_at: order.created_at,
+      updated_at: order.updated_at,
       status: order.status,
+      status_history: history,
       payment_method: order.payment_method,
       amount: order.amount, // paise
       items: order.items,
