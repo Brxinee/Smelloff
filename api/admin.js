@@ -290,6 +290,66 @@ async function countRows(table, filter) {
 }
 
 // ---------------------------------------------------------------------------
+// Customer directory — orders rolled up by phone (the primary identifier):
+// name, contact, city, what & how much they ordered, spend and recency.
+// ---------------------------------------------------------------------------
+async function computeCustomers() {
+  const { data: orders } = await sb(
+    'orders?select=created_at,customer_phone,customer_email,items,amount,status,payment_method,address&order=created_at.desc&limit=5000',
+  );
+  const map = new Map();
+  for (const o of orders) {
+    const phone = (o.customer_phone || '').trim() || 'unknown';
+    let c = map.get(phone);
+    if (!c) {
+      c = {
+        phone, name: '', email: null, city: '', state: '',
+        orders: 0, cancelled: 0, units: 0, spent: 0,
+        firstOrder: o.created_at, lastOrder: o.created_at,
+        items: {}, payments: {},
+      };
+      map.set(phone, c);
+    }
+    c.orders += 1;
+    // Orders arrive newest-first, so the first value we see is the most recent.
+    if (!c.name && o.address && o.address.name) c.name = String(o.address.name);
+    if (!c.email && o.customer_email) c.email = o.customer_email;
+    if (!c.city && o.address && o.address.city) c.city = String(o.address.city);
+    if (!c.state && o.address && o.address.state) c.state = String(o.address.state);
+    if (o.created_at > c.lastOrder) c.lastOrder = o.created_at;
+    if (o.created_at < c.firstOrder) c.firstOrder = o.created_at;
+    if (o.payment_method) c.payments[o.payment_method] = (c.payments[o.payment_method] || 0) + 1;
+    if (o.status === 'cancelled') { c.cancelled += 1; continue; }
+    c.spent += (Number(o.amount) || 0) / 100;
+    if (Array.isArray(o.items)) {
+      for (const it of o.items) {
+        const q = Number(it && it.quantity) || 0;
+        c.units += q;
+        const label = String((it && (it.label || it.name)) || 'ODORSTRIKE').slice(0, 60)
+          + (it && it.variant ? ` ${it.variant}` : '');
+        c.items[label] = (c.items[label] || 0) + q;
+      }
+    }
+  }
+  const customers = [...map.values()].map((c) => ({
+    phone: c.phone,
+    name: c.name || '',
+    email: c.email || '',
+    city: c.city || '',
+    state: c.state || '',
+    orders: c.orders,
+    cancelled: c.cancelled,
+    units: c.units,
+    spent: Math.round(c.spent),
+    firstOrder: c.firstOrder,
+    lastOrder: c.lastOrder,
+    items: Object.entries(c.items).map(([k, q]) => `${k} ×${q}`).join(', '),
+    payment: Object.keys(c.payments).join('/').toUpperCase(),
+  })).sort((a, b) => b.spent - a.spent || b.orders - a.orders);
+  return { customers, total: customers.length };
+}
+
+// ---------------------------------------------------------------------------
 // GA4 Data API via service account (no SDK: RS256 JWT + token exchange)
 // ---------------------------------------------------------------------------
 let gaTokenCache = null;
@@ -486,6 +546,9 @@ export default async function handler(req, res) {
 
       case 'stats':
         return res.status(200).json(await computeStats());
+
+      case 'customers':
+        return res.status(200).json(await computeCustomers());
 
       case 'ga4':
         return res.status(200).json(await gaRun(String(body.report || ''), body.days));
