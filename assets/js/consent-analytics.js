@@ -105,6 +105,11 @@
   // choice above. Fire-and-forget; never blocks or errors the page.
   (function sendPageview() {
     try {
+      // Owner opt-out: if this browser has logged into the admin, skip — the
+      // shop owner's own visits must never inflate the analytics.
+      var owner = false;
+      try { owner = localStorage.getItem('smelloff_owner') === '1'; } catch (e) {}
+      if (owner) return;
       var p = location.pathname || '/';
       if (/^\/(admin|api)(\/|$)/.test(p)) return;
       if (window.__smelloffPV) return;
