@@ -8,7 +8,7 @@
   'use strict';
 
   var KEY = 'smelloff_consent_v1';
-  var GA4_ID = 'G-1VFDLJLLC7';
+  var GA4_ID = 'G-S1MJ58PD89';
   var META_PIXEL_ID = '1455100092891684';
 
   function loadAnalytics() {
