@@ -27,7 +27,7 @@
     {
       "source": "/odorstrike",
       "destination": "/#buy",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/blog/zinc-ricinoleate-fabric-odor-ingredient",
