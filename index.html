@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ODORSTRIKE Fabric Odor Spray for Clothes ₹229 | Smelloff</title>
-<meta name="description" content="ODORSTRIKE — pocket fabric odor spray &amp; clothes refresher. Not perfume, not deodorant: kills sweat smell in seconds, protects up to 8 hours. 50ml · ₹229 · COD.">
+<meta name="description" content="Pocket fabric odor spray for clothes — not a perfume, not a deo. Kills sweat smell in seconds, up to 8 hours protection. 50ml · ₹229 · COD across India.">
 <meta name="theme-color" content="#080808">
 
 <!-- Crawler directives: allow everyone, everywhere -->
@@ -126,7 +126,7 @@
   "mainEntity":[
     {"@type":"Question","name":"Is ODORSTRIKE safe on skin?","acceptedAnswer":{"@type":"Answer","text":"No. ODORSTRIKE is formulated exclusively for fabric — its solvent and odor actives are designed for fibres, not skin. Do not spray on skin, face, or eyes. If contact occurs, rinse with water."}},
     {"@type":"Question","name":"Will it stain my clothes?","acceptedAnswer":{"@type":"Answer","text":"No. The formula is glycerine-free and dries fast with zero residue — nothing sticky is left behind, even on dark fabric. Works on cotton, polyester, denim, and wool. Test a small hidden area first on delicate fabrics like silk."}},
-    {"@type":"Question","name":"How long does the protection last?","acceptedAnswer":{"@type":"Answer","text":"Up to 8 hours of odor protection on fabric under normal office or commute conditions. After heavy gym sessions or long rides, re-spray worn areas."}},
+    {"@type":"Question","name":"How long does the protection last?","acceptedAnswer":{"@type":"Answer","text":"Up to 8 hours of odor protection on fabric under normal office or commute conditions. After heavy gym sessions or long rides, re-spray worn areas. See the full system for staying fresh through an 11-hour office day on the Smelloff blog."}},
     {"@type":"Question","name":"How many uses per bottle?","acceptedAnswer":{"@type":"Answer","text":"Approximately 250 sprays per 50ml bottle. At 2–3 sprays per use, that's roughly 80–125 uses — enough for 2–3 months of daily use."}},
     {"@type":"Question","name":"Does it work on dry-clean-only fabric?","acceptedAnswer":{"@type":"Answer","text":"We don't recommend it for dry-clean-only items, leather, or suede. Stick to machine-washable fabrics like cotton, polyester, denim, and wool."}},
     {"@type":"Question","name":"Is the fragrance strong?","acceptedAnswer":{"@type":"Answer","text":"Very subtle. The fragrance is designed to be barely noticeable — just enough to signal freshness without announcing itself. It fades within a minute, leaving your clothes smelling neutral."}},
@@ -209,7 +209,7 @@
     if(window.__smelloffAnalyticsLoaded)return;
     window.__smelloffAnalyticsLoaded=true;
     var g=document.createElement('script');g.src='https://www.googletagmanager.com/gtag/js?id=G-S1MJ58PD89';g.async=true;document.head.appendChild(g);
-    g.onload=function(){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-S1MJ58PD89');};
+    g.onload=function(){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-S1MJ58PD89');var aiR=(document.referrer||'').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);if(aiR){gtag('event','ai_referral',{ai_source:aiR[2],landing_page:location.pathname});}};
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
     fbq('init','1455100092891684');fbq('track','PageView');
   }
@@ -400,6 +400,11 @@
   }
   .cart-remove:hover{color:var(--text)}
   .cart-foot{border-top:1px solid var(--rule);padding:20px 24px}
+  .cart-upsell{
+    font-family:'Inter Tight',sans-serif;font-size:13px;line-height:1.5;
+    color:var(--acid);border:1px dashed rgba(184,255,87,.35);
+    padding:10px 12px;margin-bottom:14px;
+  }
   .cart-subtotal{
     display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;
     font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;
@@ -484,9 +489,51 @@
     line-height:1;
     letter-spacing:-.03em;
   }
+  .hero-hook{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--acid);
+    margin-bottom:10px;
+  }
+  .hero-cta{
+    display:block;
+    width:100%;
+    margin-top:18px;
+    padding:18px 28px;
+    background:var(--acid);
+    color:var(--ink);
+    border:none;
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:transform .15s;
+  }
+  .hero-cta:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(184,255,87,.35)}
+  .hero-trust{
+    margin-top:12px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 14px;
+    justify-content:flex-end;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
   @media(max-width:720px){
-    .hero-foot{grid-template-columns:1fr;gap:24px}
+    .hero{padding:88px 24px 28px;min-height:auto}
+    .hero h1{font-size:clamp(48px,14vw,240px);margin:20px 0}
+    .hero-foot p{font-size:16px}
+    .hero-foot{grid-template-columns:1fr;gap:16px;padding-top:16px}
     .hero-foot .price-block{text-align:left}
+    .hero-cta{margin-top:14px;padding:16px 24px}
+    .hero-trust{justify-content:flex-start}
   }
 
   /* Marquee */
@@ -890,6 +937,13 @@
     color:var(--paper);
     border-color:var(--ink);
   }
+  .pricing .buy-trust{
+    margin-top:24px;
+    display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  }
+  .pricing .buy-trust a{color:var(--acid);text-decoration:none;border-bottom:1px solid rgba(184,255,87,.35)}
   .pricing .pay-modes{
     margin-top:28px;
     font-family:'JetBrains Mono',monospace;
@@ -2057,6 +2111,13 @@
   .skip-link:focus{top:0}
   *:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
   .pay-opt:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
+  .reviews-more{margin-top:32px;font-family:'Inter Tight',sans-serif;font-size:14px;color:var(--muted);line-height:1.6}
+  .reviews-more a{color:var(--acid);text-decoration:none;border-bottom:1px solid rgba(184,255,87,.35)}
+  .guides-strip{padding:60px 32px;border-top:1px solid var(--rule)}
+  .guides-strip ul{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:12px}
+  .guides-strip li a{font-family:'Fraunces',serif;font-size:clamp(16px,1.6vw,20px);color:var(--text);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:12px;display:block;transition:color .15s}
+  .guides-strip li a:hover{color:var(--acid)}
+  .guides-all{display:inline-block;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--acid);text-decoration:none}
 </style>
 </head>
 <body>
@@ -2120,6 +2181,7 @@
       </div>
     </div>
     <div class="cart-foot" id="cartFoot" style="display:none">
+      <div class="cart-upsell">Most buyers grab 2 — one for home, one for the gym bag. Free shipping either way.</div>
       <div class="cart-subtotal">
         <span>Subtotal</span>
         <span class="cart-sub-amt" id="cartSubtotal">₹229</span>
@@ -2146,8 +2208,11 @@
   <div class="hero-foot">
     <p>A pocket-sized 50ml mist that erases odor from fabric on contact. Not a perfume. Not a deodorant. A fix.</p>
     <div class="price-block">
+      <div class="hero-hook">No One Will Know.</div>
       <div class="strike-price">M.R.P. ₹579</div>
       <div class="price">₹229</div>
+      <button class="hero-cta" onclick="buyNow()">Buy Now — ₹229 · COD</button>
+      <div class="hero-trust"><span>★ 4.7 rated</span><span>COD available</span><span>Made in India</span><span>Secure UPI</span></div>
     </div>
   </div>
 </header>
@@ -2223,7 +2288,7 @@
     </div>
     <div class="showcase-text">
       <h2>One mist. Zero evidence.</h2>
-      <p>ODORSTRIKE doesn't mask smell. It captures and neutralizes the odor molecules trapped in your shirt collar, jacket sleeves, gym bag — HPβCD, a ring-shaped cyclodextrin, cages them at the source while Zinc PCA shuts them down.</p>
+      <p>ODORSTRIKE doesn't mask smell. It captures and neutralizes the odor molecules trapped in your shirt collar, jacket sleeves, gym bag — <a href="/blog/beta-cyclodextrin-odor-removal-science">HPβCD, a ring-shaped cyclodextrin that cages odor molecules</a> at the source while Zinc PCA shuts them down.</p>
       <p>Glycerine-free. Zero residue. Dries fast. Works on cotton, polyester, denim, wool — with up to 8 hours of odor protection on fabric.</p>
       <div class="specs">
         <div class="spec-row"><span>Volume</span>50ML</div>
@@ -2397,6 +2462,7 @@
       <button onclick="buyNow()">Buy now</button>
     </div>
   </div>
+  <div class="buy-trust"><a href="#reviews">★ 4.7 · early tester reviews</a><span>COD available</span><span>Made in India</span><span>Secure UPI checkout</span></div>
   <p class="pay-modes">UPI accepted · Cash on Delivery · ₹0 advance on COD</p>
 </section>
 
@@ -2420,6 +2486,7 @@
       <cite>— Karan, 29 / Delhi</cite>
     </div>
   </div>
+  <p class="reviews-more">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review — worn, sweated and stain-tested across India</a>, or see <a href="/blog/best-fabric-odor-spray-india-2026-body-odor">how it stacks up against Febreze and 4 other sprays</a>.</p>
 </section>
 
 <!-- FAQ -->
@@ -2436,7 +2503,7 @@
     </details>
     <details>
       <summary>How long does the protection last?</summary>
-      <p class="faq-answer">Up to 8 hours of odor protection on fabric under normal office or commute conditions. After heavy gym sessions or long rides, re-spray worn areas.</p>
+      <p class="faq-answer">Up to 8 hours of odor protection on fabric under normal office or commute conditions. After heavy gym sessions or long rides, re-spray worn areas. See the full <a href="/blog/how-to-not-smell-sweaty-at-work">system for staying fresh through an 11-hour office day</a>.</p>
     </details>
     <details>
       <summary>How many uses per bottle?</summary>
@@ -2484,6 +2551,19 @@
   </div>
   <div class="ec-success" id="ecSuccess">You're in. Watch your inbox.</div>
 </div>
+
+<!-- FIELD GUIDES -->
+<section class="guides-strip">
+  <div class="section-tag">Field guides</div>
+  <ul>
+    <li><a href="/blog/why-i-built-odorstrike">Why I built ODORSTRIKE — the founder story behind India's ₹229 pocket fabric spray</a></li>
+    <li><a href="/blog/beta-cyclodextrin-odor-removal-science">The science: how beta-cyclodextrin traps odor molecules in fabric</a></li>
+    <li><a href="/blog/best-fabric-odor-spray-india-2026-body-odor">Best fabric odor spray in India (2026) — 5 tested, 1 winner</a></li>
+    <li><a href="/blog/how-to-not-smell-sweaty-at-work">How to not smell sweaty at work — the 11-hour office playbook</a></li>
+    <li><a href="/blog/odorstrike-review-30-day-india-test">ODORSTRIKE 30-day India test — is it worth ₹229?</a></li>
+  </ul>
+  <a class="guides-all" href="/blog">All guides →</a>
+</section>
 
 <footer>
   <div class="footer-grid">
