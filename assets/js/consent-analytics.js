@@ -101,27 +101,7 @@
     init();
   }
 
-  // First-party, cookieless pageview beacon → /api/track. Stores nothing on the
-  // device and sends no personal data (the server derives an anonymous, daily-
-  // rotating visitor hash), so it runs regardless of the analytics-consent
-  // choice above. Fire-and-forget; never blocks or errors the page.
-  (function sendPageview() {
-    try {
-      // Owner opt-out: if this browser has logged into the admin, skip — the
-      // shop owner's own visits must never inflate the analytics.
-      var owner = false;
-      try { owner = localStorage.getItem('smelloff_owner') === '1'; } catch (e) {}
-      if (owner) return;
-      var p = location.pathname || '/';
-      if (/^\/(admin|api)(\/|$)/.test(p)) return;
-      if (window.__smelloffPV) return;
-      window.__smelloffPV = true;
-      fetch('/api/track', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ p: p, r: document.referrer || '' }),
-        keepalive: true
-      }).catch(function () {});
-    } catch (e) {}
-  })();
+  // The first-party pageview beacon moved to /assets/js/track.js, which every
+  // page now loads directly — it also captures clicks, funnel events and cart
+  // snapshots. Nothing consent-gated lives there (cookieless, no PII).
 })();

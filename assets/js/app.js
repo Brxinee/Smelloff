@@ -222,6 +222,26 @@ const CFG = window.SMELLOFF_CONFIG;
     };
   }
 
+  // Attach the buyer's contact to their live cart the moment checkout is
+  // submitted, so an unpaid/abandoned checkout is still reachable from the
+  // admin's cart-recovery tools. The full snapshot rides along too, since the
+  // direct "buy now" flow may never have sent one.
+  function beaconCheckoutContact(order) {
+    if (typeof window.smfTrack !== 'function') return;
+    try {
+      window.smfTrack({
+        type: 'cart_update',
+        cart: {
+          items: [{ name: order.product, variant: order.variant, quantity: order.units, price: order.amount * 100 }],
+          item_count: order.units,
+          total: order.total * 100,
+          currency: 'INR',
+          contact: { name: order.name, email: order.email, phone: order.phone }
+        }
+      });
+    } catch (e) {}
+  }
+
   function logOrderToSheets(order) {
     const params = new URLSearchParams();
     Object.keys(order).forEach(k => params.append(k, order[k] != null ? order[k] : ''));
@@ -353,6 +373,7 @@ const CFG = window.SMELLOFF_CONFIG;
     if (payMethod === 'cod') {
       const order = collectOrder(orderId, 'COD');
       logOrderToSheets(order);
+      beaconCheckoutContact(order);
       if (typeof window.createSupabaseOrder === 'function') {
         window.createSupabaseOrder({
           email: order.email, phone: order.phone,
@@ -383,6 +404,7 @@ const CFG = window.SMELLOFF_CONFIG;
     // UPI — no timer; order persists. User pays whenever.
     const order = collectOrder(orderId, 'UPI_PENDING');
     logOrderToSheets(order);
+    beaconCheckoutContact(order);
     if (typeof window.createSupabaseOrder === 'function') {
       window.createSupabaseOrder({
         email: order.email, phone: order.phone,
@@ -652,12 +674,32 @@ const CFG = window.SMELLOFF_CONFIG;
   function trackInitCheckout() {
     if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout');
     if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout');
+    // First-party funnel: checkout_start. Direct "buy now" flows never touch
+    // the cart drawer, so give those a basket snapshot too; the 'cart' variant
+    // already has a live snapshot from the drawer hooks.
+    if (typeof window.smfTrack === 'function') {
+      try {
+        var v = (typeof VARIANTS !== 'undefined' && VARIANTS[currentVariant]) || null;
+        var evt = { type: 'checkout_start', label: v ? v.title : undefined, value: v ? v.amount * 100 : undefined };
+        if (v && currentVariant !== 'cart') {
+          evt.cart = {
+            items: [{ name: v.title, quantity: 1, price: v.amount * 100, variant: currentVariant }],
+            item_count: 1, total: v.amount * 100, currency: 'INR'
+          };
+        }
+        window.smfTrack(evt);
+      } catch (e) {}
+    }
   }
   var _purchasedOrders = {};
   function trackPurchase(amount, orderId) {
     amount = Number(amount);
     if (orderId && _purchasedOrders[orderId]) return;
     if (orderId) _purchasedOrders[orderId] = true;
+    // First-party funnel: purchase (also marks this session's cart converted).
+    if (typeof window.smfTrack === 'function') {
+      try { window.smfTrack({ type: 'purchase', value: amount * 100, order_code: orderId }); } catch (e) {}
+    }
     var contents = {
       value: amount, currency: 'INR',
       content_ids: ['OS-001-50ML'], content_type: 'product', content_name: 'ODORSTRIKE Fabric Odor Mist',
@@ -1350,6 +1392,27 @@ const CFG = window.SMELLOFF_CONFIG;
       } catch(e) { console.warn('[Smelloff] AddToCart tracking failed:', e); }
     }
 
+    // Mirror every cart change to the first-party beacon (assets/js/track.js)
+    // so the admin's Carts tab sees live baskets and can recover abandoned
+    // ones. Prices go over the wire in paise, matching orders.amount.
+    function beaconCart(type, p){
+      if (typeof window.smfTrack !== 'function') return;
+      try {
+        var total = cart.items.reduce(function(a,i){ return a + i.price * i.qty; }, 0);
+        window.smfTrack({
+          type: type,
+          label: p ? p.name : undefined,
+          value: p ? p.price * 100 : undefined,
+          cart: {
+            items: cart.items.map(function(i){ return { name: i.name, quantity: i.qty, price: i.price * 100, variant: i.variant }; }),
+            item_count: cart.count,
+            total: total * 100,
+            currency: 'INR'
+          }
+        });
+      } catch(e) {}
+    }
+
     // escapeHtml now shared via window.escapeHtml (defined once in the config script)
 
     function renderDrawer(){
@@ -1408,14 +1471,17 @@ const CFG = window.SMELLOFF_CONFIG;
       save();
       showToast('Added to cart');
       trackAddToCartEvent(p);
+      beaconCart('add_to_cart', p);
       // Auto-open the cart drawer so the user immediately sees what's in their cart.
       // Conversion-friendlier than a 2-second toast that disappears.
       if (typeof window.openCartDrawer === 'function') window.openCartDrawer();
     };
 
     window.removeFromCart = function(id){
+      const removed = cart.items.find(i => i.id === id);
       cart.items = cart.items.filter(i => i.id !== id);
       save();
+      beaconCart('remove_from_cart', removed);
     };
 
     window.updateCartQty = function(id, delta){
@@ -1424,6 +1490,7 @@ const CFG = window.SMELLOFF_CONFIG;
       it.qty += delta;
       if (it.qty <= 0) cart.items = cart.items.filter(i => i.id !== id);
       save();
+      beaconCart('cart_update');
     };
 
     var _cartTrigger = null;
