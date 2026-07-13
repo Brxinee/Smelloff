@@ -4,6 +4,10 @@
   "rewrites": [],
   "redirects": [
     {
+      "source": "/r/:code",
+      "destination": "/?ref=:code"
+    },
+    {
       "source": "/(.*)",
       "has": [
         {
