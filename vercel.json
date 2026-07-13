@@ -63,6 +63,21 @@
       "source": "/blog/where-to-buy-odorstrike-india",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/blog/clothes-smell-after-washing",
+      "destination": "/blog/gym-clothes-smell-after-washing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/school-uniform-smell-india-guide",
+      "destination": "/blog/hostel-clothes-smell-college-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/shirt-smell-after-ironing",
+      "destination": "/blog/office-ac-trap-why-rewear-shirts-smell-worse",
+      "permanent": true
     }
   ],
   "headers": [
@@ -258,6 +273,15 @@
         {
           "key": "Service-Worker-Allowed",
           "value": "/"
+        }
+      ]
+    },
+    {
+      "source": "/blog/cricket-jersey-smell-how-to-fix",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
         }
       ]
     }
