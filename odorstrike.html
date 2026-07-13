@@ -159,8 +159,6 @@
     if(document.readyState==='complete'){loadAnalytics();}
     else{window.addEventListener('load',loadAnalytics,{once:true});}
   }
-  // First-party, cookieless pageview beacon → /api/track (no device storage, no PII).
-  (function(){try{var o=false;try{o=localStorage.getItem('smelloff_owner')==='1';}catch(e){}if(o)return;var p=location.pathname||'/';if(/^\/(admin|api)(\/|$)/.test(p))return;if(window.__smelloffPV)return;window.__smelloffPV=true;fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p:p,r:document.referrer||''}),keepalive:true}).catch(function(){});}catch(e){}})();
 </script>
 
 <link rel="stylesheet" href="/assets/css/main.css?v=7">
@@ -808,7 +806,7 @@
 <!-- ============================= -->
 <!-- CHECKOUT LOGIC                -->
 <!-- ============================= -->
-<script src="/assets/js/app.js?v=9" defer></script>
+<script src="/assets/js/app.js?v=10" defer></script>
 <script src="/assets/js/neo.js?v=4" defer></script>
 
 <!-- CART DRAWER + TOAST -->
@@ -953,5 +951,6 @@ window.createSupabaseOrder = function (opts) {
 <!-- ═══════════ CRO ENHANCEMENTS (Pillar 1: attraction) ═══════════ -->
 <script src="/assets/js/scroll-effects.js?v=4" defer></script>
 
+<script src="/assets/js/track.js?v=1" defer></script>
 </body>
 </html>
