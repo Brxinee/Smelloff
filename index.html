@@ -2923,16 +2923,41 @@ window.createSupabaseOrder = function (opts) {
       document.body.style.overflow = '';
     }
   }
+  // Mirror cart changes to the first-party beacon (assets/js/track.js) so the
+  // admin's Carts tab sees live baskets and can recover abandoned ones.
+  // Prices go over the wire in paise, matching orders.amount.
+  function smfCartBeacon(type, contact) {
+    if (typeof window.smfTrack !== 'function') return;
+    try {
+      var qty = getCartQty();
+      var paise = unitPrice() * 100;
+      var payload = {
+        type: type,
+        label: 'ODORSTRIKE Fabric Mist',
+        value: paise,
+        cart: {
+          items: qty > 0 ? [{ name: 'ODORSTRIKE Fabric Mist', variant: '50ml', quantity: qty, price: paise }] : [],
+          item_count: qty,
+          total: paise * qty,
+          currency: 'INR'
+        }
+      };
+      if (contact) payload.cart.contact = contact;
+      window.smfTrack(payload);
+    } catch (e) {}
+  }
+
   // A "Buy" CTA now adds one unit (if the cart is empty) and opens the cart.
   function buyNow() {
     if (getCartQty() < 1) setCartQty(1);
     else renderCart();
     trackAddToCart();
+    smfCartBeacon('add_to_cart');
     openCartDrawer();
   }
-  function cartInc() { setCartQty(getCartQty() + 1); }
-  function cartDec() { var q = getCartQty(); if (q <= 1) setCartQty(0); else setCartQty(q - 1); }
-  function cartRemove() { setCartQty(0); }
+  function cartInc() { setCartQty(getCartQty() + 1); smfCartBeacon('cart_update'); }
+  function cartDec() { var q = getCartQty(); if (q <= 1) setCartQty(0); else setCartQty(q - 1); smfCartBeacon('cart_update'); }
+  function cartRemove() { setCartQty(0); smfCartBeacon('remove_from_cart'); }
   function checkoutFromCart() {
     var q = getCartQty();
     if (q < 1) return;
@@ -3294,6 +3319,9 @@ window.createSupabaseOrder = function (opts) {
     if (payMethod === 'cod') {
       const order = collectOrder(orderId, 'COD');
       logOrderToSheets(order);
+      // Attach the buyer's contact to their live cart so an unpaid/abandoned
+      // checkout stays reachable from the admin's cart-recovery tools.
+      smfCartBeacon('cart_update', { name: order.name, email: order.email, phone: order.phone });
       if (typeof window.createSupabaseOrder === 'function') {
         window.createSupabaseOrder({
           email: order.email, phone: order.phone,
@@ -3324,6 +3352,7 @@ window.createSupabaseOrder = function (opts) {
     // UPI — no timer; order persists. User pays whenever.
     const order = collectOrder(orderId, 'UPI_PENDING');
     logOrderToSheets(order);
+    smfCartBeacon('cart_update', { name: order.name, email: order.email, phone: order.phone });
     if (typeof window.createSupabaseOrder === 'function') {
       window.createSupabaseOrder({
         email: order.email, phone: order.phone,
@@ -3622,6 +3651,8 @@ window.createSupabaseOrder = function (opts) {
     var v = osValue();
     if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', fbContents(v));
     if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', { currency: 'INR', value: v, items: gaItems(v) });
+    // First-party funnel: checkout_start (snapshot keeps the live cart current).
+    smfCartBeacon('checkout_start');
   }
 
   // Idempotency guard: a page reload or duplicate success render must never
@@ -3631,6 +3662,10 @@ window.createSupabaseOrder = function (opts) {
     amount = Number(amount) || osValue();
     if (orderId && _purchasedOrders[orderId]) return;
     if (orderId) _purchasedOrders[orderId] = true;
+    // First-party funnel: purchase (also marks this session's cart converted).
+    if (typeof window.smfTrack === 'function') {
+      try { window.smfTrack({ type: 'purchase', value: amount * 100, order_code: orderId }); } catch (e) {}
+    }
     if (typeof fbq !== 'undefined') {
       if (orderId) fbq('track', 'Purchase', fbContents(amount), { eventID: 'purchase_' + orderId });
       else fbq('track', 'Purchase', fbContents(amount));
@@ -3653,6 +3688,10 @@ window.createSupabaseOrder = function (opts) {
         var vcPrice = osValue();
         if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', fbContents(vcPrice));
         if (typeof gtag !== 'undefined') gtag('event', 'view_item', { currency: 'INR', value: vcPrice, items: gaItems(vcPrice) });
+        // First-party funnel: the #buy section is this store's product view.
+        if (typeof window.smfTrack === 'function') {
+          try { window.smfTrack({ type: 'product_view', label: 'ODORSTRIKE Fabric Mist', value: vcPrice * 100 }); } catch (e) {}
+        }
         obs.disconnect();
       }
     }, { threshold: 0.3 });
