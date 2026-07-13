@@ -2116,6 +2116,42 @@
   .guides-strip li a:hover{color:var(--acid)}
   .guides-all{display:inline-block;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--acid);text-decoration:none}
 </style>
+
+<!-- Smelloff Partner Network attribution (partners.smelloff.in) -->
+<script>
+(function(){
+  var r = new URLSearchParams(location.search).get('ref');
+  if (r) {
+    var v = JSON.stringify({ c: r, t: Date.now() });
+    try { localStorage.setItem('so_ref', v); } catch (e) {} /* dual-write: WebViews differ */
+    document.cookie = 'so_ref=' + encodeURIComponent(v) + ';max-age=604800;path=/;SameSite=Lax';
+    try { navigator.sendBeacon('https://partners.smelloff.in/api/click', JSON.stringify({ ref: r })); } catch (e) {}
+  }
+})();
+function soReadRef() {
+  try {
+    var m = document.cookie.match(/(?:^|;\s*)so_ref=([^;]+)/);
+    var raw = m ? decodeURIComponent(m[1]) : localStorage.getItem('so_ref');
+    if (!raw) return null;
+    var v = JSON.parse(raw);
+    if (!v || !v.c || !v.t) return null;
+    if (Date.now() - v.t > 7 * 24 * 60 * 60 * 1000) return null; /* 7-day window */
+    return v.c;
+  } catch (e) { return null; }
+}
+function soAttachOrder(orderRef, amount, qty, paymentMethod) {
+  var ref = soReadRef();
+  if (!ref) return;
+  try {
+    fetch('https://partners.smelloff.in/api/webhook/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order_ref: orderRef, amount: amount, qty: qty || 1, payment_method: paymentMethod, ref_code: ref }),
+      keepalive: true
+    }).catch(function(){});
+  } catch (e) {}
+}
+</script>
 </head>
 <body>
 <a href="#buy" class="skip-link">Skip to products</a>
@@ -3292,6 +3328,7 @@ window.createSupabaseOrder = function (opts) {
     }
 
     trackPurchase(amount, orderId);
+    soAttachOrder(orderId, amount, cartQty > 0 ? cartQty : 1, method === 'cod' ? 'cod' : 'razorpay');
     setCartQty(0);
     // Unlock review submission (client-side gate — not tamper-proof).
     try {
