@@ -687,16 +687,19 @@
   }
   .fix-features li strong{color:var(--paper);font-weight:700}
   .fix-features li a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
-  .fix-cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:36px}
+  /* Centered buy block (specs + large CTA + note) */
+  .fix-buy{max-width:600px;margin:44px auto 0;text-align:center}
+  .fix-buy .specs{margin-top:0;padding-top:26px}
   .fix-cta{
-    display:inline-block;background:var(--acid);color:var(--ink);
-    padding:16px 30px;border:none;cursor:pointer;
-    font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;
-    letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+    display:block;width:100%;margin-top:28px;
+    background:var(--acid);color:var(--ink);
+    padding:20px 28px;border:none;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
     transition:transform .15s,box-shadow .15s;
   }
   .fix-cta:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(184,255,87,.35)}
-  .fix-cta-note{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .fix-cta-note{display:block;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
   .fix-cta-note s{opacity:.65}
   .showcase-grid{
     display:grid;
@@ -2349,16 +2352,16 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <li><strong>Fabric-only, works on everything</strong> — cotton, polyester, denim and wool. Never on skin.</li>
       <li><strong>Pocket-sized 50ml</strong> — about 250 sprays per bottle, shipped pan-India with COD.</li>
     </ul>
-    <div class="specs">
-      <div class="spec-row"><span>Volume</span>50ML</div>
-      <div class="spec-row"><span>Use on</span>FABRIC ONLY</div>
-      <div class="spec-row"><span>Protection</span>UP TO 8HR</div>
-      <div class="spec-row"><span>Sprays</span>~250</div>
-      <div class="spec-row"><span>Dries</span>FAST · NO WET PATCH</div>
-      <div class="spec-row"><span>Glycerine</span>ZERO</div>
-    </div>
-    <div class="fix-cta-row">
-      <a href="#buy" class="fix-cta">Buy ODORSTRIKE — ₹229 · COD</a>
+    <div class="fix-buy">
+      <div class="specs">
+        <div class="spec-row"><span>Volume</span>50ML</div>
+        <div class="spec-row"><span>Use on</span>FABRIC ONLY</div>
+        <div class="spec-row"><span>Protection</span>UP TO 8HR</div>
+        <div class="spec-row"><span>Sprays</span>~250</div>
+        <div class="spec-row"><span>Dries</span>FAST · NO WET PATCH</div>
+        <div class="spec-row"><span>Glycerine</span>ZERO</div>
+      </div>
+      <a href="#buy" class="fix-cta">Buy Now — ₹229 · COD</a>
       <span class="fix-cta-note">50ml · <s>₹579</s> ₹229 · free shipping pan-India</span>
     </div>
   </div>
