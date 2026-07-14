@@ -111,7 +111,8 @@
     "availability":"https://schema.org/InStock",
     "itemCondition":"https://schema.org/NewCondition",
     "url":"https://smelloff.in/#buy",
-    "priceValidUntil":"2026-12-31",
+    "validFrom":"2026-04-18",
+    "priceValidUntil":"2027-07-14",
     "shippingDetails":{"@type":"OfferShippingDetails","shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},"shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},"deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}}},
     "hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","applicableCountry":"IN","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":7,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/FreeReturn"}
   },
@@ -722,10 +723,18 @@
   .showcase-text p{
     font-size:18px;
     line-height:1.6;
-    opacity:.8;
+    color:#c7c4bd;
     margin-bottom:24px;
     max-width:480px;
   }
+  /* Inline links: acid green (#B8FF57 passes AA on #080808) + underline */
+  .showcase-text p a{
+    color:var(--acid);
+    text-decoration:underline;
+    text-underline-offset:3px;
+    text-decoration-thickness:1px;
+  }
+  .showcase-text p a:hover{text-decoration-thickness:2px}
   .specs{
     margin-top:40px;
     border-top:1px solid rgba(244,241,234,.15);
@@ -782,7 +791,7 @@
     letter-spacing:.15em;
     color:var(--muted);
   }
-  .ingredient h4{
+  .ingredient h3{
     font-family:'Fraunces',serif;
     font-weight:900;
     font-size:28px;
@@ -801,7 +810,7 @@
     color:var(--ink);
   }
   .ingredient.hero-ingredient .pct{color:rgba(8,8,8,.6)}
-  .ingredient.hero-ingredient h4{color:var(--ink)}
+  .ingredient.hero-ingredient h3{color:var(--ink)}
   .ingredient.hero-ingredient p{color:rgba(8,8,8,.7)}
   @media(max-width:1000px){
     .ingredients{grid-template-columns:1fr 1fr}
@@ -1050,7 +1059,7 @@
     padding-right:14px;
   }
   footer .brand::after{content:none} /* acid dot baked into logo image */
-  footer h5{
+  footer h3{
     font-size:11px;
     letter-spacing:.2em;
     text-transform:uppercase;
@@ -2365,22 +2374,22 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <div class="ingredients">
     <div class="ingredient hero-ingredient">
       <div class="pct">01 — TRAP</div>
-      <h4>HPβCD (Cyclodextrin)</h4>
+      <h3>HPβCD (Cyclodextrin)</h3>
       <p>A hollow ring-shaped molecule that physically cages odor molecules inside itself. The smell isn't covered — it's captured.</p>
     </div>
     <div class="ingredient">
       <div class="pct">02 — NEUTRALIZE</div>
-      <h4>Zinc PCA</h4>
+      <h3>Zinc PCA</h3>
       <p>A zinc salt that deactivates the captured odor compounds and shuts the smell down at the source.</p>
     </div>
     <div class="ingredient">
       <div class="pct">03 — PREVENT</div>
-      <h4>Triethyl Citrate</h4>
+      <h3>Triethyl Citrate</h3>
       <p>Slows the breakdown of fresh sweat before new odor can form — that's what keeps fabric protected for up to 8 hours.</p>
     </div>
     <div class="ingredient">
       <div class="pct">04 — ANTI-REGROWTH</div>
-      <h4>Zinc Gluconate</h4>
+      <h3>Zinc Gluconate</h3>
       <p>Keeps odor from re-developing in the fibres between wears, so the fix holds long after you spray.</p>
     </div>
   </div>
@@ -2605,14 +2614,14 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <p style="opacity:.6;margin-top:8px">Pocket-sized odor killer<br>for your clothes.</p>
     </div>
     <div>
-      <h5>Shop</h5>
+      <h3>Shop</h3>
       <ul>
         <li><a href="#buy">ODORSTRIKE</a></li>
         <li><a href="/track-order">Track Order</a></li>
       </ul>
     </div>
     <div>
-      <h5>Support</h5>
+      <h3>Support</h3>
       <ul>
         <li><a href="/contact">Contact</a></li>
         <li><a href="/shipping">Shipping</a></li>
@@ -2623,7 +2632,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       </ul>
     </div>
     <div>
-      <h5>Legal</h5>
+      <h3>Legal</h3>
       <ul>
         <li><a href="/privacy">Privacy</a></li>
         <li><a href="/terms">Terms</a></li>
