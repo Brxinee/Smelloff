@@ -676,6 +676,28 @@
   .showcase .section-tag{color:var(--muted)}
   .showcase .section-tag::before{background:var(--muted)}
   .showcase-text{max-width:820px}
+  .showcase-text .fix-lede{font-size:19px;color:var(--paper);opacity:.95;max-width:640px}
+  .fix-features{list-style:none;margin:28px 0 4px;padding:0;display:grid;gap:14px;max-width:660px}
+  .fix-features li{position:relative;padding-left:32px;font-size:16px;line-height:1.5;color:#c7c4bd}
+  .fix-features li::before{
+    content:'\2713';position:absolute;left:0;top:2px;
+    width:20px;height:20px;border-radius:50%;
+    background:var(--acid);color:var(--ink);
+    font-size:12px;font-weight:800;line-height:20px;text-align:center;
+  }
+  .fix-features li strong{color:var(--paper);font-weight:700}
+  .fix-features li a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
+  .fix-cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:36px}
+  .fix-cta{
+    display:inline-block;background:var(--acid);color:var(--ink);
+    padding:16px 30px;border:none;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+    transition:transform .15s,box-shadow .15s;
+  }
+  .fix-cta:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(184,255,87,.35)}
+  .fix-cta-note{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .fix-cta-note s{opacity:.65}
   .showcase-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -2345,6 +2367,35 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </div>
 </div>
 
+<!-- PRODUCT SHOWCASE / THE FIX -->
+<section class="showcase">
+  <div class="section-tag">The fix</div>
+  <div class="showcase-text">
+    <h2>Meet ODORSTRIKE.<br>One mist. Zero evidence.</h2>
+    <p class="fix-lede"><strong>ODORSTRIKE</strong> is India's first pocket-sized fabric odor remover — a 50ml spray that erases sweat, gym and smoke smell straight out of the clothes you're wearing. Not a perfume. Not a deodorant. A fix you keep in your pocket.</p>
+    <p>It doesn't mask smell — it captures and neutralizes the odor molecules trapped in your shirt collar, jacket sleeves and gym bag. <a href="/blog/hpbcd-cyclodextrin-fabric-odor">HPβCD, a ring-shaped cyclodextrin that cages odor molecules</a> traps them at the source while Zinc PCA shuts them down.</p>
+    <ul class="fix-features">
+      <li><strong>Kills odor — doesn't hide it.</strong> A 4-layer system traps, neutralizes and blocks smell instead of perfuming over it. <a href="#science">See the chemistry ↓</a></li>
+      <li><strong>Up to 8 hours of protection</strong> on fabric — enough for a full office day or a gym-to-commute stretch.</li>
+      <li><strong>Zero residue, glycerine-free.</strong> Dries fast with no wet patch, no stiffness and no stain, even on dark fabric.</li>
+      <li><strong>Fabric-only, works on everything</strong> — cotton, polyester, denim and wool. Never on skin.</li>
+      <li><strong>Pocket-sized 50ml</strong> — about 250 sprays per bottle, shipped pan-India with COD.</li>
+    </ul>
+    <div class="specs">
+      <div class="spec-row"><span>Volume</span>50ML</div>
+      <div class="spec-row"><span>Use on</span>FABRIC ONLY</div>
+      <div class="spec-row"><span>Protection</span>UP TO 8HR</div>
+      <div class="spec-row"><span>Sprays</span>~250</div>
+      <div class="spec-row"><span>Dries</span>FAST · NO WET PATCH</div>
+      <div class="spec-row"><span>Glycerine</span>ZERO</div>
+    </div>
+    <div class="fix-cta-row">
+      <a href="#buy" class="fix-cta">Buy ODORSTRIKE — ₹229 · COD</a>
+      <span class="fix-cta-note">50ml · <s>₹579</s> ₹229 · free shipping pan-India</span>
+    </div>
+  </div>
+</section>
+
 <!-- PROBLEM -->
 <section class="problem">
   <div class="section-tag">The problem</div>
@@ -2366,24 +2417,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <div>
       <h3>8sec</h3>
       <p>Time to spray, shake, walk into the meeting smelling fresh.</p>
-    </div>
-  </div>
-</section>
-
-<!-- PRODUCT SHOWCASE -->
-<section class="showcase">
-  <div class="section-tag">The fix</div>
-  <div class="showcase-text">
-    <h2>One mist. Zero evidence.</h2>
-    <p>ODORSTRIKE doesn't mask smell. It captures and neutralizes the odor molecules trapped in your shirt collar, jacket sleeves, gym bag — <a href="/blog/beta-cyclodextrin-odor-removal-science">HPβCD, a ring-shaped cyclodextrin that cages odor molecules</a> at the source while Zinc PCA shuts them down.</p>
-    <p>Glycerine-free. Zero residue. Dries fast. Works on cotton, polyester, denim, wool — with up to 8 hours of odor protection on fabric.</p>
-    <div class="specs">
-      <div class="spec-row"><span>Volume</span>50ML</div>
-      <div class="spec-row"><span>Use on</span>FABRIC ONLY</div>
-      <div class="spec-row"><span>Protection</span>UP TO 8HR</div>
-      <div class="spec-row"><span>Sprays</span>~250</div>
-      <div class="spec-row"><span>Dries</span>FAST · NO WET PATCH</div>
-      <div class="spec-row"><span>Glycerine</span>ZERO</div>
     </div>
   </div>
 </section>
