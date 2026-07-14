@@ -75,7 +75,7 @@ strong{color:var(--off-white);font-weight:700}
 /* ---------------- Product CTA card (2b) — dark surface ---------------- */
 .end-cta{background:var(--bg-surface);border:1px solid var(--line);border-radius:2px;padding:40px 36px;margin:60px 0;text-align:center}
 .end-cta .cta-label{font-family:'JetBrains Mono',monospace;font-weight:400;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--acid);margin-bottom:16px}
-.end-cta h4{font-family:'Fraunces',serif;font-weight:900;font-size:28px;color:var(--off-white);margin-bottom:12px;line-height:1.2}
+.end-cta h3{font-family:'Fraunces',serif;font-weight:900;font-size:28px;color:var(--off-white);margin-bottom:12px;line-height:1.2}
 .end-cta .cta-spec{color:var(--grey);font-size:16px;margin-bottom:20px;line-height:1.6}
 .end-cta .price-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px}
 .end-cta .strike-price{font-size:16px;color:var(--grey);text-decoration:line-through}
