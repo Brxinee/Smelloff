@@ -581,19 +581,19 @@
   .marquee{
     background:var(--acid);
     color:var(--ink);
-    padding:18px 0;
+    padding:7px 0;
     overflow:hidden;
     border-top:none;
     border-bottom:none;
   }
   .marquee-track{
     display:flex;
-    gap:48px;
+    gap:40px;
     animation:scroll 40s linear infinite;
     white-space:nowrap;
     font-family:'JetBrains Mono',monospace;
-    font-size:13px;
-    letter-spacing:.2em;
+    font-size:11px;
+    letter-spacing:.16em;
     text-transform:uppercase;
   }
   .marquee-track span{display:flex;align-items:center;gap:48px}
@@ -2331,41 +2331,9 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <span class="price">₹229</span>
       </div>
       <button class="hero-cta" onclick="buyNow()">Buy Now — ₹229 · COD</button>
-      <div class="hero-trust"><span>★ 4.7 rated</span><span>COD available</span><span>Made in India</span><span>Secure UPI</span></div>
     </div>
   </div>
 </header>
-
-<!-- TRUST ROW -->
-<div class="trust-row">
-  <span>Free shipping pan-India</span>
-  <span>·</span>
-  <span>COD across India</span>
-  <span>·</span>
-  <span>Ships in 48hr</span>
-  <span>·</span>
-  <span>Made in Hyderabad</span>
-</div>
-
-<!-- MARQUEE -->
-<div class="marquee">
-  <div class="marquee-track">
-    <span>NO RESIDUE</span>
-    <span>GLYCERINE-FREE</span>
-    <span>UP TO 8HR PROTECTION</span>
-    <span>FABRIC SAFE</span>
-    <span>50ML POCKET</span>
-    <span>SMELL KHATAM. CONFIDENCE QAAYAM.</span>
-    <span>MADE IN INDIA</span>
-    <span>NO RESIDUE</span>
-    <span>GLYCERINE-FREE</span>
-    <span>UP TO 8HR PROTECTION</span>
-    <span>FABRIC SAFE</span>
-    <span>50ML POCKET</span>
-    <span>SMELL KHATAM. CONFIDENCE QAAYAM.</span>
-    <span>MADE IN INDIA</span>
-  </div>
-</div>
 
 <!-- PRODUCT SHOWCASE / THE FIX -->
 <section class="showcase">
@@ -2395,6 +2363,26 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     </div>
   </div>
 </section>
+
+<!-- FEATURE TICKER (thin) -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>NO RESIDUE</span>
+    <span>GLYCERINE-FREE</span>
+    <span>UP TO 8HR PROTECTION</span>
+    <span>FABRIC SAFE</span>
+    <span>50ML POCKET</span>
+    <span>SMELL KHATAM. CONFIDENCE QAAYAM.</span>
+    <span>MADE IN INDIA</span>
+    <span>NO RESIDUE</span>
+    <span>GLYCERINE-FREE</span>
+    <span>UP TO 8HR PROTECTION</span>
+    <span>FABRIC SAFE</span>
+    <span>50ML POCKET</span>
+    <span>SMELL KHATAM. CONFIDENCE QAAYAM.</span>
+    <span>MADE IN INDIA</span>
+  </div>
+</div>
 
 <!-- PROBLEM -->
 <section class="problem">
