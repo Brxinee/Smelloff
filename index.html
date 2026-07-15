@@ -78,14 +78,17 @@
 {"@context":"https://schema.org","@type":"WebPage","@id":"https://smelloff.in/#webpage","name":"Smelloff ODORSTRIKE — Fabric Odor Remover Spray","url":"https://smelloff.in/","description":"India's first pocket-sized fabric odor eliminator mist. Kills smell on contact. Not a perfume, not a deodorant.","inLanguage":"en-IN","isPartOf":{"@type":"WebSite","name":"Smelloff","url":"https://smelloff.in"},"about":{"@type":"Thing","name":"Fabric Odor Elimination"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://smelloff.in/assets/odorstrike-bottle.webp"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".hero h1",".ph-tagline",".problem h2"]}}
 </script>
 <!-- JSON-LD Product (single SKU — ₹229, no bundles) -->
-<!-- HOW TO KEEP THE PRODUCT RATING IN SYNC (no individual Review markup here):
-     Google flags self-hosted individual Review objects nested in a Product
-     ("Multiple reviews without aggregateRating object" in the Review-snippets
-     report), so this schema carries ONLY "aggregateRating" — that is what
-     renders the SERP star rating. Do NOT re-add a "review" array here.
-     To update the rating: recompute ratingValue as the average of all visible
-     on-page reviews (1 decimal) and bump ratingCount/reviewCount to match.
-     Never add fabricated reviews (Google penalty risk). -->
+<!-- RATING IS GATED — no "aggregateRating" is emitted right now.
+     The only testimonials so far are pre-launch beta quotes, and a SERP star
+     rating not computed from real verified-purchase reviews is a Google
+     structured-data violation (penalty risk). So this Product schema carries
+     NO rating and NO "review" array.
+     To re-enable once real reviews exist: add an "aggregateRating" object
+     ({"@type":"AggregateRating","ratingValue":<avg to 1 decimal>,"bestRating":"5",
+     "worstRating":"1","ratingCount":<n>,"reviewCount":<n>}) as the last property
+     of this Product, computed from genuine on-page reviews only. Do NOT nest a
+     "review" array here (Google flags self-hosted Review objects), and never
+     fabricate reviews or counts. -->
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -115,8 +118,7 @@
     "priceValidUntil":"2027-07-14",
     "shippingDetails":{"@type":"OfferShippingDetails","shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},"shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},"deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}}},
     "hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","applicableCountry":"IN","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":7,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/FreeReturn"}
-  },
-  "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.7","bestRating":"5","worstRating":"1","ratingCount":"3","reviewCount":"3"}
+  }
 }
 </script>
 <!-- JSON-LD FAQPage (mirrors the on-page FAQ answers) -->
@@ -512,14 +514,6 @@
     color:#c7c4bd;
     margin:24px 0 0;
     max-width:460px;
-  }
-  .ph-hook{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    color:var(--acid);
-    margin-top:26px;
   }
   .ph-price{display:flex;align-items:baseline;gap:14px;margin-top:8px}
   .ph-price .strike-price{
@@ -1157,7 +1151,7 @@
     width:100%;
     padding:12px 14px;
     font-family:'Inter Tight',sans-serif;
-    font-size:15px;
+    font-size:16px; /* 16px minimum — anything smaller triggers iOS auto-zoom on focus */
     background:rgba(244,241,234,.05);
     border:1px solid var(--rule);
     color:var(--text);
@@ -1893,7 +1887,7 @@
     flex:1;
     padding:16px 18px;
     font-family:'Inter Tight',sans-serif;
-    font-size:15px;
+    font-size:16px; /* 16px minimum — avoids iOS auto-zoom on focus */
     background:transparent;
     border:1px solid var(--rule);
     border-right:none;
@@ -2151,9 +2145,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
     <!-- PRODUCT INFO -->
     <div class="product-info">
-      <h1>ODORSTRIKE<span class="ph-sub">Fabric Odor Remover Spray · 50ml</span></h1>
+      <h1>No One Will Know.<span class="ph-sub">ODORSTRIKE · Fabric Odor Remover Spray · 50ml</span></h1>
       <p class="ph-tagline">A pocket-sized 50ml mist that erases odor from fabric on contact. Not a perfume. Not a deodorant. A fix.</p>
-      <div class="ph-hook">No One Will Know.</div>
       <div class="ph-price">
         <span class="strike-price">M.R.P. ₹579</span>
         <span class="price">₹229</span>
@@ -2375,11 +2368,15 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <button onclick="buyNow()">Buy now</button>
     </div>
   </div>
-  <div class="buy-trust"><a href="#reviews">★ 4.7 · early tester reviews</a><span>COD available</span><span>Made in India</span><span>Secure UPI checkout</span></div>
+  <div class="buy-trust"><a href="#reviews">Read early tester reviews</a><span>COD available</span><span>Made in India</span><span>Secure UPI checkout</span></div>
   <p class="pay-modes">UPI accepted · Cash on Delivery · ₹0 advance on COD</p>
 </section>
 
 <!-- REVIEWS -->
+<!-- AggregateRating (JSON-LD) + numeric star are intentionally GATED: the only
+     testimonials so far are pre-launch beta quotes, so emitting a rating would be
+     a Google structured-data violation. Re-add the Product "aggregateRating" block
+     and a visible ★ figure ONLY when computed from real verified-purchase reviews. -->
 <section class="reviews" id="reviews">
   <div class="section-tag">Early testers say</div>
   <div class="review-grid">
