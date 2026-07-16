@@ -1,0 +1,14 @@
+C3 — POST-DELIVERY REVIEW ASK, WhatsApp version (ADDITIVE, NOT WIRED)
+=====================================================================
+Send manually (or via your WhatsApp Business quick-reply) ~2-3 days after
+the order status hits "delivered" — never before. One ask, no reminders.
+Replace {name} and {order_id} before sending. Replies get posted through
+the admin dashboard's reviews CRUD as verified-buyer reviews.
+
+--- MESSAGE (copy below this line) ---
+
+Hey {name}! Nikhil from Smelloff here — your ODORSTRIKE ({order_id}) landed a few days back. Honest verdict: did it kill the smell? 🙏
+
+2 lines + your rating (1–5) is all I need. Good or bad, it goes up unedited at smelloff.in/reviews as a verified buyer — anonymous if you prefer. A photo of the bottle wherever it lives now (gym bag, desk, car) is a bonus.
+
+No reminders after this, promise.

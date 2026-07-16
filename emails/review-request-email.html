@@ -1,0 +1,111 @@
+<!-- SUBJECT: How's your ODORSTRIKE working out? -->
+<!-- PREVIEW: 2 lines from you = a huge deal for a small brand -->
+<!--
+  C3 — POST-DELIVERY REVIEW ASK (ADDITIVE, NOT WIRED)
+  ====================================================
+  This template is NOT referenced by api/send-email.js or api/email-templates.js
+  and nothing sends it automatically. To use it:
+    1. Send manually via Resend (or add a template in the Resend dashboard).
+    2. Replace {{customer_name}} and {{order_id}} per recipient.
+    3. Send ~2-3 days AFTER the order status hits "delivered" — never before.
+  CTA is a WhatsApp deep link because the site has no self-serve review form on
+  a reachable page yet; replies are posted through the admin dashboard's
+  reviews CRUD as verified-buyer reviews. If a /reviews form ships later,
+  point the button there instead.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="color-scheme" content="dark">
+<meta name="supported-color-schemes" content="dark">
+<title>How's your ODORSTRIKE working out?</title>
+</head>
+<body style="margin:0;padding:0;background-color:#080808;font-family:Arial,Helvetica,sans-serif;color:#FFFFFF;-webkit-font-smoothing:antialiased;">
+
+<!-- Hidden preview text -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;height:0;width:0;">
+2 lines from you = a huge deal for a small brand
+</div>
+<div style="display:none;max-height:0;overflow:hidden;">&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#080808;">
+  <tr>
+    <td align="center" style="padding:24px 16px;">
+
+      <!-- Outer container -->
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#080808;border:1px solid #1F1F1F;">
+
+        <!-- HEADER BAR (acid green) -->
+        <tr>
+          <td style="background-color:#B8FF57;padding:18px 24px;" align="left">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td align="left" style="font-family:Impact,'Arial Black',sans-serif;font-weight:900;font-size:24px;letter-spacing:3px;color:#080808;text-transform:uppercase;line-height:1;">
+                  <img src="https://smelloff.in/assets/brand/logo-smelloff-black.png?v=2" alt="SMELLOFF" height="22" style="height:22px;width:auto;display:block;border:0">
+                </td>
+                <td align="right" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#080808;letter-spacing:2px;text-transform:uppercase;font-weight:700;">
+                  ODORSTRIKE
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- HERO -->
+        <tr>
+          <td style="background-color:#080808;padding:36px 32px 24px;">
+            <h1 style="margin:0 0 16px;font-family:Impact,'Arial Black',sans-serif;font-weight:900;font-size:34px;line-height:1.05;letter-spacing:1px;text-transform:uppercase;color:#FFFFFF;">
+              Did it kill the smell?
+            </h1>
+            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#C5C5C5;">
+              Hey {{customer_name}}, your ODORSTRIKE (order {{order_id}}) was delivered a few days ago — enough time for a proper verdict. Two honest lines from you would mean a lot: good or bad, we publish it unedited on our reviews page.
+            </p>
+          </td>
+        </tr>
+
+        <!-- WHY IT MATTERS CARD -->
+        <tr>
+          <td style="background-color:#080808;padding:0 32px 24px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0D0D0D;border:1px solid #1F1F1F;border-left:3px solid #B8FF57;border-radius:4px;">
+              <tr>
+                <td style="padding:18px 20px;">
+                  <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#C5C5C5;">
+                    We're a one-person brand from Hyderabad. We don't buy reviews and we don't filter them — which means the only reviews we'll ever have are the ones real buyers like you write. A photo of the bottle in your gym bag or on your desk makes it even more believable for the next person.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- CTA -->
+        <tr>
+          <td style="background-color:#080808;padding:0 32px 32px;" align="left">
+            <a href="https://wa.me/919392974031?text=Review%20for%20order%20{{order_id}}%3A%20" style="display:inline-block;background-color:#B8FF57;color:#080808;font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:15px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:14px 28px;">
+              WhatsApp your review →
+            </a>
+            <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:#8C8C8C;">
+              Reply with your rating (1–5), two lines, and a photo if you like. We post it to smelloff.in/reviews as a verified buyer — say the word and we keep your name anonymous.
+            </p>
+          </td>
+        </tr>
+
+        <!-- FOOTER -->
+        <tr>
+          <td style="background-color:#0D0D0D;border-top:1px solid #1F1F1F;padding:18px 32px;" align="left">
+            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.6;color:#8C8C8C;">
+              Smelloff · Hyderabad, India · <a href="https://smelloff.in" style="color:#B8FF57;text-decoration:none;">smelloff.in</a><br>
+              You're receiving this because you bought ODORSTRIKE. This is a one-time ask — no reminder follows.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
