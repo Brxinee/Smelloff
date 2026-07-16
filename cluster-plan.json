@@ -84,21 +84,11 @@
    "name": "Ingredient Science",
    "color": "#5BBF3F",
    "pillar": {
-    "slug": "zinc-ricinoleate-fabric-odor-ingredient",
-    "title": "The Ingredient That Actually Kills Fabric Odor (Not What You Think)",
+    "slug": "zinc-pca-fabric-odor-ingredient-guide",
+    "title": "Zinc PCA for Fabric Odor: What It Is and Why It Works",
     "incoming": 14
    },
    "spokes": [
-    {
-     "slug": "zinc-pca-fabric-odor-ingredient-guide",
-     "title": "Zinc PCA for Fabric Odor: What It Is and Why It Works",
-     "incoming": 4
-    },
-    {
-     "slug": "is-zinc-ricinoleate-safe-for-clothes",
-     "title": "Is Zinc Ricinoleate Safe for Clothes?",
-     "incoming": 6
-    },
     {
      "slug": "beta-cyclodextrin-odor-removal-science",
      "title": "Beta-Cyclodextrin: How It Traps Odor Molecules in Fabric",
