@@ -7,7 +7,7 @@ every post has ≥4 incoming internal links (was: 12 posts with zero).
 **Pillar:** [Best Fabric Odor Spray for Body Odor in India](/blog/best-fabric-odor-spray-india-2026-body-odor) — 28 incoming links
 
 - [Deodorant Spray for Clothes: 5 Indian Options Side-by-Side — 2026](/blog/best-deodorant-spray-for-clothes-not-skin) — 5 incoming
-- [Indian Men's Body Odor: The 4-Factor Biology Guide (2026)](/blog/best-body-odor-remover-spray-for-men-india) — 5 incoming
+- [Indian Men's Body Odor: The 4-Factor Biology Guide (2026)](/blog/best-fabric-odor-spray-india-2026-body-odor) — 5 incoming
 - [The Spray That Actually Kills Sweat Smell in 10 Seconds (Tested)](/blog/spray-to-remove-sweat-smell-from-clothes-instantly) — 9 incoming
 - [ODORSTRIKE Review: 30 Days, 4 Shirts, Real Results](/blog/odorstrike-review-30-day-india-test) — 48 incoming
 - [Why I Built ODORSTRIKE: A Founder's Note](/blog/why-i-built-odorstrike) — 30 incoming
