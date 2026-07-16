@@ -2,6 +2,40 @@
 
 ---
 
+## 2026-07-16 — Prompt-pack phases 1/3/5 + checkout timer removal
+
+Branch: `claude/new-session-0eklxw`
+
+**Homepage (`index.html`)**
+- Removed the 10-minute UPI countdown (markup, CSS, JS) — pure urgency UI; the
+  order never actually expired, and "expired" reads as a failed order.
+- Trust strip under the hero CTA: COD · free shipping pan-India · 3–7 days ·
+  7-day returns (every claim verified against /shipping, /returns, FAQ).
+- Config-gated hero video slot (`HERO_VIDEO_SRC`): muted/autoplay/playsinline/
+  loop/preload=none + poster; injects as first gallery slide only when a real
+  file URL is set. Renders nothing until then.
+- `<link rel=preload as=image>` for the hero shot (LCP).
+- Gated social proof: verified-review cards + rating distribution + bottles-sold
+  counter, all driven ONLY by `VERIFIED_REVIEWS` / `BOTTLES_SOLD` config (empty
+  by default → nothing renders). AggregateRating JSON-LD is computed from the
+  real review array at runtime — a fabricated rating can't be emitted.
+
+**Blog consolidation (cannibalization fixes)**
+- Merged `best-body-odor-remover-spray-for-men-india` →
+  `best-fabric-odor-spray-india-2026-body-odor` (both targeted "best body-odor
+  spray india"); ported the India use-case playbook into the winner; 301 added.
+- Merged thin `spray-for-clothes-not-skin` (904 words) →
+  `best-deodorant-spray-for-clothes-not-skin` (slug/query collision); 301 added.
+- Losers removed from sitemap (51→49 urls), blog index cards + ItemList,
+  llms.txt/llms-full.txt; every internal link repointed to the winners.
+- Title↔H1 alignment: `deodorant-vs-fabric-mist` title now uses the exact
+  primary query ("Fabric Mist", was "Fabric Spray").
+- AEO check across all 46 surviving posts: quick-answer block, FAQPage schema,
+  visible updated date — all present (no gaps found).
+- Homepage now also links the deodorant-for-clothes comparison (merge winner B).
+
+---
+
 ## 2026-07-11 — Order tracking: timestamped timeline
 
 Branch: `claude/order-tracking-audit-2hwah2`
