@@ -42,7 +42,7 @@ _Generated: 2026-05-12 | Last reviewed: 2026-05-12_
 | is fabric odor spray safe on dark clothes | FAQ | /#faq |
 | does fabric spray stain clothes | FAQ | /#faq |
 | what kills sweat smell on fabric | Informational | / |
-| how does zinc ricinoleate work on fabric odor | Informational | /blog/zinc-ricinoleate-fabric-odor-ingredient |
+| how does zinc pca work on fabric odor | Informational | /blog/zinc-pca-fabric-odor-ingredient-guide |
 | is ODORSTRIKE safe on skin | FAQ | /#faq |
 | best fabric odor spray in india 2026 | Listicle | /blog/best-fabric-odor-spray-india-2026 |
 
@@ -95,9 +95,8 @@ _Generated: 2026-05-12 | Last reviewed: 2026-05-12_
 | remove-sweat-smell-shirts-without-washing | remove sweat smell shirts without washing | "How to Remove Sweat Smell from Shirts Without Washing" | no-wash methods, shirt odor fix |
 | keep-gym-clothes-fresh-in-bag | keep gym clothes fresh | "How to Keep Gym Clothes Fresh in Your Bag" | gym bag smell, post-workout odor |
 | gym-clothes-smell-after-washing | gym clothes smell after washing | "Why Gym Clothes Smell After Washing" | polyester hydrophobic, odor trapped in fibers |
-| deodorant-vs-fabric-mist | deodorant vs fabric mist | "Deodorant vs Fabric Mist — What Actually Kills Odor" | fabric odor mechanism, zinc ricinoleate |
+| deodorant-vs-fabric-mist | deodorant vs fabric mist | "Deodorant vs Fabric Mist — What Actually Kills Odor" | fabric odor mechanism, zinc pca |
 | why-indian-men-sweat-smell-more | indian men sweat smell | "Why Indian Men Have Stronger Sweat Smell" | climate, diet, polyester shirts |
-| zinc-ricinoleate-fabric-odor-ingredient | zinc ricinoleate fabric odor | "Zinc Ricinoleate — How It Kills Fabric Odor" | odor neutralizer ingredient, castor oil derivative |
 | best-fabric-odor-spray-india-2026 | best fabric odor spray india 2026 | "Best Fabric Odor Spray in India (2026)" | buyer's guide, comparison |
 | best-fabric-odor-spray-india-2026-body-odor | best body odor spray for clothes india | "Best Fabric Odor Spray for Body Odor in India (2026)" | sweat smell eliminator |
 | bike-rider-sweat-smell-india | bike rider sweat smell india | "Bike Rider Sweat Smell — The India Fix" | helmet odor, jacket smell, two-wheeler commute |
@@ -127,5 +126,5 @@ These must appear verbatim in FAQ schema AND in visible on-page FAQ:
 6. "Is ODORSTRIKE safe to inhale?"
 7. "Can I use fabric odor spray on gym clothes?"
 8. "Does fabric spray stain clothes?"
-9. "How does zinc ricinoleate eliminate odor?"
+9. "How does zinc PCA eliminate odor?"
 10. "Is ODORSTRIKE better than Febreze?"

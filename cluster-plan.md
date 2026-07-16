@@ -23,10 +23,11 @@ every post has ≥4 incoming internal links (was: 12 posts with zero).
 - [The Confidence Spray: Before Every Meeting, Date, and Interview](/blog/confidence-spray-pre-meeting-date) — 6 incoming
 
 ## Ingredient Science
-**Pillar:** [The Ingredient That Actually Kills Fabric Odor (Not What You Think)](/blog/zinc-ricinoleate-fabric-odor-ingredient) — 14 incoming links
+**Pillar:** [Zinc PCA for Fabric Odor: What It Is and Why It Works](/blog/zinc-pca-fabric-odor-ingredient-guide) — 14 incoming links
+<!-- The former ricinoleate pillar + safety spoke are retired: Zinc Ricinoleate is NOT in the
+     product (locked Formula v3.1 — hero active is Zinc PCA) and must never be written about
+     as an ODORSTRIKE ingredient. Their old URLs 301 to this pillar in vercel.json. -->
 
-- [Zinc PCA for Fabric Odor: What It Is and Why It Works](/blog/zinc-pca-fabric-odor-ingredient-guide) — 4 incoming
-- [Is Zinc Ricinoleate Safe for Clothes?](/blog/is-zinc-ricinoleate-safe-for-clothes) — 6 incoming
 - [Beta-Cyclodextrin: How It Traps Odor Molecules in Fabric](/blog/beta-cyclodextrin-odor-removal-science) — 6 incoming
 - [What Is a Fabric Odor Eliminator?](/blog/what-is-fabric-odor-eliminator) — 8 incoming
 - [Why Indian Men Sweat-Smell More (It's Not Hygiene)](/blog/why-indian-men-sweat-smell-more) — 10 incoming

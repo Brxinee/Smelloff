@@ -1,6 +1,15 @@
 # Smelloff SEO + GEO + AEO Audit Report
 _Audit date: 2026-05-12 | Branch: claude/seo-geo-aeo-audit-6D4Nq_
 
+> ⚠️ **SUPERSEDED — formulation facts in this report are WRONG (2026-07 note).**
+> This audit predates the locked Formula v3.1. Anywhere it names **Zinc Ricinoleate**
+> (or a percentage of it) as ODORSTRIKE's active, that is outdated: Zinc Ricinoleate is
+> **permanently excluded** from the product, and the hero active is **Zinc PCA** (with
+> HPβCD, Triethyl Citrate, Zinc Gluconate). **Disregard every TODO below that asks to
+> align content, schema, or llms.txt to Zinc Ricinoleate** — the resolution went the
+> other way. Never publish formula percentages anywhere. See CLAUDE.md for the locked
+> ingredient rules. Kept for historical record only.
+
 ---
 
 ## Executive Summary
