@@ -3610,6 +3610,23 @@ window.createSupabaseOrder = function (opts) {
     if (typeof gtag !== 'undefined') gtag('event', 'purchase', {
       transaction_id: orderId, value: amount, currency: 'INR', items: gaItems(amount)
     });
+    // Server-side mirror (Meta Conversions API) — recovers iOS/ad-blocker signal
+    // loss; Meta dedupes against the browser Pixel via the shared eventID.
+    // Consent-gated (only when the Pixel is active) and fully fire-and-forget:
+    // it can never delay or break the success screen.
+    if (typeof fbq !== 'undefined' && orderId) {
+      try {
+        var _em = (document.getElementById('f_email') || {}).value || '';
+        var _ph = (document.getElementById('f_phone') || {}).value || '';
+        var _ck = function (n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]+)')); return m ? decodeURIComponent(m[1]) : ''; };
+        var _body = JSON.stringify({
+          eventId: 'purchase_' + orderId, orderId: orderId, eventSourceUrl: location.href,
+          email: _em, phone: _ph, fbp: _ck('_fbp'), fbc: _ck('_fbc'), custom: fbContents(amount)
+        });
+        if (navigator.sendBeacon) navigator.sendBeacon('/api/meta-capi', new Blob([_body], { type: 'application/json' }));
+        else fetch('/api/meta-capi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: _body, keepalive: true });
+      } catch (e) { /* analytics must never break the success screen */ }
+    }
   }
   window.trackInitCheckout = trackInitCheckout;
 
