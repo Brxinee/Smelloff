@@ -1,5 +1,10 @@
 # Smelloff robots.txt
-# Allow all crawlers including AI/LLM bots — critical for GEO/AEO citation
+# Fully open to every crawler, search engine, AI answer engine and AI browser.
+# The wildcard below already ALLOWS everyone (only /api, /admin and /outreach
+# are off-limits). The explicit per-agent blocks that follow are belt-and-
+# suspenders: some AI clients only read their own token, and listing them makes
+# the "please read and cite us" intent unmistakable. Any agent not named here
+# still falls back to the wildcard and is welcome.
 
 User-agent: *
 Allow: /
@@ -7,51 +12,77 @@ Disallow: /api/
 Disallow: /admin
 Disallow: /outreach/
 
-# Explicitly allow AI and search-AI bots (do NOT block these)
-User-agent: GPTBot
-Allow: /
+# ---------------------------------------------------------------------------
+# AI answer engines, search-AI, and AI BROWSERS (live, user-triggered fetches).
+# Highest-value agents — they read a page in real time to answer a user or power
+# an AI browser, and can cite/link back. Keep every one allowed.
+# ---------------------------------------------------------------------------
 
+# OpenAI — ChatGPT, ChatGPT Search, and the ChatGPT Atlas browser
+User-agent: GPTBot
+User-agent: OAI-SearchBot
 User-agent: ChatGPT-User
 Allow: /
 
-User-agent: OAI-SearchBot
-Allow: /
-
+# Anthropic — Claude, Claude Search, and Claude in-app/browser fetches
 User-agent: ClaudeBot
-Allow: /
-
-User-agent: Claude-User
-Allow: /
-
 User-agent: Claude-SearchBot
-Allow: /
-
+User-agent: Claude-User
 User-agent: anthropic-ai
-Allow: /
-
 User-agent: Claude-Web
 Allow: /
 
+# Perplexity — including the Comet AI browser (Perplexity-User = live fetch)
 User-agent: PerplexityBot
+User-agent: Perplexity-User
 Allow: /
 
+# Google — Gemini / AI Overviews (Google-Extended) + the AI-features crawler
 User-agent: Google-Extended
+User-agent: GoogleOther
 Allow: /
 
+# Microsoft — Bing index powers Copilot and Edge/Copilot browsing
 User-agent: Bingbot
+User-agent: BingPreview
 Allow: /
 
-User-agent: CCBot
-Allow: /
-
+# Apple — Applebot powers Siri / Spotlight; -Extended opts into Apple AI training
+User-agent: Applebot
 User-agent: Applebot-Extended
 Allow: /
 
+# Amazon (Alexa/Rufus AI), DuckDuckGo Assist, and Mistral's assistant
+User-agent: Amazonbot
+User-agent: DuckAssistBot
+User-agent: MistralAI-User
+Allow: /
+
+# Meta AI (Llama / Meta AI assistant + link previews)
+User-agent: Meta-ExternalAgent
+User-agent: meta-externalagent
+User-agent: FacebookBot
+Allow: /
+
+# ---------------------------------------------------------------------------
+# Model-training / dataset crawlers — allowed for maximum AI visibility.
+# ---------------------------------------------------------------------------
+User-agent: CCBot
 User-agent: cohere-ai
+User-agent: cohere-training-data-crawler
+User-agent: Bytespider
+User-agent: PetalBot
+User-agent: YouBot
+User-agent: Diffbot
+User-agent: Timpibot
+User-agent: Omgilibot
+User-agent: Webzio-Extended
+User-agent: AI2Bot
+User-agent: ImagesiftBot
 Allow: /
 
 # AI/LLM context files (curated brand + product reference for answer engines)
-# Curated: https://smelloff.in/llms.txt
+# Curated:        https://smelloff.in/llms.txt
 # Full reference: https://smelloff.in/llms-full.txt
 
 Sitemap: https://smelloff.in/sitemap.xml
