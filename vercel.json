@@ -19,7 +19,7 @@
       "permanent": true
     },
     {
-      "source": "/policies/:slug(privacy|terms|returns|refund|shipping|payment-failed)",
+      "source": "/policies/:slug(privacy|terms|returns|refund|shipping|cancellation|payment-failed)",
       "destination": "/:slug",
       "permanent": true
     },
