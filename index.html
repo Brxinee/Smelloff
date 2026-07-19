@@ -204,7 +204,7 @@
 <link rel="dns-prefetch" href="https://api.qrserver.com">
 
 <!-- Fonts: self-hosted woff2 (latin/latin-ext subsets, font-display:swap) — no third-party font request -->
-<link rel="preload" as="image" href="/assets/shot-studio.webp" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/hero/slide-1.webp" type="image/webp" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-italic-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-mono-normal-latin-400.woff2" crossorigin>
@@ -442,158 +442,56 @@
   }
   .cart-checkout:disabled{opacity:.4;cursor:not-allowed}
 
-  /* Hero */
+  /* Hero — 3-slide banner carousel */
   .hero{
-    padding:120px 32px 48px;
+    padding:88px 0 0;
     position:relative;
   }
-  .hero-meta{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    display:flex;justify-content:space-between;
-    color:var(--muted);
-    padding-bottom:28px;
-    border-bottom:1px solid var(--rule);
-  }
-  /* PRODUCT HERO — gallery + info */
-  .product-hero{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:56px;
-    align-items:center;
-    margin-top:44px;
-  }
-  /* SLIDING GALLERY */
-  .gallery{
-    position:relative;
-    aspect-ratio:1/1;
-    border:1px solid var(--rule);
-    border-radius:22px;
+  /* Visually-hidden text (H1 + tagline stay in the DOM for SEO/speakable) */
+  .hero .vh{
+    position:absolute;
+    width:1px;height:1px;
+    padding:0;margin:-1px;
     overflow:hidden;
-    background:#0b0b0b;
+    clip:rect(0 0 0 0);
+    clip-path:inset(50%);
+    white-space:nowrap;
+    border:0;
   }
-  .gallery-track{
+  .hero-carousel{position:relative}
+  .hero-carousel-track{
     display:flex;
-    height:100%;
-    transition:transform .5s cubic-bezier(.4,0,.2,1);
-    will-change:transform;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    overscroll-behavior-x:contain;
+    aspect-ratio:1774/887; /* matches slide intrinsic size — zero CLS */
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
   }
-  .gallery-slide{min-width:100%;height:100%}
-  .gallery-slide img{
-    width:100%;height:100%;
-    object-fit:contain;
+  .hero-carousel-track::-webkit-scrollbar{display:none}
+  .hero-slide{
+    flex:0 0 100%;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
     display:block;
   }
-  .gallery-arrow{
-    position:absolute;top:50%;transform:translateY(-50%);
-    width:44px;height:44px;border-radius:50%;
-    background:rgba(8,8,8,.55);border:1px solid rgba(244,241,234,.18);
-    color:var(--text);font-size:24px;line-height:1;
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer;z-index:2;transition:background .15s,color .15s,border-color .15s;
-    -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  .hero-slide picture{display:block;width:100%;height:100%}
+  .hero-slide img{width:100%;height:100%;object-fit:cover;display:block}
+  .hero-slide:focus-visible{outline:3px solid var(--acid);outline-offset:-3px}
+  .hero-carousel-dots{
+    position:absolute;bottom:14px;left:0;right:0;
+    display:flex;justify-content:center;gap:10px;z-index:2;
   }
-  .gallery-arrow:hover{background:var(--acid);color:var(--ink);border-color:var(--acid)}
-  .gallery-arrow.prev{left:14px}
-  .gallery-arrow.next{right:14px}
-  .gallery-dots{
-    position:absolute;bottom:16px;left:0;right:0;
-    display:flex;justify-content:center;gap:8px;z-index:2;
-  }
-  .gallery-dot{
-    width:8px;height:8px;border-radius:50%;padding:0;
+  .hero-carousel-dot{
+    width:10px;height:10px;border-radius:50%;padding:0;
     background:rgba(244,241,234,.35);border:none;cursor:pointer;
     transition:background .2s,width .2s,border-radius .2s;
   }
-  .gallery-dot.active{background:var(--acid);width:22px;border-radius:4px}
-  /* INFO PANEL */
-  .product-info h1{
-    font-family:'Fraunces',serif;
-    font-weight:900;
-    font-size:clamp(48px,5.5vw,88px);
-    line-height:.9;
-    letter-spacing:-.03em;
-    margin:0;
-  }
-  .product-info h1 .ph-sub{
-    display:block;
-    font-family:'JetBrains Mono',monospace;
-    font-weight:400;
-    font-size:clamp(14px,1.4vw,18px);
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin-top:18px;
-  }
-  .ph-tagline{
-    font-family:'Fraunces',serif;
-    font-size:clamp(18px,1.5vw,22px);
-    line-height:1.4;
-    color:#c7c4bd;
-    margin:24px 0 0;
-    max-width:460px;
-  }
-  .ph-price{display:flex;align-items:baseline;gap:14px;margin-top:8px}
-  .ph-price .strike-price{
-    text-decoration:line-through;
-    color:var(--muted);
-    font-family:'JetBrains Mono',monospace;
-    font-size:14px;
-  }
-  .ph-price .price{
-    font-family:'Fraunces',serif;
-    font-weight:900;
-    font-size:clamp(44px,5vw,72px);
-    line-height:1;
-    letter-spacing:-.03em;
-  }
-  .hero-cta{
-    display:block;
-    width:100%;
-    margin-top:22px;
-    padding:18px 28px;
-    background:var(--acid);
-    color:var(--ink);
-    border:none;
-    font-family:'JetBrains Mono',monospace;
-    font-size:14px;
-    font-weight:700;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    cursor:pointer;
-    transition:transform .15s;
-  }
-  .hero-cta:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(184,255,87,.35)}
-  /* Trust strip — one line of verified facts directly under the primary CTA */
-  .hero-trust{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px 14px;
-    margin-top:12px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:var(--muted);
-  }
-  .hero-trust span::before{content:'·';color:var(--acid);margin-right:14px}
-  .hero-trust span:first-child::before{content:''; margin-right:0}
-  /* Hero video slide (config-gated; renders only when HERO_VIDEO_SRC is set) */
-  .gallery-slide video{width:100%;height:100%;object-fit:cover;display:block}
-  @media(max-width:900px){
-    .product-hero{grid-template-columns:1fr;gap:30px;margin-top:30px}
-    .product-info{max-width:520px}
-  }
+  .hero-carousel-dot.active{background:var(--acid);width:26px;border-radius:5px}
+  .hero-carousel-dot:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
   @media(max-width:720px){
-    .hero{padding:84px 20px 28px}
-    .hero-meta{font-size:10px;padding-bottom:20px}
-    .product-hero{margin-top:22px;gap:26px}
-    .product-info h1{font-size:clamp(40px,10.5vw,64px);line-height:.95}
-    .product-info h1 .ph-sub{font-size:12px;letter-spacing:.14em;margin-top:14px}
-    .ph-tagline{font-size:17px}
-    .hero-cta{margin-top:16px;padding:16px 24px}
+    .hero{padding-top:68px}
+    .hero-carousel-dots{bottom:10px;gap:8px}
   }
 
   /* Marquee */
@@ -2169,47 +2067,40 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </aside>
 </div>
 
-<!-- HERO -->
+<!-- HERO — 3-slide banner carousel; every slide links to the buy section -->
 <header class="hero">
-  <div class="hero-meta">
-    <span>SMELLOFF / 001 — ODORSTRIKE</span>
-    <span>EST. 2026 / HYDERABAD</span>
-  </div>
+  <!-- Page H1 + tagline stay in the DOM (visually hidden) for SEO and the speakable schema -->
+  <h1 class="vh">No One Will Know. ODORSTRIKE · Fabric Odor Remover Spray · 50ml</h1>
+  <p class="ph-tagline vh">A pocket-sized 50ml mist that erases odor from fabric on contact. Not a perfume. Not a deodorant. A fix.</p>
 
-  <div class="product-hero">
-    <!-- SLIDING PRODUCT GALLERY -->
-    <div class="gallery" id="gallery">
-      <div class="gallery-track" id="galleryTrack">
-        <div class="gallery-slide"><img src="/assets/odorstrike-bottle.webp" alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black spray bottle, front on white background" width="1080" height="1080" fetchpriority="high" decoding="async"></div>
-        <div class="gallery-slide"><img src="/assets/shot-studio.webp" alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black spray bottle, studio shot with gym towel and dumbbell" width="1400" height="933" loading="lazy" decoding="async"></div>
-        <div class="gallery-slide"><img src="/assets/shot-pocket.webp" alt="ODORSTRIKE 50ml fabric odor eliminator held in hand — pocket-sized next to a phone" width="1400" height="933" loading="lazy" decoding="async"></div>
-        <div class="gallery-slide"><img src="/assets/shot-gymbag.webp" alt="ODORSTRIKE bottle tucked into a gym bag with a towel — anywhere, anytime freshness" width="1400" height="933" loading="lazy" decoding="async"></div>
-        <div class="gallery-slide"><img src="/assets/shot-flatlay.webp" alt="ODORSTRIKE bottle with wallet, watch, car key and phone — everyday carry flat lay" width="1400" height="933" loading="lazy" decoding="async"></div>
-      </div>
-      <button class="gallery-arrow prev" type="button" aria-label="Previous image">&#8249;</button>
-      <button class="gallery-arrow next" type="button" aria-label="Next image">&#8250;</button>
-      <div class="gallery-dots" id="galleryDots" role="tablist" aria-label="Product image navigation"></div>
+  <div class="hero-carousel" role="region" aria-roledescription="carousel" aria-label="ODORSTRIKE highlights">
+    <div class="hero-carousel-track" id="heroCarouselTrack">
+      <a class="hero-slide" href="#buy">
+        <picture>
+          <!-- future 4:5 mobile crop: <source media="(max-width: 640px)" srcset=""> -->
+          <source type="image/webp" srcset="/assets/hero/slide-1.webp">
+          <img src="/assets/hero/slide-1.png" alt="ODORSTRIKE fabric odor eliminator mist — No One Will Know. Fabric odor reset in seconds." width="1774" height="887" fetchpriority="high" loading="eager" decoding="async">
+        </picture>
+      </a>
+      <a class="hero-slide" href="#buy">
+        <picture>
+          <!-- future 4:5 mobile crop: <source media="(max-width: 640px)" srcset=""> -->
+          <source type="image/webp" srcset="/assets/hero/slide-2.webp">
+          <img src="/assets/hero/slide-2.png" alt="Odor Out. Confidence In. One spray for fabric freshness — ODORSTRIKE 50ml pocket spray." width="1774" height="887" loading="lazy" decoding="async">
+        </picture>
+      </a>
+      <a class="hero-slide" href="#buy">
+        <picture>
+          <!-- future 4:5 mobile crop: <source media="(max-width: 640px)" srcset=""> -->
+          <source type="image/webp" srcset="/assets/hero/slide-3.webp">
+          <img src="/assets/hero/slide-3.png" alt="Kills odor, doesn't mask it — ODORSTRIKE active chemistry fabric mist for gymwear, office and casual wear." width="1774" height="887" loading="lazy" decoding="async">
+        </picture>
+      </a>
     </div>
-
-    <!-- PRODUCT INFO -->
-    <div class="product-info">
-      <h1>No One Will Know.<span class="ph-sub">ODORSTRIKE · Fabric Odor Remover Spray · 50ml</span></h1>
-      <p class="ph-tagline">A pocket-sized 50ml mist that erases odor from fabric on contact. Not a perfume. Not a deodorant. A fix.</p>
-      <div class="ph-price">
-        <span class="strike-price">M.R.P. ₹579</span>
-        <span class="price">₹229</span>
-      </div>
-      <button class="hero-cta" onclick="buyNow()">Buy Now — ₹229 · COD</button>
-      <!-- Every claim below is verified against live policy pages: /shipping (free,
-           3–5d metro / 5–7d tier-2/3), /returns (7-day), FAQ (COD ₹0 advance). -->
-      <div class="hero-trust" aria-label="Buying reassurance">
-        <span>COD available</span>
-        <span>Free shipping pan-India</span>
-        <span>Delivers in 3–7 days</span>
-        <span>7-day returns</span>
-      </div>
-      <!-- Gated proof (under primary CTA): renders only with real data -->
-      <div id="heroProofMount"></div>
+    <div class="hero-carousel-dots">
+      <button type="button" class="hero-carousel-dot active" aria-current="true" aria-label="Go to slide 1"></button>
+      <button type="button" class="hero-carousel-dot" aria-label="Go to slide 2"></button>
+      <button type="button" class="hero-carousel-dot" aria-label="Go to slide 3"></button>
     </div>
   </div>
 </header>
@@ -3930,6 +3821,51 @@ window.createSupabaseOrder = function (opts) {
   g.addEventListener('mouseleave',start);
   start();
 })();
+</script>
+
+<!-- HERO CAROUSEL — scroll-snap track: dot sync via IntersectionObserver,
+     5s autoplay (none under prefers-reduced-motion), pause on hover/touch/focus,
+     resume after 8s idle, loops 3 → 1. -->
+<script type="module">
+  const track = document.getElementById('heroCarouselTrack');
+  if (track) {
+    const slides = Array.from(track.children);
+    const dots = Array.from(document.querySelectorAll('.hero-carousel-dot'));
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let current = 0, timer = null, idle = null;
+
+    const go = (i) => track.scrollTo({ left: track.clientWidth * i, behavior: reduce ? 'auto' : 'smooth' });
+    const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+    const start = () => { if (reduce || timer) return; timer = setInterval(() => go((current + 1) % slides.length), 5000); };
+    const pause = () => { stop(); clearTimeout(idle); idle = setTimeout(start, 8000); };
+    const hold = () => { stop(); clearTimeout(idle); };
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        current = slides.indexOf(e.target);
+        dots.forEach((d, k) => {
+          d.classList.toggle('active', k === current);
+          if (k === current) d.setAttribute('aria-current', 'true');
+          else d.removeAttribute('aria-current');
+        });
+      });
+    }, { root: track, threshold: 0.6 });
+    slides.forEach((s) => io.observe(s));
+
+    dots.forEach((d, k) => d.addEventListener('click', () => { go(k); pause(); }));
+    slides.forEach((s, k) => s.addEventListener('click', () => {
+      if (typeof window.gtag === 'function') window.gtag('event', 'hero_slide_click', { slide_index: k + 1 });
+    }));
+
+    track.addEventListener('mouseenter', hold);
+    track.addEventListener('mouseleave', pause);
+    track.addEventListener('touchstart', pause, { passive: true });
+    track.addEventListener('pointerdown', pause, { passive: true });
+    track.addEventListener('focusin', hold);
+    track.addEventListener('focusout', pause);
+    start();
+  }
 </script>
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
