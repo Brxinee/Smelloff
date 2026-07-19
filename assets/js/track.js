@@ -13,10 +13,26 @@
   var ENDPOINT = '/api/track';
   var noop = function () {};
 
+  // Automated-browser detection. Headless Chrome / Selenium / Puppeteer /
+  // Playwright render JS and auto-dismiss the cookie banner, which was
+  // inflating pageviews and "Accept all" clicks. Exposed so the consent/pixel
+  // loaders can gate on it too. Conservative signals — low false-positive.
+  function smfIsBot() {
+    try {
+      var n = navigator;
+      if (n.webdriver === true) return true;
+      if (/Headless|PhantomJS|Puppeteer|Playwright|Electron\//i.test(n.userAgent || '')) return true;
+      if (window._phantom || window.callPhantom || window.__nightmare) return true;
+      if (n.languages && n.languages.length === 0) return true;
+      return false;
+    } catch (e) { return false; }
+  }
+  window.smfIsBot = smfIsBot;
+
   // Owner opt-out: browsers that have logged into the admin never count.
   var owner = false;
   try { owner = localStorage.getItem('smelloff_owner') === '1'; } catch (e) {}
-  if (owner || /^\/(admin|api)(\/|$)/.test(location.pathname || '/')) {
+  if (owner || smfIsBot() || /^\/(admin|api)(\/|$)/.test(location.pathname || '/')) {
     window.smfTrack = noop;
     return;
   }
@@ -73,6 +89,9 @@
   addEventListener('click', function (e) {
     var el = e.target && e.target.closest ? e.target.closest('a,button,[data-track]') : null;
     if (!el) return;
+    // The cookie consent buttons ("Accept all" / "Reject") are banner noise,
+    // not a shopping interaction — never log them as click events.
+    if (el.closest && el.closest('#smelloff-consent-bar')) return;
     var label = (el.getAttribute('data-track') || el.innerText || el.getAttribute('aria-label') || '')
       .trim().replace(/\s+/g, ' ').slice(0, 120);
     if (!label) return;

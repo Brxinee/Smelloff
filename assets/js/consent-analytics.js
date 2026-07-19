@@ -12,6 +12,9 @@
   var META_PIXEL_ID = '1455100092891684';
 
   function loadAnalytics() {
+    // Never load GA4 / Meta Pixel for automated browsers (headless/scraper bots
+    // auto-click "Accept all", which was inflating both platforms).
+    if (window.smfIsBot ? window.smfIsBot() : navigator.webdriver === true) return;
     if (window.__smelloffAnalyticsLoaded) return;
     window.__smelloffAnalyticsLoaded = true;
     var g = document.createElement('script');
