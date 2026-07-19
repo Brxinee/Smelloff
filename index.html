@@ -226,6 +226,9 @@
 <!-- Analytics (GA4 + Meta Pixel) — loaded only after explicit consent. -->
 <script>
   function loadAnalytics(){
+    // Never load GA4 / Meta Pixel for automated browsers (headless/scraper
+    // bots auto-click "Accept all", which was inflating both platforms).
+    if(window.smfIsBot?window.smfIsBot():navigator.webdriver===true)return;
     if(window.__smelloffAnalyticsLoaded)return;
     window.__smelloffAnalyticsLoaded=true;
     var g=document.createElement('script');g.src='https://www.googletagmanager.com/gtag/js?id=G-S1MJ58PD89';g.async=true;document.head.appendChild(g);
