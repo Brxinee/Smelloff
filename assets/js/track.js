@@ -87,6 +87,11 @@
 
   // "Track everything": clicks on links, buttons and [data-track] elements.
   addEventListener('click', function (e) {
+    // Only real, user-initiated clicks. Programmatic clicks — button.click(),
+    // dispatchEvent, headless-browser auto-dismiss of the cookie banner — carry
+    // isTrusted === false and are never counted. (Older browsers leave it
+    // undefined, which we allow through.)
+    if (e.isTrusted === false) return;
     var el = e.target && e.target.closest ? e.target.closest('a,button,[data-track]') : null;
     if (!el) return;
     // The cookie consent buttons ("Accept all" / "Reject") are banner noise,
