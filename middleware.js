@@ -42,7 +42,13 @@ export default function middleware(request, context) {
   try {
     const ua = request.headers.get('user-agent') || '';
     const ref = request.headers.get('referer') || '';
-    const ip = (request.headers.get('x-forwarded-for') || '').split(',')[0].trim();
+    // Behind Cloudflare, x-forwarded-for at the Vercel edge is a Cloudflare
+    // POP — the real visitor IP only lives in cf-connecting-ip. Prefer it so
+    // the admin's human visitor hash counts real people, not POPs.
+    const ip =
+      request.headers.get('cf-connecting-ip') ||
+      request.headers.get('true-client-ip') ||
+      (request.headers.get('x-forwarded-for') || '').split(',')[0].trim();
     const { pathname } = new URL(request.url);
 
     // Fire-and-forget: kick off the POST, never await it in the request path.

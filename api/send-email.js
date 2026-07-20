@@ -69,8 +69,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const fwd = req.headers['x-forwarded-for'] || '';
-  const ip = (Array.isArray(fwd) ? fwd[0] : String(fwd).split(',')[0]).trim() || 'unknown';
+  // Behind Cloudflare, x-forwarded-for is a Cloudflare POP shared by many
+  // visitors — rate-limiting on it would throttle everyone routed through the
+  // same POP together. cf-connecting-ip is the real client.
+  const pickIp = (v) => String(Array.isArray(v) ? v[0] : v || '').split(',')[0].trim();
+  const ip = pickIp(req.headers['cf-connecting-ip'])
+    || pickIp(req.headers['true-client-ip'])
+    || pickIp(req.headers['x-forwarded-for'])
+    || 'unknown';
   if (rateLimited(ip)) {
     return res.status(429).json({ error: 'Too many requests. Please slow down.' });
   }

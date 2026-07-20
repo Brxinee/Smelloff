@@ -57,9 +57,28 @@ function salt() {
     .digest('hex');
 }
 
+// smelloff.in is proxied through Cloudflare, so the IP that connects to
+// Vercel — and what Vercel writes into x-forwarded-for and
+// x-vercel-ip-country — is a Cloudflare POP, not the visitor. Cloudflare
+// passes the real client in cf-connecting-ip (true-client-ip on Enterprise),
+// so those win; without them every visitor behind one POP with the same UA
+// collapses into a single visitor hash.
 function clientIp(req) {
-  const fwd = req.headers['x-forwarded-for'] || '';
-  return (Array.isArray(fwd) ? fwd[0] : String(fwd).split(',')[0]).trim() || 'unknown';
+  const pick = (v) => String(Array.isArray(v) ? v[0] : v || '').split(',')[0].trim();
+  const cf = pick(req.headers['cf-connecting-ip']) || pick(req.headers['true-client-ip']);
+  if (cf) return cf;
+  return pick(req.headers['x-forwarded-for']) || 'unknown';
+}
+
+// Visitor country, same Cloudflare caveat: x-vercel-ip-country geolocates
+// whoever connected to Vercel — behind Cloudflare that's the POP (US/SG/…),
+// which is why India never appeared in the admin's countries panel.
+// Cloudflare's cf-ipcountry carries the real visitor country and takes
+// priority. 'XX' (unknown) and 'T1' (Tor) mean "no data".
+function countryFrom(req) {
+  const pick = (v) => String(Array.isArray(v) ? v[0] : v || '').trim().toUpperCase();
+  const c = pick(req.headers['cf-ipcountry']) || pick(req.headers['x-vercel-ip-country']);
+  return !c || c === 'XX' || c === 'T1' ? null : c.slice(0, 2);
 }
 
 function visitorHash(req, ua) {
@@ -136,7 +155,7 @@ export default async function handler(req, res) {
 
     const visitor = visitorHash(req, ua);
     const device = deviceFrom(ua);
-    const country = str(req.headers['x-vercel-ip-country'], 4);
+    const country = countryFrom(req);
     const referrer = refHost(body.ref != null ? body.ref : body.r, 'smelloff.in');
     const sessionId = str(body.session, 64);
 
