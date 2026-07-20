@@ -69,7 +69,8 @@ FOOTER = '''<footer class="blog-footer" aria-labelledby="footer-brand">
       <a href="/" class="bf-brand" id="footer-brand"><span class="bf-brand-inner">SMELLOFF<span class="bf-brand-dot"></span></span></a>
       <p class="bf-desc">Fabric-only odor elimination mist. Made in Hyderabad.</p>
       <p class="bf-tag">Smell Proof. Always.</p>
-      <a class="bf-ig" href="https://instagram.com/smell0ff" target="_blank" rel="noopener">Instagram ↗</a>
+      <a class="bf-ig" href="https://instagram.com/smelloffindia" target="_blank" rel="noopener">Instagram ↗</a>
+      <a class="bf-ig" href="https://x.com/smelloffindia" target="_blank" rel="noopener">X (Twitter) ↗</a>
     </div>
     <nav class="footer-col" aria-label="Shop">
       <p class="footer-col-label">Shop</p>

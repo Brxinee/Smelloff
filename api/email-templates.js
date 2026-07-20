@@ -74,7 +74,7 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
             <p style="margin:0;">
               <a href="${SITE_URL}" style="color:${GREY};text-decoration:none;">smelloff.in</a>
               &nbsp;&middot;&nbsp;
-              <a href="https://instagram.com/smell0ff" style="color:${GREY};text-decoration:none;">@smell0ff</a>
+              <a href="https://instagram.com/smelloffindia" style="color:${GREY};text-decoration:none;">@smelloffindia</a>
             </p>
           </td>
         </tr>
