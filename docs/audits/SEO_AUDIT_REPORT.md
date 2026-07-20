@@ -129,7 +129,7 @@ Individual titles and descriptions were already optimised by the build script. M
 
 ## Phase 2 — Keyword Coverage
 
-See `/SEO_KEYWORD_MAP.md` for full mapping.
+See `SEO_KEYWORD_MAP.md` for full mapping.
 
 Key gaps identified and addressed:
 - FAQ section expanded to cover long-tail / AEO targets directly on homepage
