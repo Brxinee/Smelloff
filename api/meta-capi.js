@@ -43,9 +43,15 @@ function hashPhone(phone) {
   return sha256(d);
 }
 
+// Behind Cloudflare, x-forwarded-for is a Cloudflare POP, not the shopper —
+// prefer cf-connecting-ip so Meta's Advanced Matching gets the real client IP
+// (a POP IP degrades match quality and geo attribution).
 function clientIp(req) {
-  const fwd = req.headers['x-forwarded-for'] || '';
-  return (Array.isArray(fwd) ? fwd[0] : String(fwd).split(',')[0]).trim() || undefined;
+  const pick = (v) => String(Array.isArray(v) ? v[0] : v || '').split(',')[0].trim();
+  return pick(req.headers['cf-connecting-ip'])
+    || pick(req.headers['true-client-ip'])
+    || pick(req.headers['x-forwarded-for'])
+    || undefined;
 }
 
 export default async function handler(req, res) {
