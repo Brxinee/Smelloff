@@ -44,7 +44,7 @@ These display-truncate in SERPs. Worth fixing one at a time while watching ranki
 ## P2 — Lower impact / ongoing
 
 ### 8. Content to write (cluster gaps)
-From `cluster-plan.md` and query patterns the blog doesn't yet cover:
+From `../plans/cluster-plan.md` and query patterns the blog doesn't yet cover:
 - "fabric odor spray safe for baby clothes / kids uniforms" (school-uniform post gets the traffic; safety query is unanswered)
 - "odorstrike ingredients" as a dedicated indexable page (currently split across two zinc posts + llms.txt)
 - Hindi-market note: brief says English-only on site — fine, but consider an FAQ answering "is ODORSTRIKE available on Amazon/Flipkart" since that's the #1 *where to buy* follow-up LLMs ask
