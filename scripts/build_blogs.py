@@ -254,6 +254,7 @@ def build_post(cfg):
     <a href="/returns">Returns</a>
     <a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener">Instagram</a>
     <a href="https://x.com/smelloffindia" target="_blank" rel="noopener">X (Twitter)</a>
+    <a href="https://t.me/smelloffindia" target="_blank" rel="noopener">Telegram</a>
   </div>
   <div class="footer-bottom">&copy; 2026 SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad</div>
 </footer>
