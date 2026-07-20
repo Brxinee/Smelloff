@@ -29,7 +29,16 @@
   }
   window.smfIsBot = smfIsBot;
 
-  // Owner opt-out: browsers that have logged into the admin never count.
+  // Owner opt-out. localStorage is per-origin, so the admin (admin.smelloff.in)
+  // cannot set the flag here directly — its Settings toggle opens
+  // smelloff.in/?smf_owner=1 (or 0) and this handles the param BEFORE the
+  // owner check and before any pageview fires, so the opt-in visit itself is
+  // never counted.
+  try {
+    var op = new URLSearchParams(location.search).get('smf_owner');
+    if (op === '1') localStorage.setItem('smelloff_owner', '1');
+    else if (op === '0') localStorage.removeItem('smelloff_owner');
+  } catch (e) {}
   var owner = false;
   try { owner = localStorage.getItem('smelloff_owner') === '1'; } catch (e) {}
   if (owner || smfIsBot() || /^\/(admin|api)(\/|$)/.test(location.pathname || '/')) {
