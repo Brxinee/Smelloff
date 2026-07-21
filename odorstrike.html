@@ -328,6 +328,30 @@
     nav .hamburger{margin-left:auto}
   }
 
+  /* Header restyled to match the homepage's solid neo-brutalist bar. These
+     override the base floating `nav` rules above; `.po-nav` (a separate in-page
+     nav) keeps the base rules and is unaffected. */
+  nav.site-nav{
+    background:var(--ink);
+    border-bottom:2px solid var(--rule);
+    mix-blend-mode:normal;
+    padding:11px 20px;
+    gap:12px;
+  }
+  .site-nav .logo{
+    display:flex;align-items:center;min-height:44px;
+    padding:0;letter-spacing:normal;text-transform:none;
+  }
+  .site-nav .meta{
+    display:flex;align-items:center;gap:10px;
+  }
+  .site-nav .meta a{
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    letter-spacing:.12em;text-transform:uppercase;
+    color:var(--text);opacity:1;padding:12px 8px;text-decoration:none;
+  }
+  .site-nav .meta a:hover{color:var(--acid);opacity:1}
+
   .cta-pill{
     background:var(--acid);
     color:var(--ink) !important;
@@ -340,19 +364,22 @@
   /* ============================= */
   /* CART — nav button + drawer    */
   /* ============================= */
+  /* Cart button — bordered neo-brutalist style, matching the homepage nav. */
   .cart-btn{
-    background:var(--acid);color:var(--ink) !important;
-    border:none;padding:8px 14px;border-radius:100px;
+    background:transparent;color:var(--text) !important;
+    border:2px solid var(--text);padding:0 12px;height:44px;border-radius:0;
     opacity:1 !important;mix-blend-mode:normal;cursor:pointer;
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;
-    text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;line-height:1;
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;
+    text-transform:uppercase;display:inline-flex;align-items:center;gap:7px;line-height:1;
+    transition:border-color .18s,color .18s;
   }
-  .cart-btn .cart-ico{width:16px;height:16px;display:block}
+  .cart-btn:hover{border-color:var(--acid);color:var(--acid) !important}
+  .cart-btn .cart-ico{width:18px;height:18px;display:block}
   .cart-btn .cart-count{
-    background:var(--ink);color:var(--acid);border-radius:100px;
+    background:var(--acid);color:var(--ink);border-radius:100px;
     min-width:18px;height:18px;padding:0 5px;
     display:inline-flex;align-items:center;justify-content:center;
-    font-size:10px;font-weight:700;letter-spacing:0;
+    font-size:11px;font-weight:700;letter-spacing:0;
   }
   .cart-btn .cart-count[data-empty="1"]{display:none}
 
@@ -2101,19 +2128,19 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <body>
 <a href="#buy" class="skip-link">Skip to products</a>
 
-<nav>
-  <div class="logo"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:24px;width:auto;display:block"></div>
-  <button class="hamburger" aria-label="Open menu" onclick="document.getElementById('mobileMenu').classList.add('active');document.body.style.overflow='hidden'">
-    <span></span><span></span><span></span>
-  </button>
+<nav class="site-nav">
+  <a class="logo" href="/" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:26px;width:auto;display:block"></a>
   <div class="meta">
+    <button class="cart-btn" id="cartBtn" onclick="openCartDrawer()" aria-label="Open cart">
+      <svg class="cart-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      <span class="cart-count" id="cartCount" data-empty="1">0</span>
+    </button>
     <a href="#science">Science</a>
     <a href="#buy">Pricing</a>
     <a href="#faq">FAQ</a>
     <a href="#reviews">Reviews</a>
-    <button class="cart-btn cta" id="cartBtn" onclick="openCartDrawer()" aria-label="Open cart">
-      <svg class="cart-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-      Cart<span class="cart-count" id="cartCount" data-empty="1">0</span>
+    <button class="hamburger" aria-label="Open menu" onclick="document.getElementById('mobileMenu').classList.add('active');document.body.style.overflow='hidden'">
+      <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
@@ -3678,6 +3705,14 @@ window.createSupabaseOrder = function (opts) {
 
   // Reflect any persisted cart quantity in the nav badge on load.
   renderCart();
+
+  // Deep-link from the homepage cart button: /odorstrike?cart=open opens the
+  // cart drawer so visitors see what they've added.
+  try {
+    if (new URLSearchParams(location.search).get('cart') === 'open') {
+      openCartDrawer();
+    }
+  } catch (e) {}
 
   // Clear red border on input focus
   document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(input){

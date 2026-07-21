@@ -247,6 +247,26 @@
   }
   .nav-logo{display:flex;align-items:center;min-height:44px}
   .nav-logo img{height:24px;width:auto;display:block}
+  .nav-right{display:flex;align-items:center;gap:10px}
+  /* Cart button — bordered neo-brutalist, mono, count badge in acid.
+     Shared style across the homepage and the ODORSTRIKE product page. */
+  .cart-btn{
+    display:inline-flex;align-items:center;gap:7px;
+    height:44px;padding:0 12px;
+    background:transparent;color:var(--text);text-decoration:none;
+    border:2px solid var(--text);cursor:pointer;
+    font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+    text-transform:uppercase;line-height:1;
+  }
+  .cart-btn:hover{border-color:var(--acid);color:var(--acid)}
+  .cart-btn .cart-ico{width:18px;height:18px;display:block}
+  .cart-btn .cart-count{
+    background:var(--acid);color:var(--ink);
+    min-width:18px;height:18px;padding:0 5px;border-radius:100px;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;letter-spacing:0;
+  }
+  .cart-btn .cart-count[hidden]{display:none}
   .nav-links{display:none;align-items:center;gap:8px;list-style:none}
   .nav-links a{
     display:inline-block;padding:12px 14px;
@@ -598,15 +618,24 @@
       <a href="/" class="nav-logo" aria-label="Smelloff home">
         <img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261">
       </a>
-      <ul class="nav-links">
-        <li><a href="/odorstrike">ODORSTRIKE</a></li>
-        <li><a href="/blog">Blog</a></li>
-        <li><a href="/track-order">Track order</a></li>
-        <li><a href="/odorstrike" class="nav-cta">See ODORSTRIKE</a></li>
-      </ul>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M2 5h18M2 11h18M2 17h18" stroke="currentColor" stroke-width="2.5"/></svg>
-      </button>
+      <div class="nav-right">
+        <!-- Cart: sits to the LEFT of the nav links. The homepage is a brand
+             page (no checkout here) — this shows what's in the basket and links
+             to the ODORSTRIKE cart, which auto-opens via ?cart=open. -->
+        <a class="cart-btn" href="/odorstrike?cart=open" aria-label="Cart — view what you've added">
+          <svg class="cart-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          <span class="cart-count" id="navCartCount" hidden>0</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/odorstrike">ODORSTRIKE</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/track-order">Track order</a></li>
+          <li><a href="/odorstrike" class="nav-cta">See ODORSTRIKE</a></li>
+        </ul>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M2 5h18M2 11h18M2 17h18" stroke="currentColor" stroke-width="2.5"/></svg>
+        </button>
+      </div>
     </div>
     <ul id="navMenu">
       <li><a href="/odorstrike">ODORSTRIKE</a></li>
@@ -841,6 +870,25 @@
     </div>
   </div>
 </div>
+
+<!-- Cart badge — reflects the ODORSTRIKE basket (localStorage 'smelloff_cart_v1',
+     the same key the product page writes). Read-only here; the homepage has no
+     checkout. Refreshes on bfcache restore so the count is right when you come
+     back from the product page. -->
+<script>
+(function(){
+  var badge = document.getElementById('navCartCount');
+  if (!badge) return;
+  function refresh(){
+    var qty = 0;
+    try { qty = parseInt(localStorage.getItem('smelloff_cart_v1'), 10) || 0; } catch(e){}
+    if (qty > 0){ badge.textContent = qty; badge.hidden = false; }
+    else { badge.hidden = true; }
+  }
+  refresh();
+  window.addEventListener('pageshow', refresh);
+})();
+</script>
 
 <!-- Mobile nav toggle -->
 <script>
