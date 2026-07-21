@@ -351,6 +351,34 @@
     color:var(--text);opacity:1;padding:12px 8px;text-decoration:none;
   }
   .site-nav .meta a:hover{color:var(--acid);opacity:1}
+  /* Mobile menu — identical to the homepage: a compact mono dropdown that
+     drops below the bar (replaces the old fullscreen serif overlay). */
+  .nav-toggle{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:44px;height:44px;background:none;padding:0;
+    border:2px solid var(--text);color:var(--text);cursor:pointer;
+  }
+  .nav-toggle svg{display:block}
+  #navMenu{
+    position:absolute;top:100%;left:0;right:0;
+    display:none;
+    background:var(--ink);
+    border-top:2px solid var(--rule);border-bottom:2px solid var(--rule);
+    padding:8px 20px 16px;list-style:none;z-index:49;
+  }
+  #navMenu.open{display:block}
+  #navMenu a{
+    display:block;padding:14px 4px;min-height:44px;
+    color:var(--text);text-decoration:none;
+    font-family:'JetBrains Mono',monospace;
+    font-size:15px;font-weight:400;text-transform:uppercase;letter-spacing:.1em;
+    border-bottom:1px solid var(--rule);
+  }
+  #navMenu a:hover{color:var(--acid)}
+  @media(min-width:721px){
+    .nav-toggle{display:none !important}
+    #navMenu{display:none !important}
+  }
 
   .cta-pill{
     background:var(--acid);
@@ -1983,41 +2011,6 @@
   /* ============================= */
   /* HAMBURGER + MOBILE MENU       */
   /* ============================= */
-  .hamburger{
-    display:none;width:32px;height:32px;
-    background:none;border:none;cursor:pointer;
-    flex-direction:column;justify-content:center;align-items:center;gap:5px;
-    padding:4px;color:inherit;
-  }
-  .hamburger span{display:block;width:20px;height:2px;background:currentColor;transition:all .2s}
-  @media(max-width:720px){
-    .hamburger{display:flex !important}
-  }
-  @media(min-width:721px){.hamburger{display:none !important}}
-  .mobile-menu{
-    position:fixed;inset:0;
-    background:var(--bg);
-    z-index:55;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;
-    transform:translateX(100%);
-    transition:transform .3s ease;
-  }
-  .mobile-menu.active{transform:translateX(0)}
-  .mobile-menu a{
-    font-family:'Fraunces',serif;font-weight:900;
-    font-size:clamp(32px,8vw,48px);
-    color:var(--text);text-decoration:none;letter-spacing:-.02em;
-    transition:color .2s;
-  }
-  .mobile-menu a:hover{color:var(--acid)}
-  .mobile-menu-close{
-    position:absolute;top:20px;right:32px;
-    width:32px;height:32px;background:none;border:none;
-    color:var(--text);font-size:24px;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-  }
-
-  /* ============================= */
   /* CONSENT BAR                   */
   /* ============================= */
   #smelloff-consent-bar{
@@ -2139,21 +2132,18 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <a href="#buy">Pricing</a>
     <a href="#faq">FAQ</a>
     <a href="#reviews">Reviews</a>
-    <button class="hamburger" aria-label="Open menu" onclick="document.getElementById('mobileMenu').classList.add('active');document.body.style.overflow='hidden'">
-      <span></span><span></span><span></span>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M2 5h18M2 11h18M2 17h18" stroke="currentColor" stroke-width="2.5"/></svg>
     </button>
   </div>
+  <ul id="navMenu">
+    <li><a href="#science">Science</a></li>
+    <li><a href="#buy">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="/blog">Blog</a></li>
+  </ul>
 </nav>
-
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-menu-close" aria-label="Close menu" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">✕</button>
-  <a href="#science" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">Science</a>
-  <a href="#buy" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">Pricing</a>
-  <a href="#faq" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">FAQ</a>
-  <a href="#reviews" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">Reviews</a>
-  <a href="/blog" onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''">Blogs</a>
-</div>
 
 <!-- STICKY MOBILE BAR -->
 <div class="mobile-bar" id="mobileBar">
@@ -3698,10 +3688,29 @@ window.createSupabaseOrder = function (opts) {
       var cartOv=document.getElementById('cartOverlay');
       if(cartOv&&cartOv.classList.contains('active')){closeCartDrawer();return;}
       closeCheckout();
-      var menu=document.getElementById('mobileMenu');
-      if(menu&&menu.classList.contains('active')){menu.classList.remove('active');document.body.style.overflow='';}
+      var menu=document.getElementById('navMenu');
+      if(menu&&menu.classList.contains('open')){
+        menu.classList.remove('open');
+        var tg=document.querySelector('.site-nav .nav-toggle');
+        if(tg)tg.setAttribute('aria-expanded','false');
+      }
     }
   });
+
+  // Mobile nav dropdown toggle (matches the homepage).
+  (function(){
+    var btn=document.querySelector('.site-nav .nav-toggle');
+    var menu=document.getElementById('navMenu');
+    if(!btn||!menu)return;
+    btn.addEventListener('click',function(){
+      var open=menu.classList.toggle('open');
+      btn.setAttribute('aria-expanded',open?'true':'false');
+      btn.setAttribute('aria-label',open?'Close menu':'Open menu');
+    });
+    menu.addEventListener('click',function(e){
+      if(e.target.tagName==='A'){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}
+    });
+  })();
 
   // Reflect any persisted cart quantity in the nav badge on load.
   renderCart();
