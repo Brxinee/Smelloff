@@ -14,6 +14,7 @@
 <title>Smelloff — Smell Proof. Always. | Odor control for Indian men</title>
 <meta name="description" content="Smelloff is an Indian odor-control brand for men — kills smell on clothes, shoes, helmets and gear, not just skin. Not a perfume, not a deodorant. Made in India.">
 <meta name="theme-color" content="#080808">
+<script>document.documentElement.className+=' js';</script>
 
 <!-- Crawler directives: allow everyone, everywhere -->
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
@@ -131,8 +132,9 @@
 })();
 </script>
 
-<!-- Fonts: self-hosted WOFF2. Preload only the above-the-fold faces — Fraunces
-     (the hero H1 / LCP text) and Inter Tight (the hero sub-line body). -->
+<!-- Fonts: self-hosted WOFF2. Preload the two above-the-fold faces — Fraunces
+     (the hero H1 / LCP text) and Inter Tight (the hero sub-line). Preloading
+     both keeps CLS at 0 (the swap happens before the sub-line settles). -->
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
 
@@ -205,6 +207,14 @@
     line-height:1.55;
     overflow-x:hidden;
     -webkit-font-smoothing:antialiased;
+  }
+  /* Film-grain texture over the black — subtle richness, no asset request */
+  body::before{
+    content:'';
+    position:fixed;inset:0;
+    pointer-events:none;z-index:90;
+    opacity:.055;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   ::selection{background:var(--acid);color:var(--ink)}
   img{max-width:100%;height:auto}
@@ -288,9 +298,9 @@
   .hero h1{
     font-family:var(--display);
     font-weight:900;
-    font-size:clamp(56px,15.5vw,136px);
-    line-height:.92;
-    letter-spacing:-.02em;
+    font-size:clamp(60px,16.5vw,150px);
+    line-height:.9;
+    letter-spacing:-.025em;
   }
   .hero h1 .acid{color:var(--acid)}
   .hero-sub{
@@ -361,9 +371,9 @@
   }
   h2{
     font-family:var(--display);font-weight:900;
-    font-size:clamp(36px,7vw,62px);
-    line-height:1;
-    letter-spacing:-.02em;
+    font-size:clamp(38px,7.5vw,68px);
+    line-height:.98;
+    letter-spacing:-.025em;
     margin-bottom:22px;
   }
   .section-body{max-width:640px;font-size:18px}
@@ -511,6 +521,72 @@
   }
   #smelloff-consent-bar .cb-accept{background:var(--acid);color:var(--ink);border:2px solid var(--acid)}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:2px solid var(--rule)}
+
+  /* ===================================================================== */
+  /* MOTION + BOLDER COLOR PASS                                            */
+  /* All motion is opt-in via prefers-reduced-motion: no-preference and    */
+  /* uses transform/opacity only, so it never shifts layout (CLS stays 0). */
+  /* ===================================================================== */
+
+  /* Acid-green scrolling ticker strip (sits under the hero) */
+  .ticker{
+    background:var(--acid);color:var(--ink);
+    border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);
+    overflow:hidden;white-space:nowrap;
+  }
+  .ticker-track{
+    display:inline-block;
+    font-family:var(--display);font-weight:900;
+    font-size:clamp(20px,3vw,30px);letter-spacing:-.01em;
+    padding:12px 0;
+  }
+  .ticker-track span{padding:0 26px}
+  .ticker-track .dot{color:var(--ink);opacity:.5}
+
+  /* Hinglish band as a moving marquee (static, centred fallback below) */
+  .band-marquee{display:none}
+  .band .band-static{margin:0}
+
+  @media (prefers-reduced-motion: no-preference){
+    .ticker-track{animation:ticker 28s linear infinite;will-change:transform}
+    @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    /* Keep the static line in the accessibility tree (screen readers still
+       get the phrase) but hide it visually; the marquee is aria-hidden. */
+    .band .band-static{
+      position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+      overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+    }
+    .band-marquee{
+      display:block;overflow:hidden;white-space:nowrap;
+    }
+    .bm-track{
+      display:inline-block;
+      font-family:var(--display);font-weight:900;
+      font-size:clamp(30px,6.5vw,60px);line-height:1.04;letter-spacing:-.01em;
+      color:var(--ink);
+      animation:ticker 30s linear infinite;will-change:transform;
+    }
+    .bm-track span{padding:0 32px}
+
+    /* Scroll-reveal — only when JS is on AND motion is allowed. Never on the
+       hero (LCP), so the headline paints immediately. Transform-only (no
+       opacity fade): the text stays fully opaque, so contrast is always valid
+       and content can never render dim or invisible; it just slides up into
+       place. Transforms don't affect layout, so CLS stays 0. */
+    .js .reveal{transform:translateY(28px);transition:transform .55s cubic-bezier(.2,.6,.2,1)}
+    .js .reveal.in{transform:none}
+  }
+
+  /* Punchy hovers (pointer devices only; the reduce-motion block below
+     kills the transitions for users who ask for less motion) */
+  .zone,.faq-item,.trust-row li,.product-visual{transition:transform .18s ease,box-shadow .18s ease}
+  @media(hover:hover){
+    .zone:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--acid)}
+    .faq-item:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--acid)}
+    .trust-row li:hover{transform:translateY(-4px);box-shadow:5px 5px 0 var(--acid)}
+    .product-visual:hover{transform:translate(-3px,-3px);box-shadow:12px 12px 0 var(--acid)}
+  }
 </style>
 </head>
 <body>
@@ -592,14 +668,21 @@
     </div>
   </section>
 
+  <!-- Acid ticker strip (decorative brand phrases; hidden from AT) -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>Smell Proof. Always.</span><span class="dot">/</span><span>No One Will Know.</span><span class="dot">/</span><span>Clothes · Shoes · Helmets · Gear</span><span class="dot">/</span><span>Smell Proof. Always.</span><span class="dot">/</span><span>No One Will Know.</span><span class="dot">/</span><span>Clothes · Shoes · Helmets · Gear</span><span class="dot">/</span>
+    </div>
+  </div>
+
   <!-- ============ 2 · TERRITORY ============ -->
   <section class="territory" aria-labelledby="territoryTitle">
     <div class="wrap">
-      <h2 id="territoryTitle">Smell is bigger than skin</h2>
-      <div class="section-body">
+      <h2 id="territoryTitle" class="reveal">Smell is bigger than skin</h2>
+      <div class="section-body reveal">
         <p>Deodorant works on your skin. But smell doesn't live on skin — it soaks into the fabric, the shoes and the gear you wear all day. That's the smell other people actually notice. Smelloff goes after odor everywhere skin can't reach. It doesn't fight your deodorant. It finishes the job your deodorant starts.</p>
       </div>
-      <a class="down-link" href="#odorstrike-featured">Meet the first product ↓</a>
+      <a class="down-link reveal" href="#odorstrike-featured">Meet the first product ↓</a>
     </div>
   </section>
 
@@ -607,14 +690,14 @@
   <section class="product" id="odorstrike-featured" aria-labelledby="productTitle">
     <div class="wrap">
       <div class="product-grid">
-        <div class="product-visual">
+        <div class="product-visual reveal">
           <picture>
             <source srcset="/assets/odorstrike-bottle.avif" type="image/avif">
             <source srcset="/assets/odorstrike-bottle.webp" type="image/webp">
             <img src="/assets/odorstrike-bottle.jpg" alt="ODORSTRIKE 50ml pocket fabric odor eliminator mist bottle" width="1080" height="1080" loading="lazy" decoding="async">
           </picture>
         </div>
-        <div>
+        <div class="reveal">
           <p class="eyebrow">The first product</p>
           <h2 id="productTitle">ODORSTRIKE — the third spray</h2>
           <div class="section-body">
@@ -626,19 +709,24 @@
         </div>
       </div>
     </div>
-    <div class="band" role="presentation">
-      <p>Smell Khatam. Confidence Qaayam.</p>
+    <div class="band">
+      <p class="band-static">Smell Khatam. Confidence Qaayam.</p>
+      <div class="band-marquee" aria-hidden="true">
+        <div class="bm-track">
+          <span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ============ 4 · BRAND PROOF ============ -->
   <section class="proof" aria-labelledby="proofTitle">
     <div class="wrap">
-      <h2 id="proofTitle">Not perfume. Not deodorant. Odor control.</h2>
-      <div class="section-body">
+      <h2 id="proofTitle" class="reveal">Not perfume. Not deodorant. Odor control.</h2>
+      <div class="section-body reveal">
         <p>Smelloff doesn't mask smell with more fragrance. It goes after the odor itself, on the surfaces where it hides.</p>
       </div>
-      <ul class="trust-row">
+      <ul class="trust-row reveal">
         <li>
           <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M4 24 L14 4 L24 24 Z" stroke="#B8FF57" stroke-width="2.5" stroke-linejoin="round"/><circle cx="14" cy="18" r="2.5" stroke="#F2F2F2" stroke-width="2"/></svg>
           Made in India
@@ -662,29 +750,29 @@
   <!-- ============ 5 · FAQ ============ -->
   <section class="faq" id="faq" aria-labelledby="faqTitle">
     <div class="wrap">
-      <h2 id="faqTitle">Questions, answered</h2>
+      <h2 id="faqTitle" class="reveal">Questions, answered</h2>
       <div class="faq-list">
-        <div class="faq-item">
+        <div class="faq-item reveal">
           <h3>What is Smelloff?</h3>
           <p>Smelloff is an Indian odor-control brand for men. It goes after smell where it hides — on clothes, shoes, helmets and gear — instead of covering it with fragrance.</p>
         </div>
-        <div class="faq-item">
+        <div class="faq-item reveal">
           <h3>Is Smelloff a deodorant or a perfume?</h3>
           <p>Neither. Deodorant works on skin. Smelloff works on the fabric, shoes and gear that skin touches all day. It completes your routine instead of replacing it.</p>
         </div>
-        <div class="faq-item">
+        <div class="faq-item reveal">
           <h3>What does Smelloff make?</h3>
           <p>The first product is ODORSTRIKE, a pocket fabric odor eliminator mist for clothes. Smelloff's scope covers odor on shoes, helmets and gear too.</p>
         </div>
-        <div class="faq-item">
+        <div class="faq-item reveal">
           <h3>Where is Smelloff made?</h3>
           <p>Made in India. Smelloff is based in Hyderabad and ships across India.</p>
         </div>
-        <div class="faq-item">
+        <div class="faq-item reveal">
           <h3>Does Smelloff go on skin?</h3>
           <p>No. Smelloff products are built for fabric and gear, not skin.</p>
         </div>
-        <div class="faq-item">
+        <div class="faq-item reveal">
           <h3>How do I buy ODORSTRIKE?</h3>
           <p>Everything about ODORSTRIKE — how it works, sizes and buying — is on its <a href="/odorstrike">product page</a>.</p>
         </div>
@@ -771,6 +859,26 @@
       btn.setAttribute('aria-expanded','false');
     }
   });
+})();
+</script>
+
+<!-- Scroll-reveal — progressive enhancement. If the user prefers reduced
+     motion or IntersectionObserver is missing, every .reveal is shown at once. -->
+<script>
+(function(){
+  var els = [].slice.call(document.querySelectorAll('.reveal'));
+  function revealAll(){ els.forEach(function(el){ el.classList.add('in'); }); }
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) { revealAll(); return; }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px 200px 0px', threshold: 0 });
+  els.forEach(function(el){ io.observe(el); });
+  // Safety net: content must never stay hidden, even if an observer callback
+  // is missed (fast scroll, tab restore, odd viewport).
+  setTimeout(revealAll, 2500);
 })();
 </script>
 
