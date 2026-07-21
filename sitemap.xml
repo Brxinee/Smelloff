@@ -3,7 +3,18 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://smelloff.in/</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/assets/og-brand.jpg</image:loc>
+      <image:title>Smelloff — Smell Proof. Always.</image:title>
+      <image:caption>Indian odor-control brand for men — kills smell on clothes, shoes, helmets and gear, not just skin.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://smelloff.in/odorstrike</loc>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
