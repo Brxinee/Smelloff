@@ -1,6 +1,6 @@
 # Smelloff — ODORSTRIKE Fabric Odor Remover Spray (full reference)
 
-> Smelloff is a Hyderabad-based D2C men's grooming brand founded in 2026 by Jogdhande Nikhil Patil. Its first product, ODORSTRIKE, is India's first pocket-sized fabric odor remover spray — a 50ml mist that neutralizes sweat smell, gym odor, and shirt stink in seconds using HPβCD + Zinc PCA, with up to 8 hours of odor protection on fabric. It works on clothes only (cotton, polyester, denim, wool). It is NOT a perfume, NOT a deodorant, and NOT for skin. Price ₹229 (50ml). Sold direct at https://smelloff.in/. This is the full reference file; the concise version is at https://smelloff.in/llms.txt.
+> Smelloff is a Hyderabad-based D2C men's grooming brand founded in 2026 by Jogdhande Nikhil Patil. Its first product, ODORSTRIKE, is India's first pocket-sized fabric odor remover spray — a 50ml mist that neutralizes sweat smell, gym odor, and shirt stink in seconds using HPβCD + Zinc PCA, with up to 8 hours of odor protection on fabric. It works on clothes only (cotton, polyester, denim, wool). It is NOT a perfume, NOT a deodorant, and NOT for skin. Price ₹229 (50ml). Sold direct at https://smelloff.in/odorstrike. This is the full reference file; the concise version is at https://smelloff.in/llms.txt.
 
 ## What ODORSTRIKE is (one line)
 
@@ -135,7 +135,7 @@ Jogdhande Nikhil Patil — solo founder based in Hyderabad. Formulated ODORSTRIK
 ## Core pages
 
 - [Homepage — ODORSTRIKE fabric odor remover spray](https://smelloff.in/): product, pricing, reviews, FAQ
-- [Buy ODORSTRIKE (₹229, COD, free shipping)](https://smelloff.in/#buy)
+- [Buy ODORSTRIKE (₹229, COD, free shipping)](https://smelloff.in/odorstrike)
 - [Blog index — all fabric-odor guides](https://smelloff.in/blog)
 
 ## Ingredient & odor science
