@@ -354,11 +354,23 @@
   /* Mobile menu — identical to the homepage: a compact mono dropdown that
      drops below the bar (replaces the old fullscreen serif overlay). */
   .nav-toggle{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:44px;height:44px;background:none;padding:0;
+    display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:4px;width:44px;height:44px;background:none;padding:0;
     border:2px solid var(--text);color:var(--text);cursor:pointer;
   }
-  .nav-toggle svg{display:block}
+  .nav-toggle .bar{
+    display:block;width:20px;height:2.6px;border-radius:100px;background:currentColor;
+    transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease;
+  }
+  .nav-toggle:hover{border-color:var(--acid);color:var(--acid)}
+  /* Bars morph into an X when the menu is open. */
+  .nav-toggle[aria-expanded="true"] .bar:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+  .nav-toggle[aria-expanded="true"] .bar:nth-child(2){opacity:0}
+  .nav-toggle[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+  @media(prefers-reduced-motion:reduce){
+    .cart-btn:hover .cart-ico{animation:none}
+    .nav-toggle .bar{transition:none}
+  }
   #navMenu{
     position:absolute;top:100%;left:0;right:0;
     display:none;
@@ -402,7 +414,14 @@
     transition:border-color .18s,color .18s;
   }
   .cart-btn:hover{border-color:var(--acid);color:var(--acid) !important}
-  .cart-btn .cart-ico{width:18px;height:18px;display:block}
+  .cart-btn .cart-ico{width:18px;height:18px;display:block;transform-origin:60% 100%}
+  /* Cart nudges forward on hover, like it's being pushed. */
+  @keyframes cartNudge{
+    0%,100%{transform:translateX(0) rotate(0)}
+    25%{transform:translateX(-2px) rotate(-4deg)}
+    60%{transform:translateX(2px) rotate(3deg)}
+  }
+  .cart-btn:hover .cart-ico{animation:cartNudge .55s ease}
   .cart-btn .cart-count{
     background:var(--acid);color:var(--ink);border-radius:100px;
     min-width:18px;height:18px;padding:0 5px;
@@ -2125,7 +2144,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <a class="logo" href="/" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:26px;width:auto;display:block"></a>
   <div class="meta">
     <button class="cart-btn" id="cartBtn" onclick="openCartDrawer()" aria-label="Open cart">
-      <svg class="cart-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      <svg class="cart-ico" viewBox="0 0 576 512" fill="currentColor" aria-hidden="true"><path d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 368c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
       <span class="cart-count" id="cartCount" data-empty="1">0</span>
     </button>
     <a href="#science">Science</a>
@@ -2133,7 +2152,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <a href="#faq">FAQ</a>
     <a href="#reviews">Reviews</a>
     <button class="nav-toggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M2 5h18M2 11h18M2 17h18" stroke="currentColor" stroke-width="2.5"/></svg>
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
     </button>
   </div>
   <ul id="navMenu">
