@@ -248,18 +248,16 @@
   .nav-logo{display:flex;align-items:center;min-height:44px}
   .nav-logo img{height:24px;width:auto;display:block}
   .nav-right{display:flex;align-items:center;gap:10px}
-  /* Cart button — bordered neo-brutalist, mono, count badge in acid.
+  /* Cart button — borderless icon, count badge in acid.
      Shared style across the homepage and the ODORSTRIKE product page. */
   .cart-btn{
-    display:inline-flex;align-items:center;gap:7px;
-    height:44px;padding:0 12px;
+    display:inline-flex;align-items:center;gap:5px;
+    height:44px;padding:0 4px;
     background:transparent;color:var(--text);text-decoration:none;
-    border:2px solid var(--text);cursor:pointer;
-    font-family:var(--mono);font-size:12px;letter-spacing:.1em;
-    text-transform:uppercase;line-height:1;
+    border:0;cursor:pointer;line-height:1;
   }
-  .cart-btn:hover{border-color:var(--acid);color:var(--acid)}
-  .cart-btn .cart-ico{width:18px;height:18px;display:block;transform-origin:60% 100%}
+  .cart-btn:hover{color:var(--acid)}
+  .cart-btn .cart-ico{width:25px;height:25px;display:block;transform-origin:60% 100%}
   /* Cart nudges forward on hover, like it's being pushed. */
   @keyframes cartNudge{
     0%,100%{transform:translateX(0) rotate(0)}
@@ -294,18 +292,18 @@
   .nav-cta:hover, .nav-links a.nav-cta:hover{background:#d1ff8a;color:var(--ink)}
   .nav-toggle{
     display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:4px;width:44px;height:44px;background:none;padding:0;
-    border:2px solid var(--text);color:var(--text);cursor:pointer;
+    gap:6px;width:44px;height:44px;background:none;padding:0;
+    border:0;color:var(--text);cursor:pointer;
   }
   .nav-toggle .bar{
-    display:block;width:20px;height:2.6px;border-radius:100px;background:currentColor;
+    display:block;width:26px;height:3px;border-radius:100px;background:currentColor;
     transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease;
   }
-  .nav-toggle:hover{border-color:var(--acid);color:var(--acid)}
+  .nav-toggle:hover{color:var(--acid)}
   /* Bars morph into an X when the menu is open. */
-  .nav-toggle[aria-expanded="true"] .bar:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+  .nav-toggle[aria-expanded="true"] .bar:nth-child(1){transform:translateY(9px) rotate(45deg)}
   .nav-toggle[aria-expanded="true"] .bar:nth-child(2){opacity:0}
-  .nav-toggle[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+  .nav-toggle[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
   @media(prefers-reduced-motion:reduce){
     .cart-btn:hover .cart-ico{animation:none}
     .nav-toggle .bar{transition:none}
