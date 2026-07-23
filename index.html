@@ -363,6 +363,22 @@
     background:var(--ink);
   }
   .zone svg{flex:0 0 64px;width:64px;height:64px}
+  /* Mask-based brand icons (recolored to acid green) */
+  .mask-ico{
+    display:inline-block;flex:0 0 auto;
+    background-color:var(--acid);
+    -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+    -webkit-mask-position:center;mask-position:center;
+    -webkit-mask-size:contain;mask-size:contain;
+  }
+  .zone .mask-ico{flex:0 0 64px;width:64px;height:64px}
+  .ico-shirt{-webkit-mask-image:url(/assets/icons/shirt.png);mask-image:url(/assets/icons/shirt.png)}
+  .ico-shoe{-webkit-mask-image:url(/assets/icons/shoe.png);mask-image:url(/assets/icons/shoe.png)}
+  .ico-helmet{-webkit-mask-image:url(/assets/icons/helmet.png);mask-image:url(/assets/icons/helmet.png)}
+  .ico-india{-webkit-mask-image:url(/assets/icons/india.png);mask-image:url(/assets/icons/india.png)}
+  .ico-truck{-webkit-mask-image:url(/assets/icons/truck.png);mask-image:url(/assets/icons/truck.png)}
+  .ico-cod{-webkit-mask-image:url(/assets/icons/cod.png);mask-image:url(/assets/icons/cod.png)}
+  .ico-hyderabad{-webkit-mask-image:url(/assets/icons/hyderabad.png);mask-image:url(/assets/icons/hyderabad.png)}
   .zone .z-num{
     display:block;
     font-family:var(--mono);font-weight:400;
@@ -379,6 +395,7 @@
     .zones{grid-template-columns:repeat(3,1fr);gap:24px}
     .zone{flex-direction:column;align-items:flex-start;padding:26px}
     .zone svg{width:72px;height:72px}
+    .zone .mask-ico{width:72px;height:72px}
   }
 
   /* ============ Sections ============ */
@@ -456,6 +473,7 @@
     font-size:12px;letter-spacing:.1em;text-transform:uppercase;
   }
   .trust-row svg{flex:0 0 28px;width:28px;height:28px}
+  .trust-row .mask-ico{flex:0 0 28px;width:28px;height:28px}
   @media(min-width:768px){
     .trust-row{grid-template-columns:repeat(4,1fr);gap:20px}
     .trust-row li{padding:22px 18px;font-size:13px}
@@ -660,10 +678,7 @@
 
       <div class="zones">
         <div class="zone">
-          <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-            <path d="M14 14 L26 10 L32 20 L38 10 L50 14 L46 30 L38 24 L38 54 L26 54 L26 24 L18 30 Z" stroke="#B8FF57" stroke-width="3" stroke-linejoin="round"/>
-            <path d="M26 10 L32 20 L38 10" stroke="#F2F2F2" stroke-width="3" stroke-linejoin="round"/>
-          </svg>
+          <span class="mask-ico ico-shirt" role="img" aria-hidden="true"></span>
           <div>
             <span class="z-num">01</span>
             <p class="z-title">Shirt collar</p>
@@ -671,11 +686,7 @@
           </div>
         </div>
         <div class="zone">
-          <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-            <path d="M8 44 C8 40 10 38 14 37 L22 24 L30 30 C36 34 44 36 52 38 C56 39 58 41 58 44 L58 48 L8 48 Z" stroke="#B8FF57" stroke-width="3" stroke-linejoin="round"/>
-            <path d="M30 30 L34 26 M36 34 L40 30" stroke="#F2F2F2" stroke-width="3" stroke-linecap="round"/>
-            <path d="M8 48 L58 48" stroke="#F2F2F2" stroke-width="3"/>
-          </svg>
+          <span class="mask-ico ico-shoe" role="img" aria-hidden="true"></span>
           <div>
             <span class="z-num">02</span>
             <p class="z-title">Shoes</p>
@@ -683,10 +694,7 @@
           </div>
         </div>
         <div class="zone">
-          <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-            <path d="M12 34 C12 20 21 12 32 12 C43 12 52 20 52 34 L52 44 C52 47 50 49 47 49 L40 49 C36 49 34 46 34 43 L34 40 L12 40 Z" stroke="#B8FF57" stroke-width="3" stroke-linejoin="round"/>
-            <path d="M12 34 L34 34 L34 40" stroke="#F2F2F2" stroke-width="3" stroke-linejoin="round"/>
-          </svg>
+          <span class="mask-ico ico-helmet" role="img" aria-hidden="true"></span>
           <div>
             <span class="z-num">03</span>
             <p class="z-title">Helmet</p>
@@ -757,19 +765,19 @@
       </div>
       <ul class="trust-row reveal">
         <li>
-          <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M4 24 L14 4 L24 24 Z" stroke="#B8FF57" stroke-width="2.5" stroke-linejoin="round"/><circle cx="14" cy="18" r="2.5" stroke="#F2F2F2" stroke-width="2"/></svg>
+          <span class="mask-ico ico-india" role="img" aria-hidden="true"></span>
           Made in India
         </li>
         <li>
-          <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M3 19 L17 19 L17 9 L3 9 Z M17 12 L22 12 L25 16 L25 19 L17 19" stroke="#B8FF57" stroke-width="2.5" stroke-linejoin="round"/><circle cx="8" cy="21" r="2.5" stroke="#F2F2F2" stroke-width="2"/><circle cx="21" cy="21" r="2.5" stroke="#F2F2F2" stroke-width="2"/></svg>
+          <span class="mask-ico ico-truck" role="img" aria-hidden="true"></span>
           Ships across India
         </li>
         <li>
-          <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="3" y="8" width="22" height="13" stroke="#B8FF57" stroke-width="2.5"/><circle cx="14" cy="14.5" r="3.5" stroke="#F2F2F2" stroke-width="2"/></svg>
+          <span class="mask-ico ico-cod" role="img" aria-hidden="true"></span>
           Cash on Delivery
         </li>
         <li>
-          <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M6 24 L6 12 L14 5 L22 12 L22 24 Z" stroke="#B8FF57" stroke-width="2.5" stroke-linejoin="round"/><path d="M11 24 L11 17 L17 17 L17 24" stroke="#F2F2F2" stroke-width="2"/></svg>
+          <span class="mask-ico ico-hyderabad" role="img" aria-hidden="true"></span>
           Based in Hyderabad
         </li>
       </ul>
