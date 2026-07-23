@@ -135,6 +135,21 @@ Deno.serve(async (req: Request) => {
     const codeRaw = str(body.order_code, 20).toUpperCase();
     const order_code = ORDER_CODE_RE.test(codeRaw) ? codeRaw : null;
 
+    // Meta CAPI attribution — stored so the server-side Purchase/Refund (fired
+    // later from the order lifecycle) can build strong Advanced Matching without
+    // depending on the shopper's browser still being open. fbp/fbc/url come from
+    // the client; the real IP + UA are read from headers (never trusted from the
+    // body). cf-connecting-ip is preferred so we get the shopper, not a CF POP.
+    const fbp = str(body.fbp, 128) || null;
+    const fbc = str(body.fbc, 256) || null;
+    const eventSourceUrl = str(body.event_source_url, 512) || null;
+    const clientIpAddr =
+      (req.headers.get("cf-connecting-ip") ||
+        req.headers.get("true-client-ip") ||
+        (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() ||
+        null) || null;
+    const clientUa = (req.headers.get("user-agent") || "").slice(0, 512) || null;
+
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
@@ -159,6 +174,25 @@ Deno.serve(async (req: Request) => {
       .single();
 
     if (error) throw error;
+
+    // Best-effort: stamp the Meta CAPI attribution fields in a SEPARATE update
+    // so order creation never depends on those columns existing (the migration
+    // may not be applied yet). A failure here is swallowed — the order is
+    // already saved and the response is unaffected.
+    try {
+      if (fbp || fbc || clientIpAddr || clientUa || eventSourceUrl) {
+        await supabase
+          .from("orders")
+          .update({
+            fbp,
+            fbc,
+            client_ip: clientIpAddr,
+            client_ua: clientUa,
+            event_source_url: eventSourceUrl,
+          })
+          .eq("id", data.id);
+      }
+    } catch (_e) { /* attribution is best-effort; never block the order */ }
 
     return jsonResponse(req, { id: data.id }, 200);
   } catch (_e) {
