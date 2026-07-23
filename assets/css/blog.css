@@ -103,6 +103,21 @@ strong{color:var(--off-white);font-weight:700}
 .guide-card__title{font-family:'Fraunces',serif;font-weight:900;font-size:1.02rem;line-height:1.25;color:var(--off-white)}
 .guide-card__arrow{flex:0 0 auto;font-size:1.25rem;color:var(--acid)}
 
+/* ---------------- Share row (2f) — end of post ---------------- */
+.post-share{max-width:680px;margin:56px auto 0;padding:24px 0 0;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 18px}
+.post-share-title{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-secondary)}
+.post-share-title .ps-ico{width:15px;height:15px;fill:var(--accent);flex:none}
+.post-share-row{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ps-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;min-width:40px;padding:0 11px;border:1px solid var(--rule);border-radius:100px;background:transparent;color:var(--text);cursor:pointer;text-decoration:none;transition:border-color .15s ease,background-color .15s ease,transform .12s ease}
+.ps-btn:hover{border-color:var(--accent);background:var(--accent-light);transform:translateY(-1px)}
+.ps-btn img{width:19px;height:19px;display:block;opacity:.9}
+.ps-btn:hover img{opacity:1}
+.ps-btn .ps-ico{width:16px;height:16px;fill:currentColor;flex:none}
+.ps-copy{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.ps-btn.is-copied{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+@media(max-width:520px){.post-share{flex-direction:column;align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){.ps-btn:hover{transform:none}}
+
 /* ---------------- Global footer (2e) — multi-column grid ---------------- */
 /* Footer selectors are scoped under .blog-footer so the canonical footer
    reliably wins over any legacy inline footer CSS still present on a post. */
