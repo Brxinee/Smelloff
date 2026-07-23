@@ -159,6 +159,54 @@
 
 ---
 
+## 9. Phase 2–6 — fixes applied
+
+Implemented after the audit. Setup + verification steps live in
+`docs/META-CAPI-SETUP.md`. Everything is **additive, consent-gated, and inert
+until `META_CAPI_TOKEN` is set** — a tracking failure can never affect checkout.
+
+**Decisions taken** (from §6): (1) prepaid Purchase fires **server-side on
+`confirmed`**, not at placement; (2) `Lead` is **repointed to order placement**
+(intent), since no OTP exists; (3) CAPI stays on Vercel — `api/meta-capi.js`
+generalised, plus a new server-truth drainer.
+
+### New event taxonomy
+
+| Event | Where it fires now | `event_id` | Dedup |
+|---|---|---|---|
+| `PageView` | every page (browser) | — | — |
+| `ViewContent` | `#buy` in view (browser + CAPI mirror) | random uuid | browser⇄CAPI |
+| `AddToCart` | add to cart (browser + CAPI), real `num_items` | random uuid | browser⇄CAPI |
+| `InitiateCheckout` | checkout open (browser + CAPI), real `num_items` | random uuid | browser⇄CAPI |
+| `AddPaymentInfo` | pay method chosen (browser + CAPI), `order_type` | random uuid | browser⇄CAPI |
+| `Lead` | **order placed** — COD or unpaid UPI (browser + CAPI), full advanced matching | `lead_<code>` | browser⇄CAPI, idempotent |
+| `Purchase` | **server-side only, on `confirmed`** (`api/meta-capi-drain`) | `purchase_<code>` | outbox unique + Meta |
+| `Refund` | **server-side, on `cancelled`/`returned`** (RTO correction) | `refund_<code>` | outbox unique + Meta |
+
+### Finding → fix
+
+- **F1 (Purchase at placement / unpaid / browser)** → browser no longer fires `Purchase`; it fires `Lead` (intent). `Purchase` is emitted server-side only when an order reaches `confirmed`. `odorstrike.html` `trackPurchase()`.
+- **F2 (no COD/RTO correction)** → added `returned` (RTO) status; DB trigger `orders_meta_enqueue` enqueues a `Refund` on `cancelled`/`returned`; drainer sends it with `order_type`. `20260723_meta_capi_conversions.sql`, `api/meta-capi-drain.js`.
+- **F3 (server event browser-initiated)** → `Purchase`/`Refund` now originate from the DB trigger on the order lifecycle and are sent by a Vercel Cron drainer, independent of the shopper's browser.
+- **F4 (weak advanced matching)** → server builds `em, ph, fn, ln, ct, st, zp, country, fbp, fbc, ip, ua` from stored order fields (`_meta.js buildUserData`); browser Pixel enriched with advanced matching on checkout submit; `Lead` beacon carries the full form PII.
+- **F5 (not idempotent / not logged)** → every high-value event logged to `meta_capi_log`, unique on `(event_id, event_name)`; drainer claims rows `pending→sending` before send; request + response + HTTP status persisted.
+- **F6 (only Purchase deduped)** → all funnel events now carry a shared `event_id` and mirror to CAPI.
+- **F7 (`fbc` never built from `fbclid`)** → `_fbc()` / `_metaFbc()` rebuild `fb.1.<ts>.<fbclid>` when the cookie is absent; server also accepts `fbclid`.
+- **F8 (`num_items` hardcoded)** → funnel events use real cart quantity.
+- **Phase 5** → consent gate retained (no Pixel/CAPI before opt-in); optional Limited Data Use via `META_DPO*`; GA4 untouched.
+
+### Files changed
+
+- `api/_meta.js` *(new)* — shared hashing / normalisation / send / Supabase-log helpers.
+- `api/meta-capi.js` — generalised browser-facing mirror (Lead + funnel), idempotent + logged.
+- `api/meta-capi-drain.js` *(new)* — server-truth Purchase/Refund drainer (Vercel Cron).
+- `supabase/migrations/20260723_meta_capi_conversions.sql` *(new)* — attribution columns, `returned` status, `meta_capi_log` outbox/log, enqueue trigger.
+- `supabase/functions/create-order/index.ts` — best-effort capture of `fbp/fbc/ip/ua/url`.
+- `odorstrike.html` — event_id + CAPI mirror on all events; Lead-at-placement; advanced matching; fbc-from-fbclid; real num_items.
+- `vercel.json` — hourly cron for the drainer.
+
+---
+
 ## 8. Verification (Phase 6) — cannot be done from code alone
 
 Confirming browser⇄server pairing/dedup in Events Manager → Test Events, reading the `Purchase` Event Match Quality score, and running live test orders on both payment paths all require Meta Events Manager access and a live deploy with `META_CAPI_TOKEN` set. Those steps must be run by someone with the ad account; this audit documents what to expect and what "good" looks like so they can be checked off after the fixes land.

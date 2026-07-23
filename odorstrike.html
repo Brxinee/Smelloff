@@ -2828,6 +2828,11 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- SUPABASE ORDER MIRROR         -->
 <!-- ============================= -->
 <script>
+// Meta cookie helpers (this script block runs before the checkout logic block,
+// so it carries its own copies). _metaFbc falls back to rebuilding fbc from the
+// landing fbclid when the Pixel never set the cookie (consent delayed).
+function _metaCk(n){ var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]+)')); return m ? decodeURIComponent(m[1]) : ''; }
+function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new URLSearchParams(location.search).get('fbclid'); return f ? ('fb.1.' + Date.now() + '.' + f) : ''; } catch (e) { return ''; } }
 window.createSupabaseOrder = function (opts) {
   var SUPA_URL = (window.SMELLOFF_CONFIG || {}).SUPABASE_URL || '';
   // Phone (not email) gates the mirror — email is optional at checkout, so
@@ -2844,7 +2849,14 @@ window.createSupabaseOrder = function (opts) {
       payment_method: opts.paymentMethod,
       address:        opts.address,
       upi_ref:        opts.upiRef || null,
-      order_code:     opts.orderCode || null
+      order_code:     opts.orderCode || null,
+      // Meta CAPI attribution — stored server-side so the confirmed-order
+      // Purchase (fired later from the lifecycle) has strong Advanced Matching
+      // even after this browser is gone. IP + UA are read from headers server-
+      // side; here we forward only the Meta cookies + the click id + this URL.
+      fbp:              _metaCk('_fbp'),
+      fbc:              _metaFbc(),
+      event_source_url: location.href
     }),
     keepalive: true
   }).then(function (r) {
@@ -3097,8 +3109,12 @@ window.createSupabaseOrder = function (opts) {
     if (upiAmtInline) upiAmtInline.textContent = '₹' + total;
     const label = method === 'cod' ? 'Place COD order · ₹' + total : 'Open UPI app · ₹' + total;
     document.getElementById('submitText').textContent = label;
-    // AddPaymentInfo event
-    if (typeof fbq !== 'undefined') { var _api = fbContents(total, cartQty); _api.payment_type = method; fbq('track', 'AddPaymentInfo', _api); }
+    // AddPaymentInfo event (shared event_id → browser⇄CAPI dedup)
+    if (typeof fbq !== 'undefined') {
+      var _eidP = _eid(); var _api = fbContents(total, cartQty); _api.payment_type = method;
+      fbq('track', 'AddPaymentInfo', _api, { eventID: _eidP });
+      metaCapi('AddPaymentInfo', _eidP, { custom: _api, order_type: method === 'cod' ? 'cod' : 'prepaid' });
+    }
     if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: total, items: gaItems(v.amount, cartQty) });
   }
 
@@ -3307,6 +3323,21 @@ window.createSupabaseOrder = function (opts) {
   async function submitOrder() {
     hideError();
     if (!validateForm()) return;
+
+    // Enrich the Pixel with Advanced Matching now that the form is filled — Meta
+    // hashes these raw values client-side. Lifts Event Match Quality for the
+    // Lead here and every subsequent event this session.
+    if (typeof fbq !== 'undefined') {
+      try {
+        var _p = _formPII();
+        fbq('init', (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.META_PIXEL_ID) || '1455100092891684', {
+          em: _p.email || undefined, ph: _p.phone || undefined,
+          fn: _p.firstName || undefined, ln: _p.lastName || undefined,
+          ct: _p.city || undefined, st: _p.state || undefined,
+          zp: _p.pincode || undefined, country: 'in'
+        });
+      } catch (e) { /* AM is best-effort */ }
+    }
 
     const btn = document.getElementById('submitBtn');
     const btnText = document.getElementById('submitText');
@@ -3603,55 +3634,83 @@ window.createSupabaseOrder = function (opts) {
     };
   }
 
+  // ---- Meta event plumbing: a shared event_id per event lets Meta dedupe the
+  //      browser Pixel against its Conversions API mirror instead of double-
+  //      counting. Everything here is consent-gated (no Pixel → no CAPI) and
+  //      fire-and-forget (a tracking failure can never affect checkout). ----
+  function _ck(n){ var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]+)')); return m ? decodeURIComponent(m[1]) : ''; }
+  function _eid(){ try { return crypto.randomUUID ? crypto.randomUUID() : (String(Date.now()) + Math.random().toString(16).slice(2)); } catch (e) { return String(Date.now()) + Math.random().toString(16).slice(2); } }
+  function _fbclid(){ try { return new URLSearchParams(location.search).get('fbclid') || ''; } catch (e) { return ''; } }
+  // Use the Pixel's _fbc cookie; if it never got set (consent delayed), rebuild
+  // it from the fbclid on the landing URL so paid-click attribution isn't lost.
+  function _fbc(){ var c = _ck('_fbc'); if (c) return c; var f = _fbclid(); return f ? ('fb.1.' + Date.now() + '.' + f) : ''; }
+  function _formPII(){
+    var g = function (id){ var el = document.getElementById(id); return el && el.value ? el.value.trim() : ''; };
+    var nm = g('f_name'); var sp = nm.split(/\s+/).filter(Boolean);
+    return { email: g('f_email'), phone: g('f_phone'), name: nm,
+      firstName: sp[0] || '', lastName: sp.length > 1 ? sp[sp.length - 1] : '',
+      city: g('f_city'), state: g('f_state'), pincode: (g('f_pin') || '').replace(/\D/g, '').slice(0, 6) };
+  }
+  // Mirror one event to the Conversions API with the SAME event_id.
+  function metaCapi(eventName, eventId, payload){
+    if (typeof fbq === 'undefined') return; // consent-gated: no Pixel, no CAPI
+    try {
+      var body = Object.assign({ event_name: eventName, eventId: eventId, eventSourceUrl: location.href,
+        fbp: _ck('_fbp'), fbc: _fbc(), fbclid: _fbclid() }, payload || {});
+      var s = JSON.stringify(body);
+      if (navigator.sendBeacon) navigator.sendBeacon('/api/meta-capi', new Blob([s], { type: 'application/json' }));
+      else fetch('/api/meta-capi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: s, keepalive: true });
+    } catch (e) { /* tracking must never break the page */ }
+  }
+
   function trackAddToCart() {
-    var v = osValue();
-    if (typeof fbq !== 'undefined') fbq('track', 'AddToCart', fbContents(v));
-    if (typeof gtag !== 'undefined') gtag('event', 'add_to_cart', { currency: 'INR', value: v, items: gaItems(v) });
+    var qty = getCartQty() > 0 ? getCartQty() : 1; var v = osValue() * qty; var eid = _eid();
+    var c = fbContents(v, qty);
+    if (typeof fbq !== 'undefined') fbq('track', 'AddToCart', c, { eventID: eid });
+    if (typeof gtag !== 'undefined') gtag('event', 'add_to_cart', { currency: 'INR', value: v, items: gaItems(osValue(), qty) });
+    metaCapi('AddToCart', eid, { custom: c });
   }
   window.trackAddToCart = trackAddToCart;
 
   function trackInitCheckout() {
-    var v = osValue();
-    if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', fbContents(v));
-    if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', { currency: 'INR', value: v, items: gaItems(v) });
+    var qty = getCartQty() > 0 ? getCartQty() : 1; var v = osValue() * qty; var eid = _eid();
+    var c = fbContents(v, qty);
+    if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', c, { eventID: eid });
+    if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', { currency: 'INR', value: v, items: gaItems(osValue(), qty) });
+    metaCapi('InitiateCheckout', eid, { custom: c });
     // First-party funnel: checkout_start (snapshot keeps the live cart current).
     smfCartBeacon('checkout_start');
   }
 
-  // Idempotency guard: a page reload or duplicate success render must never
-  // double-count the same order. Meta additionally dedupes on eventID.
-  var _purchasedOrders = {};
+  // Fired when an order is PLACED (COD, or unpaid UPI awaiting a manual UTR).
+  // This is INTENT, not confirmed revenue, so it emits `Lead` — NOT `Purchase`.
+  // The real Purchase is emitted server-side (api/meta-capi-drain) only when the
+  // order is CONFIRMED, with a Refund correction if a COD order is later
+  // cancelled or returns to origin. Firing Purchase here would report every
+  // unpaid/COD order as a sale and train Meta to find people who don't pay.
+  // (Kept the name `trackPurchase` so existing call sites are untouched.)
+  var _placedOrders = {};
   function trackPurchase(amount, orderId) {
     amount = Number(amount) || osValue();
-    if (orderId && _purchasedOrders[orderId]) return;
-    if (orderId) _purchasedOrders[orderId] = true;
-    // First-party funnel: purchase (also marks this session's cart converted).
+    if (orderId && _placedOrders[orderId]) return;
+    if (orderId) _placedOrders[orderId] = true;
+    // First-party funnel (unchanged): marks this session's cart converted.
     if (typeof window.smfTrack === 'function') {
       try { window.smfTrack({ type: 'purchase', value: amount * 100, order_code: orderId }); } catch (e) {}
     }
-    if (typeof fbq !== 'undefined') {
-      if (orderId) fbq('track', 'Purchase', fbContents(amount), { eventID: 'purchase_' + orderId });
-      else fbq('track', 'Purchase', fbContents(amount));
-    }
+    // GA4 (unchanged — out of Meta scope): preserves the merchant's report.
     if (typeof gtag !== 'undefined') gtag('event', 'purchase', {
       transaction_id: orderId, value: amount, currency: 'INR', items: gaItems(amount)
     });
-    // Server-side mirror (Meta Conversions API) — recovers iOS/ad-blocker signal
-    // loss; Meta dedupes against the browser Pixel via the shared eventID.
-    // Consent-gated (only when the Pixel is active) and fully fire-and-forget:
-    // it can never delay or break the success screen.
+    // Meta: intent signal only, with Advanced Matching from the checkout form so
+    // the Lead — and the later server Purchase, which reuses these identifiers —
+    // gets a high Event Match Quality score.
     if (typeof fbq !== 'undefined' && orderId) {
-      try {
-        var _em = (document.getElementById('f_email') || {}).value || '';
-        var _ph = (document.getElementById('f_phone') || {}).value || '';
-        var _ck = function (n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]+)')); return m ? decodeURIComponent(m[1]) : ''; };
-        var _body = JSON.stringify({
-          eventId: 'purchase_' + orderId, orderId: orderId, eventSourceUrl: location.href,
-          email: _em, phone: _ph, fbp: _ck('_fbp'), fbc: _ck('_fbc'), custom: fbContents(amount)
-        });
-        if (navigator.sendBeacon) navigator.sendBeacon('/api/meta-capi', new Blob([_body], { type: 'application/json' }));
-        else fetch('/api/meta-capi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: _body, keepalive: true });
-      } catch (e) { /* analytics must never break the success screen */ }
+      var eid = 'lead_' + orderId; var pii = _formPII();
+      fbq('track', 'Lead', { content_ids: [OS_SKU], content_type: 'product' }, { eventID: eid });
+      metaCapi('Lead', eid, { orderId: orderId,
+        email: pii.email, phone: pii.phone, firstName: pii.firstName, lastName: pii.lastName,
+        city: pii.city, state: pii.state, pincode: pii.pincode, country: 'in' });
     }
   }
   window.trackInitCheckout = trackInitCheckout;
@@ -3665,9 +3724,10 @@ window.createSupabaseOrder = function (opts) {
       if (fired) return;
       if (entries[0].isIntersecting) {
         fired = true;
-        var vcPrice = osValue();
-        if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', fbContents(vcPrice));
+        var vcPrice = osValue(); var eid = _eid(); var c = fbContents(vcPrice);
+        if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', c, { eventID: eid });
         if (typeof gtag !== 'undefined') gtag('event', 'view_item', { currency: 'INR', value: vcPrice, items: gaItems(vcPrice) });
+        metaCapi('ViewContent', eid, { custom: c });
         // First-party funnel: the #buy section is this store's product view.
         if (typeof window.smfTrack === 'function') {
           try { window.smfTrack({ type: 'product_view', label: 'ODORSTRIKE Fabric Mist', value: vcPrice * 100 }); } catch (e) {}

@@ -1,115 +1,98 @@
-// /api/meta-capi — Meta Conversions API (server-side) for the Purchase event.
+// /api/meta-capi — browser-facing Conversions API mirror.
 //
-// WHY: the browser Pixel alone under-reports ~20-40% of conversions (iOS ITP,
-// ad-blockers, network drops). This endpoint mirrors each Purchase to Meta
-// server-side. It shares the SAME `eventID` the browser Pixel already emits
-// (`purchase_<orderId>`), so Meta DEDUPES the pair — you get the recovered
-// signal without double-counting.
+// The browser Pixel posts here (via sendBeacon) with the SAME `eventID` it
+// emitted client-side, so Meta DEDUPES the pair and we recover the ~20-40% of
+// events the Pixel loses to iOS ITP / ad-blockers / dropped sessions on Indian
+// mobile. It mirrors the funnel (ViewContent, AddToCart, InitiateCheckout,
+// AddPaymentInfo) and the intent signal `Lead` (fired when an order is PLACED).
 //
-// SAFETY / ROLLOUT:
-//   • Inert until configured: if META_CAPI_TOKEN is unset it returns 204 and
-//     does nothing, so shipping this before the token is set changes nothing.
-//   • Fail-silent: any error returns 204. It never affects checkout or the
-//     browser Pixel — it's a passive, additive mirror.
-//   • Privacy: email/phone are SHA-256 hashed here, server-side, per Meta's
-//     Advanced Matching spec — raw PII is never sent to Meta and never stored.
+// It does NOT own `Purchase`. Purchase is confirmed revenue and is emitted
+// server-side from the order lifecycle by api/meta-capi-drain.js — never from
+// the browser at placement, because an unpaid UPI order or a COD order that
+// later RTOs must not be reported as a sale. (A legacy cached page may still
+// POST an old Purchase beacon during rollout; it is honoured but shares the
+// event_id the server uses, so Meta + our log both dedupe it.)
 //
-// Env:
-//   META_CAPI_TOKEN       (required to activate) — a Meta system-user access
-//                         token with `ads_management` for this pixel.
-//   META_PIXEL_ID         (optional, default 1455100092891684)
-//   META_TEST_EVENT_CODE  (optional) — set while validating in Events Manager →
-//                         Test Events; remove for live traffic.
-//   META_API_VERSION      (optional, default v21.0)
+// SAFETY: inert until META_CAPI_TOKEN is set (returns 204); fail-silent on any
+// error; never blocks the client. High-value events (Lead/Purchase/Refund) are
+// logged to Supabase and de-duplicated on (event_id, event_name); funnel events
+// are fire-and-forget and not logged (to avoid table bloat).
 
-import crypto from 'node:crypto';
+import {
+  buildUserData, fbcFromFbclid, sendEvent,
+  logInsertIfNew, logUpdate, clientIp, SKU,
+} from './_meta.js';
 
-const PIXEL_ID = process.env.META_PIXEL_ID || '1455100092891684';
-const API_VERSION = process.env.META_API_VERSION || 'v21.0';
-
-const sha256 = (s) => crypto.createHash('sha256').update(s).digest('hex');
-
-// Meta wants normalized-then-hashed values: email lowercased/trimmed; phone as
-// digits only in E.164 (no '+'), India-defaulted to +91 for bare 10-digit numbers.
-function hashEmail(email) {
-  const e = String(email || '').trim().toLowerCase();
-  return e && e.includes('@') ? sha256(e) : null;
-}
-function hashPhone(phone) {
-  let d = String(phone || '').replace(/\D/g, '');
-  if (!d) return null;
-  if (d.length === 10) d = '91' + d;                 // bare Indian mobile
-  else if (d.length === 11 && d.startsWith('0')) d = '91' + d.slice(1);
-  return sha256(d);
-}
-
-// Behind Cloudflare, x-forwarded-for is a Cloudflare POP, not the shopper —
-// prefer cf-connecting-ip so Meta's Advanced Matching gets the real client IP
-// (a POP IP degrades match quality and geo attribution).
-function clientIp(req) {
-  const pick = (v) => String(Array.isArray(v) ? v[0] : v || '').split(',')[0].trim();
-  return pick(req.headers['cf-connecting-ip'])
-    || pick(req.headers['true-client-ip'])
-    || pick(req.headers['x-forwarded-for'])
-    || undefined;
-}
+const LOGGED = new Set(['Lead', 'Purchase', 'Refund']);
+const ID_PREFIX = { Purchase: 'purchase_', Refund: 'refund_', Lead: 'lead_' };
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-
-  // Inert until a token is configured — safe to deploy ahead of setup.
-  const token = process.env.META_CAPI_TOKEN;
-  if (!token) return res.status(204).end();
+  if (!process.env.META_CAPI_TOKEN) return res.status(204).end(); // inert until configured
 
   try {
     const b = req.body && typeof req.body === 'object' ? req.body : {};
     const custom = (b.custom && typeof b.custom === 'object') ? b.custom : {};
-    const value = Number(custom.value != null ? custom.value : b.value);
-    if (!(value > 0)) return res.status(204).end();   // nothing worth sending
 
-    // Advanced Matching — send only the fields we actually have.
-    const em = hashEmail(b.email);
-    const ph = hashPhone(b.phone);
-    const user_data = { client_user_agent: String(req.headers['user-agent'] || '') };
+    const event_name = String(b.event_name || 'Purchase'); // legacy beacons omit it
+    const value = Number(custom.value != null ? custom.value : b.value);
+    const orderId = b.orderId || b.order_id || null;
+
+    const event_id = b.eventId || b.event_id
+      || (orderId && ID_PREFIX[event_name] ? ID_PREFIX[event_name] + orderId : undefined);
+
+    // Value is required for commercial events; Lead may be value-less.
+    if (event_name !== 'Lead' && !(value > 0)) return res.status(204).end();
+
+    const ua = String(req.headers['user-agent'] || '');
     const ip = clientIp(req);
-    if (ip) user_data.client_ip_address = ip;
-    if (em) user_data.em = [em];
-    if (ph) user_data.ph = [ph];
-    if (b.fbp) user_data.fbp = String(b.fbp);
-    if (b.fbc) user_data.fbc = String(b.fbc);
+    let fbc = b.fbc ? String(b.fbc) : '';
+    if (!fbc && b.fbclid) fbc = fbcFromFbclid(b.fbclid);
+
+    const user_data = buildUserData({
+      email: b.email, phone: b.phone, name: b.name,
+      firstName: b.firstName, lastName: b.lastName,
+      city: b.city, state: b.state, zip: b.zip || b.pincode,
+      country: b.country, fbp: b.fbp, fbc, ip, ua,
+    });
+
+    const custom_data = { currency: custom.currency || b.currency || 'INR' };
+    if (value > 0) custom_data.value = value;
+    custom_data.content_ids = custom.content_ids || b.content_ids || [SKU];
+    custom_data.content_type = custom.content_type || 'product';
+    if (custom.contents || b.contents) custom_data.contents = custom.contents || b.contents;
+    custom_data.num_items = custom.num_items || b.num_items || 1;
+    if (orderId) custom_data.order_id = orderId;
+    if (b.order_type || custom.order_type) custom_data.order_type = b.order_type || custom.order_type;
 
     const event = {
-      event_name: 'Purchase',
+      event_name,
       event_time: Math.floor(Date.now() / 1000),
       action_source: 'website',
-      // Shared with the browser Pixel so Meta dedupes the pair.
-      event_id: b.eventId || (b.orderId ? 'purchase_' + b.orderId : undefined),
-      event_source_url: b.eventSourceUrl || undefined,
+      event_id,
+      event_source_url: b.eventSourceUrl || b.event_source_url || undefined,
       user_data,
-      custom_data: {
-        currency: custom.currency || 'INR',
-        value,
-        content_type: custom.content_type || 'product',
-        content_ids: custom.content_ids || undefined,
-        contents: custom.contents || undefined,
-        num_items: custom.num_items || 1,
-        order_id: b.orderId || undefined,
-      },
+      custom_data,
     };
 
-    const payload = { data: [event] };
-    if (process.env.META_TEST_EVENT_CODE) payload.test_event_code = process.env.META_TEST_EVENT_CODE;
-
-    const url = `https://graph.facebook.com/${API_VERSION}/${PIXEL_ID}/events?access_token=${encodeURIComponent(token)}`;
-    const r = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    // Surface Meta's response only in server logs; never leak it to the client.
-    if (!r.ok) console.error('meta-capi', r.status, (await r.text().catch(() => '')).slice(0, 300));
+    // Idempotent log for high-value events; funnel events send fire-and-forget.
+    if (LOGGED.has(event_name) && event_id) {
+      const row = await logInsertIfNew({
+        event_id, event_name, order_id: null, order_code: orderId || null,
+        source: 'browser', status: 'sending', request: event,
+      });
+      if (!row) return res.status(204).end(); // already logged elsewhere → skip
+      const r = await sendEvent(event);
+      await logUpdate(row.id, {
+        status: r.ok ? 'sent' : (r.skipped ? 'skipped' : 'failed'),
+        http_status: r.status || null, response: { body: r.body },
+        attempts: 1, sent_at: new Date().toISOString(),
+      });
+    } else {
+      await sendEvent(event);
+    }
 
     return res.status(204).end();
   } catch (e) {
