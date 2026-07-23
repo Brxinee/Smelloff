@@ -35,12 +35,12 @@ CHROME = os.environ.get("CHROME") or next(
 
 # pose -> (mascot height px, right offset px) inside the 1200x630 stage
 POSE = {
-    "shush":   (648, -232),
-    "cool":    (566, -140),
-    "think":   (624, -205),
-    "sweat":   (622, -210),
-    "present": (600, -150),
-    "shrug":   (566, -172),
+    "shush":   (664, -150),
+    "cool":    (600,  -70),
+    "think":   (650, -120),
+    "sweat":   (648, -130),
+    "present": (556,  -10),
+    "shrug":   (600, -100),
 }
 
 # slug -> (top line [white], highlight [acid], pose)
