@@ -12,7 +12,7 @@ const HEADING_FONT = `'Barlow Condensed', 'Arial Black', Impact, sans-serif`;
 const BODY_FONT = `'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
 
 const SUPPORT_EMAIL = 'smelloffsupport@gmail.com';
-const SITE_URL = 'https://www.smelloff.in';
+const SITE_URL = 'https://smelloff.in';
 
 // Single source of truth for pricing — keep in sync with index.html CFG.PRICES/MRP.
 // ODORSTRIKE 50ml is the ONLY SKU. No bundles.
