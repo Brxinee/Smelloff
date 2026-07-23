@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "crons": [
-    { "path": "/api/meta-capi-drain", "schedule": "0 * * * *" }
+    { "path": "/api/meta-capi-drain", "schedule": "0 3 * * *" }
   ],
   "rewrites": [],
   "redirects": [

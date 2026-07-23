@@ -66,9 +66,10 @@ Set `META_TEST_EVENT_CODE` and open Events Manager → **Test Events**.
    pick a pay method. Each event should appear **once** with both *Browser* and
    *Server* badges sharing an `event_id` (not two separate rows).
 2. **Lead vs Purchase:** place a COD order. You should see `Lead` (browser+server)
-   — **not** `Purchase`. Then, in the admin, advance the order to `confirmed`:
-   within the hour (cron) a server `Purchase` with `event_id = purchase_<code>`
-   appears. Cancel or mark `returned`: a server `Refund` appears.
+   — **not** `Purchase`. Then, in the admin, advance the order to `confirmed` and
+   run the drain (the daily cron, or the manual `curl` below): a server `Purchase`
+   with `event_id = purchase_<code>` appears. Cancel or mark `returned`: a server
+   `Refund` appears.
 3. **Event Match Quality:** open the `Purchase` event → check its EMQ score.
    With email+phone+name+city+state+zip+country+fbp+fbc+ip+ua it should land in
    the good range. A low score means a field isn't arriving — check the order row.
@@ -81,5 +82,10 @@ Set `META_TEST_EVENT_CODE` and open Events Manager → **Test Events**.
 ## Manual drain (optional)
 
 `curl -H "Authorization: Bearer $CRON_SECRET" https://smelloff.in/api/meta-capi-drain`
-— processes pending rows immediately instead of waiting for the hourly cron.
-Meta accepts events up to 7 days old, so the cron cadence never loses attribution.
+— processes pending rows immediately instead of waiting for the cron.
+
+The cron runs **once daily** (`0 3 * * *`) because Vercel's Hobby plan caps crons
+at daily; Meta accepts events up to 7 days old, so this loses no attribution,
+only freshness. For same-day optimisation either upgrade to Vercel Pro and set a
+more frequent schedule, or ping the endpoint (above) from your admin's
+status-change action so Purchase/Refund send the moment an order is confirmed.

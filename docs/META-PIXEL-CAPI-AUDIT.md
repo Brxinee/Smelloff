@@ -203,7 +203,7 @@ generalised, plus a new server-truth drainer.
 - `supabase/migrations/20260723_meta_capi_conversions.sql` *(new)* — attribution columns, `returned` status, `meta_capi_log` outbox/log, enqueue trigger.
 - `supabase/functions/create-order/index.ts` — best-effort capture of `fbp/fbc/ip/ua/url`.
 - `odorstrike.html` — event_id + CAPI mirror on all events; Lead-at-placement; advanced matching; fbc-from-fbclid; real num_items.
-- `vercel.json` — hourly cron for the drainer.
+- `vercel.json` — daily cron for the drainer (Hobby-plan cron limit; Meta's 7-day window makes daily lossless).
 
 ---
 
