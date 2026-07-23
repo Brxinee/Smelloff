@@ -355,18 +355,18 @@
      drops below the bar (replaces the old fullscreen serif overlay). */
   .nav-toggle{
     display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:4px;width:44px;height:44px;background:none;padding:0;
-    border:2px solid var(--text);color:var(--text);cursor:pointer;
+    gap:6px;width:44px;height:44px;background:none;padding:0;
+    border:0;color:var(--text);cursor:pointer;
   }
   .nav-toggle .bar{
-    display:block;width:20px;height:2.6px;border-radius:100px;background:currentColor;
+    display:block;width:26px;height:3px;border-radius:100px;background:currentColor;
     transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease;
   }
-  .nav-toggle:hover{border-color:var(--acid);color:var(--acid)}
+  .nav-toggle:hover{color:var(--acid)}
   /* Bars morph into an X when the menu is open. */
-  .nav-toggle[aria-expanded="true"] .bar:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+  .nav-toggle[aria-expanded="true"] .bar:nth-child(1){transform:translateY(9px) rotate(45deg)}
   .nav-toggle[aria-expanded="true"] .bar:nth-child(2){opacity:0}
-  .nav-toggle[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+  .nav-toggle[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
   @media(prefers-reduced-motion:reduce){
     .cart-btn:hover .cart-ico{animation:none}
     .nav-toggle .bar{transition:none}
@@ -404,17 +404,16 @@
   /* ============================= */
   /* CART — nav button + drawer    */
   /* ============================= */
-  /* Cart button — bordered neo-brutalist style, matching the homepage nav. */
+  /* Cart button — borderless icon, matching the homepage nav. */
   .cart-btn{
     background:transparent;color:var(--text) !important;
-    border:2px solid var(--text);padding:0 12px;height:44px;border-radius:0;
+    border:0;padding:0 4px;height:44px;border-radius:0;
     opacity:1 !important;mix-blend-mode:normal;cursor:pointer;
-    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;
-    text-transform:uppercase;display:inline-flex;align-items:center;gap:7px;line-height:1;
-    transition:border-color .18s,color .18s;
+    display:inline-flex;align-items:center;gap:5px;line-height:1;
+    transition:color .18s;
   }
-  .cart-btn:hover{border-color:var(--acid);color:var(--acid) !important}
-  .cart-btn .cart-ico{width:18px;height:18px;display:block;transform-origin:60% 100%}
+  .cart-btn:hover{color:var(--acid) !important}
+  .cart-btn .cart-ico{width:25px;height:25px;display:block;transform-origin:60% 100%}
   /* Cart nudges forward on hover, like it's being pushed. */
   @keyframes cartNudge{
     0%,100%{transform:translateX(0) rotate(0)}
