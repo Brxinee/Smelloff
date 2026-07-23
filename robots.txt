@@ -13,6 +13,38 @@ Disallow: /admin
 Disallow: /outreach/
 
 # ---------------------------------------------------------------------------
+# Traditional search engines — full crawl access to the whole public site.
+# (All are already covered by the wildcard above; named explicitly so it is
+# unmistakable that every major search engine is welcome. /api, /admin and
+# /outreach stay off-limits, exactly as for the wildcard.)
+# ---------------------------------------------------------------------------
+
+# Google (web, images, news, video). Google-Extended/GoogleOther below cover
+# Gemini / AI Overviews separately; Googlebot here is the core Search crawler.
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Googlebot-News
+User-agent: Googlebot-Video
+User-agent: Storebot-Google
+Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
+
+# Yahoo (Slurp), DuckDuckGo, Yandex, Baidu, Naver (Yeti), Sogou, Ecosia/Seznam
+User-agent: Slurp
+User-agent: DuckDuckBot
+User-agent: YandexBot
+User-agent: Baiduspider
+User-agent: Yeti
+User-agent: Sogou web spider
+User-agent: SeznamBot
+Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
+
+# ---------------------------------------------------------------------------
 # AI answer engines, search-AI, and AI BROWSERS (live, user-triggered fetches).
 # Highest-value agents — they read a page in real time to answer a user or power
 # an AI browser, and can cite/link back. Keep every one allowed.
