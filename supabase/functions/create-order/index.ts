@@ -48,6 +48,15 @@ Deno.serve(async (req: Request) => {
     return jsonResponse(req, { error: "Too many requests. Please slow down." }, 429);
   }
 
+  // Checkout is account-gated: the shopper must hold a session from a verified
+  // phone OTP. The order's phone is then taken from the VERIFIED claim, never
+  // from the request body, so an order can't be filed against someone else's
+  // number and show up in their account.
+  const authHeader = req.headers.get("Authorization") || "";
+  if (!authHeader.startsWith("Bearer ")) {
+    return jsonResponse(req, { error: "Please sign in to place your order." }, 401);
+  }
+
   try {
     let body: Record<string, unknown>;
     try {
@@ -59,10 +68,24 @@ Deno.serve(async (req: Request) => {
       return jsonResponse(req, { error: "Invalid request." }, 400);
     }
 
-    // --- Normalise + validate identity / contact ---
-    const phone = str(body.phone, 20).replace(/\D/g, "").slice(-10);
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+
+    // --- Identity: the authenticated account, not the request body ---
+    const { data: { user }, error: authError } = await supabase.auth.getUser(
+      authHeader.replace("Bearer ", ""),
+    );
+    if (authError || !user) {
+      return jsonResponse(req, { error: "Your session expired. Sign in again to place your order." }, 401);
+    }
+
+    // Phone comes from the verified claim on the session. `body.phone` is
+    // ignored entirely — this is what ties the order to the account.
+    const phone = String(user.phone || "").replace(/\D/g, "").slice(-10);
     if (phone.length !== 10) {
-      return jsonResponse(req, { error: "A valid 10-digit phone is required." }, 400);
+      return jsonResponse(req, { error: "Your account has no verified phone number. Sign in again." }, 401);
     }
 
     const emailRaw = str(body.email, 120).toLowerCase();
@@ -150,17 +173,13 @@ Deno.serve(async (req: Request) => {
         null) || null;
     const clientUa = (req.headers.get("user-agent") || "").slice(0, 512) || null;
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
-
     const status = paymentMethod === "upi" ? "upi_pending" : "placed";
 
     const { data, error } = await supabase
       .from("orders")
       .insert({
-        customer_email: email,
+        user_id: user.id,
+        customer_email: email || user.email || null,
         customer_phone: phone,
         items,
         amount: amountPaise, // server-verified, in paise
@@ -193,6 +212,21 @@ Deno.serve(async (req: Request) => {
           .eq("id", data.id);
       }
     } catch (_e) { /* attribution is best-effort; never block the order */ }
+
+    // Best-effort: keep the account profile in step with the latest checkout so
+    // /account shows a name and the next order prefills this address. Never
+    // blocks the order — the customer can edit all of it from /account.
+    try {
+      await supabase
+        .from("customer_profiles")
+        .upsert({
+          id: user.id,
+          phone,
+          full_name: address.name || null,
+          email: email || user.email || null,
+          default_address: address,
+        }, { onConflict: "id" });
+    } catch (_e) { /* profile sync is cosmetic; the order already exists */ }
 
     return jsonResponse(req, { id: data.id }, 200);
   } catch (_e) {

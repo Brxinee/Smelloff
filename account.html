@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>My Account — Orders &amp; Tracking | Smelloff</title>
+<meta name="description" content="Sign in with your mobile number to see your ODORSTRIKE order history, track deliveries and cancel orders before dispatch.">
+<!-- Private area: never indexed, never in the sitemap. -->
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://smelloff.in/account">
+<meta name="theme-color" content="#080808">
+<link rel="icon" type="image/png" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
+<style>
+  :root{
+    --black:#080808;--card:#111111;--border:#262626;--white:#F5F5F5;--gray:#8C8C8C;
+    --silver:#BFC3C8;--green:#B8FF57;--green-light:#D2FF8A;--green-dim:rgba(184,255,87,.12);
+    --red:#FF6B6B;--amber:#FFC857;
+    --bg:var(--black);--bg-surface:var(--card);--text:#f4f1ea;--text-secondary:#c9c5bd;
+    --muted:#9a958d;--accent:var(--green);--accent-rgb:184,255,87;--rule:rgba(244,241,234,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--text);font-family:'Inter Tight',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  ::selection{background:var(--accent);color:#080808}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+
+  .p-nav{display:flex;justify-content:space-between;align-items:center;padding:24px 32px;background:var(--bg);border-bottom:1px solid var(--rule)}
+  .p-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+  .p-back:hover{color:var(--text)}
+  .p-main{flex:1;width:100%;max-width:760px;margin:0 auto;padding:64px 24px 100px}
+  .p-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+  .p-eyebrow::before{content:'';width:32px;height:1px;background:var(--muted)}
+  h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(40px,6.5vw,72px);line-height:.95;letter-spacing:-.03em;margin-bottom:14px}
+  h1 .dot{color:var(--accent)}
+  .p-sub{color:var(--muted);font-size:15px;margin-bottom:36px;max-width:52ch}
+
+  label{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--rule);border-radius:6px;color:var(--text);font-family:'Inter Tight',sans-serif;font-size:16px;padding:13px 14px;margin-bottom:18px}
+  input::placeholder{color:#5a5a5a}
+  input:focus,textarea:focus{border-color:var(--accent);outline:none}
+  input[readonly]{color:var(--muted);background:rgba(244,241,234,.03)}
+  .card{background:var(--bg-surface);border:1px solid var(--rule);border-radius:10px;padding:26px 22px;margin-bottom:24px}
+  .btn{width:100%;background:var(--accent);color:#080808;border:none;border-radius:6px;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding:15px;cursor:pointer;transition:background .15s ease}
+  .btn:hover{background:var(--green-light)}
+  .btn[disabled]{opacity:.55;cursor:wait}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--rule)}
+  .btn-ghost:hover{background:rgba(244,241,234,.06);border-color:var(--text)}
+  .btn-danger{background:transparent;color:var(--red);border:1px solid rgba(255,107,107,.4)}
+  .btn-danger:hover{background:rgba(255,107,107,.1)}
+  .btn-row{display:flex;gap:12px;flex-wrap:wrap}
+  .btn-row .btn{width:auto;flex:1;min-width:150px}
+  .linkish{background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:8px 0}
+  .linkish:hover{color:var(--accent)}
+  .linkish[disabled]{opacity:.5;cursor:default}
+
+  .msg{display:none;border-radius:6px;font-size:14px;padding:12px 14px;margin-bottom:18px}
+  .msg.err{display:block;background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.4);color:var(--red)}
+  .msg.ok{display:block;background:var(--green-dim);border:1px solid rgba(var(--accent-rgb),.35);color:var(--accent)}
+
+  /* ── account header ── */
+  .acct-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:20px;margin-bottom:28px}
+  .acct-who{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+  .acct-who b{display:block;font-family:'Fraunces',serif;font-size:22px;letter-spacing:-.02em;text-transform:none;color:var(--text);margin-top:4px}
+  .tabs{display:flex;gap:8px;margin-bottom:28px}
+  .tab{flex:0 0 auto;background:transparent;border:1px solid var(--rule);border-radius:100px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:9px 18px;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#080808}
+
+  /* ── order cards ── */
+  .order{background:var(--bg-surface);border:1px solid var(--rule);border-radius:10px;padding:20px;margin-bottom:16px;cursor:pointer;transition:border-color .15s ease}
+  .order:hover{border-color:rgba(var(--accent-rgb),.45)}
+  .order-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:10px}
+  .order-code{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.06em;color:var(--text)}
+  .order-when{font-size:13px;color:var(--muted);margin-top:2px}
+  .order-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;color:var(--text-secondary)}
+  .order-total{font-family:'Fraunces',serif;font-weight:900;font-size:19px;color:var(--text)}
+  .pill{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:100px;white-space:nowrap;border:1px solid}
+  .pill.live{color:var(--accent);border-color:rgba(var(--accent-rgb),.45);background:var(--green-dim)}
+  .pill.wait{color:var(--amber);border-color:rgba(255,200,87,.4);background:rgba(255,200,87,.1)}
+  .pill.done{color:var(--text-secondary);border-color:var(--rule);background:rgba(244,241,234,.05)}
+  .pill.dead{color:var(--red);border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.08)}
+
+  .empty{text-align:center;padding:56px 20px;border:1px dashed var(--rule);border-radius:10px}
+  .empty p{color:var(--muted);margin-bottom:20px}
+  .empty a{display:inline-block;background:var(--accent);color:#080808;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:13px 26px;border-radius:100px}
+  .skeleton{height:112px;border-radius:10px;background:linear-gradient(90deg,#111 25%,#181818 50%,#111 75%);background-size:200% 100%;animation:sk 1.4s infinite;margin-bottom:16px}
+  @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+  /* ── detail ── */
+  .detail-back{display:inline-flex;align-items:center;gap:8px;background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;padding:0;margin-bottom:22px}
+  .detail-back:hover{color:var(--accent)}
+  .d-code{font-family:'Fraunces',serif;font-weight:900;font-size:30px;letter-spacing:-.02em}
+  .d-meta{color:var(--muted);font-size:13px;margin:4px 0 18px}
+  .d-updated{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+  .banner{border-radius:6px;font-size:14px;padding:13px 15px;margin-bottom:20px}
+  .banner.dead{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.4);color:var(--red)}
+  .eta{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;background:var(--green-dim);border:1px solid rgba(var(--accent-rgb),.35);border-radius:8px;padding:13px 16px;margin-bottom:20px}
+  .eta .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .eta .val{font-family:'Fraunces',serif;font-weight:900;font-size:17px;color:var(--text)}
+
+  .steps{list-style:none;margin:0 0 24px}
+  .step{display:flex;gap:14px;position:relative;padding-bottom:26px}
+  .step:last-child{padding-bottom:0}
+  .step::before{content:'';position:absolute;left:10px;top:24px;bottom:2px;width:2px;background:var(--rule)}
+  .step:last-child::before{display:none}
+  .step.done::before{background:var(--accent)}
+  .dot{flex:0 0 22px;height:22px;border-radius:50%;border:2px solid var(--rule);background:var(--bg);position:relative;z-index:1}
+  .step.done .dot{border-color:var(--accent);background:var(--accent)}
+  .step.current .dot{border-color:var(--accent);box-shadow:0 0 0 4px var(--green-dim)}
+  .step-name{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .step.done .step-name,.step.current .step-name{color:var(--text)}
+  .step-desc{font-size:13px;color:var(--muted);margin-top:3px}
+  .step-time{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--accent);margin-top:4px}
+
+  .track-box{background:var(--green-dim);border:1px solid rgba(var(--accent-rgb),.35);border-radius:8px;padding:15px 16px;margin-bottom:20px}
+  .track-box p{font-size:14px;color:var(--text-secondary);margin-bottom:4px}
+  .track-box b{color:var(--text)}
+  .track-box a{color:var(--accent);font-weight:600;text-decoration:none}
+  .lines{border-top:1px solid var(--rule);padding-top:16px;font-size:14px;color:var(--text-secondary);margin-bottom:22px}
+  .lines .row{display:flex;justify-content:space-between;gap:14px;margin-bottom:6px}
+  .lines .total{font-weight:700;color:var(--text);border-top:1px solid var(--rule);padding-top:9px;margin-top:9px}
+  .ship-to{font-size:14px;color:var(--muted);line-height:1.5}
+
+  .help{background:var(--bg-surface);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;font-size:14px;color:var(--text-secondary);margin-top:28px}
+  .help a{color:var(--accent);text-decoration:none;font-weight:600}
+  .help p{margin-bottom:8px}
+  .help p:last-child{margin-bottom:0}
+
+  .modal{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.75);align-items:center;justify-content:center;padding:20px}
+  .modal.open{display:flex}
+  .modal-box{background:var(--bg-surface);border:1px solid var(--rule);border-radius:12px;padding:26px 22px;max-width:420px;width:100%}
+  .modal-box h3{font-family:'Fraunces',serif;font-weight:900;font-size:22px;margin-bottom:10px}
+  .modal-box p{font-size:14px;color:var(--muted);margin-bottom:18px}
+
+  footer{border-top:1px solid var(--rule);padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));text-align:center;font-size:12px;color:var(--muted)}
+  footer a{color:var(--muted);text-decoration:none;margin:0 8px}
+  footer a:hover{color:var(--text)}
+  .hide{display:none !important}
+  @media(max-width:600px){.p-main{padding:44px 18px 80px}.p-nav{padding:18px}}
+</style>
+<script src="/assets/js/consent-analytics.js" defer></script>
+</head>
+<body>
+<nav class="p-nav">
+  <a href="/" class="logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:18px;width:auto;display:block"></a>
+  <a href="/" class="p-back">← Back to home</a>
+</nav>
+
+<main class="p-main">
+
+  <!-- ══ Signed out ══ -->
+  <section id="authView" class="hide">
+    <div class="p-eyebrow">Your account</div>
+    <h1>Sign in<span class="dot">.</span></h1>
+    <p class="p-sub">Your orders are tied to your mobile number. Enter it below and we'll text you a 6-digit code — no password to remember.</p>
+
+    <form class="card" id="phoneStep" onsubmit="return false">
+      <label for="a_phone">Mobile number</label>
+      <input type="tel" id="a_phone" placeholder="10-digit mobile" maxlength="10" pattern="[0-9]{10}" inputmode="numeric" autocomplete="tel" required>
+      <div class="msg" id="phoneMsg" role="alert"></div>
+      <button type="submit" class="btn" id="sendBtn">Send code</button>
+    </form>
+
+    <form class="card hide" id="otpStep" onsubmit="return false">
+      <label for="a_otp">Enter the code</label>
+      <p style="font-size:13px;color:var(--muted);margin:-4px 0 12px">Sent to <b id="otpTarget" style="color:var(--text)"></b> · <button type="button" class="linkish" style="display:inline;padding:0" onclick="editPhone()">change</button></p>
+      <input type="text" id="a_otp" placeholder="6-digit code" maxlength="6" inputmode="numeric" autocomplete="one-time-code" required>
+      <div class="msg" id="otpMsg" role="alert"></div>
+      <button type="submit" class="btn" id="verifyBtn">Verify &amp; sign in</button>
+      <button type="button" class="linkish" id="resendBtn" onclick="resendCode()">Resend code</button>
+    </form>
+
+    <aside class="help">
+      <p><b style="color:var(--text)">Placed an order before you had an account?</b> Sign in with the same number you used at checkout — it'll be waiting here.</p>
+      <p>Prefer not to sign in? <a href="/track-order">Track a single order</a> with your order ID instead.</p>
+    </aside>
+  </section>
+
+  <!-- ══ Signed in ══ -->
+  <section id="dashView" class="hide">
+    <div class="acct-bar">
+      <div class="acct-who">Signed in as<b id="whoName">—</b></div>
+      <button type="button" class="linkish" onclick="doSignOut()">Sign out</button>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tabOrders" aria-selected="true" onclick="showTab('orders')">Orders</button>
+      <button class="tab" role="tab" id="tabProfile" aria-selected="false" onclick="showTab('profile')">Profile</button>
+    </div>
+
+    <!-- Orders list -->
+    <div id="ordersPanel">
+      <div id="ordersList"><div class="skeleton"></div><div class="skeleton"></div></div>
+      <div class="msg" id="ordersMsg" role="alert"></div>
+    </div>
+
+    <!-- Single order -->
+    <div id="detailPanel" class="hide">
+      <button type="button" class="detail-back" onclick="closeDetail()">← All orders</button>
+      <div class="card">
+        <div class="d-code" id="dCode"></div>
+        <p class="d-meta" id="dMeta"></p>
+        <p class="d-updated" id="dUpdated"></p>
+        <div class="banner dead hide" id="dCancelled"></div>
+        <div class="eta hide" id="dEta"><span class="lbl" id="dEtaLbl">Estimated delivery</span><span class="val" id="dEtaVal"></span></div>
+
+        <ol class="steps" id="dSteps"></ol>
+
+        <div class="track-box hide" id="dTrackBox">
+          <p><b>Courier:</b> <span id="dCourier"></span></p>
+          <p><b>Tracking ID:</b> <span id="dTrackingId"></span></p>
+          <p id="dTrackUrlWrap" class="hide"><a id="dTrackUrl" href="#" target="_blank" rel="noopener">Track on courier site →</a></p>
+        </div>
+
+        <div class="lines" id="dLines"></div>
+        <p class="ship-to" id="dShipTo"></p>
+        <div class="msg" id="detailMsg" role="alert" style="margin-top:18px"></div>
+        <div class="btn-row" style="margin-top:20px">
+          <button type="button" class="btn btn-danger hide" id="dCancelBtn" onclick="openCancel()">Cancel order</button>
+          <a class="btn btn-ghost" href="/odorstrike#buy" style="text-align:center;text-decoration:none;line-height:1.4">Order again</a>
+        </div>
+      </div>
+      <aside class="help">
+        <p>Cancellation is available until we hand the parcel to the courier. After dispatch, refuse the delivery or start a <a href="/returns">return</a>.</p>
+        <p>Paid by UPI and cancelled? Refunds are processed manually within 5–7 business days — <a href="https://wa.me/919392974031" target="_blank" rel="noopener">WhatsApp us</a> with your UTR if it hasn't landed.</p>
+      </aside>
+    </div>
+
+    <!-- Profile -->
+    <div id="profilePanel" class="hide">
+      <form class="card" id="profileForm" onsubmit="return false">
+        <label for="p_phone">Mobile number (verified)</label>
+        <input type="tel" id="p_phone" readonly>
+        <label for="p_name">Full name</label>
+        <input type="text" id="p_name" autocomplete="name" autocapitalize="words" maxlength="80">
+        <label for="p_email">Email <span style="text-transform:none;letter-spacing:0">(optional — for order receipts)</span></label>
+        <input type="email" id="p_email" autocomplete="email" inputmode="email" maxlength="120">
+        <label for="p_addr">Default delivery address</label>
+        <input type="text" id="p_addr" autocomplete="address-line1" maxlength="200" placeholder="House / flat, street, area">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div><label for="p_city">City</label><input type="text" id="p_city" autocomplete="address-level2" maxlength="80"></div>
+          <div><label for="p_state">State</label><input type="text" id="p_state" autocomplete="address-level1" maxlength="80"></div>
+        </div>
+        <label for="p_pin">Pincode</label>
+        <input type="text" id="p_pin" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" autocomplete="postal-code">
+        <div class="msg" id="profileMsg" role="alert"></div>
+        <button type="submit" class="btn" id="saveProfileBtn">Save details</button>
+      </form>
+      <aside class="help">
+        <p>These details prefill your next checkout. We only use your email to send order receipts.</p>
+        <p>Want your account and data deleted? <a href="/contact">Contact us</a> — see our <a href="/privacy">privacy policy</a>.</p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<!-- Cancel confirmation -->
+<div class="modal" id="cancelModal" role="dialog" aria-modal="true" aria-labelledby="cancelTitle">
+  <div class="modal-box">
+    <h3 id="cancelTitle">Cancel this order?</h3>
+    <p>This can't be undone. If you paid by UPI, we'll refund you manually within 5–7 business days.</p>
+    <label for="c_reason">Reason (optional)</label>
+    <input type="text" id="c_reason" maxlength="300" placeholder="Changed my mind, ordered by mistake…">
+    <div class="msg" id="cancelMsg" role="alert"></div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-ghost" onclick="closeCancel()">Keep it</button>
+      <button type="button" class="btn btn-danger" id="confirmCancelBtn" onclick="confirmCancel()">Yes, cancel</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="/">Home</a><a href="/track-order">Track order</a><a href="/contact">Contact</a><a href="/shipping">Shipping</a><a href="/returns">Returns</a><a href="/privacy">Privacy</a>
+  <div style="margin-top:10px">© 2026 Smelloff · Made in Hyderabad</div>
+</footer>
+
+<script src="/assets/js/auth.js"></script>
+<script>
+(function(){
+  var Auth = window.SmelloffAuth;
+  var STEPS = ['placed','confirmed','packed','dispatched','out_for_delivery','delivered'];
+  var STEP_COPY = {
+    placed:          { name:'Order placed',    desc:'We’ve received your order.' },
+    confirmed:       { name:'Confirmed',       desc:'Payment/COD verified by our team.' },
+    packed:          { name:'Picked & packed', desc:'Your ODORSTRIKE is packed and ready to ship.' },
+    dispatched:      { name:'Dispatched',      desc:'Shipped from Hyderabad — courier details below.' },
+    out_for_delivery:{ name:'Out for delivery',desc:'On the way to you — keep your phone handy.' },
+    delivered:       { name:'Delivered',       desc:'Enjoy the fresh shirt energy.' }
+  };
+  var STATUS_LABEL = {
+    placed:'Order placed', upi_pending:'Awaiting payment', confirmed:'Confirmed',
+    packed:'Packed', dispatched:'Dispatched', out_for_delivery:'Out for delivery',
+    delivered:'Delivered', cancelled:'Cancelled'
+  };
+  // Mirrors CANCELLABLE in the cancel-order edge function. The server is the
+  // authority — this only decides whether to show the button.
+  var CANCELLABLE = ['placed','upi_pending','confirmed','packed'];
+
+  var orders = [];
+  var current = null;
+  var resendTimer = null;
+
+  // ---- tiny helpers ----
+  function $(id){ return document.getElementById(id); }
+  function show(el, on){ if (el) el.classList.toggle('hide', !on); }
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function note(el, text, kind){
+    if (!el) return;
+    el.textContent = text || '';
+    el.className = 'msg' + (text ? ' ' + (kind || 'err') : '');
+  }
+  function fmtDate(d, withYear){
+    return d.toLocaleDateString('en-IN', withYear
+      ? { day:'numeric', month:'short', year:'numeric' }
+      : { day:'numeric', month:'short' });
+  }
+  function fmtTime(d){ return d.toLocaleTimeString('en-IN', { hour:'numeric', minute:'2-digit' }); }
+  function addDays(d, n){ var x = new Date(d.getTime()); x.setDate(x.getDate()+n); return x; }
+  function rupees(paise){ return '₹' + Math.round((paise || 0) / 100); }
+
+  // ══════════ SIGN IN ══════════
+
+  var pendingPhone = '';
+
+  $('phoneStep').addEventListener('submit', function(){
+    var phone = $('a_phone').value.replace(/\D/g,'');
+    var btn = $('sendBtn');
+    note($('phoneMsg'), '');
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      note($('phoneMsg'), 'Enter a valid 10-digit Indian mobile number.'); return;
+    }
+    btn.disabled = true; btn.textContent = 'Sending…';
+    Auth.sendOtp(phone).then(function(){
+      pendingPhone = phone;
+      $('otpTarget').textContent = '+91 ' + phone;
+      show($('phoneStep'), false); show($('otpStep'), true);
+      $('a_otp').focus();
+      startResendCooldown();
+    }).catch(function(e){
+      note($('phoneMsg'), e.message);
+    }).then(function(){
+      btn.disabled = false; btn.textContent = 'Send code';
+    });
+  });
+
+  $('otpStep').addEventListener('submit', function(){
+    var code = $('a_otp').value.replace(/\D/g,'');
+    var btn = $('verifyBtn');
+    note($('otpMsg'), '');
+    if (code.length < 4) { note($('otpMsg'), 'Enter the code from the SMS.'); return; }
+    btn.disabled = true; btn.textContent = 'Verifying…';
+    Auth.verifyOtp(pendingPhone, code).then(function(){
+      enterDashboard();
+    }).catch(function(e){
+      note($('otpMsg'), e.message);
+    }).then(function(){
+      btn.disabled = false; btn.textContent = 'Verify & sign in';
+    });
+  });
+
+  window.editPhone = function(){
+    show($('otpStep'), false); show($('phoneStep'), true);
+    note($('otpMsg'), ''); $('a_otp').value = '';
+    $('a_phone').focus();
+  };
+
+  window.resendCode = function(){
+    if ($('resendBtn').disabled) return;
+    note($('otpMsg'), '');
+    Auth.sendOtp(pendingPhone).then(function(){
+      note($('otpMsg'), 'New code sent.', 'ok');
+      startResendCooldown();
+    }).catch(function(e){ note($('otpMsg'), e.message); });
+  };
+
+  // 45s cooldown — SMS costs money and the provider rate-limits anyway.
+  function startResendCooldown(){
+    var btn = $('resendBtn');
+    var left = 45;
+    btn.disabled = true;
+    clearInterval(resendTimer);
+    btn.textContent = 'Resend code in ' + left + 's';
+    resendTimer = setInterval(function(){
+      left--;
+      if (left <= 0) {
+        clearInterval(resendTimer);
+        btn.disabled = false; btn.textContent = 'Resend code';
+      } else {
+        btn.textContent = 'Resend code in ' + left + 's';
+      }
+    }, 1000);
+  }
+
+  window.doSignOut = function(){
+    Auth.signOut().then(function(){ location.href = '/'; });
+  };
+
+  // ══════════ DASHBOARD ══════════
+
+  function enterDashboard(){
+    var u = Auth.user() || {};
+    show($('authView'), false); show($('dashView'), true);
+    $('whoName').textContent = '+91 ' + Auth.phone();
+    loadProfile();
+    loadOrders();
+  }
+
+  window.showTab = function(which){
+    var isOrders = which === 'orders';
+    $('tabOrders').setAttribute('aria-selected', isOrders ? 'true' : 'false');
+    $('tabProfile').setAttribute('aria-selected', isOrders ? 'false' : 'true');
+    show($('profilePanel'), !isOrders);
+    // Leaving the detail view whenever tabs change keeps the back-stack simple.
+    if (isOrders) { show($('ordersPanel'), !current); show($('detailPanel'), !!current); }
+    else { show($('ordersPanel'), false); show($('detailPanel'), false); }
+  };
+
+  // ---- orders ----
+
+  function loadOrders(){
+    var cols = 'id,order_code,created_at,updated_at,status,status_history,payment_method,' +
+               'amount,items,tracking_id,courier,tracking_url,address,cancel_reason,cancelled_at';
+    Auth.rest('/orders?select=' + cols + '&order=created_at.desc&limit=50')
+      .then(function(rows){
+        orders = Array.isArray(rows) ? rows : [];
+        renderOrders();
+      })
+      .catch(function(e){
+        $('ordersList').innerHTML = '';
+        note($('ordersMsg'), e.message || 'Could not load your orders. Refresh and try again.');
+      });
+  }
+
+  function pillClass(status){
+    if (status === 'cancelled') return 'dead';
+    if (status === 'delivered') return 'done';
+    if (status === 'upi_pending') return 'wait';
+    return 'live';
+  }
+
+  function renderOrders(){
+    var list = $('ordersList');
+    if (!orders.length) {
+      list.innerHTML =
+        '<div class="empty"><p>No orders yet. Your ODORSTRIKE is waiting.</p>' +
+        '<a href="/odorstrike#buy">Shop ODORSTRIKE — ₹229</a></div>';
+      return;
+    }
+    var html = '';
+    orders.forEach(function(o, i){
+      var placed = o.created_at ? new Date(o.created_at) : null;
+      var first = (Array.isArray(o.items) && o.items[0]) || {};
+      var qty = (Array.isArray(o.items) ? o.items : []).reduce(function(n, it){
+        return n + (Number(it.quantity) || 1);
+      }, 0) || 1;
+      html +=
+        '<article class="order" tabindex="0" role="button" data-i="' + i + '" ' +
+          'aria-label="Open order ' + esc(o.order_code || '') + '">' +
+          '<div class="order-top">' +
+            '<div>' +
+              '<div class="order-code">' + esc(o.order_code || o.id.slice(0, 8)) + '</div>' +
+              '<div class="order-when">' + (placed ? 'Placed ' + fmtDate(placed, true) : '') + '</div>' +
+            '</div>' +
+            '<span class="pill ' + pillClass(o.status) + '">' + esc(STATUS_LABEL[o.status] || o.status) + '</span>' +
+          '</div>' +
+          '<div class="order-bottom">' +
+            '<span>' + esc(first.label || first.name || 'ODORSTRIKE Fabric Mist') +
+              (qty > 1 ? ' × ' + qty : '') + '</span>' +
+            '<span class="order-total">' + rupees(o.amount) + '</span>' +
+          '</div>' +
+        '</article>';
+    });
+    list.innerHTML = html;
+
+    Array.prototype.forEach.call(list.querySelectorAll('.order'), function(el){
+      el.addEventListener('click', function(){ openDetail(+el.getAttribute('data-i')); });
+      el.addEventListener('keydown', function(ev){
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openDetail(+el.getAttribute('data-i')); }
+      });
+    });
+  }
+
+  // ---- order detail ----
+
+  window.openDetail = function(i){
+    current = orders[i];
+    if (!current) return;
+    renderDetail(current);
+    show($('ordersPanel'), false); show($('detailPanel'), true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.closeDetail = function(){
+    current = null;
+    note($('detailMsg'), '');
+    show($('detailPanel'), false); show($('ordersPanel'), true);
+  };
+
+  function renderDetail(o){
+    $('dCode').textContent = o.order_code || o.id.slice(0, 8);
+
+    var placed = o.created_at ? new Date(o.created_at) : null;
+    var pm = o.payment_method === 'cod' ? 'Cash on Delivery' : 'UPI';
+    var addr = o.address || {};
+    $('dMeta').textContent =
+      (placed ? 'Placed ' + fmtDate(placed, true) + ' · ' : '') + pm +
+      (addr.city ? ' · Ships to ' + addr.city + (addr.state ? ', ' + addr.state : '') : '');
+
+    var upd = o.updated_at ? new Date(o.updated_at) : null;
+    $('dUpdated').textContent = upd ? 'Last updated ' + fmtDate(upd, false) + ' · ' + fmtTime(upd) : '';
+
+    // status → when it happened
+    var at = {};
+    (Array.isArray(o.status_history) ? o.status_history : []).forEach(function(h){
+      if (h && h.status && h.at) at[h.status] = new Date(h.at);
+    });
+
+    var cancelled = o.status === 'cancelled';
+    var banner = $('dCancelled');
+    show(banner, cancelled);
+    if (cancelled) {
+      var when = o.cancelled_at ? new Date(o.cancelled_at) : at.cancelled;
+      banner.textContent = 'Cancelled' + (when ? ' on ' + fmtDate(when, true) : '') + '. ' +
+        (o.payment_method === 'upi'
+          ? 'If you had already paid, the refund is processed manually within 5–7 business days.'
+          : 'Nothing was charged — this was a Cash on Delivery order.');
+    }
+
+    // Timeline. upi_pending sits between "placed" and "confirmed".
+    var effective = o.status === 'upi_pending' ? 'placed' : o.status;
+    var idx = STEPS.indexOf(effective);
+    var stepsHtml = '';
+    STEPS.forEach(function(key, i){
+      var copy = STEP_COPY[key];
+      var cls = 'step';
+      if (!cancelled) {
+        if (i < idx) cls += ' done';
+        else if (i === idx) cls += (idx === STEPS.length - 1 ? ' done' : ' current');
+      }
+      var t = at[key] || (key === 'placed' ? at.upi_pending : null);
+      var desc = (key === 'placed' && o.status === 'upi_pending')
+        ? 'Order received — awaiting UPI payment confirmation. Sent your UTR on WhatsApp yet?'
+        : copy.desc;
+      stepsHtml +=
+        '<li class="' + cls + '"><span class="dot" aria-hidden="true"></span><div>' +
+          '<div class="step-name">' + esc(copy.name) + '</div>' +
+          '<div class="step-desc">' + esc(desc) + '</div>' +
+          (t ? '<div class="step-time">' + esc(fmtDate(t, false) + ' · ' + fmtTime(t)) + '</div>' : '') +
+        '</div></li>';
+    });
+    $('dSteps').innerHTML = stepsHtml;
+
+    // Estimated delivery window, derived from the trail.
+    var eta = $('dEta'), etaVal = $('dEtaVal'), etaLbl = $('dEtaLbl');
+    if (cancelled) {
+      show(eta, false);
+    } else if (o.status === 'delivered') {
+      etaLbl.textContent = 'Status';
+      etaVal.textContent = at.delivered ? 'Delivered ' + fmtDate(at.delivered, true) : 'Delivered';
+      show(eta, true);
+    } else {
+      etaLbl.textContent = 'Estimated delivery';
+      var sent = at.dispatched || at.out_for_delivery;
+      if (o.status === 'out_for_delivery') {
+        etaVal.textContent = 'Arriving today'; show(eta, true);
+      } else if (sent) {
+        etaVal.textContent = fmtDate(addDays(sent, 2), false) + ' – ' + fmtDate(addDays(sent, 5), false);
+        show(eta, true);
+      } else if (placed && o.status !== 'upi_pending') {
+        etaVal.textContent = fmtDate(addDays(placed, 3), false) + ' – ' + fmtDate(addDays(placed, 7), false);
+        show(eta, true);
+      } else {
+        show(eta, false);
+      }
+    }
+
+    var hasTracking = !!(o.tracking_id || o.courier);
+    show($('dTrackBox'), hasTracking);
+    if (hasTracking) {
+      $('dCourier').textContent = o.courier || '—';
+      $('dTrackingId').textContent = o.tracking_id || '—';
+      var ok = o.tracking_url && /^https:\/\//.test(o.tracking_url);
+      show($('dTrackUrlWrap'), !!ok);
+      if (ok) $('dTrackUrl').href = o.tracking_url;
+    }
+
+    var rows = '';
+    (Array.isArray(o.items) ? o.items : []).forEach(function(it){
+      var label = (it.label || it.name || 'ODORSTRIKE') + (it.quantity > 1 ? ' × ' + it.quantity : '');
+      rows += '<div class="row"><span>' + esc(label) + '</span></div>';
+    });
+    rows += '<div class="row total"><span>Total</span><span>' + rupees(o.amount) + '</span></div>';
+    $('dLines').innerHTML = rows;
+
+    $('dShipTo').textContent = [addr.name, addr.line, addr.city, addr.state, addr.pincode]
+      .filter(Boolean).join(', ');
+
+    show($('dCancelBtn'), CANCELLABLE.indexOf(o.status) !== -1);
+  }
+
+  // ---- cancellation ----
+
+  window.openCancel = function(){
+    note($('cancelMsg'), '');
+    $('c_reason').value = '';
+    $('cancelModal').classList.add('open');
+    $('c_reason').focus();
+  };
+  window.closeCancel = function(){ $('cancelModal').classList.remove('open'); };
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && $('cancelModal').classList.contains('open')) closeCancel();
+  });
+
+  window.confirmCancel = function(){
+    if (!current) return;
+    var btn = $('confirmCancelBtn');
+    btn.disabled = true; btn.textContent = 'Cancelling…';
+    note($('cancelMsg'), '');
+
+    Auth.fn('cancel-order', { order_id: current.id, reason: $('c_reason').value.trim() })
+      .then(function(){
+        closeCancel();
+        note($('detailMsg'), 'Order cancelled.', 'ok');
+        // Re-read from the server so the timeline shows the real cancelled_at
+        // stamp rather than a guess made in the browser.
+        var id = current.id;
+        return Auth.rest('/orders?select=id,order_code,created_at,updated_at,status,status_history,' +
+          'payment_method,amount,items,tracking_id,courier,tracking_url,address,cancel_reason,cancelled_at' +
+          '&id=eq.' + encodeURIComponent(id)).then(function(rows){
+            var fresh = rows && rows[0];
+            if (!fresh) return;
+            for (var i = 0; i < orders.length; i++) {
+              if (orders[i].id === id) { orders[i] = fresh; break; }
+            }
+            current = fresh;
+            renderDetail(fresh);
+            renderOrders();
+          });
+      })
+      .catch(function(e){
+        note($('cancelMsg'), e.message || 'Could not cancel the order. Try again.');
+      })
+      .then(function(){
+        btn.disabled = false; btn.textContent = 'Yes, cancel';
+      });
+  };
+
+  // ---- profile ----
+
+  function loadProfile(){
+    $('p_phone').value = '+91 ' + Auth.phone();
+    Auth.rest('/customer_profiles?select=full_name,email,default_address&id=eq.' +
+      encodeURIComponent((Auth.user() || {}).id))
+      .then(function(rows){
+        var p = (rows && rows[0]) || {};
+        var a = p.default_address || {};
+        $('p_name').value  = p.full_name || '';
+        $('p_email').value = p.email || '';
+        $('p_addr').value  = a.line || '';
+        $('p_city').value  = a.city || '';
+        $('p_state').value = a.state || '';
+        $('p_pin').value   = a.pincode || '';
+        if (p.full_name) $('whoName').textContent = p.full_name;
+      })
+      .catch(function(){ /* a missing profile is fine — saving creates it */ });
+  }
+
+  $('profileForm').addEventListener('submit', function(){
+    var btn = $('saveProfileBtn');
+    var email = $('p_email').value.trim();
+    var pin = $('p_pin').value.replace(/\D/g,'');
+    note($('profileMsg'), '');
+
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      note($('profileMsg'), 'Enter a valid email or leave it blank.'); return;
+    }
+    if (pin && pin.length !== 6) {
+      note($('profileMsg'), 'Pincode must be 6 digits.'); return;
+    }
+
+    var name = $('p_name').value.trim();
+    var body = {
+      id: (Auth.user() || {}).id,
+      phone: Auth.phone(),
+      full_name: name || null,
+      email: email || null,
+      default_address: {
+        name: name,
+        line: $('p_addr').value.trim(),
+        city: $('p_city').value.trim(),
+        state: $('p_state').value.trim(),
+        pincode: pin
+      }
+    };
+
+    btn.disabled = true; btn.textContent = 'Saving…';
+    // Upsert — the row is created on signup, but never assume it's there.
+    Auth.rest('/customer_profiles', {
+      method: 'POST',
+      headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+      body: body
+    }).then(function(){
+      note($('profileMsg'), 'Saved. These details will prefill your next order.', 'ok');
+      if (name) $('whoName').textContent = name;
+    }).catch(function(e){
+      note($('profileMsg'), e.message || 'Could not save. Try again.');
+    }).then(function(){
+      btn.disabled = false; btn.textContent = 'Save details';
+    });
+  });
+
+  // ══════════ BOOT ══════════
+  // onReady fires after any stored session has been validated/refreshed, so we
+  // never flash the sign-in form at someone who is already signed in.
+  Auth.onReady(function(user){
+    if (user) enterDashboard();
+    else { show($('authView'), true); $('a_phone').focus(); }
+  });
+})();
+</script>
+</body>
+</html>

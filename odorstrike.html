@@ -1369,6 +1369,29 @@
     color:var(--muted);
     margin-top:14px;
   }
+  /* Sign-in gate (#checkoutAuth) — reuses the overlay's label/input/submit-btn
+     styling; only these two extras are new. */
+  .co-auth-why{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.5;
+    margin:0 0 20px;
+  }
+  .co-auth-why b{color:var(--paper)}
+  .co-linkish{
+    background:none;
+    border:none;
+    padding:0;
+    color:var(--muted);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    cursor:pointer;
+    text-decoration:underline;
+  }
+  .co-linkish:hover{color:var(--acid)}
+  .co-linkish[disabled]{opacity:.5;cursor:default;text-decoration:none}
   .overlay .submit-btn{
     width:100%;
     padding:18px;
@@ -2566,6 +2589,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <h3>Shop</h3>
       <ul>
         <li><a href="#buy">ODORSTRIKE</a></li>
+        <li><a href="/account">My Orders</a></li>
         <li><a href="/track-order">Track Order</a></li>
       </ul>
     </div>
@@ -2602,6 +2626,38 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <div class="overlay" id="checkoutOverlay" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
   <div class="overlay-panel">
     <button class="overlay-close" onclick="closeCheckout()" aria-label="Close">×</button>
+
+    <!-- ── Sign-in gate ─────────────────────────────────────────────────
+         Checkout is account-gated: the shopper verifies their mobile with a
+         one-time SMS code before the order form appears. The verified number
+         is what ties the order to their account, so /account can show history,
+         tracking and pre-dispatch cancellation. Shown instead of #checkoutForm
+         whenever there is no session. -->
+    <div id="checkoutAuth" style="display:none">
+      <div class="overlay-tag">Secure checkout · Smelloff</div>
+      <h3>Verify your number</h3>
+      <p class="checkout-trust">🔒 ONE-TIME SMS CODE · ✓ NO PASSWORD</p>
+      <p class="co-auth-why">We tie every order to your mobile number so you can track it, cancel before dispatch, and reorder in one tap.</p>
+
+      <div id="coPhoneStep">
+        <label for="co_phone">Mobile number</label>
+        <input type="tel" id="co_phone" maxlength="10" pattern="[0-9]{10}" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile" enterkeyhint="send">
+        <div id="coAuthError" style="display:none" class="error-msg" role="alert"></div>
+        <button class="submit-btn" type="button" id="coSendBtn" onclick="coSendOtp()"><span id="coSendText">Send code</span></button>
+      </div>
+
+      <div id="coOtpStep" style="display:none">
+        <label for="co_otp">Enter the code</label>
+        <p class="co-auth-why">Sent to <b id="coOtpTarget"></b> · <button type="button" class="co-linkish" onclick="coEditPhone()">change</button></p>
+        <input type="text" id="co_otp" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code" enterkeyhint="done">
+        <div id="coOtpError" style="display:none" class="error-msg" role="alert"></div>
+        <button class="submit-btn" type="button" id="coVerifyBtn" onclick="coVerifyOtp()"><span id="coVerifyText">Verify &amp; continue</span></button>
+        <button type="button" class="co-linkish" id="coResendBtn" onclick="coResend()" style="margin-top:14px">Resend code</button>
+      </div>
+
+      <p class="checkout-reassure">Ordered with this number before? Those orders are already waiting in <a href="/account" style="color:var(--acid)">your account</a>.</p>
+    </div>
+
     <div id="checkoutForm">
       <div class="overlay-tag">Checkout · Smelloff</div>
       <h3 id="checkoutTitle">ODORSTRIKE 50ml</h3>
@@ -2818,6 +2874,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </div>
 </div>
 
+<!-- Customer session (phone-OTP). Loaded before the checkout logic so the
+     sign-in gate and the order call can both reach window.SmelloffAuth. -->
+<script src="/assets/js/auth.js"></script>
+
 <!-- ============================= -->
 <!-- SUPABASE ORDER MIRROR         -->
 <!-- ============================= -->
@@ -2827,39 +2887,35 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 // landing fbclid when the Pixel never set the cookie (consent delayed).
 function _metaCk(n){ var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]+)')); return m ? decodeURIComponent(m[1]) : ''; }
 function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new URLSearchParams(location.search).get('fbclid'); return f ? ('fb.1.' + Date.now() + '.' + f) : ''; } catch (e) { return ''; } }
+// Writes the order server-side. Checkout is account-gated, so this always runs
+// with a session: SmelloffAuth.fn attaches the access token and create-order
+// takes the customer's phone from the VERIFIED claim on it (the phone in `opts`
+// is only used for the Sheets/WhatsApp copies). Returns a promise so the caller
+// can hold the success screen until the order is really saved.
 window.createSupabaseOrder = function (opts) {
-  var SUPA_URL = (window.SMELLOFF_CONFIG || {}).SUPABASE_URL || '';
-  // Phone (not email) gates the mirror — email is optional at checkout, so
-  // every order lands in Supabase and is trackable on /track-order.
-  if (!opts.phone || !SUPA_URL) return;
-  fetch(SUPA_URL + '/functions/v1/create-order/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email:          opts.email || null,
-      phone:          opts.phone,
-      items:          opts.items,
-      amount:         Math.round(opts.amountRupees * 100),
-      payment_method: opts.paymentMethod,
-      address:        opts.address,
-      upi_ref:        opts.upiRef || null,
-      order_code:     opts.orderCode || null,
-      // Meta CAPI attribution — stored server-side so the confirmed-order
-      // Purchase (fired later from the lifecycle) has strong Advanced Matching
-      // even after this browser is gone. IP + UA are read from headers server-
-      // side; here we forward only the Meta cookies + the click id + this URL.
-      fbp:              _metaCk('_fbp'),
-      fbc:              _metaFbc(),
-      event_source_url: location.href
-    }),
-    keepalive: true
-  }).then(function (r) {
-    return r.ok ? r.json() : null;
+  var Auth = window.SmelloffAuth;
+  if (!Auth || !Auth.isSignedIn()) {
+    return Promise.reject(new Error('Please verify your mobile number to place the order.'));
+  }
+  return Auth.fn('create-order', {
+    email:          opts.email || null,
+    items:          opts.items,
+    amount:         Math.round(opts.amountRupees * 100),
+    payment_method: opts.paymentMethod,
+    address:        opts.address,
+    upi_ref:        opts.upiRef || null,
+    order_code:     opts.orderCode || null,
+    // Meta CAPI attribution — stored server-side so the confirmed-order
+    // Purchase (fired later from the lifecycle) has strong Advanced Matching
+    // even after this browser is gone. IP + UA are read from headers server-
+    // side; here we forward only the Meta cookies + the click id + this URL.
+    fbp:              _metaCk('_fbp'),
+    fbc:              _metaFbc(),
+    event_source_url: location.href
   }).then(function (d) {
     // The order uuid unlocks verified-buyer reviews via the submit-review function.
     if (d && d.id) { try { localStorage.setItem('smelloff_order_uuid', d.id); } catch (e) {} }
-  }).catch(function (e) {
-    console.warn('[Smelloff] Supabase order mirror failed:', e);
+    return d;
   });
 };
 </script>
@@ -3023,7 +3079,6 @@ window.createSupabaseOrder = function (opts) {
     var upiAmtInline = document.getElementById('upiAmountInline');
     if (upiAmtInline) upiAmtInline.textContent = '₹' + total;
     document.getElementById('submitText').textContent = (payMethod === 'cod' ? 'Place COD order · ₹' : 'Open UPI app · ₹') + total;
-    document.getElementById('checkoutForm').style.display = 'block';
     document.getElementById('successScreen').style.display = 'none';
     var lsEl = document.getElementById('loadingScreen');
     if (lsEl) { lsEl.classList.remove('active'); lsEl.style.display = 'none'; }
@@ -3032,13 +3087,202 @@ window.createSupabaseOrder = function (opts) {
     // Hide sticky buy bar while overlay is open
     var mb = document.getElementById('mobileBar');
     if (mb) mb.style.display = 'none';
+
+    // Show the order form or the sign-in gate depending on the session. A
+    // stored session may still need a token refresh, so this resolves async;
+    // the gate is the safe thing to render while we find out.
+    var Auth = window.SmelloffAuth;
+    if (Auth && Auth.isSignedIn()) {
+      showCheckoutForm();
+      // onReady settles once, at page load, so re-check LIVE state rather than
+      // the user it hands back — otherwise signing in through the gate and then
+      // re-opening checkout would bounce back to the gate on a stale value.
+      Auth.onReady(function(){ if (!Auth.isSignedIn()) showCheckoutGate(); });
+    } else {
+      showCheckoutGate();
+    }
+
     // Trap focus immediately so keyboard users can't tab into the page behind
     trapFocusInOverlay();
-    setTimeout(function() {
-      var first = document.getElementById('f_phone');
-      if (first) first.focus();
-    }, 100);
     trackInitCheckout();
+  }
+
+  // ── Sign-in gate ──────────────────────────────────────────────────────
+  // Swaps between #checkoutAuth and #checkoutForm inside the overlay.
+
+  var _coResendTimer = null;
+  var _coPendingPhone = '';
+  var _coProfileLoaded = false;
+
+  function showCheckoutGate() {
+    var authEl = document.getElementById('checkoutAuth');
+    var formEl = document.getElementById('checkoutForm');
+    if (authEl) authEl.style.display = 'block';
+    if (formEl) formEl.style.display = 'none';
+    coHideError();
+    trapFocusInOverlay(); // the focusable set just changed
+    setTimeout(function(){
+      var el = document.getElementById('co_phone');
+      if (el) el.focus();
+    }, 100);
+  }
+
+  function showCheckoutForm() {
+    var authEl = document.getElementById('checkoutAuth');
+    var formEl = document.getElementById('checkoutForm');
+    if (authEl) authEl.style.display = 'none';
+    if (formEl) formEl.style.display = 'block';
+    prefillFromAccount();
+    trapFocusInOverlay(); // the focusable set just changed
+    setTimeout(function(){
+      // Phone is locked to the verified number, so start at the first field the
+      // shopper can actually edit.
+      var el = document.getElementById('f_name');
+      if (el && !el.value) el.focus();
+    }, 100);
+  }
+
+  function coShowError(id, msg) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  function coHideError() {
+    ['coAuthError','coOtpError'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+  }
+
+  window.coSendOtp = function() {
+    var input = document.getElementById('co_phone');
+    var btn = document.getElementById('coSendBtn');
+    var txt = document.getElementById('coSendText');
+    var phone = (input.value || '').replace(/\D/g, '');
+    coHideError();
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      coShowError('coAuthError', 'Enter a valid 10-digit Indian mobile number.');
+      input.focus();
+      return;
+    }
+    btn.disabled = true; txt.textContent = 'Sending…';
+    window.SmelloffAuth.sendOtp(phone).then(function(){
+      _coPendingPhone = phone;
+      document.getElementById('coOtpTarget').textContent = '+91 ' + phone;
+      document.getElementById('coPhoneStep').style.display = 'none';
+      document.getElementById('coOtpStep').style.display = 'block';
+      document.getElementById('co_otp').focus();
+      coStartResendCooldown();
+    }).catch(function(e){
+      coShowError('coAuthError', e.message);
+    }).then(function(){
+      btn.disabled = false; txt.textContent = 'Send code';
+    });
+  };
+
+  window.coVerifyOtp = function() {
+    var btn = document.getElementById('coVerifyBtn');
+    var txt = document.getElementById('coVerifyText');
+    var code = (document.getElementById('co_otp').value || '').replace(/\D/g, '');
+    coHideError();
+    if (code.length < 4) { coShowError('coOtpError', 'Enter the code from the SMS.'); return; }
+    btn.disabled = true; txt.textContent = 'Verifying…';
+    window.SmelloffAuth.verifyOtp(_coPendingPhone, code).then(function(){
+      clearInterval(_coResendTimer);
+      _coProfileLoaded = false;
+      showCheckoutForm();
+    }).catch(function(e){
+      coShowError('coOtpError', e.message);
+    }).then(function(){
+      btn.disabled = false; txt.textContent = 'Verify & continue';
+    });
+  };
+
+  window.coEditPhone = function() {
+    document.getElementById('coOtpStep').style.display = 'none';
+    document.getElementById('coPhoneStep').style.display = 'block';
+    document.getElementById('co_otp').value = '';
+    coHideError();
+    document.getElementById('co_phone').focus();
+  };
+
+  window.coResend = function() {
+    var btn = document.getElementById('coResendBtn');
+    if (btn.disabled) return;
+    coHideError();
+    window.SmelloffAuth.sendOtp(_coPendingPhone).then(function(){
+      coStartResendCooldown();
+    }).catch(function(e){ coShowError('coOtpError', e.message); });
+  };
+
+  // 45s cooldown — each SMS costs money and the provider rate-limits anyway.
+  function coStartResendCooldown() {
+    var btn = document.getElementById('coResendBtn');
+    var left = 45;
+    btn.disabled = true;
+    clearInterval(_coResendTimer);
+    btn.textContent = 'Resend code in ' + left + 's';
+    _coResendTimer = setInterval(function(){
+      left--;
+      if (left <= 0) {
+        clearInterval(_coResendTimer);
+        btn.disabled = false; btn.textContent = 'Resend code';
+      } else {
+        btn.textContent = 'Resend code in ' + left + 's';
+      }
+    }, 1000);
+  }
+
+  // Fill the order form from the verified session + saved profile. The phone
+  // field mirrors the verified number and is locked — create-order takes it
+  // from the session regardless, so an editable box would just be a lie.
+  function prefillFromAccount() {
+    var Auth = window.SmelloffAuth;
+    if (!Auth || !Auth.isSignedIn()) return;
+
+    var phoneEl = document.getElementById('f_phone');
+    if (phoneEl) {
+      phoneEl.value = Auth.phone();
+      phoneEl.readOnly = true;
+      phoneEl.setAttribute('aria-describedby', 'f_phone_note');
+      if (!document.getElementById('f_phone_note')) {
+        var note = document.createElement('p');
+        note.id = 'f_phone_note';
+        note.className = 'co-auth-why';
+        note.style.margin = '-10px 0 16px';
+        note.textContent = 'Verified ✓ — your orders are saved to this number.';
+        phoneEl.parentNode.insertBefore(note, phoneEl.nextSibling);
+      }
+    }
+
+    if (_coProfileLoaded) return;
+    _coProfileLoaded = true;
+
+    var uid = (Auth.user() || {}).id;
+    if (!uid) return;
+    Auth.rest('/customer_profiles?select=full_name,email,default_address&id=eq.' + encodeURIComponent(uid))
+      .then(function(rows){
+        var p = (rows && rows[0]) || {};
+        var a = p.default_address || {};
+        var set = function(id, val){
+          var el = document.getElementById(id);
+          if (el && !el.value && val) el.value = val;
+        };
+        set('f_name',  p.full_name);
+        set('f_email', p.email);
+        set('f_addr',  a.line);
+        set('f_city',  a.city);
+        set('f_state', a.state);
+        set('f_pin',   a.pincode);
+        // The delivery estimate + pincode lookup hang off f_pin's input event,
+        // so nudge it after prefilling rather than duplicating that logic.
+        var pin = document.getElementById('f_pin');
+        if (pin && /^\d{6}$/.test(pin.value)) {
+          pin.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      })
+      .catch(function(){ /* no profile yet — the form just starts empty */ });
   }
 
   function closeCheckout() {
@@ -3314,8 +3558,28 @@ window.createSupabaseOrder = function (opts) {
     } catch (e) { /* localStorage may be blocked in private mode */ }
   }
 
+  // Puts the overlay back into an editable state after a failed attempt.
+  // showLoadingScreen() hides #checkoutForm, so bringing it back is part of the
+  // job — otherwise a failed order leaves an empty overlay.
+  function restoreCheckoutForm() {
+    hideLoadingScreen();
+    const form = document.getElementById('checkoutForm');
+    if (form) form.style.display = 'block';
+    const btn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('submitText');
+    const total = VARIANTS[currentVariant].amount * cartQty;
+    if (btn) btn.disabled = false;
+    if (btnText) btnText.textContent = (payMethod === 'cod' ? 'Place COD order · ₹' : 'Open UPI app · ₹') + total;
+  }
+
   async function submitOrder() {
     hideError();
+    // Checkout is account-gated. If the session lapsed between opening the
+    // overlay and submitting, drop back to the gate instead of failing later.
+    if (!window.SmelloffAuth || !window.SmelloffAuth.isSignedIn()) {
+      showCheckoutGate();
+      return;
+    }
     if (!validateForm()) return;
 
     // Enrich the Pixel with Advanced Matching now that the form is filled — Meta
@@ -3347,8 +3611,11 @@ window.createSupabaseOrder = function (opts) {
       // Attach the buyer's contact to their live cart so an unpaid/abandoned
       // checkout stays reachable from the admin's cart-recovery tools.
       smfCartBeacon('cart_update', { name: order.name, email: order.email, phone: order.phone });
-      if (typeof window.createSupabaseOrder === 'function') {
-        window.createSupabaseOrder({
+      showLoadingScreen('Placing your order…', 'Confirming with our team');
+      // The server write is now the source of truth for the order — never show
+      // a success screen for an order that didn't save.
+      try {
+        await window.createSupabaseOrder({
           email: order.email, phone: order.phone,
           items: [{ name: 'ODORSTRIKE Fabric Mist', variant: order.variant, label: order.variantLabel, quantity: order.quantity, price: unitPrice() }],
           amountRupees: order.total, paymentMethod: 'cod',
@@ -3356,6 +3623,10 @@ window.createSupabaseOrder = function (opts) {
           upiRef: null,
           orderCode: order.orderId
         });
+      } catch (e) {
+        restoreCheckoutForm();
+        showError(e.message || 'Could not place your order. Please try again.');
+        return;
       }
       if (order.email) {
         SmelloffEmail.send('orderConfirmation', order.email, {
@@ -3366,7 +3637,6 @@ window.createSupabaseOrder = function (opts) {
           paymentMethod: 'Cash on Delivery'
         }).catch(console.error);
       }
-      showLoadingScreen('Placing your order…', 'Confirming with our team');
       setTimeout(() => {
         btn.disabled = false;
         showSuccess(orderId, 'cod');
@@ -3378,8 +3648,9 @@ window.createSupabaseOrder = function (opts) {
     const order = collectOrder(orderId, 'UPI_PENDING');
     logOrderToSheets(order);
     smfCartBeacon('cart_update', { name: order.name, email: order.email, phone: order.phone });
-    if (typeof window.createSupabaseOrder === 'function') {
-      window.createSupabaseOrder({
+    showLoadingScreen('Confirming payment…', 'Securing your UPI session');
+    try {
+      await window.createSupabaseOrder({
         email: order.email, phone: order.phone,
         items: [{ name: 'ODORSTRIKE Fabric Mist', variant: order.variant, label: order.variantLabel, quantity: order.quantity, price: unitPrice() }],
         amountRupees: order.total, paymentMethod: 'upi',
@@ -3387,6 +3658,12 @@ window.createSupabaseOrder = function (opts) {
         upiRef: null, // UTR is shared by customer via WhatsApp; matched manually
         orderCode: order.orderId
       });
+    } catch (e) {
+      // Bail out BEFORE handing off to the UPI app — a payment against an order
+      // we never saved is the worst possible outcome.
+      restoreCheckoutForm();
+      showError(e.message || 'Could not place your order. Please try again.');
+      return;
     }
     if (order.email) {
       SmelloffEmail.send('orderConfirmation', order.email, {
@@ -3399,7 +3676,6 @@ window.createSupabaseOrder = function (opts) {
     }
 
     const upiLink = buildUpiLink(total, orderId);
-    showLoadingScreen('Confirming payment…', 'Securing your UPI session');
     setTimeout(function() {
       btn.disabled = false;
       showUpiSuccess(orderId, total, upiLink);

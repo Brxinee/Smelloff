@@ -10,6 +10,7 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /admin
+Disallow: /account
 Disallow: /outreach/
 
 # ---------------------------------------------------------------------------
@@ -29,6 +30,7 @@ User-agent: Storebot-Google
 Allow: /
 Disallow: /api/
 Disallow: /admin
+Disallow: /account
 Disallow: /outreach/
 
 # Yahoo (Slurp), DuckDuckGo, Yandex, Baidu, Naver (Yeti), Sogou, Ecosia/Seznam
@@ -42,6 +44,7 @@ User-agent: SeznamBot
 Allow: /
 Disallow: /api/
 Disallow: /admin
+Disallow: /account
 Disallow: /outreach/
 
 # ---------------------------------------------------------------------------
