@@ -354,7 +354,26 @@
     padding:8px 14px;
     box-shadow:5px 5px 0 var(--text);
   }
-  .hero-cta-row{margin-top:32px}
+  .hero-offer{
+    margin-top:34px;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    padding-top:22px;
+    border-top:1px solid var(--rule);
+  }
+  .hero-price{
+    font-family:var(--display);font-weight:900;
+    font-size:clamp(40px,7vw,58px);line-height:1;letter-spacing:-.03em;
+    color:var(--acid);
+  }
+  .hero-mrp{
+    font-family:var(--mono);font-size:13px;letter-spacing:.06em;
+    color:var(--muted);text-decoration:line-through;
+  }
+  .hero-price-meta{
+    font-family:var(--mono);font-size:12px;line-height:1.7;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  }
+  .hero-cta-row{margin-top:26px;display:flex;gap:16px;flex-wrap:wrap}
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:10px;
     background:var(--acid);color:var(--ink);text-decoration:none;
@@ -366,6 +385,13 @@
   }
   .btn:hover{background:#d1ff8a;box-shadow:3px 3px 0 var(--text);transform:translate(3px,3px)}
   .btn:active{box-shadow:0 0 0 var(--text);transform:translate(6px,6px)}
+  /* Secondary action: outlined, so the acid fill stays reserved for one CTA.
+     Declared after .btn so it wins on source order (same specificity). */
+  .btn-ghost{
+    background:transparent;color:var(--text);
+    border-color:var(--text);box-shadow:6px 6px 0 var(--rule);
+  }
+  .btn-ghost:hover{background:transparent;color:var(--acid);border-color:var(--acid);box-shadow:3px 3px 0 var(--rule)}
 
   /* Hero zones — where smell hides: collar, shoes, helmet */
   .zones{
@@ -689,8 +715,18 @@
       <h1 id="heroTitle">Smell Proof. <span class="acid">Always.</span></h1>
       <p class="hero-sub">Odor control for everywhere it hides — your clothes, your shoes, your helmet, your gear. Not just your skin.</p>
       <p><span class="hero-hook">No One Will Know.</span></p>
+
+      <!-- Price + primary buy CTA live above the fold so the homepage can sell on
+           its own instead of costing a click to /odorstrike first. ₹229 is the
+           only price — no struck anchor, no "% OFF". -->
+      <div class="hero-offer">
+        <span class="hero-price">₹229</span>
+        <span class="hero-mrp">M.R.P. ₹499</span>
+        <span class="hero-price-meta">ODORSTRIKE 50ml · ~250 sprays<br>Free shipping pan-India · COD available</span>
+      </div>
       <div class="hero-cta-row">
-        <a class="btn" href="/odorstrike">See ODORSTRIKE</a>
+        <a class="btn" href="/odorstrike#buy">Buy Now — ₹229</a>
+        <a class="btn btn-ghost" href="/odorstrike">See ODORSTRIKE</a>
       </div>
 
       <div class="zones">

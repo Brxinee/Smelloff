@@ -1,12 +1,12 @@
 # Smelloff — ODORSTRIKE Fabric Odor Remover Spray
 
-> ODORSTRIKE by Smelloff is India's first pocket-sized fabric odor remover spray — a 50ml mist (₹229) that neutralizes sweat smell, gym odor, and shirt stink in seconds and keeps fabric odor-free for up to 8 hours. It is for clothes only (cotton, polyester, denim, wool) — NOT a perfume, NOT a deodorant, NOT for skin. D2C brand founded in 2026 by Jogdhande Nikhil Patil in Hyderabad, India. Sold direct at https://smelloff.in/odorstrike.
+> ODORSTRIKE by Smelloff is a pocket-sized fabric odor remover spray — a 50ml mist (₹229) that neutralizes sweat smell, gym odor, and shirt stink in seconds and keeps fabric odor-free for up to 8 hours. It is for clothes only (cotton, polyester, denim, wool) — NOT a perfume, NOT a deodorant, NOT for skin. D2C brand founded in 2026 by Jogdhande Nikhil Patil in Hyderabad, India. Sold direct at https://smelloff.in/odorstrike.
 
 ODORSTRIKE treats the fabric, not the skin. It does not mask odor with fragrance — formula v3.1 pairs two actives: hydroxypropyl β-cyclodextrin (HPβCD), a ring-shaped molecule that physically encapsulates odor compounds inside the fibre, and Zinc PCA, which binds the volatile odor molecules in sweat (isovaleric acid, butyric acid, sulfur compounds) so they can't go airborne. This is molecular neutralization, not cover-up. The full reference is at https://smelloff.in/llms-full.txt.
 
 ## Key facts (quotable)
 
-- ODORSTRIKE costs ₹229 for a 50ml pocket bottle (MRP ₹579). Single SKU — no multi-packs.
+- ODORSTRIKE costs ₹229 for a 50ml pocket bottle (MRP ₹499), inclusive of all taxes. Single SKU — no multi-packs.
 - ODORSTRIKE works in about 30 seconds: spray 2–3 times on collar, underarms and back, let it dry, wear.
 - ODORSTRIKE gives up to 8 hours of odor protection on fabric.
 - ODORSTRIKE is fabric-only: cotton, polyester, denim, wool, nylon. Never skin, leather, suede or dry-clean-only silk.

@@ -57,7 +57,7 @@
   "foundingDate":"2026",
   "foundingLocation":{"@type":"Place","name":"Hyderabad, India"},
   "founder":{"@type":"Person","name":"Jogdhande Nikhil Patil","jobTitle":"Founder","url":"https://smelloff.in/about","worksFor":"Smelloff"},
-  "description":"D2C men's grooming brand from Hyderabad. Maker of ODORSTRIKE — India's first pocket-sized fabric odor remover spray.",
+  "description":"D2C men's grooming brand from Hyderabad. Maker of ODORSTRIKE — a pocket-sized fabric odor remover spray.",
   "slogan":"Smell Proof. Always.",
   "knowsAbout":["fabric odor","sweat smell","cyclodextrin","zinc pca","men's grooming","fabric care","polyester odor","gym clothes smell"],
   "address":{"@type":"PostalAddress","addressLocality":"Hyderabad","addressRegion":"Telangana","postalCode":"500018","addressCountry":"IN"},
@@ -75,7 +75,7 @@
 </script>
 <!-- JSON-LD WebPage -->
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://smelloff.in/odorstrike#webpage","name":"Smelloff ODORSTRIKE — Fabric Odor Remover Spray","url":"https://smelloff.in/odorstrike","description":"India's first pocket-sized fabric odor eliminator mist. Kills smell on contact. Not a perfume, not a deodorant.","inLanguage":"en-IN","isPartOf":{"@type":"WebSite","name":"Smelloff","url":"https://smelloff.in"},"about":{"@type":"Thing","name":"Fabric Odor Elimination"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://smelloff.in/assets/odorstrike-bottle.webp"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".hero h1",".ph-tagline",".problem h2"]}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://smelloff.in/odorstrike#webpage","name":"Smelloff ODORSTRIKE — Fabric Odor Remover Spray","url":"https://smelloff.in/odorstrike","description":"A pocket-sized fabric odor eliminator mist. Kills smell on contact. Not a perfume, not a deodorant.","inLanguage":"en-IN","isPartOf":{"@type":"WebSite","name":"Smelloff","url":"https://smelloff.in"},"about":{"@type":"Thing","name":"Fabric Odor Elimination"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://smelloff.in/assets/odorstrike-bottle.webp"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".hero h1",".ph-tagline",".problem h2"]}}
 </script>
 <!-- JSON-LD Product (single SKU — ₹229, no bundles) -->
 <!-- RATING IS GATED — no "aggregateRating" is emitted right now.
@@ -96,7 +96,7 @@
   "@id":"https://smelloff.in/#odorstrike",
   "name":"ODORSTRIKE Fabric Odor Remover Spray",
   "alternateName":["ODORSTRIKE","Smelloff ODORSTRIKE","Fabric Odor Spray India","Fabric Refresher Spray for Clothes","Pocket Fabric Freshener"],
-  "description":"India's first pocket-sized fabric odor remover spray. 50ml mist that kills sweat smell, gym odor, and shirt stink in seconds — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them, Triethyl Citrate prevents new odor, and Zinc Gluconate stops regrowth. Up to 8 hours odor protection on fabric. Glycerine-free, zero residue, dries fast. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
+  "description":"A pocket-sized fabric odor remover spray. 50ml mist that kills sweat smell, gym odor, and shirt stink in seconds — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them, Triethyl Citrate prevents new odor, and Zinc Gluconate stops regrowth. Up to 8 hours odor protection on fabric. Glycerine-free, zero residue, dries fast. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
   "image":["https://smelloff.in/assets/odorstrike-bottle.webp","https://smelloff.in/assets/og-image.jpg"],
   "brand":{"@type":"Brand","name":"Smelloff","logo":"https://smelloff.in/apple-touch-icon.png"},
   "manufacturer":{"@type":"Organization","name":"Smelloff","address":{"@type":"PostalAddress","addressLocality":"Hyderabad","addressRegion":"Telangana","addressCountry":"IN"}},
@@ -151,7 +151,11 @@
     UPI_ID: "mr.brainy@ibl",
     UPI_NAME: "Smelloff",
     PRICES: { solo: 229 },
-    MRP:    { solo: 579 },
+    // MRP = the maximum retail price declared on the physical pack. It is only
+    // legitimate to strike it through if ₹499 is the figure actually printed on
+    // the bottle label; a reference price that was never on the pack and never
+    // charged is a misleading-price risk under the Consumer Protection Act 2019.
+    MRP:    { solo: 499 },
     // ==== SOCIAL PROOF — ALL GATED. Components render NOTHING until real data ====
     // Verified-purchase reviews ONLY. The site computes the visible count, average
     // and star distribution from this array — never hardcode a rating anywhere.
@@ -575,12 +579,19 @@
     margin:24px 0 0;
     max-width:460px;
   }
-  .ph-price{display:flex;align-items:baseline;gap:14px;margin-top:8px}
+  .ph-price{display:flex;align-items:baseline;gap:14px;margin-top:8px;flex-wrap:wrap}
   .ph-price .strike-price{
     text-decoration:line-through;
     color:var(--muted);
     font-family:'JetBrains Mono',monospace;
     font-size:14px;
+  }
+  .ph-price .price-note{
+    color:var(--muted);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
   }
   .ph-price .price{
     font-family:'Fraunces',serif;
@@ -710,11 +721,14 @@
   .problem-grid h3{
     font-family:'Fraunces',serif;
     font-weight:900;
-    font-size:48px;
+    /* Word labels, not 2–4 character figures — scale down so they never overflow
+       the 4-up column or wrap awkwardly on small screens. */
+    font-size:clamp(28px,3.4vw,44px);
     letter-spacing:-.03em;
-    line-height:1;
+    line-height:1.05;
     margin-bottom:12px;
     color:var(--acid);
+    hyphens:none;
   }
   .problem-grid p{
     font-size:14px;
@@ -2187,8 +2201,9 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <h1>No One Will Know.<span class="ph-sub">ODORSTRIKE · Fabric Odor Remover Spray · 50ml</span></h1>
       <p class="ph-tagline">A pocket-sized 50ml mist that erases odor from fabric on contact. Not a perfume. Not a deodorant. A fix.</p>
       <div class="ph-price">
-        <span class="strike-price">M.R.P. ₹579</span>
+        <span class="strike-price">M.R.P. ₹499</span>
         <span class="price">₹229</span>
+        <span class="price-note">all-inclusive · free shipping</span>
       </div>
       <button class="hero-cta" onclick="buyNow()">Buy Now — ₹229 · COD</button>
       <!-- Every claim below is verified against live policy pages: /shipping (free,
@@ -2210,7 +2225,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <div class="section-tag">The fix</div>
   <div class="showcase-text">
     <h2>Meet ODORSTRIKE.<br>One mist. Zero evidence.</h2>
-    <p class="fix-lede"><strong>ODORSTRIKE</strong> is India's first pocket-sized fabric odor remover — a 50ml spray that erases sweat, gym and smoke smell straight out of the clothes you're wearing. Not a perfume. Not a deodorant. A fix you keep in your pocket.</p>
+    <p class="fix-lede"><strong>ODORSTRIKE</strong> is a pocket-sized fabric odor remover — a 50ml spray that erases sweat, gym and smoke smell straight out of the clothes you're wearing. Not a perfume. Not a deodorant. A fix you keep in your pocket.</p>
     <p>It doesn't mask smell — it captures and neutralizes the odor molecules trapped in your shirt collar, jacket sleeves and gym bag. <a href="/blog/hpbcd-cyclodextrin-fabric-odor">HPβCD, a ring-shaped cyclodextrin that cages odor molecules</a> traps them at the source while Zinc PCA shuts them down.</p>
     <ul class="fix-features">
       <li><strong>Kills odor — doesn't hide it.</strong> A 4-layer system traps, neutralizes and blocks smell instead of perfuming over it. <a href="#science">See the chemistry ↓</a></li>
@@ -2229,7 +2244,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <div class="spec-row"><span>Glycerine</span>ZERO</div>
       </div>
       <a href="#buy" class="fix-cta">Buy Now — ₹229 · COD</a>
-      <span class="fix-cta-note">50ml · <s>₹579</s> ₹229 · free shipping pan-India</span>
+      <span class="fix-cta-note">50ml · <s>₹499</s> ₹229 · free shipping pan-India</span>
     </div>
   </div>
 </section>
@@ -2259,22 +2274,25 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <div class="section-tag">The problem</div>
   <h2>You don't fear smelling bad. You fear <b>someone noticing.</b></h2>
 
+  <!-- These four tiles carry no numbers on purpose. Any objectively ascertainable
+       figure here (hours, multiples, seconds) would need a dated, citable source
+       under the ASCI code — so unless someone supplies one, keep them qualitative. -->
   <div class="problem-grid">
     <div>
-      <h3>11hr</h3>
-      <p>Average gap between morning shower and evening commute home.</p>
+      <h3>All day</h3>
+      <p>Your morning shower is long gone by the evening commute home.</p>
     </div>
     <div>
-      <h3>4×</h3>
-      <p>Times your shirt collects sweat, smoke, food smell in one office day.</p>
+      <h3>Again</h3>
+      <p>And again. Your shirt keeps collecting sweat, smoke and food smell all through an office day.</p>
     </div>
     <div>
-      <h3>0</h3>
-      <p>Number of deodorants that work after the smell is already in fabric.</p>
+      <h3>None</h3>
+      <p>Deodorants work on skin. None of them reach the smell already sitting in fabric.</p>
     </div>
     <div>
-      <h3>8sec</h3>
-      <p>Time to spray, shake, walk into the meeting smelling fresh.</p>
+      <h3>Seconds</h3>
+      <p>Spray, shake, walk into the meeting smelling fresh.</p>
     </div>
   </div>
 </section>
@@ -2410,10 +2428,13 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <div class="price-grid">
     <div class="price-card featured">
       <div class="pack-size">ODORSTRIKE — 50ML POCKET</div>
-      <div class="mrp-strike">M.R.P. ₹579</div>
+      <div class="mrp-strike">M.R.P. ₹499</div>
       <h3>₹229</h3>
       <div class="per-unit">1 bottle · ~250 sprays · up to 8hr protection</div>
-      <div class="save">60% OFF</div>
+      <!-- 54% = (499 − 229) / 499, rounded. Keep this in step with CFG.MRP.solo
+           and CFG.PRICES.solo — a discount % that doesn't match the two prices
+           shown on the same card is a misleading-price claim. -->
+      <div class="save">54% OFF</div>
       <button onclick="buyNow()">Buy now</button>
     </div>
   </div>
