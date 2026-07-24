@@ -1,8 +1,12 @@
 const CFG = window.SMELLOFF_CONFIG;
+  // NOTE: no page currently loads this file — odorstrike.html carries its own
+  // inline checkout. The duo/trio entries below are stale (₹229 solo is the only
+  // SKU) and CFG.PRICES.duo/.trio no longer exist. Kept only so the file still
+  // parses; no `mrp` field, because there is no real price above ₹229 to strike.
   const VARIANTS = {
-    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: CFG.PRICES.solo, mrp: CFG.MRP.solo, label: 'solo' },
-    duo:  { title: 'ODORSTRIKE 50ml × 2',  units: '2 × 50ml', amount: CFG.PRICES.duo,  mrp: CFG.MRP.duo,  label: 'duo'  },
-    trio: { title: 'ODORSTRIKE 50ml × 3',  units: '3 × 50ml', amount: CFG.PRICES.trio, mrp: CFG.MRP.trio, label: 'trio' }
+    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: CFG.PRICES.solo, label: 'solo' },
+    duo:  { title: 'ODORSTRIKE 50ml × 2',  units: '2 × 50ml', amount: CFG.PRICES.duo,  label: 'duo'  },
+    trio: { title: 'ODORSTRIKE 50ml × 3',  units: '3 × 50ml', amount: CFG.PRICES.trio, label: 'trio' }
   };
 
   let currentVariant = 'solo';
@@ -737,11 +741,19 @@ const CFG = window.SMELLOFF_CONFIG;
     var priceMain = document.getElementById('pcPriceMain');
     if (priceMain) priceMain.textContent = '₹' + price;
 
-    // CO1 — price anchoring: struck MRP + discount %
-    var mrp = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.MRP && window.SMELLOFF_CONFIG.MRP[variant]) || (qty === 3 ? 1399 : qty === 2 ? 999 : 579);
-    var off = Math.round((mrp - price) / mrp * 100);
-    var priceMrp = document.getElementById('pcPriceMrp'); if (priceMrp) priceMrp.textContent = '₹' + mrp;
-    var priceOff = document.getElementById('pcPriceOff'); if (priceOff) priceOff.textContent = off + '% OFF';
+    // Price anchoring: struck MRP + discount %. Renders ONLY from a real
+    // CFG.MRP entry — the old ₹579/₹999/₹1399 hardcoded fallbacks are gone, so
+    // a missing MRP now hides the anchor instead of inventing one.
+    var mrp = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.MRP && window.SMELLOFF_CONFIG.MRP[variant]) || 0;
+    var priceMrp = document.getElementById('pcPriceMrp');
+    var priceOff = document.getElementById('pcPriceOff');
+    if (mrp > price) {
+      if (priceMrp) priceMrp.textContent = '₹' + mrp;
+      if (priceOff) priceOff.textContent = Math.round((mrp - price) / mrp * 100) + '% OFF';
+    } else {
+      if (priceMrp) priceMrp.textContent = '';
+      if (priceOff) priceOff.textContent = '';
+    }
     var svCtaPrice = document.getElementById('svCtaPrice'); if (svCtaPrice) svCtaPrice.textContent = '₹' + price;
 
     var perUse = document.getElementById('pcPerUse');
@@ -1547,8 +1559,7 @@ const CFG = window.SMELLOFF_CONFIG;
             ? cart.items[0].name
             : 'ODORSTRIKE — Cart',
           units: label,
-          amount: subtotal,
-          mrp: Math.round(subtotal * 1.5)
+          amount: subtotal
         };
       }
       closeCartDrawer();

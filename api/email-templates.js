@@ -14,10 +14,12 @@ const BODY_FONT = `'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', san
 const SUPPORT_EMAIL = 'smelloffsupport@gmail.com';
 const SITE_URL = 'https://smelloff.in';
 
-// Single source of truth for pricing — keep in sync with index.html CFG.PRICES/MRP.
+// Single source of truth for pricing — keep in sync with odorstrike.html CFG.PRICES.
 // ODORSTRIKE 50ml is the ONLY SKU. No bundles.
+// MRP is the maximum retail price declared on the physical pack — only strike it
+// through if ₹499 is the figure actually printed on the bottle label.
 const PRICE = 229;
-const MRP = 579;
+const MRP = 499;
 const SHIPPING_LINE = 'Free shipping pan-India &middot; COD available';
 
 // Customer order-tracking deep link (mirrors the /track-order page).
