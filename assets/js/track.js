@@ -1,5 +1,5 @@
 /* Smelloff — first-party, cookieless event beacon (page views, clicks, funnel).
- * Include on every page with: <script src="/assets/js/track.js?v=1" defer></script>
+ * Include on every page with: <script src="/assets/js/track.js?v=2" defer></script>
  *
  * Posts same-origin to /api/track, which derives an anonymous daily-rotating
  * visitor hash server-side — no cookie, no PII, runs independently of the
