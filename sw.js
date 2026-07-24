@@ -2,22 +2,20 @@
    Safe-by-design: only same-origin GET requests are handled.
    Cross-origin (Supabase, analytics, Meta, Google Apps Script) and /api/
    are never intercepted, so the checkout/payment flow is untouched. */
-const VERSION = 'smelloff-v26';
+const VERSION = 'smelloff-v27';
 const STATIC_CACHE = 'static-' + VERSION;
 const PAGE_CACHE = 'pages-' + VERSION;
 
-/* Minimal precache: the offline shell + critical fonts/css. */
+/* Minimal precache: the offline shell ('/') + the assets it actually renders
+   with. The homepage is self-contained (inline CSS/JS) and only pulls in the
+   first-party tracker plus its two display fonts, so precache exactly those.
+   Everything else (blog.css, fonts.css, sub-page fonts) is same-origin and
+   gets cached-first at runtime on first visit — no need to precache it. */
 const PRECACHE = [
   '/',
-  '/assets/css/main.css?v=7',
-  '/assets/css/neo.css?v=16',
-  '/assets/js/app.js?v=10',
-  '/assets/js/track.js?v=1',
-  '/assets/js/neo.js?v=4',
-  '/assets/js/scroll-effects.js?v=4',
-  '/assets/fonts.css',
-  '/assets/fonts/dm-sans-normal-latin-400.woff2',
-  '/assets/fonts/barlow-condensed-normal-latin-900.woff2',
+  '/assets/js/track.js?v=2',
+  '/assets/fonts/fraunces-normal-latin-400.woff2',
+  '/assets/fonts/inter-tight-normal-latin-400.woff2',
   '/manifest.json'
 ];
 

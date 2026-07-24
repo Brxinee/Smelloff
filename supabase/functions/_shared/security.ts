@@ -41,10 +41,17 @@ export function preflight(req: Request): Response {
 }
 
 // Derive a best-effort client key for rate limiting from proxy headers.
+// Behind Cloudflare, x-forwarded-for is a shared Cloudflare POP IP — keying on
+// it would lump every visitor routed through the same POP into one bucket and
+// throttle them together. cf-connecting-ip (true-client-ip on Enterprise) is
+// the real client, so it wins; XFF is only the last-resort fallback. This
+// matches the IP derivation used everywhere else (api/track, api/_meta, …).
 export function clientKey(req: Request): string {
+  const cf = req.headers.get("cf-connecting-ip") ||
+    req.headers.get("true-client-ip");
+  if (cf) return cf.trim();
   const xff = req.headers.get("x-forwarded-for") || "";
-  const first = xff.split(",")[0]?.trim();
-  return first || req.headers.get("cf-connecting-ip") || "unknown";
+  return xff.split(",")[0]?.trim() || "unknown";
 }
 
 interface Bucket {
