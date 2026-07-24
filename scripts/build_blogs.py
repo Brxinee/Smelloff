@@ -29,6 +29,19 @@ CSS = """  :root { --black:#080808; --off-white:#EDEAE0; --acid:#B8FF57; --grey:
   .blog-nav .logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:3px;text-transform:uppercase;color:var(--off-white);text-decoration:none;position:relative;padding-right:12px}
   .blog-nav .logo::after{content:none} /* acid dot baked into logo image */
   .blog-nav .buy-pill{background:var(--acid);color:var(--black);font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;padding:8px 18px;border-radius:100px;text-decoration:none}
+  .blog-nav-right{display:flex;align-items:center;gap:14px}
+  .blog-nav-toggle{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:44px;height:44px;background:none;padding:0;border:0;color:var(--off-white);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .blog-nav-toggle .bar{display:block;width:26px;height:3px;border-radius:100px;background:currentColor;transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease}
+  .blog-nav-toggle:hover{color:var(--acid)}
+  .blog-nav-toggle[aria-expanded="true"] .bar:nth-child(1){transform:translateY(9px) rotate(45deg)}
+  .blog-nav-toggle[aria-expanded="true"] .bar:nth-child(2){opacity:0}
+  .blog-nav-toggle[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
+  .blog-nav-menu{position:absolute;top:100%;left:0;right:0;display:none;list-style:none;margin:0;padding:8px 32px 16px;background:rgba(8,8,8,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .blog-nav-menu.open{display:block}
+  .blog-nav-menu li{margin:0}
+  .blog-nav-menu a{display:block;padding:14px 4px;min-height:44px;color:var(--off-white);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:400;text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid var(--line)}
+  .blog-nav-menu a:last-child{border-bottom:0}
+  .blog-nav-menu a:hover{color:var(--acid)}
   .article-wrap{max-width:680px;margin:0 auto;padding:60px 32px 100px}
   .article-header{margin-bottom:48px}
   .article-meta{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
@@ -206,9 +219,19 @@ def build_post(cfg):
 <div id="progress-bar"></div>
 
 <nav class="blog-nav">
-  <a href="/" class="logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:20px;width:auto;display:block"></a>
-  <a href="/#buy" class="buy-pill">BUY ₹229</a>
+  <a href="/" class="logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:24px;width:auto;display:block"></a>
+  <div class="blog-nav-right">
+    <a href="/odorstrike#buy" class="buy-pill">BUY ₹229</a>
+    <button class="blog-nav-toggle" aria-expanded="false" aria-controls="blogNavMenu" aria-label="Open menu"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
+  </div>
+  <ul id="blogNavMenu" class="blog-nav-menu">
+    <li><a href="/odorstrike">ODORSTRIKE</a></li>
+    <li><a href="/blog">Blog</a></li>
+    <li><a href="/track-order">Track order</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
 </nav>
+<script>(function(){{var b=document.querySelector(".blog-nav-toggle"),m=document.getElementById("blogNavMenu");if(!b||!m)return;b.addEventListener("click",function(){{var o=m.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");b.setAttribute("aria-label",o?"Close menu":"Open menu");}});m.addEventListener("click",function(e){{if(e.target.tagName==="A"){{m.classList.remove("open");b.setAttribute("aria-expanded","false");}}}});document.addEventListener("keydown",function(e){{if(e.key==="Escape"&&m.classList.contains("open")){{m.classList.remove("open");b.setAttribute("aria-expanded","false");b.focus();}}}});}})();</script>
 
 <article class="article-wrap">
   <header class="article-header">
