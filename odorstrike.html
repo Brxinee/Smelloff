@@ -152,12 +152,6 @@
     UPI_NAME: "Smelloff",
     PRICES: { solo: 229 },
     MRP:    { solo: 579 },
-    // Hero demo video (spray → 10s dry → sniff proof). Leave SRC empty until the
-    // real file exists — the slot renders NOTHING while empty. When set, it becomes
-    // the first gallery slide: muted, autoplay, playsinline, loop, preload=none,
-    // poster fallback so it never blocks LCP.
-    HERO_VIDEO_SRC: "",
-    HERO_VIDEO_POSTER: "/assets/shot-studio.webp",
     // ==== SOCIAL PROOF — ALL GATED. Components render NOTHING until real data ====
     // Verified-purchase reviews ONLY. The site computes the visible count, average
     // and star distribution from this array — never hardcode a rating anywhere.
@@ -539,7 +533,7 @@
     align-items:center;
     margin-top:44px;
   }
-  /* SLIDING GALLERY */
+  /* PRODUCT IMAGE */
   .gallery{
     position:relative;
     aspect-ratio:1/1;
@@ -547,41 +541,13 @@
     border-radius:22px;
     overflow:hidden;
     background:#0b0b0b;
+    margin:0;
   }
-  .gallery-track{
-    display:flex;
-    height:100%;
-    transition:transform .5s cubic-bezier(.4,0,.2,1);
-    will-change:transform;
-  }
-  .gallery-slide{min-width:100%;height:100%}
-  .gallery-slide img{
+  .gallery>img{
     width:100%;height:100%;
     object-fit:contain;
     display:block;
   }
-  .gallery-arrow{
-    position:absolute;top:50%;transform:translateY(-50%);
-    width:44px;height:44px;border-radius:50%;
-    background:rgba(8,8,8,.55);border:1px solid rgba(244,241,234,.18);
-    color:var(--text);font-size:24px;line-height:1;
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer;z-index:2;transition:background .15s,color .15s,border-color .15s;
-    -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
-  }
-  .gallery-arrow:hover{background:var(--acid);color:var(--ink);border-color:var(--acid)}
-  .gallery-arrow.prev{left:14px}
-  .gallery-arrow.next{right:14px}
-  .gallery-dots{
-    position:absolute;bottom:16px;left:0;right:0;
-    display:flex;justify-content:center;gap:8px;z-index:2;
-  }
-  .gallery-dot{
-    width:8px;height:8px;border-radius:50%;padding:0;
-    background:rgba(244,241,234,.35);border:none;cursor:pointer;
-    transition:background .2s,width .2s,border-radius .2s;
-  }
-  .gallery-dot.active{background:var(--acid);width:22px;border-radius:4px}
   /* INFO PANEL */
   .product-info h1{
     font-family:'Fraunces',serif;
@@ -654,8 +620,6 @@
   }
   .hero-trust span::before{content:'·';color:var(--acid);margin-right:14px}
   .hero-trust span:first-child::before{content:''; margin-right:0}
-  /* Hero video slide (config-gated; renders only when HERO_VIDEO_SRC is set) */
-  .gallery-slide video{width:100%;height:100%;object-fit:cover;display:block}
   @media(max-width:900px){
     .product-hero{grid-template-columns:1fr;gap:30px;margin-top:30px}
     .product-info{max-width:520px}
@@ -2213,19 +2177,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </div>
 
   <div class="product-hero">
-    <!-- SLIDING PRODUCT GALLERY -->
-    <div class="gallery" id="gallery">
-      <div class="gallery-track" id="galleryTrack">
-        <div class="gallery-slide"><img src="/assets/odorstrike-bottle.webp" alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black spray bottle, front on white background" width="1080" height="1080" fetchpriority="high" decoding="async"></div>
-        <div class="gallery-slide"><img src="/assets/shot-studio.webp" alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black spray bottle, studio shot with gym towel and dumbbell" width="1400" height="933" loading="lazy" decoding="async"></div>
-        <div class="gallery-slide"><img src="/assets/shot-pocket.webp" alt="ODORSTRIKE 50ml fabric odor eliminator held in hand — pocket-sized next to a phone" width="1400" height="933" loading="lazy" decoding="async"></div>
-        <div class="gallery-slide"><img src="/assets/shot-gymbag.webp" alt="ODORSTRIKE bottle tucked into a gym bag with a towel — anywhere, anytime freshness" width="1400" height="933" loading="lazy" decoding="async"></div>
-        <div class="gallery-slide"><img src="/assets/shot-flatlay.webp" alt="ODORSTRIKE bottle with wallet, watch, car key and phone — everyday carry flat lay" width="1400" height="933" loading="lazy" decoding="async"></div>
-      </div>
-      <button class="gallery-arrow prev" type="button" aria-label="Previous image">&#8249;</button>
-      <button class="gallery-arrow next" type="button" aria-label="Next image">&#8250;</button>
-      <div class="gallery-dots" id="galleryDots" role="tablist" aria-label="Product image navigation"></div>
-    </div>
+    <!-- PRODUCT IMAGE -->
+    <figure class="gallery" id="gallery">
+      <img src="/assets/odorstrike-bottle.webp" alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black spray bottle, front on white background" width="1080" height="1080" fetchpriority="high" decoding="async">
+    </figure>
 
     <!-- PRODUCT INFO -->
     <div class="product-info">
@@ -3989,73 +3944,6 @@ window.createSupabaseOrder = function (opts) {
     "aggregateRating":{"@type":"AggregateRating","ratingValue":String(avg),"bestRating":"5","worstRating":"1","ratingCount":String(n),"reviewCount":String(n)}
   });
   document.head.appendChild(ld);
-})();
-</script>
-
-<!-- HERO VIDEO SLOT (config-gated) — injects a video as the first gallery slide
-     ONLY when SMELLOFF_CONFIG.HERO_VIDEO_SRC is set. Must run before the slider
-     init below so the slide is counted by the dots/arrows. -->
-<script>
-(function(){
-  var cfg = window.SMELLOFF_CONFIG || {};
-  if (!cfg.HERO_VIDEO_SRC) return; // no video yet — render nothing
-  var track = document.getElementById('galleryTrack'); if (!track) return;
-  var slide = document.createElement('div');
-  slide.className = 'gallery-slide';
-  var v = document.createElement('video');
-  v.muted = true; v.autoplay = true; v.loop = true; v.playsInline = true;
-  v.setAttribute('muted',''); v.setAttribute('playsinline','');
-  v.preload = 'none';
-  v.poster = cfg.HERO_VIDEO_POSTER || '/assets/shot-studio.webp';
-  v.width = 1400; v.height = 933;
-  v.setAttribute('aria-label','ODORSTRIKE demo — spray, 10-second dry, smell test');
-  v.src = cfg.HERO_VIDEO_SRC;
-  slide.appendChild(v);
-  track.insertBefore(slide, track.firstElementChild);
-  // Autoplay is best-effort; if the browser blocks it, the poster still shows.
-  v.play && v.play().catch(function(){});
-})();
-</script>
-
-<!-- PRODUCT GALLERY SLIDER -->
-<script>
-(function(){
-  var g=document.getElementById('gallery'); if(!g) return;
-  var track=document.getElementById('galleryTrack');
-  var slides=track.children, n=slides.length;
-  var dotsWrap=document.getElementById('galleryDots');
-  var i=0, timer=null;
-  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  for(var d=0; d<n; d++){ (function(d){
-    var b=document.createElement('button');
-    b.type='button'; b.className='gallery-dot'+(d===0?' active':'');
-    b.setAttribute('role','tab'); b.setAttribute('aria-label','Go to image '+(d+1));
-    b.addEventListener('click',function(){ go(d); restart(); });
-    dotsWrap.appendChild(b);
-  })(d); }
-  var dots=dotsWrap.children;
-  function go(x){
-    i=(x+n)%n;
-    track.style.transform='translateX(-'+(i*100)+'%)';
-    for(var k=0;k<n;k++){ dots[k].classList.toggle('active',k===i); dots[k].setAttribute('aria-selected',k===i?'true':'false'); }
-  }
-  function next(){ go(i+1); } function prev(){ go(i-1); }
-  var nx=g.querySelector('.gallery-arrow.next'), pv=g.querySelector('.gallery-arrow.prev');
-  if(nx) nx.addEventListener('click',function(){ next(); restart(); });
-  if(pv) pv.addEventListener('click',function(){ prev(); restart(); });
-  function start(){ if(reduce) return; timer=setInterval(next,5000); }
-  function restart(){ clearInterval(timer); start(); }
-  var x0=null;
-  track.addEventListener('touchstart',function(e){ x0=e.touches[0].clientX; },{passive:true});
-  track.addEventListener('touchend',function(e){
-    if(x0===null) return;
-    var dx=e.changedTouches[0].clientX-x0;
-    if(Math.abs(dx)>40){ (dx<0?next:prev)(); restart(); }
-    x0=null;
-  },{passive:true});
-  g.addEventListener('mouseenter',function(){ clearInterval(timer); });
-  g.addEventListener('mouseleave',start);
-  start();
 })();
 </script>
 
