@@ -21,7 +21,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 BLOG = REPO / "blog"
 
-BLOGCSS = '<link rel="stylesheet" href="/assets/css/blog.css?v=1">'
+BLOGCSS = '<link rel="stylesheet" href="/assets/css/blog.css?v=6">'
 
 NAV = (
     '<nav class="blog-nav">\n'
