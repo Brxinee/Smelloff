@@ -65,7 +65,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
   .b-buy-pill:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(0,0,0,.45)}
   @media(max-width:420px){.b-buy-pill{font-size:13px;padding:7px 14px}}
   .b-logo{display:inline-flex;align-items:center;color:var(--text);text-decoration:none}
-  .b-logo img{height:20px;width:auto;display:block}
+  .b-logo img{height:24px;width:auto;display:block}
   .b-logo .p-dot{display:none}
   .b-cta{justify-self:end;font-family:'JetBrains Mono',monospace;font-weight:400;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:8px 14px;border-radius:4px;text-decoration:none;transition:background .15s ease}
   .b-cta:hover{background:var(--accent-hover)}
@@ -327,22 +327,24 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
     font-size:14px;letter-spacing:.18em;text-transform:uppercase;
   }
 
-  /* Hamburger menu button (replaces Buy CTA on /blog top nav) */
+  /* Hamburger menu button — matches the homepage (.nav-toggle): borderless,
+     three 26x3 rounded bars in currentColor that morph into an X when open. */
   .b-menu-toggle{
     justify-self:end;
-    width:40px;height:40px;padding:0;
-    background:transparent;border:1px solid var(--rule);border-radius:8px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-    cursor:pointer;transition:border-color .15s ease,background .15s ease;
+    width:44px;height:44px;padding:0;
+    background:none;border:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    cursor:pointer;color:var(--text);-webkit-tap-highlight-color:transparent;
   }
-  .b-menu-toggle:hover{border-color:var(--accent)}
+  .b-menu-toggle:hover{color:var(--accent)}
   .b-menu-toggle span{
-    display:block;width:18px;height:2px;background:var(--bg-surface);border-radius:1px;
-    transition:transform .25s ease,opacity .2s ease,background .15s ease;
+    display:block;width:26px;height:3px;background:currentColor;border-radius:100px;
+    transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease;
   }
-  .b-menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg);background:var(--accent)}
+  .b-menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(9px) rotate(45deg)}
   .b-menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
-  .b-menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg);background:var(--accent)}
+  .b-menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
+  @media(prefers-reduced-motion:reduce){.b-menu-toggle span{transition:none}}
 
   /* Right-side drawer */
   .b-drawer-backdrop{
