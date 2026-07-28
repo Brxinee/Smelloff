@@ -199,48 +199,85 @@
    --------------------------------------------------------------------- */
 .sf-ftr{
   border-top:2px solid var(--acid);
-  padding:56px 0 32px;
+  padding:40px 0 28px;
   background:var(--ink);
+  /* Three pages (contact, reviews, track-order) centre-align their page
+     wrapper, and that inherited straight into the footer — so the same
+     footer read centred there and left-aligned everywhere else. Pin it. */
+  text-align:left;
 }
-.sf-ftr__grid{display:grid;grid-template-columns:1fr;gap:36px}
+
+/* Mobile puts the three link groups SIDE BY SIDE, not stacked.
+   Stacked one per row, the footer ran ~1200px — taller than the phone
+   viewport itself, so it alone was a screen and a half of scrolling. Three
+   short columns plus tighter rows brings it under 500px, and it still reads
+   as three labelled groups rather than one undifferentiated list. */
+.sf-ftr__grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:22px 12px;
+  align-items:start;
+}
+/* Brand and socials are full-width bands above and below the columns —
+   at every width, so the footer reads the same on a phone and a desktop. */
+.sf-ftr__brand,.sf-ftr__socials{grid-column:1 / -1}
 @media(min-width:768px){
-  .sf-ftr__grid{grid-template-columns:2fr 1fr 1fr 1fr}
+  /* Brand takes the wide first column and the three link groups sit beside
+     it; the socials keep their own full-width row underneath. */
+  .sf-ftr__grid{grid-template-columns:2fr 1fr 1fr 1fr;gap:28px 36px}
+  .sf-ftr__brand{grid-column:1}
 }
-.sf-ftr__brand img{height:26px;width:auto;display:block}
+.sf-ftr__brand img{height:24px;width:auto;display:block}
 .sf-ftr__brand p{
-  color:var(--muted);margin-top:10px;
-  font-size:var(--fs-sm);max-width:260px;
+  color:var(--muted);margin-top:8px;
+  font-size:var(--fs-sm);max-width:34ch;
 }
 .sf-ftr h3{
   font-family:var(--mono);font-weight:400;
-  font-size:13px;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--acid);margin:0 0 12px;
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--acid);margin:0 0 8px;
 }
 .sf-ftr ul{list-style:none;margin:0;padding:0}
-.sf-ftr li{margin-bottom:2px}
+.sf-ftr li{margin:0}
+/* Rows were 40px tall with 8px of padding each — that alone accounted for
+   most of the footer's height. 34px still clears the 24px WCAG 2.2 target
+   minimum with the gap between rows counted in. */
 .sf-ftr ul a{
-  display:inline-block;padding:8px 0;min-height:40px;
-  color:var(--text);text-decoration:none;font-size:var(--fs-sm);
+  display:block;padding:5px 0;min-height:34px;
+  color:var(--text);text-decoration:none;
+  font-size:13.5px;line-height:1.55;
   transition:color .2s var(--ease);
 }
+@media(min-width:768px){
+  .sf-ftr ul a{font-size:var(--fs-sm)}
+}
 .sf-ftr ul a:hover{color:var(--acid)}
-.sf-ftr__socials{display:flex;flex-wrap:wrap;gap:2px;margin-top:6px}
+.sf-ftr__socials{
+  display:flex;flex-wrap:wrap;gap:2px;margin-top:4px;
+}
+/* Six icons have to sit on one row down to 320px, so they shrink rather
+   than wrap into a ragged second line. */
 .sf-ftr__socials a{
   display:inline-flex;align-items:center;justify-content:center;
-  width:44px;height:44px;border-radius:var(--sq-pill,100px);
+  flex:0 0 auto;
+  width:clamp(36px,11vw,40px);height:40px;
+  border-radius:var(--sq-pill,100px);
 }
-.sf-ftr__socials img{width:20px;height:20px;opacity:.85}
+.sf-ftr__socials img{width:19px;height:19px;opacity:.85}
 .sf-ftr__socials a:hover img{opacity:1}
 .sf-ftr__bottom{
-  margin-top:44px;padding-top:20px;
+  margin-top:28px;padding-top:16px;
   border-top:1px solid var(--rule);
-  display:flex;flex-direction:column;gap:10px;
+  display:flex;flex-direction:column;gap:8px;
   font-family:var(--mono);
-  font-size:11.5px;color:var(--muted);
-  letter-spacing:.06em;text-transform:uppercase;
+  font-size:10.5px;line-height:1.6;color:var(--muted);
+  letter-spacing:.05em;text-transform:uppercase;
 }
 @media(min-width:768px){
-  .sf-ftr__bottom{flex-direction:row;justify-content:space-between}
+  .sf-ftr__bottom{
+    flex-direction:row;justify-content:space-between;gap:24px;
+    font-size:11.5px;
+  }
 }
 
 /* ---------------------------------------------------------------------

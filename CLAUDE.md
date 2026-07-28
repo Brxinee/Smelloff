@@ -47,10 +47,21 @@ footers, so moving from `/` to `/privacy` or `/blog` read as a different site.
 - `assets/js/chrome.js` — burger toggle, cart badge, `aria-current` on the nav
   link matching the URL. Replaces the inline copies that used to live on each
   page that happened to have a header.
-- **Load order in every `<head>`:** page `<style>` → `soft.css` → `chrome.css`.
-  Same reasoning as `soft.css`: these pages are self-contained, so an inline
-  `<style>` beats a preceding `<link>` at equal specificity, and the shared
-  layers have to come last to win.
+- **`soft.css` and `chrome.css` must be the LAST stylesheets in `<head>`,
+  after every other `<link>` and after the page's inline `<style>`.** They win
+  by source order, not specificity — most of their rules sit at the same
+  weight as the page's own. `apply-chrome.mjs` enforces this by stripping and
+  re-inserting them immediately before `</head>`; don't hand-place them.
+  (Getting this wrong is not theoretical: parked before `blog.css`, the blog
+  posts picked up that file's `.faq details{border-radius:0}` and its own
+  summary padding, so blog FAQs rendered square and double-height while the
+  rest of the site's were round and compact.)
+- **FAQ accordions: the `<details>` owns the shape, the `<summary>` owns the
+  padding.** Both padding sets applied at once is what made every row twice as
+  tall as its text. The canonical spec is in `soft.css` §3 and covers
+  `.faq details`, `.faq-item`, `.faq-q` and `.faq-list details`; it uses
+  `!important` on padding/radius specifically to beat `blog.css`. The list
+  container is one column on phones and two at ≥900px, everywhere.
 - The markup is **generated**, not hand-written. `scripts/apply-chrome.mjs`
   holds the canonical header/footer and stamps them between
   `<!-- SF-CHROME:HEADER -->` / `<!-- SF-CHROME:FOOTER -->` markers on all 24
@@ -64,6 +75,14 @@ footers, so moving from `/` to `/privacy` or `/blog` read as a different site.
 - The blog's slide-out drawer is gone — it was a fourth nav pattern with its own
   logo, socials and guide list. Its topic chips survive inline above the grid as
   `.b-cats` / `.b-cat`, wired to the same `window.filterCards`.
+- **The footer is three link columns side by side at every width**, with the
+  brand block and the social row as full-width bands. Stacked one group per
+  row it ran ~1200px on a phone — taller than the viewport, so the footer
+  alone was a screen and a half of scrolling and made pages look like their
+  content had vanished. Keep the labels short enough not to wrap in a
+  ~110px column ("Refunds", "Partners", not "Refund policy", "Partner
+  program"). `text-align:left` is pinned on `.sf-ftr` because contact,
+  reviews and track-order centre their page wrapper and it inherited in.
 
 ## Design system (2026-07-28)
 `assets/css/tokens.css` is the **single source of truth** for colour, type
