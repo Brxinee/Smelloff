@@ -1,0 +1,328 @@
+/* =====================================================================
+   Smelloff — shared site chrome  (v1, 2026-07-28)
+   =====================================================================
+   Before this file, the site had FOUR different headers and THREE
+   different footers:
+
+     index.html        logo + cart + nav links + acid CTA, sticky
+     odorstrike.html   logo + cart + SCIENCE/PRICING/FAQ/REVIEWS jump links
+     blog/*.html       logo + "BUY ₹229" pill + a hamburger, no nav links
+     the other 13      `.p-nav`: logo + "← Back to home", and a `.p-footer`
+                       that dumped every link on the site into one flat row
+
+   A visitor moving from the homepage to a policy page or a guide landed
+   on what looked like a different website. This file defines ONE header
+   and ONE footer — modelled on the homepage's, which is the design the
+   whole site is being brought in line with — plus the page shell
+   (section rhythm, eyebrow, display headings, long-form prose) that the
+   self-contained pages already had and the secondary pages did not.
+
+   HOW THIS LOADS
+   Same rule as soft.css: linked AFTER each page's inline <style> so it
+   wins at equal specificity, and after soft.css so the chrome's own
+   shapes are final. Order in every <head>:
+
+       <style> …page-specific… </style>
+       <link rel="stylesheet" href="/assets/css/soft.css">     shapes
+       <link rel="stylesheet" href="/assets/css/chrome.css">   chrome
+
+   Colour and type come entirely from tokens.css — this file declares no
+   hex values of its own. The `.sf-` prefix keeps it from colliding with
+   the page-local class names already in use.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   0 · PAGE SHELL
+   The secondary pages each invented their own container width and
+   section padding. One rhythm now, matching the homepage.
+   --------------------------------------------------------------------- */
+.sf-wrap{
+  width:100%;
+  max-width:var(--maxw);
+  margin-inline:auto;
+  padding-inline:var(--gutter);
+}
+.sf-wrap--narrow{max-width:760px}
+.sf-section{padding-block:var(--section-y)}
+.sf-section + .sf-section{border-top:1px solid var(--rule)}
+
+.sf-eyebrow{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--mono);
+  font-size:var(--fs-eyebrow);
+  letter-spacing:var(--ls-eyebrow);
+  text-transform:uppercase;
+  color:var(--acid);
+  margin-bottom:18px;
+}
+/* The short acid rule that precedes every eyebrow on the homepage. */
+.sf-eyebrow::before{
+  content:'';
+  width:34px;height:1px;flex:0 0 34px;
+  background:currentColor;opacity:.75;
+}
+
+.sf-h1,.sf-h2{
+  font-family:var(--display);
+  font-weight:900;
+  line-height:var(--lh-display);
+  letter-spacing:var(--ls-display);
+}
+.sf-h1{font-size:var(--fs-h2)}
+.sf-h2{font-size:var(--fs-h3)}
+.sf-lead{
+  font-size:var(--fs-lead);
+  line-height:1.5;
+  color:var(--text-2);
+  max-width:60ch;
+}
+
+/* ---------------------------------------------------------------------
+   1 · HEADER
+   Sticky, hairline-ruled, logo left / cart + links + CTA right, with a
+   burger that reveals the same links stacked on small screens.
+   --------------------------------------------------------------------- */
+.sf-hdr{
+  position:sticky;top:0;z-index:70;
+  background:var(--ink);
+  border-bottom:1px solid var(--rule);
+}
+.sf-hdr__row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;min-height:64px;
+}
+.sf-hdr__logo{display:flex;align-items:center;min-height:44px}
+.sf-hdr__logo img{height:24px;width:auto;display:block}
+.sf-hdr__right{display:flex;align-items:center;gap:10px}
+
+/* Cart — borderless icon with an acid count badge. Lifted verbatim from
+   the homepage so the control is pixel-identical everywhere. */
+.sf-cart{
+  display:inline-flex;align-items:center;gap:5px;
+  height:44px;padding:0 4px;
+  background:transparent;color:var(--text);text-decoration:none;
+  border:0;cursor:pointer;line-height:1;
+}
+.sf-cart:hover{color:var(--acid)}
+.sf-cart svg{width:25px;height:25px;display:block;transform-origin:60% 100%}
+@keyframes sfCartNudge{
+  0%,100%{transform:translateX(0) rotate(0)}
+  25%{transform:translateX(-2px) rotate(-4deg)}
+  60%{transform:translateX(2px) rotate(3deg)}
+}
+@media (prefers-reduced-motion: no-preference){
+  .sf-cart:hover svg{animation:sfCartNudge .55s ease}
+}
+.sf-cart__count{
+  background:var(--acid);color:var(--on-acid);
+  min-width:18px;height:18px;padding:0 5px;border-radius:var(--sq-pill,100px);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--body);
+  font-size:11px;font-weight:700;letter-spacing:0;
+}
+/* Two empty-states to honour: `hidden` (set by chrome.js from localStorage)
+   and `data-empty="1"` (set by the /odorstrike checkout's own cart code).
+   Without the second one the product page showed a permanent acid "0". */
+.sf-cart__count[hidden],
+.sf-cart__count[data-empty="1"]{display:none}
+
+.sf-nav{display:none;align-items:center;gap:6px;list-style:none;margin:0;padding:0}
+.sf-nav a{
+  display:inline-block;padding:12px 14px;
+  border-radius:var(--sq-sm,11px);
+  font-family:var(--mono);
+  font-size:13px;color:var(--text);text-decoration:none;
+  letter-spacing:.12em;text-transform:uppercase;
+  transition:color .2s var(--ease);
+}
+.sf-nav a:hover{color:var(--acid)}
+/* Current page reads as current — none of the old headers did this. */
+.sf-nav a[aria-current="page"]{color:var(--acid)}
+
+.sf-hdr__cta{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--acid);color:var(--on-acid);text-decoration:none;
+  border:0;border-radius:var(--sq-sm,11px);
+  font-family:var(--mono);
+  font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+  padding:12px 18px;min-height:44px;
+  transition:background-color .2s var(--ease);
+}
+.sf-hdr__cta:hover{background:var(--acid-hi)}
+
+.sf-burger{
+  display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;width:44px;height:44px;background:none;padding:0;
+  border:0;color:var(--text);cursor:pointer;
+}
+.sf-burger span{
+  display:block;width:26px;height:3px;border-radius:100px;background:currentColor;
+  transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease;
+}
+.sf-burger:hover{color:var(--acid)}
+.sf-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(9px) rotate(45deg)}
+.sf-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.sf-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
+
+.sf-hdr__menu{
+  display:none;
+  border-top:1px solid var(--rule);
+  padding:8px 0 16px;
+  list-style:none;margin:0;
+}
+.sf-hdr__menu.is-open{display:block}
+.sf-hdr__menu a{
+  display:block;padding:14px 4px;min-height:44px;
+  color:var(--text);text-decoration:none;
+  font-family:var(--mono);
+  font-size:15px;text-transform:uppercase;letter-spacing:.1em;
+  border-bottom:1px solid var(--rule);
+}
+.sf-hdr__menu a:hover{color:var(--acid)}
+
+@media(min-width:900px){
+  .sf-nav{display:flex}
+  .sf-burger{display:none}
+  .sf-hdr__menu{display:none !important}
+  .sf-hdr__logo img{height:28px}
+}
+@media(prefers-reduced-motion:reduce){
+  .sf-cart:hover svg{animation:none}
+  .sf-burger span{transition:none}
+}
+
+/* ---------------------------------------------------------------------
+   2 · FOOTER
+   Four columns on desktop, stacked on mobile, acid rule on top. The old
+   `.p-footer` was a single flat run of 12 links with no grouping — this
+   restores the homepage's Shop / Support / Legal structure everywhere.
+   --------------------------------------------------------------------- */
+.sf-ftr{
+  border-top:2px solid var(--acid);
+  padding:56px 0 32px;
+  background:var(--ink);
+}
+.sf-ftr__grid{display:grid;grid-template-columns:1fr;gap:36px}
+@media(min-width:768px){
+  .sf-ftr__grid{grid-template-columns:2fr 1fr 1fr 1fr}
+}
+.sf-ftr__brand img{height:26px;width:auto;display:block}
+.sf-ftr__brand p{
+  color:var(--muted);margin-top:10px;
+  font-size:var(--fs-sm);max-width:260px;
+}
+.sf-ftr h3{
+  font-family:var(--mono);font-weight:400;
+  font-size:13px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--acid);margin:0 0 12px;
+}
+.sf-ftr ul{list-style:none;margin:0;padding:0}
+.sf-ftr li{margin-bottom:2px}
+.sf-ftr ul a{
+  display:inline-block;padding:8px 0;min-height:40px;
+  color:var(--text);text-decoration:none;font-size:var(--fs-sm);
+  transition:color .2s var(--ease);
+}
+.sf-ftr ul a:hover{color:var(--acid)}
+.sf-ftr__socials{display:flex;flex-wrap:wrap;gap:2px;margin-top:6px}
+.sf-ftr__socials a{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:var(--sq-pill,100px);
+}
+.sf-ftr__socials img{width:20px;height:20px;opacity:.85}
+.sf-ftr__socials a:hover img{opacity:1}
+.sf-ftr__bottom{
+  margin-top:44px;padding-top:20px;
+  border-top:1px solid var(--rule);
+  display:flex;flex-direction:column;gap:10px;
+  font-family:var(--mono);
+  font-size:11.5px;color:var(--muted);
+  letter-spacing:.06em;text-transform:uppercase;
+}
+@media(min-width:768px){
+  .sf-ftr__bottom{flex-direction:row;justify-content:space-between}
+}
+
+/* ---------------------------------------------------------------------
+   3 · LONG-FORM PROSE  (policies, guides, about)
+   The policy pages were the worst offenders: bare <h2>/<p> inheriting
+   whatever the page happened to declare, so "Privacy" and "Terms" didn't
+   even match each other. One measure, one scale, one link colour.
+   --------------------------------------------------------------------- */
+.sf-prose{max-width:68ch;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--text-2)}
+.sf-prose > * + *{margin-top:1.1em}
+.sf-prose h2{
+  font-family:var(--display);font-weight:900;
+  font-size:var(--fs-h3);line-height:1.06;letter-spacing:var(--ls-display);
+  color:var(--text);
+  margin-top:2.2em;margin-bottom:.5em;
+}
+.sf-prose h3{
+  font-family:var(--display);font-weight:900;
+  font-size:var(--fs-h4);line-height:1.15;letter-spacing:-.015em;
+  color:var(--text);
+  margin-top:1.8em;margin-bottom:.4em;
+}
+.sf-prose h2:first-child,.sf-prose h3:first-child{margin-top:0}
+.sf-prose strong{color:var(--text);font-weight:600}
+.sf-prose a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
+.sf-prose a:hover{color:var(--acid-hi)}
+.sf-prose ul,.sf-prose ol{padding-left:0;list-style:none}
+.sf-prose ol{counter-reset:sf-ol}
+.sf-prose li{position:relative;padding-left:26px;margin-top:.55em}
+.sf-prose ul > li::before{
+  content:'';position:absolute;left:6px;top:.62em;
+  width:6px;height:6px;border-radius:50%;background:var(--acid);
+}
+.sf-prose ol > li{counter-increment:sf-ol}
+.sf-prose ol > li::before{
+  content:counter(sf-ol);position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:12px;color:var(--acid);line-height:1.9;
+}
+.sf-prose blockquote{
+  margin-left:0;padding:18px 22px;
+  border-left:3px solid var(--acid);
+  border-radius:var(--sq-md,18px);
+  background:var(--surface);
+  color:var(--text);
+}
+.sf-prose table{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+.sf-prose th,.sf-prose td{
+  text-align:left;padding:12px 14px;
+  border-bottom:1px solid var(--rule);
+}
+.sf-prose th{
+  font-family:var(--mono);font-weight:400;font-size:12px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--acid);
+}
+/* Tables are the one thing that can force a horizontal scrollbar on the
+   page itself; give them their own scroller instead. */
+.sf-prose .sf-table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* Page masthead used by every secondary page: eyebrow, big title, lead. */
+.sf-masthead{padding-block:clamp(44px,7vw,88px) clamp(28px,4vw,44px)}
+.sf-masthead h1{
+  font-family:var(--display);font-weight:900;
+  font-size:var(--fs-h2);line-height:var(--lh-display);
+  letter-spacing:var(--ls-display);
+  margin:0;
+}
+.sf-masthead h1 .dot{color:var(--acid)}
+.sf-masthead .sf-lead{margin-top:20px}
+
+/* ---------------------------------------------------------------------
+   4 · SKIP LINK + FOCUS
+   Several secondary pages had neither.
+   --------------------------------------------------------------------- */
+.sf-skip{
+  position:absolute;left:-9999px;top:0;z-index:200;
+  background:var(--acid);color:var(--on-acid);padding:12px 20px;
+  font-weight:700;text-decoration:none;
+}
+.sf-skip:focus{left:0}
+.sf-hdr a:focus-visible,.sf-hdr button:focus-visible,
+.sf-ftr a:focus-visible{
+  outline:3px solid var(--acid);
+  outline-offset:3px;
+  border-radius:var(--sq-xs,8px);
+}

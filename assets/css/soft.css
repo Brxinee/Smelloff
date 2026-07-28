@@ -52,7 +52,12 @@
 
 .btn,.nb-btn,.buy-btn,.buy-pill,.cta,a.cta,button.cta,
 .product-form__submit,.nav-cta,.nav-links a.nav-cta,
-.b-buy-btn,.end-cta .btn,.write-review-btn{
+.b-buy-btn,.end-cta .btn,.write-review-btn,
+/* The /odorstrike CTAs. They were the only square-cornered buttons left on
+   the site — the page names them .hero-cta / .fix-cta / .mb-btn rather than
+   .btn, so the list above never reached them. */
+.hero-cta,.fix-cta,.mb-btn,.final button,.price-card button,
+.cart-checkout,.email-form button,.ec-form button{
   border-radius:var(--sq-sm) !important;
   border:0 !important;
   box-shadow:none !important;
@@ -63,12 +68,15 @@
   transition:background-color .2s var(--ease),color .2s var(--ease),transform .2s var(--ease);
 }
 .btn:hover,.nb-btn:hover,.buy-btn:hover,.buy-pill:hover,.cta:hover,
-.product-form__submit:hover,.nav-cta:hover,.nav-links a.nav-cta:hover{
+.product-form__submit:hover,.nav-cta:hover,.nav-links a.nav-cta:hover,
+.hero-cta:hover,.fix-cta:hover,.mb-btn:hover,.final button:hover,
+.price-card button:hover,.cart-checkout:hover{
   box-shadow:none !important;
   transform:none;
 }
 @media (prefers-reduced-motion: no-preference){
-  .btn:hover,.buy-btn:hover,.buy-pill:hover,.cta:hover,.nav-cta:hover{
+  .btn:hover,.buy-btn:hover,.buy-pill:hover,.cta:hover,.nav-cta:hover,
+  .hero-cta:hover,.fix-cta:hover,.final button:hover,.price-card button:hover{
     animation:sf-bounce .6s ease;
   }
 }
@@ -90,6 +98,7 @@
    --------------------------------------------------------------------- */
 .zone,.voice,.faq-item,.trust-row li,.product-visual,
 .b-card,.guide-card,.card,.rv-card,.review,.price-card,
+.layer,.use-card,.proof-card,
 .end-cta,.read-next,.b-buy-card,.nf-card,.contact-card,.track-card{
   border-radius:var(--sq-lg) !important;
   border:var(--hair) solid var(--rule) !important;
@@ -98,6 +107,11 @@
   overflow:hidden;
   transition:border-color .2s var(--ease),background-color .2s var(--ease),transform .2s var(--ease);
 }
+/* …except cards that deliberately hang a badge over their own top edge.
+   `overflow:hidden` above was clipping the "ONE SKU. NO BUNDLES." ribbon on
+   the /odorstrike price card in half. Clipping is only there to keep media
+   inside the curve, and these cards hold no media. */
+.price-card,.b-buy-card{overflow:visible !important}
 @media(hover:hover){
   .zone:hover,.voice:hover,.faq-item:hover,.b-card:hover,.guide-card:hover,
   .card:hover,.rv-card:hover,.product-visual:hover{

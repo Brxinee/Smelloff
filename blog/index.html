@@ -58,16 +58,8 @@
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
   /* Nav */
-  .b-nav{position:sticky;top:0;z-index:50;height:calc(60px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) max(20px, env(safe-area-inset-right, 0px)) 0 max(20px, env(safe-area-inset-left, 0px));display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-bottom:1px solid var(--rule)}
   .b-back{justify-self:start;font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;padding:8px 10px}
   .b-back:hover{color:var(--text)}
-  .b-nav-actions{display:flex;align-items:center;gap:12px}
-  .b-buy-pill{background:var(--accent);color:#080808;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:14px;padding:8px 18px;border-radius:100px;text-decoration:none;white-space:nowrap;box-shadow:3px 3px 0 rgba(0,0,0,.35);transition:transform .12s ease,box-shadow .12s ease}
-  .b-buy-pill:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(0,0,0,.45)}
-  @media(max-width:420px){.b-buy-pill{font-size:13px;padding:7px 14px}}
-  .b-logo{display:inline-flex;align-items:center;color:var(--text);text-decoration:none}
-  .b-logo img{height:24px;width:auto;display:block}
-  .b-logo .p-dot{display:none}
   .b-cta{justify-self:end;font-family:'JetBrains Mono',monospace;font-weight:400;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:8px 14px;border-radius:4px;text-decoration:none;transition:background .15s ease}
   .b-cta:hover{background:var(--accent-hover)}
 
@@ -183,7 +175,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
   .b-card-body{padding:18px 18px 18px;display:flex;flex-direction:column;gap:10px}
   /* Image thumbnails: crop the photo to the card's banner ratio so cards stay short.
      Without this the raw 1200x630 image renders at full height and makes the card enormous. */
-  .b-card-thumb--img{overflow:hidden}
+  /* Match the card banner to the hero images' real 1200×630 ratio. At the
+     old 5/3 the cover crop sliced the top off the card graphic in every
+     thumbnail — the artwork's headline box sits near the top edge. */
+  .b-card-thumb--img{overflow:hidden;aspect-ratio:1200/630}
   .b-card-thumb--img img{
     position:absolute;inset:0;width:100%;height:100%;
     object-fit:cover;display:block;
@@ -298,6 +293,19 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
   .b-topic-count{font-size:11px;letter-spacing:.14em;color:var(--accent);white-space:nowrap}
   .b-topic-desc{font-family:'Inter Tight',sans-serif;font-size:13px;color:var(--text-secondary);line-height:1.5;margin-top:6px}
 
+  /* Inline topic filter (replaces the drawer's chip row) */
+  .b-cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+  .b-cat{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    padding:9px 16px;min-height:40px;cursor:pointer;
+    background:transparent;color:var(--text);
+    border:1px solid var(--rule);border-radius:999px;
+    transition:color .2s,border-color .2s,background-color .2s;
+  }
+  .b-cat:hover{border-color:var(--accent);color:var(--accent)}
+  .b-cat.is-active{background:var(--accent);border-color:var(--accent);color:#080808}
+
   .b-grid-3{display:grid;grid-template-columns:1fr;gap:12px}
   @media(min-width:720px){.b-grid-3{grid-template-columns:1fr 1fr;gap:16px}}
   @media(min-width:1100px){.b-grid-3{grid-template-columns:1fr 1fr 1fr}}
@@ -330,92 +338,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
 
   /* Hamburger menu button — matches the homepage (.nav-toggle): borderless,
      three 26x3 rounded bars in currentColor that morph into an X when open. */
-  .b-menu-toggle{
-    justify-self:end;
-    width:44px;height:44px;padding:0;
-    background:none;border:0;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
-    cursor:pointer;color:var(--text);-webkit-tap-highlight-color:transparent;
-  }
-  .b-menu-toggle:hover{color:var(--accent)}
-  .b-menu-toggle span{
-    display:block;width:26px;height:3px;background:currentColor;border-radius:100px;
-    transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease;
-  }
-  .b-menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(9px) rotate(45deg)}
-  .b-menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
-  .b-menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
-  @media(prefers-reduced-motion:reduce){.b-menu-toggle span{transition:none}}
 
   /* Right-side drawer */
-  .b-drawer-backdrop{
-    position:fixed;inset:0;z-index:60;
-    background:rgba(0,0,0,.65);
-    opacity:0;pointer-events:none;
-    transition:opacity .25s ease;
-  }
-  .b-drawer-backdrop.open{opacity:1;pointer-events:auto}
-  .b-drawer{
-    position:fixed;top:0;right:0;bottom:0;z-index:70;
-    width:88vw;max-width:520px;
-    background:var(--bg);border-left:1px solid var(--rule);
-    transform:translateX(100%);
-    transition:transform .3s cubic-bezier(.2,.8,.2,1);
-    display:flex;flex-direction:column;
-    overflow:hidden;
-  }
-  .b-drawer.open{transform:translateX(0)}
   @media(min-width:720px){
-    .b-drawer{width:50vw;max-width:560px}
   }
-  body.drawer-open{overflow:hidden}
 
   /* Drawer header (logo + close) */
-  .b-drawer-head{
-    flex:0 0 auto;
-    padding:env(safe-area-inset-top,0px) max(18px, env(safe-area-inset-right, 0px)) 0 max(18px, env(safe-area-inset-left, 0px));
-    height:calc(56px + env(safe-area-inset-top,0px));
-    display:flex;align-items:center;justify-content:space-between;
-    border-bottom:1px solid var(--rule);background:var(--bg);
-  }
-  .b-drawer-close{
-    width:40px;height:40px;padding:0;
-    background:transparent;border:1px solid var(--rule);border-radius:8px;
-    color:var(--text);font-size:22px;line-height:1;
-    cursor:pointer;transition:border-color .15s ease,color .15s ease;
-  }
-  .b-drawer-close:hover{border-color:var(--accent);color:var(--accent)}
-  .b-drawer-logo{
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;
-    font-size:22px;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--text);text-decoration:none;position:relative;padding-right:10px;
-  }
-  .b-drawer-dot{
-    position:absolute;top:-2px;right:0;
-    width:6px;height:6px;background:var(--accent);border-radius:50%;
-  }
-  .b-drawer-nav{
-    display:flex;flex-direction:column;
-    padding:14px 0 calc(20px + env(safe-area-inset-bottom,0px));
-    overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto;
-  }
-  .b-drawer-link{
-    text-align:left;background:transparent;border:none;
-    padding:14px 22px;
-    font-family:'Inter Tight',sans-serif;font-size:16px;font-weight:500;
-    color:var(--text);text-decoration:none;cursor:pointer;
-    transition:background .15s ease,color .15s ease;
-    border-left:3px solid transparent;
-  }
-  .b-drawer-link:hover{background:var(--bg-surface);color:var(--accent);border-left-color:var(--accent)}
-  .b-drawer-link--cta{color:var(--accent)}
-  .b-drawer-section-label{
-    margin:18px 22px 6px;
-    font-family:'JetBrains Mono',monospace;font-weight:400;font-size:11px;
-    letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
-    border-top:1px solid var(--rule);padding-top:18px;
-  }
-  .b-drawer-section-label:first-of-type{border-top:none;padding-top:0;margin-top:18px}
 
   /* Section-jump pills on /blog body (replaces the old filter pills) */
   .b-jumps{
@@ -432,90 +360,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
   .b-jump-pill:hover{color:var(--bg);background:var(--accent);border-color:var(--accent)}
 
   /* Drawer categories as pills */
-  .b-drawer-cats{
-    display:flex;flex-wrap:wrap;gap:8px;
-    padding:0 22px 14px;
-  }
-  .b-drawer-cat{
-    font-family:'JetBrains Mono',monospace;font-weight:400;font-size:11px;
-    letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
-    background:transparent;border:1px solid var(--rule);
-    padding:9px 14px;border-radius:100px;cursor:pointer;
-    transition:color .15s ease,border-color .15s ease,background .15s ease;
-  }
-  .b-drawer-cat:hover{color:var(--text);border-color:var(--accent)}
-  .b-drawer-cat.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
 
   /* Push social icons to bottom-center of drawer */
-  .b-drawer-spacer{flex:1 1 auto;min-height:18px}
-  .b-drawer-socials{
-    display:flex;justify-content:center;align-items:center;gap:18px;
-    padding:18px 22px calc(18px + env(safe-area-inset-bottom,0px));
-    border-top:1px solid var(--rule);
-  }
-  .b-drawer-socials a{
-    width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
-    border:1px solid var(--rule);border-radius:50%;
-    transition:border-color .15s ease,background .15s ease;
-  }
-  .b-drawer-socials a:hover{border-color:var(--accent);background:var(--bg-surface)}
-  .b-drawer-socials img{width:22px;height:22px;display:block}
 
   /* Drawer new sections: Popular Guides, Latest, Newsletter */
-  .b-drawer-new-label{
-    margin:24px 22px 0;padding-top:24px;
-    font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:500;
-    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-    border-top:1px solid var(--rule);
-  }
-  .b-drawer-new-label--first{margin-top:32px}
-  .b-drawer-guides{display:flex;flex-direction:column;gap:0;padding:4px 0 0}
-  .b-drawer-guide-link{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:12px 22px;
-    font-family:'Inter Tight',sans-serif;font-size:15px;font-weight:400;
-    color:var(--text);text-decoration:none;
-    transition:background .15s ease;
-  }
-  .b-drawer-guide-link + .b-drawer-guide-link{margin-top:0;padding-top:4px}
-  .b-drawer-guide-link:hover{background:var(--bg-surface)}
-  .b-drawer-guide-link:active{background:var(--bg-surface)}
-  .b-drawer-guide-link:hover .b-drawer-guide-arrow{color:var(--accent)}
-  .b-drawer-guide-link:active .b-drawer-guide-arrow{color:var(--accent)}
-  .b-drawer-guide-arrow{
-    color:var(--muted);flex-shrink:0;margin-left:10px;font-style:normal;
-    transition:color .15s ease;
-  }
-  .b-drawer-nl{padding:8px 22px 0}
-  .b-drawer-nl-copy{
-    font-family:'Inter Tight',sans-serif;font-size:13px;color:var(--muted);
-    margin:0 0 10px;line-height:1.4;
-  }
-  .b-drawer-nl-form{display:flex;flex-direction:column;gap:8px}
-  .b-drawer-nl-input{
-    width:100%;box-sizing:border-box;
-    background:transparent;border:1px solid var(--rule);border-radius:6px;
-    color:var(--text);font-family:'Inter Tight',sans-serif;font-size:14px;
-    padding:10px 12px;outline:none;
-    transition:border-color .15s ease;
-  }
-  .b-drawer-nl-input::placeholder{color:var(--muted)}
-  .b-drawer-nl-input:focus{border-color:var(--accent)}
-  .b-drawer-nl-btn{
-    width:100%;background:var(--accent);color:var(--bg);border:none;border-radius:6px;
-    font-family:'Fraunces',serif;font-weight:900;font-size:15px;
-    letter-spacing:-.01em;text-transform:none;
-    padding:11px 0;cursor:pointer;transition:opacity .15s ease;
-  }
-  .b-drawer-nl-btn:hover{opacity:.88}
-  .b-drawer-nl-success{
-    font-family:'Inter Tight',sans-serif;font-size:14px;
-    color:var(--accent);padding:10px 0 0;
-  }
-  .b-drawer-nl-error{
-    font-family:'Inter Tight',sans-serif;font-size:13px;
-    color:#f66;margin-top:6px;
-  }
 
   /* Filter loading state — gives visual feedback when category changes
      so users see something happen even though the palette is uniform. */
@@ -625,22 +473,51 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
   a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 </style>
 <link rel="stylesheet" href="/assets/css/soft.css">
+<link rel="stylesheet" href="/assets/css/chrome.css">
 <link rel="alternate" hreflang="en-IN" href="https://smelloff.in/blog">
 <link rel="alternate" hreflang="x-default" href="https://smelloff.in/blog">
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
 <script src="/assets/js/consent-analytics.js" defer></script>
+<script src="/assets/js/chrome.js" defer></script>
 </head>
 <body>
 
-<nav class="b-nav">
-  <a href="/" class="b-logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" decoding="async"></a>
-  <div class="b-nav-actions">
-    <a href="/odorstrike#buy" class="b-buy-pill">BUY ₹229</a>
-    <button class="b-menu-toggle" id="blogMenuToggle" type="button" aria-label="Open menu" aria-controls="blogDrawer" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
+<!-- SF-CHROME:HEADER — generated by scripts/apply-chrome.mjs. Edit there, not here. -->
+<header class="sf-hdr">
+  <div class="sf-wrap">
+    <div class="sf-hdr__row">
+      <a href="/" class="sf-hdr__logo" aria-label="Smelloff home">
+        <img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" decoding="async">
+      </a>
+      <div class="sf-hdr__right">
+        <a class="sf-cart" href="/odorstrike?cart=open" aria-label="Cart — view what you've added">
+          <svg viewBox="0 0 576 512" fill="currentColor" aria-hidden="true"><path d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 368c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
+          <span class="sf-cart__count" id="sfCartCount" hidden>0</span>
+        </a>
+        <ul class="sf-nav">
+          <li><a href="/odorstrike">ODORSTRIKE</a></li>
+          <li><a href="/blog">Guides</a></li>
+          <li><a href="/reviews">Reviews</a></li>
+          <li><a href="/faq">FAQ</a></li>
+          <li><a href="/track-order">Track order</a></li>
+        </ul>
+        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹229</a>
+        <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <ul class="sf-hdr__menu" id="sfMenu">
+      <li><a href="/odorstrike">ODORSTRIKE</a></li>
+      <li><a href="/blog">Guides</a></li>
+      <li><a href="/reviews">Reviews</a></li>
+      <li><a href="/faq">FAQ</a></li>
+      <li><a href="/track-order">Track order</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
   </div>
-</nav>
+</header>
+<!-- /SF-CHROME:HEADER -->
 
 <header class="b-hero">
   <div class="b-hero-top">
@@ -669,6 +546,15 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
   <div class="b-section-head">
     <h2 class="b-section-tag">All guides</h2>
     <span class="b-section-count" id="latestCount">8 articles</span>
+  </div>
+  <!-- Topic filter. These chips used to live inside the blog's own slide-out
+       drawer, which was a fourth navigation pattern on a site that now has
+       one header. The drawer is gone; the filter it was hiding is here,
+       above the grid it filters, where it is discoverable without a tap. -->
+  <div class="b-cats" role="group" aria-label="Filter guides by topic">
+    <button class="b-cat is-active" data-cat="all" type="button" aria-pressed="true">All</button>
+    <button class="b-cat" data-cat="confidence" type="button" aria-pressed="false">Confidence</button>
+    <button class="b-cat" data-cat="science" type="button" aria-pressed="false">Science</button>
   </div>
   <div class="b-grid b-grid-3" id="latestGrid">
     <a href="/blog/ambi-pur-vs-odorstrike" class="b-card" data-cat="science">
@@ -789,83 +675,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
 </section>
 
 
-<div class="b-drawer-backdrop" id="drawerBackdrop"></div>
-<aside class="b-drawer" id="blogDrawer" aria-hidden="true">
-  <div class="b-drawer-head">
-    <a href="/" class="b-drawer-logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:20px;width:auto;display:block"></a>
-    <button class="b-drawer-close" id="drawerClose" type="button" aria-label="Close menu">&times;</button>
-  </div>
-  <nav class="b-drawer-nav" aria-label="Site menu">
-    <a href="/" class="b-drawer-link">Home</a>
-    <a href="/odorstrike#buy" class="b-drawer-link b-drawer-link--cta">Shop ODORSTRIKE</a>
-    <a href="/blog" class="b-drawer-link">All Guides</a>
-
-    <div class="b-drawer-section-label">Browse by topic</div>
-    <div class="b-drawer-cats">
-      <button class="b-drawer-cat active" data-cat="all" type="button">All</button>
-      <button class="b-drawer-cat" data-cat="confidence" type="button">Confidence</button>
-      <button class="b-drawer-cat" data-cat="science" type="button">Science</button>
-    </div>
-
-    <!-- POPULAR GUIDES -->
-    <div class="b-drawer-new-label b-drawer-new-label--first">Popular Guides</div>
-    <div class="b-drawer-guides">
-      <a href="/blog/odorstrike-review-30-day-india-test" class="b-drawer-guide-link">
-        <span>How to remove sweat smell from shirts</span>
-        <span class="b-drawer-guide-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="/blog/odorstrike-review-30-day-india-test" class="b-drawer-guide-link">
-        <span>Why clothes smell even after washing</span>
-        <span class="b-drawer-guide-arrow" aria-hidden="true">→</span>
-      </a>
-      <a href="/blog/odorstrike-review-30-day-india-test" class="b-drawer-guide-link">
-        <span>Keep gym clothes fresh longer</span>
-        <span class="b-drawer-guide-arrow" aria-hidden="true">→</span>
-      </a>
-    </div>
-
-    <!-- LATEST -->
-    <div class="b-drawer-new-label">Latest</div>
-    <div class="b-drawer-guides" id="drawerLatestLinks"></div>
-
-    <!-- NEWSLETTER -->
-    <div class="b-drawer-new-label">Newsletter</div>
-    <div class="b-drawer-nl">
-      <p class="b-drawer-nl-copy">One smell-science email a week. No spam.</p>
-      <div id="drawerNlForm" class="b-drawer-nl-form">
-        <input type="email" id="drawerNlEmail" class="b-drawer-nl-input" placeholder="your@email.com" autocomplete="email">
-        <button type="button" class="b-drawer-nl-btn" id="drawerNlBtn">Subscribe</button>
-      </div>
-      <div id="drawerNlSuccess" class="b-drawer-nl-success" style="display:none">&#10003; Subscribed</div>
-      <div id="drawerNlError" class="b-drawer-nl-error" style="display:none"></div>
-    </div>
-
-    <div class="b-drawer-spacer"></div>
-    <div class="b-drawer-socials" aria-label="Connect with us">
-      <a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram">
-        <img src="/assets/icon-instagram.png" alt="" width="40" height="40" loading="lazy">
-      </a>
-      <a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)">
-        <img src="/assets/icon-x.png" alt="" width="40" height="40" loading="lazy">
-      </a>
-      <a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram">
-        <img src="/assets/icon-telegram.png" alt="" width="40" height="40" loading="lazy">
-      </a>
-      <a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn">
-        <img src="/assets/icon-linkedin.png" alt="" width="40" height="40" loading="lazy">
-      </a>
-      <a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook">
-        <img src="/assets/icon-facebook.png" alt="" width="40" height="40" loading="lazy">
-      </a>
-      <a href="https://wa.me/919392974031?text=Hi%20Smelloff" target="_blank" rel="noopener" aria-label="WhatsApp">
-        <img src="/assets/icon-whatsapp.png" alt="" width="40" height="40" loading="lazy">
-      </a>
-      <a href="mailto:smelloffsupport@gmail.com" aria-label="Email Support">
-        <img src="/assets/icon-email.png" alt="" width="40" height="40" loading="lazy">
-      </a>
-    </div>
-  </nav>
-</aside>
+<!-- The blog's slide-out drawer used to live here: a second logo, a second
+     nav, a second set of social icons and a duplicate guide list, opened by a
+     hamburger only this page had. It was the site's fourth navigation pattern.
+     The shared header replaces it; its topic chips moved inline above the
+     grid (see .b-cats) so no feature was lost with it. -->
 
 <style>
   /* Canonical footer — explicitly DARK so it is byte-for-byte identical to every
@@ -895,44 +709,59 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
   .blog-footer .footer-top:hover{background:#B8FF57;color:#080808}
   @media(max-width:640px){.blog-footer{padding:36px 20px 24px}}
 </style>
-<footer class="blog-footer" aria-labelledby="footer-brand">
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a href="/" class="bf-brand" id="footer-brand" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:24px;width:auto;display:block;margin:0 auto"></a>
-      <p class="bf-desc">Fabric-only odor elimination mist. Made in Hyderabad.</p>
-      <p class="bf-tag">Smell Proof. Always.</p>
-      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px"><a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-instagram-white.png" alt="Instagram" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-x.png" alt="X (Twitter)" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-telegram-white.png" alt="Telegram" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-linkedin-white.png" alt="LinkedIn" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-facebook-white.png" alt="Facebook" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://wa.me/919392974031" target="_blank" rel="noopener" aria-label="WhatsApp" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-whatsapp-white.png" alt="WhatsApp" width="20" height="20" style="opacity:.85" loading="lazy"></a></div>
+<!-- SF-CHROME:FOOTER — generated by scripts/apply-chrome.mjs. Edit there, not here. -->
+<footer class="sf-ftr">
+  <div class="sf-wrap">
+    <div class="sf-ftr__grid">
+      <div class="sf-ftr__brand">
+        <img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" loading="lazy">
+        <p>Odor control for clothes, shoes, helmets and gear. Smell Proof. Always.</p>
+      </div>
+      <div>
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="/odorstrike">ODORSTRIKE</a></li>
+          <li><a href="/track-order">Track order</a></li>
+          <li><a href="/reviews">Reviews</a></li>
+          <li><a href="/blog">Guides</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Support</h3>
+        <ul>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/faq">FAQ</a></li>
+          <li><a href="/shipping">Shipping</a></li>
+          <li><a href="/returns">Returns</a></li>
+          <li><a href="/refund">Refund policy</a></li>
+          <li><a href="/cancellation">Cancellation</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+          <li><a href="https://partners.smelloff.in">Partner program</a></li>
+        </ul>
+        <div class="sf-ftr__socials">
+        <a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram"><img src="/assets/icon-instagram-white.png" alt="" width="20" height="20" loading="lazy"></a>
+        <a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)"><img src="/assets/icon-x.png" alt="" width="20" height="20" loading="lazy"></a>
+        <a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram"><img src="/assets/icon-telegram-white.png" alt="" width="20" height="20" loading="lazy"></a>
+        <a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="/assets/icon-linkedin-white.png" alt="" width="20" height="20" loading="lazy"></a>
+        <a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook"><img src="/assets/icon-facebook-white.png" alt="" width="20" height="20" loading="lazy"></a>
+        <a href="https://wa.me/919392974031" target="_blank" rel="noopener" aria-label="WhatsApp"><img src="/assets/icon-whatsapp-white.png" alt="" width="20" height="20" loading="lazy"></a>
+        </div>
+      </div>
     </div>
-    <nav class="footer-col" aria-label="Shop">
-      <p class="footer-col-label">Shop</p>
-      <a href="/">Home</a>
-      <a href="/odorstrike#buy">Buy ODORSTRIKE</a>
-    </nav>
-    <nav class="footer-col" aria-label="Guides">
-      <p class="footer-col-label">Guides</p>
-      <a href="/blog">All Guides</a>
-      <a href="/blog/odorstrike-review-30-day-india-test">30-day review</a>
-      <a href="/blog/why-i-built-odorstrike">Founder story</a>
-      <a href="/blog/odorstrike-vs-febreze-india">ODORSTRIKE vs Febreze</a>
-      <a href="/blog/zinc-pca-fabric-odor-ingredient-guide">Zinc PCA explained</a>
-
-    </nav>
-    <nav class="footer-col" aria-label="Company">
-      <p class="footer-col-label">Company</p>
-      <a href="/about">About</a>
-      <a href="https://partners.smelloff.in">Partner Program</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/shipping">Shipping</a>
-      <a href="/returns">Returns</a>
-      <a href="/refund">Refund</a>
-    </nav>
-  </div>
-  <div class="footer-bottom">
-    <span>&copy; <span id="year">2026</span> SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad</span>
-    <button class="footer-top" type="button" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&uarr;</button>
+    <div class="sf-ftr__bottom">
+      <span>© 2026 SMELLOFF. HYDERABAD. MFG: Jogdhande Nikhil Patil, Sanathnagar, Erragadda, Hyderabad.</span>
+      <span>MADE IN INDIA / FABRIC ONLY</span>
+    </div>
   </div>
 </footer>
+<!-- /SF-CHROME:FOOTER -->
 <script>(function(){var y=document.getElementById('year');if(y){y.textContent=new Date().getFullYear();}})();</script>
 
 
@@ -1039,6 +868,19 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
   // Legacy alias for any existing callers
   window.__blogSetCat = function(cat){ window.filterCards('', cat); };
 
+  /* Inline topic chips (they replaced the drawer's chip row). */
+  var catBtns = document.querySelectorAll('.b-cats .b-cat');
+  Array.prototype.forEach.call(catBtns, function(btn){
+    btn.addEventListener('click', function(){
+      Array.prototype.forEach.call(catBtns, function(x){
+        var on = x === btn;
+        x.classList.toggle('is-active', on);
+        x.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      window.filterCards('', btn.dataset.cat);
+    });
+  });
+
   // Search input — debounced 150ms
   if(searchInput){
     searchInput.addEventListener('input', function(){
@@ -1054,78 +896,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
 })();
 </script>
 
-<script>
-(function(){
-  var btn = document.getElementById('blogMenuToggle');
-  var drawer = document.getElementById('blogDrawer');
-  var backdrop = document.getElementById('drawerBackdrop');
-  var closeBtn = document.getElementById('drawerClose');
-  if(!btn || !drawer || !backdrop) return;
-  function open(){
-    drawer.classList.add('open');
-    backdrop.classList.add('open');
-    document.body.classList.add('drawer-open');
-    btn.setAttribute('aria-expanded','true');
-    drawer.setAttribute('aria-hidden','false');
-  }
-  function close(){
-    drawer.classList.remove('open');
-    backdrop.classList.remove('open');
-    document.body.classList.remove('drawer-open');
-    btn.setAttribute('aria-expanded','false');
-    drawer.setAttribute('aria-hidden','true');
-  }
-  btn.addEventListener('click', function(){
-    if(drawer.classList.contains('open')) close(); else open();
-  });
-  if(closeBtn) closeBtn.addEventListener('click', close);
-  backdrop.addEventListener('click', close);
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && drawer.classList.contains('open')) close();
-  });
-})();
-</script>
 
 
-<script>
-(function(){
-  var drawer   = document.getElementById('blogDrawer');
-  var backdrop = document.getElementById('drawerBackdrop');
-  var menuBtn  = document.getElementById('blogMenuToggle');
-  if(!drawer) return;
 
-  function closeDrawer(){
-    drawer.classList.remove('open');
-    if(backdrop) backdrop.classList.remove('open');
-    document.body.classList.remove('drawer-open');
-    if(menuBtn) menuBtn.setAttribute('aria-expanded','false');
-    drawer.setAttribute('aria-hidden','true');
-  }
 
-  drawer.querySelectorAll('.b-drawer-cat').forEach(function(chip){
-    chip.addEventListener('click', function(){
-      var cat = chip.dataset.cat;
-
-      // Update active chip state — persists until cleared
-      drawer.querySelectorAll('.b-drawer-cat').forEach(function(x){ x.classList.remove('active'); });
-      chip.classList.add('active');
-
-      closeDrawer();
-
-      // Apply filter via shared function (clears any active search query)
-      if(typeof window.filterCards === 'function') window.filterCards('', cat);
-
-      // Scroll to Latest reads
-      var latestSec = document.getElementById('latestSection');
-      if(latestSec){
-        setTimeout(function(){
-          window.scrollTo({ top: latestSec.getBoundingClientRect().top + window.pageYOffset - 70, behavior: 'smooth' });
-        }, 80);
-      }
-    });
-  });
-})();
-</script>
 
 
 <script>
@@ -1168,57 +942,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
 })();
 </script>
 
-<script>
-/* Drawer: auto-populate Latest from last 3 cards in latestGrid */
-(function(){
-  var grid = document.getElementById('latestGrid');
-  var linksEl = document.getElementById('drawerLatestLinks');
-  if(!grid || !linksEl) return;
-  var cards = Array.prototype.slice.call(grid.querySelectorAll('a.b-card'));
-  var latest = cards.slice(Math.max(0, cards.length - 3)).reverse();
-  latest.forEach(function(card){
-    var href = card.getAttribute('href');
-    var titleEl = card.querySelector('h3');
-    var title = titleEl ? titleEl.textContent.trim() : '';
-    if(!href || !title) return;
-    var a = document.createElement('a');
-    a.href = href;
-    a.className = 'b-drawer-guide-link';
-    a.innerHTML = '<span>' + title + '</span><span class="b-drawer-guide-arrow" aria-hidden="true">→</span>';
-    linksEl.appendChild(a);
-  });
-})();
 
-/* Drawer: newsletter subscription */
-(function(){
-  var SHEETS_EP = 'https://script.google.com/macros/s/AKfycbwvZamMivX4MF_jM83VjO3f8GDYmitlOxKkkXS2mSnivZ1wzps9ZolIQG2tvKMATIoh2Q/exec';
-  var btn = document.getElementById('drawerNlBtn');
-  if(!btn) return;
-  btn.addEventListener('click', function(){
-    var input = document.getElementById('drawerNlEmail');
-    var formEl = document.getElementById('drawerNlForm');
-    var successEl = document.getElementById('drawerNlSuccess');
-    var errorEl = document.getElementById('drawerNlError');
-    var email = input ? input.value.trim() : '';
-    if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-      if(input) input.style.borderColor = '#a00';
-      return;
-    }
-    input.style.borderColor = '';
-    errorEl.style.display = 'none';
-    var url = SHEETS_EP + '?email=' + encodeURIComponent(email);
-    var img = new Image();
-    img.src = url;
-    if(navigator.sendBeacon){
-      var fd = new FormData();
-      fd.append('email', email);
-      navigator.sendBeacon(SHEETS_EP, fd);
-    }
-    formEl.style.display = 'none';
-    successEl.style.display = 'block';
-  });
-})();
-</script>
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <script src="/assets/js/track.js?v=2" defer></script>

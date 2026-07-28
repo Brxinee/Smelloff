@@ -36,6 +36,35 @@ Earlier notes here claimed `index.html` carried the buy section and that
   LCP path carries no extra render-blocking request. They do **not** use
   `/assets/js/app.js`.
 
+## Shared site chrome (2026-07-28)
+Every page now carries the **same header and footer** — the homepage's. Before
+this there were four headers (homepage, `/odorstrike`, `/blog`, and a `.p-nav`
+that was just a logo plus "← Back to home" on the other 13 pages) and three
+footers, so moving from `/` to `/privacy` or `/blog` read as a different site.
+- `assets/css/chrome.css` — header, footer, page shell (`.sf-wrap`,
+  `.sf-section`, `.sf-eyebrow`, `.sf-masthead`) and long-form prose
+  (`.sf-prose`). All `.sf-` prefixed; declares **no hex values**, only tokens.
+- `assets/js/chrome.js` — burger toggle, cart badge, `aria-current` on the nav
+  link matching the URL. Replaces the inline copies that used to live on each
+  page that happened to have a header.
+- **Load order in every `<head>`:** page `<style>` → `soft.css` → `chrome.css`.
+  Same reasoning as `soft.css`: these pages are self-contained, so an inline
+  `<style>` beats a preceding `<link>` at equal specificity, and the shared
+  layers have to come last to win.
+- The markup is **generated**, not hand-written. `scripts/apply-chrome.mjs`
+  holds the canonical header/footer and stamps them between
+  `<!-- SF-CHROME:HEADER -->` / `<!-- SF-CHROME:FOOTER -->` markers on all 24
+  pages. It is idempotent (`--check` for a dry run). **Edit the script, re-run
+  it, commit the result — never hand-edit the markup between the markers.**
+- One deliberate variant: the cart control. On `/odorstrike` it is a
+  `<button onclick="openCartDrawer()">` whose badge is `#cartCount` (driven by
+  that page's checkout JS); everywhere else it is a link to
+  `/odorstrike?cart=open` with badge `#sfCartCount` (driven by `chrome.js` from
+  `localStorage`). Pass `cart: 'drawer'` in the script's `PAGES` table.
+- The blog's slide-out drawer is gone — it was a fourth nav pattern with its own
+  logo, socials and guide list. Its topic chips survive inline above the grid as
+  `.b-cats` / `.b-cat`, wired to the same `window.filterCards`.
+
 ## Design system (2026-07-28)
 `assets/css/tokens.css` is the **single source of truth** for colour, type
 scale, rhythm, borders and motion. Before it, nine `:root` blocks had drifted
@@ -75,15 +104,29 @@ buttons with uppercase wide-tracked labels and a bounce on hover.
 - FAQs are `<details>` accordions everywhere (homepage, `/odorstrike`, `/faq`).
   The +/− marker, the open state and the row transition all live in `soft.css`;
   a page only needs `<details class="faq-item"><summary><h3>…</h3></summary>`.
-- `/odorstrike` hero is now a scrolling squircle gallery beside a **sticky buy
+- `/odorstrike` hero is a scrolling squircle gallery beside a **sticky buy
   panel** (`.product-info` is `position:sticky` at ≥960px). The gallery is a
-  horizontal scroll-snap carousel on mobile so the CTA stays reachable. It uses
-  the four lifestyle shots in `/assets` (`shot-pocket`, `shot-gymbag`,
-  `shot-flatlay`, `shot-studio`) that were previously unrendered — only
-  `shot-studio` was preloaded, pointing at nothing.
+  horizontal scroll-snap carousel on mobile so the CTA stays reachable.
+- **PDP gallery = product photography only, three tiles**:
+  `odorstrike-hero-disc.webp` (bottle on the acid disc), `shot-studio.webp`
+  (clean studio shot), `odorstrike-bottle-cutout.webp` (contained, as a detail).
+  It used to render `shot-pocket`, `shot-gymbag` and `shot-flatlay` too — those
+  are **ad creatives with headline copy, bullet lists and icon rows burnt into
+  the pixels**. Two type systems fought in every tile and the claims inside were
+  unselectable, untranslatable and invisible to search. **Do not put them back
+  in the gallery.** The claims they carried are real markup now (`.fix-carry`).
+  The three files are still in `/assets` for paid social.
+- `assets/odorstrike-hero-disc.webp` was derived from a founder-supplied render
+  whose disc was `#BFE20A`. It is recoloured to the brand `--acid #B8FF57`
+  exactly, and its background is lifted from `#000000` to the page ink
+  `#080808` so the tile is seamless. Any replacement must match both.
 - The `.spec-scale` rows (protection / fragrance) are the analogue of
   wimpdecaf's roast-strength slider. Levels are 1–4; "up to 8 hrs" is the
   locked claim, so the protection dot sits at the top of the scale, not past it.
+- `.spec-row` is used by **two** components on `/odorstrike` — the hero scale
+  and the showcase spec table. Both are scoped (`.spec-scale .spec-row`,
+  `.specs .spec-row`); they were not, and the hero's grid columns were leaking
+  into the table. Keep them scoped.
 
 ## Site structure
 - `/` — brand homepage (hero, benefits, problem, product, voices, founder, FAQ)
