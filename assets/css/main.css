@@ -1,42 +1,19 @@
+/* Colour tokens now come from /assets/css/tokens.css — the pages that
+   load this file link it first. Only file-specific vars remain below. */
 /* === PERMANENT DARK THEME — single source of truth. No light mode, no toggle. === */
   :root{
-    /* Surfaces */
+  /* Surfaces */
     --black:         #080808;
-    --card:          #0F0F0F;
-    --card-hover:    #141414;
-    --border:        rgba(255,255,255,.12);
-    --border-subtle: rgba(255,255,255,.08);
-
-    /* Text */
+  /* Text */
     --white:         #FFFFFF;
-    --gray:          #8A8A8A;
-    --silver:        #BFC3C8;
-
-    /* Accent */
+  /* Accent */
     --green:         #B8FF57;
-    --green-light:   #D2FF8A;
-    --green-dim:     rgba(184,255,87,.12);
-
-    /* Utility */
+  /* Utility */
     --overlay:       rgba(0,0,0,.75);
-
-    /* Aliases — existing markup references these names; map them to the dark palette */
+  /* Aliases — existing markup references these names;
+  map them to the dark palette */
     --bg:             var(--black);
-    --bg-surface:     var(--card);
-    --bg-subtle:      var(--border-subtle);
-    --text:           var(--white);
-    --text-secondary: var(--silver);
-    --muted:          var(--gray);
-    --accent:         var(--green);
-    --accent-rgb:     184,255,87;
-    --accent-hover:   var(--green-light);
-    --accent-light:   var(--green-dim);
-    --rule:           var(--border);
-    --ink:            var(--black);
-    --paper:          var(--white);
-    --shadow:         rgba(0,0,0,.40);
-    --acid:           var(--green);
-  }
+}
 
   /* Smooth interaction transitions */
   button, a, .price-card, .pay-opt, .faq-summary, .nav-cart, .to-top{

@@ -16,23 +16,75 @@ Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — India's first pocke
 The homepage was restored to the original iconic design (dark #080808, Fraunces
 serif display, acid-green #B8FF57 highlights, JetBrains Mono labels) from the
 April 2026 codebase, paired with current-correct data:
-- **₹229 solo (50ml) is the ONLY SKU. No duo/trio/bundles anywhere.** `/odorstrike` redirects to `/#buy`.
+- **₹229 solo (50ml) is the ONLY SKU. No duo/trio/bundles anywhere.**
 - Claim: "up to 8 hours odor protection on fabric". Glycerine-free, zero residue.
 - 4-layer mechanism: TRAP HPβCD · NEUTRALIZE Zinc PCA · PREVENT Triethyl Citrate · ANTI-REGROWTH Zinc Gluconate (Formula v3.1).
 - NEVER list Zinc Ricinoleate, Sodium Bicarbonate, or Glycerine as ingredients.
 - **NEVER publish formula percentages/concentrations anywhere** (site, schema, llms.txt, blog). Ingredient NAMES are public; exact amounts are a trade secret. Say "exact concentrations are proprietary" if asked.
-- `index.html` is fully self-contained (single-file CSS/JS incl. checkout: UPI + COD + Supabase mirror + Sheets logging + Resend email + consent-gated analytics). It does NOT use `/assets/js/app.js` or `/assets/css/neo.css` — other pages (faq, reviews) still do.
 - Canonical domain is `https://smelloff.in` (non-www; www redirects).
 
+## Page roles (corrected 2026-07-28)
+Earlier notes here claimed `index.html` carried the buy section and that
+`/odorstrike` redirected to `/#buy`. Neither is true. The actual split:
+- **`index.html` (~55KB)** — the **brand page**. Hero (bottle + price + buy CTA
+  that links out), benefits strip, ticker, zones, territory, problem, featured
+  product, voices, founder, proof, FAQ. No checkout on this page.
+- **`odorstrike.html` (~166KB)** — the **product page and the entire checkout**
+  (UPI + COD + Supabase mirror + Sheets logging + Resend email + consent-gated
+  analytics). This is the money page; be careful editing it.
+- Both are deliberately self-contained single-file pages (inline CSS/JS) so the
+  LCP path carries no extra render-blocking request. They do **not** use
+  `/assets/js/app.js`.
+
+## Design system (2026-07-28)
+`assets/css/tokens.css` is the **single source of truth** for colour, type
+scale, rhythm, borders and motion. Before it, nine `:root` blocks had drifted
+apart across three naming families — three different whites (`#F4F1EA`,
+`#F5F5F5`, `#FFFFFF`), two card fills, two border colours and four greys.
+- Canonical: `--ink #080808` · `--surface #0F0F0F` · `--text #F4F1EA` ·
+  `--muted #9A958D` · `--text-2 #C9C5BD` · `--acid #B8FF57` · `--acid-hi #D1FF8A`.
+- Every page links `tokens.css`. The two self-contained pages inline a
+  **byte-identical copy** of its `:root` block, marked `TOKENS v1` — change a
+  value in one, change all three.
+- `tokens.css` also carries a frozen alias layer mapping the old names
+  (`--paper/--bg/--accent`, `--black/--white/--card/--border/--green/--gray`,
+  `--nb-*`) onto the canonical tokens, so legacy rules keep resolving. Write new
+  CSS against the canonical names; don't grow the aliases.
+- Metric-matched fallback faces (`Fraunces Fallback` etc.) live in
+  `assets/fonts.css` and inline in `index.html`, holding CLS near zero.
+- Unreferenced stylesheets: `assets/css/neo.css`, `neo-lite.css` and `main.css`
+  are no longer loaded by any page (blog posts use `blog.css`). Left in place,
+  but they are dead weight and safe to delete.
+- Text selection is enabled site-wide. It used to be blocked on `body` in
+  `odorstrike.html` and `blog.css`, which stopped customers copying their own
+  order ID and readers quoting a guide. Only interactive chrome opts out now.
+
 ## Site structure
-- `/` — homepage (product hero, buy section, FAQ, reviews)
-- `/blog` — blog index (50+ posts)
+- `/` — brand homepage (hero, benefits, problem, product, voices, founder, FAQ)
+- `/odorstrike` — product page + checkout
+- `/blog` — blog index (8 posts)
 - `/blog/[slug]` — individual blog posts
 - `/shipping`, `/returns`, `/refund`, `/privacy`, `/terms` — policy pages
 - `/llms.txt`, `/llms-full.txt` — AI/LLM context files
 - `/sitemap.xml`, `/robots.txt`, `/manifest.json`
 - `/admin` — private admin dashboard ("Mission Control"), served at `admin.smelloff.in` (noindex, password-gated). Single self-contained SPA `admin/index.html` + one serverless function `api/admin.js` (session login, Supabase service-role CRUD over orders/reviews/messages/waitlist/blog_comments, computed business stats, first-party analytics reports, optional GA4 Data API proxy). Order status pipeline: placed→confirmed→packed→dispatched→out_for_delivery→delivered (+upi_pending, cancelled); admin has one-tap "advance" buttons and the customer `track-order.html` timeline mirrors it. Every status change is timestamped into `orders.status_history` (jsonb `[{status,at}]`) + `orders.updated_at` by the `orders_track_status` DB trigger (migration `20260711_order_status_history.sql`), so the customer timeline shows *when* each stage happened plus an estimated-delivery window — no admin wiring needed, the trigger fires on any status update. Setup + env vars in `docs/ADMIN-SETUP.md`. Secrets (`ADMIN_PASSWORD`, `SUPABASE_SERVICE_ROLE_KEY`, optional `GA4_*`) live only in Vercel env — never in the client. Reuses brand fonts/colors; charts follow the validated dark-mode dataviz palette.
 - **First-party analytics** — cookieless, no-Google web analytics. `api/track.js` receives a beacon from every page (added inline to index/faq/odorstrike, via `assets/js/consent-analytics.js` everywhere else) and stores an anonymised row in `page_views` (daily-rotating visitor hash from IP+UA+salt; no cookie, no PII). Aggregated by the `site_analytics()`/`site_realtime()` RPCs (service-role only) and shown in the admin Analytics tab. Runs regardless of the GA/Pixel consent choice because it stores nothing on the device and no personal data. Migration: `supabase/migrations/20260711_first_party_analytics.sql`.
+
+## Blog prune (2026-07-28)
+The blog was cut from 48 posts to **8** — brand, founder and ODORSTRIKE product
+content only. Kept: `why-i-built-odorstrike`, `odorstrike-review-30-day-india-test`,
+`odorstrike-vs-febreze-india`, `ambi-pur-vs-odorstrike`, `what-is-fabric-odor-eliminator`,
+`hpbcd-cyclodextrin-fabric-odor`, `zinc-pca-fabric-odor-ingredient-guide`,
+`beta-cyclodextrin-odor-removal-science`.
+- All 40 deleted slugs **301 to `/odorstrike`** in `vercel.json`, so existing
+  backlinks still land somewhere useful instead of 404ing.
+- Sitemap went 61 → 22 URLs; `llms.txt` / `llms-full.txt` pruned to match.
+- The blog index collapsed from six sections (Featured / Trending / Most Read /
+  Browse by Topic / Latest / You might also like) to one grid — with 8 posts the
+  rest just repeated the same cards. The curated-slot arrays in its inline JS are
+  now empty; re-populate them to bring those sections back.
+- Note this reverses SEO audit items 3, 6, 7 and 8 below for the deleted posts.
+  This was a deliberate product decision, not a regression.
 
 ## SEO audit status (originally 77/100 — all 9 code-fixable issues resolved as of 2026-06-10)
 1. ~~www vs non-www canonical conflict~~ — **FIXED**: everything (canonicals, sitemap, JSON-LD, robots.txt Sitemap directive, llms.txt) uses non-www `https://smelloff.in` (no trailing slash, https). `vercel.json` 301s www→non-www; `cleanUrls:true` + `trailingSlash:false`.

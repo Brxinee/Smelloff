@@ -243,37 +243,80 @@
 </script>
 
 <style>
+  /* ============ TOKENS v1 ============
+     Byte-identical copy of the :root block in /assets/css/tokens.css, which is
+     the single source of truth. Inlined (not linked) because this page is
+     deliberately self-contained — linking would put a render-blocking request
+     on the LCP path. Change one, change all three (tokens.css, index.html,
+     odorstrike.html). */
   :root{
+    /* ---- Color ---- */
     --ink:#080808;
-    --paper:#f4f1ea;
-    --acid:#b8ff57;
-    --rule:rgba(244,241,234,.12);
-    --muted:#9a958d;
-    --bg:#080808;
-    --text:#f4f1ea;
+    --surface:#0F0F0F;
+    --surface-2:#141414;
+    --text:#F4F1EA;
+    --muted:#9A958D;
+    --acid:#B8FF57;
+    --acid-hi:#D1FF8A;
+    --on-acid:#080808;
+    --rule:rgba(244,241,234,.14);
+    --rule-strong:rgba(244,241,234,.28);
+    /* ---- Type families ---- */
+    --display:'Fraunces','Fraunces Fallback',serif;
+    --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
+    --body:'Inter Tight','Inter Tight Fallback',sans-serif;
+    /* ---- Type scale ---- */
+    --lh-display:.86;
+    --lh-body:1.55;
+    --ls-display:-.028em;
+    --fs-h1:clamp(58px,14vw,164px);
+    --fs-h2:clamp(40px,7.6vw,84px);
+    --fs-h3:clamp(27px,3.6vw,42px);
+    --fs-h4:clamp(21px,2.2vw,27px);
+    --fs-lead:clamp(18px,1.5vw,22px);
+    --fs-body:17px;
+    --fs-sm:15px;
+    --fs-eyebrow:13px;
+    --ls-eyebrow:.2em;
+    /* ---- Rhythm ---- */
+    --maxw:1160px;
+    --gutter:20px;
+    --section-y:clamp(56px,8vw,112px);
+    /* ---- Form ---- */
+    --bw:3px;
+    --bw-thin:2px;
+    --r:0px;
+    --r-pill:100px;
+    --shadow-offset:6px;
+    /* ---- Motion ---- */
+    --ease:cubic-bezier(.19,1,.22,1);
+    --ease-snap:cubic-bezier(.2,.6,.2,1);
+    --dur:.2s;
+    /* ---- Local aliases kept so this page's existing rules keep resolving ---- */
+    --bg:var(--ink);
+    --paper:var(--text);
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   body{
     background:var(--bg);
     color:var(--text);
-    font-family:'Inter Tight',sans-serif;
+    font-family:var(--body);
     font-size:16px;
     line-height:1.5;
     overflow-x:hidden;
     -webkit-font-smoothing:antialiased;
+    touch-action:pan-x pan-y;
+  }
+  /* Text is selectable everywhere. This page carries the checkout, so blocking
+     selection stopped customers copying their own order ID and UPI reference.
+     Only the interactive chrome opts out, to avoid a drag selecting the label
+     instead of pressing the control. */
+  button,.pay-opt,.qty-btn,.b-card-arrow{
     -webkit-user-select:none;
     -moz-user-select:none;
     -ms-user-select:none;
     user-select:none;
-    touch-action:pan-x pan-y;
-  }
-  /* Re-enable selection where users actually need to copy text */
-  input,textarea,select,.review blockquote,.review cite,.overlay-panel p,.hero-foot p,.upi-inline-val,.upi-row .val,.order-id{
-    -webkit-user-select:text;
-    -moz-user-select:text;
-    -ms-user-select:text;
-    user-select:text;
   }
   /* Remove blue tap highlight on buttons/links */
   button,a,.price-card,.pay-opt{
@@ -312,7 +355,7 @@
   }
   nav .logo::after{content:none} /* acid dot is baked into the logo image */
   nav .meta{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     text-transform:uppercase;
     letter-spacing:.15em;
@@ -344,7 +387,7 @@
     display:flex;align-items:center;gap:10px;
   }
   .site-nav .meta a{
-    font-family:'JetBrains Mono',monospace;font-size:13px;
+    font-family:var(--mono);font-size:13px;
     letter-spacing:.12em;text-transform:uppercase;
     color:var(--text);opacity:1;padding:12px 8px;text-decoration:none;
   }
@@ -380,7 +423,7 @@
   #navMenu a{
     display:block;padding:14px 4px;min-height:44px;
     color:var(--text);text-decoration:none;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:15px;font-weight:400;text-transform:uppercase;letter-spacing:.1em;
     border-bottom:1px solid var(--rule);
   }
@@ -446,7 +489,7 @@
     padding:22px 24px;border-bottom:1px solid var(--rule);
   }
   .cart-head h3{
-    font-family:'Fraunces',serif;font-weight:900;font-size:22px;
+    font-family:var(--display);font-weight:900;font-size:22px;
     letter-spacing:-.01em;color:var(--text);margin:0;
   }
   .cart-close{
@@ -456,7 +499,7 @@
   }
   .cart-body{flex:1;overflow-y:auto;padding:24px}
   .cart-empty{
-    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;
+    font-family:var(--mono);font-size:12px;letter-spacing:.1em;
     color:var(--muted);text-align:center;padding:48px 0;text-transform:uppercase;
   }
   .cart-line{display:flex;gap:16px;align-items:flex-start}
@@ -466,11 +509,11 @@
   }
   .cart-line-info{flex:1;min-width:0}
   .cart-line-name{
-    font-family:'Fraunces',serif;font-weight:900;font-size:16px;
+    font-family:var(--display);font-weight:900;font-size:16px;
     color:var(--text);margin-bottom:4px;line-height:1.15;
   }
   .cart-line-unit{
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
     color:var(--muted);margin-bottom:12px;
   }
   .cart-stepper{display:flex;align-items:center;border:1px solid var(--rule);width:max-content;border-radius:3px;overflow:hidden}
@@ -481,35 +524,35 @@
   .cart-stepper button:hover{background:rgba(244,241,234,.06)}
   .cart-stepper .qty-val{
     min-width:40px;text-align:center;
-    font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text);
+    font-family:var(--mono);font-size:13px;color:var(--text);
     border-left:1px solid var(--rule);border-right:1px solid var(--rule);
     line-height:32px;
   }
   .cart-remove{
     background:none;border:none;color:var(--muted);cursor:pointer;
-    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;
     text-transform:uppercase;text-decoration:underline;padding:0;margin-top:12px;
   }
   .cart-remove:hover{color:var(--text)}
   .cart-foot{border-top:1px solid var(--rule);padding:20px 24px}
   .cart-upsell{
-    font-family:'Inter Tight',sans-serif;font-size:13px;line-height:1.5;
+    font-family:var(--body);font-size:13px;line-height:1.5;
     color:var(--acid);border:1px dashed rgba(184,255,87,.35);
     padding:10px 12px;margin-bottom:14px;
   }
   .cart-subtotal{
     display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;
-    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;
+    font-family:var(--mono);font-size:12px;letter-spacing:.1em;
     text-transform:uppercase;color:var(--muted);
   }
-  .cart-subtotal .cart-sub-amt{font-size:22px;color:var(--acid);font-weight:500;font-family:'Fraunces',serif}
+  .cart-subtotal .cart-sub-amt{font-size:22px;color:var(--acid);font-weight:500;font-family:var(--display)}
   .cart-ship-note{
-    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;
     color:var(--muted);margin-bottom:16px;
   }
   .cart-checkout{
     width:100%;background:var(--acid);color:var(--ink);border:none;
-    padding:15px;font-family:'JetBrains Mono',monospace;font-size:12px;
+    padding:15px;font-family:var(--mono);font-size:12px;
     font-weight:500;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;
   }
   .cart-checkout:disabled{opacity:.4;cursor:not-allowed}
@@ -520,7 +563,7 @@
     position:relative;
   }
   .hero-meta{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.2em;
     text-transform:uppercase;
@@ -554,7 +597,7 @@
   }
   /* INFO PANEL */
   .product-info h1{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:clamp(48px,5.5vw,88px);
     line-height:.9;
@@ -563,7 +606,7 @@
   }
   .product-info h1 .ph-sub{
     display:block;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-weight:400;
     font-size:clamp(14px,1.4vw,18px);
     letter-spacing:.18em;
@@ -572,7 +615,7 @@
     margin-top:18px;
   }
   .ph-tagline{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-size:clamp(18px,1.5vw,22px);
     line-height:1.4;
     color:#c7c4bd;
@@ -583,18 +626,18 @@
   .ph-price .strike-price{
     text-decoration:line-through;
     color:var(--muted);
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:14px;
   }
   .ph-price .price-note{
     color:var(--muted);
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:12px;
     letter-spacing:.06em;
     text-transform:uppercase;
   }
   .ph-price .price{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:clamp(44px,5vw,72px);
     line-height:1;
@@ -608,7 +651,7 @@
     background:var(--acid);
     color:var(--ink);
     border:none;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:14px;
     font-weight:700;
     letter-spacing:.15em;
@@ -623,7 +666,7 @@
     flex-wrap:wrap;
     gap:6px 14px;
     margin-top:12px;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.08em;
     text-transform:uppercase;
@@ -659,7 +702,7 @@
     gap:40px;
     animation:scroll 40s linear infinite;
     white-space:nowrap;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.16em;
     text-transform:uppercase;
@@ -677,7 +720,7 @@
   /* Section base */
   section{padding:120px 32px;border-bottom:1px solid var(--rule)}
   .section-tag{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.2em;
     text-transform:uppercase;
@@ -693,7 +736,7 @@
 
   /* Problem section */
   .problem h2{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:400;
     font-style:italic;
     font-size:clamp(40px,7vw,96px);
@@ -719,7 +762,7 @@
   }
   .problem-grid div:last-child{border-right:none}
   .problem-grid h3{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     /* Word labels, not 2–4 character figures — scale down so they never overflow
        the 4-up column or wrap awkwardly on small screens. */
@@ -765,15 +808,15 @@
     display:block;width:100%;margin-top:28px;
     background:var(--acid);color:var(--ink);
     padding:20px 28px;border:none;cursor:pointer;
-    font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;
+    font-family:var(--mono);font-size:15px;font-weight:700;
     letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
     transition:transform .15s,box-shadow .15s;
   }
   .fix-cta:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(184,255,87,.35)}
-  .fix-cta-note{display:block;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .fix-cta-note{display:block;margin-top:14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
   .fix-cta-note s{opacity:.65}
   .showcase-text h2{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:clamp(36px,4.5vw,64px);
     line-height:1;
@@ -804,7 +847,7 @@
     gap:20px;
   }
   .spec-row{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:12px;
     letter-spacing:.1em;
     text-transform:uppercase;
@@ -813,7 +856,7 @@
 
   /* Science */
   .science h2{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:clamp(48px,8vw,120px);
     line-height:.9;
@@ -843,13 +886,13 @@
     padding:32px 24px;
   }
   .ingredient .pct{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.15em;
     color:var(--muted);
   }
   .ingredient h3{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:28px;
     letter-spacing:-.02em;
@@ -881,7 +924,7 @@
     text-align:center;
   }
   .pricing h2{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:clamp(48px,8vw,120px);
     line-height:.9;
@@ -889,7 +932,7 @@
     margin-bottom:24px;
   }
   .pricing .sub{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-style:italic;
     font-size:20px;
     color:var(--muted);
@@ -929,27 +972,27 @@
     background:var(--ink);
     color:var(--acid);
     padding:4px 12px;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:10px;
     letter-spacing:.2em;
     border-radius:2px;
   }
   .price-card .pack-size{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.2em;
     text-transform:uppercase;
     opacity:.6;
   }
   .price-card h3{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:48px;
     letter-spacing:-.03em;
     margin:8px 0 4px;
   }
   .price-card .mrp-strike{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:12px;
     opacity:.5;
     text-decoration:line-through;
@@ -965,7 +1008,7 @@
     background:var(--ink);
     color:var(--acid);
     padding:4px 10px;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.1em;
     margin-bottom:20px;
@@ -977,7 +1020,7 @@
     background:transparent;
     color:var(--text);
     border:1px solid var(--rule);
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:13px;
     letter-spacing:.15em;
     text-transform:uppercase;
@@ -1003,13 +1046,13 @@
   .pricing .buy-trust{
     margin-top:24px;
     display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;
-    font-family:'JetBrains Mono',monospace;font-size:11px;
+    font-family:var(--mono);font-size:11px;
     letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
   }
   .pricing .buy-trust a{color:var(--acid);text-decoration:none;border-bottom:1px solid rgba(184,255,87,.35)}
   .pricing .pay-modes{
     margin-top:28px;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.15em;
     text-transform:uppercase;
@@ -1040,13 +1083,13 @@
     margin-bottom:16px;
   }
   .review blockquote{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-size:20px;
     line-height:1.4;
     margin-bottom:24px;
   }
   .review cite{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.15em;
     text-transform:uppercase;
@@ -1064,7 +1107,7 @@
     background:var(--acid);
   }
   .final h2{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-style:italic;
     font-size:clamp(56px,10vw,160px);
@@ -1078,7 +1121,7 @@
     background:var(--ink);
     color:var(--acid);
     border:none;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:14px;
     letter-spacing:.2em;
     text-transform:uppercase;
@@ -1093,7 +1136,7 @@
     background:var(--ink);
     color:var(--paper);
     padding:60px 32px 32px;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:12px;
     letter-spacing:.1em;
   }
@@ -1181,7 +1224,7 @@
     display:flex;align-items:center;justify-content:center;
   }
   .overlay-tag{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:10px;
     letter-spacing:.2em;
     text-transform:uppercase;
@@ -1189,7 +1232,7 @@
     margin-bottom:8px;
   }
   .overlay h3{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:36px;
     letter-spacing:-.02em;
@@ -1198,7 +1241,7 @@
     color:var(--text);
   }
   .checkout-trust{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:10px;
     letter-spacing:.1em;
     color:var(--muted);
@@ -1210,7 +1253,7 @@
     margin-bottom:24px;
   }
   .overlay .summary{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:12px;
     letter-spacing:.1em;
     color:var(--muted);
@@ -1222,7 +1265,7 @@
   .overlay .summary .amt{color:var(--acid);font-weight:500}
   .overlay label{
     display:block;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:10px;
     letter-spacing:.15em;
     text-transform:uppercase;
@@ -1238,7 +1281,7 @@
   .overlay input,.overlay select,.overlay textarea{
     width:100%;
     padding:12px 14px;
-    font-family:'Inter Tight',sans-serif;
+    font-family:var(--body);
     font-size:16px; /* 16px minimum — anything smaller triggers iOS auto-zoom on focus */
     background:rgba(244,241,234,.05);
     border:1px solid var(--rule);
@@ -1257,7 +1300,7 @@
   .delivery-estimate{
     display:none;
     align-items:center;gap:8px;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.08em;
     color:var(--acid);
@@ -1277,7 +1320,7 @@
     border:1px solid var(--rule);
     cursor:pointer;
     text-align:center;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.15em;
     text-transform:uppercase;
@@ -1295,7 +1338,7 @@
     margin-top:10px;
   }
   .upi-panel-title{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:10px;
     letter-spacing:.12em;
     text-transform:uppercase;
@@ -1309,7 +1352,7 @@
     font-size:13px;
   }
   .upi-inline-lbl{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:10px;
     letter-spacing:.15em;
     text-transform:uppercase;
@@ -1317,7 +1360,7 @@
     width:64px;flex-shrink:0;
   }
   .upi-inline-val{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:13px;
     letter-spacing:.05em;
   }
@@ -1328,7 +1371,7 @@
     color:var(--acid);
     border:1px solid rgba(184,255,87,.35);
     padding:4px 10px;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:10px;
     letter-spacing:.1em;
     text-transform:uppercase;
@@ -1349,12 +1392,12 @@
     background:rgba(37,211,102,.1);
     border:1px solid rgba(37,211,102,.3);
     color:#25d366;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;letter-spacing:.1em;
     text-transform:uppercase;text-decoration:none;
   }
   .pay-cod{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:18px;
     color:var(--text);
@@ -1375,7 +1418,7 @@
     background:var(--acid);
     color:var(--ink);
     border:none;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:13px;
     letter-spacing:.2em;
     text-transform:uppercase;
@@ -1392,7 +1435,7 @@
     padding:10px 12px;
     font-size:13px;
     margin-top:12px;
-    font-family:'Inter Tight',sans-serif;
+    font-family:var(--body);
     border-left:3px solid #ff6b6b;
   }
   .wa-fallback{
@@ -1400,7 +1443,7 @@
     padding:12px;background:rgba(37,211,102,.1);
     border:1px solid rgba(37,211,102,.3);
     color:#25d366;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:12px;letter-spacing:.1em;
     text-transform:uppercase;text-decoration:none;
   }
@@ -1411,7 +1454,7 @@
   .overlay .success-screen h3{font-size:40px;margin-bottom:12px;color:var(--text)}
   .overlay .success-screen p{color:var(--muted);margin-bottom:20px;font-size:15px}
   .overlay .success-screen .order-id{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     background:rgba(184,255,87,.1);
     color:var(--acid);
     padding:12px 16px;
@@ -1423,7 +1466,7 @@
   }
   .success-track-link{
     display:none;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.1em;
     text-transform:uppercase;
@@ -1447,11 +1490,11 @@
     font-size:13px;
   }
   .upi-row .lbl{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:10px;letter-spacing:.15em;text-transform:uppercase;
     color:var(--muted);
   }
-  .upi-row .val{font-family:'JetBrains Mono',monospace;font-size:13px}
+  .upi-row .val{font-family:var(--mono);font-size:13px}
   .upi-row .val.acid{color:var(--acid);font-weight:500}
   .upi-cta{
     display:block;
@@ -1460,7 +1503,7 @@
     padding:14px;
     background:var(--acid);
     color:var(--ink);
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:12px;letter-spacing:.15em;text-transform:uppercase;
     text-decoration:none;
     font-weight:500;
@@ -1507,13 +1550,13 @@
     50%{transform:translateY(-32px)}
   }
   .ls-label{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:24px;
     margin-bottom:6px;
   }
   .ls-sub{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;letter-spacing:.15em;text-transform:uppercase;
     color:var(--muted);
   }
@@ -1539,7 +1582,7 @@
   }
   .po-back,.po-close{
     background:transparent;border:1px solid var(--rule);color:var(--text);
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
     text-transform:uppercase;cursor:pointer;padding:8px 14px;
   }
   .po-close{font-size:16px;padding:6px 12px}
@@ -1554,12 +1597,12 @@
     padding:48px 24px 80px;
   }
   .po-eyebrow{
-    font-family:'JetBrains Mono',monospace;font-size:10px;
+    font-family:var(--mono);font-size:10px;
     letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
     margin-bottom:16px;
   }
   .po-main h2{
-    font-family:'Fraunces',serif;font-weight:900;
+    font-family:var(--display);font-weight:900;
     font-size:clamp(24px,4vw,36px);letter-spacing:-.02em;line-height:1.15;
     margin:32px 0 12px;
   }
@@ -1573,7 +1616,7 @@
   }
   .po-meta{
     margin-top:40px;padding-top:20px;border-top:1px solid var(--rule);
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
     color:var(--muted);line-height:1.8;
   }
 
@@ -1594,7 +1637,7 @@
   }
   .mobile-bar.visible{transform:translateY(0)}
   .mobile-bar .mb-label{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.1em;
     color:var(--paper);
@@ -1605,7 +1648,7 @@
     color:var(--ink);
     border:none;
     padding:12px 24px;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:12px;
     font-weight:500;
     letter-spacing:.15em;
@@ -1628,7 +1671,7 @@
     border:none;
     padding:16px 0;
     cursor:pointer;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.15em;
     text-transform:uppercase;
@@ -1660,18 +1703,18 @@
   }
   .inci-row:last-child{border-bottom:none}
   .inci-row .i-pct{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     color:var(--muted);
     letter-spacing:.05em;
   }
   .inci-row .i-name{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:15px;
   }
   .inci-row .i-role{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:10px;
     letter-spacing:.1em;
     text-transform:uppercase;
@@ -1685,7 +1728,7 @@
     display:inline-block;
     background:rgba(184,255,87,.2);
     color:var(--acid);
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:9px;
     letter-spacing:.2em;
     text-transform:uppercase;
@@ -1712,7 +1755,7 @@
   .faq-list summary{
     padding:24px 0;
     cursor:pointer;
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:clamp(18px,2.5vw,24px);
     letter-spacing:-.01em;
@@ -1727,7 +1770,7 @@
   .faq-list summary::-webkit-details-marker{display:none}
   .faq-list summary::after{
     content:'+';
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:20px;
     font-weight:400;
     color:var(--muted);
@@ -1770,7 +1813,7 @@
     background:rgba(244,241,234,.03);
   }
   .proof-label{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:10px;
     letter-spacing:.2em;
     text-transform:uppercase;
@@ -1804,7 +1847,7 @@
     50%{transform:translateY(-6px)}
   }
   .proof-caption{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:20px;
     letter-spacing:-.01em;
@@ -1813,7 +1856,7 @@
   .proof-footer{
     text-align:center;
     margin-top:40px;
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-style:italic;
     font-size:clamp(16px,2vw,22px);
     color:var(--muted);
@@ -1835,7 +1878,7 @@
     border-top:1px solid var(--rule);
   }
   .use-cases h2{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:400;
     font-style:italic;
     font-size:clamp(40px,7vw,96px);
@@ -1865,14 +1908,14 @@
   .use-card:last-child{border-right:none;padding-right:0}
   .use-card:not(:first-child){padding-left:28px}
   .use-label{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.15em;
     color:var(--acid);
     margin-bottom:32px;
   }
   .use-card h3{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:900;
     font-size:28px;
     line-height:1.05;
@@ -1904,7 +1947,7 @@
     gap:60px;
   }
   .htu-head h3{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-weight:400;
     font-style:italic;
     font-size:clamp(32px,4vw,56px);
@@ -1930,7 +1973,7 @@
   .htu-steps li:last-child{border-bottom:none}
   .htu-steps li strong{color:var(--text);font-weight:500}
   .step-num{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.15em;
     color:var(--acid);
@@ -1950,7 +1993,7 @@
     text-align:center;
   }
   .email-capture .ec-text{
-    font-family:'Fraunces',serif;
+    font-family:var(--display);
     font-style:italic;
     font-size:clamp(18px,2.5vw,24px);
     color:var(--muted);
@@ -1966,7 +2009,7 @@
   .email-form input{
     flex:1;
     padding:16px 18px;
-    font-family:'Inter Tight',sans-serif;
+    font-family:var(--body);
     font-size:16px; /* 16px minimum — avoids iOS auto-zoom on focus */
     background:transparent;
     border:1px solid var(--rule);
@@ -1980,7 +2023,7 @@
     background:var(--acid);
     color:var(--ink);
     border:1px solid var(--acid);
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;
     letter-spacing:.15em;
     text-transform:uppercase;
@@ -1991,7 +2034,7 @@
   .email-form button:hover{background:#a3e84d}
   .ec-success{
     display:none;
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:12px;
     letter-spacing:.1em;
     color:var(--acid);
@@ -2016,7 +2059,7 @@
     background:#111;
     border-top:1px solid var(--rule);
     padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));
-    font-family:'Inter Tight',sans-serif;
+    font-family:var(--body);
   }
   #smelloff-consent-bar .cb-inner{
     max-width:900px;margin:0 auto;
@@ -2028,7 +2071,7 @@
   #smelloff-consent-bar p a{color:var(--acid);text-decoration:none}
   #smelloff-consent-bar .cb-actions{display:flex;gap:10px;flex-shrink:0}
   #smelloff-consent-bar button{
-    font-family:'JetBrains Mono',monospace;
+    font-family:var(--mono);
     font-size:11px;letter-spacing:.1em;text-transform:uppercase;
     padding:9px 18px;border-radius:2px;cursor:pointer;
   }
@@ -2043,7 +2086,7 @@
     position:absolute;top:-100%;left:50%;transform:translateX(-50%);
     background:var(--acid);color:var(--ink);
     padding:12px 24px;z-index:999;
-    font-family:'JetBrains Mono',monospace;font-size:12px;
+    font-family:var(--mono);font-size:12px;
     letter-spacing:.15em;text-transform:uppercase;text-decoration:none;
     border-radius:0 0 4px 4px;
   }
@@ -2052,11 +2095,11 @@
   .pay-opt:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
   /* ---- Gated social proof (verified reviews / distribution / bottles sold) ---- */
   .vr-summary{border:1px solid var(--rule);padding:18px 20px;margin:0 0 28px;display:flex;flex-wrap:wrap;gap:18px 34px;align-items:center}
-  .vr-avg{font-family:'Fraunces',serif;font-weight:900;font-size:44px;line-height:1}
+  .vr-avg{font-family:var(--display);font-weight:900;font-size:44px;line-height:1}
   .vr-stars{color:var(--acid);letter-spacing:2px;font-size:15px}
-  .vr-count{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .vr-count{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
   .vr-dist{flex:1;min-width:200px;display:grid;gap:4px}
-  .vr-dist-row{display:grid;grid-template-columns:28px 1fr 30px;gap:8px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+  .vr-dist-row{display:grid;grid-template-columns:28px 1fr 30px;gap:8px;align-items:center;font-family:var(--mono);font-size:10px;color:var(--muted)}
   .vr-bar{height:8px;background:rgba(244,241,234,.08)}
   .vr-bar i{display:block;height:100%;background:var(--acid)}
   .vr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:36px}
@@ -2064,18 +2107,18 @@
   .vr-card img{width:100%;height:160px;object-fit:cover;margin-bottom:12px;display:block}
   .vr-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
   .vr-name{font-weight:700;font-size:14px}
-  .vr-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:var(--acid);padding:2px 6px;white-space:nowrap}
-  .vr-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin:4px 0 8px}
+  .vr-badge{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:var(--acid);padding:2px 6px;white-space:nowrap}
+  .vr-meta{font-family:var(--mono);font-size:10px;color:var(--muted);margin:4px 0 8px}
   .vr-text{font-size:14px;line-height:1.55;color:#c7c4bd}
-  .sold-strip{display:inline-block;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);border:1px solid var(--acid);padding:6px 12px}
+  .sold-strip{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);border:1px solid var(--acid);padding:6px 12px}
   #buyProofMount .vr-summary{max-width:560px;margin:24px auto 0}
-  .reviews-more{margin-top:32px;font-family:'Inter Tight',sans-serif;font-size:14px;color:var(--muted);line-height:1.6}
+  .reviews-more{margin-top:32px;font-family:var(--body);font-size:14px;color:var(--muted);line-height:1.6}
   .reviews-more a{color:var(--acid);text-decoration:none;border-bottom:1px solid rgba(184,255,87,.35)}
   .guides-strip{padding:60px 32px;border-top:1px solid var(--rule)}
   .guides-strip ul{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:12px}
-  .guides-strip li a{font-family:'Fraunces',serif;font-size:clamp(16px,1.6vw,20px);color:var(--text);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:12px;display:block;transition:color .15s}
+  .guides-strip li a{font-family:var(--display);font-size:clamp(16px,1.6vw,20px);color:var(--text);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:12px;display:block;transition:color .15s}
   .guides-strip li a:hover{color:var(--acid)}
-  .guides-all{display:inline-block;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--acid);text-decoration:none}
+  .guides-all{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--acid);text-decoration:none}
 </style>
 
 <!-- Smelloff Partner Network attribution (partners.smelloff.in) -->
@@ -2473,7 +2516,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <cite>— Karan, 29 / Delhi</cite>
     </div>
   </div>
-  <p class="reviews-more">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review — worn, sweated and stain-tested across India</a>, see <a href="/blog/best-fabric-odor-spray-india-2026-body-odor">how it stacks up against Febreze and 4 other sprays</a>, or compare <a href="/blog/best-deodorant-spray-for-clothes-not-skin">5 deodorant sprays for clothes (not skin) side-by-side</a>.</p>
+  <p class="reviews-more">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review — worn, sweated and stain-tested across India</a>, see how it stacks up against Febreze and 4 other sprays, or compare 5 deodorant sprays for clothes (not skin) side-by-side.</p>
 </section>
 
 <!-- FAQ -->
@@ -2490,7 +2533,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     </details>
     <details>
       <summary>How long does the protection last?</summary>
-      <p class="faq-answer">Up to 8 hours of odor protection on fabric under normal office or commute conditions. After heavy gym sessions or long rides, re-spray worn areas. See the full <a href="/blog/how-to-not-smell-sweaty-at-work">system for staying fresh through an 11-hour office day</a>.</p>
+      <p class="faq-answer">Up to 8 hours of odor protection on fabric under normal office or commute conditions. After heavy gym sessions or long rides, re-spray worn areas. See the full system for staying fresh through an 11-hour office day.</p>
     </details>
     <details>
       <summary>How many uses per bottle?</summary>
@@ -2549,8 +2592,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <ul>
     <li><a href="/blog/why-i-built-odorstrike">Why I built ODORSTRIKE — the founder story behind India's ₹229 pocket fabric spray</a></li>
     <li><a href="/blog/beta-cyclodextrin-odor-removal-science">The science: how beta-cyclodextrin traps odor molecules in fabric</a></li>
-    <li><a href="/blog/best-fabric-odor-spray-india-2026-body-odor">Best fabric odor spray in India (2026) — 5 tested, 1 winner</a></li>
-    <li><a href="/blog/how-to-not-smell-sweaty-at-work">How to not smell sweaty at work — the 11-hour office playbook</a></li>
+    <li>Best fabric odor spray in India (2026) — 5 tested, 1 winner</li>
+    <li>How to not smell sweaty at work — the 11-hour office playbook</li>
     <li><a href="/blog/odorstrike-review-30-day-india-test">ODORSTRIKE 30-day India test — is it worth ₹229?</a></li>
   </ul>
   <a class="guides-all" href="/blog">All guides →</a>

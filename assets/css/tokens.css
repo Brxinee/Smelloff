@@ -1,0 +1,145 @@
+/* =====================================================================
+   Smelloff — canonical design tokens. SINGLE SOURCE OF TRUTH.
+   =====================================================================
+   Before this file existed there were three drifted copies of the system:
+   index.html (--text #F2F2F2), odorstrike.html (--text #f4f1ea) and
+   neo.css (--nb-ink #FFFFFF). Three different whites, three type scales.
+
+   Now: these values are canonical. index.html and odorstrike.html inline a
+   byte-identical copy of the :root block below (they are deliberately
+   self-contained single-file pages — see CLAUDE.md — so they cannot link
+   this file without adding a render-blocking request on the LCP path).
+   Every other page links this file.
+
+   If you change a value here, change it in those two inline blocks too.
+   Search for "TOKENS v1" to find them.
+   ===================================================================== */
+
+:root{
+  /* ---- Color -------------------------------------------------------- */
+  --ink:#080808;              /* page background */
+  --surface:#0F0F0F;          /* card / slab fill */
+  --surface-2:#141414;        /* raised slab, chips */
+  --text:#F4F1EA;             /* warm paper white — the one true text color */
+  --muted:#9A958D;            /* secondary copy */
+  --text-2:#C9C5BD;           /* secondary copy — brighter than --muted */
+  --acid:#B8FF57;             /* the single accent */
+  --acid-hi:#D1FF8A;          /* accent hover */
+  --acid-dim:rgba(184,255,87,.12);
+  --acid-rgb:184,255,87;
+  --on-acid:#080808;          /* text ON acid is always ink, never white */
+  --rule:rgba(244,241,234,.14);
+  --rule-soft:rgba(244,241,234,.08);
+  --rule-strong:rgba(244,241,234,.28);
+  --overlay:rgba(0,0,0,.75);
+
+  /* ---- Type families ------------------------------------------------ */
+  --display:'Fraunces','Fraunces Fallback',serif;
+  --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
+  --body:'Inter Tight','Inter Tight Fallback',sans-serif;
+
+  /* ---- Type scale ---------------------------------------------------
+     Display line-height is deliberately sub-1 so multi-line headlines
+     stack tight and read as a single mass. Tracking tightens as size
+     grows, which is what keeps large Fraunces from looking loose. */
+  --lh-display:.86;
+  --lh-body:1.55;
+  --ls-display:-.028em;
+
+  --fs-h1:clamp(58px,14vw,164px);
+  --fs-h2:clamp(40px,7.6vw,84px);
+  --fs-h3:clamp(27px,3.6vw,42px);
+  --fs-h4:clamp(21px,2.2vw,27px);
+  --fs-lead:clamp(18px,1.5vw,22px);
+  --fs-body:17px;
+  --fs-sm:15px;
+  --fs-eyebrow:13px;
+  --ls-eyebrow:.2em;
+
+  /* ---- Rhythm ------------------------------------------------------- */
+  --maxw:1160px;
+  --gutter:20px;
+  --section-y:clamp(56px,8vw,112px);
+
+  /* ---- Form --------------------------------------------------------- */
+  --bw:3px;                   /* hard border weight — the brutalist edge */
+  --bw-thin:2px;
+  --r:0px;                    /* square by default; the brand is sharp */
+  --r-pill:100px;
+  --shadow-offset:6px;        /* hard offset shadow, never a blur */
+
+  /* ---- Motion ------------------------------------------------------- */
+  --ease:cubic-bezier(.19,1,.22,1);
+  --ease-snap:cubic-bezier(.2,.6,.2,1);
+  --dur:.2s;
+}
+
+/* =====================================================================
+   Legacy alias layer.
+
+   Three naming families grew up independently across this codebase:
+     A  --ink / --paper / --acid / --text / --muted / --rule
+        (index.html, odorstrike.html, faq.html)
+     B  --black / --card / --border / --white / --gray / --silver /
+        --green / --bg / --accent
+        (reviews, about, contact, track-order, 404, blog/index, blog.css)
+     C  --nb-*
+        (neo.css)
+
+   They also disagreed on values — three whites (#F4F1EA, #F5F5F5,
+   #FFFFFF), two card fills (#111111, #0F0F0F), two borders (#262626,
+   rgba(255,255,255,.12)) and four greys. Rewriting every rule in every
+   file would be a large, risky diff, so instead all three families now
+   resolve to the canonical tokens above. One value to change, everywhere.
+
+   New CSS should use the canonical names. These aliases are frozen —
+   don't add to them.
+   ===================================================================== */
+:root{
+  /* Family A */
+  --paper:var(--text);
+  --bg:var(--ink);
+  --accent:var(--acid);
+  --text-secondary:var(--text-2);
+
+  /* Family B */
+  --black:var(--ink);
+  --white:var(--text);
+  --card:var(--surface);
+  --card-hover:var(--surface-2);
+  --bg-surface:var(--surface);
+  --bg-subtle:var(--surface-2);
+  --border:var(--rule);
+  --border-subtle:var(--rule-soft);
+  --line:var(--rule);
+  --gray:var(--muted);
+  --grey:var(--text-2);
+  --silver:var(--text-2);
+  --off-white:var(--text);
+  --green:var(--acid);
+  --green-light:var(--acid-hi);
+  --green-dim:var(--acid-dim);
+  --accent-hover:var(--acid-hi);
+  --accent-light:var(--acid-dim);
+  --accent-rgb:var(--acid-rgb);
+  --shadow:rgba(0,0,0,.40);
+
+  /* Family C */
+  --nb-paper:var(--ink);
+  --nb-ink:var(--text);
+  --nb-white:var(--text);
+  --nb-surface:var(--surface);
+  --nb-surface-2:var(--surface-2);
+  --nb-chip:var(--surface-2);
+  --nb-line:var(--rule);
+  --nb-line-strong:var(--rule-strong);
+  --nb-black:var(--ink);
+  --nb-acid:var(--acid);
+  --nb-yellow:var(--acid);
+  --nb-muted:var(--muted);
+  --nb-shadow:none;
+  --nb-shadow-sm:none;
+  --nb-bw:1px;
+  --nb-r:2px;
+  --nb-r-sm:2px;
+}

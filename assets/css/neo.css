@@ -1,3 +1,5 @@
+/* Colour tokens now come from /assets/css/tokens.css — the pages that
+   load this file link it first. Only file-specific vars remain below. */
 /* ═══════════════════════════════════════════════════════════════
    SMELLOFF — NEO-BRUTALIST SKIN (loads after main.css, overrides it)
    Shapes/Hella-Goods style: hard offset shadows, 3px black borders,
@@ -13,24 +15,9 @@
        --nb-chip   = former solid-black chip fill
        --nb-ink / --nb-white = text colors (now white)
        --nb-line   = hairline border color (was --nb-ink border role)
-       --nb-acid   = the single accent; text ON acid stays #080808 */
+       --nb-acid   = the single accent;
+  text ON acid stays #080808 */
   --nb-paper:#080808;
-  --nb-ink:#FFFFFF;
-  --nb-white:#FFFFFF;
-  --nb-surface:#0F0F0F;
-  --nb-surface-2:#141414;
-  --nb-chip:#141414;
-  --nb-line:rgba(255,255,255,.12);
-  --nb-line-strong:rgba(255,255,255,.22);
-  --nb-black:#080808;
-  --nb-acid:#B8FF57;
-  --nb-yellow:#B8FF57;
-  --nb-muted:#8A8A8A;
-  --nb-shadow:none;
-  --nb-shadow-sm:none;
-  --nb-bw:1px;
-  --nb-r:2px;
-  --nb-r-sm:2px;
   --nb-head:'Barlow Condensed',sans-serif;
   --nb-body:'DM Sans','Inter Tight',sans-serif;
 }
