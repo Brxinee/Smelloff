@@ -201,3 +201,22 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
   html{scroll-behavior:auto}
   *{transition:none!important}
 }
+
+/* Citation links in article prose carry no class and the prose is not wrapped
+   in a container class, so they fell back to the UA default (#0000EE) — about
+   2:1 against the dark page and effectively unreadable. Style classless links
+   globally; footer/social links wrap an <img> so the underline never paints,
+   but the rule below turns it off there anyway to be explicit. */
+a:not([class]){
+  color:var(--acid);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  text-decoration-thickness:1px;
+}
+a:not([class]):hover{color:var(--acid-hi)}
+footer a:not([class]),.socials a:not([class]),.blog-footer a:not([class]){
+  text-decoration:none;
+}
+/* .read-next__card sets no colour of its own, so any text in it that isn't the
+   styled title also fell through to UA blue. */
+.read-next__card{color:var(--text)}
