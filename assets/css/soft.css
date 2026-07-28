@@ -1,0 +1,260 @@
+/* =====================================================================
+   Smelloff — soft form language  (v1, 2026-07-28)
+   =====================================================================
+   The site was built on a hard-edged brutalist form language: 90° corners,
+   3px borders, hard offset shadows. This layer replaces that with the soft
+   squircle language modelled on wimpdecaf.com's product page — generous
+   corner radii, hairline outlines, no offset shadows, pill buttons with
+   uppercase wide-tracked labels and a bounce on hover.
+
+   Palette and type are unchanged: still #080808 / #B8FF57 / Fraunces.
+   Only the *shapes* change.
+
+   HOW THIS LOADS
+   Most pages in this repo are self-contained: their CSS lives in an inline
+   <style> in <head>. An inline <style> beats a <link> that precedes it at
+   equal specificity, so this file is linked *after* each page's <style>
+   block on purpose. That lets one file restyle every component across
+   ~24 pages without rewriting each page's rules — and makes the change
+   trivially reversible by removing one <link>.
+
+   Reference for the radii/button spec: wimpdecaf's _base.css
+   (.btn radius .6875rem, uppercase, letter-spacing .07em) and _cmp-faqs.css
+   (details radius 32px, 3px outline, rotating icon, max-height answer).
+   ===================================================================== */
+
+:root{
+  /* Squircle scale. 32px on cards is wimpdecaf's number; the rest are
+     proportional steps so nested shapes stay visually concentric. */
+  --sq-xs:8px;
+  --sq-sm:11px;    /* buttons — .6875rem */
+  --sq-md:18px;
+  --sq-lg:28px;    /* cards */
+  --sq-xl:36px;    /* large panels, gallery tiles */
+  --sq-pill:999px;
+
+  /* Hairline outline replaces the old 3px hard border. */
+  --hair:1px;
+  --hair-strong:2px;
+}
+
+/* ---------------------------------------------------------------------
+   1 · BUTTONS
+   One spec everywhere: pill-ish radius, uppercase, wide tracking, acid
+   fill, and a bounce on hover. The old hard offset shadow is removed —
+   it fought the rounded corners.
+   --------------------------------------------------------------------- */
+@keyframes sf-bounce{
+  0%,100%{transform:translateY(0)}
+  30%{transform:translateY(-3px)}
+  60%{transform:translateY(-1px)}
+}
+
+.btn,.nb-btn,.buy-btn,.buy-pill,.cta,a.cta,button.cta,
+.product-form__submit,.nav-cta,.nav-links a.nav-cta,
+.b-buy-btn,.end-cta .btn,.write-review-btn{
+  border-radius:var(--sq-sm) !important;
+  border:0 !important;
+  box-shadow:none !important;
+  text-transform:uppercase;
+  font-weight:600;
+  letter-spacing:.07em;
+  line-height:1.4;
+  transition:background-color .2s var(--ease),color .2s var(--ease),transform .2s var(--ease);
+}
+.btn:hover,.nb-btn:hover,.buy-btn:hover,.buy-pill:hover,.cta:hover,
+.product-form__submit:hover,.nav-cta:hover,.nav-links a.nav-cta:hover{
+  box-shadow:none !important;
+  transform:none;
+}
+@media (prefers-reduced-motion: no-preference){
+  .btn:hover,.buy-btn:hover,.buy-pill:hover,.cta:hover,.nav-cta:hover{
+    animation:sf-bounce .6s ease;
+  }
+}
+/* Ghost/secondary: hairline outline instead of the old 3px slab. */
+.btn-ghost,.nb-btn--ghost{
+  background:transparent !important;
+  border:var(--hair-strong) solid var(--rule-strong) !important;
+  color:var(--text) !important;
+}
+.btn-ghost:hover,.nb-btn--ghost:hover{
+  border-color:var(--acid) !important;
+  color:var(--acid) !important;
+}
+
+/* ---------------------------------------------------------------------
+   2 · CARDS / PANELS
+   Every slab on the site becomes a squircle with a hairline edge and a
+   slightly raised fill. Hover lifts instead of throwing a hard shadow.
+   --------------------------------------------------------------------- */
+.zone,.voice,.faq-item,.trust-row li,.product-visual,
+.b-card,.guide-card,.card,.rv-card,.review,.price-card,
+.end-cta,.read-next,.b-buy-card,.nf-card,.contact-card,.track-card{
+  border-radius:var(--sq-lg) !important;
+  border:var(--hair) solid var(--rule) !important;
+  box-shadow:none !important;
+  background:var(--surface);
+  overflow:hidden;
+  transition:border-color .2s var(--ease),background-color .2s var(--ease),transform .2s var(--ease);
+}
+@media(hover:hover){
+  .zone:hover,.voice:hover,.faq-item:hover,.b-card:hover,.guide-card:hover,
+  .card:hover,.rv-card:hover,.product-visual:hover{
+    transform:translateY(-3px) !important;
+    border-color:var(--rule-strong) !important;
+    box-shadow:none !important;
+    background:var(--surface-2);
+  }
+}
+/* Media inside a squircle card has to be clipped to the same curve. */
+.b-card img,.product-visual img,.card img,.b-card-thumb,.b-card-thumb--img{
+  border-radius:0;
+}
+.b-card-thumb,.b-card-thumb--img{overflow:hidden}
+
+/* The benefits strip cells sit flush inside one band, so they get the
+   radius on the band rather than each cell. */
+.benefits-strip{
+  border-radius:var(--sq-xl);
+  border:var(--hair) solid var(--rule) !important;
+  overflow:hidden;
+  margin-inline:auto;
+  max-width:var(--maxw);
+  width:calc(100% - var(--gutter) * 2);
+}
+.benefits-strip .trust-row li{
+  border-radius:0 !important;
+  border:0 !important;
+  border-right:var(--hair) solid var(--rule) !important;
+  background:transparent;
+}
+.benefits-strip .trust-row li:last-child{border-right:0 !important}
+.benefits-strip .trust-row li:hover{transform:none !important}
+
+/* ---------------------------------------------------------------------
+   3 · FAQ ACCORDION
+   wimpdecaf collapses FAQs into <details> with a rotating + icon and a
+   max-height answer transition. Pages here that still render FAQs as
+   always-open blocks keep working; those upgraded to <details> pick this up.
+   --------------------------------------------------------------------- */
+.faq details,details.faq-item,details.faq-q{
+  border-radius:var(--sq-lg);
+  border:var(--hair) solid var(--rule);
+  background:var(--surface);
+  padding:clamp(20px,3vw,34px);
+  overflow:hidden;
+  transition:border-color .2s var(--ease),background-color .2s var(--ease);
+}
+details.faq-item[open],.faq details[open]{
+  background:var(--surface-2);
+  border-color:var(--rule-strong);
+}
+details.faq-item > summary,.faq details > summary{
+  cursor:pointer;
+  list-style:none;
+  position:relative;
+  padding-right:56px;
+  -webkit-user-select:none;user-select:none;
+}
+details.faq-item > summary::-webkit-details-marker,
+.faq details > summary::-webkit-details-marker{display:none}
+/* The + that becomes a − */
+details.faq-item > summary::after,.faq details > summary::after{
+  content:'';
+  position:absolute;right:6px;top:50%;
+  width:18px;height:2px;
+  background:var(--acid);
+  transform:translateY(-50%);
+}
+details.faq-item > summary::before,.faq details > summary::before{
+  content:'';
+  position:absolute;right:14px;top:50%;
+  width:2px;height:18px;
+  background:var(--acid);
+  transform:translateY(-50%);
+  transition:transform .3s var(--ease),opacity .2s ease;
+}
+details.faq-item[open] > summary::before,.faq details[open] > summary::before{
+  transform:translateY(-50%) rotate(90deg);
+  opacity:0;
+}
+details.faq-item > summary:focus-visible,.faq details > summary:focus-visible{
+  outline:3px solid var(--acid);outline-offset:4px;border-radius:var(--sq-xs);
+}
+.faq-answer-wrap{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .3s var(--ease);
+}
+details[open] .faq-answer-wrap{grid-template-rows:1fr}
+.faq-answer-wrap > *{overflow:hidden}
+
+/* ---------------------------------------------------------------------
+   4 · NAV + CART DRAWER
+   --------------------------------------------------------------------- */
+header.site,nav.site-nav,.b-nav{
+  border-bottom:var(--hair) solid var(--rule) !important;
+}
+.nav-links a,.b-nav a{border-radius:var(--sq-sm)}
+.cart-btn,.nav-toggle,.b-nav-btn{border-radius:var(--sq-pill)}
+.cart-btn .cart-count{border-radius:var(--sq-pill)}
+
+/* Minicart / overlay panels become a rounded sheet rather than a hard slab. */
+.cart-drawer,.overlay-panel,.minicart,#cartDrawer,.drawer,
+.b-drawer,.checkout-panel{
+  border-radius:var(--sq-xl) 0 0 var(--sq-xl);
+  border-left:var(--hair) solid var(--rule);
+}
+@media(max-width:640px){
+  .cart-drawer,.overlay-panel,.minicart,#cartDrawer,.drawer,
+  .b-drawer,.checkout-panel{
+    border-radius:var(--sq-xl) var(--sq-xl) 0 0;
+    border-left:0;
+    border-top:var(--hair) solid var(--rule);
+  }
+}
+.cart-item,.cart-line,.mc-item{border-radius:var(--sq-md);overflow:hidden}
+.cart-line-img,.mc-item img{border-radius:var(--sq-xs);overflow:hidden}
+.cart-checkout,.cart-empty .btn{border-radius:var(--sq-sm) !important;box-shadow:none !important}
+.cart-close,.b-drawer-close,.overlay-close{border-radius:var(--sq-pill)}
+.cart-stepper,.cart-qty{border-radius:var(--sq-pill);overflow:hidden;border:var(--hair) solid var(--rule)}
+.b-drawer-cat,.filter-chip,.b-jump-pill{
+  border-radius:var(--sq-pill) !important;
+  border:var(--hair) solid var(--rule) !important;
+}
+.b-drawer-cat.active,.filter-chip.active{
+  background:var(--acid) !important;color:var(--on-acid) !important;border-color:var(--acid) !important;
+}
+
+/* ---------------------------------------------------------------------
+   5 · FORMS
+   --------------------------------------------------------------------- */
+input[type="text"],input[type="email"],input[type="tel"],input[type="search"],
+input[type="number"],textarea,select,.b-search,.field input,.form-input{
+  border-radius:var(--sq-sm) !important;
+  border:var(--hair) solid var(--rule) !important;
+  background:var(--surface) !important;
+  color:var(--text);
+  transition:border-color .2s var(--ease);
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--acid) !important;
+  outline:none;
+}
+.pay-opt,.qty,.qty-btn,.quantity{border-radius:var(--sq-sm) !important}
+.qty-btn{border-radius:var(--sq-pill) !important}
+
+/* ---------------------------------------------------------------------
+   6 · ODDS AND ENDS
+   The hero hook and the acid price chip were hard rectangles with an
+   offset shadow; they become soft chips. Tickers and the hinglish band
+   stay full-bleed and square — they're meant to read as a cut across the
+   page, and rounding them would weaken that.
+   --------------------------------------------------------------------- */
+.hero-hook,.chip,.tag,.badge,.b-thumb-cat,.b-card-cat,.v-tag,.pill{
+  border-radius:var(--sq-pill);
+  box-shadow:none !important;
+}
+.hero-hook{padding:8px 16px}
+img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-lg)}
+.pull-quote{border-radius:var(--sq-md);padding:20px 24px;border-left:3px solid var(--acid)}

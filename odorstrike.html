@@ -575,21 +575,92 @@
   /* PRODUCT HERO — gallery + info */
   .product-hero{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:56px;
-    align-items:center;
+    grid-template-columns:1fr;
+    gap:28px;
+    align-items:start;
     margin-top:44px;
   }
-  /* PRODUCT IMAGE */
-  .gallery{
-    position:relative;
-    aspect-ratio:1/1;
+  @media(min-width:960px){
+    .product-hero{grid-template-columns:1.05fr .95fr;gap:56px}
+  }
+
+  /* PRODUCT GALLERY
+     Mobile: horizontal scroll-snap carousel, so five images don't push the buy
+     button off the bottom of the world. Desktop: a vertical stack that scrolls
+     past the sticky buy panel. */
+  .gallery-stack{
+    display:grid;
+    grid-auto-flow:column;
+    grid-auto-columns:84%;
+    gap:12px;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    margin:0 calc(var(--gutter) * -1);
+    padding:0 var(--gutter);
+  }
+  .gallery-stack::-webkit-scrollbar{display:none}
+  .gal-tile{
+    margin:0;
+    scroll-snap-align:center;
     border:1px solid var(--rule);
-    border-radius:22px;
+    border-radius:var(--sq-xl,36px);
     overflow:hidden;
     background:#0b0b0b;
-    margin:0;
+    aspect-ratio:3/2;
   }
+  .gal-tile--main{aspect-ratio:1/1}
+  .gal-tile img{width:100%;height:100%;object-fit:cover;display:block}
+  @media(min-width:960px){
+    .gallery-stack{
+      grid-auto-flow:row;
+      grid-auto-columns:auto;
+      gap:16px;
+      overflow:visible;
+      margin:0;padding:0;
+    }
+  }
+  /* Sticky buy panel — the gallery scrolls, the price and CTA stay put. */
+  @media(min-width:960px){
+    .product-info{position:sticky;top:92px}
+  }
+
+  /* Spec scales (protection / fragrance) */
+  .spec-scale{
+    margin-top:26px;padding-top:22px;
+    border-top:1px solid var(--rule);
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .spec-row{display:grid;grid-template-columns:88px 1fr auto;gap:14px;align-items:center}
+  .spec-label,.spec-val{
+    font-family:var(--mono);font-size:11px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+  .spec-val{color:var(--acid)}
+  .scale{position:relative;height:12px}
+  .scale-track{
+    position:absolute;top:50%;left:0;width:100%;height:2px;
+    background:var(--rule-strong);transform:translateY(-50%);
+  }
+  .scale-dot{
+    position:absolute;top:50%;width:13px;height:13px;
+    border-radius:50%;background:var(--acid);
+    transform:translate(-50%,-50%);
+  }
+  .scale[data-level="1"] .scale-dot{left:12%}
+  .scale[data-level="2"] .scale-dot{left:37%}
+  .scale[data-level="3"] .scale-dot{left:62%}
+  .scale[data-level="4"] .scale-dot{left:88%}
+  @media (prefers-reduced-motion: no-preference){
+    .scale-dot{animation:scaleWobble .6s ease-in-out}
+    @keyframes scaleWobble{
+      0%,100%{transform:translate(-50%,-50%)}
+      30%{transform:translate(-64%,-50%)}
+      65%{transform:translate(-40%,-50%)}
+    }
+  }
+  .spec-note{font-size:13px;color:var(--muted);margin-top:2px}
   .gallery>img{
     width:100%;height:100%;
     object-fit:contain;
@@ -2120,6 +2191,7 @@
   .guides-strip li a:hover{color:var(--acid)}
   .guides-all{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--acid);text-decoration:none}
 </style>
+<link rel="stylesheet" href="/assets/css/soft.css">
 
 <!-- Smelloff Partner Network attribution (partners.smelloff.in) -->
 <script>
@@ -2234,10 +2306,30 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </div>
 
   <div class="product-hero">
-    <!-- PRODUCT IMAGE -->
-    <figure class="gallery" id="gallery">
-      <img src="/assets/odorstrike-bottle.webp" alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black spray bottle, front on white background" width="1080" height="1080" fetchpriority="high" decoding="async">
-    </figure>
+    <!-- PRODUCT GALLERY
+         A scrolling stack of squircle tiles beside a sticky buy panel. The four
+         lifestyle shots already lived in /assets but were never rendered (only
+         shot-studio was preloaded, pointing at nothing) — they carry the scale,
+         carry and use-case story far better than the packshot alone.
+         Desktop: vertical stack that scrolls past the pinned buy panel.
+         Mobile: horizontal scroll-snap carousel so the CTA stays reachable. -->
+    <div class="gallery-stack" id="gallery" role="group" aria-label="ODORSTRIKE product images">
+      <figure class="gal-tile gal-tile--main">
+        <img src="/assets/odorstrike-bottle.webp" alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black spray bottle, front on white background" width="1080" height="1080" fetchpriority="high" decoding="async">
+      </figure>
+      <figure class="gal-tile">
+        <img src="/assets/shot-pocket.webp" alt="ODORSTRIKE held in a hand next to a phone for scale — the bottle is 10.5cm tall" width="1400" height="933" loading="lazy" decoding="async">
+      </figure>
+      <figure class="gal-tile">
+        <img src="/assets/shot-gymbag.webp" alt="ODORSTRIKE tucked into a gym bag beside shoes and a towel" width="1400" height="933" loading="lazy" decoding="async">
+      </figure>
+      <figure class="gal-tile">
+        <img src="/assets/shot-flatlay.webp" alt="ODORSTRIKE laid flat with everyday carry items" width="1400" height="933" loading="lazy" decoding="async">
+      </figure>
+      <figure class="gal-tile">
+        <img src="/assets/shot-studio.webp" alt="ODORSTRIKE studio shot showing the full bottle and label" width="1400" height="933" loading="lazy" decoding="async">
+      </figure>
+    </div>
 
     <!-- PRODUCT INFO -->
     <div class="product-info">
@@ -2256,6 +2348,30 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <span>Free shipping pan-India</span>
         <span>Delivers in 3–7 days</span>
         <span>7-day returns</span>
+      </div>
+
+      <!-- Protection scale. wimpdecaf uses a dot-on-a-track to show roast
+           strength at a glance; the equivalent spec for this product is how
+           long the fabric stays protected. "Up to 8 hours" is the locked
+           claim — the dot sits at the top of the scale, not beyond it. -->
+      <div class="spec-scale">
+        <div class="spec-row">
+          <span class="spec-label">Protection</span>
+          <div class="scale" data-level="4" aria-hidden="true">
+            <span class="scale-track"></span>
+            <span class="scale-dot"></span>
+          </div>
+          <span class="spec-val">up to 8 hrs</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">Fragrance</span>
+          <div class="scale" data-level="1" aria-hidden="true">
+            <span class="scale-track"></span>
+            <span class="scale-dot"></span>
+          </div>
+          <span class="spec-val">barely there</span>
+        </div>
+        <p class="spec-note">Fabric only — never on skin. Glycerine-free, zero residue.</p>
       </div>
       <!-- Gated proof (under primary CTA): renders only with real data -->
       <div id="heroProofMount"></div>
