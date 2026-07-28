@@ -251,6 +251,46 @@ input:focus,textarea:focus,select:focus{
    stay full-bleed and square — they're meant to read as a cut across the
    page, and rounding them would weaken that.
    --------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------
+   7 · BARE FOOTERS + TAP TARGETS
+   contact / reviews / track-order use a <footer> of inline <a>s separated by
+   horizontal margins. At 390px that produced 16px of horizontal scroll on
+   /contact ("Partner Program" couldn't break cleanly against its own margin),
+   and every link was ~18px tall — well under the 44px minimum for a
+   navigation target. A wrapping flex row with gap fixes both.
+   The grid footers on / and /odorstrike are untouched: they have no direct
+   <a> children, so :has(> a) doesn't match them.
+   --------------------------------------------------------------------- */
+footer:has(> a){
+  display:flex;flex-wrap:wrap;
+  justify-content:center;align-items:center;
+  gap:2px 10px;
+}
+footer:has(> a) > a{
+  margin:0;
+  padding:11px 6px;
+  min-height:44px;
+  display:inline-flex;align-items:center;
+}
+/* Nav and footer-column links are navigation, not prose — give them a real
+   touch area. Inline links inside body copy are deliberately excluded
+   (WCAG 2.5.8 exempts links in a sentence, and padding them would break
+   the line rhythm). */
+.nav-links a,#navMenu a,footer ul a,.footer-col > a,.b-drawer-nav a,
+.p-nav a,.p-footer-links > a,.p-footer-guides > a,.p-footer-policy > a,.nf-links a,.b-nav a,
+.blog-nav a,.footer-links > a,.footer-guides > a,.footer-policy > a{
+  min-height:44px;
+  display:inline-flex;align-items:center;
+}
+/* The policy-page footers are inline runs, so the flex boxes above need to
+   wrap and keep a readable gap once each link is 44px tall. */
+.p-footer-links,.p-footer-guides,.p-footer-policy,.nf-links,
+.footer-links,.footer-guides,.footer-policy{
+  display:flex;flex-wrap:wrap;align-items:center;
+  gap:0 14px;
+}
+.socials a,.blog-footer .socials a{min-width:44px;min-height:44px}
+
 .hero-hook,.chip,.tag,.badge,.b-thumb-cat,.b-card-cat,.v-tag,.pill{
   border-radius:var(--sq-pill);
   box-shadow:none !important;
