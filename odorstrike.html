@@ -1162,7 +1162,7 @@
     line-height:1.7;
     opacity:.68;
     text-decoration:line-through;
-    margin-bottom:4px;
+    margin:6px 0 4px;
   }
   .price-card .per-unit{
     font-size:13px;
@@ -1803,6 +1803,12 @@
     border-top:1px solid rgba(244,241,234,.1);
   }
   .mobile-bar.visible{transform:translateY(0)}
+  /* The bar is fixed over the page, so the last ~70px of every section sat
+     permanently underneath it — the closing lines of the footer and of the
+     "when to use it" cards were unreadable on a phone. Reserve the space. */
+  @media(max-width:960px){
+    body{padding-bottom:76px}
+  }
   .mobile-bar .mb-label{
     font-family:var(--mono);
     font-size:11px;
@@ -2306,8 +2312,6 @@
   .guides-strip li a:hover{color:var(--acid)}
   .guides-all{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--acid);text-decoration:none}
 </style>
-<link rel="stylesheet" href="/assets/css/soft.css">
-<link rel="stylesheet" href="/assets/css/chrome.css">
 
 <!-- Smelloff Partner Network attribution (partners.smelloff.in) -->
 <script>
@@ -2344,6 +2348,9 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   } catch (e) {}
 }
 </script>
+<!-- Shared layers load LAST so they win on source order. See scripts/apply-chrome.mjs. -->
+<link rel="stylesheet" href="/assets/css/soft.css">
+<link rel="stylesheet" href="/assets/css/chrome.css">
 <script src="/assets/js/chrome.js" defer></script>
 </head>
 <body>
@@ -2899,7 +2906,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <li><a href="/faq">FAQ</a></li>
           <li><a href="/shipping">Shipping</a></li>
           <li><a href="/returns">Returns</a></li>
-          <li><a href="/refund">Refund policy</a></li>
+          <li><a href="/refund">Refunds</a></li>
           <li><a href="/cancellation">Cancellation</a></li>
         </ul>
       </div>
@@ -2909,16 +2916,19 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <li><a href="/about">About</a></li>
           <li><a href="/privacy">Privacy</a></li>
           <li><a href="/terms">Terms</a></li>
-          <li><a href="https://partners.smelloff.in">Partner program</a></li>
+          <li><a href="https://partners.smelloff.in">Partners</a></li>
         </ul>
-        <div class="sf-ftr__socials">
+      </div>
+      <!-- The socials are a grid child in their own right, not nested inside
+           the Company column. Nested, "grid-column: 1 / -1" had nothing to
+           span and they wrapped two-per-row inside a narrow column. -->
+      <div class="sf-ftr__socials">
         <a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram"><img src="/assets/icon-instagram-white.png" alt="" width="20" height="20" loading="lazy"></a>
         <a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)"><img src="/assets/icon-x.png" alt="" width="20" height="20" loading="lazy"></a>
         <a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram"><img src="/assets/icon-telegram-white.png" alt="" width="20" height="20" loading="lazy"></a>
         <a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="/assets/icon-linkedin-white.png" alt="" width="20" height="20" loading="lazy"></a>
         <a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook"><img src="/assets/icon-facebook-white.png" alt="" width="20" height="20" loading="lazy"></a>
         <a href="https://wa.me/919392974031" target="_blank" rel="noopener" aria-label="WhatsApp"><img src="/assets/icon-whatsapp-white.png" alt="" width="20" height="20" loading="lazy"></a>
-        </div>
       </div>
     </div>
     <div class="sf-ftr__bottom">

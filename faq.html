@@ -93,7 +93,13 @@
   .p-logo .p-dot{color:var(--acid)}
   .p-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
   .p-back:hover{color:var(--text)}
-  main{max-width:800px;margin:0 auto;padding:80px 32px 120px}
+  /* The FAQ list is two columns site-wide (see soft.css). At the old 800px
+     cap that meant two ~350px tracks and almost every question wrapped to
+     two lines, so the page ran far longer than it needed to. This is an
+     index of questions, not long-form prose — it takes the site measure. */
+  main{max-width:var(--maxw);margin:0 auto;padding:80px 32px 120px}
+  /* …but the intro copy above the list still wants a reading measure. */
+  main > .p-eyebrow,main > h1,main > .p-sub{max-width:800px}
   .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:12px}
   .tag::before{content:'';width:32px;height:1px;background:var(--muted)}
   h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(48px,7vw,96px);line-height:.95;letter-spacing:-.03em;margin-bottom:16px}
@@ -132,10 +138,11 @@
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--rule)}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
 </style>
-<link rel="stylesheet" href="/assets/css/soft.css">
-<link rel="stylesheet" href="/assets/css/chrome.css">
 <link rel="alternate" hreflang="en-IN" href="https://smelloff.in/faq">
 <link rel="alternate" hreflang="x-default" href="https://smelloff.in/faq">
+<!-- Shared layers load LAST so they win on source order. See scripts/apply-chrome.mjs. -->
+<link rel="stylesheet" href="/assets/css/soft.css">
+<link rel="stylesheet" href="/assets/css/chrome.css">
 <script src="/assets/js/chrome.js" defer></script>
 </head>
 <body>
@@ -319,7 +326,7 @@
           <li><a href="/faq">FAQ</a></li>
           <li><a href="/shipping">Shipping</a></li>
           <li><a href="/returns">Returns</a></li>
-          <li><a href="/refund">Refund policy</a></li>
+          <li><a href="/refund">Refunds</a></li>
           <li><a href="/cancellation">Cancellation</a></li>
         </ul>
       </div>
@@ -329,16 +336,19 @@
           <li><a href="/about">About</a></li>
           <li><a href="/privacy">Privacy</a></li>
           <li><a href="/terms">Terms</a></li>
-          <li><a href="https://partners.smelloff.in">Partner program</a></li>
+          <li><a href="https://partners.smelloff.in">Partners</a></li>
         </ul>
-        <div class="sf-ftr__socials">
+      </div>
+      <!-- The socials are a grid child in their own right, not nested inside
+           the Company column. Nested, "grid-column: 1 / -1" had nothing to
+           span and they wrapped two-per-row inside a narrow column. -->
+      <div class="sf-ftr__socials">
         <a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram"><img src="/assets/icon-instagram-white.png" alt="" width="20" height="20" loading="lazy"></a>
         <a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)"><img src="/assets/icon-x.png" alt="" width="20" height="20" loading="lazy"></a>
         <a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram"><img src="/assets/icon-telegram-white.png" alt="" width="20" height="20" loading="lazy"></a>
         <a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="/assets/icon-linkedin-white.png" alt="" width="20" height="20" loading="lazy"></a>
         <a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook"><img src="/assets/icon-facebook-white.png" alt="" width="20" height="20" loading="lazy"></a>
         <a href="https://wa.me/919392974031" target="_blank" rel="noopener" aria-label="WhatsApp"><img src="/assets/icon-whatsapp-white.png" alt="" width="20" height="20" loading="lazy"></a>
-        </div>
       </div>
     </div>
     <div class="sf-ftr__bottom">

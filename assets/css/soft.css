@@ -80,6 +80,17 @@
     animation:sf-bounce .6s ease;
   }
 }
+/* Stragglers found by sweeping every page for controls still rendering at
+   radius 0: the consent-bar buttons, the /faq footer CTAs and the blog's
+   in-article buy button. They keep their own colour and size — only the
+   corners join the rest of the site. */
+.cb-accept,.cb-reject,.faq-cta,.wa-strip,.bc-cta,.nf-btn,.c-btn{
+  border-radius:var(--sq-sm) !important;
+}
+.faq-cta,.wa-strip{
+  border-radius:var(--sq-md) !important;
+}
+
 /* Ghost/secondary: hairline outline instead of the old 3px slab. */
 .btn-ghost,.nb-btn--ghost{
   background:transparent !important;
@@ -146,56 +157,120 @@
 .benefits-strip .trust-row li:last-child{border-right:0 !important}
 .benefits-strip .trust-row li:hover{transform:none !important}
 
+/* Same idea for the /odorstrike 4-layer band. Its cells sit flush with 1px
+   hairlines between them, so the radius belongs to the band — rounding each
+   cell would open gaps in the hairlines and break the strip. It was the last
+   hard-cornered block on the page. */
+.ingredients{
+  border-radius:var(--sq-lg);
+  overflow:hidden;
+  border-top:0 !important;
+  border-bottom:0 !important;
+}
+
 /* ---------------------------------------------------------------------
-   3 · FAQ ACCORDION
+   3 · FAQ ACCORDION — one spec, every page
    wimpdecaf collapses FAQs into <details> with a rotating + icon and a
    max-height answer transition. Pages here that still render FAQs as
    always-open blocks keep working; those upgraded to <details> pick this up.
+
+   THE RULE: the <details> owns the shape, the <summary> owns the padding.
+   Getting this wrong is what made the accordions balloon — soft.css put
+   clamp(20px,3vw,34px) on the <details> while the page ALSO padded its own
+   <summary>, so every row carried two sets of padding and each question sat
+   in a box roughly twice as tall as its text. Rows are now a consistent
+   ~64px closed at every width, on the homepage, /faq, /odorstrike and the
+   blog alike.
+
+   `!important` is deliberate on the padding and radius: `blog.css` loads on
+   the post pages and re-declares both (`border-radius:0`, `padding:18px 20px`
+   on the summary) at the same specificity. Load order alone left the blog
+   with square, double-padded rows while the rest of the site was round and
+   compact.
    --------------------------------------------------------------------- */
-.faq details,details.faq-item,details.faq-q{
-  border-radius:var(--sq-lg);
-  border:var(--hair) solid var(--rule);
+.faq details,details.faq-item,details.faq-q,.faq-list details{
+  border-radius:var(--sq-lg) !important;
+  border:var(--hair) solid var(--rule) !important;
   background:var(--surface);
-  padding:clamp(20px,3vw,34px);
+  padding:0 !important;
   overflow:hidden;
   transition:border-color .2s var(--ease),background-color .2s var(--ease);
 }
-details.faq-item[open],.faq details[open]{
+details.faq-item[open],.faq details[open],.faq-list details[open]{
   background:var(--surface-2);
-  border-color:var(--rule-strong);
+  border-color:var(--rule-strong) !important;
 }
-details.faq-item > summary,.faq details > summary{
+details.faq-item > summary,.faq details > summary,.faq-list details > summary{
   cursor:pointer;
   list-style:none;
   position:relative;
-  padding-right:56px;
+  display:block;
+  padding:18px 56px 18px 22px !important;
+  font-size:clamp(16px,2.2vw,19px);
+  line-height:1.35;
   -webkit-user-select:none;user-select:none;
 }
 details.faq-item > summary::-webkit-details-marker,
-.faq details > summary::-webkit-details-marker{display:none}
-/* The + that becomes a − */
-details.faq-item > summary::after,.faq details > summary::after{
-  content:'';
-  position:absolute;right:6px;top:50%;
-  width:18px;height:2px;
+.faq details > summary::-webkit-details-marker,
+.faq-list details > summary::-webkit-details-marker{display:none}
+/* Answers: same inline padding as the question, so the two align. */
+.faq details > .faq-a,.faq details > .faq-answer,
+.faq-list .faq-answer,details.faq-item .faq-answer-wrap > div{
+  padding:0 22px 18px !important;
+  border-top:0 !important;
+}
+.faq details > .faq-a > p:first-child,
+.faq details > .faq-answer > p:first-child{margin-top:0}
+
+/* The + that becomes a −. Two bars, so it can rotate into a minus rather
+   than swapping a glyph (which reflows the row). */
+details.faq-item > summary::after,.faq details > summary::after,
+.faq-list details > summary::after{
+  content:'' !important;
+  position:absolute;right:20px;top:50%;
+  width:16px;height:2px;
   background:var(--acid);
   transform:translateY(-50%);
+  transition:none;
 }
-details.faq-item > summary::before,.faq details > summary::before{
+details.faq-item > summary::before,.faq details > summary::before,
+.faq-list details > summary::before{
   content:'';
-  position:absolute;right:14px;top:50%;
-  width:2px;height:18px;
+  position:absolute;right:27px;top:50%;
+  width:2px;height:16px;
   background:var(--acid);
   transform:translateY(-50%);
   transition:transform .3s var(--ease),opacity .2s ease;
 }
-details.faq-item[open] > summary::before,.faq details[open] > summary::before{
+details.faq-item[open] > summary::before,.faq details[open] > summary::before,
+.faq-list details[open] > summary::before{
   transform:translateY(-50%) rotate(90deg);
   opacity:0;
 }
-details.faq-item > summary:focus-visible,.faq details > summary:focus-visible{
-  outline:3px solid var(--acid);outline-offset:4px;border-radius:var(--sq-xs);
+details.faq-item > summary:focus-visible,.faq details > summary:focus-visible,
+.faq-list details > summary:focus-visible{
+  outline:3px solid var(--acid);outline-offset:-3px;border-radius:var(--sq-lg);
 }
+/* Rows sit in a tight stack rather than floating 18-22px apart. */
+.faq details,.faq-list details,details.faq-item{margin:0 !important}
+
+/* One FAQ layout everywhere: a single column on phones, two on desktop.
+   The homepage and /faq each pinned their list to a ~760-800px column on
+   the left, so on a wide screen half the section was empty while the list
+   ran twice as long as it needed to. `align-content:start` keeps rows their
+   natural height instead of stretching them to fill the track. */
+.faq-list,.faq .faq-list{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  align-content:start;
+  max-width:var(--maxw);
+  margin-inline:auto;
+}
+@media(min-width:900px){
+  .faq-list,.faq .faq-list{grid-template-columns:1fr 1fr;gap:12px 20px}
+}
+.faq-list details{height:fit-content}
 .faq-answer-wrap{
   display:grid;grid-template-rows:0fr;
   transition:grid-template-rows .3s var(--ease);
