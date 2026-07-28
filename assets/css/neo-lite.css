@@ -1,3 +1,5 @@
+/* Colour tokens now come from /assets/css/tokens.css — the pages that
+   load this file link it first. Only file-specific vars remain below. */
 /* ═══════════════════════════════════════════════════════════════
    SMELLOFF — NEO-LITE (secondary pages: policies, blog, reviews,
    track-order, contact, 404). Loads AFTER each page's inline styles
@@ -14,36 +16,18 @@
    style block that still declares green text.
    ═══════════════════════════════════════════════════════════════ */
 :root{
-  /* Smelloff2 premium-minimal — dark. Was a paper flip; now flips the
+  /* Smelloff2 premium-minimal — dark. Was a paper flip;
+  now flips the
      shared aliases back to matte black. --nb-ink is now WHITE (text role);
-     acid green keeps #080808 text via the remediation block below. */
+  acid green keeps #080808 text via the remediation block below. */
   --bg:#080808;
-  --bg-surface:#0F0F0F;
-  --bg-subtle:#141414;
-  --text:var(--nb-ink);
-  --text-secondary:#8A8A8A;
-  --muted:#8A8A8A;
-  --rule:rgba(255,255,255,.12);
-  --overlay:rgba(0,0,0,.6);
-  --shadow:transparent;
   /* raw names some rules use directly */
   --card:#0F0F0F;
-  --card-hover:#141414;
-  --border:rgba(255,255,255,.12);
-  --border-subtle:rgba(255,255,255,.08);
-  --silver:#BFC3C8;
-  --gray:#8A8A8A;
   /* blog-post token set */
   --off-white:var(--nb-ink);
-  --line:rgba(255,255,255,.12);
   --cream:#8A8A8A;
   /* neo tokens (de-overloaded by role) */
   --nb-ink:#FFFFFF;
-  --nb-acid:#B8FF57;
-  --nb-black:#080808;
-  --nb-surface:#0F0F0F;
-  --nb-chip:#141414;
-  --nb-line:rgba(255,255,255,.12);
 }
 body{background:var(--bg);color:var(--text);font-family:'DM Sans','Inter Tight',sans-serif}
 ::selection{background:var(--nb-acid);color:var(--nb-ink)}

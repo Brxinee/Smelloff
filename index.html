@@ -138,6 +138,11 @@
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
 
+<!-- Hero bottle is above the fold and an LCP candidate. This is the background-
+     removed cutout (the catalogue shot has a white studio sweep baked in, which
+     read as a white card sitting on the hero's acid disc). -->
+<link rel="preload" as="image" type="image/webp" href="/assets/odorstrike-bottle-cutout.webp" fetchpriority="high">
+
 <!-- AI/LLM context files (answer-engine discovery hint) -->
 <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
 <link rel="alternate" type="text/plain" title="llms-full.txt" href="/llms-full.txt">
@@ -183,15 +188,55 @@
   @font-face{font-family:'Inter Tight Fallback';src:local('Arial');size-adjust:136.95%;ascent-override:70.74%;descent-override:17.61%;line-gap-override:0%;}
   @font-face{font-family:'JetBrains Mono Fallback';src:local('Courier New');size-adjust:99.98%;ascent-override:102.02%;descent-override:30.00%;line-gap-override:0%;}
 
+  /* ============ TOKENS v1 ============
+     Byte-identical copy of the :root block in /assets/css/tokens.css, which
+     is the single source of truth. Inlined (not linked) because this page is
+     deliberately self-contained — linking would put a render-blocking request
+     on the LCP path. Change one, change all three (tokens.css, index.html,
+     odorstrike.html). */
   :root{
+    /* ---- Color ---- */
     --ink:#080808;
+    --surface:#0F0F0F;
+    --surface-2:#141414;
+    --text:#F4F1EA;
+    --muted:#9A958D;
     --acid:#B8FF57;
-    --text:#F2F2F2;
-    --muted:#B8B8B8;
-    --rule:rgba(242,242,242,.16);
+    --acid-hi:#D1FF8A;
+    --on-acid:#080808;
+    --rule:rgba(244,241,234,.14);
+    --rule-strong:rgba(244,241,234,.28);
+    /* ---- Type families ---- */
     --display:'Fraunces','Fraunces Fallback',serif;
     --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
     --body:'Inter Tight','Inter Tight Fallback',sans-serif;
+    /* ---- Type scale ---- */
+    --lh-display:.86;
+    --lh-body:1.55;
+    --ls-display:-.028em;
+    --fs-h1:clamp(58px,14vw,164px);
+    --fs-h2:clamp(40px,7.6vw,84px);
+    --fs-h3:clamp(27px,3.6vw,42px);
+    --fs-h4:clamp(21px,2.2vw,27px);
+    --fs-lead:clamp(18px,1.5vw,22px);
+    --fs-body:17px;
+    --fs-sm:15px;
+    --fs-eyebrow:13px;
+    --ls-eyebrow:.2em;
+    /* ---- Rhythm ---- */
+    --maxw:1160px;
+    --gutter:20px;
+    --section-y:clamp(56px,8vw,112px);
+    /* ---- Form ---- */
+    --bw:3px;
+    --bw-thin:2px;
+    --r:0px;
+    --r-pill:100px;
+    --shadow-offset:6px;
+    /* ---- Motion ---- */
+    --ease:cubic-bezier(.19,1,.22,1);
+    --ease-snap:cubic-bezier(.2,.6,.2,1);
+    --dur:.2s;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -203,8 +248,8 @@
     background:var(--ink);
     color:var(--text);
     font-family:var(--body);
-    font-size:17px;
-    line-height:1.55;
+    font-size:var(--fs-body);
+    line-height:var(--lh-body);
     overflow-x:hidden;
     -webkit-font-smoothing:antialiased;
   }
@@ -233,7 +278,7 @@
     outline-offset:3px;
   }
 
-  .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter)}
 
   /* ============ Header ============ */
   header.site{
@@ -330,21 +375,83 @@
     .nav-logo img{height:28px}
   }
 
-  /* ============ Hero ============ */
-  .hero{padding:56px 0 64px}
+  /* ============ Hero ============
+     Asymmetric two-column composition: the copy holds the left, the bottle
+     sits right and deliberately bleeds past the container edge so the
+     product is present above the fold instead of three sections down.
+     Mobile collapses to a single stack with the bottle between the
+     headline and the price. */
+  .hero{padding:clamp(36px,5vw,64px) 0 clamp(48px,6vw,72px);overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:clamp(20px,4vw,36px)}
+  .hero-offer{margin-top:0}
   .hero h1{
     font-family:var(--display);
     font-weight:900;
-    font-size:clamp(60px,16.5vw,150px);
-    line-height:.9;
-    letter-spacing:-.025em;
+    font-size:var(--fs-h1);
+    line-height:var(--lh-display);
+    letter-spacing:var(--ls-display);
   }
   .hero h1 .acid{color:var(--acid)}
   .hero-sub{
-    max-width:620px;
+    max-width:34ch;
     margin-top:24px;
-    font-size:19px;
-    line-height:1.55;
+    font-size:var(--fs-lead);
+    line-height:1.5;
+  }
+
+  /* Bottle: an acid disc behind it, the product scaled past its own box.
+     aspect-ratio + explicit width/height on the img keep CLS at 0 even
+     though the image is transformed. */
+  .hero-visual{
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+    min-height:clamp(340px,70vw,480px);
+  }
+  .hero-visual::before{
+    content:'';
+    position:absolute;top:50%;left:50%;
+    width:clamp(210px,52vw,340px);aspect-ratio:1;
+    transform:translate(-50%,-50%);
+    background:var(--acid);
+    border-radius:50%;
+    z-index:0;
+  }
+  /* The bottle is a tall 241×915 cutout, so it's sized by height against the
+     disc rather than width — that keeps the overlap consistent as the disc
+     scales. It deliberately overshoots the disc top and bottom. */
+  .hero-visual img{
+    position:relative;z-index:1;
+    height:clamp(300px,62vw,430px);width:auto;
+    display:block;
+    filter:drop-shadow(0 22px 44px rgba(0,0,0,.7));
+  }
+  /* Rotated mono caption riding the disc edge — the "technical product"
+     signal, borrowed from the PDP's breadcrumb treatment. */
+  .hero-visual figcaption{
+    position:absolute;z-index:2;
+    right:-4px;top:50%;
+    transform:translateY(-50%) rotate(90deg);
+    transform-origin:right center;
+    font-family:var(--mono);font-size:11px;
+    letter-spacing:.24em;text-transform:uppercase;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  @media(min-width:960px){
+    .hero-grid{
+      grid-template-columns:1.1fr .9fr;
+      grid-template-areas:
+        "copy visual"
+        "buy  visual";
+      align-content:center;
+      gap:clamp(28px,3vw,44px) clamp(32px,4vw,56px);
+    }
+    .hero-copy{grid-area:copy;align-self:end}
+    .hero-buy{grid-area:buy;align-self:start}
+    /* Bleed the visual past the wrap so the bottle runs off the page edge. */
+    .hero-visual{grid-area:visual;align-self:center;margin-right:calc(var(--gutter) * -3);min-height:560px}
+    .hero-visual img{height:clamp(420px,42vw,540px)}
+    .hero-visual figcaption{right:-18px}
   }
   .hero-hook{
     display:inline-block;
@@ -442,21 +549,22 @@
   }
 
   /* ============ Sections ============ */
-  section{padding:64px 0}
+  section{padding:var(--section-y) 0}
   .eyebrow{
     font-family:var(--mono);font-weight:400;
-    font-size:13px;letter-spacing:.2em;text-transform:uppercase;
+    font-size:var(--fs-eyebrow);letter-spacing:var(--ls-eyebrow);text-transform:uppercase;
     color:var(--acid);
     margin-bottom:14px;
   }
   h2{
     font-family:var(--display);font-weight:900;
-    font-size:clamp(38px,7.5vw,68px);
-    line-height:.98;
-    letter-spacing:-.025em;
+    font-size:var(--fs-h2);
+    line-height:var(--lh-display);
+    letter-spacing:var(--ls-display);
     margin-bottom:22px;
+    max-width:16ch;
   }
-  .section-body{max-width:640px;font-size:18px}
+  .section-body{max-width:640px;font-size:var(--fs-lead)}
   .section-body p+p{margin-top:16px}
 
   .territory{border-top:2px solid var(--rule)}
@@ -520,6 +628,120 @@
   @media(min-width:768px){
     .trust-row{grid-template-columns:repeat(4,1fr);gap:20px}
     .trust-row li{padding:22px 18px;font-size:13px}
+  }
+
+  /* ============ Benefits strip ============
+     Was buried above the FAQ as part of the "proof" section. Promoted to
+     directly under the hero: these four facts (made in India, ships
+     pan-India, COD, Hyderabad) are the objection-killers, and they were
+     doing no work eight screens down. */
+  .benefits-strip{
+    border-top:var(--bw-thin) solid var(--rule);
+    border-bottom:var(--bw-thin) solid var(--rule);
+    background:var(--surface);
+    padding:0;
+  }
+  .benefits-strip .trust-row{margin:0;border:0;gap:0}
+  .benefits-strip .trust-row li{
+    border:0;
+    border-right:1px solid var(--rule);
+    padding:20px 16px;
+    justify-content:center;
+  }
+  .benefits-strip .trust-row li:last-child{border-right:0}
+  @media(max-width:767px){
+    .benefits-strip .trust-row li:nth-child(2n){border-right:0}
+    .benefits-strip .trust-row li:nth-child(-n+2){border-bottom:1px solid var(--rule)}
+  }
+
+  /* ============ Problem ============
+     Names why the alternatives fail before pitching the fix. Four blunt
+     answers in acid, each with the reason underneath. */
+  .problem{border-top:var(--bw-thin) solid var(--rule)}
+  .fail-grid{
+    margin-top:44px;
+    display:grid;grid-template-columns:1fr;gap:0;
+    list-style:none;
+  }
+  .fail-grid li{
+    padding:22px 0;
+    border-top:1px solid var(--rule);
+  }
+  .fail-grid .f-answer{
+    font-family:var(--display);font-weight:900;
+    font-size:var(--fs-h4);line-height:1.05;letter-spacing:-.02em;
+    color:var(--acid);
+    margin-bottom:8px;
+  }
+  .fail-grid .f-q{
+    font-family:var(--mono);font-size:11.5px;
+    letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:12px;
+  }
+  .fail-grid p{font-size:var(--fs-sm);color:var(--muted)}
+  @media(min-width:768px){
+    .fail-grid{grid-template-columns:repeat(4,1fr);gap:0}
+    .fail-grid li{
+      border-top:1px solid var(--rule);
+      border-right:1px solid var(--rule);
+      padding:26px 24px 26px 0;
+    }
+    .fail-grid li:last-child{border-right:0}
+    .fail-grid li+li{padding-left:24px}
+  }
+
+  /* ============ Voices (social proof) ============ */
+  .voices{border-top:var(--bw-thin) solid var(--rule)}
+  .voice-grid{
+    margin-top:40px;
+    display:grid;grid-template-columns:1fr;gap:20px;
+    list-style:none;
+  }
+  .voice{
+    border:var(--bw-thin) solid var(--text);
+    box-shadow:5px 5px 0 var(--acid);
+    background:var(--surface);
+    padding:24px;
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .voice .v-tag{
+    font-family:var(--mono);font-size:11px;
+    letter-spacing:.18em;text-transform:uppercase;
+    color:var(--acid);
+  }
+  .voice blockquote{
+    font-family:var(--display);font-weight:400;
+    font-size:19px;line-height:1.32;letter-spacing:-.01em;
+    color:var(--text);
+  }
+  .voice cite{
+    font-family:var(--mono);font-size:12px;font-style:normal;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    margin-top:auto;
+  }
+  .voices-note{
+    margin-top:26px;font-size:var(--fs-sm);color:var(--muted);max-width:60ch;
+  }
+  .voices-note a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
+  @media(min-width:768px){
+    .voice-grid{grid-template-columns:repeat(3,1fr);gap:24px}
+  }
+
+  /* ============ Founder ============ */
+  .founder{border-top:var(--bw-thin) solid var(--rule)}
+  .founder-grid{display:grid;grid-template-columns:1fr;gap:32px;align-items:start}
+  .founder-body p+p{margin-top:16px}
+  .founder-body{max-width:62ch;font-size:var(--fs-lead);line-height:1.5}
+  .founder-body a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
+  .founder-sig{
+    margin-top:26px;padding-top:18px;
+    border-top:1px solid var(--rule);
+    font-family:var(--mono);font-size:12px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  }
+  .founder-sig strong{color:var(--text);font-weight:400}
+  @media(min-width:900px){
+    .founder-grid{grid-template-columns:auto 1fr;gap:56px}
   }
 
   /* ============ FAQ ============ */
@@ -661,12 +883,16 @@
 
   /* Punchy hovers (pointer devices only; the reduce-motion block below
      kills the transitions for users who ask for less motion) */
-  .zone,.faq-item,.trust-row li,.product-visual{transition:transform .18s ease,box-shadow .18s ease}
+  .zone,.faq-item,.trust-row li,.product-visual,.voice{transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease}
   @media(hover:hover){
     .zone:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--acid)}
     .faq-item:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--acid)}
-    .trust-row li:hover{transform:translateY(-4px);box-shadow:5px 5px 0 var(--acid)}
     .product-visual:hover{transform:translate(-3px,-3px);box-shadow:12px 12px 0 var(--acid)}
+    .voice:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--acid)}
+    /* The strip is a flush band, so its cells tint instead of lifting —
+       a translate would break the shared hairlines between them. */
+    .benefits-strip .trust-row li:hover{background:var(--surface-2);color:var(--acid)}
+    .fail-grid li:hover .f-answer{color:var(--acid-hi)}
   }
 </style>
 </head>
@@ -712,21 +938,40 @@
   <!-- ============ 1 · HERO ============ -->
   <section class="hero" aria-labelledby="heroTitle">
     <div class="wrap">
-      <h1 id="heroTitle">Smell Proof. <span class="acid">Always.</span></h1>
-      <p class="hero-sub">Odor control for everywhere it hides — your clothes, your shoes, your helmet, your gear. Not just your skin.</p>
-      <p><span class="hero-hook">No One Will Know.</span></p>
+      <!-- Three children, not two, so the stacking order can differ per breakpoint:
+           mobile reads headline → bottle → price (DOM order), while desktop puts
+           copy and price in the left column with the bottle spanning both rows. -->
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1 id="heroTitle">Smell Proof. <span class="acid">Always.</span></h1>
+          <p class="hero-sub">Odor control for everywhere it hides — your clothes, your shoes, your helmet, your gear. Not just your skin.</p>
+          <p><span class="hero-hook">No One Will Know.</span></p>
+        </div>
 
-      <!-- Price + primary buy CTA live above the fold so the homepage can sell on
-           its own instead of costing a click to /odorstrike first. ₹229 is the
-           only price — no struck anchor, no "% OFF". -->
-      <div class="hero-offer">
-        <span class="hero-price">₹229</span>
-        <span class="hero-mrp">M.R.P. ₹499</span>
-        <span class="hero-price-meta">ODORSTRIKE 50ml · ~250 sprays<br>Free shipping pan-India · COD available</span>
-      </div>
-      <div class="hero-cta-row">
-        <a class="btn" href="/odorstrike#buy">Buy Now — ₹229</a>
-        <a class="btn btn-ghost" href="/odorstrike">See ODORSTRIKE</a>
+        <!-- The product, above the fold. Eager + high priority because this is
+             now a likely LCP candidate alongside the H1 (preloaded in <head>). -->
+        <figure class="hero-visual">
+          <picture>
+            <source srcset="/assets/odorstrike-bottle-cutout.webp" type="image/webp">
+            <img src="/assets/odorstrike-bottle-cutout.png" alt="ODORSTRIKE 50ml pocket fabric odor eliminator mist bottle" width="241" height="915" fetchpriority="high" decoding="async">
+          </picture>
+          <figcaption>50ml · ~250 sprays</figcaption>
+        </figure>
+
+        <!-- Price + primary buy CTA live above the fold so the homepage can sell on
+             its own instead of costing a click to /odorstrike first. ₹229 is the
+             only price — no struck anchor, no "% OFF". -->
+        <div class="hero-buy">
+          <div class="hero-offer">
+            <span class="hero-price">₹229</span>
+            <span class="hero-mrp">M.R.P. ₹499</span>
+            <span class="hero-price-meta">ODORSTRIKE 50ml · ~250 sprays<br>Free shipping pan-India · COD available</span>
+          </div>
+          <div class="hero-cta-row">
+            <a class="btn" href="/odorstrike#buy">Buy Now — ₹229</a>
+            <a class="btn btn-ghost" href="/odorstrike">See ODORSTRIKE</a>
+          </div>
+        </div>
       </div>
 
       <div class="zones">
@@ -758,6 +1003,33 @@
     </div>
   </section>
 
+  <!-- ============ 1b · BENEFITS STRIP ============
+       Promoted from the old "proof" section further down the page — these
+       are the objection-killers (COD, free shipping, made in India) and
+       they belong immediately under the buy CTA, not eight screens away. -->
+  <div class="benefits-strip">
+    <div class="wrap">
+      <ul class="trust-row">
+        <li>
+          <span class="mask-ico ico-india" role="img" aria-hidden="true"></span>
+          Made in India
+        </li>
+        <li>
+          <span class="mask-ico ico-truck" role="img" aria-hidden="true"></span>
+          Ships across India
+        </li>
+        <li>
+          <span class="mask-ico ico-cod" role="img" aria-hidden="true"></span>
+          Cash on Delivery
+        </li>
+        <li>
+          <span class="mask-ico ico-hyderabad" role="img" aria-hidden="true"></span>
+          Based in Hyderabad
+        </li>
+      </ul>
+    </div>
+  </div>
+
   <!-- Acid ticker strip (decorative brand phrases; hidden from AT) -->
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
@@ -773,6 +1045,41 @@
         <p>Deodorant works on your skin. But smell doesn't live on skin — it soaks into the fabric, the shoes and the gear you wear all day. That's the smell other people actually notice. Smelloff goes after odor everywhere skin can't reach. It doesn't fight your deodorant. It finishes the job your deodorant starts.</p>
       </div>
       <a class="down-link reveal" href="#odorstrike-featured">Meet the first product ↓</a>
+    </div>
+  </section>
+
+  <!-- ============ 2b · PROBLEM ============
+       Names why the existing options fail before pitching the fix, so the
+       product lands as an answer rather than another bottle. -->
+  <section class="problem" aria-labelledby="problemTitle">
+    <div class="wrap">
+      <p class="eyebrow reveal">The gap</p>
+      <h2 id="problemTitle" class="reveal">Why your deodorant doesn't fix this</h2>
+      <div class="section-body reveal">
+        <p>By 3pm on an Indian summer day it isn't your skin that smells — it's your shirt. Sweat compounds bind to fabric, especially polyester, and nothing in a normal routine reaches them.</p>
+      </div>
+      <ul class="fail-grid reveal">
+        <li>
+          <p class="f-q">Deodorant</p>
+          <p class="f-answer">Wrong surface</p>
+          <p>It works on skin. The smell other people notice is already sitting in the fabric.</p>
+        </li>
+        <li>
+          <p class="f-q">Perfume</p>
+          <p class="f-answer">Stacks, not solves</p>
+          <p>Fragrance over sweat smells worse than either one on its own. Nothing is removed.</p>
+        </li>
+        <li>
+          <p class="f-q">Re-washing</p>
+          <p class="f-answer">Not an option at 3pm</p>
+          <p>Useless mid-day, and odor compounds survive a normal wash on synthetics anyway.</p>
+        </li>
+        <li>
+          <p class="f-q">Room sprays</p>
+          <p class="f-answer">Built for air</p>
+          <p>Made to scent a room, not to sit on fabric you're wearing for the next eight hours.</p>
+        </li>
+      </ul>
     </div>
   </section>
 
@@ -809,6 +1116,56 @@
     </div>
   </section>
 
+  <!-- ============ 3b · VOICES ============
+       The same three beta-tester quotes that run on the ODORSTRIKE product
+       page, kept word-for-word and labelled as beta testers. These are the
+       only first-hand accounts that exist — do not add invented ones here.
+       When real verified customer reviews land, swap these and update the
+       Product schema on /odorstrike at the same time. -->
+  <section class="voices" aria-labelledby="voicesTitle">
+    <div class="wrap">
+      <p class="eyebrow reveal">Early testers</p>
+      <h2 id="voicesTitle" class="reveal">What it's like to carry one</h2>
+      <ul class="voice-grid">
+        <li class="voice reveal">
+          <p class="v-tag">Beta tester</p>
+          <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
+          <cite>Rohit, 26 / Bengaluru</cite>
+        </li>
+        <li class="voice reveal">
+          <p class="v-tag">Beta tester</p>
+          <blockquote>“Lives in my gym bag now. Post-workout, pre-Uber, no more ‘should I shower at office’ anxiety.”</blockquote>
+          <cite>Aakash, 24 / Pune</cite>
+        </li>
+        <li class="voice reveal">
+          <p class="v-tag">Beta tester</p>
+          <blockquote>“Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger.”</blockquote>
+          <cite>Karan, 29 / Delhi</cite>
+        </li>
+      </ul>
+      <p class="voices-note reveal">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review</a> — worn, sweated and stain-tested across India.</p>
+    </div>
+  </section>
+
+  <!-- ============ 3c · FOUNDER ============
+       Copy condensed from /about — same story, same facts, no new claims. -->
+  <section class="founder" aria-labelledby="founderTitle">
+    <div class="wrap">
+      <div class="founder-grid">
+        <div>
+          <p class="eyebrow reveal">Why this exists</p>
+          <h2 id="founderTitle" class="reveal">Built after a bad<br>client meeting</h2>
+        </div>
+        <div class="founder-body reveal">
+          <p>Smelloff started with an hour-long ride through 41°C Hyderabad heat, a client meeting at the other end, and the moment a colleague's expression shifted.</p>
+          <p>Deodorant had done its job. The shirt hadn't. That gap — a fabric-specific fix built for Indian heat, humidity and commutes, at a price that isn't precious — didn't exist, so we spent six months and a pile of failed prototypes building it.</p>
+          <p>What we believe hasn't changed since: neutralize, don't mask. Fragrance over sweat smells worse than either. <a href="/about">Read the full story →</a></p>
+          <p class="founder-sig"><strong>Jogdhande Nikhil Patil</strong> · Founder, Smelloff · Hyderabad</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ 4 · BRAND PROOF ============ -->
   <section class="proof" aria-labelledby="proofTitle">
     <div class="wrap">
@@ -816,24 +1173,6 @@
       <div class="section-body reveal">
         <p>Smelloff doesn't mask smell with more fragrance. It goes after the odor itself, on the surfaces where it hides.</p>
       </div>
-      <ul class="trust-row reveal">
-        <li>
-          <span class="mask-ico ico-india" role="img" aria-hidden="true"></span>
-          Made in India
-        </li>
-        <li>
-          <span class="mask-ico ico-truck" role="img" aria-hidden="true"></span>
-          Ships across India
-        </li>
-        <li>
-          <span class="mask-ico ico-cod" role="img" aria-hidden="true"></span>
-          Cash on Delivery
-        </li>
-        <li>
-          <span class="mask-ico ico-hyderabad" role="img" aria-hidden="true"></span>
-          Based in Hyderabad
-        </li>
-      </ul>
     </div>
   </section>
 
