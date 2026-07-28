@@ -203,7 +203,13 @@
 <link rel="dns-prefetch" href="https://api.qrserver.com">
 
 <!-- Fonts: self-hosted woff2 (latin/latin-ext subsets, font-display:swap) — no third-party font request -->
-<link rel="preload" as="image" href="/assets/shot-studio.webp" fetchpriority="high">
+<!-- LCP candidate: the first gallery tile. This used to preload shot-studio,
+     which is the *third* image in the stack and below the fold — the tile that
+     actually paints first was never preloaded. -->
+<link rel="preload" as="image" type="image/webp"
+      href="/assets/odorstrike-hero-disc.webp"
+      imagesrcset="/assets/odorstrike-hero-disc@900.webp 900w, /assets/odorstrike-hero-disc.webp 1600w"
+      imagesizes="(min-width:960px) 46vw, 84vw" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-italic-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-mono-normal-latin-400.woff2" crossorigin>
@@ -612,6 +618,17 @@
   }
   .gal-tile--main{aspect-ratio:1/1}
   .gal-tile img{width:100%;height:100%;object-fit:cover;display:block}
+  /* The cutout is a transparent 241×915 PNG of the bottle alone — cover
+     would crop the cap and the base off. It gets contained on the card
+     fill instead, with breathing room, so it reads as a detail shot. */
+  .gal-tile--cutout{aspect-ratio:4/3;background:var(--surface)}
+  .gal-tile--cutout img{
+    width:auto;max-width:none;
+    height:82%;margin:0 auto;
+    object-fit:contain;
+    padding:0;
+    position:relative;top:9%;
+  }
   @media(min-width:960px){
     .gallery-stack{
       grid-auto-flow:row;
@@ -632,7 +649,12 @@
     border-top:1px solid var(--rule);
     display:flex;flex-direction:column;gap:14px;
   }
-  .spec-row{display:grid;grid-template-columns:88px 1fr auto;gap:14px;align-items:center}
+  /* NOTE: `.spec-row` is used by two unrelated components — this scale row
+     and the showcase spec table further down. Both used to declare the
+     bare `.spec-row` class, so the grid columns declared here were also
+     applied to the showcase table, which is why that table rendered as a
+     lopsided three-column block. Both are scoped to their parent now. */
+  .spec-scale .spec-row{display:grid;grid-template-columns:88px 1fr auto;gap:14px;align-items:center}
   .spec-label,.spec-val{
     font-family:var(--mono);font-size:11px;
     letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
@@ -675,25 +697,32 @@
     letter-spacing:-.03em;
     margin:0;
   }
-  .product-info h1 .ph-sub{
-    display:block;
+  /* Product line, above the title. Sized so it cannot wrap at any width
+     the info column takes — the old in-headline version orphaned "50ML". */
+  .ph-eyebrow{
     font-family:var(--mono);
-    font-weight:400;
-    font-size:clamp(14px,1.4vw,18px);
-    letter-spacing:.18em;
+    font-size:12px;
+    letter-spacing:.2em;
     text-transform:uppercase;
-    color:var(--muted);
-    margin-top:18px;
+    color:var(--acid);
+    margin:0 0 16px;
   }
   .ph-tagline{
-    font-family:var(--display);
-    font-size:clamp(18px,1.5vw,22px);
-    line-height:1.4;
-    color:#c7c4bd;
-    margin:24px 0 0;
-    max-width:460px;
+    font-family:var(--body);
+    font-size:clamp(16px,1.3vw,18px);
+    line-height:1.55;
+    color:var(--text-2,#c7c4bd);
+    margin:20px 0 0;
+    max-width:44ch;
   }
-  .ph-price{display:flex;align-items:baseline;gap:14px;margin-top:8px;flex-wrap:wrap}
+  /* Price row: the figure leads, the struck MRP and the note sit under it
+     on their own line. Baseline-aligning a 14px mono strike against a 72px
+     display numeral (which is what the old single-row flex did) left the
+     MRP floating in the middle of the ₹229 with nothing to align to. */
+  .ph-price{
+    display:flex;align-items:baseline;gap:8px 14px;
+    margin-top:26px;flex-wrap:wrap;
+  }
   .ph-price .strike-price{
     text-decoration:line-through;
     color:var(--muted);
@@ -701,6 +730,7 @@
     font-size:14px;
   }
   .ph-price .price-note{
+    flex:1 0 100%;
     color:var(--muted);
     font-family:var(--mono);
     font-size:12px;
@@ -852,17 +882,32 @@
     .problem-grid{grid-template-columns:1fr 1fr;gap:20px}
   }
 
-  /* Product showcase */
+  /* Product showcase
+     Was a single 820px-wide text column pinned to the left of a full-bleed
+     section, so on any desktop width more than half the band was empty and
+     the section read as a broken layout rather than a deliberate one. It is
+     a two-column composition now: the argument on the left, the spec table
+     and the buy CTA in a card on the right, which is also where the eye is
+     already looking after the sticky panel above. */
   .showcase{
-    background:#0e0e0e;
-    color:var(--paper);
-    padding:140px 32px;
+    background:var(--surface);
+    color:var(--text);
+    padding:clamp(72px,9vw,120px) 32px;
   }
   .showcase .section-tag{color:var(--muted)}
   .showcase .section-tag::before{background:var(--muted)}
-  .showcase-text{max-width:820px}
-  .showcase-text .fix-lede{font-size:19px;color:var(--paper);opacity:.95;max-width:640px}
-  .fix-features{list-style:none;margin:28px 0 4px;padding:0;display:grid;gap:14px;max-width:660px}
+  .showcase-grid{
+    display:grid;grid-template-columns:1fr;
+    gap:clamp(36px,5vw,64px);
+    align-items:start;
+    max-width:var(--maxw);margin:0 auto;
+  }
+  @media(min-width:960px){
+    .showcase-grid{grid-template-columns:1.15fr .85fr}
+  }
+  .showcase-text{max-width:none}
+  .showcase-text .fix-lede{font-size:19px;color:var(--text);opacity:.95;max-width:none}
+  .fix-features{list-style:none;margin:28px 0 4px;padding:0;display:grid;gap:14px;max-width:none}
   .fix-features li{position:relative;padding-left:32px;font-size:16px;line-height:1.5;color:#c7c4bd}
   .fix-features li::before{
     content:'\2713';position:absolute;left:0;top:2px;
@@ -872,9 +917,19 @@
   }
   .fix-features li strong{color:var(--paper);font-weight:700}
   .fix-features li a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
-  /* Centered buy block (specs + large CTA + note) */
-  .fix-buy{max-width:600px;margin:44px auto 0;text-align:center}
-  .fix-buy .specs{margin-top:0;padding-top:26px}
+  /* Buy block — now a card in the right column rather than a centred slab
+     floating under the copy. Sticks alongside the argument on desktop. */
+  .fix-buy{
+    margin:0;
+    padding:clamp(24px,3vw,32px);
+    background:var(--ink);
+    border:1px solid var(--rule);
+    border-radius:var(--sq-lg,28px);
+  }
+  @media(min-width:960px){
+    .fix-buy{position:sticky;top:96px}
+  }
+  .fix-buy .specs{margin-top:0;padding-top:0;border-top:0}
   .fix-cta{
     display:block;width:100%;margin-top:28px;
     background:var(--acid);color:var(--ink);
@@ -884,8 +939,31 @@
     transition:transform .15s,box-shadow .15s;
   }
   .fix-cta:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(184,255,87,.35)}
-  .fix-cta-note{display:block;margin-top:14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .fix-cta-note{display:block;margin-top:14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;text-align:center}
   .fix-cta-note s{opacity:.65}
+  .fix-buy-title{
+    font-family:var(--mono);font-size:12px;
+    letter-spacing:.2em;text-transform:uppercase;
+    color:var(--acid);margin:0 0 18px;
+  }
+  /* Scale / carry facts — text versions of what the ad creatives used to
+     say in burnt-in pixels. */
+  .fix-carry{
+    list-style:none;margin:34px 0 0;padding:22px 0 0;
+    border-top:1px solid var(--rule);
+    display:grid;gap:16px;
+  }
+  @media(min-width:640px){
+    .fix-carry{grid-template-columns:repeat(3,1fr);gap:24px}
+  }
+  .fix-carry li{font-size:14px;line-height:1.5;color:var(--muted)}
+  .fix-carry span{
+    display:block;
+    font-family:var(--display);font-weight:900;
+    font-size:22px;line-height:1.1;letter-spacing:-.02em;
+    color:var(--acid);
+    margin-bottom:6px;
+  }
   .showcase-text h2{
     font-family:var(--display);
     font-weight:900;
@@ -897,9 +975,9 @@
   .showcase-text p{
     font-size:18px;
     line-height:1.6;
-    color:#c7c4bd;
+    color:var(--text-2,#c7c4bd);
     margin-bottom:24px;
-    max-width:480px;
+    max-width:62ch;
   }
   /* Inline links: acid green (#B8FF57 passes AA on #080808) + underline */
   .showcase-text p a{
@@ -909,21 +987,29 @@
     text-decoration-thickness:1px;
   }
   .showcase-text p a:hover{text-decoration-thickness:2px}
+  /* Showcase spec table — a plain label/value list, left-aligned. */
   .specs{
-    margin-top:40px;
-    border-top:1px solid rgba(244,241,234,.15);
-    padding-top:24px;
+    margin-top:0;
     display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:20px;
+    grid-template-columns:1fr;
+    gap:0;
   }
-  .spec-row{
+  .specs .spec-row{
+    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    padding:11px 0;
+    border-bottom:1px solid var(--rule);
     font-family:var(--mono);
     font-size:12px;
-    letter-spacing:.1em;
+    letter-spacing:.08em;
     text-transform:uppercase;
+    color:var(--text);
+    text-align:left;
   }
-  .spec-row span{display:block;opacity:.5;font-size:10px;margin-bottom:4px}
+  .specs .spec-row:last-child{border-bottom:0}
+  .specs .spec-row span{
+    display:block;opacity:.55;font-size:10px;margin:0;
+    letter-spacing:.14em;flex:0 0 auto;
+  }
 
   /* Science */
   .science h2{
@@ -1036,21 +1122,28 @@
     color:var(--ink);
     border-color:var(--acid);
   }
+  /* Ribbon. It used to sit at left:24px, which put half of it over the
+     card's rounded top-left corner once the card gained a radius — it read
+     as a rendering fault. Centred on the top edge it reads as a ribbon. */
   .price-card.featured::before{
     content:'ONE SKU. NO BUNDLES.';
     position:absolute;
-    top:-12px;left:24px;
+    top:-13px;left:50%;
+    transform:translateX(-50%);
+    white-space:nowrap;
     background:var(--ink);
     color:var(--acid);
-    padding:4px 12px;
+    padding:6px 16px;
     font-family:var(--mono);
     font-size:10px;
     letter-spacing:.2em;
-    border-radius:2px;
+    border-radius:var(--sq-pill,100px);
   }
   .price-card .pack-size{
+    display:block;
     font-family:var(--mono);
     font-size:11px;
+    line-height:1.7;
     letter-spacing:.2em;
     text-transform:uppercase;
     opacity:.6;
@@ -1063,9 +1156,11 @@
     margin:8px 0 4px;
   }
   .price-card .mrp-strike{
+    display:block;
     font-family:var(--mono);
     font-size:12px;
-    opacity:.5;
+    line-height:1.7;
+    opacity:.68;
     text-decoration:line-through;
     margin-bottom:4px;
   }
@@ -1078,7 +1173,8 @@
     display:inline-block;
     background:var(--ink);
     color:var(--acid);
-    padding:4px 10px;
+    padding:6px 14px;
+    border-radius:var(--sq-pill,100px);
     font-family:var(--mono);
     font-size:11px;
     letter-spacing:.1em;
@@ -1817,14 +1913,30 @@
   }
   .faq .section-tag{color:var(--muted)}
   .faq .section-tag::before{background:var(--muted)}
+  /* Two columns of accordions rather than one 800px column pinned left,
+     which left the whole right half of the section empty. */
   .faq-list{
-    max-width:800px;
+    max-width:var(--maxw);
+    margin-inline:auto;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+    align-content:start;
   }
+  @media(min-width:900px){
+    .faq-list{grid-template-columns:1fr 1fr;gap:14px 20px}
+  }
+  /* soft.css turns each <details> into a padded squircle card; the summary
+     carried its own 24px block padding on top of that, which is what made
+     these rows twice as tall as they needed to be. The card owns the
+     padding now, the summary owns none. */
   .faq-list details{
-    border-bottom:1px solid var(--rule);
+    border-bottom:0;
+    padding:0 !important;
+    height:fit-content;
   }
   .faq-list summary{
-    padding:24px 0;
+    padding:20px 24px;
     cursor:pointer;
     font-family:var(--display);
     font-weight:900;
@@ -1852,11 +1964,11 @@
     content:'−';
   }
   .faq-list .faq-answer{
-    padding:0 0 24px;
+    padding:0 24px 22px;
     font-size:15px;
     line-height:1.6;
     color:var(--muted);
-    max-width:680px;
+    max-width:none;
   }
   .faq-list .faq-answer a{color:var(--acid);text-decoration:none;border-bottom:1px solid rgba(184,255,87,.3)}
 
@@ -2187,11 +2299,15 @@
   .reviews-more a{color:var(--acid);text-decoration:none;border-bottom:1px solid rgba(184,255,87,.35)}
   .guides-strip{padding:60px 32px;border-top:1px solid var(--rule)}
   .guides-strip ul{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:12px}
-  .guides-strip li a{font-family:var(--display);font-size:clamp(16px,1.6vw,20px);color:var(--text);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:12px;display:block;transition:color .15s}
+  /* Styled on the <li> so an entry without a link can never fall back to
+     the body face mid-list, the way two of these used to. */
+  .guides-strip li{font-family:var(--display);font-size:clamp(16px,1.6vw,20px);color:var(--text);border-bottom:1px solid var(--rule);padding-bottom:12px}
+  .guides-strip li a{color:inherit;text-decoration:none;display:block;transition:color .15s}
   .guides-strip li a:hover{color:var(--acid)}
   .guides-all{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--acid);text-decoration:none}
 </style>
 <link rel="stylesheet" href="/assets/css/soft.css">
+<link rel="stylesheet" href="/assets/css/chrome.css">
 
 <!-- Smelloff Partner Network attribution (partners.smelloff.in) -->
 <script>
@@ -2228,33 +2344,47 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   } catch (e) {}
 }
 </script>
+<script src="/assets/js/chrome.js" defer></script>
 </head>
 <body>
 <a href="#buy" class="skip-link">Skip to products</a>
 
-<nav class="site-nav">
-  <a class="logo" href="/" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:26px;width:auto;display:block"></a>
-  <div class="meta">
-    <button class="cart-btn" id="cartBtn" onclick="openCartDrawer()" aria-label="Open cart">
-      <svg class="cart-ico" viewBox="0 0 576 512" fill="currentColor" aria-hidden="true"><path d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 368c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
-      <span class="cart-count" id="cartCount" data-empty="1">0</span>
-    </button>
-    <a href="#science">Science</a>
-    <a href="#buy">Pricing</a>
-    <a href="#faq">FAQ</a>
-    <a href="#reviews">Reviews</a>
-    <button class="nav-toggle" aria-expanded="false" aria-controls="navMenu" aria-label="Open menu">
-      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
-    </button>
+<!-- SF-CHROME:HEADER — generated by scripts/apply-chrome.mjs. Edit there, not here. -->
+<header class="sf-hdr">
+  <div class="sf-wrap">
+    <div class="sf-hdr__row">
+      <a href="/" class="sf-hdr__logo" aria-label="Smelloff home">
+        <img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" decoding="async">
+      </a>
+      <div class="sf-hdr__right">
+        <button class="sf-cart" type="button" id="cartBtn" onclick="openCartDrawer()" aria-label="Open cart">
+          <svg viewBox="0 0 576 512" fill="currentColor" aria-hidden="true"><path d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 368c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
+          <span class="sf-cart__count" id="cartCount" data-empty="1">0</span>
+        </button>
+        <ul class="sf-nav">
+          <li><a href="/odorstrike">ODORSTRIKE</a></li>
+          <li><a href="/blog">Guides</a></li>
+          <li><a href="/reviews">Reviews</a></li>
+          <li><a href="/faq">FAQ</a></li>
+          <li><a href="/track-order">Track order</a></li>
+        </ul>
+        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹229</a>
+        <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <ul class="sf-hdr__menu" id="sfMenu">
+      <li><a href="/odorstrike">ODORSTRIKE</a></li>
+      <li><a href="/blog">Guides</a></li>
+      <li><a href="/reviews">Reviews</a></li>
+      <li><a href="/faq">FAQ</a></li>
+      <li><a href="/track-order">Track order</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
   </div>
-  <ul id="navMenu">
-    <li><a href="#science">Science</a></li>
-    <li><a href="#buy">Pricing</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="#reviews">Reviews</a></li>
-    <li><a href="/blog">Blog</a></li>
-  </ul>
-</nav>
+</header>
+<!-- /SF-CHROME:HEADER -->
 
 <!-- STICKY MOBILE BAR -->
 <div class="mobile-bar" id="mobileBar">
@@ -2307,37 +2437,49 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
   <div class="product-hero">
     <!-- PRODUCT GALLERY
-         A scrolling stack of squircle tiles beside a sticky buy panel. The four
-         lifestyle shots already lived in /assets but were never rendered (only
-         shot-studio was preloaded, pointing at nothing) — they carry the scale,
-         carry and use-case story far better than the packshot alone.
+         Three tiles beside a sticky buy panel. It used to be five, four of
+         which were ad creatives with headline copy, bullet lists and icon
+         rows burnt into the pixels ("POCKET-SIZED. ALWAYS READY." and so
+         on). Two typographic systems fought in every tile and the claims
+         inside them were unselectable, untranslatable and invisible to
+         search. Those creatives belong in an ad, not on the PDP — the
+         claims they carried now live as real markup further down the page.
+         What is left is product photography only:
+           1. the bottle on the brand's acid disc (the homepage hero
+              composition, matched to --acid #B8FF57 exactly)
+           2. the clean studio shot
+           3. the cutout, framed to show the label
          Desktop: vertical stack that scrolls past the pinned buy panel.
          Mobile: horizontal scroll-snap carousel so the CTA stays reachable. -->
     <div class="gallery-stack" id="gallery" role="group" aria-label="ODORSTRIKE product images">
       <figure class="gal-tile gal-tile--main">
-        <img src="/assets/odorstrike-bottle.webp" alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black spray bottle, front on white background" width="1080" height="1080" fetchpriority="high" decoding="async">
+        <img src="/assets/odorstrike-hero-disc.webp"
+             srcset="/assets/odorstrike-hero-disc@900.webp 900w, /assets/odorstrike-hero-disc.webp 1600w"
+             sizes="(min-width:960px) 46vw, 84vw"
+             alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black spray bottle on the Smelloff acid-green disc" width="1600" height="1600" fetchpriority="high" decoding="async">
       </figure>
       <figure class="gal-tile">
-        <img src="/assets/shot-pocket.webp" alt="ODORSTRIKE held in a hand next to a phone for scale — the bottle is 10.5cm tall" width="1400" height="933" loading="lazy" decoding="async">
+        <img src="/assets/shot-studio.webp" alt="ODORSTRIKE studio shot — the bottle beside a folded gym towel and a dumbbell" width="1400" height="933" loading="lazy" decoding="async">
       </figure>
-      <figure class="gal-tile">
-        <img src="/assets/shot-gymbag.webp" alt="ODORSTRIKE tucked into a gym bag beside shoes and a towel" width="1400" height="933" loading="lazy" decoding="async">
-      </figure>
-      <figure class="gal-tile">
-        <img src="/assets/shot-flatlay.webp" alt="ODORSTRIKE laid flat with everyday carry items" width="1400" height="933" loading="lazy" decoding="async">
-      </figure>
-      <figure class="gal-tile">
-        <img src="/assets/shot-studio.webp" alt="ODORSTRIKE studio shot showing the full bottle and label" width="1400" height="933" loading="lazy" decoding="async">
+      <figure class="gal-tile gal-tile--cutout">
+        <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE bottle, front label: fabric odor eliminator mist, net weight 50ml" width="241" height="915" loading="lazy" decoding="async">
       </figure>
     </div>
 
     <!-- PRODUCT INFO -->
     <div class="product-info">
-      <h1>No One Will Know.<span class="ph-sub">ODORSTRIKE · Fabric Odor Remover Spray · 50ml</span></h1>
-      <p class="ph-tagline">A pocket-sized 50ml mist that erases odor from fabric on contact. Not a perfume. Not a deodorant. A fix.</p>
+      <!-- The product line used to be a <span> inside the <h1>, set in mono
+           at 18px with .18em tracking. At every desktop width it wrapped
+           and left "50ML" alone on its own line under the title. It is a
+           label, not part of the headline — so it is an eyebrow above it
+           now, which is also how wimpdecaf's PDP reads (title, then a
+           short description). -->
+      <p class="ph-eyebrow">ODORSTRIKE · 50ml</p>
+      <h1>No One Will Know.</h1>
+      <p class="ph-tagline">A pocket-sized fabric odor remover that erases smell from fabric on contact. Not a perfume. Not a deodorant. A fix.</p>
       <div class="ph-price">
-        <span class="strike-price">M.R.P. ₹499</span>
         <span class="price">₹229</span>
+        <span class="strike-price">M.R.P. ₹499</span>
         <span class="price-note">all-inclusive · free shipping</span>
       </div>
       <button class="hero-cta" onclick="buyNow()">Buy Now — ₹229 · COD</button>
@@ -2381,8 +2523,9 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
 <!-- PRODUCT SHOWCASE / THE FIX -->
 <section class="showcase">
-  <div class="section-tag">The fix</div>
+  <div class="showcase-grid">
   <div class="showcase-text">
+    <div class="section-tag">The fix</div>
     <h2>Meet ODORSTRIKE.<br>One mist. Zero evidence.</h2>
     <p class="fix-lede"><strong>ODORSTRIKE</strong> is a pocket-sized fabric odor remover — a 50ml spray that erases sweat, gym and smoke smell straight out of the clothes you're wearing. Not a perfume. Not a deodorant. A fix you keep in your pocket.</p>
     <p>It doesn't mask smell — it captures and neutralizes the odor molecules trapped in your shirt collar, jacket sleeves and gym bag. <a href="/blog/hpbcd-cyclodextrin-fabric-odor">HPβCD, a ring-shaped cyclodextrin that cages odor molecules</a> traps them at the source while Zinc PCA shuts them down.</p>
@@ -2393,18 +2536,30 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <li><strong>Fabric-only, works on everything</strong> — cotton, polyester, denim and wool. Never on skin.</li>
       <li><strong>Pocket-sized 50ml</strong> — about 250 sprays per bottle, shipped pan-India with COD.</li>
     </ul>
-    <div class="fix-buy">
-      <div class="specs">
-        <div class="spec-row"><span>Volume</span>50ML</div>
-        <div class="spec-row"><span>Use on</span>FABRIC ONLY</div>
-        <div class="spec-row"><span>Protection</span>UP TO 8HR</div>
-        <div class="spec-row"><span>Sprays</span>~250</div>
-        <div class="spec-row"><span>Dries</span>FAST · NO WET PATCH</div>
-        <div class="spec-row"><span>Glycerine</span>ZERO</div>
-      </div>
-      <a href="#buy" class="fix-cta">Buy Now — ₹229 · COD</a>
-      <span class="fix-cta-note">50ml · <s>₹499</s> ₹229 · free shipping pan-India</span>
+
+    <!-- The scale, carry and use-case claims that used to be baked into the
+         gallery creatives as pixels. Real text: selectable, indexable,
+         translatable, and it inherits the page's own type. -->
+    <ul class="fix-carry">
+      <li><span>10.5 cm</span>Fits a jeans pocket, a laptop sleeve or a gym-bag side pouch.</li>
+      <li><span>Cabin-safe</span>Under the 100ml liquids limit, so it flies in hand baggage.</li>
+      <li><span>~250 sprays</span>Two sprays per refresh — roughly four months of daily use.</li>
+    </ul>
+  </div>
+
+  <div class="fix-buy">
+    <p class="fix-buy-title">ODORSTRIKE 50ml</p>
+    <div class="specs">
+      <div class="spec-row"><span>Volume</span>50ML</div>
+      <div class="spec-row"><span>Use on</span>FABRIC ONLY</div>
+      <div class="spec-row"><span>Protection</span>UP TO 8HR</div>
+      <div class="spec-row"><span>Sprays</span>~250</div>
+      <div class="spec-row"><span>Dries</span>FAST · NO WET PATCH</div>
+      <div class="spec-row"><span>Glycerine</span>ZERO</div>
     </div>
+    <a href="#buy" class="fix-cta">Buy Now — ₹229 · COD</a>
+    <span class="fix-cta-note">50ml · <s>₹499</s> ₹229 · free shipping pan-India</span>
+  </div>
   </div>
 </section>
 
@@ -2708,52 +2863,71 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <ul>
     <li><a href="/blog/why-i-built-odorstrike">Why I built ODORSTRIKE — the founder story behind India's ₹229 pocket fabric spray</a></li>
     <li><a href="/blog/beta-cyclodextrin-odor-removal-science">The science: how beta-cyclodextrin traps odor molecules in fabric</a></li>
-    <li>Best fabric odor spray in India (2026) — 5 tested, 1 winner</li>
-    <li>How to not smell sweaty at work — the 11-hour office playbook</li>
+    <!-- Two entries here were plain <li> text with no link — leftovers from
+         the blog prune, pointing at posts that no longer exist. They also
+         rendered in the body face while their linked neighbours rendered in
+         Fraunces, which is why this list looked like two different lists.
+         Replaced with guides that are actually still published. -->
+    <li><a href="/blog/odorstrike-vs-febreze-india">ODORSTRIKE vs Febreze — which works better on Indian clothes</a></li>
+    <li><a href="/blog/zinc-pca-fabric-odor-ingredient-guide">Zinc PCA for fabric odor — what it is and why it works</a></li>
     <li><a href="/blog/odorstrike-review-30-day-india-test">ODORSTRIKE 30-day India test — is it worth ₹229?</a></li>
   </ul>
   <a class="guides-all" href="/blog">All guides →</a>
 </section>
 
-<footer>
-  <div class="footer-grid">
-    <div>
-      <div class="brand"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:28px;width:auto;display:block"></div>
-      <p style="opacity:.6;margin-top:8px">Pocket-sized odor killer<br>for your clothes.</p>
+<!-- SF-CHROME:FOOTER — generated by scripts/apply-chrome.mjs. Edit there, not here. -->
+<footer class="sf-ftr">
+  <div class="sf-wrap">
+    <div class="sf-ftr__grid">
+      <div class="sf-ftr__brand">
+        <img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" loading="lazy">
+        <p>Odor control for clothes, shoes, helmets and gear. Smell Proof. Always.</p>
+      </div>
+      <div>
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="/odorstrike">ODORSTRIKE</a></li>
+          <li><a href="/track-order">Track order</a></li>
+          <li><a href="/reviews">Reviews</a></li>
+          <li><a href="/blog">Guides</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Support</h3>
+        <ul>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/faq">FAQ</a></li>
+          <li><a href="/shipping">Shipping</a></li>
+          <li><a href="/returns">Returns</a></li>
+          <li><a href="/refund">Refund policy</a></li>
+          <li><a href="/cancellation">Cancellation</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+          <li><a href="https://partners.smelloff.in">Partner program</a></li>
+        </ul>
+        <div class="sf-ftr__socials">
+        <a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram"><img src="/assets/icon-instagram-white.png" alt="" width="20" height="20" loading="lazy"></a>
+        <a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)"><img src="/assets/icon-x.png" alt="" width="20" height="20" loading="lazy"></a>
+        <a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram"><img src="/assets/icon-telegram-white.png" alt="" width="20" height="20" loading="lazy"></a>
+        <a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="/assets/icon-linkedin-white.png" alt="" width="20" height="20" loading="lazy"></a>
+        <a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook"><img src="/assets/icon-facebook-white.png" alt="" width="20" height="20" loading="lazy"></a>
+        <a href="https://wa.me/919392974031" target="_blank" rel="noopener" aria-label="WhatsApp"><img src="/assets/icon-whatsapp-white.png" alt="" width="20" height="20" loading="lazy"></a>
+        </div>
+      </div>
     </div>
-    <div>
-      <h3>Shop</h3>
-      <ul>
-        <li><a href="#buy">ODORSTRIKE</a></li>
-        <li><a href="/track-order">Track Order</a></li>
-      </ul>
+    <div class="sf-ftr__bottom">
+      <span>© 2026 SMELLOFF. HYDERABAD. MFG: Jogdhande Nikhil Patil, Sanathnagar, Erragadda, Hyderabad.</span>
+      <span>MADE IN INDIA / FABRIC ONLY</span>
     </div>
-    <div>
-      <h3>Support</h3>
-      <ul>
-        <li><a href="/contact">Contact</a></li>
-        <li><a href="/shipping">Shipping</a></li>
-        <li><a href="/returns">Returns</a></li>
-        <li><a href="/refund">Refund Policy</a></li>
-        <li><a href="/cancellation">Cancellation</a></li>
-        <li><a href="/blog">Blogs</a></li>
-        <li><a href="https://partners.smelloff.in">Partner Program</a></li>
-      </ul>
-    </div>
-    <div>
-      <h3>Legal</h3>
-      <ul>
-        <li><a href="/privacy">Privacy</a></li>
-        <li><a href="/terms">Terms</a></li>
-        <li style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;list-style:none;padding-top:8px;margin-left:-6px"><a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-instagram-white.png" alt="Instagram" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-x.png" alt="X (Twitter)" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-telegram-white.png" alt="Telegram" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-linkedin-white.png" alt="LinkedIn" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-facebook-white.png" alt="Facebook" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://wa.me/919392974031" target="_blank" rel="noopener" aria-label="WhatsApp" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-whatsapp-white.png" alt="WhatsApp" width="20" height="20" style="opacity:.85" loading="lazy"></a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 SMELLOFF. HYDERABAD. MFG: Jogdhande Nikhil Patil, Sanathnagar, Erragadda, Hyderabad.</span>
-    <span>MADE IN INDIA / FABRIC ONLY</span>
   </div>
 </footer>
+<!-- /SF-CHROME:FOOTER -->
 
 <!-- ============================= -->
 <!-- CHECKOUT OVERLAY              -->
