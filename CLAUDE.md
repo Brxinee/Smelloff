@@ -59,6 +59,32 @@ apart across three naming families — three different whites (`#F4F1EA`,
   `odorstrike.html` and `blog.css`, which stopped customers copying their own
   order ID and readers quoting a guide. Only interactive chrome opts out now.
 
+## Soft form language (2026-07-28)
+`assets/css/soft.css` replaces the old brutalist shapes (90° corners, 3px
+borders, hard offset shadows) with the squircle language modelled on
+wimpdecaf.com: generous radii, hairline outlines, no offset shadows, pill
+buttons with uppercase wide-tracked labels and a bounce on hover.
+**Palette and type are unchanged** — only the shapes.
+- Radii scale: `--sq-sm 11px` (buttons, matching wimpdecaf's `.6875rem`),
+  `--sq-lg 28px` (cards), `--sq-xl 36px` (panels, gallery tiles), `--sq-pill`.
+- **It is linked *after* each page's inline `<style>` on purpose.** Most pages
+  here are self-contained, and an inline `<style>` beats a preceding `<link>`
+  at equal specificity. Loading last lets one file restyle every component
+  across ~24 pages, and makes the whole change reversible by removing one
+  `<link>`. If you add a page, link `soft.css` last in `<head>`.
+- FAQs are `<details>` accordions everywhere (homepage, `/odorstrike`, `/faq`).
+  The +/− marker, the open state and the row transition all live in `soft.css`;
+  a page only needs `<details class="faq-item"><summary><h3>…</h3></summary>`.
+- `/odorstrike` hero is now a scrolling squircle gallery beside a **sticky buy
+  panel** (`.product-info` is `position:sticky` at ≥960px). The gallery is a
+  horizontal scroll-snap carousel on mobile so the CTA stays reachable. It uses
+  the four lifestyle shots in `/assets` (`shot-pocket`, `shot-gymbag`,
+  `shot-flatlay`, `shot-studio`) that were previously unrendered — only
+  `shot-studio` was preloaded, pointing at nothing.
+- The `.spec-scale` rows (protection / fragrance) are the analogue of
+  wimpdecaf's roast-strength slider. Levels are 1–4; "up to 8 hrs" is the
+  locked claim, so the protection dot sits at the top of the scale, not past it.
+
 ## Site structure
 - `/` — brand homepage (hero, benefits, problem, product, voices, founder, FAQ)
 - `/odorstrike` — product page + checkout

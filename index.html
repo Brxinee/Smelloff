@@ -539,6 +539,9 @@
     font-family:var(--display);font-weight:900;
     font-size:27px;letter-spacing:-.01em;
     line-height:1.02;
+    /* .z-title is a <p>, so the `.zone p` rule below was rendering these card
+       headings in --muted. Set the colour explicitly. */
+    color:var(--text);
   }
   .zone p{font-size:15px;color:var(--muted);margin-top:6px}
   @media(min-width:768px){
@@ -757,8 +760,15 @@
     font-family:var(--display);font-weight:900;
     font-size:25px;letter-spacing:-.01em;
     line-height:1.1;
-    margin-bottom:10px;
+    margin:0;
+    display:inline;
   }
+  /* Accordion: the item is a <details>, the question is the <summary>.
+     Open/closed chrome (the +/- and the row transition) lives in soft.css. */
+  .faq-item{padding:0}
+  .faq-item > summary{padding:22px 26px}
+  .faq-item .faq-answer-wrap > div{padding:0 26px 22px}
+  .faq-item .faq-answer-wrap p{margin-top:2px}
   .faq-item p{font-size:17px}
   .faq-item a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
   .faq-item a:hover{color:#d1ff8a}
@@ -895,6 +905,7 @@
     .fail-grid li:hover .f-answer{color:var(--acid-hi)}
   }
 </style>
+<link rel="stylesheet" href="/assets/css/soft.css">
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -1181,30 +1192,30 @@
     <div class="wrap">
       <h2 id="faqTitle" class="reveal">Questions, answered</h2>
       <div class="faq-list">
-        <div class="faq-item reveal">
-          <h3>What is Smelloff?</h3>
-          <p>Smelloff is an Indian odor-control brand for men. It goes after smell where it hides — on clothes, shoes, helmets and gear — instead of covering it with fragrance.</p>
-        </div>
-        <div class="faq-item reveal">
-          <h3>Is Smelloff a deodorant or a perfume?</h3>
-          <p>Neither. Deodorant works on skin. Smelloff works on the fabric, shoes and gear that skin touches all day. It completes your routine instead of replacing it.</p>
-        </div>
-        <div class="faq-item reveal">
-          <h3>What does Smelloff make?</h3>
-          <p>The first product is ODORSTRIKE, a pocket fabric odor eliminator mist for clothes. Smelloff's scope covers odor on shoes, helmets and gear too.</p>
-        </div>
-        <div class="faq-item reveal">
-          <h3>Where is Smelloff made?</h3>
-          <p>Made in India. Smelloff is based in Hyderabad and ships across India.</p>
-        </div>
-        <div class="faq-item reveal">
-          <h3>Does Smelloff go on skin?</h3>
-          <p>No. Smelloff products are built for fabric and gear, not skin.</p>
-        </div>
-        <div class="faq-item reveal">
-          <h3>How do I buy ODORSTRIKE?</h3>
-          <p>Everything about ODORSTRIKE — how it works, sizes and buying — is on its <a href="/odorstrike">product page</a>.</p>
-        </div>
+        <details class="faq-item reveal">
+          <summary><h3>What is Smelloff?</h3></summary>
+          <div class="faq-answer-wrap"><div><p>Smelloff is an Indian odor-control brand for men. It goes after smell where it hides — on clothes, shoes, helmets and gear — instead of covering it with fragrance.</p></div></div>
+        </details>
+        <details class="faq-item reveal">
+          <summary><h3>Is Smelloff a deodorant or a perfume?</h3></summary>
+          <div class="faq-answer-wrap"><div><p>Neither. Deodorant works on skin. Smelloff works on the fabric, shoes and gear that skin touches all day. It completes your routine instead of replacing it.</p></div></div>
+        </details>
+        <details class="faq-item reveal">
+          <summary><h3>What does Smelloff make?</h3></summary>
+          <div class="faq-answer-wrap"><div><p>The first product is ODORSTRIKE, a pocket fabric odor eliminator mist for clothes. Smelloff's scope covers odor on shoes, helmets and gear too.</p></div></div>
+        </details>
+        <details class="faq-item reveal">
+          <summary><h3>Where is Smelloff made?</h3></summary>
+          <div class="faq-answer-wrap"><div><p>Made in India. Smelloff is based in Hyderabad and ships across India.</p></div></div>
+        </details>
+        <details class="faq-item reveal">
+          <summary><h3>Does Smelloff go on skin?</h3></summary>
+          <div class="faq-answer-wrap"><div><p>No. Smelloff products are built for fabric and gear, not skin.</p></div></div>
+        </details>
+        <details class="faq-item reveal">
+          <summary><h3>How do I buy ODORSTRIKE?</h3></summary>
+          <div class="faq-answer-wrap"><div><p>Everything about ODORSTRIKE — how it works, sizes and buying — is on its <a href="/odorstrike">product page</a>.</p></div></div>
+        </details>
       </div>
     </div>
   </section>
