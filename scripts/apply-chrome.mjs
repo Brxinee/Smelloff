@@ -11,8 +11,8 @@
      1. replaces whatever chrome a page currently has (`.p-nav`,
         `.blog-nav`, `.b-nav`, `nav.site-nav`, `header.site`, and the
         matching footers) with the canonical markup below;
-     2. makes sure `soft.css`, `chrome.css` and `chrome.js` are linked, in
-        that order, after the page's own inline <style>.
+     2. makes sure `soft.css`, `chrome.css` and `chrome.js` are linked LAST
+        in <head>, each carrying a content hash in its query string.
 
    Re-running it is safe and idempotent: it rewrites the region between
    the chrome markers rather than appending.
@@ -21,14 +21,46 @@
        node scripts/apply-chrome.mjs --check   # report, change nothing
 
    Edit the HEADER / FOOTER constants here, re-run, commit the result.
+
+   RE-RUN THIS AFTER EVERY EDIT TO soft.css / chrome.css / chrome.js — see
+   the cache-busting note on hashOf() below. It is why those edits do not
+   reach anyone who has already visited the site until you do.
    ===================================================================== */
 
 import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
+
+/* --- cache busting ---------------------------------------------------
+   `vercel.json` serves everything under /assets with
+
+       Cache-Control: public, max-age=31536000, immutable
+
+   `immutable` means the browser will not revalidate for a year. Combined
+   with an unversioned URL, that froze every returning visitor on whatever
+   copy of soft.css they happened to fetch first: a design change would ship,
+   the deploy would go green, and the site would still look the same on any
+   device that had loaded it before. Three separate rounds of fixes appeared
+   not to work for exactly this reason.
+
+   The rest of the site already handles this by hand (`blog.css?v=6`), which
+   only works if someone remembers to bump it. Hashing the file contents
+   makes the URL change automatically when — and only when — the file does.
+   ---------------------------------------------------------------------- */
+function hashOf(relPath) {
+  try {
+    return createHash('sha256')
+      .update(readFileSync(join(ROOT, relPath)))
+      .digest('hex')
+      .slice(0, 8);
+  } catch {
+    return '0';
+  }
+}
 
 /* --- the one header -------------------------------------------------
    The cart control is the single element that legitimately differs: on
@@ -231,9 +263,9 @@ function withMarkers(html, block, kind) {
  *  </head>, after every other stylesheet the page loads.
  */
 function ensureAssets(html) {
-  const softTag = '<link rel="stylesheet" href="/assets/css/soft.css">';
-  const chromeTag = '<link rel="stylesheet" href="/assets/css/chrome.css">';
-  const jsTag = '<script src="/assets/js/chrome.js" defer></script>';
+  const softTag = `<link rel="stylesheet" href="/assets/css/soft.css?v=${hashOf('assets/css/soft.css')}">`;
+  const chromeTag = `<link rel="stylesheet" href="/assets/css/chrome.css?v=${hashOf('assets/css/chrome.css')}">`;
+  const jsTag = `<script src="/assets/js/chrome.js?v=${hashOf('assets/js/chrome.js')}" defer></script>`;
 
   // Drop existing references (any attribute order / query string) and the
   // banner comment, so a re-run relocates them instead of stacking copies.
@@ -247,11 +279,19 @@ function ensureAssets(html) {
     ''
   );
 
+  // tokens.css is hand-linked per page rather than stamped here, but it sits
+  // under the same immutable cache rule — so re-stamp its query string in
+  // place. A palette change is otherwise invisible to returning visitors.
+  html = html.replace(
+    /(href="\/assets\/css\/tokens\.css)(\?[^"]*)?"/g,
+    `$1?v=${hashOf('assets/css/tokens.css')}"`
+  );
+
   const headEnd = html.lastIndexOf('</head>');
   if (headEnd === -1) return html;
   return (
     html.slice(0, headEnd) +
-    `<!-- Shared layers load LAST so they win on source order. See scripts/apply-chrome.mjs. -->\n` +
+    `<!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->\n` +
     `${softTag}\n${chromeTag}\n${jsTag}\n` +
     html.slice(headEnd)
   );
