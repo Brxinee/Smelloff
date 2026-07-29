@@ -57,11 +57,21 @@ footers, so moving from `/` to `/privacy` or `/blog` read as a different site.
   summary padding, so blog FAQs rendered square and double-height while the
   rest of the site's were round and compact.)
 - **FAQ accordions: the `<details>` owns the shape, the `<summary>` owns the
-  padding.** Both padding sets applied at once is what made every row twice as
-  tall as its text. The canonical spec is in `soft.css` §3 and covers
+  padding *and the type*.** Both padding sets applied at once is what made
+  every row twice as tall as its text; and the homepage set Fraunces/25px on
+  a nested `<h3>`, so its questions ran larger than every other page's. The
+  `<summary>` now carries the family, weight and size (Fraunces 900,
+  16px→19px) and any heading inside it inherits — the heading is there for
+  document outline only. Canonical spec is `soft.css` §3, covering
   `.faq details`, `.faq-item`, `.faq-q` and `.faq-list details`; it uses
   `!important` on padding/radius specifically to beat `blog.css`. The list
   container is one column on phones and two at ≥900px, everywhere.
+- **Flush grids keep their hairlines; they do not become cards.** When cells
+  sit edge to edge and share dividers, the radius belongs to the band, not
+  the cell — `.benefits-strip`, `.ingredients` and the `/odorstrike`
+  `.use-card` grid all work this way. `.use-card` was briefly added to
+  `soft.css`'s card list and it turned four columns of an editorial table
+  into four floating boxes. Don't put it back.
 - The markup is **generated**, not hand-written. `scripts/apply-chrome.mjs`
   holds the canonical header/footer and stamps them between
   `<!-- SF-CHROME:HEADER -->` / `<!-- SF-CHROME:FOOTER -->` markers on all 24

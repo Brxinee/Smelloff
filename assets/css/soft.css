@@ -107,9 +107,15 @@
    Every slab on the site becomes a squircle with a hairline edge and a
    slightly raised fill. Hover lifts instead of throwing a hard shadow.
    --------------------------------------------------------------------- */
+/* NOTE: `.use-card` does NOT belong in this list. The /odorstrike "when to
+   use it" cells are a rule-separated grid — hairlines between the columns,
+   no box — and boxing them turned four columns of an editorial table into
+   four floating cards. Same reasoning as `.benefits-strip` and
+   `.ingredients`: when cells sit flush and share their dividers, the shape
+   belongs to the band, not the cell. (`.layer` and `.proof-card` were in
+   here too and match nothing on the site.) */
 .zone,.voice,.faq-item,.trust-row li,.product-visual,
 .b-card,.guide-card,.card,.rv-card,.review,.price-card,
-.layer,.use-card,.proof-card,
 .end-cta,.read-next,.b-buy-card,.nf-card,.contact-card,.track-card{
   border-radius:var(--sq-lg) !important;
   border:var(--hair) solid var(--rule) !important;
@@ -206,13 +212,37 @@ details.faq-item > summary,.faq details > summary,.faq-list details > summary{
   position:relative;
   display:block;
   padding:18px 56px 18px 22px !important;
+  /* The question's type lives here, on the <summary>, so every FAQ on the
+     site reads at one size in one face. The homepage set Fraunces on its
+     nested <h3> instead, which is why its questions came out in the display
+     face at 25px while everyone else's were 19px. */
+  font-family:var(--display);
+  font-weight:900;
   font-size:clamp(16px,2.2vw,19px);
   line-height:1.35;
+  letter-spacing:-.01em;
+  color:var(--text);
   -webkit-user-select:none;user-select:none;
 }
 details.faq-item > summary::-webkit-details-marker,
 .faq details > summary::-webkit-details-marker,
 .faq-list details > summary::-webkit-details-marker{display:none}
+/* Some pages wrap the question in a heading for document outline (the
+   homepage uses <summary><h3>…</h3></summary>). The heading must not bring
+   its own size along or that page's questions render larger than everyone
+   else's — the homepage's were 25px against 19px everywhere else. The
+   <summary> sets the size; the heading only carries semantics. */
+details.faq-item > summary :is(h2,h3,h4),
+.faq details > summary :is(h2,h3,h4),
+.faq-list details > summary :is(h2,h3,h4){
+  font-size:inherit;
+  line-height:inherit;
+  font-family:inherit;
+  font-weight:900;
+  letter-spacing:-.01em;
+  margin:0;
+  display:inline;
+}
 /* Answers: same inline padding as the question, so the two align. */
 .faq details > .faq-a,.faq details > .faq-answer,
 .faq-list .faq-answer,details.faq-item .faq-answer-wrap > div{
