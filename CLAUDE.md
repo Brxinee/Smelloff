@@ -72,6 +72,17 @@ footers, so moving from `/` to `/privacy` or `/blog` read as a different site.
   `.use-card` grid all work this way. `.use-card` was briefly added to
   `soft.css`'s card list and it turned four columns of an editorial table
   into four floating boxes. Don't put it back.
+- **Shared-layer URLs carry a content hash, and `apply-chrome.mjs` stamps it.
+  Re-run the script after every edit to `soft.css`, `chrome.css`,
+  `chrome.js` or `tokens.css`, or the change ships without reaching anyone.**
+  `vercel.json` serves `/assets/(.*)` with
+  `Cache-Control: public, max-age=31536000, immutable`. `immutable` means the
+  browser never revalidates, so an unversioned `/assets/css/soft.css` froze
+  every returning visitor on whatever copy they fetched first — for a year.
+  Three rounds of design fixes appeared not to work because of this: the
+  deploy was green, production served the new CSS (verified with `curl`), and
+  phones kept rendering the old one. The HTML itself is `no-cache`, so a new
+  hash in the query string is picked up on the next page load.
 - The markup is **generated**, not hand-written. `scripts/apply-chrome.mjs`
   holds the canonical header/footer and stamps them between
   `<!-- SF-CHROME:HEADER -->` / `<!-- SF-CHROME:FOOTER -->` markers on all 24

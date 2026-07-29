@@ -2358,10 +2358,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   } catch (e) {}
 }
 </script>
-<!-- Shared layers load LAST so they win on source order. See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css">
-<link rel="stylesheet" href="/assets/css/chrome.css">
-<script src="/assets/js/chrome.js" defer></script>
+<!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
+<link rel="stylesheet" href="/assets/css/soft.css?v=3e55f1e6">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=2874808e">
+<script src="/assets/js/chrome.js?v=1846e176" defer></script>
 </head>
 <body>
 <a href="#buy" class="skip-link">Skip to products</a>

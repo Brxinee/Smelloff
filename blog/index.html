@@ -46,7 +46,7 @@
 
 <link rel="preload" href="/assets/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=9d395774">
 
 <style>
   
@@ -476,10 +476,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
 <link rel="alternate" hreflang="x-default" href="https://smelloff.in/blog">
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
 <script src="/assets/js/consent-analytics.js" defer></script>
-<!-- Shared layers load LAST so they win on source order. See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css">
-<link rel="stylesheet" href="/assets/css/chrome.css">
-<script src="/assets/js/chrome.js" defer></script>
+<!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
+<link rel="stylesheet" href="/assets/css/soft.css?v=3e55f1e6">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=2874808e">
+<script src="/assets/js/chrome.js?v=1846e176" defer></script>
 </head>
 <body>
 
