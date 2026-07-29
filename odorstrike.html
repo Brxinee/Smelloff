@@ -2116,15 +2116,25 @@
     line-height:1.55;
     color:var(--muted);
   }
+  /* Two up: vertical rule between the pair, horizontal rule between the rows,
+     and nothing hanging off the bottom of the last row. */
   @media(max-width:900px){
     .use-grid{grid-template-columns:1fr 1fr}
     .use-card{padding:28px 20px;border-bottom:1px solid var(--rule)}
-    .use-card:nth-child(2){border-right:none}
-    .use-card:nth-child(3),.use-card:nth-child(4){border-bottom:none}
+    .use-card:nth-child(2n){border-right:none}
+    .use-card:nth-last-child(-n+2){border-bottom:none}
   }
+  /* One up: a single hairline between each row. The nth-child(3),(4) rule
+     above used to carry over here and strip the dividers off the bottom two
+     cards, so the stack lost its rhythm halfway down. */
   @media(max-width:560px){
     .use-grid{grid-template-columns:1fr}
-    .use-card{border-right:none !important;padding:28px 0 !important}
+    .use-card{
+      border-right:none !important;
+      border-bottom:1px solid var(--rule) !important;
+      padding:28px 0 !important;
+    }
+    .use-card:last-child{border-bottom:none !important}
   }
 
   .how-to-use{
