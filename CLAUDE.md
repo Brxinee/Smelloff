@@ -147,15 +147,42 @@ buttons with uppercase wide-tracked labels and a bounce on hover.
 - `/odorstrike` hero is a scrolling squircle gallery beside a **sticky buy
   panel** (`.product-info` is `position:sticky` at ≥960px). The gallery is a
   horizontal scroll-snap carousel on mobile so the CTA stays reachable.
-- **PDP gallery = product photography only, three tiles**:
-  `odorstrike-hero-disc.webp` (bottle on the acid disc), `shot-studio.webp`
-  (clean studio shot), `odorstrike-bottle-cutout.webp` (contained, as a detail).
-  It used to render `shot-pocket`, `shot-gymbag` and `shot-flatlay` too — those
-  are **ad creatives with headline copy, bullet lists and icon rows burnt into
-  the pixels**. Two type systems fought in every tile and the claims inside were
-  unselectable, untranslatable and invisible to search. **Do not put them back
-  in the gallery.** The claims they carried are real markup now (`.fix-carry`).
-  The three files are still in `/assets` for paid social.
+- **PDP gallery = eight tiles, one objection each (2026-07-30)**, in the order
+  a first-time buyer raises them: `pdp-01-hero` (what is it — the only pure
+  product shot, bottle on white), `pdp-02-problem` ("You don't smell. Your
+  shirt does."), `pdp-03-how-to-use` (spray → 10 sec → wear),
+  `pdp-04-pocket-size` (jeans / shirt / gym bag / laptop bag),
+  `pdp-05-proof` (sprayed on a black shirt, no white marks),
+  `pdp-06-science` (HPβCD traps → Zinc PCA neutralises → fresh),
+  `pdp-07-fabric-only` (FABRIC ONLY — not skin, hair or body),
+  `pdp-08-comparison` (vs deodorant vs perfume). Each has an `@640` variant.
+  - **All eight assets are cut to 1196×1315 (~9:10) and no tile declares an
+    `aspect-ratio`** — the tile takes the image's own height, so the carousel
+    steps through uniform cards and no headline is ever cropped. The product
+    shot was natively 1:1 and is extended on its own white sweep to match.
+    Cut new gallery assets to that ratio.
+  - Tile 1 is the LCP image and is preloaded in `<head>`. **If the running
+    order changes, move that preload with it** — it once pointed at the third
+    image in the stack, below the fold, so the tile that actually painted
+    first was never preloaded.
+  - An earlier pass stripped creatives out of this gallery because the claims
+    burnt into their pixels were unselectable and invisible to search. That
+    constraint still holds and is met differently now: the same claims exist
+    as real markup further down the page (`.fix-carry`, `.specs`, the
+    ingredient rows), and **every tile's `alt` states its message in words** —
+    keep it that way when swapping an asset. The pixels sell; the markup
+    indexes.
+  - Because the creatives carry body copy inside the artwork (unreadable in a
+    294px carousel cell), **every tile opens full-screen on tap** —
+    `.gal-zoom-btn` → `#galViewer`, dismissed by tap, ✕ or Escape. It clones
+    the tile's `<img>`, so opening costs no extra request. Don't remove the
+    zoom without also solving legibility on phones.
+  - Superseded: `odorstrike-hero-disc.webp` (+`@900`) and `shot-studio.webp`
+    are no longer referenced by any page. `shot-pocket`, `shot-gymbag` and
+    `shot-flatlay` were never restored — those three are older creatives with
+    a different type system and **do not go in the gallery**. All are still in
+    `/assets` for paid social. `odorstrike-bottle-cutout.webp` is still the
+    homepage hero — don't delete that one.
 - `assets/odorstrike-hero-disc.webp` was derived from a founder-supplied render
   whose disc was `#BFE20A`. It is recoloured to the brand `--acid #B8FF57`
   exactly, and its background is lifted from `#000000` to the page ink
