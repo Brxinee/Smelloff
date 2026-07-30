@@ -97,7 +97,7 @@
   "name":"ODORSTRIKE Fabric Odor Remover Spray",
   "alternateName":["ODORSTRIKE","Smelloff ODORSTRIKE","Fabric Odor Spray India","Fabric Refresher Spray for Clothes","Pocket Fabric Freshener"],
   "description":"A pocket-sized fabric odor remover spray. 50ml mist that kills sweat smell, gym odor, and shirt stink in seconds — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them, Triethyl Citrate prevents new odor, and Zinc Gluconate stops regrowth. Up to 8 hours odor protection on fabric. Glycerine-free, zero residue, dries fast. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
-  "image":["https://smelloff.in/assets/odorstrike-bottle.webp","https://smelloff.in/assets/og-image.jpg"],
+  "image":["https://smelloff.in/assets/pdp-01-hero.webp","https://smelloff.in/assets/odorstrike-bottle.webp","https://smelloff.in/assets/og-image.jpg"],
   "brand":{"@type":"Brand","name":"Smelloff","logo":"https://smelloff.in/apple-touch-icon.png"},
   "manufacturer":{"@type":"Organization","name":"Smelloff","address":{"@type":"PostalAddress","addressLocality":"Hyderabad","addressRegion":"Telangana","addressCountry":"IN"}},
   "category":"Personal Care > Fabric Care > Odor Eliminator",
@@ -203,12 +203,13 @@
 <link rel="dns-prefetch" href="https://api.qrserver.com">
 
 <!-- Fonts: self-hosted woff2 (latin/latin-ext subsets, font-display:swap) — no third-party font request -->
-<!-- LCP candidate: the first gallery tile. This used to preload shot-studio,
-     which is the *third* image in the stack and below the fold — the tile that
-     actually paints first was never preloaded. -->
+<!-- LCP candidate: the first gallery tile. Keep this pointing at whatever
+     image is tile 1 — it once preloaded the *third* image in the stack, which
+     is below the fold, so the tile that actually paints first was never
+     preloaded. -->
 <link rel="preload" as="image" type="image/webp"
-      href="/assets/odorstrike-hero-disc.webp"
-      imagesrcset="/assets/odorstrike-hero-disc@900.webp 900w, /assets/odorstrike-hero-disc.webp 1600w"
+      href="/assets/pdp-01-hero.webp"
+      imagesrcset="/assets/pdp-01-hero@640.webp 640w, /assets/pdp-01-hero.webp 1200w"
       imagesizes="(min-width:960px) 46vw, 84vw" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-italic-latin-400.woff2" crossorigin>
@@ -591,13 +592,20 @@
   }
 
   /* PRODUCT GALLERY
-     Mobile: horizontal scroll-snap carousel, so five images don't push the buy
-     button off the bottom of the world. Desktop: a vertical stack that scrolls
-     past the sticky buy panel. */
+     Mobile: horizontal scroll-snap carousel, so eight images don't push the
+     buy button off the bottom of the world. Desktop: a vertical stack that
+     scrolls past the sticky buy panel.
+     No tile declares an aspect-ratio — each takes its image's own. All eight
+     assets are cut to the same 1196×1315 (~9:10) portrait, so the carousel
+     steps through uniform cards and nothing is cropped to fit a box. The
+     product shot was natively 1:1; it is extended on its own white sweep to
+     match, rather than squared off with the others letterboxed around it.
+     Keep new gallery assets on that ratio. */
   .gallery-stack{
     display:grid;
     grid-auto-flow:column;
     grid-auto-columns:84%;
+    align-items:start;
     gap:12px;
     overflow-x:auto;
     overscroll-behavior-x:contain;
@@ -614,25 +622,57 @@
     border-radius:var(--sq-xl,36px);
     overflow:hidden;
     background:#0b0b0b;
-    aspect-ratio:3/2;
   }
-  .gal-tile--main{aspect-ratio:1/1}
-  .gal-tile img{width:100%;height:100%;object-fit:cover;display:block}
-  /* The cutout is a transparent 241×915 PNG of the bottle alone — cover
-     would crop the cap and the base off. It gets contained on the card
-     fill instead, with breathing room, so it reads as a detail shot. */
-  .gal-tile--cutout{aspect-ratio:4/3;background:var(--surface)}
-  .gal-tile--cutout img{
-    width:auto;max-width:none;
-    height:82%;margin:0 auto;
+  .gal-tile img{width:100%;height:auto;display:block}
+  /* Tile 1 is the product shot on a white sweep — the tile fill is white too
+     so the sweep's edge never meets a dark card. */
+  .gal-tile--main{background:#fff}
+  /* Tiles 2–8 are full-bleed creatives. Their artboards are pure black; the
+     radius clips the corners away, so nothing seams against the page ink. */
+  .gal-tile--info{background:#000}
+
+  /* TAP TO ZOOM
+     The creatives are laid out at ~1200px wide and carry body copy inside the
+     artwork. In a 294px carousel cell on a phone that copy is unreadable, so
+     every tile opens full-screen. This is a viewer, not a lightbox gallery:
+     no captions, no slideshow, no arrows — one image, dismissed by tapping
+     anywhere, the ✕, or Escape. The <img> is reused from the tile, so opening
+     costs no new request. */
+  .gal-zoom-btn{
+    display:block;width:100%;padding:0;border:0;background:none;
+    cursor:zoom-in;color:inherit;font:inherit;
+  }
+  .gal-zoom-btn:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+  .gal-viewer{
+    position:fixed;inset:0;z-index:9000;
+    display:none;align-items:center;justify-content:center;
+    padding:16px;
+    background:rgba(4,4,4,.94);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    overscroll-behavior:contain;
+    cursor:zoom-out;
+  }
+  .gal-viewer.active{display:flex}
+  .gal-viewer img{
+    max-width:100%;max-height:100%;
+    width:auto;height:auto;
     object-fit:contain;
-    padding:0;
-    position:relative;top:9%;
+    border-radius:var(--sq-lg,28px);
+    background:#000;
   }
+  .gal-viewer-close{
+    position:absolute;top:14px;right:14px;
+    width:44px;height:44px;border-radius:50%;
+    border:1px solid var(--rule-strong);
+    background:rgba(12,12,12,.9);color:var(--text);
+    font-size:19px;line-height:1;cursor:pointer;
+  }
+  .gal-viewer-close:hover{background:var(--acid);color:var(--ink);border-color:var(--acid)}
   @media(min-width:960px){
     .gallery-stack{
       grid-auto-flow:row;
       grid-auto-columns:auto;
+      align-items:stretch;
       gap:16px;
       overflow:visible;
       margin:0;padding:0;
@@ -2410,6 +2450,12 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 </div>
 
 <!-- CART DRAWER -->
+<!-- Full-screen viewer for the product gallery. Empty until a tile is
+     opened; the <img> is cloned from the tile so nothing extra is fetched. -->
+<div class="gal-viewer" id="galViewer" role="dialog" aria-modal="true" aria-label="Product image">
+  <button class="gal-viewer-close" type="button" aria-label="Close image">✕</button>
+</div>
+
 <div class="cart-overlay" id="cartOverlay" onclick="if(event.target===this)closeCartDrawer()">
   <aside class="cart-drawer" role="dialog" aria-label="Your cart" aria-modal="true">
     <div class="cart-head">
@@ -2453,33 +2499,90 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </div>
 
   <div class="product-hero">
-    <!-- PRODUCT GALLERY
-         Three tiles beside a sticky buy panel. It used to be five, four of
-         which were ad creatives with headline copy, bullet lists and icon
-         rows burnt into the pixels ("POCKET-SIZED. ALWAYS READY." and so
-         on). Two typographic systems fought in every tile and the claims
-         inside them were unselectable, untranslatable and invisible to
-         search. Those creatives belong in an ad, not on the PDP — the
-         claims they carried now live as real markup further down the page.
-         What is left is product photography only:
-           1. the bottle on the brand's acid disc (the homepage hero
-              composition, matched to --acid #B8FF57 exactly)
-           2. the clean studio shot
-           3. the cutout, framed to show the label
+    <!-- PRODUCT GALLERY — eight tiles beside a sticky buy panel.
+         Not eight photographs of a bottle: eight objections answered in the
+         order a first-time buyer raises them. Tile 1 is the only pure
+         product shot (what is it?); tiles 2–8 are brand creatives, one
+         message each — problem, how to use, pocket size, proof, science,
+         fabric-only, comparison.
+
+         A previous pass stripped creatives out of this gallery because the
+         claims burnt into their pixels were unselectable and invisible to
+         search. That constraint still holds and is met differently now: the
+         same claims exist as real markup further down the page (.fix-carry,
+         .specs, the ingredient rows), and every tile carries alt text that
+         states its message in words. The pixels sell; the markup indexes.
+         Ad creatives that duplicate a claim with no gallery job — the old
+         shot-pocket / shot-gymbag / shot-flatlay set — still don't belong.
+
          Desktop: vertical stack that scrolls past the pinned buy panel.
-         Mobile: horizontal scroll-snap carousel so the CTA stays reachable. -->
+         Mobile: horizontal scroll-snap carousel so the CTA stays reachable.
+         Tile 1 is the LCP image and is preloaded in <head> — if the running
+         order changes, move that preload with it. -->
     <div class="gallery-stack" id="gallery" role="group" aria-label="ODORSTRIKE product images">
       <figure class="gal-tile gal-tile--main">
-        <img src="/assets/odorstrike-hero-disc.webp"
-             srcset="/assets/odorstrike-hero-disc@900.webp 900w, /assets/odorstrike-hero-disc.webp 1600w"
-             sizes="(min-width:960px) 46vw, 84vw"
-             alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black spray bottle on the Smelloff acid-green disc" width="1600" height="1600" fetchpriority="high" decoding="async">
+        <button class="gal-zoom-btn" type="button">
+          <img src="/assets/pdp-01-hero.webp"
+               srcset="/assets/pdp-01-hero@640.webp 640w, /assets/pdp-01-hero.webp 1196w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black pocket spray bottle on a white background" width="1196" height="1315" fetchpriority="high" decoding="async">
+        </button>
       </figure>
-      <figure class="gal-tile">
-        <img src="/assets/shot-studio.webp" alt="ODORSTRIKE studio shot — the bottle beside a folded gym towel and a dumbbell" width="1400" height="933" loading="lazy" decoding="async">
+      <figure class="gal-tile gal-tile--info">
+        <button class="gal-zoom-btn" type="button">
+          <img src="/assets/pdp-02-problem.webp"
+               srcset="/assets/pdp-02-problem@640.webp 640w, /assets/pdp-02-problem.webp 1195w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="You don't smell. Your shirt does. Sweat, pollution and long hours leave odor on your clothes — after a workout, a bike commute, before a meeting or in close contact. ODORSTRIKE kills odor at the source and keeps clothes fresh for up to 8 hours." width="1195" height="1316" loading="lazy" decoding="async">
+        </button>
       </figure>
-      <figure class="gal-tile gal-tile--cutout">
-        <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE bottle, front label: fabric odor eliminator mist, net weight 50ml" width="241" height="915" loading="lazy" decoding="async">
+      <figure class="gal-tile gal-tile--info">
+        <button class="gal-zoom-btn" type="button">
+          <img src="/assets/pdp-03-how-to-use.webp"
+               srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="Three steps: spray the fabric from 15 cm away, wait 10 seconds, then wear it and stay fresh for up to 8 hours." width="1196" height="1315" loading="lazy" decoding="async">
+        </button>
+      </figure>
+      <figure class="gal-tile gal-tile--info">
+        <button class="gal-zoom-btn" type="button">
+          <img src="/assets/pdp-04-pocket-size.webp"
+               srcset="/assets/pdp-04-pocket-size@640.webp 640w, /assets/pdp-04-pocket-size.webp 1196w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="Pocket size, always ready — the 50ml bottle shown in a jeans pocket, a shirt pocket, a gym bag and a laptop bag. About 250 sprays per bottle, travel friendly and lightweight." width="1196" height="1315" loading="lazy" decoding="async">
+        </button>
+      </figure>
+      <figure class="gal-tile gal-tile--info">
+        <button class="gal-zoom-btn" type="button">
+          <img src="/assets/pdp-05-proof.webp"
+               srcset="/assets/pdp-05-proof@640.webp 640w, /assets/pdp-05-proof.webp 1195w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="No white marks, no residue — a black t-shirt sprayed with ODORSTRIKE beside one sprayed with an ordinary spray. Dries in seconds, leaves no stains on black and dark colours, and won't damage or fade fabric." width="1195" height="1316" loading="lazy" decoding="async">
+        </button>
+      </figure>
+      <figure class="gal-tile gal-tile--info">
+        <button class="gal-zoom-btn" type="button">
+          <img src="/assets/pdp-06-science.webp"
+               srcset="/assets/pdp-06-science@640.webp 640w, /assets/pdp-06-science.webp 1196w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="How it works: sweat, bacteria and pollutants create odor molecules in fabric; HPβCD traps them like a microscopic cage; Zinc PCA neutralises the odor at the source; the fabric stays fresh for up to 8 hours. Fragrance-free — it eliminates odor rather than masking it." width="1196" height="1315" loading="lazy" decoding="async">
+        </button>
+      </figure>
+      <figure class="gal-tile gal-tile--info">
+        <button class="gal-zoom-btn" type="button">
+          <img src="/assets/pdp-07-fabric-only.webp"
+               srcset="/assets/pdp-07-fabric-only@640.webp 640w, /assets/pdp-07-fabric-only.webp 1190w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="Fabric only, not for skin. Use on shirts, jackets, hoodies and uniforms. Do not use on skin, body, hair or scalp — ODORSTRIKE is not a perfume, deodorant or body spray." width="1190" height="1322" loading="lazy" decoding="async">
+        </button>
+      </figure>
+      <figure class="gal-tile gal-tile--info">
+        <button class="gal-zoom-btn" type="button">
+          <img src="/assets/pdp-08-comparison.webp"
+               srcset="/assets/pdp-08-comparison@640.webp 640w, /assets/pdp-08-comparison.webp 1196w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="ODORSTRIKE compared with deodorant and perfume: it removes fabric odor, is made for clothes, is pocket sized, dries quickly, leaves no residue and eliminates rather than masks odor. Deodorant and perfume are made for skin and only cover the smell." width="1196" height="1315" loading="lazy" decoding="async">
+        </button>
       </figure>
     </div>
 
@@ -4085,9 +4188,53 @@ window.createSupabaseOrder = function (opts) {
     obs.observe(buySection);
   })();
 
+  // Gallery zoom — tiles 2–8 carry body copy inside the artwork, which is
+  // unreadable in a 294px carousel cell. Any tile opens full-screen.
+  (function(){
+    var gallery=document.getElementById('gallery');
+    var viewer=document.getElementById('galViewer');
+    if(!gallery||!viewer)return;
+    var opener=null;
+
+    function open(img){
+      var big=viewer.querySelector('img');
+      if(big)big.remove();
+      var clone=img.cloneNode(true);
+      clone.removeAttribute('loading');
+      clone.removeAttribute('fetchpriority');
+      clone.removeAttribute('sizes');
+      clone.removeAttribute('srcset');   // always the full-size file here
+      viewer.appendChild(clone);
+      viewer.classList.add('active');
+      document.body.style.overflow='hidden';
+      viewer.querySelector('.gal-viewer-close').focus();
+    }
+    function close(){
+      if(!viewer.classList.contains('active'))return;
+      viewer.classList.remove('active');
+      document.body.style.overflow='';
+      if(opener){opener.focus();opener=null;}
+    }
+
+    gallery.addEventListener('click',function(e){
+      var btn=e.target.closest('.gal-zoom-btn');
+      if(!btn)return;
+      var img=btn.querySelector('img');
+      if(!img)return;
+      opener=btn;
+      open(img);
+    });
+    // Tapping the backdrop or the image both dismiss — the whole surface is
+    // cursor:zoom-out, so anywhere the pointer lands should close it.
+    viewer.addEventListener('click',close);
+    window.closeGalleryViewer=close;
+  })();
+
   // Escape key — close overlays + mobile menu
   document.addEventListener('keydown', function(e){
     if(e.key==='Escape'){
+      var gv=document.getElementById('galViewer');
+      if(gv&&gv.classList.contains('active')){window.closeGalleryViewer();return;}
       if (document.getElementById('paymentFailedOverlay').classList.contains('active')) {
         window.closePaymentFailedOverlay();
         return;
