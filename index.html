@@ -695,7 +695,13 @@
   }
   #smelloff-consent-bar p{font-size:13.5px;color:var(--text);max-width:640px}
   #smelloff-consent-bar p a{color:var(--acid);text-decoration:none}
-  #smelloff-consent-bar .cb-actions{display:flex;gap:10px;flex-shrink:0}
+  /* Wraps rather than overflowing: at 320px these two buttons measured
+     315px inside a 300px content box. See chrome.css §5.2. */
+  #smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}
+  @media(max-width:520px){
+    #smelloff-consent-bar .cb-actions{width:100%}
+    #smelloff-consent-bar .cb-actions button{flex:1 1 100%}
+  }
   #smelloff-consent-bar button{
     font-family:var(--body);font-size:13.5px;font-weight:700;
     padding:11px 16px;min-height:44px;cursor:pointer;
@@ -775,7 +781,7 @@
 </style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=3e55f1e6">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=2874808e">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=3b08e344">
 <script src="/assets/js/chrome.js?v=1846e176" defer></script>
 </head>
 <body>

@@ -363,3 +363,97 @@
   outline-offset:3px;
   border-radius:var(--sq-xs,8px);
 }
+
+/* =====================================================================
+   5 · RESPONSIVE HARDENING                             (added 2026-07-30)
+   =====================================================================
+   Measured, not guessed: every page was rendered in headless Chromium at
+   320 / 360 / 375 / 393 / 430 / 600 / 768 / 820 / 900 / 1024 / 1280 /
+   1440 / 1920 with `body{overflow-x:hidden}` neutralised, because that
+   declaration (index.html, odorstrike.html) clamps
+   documentElement.scrollWidth and hides real overflow from any check that
+   trusts it. The defects below are what that revealed.
+
+   THE CANONICAL BREAKPOINT SCALE
+   Eighteen distinct breakpoint values had grown across the codebase —
+   440, 460, 520, 560, 640, 680, 720, 721, 760, 767, 768, 800, 820, 880,
+   900, 960, 980, 1000, 1040, 1200. Neighbouring values that differ by one
+   or two pixels are not design decisions, they are drift, and they leave
+   dead bands where one component has switched layout and its neighbour
+   has not. New CSS should use these four and nothing else:
+
+       520px   phone → large phone    (consent bar stacks its buttons)
+       768px   large phone → tablet   (footer columns; the PDP's whole hero
+                                       — two columns, gallery stack, sticky
+                                       buy panel, mobile-bar handoff)
+       960px   tablet → desktop       (the PDP hero refines its proportions
+                                       to 1.05fr/.95fr and a wider gap)
+       1160px  --maxw; content stops growing
+
+   Media queries can't read custom properties, so this is a convention
+   rather than something CSS can enforce. It is written down here because
+   that is the only place it can be.
+   --------------------------------------------------------------------- */
+
+/* --- 5.1 · Safe-area insets -------------------------------------------
+   Every page sets `viewport-fit=cover`, which extends the canvas under
+   the notch and the home indicator. Only blog.css and two of the three
+   consent bars ever honoured the insets, so on a notched phone in
+   landscape the header logo and nav sat under the sensor housing.
+
+   Pad the shell rather than the elements, so it applies once: the header
+   row is always inside .sf-wrap (see the generated markup in
+   scripts/apply-chrome.mjs), so padding the wrap covers the header, the
+   footer and every page body in one rule. max() keeps the normal gutter
+   on every device that has no inset to honour. */
+.sf-wrap{
+  padding-left:max(var(--gutter),env(safe-area-inset-left,0px));
+  padding-right:max(var(--gutter),env(safe-area-inset-right,0px));
+}
+
+/* --- 5.2 · Consent bar -------------------------------------------------
+   The most-seen component on the site — it is the first thing every new
+   visitor gets, on all 24 pages — and it existed in THREE independently
+   drifted copies: inline in index.html, inline in odorstrike.html, and
+   built from a CSS string in assets/js/consent-analytics.js. All three
+   declared `.cb-actions{display:flex;gap:10px;flex-shrink:0}` with no
+   wrap, so at 320px the action row measured 315px inside a 300px content
+   box and "Reject non-essential" hung 15px off the right edge of the
+   screen — on every page, at the one width where it is least affordable.
+
+   The ID selector is deliberate: it matches the specificity of the three
+   inline copies (0,1,1,0), and this file loads after all of them, so it
+   wins on source order without needing !important. */
+#smelloff-consent-bar .cb-actions{
+  display:flex;
+  flex-wrap:wrap;              /* was the bug: no wrap at any width */
+  gap:10px;
+  flex-shrink:1;               /* was 0 — it refused to give up space */
+  min-width:0;
+}
+/* Below the phone breakpoint the two buttons take a row each and fill it.
+   Two 44px-tall full-width buttons are also a far easier target than two
+   34px pills crammed onto one line. */
+@media(max-width:520px){
+  #smelloff-consent-bar .cb-inner{gap:12px}
+  #smelloff-consent-bar .cb-actions{width:100%}
+  #smelloff-consent-bar .cb-actions button{flex:1 1 100%}
+}
+/* odorstrike.html's copy sets `padding:9px 18px` and no min-height, so its
+   buttons came out 34px tall while index.html's were 44px. Same control,
+   same size, everywhere. */
+#smelloff-consent-bar button{min-height:44px}
+/* index.html's copy is the one that never honoured the home indicator. */
+#smelloff-consent-bar{
+  padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
+}
+
+/* A note for the next person auditing this, because it cost a pass here:
+   the marquee strips (.ticker / .band-marquee on the homepage, .marquee on
+   the PDP) contain tracks measuring 2095–6546px, and getBoundingClientRect
+   reports that full un-clipped width. They are NOT overflow bugs — all
+   three wrappers already carry `overflow:hidden`, and a rect wider than
+   the viewport inside a clipping parent is exactly what an infinite
+   marquee looks like. Any overflow check that only treats `auto|scroll`
+   as clipping will report all three as defects. Treat `hidden` and `clip`
+   as clipping too. */
