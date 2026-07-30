@@ -128,6 +128,59 @@ apart across three naming families — three different whites (`#F4F1EA`,
   `odorstrike.html` and `blog.css`, which stopped customers copying their own
   order ID and readers quoting a guide. Only interactive chrome opts out now.
 
+## Responsive rules (2026-07-30)
+Canonical breakpoints — **520 · 768 · 960 · 1160**, documented in `chrome.css`
+§5. Eighteen distinct values had drifted in (440/460/520/560/640/680/720/721/
+760/767/768/800/820/880/900/960/980/1000/1040/1200); neighbouring values a
+pixel or two apart are drift, not design, and they leave bands where one
+component has switched layout and its neighbour has not. Media queries can't
+read custom properties, so this is a convention — it can only be written down.
+- **Overlapping `min-`/`max-width` pairs that disagree in the overlap are the
+  bug to watch for.** The PDP had `min-width:960px{two columns}` and, further
+  down the file, `max-width:900px{one column}`. Equal specificity, so the later
+  one won and forced a single column across 768–900 — the phone layout at
+  tablet width, with `grid-auto-columns:84%` carousel tiles rendering ~655px
+  wide and the buy panel a full screen below the fold, on the page that carries
+  the checkout. When you move one edge of a layout switch, move its pair.
+- **The PDP's three hero rules are one layout and switch together at 768**:
+  `.product-hero` columns, `.gallery-stack` carousel→vertical stack, and
+  `.product-info` sticky. So does the `.mobile-bar` handoff — the sticky mobile
+  CTA hides at exactly the width the sticky buy panel appears, so there is
+  always one persistent route to checkout. It used to hide at 721 while the
+  panel arrived at 960, leaving a band with neither, and `body{padding-bottom}`
+  reserved space for it up to 960 — 240px of dead space under the footer at
+  tablet sizes.
+- **`body{overflow-x:hidden}` on `index.html` and `odorstrike.html` clamps
+  `documentElement.scrollWidth`, so any overflow check that trusts it reports
+  a clean page.** Neutralise it (`html,body{overflow-x:visible}`) before
+  measuring, or you are auditing the clamp rather than the layout.
+- Conversely, the marquee strips (`.ticker` / `.band-marquee` on the homepage,
+  `.marquee` on the PDP) hold tracks measuring 2095–6546px and
+  `getBoundingClientRect` reports that full width. They are **not** overflow
+  bugs — all three wrappers already carry `overflow:hidden`. An audit that
+  treats only `auto|scroll` as clipping will flag all three. Count `hidden`
+  and `clip` as clipping.
+- **The consent bar exists in THREE copies** — inline in `index.html`, inline
+  in `odorstrike.html`, and as a CSS string in `assets/js/consent-analytics.js`
+  (which appends its `<style>` to `<head>` at runtime, so it lands *after*
+  `chrome.css` and wins at equal specificity). All three had
+  `.cb-actions{flex-shrink:0}` with no wrap, so at 320px the row measured 315px
+  in a 300px box and "Reject non-essential" hung off-screen on all 24 pages.
+  Fixed in all three plus `chrome.css` §5.2 — **change all four together.**
+- `viewport-fit=cover` is set site-wide, so safe-area insets are real. `.sf-wrap`
+  carries `max(var(--gutter), env(safe-area-inset-*))`, which covers the header,
+  the footer and every page body at once. Fixed bottom bars (`.mobile-bar`, the
+  consent bar) need `env(safe-area-inset-bottom)` of their own — the PDP's buy
+  CTA sat under the iPhone home indicator without it.
+- Verified by rendering all 18 pages in headless Chromium at 320/360/375/393/
+  430/520/600/720/767/768/820/900/960/1024/1280/1440/1920 plus landscape
+  (851×393, 932×430) and ultra-wide (2560, 3840). Form controls are already
+  ≥16px (below that, iOS zooms the page on focus — it carries the checkout),
+  and no layout uses `vh`, so there is no mobile address-bar jump.
+- The footer's 34px link rows are **deliberate** and clear the WCAG 2.2 AA
+  24×24 minimum — see the footer note above before "fixing" them to 44px; that
+  reintroduces the ~1200px mobile footer.
+
 ## Soft form language (2026-07-28)
 `assets/css/soft.css` replaces the old brutalist shapes (90° corners, 3px
 borders, hard offset shadows) with the squircle language modelled on

@@ -587,6 +587,18 @@
     align-items:start;
     margin-top:44px;
   }
+  /* Two columns from the tablet breakpoint, not from 960px.
+     Between 768 and 959 this page used to render the PHONE layout at
+     tablet width: the gallery stayed a carousel whose tiles are sized
+     `grid-auto-columns:84%`, so on an iPad in portrait each tile came out
+     ~655px wide and, at the 9:10 ratio all eight assets are cut to,
+     ~720px tall. The buy panel sat below that — roughly a full screen
+     below the fold on the page that carries the entire checkout.
+     iPad portrait (768) and the 820/900 Android tablets all landed in
+     that band. */
+  @media(min-width:768px){
+    .product-hero{grid-template-columns:1fr 1fr;gap:32px}
+  }
   @media(min-width:960px){
     .product-hero{grid-template-columns:1.05fr .95fr;gap:56px}
   }
@@ -668,7 +680,12 @@
     font-size:19px;line-height:1;cursor:pointer;
   }
   .gal-viewer-close:hover{background:var(--acid);color:var(--ink);border-color:var(--acid)}
-  @media(min-width:960px){
+  /* The carousel unwinds into a vertical stack at the same width the hero
+     becomes two columns — these three rules (columns, stack, sticky) are
+     one layout and must switch together. Split across two breakpoints,
+     the tablet band got a two-column grid with a horizontal carousel
+     wedged into a 360px cell. */
+  @media(min-width:768px){
     .gallery-stack{
       grid-auto-flow:row;
       grid-auto-columns:auto;
@@ -678,8 +695,9 @@
       margin:0;padding:0;
     }
   }
-  /* Sticky buy panel — the gallery scrolls, the price and CTA stay put. */
-  @media(min-width:960px){
+  /* Sticky buy panel — the gallery scrolls, the price and CTA stay put.
+     top:92px clears the 64px sticky header plus breathing room. */
+  @media(min-width:768px){
     .product-info{position:sticky;top:92px}
   }
 
@@ -815,7 +833,13 @@
   }
   .hero-trust span::before{content:'·';color:var(--acid);margin-right:14px}
   .hero-trust span:first-child::before{content:''; margin-right:0}
-  @media(max-width:900px){
+  /* Single column below the tablet breakpoint only. This was max-width:900px
+     and it sits later in the file than the min-width:768px rule above, so at
+     equal specificity it won on source order and forced one column across
+     768–900px — cancelling the two-column layout exactly where the tablets
+     are. Overlapping min-/max-width pairs that disagree in the overlap is
+     the drift the breakpoint scale in chrome.css §5 exists to stop. */
+  @media(max-width:767px){
     .product-hero{grid-template-columns:1fr;gap:30px;margin-top:30px}
     .product-info{max-width:520px}
   }
@@ -1834,7 +1858,13 @@
     position:fixed;bottom:0;left:0;right:0;
     z-index:60;
     background:var(--ink);
-    padding:12px 20px;
+    /* viewport-fit=cover puts the canvas under the home indicator, and this
+       bar carries the BUY NOW button. Without the inset the primary CTA of
+       the whole site sat beneath the gesture bar on every notched iPhone.
+       The side insets matter in landscape, where the notch eats one edge. */
+    padding:12px max(20px,env(safe-area-inset-left,0px))
+            calc(12px + env(safe-area-inset-bottom,0px))
+            max(20px,env(safe-area-inset-right,0px));
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -1845,9 +1875,15 @@
   .mobile-bar.visible{transform:translateY(0)}
   /* The bar is fixed over the page, so the last ~70px of every section sat
      permanently underneath it — the closing lines of the footer and of the
-     "when to use it" cards were unreadable on a phone. Reserve the space. */
-  @media(max-width:960px){
-    body{padding-bottom:76px}
+     "when to use it" cards were unreadable on a phone. Reserve the space.
+     Scoped to match where the bar actually exists. This reserve ran to
+     960px while the bar hid at 721px, so every width from 721–960 carried
+     76px of padding for a bar that wasn't there — a dead band under the
+     footer on exactly the tablet sizes. Both now switch at 768, with the
+     hero layout, so the sticky CTA hands over to the sticky buy panel at
+     the same width instead of leaving a 47px band (721–767) with neither. */
+  @media(max-width:767px){
+    body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   }
   .mobile-bar .mb-label{
     font-family:var(--mono);
@@ -1869,7 +1905,9 @@
     cursor:pointer;
     border-radius:2px;
   }
-  @media(min-width:721px){.mobile-bar{display:none !important}}
+  /* Hides exactly where .product-info becomes a sticky buy panel (768px),
+     so there is always one persistent route to checkout at every width. */
+  @media(min-width:768px){.mobile-bar{display:none !important}}
 
   /* ============================= */
   /* INCI ACCORDION                */
@@ -2308,11 +2346,19 @@
     flex:1;font-size:13px;color:var(--muted);line-height:1.5;margin:0;min-width:200px;
   }
   #smelloff-consent-bar p a{color:var(--acid);text-decoration:none}
-  #smelloff-consent-bar .cb-actions{display:flex;gap:10px;flex-shrink:0}
+  /* Wraps rather than overflowing: at 320px these two buttons measured
+     315px inside a 300px content box. See chrome.css §5.2. */
+  #smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}
+  @media(max-width:520px){
+    #smelloff-consent-bar .cb-actions{width:100%}
+    #smelloff-consent-bar .cb-actions button{flex:1 1 100%}
+  }
   #smelloff-consent-bar button{
     font-family:var(--mono);
     font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-    padding:9px 18px;border-radius:2px;cursor:pointer;
+    /* min-height was absent here but present in index.html's copy, so the
+       same control was 34px tall on this page and 44px on the homepage. */
+    padding:9px 18px;min-height:44px;border-radius:2px;cursor:pointer;
   }
   #smelloff-consent-bar .cb-accept{background:var(--acid);color:var(--ink);border:none}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--rule)}
@@ -2400,7 +2446,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 </script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=3e55f1e6">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=2874808e">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=3b08e344">
 <script src="/assets/js/chrome.js?v=1846e176" defer></script>
 </head>
 <body>
