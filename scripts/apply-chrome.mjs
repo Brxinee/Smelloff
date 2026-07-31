@@ -214,6 +214,14 @@ const PAGES = [
     'does-fabric-spray-stain-clothes', 'gym-clothes-smell-after-washing',
     'odorstrike-ingredients', 'wedding-festive-wear-odor-guide', 'how-to-use-odorstrike',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
+  // solutions hub & regional guides
+  ...[
+    'solutions/index.html',
+    'solutions/monsoon-damp-fabric-care.html',
+    'solutions/post-gym-workout-sweat-spray.html',
+    'solutions/office-commute-fabric-refresher.html',
+    'solutions/denim-outerwear-dry-care.html',
+  ].map((f) => ({ file: f, header: 'header', footer: 'footer' })),
   // the two self-contained pages
   { file: 'index.html', header: 'header.site', footer: 'footer' },
   { file: 'odorstrike.html', header: 'nav.site-nav', footer: 'footer', cart: 'drawer' },

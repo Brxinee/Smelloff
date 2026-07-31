@@ -4,7 +4,16 @@
   "private": true,
   "description": "Smelloff / ODORSTRIKE — smelloff.in",
   "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "build:images": "node scripts/build-blog-thumbnails.js",
+    "build": "node scripts/build-blog-thumbnails.js && node -c server.js",
+    "lint": "node -c server.js",
+    "start": "node server.js"
+  },
   "dependencies": {
-    "resend": "^4.0.0"
+    "express": "^5.2.1",
+    "resend": "^4.0.0",
+    "sharp": "^0.35.3"
   }
 }

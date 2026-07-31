@@ -1,4 +1,5 @@
 {
+  "buildCommand": "",
   "cleanUrls": true,
   "trailingSlash": false,
   "crons": [
