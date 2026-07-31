@@ -55,7 +55,17 @@ const probe = () => {
     if (cs.display === 'none' || cs.visibility === 'hidden') continue;
     if (cs.position === 'fixed') continue;          // fixed bars are handled below
     const r = el.getBoundingClientRect();
-    if (!r.width || !r.height || r.right <= docW + 1) continue;
+    if (!r.width || !r.height) continue;
+
+    // Fully off-screen to the left is the visually-hidden idiom, not a defect:
+    // skip links park at left:-9999px until focused. What matters is content
+    // PARTIALLY cut — left of zero while still partly on screen. Checking
+    // `left < 0` alone reports every skip link on every page at every width.
+    if (r.right <= 0) continue;
+
+    const overRight = r.right - docW;
+    const overLeft = r.left < 0 ? -r.left : 0;
+    if (overRight <= 1 && overLeft <= 1) continue;
 
     // Clipped by an ancestor? Then it isn't pushing the page out. See (2).
     let a = el.parentElement, clipped = false;
@@ -66,14 +76,20 @@ const probe = () => {
     if (clipped) continue;
 
     // Report the outermost offender only — the child is usually just cargo.
-    if (el.parentElement && el.parentElement.getBoundingClientRect().right > docW + 1) continue;
+    if (el.parentElement) {
+      const p = el.parentElement.getBoundingClientRect();
+      if (p.right > docW + 1 || p.left < -1) continue;
+    }
 
+    const side = overRight >= overLeft
+      ? `right +${Math.round(overRight)}px`
+      : `left -${Math.round(overLeft)}px`;
     overflow.push(
       el.tagName.toLowerCase() +
       (el.id ? '#' + el.id : '') +
       (typeof el.className === 'string' && el.className
         ? '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.') : '') +
-      ` +${Math.round(r.right - docW)}px`
+      ` (${side})`
     );
   }
 

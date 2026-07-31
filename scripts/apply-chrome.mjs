@@ -287,13 +287,47 @@ function ensureAssets(html) {
     ''
   );
 
-  // tokens.css is hand-linked per page rather than stamped here, but it sits
-  // under the same immutable cache rule — so re-stamp its query string in
-  // place. A palette change is otherwise invisible to returning visitors.
+  // tokens.css sits under the same immutable cache rule, so re-stamp its
+  // query string in place. A palette change is otherwise invisible to
+  // returning visitors.
   html = html.replace(
     /(href="\/assets\/css\/tokens\.css)(\?[^"]*)?"/g,
     `$1?v=${hashOf('assets/css/tokens.css')}"`
   );
+
+  // ...and link it when the page doesn't. This used to be hand-linked per
+  // page, and the 16 blog POSTS were the ones that never got it (the blog
+  // index did, which is why the gap survived review). tokens.css is where
+  // --gutter / --maxw / --fs-* / the type families live, so without it every
+  // token-valued declaration in chrome.css and soft.css is invalid at
+  // computed-value time and falls back to the property's initial value —
+  // silently, with no console error. The visible symptom was the shared
+  // header rendering `padding-inline:var(--gutter)` as 0 on every blog post,
+  // putting the logo flush against the edge of the screen at every width.
+  //
+  // Inserted BEFORE the page's own <style>, deliberately. Blog posts carry an
+  // inline :root holding the pre-consolidation palette (--white:#F5F5F5 where
+  // canonical is #F4F1EA, --border:#262626, --gray:#8C8C8C). Loading tokens
+  // first supplies every missing layout/type token while leaving those colour
+  // declarations to win exactly as they do today, so this fixes the layout
+  // without repainting 16 posts. Retiring that drifted block is a separate,
+  // visual decision — see CLAUDE.md.
+  if (!/href="\/assets\/css\/tokens\.css/.test(html)) {
+    const tokensTag =
+      `<link rel="stylesheet" href="/assets/css/tokens.css?v=${hashOf('assets/css/tokens.css')}">`;
+    // Insert at the TOP of <head>, right after <meta charset> when present.
+    // Not "before the first stylesheet link": on the blog posts that link is
+    // inside a <noscript> fallback, so anchoring to it buried tokens.css in a
+    // block that only applies with JS disabled — the file shipped and changed
+    // nothing. Anchoring to <head> itself cannot land inside another element.
+    const charset = html.match(/<meta[^>]+charset[^>]*>/i);
+    const at = charset
+      ? html.indexOf(charset[0]) + charset[0].length
+      : (html.search(/<head[^>]*>/i) !== -1
+          ? html.search(/<head[^>]*>/i) + html.match(/<head[^>]*>/i)[0].length
+          : -1);
+    if (at !== -1) html = html.slice(0, at) + '\n' + tokensTag + html.slice(at);
+  }
 
   const headEnd = html.lastIndexOf('</head>');
   if (headEnd === -1) return html;

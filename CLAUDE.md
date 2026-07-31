@@ -112,9 +112,26 @@ apart across three naming families — three different whites (`#F4F1EA`,
 `#F5F5F5`, `#FFFFFF`), two card fills, two border colours and four greys.
 - Canonical: `--ink #080808` · `--surface #0F0F0F` · `--text #F4F1EA` ·
   `--muted #9A958D` · `--text-2 #C9C5BD` · `--acid #B8FF57` · `--acid-hi #D1FF8A`.
-- Every page links `tokens.css`. The two self-contained pages inline a
-  **byte-identical copy** of its `:root` block, marked `TOKENS v1` — change a
-  value in one, change all three.
+- Every page links `tokens.css`, and **`apply-chrome.mjs` now enforces that**
+  rather than trusting it. This note used to assert it while the 16 blog
+  **posts** did not link it — the blog *index* did, which is why the gap
+  survived review. Missing tokens fail silently and invisibly: `var(--gutter)`
+  with no `--gutter` is invalid at computed-value time, so the declaration
+  falls back to the property's initial value with no console error. The
+  symptom was the shared header rendering `padding-inline:var(--gutter)` as
+  `0` on every blog post, logo flush against the screen edge at every width.
+  The script inserts the link at the top of `<head>` — anchoring it to the
+  first stylesheet link instead buries it inside those posts' `<noscript>`
+  fallback, where it ships and does nothing.
+- Blog posts still carry an inline `:root` holding the **pre-consolidation
+  palette** (`--white:#F5F5F5` where canonical is `#F4F1EA`, `--border:#262626`,
+  `--gray:#8C8C8C`). `tokens.css` loads *before* it deliberately, so it supplies
+  the missing layout/type tokens while those colour declarations keep winning —
+  the layout is fixed without repainting 16 posts. Retiring that block is a
+  separate visual decision; it is the last copy of the drift the design system
+  work was meant to end.
+- The two self-contained pages inline a **byte-identical copy** of the `:root`
+  block, marked `TOKENS v1` — change a value in one, change all three.
 - `tokens.css` also carries a frozen alias layer mapping the old names
   (`--paper/--bg/--accent`, `--black/--white/--card/--border/--green/--gray`,
   `--nb-*`) onto the canonical tokens, so legacy rules keep resolving. Write new
@@ -172,11 +189,29 @@ read custom properties, so this is a convention — it can only be written down.
   the footer and every page body at once. Fixed bottom bars (`.mobile-bar`, the
   consent bar) need `env(safe-area-inset-bottom)` of their own — the PDP's buy
   CTA sat under the iPhone home indicator without it.
-- Verified by rendering all 18 pages in headless Chromium at 320/360/375/393/
+- **`.verdict-table`** (the 3–4 column comparison in the versus posts) has no
+  scroll container, and its columns cannot shrink — cells like "ODORSTRIKE
+  (Smelloff)" bottom out at ~123px of min-content each, so four columns need
+  ~520px. At 320px it ran 220px past the viewport. It scrolls now, via
+  `chrome.css` §5.3 rather than the posts, because blog HTML is generated
+  (`build_blogs.py`, `standardize_blog.py`) and a hand-edit there is lost on
+  the next rebuild.
+- **An overflow probe is not a layout check.** The blog header bug above had
+  `left:0` — zero gutter, not negative offset — so no overflow check of any
+  kind would have caught it; it was found by eye in a screenshot and then
+  measured. Overflow is the cheap automated floor, not the ceiling: look at
+  the pages. `scripts/audit-responsive.mjs` does now check the left edge too
+  (partially-cut content never widens the page, so a right-edge-only probe
+  calls it clean), but it must exclude elements lying *fully* off-screen —
+  `left:-9999px` skip links are the visually-hidden idiom, and flagging them
+  reports a false defect on every page at every width.
+- Verified by rendering every page in headless Chromium at 320/360/375/393/
   430/520/600/720/767/768/820/900/960/1024/1280/1440/1920 plus landscape
   (851×393, 932×430) and ultra-wide (2560, 3840). Form controls are already
   ≥16px (below that, iOS zooms the page on focus — it carries the checkout),
   and no layout uses `vh`, so there is no mobile address-bar jump.
+  **Include the blog posts in the page list** — the versus posts and the
+  header gutter bug were both found only once they were added.
 - The footer's 34px link rows are **deliberate** and clear the WCAG 2.2 AA
   24×24 minimum — see the footer note above before "fixing" them to 44px; that
   reintroduces the ~1200px mobile footer.

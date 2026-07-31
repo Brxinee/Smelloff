@@ -448,6 +448,40 @@
   padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
 }
 
+/* --- 5.3 · Blog comparison tables -------------------------------------
+   `.verdict-table` is the 3–4 column comparison in the versus posts
+   (odorstrike-vs-febreze-india, best-fabric-odor-spray-india-2026-body-odor,
+   best-deodorant-spray-for-clothes-not-skin). It is `width:100%` with no
+   scroll container, which only holds while the columns can shrink — and
+   they cannot: cells like "ODORSTRIKE (Smelloff)" and "Febreze Fabric
+   Refresh" bottom out at ~123px of min-content each, so a four-column
+   table needs ~520px. Measured at 320px it ran 220px past the viewport on
+   the four-column posts (136px on the three-column one, and still 165px
+   over at 375px). Every phone on the site got a broken page.
+
+   Columns can't compress further without hyphenating a brand name, so the
+   table scrolls instead — the standard answer for tabular data on a phone,
+   and it keeps every cell readable rather than crushing the type.
+
+   This lives here, not in the posts: blog HTML is generated
+   (scripts/build_blogs.py, standardize_blog.py), so a fix hand-edited into
+   the three files is lost on the next rebuild. chrome.css loads last on
+   every page, so one rule covers all three and any versus post added later.
+
+   overflow-x alone, because the rule the posts already declare is the
+   shorthand `overflow:hidden` (paired with border-radius:8px) — leaving
+   the y axis hidden keeps that clip intact. */
+@media(max-width:640px){
+  .verdict-table{
+    display:block;
+    width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;   /* don't chain into the page's scroll */
+  }
+}
+
 /* A note for the next person auditing this, because it cost a pass here:
    the marquee strips (.ticker / .band-marquee on the homepage, .marquee on
    the PDP) contain tracks measuring 2095–6546px, and getBoundingClientRect
@@ -456,4 +490,9 @@
    the viewport inside a clipping parent is exactly what an infinite
    marquee looks like. Any overflow check that only treats `auto|scroll`
    as clipping will report all three as defects. Treat `hidden` and `clip`
-   as clipping too. */
+   as clipping too.
+
+   The same cuts the other way: an element inside a scroll container is not
+   overflowing the page, so `.verdict-table` above stops being reported the
+   moment it becomes one. That is a real fix, not a silenced check — the
+   difference is whether the content stays reachable, and here it scrolls. */
