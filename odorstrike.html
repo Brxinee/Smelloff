@@ -3423,19 +3423,19 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <span class="upi-panel-title">Select 1-Click UPI App</span>
         <div class="upi-apps-grid" role="radiogroup" aria-label="Select UPI App">
           <button type="button" class="upi-app-btn active" data-app="any" onclick="setUpiApp('any')">
-            <svg viewBox="0 0 24 24" class="upi-icon" width="18" height="18" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 7.5L4.5 7 12 3.25 19.5 7 12 9.5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <svg viewBox="0 0 24 24" class="upi-icon" width="18" height="18" fill="currentColor"><path fill="#E97626" d="M5.5 2 14 12 5.5 22 2.8 19.3 9.4 12 2.8 4.7Z"/><path fill="#0E9347" d="M12.5 2 21 12 12.5 22 9.8 19.3 16.4 12 9.8 4.7Z"/></svg>
             <span>Any App</span>
           </button>
           <button type="button" class="upi-app-btn" data-app="gpay" onclick="setUpiApp('gpay')">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.5 11v2.5h6.5c-.3 1.8-2 5.2-6.5 5.2-3.9 0-7.1-3.2-7.1-7.2s3.2-7.2 7.1-7.2c2.2 0 3.7.9 4.6 1.7l1.9-1.9C17.8 2.8 15.4 2 12.5 2 6.7 2 2 6.7 2 12.5S6.7 23 12.5 23c6.1 0 10.1-4.3 10.1-10.3 0-.7-.1-1.2-.2-1.7H12.5z"/></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><g transform="scale(.5)"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></g></svg>
             <span>Google Pay</span>
           </button>
           <button type="button" class="upi-app-btn" data-app="phonepe" onclick="setUpiApp('phonepe')">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19.5 3H4.5C3.7 3 3 3.7 3 4.5v15c0 .8.7 1.5 1.5 1.5h15c.8 0 1.5-.7 1.5-1.5v-15c0-.8-.7-1.5-1.5-1.5zm-5 13.5l-2.5-3.5H9.5V17H8V7h4c1.7 0 3 1.3 3 3s-1.3 3-3 3h-1l2.5 3.5h2zm-2.5-6.5H9.5v2h2.5c.8 0 1.5-.7 1.5-1s-.7-1-1.5-1z"/></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="1" y="1" width="22" height="22" rx="5.5" fill="#5F259F"/><text x="12" y="16.6" text-anchor="middle" font-family="system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12.5" font-weight="600" fill="#FFFFFF">पे</text></svg>
             <span>PhonePe</span>
           </button>
           <button type="button" class="upi-app-btn" data-app="paytm" onclick="setUpiApp('paytm')">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 5h18v14H3V5zm2 2v10h14V7H5zm2 2h3v2H7V9zm5 0h5v6h-2v-4h-3V9z"/></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="1" y="4.5" width="22" height="15" rx="3" fill="#FFFFFF"/><text x="12" y="14.6" text-anchor="middle" font-family="system-ui,-apple-system,'Segoe UI',sans-serif" font-size="6.6" font-weight="700"><tspan fill="#002E6E">pay</tspan><tspan fill="#00B9F1">tm</tspan></text></svg>
             <span>Paytm</span>
           </button>
         </div>
@@ -3495,19 +3495,19 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <div class="upi-app-launch-head">Tap to launch your UPI app directly:</div>
         <div class="upi-launch-grid" id="upiLaunchGrid">
           <a class="upi-launch-btn gpay" id="upiGpayBtn" href="#" onclick="launchSpecificUpi('gpay', event)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 11v2.5h6.5c-.3 1.8-2 5.2-6.5 5.2-3.9 0-7.1-3.2-7.1-7.2s3.2-7.2 7.1-7.2c2.2 0 3.7.9 4.6 1.7l1.9-1.9C17.8 2.8 15.4 2 12.5 2 6.7 2 2 6.7 2 12.5S6.7 23 12.5 23c6.1 0 10.1-4.3 10.1-10.3 0-.7-.1-1.2-.2-1.7H12.5z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><g transform="scale(.5)"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></g></svg>
             <span>Google Pay</span>
           </a>
           <a class="upi-launch-btn phonepe" id="upiPhonepeBtn" href="#" onclick="launchSpecificUpi('phonepe', event)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 3H4.5C3.7 3 3 3.7 3 4.5v15c0 .8.7 1.5 1.5 1.5h15c.8 0 1.5-.7 1.5-1.5v-15c0-.8-.7-1.5-1.5-1.5zm-5 13.5l-2.5-3.5H9.5V17H8V7h4c1.7 0 3 1.3 3 3s-1.3 3-3 3h-1l2.5 3.5h2zm-2.5-6.5H9.5v2h2.5c.8 0 1.5-.7 1.5-1s-.7-1-1.5-1z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="1" width="22" height="22" rx="5.5" fill="#5F259F"/><text x="12" y="16.6" text-anchor="middle" font-family="system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12.5" font-weight="600" fill="#FFFFFF">पे</text></svg>
             <span>PhonePe</span>
           </a>
           <a class="upi-launch-btn paytm" id="upiPaytmBtn" href="#" onclick="launchSpecificUpi('paytm', event)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v14H3V5zm2 2v10h14V7H5zm2 2h3v2H7V9zm5 0h5v6h-2v-4h-3V9z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="4.5" width="22" height="15" rx="3" fill="#FFFFFF"/><text x="12" y="14.6" text-anchor="middle" font-family="system-ui,-apple-system,'Segoe UI',sans-serif" font-size="6.6" font-weight="700"><tspan fill="#002E6E">pay</tspan><tspan fill="#00B9F1">tm</tspan></text></svg>
             <span>Paytm</span>
           </a>
           <a class="upi-launch-btn generic" id="upiOpenBtn" href="#" onclick="launchSpecificUpi('any', event)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 7.5L4.5 7 12 3.25 19.5 7 12 9.5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path fill="#E97626" d="M5.5 2 14 12 5.5 22 2.8 19.3 9.4 12 2.8 4.7Z"/><path fill="#0E9347" d="M12.5 2 21 12 12.5 22 9.8 19.3 16.4 12 9.8 4.7Z"/></svg>
             <span>Any UPI App</span>
           </a>
         </div>
