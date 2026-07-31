@@ -3423,19 +3423,19 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <span class="upi-panel-title">Select 1-Click UPI App</span>
         <div class="upi-apps-grid" role="radiogroup" aria-label="Select UPI App">
           <button type="button" class="upi-app-btn active" data-app="any" onclick="setUpiApp('any')">
-            <svg viewBox="0 0 24 24" class="upi-icon" width="18" height="18" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 7.5L4.5 7 12 3.25 19.5 7 12 9.5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <img src="/assets/pay-upi.png" width="18" height="18" alt="">
             <span>Any App</span>
           </button>
           <button type="button" class="upi-app-btn" data-app="gpay" onclick="setUpiApp('gpay')">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.5 11v2.5h6.5c-.3 1.8-2 5.2-6.5 5.2-3.9 0-7.1-3.2-7.1-7.2s3.2-7.2 7.1-7.2c2.2 0 3.7.9 4.6 1.7l1.9-1.9C17.8 2.8 15.4 2 12.5 2 6.7 2 2 6.7 2 12.5S6.7 23 12.5 23c6.1 0 10.1-4.3 10.1-10.3 0-.7-.1-1.2-.2-1.7H12.5z"/></svg>
+            <img src="/assets/pay-gpay.png" width="18" height="18" alt="">
             <span>Google Pay</span>
           </button>
           <button type="button" class="upi-app-btn" data-app="phonepe" onclick="setUpiApp('phonepe')">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19.5 3H4.5C3.7 3 3 3.7 3 4.5v15c0 .8.7 1.5 1.5 1.5h15c.8 0 1.5-.7 1.5-1.5v-15c0-.8-.7-1.5-1.5-1.5zm-5 13.5l-2.5-3.5H9.5V17H8V7h4c1.7 0 3 1.3 3 3s-1.3 3-3 3h-1l2.5 3.5h2zm-2.5-6.5H9.5v2h2.5c.8 0 1.5-.7 1.5-1s-.7-1-1.5-1z"/></svg>
+            <img src="/assets/pay-phonepe.png" width="18" height="18" alt="">
             <span>PhonePe</span>
           </button>
           <button type="button" class="upi-app-btn" data-app="paytm" onclick="setUpiApp('paytm')">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 5h18v14H3V5zm2 2v10h14V7H5zm2 2h3v2H7V9zm5 0h5v6h-2v-4h-3V9z"/></svg>
+            <img src="/assets/pay-paytm.png" width="18" height="18" alt="">
             <span>Paytm</span>
           </button>
         </div>
@@ -3495,19 +3495,19 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <div class="upi-app-launch-head">Tap to launch your UPI app directly:</div>
         <div class="upi-launch-grid" id="upiLaunchGrid">
           <a class="upi-launch-btn gpay" id="upiGpayBtn" href="#" onclick="launchSpecificUpi('gpay', event)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 11v2.5h6.5c-.3 1.8-2 5.2-6.5 5.2-3.9 0-7.1-3.2-7.1-7.2s3.2-7.2 7.1-7.2c2.2 0 3.7.9 4.6 1.7l1.9-1.9C17.8 2.8 15.4 2 12.5 2 6.7 2 2 6.7 2 12.5S6.7 23 12.5 23c6.1 0 10.1-4.3 10.1-10.3 0-.7-.1-1.2-.2-1.7H12.5z"/></svg>
+            <img src="/assets/pay-gpay.png" width="18" height="18" alt="">
             <span>Google Pay</span>
           </a>
           <a class="upi-launch-btn phonepe" id="upiPhonepeBtn" href="#" onclick="launchSpecificUpi('phonepe', event)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 3H4.5C3.7 3 3 3.7 3 4.5v15c0 .8.7 1.5 1.5 1.5h15c.8 0 1.5-.7 1.5-1.5v-15c0-.8-.7-1.5-1.5-1.5zm-5 13.5l-2.5-3.5H9.5V17H8V7h4c1.7 0 3 1.3 3 3s-1.3 3-3 3h-1l2.5 3.5h2zm-2.5-6.5H9.5v2h2.5c.8 0 1.5-.7 1.5-1s-.7-1-1.5-1z"/></svg>
+            <img src="/assets/pay-phonepe.png" width="18" height="18" alt="">
             <span>PhonePe</span>
           </a>
           <a class="upi-launch-btn paytm" id="upiPaytmBtn" href="#" onclick="launchSpecificUpi('paytm', event)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v14H3V5zm2 2v10h14V7H5zm2 2h3v2H7V9zm5 0h5v6h-2v-4h-3V9z"/></svg>
+            <img src="/assets/pay-paytm.png" width="18" height="18" alt="">
             <span>Paytm</span>
           </a>
           <a class="upi-launch-btn generic" id="upiOpenBtn" href="#" onclick="launchSpecificUpi('any', event)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zm0 7.5L4.5 7 12 3.25 19.5 7 12 9.5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <img src="/assets/pay-upi.png" width="18" height="18" alt="">
             <span>Any UPI App</span>
           </a>
         </div>
