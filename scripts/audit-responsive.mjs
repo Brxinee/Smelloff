@@ -40,10 +40,33 @@ const CHROME = process.env.CHROMIUM || '/opt/pw-browsers/chromium-1194/chrome-li
 const WIDTHS = (process.env.WIDTHS || '320,360,375,393,430,520,600,720,767,768,820,900,960,1024,1280,1440,1920')
   .split(',').map(Number);
 
+// EVERY page, not a sample. Both defects found in the second pass
+// (.verdict-table, and the blog header with no gutter) were on pages the
+// first pass's shortened list didn't include — the list was the weak link,
+// not the code. Keep this in sync with the PAGES table in apply-chrome.mjs.
 const PAGES = (process.env.PAGES || [
   '/', '/odorstrike', '/faq', '/about', '/contact', '/reviews', '/track-order',
   '/shipping', '/returns', '/refund', '/cancellation', '/privacy', '/terms',
-  '/payment-failed', '/404.html', '/blog/', '/blog/why-i-built-odorstrike',
+  '/payment-failed', '/404.html',
+  // solutions hub + regional guides
+  '/solutions/', '/solutions/monsoon-damp-fabric-care',
+  '/solutions/post-gym-workout-sweat-spray',
+  '/solutions/office-commute-fabric-refresher',
+  '/solutions/denim-outerwear-dry-care',
+  // blog index + every post
+  '/blog/',
+  '/blog/why-i-built-odorstrike', '/blog/odorstrike-review-30-day-india-test',
+  '/blog/odorstrike-vs-febreze-india', '/blog/ambi-pur-vs-odorstrike',
+  '/blog/what-is-fabric-odor-eliminator', '/blog/hpbcd-cyclodextrin-fabric-odor',
+  '/blog/zinc-pca-fabric-odor-ingredient-guide',
+  '/blog/beta-cyclodextrin-odor-removal-science',
+  '/blog/best-fabric-odor-spray-india-2026-body-odor',
+  '/blog/best-deodorant-spray-for-clothes-not-skin',
+  '/blog/deodorant-vs-fabric-mist',
+  '/blog/spray-to-remove-sweat-smell-from-clothes-instantly',
+  '/blog/does-fabric-spray-stain-clothes', '/blog/gym-clothes-smell-after-washing',
+  '/blog/odorstrike-ingredients', '/blog/wedding-festive-wear-odor-guide',
+  '/blog/how-to-use-odorstrike',
 ].join(',')).split(',');
 
 const probe = () => {
