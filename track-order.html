@@ -27,6 +27,10 @@
 {"@context": "https://schema.org", "@type": "WebPage", "name": "Track Your Order", "url": "https://smelloff.in/track-order", "description": "Track your ODORSTRIKE order: payment status, dispatch and courier tracking.", "inLanguage": "en-IN", "isPartOf": {"@type": "WebSite", "name": "Smelloff", "url": "https://smelloff.in"}, "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://smelloff.in/"}, {"@type": "ListItem", "position": 2, "name": "Track Order", "item": "https://smelloff.in/track-order"}]}}
 </script>
 <link rel="icon" type="image/png" href="/favicon-32.png">
+<!-- Resource Hints for Slow Mobile Networks in India -->
+<link rel="dns-prefetch" href="https://tnuqjydmoxczdjnsgpci.supabase.co">
+<link rel="preconnect" href="https://tnuqjydmoxczdjnsgpci.supabase.co" crossorigin>
+
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
@@ -140,7 +144,7 @@
 <script src="/assets/js/consent-analytics.js" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=3e55f1e6">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=3b08e344">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=c123f860">
 <script src="/assets/js/chrome.js?v=1846e176" defer></script>
 </head>
 <body>
@@ -214,6 +218,11 @@
       <p><b>Tracking ID:</b> <span id="rTrackingId"></span></p>
       <p id="rTrackUrlWrap" style="display:none"><a id="rTrackUrl" href="#" target="_blank" rel="noopener">Track on courier site →</a></p>
     </div>
+    <div class="t-review-prompt" style="margin-top:24px;padding:20px;background:rgba(184,255,87,0.08);border:1px solid rgba(184,255,87,0.25);border-radius:12px;text-align:center">
+      <h3 style="font-family:var(--display,serif);font-size:18px;margin:0 0 6px;color:#fff">Tried ODORSTRIKE yet?</h3>
+      <p style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:14px">Your purchase is verified! Leave a review to help fellow buyers.</p>
+      <button type="button" class="rv-primary-btn" onclick="openReviewForm()" style="width:auto;padding:10px 20px;display:inline-flex;align-items:center;gap:6px">★ Write a Verified Review</button>
+    </div>
     <div class="t-items" id="rItems"></div>
   </section>
 
@@ -286,10 +295,29 @@
   var SUPA_URL = 'https://tnuqjydmoxczdjnsgpci.supabase.co';
   var STEPS = ['placed','confirmed','packed','dispatched','out_for_delivery','delivered'];
 
-  // Pre-fill order code from /track-order?code=SMF-…
+  // Pre-fill order code & phone from URL query params or previous order in localStorage
   try {
-    var qp = new URLSearchParams(location.search).get('code');
-    if (qp) document.getElementById('t_code').value = qp.toUpperCase();
+    var codeInput = document.getElementById('t_code');
+    var phoneInput = document.getElementById('t_phone');
+    var qpCode = new URLSearchParams(location.search).get('code');
+    var qpPhone = new URLSearchParams(location.search).get('phone');
+    
+    if (qpCode && codeInput) {
+      codeInput.value = qpCode.trim().toUpperCase();
+    } else if (codeInput) {
+      var lastOrderStr = localStorage.getItem('smelloff_last_order');
+      if (lastOrderStr) {
+        var lastOrder = JSON.parse(lastOrderStr);
+        if (lastOrder && lastOrder.code) codeInput.value = lastOrder.code.toUpperCase();
+      }
+    }
+
+    if (qpPhone && phoneInput) {
+      phoneInput.value = qpPhone.trim();
+    } else if (phoneInput) {
+      var lastPhone = localStorage.getItem('smelloff_last_phone');
+      if (lastPhone) phoneInput.value = lastPhone;
+    }
   } catch(e){}
 
   function show(el, on){ el.style.display = on ? 'block' : 'none'; }
@@ -454,6 +482,7 @@
   }
 })();
 </script>
+<script src="/assets/js/reviews-system.js?v=1" defer></script>
 <script src="/assets/js/track.js?v=2" defer></script>
 </body>
 </html>

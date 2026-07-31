@@ -134,6 +134,14 @@ async function sbWrite(path, body, { method = 'POST', headers = {} } = {}) {
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
+  const origin = req.headers.origin;
+  if (origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Vary', 'Origin');
+  }
+  if (req.method === 'OPTIONS') return res.status(204).end();
   // The beacon is same-origin; keep the surface tiny.
   if (req.method !== 'POST') return res.status(405).end();
 
