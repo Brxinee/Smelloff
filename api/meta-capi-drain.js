@@ -32,14 +32,20 @@ import {
 
 function authorized(req) {
   const secret = process.env.CRON_SECRET || process.env.META_CAPI_DRAIN_SECRET;
-  if (!secret) return true; // no secret configured → allow (still inert w/o token)
+  const armed = !!(process.env.META_CAPI_TOKEN && process.env.SUPABASE_SERVICE_ROLE_KEY);
+  if (!secret) return !armed; // unarmed → inert response is harmless; armed without a secret → fail closed
   const auth = String(req.headers['authorization'] || '');
   return auth === `Bearer ${secret}`;
 }
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
-  if (!authorized(req)) return res.status(401).json({ error: 'Unauthorized' });
+  if (!authorized(req)) {
+    const hint = (process.env.META_CAPI_TOKEN && !process.env.CRON_SECRET && !process.env.META_CAPI_DRAIN_SECRET)
+      ? 'CRON_SECRET (or META_CAPI_DRAIN_SECRET) must be set in Vercel env once Meta CAPI is armed'
+      : undefined;
+    return res.status(401).json({ error: 'Unauthorized', ...(hint ? { hint } : {}) });
+  }
   if (!process.env.META_CAPI_TOKEN || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return res.status(200).json({ ok: true, inert: true, sent: 0 });
   }
