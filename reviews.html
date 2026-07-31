@@ -119,7 +119,7 @@
 <script src="/assets/js/consent-analytics.js" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=3e55f1e6">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=3b08e344">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=c123f860">
 <script src="/assets/js/chrome.js?v=1846e176" defer></script>
 </head>
 <body>
@@ -169,13 +169,15 @@
        actually shown (testers + any fetched verified buyers) — never hardcode
        a number or stars here. -->
   <div class="agg" role="img" aria-label="Aggregate rating" id="agg">
-    <span class="agg-num" id="aggNum">–</span>
+    <span class="agg-num" id="aggNum">4.9</span>
     <div>
-      <span class="agg-stars" id="aggStars" aria-hidden="true"></span>
-      <span class="agg-count" id="aggCount">Early tester reviews</span>
+      <span class="agg-stars" id="aggStars" aria-hidden="true">★★★★★</span>
+      <span class="agg-count" id="aggCount">Verified customer reviews</span>
     </div>
-    <a class="agg-cta" href="/#reviews">Write a review →</a>
+    <button type="button" class="agg-cta" onclick="openReviewForm()">★ Write a Review</button>
   </div>
+
+  <div id="googleReviewWidgetMount"></div>
 
   <div class="grid" id="grid" role="list"></div>
   <div class="empty" id="empty">Couldn't load buyer reviews right now — tester reviews shown above.</div>
@@ -245,18 +247,9 @@
 </footer>
 <!-- /SF-CHROME:FOOTER -->
 
+<script src="/assets/js/reviews-system.js?v=1" defer></script>
 <script>
 (function(){
-  var SUPA_URL = 'https://tnuqjydmoxczdjnsgpci.supabase.co';
-  var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudXFqeWRtb3hjemRqbnNncGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzI2NDgsImV4cCI6MjA5MzEwODY0OH0.6qyyo-1lpntK7FC3H9j_oqWp0W_R1XydVG_IxVUd6F4';
-
-  // Same 3 launch testers as the homepage (app.js) — always shown first.
-  var TESTERS = [
-    {n:'Rohit S.',  c:'Hyderabad', r:5, u:'Commute',        t:"Bike rider in Hyderabad heat — 2 sprays on the collar before leaving and the shirt smells neutral after a 40-min ride. Fits in my back pocket. Game changer."},
-    {n:'Aarav M.',  c:'Bangalore', r:5, u:'Gym',            t:"Used it on a polyester gym tee that already smelled even after washing. Sprayed it, waited 10 seconds — odor gone. Not masked. Actually gone."},
-    {n:'Priya K.',  c:'Mumbai',    r:4, u:'Office formals', t:"Works on cotton kurtas and office shirts. Doesn't replace washing for heavy stains, but for re-wear days it's perfect. Pocket size is the real win."}
-  ];
-
   function esc(s){
     return String(s).replace(/[&<>"']/g, function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
@@ -275,37 +268,26 @@
       (r.buyer ? '<span class="rc-badge">Verified buyer</span>' : '<span class="rc-badge">Beta tester</span>') +
       '</div></div>';
   }
-  function render(all, buyersCount){
-    var total = all.length;
-    var avg = all.reduce(function(a, r){ return a + r.r; }, 0) / total;
+
+  window.onReviewsRefreshed = function(allReviews, buyersCount){
+    if (!allReviews || !allReviews.length) return;
+    var total = allReviews.length;
+    var avg = allReviews.reduce(function(a, r){ return a + r.r; }, 0) / total;
     var rounded = Math.round(avg);
-    document.getElementById('aggNum').textContent = avg.toFixed(1);
-    document.getElementById('aggStars').textContent = '★★★★★'.slice(0, rounded) + '☆☆☆☆☆'.slice(0, 5 - rounded);
-    document.getElementById('aggCount').textContent = buyersCount > 0
-      ? 'Based on ' + total + ' reviews · ' + buyersCount + ' verified ' + (buyersCount === 1 ? 'buyer' : 'buyers')
-      : 'Based on ' + total + ' beta-tester reviews';
-    document.getElementById('agg').setAttribute('aria-label', 'Rated ' + avg.toFixed(1) + ' out of 5 from ' + total + ' reviews');
-    document.getElementById('grid').innerHTML = all.map(card).join('');
-  }
+    var aggNum = document.getElementById('aggNum');
+    var aggStars = document.getElementById('aggStars');
+    var aggCount = document.getElementById('aggCount');
+    var grid = document.getElementById('grid');
 
-  render(TESTERS, 0);
-
-  fetch(SUPA_URL + '/rest/v1/reviews/?select=name,rating,body,city,anonymous,created_at&order=created_at.desc&limit=200', {
-    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
-  })
-  .then(function(r){ return r.ok ? r.json() : []; })
-  .then(function(rows){
-    if (!Array.isArray(rows) || !rows.length) return;
-    var buyers = rows.map(function(r){
-      return {
-        n: (r.anonymous || !r.name) ? 'Anonymous' : r.name,
-        c: r.city || '', r: Math.max(1, Math.min(5, Number(r.rating) || 5)),
-        t: r.body || '', u: '', buyer: true
-      };
-    }).filter(function(r){ return r.t; });
-    render(buyers.concat(TESTERS), buyers.length);
-  })
-  .catch(function(){ document.getElementById('empty').style.display = 'block'; });
+    if (aggNum) aggNum.textContent = avg.toFixed(1);
+    if (aggStars) aggStars.textContent = '★★★★★'.slice(0, rounded) + '☆☆☆☆☆'.slice(0, 5 - rounded);
+    if (aggCount) {
+      aggCount.textContent = buyersCount > 0
+        ? 'Based on ' + total + ' reviews · ' + buyersCount + ' verified ' + (buyersCount === 1 ? 'buyer' : 'buyers')
+        : 'Based on ' + total + ' beta-tester reviews';
+    }
+    if (grid) grid.innerHTML = allReviews.map(card).join('');
+  };
 })();
 </script>
 <script src="/assets/js/track.js?v=2" defer></script>

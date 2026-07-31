@@ -501,15 +501,37 @@ const CFG = window.SMELLOFF_CONFIG;
     if (wrap) { wrap.style.display = 'none'; wrap.classList.remove('expired'); }
   };
 
-  function buildUpiLink(amount, orderId) {
-    const params = new URLSearchParams({
-      pa: CFG.UPI_ID,
-      pn: CFG.UPI_NAME,
-      am: String(amount),
-      cu: 'INR',
-      tn: 'ODORSTRIKE-' + orderId
-    });
-    return 'upi://pay?' + params.toString();
+  function getAppUpiLink(app, amount, orderId) {
+    const pa = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || 'mr.brainy@ibl';
+    const pn = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_NAME) || 'Smelloff';
+    const am = String(amount || 229);
+    const tn = 'ODORSTRIKE-' + (orderId || '');
+    const params = new URLSearchParams({ pa, pn, am, cu: 'INR', tn }).toString();
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    if (app === 'gpay') {
+      if (isAndroid) {
+        return `intent://pay?${params}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end;`;
+      }
+      return `tez://upi/pay?${params}`;
+    }
+    if (app === 'phonepe') {
+      if (isAndroid) {
+        return `intent://pay?${params}#Intent;scheme=upi;package=com.phonepe.app;scheme=upi;end;`;
+      }
+      return `phonepe://pay?${params}`;
+    }
+    if (app === 'paytm') {
+      if (isAndroid) {
+        return `intent://pay?${params}#Intent;scheme=upi;package=net.one97.paytm;scheme=upi;end;`;
+      }
+      return `paytmmp://pay?${params}`;
+    }
+    return `upi://pay?${params}`;
+  }
+
+  function buildUpiLink(amount, orderId, app) {
+    return getAppUpiLink(app || 'any', amount, orderId);
   }
 
   function showUpiSuccess(orderId, total, upiLink) {
