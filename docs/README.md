@@ -20,6 +20,7 @@ Internal documentation, audits, and planning files. Nothing in this folder is se
 | [ANALYTICS-TRACKING-AUDIT.md](audits/ANALYTICS-TRACKING-AUDIT.md) | GA4 / Meta Pixel tracking audit |
 | [SEO_KEYWORD_MAP.md](audits/SEO_KEYWORD_MAP.md) | Keyword strategy and page mapping |
 | [seo-audit.md](audits/seo-audit.md) | SEO/AEO/GEO audit — indexability and redirects |
+| [blog-visual-strategy-audit-2026-08-01.md](audits/blog-visual-strategy-audit-2026-08-01.md) | Blog thumbnail content-pillar audit, CTR psychology, and FLUX prompt standards |
 | [seo-backlog.md](audits/seo-backlog.md) | Outstanding SEO items that need human action |
 | [seo-audit-2026-06/](audits/seo-audit-2026-06/) | June 2026 audit artifacts (report, conflicts, URL map) |
 
