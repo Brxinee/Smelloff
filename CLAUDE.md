@@ -12,6 +12,49 @@ Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — India's first pocke
 - Resend transactional email via `/api/send-email`
 - Self-hosted fonts (Fraunces + JetBrains Mono + Inter Tight + Barlow Condensed)
 
+## Conversion path (2026-08-02)
+The money path on `/odorstrike` had a click in it that nobody chose to put
+there. **`buyNow()` added a unit and opened the cart drawer** — so every CTA
+labelled "Buy now" (hero, `#buy`, final, sticky mobile bar) landed on a drawer,
+and checkout took a second click. It now goes **straight to `openCheckout()`**.
+- **Two buttons, two intents.** `buyNow()` = express, straight to the form.
+  `addToCart()` = browse, opens the drawer. The drawer is still reachable from
+  the header cart; it is just no longer in the way of a decided buyer.
+- **`pdpQty` is the page's quantity and is deliberately NOT the cart.** Stepping
+  it must not light the header badge before anything has been added. Single SKU,
+  so both CTAs **set** the cart to `pdpQty` rather than adding — pressing "Add to
+  cart" twice on a one-product store must not silently mean four bottles. The
+  drawer's own +/− mirrors back via `syncPdpQtyFromCart()`; the two controls can
+  never disagree.
+- **COD is the checkout default** (`payMethod = 'cod'`, and the markup order and
+  visible panel match). The UPI path is manual — copy the VPA, switch app, pay,
+  screenshot, WhatsApp the screenshot and UTR — and each step sheds orders. COD
+  is ₹0 advance and one tap. `/faq`'s "How to pay" now leads with COD too; keep
+  the two in step. **Flip both back together** if RTO cost ever outweighs it.
+- **`?buy=1` opens checkout on load**, the sibling of `?cart=open`. Terminal CTAs
+  elsewhere (homepage hero, blog end-of-post `.buy-btn`, `/faq` and `/reviews`
+  closers) point at it. **Header "Buy ₹229" pills and in-prose `.inline-cta`
+  links were left on `#buy` on purpose** — those are navigation and citation, not
+  a decision, and dropping a modal on someone who wanted to read is worse.
+- **The sticky mobile bar tracks the real CTA, not a scroll number.** It waited
+  for 400px; the hero's buy buttons start at ~830px on a 390×844 phone, so
+  scroll 0–400 had no purchase control anywhere on screen. An IntersectionObserver
+  on `.buy-actions` now drives it alongside the `#buy` one, so there is always
+  exactly one route to checkout and never two competing.
+- **Phone spacing above the fold is measured, not eyeballed.** The CTA was at
+  y=904 on a 390×844 screen; it is ~846 now, and the price is at 762. The space
+  came out of 84px of decorative hero padding (the header is `position:sticky`,
+  so that padding bought no clearance) — **not** out of the gallery, which is
+  what sells. Re-measure rather than nudging by eye.
+- **Preload only what paints above the fold.** The PDP was preloading five font
+  files. `fraunces-italic-400` (80KB) serves one below-fold heading, and
+  `barlow-condensed-900` **is not used on that page at all** — it was fetched at
+  top priority to render nothing. Grep `font-family:var(--…)` before adding a
+  preload back; this page renders in exactly three families.
+- Known, not yet fixed: `fraunces-normal-latin-ext-400.woff2` (58KB) downloads on
+  every page because **₹ (U+20B9) falls in the latin-ext `unicode-range`**. One
+  glyph, 58KB. Subsetting a ₹ into the latin file would remove it.
+
 ## Positioning: clothing only (2026-08-02)
 ODORSTRIKE is a **pocket-sized fabric odor neutralizer for clothes**. That is the
 whole category. The site used to sell "odor control for clothes, shoes, helmets
