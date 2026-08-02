@@ -9,6 +9,6 @@ the admin dashboard's reviews CRUD as verified-buyer reviews.
 
 Hey {name}! Nikhil from Smelloff here — your ODORSTRIKE ({order_id}) landed a few days back. Honest verdict: did it kill the smell? 🙏
 
-2 lines + your rating (1–5) is all I need. Good or bad, it goes up unedited at smelloff.in/reviews as a verified buyer — anonymous if you prefer. A photo of the bottle wherever it lives now (gym bag, desk, car) is a bonus.
+2 lines + your rating (1–5) is all I need. Good or bad, it goes up unedited at smelloff.in/reviews as a verified buyer — anonymous if you prefer. A photo of the bottle wherever it lives now (desk, pocket, wardrobe) is a bonus.
 
 No reminders after this, promise.

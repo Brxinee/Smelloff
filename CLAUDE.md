@@ -12,6 +12,42 @@ Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — India's first pocke
 - Resend transactional email via `/api/send-email`
 - Self-hosted fonts (Fraunces + JetBrains Mono + Inter Tight + Barlow Condensed)
 
+## Positioning: clothing only (2026-08-02)
+ODORSTRIKE is a **pocket-sized fabric odor neutralizer for clothes**. That is the
+whole category. The site used to sell "odor control for clothes, shoes, helmets
+and gear" — that line was in the shared footer on all 24 pages, the homepage
+meta/OG/Twitter descriptions, the Organization and FAQPage schema, the hero
+sub-headline, two of the three hero zone cards, the ticker, `llms.txt`,
+`llms-full.txt` and a `/faq` answer that actively told buyers to spray shoes and
+helmet liners. All of it is gone.
+- **In scope:** shirts, t-shirts, hoodies, jackets, blazers, jeans, trousers,
+  uniforms, everyday clothing. Fabrics: cotton, polyester, denim, nylon, wool
+  blends.
+- **Never reintroduce:** shoes, sneakers, helmets, gym gear, sports equipment,
+  bags, luggage, gloves, bike gear, car seats, sofas, curtains, room/air
+  freshening. Competitor comparisons may name those as what *the competitor* is
+  for — that sharpens the contrast — but must not claim them for ODORSTRIKE.
+- **State the limits, don't bury them.** "Fabric only, never skin/hair/body",
+  "does not replace washing", "does not remove stains" now appear in the
+  homepage FAQ + schema, the `/faq` "What is it not for?" answer (which replaced
+  and merged the old shoes/helmets and sofas/curtains questions), and both
+  `llms*.txt`. Honest limits are a trust asset here, not a disclaimer.
+- **Two things were deliberately left alone.** (1) The beta-tester quote "Lives
+  in my gym bag now…" on `/` and `/odorstrike` — it is a real first-hand account
+  and the brand rule against inventing or editing reviews outranks the phrasing.
+  Replace it only with another real quote. (2) `assets/pdp-04-pocket-size.webp`
+  has "GYM BAG" and "LAPTOP BAG" burnt into two of its four panels. Its `alt`
+  still describes them because alt must match the image; there is an
+  ASSET RECUT NEEDED comment above the tile in `odorstrike.html`. Recut those two
+  cells to clothing-carry contexts, then update the alt.
+- The homepage hero zone cards are now Shirt collar / Hoodie / Blazer & jacket,
+  drawn as **inline SVG** (`.z-ico`) instead of masked PNGs — crisper, and two
+  fewer image requests above the fold. `assets/icons/shoe.png` and `helmet.png`
+  are now unreferenced. Sizing lives on `.zone svg`; `.z-ico` is stroke only.
+  Do not put a `flex-basis` back on it — `.zone` is a row on phones and a
+  **column** at ≥768, where a basis resolves against the cross axis and rendered
+  the icons 72×64 instead of square.
+
 ## Design restoration (2026-07-10)
 The homepage was restored to the original iconic design (dark #080808, Fraunces
 serif display, acid-green #B8FF57 highlights, JetBrains Mono labels) from the

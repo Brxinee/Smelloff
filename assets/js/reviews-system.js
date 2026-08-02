@@ -73,7 +73,7 @@
 
             '<div class="rv-field">' +
               '<label for="rvText">Your Review</label>' +
-              '<textarea id="rvText" placeholder="Did it eliminate collar odor? Work on gym clothes or helmet lining? Be specific!" maxlength="400" required></textarea>' +
+              '<textarea id="rvText" placeholder="Did it clear collar odor? How did it hold up on a gym tee, a hoodie or a blazer? Be specific." maxlength="400" required></textarea>' +
               '<div style="font-size:11px;color:rgba(255,255,255,0.4);text-align:right;margin-top:4px" id="rvCharCount">0/400</div>' +
             '</div>' +
 
