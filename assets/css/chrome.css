@@ -392,6 +392,17 @@
 /* ---------------------------------------------------------------------
    4 · SKIP LINK + FOCUS
    Several secondary pages had neither.
+
+   This rule predated the markup: nothing on the site emitted .sf-skip, so
+   for 22 of 24 pages there was no way to bypass six nav links at all
+   (WCAG 2.4.1). index.html and odorstrike.html each had their own
+   hand-rolled .skip-link with different targets instead. The link is now
+   generated into the header block by scripts/apply-chrome.mjs, which also
+   stamps id="sf-main" tabindex="-1" onto each page's <main>, <article> or
+   first <section> — so edit it there, not in the page markup.
+
+   Parked off-canvas rather than display:none, which would drop it out of
+   the tab order and defeat the point. z-index clears the sticky header.
    --------------------------------------------------------------------- */
 .sf-skip{
   position:absolute;left:-9999px;top:0;z-index:200;
@@ -399,6 +410,11 @@
   font-weight:700;text-decoration:none;
 }
 .sf-skip:focus{left:0}
+/* The target needs tabindex="-1" for focus to actually move to it — without
+   it the page scrolls but focus stays on the link, so the next Tab goes
+   straight back into the nav and the skip link has achieved nothing. That
+   in turn draws a focus ring around the entire page body, which is noise. */
+#sf-main:focus{outline:none}
 .sf-hdr a:focus-visible,.sf-hdr button:focus-visible,
 .sf-ftr a:focus-visible{
   outline:3px solid var(--acid);
