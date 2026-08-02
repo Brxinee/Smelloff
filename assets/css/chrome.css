@@ -490,6 +490,24 @@
   padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
 }
 
+/* 5.3 · THE CONSENT BAR STANDS DOWN FOR MODALS
+   ---------------------------------------------------------------------
+   The bar is z-index:9999 and pinned to the bottom — the highest thing on
+   the page, because it must clear the sticky header and the sticky buy bar.
+   On /odorstrike that put it directly over the checkout panel's submit
+   button: elementFromPoint at the centre of "Place COD order · ₹229"
+   returned `.cb-accept` at 320×568, 360×640, 390×844 and 414×896. A
+   first-time visitor has not answered the bar yet — so every new mobile
+   buyer was tapping "Accept all" instead of ordering.
+
+   Two independent guards, because this one is expensive to get wrong:
+   the PDP's .overlay / .gal-viewer now outrank 9999 (see odorstrike.html),
+   and any page that opens a modal sets .sf-modal-open on <html>, which
+   removes the bar from the screen entirely rather than burying it under a
+   scrim where it is visible-but-dead. The bar returns on close; consent is
+   never skipped, only deferred past the transaction. */
+html.sf-modal-open #smelloff-consent-bar{display:none !important}
+
 /* A note for the next person auditing this, because it cost a pass here:
    the marquee strips (.ticker / .band-marquee on the homepage, .marquee on
    the PDP) contain tracks measuring 2095–6546px, and getBoundingClientRect
