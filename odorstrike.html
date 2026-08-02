@@ -2491,7 +2491,11 @@
     .use-card:last-child{border-bottom:none !important}
   }
 
-  .how-to-use{
+  /* ============ The 30-second reset ============
+     Three beats in a row on desktop, stacked on phones. The only motion is a
+     conic-gradient sweep on one ring, driven by a single custom property, run
+     once when the block scrolls into view. No library, no per-frame layout. */
+  .reset30{
     margin-top:120px;
     padding-top:60px;
     border-top:1px solid var(--rule);
@@ -2508,33 +2512,63 @@
     letter-spacing:-.02em;
     margin-top:24px;
   }
-  .htu-steps{
-    list-style:none;
-    padding:0;
-    margin:0;
+  .r30-steps{
+    list-style:none;padding:0;margin:0;
+    display:grid;grid-template-columns:1fr;gap:0;
   }
-  .htu-steps li{
-    display:grid;
-    grid-template-columns:80px 1fr;
-    gap:24px;
-    padding:24px 0;
+  .r30-step{
+    position:relative;
+    padding:26px 0;
     border-bottom:1px solid var(--rule);
-    font-size:15px;
-    line-height:1.55;
-    color:var(--muted);
   }
-  .htu-steps li:last-child{border-bottom:none}
-  .htu-steps li strong{color:var(--text);font-weight:500}
-  .step-num{
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.15em;
-    color:var(--acid);
-    padding-top:4px;
+  .r30-step:last-child{border-bottom:none}
+  .r30-num{
+    display:block;
+    font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+    color:var(--acid);margin-bottom:10px;
+  }
+  .r30-title{
+    font-family:var(--display);font-weight:900;
+    font-size:clamp(20px,2.4vw,26px);line-height:1.1;
+    letter-spacing:-.01em;color:var(--text);margin-bottom:8px;
+  }
+  .r30-body{font-size:15px;line-height:1.55;color:var(--muted);max-width:46ch}
+
+  /* The ten-second ring. Sweeps from 0 to 360deg exactly once. */
+  .r30-ring{
+    --r30-deg:0deg;
+    position:relative;display:grid;place-items:center;
+    width:62px;height:62px;border-radius:50%;
+    margin-bottom:14px;
+    background:conic-gradient(var(--acid) var(--r30-deg), rgba(244,241,234,.14) 0deg);
+  }
+  .r30-ring::after{
+    content:"";position:absolute;inset:5px;border-radius:50%;background:var(--ink);
+  }
+  .r30-ring-num{
+    position:relative;z-index:1;
+    font-family:var(--mono);font-size:16px;font-weight:700;
+    color:var(--acid);font-variant-numeric:tabular-nums;
+  }
+  .r30-step--timer.is-done .r30-ring{background:var(--acid)}
+  .r30-step--timer.is-done .r30-ring-num{color:var(--acid)}
+
+  @media(min-width:768px){
+    .r30-steps{grid-template-columns:repeat(3,1fr);gap:0}
+    .r30-step{
+      padding:0 26px 0 0;border-bottom:none;
+      border-right:1px solid var(--rule);
+    }
+    .r30-step+.r30-step{padding-left:26px}
+    .r30-step:last-child{border-right:none}
   }
   @media(max-width:720px){
-    .how-to-use{grid-template-columns:1fr;gap:32px;margin-top:80px}
-    .htu-steps li{grid-template-columns:60px 1fr;gap:16px}
+    .reset30{grid-template-columns:1fr;gap:32px;margin-top:80px}
+  }
+  /* A timer that runs itself is motion. Honour the preference: show the ring
+     already complete and let the copy state the ten seconds. */
+  @media(prefers-reduced-motion:reduce){
+    .r30-ring{--r30-deg:360deg !important}
   }
 
   /* ============================= */
@@ -3190,10 +3224,15 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <p class="proof-footer">Odor molecules don't get masked. They get trapped, neutralized, and kept from coming back — for up to 8 hours on fabric. No one will know.</p>
 </section>
 
-<!-- WHEN & HOW - content block for SEO word count -->
+<!-- MOMENTS YOU CAN'T REWASH FOR
+     This block used to be labelled "content block for SEO word count", and it
+     read like it: four cards headed POST GYM / RE-WEARS / TRAVEL / MONSOON.
+     The body copy is genuinely useful and specific, so it stays — but the
+     section is now framed by the thing the customer actually feels, which is
+     that some moments don't offer a second chance at the laundry. -->
 <section class="use-cases">
-  <div class="section-tag">When to use it</div>
-  <h2>Built for the moments your deodorant <span class="acid-mark">can't reach.</span></h2>
+  <div class="section-tag">Moments you can't rewash for</div>
+  <h2>You don't get to go home <span class="acid-mark">and change.</span></h2>
 
   <div class="use-grid">
     <div class="use-card">
@@ -3218,15 +3257,37 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     </div>
   </div>
 
-  <div class="how-to-use">
+  <!-- THE 30-SECOND RESET
+       Was a plain numbered <ol> headed "How to use". Same three instructions,
+       same accurate detail — but the middle beat now runs the actual ten
+       seconds in front of you, once, when it scrolls into view. The claim is
+       already the site's locked one ("10-second dry"), so the timer is a
+       demonstration of a real number rather than a new assertion.
+       Still an <ol>: the steps are sequential and must read as a list with
+       JS off, with a screen reader, and in print. The ring is decorative. -->
+  <div class="reset30" id="reset30">
     <div class="htu-head">
-      <div class="section-tag">How to use</div>
-      <h3>Three seconds. No technique.</h3>
+      <div class="section-tag">The 30-second reset</div>
+      <h3>Spray. Count to ten. Walk in.</h3>
     </div>
-    <ol class="htu-steps">
-      <li><span class="step-num">01</span><div><strong>Hold 15cm from fabric.</strong> Closer and you'll oversaturate. Further and the mist disperses before landing.</div></li>
-      <li><span class="step-num">02</span><div><strong>Spray 2–3 pumps per zone.</strong> Focus on collar, armpits, chest, and crotch. Skip areas that aren't smelly — you're not perfuming, you're neutralizing.</div></li>
-      <li><span class="step-num">03</span><div><strong>Wait 10 seconds.</strong> The mist flashes off. The actives bind to the odor. The fabric is dry, the smell is gone, and nobody knows you used it.</div></li>
+    <ol class="r30-steps">
+      <li class="r30-step">
+        <span class="r30-num">01</span>
+        <p class="r30-title">Hold it 15cm away</p>
+        <p class="r30-body">Closer and you oversaturate. Further and the mist disperses before it lands.</p>
+      </li>
+      <li class="r30-step">
+        <span class="r30-num">02</span>
+        <p class="r30-title">Two pumps per zone</p>
+        <p class="r30-body">Collar, underarms, chest. Skip what doesn't smell — you're neutralizing, not perfuming.</p>
+      </li>
+      <li class="r30-step r30-step--timer">
+        <span class="r30-num">03</span>
+        <!-- The ring is aria-hidden; the sentence below it carries the meaning. -->
+        <span class="r30-ring" aria-hidden="true"><span class="r30-ring-fill"></span><span class="r30-ring-num">10</span></span>
+        <p class="r30-title">Ten seconds</p>
+        <p class="r30-body">The carrier flashes off, the actives bind to the odor, the fabric is dry. Nobody knows you used it.</p>
+      </li>
     </ol>
   </div>
 </section>
@@ -4841,6 +4902,46 @@ window.createSupabaseOrder = function (opts) {
     if (ecSuccess) ecSuccess.style.display = 'inline-block';
     SmelloffEmail.send('welcomeEmail', email, { customerName: 'there' }).catch(console.error);
   };
+
+  // THE 30-SECOND RESET — run the ten seconds once, when it comes into view.
+  // Drives one custom property on one element via rAF; nothing else moves and
+  // nothing reflows. Runs a single time so it reads as a demonstration rather
+  // than a looping ornament.
+  (function(){
+    var block = document.getElementById('reset30');
+    if (!block) return;
+    var step = block.querySelector('.r30-step--timer');
+    var ring = block && block.querySelector('.r30-ring');
+    var num  = block && block.querySelector('.r30-ring-num');
+    if (!step || !ring || !num) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      // Show the finished state: the claim is in the copy, not the animation.
+      ring.style.setProperty('--r30-deg', '360deg');
+      num.textContent = '0';
+      step.classList.add('is-done');
+      return;
+    }
+    var DURATION = 10000;
+    var started = false;
+    function run(t0){
+      function frame(now){
+        var p = Math.min(1, (now - t0) / DURATION);
+        ring.style.setProperty('--r30-deg', (p * 360).toFixed(1) + 'deg');
+        num.textContent = String(Math.ceil((1 - p) * 10));
+        if (p < 1) requestAnimationFrame(frame);
+        else step.classList.add('is-done');
+      }
+      requestAnimationFrame(frame);
+    }
+    new IntersectionObserver(function(entries, obs){
+      if (entries[0].isIntersecting && !started) {
+        started = true;
+        obs.disconnect();
+        requestAnimationFrame(function(now){ run(now); });
+      }
+    }, { threshold: 0.45 }).observe(step);
+  })();
 
   // Mobile sticky bar — visible whenever no other buy control is on screen
   // (hero buttons, #buy section), and hidden while the checkout overlay is up.

@@ -493,15 +493,115 @@
   .section-body{max-width:640px;font-size:var(--fs-lead)}
   .section-body p+p{margin-top:16px}
 
-  .territory{border-top:2px solid var(--rule)}
-  .territory .down-link{
-    display:inline-block;margin-top:24px;
-    color:var(--acid);text-decoration:none;
-    font-weight:700;font-size:16px;
-    padding:10px 0;
-    border-bottom:2px solid var(--acid);
+  /* ============ Your shirt remembers ============
+     Every visual state keys off [data-step] on the section, so dragging the
+     slider changes one attribute and CSS does the rest — no per-frame JS, no
+     layout thrash. Transitions are on opacity/transform only. */
+  .remembers{border-top:2px solid var(--rule)}
+  .rm-intro{max-width:560px;font-size:var(--fs-lead);color:var(--text-2);margin-top:18px}
+
+  .rm-stage{
+    display:grid;grid-template-columns:1fr;gap:22px;align-items:center;
+    margin-top:44px;
+    border:1px solid var(--rule);border-radius:28px;
+    background:var(--surface);
+    padding:32px 24px;
   }
-  .territory .down-link:hover{color:#d1ff8a;border-color:#d1ff8a}
+  .rm-shirt-wrap{position:relative;justify-self:center;width:150px;height:162px}
+  .rm-shirt{width:100%;height:100%;overflow:visible}
+  .rm-outline{
+    fill:none;stroke:var(--muted);stroke-width:2.4;
+    stroke-linejoin:round;
+    transition:stroke .45s ease;
+  }
+  /* The haze is the day's load. It never carries a number — it just grows. */
+  .rm-haze{opacity:0;transition:opacity .5s ease,transform .5s ease;transform-origin:60px 60px}
+  .remembers[data-step="1"] .rm-haze{opacity:.20;transform:scale(.72)}
+  .remembers[data-step="2"] .rm-haze{opacity:.42;transform:scale(.84)}
+  .remembers[data-step="3"] .rm-haze{opacity:.58;transform:scale(.92)}
+  .remembers[data-step="4"] .rm-haze{opacity:.78;transform:scale(1)}
+  .remembers[data-step="5"] .rm-haze{opacity:1;transform:scale(1.06)}
+  .remembers[data-step="6"] .rm-haze{opacity:0;transform:scale(.55)}
+  .remembers[data-step="6"] .rm-outline{stroke:var(--acid)}
+
+  /* One-shot sweep when the day resets — the reward for reaching the end. */
+  .rm-flash{
+    position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle,var(--acid) 0%,transparent 68%);
+    opacity:0;pointer-events:none;
+  }
+  .remembers[data-step="6"] .rm-flash{animation:rmFlash .7s ease-out}
+  @keyframes rmFlash{0%{opacity:0;transform:scale(.5)}35%{opacity:.30}100%{opacity:0;transform:scale(1.5)}}
+
+  .rm-readout{min-height:132px}
+  .rm-time{
+    font-family:var(--mono);font-size:13px;letter-spacing:.2em;
+    color:var(--acid);margin-bottom:10px;
+  }
+  .rm-event{
+    font-family:var(--display);font-weight:900;
+    font-size:clamp(23px,5.2vw,32px);line-height:1.12;
+    letter-spacing:-.01em;color:var(--text);
+  }
+  .rm-state{
+    display:inline-block;margin-top:14px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);
+    border:1px solid var(--rule);border-radius:999px;padding:6px 13px;
+  }
+  .remembers[data-step="6"] .rm-state{color:var(--ink);background:var(--acid);border-color:var(--acid)}
+
+  /* Native range input: keyboard, touch and AT support with no library. */
+  .rm-control{margin-top:26px}
+  .rm-scrub{
+    -webkit-appearance:none;appearance:none;
+    width:100%;height:44px;background:transparent;cursor:grab;display:block;
+  }
+  .rm-scrub:active{cursor:grabbing}
+  .rm-scrub::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--rule-strong,rgba(244,241,234,.28))}
+  .rm-scrub::-moz-range-track{height:4px;border-radius:2px;background:rgba(244,241,234,.28)}
+  .rm-scrub::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;
+    width:26px;height:26px;margin-top:-11px;border-radius:50%;
+    background:var(--acid);border:3px solid var(--ink);
+    box-shadow:0 0 0 1px var(--acid);
+    transition:transform .15s ease;
+  }
+  .rm-scrub::-moz-range-thumb{
+    width:26px;height:26px;border-radius:50%;
+    background:var(--acid);border:3px solid var(--ink);
+  }
+  .rm-scrub:hover::-webkit-slider-thumb{transform:scale(1.14)}
+  .rm-scrub:focus-visible{outline:none}
+  .rm-scrub:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px rgba(184,255,87,.4)}
+  .rm-axis{
+    display:flex;justify-content:space-between;
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);
+    padding:0 2px;
+  }
+  .rm-foot{margin-top:26px;max-width:560px;font-size:var(--fs-sm);color:var(--muted)}
+  .rm-cta{
+    display:inline-block;margin-top:22px;
+    background:var(--acid);color:var(--ink);text-decoration:none;
+    font-family:var(--mono);font-size:13px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;
+    padding:16px 26px;border-radius:999px;
+    transition:transform .15s ease;
+  }
+  .rm-cta:hover{transform:translateY(-2px)}
+
+  @media(min-width:768px){
+    .rm-stage{grid-template-columns:auto 1fr;gap:44px;padding:40px}
+    .rm-shirt-wrap{width:180px;height:196px}
+    .rm-control{max-width:640px}
+  }
+  /* The whole section is a story, not a required control — if someone has
+     asked for less motion, hold every state still and let the copy carry it. */
+  @media(prefers-reduced-motion:reduce){
+    .rm-haze,.rm-outline{transition:none}
+    .remembers[data-step="6"] .rm-flash{animation:none}
+    .rm-cta:hover{transform:none}
+  }
 
   /* ============ Featured product ============ */
   .product{border-top:2px solid var(--rule)}
@@ -583,39 +683,6 @@
   /* ============ Problem ============
      Names why the alternatives fail before pitching the fix. Four blunt
      answers in acid, each with the reason underneath. */
-  .problem{border-top:var(--bw-thin) solid var(--rule)}
-  .fail-grid{
-    margin-top:44px;
-    display:grid;grid-template-columns:1fr;gap:0;
-    list-style:none;
-  }
-  .fail-grid li{
-    padding:22px 0;
-    border-top:1px solid var(--rule);
-  }
-  .fail-grid .f-answer{
-    font-family:var(--display);font-weight:900;
-    font-size:var(--fs-h4);line-height:1.05;letter-spacing:-.02em;
-    color:var(--acid);
-    margin-bottom:8px;
-  }
-  .fail-grid .f-q{
-    font-family:var(--mono);font-size:11.5px;
-    letter-spacing:.16em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:12px;
-  }
-  .fail-grid p{font-size:var(--fs-sm);color:var(--muted)}
-  @media(min-width:768px){
-    .fail-grid{grid-template-columns:repeat(4,1fr);gap:0}
-    .fail-grid li{
-      border-top:1px solid var(--rule);
-      border-right:1px solid var(--rule);
-      padding:26px 24px 26px 0;
-    }
-    .fail-grid li:last-child{border-right:0}
-    .fail-grid li+li{padding-left:24px}
-  }
-
   /* ============ Voices (social proof) ============ */
   .voices{border-top:var(--bw-thin) solid var(--rule)}
   .voice-grid{
@@ -790,7 +857,6 @@
     /* The strip is a flush band, so its cells tint instead of lifting —
        a translate would break the shared hairlines between them. */
     .benefits-strip .trust-row li:hover{background:var(--surface-2);color:var(--acid)}
-    .fail-grid li:hover .f-answer{color:var(--acid-hi)}
   }
 </style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
@@ -956,50 +1022,69 @@
     </div>
   </div>
 
-  <!-- ============ 2 · TERRITORY ============ -->
-  <section class="territory" aria-labelledby="territoryTitle">
-    <div class="wrap">
-      <h2 id="territoryTitle" class="reveal">Smell is bigger than skin</h2>
-      <div class="section-body reveal">
-        <p>You shower. You apply deodorant. You still catch it in the lift at 4pm.</p>
-        <p>That smell isn't on your skin. It soaked into your shirt hours ago, and it stays there until the next wash. Deodorant can't reach it. Perfume just sits on top of it. Smelloff goes after the odor where it actually lives — in the fabric. It doesn't replace your deodorant. It finishes what your deodorant starts.</p>
-      </div>
-      <a class="down-link reveal" href="#odorstrike-featured">Meet the first product ↓</a>
-    </div>
-  </section>
+  <!-- ============ 2 · YOUR SHIRT REMEMBERS ============
+       The signature section. It replaced two prose blocks — "Smell is bigger
+       than skin" and "Why your deodorant doesn't fix this" — that argued the
+       same point twice and ended in a four-column competitor grid every DTC
+       site has. Instead of telling someone their shirt holds the smell, this
+       walks them through their own day until they recognise it.
 
-  <!-- ============ 2b · PROBLEM ============
-       Names why the existing options fail before pitching the fix, so the
-       product lands as an answer rather than another bottle. -->
-  <section class="problem" aria-labelledby="problemTitle">
+       Built on a native <input type="range">. That is the whole interaction
+       model: keyboard arrows, touch drag and screen-reader support come free
+       and correct, there is no drag library, and the JS is one event listener
+       that writes data-step onto the section. Every visual state is CSS keyed
+       off that attribute, so scrubbing costs a class recalc and no layout.
+
+       IMPORTANT: no numbers, no percentages, no meter readings. Nothing here
+       is a measurement and it must never start implying one — it is a story
+       about a day. The only claim is the locked one, in the final panel. -->
+  <section class="remembers" id="remembers" aria-labelledby="remembersTitle" data-step="0">
     <div class="wrap">
-      <p class="eyebrow reveal">The gap</p>
-      <h2 id="problemTitle" class="reveal">Why your deodorant doesn't fix this</h2>
-      <div class="section-body reveal">
-        <p>By 3pm on an Indian summer day it isn't your skin that smells — it's your shirt. Sweat compounds bind to fabric, especially polyester, and nothing in a normal routine reaches them.</p>
+      <p class="eyebrow reveal">One shirt · One day</p>
+      <h2 id="remembersTitle" class="reveal">Your shirt remembers<br>everything you did today.</h2>
+      <p class="rm-intro reveal">Your deodorant quit around noon. What it left behind is still in the cotton — and it is what the person next to you actually smells. Drag through the day.</p>
+
+      <div class="rm-stage reveal">
+        <!-- The garment. Three zones (collar, both underarms) gain a soft
+             haze as the day loads up; the whole shirt strokes acid on reset. -->
+        <div class="rm-shirt-wrap">
+          <svg class="rm-shirt" viewBox="0 0 120 130" role="img" aria-hidden="true">
+            <defs>
+              <radialGradient id="rmHaze">
+                <stop offset="0%" stop-color="var(--muted)" stop-opacity=".85"/>
+                <stop offset="100%" stop-color="var(--muted)" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <g class="rm-haze">
+              <circle cx="60" cy="26" r="17" fill="url(#rmHaze)"/>
+              <circle cx="27" cy="52" r="15" fill="url(#rmHaze)"/>
+              <circle cx="93" cy="52" r="15" fill="url(#rmHaze)"/>
+              <circle cx="60" cy="66" r="20" fill="url(#rmHaze)"/>
+            </g>
+            <path class="rm-outline" d="M40 12 20 24 12 50l16 7v62h64V57l16-7-8-26-20-12-8 11a16 16 0 0 1-24 0Z"/>
+          </svg>
+          <span class="rm-flash" aria-hidden="true"></span>
+        </div>
+
+        <!-- aria-live so the story is announced as the slider moves; the
+             slider itself carries the accessible name and value text. -->
+        <div class="rm-readout" aria-live="polite">
+          <p class="rm-time" id="rmTime">07:00</p>
+          <p class="rm-event" id="rmEvent">Fresh shirt. Deodorant on. You feel fine.</p>
+          <p class="rm-state" id="rmState">Clean</p>
+        </div>
       </div>
-      <ul class="fail-grid reveal">
-        <li>
-          <p class="f-q">Deodorant</p>
-          <p class="f-answer">Wrong surface</p>
-          <p>It works on skin. The smell other people notice is already sitting in the fabric.</p>
-        </li>
-        <li>
-          <p class="f-q">Perfume</p>
-          <p class="f-answer">Stacks, not solves</p>
-          <p>Fragrance over sweat smells worse than either one on its own. Nothing is removed.</p>
-        </li>
-        <li>
-          <p class="f-q">Re-washing</p>
-          <p class="f-answer">Not an option at 3pm</p>
-          <p>Useless mid-day, and odor compounds survive a normal wash on synthetics anyway.</p>
-        </li>
-        <li>
-          <p class="f-q">Room sprays</p>
-          <p class="f-answer">Built for air</p>
-          <p>Made to scent a room, not to sit on fabric you're wearing for the next eight hours.</p>
-        </li>
-      </ul>
+
+      <div class="rm-control reveal">
+        <input class="rm-scrub" id="rmScrub" type="range" min="0" max="6" step="1" value="0"
+               aria-labelledby="remembersTitle" aria-describedby="rmEvent">
+        <div class="rm-axis" aria-hidden="true">
+          <span>07:00</span><span>Reset</span>
+        </div>
+      </div>
+
+      <p class="rm-foot reveal">Nothing above is a measurement — it's a Tuesday. The fix is real: two sprays, ten seconds, up to 8 hours of odor protection on fabric.</p>
+      <a class="rm-cta reveal" href="/odorstrike?buy=1">Reset your shirt — ₹229</a>
     </div>
   </section>
 
@@ -1222,6 +1307,43 @@
   // Safety net: content must never stay hidden, even if an observer callback
   // is missed (fast scroll, tab restore, odd viewport).
   setTimeout(revealAll, 2500);
+})();
+</script>
+
+<!-- "Your shirt remembers" — the whole interaction is one listener writing an
+     attribute. Everything visual is CSS keyed off [data-step], so dragging
+     costs no layout and there is no animation library on this page.
+     The copy lives here rather than in the markup so the seven states can't
+     drift out of sync with the slider's range. -->
+<script>
+(function(){
+  var scrub = document.getElementById('rmScrub');
+  var sec   = document.getElementById('remembers');
+  if (!scrub || !sec) return;
+  var DAY = [
+    ['07:00', 'Fresh shirt. Deodorant on. You feel fine.',                'Clean'],
+    ['09:20', 'Packed metro. A stranger’s arm across your back.',    'Picking up'],
+    ['12:00', 'Your deodorant is done. The shirt is just getting started.', 'Settling in'],
+    ['14:30', 'Lunch. The good biryani place. It follows you out.',       'Holding'],
+    ['16:00', 'The lift. Someone steps in behind you.',                   'This is the one'],
+    ['18:40', 'Still in it. Drinks at eight. No time to go home.',        'All of it, still there'],
+    ['RESET', 'Two sprays. Ten seconds. Walk in like it’s 07:00.',   'Gone']
+  ];
+  var elTime  = document.getElementById('rmTime');
+  var elEvent = document.getElementById('rmEvent');
+  var elState = document.getElementById('rmState');
+  function paint(){
+    var i = Math.max(0, Math.min(DAY.length - 1, parseInt(scrub.value, 10) || 0));
+    sec.setAttribute('data-step', String(i));
+    elTime.textContent  = DAY[i][0];
+    elEvent.textContent = DAY[i][1];
+    elState.textContent = DAY[i][2];
+    // Screen readers announce a slider by its value, and "4 of 6" says
+    // nothing here — give it the actual moment instead.
+    scrub.setAttribute('aria-valuetext', DAY[i][0] + ' — ' + DAY[i][1]);
+  }
+  scrub.addEventListener('input', paint);
+  paint();
 })();
 </script>
 
