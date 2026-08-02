@@ -307,11 +307,20 @@
       href="/assets/pdp-01-hero.webp"
       imagesrcset="/assets/pdp-01-hero@640.webp 640w, /assets/pdp-01-hero.webp 1200w"
       imagesizes="(min-width:960px) 46vw, 84vw" fetchpriority="high">
+<!-- Preload ONLY the faces that paint above the fold. This page renders in
+     exactly three families — Fraunces (--display), JetBrains Mono (--mono) and
+     Inter Tight (--body); grep the file, there is no fourth.
+     Removed from this list, and why:
+       · fraunces-italic-400 (80KB) — the only italic on the page is
+         `.problem h2`, several screens down. Preloading it put 80KB at
+         highest priority ahead of the LCP image on the checkout page. It
+         still loads from fonts.css when that heading needs it, with
+         font-display:swap and the metric-matched fallback holding the layout.
+       · barlow-condensed-900 — not used on this page at all. It was being
+         fetched at top priority to render nothing. -->
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-italic-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-mono-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/barlow-condensed-normal-latin-900.woff2" crossorigin>
 <link rel="preload" href="/assets/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
 
@@ -915,6 +924,41 @@
     transition:transform .15s;
   }
   .hero-cta:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(184,255,87,.35)}
+  /* Qty + primary CTA share one row so the stepper never pushes the buy
+     button below the fold on a phone. The stepper is fixed-width; the CTA
+     takes the rest. */
+  .buy-actions{display:flex;gap:10px;align-items:stretch;margin-top:22px}
+  .buy-actions .hero-cta{margin-top:0;flex:1 1 auto;min-width:0}
+  .qty-picker{
+    display:flex;align-items:center;flex:none;
+    border:1px solid var(--rule-strong);
+    border-radius:var(--sq-sm,11px);
+    background:var(--surface,#0F0F0F);
+    overflow:hidden;
+  }
+  .qty-picker button{
+    /* 44px is the comfortable thumb target; the footer's 34px rows are a
+       documented exception, this is not one. */
+    width:44px;height:100%;min-height:44px;
+    background:none;border:none;color:var(--text);
+    font-size:19px;line-height:1;cursor:pointer;
+    transition:color .15s,background .15s;
+  }
+  .qty-picker button:hover:not(:disabled){color:var(--acid);background:rgba(184,255,87,.08)}
+  .qty-picker button:disabled{opacity:.35;cursor:default}
+  .qty-picker output{
+    min-width:2ch;text-align:center;
+    font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text);
+    font-variant-numeric:tabular-nums;
+  }
+  .hero-cta--ghost{
+    margin-top:10px;
+    background:transparent;color:var(--text);
+    /* --rule (.14 alpha) is a hairline for dividers; on a button it read as
+       plain text with no affordance. The secondary CTA needs a visible edge. */
+    border:1px solid var(--rule-strong);
+  }
+  .hero-cta--ghost:hover{border-color:var(--acid);color:var(--acid);box-shadow:none;transform:none}
   /* Trust strip — one line of verified facts directly under the primary CTA */
   .hero-trust{
     display:flex;
@@ -969,18 +1013,26 @@
      768–900px — cancelling the two-column layout exactly where the tablets
      are. Overlapping min-/max-width pairs that disagree in the overlap is
      the drift the breakpoint scale in chrome.css §5 exists to stop. */
+  /* Phone spacing is tuned against the fold, not by eye. On a 390x844 screen
+     the primary CTA measured y=904 — below the fold on the page that carries
+     the checkout — with 84px of decorative padding above a hero whose header
+     is `position:sticky` (so that padding buys no clearance, it is pure air).
+     Trimmed here rather than by compressing the gallery, which is what sells.
+     The sticky mobile bar guarantees a CTA at scroll 0 regardless; this just
+     stops the real buy panel starting a screen down. */
   @media(max-width:767px){
-    .product-hero{grid-template-columns:1fr;gap:30px;margin-top:30px}
+    .product-hero{grid-template-columns:1fr;gap:24px;margin-top:22px}
     .product-info{max-width:520px}
   }
   @media(max-width:720px){
-    .hero{padding:84px 20px 28px}
-    .hero-meta{font-size:10px;padding-bottom:20px}
-    .product-hero{margin-top:22px;gap:26px}
+    .hero{padding:52px 20px 28px}
+    .hero-meta{font-size:10px;padding-bottom:14px}
+    .product-hero{margin-top:16px;gap:20px}
     .product-info h1{font-size:clamp(40px,10.5vw,64px);line-height:.95}
     .product-info h1 .ph-sub{font-size:12px;letter-spacing:.14em;margin-top:14px}
     .ph-tagline{font-size:17px}
     .hero-cta{margin-top:16px;padding:16px 24px}
+    .buy-actions{margin-top:14px}
   }
 
   /* Marquee */
@@ -2735,7 +2787,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <div class="cart-body">
       <div class="cart-empty" id="cartEmpty">Your cart is empty</div>
       <div class="cart-line" id="cartLine" style="display:none">
-        <img class="cart-line-img" src="/assets/odorstrike-bottle.webp" alt="ODORSTRIKE 50ml" loading="lazy" onerror="this.style.display='none'">
+        <img class="cart-line-img" src="/assets/odorstrike-bottle.webp" alt="ODORSTRIKE 50ml" width="64" height="64" loading="lazy" decoding="async" onerror="this.style.display='none'">
         <div class="cart-line-info">
           <div class="cart-line-name">ODORSTRIKE 50ml</div>
           <div class="cart-line-unit">₹229 · 1 × 50ml</div>
@@ -2880,7 +2932,21 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <span class="strike-price">M.R.P. ₹499</span>
         <span class="price-note">all-inclusive · free shipping</span>
       </div>
-      <button class="hero-cta" onclick="buyNow()">Buy Now — ₹229 · COD</button>
+      <!-- Two intents, two buttons. "Buy now" is the express path straight to
+           the checkout form; "Add to cart" opens the drawer for anyone still
+           browsing. Before this the panel had a single CTA that did neither
+           cleanly — it opened the drawer while being labelled Buy Now — and
+           there was no quantity control anywhere on the page, so the only way
+           to order two was to open the cart and press +. -->
+      <div class="buy-actions">
+        <div class="qty-picker" role="group" aria-label="Quantity">
+          <button type="button" id="pdpQtyDec" onclick="pdpQtyStep(-1)" aria-label="Decrease quantity">−</button>
+          <output id="pdpQtyVal" for="pdpQtyDec pdpQtyInc" aria-live="polite">1</output>
+          <button type="button" id="pdpQtyInc" onclick="pdpQtyStep(1)" aria-label="Increase quantity">+</button>
+        </div>
+        <button class="hero-cta" onclick="buyNow()"><span id="pdpBuyText">Buy now · ₹229</span></button>
+      </div>
+      <button class="hero-cta hero-cta--ghost" onclick="addToCart()">Add to cart</button>
       <!-- Every claim below is verified against live policy pages: /shipping (free,
            3–5d metro / 5–7d tier-2/3), /returns (7-day), FAQ (COD ₹0 advance). -->
       <div class="hero-trust" aria-label="Buying reassurance">
@@ -3422,12 +3488,12 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
       <label id="paymentMethodLabel">Payment</label>
       <div class="pay-toggle" role="radiogroup" aria-labelledby="paymentMethodLabel">
-        <div class="pay-opt active" data-method="prepaid" onclick="selectPay('prepaid')" tabindex="0" role="radio" aria-checked="true" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPay('prepaid')}">Pay via UPI</div>
-        <div class="pay-opt" data-method="cod" onclick="selectPay('cod')" tabindex="0" role="radio" aria-checked="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPay('cod')}">Cash on delivery</div>
+        <div class="pay-opt active" data-method="cod" onclick="selectPay('cod')" tabindex="0" role="radio" aria-checked="true" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPay('cod')}">Cash on delivery</div>
+        <div class="pay-opt" data-method="prepaid" onclick="selectPay('prepaid')" tabindex="0" role="radio" aria-checked="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPay('prepaid')}">Pay via UPI</div>
       </div>
 
       <!-- UPI panel (shown when prepaid selected) -->
-      <div id="upiPayPanel" class="pay-panel">
+      <div id="upiPayPanel" class="pay-panel" style="display:none">
         <span class="upi-panel-title">Select 1-Click UPI App</span>
         <div class="upi-apps-grid" role="radiogroup" aria-label="Select UPI App">
           <button type="button" class="upi-app-btn active" data-app="any" onclick="setUpiApp('any')">
@@ -3466,7 +3532,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       </div>
 
       <!-- COD panel (shown when cod selected) -->
-      <div id="codPayPanel" class="pay-panel" style="display:none">
+      <div id="codPayPanel" class="pay-panel">
         <p class="pay-cod">₹0 advance · Pay when it arrives</p>
         <p class="pay-note-cod">Most of our customers choose COD</p>
       </div>
@@ -3476,7 +3542,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
       <p class="checkout-reassure">Your details are private and never shared. COD = pay nothing now.</p>
       <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
-        <span id="submitText">Open UPI app · ₹229</span>
+        <span id="submitText">Place COD order · ₹229</span>
       </button>
     </div>
 
@@ -3676,7 +3742,13 @@ window.createSupabaseOrder = function (opts) {
   };
 
   let currentVariant = 'solo';
-  let payMethod = 'prepaid'; // matches the default-active .pay-opt[data-method="prepaid"]
+  // COD is the default because it is the only method that completes without
+  // leaving the page. The UPI path is manual — copy the VPA, switch to a
+  // payment app, pay, screenshot it, then send the screenshot and UTR over
+  // WhatsApp — and every one of those steps is a place to drop out. COD is
+  // ₹0 advance and one tap. Flip this back to 'prepaid' (and the markup below)
+  // if the RTO cost of COD ever outweighs the completed orders it wins.
+  let payMethod = 'cod'; // matches the default-active .pay-opt[data-method="cod"]
   // Quantity being checked out — sourced from the cart. Unit price stays ₹229
   // (single SKU); the order pipeline multiplies by this.
   let cartQty = 1;
@@ -3754,17 +3826,55 @@ window.createSupabaseOrder = function (opts) {
     } catch (e) {}
   }
 
-  // A "Buy" CTA now adds one unit (if the cart is empty) and opens the cart.
+  // "Buy now" is the express path: it goes STRAIGHT to checkout. It used to add
+  // a unit and open the cart drawer instead, which meant every buy CTA on the
+  // page — hero, pricing, final, sticky mobile bar — cost an extra click and an
+  // extra decision before the form appeared. The drawer is still reachable from
+  // the header cart and from "Add to cart"; it is just no longer in the way of
+  // someone who has already decided.
+  // Quantity chosen on the page, distinct from what is already in the cart —
+  // stepping it must not light up the header badge before the shopper has
+  // actually added anything. Single SKU, so both CTAs SET the cart to this
+  // number rather than adding to it; pressing "Add to cart" twice on a
+  // one-product store should not silently mean four bottles.
+  var pdpQty = 1;
+  function renderPdpQty() {
+    var v = document.getElementById('pdpQtyVal');
+    if (v) v.textContent = String(pdpQty);
+    var t = document.getElementById('pdpBuyText');
+    if (t) t.textContent = 'Buy now · ₹' + (unitPrice() * pdpQty);
+    var dec = document.getElementById('pdpQtyDec');
+    if (dec) dec.disabled = pdpQty <= 1;
+  }
+  function pdpQtyStep(d) {
+    pdpQty = Math.max(1, Math.min(99, pdpQty + d));
+    renderPdpQty();
+  }
   function buyNow() {
-    if (getCartQty() < 1) setCartQty(1);
-    else renderCart();
+    setCartQty(Math.max(1, pdpQty));
+    trackAddToCart();
+    smfCartBeacon('add_to_cart');
+    closeCartDrawer();
+    openCheckout('solo');
+  }
+  // "Add to cart" is the browse path: add a unit and show the drawer, so the
+  // qty controls and the subtotal are visible and the page stays behind it.
+  function addToCart() {
+    setCartQty(Math.max(1, pdpQty));
     trackAddToCart();
     smfCartBeacon('add_to_cart');
     openCartDrawer();
   }
-  function cartInc() { setCartQty(getCartQty() + 1); smfCartBeacon('cart_update'); }
-  function cartDec() { var q = getCartQty(); if (q <= 1) setCartQty(0); else setCartQty(q - 1); smfCartBeacon('cart_update'); }
-  function cartRemove() { setCartQty(0); smfCartBeacon('remove_from_cart'); }
+  // Drawer qty changes mirror back into the PDP stepper, so the two controls
+  // can never disagree about how many bottles are being bought.
+  function syncPdpQtyFromCart() {
+    var q = getCartQty();
+    pdpQty = q > 0 ? q : 1;
+    renderPdpQty();
+  }
+  function cartInc() { setCartQty(getCartQty() + 1); syncPdpQtyFromCart(); smfCartBeacon('cart_update'); }
+  function cartDec() { var q = getCartQty(); if (q <= 1) setCartQty(0); else setCartQty(q - 1); syncPdpQtyFromCart(); smfCartBeacon('cart_update'); }
+  function cartRemove() { setCartQty(0); syncPdpQtyFromCart(); smfCartBeacon('remove_from_cart'); }
   function checkoutFromCart() {
     var q = getCartQty();
     if (q < 1) return;
@@ -3775,6 +3885,8 @@ window.createSupabaseOrder = function (opts) {
   window.openCartDrawer = openCartDrawer;
   window.closeCartDrawer = closeCartDrawer;
   window.buyNow = buyNow;
+  window.addToCart = addToCart;
+  window.pdpQtyStep = pdpQtyStep;
   window.cartInc = cartInc;
   window.cartDec = cartDec;
   window.cartRemove = cartRemove;
@@ -4663,15 +4775,24 @@ window.createSupabaseOrder = function (opts) {
     });
   })();
 
-  // Reflect any persisted cart quantity in the nav badge on load.
+  // Reflect any persisted cart quantity in the nav badge on load, and seed the
+  // PDP stepper from it so a returning visitor sees the number they left in
+  // the cart rather than a reset 1.
   renderCart();
+  if (getCartQty() > 0) pdpQty = getCartQty();
+  renderPdpQty();
 
-  // Deep-link from the homepage cart button: /odorstrike?cart=open opens the
-  // cart drawer so visitors see what they've added.
+  // Deep links from other pages.
+  //   ?cart=open  — header cart button elsewhere on the site: show the drawer.
+  //   ?buy=1      — a "Buy now" CTA on the homepage or a policy page: open the
+  //                 checkout form straight away. Someone who clicked Buy on
+  //                 another page has already decided; landing them on an
+  //                 anchor and making them find the button again is a wasted
+  //                 step on the highest-intent click the site gets.
   try {
-    if (new URLSearchParams(location.search).get('cart') === 'open') {
-      openCartDrawer();
-    }
+    var _q = new URLSearchParams(location.search);
+    if (_q.get('cart') === 'open') openCartDrawer();
+    else if (_q.get('buy') === '1') buyNow();
   } catch (e) {}
 
   // Clear red border on input focus
@@ -4721,19 +4842,20 @@ window.createSupabaseOrder = function (opts) {
     SmelloffEmail.send('welcomeEmail', email, { customerName: 'there' }).catch(console.error);
   };
 
-  // Mobile sticky bar — slides up after scrolling 400px, hides while the
-  // #buy section is in the viewport or the checkout overlay is open.
+  // Mobile sticky bar — visible whenever no other buy control is on screen
+  // (hero buttons, #buy section), and hidden while the checkout overlay is up.
   (function(){
     var bar = document.getElementById('mobileBar');
     if (!bar) return;
     var buy = document.getElementById('buy');
     var scrolledEnough = false;
     var buyInView = false;
+    var heroCtaInView = true; // assume visible until the observer says otherwise
 
     function update(){
       var overlay = document.getElementById('checkoutOverlay');
       var overlayOpen = overlay && overlay.classList.contains('active');
-      var show = scrolledEnough && !buyInView && !overlayOpen;
+      var show = scrolledEnough && !buyInView && !heroCtaInView && !overlayOpen;
       bar.classList.toggle('visible', show);
       bar.setAttribute('aria-hidden', show ? 'false' : 'true');
     }
@@ -4747,10 +4869,26 @@ window.createSupabaseOrder = function (opts) {
       }, { threshold: 0.01 }).observe(buy);
     }
 
-    // Reveal after scrolling 400px past the top of the hero.
+    // The bar used to wait for 400px of scroll. On a 390x844 phone the hero's
+    // own buy buttons start at ~830px, so between scroll 0 and 400 there was
+    // no purchase control on screen at all — the worst possible gap, right at
+    // the top of the page. It now tracks the real CTA instead: the bar is
+    // shown whenever neither the hero buttons nor the #buy section is visible,
+    // so there is always exactly one route to checkout and never two at once.
+    // The scroll handler stays as the fallback for browsers without IO.
+    var heroCta = document.querySelector('.buy-actions');
+    if (heroCta && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function(entries){
+        heroCtaInView = entries[0].isIntersecting;
+        scrolledEnough = true; // IO drives visibility; don't gate on scroll too
+        update();
+      }, { threshold: 0.01 }).observe(heroCta);
+    }
     var ticking = false;
     function onScroll(){
-      scrolledEnough = window.scrollY > 400;
+      if (!(heroCta && 'IntersectionObserver' in window)) {
+        scrolledEnough = window.scrollY > 400;
+      }
       ticking = false;
       update();
     }
