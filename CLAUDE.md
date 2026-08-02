@@ -12,6 +12,43 @@ Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — India's first pocke
 - Resend transactional email via `/api/send-email`
 - Self-hosted fonts (Fraunces + JetBrains Mono + Inter Tight + Barlow Condensed)
 
+## Signature sections (2026-08-02)
+Two owned experiences replaced four generic ones. Both are built the same way
+and that way is the point: **an attribute or a custom property drives CSS, and
+the JS is one listener.** There is no animation library on this site — no GSAP,
+no Lenis — because the pages are self-contained single files whose whole
+advantage is that the LCP path carries no extra request. Don't add one.
+
+**`index.html` — "Your shirt remembers"** (`#remembers`). Replaced `territory`
+("Smell is bigger than skin") and `problem` ("Why your deodorant doesn't fix
+this"), which argued the same point twice and ended in the four-column
+competitor grid every DTC site has. It walks the visitor through one day of
+their own shirt until they recognise 16:00, then resets it.
+- **The scrubber is a native `<input type="range">`.** Keyboard, touch and
+  screen-reader support come free and correct; `aria-valuetext` is rewritten
+  per step so AT announces the moment, not "4 of 6". Don't replace this with a
+  custom drag handler.
+- The seven states live in the `DAY` array in the page's inline script, not in
+  markup, so they can't drift from the slider's `max`.
+- Visuals key off `[data-step]` on the section — scrubbing is a class recalc,
+  no layout, no per-frame JS.
+- **Nothing in it is a measurement and it must never start implying one.** No
+  numbers, no percentages, no meter readings — it is a story about a Tuesday,
+  and it says so. The only claim is the locked one in the closing line.
+
+**`odorstrike.html` — "The 30-second reset"** (`#reset30`, was `.how-to-use`).
+Same three instructions, but the middle beat **runs the actual ten seconds**
+once when scrolled into view — a demonstration of the site's existing locked
+"10-second dry" claim, not a new assertion. One `conic-gradient` swept by one
+custom property via rAF, `IntersectionObserver` with `obs.disconnect()` so it
+fires once. Still a real `<ol>`: the steps must read as a list with JS off.
+- `.use-cases` kept its (genuinely specific) body copy but lost the header that
+  was literally commented "content block for SEO word count". It is now
+  "Moments you can't rewash for".
+
+**Both honour `prefers-reduced-motion`** by showing the finished state — the
+ring full, the transitions off — never by hiding the content.
+
 ## Conversion path (2026-08-02)
 The money path on `/odorstrike` had a click in it that nobody chose to put
 there. **`buyNow()` added a unit and opened the cart drawer** — so every CTA
