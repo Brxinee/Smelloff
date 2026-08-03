@@ -88,9 +88,26 @@ and checkout took a second click. It now goes **straight to `openCheckout()`**.
   `barlow-condensed-900` **is not used on that page at all** — it was fetched at
   top priority to render nothing. Grep `font-family:var(--…)` before adding a
   preload back; this page renders in exactly three families.
-- Known, not yet fixed: `fraunces-normal-latin-ext-400.woff2` (58KB) downloads on
-  every page because **₹ (U+20B9) falls in the latin-ext `unicode-range`**. One
-  glyph, 58KB. Subsetting a ₹ into the latin file would remove it.
+- **Fixed (2026-08-03): ₹ no longer drags in the latin-ext faces.** A scan of the
+  rendered text of every page found **U+20B9 is the only latin-ext codepoint on
+  the whole site** — nothing else in that range appears anywhere. It was costing
+  Inter Tight 87KB, Fraunces 57KB, Fraunces italic 69KB and DM Sans 17KB, plus
+  Barlow Condensed (14KB) and JetBrains Mono (7KB) whose latin-ext files **don't
+  even contain ₹** — they downloaded, found no glyph and fell back.
+  U+20B9 is now carved out of every latin-ext `unicode-range` (`U+20AD-20C0`
+  split around it) and served from `*-rupee-*.woff2` single-glyph subsets built
+  with `fontTools`: **87KB → 1.1KB**. Per page load: `/blog` fonts 225→131KB,
+  `/odorstrike` 275→211KB, `/` 195→132KB.
+  - The latin-ext faces are still declared and intact — nothing requests them
+    today, and they're there when a name with an ā or ł needs setting.
+  - **Rebuild the subsets if a font file is ever replaced**, and remember the
+    declarations exist in **two** places: `assets/fonts.css` and the inline
+    block in `index.html`.
+- `fraunces-italic` (80KB on the PDP) is used by **eight** heading rules
+  (`.problem h2`, `.final h2`, `.use-cases h2`, `.pricing .sub`, …), not the one
+  below-fold heading an earlier note claimed. It is `font-display:swap` and
+  unpreloaded, so it doesn't block render. Removing it is a redesign, not a
+  perf fix.
 
 ## Positioning: clothing only (2026-08-02)
 ODORSTRIKE is a **pocket-sized fabric odor neutralizer for clothes**. That is the
@@ -190,7 +207,13 @@ footers, so moving from `/` to `/privacy` or `/blog` read as a different site.
   into four floating boxes. Don't put it back.
 - **Shared-layer URLs carry a content hash, and `apply-chrome.mjs` stamps it.
   Re-run the script after every edit to `soft.css`, `chrome.css`,
-  `chrome.js` or `tokens.css`, or the change ships without reaching anyone.**
+  `chrome.js`, `tokens.css`, `fonts.css`, `consent-analytics.js`,
+  `blog-share.js` or `track.js`, or the change ships without reaching anyone.**
+  (Only `tokens.css` was being stamped until 2026-08-03; the other four shipped
+  unversioned under the same `immutable` header. `consent-analytics.js` was the
+  expensive one — it carries the consent gate, the analytics loaders and the
+  injected consent bar for the 30 pages without an inline copy, so it is the
+  file most likely to need to reach everyone and was the least likely to.)
   `vercel.json` serves `/assets/(.*)` with
   `Cache-Control: public, max-age=31536000, immutable`. `immutable` means the
   browser never revalidates, so an unversioned `/assets/css/soft.css` froze
@@ -283,6 +306,18 @@ read custom properties, so this is a convention — it can only be written down.
   `.cb-actions{flex-shrink:0}` with no wrap, so at 320px the row measured 315px
   in a 300px box and "Reject non-essential" hung off-screen on all 24 pages.
   Fixed in all three plus `chrome.css` §5.2 — **change all four together.**
+- **The consent bar must never be over the checkout, and it was (2026-08-03).**
+  It is `position:fixed;bottom:0;z-index:9999` — deliberately the highest thing
+  on the page so it clears the sticky header and the sticky buy bar. The PDP's
+  `.overlay` was `z-index:200`, so `elementFromPoint` at the centre of "Place
+  COD order · ₹229" returned `.cb-accept` at 320×568, 360×640, 390×844 and
+  414×896. Desktop was fine, which is why it survived. **A first-time visitor
+  has by definition not answered the bar yet, so this was every new mobile
+  buyer tapping "Accept all" instead of ordering.** Two guards now:
+  `.overlay`/`.gal-viewer` outrank 9999, and `syncModalState()` puts
+  `.sf-modal-open` on `<html>`, which `chrome.css` §5.3 uses to remove the bar
+  while a modal is open. **Anything new that is `position:fixed` must stay
+  below 9999 or explicitly join that ladder.**
 - `viewport-fit=cover` is set site-wide, so safe-area insets are real. `.sf-wrap`
   carries `max(var(--gutter), env(safe-area-inset-*))`, which covers the header,
   the footer and every page body at once. Fixed bottom bars (`.mobile-bar`, the
@@ -296,6 +331,42 @@ read custom properties, so this is a convention — it can only be written down.
 - The footer's 34px link rows are **deliberate** and clear the WCAG 2.2 AA
   24×24 minimum — see the footer note above before "fixing" them to 44px; that
   reintroduces the ~1200px mobile footer.
+
+## Launch readiness (2026-08-03)
+Analytics coverage, the skip link and the motion layer — the three things that
+were declared somewhere but not actually wired to every page.
+
+- **Analytics is on all 38 pages now.** The five `/solutions/*` pages loaded
+  `chrome.js` and nothing else: no GA4, no Pixel, no first-party beacon, and
+  **no consent bar at all** (it's injected by `consent-analytics.js`). They're
+  SEO/paid landing pages, so traffic was converting against no measurement.
+  Ten pages were missing `track.js`. Both fixed — if you add a page, it needs
+  `track.js` **and** `consent-analytics.js` (or an inline consent block).
+- **Microsoft Clarity is wired but off.** `CLARITY_ID` is empty in all four
+  copies of the loader (`index.html`, `faq.html`, `odorstrike.html`,
+  `consent-analytics.js`) — paste the project ID into **all four**, same rule as
+  `GA4_ID` and `META_PIXEL_ID`. Empty means the tag is never requested. It is
+  consent-gated and bot-guarded with the others because it sets a cookie.
+- **The skip link is generated, not hand-written.** `apply-chrome.mjs` emits
+  `.sf-skip` into the header block and stamps `id="sf-main" tabindex="-1"` onto
+  each page's `<main>`, else first `<article>`, else first `<section>`. The
+  `tabindex` is load-bearing: without it the page scrolls but focus stays on the
+  link, the next Tab goes back into the nav, and the link has done nothing.
+  - The search is **bounded to the region between the chrome markers** — the
+    PDP has a `<main class="po-main">` inside its payment-failed policy
+    overlay, below the footer in source order, and an unbounded search picked it.
+  - Pages where the first landmark is the wrong place take an explicit `skip:`
+    selector in `PAGES` (`odorstrike.html` → `product-hero`, otherwise it lands
+    3600px down on `.showcase`; `blog/index.html` → `b-hero`).
+- **Motion is CSS-only and additive.** Scrims (`.overlay`, `.cart-overlay`,
+  `.gal-viewer`) fade in from `display:none` using
+  `transition-behavior:allow-discrete` + `@starting-style` — no JS, and browsers
+  without support snap exactly as before, so the fallback is today's behaviour.
+  Press feedback (`:active{transform:scale(.97)}`) lives in `soft.css` §1 so all
+  24 pages share it; the cart badge bump fires only on a real quantity increase.
+  **Everything is inside `prefers-reduced-motion:no-preference`** — reduce keeps
+  the finished state, never a hidden or half-drawn overlay. Still no animation
+  library, and only compositor properties (opacity/transform).
 
 ## Soft form language (2026-07-28)
 `assets/css/soft.css` replaces the old brutalist shapes (90° corners, 3px

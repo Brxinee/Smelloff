@@ -79,6 +79,32 @@
   .hero-cta:hover,.fix-cta:hover,.final button:hover,.price-card button:hover{
     animation:sf-bounce .6s ease;
   }
+  /* Press feedback. The bounce above is a hover affordance and hover does
+     not exist on a phone, which is where the buying happens — so until now
+     tapping any button on this site produced no acknowledgement at all
+     between the tap and whatever loaded next. A control that gives under
+     the thumb is the cheapest way to say "that registered".
+
+     Deliberately smaller than the hover bounce (.97, 140ms): this fires on
+     every tap including mis-taps, so it should read as firmness, not as an
+     event. `transform` only — it composites, so it cannot cost a frame on
+     the tap that starts a checkout. */
+  .btn:active,.nb-btn:active,.buy-btn:active,.buy-pill:active,.cta:active,
+  .product-form__submit:active,.nav-cta:active,.b-buy-btn:active,
+  .hero-cta:active,.fix-cta:active,.mb-btn:active,.final button:active,
+  .price-card button:active,.cart-checkout:active,.write-review-btn:active,
+  .cb-accept:active,.cb-reject:active,.faq-cta:active,.bc-cta:active,
+  .nf-btn:active,.c-btn:active{
+    transform:scale(.97);
+    transition-duration:.14s;
+  }
+  /* A disabled control must not pretend to respond — the checkout disables
+     its submit button for the whole time the order is in flight. */
+  .btn:disabled:active,.nb-btn:disabled:active,.buy-btn:disabled:active,
+  .cta:disabled:active,.mb-btn:disabled:active,.cart-checkout:disabled:active,
+  .c-btn:disabled:active,.nf-btn:disabled:active{
+    transform:none;
+  }
 }
 /* Stragglers found by sweeping every page for controls still rendering at
    radius 0: the consent-bar buttons, the /faq footer CTAs and the blog's

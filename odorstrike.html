@@ -2751,6 +2751,61 @@
   .guides-strip li a{color:inherit;text-decoration:none;display:block;transition:color .15s}
   .guides-strip li a:hover{color:var(--acid)}
   .guides-all{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--acid);text-decoration:none}
+
+  /* ============================= */
+  /* MOTION POLISH                 */
+  /* ============================= */
+  /* Last in the file on purpose — every rule here overrides one declared
+     above, and they win on source order at equal specificity.
+
+     The panels already moved: .overlay-panel slides up, .cart-drawer slides
+     in from the right. Their *scrims* did not — .overlay and .cart-overlay
+     went display:none -> flex/block with nothing in between, so opening the
+     checkout was a hard black flash and then a sliding panel, two events
+     where there should be one. .gal-viewer had neither: a full-screen image
+     appearing as a hard cut.
+
+     Done with `transition-behavior:allow-discrete` + `@starting-style`, so
+     an element can animate in from display:none with no JavaScript at all.
+     Browsers without support ignore the discrete step and snap exactly as
+     they do today — the fallback is the current behaviour, not a broken one.
+     No library, no per-frame JS, nothing added to the LCP path: opacity and
+     transform only, both compositor properties.
+
+     Everything is inside prefers-reduced-motion:no-preference, so reduced
+     motion keeps the finished state and simply has no transition — never a
+     hidden or half-drawn overlay. */
+  @media(prefers-reduced-motion:no-preference){
+    .overlay,.cart-overlay,.gal-viewer{
+      opacity:0;
+      transition:opacity .26s var(--ease),display .26s allow-discrete;
+    }
+    .overlay.active,.cart-overlay.active,.gal-viewer.active{opacity:1}
+    @starting-style{
+      .overlay.active,.cart-overlay.active,.gal-viewer.active{opacity:0}
+    }
+    /* The zoomed product shot settles rather than appearing. */
+    .gal-viewer img{transform:scale(.96);transition:transform .34s var(--ease)}
+    .gal-viewer.active img{transform:scale(1)}
+
+    /* Press feedback on the two controls that take money. A button that
+       moves under the thumb is the difference between "did that register?"
+       and knowing it did — on COD especially, where the next thing that
+       happens is a spinner and no payment sheet. */
+    .submit-btn,.mb-btn,.buy-btn{transition:transform .16s var(--ease-snap),background-color .2s var(--ease)}
+    .submit-btn:active,.mb-btn:active,.buy-btn:active{transform:scale(.97)}
+    .submit-btn:disabled:active{transform:none}
+
+    /* The cart badge acknowledges the add. Fires only on a real change —
+       see bumpCartBadge() — so it is feedback, not decoration. */
+    .sf-cart__count.bump{animation:cartBump .42s var(--ease)}
+    @keyframes cartBump{
+      0%{transform:scale(1)}
+      35%{transform:scale(1.32)}
+      70%{transform:scale(.94)}
+      100%{transform:scale(1)}
+    }
+  }
 </style>
 
 <!-- Smelloff Partner Network attribution (partners.smelloff.in) -->
@@ -2789,7 +2844,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 }
 </script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=3e55f1e6">
+<link rel="stylesheet" href="/assets/css/soft.css?v=e279586e">
 <link rel="stylesheet" href="/assets/css/chrome.css?v=cbf90847">
 <script src="/assets/js/chrome.js?v=1846e176" defer></script>
 </head>
@@ -3872,10 +3927,39 @@ window.createSupabaseOrder = function (opts) {
     try { localStorage.setItem(CART_KEY, String(n)); } catch (e) {}
     renderCart();
   }
+  // Restart the badge animation on a real increase only. Re-adding a class
+  // that is already present does not replay a CSS animation, hence the
+  // reflow read; and gating on "went up" keeps this as acknowledgement of
+  // something the customer did, rather than a badge that twitches on every
+  // render — including the render that empties it after a completed order.
+  var _lastBadgeQty = null;
+  function bumpCartBadge(badge, qty) {
+    // The keyframes live inside prefers-reduced-motion:no-preference, so under
+    // "reduce" no animation runs, animationend never fires, and the class
+    // would sit on the badge forever. Don't add it in the first place.
+    var mayAnimate = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (mayAnimate && _lastBadgeQty !== null && qty > _lastBadgeQty) {
+      badge.classList.remove('bump');
+      void badge.offsetWidth;
+      badge.classList.add('bump');
+      // Clear it once it has played, so the badge is not left carrying a
+      // spent animation class between renders.
+      badge.addEventListener('animationend', function handler() {
+        badge.classList.remove('bump');
+        badge.removeEventListener('animationend', handler);
+      });
+    }
+    _lastBadgeQty = qty;
+  }
+
   function renderCart() {
     var qty = getCartQty();
     var badge = document.getElementById('cartCount');
-    if (badge) { badge.textContent = String(qty); badge.setAttribute('data-empty', qty > 0 ? '0' : '1'); }
+    if (badge) {
+      badge.textContent = String(qty);
+      badge.setAttribute('data-empty', qty > 0 ? '0' : '1');
+      bumpCartBadge(badge, qty);
+    }
     var empty = document.getElementById('cartEmpty');
     var line = document.getElementById('cartLine');
     var foot = document.getElementById('cartFoot');
