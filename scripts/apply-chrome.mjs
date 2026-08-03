@@ -236,6 +236,12 @@ const PAGES = [
     'does-fabric-spray-stain-clothes', 'gym-clothes-smell-after-washing',
     'odorstrike-ingredients', 'wedding-festive-wear-odor-guide', 'how-to-use-odorstrike',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
+  // 2026-08 series: monsoon, denim, travel, fibre reference, formalwear, buyer's guide
+  ...[
+    'damp-clothes-musty-smell-monsoon-fix', 'how-often-to-wash-jeans-india',
+    'keep-clothes-fresh-while-travelling', 'which-fabrics-hold-odor-most',
+    'remove-smell-from-blazer-without-dry-cleaning', 'fabric-deodorizer-spray-india-guide-2026',
+  ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
   // solutions hub & regional guides
   ...[
     'solutions/index.html',
