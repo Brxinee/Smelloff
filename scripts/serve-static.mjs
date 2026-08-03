@@ -14,6 +14,7 @@ const PORT = Number(process.env.PORT || 8099);
 const TYPES = {
   '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
   '.mjs': 'text/javascript', '.json': 'application/json', '.webp': 'image/webp',
+  '.avif': 'image/avif',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.woff': 'font/woff',
   '.ico': 'image/x-icon', '.txt': 'text/plain', '.xml': 'application/xml',

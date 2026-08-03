@@ -6,8 +6,11 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
-    "build:images": "node scripts/build-blog-thumbnails.js",
-    "build": "node scripts/build-blog-thumbnails.js && node -c server.js",
+    "thumbnails": "node scripts/thumbnails/build-thumbnails.mjs && node scripts/thumbnails/apply-thumbnails.mjs",
+    "thumbnails:build": "node scripts/thumbnails/build-thumbnails.mjs",
+    "thumbnails:apply": "node scripts/thumbnails/apply-thumbnails.mjs",
+    "thumbnails:check": "node scripts/thumbnails/apply-thumbnails.mjs --check",
+    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node -c server.js",
     "lint": "node -c server.js",
     "start": "node server.js"
   },
