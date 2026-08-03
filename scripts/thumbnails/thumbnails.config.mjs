@@ -31,6 +31,70 @@ export const CANVAS = { width: 1920, height: 1080 }; // 16:9, 2,073,600px — cl
 export const WIDTHS = [1920, 1200];
 
 export const POSTS = [
+  // 2026-08/09 series. Photo choice is bound by the clothing-only rule above:
+  // every frame was checked for footwear before licensing, and the suitcase
+  // shots that had sandals in them were rejected for that reason.
+  {
+    slug: 'fabric-deodorizer-spray-india-guide-2026',
+    kicker: 'Buying guide',
+    top: 'Masking',
+    hi: 'or binding?',
+    // The source is 5120x2700, wider than the ~1.17:1 photo panel, so the crop
+    // is constrained horizontally and object-position Y has no travel — the
+    // frame is what it is. The photographer already crops the forehead, so this
+    // one is chin-and-hands rather than a full face; it was still the right
+    // pick over the alternatives, which had either a bare raised underarm or
+    // footwear on the wardrobe floor.
+    photo: 459888446,
+    focal: '50% 50%',
+    alt: 'A shopper works along a rail of hanging garments, comparing one against the next before choosing',
+  },
+  {
+    slug: 'remove-smell-from-blazer-without-dry-cleaning',
+    kicker: 'Formalwear',
+    top: 'Smoke smell?',
+    hi: 'Check the lining.',
+    photo: 235296378,
+    focal: '50% 30%',
+    alt: 'A man in a blue blazer over a dark polo neck stands outdoors, looking away from the camera',
+  },
+  {
+    slug: 'which-fabrics-hold-odor-most',
+    kicker: 'Fabric science',
+    top: 'Which fabric',
+    hi: 'holds the smell?',
+    photo: 512989785,
+    focal: '50% 50%',
+    alt: 'Overhead view of a pair of hands folding assorted cotton and knit garments into storage boxes',
+  },
+  {
+    slug: 'keep-clothes-fresh-while-travelling',
+    kicker: 'Travel',
+    top: 'Four shirts.',
+    hi: 'Seven days?',
+    photo: 649242862,
+    focal: '50% 50%',
+    tone: 'brightness(1.22) contrast(1.04) saturate(1.08)',
+    alt: 'A traveller packs folded shirts and knitwear into an open suitcase before a trip',
+  },
+  {
+    slug: 'how-often-to-wash-jeans-india',
+    kicker: 'Denim care',
+    top: 'How often',
+    hi: 'wash your jeans?',
+    photo: 315726352,
+    focal: '50% 55%',
+    alt: 'A neat stack of folded blue denim jeans in several washes against a pale background',
+  },
+  {
+    slug: 'damp-clothes-musty-smell-monsoon-fix',
+    kicker: 'Monsoon laundry',
+    top: 'Clean. Still musty.',
+    hi: 'Why?',
+    photo: 909948385,
+    focal: '50% 40%',
+    alt: 'A person hangs freshly washed white laundry on an indoor drying rack beside a washing machine',
+  },
   {
     slug: 'gym-clothes-smell-after-washing',
     kicker: 'Fabric science',
