@@ -1,6 +1,6 @@
 # Blog thumbnails — licensed-photography set (2026-08-03)
 
-The 17 posts under `/blog` each have a **1920×1080 (16:9)** featured image: licensed
+The 23 posts under `/blog` each have a **1920×1080 (16:9)** featured image: licensed
 Adobe Stock photography under a brand type layer, built by a script from a single
 config. This document is the operating manual.
 
@@ -89,6 +89,18 @@ gitignored. To rebuild images from scratch you need them back:
 Override the folder with `THUMBNAIL_SOURCES=/path/to/originals`. The build fails
 naming the specific missing asset id rather than rendering a hole, so a partial
 folder is safe.
+
+### 2026-08/09 additions
+
+Six entries were added for the monsoon / denim / travel / fibre / formalwear /
+buyer's-guide series, licensed the same way. Two candidates were rejected on the
+clothing-only rule rather than on looks, which is what that rule is for:
+
+- an open-suitcase flat-lay with espadrilles and sandals in frame (footwear)
+- a clothes-rail shot whose subject had a raised arm and a bare underarm — the
+  same failure already documented for `best-deodorant-spray-for-clothes-not-skin`
+
+Check the frame, not just the caption, before licensing.
 
 ### Brand constraints on photo choice
 

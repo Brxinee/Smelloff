@@ -49,12 +49,12 @@
        either merge each post on or after its date, or reset both these
        lastmod values and the datePublished/dateModified in each post to the
        actual merge date. Do not ship future dates. -->
-  <url><loc>https://smelloff.in/blog/damp-clothes-musty-smell-monsoon-fix</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://smelloff.in/blog/how-often-to-wash-jeans-india</loc><lastmod>2026-08-12</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://smelloff.in/blog/keep-clothes-fresh-while-travelling</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://smelloff.in/blog/which-fabrics-hold-odor-most</loc><lastmod>2026-08-26</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://smelloff.in/blog/remove-smell-from-blazer-without-dry-cleaning</loc><lastmod>2026-09-02</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://smelloff.in/blog/fabric-deodorizer-spray-india-guide-2026</loc><lastmod>2026-09-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://smelloff.in/blog/damp-clothes-musty-smell-monsoon-fix</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority><image:image><image:loc>https://smelloff.in/blog/assets/damp-clothes-musty-smell-monsoon-fix.jpg?v=4</image:loc><image:title>Why Clothes Smell Musty in Monsoon (And How to Fix It Without Re-Washing)</image:title></image:image></url>
+  <url><loc>https://smelloff.in/blog/how-often-to-wash-jeans-india</loc><lastmod>2026-08-12</lastmod><changefreq>monthly</changefreq><priority>0.8</priority><image:image><image:loc>https://smelloff.in/blog/assets/how-often-to-wash-jeans-india.jpg?v=4</image:loc><image:title>How Often Should You Wash Jeans? (And What to Do In Between)</image:title></image:image></url>
+  <url><loc>https://smelloff.in/blog/keep-clothes-fresh-while-travelling</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority><image:image><image:loc>https://smelloff.in/blog/assets/keep-clothes-fresh-while-travelling.jpg?v=4</image:loc><image:title>How to Keep Clothes Fresh While Travelling (Without Laundry)</image:title></image:image></url>
+  <url><loc>https://smelloff.in/blog/which-fabrics-hold-odor-most</loc><lastmod>2026-08-26</lastmod><changefreq>monthly</changefreq><priority>0.8</priority><image:image><image:loc>https://smelloff.in/blog/assets/which-fabrics-hold-odor-most.jpg?v=4</image:loc><image:title>Which Fabrics Hold Odor Most? Cotton, Polyester, Denim, Wool and Silk</image:title></image:image></url>
+  <url><loc>https://smelloff.in/blog/remove-smell-from-blazer-without-dry-cleaning</loc><lastmod>2026-09-02</lastmod><changefreq>monthly</changefreq><priority>0.8</priority><image:image><image:loc>https://smelloff.in/blog/assets/remove-smell-from-blazer-without-dry-cleaning.jpg?v=4</image:loc><image:title>How to Remove Food and Smoke Smell From a Blazer Without Dry Cleaning</image:title></image:image></url>
+  <url><loc>https://smelloff.in/blog/fabric-deodorizer-spray-india-guide-2026</loc><lastmod>2026-09-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority><image:image><image:loc>https://smelloff.in/blog/assets/fabric-deodorizer-spray-india-guide-2026.jpg?v=4</image:loc><image:title>Fabric Deodorizer Sprays in India: What to Look For (2026)</image:title></image:image></url>
 
   <!-- Regional Solution landing pages -->
   <url><loc>https://smelloff.in/solutions/</loc><lastmod>2026-07-31</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
