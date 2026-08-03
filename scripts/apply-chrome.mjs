@@ -188,6 +188,20 @@ ${SOCIALS}
       <span>© 2026 SMELLOFF. HYDERABAD. MFG: Jogdhande Nikhil Patil, Sanathnagar, Erragadda, Hyderabad.</span>
       <span>MADE IN INDIA / FABRIC ONLY</span>
     </div>
+    <!-- Trademark / affiliation notice.
+         The site names Febreze 166 times and Ambi Pur 51 times across two
+         head-to-head comparison posts, the PDP comparison tile and the FAQ,
+         and carried no disclaimer anywhere. Google Merchant Center's
+         Misrepresentation policy lists "falsely implying affiliation with, or
+         endorsement by, another individual, organisation, product or service"
+         under prohibited misleading offers, and its best practices say: "If
+         you reference another brand but you're not an official or authorised
+         partner, consider a disclaimer on your website and in your ads."
+         Suspension under that policy is immediate and without prior warning,
+         so the cheapest possible insurance is one line on every page. -->
+    <div class="sf-ftr__disclaimer">
+      <span>Febreze, Ambi Pur and all other product names, logos and brands mentioned on this site are the property of their respective owners. Smelloff is not affiliated with, endorsed by or sponsored by any of them. Comparisons are our own independent assessments, published for information only.</span>
+    </div>
   </div>
 </footer>
 <!-- /SF-CHROME:FOOTER -->`;

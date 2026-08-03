@@ -321,6 +321,17 @@
     font-size:11.5px;
   }
 }
+/* Trademark / affiliation notice — see the note in apply-chrome.mjs.
+   Sentence case and not uppercase, unlike the line above it: this is a legal
+   disclaimer meant to be read if anyone looks for it, and 10.5px of
+   wide-tracked uppercase across three lines is not readable prose. Kept
+   quiet (muted, small, last) because it is a notice, not a message. */
+.sf-ftr__disclaimer{
+  margin-top:14px;
+  font-size:11px;line-height:1.6;
+  color:var(--muted);
+  max-width:78ch;
+}
 
 /* ---------------------------------------------------------------------
    3 · LONG-FORM PROSE  (policies, guides, about)
