@@ -1,0 +1,54 @@
+# Push every sitemap URL to IndexNow after a deploy, so Bing / Copilot /
+# Yandex / Naver learn about a new or changed page instead of waiting to
+# recrawl. Google does NOT participate in IndexNow — for Google the levers are
+# the sitemap in robots.txt and internal linking, both already in place.
+#
+# It waits before firing: the push to main is what triggers Vercel's build, so
+# submitting immediately would point crawlers at the OLD deploy. The step below
+# polls the live sitemap until it matches the commit being deployed, then pings.
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+    paths:
+      # Only content changes are worth a submission. Skip docs/scripts/CI churn.
+      - '**.html'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - 'llms.txt'
+      - 'llms-full.txt'
+  workflow_dispatch:        # allow a manual re-submit
+
+# One at a time; a queued run would submit a sitemap that is about to change.
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Vercel builds from the same push. Wait for the deploy to actually serve
+      # this commit's sitemap before telling anyone to come and read it.
+      - name: Wait for the new sitemap to go live
+        run: |
+          want=$(grep -c '<url>' sitemap.xml)
+          echo "expecting $want URLs live"
+          for i in $(seq 1 30); do
+            live=$(curl -sS --max-time 20 https://smelloff.in/sitemap.xml | grep -c '<url>' || echo 0)
+            echo "  attempt $i: live sitemap has $live URLs"
+            [ "$live" = "$want" ] && exit 0
+            sleep 20
+          done
+          echo "::warning::live sitemap never matched the committed one; pinging anyway"
+
+      - name: Submit to IndexNow
+        run: node scripts/indexnow-ping.mjs
