@@ -10,7 +10,9 @@
     "thumbnails:build": "node scripts/thumbnails/build-thumbnails.mjs",
     "thumbnails:apply": "node scripts/thumbnails/apply-thumbnails.mjs",
     "thumbnails:check": "node scripts/thumbnails/apply-thumbnails.mjs --check",
-    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node -c server.js",
+    "share": "node scripts/share/apply-share-templates.mjs",
+    "share:check": "node scripts/share/apply-share-templates.mjs --check",
+    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node -c server.js",
     "lint": "node -c server.js",
     "start": "node server.js"
   },

@@ -338,7 +338,8 @@ function ensureAssets(html) {
     ['assets/css/tokens.css', /(href="\/assets\/css\/tokens\.css)(\?[^"]*)?"/g],
     ['assets/fonts.css', /(href="\/assets\/fonts\.css)(\?[^"]*)?"/g],
     ['assets/js/consent-analytics.js', /(src="\/assets\/js\/consent-analytics\.js)(\?[^"]*)?"/g],
-    ['assets/js/blog-share.js', /(src="\/assets\/js\/blog-share\.js)(\?[^"]*)?"/g],
+    // blog-share.js is NOT stamped here — see ensureShareScript(), which
+    // inserts it rather than only re-stamping a tag that already exists.
     ['assets/js/track.js', /(src="\/assets\/js\/track\.js)(\?[^"]*)?"/g],
     ['assets/js/google-customer-reviews.js', /(src="\/assets\/js\/google-customer-reviews\.js)(\?[^"]*)?"/g],
   ]) {
@@ -353,6 +354,42 @@ function ensureAssets(html) {
     `<!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->\n` +
     `${softTag}\n${chromeTag}\n${jsTag}\n` +
     html.slice(headEnd)
+  );
+}
+
+/* Load the share widget's script wherever the widget itself appears.
+ *
+ * The buttons in `.post-share` ship with NO href — blog-share.js writes one on
+ * each from the page's canonical URL. So a post that carries the widget and
+ * does not load the script has seven dead controls: an <a> without an href is
+ * not a link, so it takes no click, no focus and no pointer cursor; the
+ * native-share button stays `hidden`; and copy-link never gets its listener.
+ * Nothing looks broken — the icons render fine — which is why it survived.
+ *
+ * It survived because the tag was hand-linked per page and the stamping loop
+ * in ensureAssets() only rewrites a tag that is ALREADY present, so it was a
+ * silent no-op on any page missing one. 11 of 23 posts were in that state:
+ * the five generated on 2026-07-29 and the six added on 2026-08-03, i.e.
+ * every post written after the convention was set and never written down.
+ *
+ * Keying the insert off the widget's own presence is what stops it recurring.
+ */
+function ensureShareScript(html) {
+  // Drop any existing reference first so a re-run relocates it rather than
+  // stacking copies, the same way the header/footer/chrome.js tags are handled.
+  html = html.replace(
+    /[ \t]*<script[^>]+src="\/assets\/js\/blog-share\.js[^"]*"[^>]*><\/script>\n?/g,
+    ''
+  );
+  if (!/class="post-share"/.test(html)) return html;
+
+  const bodyEnd = html.lastIndexOf('</body>');
+  if (bodyEnd === -1) return html;
+  const v = hashOf('assets/js/blog-share.js');
+  return (
+    html.slice(0, bodyEnd) +
+    `<script src="/assets/js/blog-share.js?v=${v}" defer></script>\n` +
+    html.slice(bodyEnd)
   );
 }
 
@@ -429,6 +466,7 @@ for (const page of PAGES) {
 
   html = ensureSkipTarget(html, page.skip);
   html = ensureAssets(html);
+  html = ensureShareScript(html);
 
   if (html !== before) {
     changed++;
