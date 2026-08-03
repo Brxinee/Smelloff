@@ -4434,6 +4434,25 @@ window.createSupabaseOrder = function (opts) {
       document.getElementById('successTag').textContent = 'Order received';
       document.getElementById('successHeading').textContent = "COD order placed.";
       document.getElementById('successMsg').textContent = 'Our team will call to confirm within 24 hours. Pay ₹' + amount + ' to the delivery person on arrival.';
+
+      // Google Customer Reviews opt-in. COD only, deliberately: this is a real
+      // placed order the moment it exists (₹0 advance, confirmed by phone), so
+      // it is a genuine order-confirmation event. The UPI path is not — see
+      // the note in showUpiSuccess(). COD is the default and the majority
+      // path, so this covers most orders.
+      //
+      // Consent-gated and no-ops without an email address; all of that lives
+      // in assets/js/google-customer-reviews.js. Wrapped because nothing on
+      // the screen that confirms someone's order may ever throw.
+      try {
+        var gcrEmail = document.getElementById('f_email');
+        if (typeof window.smfGoogleReviewOptIn === 'function') {
+          window.smfGoogleReviewOptIn({
+            orderId: orderId,
+            email: gcrEmail ? gcrEmail.value.trim() : ''
+          });
+        }
+      } catch (e) {}
     } else {
       document.getElementById('successTag').textContent = 'Order confirmed';
       document.getElementById('successHeading').textContent = "You're done.";
@@ -4645,6 +4664,13 @@ window.createSupabaseOrder = function (opts) {
     return getAppUpiLink(app || selectedUpiApp, amount, orderId);
   }
 
+  // No Google Customer Reviews opt-in here, on purpose. A UPI order at this
+  // point is `upi_pending`: the customer still has to copy the VPA, pay,
+  // screenshot it and WhatsApp us the UTR, and some never do. Asking Google to
+  // survey an order that was never paid for produces surveys about deliveries
+  // that never happened. The right trigger for UPI is payment confirmation,
+  // which happens by hand in /admin, not on this screen. If that ever gets
+  // wired up, call window.smfGoogleReviewOptIn() from there — not from here.
   function showUpiSuccess(orderId, total, upiLink) {
     hideLoadingScreen();
     document.getElementById('checkoutForm').style.display = 'none';
@@ -5341,5 +5367,12 @@ window.createSupabaseOrder = function (opts) {
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
 <script src="/assets/js/reviews-system.js?v=1" defer></script>
 <script src="/assets/js/track.js?v=64e65429" defer></script>
+<!-- Google Customer Reviews. Loaded on the PDP only, because that is the page
+     that carries the checkout and therefore the order-confirmation moment.
+     `defer` so it costs nothing on the LCP path — it does no work at all until
+     showSuccess() calls it. If the seller-rating badge is ever switched on
+     (BADGE_ENABLED in that file), move this into scripts/apply-chrome.mjs so
+     the badge can render site-wide. -->
+<script src="/assets/js/google-customer-reviews.js?v=b050d627" defer></script>
 </body>
 </html>

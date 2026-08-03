@@ -320,6 +320,7 @@ function ensureAssets(html) {
     ['assets/js/consent-analytics.js', /(src="\/assets\/js\/consent-analytics\.js)(\?[^"]*)?"/g],
     ['assets/js/blog-share.js', /(src="\/assets\/js\/blog-share\.js)(\?[^"]*)?"/g],
     ['assets/js/track.js', /(src="\/assets\/js\/track\.js)(\?[^"]*)?"/g],
+    ['assets/js/google-customer-reviews.js', /(src="\/assets\/js\/google-customer-reviews\.js)(\?[^"]*)?"/g],
   ]) {
     const v = hashOf(file);
     if (v) html = html.replace(pattern, `$1?v=${v}"`);
