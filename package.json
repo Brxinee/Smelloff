@@ -12,7 +12,10 @@
     "thumbnails:check": "node scripts/thumbnails/apply-thumbnails.mjs --check",
     "share": "node scripts/share/apply-share-templates.mjs",
     "share:check": "node scripts/share/apply-share-templates.mjs --check",
-    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node -c server.js",
+    "sitemap": "node scripts/seo/build-sitemap.mjs",
+    "sitemap:check": "node scripts/seo/build-sitemap.mjs --check",
+    "indexnow": "node scripts/indexnow-ping.mjs",
+    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs --check && node -c server.js",
     "lint": "node -c server.js",
     "start": "node server.js"
   },
