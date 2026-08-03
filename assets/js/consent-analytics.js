@@ -10,6 +10,14 @@
   var KEY = 'smelloff_consent_v1';
   var GA4_ID = 'G-S1MJ58PD89';
   var META_PIXEL_ID = '1455100092891684';
+  // Microsoft Clarity — session recordings + heatmaps. Paste the project ID
+  // from clarity.microsoft.com to switch it on; empty means the tag is never
+  // requested, so shipping it unset costs nothing. Clarity writes a first-party
+  // cookie and reads localStorage, so it loads on "Accept all" only, alongside
+  // GA4 and the Pixel — never on the cookieless /api/track beacon path.
+  // This constant exists in FOUR places, same as GA4_ID and META_PIXEL_ID:
+  // here, and inline in index.html, faq.html and odorstrike.html. Set all four.
+  var CLARITY_ID = '';
 
   function loadAnalytics() {
     // Never load GA4 / Meta Pixel for automated browsers (headless/scraper bots
@@ -33,6 +41,19 @@
     !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', META_PIXEL_ID);
     fbq('track', 'PageView');
+    loadClarity();
+  }
+
+  // Kept separate from loadAnalytics() so the bot guard and the consent gate
+  // above apply to it unchanged, and so a missing ID is a no-op rather than a
+  // request to clarity.ms that 404s on every page view.
+  function loadClarity() {
+    if (!CLARITY_ID || window.clarity) return;
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', CLARITY_ID);
   }
 
   function getConsent() {

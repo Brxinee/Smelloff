@@ -174,6 +174,13 @@
     g.onload=function(){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-S1MJ58PD89');var aiR=(document.referrer||'').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);if(aiR){gtag('event','ai_referral',{ai_source:aiR[2],landing_page:location.pathname});}};
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
     fbq('init','1455100092891684');fbq('track','PageView');
+    /* Microsoft Clarity — paste the project ID from clarity.microsoft.com to
+       switch it on. Empty means the tag is never requested. Consent-gated and
+       bot-guarded with GA4/Pixel above; this constant lives in FOUR places
+       (index.html, faq.html, odorstrike.html, assets/js/consent-analytics.js)
+       — set all four together, exactly like GA4_ID and META_PIXEL_ID. */
+    var CLARITY_ID='';
+    if(CLARITY_ID&&!window.clarity){(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,'clarity','script',CLARITY_ID);}
   }
   // Only auto-load analytics if user has already accepted consent
   if(localStorage.getItem('smelloff_consent_v1')==='accepted'){
@@ -188,11 +195,32 @@
      Metrics-matched fallbacks (size-adjust/overrides computed from the actual
      font files) hold CLS near zero while the web fonts swap in. */
   @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 900;font-display:swap;src:url('/assets/fonts/fraunces-normal-latin-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
-  @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 900;font-display:swap;src:url('/assets/fonts/fraunces-normal-latin-ext-400.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 900;font-display:swap;src:url('/assets/fonts/fraunces-normal-latin-ext-400.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20B8, U+20BA-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
   @font-face{font-family:'Inter Tight';font-style:normal;font-weight:400 500;font-display:swap;src:url('/assets/fonts/inter-tight-normal-latin-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
-  @font-face{font-family:'Inter Tight';font-style:normal;font-weight:400 500;font-display:swap;src:url('/assets/fonts/inter-tight-normal-latin-ext-400.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+  @font-face{font-family:'Inter Tight';font-style:normal;font-weight:400 500;font-display:swap;src:url('/assets/fonts/inter-tight-normal-latin-ext-400.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20B8, U+20BA-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
   @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/jetbrains-mono-normal-latin-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
-  @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/jetbrains-mono-normal-latin-ext-400.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+
+/* ---------------------------------------------------------------------
+   ₹ (U+20B9) — the only latin-ext character on this entire site.
+   ---------------------------------------------------------------------
+   Every page shows a price, U+20B9 sits inside the latin-ext block's
+   U+20AD-20C0 sub-range, and that is the whole reason the latin-ext files
+   were being fetched: Fraunces 57K, Inter Tight 87K, DM Sans 17K, plus
+   Barlow Condensed 14K and JetBrains Mono 7K which do not even contain the
+   glyph — those two downloaded and then fell back. A scan of the rendered
+   text of every page found no other codepoint in the latin-ext range.
+
+   So: U+20B9 is carved out of every latin-ext unicode-range above, and
+   served instead from single-glyph subsets built with fontTools. 87K
+   becomes 1.1K. The latin-ext faces are left declared and intact — nothing
+   currently requests them, and they are there the day a name with an ā or
+   a ł needs setting.
+   --------------------------------------------------------------------- */
+  @font-face{font-family:'DM Sans';font-style:normal;font-weight:400 700;font-display:swap;src:url('/assets/fonts/dm-sans-normal-rupee-400.woff2') format('woff2');unicode-range:U+20B9;}
+  @font-face{font-family:'Fraunces';font-style:italic;font-weight:400 900;font-display:swap;src:url('/assets/fonts/fraunces-italic-rupee-400.woff2') format('woff2');unicode-range:U+20B9;}
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 900;font-display:swap;src:url('/assets/fonts/fraunces-normal-rupee-400.woff2') format('woff2');unicode-range:U+20B9;}
+  @font-face{font-family:'Inter Tight';font-style:normal;font-weight:400 500;font-display:swap;src:url('/assets/fonts/inter-tight-normal-rupee-400.woff2') format('woff2');unicode-range:U+20B9;}
+  @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/jetbrains-mono-normal-latin-ext-400.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20B8, U+20BA-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
   @font-face{font-family:'Fraunces Fallback';src:local('Georgia');size-adjust:109.93%;ascent-override:88.96%;descent-override:23.20%;line-gap-override:0%;}
   @font-face{font-family:'Inter Tight Fallback';src:local('Arial');size-adjust:136.95%;ascent-override:70.74%;descent-override:17.61%;line-gap-override:0%;}
   @font-face{font-family:'JetBrains Mono Fallback';src:local('Courier New');size-adjust:99.98%;ascent-override:102.02%;descent-override:30.00%;line-gap-override:0%;}
@@ -860,14 +888,15 @@
   }
 </style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=3e55f1e6">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=c123f860">
+<link rel="stylesheet" href="/assets/css/soft.css?v=e279586e">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=cbf90847">
 <script src="/assets/js/chrome.js?v=1846e176" defer></script>
 </head>
 <body>
-<a href="#main" class="skip-link">Skip to content</a>
+
 
 <!-- SF-CHROME:HEADER — generated by scripts/apply-chrome.mjs. Edit there, not here. -->
+<a class="sf-skip" href="#sf-main">Skip to content</a>
 <header class="sf-hdr">
   <div class="sf-wrap">
     <div class="sf-hdr__row">
@@ -904,7 +933,7 @@
 </header>
 <!-- /SF-CHROME:HEADER -->
 
-<main id="main">
+<main id="sf-main" tabindex="-1" id="main">
 
   <!-- ============ 1 · HERO ============ -->
   <section class="hero" aria-labelledby="heroTitle">
@@ -1372,6 +1401,6 @@
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
 <script src="/assets/js/reviews-system.js?v=1" defer></script>
-<script src="/assets/js/track.js?v=2" defer></script>
+<script src="/assets/js/track.js?v=64e65429" defer></script>
 </body>
 </html>

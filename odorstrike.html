@@ -321,8 +321,8 @@
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-mono-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
-<link rel="preload" href="/assets/fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
+<link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
 
 <!-- AI/LLM context files (answer-engine discovery hint) -->
 <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
@@ -346,6 +346,13 @@
     g.onload=function(){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-S1MJ58PD89');var aiR=(document.referrer||'').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);if(aiR){gtag('event','ai_referral',{ai_source:aiR[2],landing_page:location.pathname});}};
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
     fbq('init','1455100092891684');fbq('track','PageView');
+    /* Microsoft Clarity — paste the project ID from clarity.microsoft.com to
+       switch it on. Empty means the tag is never requested. Consent-gated and
+       bot-guarded with GA4/Pixel above; this constant lives in FOUR places
+       (index.html, faq.html, odorstrike.html, assets/js/consent-analytics.js)
+       — set all four together, exactly like GA4_ID and META_PIXEL_ID. */
+    var CLARITY_ID='';
+    if(CLARITY_ID&&!window.clarity){(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,'clarity','script',CLARITY_ID);}
   }
   // Only auto-load analytics if user has already accepted consent
   if(localStorage.getItem('smelloff_consent_v1')==='accepted'){
@@ -611,9 +618,22 @@
   }
   .cart-body{flex:1;overflow-y:auto;padding:24px}
   .cart-empty{
-    font-family:var(--mono);font-size:12px;letter-spacing:.1em;
-    color:var(--muted);text-align:center;padding:48px 0;text-transform:uppercase;
+    text-align:center;padding:48px 0;
   }
+  .cart-empty-msg{
+    font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+    color:var(--muted);text-transform:uppercase;margin:0 0 20px;
+  }
+  .cart-empty-cta{
+    display:inline-block;background:var(--acid);color:var(--ink);
+    border:none;border-radius:var(--sq-pill,999px);cursor:pointer;
+    padding:13px 26px;min-height:44px;
+    font-family:var(--mono);font-size:12px;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;
+    transition:transform .18s cubic-bezier(.22,1,.36,1),background .18s ease;
+  }
+  .cart-empty-cta:hover{background:var(--acid-hi);transform:translateY(-2px)}
+  .cart-empty-cta:active{transform:translateY(0)}
   .cart-line{display:flex;gap:16px;align-items:flex-start}
   .cart-line-img{
     width:64px;height:64px;flex-shrink:0;border-radius:3px;
@@ -761,7 +781,9 @@
   }
   .gal-zoom-btn:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
   .gal-viewer{
-    position:fixed;inset:0;z-index:9000;
+    /* Above the consent bar for the same reason as .overlay — at z-index:9000
+       the bar sat across the bottom of the full-screen product image. */
+    position:fixed;inset:0;z-index:10010;
     display:none;align-items:center;justify-content:center;
     padding:16px;
     background:rgba(4,4,4,.94);
@@ -1598,12 +1620,24 @@
   /* ============================= */
   /* CHECKOUT OVERLAY              */
   /* ============================= */
+  /* Z-INDEX LADDER — the consent bar is `position:fixed;bottom:0;z-index:9999`
+     and it is the single highest thing on the page, on purpose, because it has
+     to sit above the sticky header and the sticky buy bar. That made it sit
+     above the checkout too: with `.overlay` at z-index:200, the bar covered the
+     bottom of the panel and `elementFromPoint` at the centre of the "Place COD
+     order · ₹229" button returned `.cb-accept`. Verified at 320×568, 360×640,
+     390×844 and 414×896 — every phone size. A first-time visitor has by
+     definition not answered the consent bar yet, so at launch that is 100% of
+     mobile buyers tapping "Accept all" instead of placing their order.
+     Modals now outrank it (and `.sf-modal-open` on <html> hides it outright
+     while one is open — see chrome.css §5.2). Anything fixed added here must
+     stay below 9999 or explicitly join this ladder. */
   .overlay{
     position:fixed;inset:0;
     background:rgba(8,8,8,.85);
     backdrop-filter:blur(8px);
     -webkit-backdrop-filter:blur(8px);
-    z-index:200;
+    z-index:10000;
     display:none;
     align-items:flex-start;
     justify-content:center;
@@ -2717,6 +2751,61 @@
   .guides-strip li a{color:inherit;text-decoration:none;display:block;transition:color .15s}
   .guides-strip li a:hover{color:var(--acid)}
   .guides-all{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--acid);text-decoration:none}
+
+  /* ============================= */
+  /* MOTION POLISH                 */
+  /* ============================= */
+  /* Last in the file on purpose — every rule here overrides one declared
+     above, and they win on source order at equal specificity.
+
+     The panels already moved: .overlay-panel slides up, .cart-drawer slides
+     in from the right. Their *scrims* did not — .overlay and .cart-overlay
+     went display:none -> flex/block with nothing in between, so opening the
+     checkout was a hard black flash and then a sliding panel, two events
+     where there should be one. .gal-viewer had neither: a full-screen image
+     appearing as a hard cut.
+
+     Done with `transition-behavior:allow-discrete` + `@starting-style`, so
+     an element can animate in from display:none with no JavaScript at all.
+     Browsers without support ignore the discrete step and snap exactly as
+     they do today — the fallback is the current behaviour, not a broken one.
+     No library, no per-frame JS, nothing added to the LCP path: opacity and
+     transform only, both compositor properties.
+
+     Everything is inside prefers-reduced-motion:no-preference, so reduced
+     motion keeps the finished state and simply has no transition — never a
+     hidden or half-drawn overlay. */
+  @media(prefers-reduced-motion:no-preference){
+    .overlay,.cart-overlay,.gal-viewer{
+      opacity:0;
+      transition:opacity .26s var(--ease),display .26s allow-discrete;
+    }
+    .overlay.active,.cart-overlay.active,.gal-viewer.active{opacity:1}
+    @starting-style{
+      .overlay.active,.cart-overlay.active,.gal-viewer.active{opacity:0}
+    }
+    /* The zoomed product shot settles rather than appearing. */
+    .gal-viewer img{transform:scale(.96);transition:transform .34s var(--ease)}
+    .gal-viewer.active img{transform:scale(1)}
+
+    /* Press feedback on the two controls that take money. A button that
+       moves under the thumb is the difference between "did that register?"
+       and knowing it did — on COD especially, where the next thing that
+       happens is a spinner and no payment sheet. */
+    .submit-btn,.mb-btn,.buy-btn{transition:transform .16s var(--ease-snap),background-color .2s var(--ease)}
+    .submit-btn:active,.mb-btn:active,.buy-btn:active{transform:scale(.97)}
+    .submit-btn:disabled:active{transform:none}
+
+    /* The cart badge acknowledges the add. Fires only on a real change —
+       see bumpCartBadge() — so it is feedback, not decoration. */
+    .sf-cart__count.bump{animation:cartBump .42s var(--ease)}
+    @keyframes cartBump{
+      0%{transform:scale(1)}
+      35%{transform:scale(1.32)}
+      70%{transform:scale(.94)}
+      100%{transform:scale(1)}
+    }
+  }
 </style>
 
 <!-- Smelloff Partner Network attribution (partners.smelloff.in) -->
@@ -2755,14 +2844,15 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 }
 </script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=3e55f1e6">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=c123f860">
+<link rel="stylesheet" href="/assets/css/soft.css?v=e279586e">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=cbf90847">
 <script src="/assets/js/chrome.js?v=1846e176" defer></script>
 </head>
 <body>
-<a href="#buy" class="skip-link">Skip to products</a>
+
 
 <!-- SF-CHROME:HEADER — generated by scripts/apply-chrome.mjs. Edit there, not here. -->
+<a class="sf-skip" href="#sf-main">Skip to content</a>
 <header class="sf-hdr">
   <div class="sf-wrap">
     <div class="sf-hdr__row">
@@ -2819,7 +2909,15 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <button class="cart-close" aria-label="Close cart" onclick="closeCartDrawer()">✕</button>
     </div>
     <div class="cart-body">
-      <div class="cart-empty" id="cartEmpty">Your cart is empty</div>
+      <!-- An empty state with no way out is a dead end: the drawer is a
+           full-height panel over the page, so "Your cart is empty" and
+           nothing else left the only exit as the × in the corner. Anyone
+           arriving here from the header cart on another page (/odorstrike
+           ?cart=open) landed on a blank panel with no next step. -->
+      <div class="cart-empty" id="cartEmpty">
+        <p class="cart-empty-msg">Your cart is empty</p>
+        <button type="button" class="cart-empty-cta" onclick="closeCartDrawer();document.getElementById('sf-main').scrollIntoView({behavior:'smooth',block:'start'})">Shop ODORSTRIKE · ₹229</button>
+      </div>
       <div class="cart-line" id="cartLine" style="display:none">
         <img class="cart-line-img" src="/assets/odorstrike-bottle.webp" alt="ODORSTRIKE 50ml" width="64" height="64" loading="lazy" decoding="async" onerror="this.style.display='none'">
         <div class="cart-line-info">
@@ -2854,7 +2952,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <span>EST. 2026 / HYDERABAD</span>
   </div>
 
-  <div class="product-hero">
+  <div id="sf-main" tabindex="-1" class="product-hero">
     <!-- PRODUCT GALLERY — eight tiles beside a sticky buy panel.
          Not eight photographs of a bottle: eight objections answered in the
          order a first-time buyer raises them. Tile 1 is the only pure
@@ -3558,19 +3656,19 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <span class="upi-panel-title">Select 1-Click UPI App</span>
         <div class="upi-apps-grid" role="radiogroup" aria-label="Select UPI App">
           <button type="button" class="upi-app-btn active" data-app="any" onclick="setUpiApp('any')">
-            <img src="/assets/pay-upi.png" width="18" height="18" alt="">
+            <img loading="lazy" decoding="async" src="/assets/pay-upi.png" width="18" height="18" alt="">
             <span>Any App</span>
           </button>
           <button type="button" class="upi-app-btn" data-app="gpay" onclick="setUpiApp('gpay')">
-            <img src="/assets/pay-gpay.png" width="18" height="18" alt="">
+            <img loading="lazy" decoding="async" src="/assets/pay-gpay.png" width="18" height="18" alt="">
             <span>Google Pay</span>
           </button>
           <button type="button" class="upi-app-btn" data-app="phonepe" onclick="setUpiApp('phonepe')">
-            <img src="/assets/pay-phonepe.png" width="18" height="18" alt="">
+            <img loading="lazy" decoding="async" src="/assets/pay-phonepe.png" width="18" height="18" alt="">
             <span>PhonePe</span>
           </button>
           <button type="button" class="upi-app-btn" data-app="paytm" onclick="setUpiApp('paytm')">
-            <img src="/assets/pay-paytm.png" width="18" height="18" alt="">
+            <img loading="lazy" decoding="async" src="/assets/pay-paytm.png" width="18" height="18" alt="">
             <span>Paytm</span>
           </button>
         </div>
@@ -3630,19 +3728,19 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <div class="upi-app-launch-head">Tap to launch your UPI app directly:</div>
         <div class="upi-launch-grid" id="upiLaunchGrid">
           <a class="upi-launch-btn gpay" id="upiGpayBtn" href="#" onclick="launchSpecificUpi('gpay', event)">
-            <img src="/assets/pay-gpay.png" width="18" height="18" alt="">
+            <img loading="lazy" decoding="async" src="/assets/pay-gpay.png" width="18" height="18" alt="">
             <span>Google Pay</span>
           </a>
           <a class="upi-launch-btn phonepe" id="upiPhonepeBtn" href="#" onclick="launchSpecificUpi('phonepe', event)">
-            <img src="/assets/pay-phonepe.png" width="18" height="18" alt="">
+            <img loading="lazy" decoding="async" src="/assets/pay-phonepe.png" width="18" height="18" alt="">
             <span>PhonePe</span>
           </a>
           <a class="upi-launch-btn paytm" id="upiPaytmBtn" href="#" onclick="launchSpecificUpi('paytm', event)">
-            <img src="/assets/pay-paytm.png" width="18" height="18" alt="">
+            <img loading="lazy" decoding="async" src="/assets/pay-paytm.png" width="18" height="18" alt="">
             <span>Paytm</span>
           </a>
           <a class="upi-launch-btn generic" id="upiOpenBtn" href="#" onclick="launchSpecificUpi('any', event)">
-            <img src="/assets/pay-upi.png" width="18" height="18" alt="">
+            <img loading="lazy" decoding="async" src="/assets/pay-upi.png" width="18" height="18" alt="">
             <span>Any UPI App</span>
           </a>
         </div>
@@ -3829,10 +3927,39 @@ window.createSupabaseOrder = function (opts) {
     try { localStorage.setItem(CART_KEY, String(n)); } catch (e) {}
     renderCart();
   }
+  // Restart the badge animation on a real increase only. Re-adding a class
+  // that is already present does not replay a CSS animation, hence the
+  // reflow read; and gating on "went up" keeps this as acknowledgement of
+  // something the customer did, rather than a badge that twitches on every
+  // render — including the render that empties it after a completed order.
+  var _lastBadgeQty = null;
+  function bumpCartBadge(badge, qty) {
+    // The keyframes live inside prefers-reduced-motion:no-preference, so under
+    // "reduce" no animation runs, animationend never fires, and the class
+    // would sit on the badge forever. Don't add it in the first place.
+    var mayAnimate = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (mayAnimate && _lastBadgeQty !== null && qty > _lastBadgeQty) {
+      badge.classList.remove('bump');
+      void badge.offsetWidth;
+      badge.classList.add('bump');
+      // Clear it once it has played, so the badge is not left carrying a
+      // spent animation class between renders.
+      badge.addEventListener('animationend', function handler() {
+        badge.classList.remove('bump');
+        badge.removeEventListener('animationend', handler);
+      });
+    }
+    _lastBadgeQty = qty;
+  }
+
   function renderCart() {
     var qty = getCartQty();
     var badge = document.getElementById('cartCount');
-    if (badge) { badge.textContent = String(qty); badge.setAttribute('data-empty', qty > 0 ? '0' : '1'); }
+    if (badge) {
+      badge.textContent = String(qty);
+      badge.setAttribute('data-empty', qty > 0 ? '0' : '1');
+      bumpCartBadge(badge, qty);
+    }
     var empty = document.getElementById('cartEmpty');
     var line = document.getElementById('cartLine');
     var foot = document.getElementById('cartFoot');
@@ -3850,18 +3977,34 @@ window.createSupabaseOrder = function (opts) {
       if (unit) unit.textContent = '₹' + price + ' · ' + qty + ' × 50ml';
     }
   }
+  // One switch for "a modal owns the screen": locks scroll and drops the
+  // consent bar, which is z-index:9999 and was covering the checkout's submit
+  // button on every phone size. Always recomputed from what is actually open,
+  // so closing the drawer while checkout is still up doesn't unlock the page.
+  function syncModalState() {
+    var open = ['checkoutOverlay', 'cartOverlay'].some(function (id) {
+      var el = document.getElementById(id);
+      return el && el.classList.contains('active');
+    }) || (function () {
+      var gv = document.getElementById('galViewer');
+      return !!gv && gv.classList.contains('active');
+    })();
+    document.body.style.overflow = open ? 'hidden' : '';
+    document.documentElement.classList.toggle('sf-modal-open', open);
+    return open;
+  }
+  window.syncModalState = syncModalState;
+
   function openCartDrawer() {
     renderCart();
     var ov = document.getElementById('cartOverlay');
     if (ov) ov.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    syncModalState();
   }
   function closeCartDrawer() {
     var ov = document.getElementById('cartOverlay');
     if (ov) ov.classList.remove('active');
-    if (!document.getElementById('checkoutOverlay').classList.contains('active')) {
-      document.body.style.overflow = '';
-    }
+    syncModalState();
   }
   // Mirror cart changes to the first-party beacon (assets/js/track.js) so the
   // admin's Carts tab sees live baskets and can recover abandoned ones.
@@ -4002,7 +4145,7 @@ window.createSupabaseOrder = function (opts) {
     var lsEl = document.getElementById('loadingScreen');
     if (lsEl) { lsEl.classList.remove('active'); lsEl.style.display = 'none'; }
     document.getElementById('checkoutOverlay').classList.add('active');
-    document.body.style.overflow = 'hidden';
+    syncModalState();
     // Hide sticky buy bar while overlay is open
     var mb = document.getElementById('mobileBar');
     if (mb) mb.style.display = 'none';
@@ -4017,7 +4160,7 @@ window.createSupabaseOrder = function (opts) {
 
   function closeCheckout() {
     document.getElementById('checkoutOverlay').classList.remove('active');
-    document.body.style.overflow = '';
+    syncModalState();
     var lsEl = document.getElementById('loadingScreen');
     if (lsEl) { lsEl.classList.remove('active'); lsEl.style.display = 'none'; }
     const upiBlock = document.getElementById('upiBlock');
@@ -4039,11 +4182,28 @@ window.createSupabaseOrder = function (opts) {
     var overlay = document.getElementById('checkoutOverlay');
     if (!overlay) return;
     if (_overlayFocusTrapHandler) overlay.removeEventListener('keydown', _overlayFocusTrapHandler);
-    var focusable = overlay.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
-    if (!focusable.length) return;
-    var first = focusable[0], last = focusable[focusable.length - 1];
+    // The list has to be recomputed on every Tab, and it has to exclude what
+    // is hidden. Snapshotting it once at open time caught the UPI panel, the
+    // WhatsApp fallback link, the loading screen and the success screen —
+    // all `display:none` at that moment — so `last` was an element that can
+    // never hold focus, the wrap-around test never matched, and Tab walked
+    // straight out of the dialog into the site header behind it. Measured:
+    // 19 stops, then `.sf-hdr__logo`. Which panels are visible also changes
+    // while the dialog is open (COD ↔ UPI), so a snapshot is wrong anyway.
+    var visibleFocusable = function () {
+      var all = overlay.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      return Array.prototype.filter.call(all, function (el) {
+        return el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+      });
+    };
     _overlayFocusTrapHandler = function(e) {
       if (e.key !== 'Tab') return;
+      var f = visibleFocusable();
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      // Focus sitting on the dialog itself (or on something now hidden) must
+      // still land back inside rather than falling through to the page.
+      if (f.indexOf(document.activeElement) === -1) { e.preventDefault(); (e.shiftKey ? last : first).focus(); return; }
       if (e.shiftKey) {
         if (document.activeElement === first) { e.preventDefault(); last.focus(); }
       } else {
@@ -4052,6 +4212,30 @@ window.createSupabaseOrder = function (opts) {
     };
     overlay.addEventListener('keydown', _overlayFocusTrapHandler);
   }
+
+  // #checkoutForm is a <div>, not a <form> — so there is no implicit submit,
+  // and pressing Enter (or "Go" on a phone keyboard, which the fields ask for
+  // via enterkeyhint) did nothing at all on the one screen where doing nothing
+  // costs an order. Enter anywhere in the panel except a textarea now places
+  // the order, which is what every other checkout on the internet does.
+  // Left as a <div> deliberately: submitOrder() owns validation and renders
+  // its own messages into #checkoutError, and a real <form> would put native
+  // validation bubbles in front of them.
+  (function () {
+    var overlay = document.getElementById('checkoutOverlay');
+    if (!overlay) return;
+    overlay.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+      var t = e.target;
+      if (!t || t.tagName === 'TEXTAREA') return;          // newline in the address
+      if (t.tagName === 'BUTTON' || t.tagName === 'A') return; // let the control act
+      if (!overlay.contains(t)) return;
+      var btn = document.getElementById('submitBtn');
+      if (!btn || btn.disabled) return;
+      e.preventDefault();
+      btn.click();
+    });
+  })();
 
   window.openCheckout = openCheckout;
   window.closeCheckout = closeCheckout;
@@ -4776,13 +4960,13 @@ window.createSupabaseOrder = function (opts) {
       clone.removeAttribute('srcset');   // always the full-size file here
       viewer.appendChild(clone);
       viewer.classList.add('active');
-      document.body.style.overflow='hidden';
+      syncModalState();
       viewer.querySelector('.gal-viewer-close').focus();
     }
     function close(){
       if(!viewer.classList.contains('active'))return;
       viewer.classList.remove('active');
-      document.body.style.overflow='';
+      syncModalState();
       if(opener){opener.focus();opener=null;}
     }
 
@@ -5156,6 +5340,6 @@ window.createSupabaseOrder = function (opts) {
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
 <script src="/assets/js/reviews-system.js?v=1" defer></script>
-<script src="/assets/js/track.js?v=2" defer></script>
+<script src="/assets/js/track.js?v=64e65429" defer></script>
 </body>
 </html>
