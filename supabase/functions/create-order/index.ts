@@ -14,6 +14,11 @@ import {
 // the line item, which must in turn match this table.
 const PACK_PRICES = [229, 399, 549];
 const MAX_ORDER_RUPEES = 20000; // generous ceiling; caps the DP + absurd orders.
+// Handling charge added when the customer pays cash on delivery. Server-side
+// only: the client proposes a total, this decides whether the surcharge is part
+// of it. Must match CFG.COD_FEE in odorstrike.html — if the two disagree, every
+// COD order fails the guard below with "Order total mismatch".
+const COD_FEE_RUPEES = 60;
 
 // Is `rupees` expressible as a sum of pack prices (i.e. a legitimate order total)?
 function isValidTotal(rupees: number): boolean {
@@ -95,18 +100,26 @@ Deno.serve(async (req: Request) => {
     });
 
     // --- Price guard: recompute trust server-side, never from the client total ---
-    // The browser always submits a single line item whose price equals the order
-    // subtotal (shipping is free). Enforce that invariant and that the price is a
-    // legitimate, composable total.
+    // The browser submits a single line item carrying the UNIT price and the
+    // quantity; the subtotal is `price × quantity` and must be composable from
+    // the pack table. Reading `price` as if it were already the line total was a
+    // bug: a two-bottle order submitted price 229 with amount ₹458, the guard
+    // compared ₹458 against ₹229 and rejected it, so every order of more than
+    // one bottle silently failed to mirror into the database.
     if (items.length !== 1) {
       return jsonResponse(req, { error: "Unexpected order shape." }, 400);
     }
-    const linePrice = items[0].price;
-    if (!isValidTotal(linePrice)) {
+    const subtotalRupees = items[0].price * items[0].quantity;
+    if (!isValidTotal(subtotalRupees)) {
       return jsonResponse(req, { error: "Order total could not be verified." }, 400);
     }
+    // The COD handling charge is decided HERE, from the payment method, and is
+    // never read from the request — otherwise the one figure the customer pays
+    // over and above the product price would be client-controlled.
+    const codFeeRupees = paymentMethod === "cod" ? COD_FEE_RUPEES : 0;
+    const codFeePaise = codFeeRupees * 100;
     // Server-computed amount in paise — this is what we store, not body.amount.
-    const amountPaise = linePrice * 100;
+    const amountPaise = (subtotalRupees + codFeeRupees) * 100;
     const clientAmount = Number(body.amount);
     if (!Number.isInteger(clientAmount) || clientAmount !== amountPaise) {
       // Client tried to pay an amount that doesn't match the verified price.
@@ -174,6 +187,19 @@ Deno.serve(async (req: Request) => {
       .single();
 
     if (error) throw error;
+
+    // Best-effort, same reasoning as the CAPI stamp below: cod_fee arrives in a
+    // separate update so a deploy that lands before migration 20260804 still
+    // takes the order. The charge is already inside `amount`, so losing this
+    // write costs reporting granularity, never money.
+    try {
+      if (codFeePaise > 0 && data?.id) {
+        await supabase
+          .from("orders")
+          .update({ cod_fee: codFeePaise })
+          .eq("id", data.id);
+      }
+    } catch (_) { /* column not migrated yet — ignore */ }
 
     // Best-effort: stamp the Meta CAPI attribution fields in a SEPARATE update
     // so order creation never depends on those columns existing (the migration

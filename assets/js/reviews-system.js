@@ -343,6 +343,25 @@
 
   // Inject or update Google Product AggregateRating JSON-LD schema
   function injectAggregateSchema(avgVal, countVal) {
+    var productScript = document.getElementById('product-jsonld');
+    if (productScript) {
+      try {
+        var data = JSON.parse(productScript.textContent);
+        data.aggregateRating = {
+          "@type": "AggregateRating",
+          "ratingValue": String(avgVal),
+          "bestRating": "5",
+          "worstRating": "1",
+          "ratingCount": String(countVal),
+          "reviewCount": String(countVal)
+        };
+        productScript.textContent = JSON.stringify(data, null, 2);
+        var oldDup = document.getElementById('google-review-aggregate-ld');
+        if (oldDup) oldDup.remove();
+        return;
+      } catch (e) {}
+    }
+
     var existingScript = document.getElementById('google-review-aggregate-ld');
     if (existingScript) {
       existingScript.remove();
@@ -356,18 +375,49 @@
       "@type": "Product",
       "@id": "https://smelloff.in/#odorstrike",
       "name": "ODORSTRIKE Fabric Odor Remover Spray",
-      "image": "https://smelloff.in/assets/product-hero.webp",
-      "description": "Lab-verified fabric odor remover spray engineered for sweat, dampness, and body odors on clothes, gym gear, and jackets without washing.",
+      "image": [
+        "https://smelloff.in/assets/pdp-01-hero.webp",
+        "https://smelloff.in/assets/odorstrike-bottle.webp",
+        "https://smelloff.in/assets/og-image.jpg"
+      ],
+      // Clothing only — never name shoes, helmets, bags or gym gear here.
+      // See CLAUDE.md "Positioning: clothing only".
+      "description": "Lab-verified fabric odor remover spray engineered for sweat, dampness and body odors on shirts, hoodies and jackets without washing.",
       "brand": {
         "@type": "Brand",
-        "name": "Smelloff"
+        "name": "Smelloff",
+        "logo": "https://smelloff.in/apple-touch-icon.png"
       },
+      "sku": "OS-001-50ML",
+      "mpn": "SMLF-ODST-50",
       "offers": {
         "@type": "Offer",
-        "url": "https://smelloff.in/odorstrike",
+        "name": "ODORSTRIKE 50ml — Single Bottle",
+        "sku": "OS-001-50ML",
+        "url": "https://smelloff.in/odorstrike#buy",
         "priceCurrency": "INR",
-        "price": "229",
-        "availability": "https://schema.org/InStock"
+        "price": "229.00",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": { "@type": "MonetaryAmount", "value": "0.00", "currency": "INR" },
+          "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "IN" },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 1, "unitCode": "DAY" },
+            "transitTime": { "@type": "QuantitativeValue", "minValue": 2, "maxValue": 7, "unitCode": "DAY" }
+          }
+        },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "IN",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays": 7,
+          "returnMethod": "https://schema.org/ReturnByMail",
+          "returnFees": "https://schema.org/FreeReturn"
+        }
       },
       "aggregateRating": {
         "@type": "AggregateRating",

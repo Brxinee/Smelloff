@@ -24,7 +24,51 @@
 <meta name="twitter:title" content="Track Your ODORSTRIKE Order — Smelloff">
 <meta name="twitter:description" content="Live order status and courier tracking for ODORSTRIKE orders.">
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "WebPage", "name": "Track Your Order", "url": "https://smelloff.in/track-order", "description": "Track your ODORSTRIKE order: payment status, dispatch and courier tracking.", "inLanguage": "en-IN", "isPartOf": {"@type": "WebSite", "name": "Smelloff", "url": "https://smelloff.in"}, "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://smelloff.in/"}, {"@type": "ListItem", "position": 2, "name": "Track Order", "item": "https://smelloff.in/track-order"}]}}
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Track Your Order — Smelloff",
+  "url": "https://smelloff.in/track-order",
+  "description": "Track your ODORSTRIKE order: payment status, dispatch and courier tracking.",
+  "inLanguage": "en-IN",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Smelloff",
+    "url": "https://smelloff.in"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "@id": "https://smelloff.in/#organization",
+    "name": "Smelloff",
+    "url": "https://smelloff.in",
+    "email": "smelloffsupport@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Sanathnagar, Erragadda",
+      "addressLocality": "Hyderabad",
+      "addressRegion": "Telangana",
+      "postalCode": "500018",
+      "addressCountry": "IN"
+    }
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://smelloff.in/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Track Order",
+        "item": "https://smelloff.in/track-order"
+      }
+    ]
+  }
+}
 </script>
 <link rel="icon" type="image/png" href="/favicon-32.png">
 <!-- Resource Hints for Slow Mobile Networks in India -->
@@ -188,7 +232,7 @@
 
 <main id="sf-main" tabindex="-1" class="p-main">
   <div class="p-eyebrow">Order Status</div>
-  <h1>Track your order<span class="h1-dot">.</span></h1>
+  <h1>Track Your Order<span class="h1-dot">.</span></h1>
   <p class="p-sub">Enter the order ID from your confirmation screen or email (looks like <b>SMF-20260610-1234</b>) and the phone number you used at checkout.</p>
 
   <form id="trackForm" onsubmit="trackOrder();return false;">
@@ -466,6 +510,13 @@
       var label = (it.label || it.name || 'ODORSTRIKE') + (it.quantity > 1 ? ' × ' + it.quantity : '');
       rows += '<div class="row"><span>' + esc(label) + '</span></div>';
     });
+    // The COD handling charge is already inside `amount`. Show it on its own row
+    // so a customer looking up a ₹289 order against a ₹229 product can see where
+    // the difference came from rather than reading it as a billing error.
+    var codFee = Math.round((o.cod_fee || 0) / 100);
+    if (codFee > 0) {
+      rows += '<div class="row"><span>COD handling charge</span><span>₹' + codFee + '</span></div>';
+    }
     rows += '<div class="row total"><span>Total</span><span>₹' + Math.round((o.amount || 0) / 100) + '</span></div>';
     itemsEl.innerHTML = rows;
 
@@ -497,7 +548,7 @@
   }
 })();
 </script>
-<script src="/assets/js/reviews-system.js?v=1" defer></script>
+<script src="/assets/js/reviews-system.js?v=2" defer></script>
 <script src="/assets/js/track.js?v=64e65429" defer></script>
 </body>
 </html>

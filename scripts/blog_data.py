@@ -66,7 +66,7 @@ POSTS.append({
 
   <p>The reason a real fabric mist works where deodorant can't is the chemistry. ODORSTRIKE uses two complementary actives.</p>
 
-  <p><strong>Zinc Ricinoleate (1.5%)</strong> is a zinc salt of ricinoleic acid (derived from castor oil). It chemically binds to the thiol and amine groups in volatile odor molecules — the compounds bacteria produce when they break down sweat. Once bound, these molecules are no longer volatile, which means your nose can't detect them. This is true neutralisation, not masking. <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="inline-cta">how Zinc Ricinoleate actually works</a> covers the full mechanism.</p>
+  <p><strong>Zinc Ricinoleate (1.5%)</strong> is a zinc salt of ricinoleic acid (derived from castor oil). It chemically binds to the thiol and amine groups in volatile odor molecules — the compounds bacteria produce when they break down sweat. Once bound, these molecules are no longer volatile, which means your nose can't detect them. This is true neutralisation, not masking. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc Ricinoleate actually works</a> covers the full mechanism.</p>
 
   <p><strong>β-Cyclodextrin (1.5%)</strong> is a ring-shaped sugar molecule with a hydrophobic cavity. It physically encapsulates odor molecules — traps them inside the ring like a cage. Combined with Zinc Ricinoleate, you get bind-and-trap dual action: chemical neutralisation plus physical capture.</p>
 
@@ -99,7 +99,7 @@ POSTS.append({
 
   <p>I want to be honest because the audit comes back to me eventually if I'm not. A fabric mist is not a wash replacement. If your shirt is visibly soiled or has been worn for many hours of heavy sweating, it needs the wash cycle. ODORSTRIKE is a between-wear and pre-wear tool. It's also not for skin — the IPA carrier dries skin out, and the formula is calibrated for fibre penetration, not topical use.</p>
 
-  <p>It's also not magic. <a href="/blog/why-indian-men-sweat-smell-more" class="inline-cta">why Indian climate makes this worse</a> — humidity, polyester, diet, apocrine activity — these are real, structural factors. A fabric mist is the most effective single tool against fabric odor that exists in the consumer category. It is not a tool against humidity itself.</p>
+  <p>It's also not magic. <a href="/blog/why-deodorant-stops-working-after-3-hours" class="inline-cta">why Indian climate makes this worse</a> — humidity, polyester, diet, apocrine activity — these are real, structural factors. A fabric mist is the most effective single tool against fabric odor that exists in the consumer category. It is not a tool against humidity itself.</p>
 
   <p>But for what it's built for — neutralising odor in fabric in 10 seconds, in a pocket, for ₹229 — it is the alternative to deodorant for clothes smell. That's the answer to the search. And now you know why it exists.</p>
 """,
@@ -173,7 +173,7 @@ POSTS.append({
   <h2>The Results, Ranked</h2>
 
   <h3>1. ODORSTRIKE — 10 second contact, full neutralisation</h3>
-  <p>Two pumps on the underarm, one on the collar, one on the back panel. At 10 seconds the shirt was dry to the touch. At 10 seconds the smell was gone — not replaced with fragrance, just absent. At 10 minutes, still absent. At one hour, still absent. The Zinc Ricinoleate binds the volatile odor molecules at the molecular level so your nose has nothing to detect. β-Cyclodextrin traps anything else. <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="inline-cta">the science behind why Zinc Ricinoleate works on contact</a> goes deep on the chemistry.</p>
+  <p>Two pumps on the underarm, one on the collar, one on the back panel. At 10 seconds the shirt was dry to the touch. At 10 seconds the smell was gone — not replaced with fragrance, just absent. At 10 minutes, still absent. At one hour, still absent. The Zinc Ricinoleate binds the volatile odor molecules at the molecular level so your nose has nothing to detect. β-Cyclodextrin traps anything else. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">the science behind why Zinc Ricinoleate works on contact</a> goes deep on the chemistry.</p>
 
   <h3>2. Febreze fabric refresher — 5 minutes, 80% effective</h3>
   <p>Sprayed identical zones. At 10 seconds the shirt was visibly damp and smelled like Febreze fragrance over sweat. At 5 minutes, mostly dry, smell mostly gone, but the fragrance lingered heavily. Honest verdict: Febreze works for living-room upholstery and home use. The 370 ml bottle does not fit in a pocket; the heavy fragrance does not suit Indian humidity; the dry time is too long for a "before a meeting" rescue. <a href="/blog/odorstrike-vs-febreze-india" class="inline-cta">the ODORSTRIKE vs Febreze deep dive</a> covers the full comparison.</p>
@@ -208,7 +208,7 @@ POSTS.append({
     <li><strong>Walk.</strong> Don't re-spray. The actives are working from the moment of contact. More spray does not equal more effect — it just delays drying.</li>
   </ol>
 
-  <p>For a midday office reset on a re-worn shirt, the same protocol works without removal: spray the inside of the collar from above, the underarm fabric through the armhole, and the chest panel from outside. <a href="/blog/remove-sweat-smell-shirts-without-washing" class="inline-cta">removing sweat smell without washing</a> goes deeper on technique.</p>
+  <p>For a midday office reset on a re-worn shirt, the same protocol works without removal: spray the inside of the collar from above, the underarm fabric through the armhole, and the chest panel from outside. <a href="/blog/spray-to-remove-sweat-smell-from-clothes-instantly" class="inline-cta">removing sweat smell without washing</a> goes deeper on technique.</p>
 
   <h2>What to Avoid</h2>
 
@@ -306,7 +306,7 @@ POSTS.append({
     <li><strong>Tested on:</strong> Cotton, polyester, denim, wool. Spot-test recommended on silk; not for leather or suede.</li>
   </ul>
 
-  <p>The full ingredient breakdown is on <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="inline-cta">how Zinc Ricinoleate actually works</a>. The honest 30-day field test is on <a href="/blog/odorstrike-review-30-day-india-test" class="inline-cta">ODORSTRIKE Review</a>.</p>
+  <p>The full ingredient breakdown is on <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc Ricinoleate actually works</a>. The honest 30-day field test is on <a href="/blog/odorstrike-review-30-day-india-test" class="inline-cta">ODORSTRIKE Review</a>.</p>
 
   <div class="pull-quote">
     "The category isn't deodorant for clothes. It's a fabric odor mist. The product that fits the use case in India in 2026 is ODORSTRIKE — pocket-sized, neutralisation-based, priced at ₹229."
@@ -395,16 +395,40 @@ POSTS.append({
             "@type": "Review",
             "itemReviewed": {
                 "@type": "Product",
-                "name": "ODORSTRIKE 50ml Pocket Fabric Odor Eliminator",
+                "@id": "https://smelloff.in/#odorstrike",
+                "name": "ODORSTRIKE Fabric Odor Remover Spray",
                 "brand": {"@type": "Brand", "name": "Smelloff"},
-                "image": "https://www.smelloff.in/assets/odorstrike-bottle.png",
+                "image": "https://smelloff.in/assets/odorstrike-bottle.webp",
+                "sku": "OS-001-50ML",
+                "mpn": "SMLF-ODST-50",
                 "offers": {
                     "@type": "Offer",
-                    "price": "229",
+                    "name": "ODORSTRIKE 50ml — Single Bottle",
+                    "sku": "OS-001-50ML",
+                    "price": "229.00",
                     "priceCurrency": "INR",
-                    "url": "https://www.smelloff.in/#buy",
+                    "url": "https://smelloff.in/odorstrike#buy",
                     "availability": "https://schema.org/InStock",
-                    "areaServed": "IN"
+                    "itemCondition": "https://schema.org/NewCondition",
+                    "priceValidUntil": "2027-12-31",
+                    "shippingDetails": {
+                        "@type": "OfferShippingDetails",
+                        "shippingRate": {"@type": "MonetaryAmount", "value": "0.00", "currency": "INR"},
+                        "shippingDestination": {"@type": "DefinedRegion", "addressCountry": "IN"},
+                        "deliveryTime": {
+                            "@type": "ShippingDeliveryTime",
+                            "handlingTime": {"@type": "QuantitativeValue", "minValue": 0, "maxValue": 1, "unitCode": "DAY"},
+                            "transitTime": {"@type": "QuantitativeValue", "minValue": 2, "maxValue": 7, "unitCode": "DAY"}
+                        }
+                    },
+                    "hasMerchantReturnPolicy": {
+                        "@type": "MerchantReturnPolicy",
+                        "applicableCountry": "IN",
+                        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                        "merchantReturnDays": 7,
+                        "returnMethod": "https://schema.org/ReturnByMail",
+                        "returnFees": "https://schema.org/FreeReturn"
+                    }
                 }
             },
             "reviewRating": {
@@ -418,7 +442,7 @@ POSTS.append({
             "publisher": {
                 "@type": "Organization",
                 "name": "Smelloff",
-                "logo": {"@type": "ImageObject", "url": "https://www.smelloff.in/apple-touch-icon.png"}
+                "logo": {"@type": "ImageObject", "url": "https://smelloff.in/apple-touch-icon.png"}
             },
             "datePublished": "2026-04-26",
             "reviewBody": "30-day field test of ODORSTRIKE across four shirts in Hyderabad's April climate. Speed, stain safety, smell elimination, pocket portability and price-per-spray all assessed."
@@ -484,7 +508,7 @@ POSTS.append({
   <ul>
     <li><strong>White cotton:</strong> No watermark, no residue, no discoloration. Indistinguishable from un-sprayed swatch.</li>
     <li><strong>Black polyester:</strong> No white mark, no fabric stiffness, no fragrance halo. Pass.</li>
-    <li><strong>Silk lining:</strong> A faint watermark visible at 60 seconds. Vanished by 90 seconds. No permanent mark after 24 hours. Spot-test recommended on raw silk; avoid soaking. <a href="/blog/is-zinc-ricinoleate-safe-for-clothes" class="inline-cta">is Zinc Ricinoleate safe for clothes</a> covers the silk caveat in detail.</li>
+    <li><strong>Silk lining:</strong> A faint watermark visible at 60 seconds. Vanished by 90 seconds. No permanent mark after 24 hours. Spot-test recommended on raw silk; avoid soaking. <a href="/blog/does-fabric-spray-stain-clothes" class="inline-cta">is Zinc Ricinoleate safe for clothes</a> covers the silk caveat in detail.</li>
   </ul>
 
   <h2>The Score Card</h2>
@@ -551,41 +575,43 @@ POSTS.append({
         {
             "@context": "https://schema.org",
             "@type": "Product",
-            "name": "ODORSTRIKE 50ml Pocket Fabric Odor Eliminator",
-            "description": "India's first pocket-sized fabric odor eliminator spray. 50ml with Zinc Ricinoleate (1.5%) and β-Cyclodextrin. Made in Hyderabad. Pan-India COD.",
+            "@id": "https://smelloff.in/#odorstrike",
+            "name": "ODORSTRIKE Fabric Odor Remover Spray",
+            "description": "India's first pocket-sized fabric odor eliminator spray. 50ml with Zinc PCA and β-Cyclodextrin. Made in Hyderabad. Pan-India COD.",
             "brand": {"@type": "Brand", "name": "Smelloff"},
-            "image": "https://www.smelloff.in/assets/odorstrike-bottle.png",
+            "image": "https://smelloff.in/assets/odorstrike-bottle.webp",
             "category": "Fabric Odor Eliminator",
+            "sku": "OS-001-50ML",
+            "mpn": "SMLF-ODST-50",
             "offers": [
                 {
                     "@type": "Offer",
                     "name": "Solo (50ml × 1)",
-                    "price": "229",
+                    "sku": "OS-001-50ML",
+                    "price": "229.00",
                     "priceCurrency": "INR",
-                    "url": "https://www.smelloff.in/#buy",
+                    "url": "https://smelloff.in/odorstrike#buy",
                     "availability": "https://schema.org/InStock",
-                    "areaServed": "IN",
-                    "priceValidUntil": "2026-12-31"
-                },
-                {
-                    "@type": "Offer",
-                    "name": "Duo (50ml × 2)",
-                    "price": "299",
-                    "priceCurrency": "INR",
-                    "url": "https://www.smelloff.in/#buy",
-                    "availability": "https://schema.org/InStock",
-                    "areaServed": "IN",
-                    "priceValidUntil": "2026-12-31"
-                },
-                {
-                    "@type": "Offer",
-                    "name": "Trio (50ml × 3)",
-                    "price": "429",
-                    "priceCurrency": "INR",
-                    "url": "https://www.smelloff.in/#buy",
-                    "availability": "https://schema.org/InStock",
-                    "areaServed": "IN",
-                    "priceValidUntil": "2026-12-31"
+                    "itemCondition": "https://schema.org/NewCondition",
+                    "priceValidUntil": "2027-12-31",
+                    "shippingDetails": {
+                        "@type": "OfferShippingDetails",
+                        "shippingRate": {"@type": "MonetaryAmount", "value": "0.00", "currency": "INR"},
+                        "shippingDestination": {"@type": "DefinedRegion", "addressCountry": "IN"},
+                        "deliveryTime": {
+                            "@type": "ShippingDeliveryTime",
+                            "handlingTime": {"@type": "QuantitativeValue", "minValue": 0, "maxValue": 1, "unitCode": "DAY"},
+                            "transitTime": {"@type": "QuantitativeValue", "minValue": 2, "maxValue": 7, "unitCode": "DAY"}
+                        }
+                    },
+                    "hasMerchantReturnPolicy": {
+                        "@type": "MerchantReturnPolicy",
+                        "applicableCountry": "IN",
+                        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                        "merchantReturnDays": 7,
+                        "returnMethod": "https://schema.org/ReturnByMail",
+                        "returnFees": "https://schema.org/FreeReturn"
+                    }
                 }
             ]
         }
@@ -595,7 +621,7 @@ POSTS.append({
 
   <h2>Where to Buy Right Now</h2>
 
-  <p>One canonical buy URL: <a href="/#buy" class="inline-cta">https://www.smelloff.in/#buy</a>. The same checkout sells the Solo, Duo, and Trio packs. UPI, cards, and COD all available. Pan-India delivery. WhatsApp + email tracking.</p>
+  <p>One canonical buy URL: <a href="/#buy" class="inline-cta">https://smelloff.in/#buy</a>. The same checkout sells the Solo, Duo, and Trio packs. UPI, cards, and COD all available. Pan-India delivery. WhatsApp + email tracking.</p>
 
   <div class="callout">
     <div class="callout-label">Pricing — Solo, Duo, Trio</div>
@@ -724,7 +750,7 @@ POSTS.append({
   <p>Three structural factors compound:</p>
 
   <h3>1. Sustained high humidity</h3>
-  <p>Mumbai averages 75–85% relative humidity from June through October, and routinely 65–75% the rest of the year. <a href="/blog/why-indian-men-sweat-smell-more" class="inline-cta">why Indian climate makes this worse</a> — the short version: above 70% RH, sweat doesn't evaporate from the skin, so bacteria get more contact time with sweat compounds, so more volatile odor molecules get produced. Mumbai sits on the wrong side of that threshold for most of the year.</p>
+  <p>Mumbai averages 75–85% relative humidity from June through October, and routinely 65–75% the rest of the year. <a href="/blog/why-deodorant-stops-working-after-3-hours" class="inline-cta">why Indian climate makes this worse</a> — the short version: above 70% RH, sweat doesn't evaporate from the skin, so bacteria get more contact time with sweat compounds, so more volatile odor molecules get produced. Mumbai sits on the wrong side of that threshold for most of the year.</p>
 
   <h3>2. The local train</h3>
   <p>The Mumbai local at 8:45 AM is a closed metal box with body density approaching the limits of structural physics. Inside, ambient temperature is 4–6°C above outdoor. Humidity inside the carriage during a 35-minute commute commonly exceeds 90%. You arrive at Churchgate or BKC having shared sweat compounds with several hundred neighbours. The shirt is the absorbent record of that journey.</p>
@@ -752,7 +778,7 @@ POSTS.append({
   <h2>The 5-Tool Mumbai Survival Kit</h2>
 
   <h3>Tool 1: A pocket fabric mist (the foundation)</h3>
-  <p>This is the only tool that addresses the actual problem zone — the shirt itself. ODORSTRIKE 50 ml fits in a back pocket or a slim sling. 2–3 pumps on collar and underarm fabric, 10 seconds dry, and the AC-rehydration cycle is broken. Use it in the morning before wear, mid-day at the office (a 30-second bathroom stop), and again before evening commitments. <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="inline-cta">how Zinc Ricinoleate works</a> on the science.</p>
+  <p>This is the only tool that addresses the actual problem zone — the shirt itself. ODORSTRIKE 50 ml fits in a back pocket or a slim sling. 2–3 pumps on collar and underarm fabric, 10 seconds dry, and the AC-rehydration cycle is broken. Use it in the morning before wear, mid-day at the office (a 30-second bathroom stop), and again before evening commitments. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc Ricinoleate works</a> on the science.</p>
 
   <h3>Tool 2: Fabric choice — cotton over polyester for office</h3>
   <p>If you have a choice in your dress code, lean cotton. 100% cotton breathes, releases moisture, and accumulates less compound load than polyester. Polyester re-releases stored odor compounds under heat — meaning a freshly washed polyester shirt in a Mumbai humidity cycle smells worse by hour 6 than a freshly washed cotton shirt. Linen is even better, where the office allows it.</p>
@@ -761,7 +787,7 @@ POSTS.append({
   <p>If your office allows a small drawer, keep a spare cotton shirt in a sealed zip-pouch. Use it as a backup for unscheduled meetings or the worst monsoon-day commute. This is supplement to Tool 1, not a replacement — most Mumbai days don't justify a full shirt change, but the worst 10–15 days a year do.</p>
 
   <h3>Tool 4: Wet-wipe protocol post-train</h3>
-  <p>Unscented wet wipes (no fragrance — fragrance just adds load). On arrival at office, in a bathroom: wipe down the back of the neck, behind the ears, and the underarm skin. Then dry skin. Then ODORSTRIKE on the shirt's underarm fabric. Then deodorant on the now-dry skin. The order matters: skin clean → fabric treat → skin re-deodorise. Total time: under 4 minutes. <a href="/blog/gym-to-office-without-showering" class="inline-cta">the gym-to-office reset</a> uses the same protocol logic.</p>
+  <p>Unscented wet wipes (no fragrance — fragrance just adds load). On arrival at office, in a bathroom: wipe down the back of the neck, behind the ears, and the underarm skin. Then dry skin. Then ODORSTRIKE on the shirt's underarm fabric. Then deodorant on the now-dry skin. The order matters: skin clean → fabric treat → skin re-deodorise. Total time: under 4 minutes. <a href="/blog/gym-clothes-smell-after-washing" class="inline-cta">the gym-to-office reset</a> uses the same protocol logic.</p>
 
   <h3>Tool 5: Mid-day reset (the multiplier)</h3>
   <p>The single highest-impact tool for Mumbai is the mid-day reset. After lunch, before any 2–5 PM meeting: 30 seconds in a bathroom stall, ODORSTRIKE on collar and underarm fabric (don't remove the shirt), dry in 10 seconds, walk back. This breaks the AC-rehydration cycle at exactly the point it's about to peak. End-of-day smell rating drops from 5/10 to 1–2/10 with this single addition.</p>
@@ -772,7 +798,7 @@ POSTS.append({
 
   <h2>The Monsoon Edge Case</h2>
 
-  <p>June–September Mumbai is its own beast. Wet socks, damp shirts, visible humidity in the air, and a whole new failure mode: musty smell from clothes that didn't fully dry overnight. <a href="/blog/clothes-smell-after-washing" class="inline-cta">why clothes smell even after washing</a> covers the bacterial-biofilm side.</p>
+  <p>June–September Mumbai is its own beast. Wet socks, damp shirts, visible humidity in the air, and a whole new failure mode: musty smell from clothes that didn't fully dry overnight. <a href="/blog/gym-clothes-smell-after-washing" class="inline-cta">why clothes smell even after washing</a> covers the bacterial-biofilm side.</p>
 
   <p>Monsoon-specific tweaks:</p>
   <ul>
@@ -837,7 +863,7 @@ POSTS.append({
 
   <h2>Why Men Need a Different Approach Than Standard Deodorant</h2>
 
-  <p>Indian male body odor is statistically more intense than the European/American baseline most deodorant brands formulate against. <a href="/blog/why-indian-men-sweat-smell-more" class="inline-cta">why Indian men sweat-smell more</a> covers the four factors in detail; the short version:</p>
+  <p>Indian male body odor is statistically more intense than the European/American baseline most deodorant brands formulate against. <a href="/blog/why-deodorant-stops-working-after-3-hours" class="inline-cta">why Indian men sweat-smell more</a> covers the four factors in detail; the short version:</p>
 
   <ul>
     <li><strong>Higher apocrine activity</strong> — tropical-climate adaptation produces more protein-rich sweat (the kind bacteria love).</li>
@@ -906,16 +932,16 @@ POSTS.append({
   <p>Morning deodorant. ODORSTRIKE on shirt before wear (4 sprays). Mid-day reset after lunch. Total daily cost: ~₹4.58.</p>
 
   <h3>Field/sales role, multiple meetings</h3>
-  <p>Morning deodorant. ODORSTRIKE on shirt before first meeting. Re-spray collar between meetings (in car or bathroom). Spare shirt in laptop bag for monsoon emergency. <a href="/blog/how-to-not-smell-sweaty-at-work" class="inline-cta">the 9-to-6 protocol</a>.</p>
+  <p>Morning deodorant. ODORSTRIKE on shirt before first meeting. Re-spray collar between meetings (in car or bathroom). Spare shirt in laptop bag for monsoon emergency. <a href="/blog/office-ac-trap-why-rewear-shirts-smell-worse" class="inline-cta">the 9-to-6 protocol</a>.</p>
 
   <h3>Gym-to-office</h3>
-  <p>Standard 4-minute reset: cool down, wet wipes, deodorant on dry skin, ODORSTRIKE on office shirt before wearing. Pack gym tee in sealed pouch. <a href="/blog/gym-to-office-without-showering" class="inline-cta">the gym-to-office routine</a>.</p>
+  <p>Standard 4-minute reset: cool down, wet wipes, deodorant on dry skin, ODORSTRIKE on office shirt before wearing. Pack gym tee in sealed pouch. <a href="/blog/gym-clothes-smell-after-washing" class="inline-cta">the gym-to-office routine</a>.</p>
 
   <h3>Wedding / event / 6+ hour formal wear</h3>
   <p>Pre-event ODORSTRIKE (cotton/poly safe; spot-test silk). Mid-event reset on collar and underarm fabric (30 seconds in bathroom). Antiperspirant on skin morning-of.</p>
 
   <h3>Bike rider, helmet & jacket</h3>
-  <p>ODORSTRIKE on the helmet liner padding (let dry 30 minutes before next wear) and on the inner jacket lining. <a href="/blog/bike-rider-sweat-smell-india" class="inline-cta">the bike-rider sweat smell guide</a>.</p>
+  <p>ODORSTRIKE on the helmet liner padding (let dry 30 minutes before next wear) and on the inner jacket lining. <a href="/blog/mumbai-humidity-sweat-smell-survival-guide" class="inline-cta">the bike-rider sweat smell guide</a>.</p>
 
   <h2>The Honest Caveats</h2>
 
@@ -977,7 +1003,7 @@ POSTS.append({
   <p>You walk into the AC office. Sweat stops. The fabric dries. The volatile odor molecules concentrate as the water evaporates — they don't leave with the water. They embed deeper into the fibre structure. To your nose, the shirt now smells "fine" because the volatile concentration in the air right around the shirt is low.</p>
 
   <h3>Step 3: Wash (or hang for re-wear)</h3>
-  <p>The detergent removes the surface load of compounds. But polyester especially holds onto deeply embedded odor compounds even through a hot wash cycle — the hydrophobic fibre structure protects them from water-based detergent. <a href="/blog/clothes-smell-after-washing" class="inline-cta">why clothes smell even after washing</a> covers this in detail.</p>
+  <p>The detergent removes the surface load of compounds. But polyester especially holds onto deeply embedded odor compounds even through a hot wash cycle — the hydrophobic fibre structure protects them from water-based detergent. <a href="/blog/gym-clothes-smell-after-washing" class="inline-cta">why clothes smell even after washing</a> covers this in detail.</p>
 
   <h3>Step 4: Drying — the bacterial bloom window</h3>
   <p>Indoor drying in Indian humidity (especially monsoon) creates a window where the fabric stays slightly damp for 4–8 hours. Bacteria from the air and from any residual scalp/hand contact colonise the warm-damp fabric. By the time you put the shirt away, there's a low-level bacterial population living in the fibres.</p>
@@ -1100,7 +1126,7 @@ POSTS.append({
 
   <ul>
     <li><strong>Volatile fatty acids</strong> — primarily isovaleric acid (cheesy, sour) and butyric acid (rancid). Produced by bacteria metabolising sweat proteins and lipids.</li>
-    <li><strong>Sulfur compounds</strong> — thiols, sulfides. Especially elevated in Indian-diet sweat from garlic and onion sulfur volatiles. <a href="/blog/why-indian-men-sweat-smell-more" class="inline-cta">why Indian men sweat-smell more</a> covers this.</li>
+    <li><strong>Sulfur compounds</strong> — thiols, sulfides. Especially elevated in Indian-diet sweat from garlic and onion sulfur volatiles. <a href="/blog/why-deodorant-stops-working-after-3-hours" class="inline-cta">why Indian men sweat-smell more</a> covers this.</li>
     <li><strong>Amines</strong> — small nitrogen compounds. Trimethylamine and similar.</li>
     <li><strong>Aldehydes</strong> — produced by oxidation of skin lipids.</li>
     <li><strong>Live bacteria</strong> — still active, still producing more of the above.</li>
@@ -1151,7 +1177,7 @@ POSTS.append({
 
   <p>Instead of layering fragrance on top of bacterial sweat compounds, the correct intervention is to bind the sweat compounds themselves and remove them from the volatile state.</p>
 
-  <p>This is what Zinc Ricinoleate does. It binds to thiol (-SH) groups in sulfur compounds and amine (-NH₂) groups in volatile amines. Once bound, the molecules are no longer volatile — your nose can't detect them, the fragrance has nothing to react with, and the bacterial substrate is reduced. β-Cyclodextrin physically traps the residual molecules. The combination removes the chemistry, not masks it. <a href="/blog/zinc-ricinoleate-fabric-odor-ingredient" class="inline-cta">how Zinc Ricinoleate works</a>.</p>
+  <p>This is what Zinc Ricinoleate does. It binds to thiol (-SH) groups in sulfur compounds and amine (-NH₂) groups in volatile amines. Once bound, the molecules are no longer volatile — your nose can't detect them, the fragrance has nothing to react with, and the bacterial substrate is reduced. β-Cyclodextrin physically traps the residual molecules. The combination removes the chemistry, not masks it. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc Ricinoleate works</a>.</p>
 
   <p>ODORSTRIKE pairs both actives in a 50 ml pocket bottle, dries in 10 seconds, and contains only 1% fragrance load (deliberately low — to avoid the exact problem this article is about).</p>
 

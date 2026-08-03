@@ -68,6 +68,37 @@ and checkout took a second click. It now goes **straight to `openCheckout()`**.
   screenshot, WhatsApp the screenshot and UTR — and each step sheds orders. COD
   is ₹0 advance and one tap. `/faq`'s "How to pay" now leads with COD too; keep
   the two in step. **Flip both back together** if RTO cost ever outweighs it.
+
+## COD carries a ₹60 handling charge (2026-08-04)
+₹229 prepaid by UPI, **₹289 collected on delivery**. The product price is still
+₹229 — the ₹60 is a surcharge on the *payment method*, which is why `Product`
+schema, `products.json` and every "Buy ₹229" pill still say 229 and should stay
+that way. Two rules govern it:
+- **It must be visible before the checkout modal opens.** Quoting ₹229 all the
+  way down the page and revealing ₹289 in the final summary is drip pricing,
+  named explicitly in the CCPA's 2023 dark-pattern guidelines. It is disclosed on
+  the PDP hero (`.price-note`), the `#buy` card (`.cod-line`), `.pay-modes`, the
+  `.fix-cta` note, the cart drawer's ship note, the homepage hero meta, both COD
+  FAQ answers **and their FAQPage schema twins**, and `llms*.txt`. The checkout
+  summary restates it; it never introduces it.
+- **The number lives in two places and they must agree**: `CFG.COD_FEE` in
+  `odorstrike.html` and `COD_FEE_RUPEES` in
+  `supabase/functions/create-order/index.ts`. The edge function decides the
+  surcharge itself from `payment_method` and rejects the order if the client's
+  total disagrees, so a one-sided change makes **every COD order fail to mirror
+  into the database** with "Order total mismatch" — silently, since the checkout
+  itself still succeeds.
+- All checkout arithmetic goes through **one** function, `orderTotals()`. The
+  summary, the UPI panel, the COD panel, the submit button, `collectOrder()` and
+  the success screen all read from it; none of them recompute. `codFee` is its
+  own column in the Sheets payload and in `orders.cod_fee` (migration
+  `20260804_order_cod_fee.sql`) so product revenue stays separable from
+  payment-method revenue — `amount - cod_fee` is the product subtotal on every
+  row. `/track-order` shows the charge on its own line for the same reason.
+- Fixed alongside it: the edge function read `items[0].price` as though it were
+  the line total, so it compared a two-bottle order's ₹458 against ₹229 and
+  rejected it. **Every order of more than one bottle had been failing to reach
+  Supabase.** It now verifies `price × quantity`.
 - **`?buy=1` opens checkout on load**, the sibling of `?cart=open`. Terminal CTAs
   elsewhere (homepage hero, blog end-of-post `.buy-btn`, `/faq` and `/reviews`
   closers) point at it. **Header "Buy ₹229" pills and in-prose `.inline-cta`

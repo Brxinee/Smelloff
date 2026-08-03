@@ -39,7 +39,7 @@ POOL = [
     ("/blog/deodorant-vs-fabric-mist/", "Deodorant vs Fabric Mist: What Actually Kills Odor"),
     ("/blog/fix-shirt-odor-before-meeting/", "Fix Shirt Odor Before a Meeting"),
     ("/blog/odorstrike-review-30-day-india-test/", "ODORSTRIKE: 30-Day India Test"),
-    ("/blog/remove-sweat-smell-shirts-without-washing/", "Remove Sweat Smell From Shirts Without Washing"),
+    ("/blog/spray-to-remove-sweat-smell-from-clothes-instantly/", "Remove Sweat Smell From Shirts Without Washing"),
 ]
 
 # Class names owned by the shared stylesheet (+ legacy footer/carousel/nav classes

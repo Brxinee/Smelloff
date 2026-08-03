@@ -127,13 +127,23 @@ const priceBlock = () => `
 
 // ---------- TEMPLATES ----------
 
+// `amount` is the collectable total. On COD that includes the handling charge,
+// so `codFee` breaks it out on its own row — a customer who was quoted ₹289 and
+// sees only "Amount ₹289" against a ₹229 product has no way to reconcile it.
 export function orderConfirmation({
   orderId = '',
   customerName = 'there',
   amount = '',
   address = '',
   paymentMethod = '',
+  codFee = 0,
 } = {}) {
+  const fee = Number(codFee) || 0;
+  const codFeeRow = fee > 0 ? `
+        <tr>
+          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">COD handling charge</td>
+          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">&#8377;${escape(String(fee))}</td>
+        </tr>` : '';
   const inner = `
     ${accentBar}
     ${heading('Order<br>Confirmed.')}
@@ -148,8 +158,9 @@ export function orderConfirmation({
           <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Product</td>
           <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">ODORSTRIKE 50ml</td>
         </tr>
+        ${codFeeRow}
         <tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Amount</td>
+          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">${fee > 0 ? 'Total payable' : 'Amount'}</td>
           <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">&#8377;${escape(amount)}</td>
         </tr>
         <tr>

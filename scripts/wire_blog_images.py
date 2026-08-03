@@ -16,7 +16,7 @@ from pathlib import Path
 
 BLOG = Path(__file__).resolve().parent.parent / "blog"
 ASSETS = BLOG / "assets"
-WWW = "https://www.smelloff.in"
+WWW = "https://smelloff.in"
 
 DEFAULT_OG = [
     "https://www.smelloff.in/assets/og-image.jpg",

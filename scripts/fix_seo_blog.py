@@ -10,7 +10,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 BLOG_DIR = REPO / "blog"
-SITE = "https://www.smelloff.in"
+SITE = "https://smelloff.in"
 OG_IMAGE = f"{SITE}/assets/og-image.jpg"
 LOGO_URL = f"{SITE}/apple-touch-icon.png"
 

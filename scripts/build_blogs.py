@@ -13,7 +13,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 OUT_DIR = REPO / "blog"
-SITE = "https://www.smelloff.in"
+SITE = "https://smelloff.in"
 DATE = "2026-04-26"
 DATE_PRETTY = "April 26, 2026"
 OG_IMAGE = f"{SITE}/assets/og-image.jpg"

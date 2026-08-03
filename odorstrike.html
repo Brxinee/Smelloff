@@ -89,8 +89,11 @@
      "worstRating":"1","ratingCount":<n>,"reviewCount":<n>}) as the last property
      of this Product, computed from genuine on-page reviews only. Do NOT nest a
      "review" array here (Google flags self-hosted Review objects), and never
-     fabricate reviews or counts. -->
-<script type="application/ld+json">
+     fabricate reviews or counts.
+     The id is load-bearing: the on-page review script finds this node and writes
+     aggregateRating INTO it. It used to append a second Product node carrying
+     nothing but a rating, which Google reads as a separate, incomplete product. -->
+<script type="application/ld+json" id="product-jsonld">
 {
   "@context":"https://schema.org",
   "@type":"Product",
@@ -152,7 +155,7 @@
     {"@type":"Question","name":"Does it work on dry-clean-only fabric?","acceptedAnswer":{"@type":"Answer","text":"We don't recommend it for dry-clean-only items, leather, or suede. Stick to machine-washable fabrics like cotton, polyester, denim, and wool."}},
     {"@type":"Question","name":"Is the fragrance strong?","acceptedAnswer":{"@type":"Answer","text":"Very subtle. The fragrance is designed to be barely noticeable — just enough to signal freshness without announcing itself. It fades within a minute, leaving your clothes smelling neutral."}},
     {"@type":"Question","name":"What's the shipping time?","acceptedAnswer":{"@type":"Answer","text":"Orders ship from Hyderabad within 48 hours. 3–5 business days for metros (Hyderabad, Bangalore, Delhi, Mumbai, Chennai, Pune), 5–7 days for tier 2/3 cities. Free shipping pan-India."}},
-    {"@type":"Question","name":"Is COD available?","acceptedAnswer":{"@type":"Answer","text":"Yes. Cash on Delivery is available across India with ₹0 advance — pay when it arrives. COD orders are confirmed via a quick phone call before dispatch."}},
+    {"@type":"Question","name":"Is COD available?","acceptedAnswer":{"@type":"Answer","text":"Yes. Cash on Delivery is available across India with ₹0 advance — you pay the delivery person on arrival. COD carries a ₹60 handling charge, so the collectable amount is ₹289 instead of the ₹229 you'd pay by UPI. COD orders are confirmed via a quick phone call before dispatch."}},
     {"@type":"Question","name":"Do you ship outside India?","acceptedAnswer":{"@type":"Answer","text":"Not yet. ODORSTRIKE ships only within India for now — pan-India delivery from Hyderabad with free shipping and COD, including tier 2/3 cities and the North-East. International shipping is not available at the moment."}},
     {"@type":"Question","name":"Is ODORSTRIKE a fabric refresher like Febreze?","acceptedAnswer":{"@type":"Answer","text":"It refreshes fabric, but it works differently. Home fabric refreshers are 300\u2013500ml fragrance-first bottles built for sofas and curtains. ODORSTRIKE is a pocket-sized 50ml odor eliminator for the clothes you are wearing \u2014 HP\u03b2CD (cyclodextrin) traps odor molecules and Zinc PCA neutralizes them instead of covering them with heavy fragrance. If you want a fabric refresher that fits in your pocket and kills the smell instead of masking it, that is ODORSTRIKE."}},{"@type":"Question","name":"What's the return policy?","acceptedAnswer":{"@type":"Answer","text":"7-day no-questions-asked returns. Product must be at least 80% full. We arrange reverse pickup. Refund processed within 5–7 business days."}}
   ]
@@ -252,6 +255,15 @@
     // the bottle label; a reference price that was never on the pack and never
     // charged is a misleading-price risk under the Consumer Protection Act 2019.
     MRP:    { solo: 499 },
+    // COD_FEE = the handling charge added when the buyer chooses Cash on Delivery.
+    // It is a surcharge on the payment method, not on the product: the product
+    // price stays ₹229 and that is what Product schema and products.json declare.
+    // It MUST be disclosed everywhere the buyer can see a price *before* they
+    // reach the checkout modal — the #buy card, the hero, the cart drawer, the
+    // FAQ. Revealing it only in the final summary is drip pricing, which the
+    // CCPA's 2023 dark-pattern guidelines name explicitly. Changing this number
+    // means changing every one of those surfaces with it; grep COD_FEE and ₹60.
+    COD_FEE: 60,
     // ==== SOCIAL PROOF — ALL GATED. Components render NOTHING until real data ====
     // Verified-purchase reviews ONLY. The site computes the visible count, average
     // and star distribution from this array — never hardcode a rating anywhere.
@@ -1449,6 +1461,17 @@
     margin-bottom:20px;
     font-weight:500;
   }
+  /* Both payable figures, stated on the buy card itself rather than saved for
+     the checkout summary. Sits directly above the CTA so it cannot be missed. */
+  .price-card .cod-line{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.06em;
+    line-height:1.5;
+    color:var(--muted);
+    margin-bottom:16px;
+  }
+  .price-card.featured .cod-line{color:rgba(8,8,8,.72)}
   .price-card button{
     width:100%;
     padding:16px;
@@ -1710,6 +1733,9 @@
   .overlay .summary + .summary{border-top:1px dashed rgba(244,241,234,.08)}
   .overlay .summary.total{color:var(--text)}
   .overlay .summary .amt{color:var(--acid);font-weight:500}
+  /* The COD surcharge is the one figure in this card that costs the buyer more,
+     so it does not get the acid treatment the free/discount rows get. */
+  .overlay .summary .amt.fee{color:var(--text-2)}
   .overlay label{
     display:block;
     font-family:var(--mono);
@@ -2939,7 +2965,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <span>Subtotal</span>
         <span class="cart-sub-amt" id="cartSubtotal">₹229</span>
       </div>
-      <div class="cart-ship-note">Free shipping across India</div>
+      <div class="cart-ship-note">Free shipping across India · COD adds ₹60 at checkout</div>
       <button class="cart-checkout" id="cartCheckoutBtn" onclick="checkoutFromCart()">Checkout · <span id="cartCheckoutAmt">₹229</span></button>
     </div>
   </aside>
@@ -3059,10 +3085,14 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <p class="ph-eyebrow">ODORSTRIKE · 50ml</p>
       <h1>No One Will Know.</h1>
       <p class="ph-tagline">A pocket-sized fabric odor remover that erases smell from fabric on contact. Not a perfume. Not a deodorant. A fix.</p>
+      <!-- The COD total is stated here, in the hero, and not held back for the
+           checkout summary. Showing ₹229 all the way down the page and revealing
+           ₹289 in the final modal is drip pricing — named as a dark pattern in
+           the CCPA's 2023 guidelines. Keep the ₹60 in step with CFG.COD_FEE. -->
       <div class="ph-price">
         <span class="price">₹229</span>
         <span class="strike-price">M.R.P. ₹499</span>
-        <span class="price-note">all-inclusive · free shipping</span>
+        <span class="price-note">free shipping · ₹289 on delivery (COD +₹60)</span>
       </div>
       <!-- Two intents, two buttons. "Buy now" is the express path straight to
            the checkout form; "Add to cart" opens the drawer for anyone still
@@ -3188,7 +3218,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <div class="spec-row"><span>Glycerine</span>ZERO</div>
     </div>
     <a href="#buy" class="fix-cta">Buy Now — ₹229 · COD</a>
-    <span class="fix-cta-note">50ml · <s>₹499</s> ₹229 · free shipping pan-India</span>
+    <span class="fix-cta-note">50ml · <s>₹499</s> ₹229 · free shipping · ₹289 on COD</span>
   </div>
   </div>
 </section>
@@ -3394,7 +3424,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <section class="pricing" id="buy">
   <div class="section-tag" style="justify-content:center">Buy</div>
   <h2>Smell Proof. Always.</h2>
-  <p class="sub">One bottle. One price. Free shipping pan-India. COD available.</p>
+  <p class="sub">One bottle. One price. Free shipping pan-India. COD available for ₹60 more.</p>
 
   <div class="price-grid">
     <div class="price-card featured">
@@ -3406,6 +3436,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
            and CFG.PRICES.solo — a discount % that doesn't match the two prices
            shown on the same card is a misleading-price claim. -->
       <div class="save">54% OFF</div>
+      <div class="cod-line">₹229 prepaid by UPI · ₹289 on delivery (COD +₹60)</div>
       <button onclick="buyNow()">Buy now</button>
     </div>
   </div>
@@ -3413,7 +3444,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
        CFG.VERIFIED_REVIEWS has real entries; bottles-sold only when CFG.BOTTLES_SOLD > 0 -->
   <div id="buyProofMount"></div>
   <div class="buy-trust"><a href="#reviews">Read early tester reviews</a><span>COD available</span><span>Made in India</span><span>Secure UPI checkout</span></div>
-  <p class="pay-modes">UPI accepted · Cash on Delivery · ₹0 advance on COD</p>
+  <p class="pay-modes">UPI ₹229 · Cash on Delivery ₹289 · ₹0 advance either way</p>
 </section>
 
 <!-- REVIEWS -->
@@ -3479,7 +3510,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     </details>
     <details>
       <summary>Is COD available?</summary>
-      <p class="faq-answer">Yes. Cash on Delivery is available across India with ₹0 advance — pay when it arrives. COD orders are confirmed via a quick phone call before dispatch.</p>
+      <p class="faq-answer">Yes. Cash on Delivery is available across India with ₹0 advance — you pay the delivery person on arrival. COD carries a ₹60 handling charge, so the collectable amount is ₹289 instead of the ₹229 you'd pay by UPI. COD orders are confirmed via a quick phone call before dispatch.</p>
     </details>
     <details>
       <summary>Do you ship outside India?</summary>
@@ -3611,6 +3642,11 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <div class="overlay-tag">Checkout · Smelloff</div>
       <h3 id="checkoutTitle">ODORSTRIKE 50ml</h3>
       <p class="checkout-trust">🔒 SECURE · ✓ FREE SHIPPING · ✓ 7-DAY RETURNS</p>
+      <!-- The COD row is disclosed on the #buy card and the hero before anyone
+           opens this modal; it is restated here, never introduced here. Do not
+           add a struck "shipping ₹70 → −₹70" pair: shipping has always been free,
+           and inventing a charge in order to discount it is a fake reference
+           price under the Consumer Protection Act 2019. -->
       <div class="summary-card">
         <div class="summary">
           <span id="checkoutVariant">1 × 50ml</span>
@@ -3620,9 +3656,13 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <span>Shipping</span>
           <span class="amt" id="checkoutShipping">Free ✓</span>
         </div>
+        <div class="summary" id="codFeeRow">
+          <span>COD handling charge</span>
+          <span class="amt fee" id="checkoutCodFee">+₹60</span>
+        </div>
         <div class="summary total">
           <span>Total</span>
-          <span class="amt" id="checkoutTotal">₹229</span>
+          <span class="amt" id="checkoutTotal">₹289</span>
         </div>
       </div>
 
@@ -3706,8 +3746,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
       <!-- COD panel (shown when cod selected) -->
       <div id="codPayPanel" class="pay-panel">
-        <p class="pay-cod">₹0 advance · Pay when it arrives</p>
-        <p class="pay-note-cod">Most of our customers choose COD</p>
+        <p class="pay-cod" id="codPayDesc">₹0 advance · pay ₹289 on delivery (includes the ₹60 COD handling charge)</p>
+        <p class="pay-note-cod">Paying by UPI instead skips the ₹60 charge</p>
       </div>
 
       <div id="checkoutError" style="display:none" class="error-msg" role="alert" aria-live="assertive"></div>
@@ -3913,6 +3953,9 @@ window.createSupabaseOrder = function (opts) {
   const VARIANTS = {
     solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: CFG.PRICES.solo, mrp: CFG.MRP.solo }
   };
+  // Surcharge for choosing Cash on Delivery. Read once here so the whole page has
+  // one number; the static markup that quotes it is listed at CFG.COD_FEE.
+  const COD_FEE = Number(CFG.COD_FEE) || 0;
 
   let currentVariant = 'solo';
   // COD is the default because it is the only method that completes without
@@ -4137,23 +4180,55 @@ window.createSupabaseOrder = function (opts) {
 
   var _checkoutTrigger = null;
 
+  // The single arithmetic for a checkout: product price × quantity, plus the COD
+  // surcharge when COD is the chosen method. Every figure the modal shows comes
+  // from here, so the summary, the UPI panel, the COD panel and the submit button
+  // cannot drift apart — which is exactly how they drifted before.
+  function orderTotals() {
+    const v = VARIANTS[currentVariant] || {};
+    const qty = cartQty > 0 ? cartQty : 1;
+    const unit = Number(v.amount) || CFG.PRICES.solo;
+    const subtotal = unit * qty;
+    const shipping = Number(calcShipping(subtotal)) || 0;
+    const codFee = payMethod === 'cod' ? COD_FEE : 0;
+    return { qty: qty, unit: unit, subtotal: subtotal, shipping: shipping,
+             codFee: codFee, total: subtotal + shipping + codFee };
+  }
+
+  function renderCheckoutPrices() {
+    const t = orderTotals();
+    const isCod = payMethod === 'cod';
+    const set = function (id, text) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = text;
+    };
+    set('checkoutVariant', t.qty + ' × 50ml');
+    set('checkoutAmount', '₹' + t.unit + (t.qty > 1 ? ' × ' + t.qty : ''));
+    set('checkoutShipping', 'Free ✓');
+    set('checkoutCodFee', isCod ? '+₹' + COD_FEE : 'Not applied ✓');
+    set('checkoutTotal', '₹' + t.total);
+    // The UPI panel only ever shows the prepaid figure — no COD fee applies there.
+    set('upiAmountInline', '₹' + (t.subtotal + t.shipping));
+    set('submitText', (isCod ? 'Place COD order · ₹' : 'Open UPI app · ₹') + t.total);
+    // Only rewrite the COD panel while COD is actually selected. Rewriting it
+    // unconditionally left it reading "pay ₹229 on delivery (includes the ₹60
+    // COD handling charge)" whenever UPI was chosen — hidden, but wrong, and it
+    // would have surfaced the moment anyone switched back.
+    if (isCod) {
+      set('codPayDesc', '₹0 advance · pay ₹' + t.total + ' on delivery (includes the ₹' + COD_FEE + ' COD handling charge)');
+    }
+    var feeRow = document.getElementById('codFeeRow');
+    if (feeRow) feeRow.style.display = isCod ? '' : 'none';
+  }
+
   function openCheckout(variant) {
     _checkoutTrigger = document.activeElement;
     currentVariant = variant;
     // Sync quantity from the cart (default to 1 for any direct/legacy call).
     if (getCartQty() > 0) cartQty = getCartQty();
     if (!(cartQty > 0)) cartQty = 1;
-    const v = VARIANTS[variant];
-    const total = v.amount * cartQty;
-    document.getElementById('checkoutTitle').textContent = v.title;
-    document.getElementById('checkoutVariant').textContent = cartQty + ' × 50ml';
-    document.getElementById('checkoutAmount').textContent = '₹' + v.amount + (cartQty > 1 ? ' × ' + cartQty : '');
-    document.getElementById('checkoutTotal').textContent = '₹' + total;
-    var shipEl = document.getElementById('checkoutShipping');
-    if (shipEl) shipEl.textContent = 'Free ✓';
-    var upiAmtInline = document.getElementById('upiAmountInline');
-    if (upiAmtInline) upiAmtInline.textContent = '₹' + total;
-    document.getElementById('submitText').textContent = (payMethod === 'cod' ? 'Place COD order · ₹' : 'Open UPI app · ₹') + total;
+    document.getElementById('checkoutTitle').textContent = VARIANTS[variant].title;
+    renderCheckoutPrices();
     document.getElementById('checkoutForm').style.display = 'block';
     document.getElementById('successScreen').style.display = 'none';
     var lsEl = document.getElementById('loadingScreen');
@@ -4268,20 +4343,18 @@ window.createSupabaseOrder = function (opts) {
     var codPanel = document.getElementById('codPayPanel');
     if (upiPanel) upiPanel.style.display = method === 'cod' ? 'none' : 'block';
     if (codPanel) codPanel.style.display = method === 'cod' ? 'block' : 'none';
+    // Switching method changes the total (COD carries the handling charge), so
+    // every price in the modal is re-rendered from the one source of truth.
+    renderCheckoutPrices();
     const v = VARIANTS[currentVariant];
-    const total = v.amount * cartQty;
-    // Reflect amount in inline UPI panel
-    var upiAmtInline = document.getElementById('upiAmountInline');
-    if (upiAmtInline) upiAmtInline.textContent = '₹' + total;
-    const label = method === 'cod' ? 'Place COD order · ₹' + total : 'Open UPI app · ₹' + total;
-    document.getElementById('submitText').textContent = label;
+    const t = orderTotals();
     // AddPaymentInfo event (shared event_id → browser⇄CAPI dedup)
     if (typeof fbq !== 'undefined') {
-      var _eidP = _eid(); var _api = fbContents(total, cartQty); _api.payment_type = method;
+      var _eidP = _eid(); var _api = fbContents(t.total, t.qty); _api.payment_type = method;
       fbq('track', 'AddPaymentInfo', _api, { eventID: _eidP });
       metaCapi('AddPaymentInfo', _eidP, { custom: _api, order_type: method === 'cod' ? 'cod' : 'prepaid' });
     }
-    if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: total, items: gaItems(v.amount, cartQty) });
+    if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: t.total, items: gaItems(v.amount, t.qty) });
   }
 
   function showError(msg) {
@@ -4338,9 +4411,10 @@ window.createSupabaseOrder = function (opts) {
 
   function collectOrder(orderId, paymentId) {
     const v = VARIANTS[currentVariant] || {};
-    const qty = cartQty > 0 ? cartQty : 1;
-    const baseAmount = (Number(v.amount) || 0) * qty;
-    const shipping = Number(calcShipping(baseAmount)) || 0;
+    const t = orderTotals();
+    const qty = t.qty;
+    const baseAmount = t.subtotal;
+    const shipping = t.shipping;
     const sv = SHEET_VARIANT[currentVariant] || { variant: currentVariant, label: v.title || currentVariant, bottles: 1 };
     const isCod = payMethod === 'cod';
     let source = 'Direct';
@@ -4357,7 +4431,11 @@ window.createSupabaseOrder = function (opts) {
       quantity: qty,
       amount: baseAmount,
       shipping: shipping,
-      total: baseAmount + shipping,
+      // codFee is sent as its own column so the collectable figure and the
+      // product revenue stay separable in the sheet, in Supabase and in admin —
+      // folding it into `total` alone would silently inflate reported sales.
+      codFee: t.codFee,
+      total: t.total,
       paymentMethod: isCod ? 'cod' : 'upi',
       paymentStatus: isCod ? 'cod_pending_call' : 'pending',
       paymentId: '',
@@ -4440,7 +4518,8 @@ window.createSupabaseOrder = function (opts) {
     if (trk) { trk.href = '/track-order?code=' + encodeURIComponent(orderId); trk.style.display = 'inline-block'; }
     try { localStorage.setItem('smelloff_last_order', JSON.stringify({ code: orderId, ts: Date.now() })); } catch (e) {}
 
-    var amount = VARIANTS[currentVariant].amount * cartQty;
+    // The collectable figure, COD charge included — this is what the courier asks for.
+    var amount = orderTotals().total;
     var name = (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
     var phone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || '';
 
@@ -4532,7 +4611,10 @@ window.createSupabaseOrder = function (opts) {
     btnText.innerHTML = '<span class="loader"></span>Processing...';
 
     const orderId = genOrderId();
-    const total = VARIANTS[currentVariant].amount * cartQty;
+    // UPI is prepaid, so no COD surcharge applies to the amount encoded in the
+    // UPI intent link. orderTotals() already returns 0 for codFee unless COD is
+    // the selected method, so this stays correct without a second calculation.
+    const total = orderTotals().subtotal + orderTotals().shipping;
 
     if (payMethod === 'cod') {
       const order = collectOrder(orderId, 'COD');
@@ -4555,6 +4637,7 @@ window.createSupabaseOrder = function (opts) {
           orderId: order.orderId,
           customerName: order.name || 'there',
           amount: String(order.total),
+          codFee: order.codFee,
           address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '),
           paymentMethod: 'Cash on Delivery'
         }).catch(console.error);
@@ -4647,8 +4730,8 @@ window.createSupabaseOrder = function (opts) {
   window.launchSpecificUpi = function(app, event) {
     if (event) event.preventDefault();
     const orderId = document.getElementById('orderIdDisplay') ? document.getElementById('orderIdDisplay').textContent.trim() : '';
-    const total = VARIANTS[currentVariant].amount * cartQty;
-    const link = getAppUpiLink(app, total, orderId);
+    const t = orderTotals();
+    const link = getAppUpiLink(app, t.subtotal + t.shipping, orderId);
     window.location.href = link;
   };
 
@@ -5364,22 +5447,31 @@ window.createSupabaseOrder = function (opts) {
   var buyMount = document.getElementById('buyProofMount');
   if (buyMount) buyMount.innerHTML = summaryHTML();
 
-  // AggregateRating JSON-LD — computed from the same real array, never hardcoded
-  var ld = document.createElement('script');
-  ld.type = 'application/ld+json';
-  ld.textContent = JSON.stringify({
-    "@context":"https://schema.org","@type":"Product",
-    "@id":"https://smelloff.in/#odorstrike",
-    "name":"ODORSTRIKE Fabric Odor Remover Spray",
-    "aggregateRating":{"@type":"AggregateRating","ratingValue":String(avg),"bestRating":"5","worstRating":"1","ratingCount":String(n),"reviewCount":String(n)}
-  });
-  document.head.appendChild(ld);
+  // AggregateRating JSON-LD — computed from the same real array, never hardcoded.
+  // Written INTO the page's existing Product node rather than appended as a second
+  // one: a Product carrying only a rating is an incomplete duplicate entity, and
+  // Google resolves the two by @id into one node with conflicting completeness.
+  var productScript = document.getElementById('product-jsonld');
+  if (productScript) {
+    try {
+      var pData = JSON.parse(productScript.textContent);
+      pData.aggregateRating = {
+        "@type":"AggregateRating",
+        "ratingValue":String(avg),
+        "bestRating":"5",
+        "worstRating":"1",
+        "ratingCount":String(n),
+        "reviewCount":String(n)
+      };
+      productScript.textContent = JSON.stringify(pData, null, 2);
+    } catch (e) {}
+  }
 })();
 </script>
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
-<script src="/assets/js/reviews-system.js?v=1" defer></script>
+<script src="/assets/js/reviews-system.js?v=2" defer></script>
 <script src="/assets/js/track.js?v=64e65429" defer></script>
 <!-- Google Customer Reviews. Loaded on the PDP only, because that is the page
      that carries the checkout and therefore the order-confirmation moment.
