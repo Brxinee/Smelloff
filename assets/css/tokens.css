@@ -46,7 +46,17 @@
   --lh-body:1.55;
   --ls-display:-.028em;
 
-  --fs-h1:clamp(58px,14vw,164px);
+  /* --fs-h1 is consumed by exactly one rule: `.hero h1` on index.html. It was
+     clamp(58px,14vw,164px), tuned for the 20-character "Smell Proof. Always.".
+     The headline is now "Don't let them notice your sweat." — 33 characters —
+     and at 164px that wrapped to five lines, making the H1 705px tall instead
+     of 423px and pushing the price and Buy Now button 285px BELOW the fold on
+     a 1280×900 desktop. The old headline had them at the fold (+3px).
+     At 120px it wraps to three lines, 310px tall, and the CTA sits 111px ABOVE
+     the fold — better than before the copy change. The 58px floor is unchanged,
+     so phones render identically to the approved design (3 lines, 150px).
+     Re-measure the fold if this headline changes length again; don't eyeball it. */
+  --fs-h1:clamp(58px,11vw,120px);
   --fs-h2:clamp(40px,7.6vw,84px);
   --fs-h3:clamp(27px,3.6vw,42px);
   --fs-h4:clamp(21px,2.2vw,27px);
