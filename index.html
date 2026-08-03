@@ -251,7 +251,7 @@
     --lh-display:.86;
     --lh-body:1.55;
     --ls-display:-.028em;
-    --fs-h1:clamp(58px,14vw,164px);
+    --fs-h1:clamp(58px,11vw,120px);
     --fs-h2:clamp(40px,7.6vw,84px);
     --fs-h3:clamp(27px,3.6vw,42px);
     --fs-h4:clamp(21px,2.2vw,27px);
@@ -943,9 +943,16 @@
            copy and price in the left column with the bottle spanning both rows. -->
       <div class="hero-grid">
         <div class="hero-copy">
-          <h1 id="heroTitle">Smell Proof. <span class="acid">Always.</span></h1>
+          <!-- The H1 leads with the problem, not the slogan. "Smell Proof.
+               Always." is the brand line — it is the schema `slogan`, the
+               <title>, the OG/Twitter titles, the ticker and the footer, so it
+               is not going anywhere; it just stops being the headline and moves
+               into the hook badge below, which is where it sits in the approved
+               design. This also puts a keyword in the H1 for the first time:
+               "sweat" is what people actually search, "Smell Proof" is not. -->
+          <h1 id="heroTitle">Don't let them notice your <span class="acid">sweat.</span></h1>
           <p class="hero-sub">Deodorant works on your skin. The smell people notice is in your shirt. ODORSTRIKE neutralizes it in the fabric.</p>
-          <p><span class="hero-hook">No One Will Know.</span></p>
+          <p><span class="hero-hook">Smell Proof. Always.</span></p>
         </div>
 
         <!-- The product, above the fold. Eager + high priority because this is
