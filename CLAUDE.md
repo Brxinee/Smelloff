@@ -446,6 +446,43 @@ buttons with uppercase wide-tracked labels and a bounce on hover.
 - `/admin` — private admin dashboard ("Mission Control"), served at `admin.smelloff.in` (noindex, password-gated). Single self-contained SPA `admin/index.html` + one serverless function `api/admin.js` (session login, Supabase service-role CRUD over orders/reviews/messages/waitlist/blog_comments, computed business stats, first-party analytics reports, optional GA4 Data API proxy). Order status pipeline: placed→confirmed→packed→dispatched→out_for_delivery→delivered (+upi_pending, cancelled); admin has one-tap "advance" buttons and the customer `track-order.html` timeline mirrors it. Every status change is timestamped into `orders.status_history` (jsonb `[{status,at}]`) + `orders.updated_at` by the `orders_track_status` DB trigger (migration `20260711_order_status_history.sql`), so the customer timeline shows *when* each stage happened plus an estimated-delivery window — no admin wiring needed, the trigger fires on any status update. Setup + env vars in `docs/ADMIN-SETUP.md`. Secrets (`ADMIN_PASSWORD`, `SUPABASE_SERVICE_ROLE_KEY`, optional `GA4_*`) live only in Vercel env — never in the client. Reuses brand fonts/colors; charts follow the validated dark-mode dataviz palette.
 - **First-party analytics** — cookieless, no-Google web analytics. `api/track.js` receives a beacon from every page (added inline to index/faq/odorstrike, via `assets/js/consent-analytics.js` everywhere else) and stores an anonymised row in `page_views` (daily-rotating visitor hash from IP+UA+salt; no cookie, no PII). Aggregated by the `site_analytics()`/`site_realtime()` RPCs (service-role only) and shown in the admin Analytics tab. Runs regardless of the GA/Pixel consent choice because it stores nothing on the device and no personal data. Migration: `supabase/migrations/20260711_first_party_analytics.sql`.
 
+## Blog thumbnails (2026-08-03)
+All 17 posts carry a **1920×1080 (16:9)** featured image — licensed Adobe Stock
+photography under a brand type layer, generated from one config. Full manual in
+`docs/BLOG-THUMBNAILS.md`; run `npm run thumbnails`.
+- **`scripts/thumbnails/thumbnails.config.mjs` is the source of truth** and drives
+  *both* renderers (the local compositor and the Canva Autofill script), so copy
+  and photography can't drift between them. `validateConfig()` throws on an
+  overlay over **six words** — that cap is measured, not taste (past ten words
+  costs ~16% CTR), as is the preference for a question over a statement (~20%)
+  and for a human face over an object (9.2% vs 6.1%).
+- **This reverses two earlier rules.** The old `docs/BLOG-THUMBNAILS.md` banned
+  text baked into the image and specified 1200×630; the 2026-08 research measures
+  the opposite on both counts (Discover letterboxes 630-tall assets). It also
+  described an AI-photographic set as shipped — it never was; the live assets were
+  still the mascot tweet cards.
+- **The old generator is deleted, not just unwired.** `build-blog-thumbnails.js`
+  re-wrapped `<img>`s that were already inside a `<picture>`, so `<source>` rows
+  accumulated on every run — the blog index was carrying six for two formats. The
+  previous doc warned people not to run that step; a warning in prose is not a
+  fix. `apply-thumbnails.mjs` replaces whole blocks, is idempotent, and has
+  `--check` (wired into `npm run build`).
+- **Source photos are gitignored** (`.thumbnail-sources/`, 5–15MB each); only the
+  composites are versioned. The Adobe Stock asset ids are in the config, and
+  re-licensing an id you already own doesn't charge again.
+- **Photo choice is bound by the clothing-only rule.** Never spray on skin/hair/
+  body, never shoes/helmets/bags/gym gear — a thumbnail has no copy to qualify
+  itself. The "clothes, not skin" post first drew an underarm frame that argued
+  the opposite of the post under it.
+- **Bump `V` in `apply-thumbnails.mjs` when the pixels change** — `/assets/*` is
+  `immutable` for a year, the same trap as the shared CSS/JS layers.
+- **The Canva Connect route needs a paid plan and has never been run.** Brand
+  Templates + Autofill are Pro/Teams/Enterprise; the connected account is Free.
+  `scripts/canva_thumbnail_automation.js` is written and guarded but unexercised —
+  and it deviates from the research PDF's reference code on purpose (raw-binary
+  asset upload, because the PDF's `file_base64` JSON body 400s against the live
+  endpoint).
+
 ## Blog prune (2026-07-28)
 The blog was cut from 48 posts to **8** — brand, founder and ODORSTRIKE product
 content only. Kept: `why-i-built-odorstrike`, `odorstrike-review-30-day-india-test`,

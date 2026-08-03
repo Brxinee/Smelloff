@@ -17,6 +17,22 @@ Run:  python3 scripts/build_thumbnails.py            # all posts
 Deps: Pillow, headless Chromium (path auto-detected or $CHROME).
 """
 import os, re, sys, glob, subprocess, tempfile, hashlib
+
+# ---------------------------------------------------------------------------
+# SUPERSEDED (2026-08-03). The blog thumbnails are now photographic 1920x1080
+# (16:9) cards built by scripts/thumbnails/build-thumbnails.mjs from
+# scripts/thumbnails/thumbnails.config.mjs. This script still produces the old
+# 1200x630 mascot "tweet cards" and would overwrite them, and most of the slugs
+# in HEAD below were deleted in the 2026-07-28 blog prune.
+#
+# Kept for reference only. Run `npm run thumbnails` instead.
+if os.environ.get("ALLOW_LEGACY_THUMBNAILS") != "1":
+    sys.exit(
+        "scripts/build_thumbnails.py is superseded — run `npm run thumbnails`.\n"
+        "Set ALLOW_LEGACY_THUMBNAILS=1 to run it anyway (it will overwrite the "
+        "current 16:9 thumbnails with the old 1200x630 mascot cards)."
+    )
+# ---------------------------------------------------------------------------
 from pathlib import Path
 from PIL import Image
 
