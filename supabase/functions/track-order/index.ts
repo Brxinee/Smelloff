@@ -40,7 +40,7 @@ Deno.serve(async (req: Request) => {
 
     const { data: order, error } = await supabase
       .from("orders")
-      .select("order_code, created_at, updated_at, status, status_history, payment_method, amount, items, tracking_id, courier, tracking_url, customer_phone, address")
+      .select("order_code, created_at, updated_at, status, status_history, payment_method, amount, cod_fee, items, tracking_id, courier, tracking_url, customer_phone, address")
       .eq("order_code", code)
       .maybeSingle();
 
@@ -63,7 +63,8 @@ Deno.serve(async (req: Request) => {
       status: order.status,
       status_history: history,
       payment_method: order.payment_method,
-      amount: order.amount, // paise
+      amount: order.amount, // paise, COD handling charge included
+      cod_fee: order.cod_fee ?? 0, // paise; broken out so the total reconciles
       items: order.items,
       city: addr.city || null,
       state: addr.state || null,

@@ -21,7 +21,7 @@ Deodorant treats your skin — about 0.3% of your body's surface area. Your shir
 - Size: 50ml pocket bottle, ~250 sprays per bottle
 - Price: ₹229 for one 50ml bottle (MRP ₹499), inclusive of all taxes. Single SKU — no bundles or multi-packs.
 - Standard MRP: ₹499 per bottle
-- Shipping: Free across India, COD available pan-India. India-only for now — no international shipping yet
+- Shipping: Free across India. COD available pan-India for a ₹60 handling charge — ₹289 collectable on delivery versus ₹229 prepaid by UPI. India-only for now — no international shipping yet
 - Dispatch: within 48 hours
 - Delivery: 3–5 days metro, 5–7 days tier 2/3 cities
 - Returns: 7-day return window, free returns
@@ -135,7 +135,7 @@ Jogdhande Nikhil Patil — solo founder based in Hyderabad. Formulated ODORSTRIK
 ## Core pages
 
 - [Homepage — ODORSTRIKE fabric odor remover spray](https://smelloff.in/): product, pricing, reviews, FAQ
-- [Buy ODORSTRIKE (₹229, COD, free shipping)](https://smelloff.in/odorstrike)
+- [Buy ODORSTRIKE (₹229 prepaid / ₹289 COD, free shipping)](https://smelloff.in/odorstrike)
 - [Blog index — all fabric-odor guides](https://smelloff.in/blog)
 
 ## Ingredient & odor science
@@ -160,6 +160,10 @@ Jogdhande Nikhil Patil — solo founder based in Hyderabad. Formulated ODORSTRIK
 
 - [ODORSTRIKE Review: 30 days, 4 shirts, real results](https://smelloff.in/blog/odorstrike-review-30-day-india-test)
 - [Why I built ODORSTRIKE — founder's note](https://smelloff.in/blog/why-i-built-odorstrike)
+
+## Machine-Readable Feeds & Catalogs
+
+- [OpenAI & AI Agent Product Catalog JSON](https://smelloff.in/products.json) — structured product data for ChatGPT Search and AI shopping agents.
 
 ## Policies
 

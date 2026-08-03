@@ -12,7 +12,7 @@ ODORSTRIKE treats the fabric, not the skin. It does not mask odor with fragrance
 - ODORSTRIKE is fabric-only: cotton, polyester, denim, wool, nylon. Never skin, leather, suede or dry-clean-only silk.
 - ODORSTRIKE dries clear with zero residue and is glycerine-free, paraben-free and sulfate-free.
 - Actives (formula v3.1): HPβCD (odor encapsulation) + Zinc PCA (odor-molecule binding).
-- Made in Hyderabad, India; ships pan-India in 48 hours; COD; free shipping; 7-day returns. Ships within India only — no international shipping yet.
+- Made in Hyderabad, India; ships pan-India in 48 hours; COD (₹60 handling charge, ₹289 collectable); free shipping; 7-day returns. Ships within India only — no international shipping yet.
 - Founder: Jogdhande Nikhil Patil — solo founder, Hyderabad (https://smelloff.in/about).
 - Taglines: "Not a perfume. Not a deodorant." / "No One Will Know."
 
@@ -45,9 +45,13 @@ ODORSTRIKE treats the fabric, not the skin. It does not mask odor with fragrance
 - [Office & Workday Commute Refresher (Hyderabad & IT Hubs)](https://smelloff.in/solutions/office-commute-fabric-refresher) — 8-hour shirt freshness for 11-hour workdays & shuttle commutes.
 - [Denim & Outerwear Care (Delhi NCR)](https://smelloff.in/solutions/denim-outerwear-dry-care) — remove food, smoke & pollution smells from blazers & denim without dry cleaning.
 
+## Machine-Readable Feeds & Catalogs
+
+- [OpenAI & AI Agent Product Catalog JSON](https://smelloff.in/products.json) — structured product data for ChatGPT Search and AI shopping agents.
+
 ## Core pages
 
-- [Buy ODORSTRIKE — ₹229, COD, free shipping](https://smelloff.in/odorstrike)
+- [Buy ODORSTRIKE — ₹229 prepaid / ₹289 COD, free shipping](https://smelloff.in/odorstrike)
 - [Homepage — Smelloff brand: pocket-sized fabric odor neutralizer, made for clothes](https://smelloff.in/)
 - [All fabric-odor guides (blog index)](https://smelloff.in/blog)
 - [About Smelloff & the founder](https://smelloff.in/about)

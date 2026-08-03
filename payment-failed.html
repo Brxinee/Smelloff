@@ -6,6 +6,8 @@
 <title>Payment Failed Policy — Smelloff</title>
 <meta name="description" content="What to do if your UPI payment for an ODORSTRIKE order fails, gets debited but not confirmed, or stays pending.">
 <link rel="canonical" href="https://smelloff.in/payment-failed">
+<!-- noindex is deliberate: this is a transactional dead-end reached only after a
+     failed UPI attempt. It must stay out of the index (and out of sitemap.xml). -->
 <meta name="robots" content="noindex,follow">
 <meta name="geo.region" content="IN-TG">
 <meta name="geo.placename" content="Hyderabad">
@@ -74,7 +76,51 @@
   a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 </style>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","name":"Payment Failed — Smelloff","url":"https://smelloff.in/payment-failed","inLanguage":"en-IN","isPartOf":{"@type":"WebSite","name":"Smelloff","url":"https://smelloff.in"}}
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Payment Failed Policy — Smelloff",
+  "url": "https://smelloff.in/payment-failed",
+  "description": "What to do if your UPI payment for an ODORSTRIKE order fails, gets debited but not confirmed, or stays pending.",
+  "inLanguage": "en-IN",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Smelloff",
+    "url": "https://smelloff.in"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "@id": "https://smelloff.in/#organization",
+    "name": "Smelloff",
+    "url": "https://smelloff.in",
+    "email": "smelloffsupport@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Sanathnagar, Erragadda",
+      "addressLocality": "Hyderabad",
+      "addressRegion": "Telangana",
+      "postalCode": "500018",
+      "addressCountry": "IN"
+    }
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://smelloff.in/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Payment Failed Policy",
+        "item": "https://smelloff.in/payment-failed"
+      }
+    ]
+  }
+}
 </script>
 <style>
   /* ── Iconic design restoration (homepage design language) ─────────────
@@ -164,40 +210,41 @@
 
 <main id="sf-main" tabindex="-1" class="p-main">
   <div class="p-eyebrow">Policy · Payment Failed</div>
-  <h1>Payment Failed / Failed Transaction Policy<span class="h1-dot">.</span></h1>
+  <h1>Payment Failed &amp; Issue Resolution Policy<span class="h1-dot">.</span></h1>
 
   <p>At Smelloff, we currently accept payments via UPI (direct transfer to our UPI ID and QR code). Since payments are processed manually, here's what happens if something goes wrong:</p>
 
   <h2>1. Money debited but order not confirmed</h2>
   <p>If your UPI app shows the payment as successful but you didn't receive an order confirmation from us within 30 minutes:</p>
   <ul>
-    <li>Email us at <a class="inline" href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a> with your UPI transaction ID (UTR), screenshot of the payment, and the phone number/email used to place the order.</li>
-    <li>We'll verify the payment against our records within 24 hours.</li>
-    <li>If confirmed, we'll process your order immediately. If the payment didn't reach us, we'll issue a full refund to your original UPI ID within 5–7 business days.</li>
+    <li>Email us at <a class="inline" href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a> or WhatsApp us at <a class="inline" href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20my%20UPI%20payment%20was%20debited%20but%20order%20is%20unconfirmed.%0AUTR%3A%20">+91 93929 74031</a> with your UPI transaction ID (UTR), payment screenshot, and phone number/email.</li>
+    <li>We'll verify the payment against our bank records within 24 hours.</li>
+    <li>If confirmed, we'll process your order immediately. If the payment didn't reach us, we'll guide you through claiming auto-reversal from your bank or issue a refund within 5–7 business days if received.</li>
   </ul>
 
   <h2>2. Payment failed at your end</h2>
   <p>If your UPI app shows "Failed" or "Pending" and no money was debited, simply retry. No action needed from us.</p>
 
   <h2>3. Payment stuck in "Pending"</h2>
-  <p>UPI pending transactions usually auto-resolve within 24–48 hours. If money is debited and stays pending beyond that, it auto-reverses to your account. If it doesn't, contact your bank — we cannot release a refund for a payment we never received.</p>
+  <p>UPI pending transactions usually auto-resolve within 24–48 hours under NPCI guidelines. If money is debited and stays pending beyond that, it auto-reverses to your account within T+5 business days. If it doesn't, contact your bank with the UTR.</p>
 
   <h2>4. Duplicate payment</h2>
   <p>If you accidentally paid twice for the same order, email us with both UTRs. We'll refund the duplicate amount within 5–7 business days.</p>
 
   <h2>5. Wrong amount paid</h2>
   <ul>
-    <li><strong>Paid less:</strong> We'll email you a request for the balance before dispatching.</li>
+    <li><strong>Paid less:</strong> We'll message you requesting the balance before dispatching.</li>
     <li><strong>Paid more:</strong> We'll refund the excess within 5–7 business days.</li>
   </ul>
 
   <h2>Refund timeline</h2>
-  <p>All verified refunds are processed within 5–7 business days to your original UPI ID. Bank processing may take an additional 2–3 days.</p>
+  <p>All verified refunds are processed within 5–7 business days to your original UPI account. Bank processing may take an additional 1–2 days.</p>
 
   <h2>Contact for payment issues</h2>
   <div class="callout">
-    <p><strong>Email:</strong> <a class="inline" href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a></p>
-    <p>Always include your UTR/transaction ID — we cannot trace payments without it.</p>
+    <p><strong>Email:</strong> <a class="inline" href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a><br>
+    <strong>WhatsApp:</strong> <a class="inline" href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20have%20a%20payment%20issue.%0AUTR%3A%20">+91 93929 74031</a></p>
+    <p>Always include your UTR/transaction ID — we cannot trace bank payments without it.</p>
   </div>
 
   <div class="p-meta">
@@ -209,8 +256,9 @@
          absent field. A proprietorship under the registration threshold is not
          required to display one, so omitting it is accurate either way;
          asserting a pending status is not. -->
+    Operator: Smelloff (Sole Proprietorship) · Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India<br>
     Smelloff · Hyderabad, Telangana, India<br>
-    Last updated: April 2026
+    Last updated: August 2026
   </div>
 </main>
 
