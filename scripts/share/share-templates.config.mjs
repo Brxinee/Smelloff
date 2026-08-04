@@ -157,6 +157,33 @@ export const POSTS = {
     wa: 'The founder story behind ODORSTRIKE — started because deodorant kept solving the wrong half of the problem: {url}',
     x: 'Why I built a fabric odor spray: deodorant treats skin, and the smell everyone was actually noticing was in the shirt. Nobody in India was selling something you could carry for the second problem.',
   },
+
+  /* ---- the 2026-08 strategy series ------------------------------------ */
+
+  'remove-cooking-smell-from-clothes': {
+    wa: 'Turns out kitchen smell lands on you as oil, not as air — which is exactly why airing the kurta on the balcony does nothing. Ten-minute fix: {url}',
+    x: 'Cooking smell doesn\'t drift onto clothes, it lands on them. Hot oil throws a fine aerosol that settles as a film and holds the scent in place, which is why a shirt aired overnight still smells of dinner.',
+  },
+  'remove-smell-from-hoodie-without-washing': {
+    wa: 'Your hoodie smells before it looks dirty because brushed fleece has a huge inner surface area. Also: stop washing it weekly, that\'s what flattens it: {url}',
+    x: 'A hoodie is brushed fleece, which multiplies the inner surface area many times over, on a fibre that grips skin oils. It collects an enormous amount while looking exactly as clean as it did on day one.',
+  },
+  'keep-clothes-fresh-without-washing-machine': {
+    wa: 'For the hostel situation — the clothes don\'t smell because they\'re dirty, they smell because nothing dries. Ninety-second nightly routine: {url}',
+    x: 'Hostel clothes usually smell because of how long they took to dry, not how they were washed. Weekly laundry and a daily wardrobe is an arithmetic problem, and it is solved at night, not on laundry day.',
+  },
+  'remove-cigarette-smoke-smell-from-clothes': {
+    wa: 'Why one evening out is still on the jacket three days later — smoke leaves residue that keeps releasing. Don\'t hang it in the wardrobe: {url}',
+    x: 'A smoky shirt isn\'t holding a fixed amount of smell waiting to escape. It\'s a source, quietly emitting into whatever you hang it next to. Which is why one shirt becomes five.',
+  },
+  'remove-mothball-almirah-smell-from-clothes': {
+    wa: 'Mothball smell survives washing because naphthalene goes solid straight to vapour and gets into every fold. Also stop putting the saree in the sun: {url}',
+    x: 'Naphthalene sublimes — solid straight to vapour — so a closed almirah fills with it and it reaches every fold and seam. It\'s also barely water-soluble, which is why washing does so little.',
+  },
+  'keep-office-trousers-fresh-without-washing': {
+    wa: 'Four zones on the inside of your formals carry almost all of it. Everyone responds by washing the whole trouser, which is what kills the waistband: {url}',
+    x: 'Waistband, inner thigh seams, collar lining, cuffs. Four zones on the inside of formal wear produce nearly all the smell, and the standard response is to wash the entire garment every night.',
+  },
 };
 
 /**

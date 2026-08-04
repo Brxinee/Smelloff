@@ -469,7 +469,7 @@ buttons with uppercase wide-tracked labels and a bounce on hover.
 ## Site structure
 - `/` — brand homepage (hero, benefits, problem, product, voices, founder, FAQ)
 - `/odorstrike` — product page + checkout
-- `/blog` — blog index (8 posts)
+- `/blog` — blog index (29 posts)
 - `/blog/[slug]` — individual blog posts
 - `/shipping`, `/returns`, `/refund`, `/privacy`, `/terms` — policy pages
 - `/llms.txt`, `/llms-full.txt` — AI/LLM context files
@@ -513,6 +513,42 @@ photography under a brand type layer, generated from one config. Full manual in
   and it deviates from the research PDF's reference code on purpose (raw-binary
   asset upload, because the PDF's `file_base64` JSON body 400s against the live
   endpoint).
+
+## Blog expansion from the SEO strategy brief (2026-08-04)
+Six posts added from an external SEO/content strategy report, taking the blog to
+**29**. The report is a useful keyword and information-gain document and its
+scope was wrong for this brand — **four of its six proposed topics were banned
+by "Positioning: clothing only" above**, and were replaced rather than published:
+- **Rejected:** leather jackets *and biker gear* (helmets, riding gear),
+  gym bags / backpacks / duffels, canvas shoes and sneakers, car seat upholstery.
+  The leather-jacket brief was the near miss — a jacket *is* clothing and the
+  "spray the polyester lining, never the hide" angle is genuinely strong — but it
+  was dropped along with the rest rather than published half-in-scope.
+- **Published instead:** `remove-cooking-smell-from-clothes`,
+  `remove-smell-from-hoodie-without-washing`,
+  `keep-clothes-fresh-without-washing-machine` (hostel/PG),
+  `remove-cigarette-smoke-smell-from-clothes`, plus the report's two in-scope
+  topics — `remove-mothball-almirah-smell-from-clothes` and
+  `keep-office-trousers-fresh-without-washing`.
+- **The report also invented product facts.** It specified an "isopropyl solvent
+  base" as the formulation and a "10 minute" dry time. Neither is ours. Every
+  post uses only the locked claims: the v3.1 actives by name, no percentages,
+  "dry in about 10 seconds", "up to 8 hours of odor protection on fabric".
+  Treat any external brief as keyword research, never as a source of formula copy.
+- Each post carries Article + HowTo + FAQPage + Speakable + BreadcrumbList
+  JSON-LD, a `.quick-answer` block, six question-shaped H2s, an on-page FAQ
+  mirrored 1:1 into the schema, and a real primary-source citation with a
+  concrete number (Tang 2024 *Indoor Air* on frying VOCs, Sleiman 2010 *PNAS* on
+  thirdhand smoke, ATSDR on naphthalene subliming, Callewaert 2014 *AEM* on
+  polyester vs cotton).
+- **Fixed alongside:** the blog index `ItemList` schema listed only 17 of 23
+  posts — the whole 2026-08 series had been added to the grid and never to the
+  schema. It now lists all 29. Four section headings in `llms-full.txt`
+  ("Why clothes smell", "How to remove smell", "Use cases", "India climate")
+  had been left empty by the 2026-07-28 prune and are populated again.
+- Three counts on the blog index are hand-written and drift silently: the hero
+  `.b-pill` ("29 Science Guides"), the `data-cat="all"` chip and `#latestCount`.
+  **Update all three when the post count changes.**
 
 ## Blog prune (2026-07-28)
 The blog was cut from 48 posts to **8** — brand, founder and ODORSTRIKE product
