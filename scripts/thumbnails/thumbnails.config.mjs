@@ -258,6 +258,68 @@ export const POSTS = [
     focal: '50% 22%',
     alt: 'A man stands confidently with his arms crossed, illustrating the founder story behind ODORSTRIKE',
   },
+
+  // 2026-08 strategy series. Same clothing-only constraint as the batch above:
+  // every frame was checked for footwear, bags and bare-skin application before
+  // licensing. The nightclub frame was picked for the smoke post because the
+  // alternatives in that search were all backlit crowd silhouettes with no
+  // garment visible at all, which defeats the point of the image.
+  {
+    slug: 'remove-cooking-smell-from-clothes',
+    kicker: 'Everyday care',
+    top: 'Smell like',
+    hi: 'last night\'s dinner?',
+    photo: 359756867,
+    focal: '50% 50%',
+    alt: 'A woman in an apron cooks at a hob, adding vegetables to a hot pan on a wooden kitchen counter',
+  },
+  {
+    slug: 'remove-smell-from-hoodie-without-washing',
+    kicker: 'Fabric care',
+    top: 'Why does',
+    hi: 'your hoodie smell?',
+    photo: 327219686,
+    // The photographer crops the top of the head, so pulling the focal point up
+    // gains nothing and loses the garment — which is the subject here.
+    focal: '50% 45%',
+    alt: 'A woman in a plain black sweatshirt stands against a white wall beside a houseplant',
+  },
+  {
+    slug: 'keep-clothes-fresh-without-washing-machine',
+    kicker: 'Student life',
+    top: 'No machine.',
+    hi: 'Seven days?',
+    photo: 375341026,
+    focal: '50% 50%',
+    alt: 'A hand pegs laundry onto an outdoor washing line, with shirts and towels hanging in the sun',
+  },
+  {
+    slug: 'remove-cigarette-smoke-smell-from-clothes',
+    kicker: 'Smoke odor',
+    top: 'Still smells',
+    hi: 'of last night?',
+    photo: 133782212,
+    focal: '50% 45%',
+    alt: 'A group of friends dance closely together at a party under red and blue club lighting',
+  },
+  {
+    slug: 'remove-mothball-almirah-smell-from-clothes',
+    kicker: 'Storage odor',
+    top: 'Mothball smell',
+    hi: 'survives washing?',
+    photo: 391867480,
+    focal: '50% 50%',
+    alt: 'A hand reaches along a clothes rail of hanging knitwear and sweaters in a sunlit room',
+  },
+  {
+    slug: 'keep-office-trousers-fresh-without-washing',
+    kicker: 'Formalwear',
+    top: 'Wash formals',
+    hi: 'every day?',
+    photo: 212698738,
+    focal: '50% 50%',
+    alt: 'A cropped view of a man in a dark tailored suit and tie buttoning his jacket',
+  },
 ];
 
 /**

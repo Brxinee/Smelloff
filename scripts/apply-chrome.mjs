@@ -242,6 +242,17 @@ const PAGES = [
     'keep-clothes-fresh-while-travelling', 'which-fabrics-hold-odor-most',
     'remove-smell-from-blazer-without-dry-cleaning', 'fabric-deodorizer-spray-india-guide-2026',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
+  // 2026-08 second series: the six built from the SEO strategy brief. Four of
+  // the brief's six topics were out of scope under CLAUDE.md "Positioning:
+  // clothing only" (gym bags, canvas shoes, car upholstery, biker gear) and
+  // were replaced with in-scope ones. These ship with empty <nav>/<footer>
+  // placeholders, so the header/footer below get stamped into them on the
+  // first run exactly as they were for the 2026-07-29 batch.
+  ...[
+    'remove-cooking-smell-from-clothes', 'remove-smell-from-hoodie-without-washing',
+    'keep-clothes-fresh-without-washing-machine', 'remove-cigarette-smoke-smell-from-clothes',
+    'remove-mothball-almirah-smell-from-clothes', 'keep-office-trousers-fresh-without-washing',
+  ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
   // solutions hub & regional guides
   ...[
     'solutions/index.html',
