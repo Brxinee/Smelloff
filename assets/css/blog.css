@@ -78,6 +78,17 @@ strong{color:var(--off-white);font-weight:700}
 .quick-answer p{margin:0;color:var(--text);font-size:16px;line-height:1.6}
 .inline-cta{color:var(--acid);text-decoration:underline;text-decoration-color:var(--acid);text-underline-offset:3px}
 
+/* Citation links in the .sources block.
+   These had no rule anywhere, so on all 29 posts they fell through to the UA
+   default — #0000EE blue, and #551A8B purple once visited — on a #080808
+   background. Unreadable, and the one part of the page that exists to read as
+   evidence looked broken instead.
+   Matches .inline-cta above. :visited is restated because the UA sheet's
+   visited rule would otherwise keep the purple. */
+.sources a,
+.sources a:visited{color:var(--acid);text-decoration:underline;text-decoration-color:var(--acid);text-underline-offset:3px;overflow-wrap:anywhere}
+.sources a:hover{color:var(--acid-hi,var(--acid))}
+
 /* "The bottom line" standardized conclusion container */
 .bottom-line{background:var(--bg-surface);border:1px solid var(--line);border-radius:2px;padding:28px 30px;margin:52px 0 0}
 .bottom-line h2{margin:0 0 12px;font-size:clamp(22px,3vw,28px)}

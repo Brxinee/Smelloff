@@ -348,6 +348,12 @@ function ensureAssets(html) {
   for (const [file, pattern] of [
     ['assets/css/tokens.css', /(href="\/assets\/css\/tokens\.css)(\?[^"]*)?"/g],
     ['assets/fonts.css', /(href="\/assets\/fonts\.css)(\?[^"]*)?"/g],
+    // blog.css was hand-versioned (`?v=6`) across 29 posts, which is the same
+    // trap as the rest of this list: `/assets/*` is immutable for a year, so a
+    // change only reaches returning visitors if somebody remembers to bump the
+    // number by hand. Nobody did — the citation-link fix in it would have
+    // shipped invisibly. Now content-hashed like everything else.
+    ['assets/css/blog.css', /(href="\/assets\/css\/blog\.css)(\?[^"]*)?"/g],
     ['assets/js/consent-analytics.js', /(src="\/assets\/js\/consent-analytics\.js)(\?[^"]*)?"/g],
     // blog-share.js is NOT stamped here — see ensureShareScript(), which
     // inserts it rather than only re-stamping a tag that already exists.
