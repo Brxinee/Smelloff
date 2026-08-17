@@ -15,6 +15,8 @@
     "seo:revenue": "node scripts/seo/apply-revenue-seo.mjs",
     "seo:revenue:check": "node scripts/seo/apply-revenue-seo.mjs --check",
     "seo:discovery:check": "node scripts/seo/check-blog-discovery.mjs",
+    "seo:indexability:check": "node scripts/seo/check-indexability.mjs",
+    "seo:redirects:check": "node scripts/seo/check-redirects.mjs",
     "seo:claims": "node scripts/seo/harden-product-claims.mjs",
     "seo:claims:check": "node scripts/seo/harden-product-claims.mjs --check",
     "sitemap": "node scripts/seo/build-sitemap.mjs",
@@ -23,7 +25,8 @@
     "pdp": "node scripts/quality/apply-pdp-conversion.mjs",
     "pdp:check": "node scripts/quality/apply-pdp-conversion.mjs --check",
     "indexnow": "node scripts/indexnow-ping.mjs",
-    "build": "node scripts/quality/apply-pdp-conversion.mjs && node scripts/seo/apply-revenue-seo.mjs && node scripts/seo/harden-product-claims.mjs && node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs && node scripts/seo/build-sitemap.mjs --check && node scripts/seo/check-blog-discovery.mjs && node scripts/quality/check-public-truth.mjs && node scripts/quality/apply-pdp-conversion.mjs --check && node scripts/seo/apply-revenue-seo.mjs --check && node scripts/seo/harden-product-claims.mjs --check && node -c server.js",
+    "postinstall": "node scripts/quality/apply-pdp-conversion.mjs && node scripts/seo/apply-revenue-seo.mjs && node scripts/seo/harden-product-claims.mjs && node scripts/seo/build-sitemap.mjs && node scripts/seo/check-blog-discovery.mjs && node scripts/seo/check-indexability.mjs && node scripts/seo/check-redirects.mjs",
+    "build": "node scripts/quality/apply-pdp-conversion.mjs && node scripts/seo/apply-revenue-seo.mjs && node scripts/seo/harden-product-claims.mjs && node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs && node scripts/seo/build-sitemap.mjs --check && node scripts/seo/check-blog-discovery.mjs && node scripts/seo/check-indexability.mjs && node scripts/seo/check-redirects.mjs && node scripts/quality/check-public-truth.mjs && node scripts/quality/apply-pdp-conversion.mjs --check && node scripts/seo/apply-revenue-seo.mjs --check && node scripts/seo/harden-product-claims.mjs --check && node -c server.js",
     "lint": "node -c server.js",
     "start": "node server.js"
   },
