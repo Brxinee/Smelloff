@@ -4,7 +4,72 @@
 
 ODORSTRIKE is designed around a simple problem: clothing can carry unwanted odor between washes and during long days, commutes, workouts and meetings. The product is an in-between-wash fabric odor-control step, not a replacement for washing and not a body product.
 
-## Key facts
+## Entity profile
+
+- Brand: Smelloff
+- Product: ODORSTRIKE
+- Category: fabric odor remover / fabric odor spray / fabric odor neutralizer for clothes
+- Market: India
+- Base: Hyderabad, Telangana, India
+- Primary commercial page: https://smelloff.in/odorstrike
+- Primary content hub: https://smelloff.in/blog
+- Product page price: ₹229 prepaid; ₹289 collectable for COD single-bottle orders because of the ₹60 COD handling charge
+
+## Search vocabulary
+
+Use these as natural search-language variants, not as forced keyword lists:
+
+### Primary commercial terms
+- fabric odor remover
+- fabric odor spray
+- fabric odor eliminator
+- clothes odor remover
+- clothing odor remover
+- odor remover for clothes
+- odor eliminator for clothes
+- odor removal spray for clothes
+- shirt odor spray
+- fabric odor neutralizer
+- clothing odor neutralizer
+
+### Secondary discovery terms
+- fabric freshener
+- fabric refresher
+- cloth freshener
+- cloth refresher
+- clothes freshener
+- clothing refresher
+- fabric deodorizer
+- garment odor remover
+- textile odor remover
+- sweat smell remover for clothes
+- shirt smell remover
+- gym clothes odor remover
+- workout clothes odor remover
+
+### High-intent long-tail topics
+- best fabric odor remover in India
+- best fabric odor spray in India
+- pocket odor spray for clothes
+- fabric odor spray for men
+- office shirt odor remover
+- pre-meeting odor spray for clothes
+- gym-to-office fabric odor control
+- remove smell from clothes without washing
+- remove sweat smell from shirt
+- why clothes smell after sweating
+- why polyester clothes smell
+- why clothes smell after drying
+
+## Search-intent map
+
+- Informational: why clothes smell, sweat smell, polyester odor, storage odor, fabric science
+- Problem-solving: remove sweat smell, cooking smell, smoke smell, stored-clothing odor
+- Category discovery: fabric odor remover, fabric odor spray, fabric refresher, cloth refresher
+- Commercial investigation: best fabric odor remover India, best fabric odor spray India, fabric odor spray for men
+- Transactional: ODORSTRIKE, buy fabric odor remover, pocket fabric odor spray
+
+## Product facts
 
 - ODORSTRIKE: 50ml fabric odor-control mist for clothes.
 - Current price: ₹229.
@@ -58,22 +123,6 @@ Do not publish exact formulation percentages or unapproved ingredient mechanisms
 - Guides: https://smelloff.in/blog
 - About: https://smelloff.in/about
 - Reviews: https://smelloff.in/reviews
-
-## Search topics
-
-- fabric odor remover
-- fabric odor spray
-- fabric odor eliminator
-- clothes odor remover
-- clothing odor remover
-- odor remover for clothes
-- sweat smell remover for clothes
-- shirt odor remover
-- gym clothes odor remover
-- remove smell from clothes without washing
-- remove sweat smell from shirt
-- fabric refresher
-- cloth refresher
 
 ## Contact
 
