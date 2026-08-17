@@ -1,9 +1,5 @@
 #!/usr/bin/env node
-/**
- * Crawl/index safety audit for Smelloff.
- * Fails when an indexable HTML page is missing a self-canonical or when
- * the sitemap points at a URL that does not map to an indexable page.
- */
+/** Crawl/index safety audit for Smelloff. */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -33,6 +29,7 @@ function urlPathFor(file) {
 
 function isIndexable(html, urlPath) {
   if (urlPath === '/404') return false;
+  if (/google-site-verification:/i.test(html)) return false;
   return !/<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(html);
 }
 
@@ -45,10 +42,7 @@ function sitemapUrls() {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
 }
 
-const pages = walk(REPO).map(file => {
-  const html = fs.readFileSync(file, 'utf8');
-  return { file, html, urlPath: urlPathFor(file) };
-});
+const pages = walk(REPO).map(file => ({ file, html: fs.readFileSync(file, 'utf8'), urlPath: urlPathFor(file) }));
 const indexable = pages.filter(p => isIndexable(p.html, p.urlPath));
 const pageMap = new Map(indexable.map(p => [ORIGIN + p.urlPath, p]));
 const urls = sitemapUrls();
