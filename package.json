@@ -14,8 +14,9 @@
     "share:check": "node scripts/share/apply-share-templates.mjs --check",
     "sitemap": "node scripts/seo/build-sitemap.mjs",
     "sitemap:check": "node scripts/seo/build-sitemap.mjs --check",
+    "truth:check": "node scripts/quality/check-public-truth.mjs",
     "indexnow": "node scripts/indexnow-ping.mjs",
-    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs --check && node -c server.js",
+    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs --check && node scripts/quality/check-public-truth.mjs && node -c server.js",
     "lint": "node -c server.js",
     "start": "node server.js"
   },
