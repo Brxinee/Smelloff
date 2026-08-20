@@ -15,11 +15,12 @@ const ALLOWED_ORIGINS = new Set([
 const ALLOWED_EVENTS = new Set([
   'pageview', 'click', 'product_view', 'view_content', 'select_content',
   'buy_cta_click', 'add_to_cart', 'remove_from_cart', 'cart', 'cart_update',
-  'begin_checkout', 'add_payment_info', 'purchase', 'purchase_confirmed',
+  'begin_checkout', 'checkout_start', 'payment_method_select', 'checkout_field_fill',
+  'checkout_error', 'add_payment_info', 'purchase', 'purchase_confirmed',
   'refund', 'contact_submit', 'review_submit', 'search', 'error',
 ]);
 
-const CART_EVENTS = new Set(['add_to_cart', 'remove_from_cart', 'cart', 'cart_update']);
+const CART_EVENTS = new Set(['add_to_cart', 'remove_from_cart', 'cart', 'cart_update', 'checkout_start']);
 const BOT_RE = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quora|pinterest|vkshare|whatsapp|telegram|preview|monitor|lighthouse|headless|pingdom|uptime|curl|wget|python-requests|axios|node-fetch|go-http/i;
 const MAX_BODY_BYTES = 24 * 1024;
 const MAX_META_KEYS = 24;

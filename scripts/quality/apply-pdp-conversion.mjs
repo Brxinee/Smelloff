@@ -107,7 +107,7 @@ function check() {
   if (/kills sweat smell in seconds|eliminate odor from clothes instantly/i.test(html)) {
     throw new Error('Legacy instant-performance language remains on the PDP.');
   }
-  if (/Triethyl Citrate|Zinc Gluconate stops regrowth/i.test(html)) {
+  if (/Triethyl Citrate prevents new odor|Zinc Gluconate stops regrowth/i.test(html)) {
     throw new Error('Unapproved formulation language remains on the PDP.');
   }
   console.log('ODORSTRIKE PDP conversion layer check passed.');

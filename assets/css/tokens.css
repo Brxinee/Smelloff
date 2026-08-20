@@ -17,17 +17,23 @@
 
 :root{
   /* ---- Color -------------------------------------------------------- */
-  --ink:#080808;              /* page background */
-  --surface:#0F0F0F;          /* card / slab fill */
-  --surface-2:#141414;        /* raised slab, chips */
-  --text:#F4F1EA;             /* warm paper white — the one true text color */
-  --muted:#9A958D;            /* secondary copy */
+  --ink:#080808;              /* brand black / page background */
+  --surface:#111111;          /* dark surface card / slab fill */
+  --surface-2:#161616;        /* raised slab, chips */
+  --surface-light:#FFFFFF;    /* white surface */
+  --bg-light:#F7F7F5;         /* light background for hybrid sections */
+  --text-dark:#0A0A0A;        /* primary dark text */
+  --text-dark-muted:#666666;  /* secondary light-bg text */
+  --text:#F4F1EA;             /* warm paper white */
+  --muted:#A0A0A0;            /* secondary dark-bg copy */
   --text-2:#C9C5BD;           /* secondary copy — brighter than --muted */
-  --acid:#B8FF57;             /* the single accent */
+  --acid:#B8FF57;             /* acid green accent */
   --acid-hi:#D1FF8A;          /* accent hover */
   --acid-dim:rgba(184,255,87,.12);
   --acid-rgb:184,255,87;
   --on-acid:#080808;          /* text ON acid is always ink, never white */
+  --border-light:#E5E5E2;     /* light borders */
+  --border-dark:#252525;      /* dark borders */
   --rule:rgba(244,241,234,.14);
   --rule-soft:rgba(244,241,234,.08);
   --rule-strong:rgba(244,241,234,.28);

@@ -43,10 +43,11 @@ function normalizeOne(slug) {
   let html = fs.readFileSync(file, 'utf8');
   const before = html;
 
-  html = html.replace(/<header class="sf-hdr">[\s\S]*?<\/header>/i, HEADER);
+  html = html.replace(/(?:\s*<!-- \/?SF-CHROME:HEADER -->\s*|\s*<a class="sf-skip"[^>]*>Skip to content<\/a>\s*)*<header class="sf-hdr">[\s\S]*?<\/header>(?:\s*<!-- \/?SF-CHROME:HEADER -->\s*)*/gi, HEADER);
   html = normalizeFaq(html);
-  html = html.replace(/<footer class="sf-ftr">[\s\S]*?<\/footer>/i, FOOTER.replace('__SLUG__', slug));
+  html = html.replace(/(?:\s*<!-- \/?SF-CHROME:FOOTER -->\s*|\s*<script src="\/assets\/js\/blog-share\.js[^"]*" defer><\/script>\s*)*<footer class="sf-ftr">[\s\S]*?<\/footer>(?:\s*<!-- \/?SF-CHROME:FOOTER -->\s*|\s*<script src="\/assets\/js\/blog-share\.js[^"]*" defer><\/script>\s*)*/gi, FOOTER.replace('__SLUG__', slug));
 
+  html = html.replace(/(?:<div id="progress-bar"><\/div>\s*)+/g, '<div id="progress-bar"></div>\n');
   if (!html.includes('<div id="progress-bar"></div>')) {
     html = html.replace('<body>', '<body>\n<div id="progress-bar"></div>');
   }
@@ -58,10 +59,6 @@ function normalizeOne(slug) {
 
   if (!html.includes('class="sf-ftr"')) {
     html = html.replace('</body>', FOOTER.replace('__SLUG__', slug) + '\n</body>');
-  } else {
-    // If footer existed before, ensure share script is present exactly once.
-    const shareCount = (html.match(/blog-share\.js/g) || []).length;
-    if (shareCount === 0) html = html.replace('</body>', '<script src="/assets/js/blog-share.js?v=7c7fb634" defer></script>\n</body>');
   }
 
   if (html !== before) {
