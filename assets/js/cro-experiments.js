@@ -1,21 +1,31 @@
 /* =====================================================================
-   Smelloff & ODORSTRIKE — CRO Experimentation Engine (v1.0)
+   Smelloff & ODORSTRIKE — CRO Experimentation Engine (v1.1)
    =====================================================================
-   Deterministic, cookieless, zero-CLS experimentation framework.
-   Prioritized Experiments:
-     1. Hero / Category Clarity
-     2. 1-Pack vs 2-Pack Default
-     3. Pricing Architecture & Bundle Tiering
-     4. COD Fee vs Prepaid Incentive
-     5. Demonstration Placement
-     6. Review Placement
+   Deterministic, cookieless, single-experiment isolation architecture.
+   Only ONE experiment is active by default to prevent statistical contamination.
+   
+   ACTIVE EXPERIMENT:
+     1. Hero / Category Clarity (EXP-01-HERO)
+        - Control: Approved Baseline Hero
+        - Variant A (action_reset): Problem & Behavior Framing
+        - Variant B (clothes_deodorant): Category & Product Clarity Framing
+   
+   Dormant / Flag-Gated Experiments (Preserved for sequential iterations):
+     2. 1-Pack vs 2-Pack Default (EXP-02-BUNDLE)
+     3. Pricing Architecture (EXP-03-PRICING)
+     4. COD Fee vs Prepaid Incentive (EXP-04-PAYMENT)
+     5. Demonstration Placement (EXP-05-DEMO)
+     6. Review & Proof Placement (EXP-06-REVIEWS)
    ===================================================================== */
 (function() {
   'use strict';
 
   if (window.SMELLOFF_EXPERIMENTS) return;
 
-  var STORAGE_KEY = 'smf_exp_bucket_v1';
+  var STORAGE_KEY = 'smf_exp_bucket_v2';
+
+  // Configurable active experiments list — single experiment active by default
+  var ACTIVE_EXPERIMENTS = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.ACTIVE_EXPERIMENTS) || ['exp_hero_clarity'];
 
   // Seed / Hash generator for deterministic A/B assignment
   function getVisitorSeed() {
@@ -27,7 +37,7 @@
       }
       return sid;
     } catch (e) {
-      return 'fallback_guest_' + Math.floor(Math.random() * 10000);
+      return 'guest_' + Math.floor(Math.random() * 10000);
     }
   }
 
@@ -41,16 +51,16 @@
     return Math.abs(hash);
   }
 
-  // Get URL param overrides for testing (e.g. ?exp_hero=b or ?exp_bundle=duo)
+  // URL overrides for internal QA / review (?exp_hero=control | action_reset | clothes_deodorant)
   var urlParams = new URLSearchParams(window.location.search);
-
   var visitorId = getVisitorSeed();
 
-  // Active Experiment Registry
+  // Full Experiment Specifications Registry
   var EXPERIMENT_SPECS = {
     exp_hero_clarity: {
       id: 'EXP-01-HERO',
       name: 'Hero Category Clarity',
+      defaultVariant: 'control',
       variants: ['control', 'action_reset', 'clothes_deodorant'],
       weights: [0.34, 0.33, 0.33],
       overrideParam: 'exp_hero'
@@ -58,6 +68,7 @@
     exp_bundle_default: {
       id: 'EXP-02-BUNDLE',
       name: '1-Pack vs 2-Pack Default',
+      defaultVariant: 'solo',
       variants: ['solo', 'duo'],
       weights: [0.50, 0.50],
       overrideParam: 'exp_bundle'
@@ -65,6 +76,7 @@
     exp_pricing_arch: {
       id: 'EXP-03-PRICING',
       name: 'Pricing Architecture',
+      defaultVariant: 'standard',
       variants: ['standard', 'tiered_savings'],
       weights: [0.50, 0.50],
       overrideParam: 'exp_pricing'
@@ -72,6 +84,7 @@
     exp_payment_incentive: {
       id: 'EXP-04-PAYMENT',
       name: 'COD Fee vs Prepaid Incentive',
+      defaultVariant: 'standard_cod_fee',
       variants: ['standard_cod_fee', 'prepaid_discount'],
       weights: [0.50, 0.50],
       overrideParam: 'exp_payment'
@@ -79,6 +92,7 @@
     exp_demo_placement: {
       id: 'EXP-05-DEMO',
       name: 'Demonstration Placement',
+      defaultVariant: 'standard',
       variants: ['standard', 'high_priority'],
       weights: [0.50, 0.50],
       overrideParam: 'exp_demo'
@@ -86,6 +100,7 @@
     exp_review_placement: {
       id: 'EXP-06-REVIEWS',
       name: 'Review & Proof Placement',
+      defaultVariant: 'standard',
       variants: ['standard', 'prominent'],
       weights: [0.50, 0.50],
       overrideParam: 'exp_reviews'
@@ -94,15 +109,15 @@
 
   var activeVariants = {};
 
-  // Assign variants deterministically
+  // Assign variants deterministically (only active experiments receive randomized buckets)
   Object.keys(EXPERIMENT_SPECS).forEach(function(expKey) {
     var spec = EXPERIMENT_SPECS[expKey];
     var overrideVal = urlParams.get(spec.overrideParam);
 
     if (overrideVal && spec.variants.indexOf(overrideVal) !== -1) {
       activeVariants[expKey] = overrideVal;
-    } else {
-      // Deterministic bucket allocation
+    } else if (ACTIVE_EXPERIMENTS.indexOf(expKey) !== -1) {
+      // Deterministic bucket allocation for active experiment
       var h = hashString(visitorId + '_' + spec.id) % 100;
       var cumulative = 0;
       var chosen = spec.variants[0];
@@ -115,6 +130,9 @@
         }
       }
       activeVariants[expKey] = chosen;
+    } else {
+      // Inactive experiments strictly locked to baseline default
+      activeVariants[expKey] = spec.defaultVariant;
     }
   });
 
@@ -124,21 +142,31 @@
       if (typeof window.smfTrack === 'function') {
         window.smfTrack({
           type: 'experiment_assigned',
-          label: 'CRO_V1',
-          meta: Object.assign({}, activeVariants)
+          label: 'CRO_V1_SINGLE_HERO',
+          meta: {
+            active_experiment: 'exp_hero_clarity',
+            variant: activeVariants.exp_hero_clarity,
+            all_variants: Object.assign({}, activeVariants)
+          }
         });
       }
       if (typeof gtag !== 'undefined') {
-        var gPayload = Object.assign({ event_category: 'Experimentation' }, activeVariants);
-        gtag('event', 'cro_experiment_loaded', gPayload);
+        gtag('event', 'cro_experiment_loaded', {
+          event_category: 'Experimentation',
+          experiment_id: 'EXP-01-HERO',
+          variant: activeVariants.exp_hero_clarity
+        });
       }
       if (typeof fbq !== 'undefined') {
-        fbq('trackCustom', 'ExperimentAssigned', activeVariants);
+        fbq('trackCustom', 'ExperimentAssigned', {
+          experiment_id: 'EXP-01-HERO',
+          variant: activeVariants.exp_hero_clarity
+        });
       }
     } catch (e) {}
   }
 
-  // Apply Hero Variant Copy
+  // Apply Hero Variant Copy (Strictly verified claims only)
   function applyHeroExperiment() {
     var variant = activeVariants.exp_hero_clarity;
     if (variant === 'control') return;
@@ -147,33 +175,19 @@
     var heroSub = document.getElementById('heroSubheading') || document.querySelector('.hero-sub') || document.querySelector('.ph-tagline');
 
     if (variant === 'action_reset') {
-      if (heroTitle) heroTitle.innerHTML = 'Target Fabric Odor<br>At The Weave.';
-      if (heroSub) heroSub.innerHTML = 'Stop spraying heavy perfume over sweaty shirts. ODORSTRIKE atomizes molecular cyclodextrins directly into fabric weaves to neutralize odor on clothes.';
+      // Variant A: Problem & Behavior Framing
+      if (heroTitle) heroTitle.innerHTML = 'Target Sweat Odor<br>At The Clothing Weave.';
+      if (heroSub) heroSub.innerHTML = 'Stop spraying heavy perfume over sweaty shirts. ODORSTRIKE mist neutralizes odor compounds directly on fabric fibers with up to 8 hours of protection.';
     } else if (variant === 'clothes_deodorant') {
-      if (heroTitle) heroTitle.innerHTML = 'Fabric Odor Spray<br>For Your Clothes.';
-      if (heroSub) heroSub.innerHTML = 'Daytime sweat odor stays trapped in your shirt fabric, not on your skin. ODORSTRIKE captures and eliminates odor compounds directly at the fiber source.';
-    }
-  }
-
-  // Apply Bundle Default (1-bottle vs 2-bottle default test)
-  function applyBundleDefaultExperiment() {
-    var variant = activeVariants.exp_bundle_default;
-    if (variant === 'duo' && typeof window.pdpQtyStep === 'function') {
-      try {
-        if (!sessionStorage.getItem('smf_user_selected_qty')) {
-          var qv = document.getElementById('pdpQtyVal');
-          if (qv && qv.textContent.trim() === '1') {
-            window.pdpQtyStep(1);
-          }
-        }
-      } catch (e) {}
+      // Variant B: Category & Product Clarity Framing
+      if (heroTitle) heroTitle.innerHTML = 'Pocket Fabric Odor Spray<br>For Your Clothes.';
+      if (heroSub) heroSub.innerHTML = 'Daytime sweat odor stays trapped in shirt fabric, not on your skin. ODORSTRIKE captures and eliminates odor compounds directly at the fiber source — not a perfume, not a deodorant.';
     }
   }
 
   // Apply DOM experiments on DOMContentLoaded
   function initExperiments() {
     applyHeroExperiment();
-    applyBundleDefaultExperiment();
     emitExperimentEvents();
   }
 
@@ -185,8 +199,11 @@
 
   // Public API
   window.SMELLOFF_EXPERIMENTS = {
+    getActiveExperiment: function() {
+      return 'exp_hero_clarity';
+    },
     getVariant: function(expName) {
-      return activeVariants[expName] || null;
+      return activeVariants[expName] || (EXPERIMENT_SPECS[expName] ? EXPERIMENT_SPECS[expName].defaultVariant : null);
     },
     getAllVariants: function() {
       return Object.assign({}, activeVariants);

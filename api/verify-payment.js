@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import { Resend } from 'resend';
 import { orderConfirmation } from './email-templates.js';
 
@@ -18,7 +17,7 @@ function isAllowedOrigin(origin) {
   return false;
 }
 
-async function updateSupabaseOrder(orderCode, paymentId, rzpOrderId) {
+async function updateSupabaseOrderConfirmed(orderCode, upiRef) {
   if (!SERVICE_KEY || !orderCode) return null;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`, {
@@ -31,7 +30,7 @@ async function updateSupabaseOrder(orderCode, paymentId, rzpOrderId) {
       },
       body: JSON.stringify({
         status: 'confirmed',
-        upi_ref: paymentId || rzpOrderId,
+        upi_ref: upiRef || null,
         updated_at: new Date().toISOString()
       })
     });
@@ -64,38 +63,14 @@ export default async function handler(req, res) {
 
   try {
     const body = req.body && typeof req.body === 'object' ? req.body : {};
-    const {
-      orderCode,
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-      customerEmail,
-      customerName,
-      amount,
-      address
-    } = body;
+    const { orderCode, upiRef, customerEmail, customerName, amount, address } = body;
 
     if (!orderCode) {
       return res.status(400).json({ error: 'Order reference required' });
     }
 
-    const keySecret = process.env.RAZORPAY_KEY_SECRET;
-
-    // Cryptographic signature verification if Razorpay secret is set
-    if (keySecret && razorpay_order_id && razorpay_payment_id) {
-      const generatedSignature = crypto
-        .createHmac('sha256', keySecret)
-        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-        .digest('hex');
-
-      if (generatedSignature !== razorpay_signature) {
-        console.error('[verify-payment] Signature mismatch for order:', orderCode);
-        return res.status(400).json({ error: 'Invalid payment signature. Verification failed.' });
-      }
-    }
-
-    // Update order status idempotently to 'confirmed'
-    const updatedOrder = await updateSupabaseOrder(orderCode, razorpay_payment_id, razorpay_order_id);
+    // Transition state from upi_pending to confirmed
+    const updatedOrder = await updateSupabaseOrderConfirmed(orderCode, upiRef);
 
     // Send confirmation email asynchronously if email is present
     if (process.env.RESEND_API_KEY && customerEmail) {
@@ -105,10 +80,10 @@ export default async function handler(req, res) {
           customerName: customerName || 'there',
           amount: String(amount || 229),
           address: typeof address === 'string' ? address : [address?.line, address?.city, address?.state, address?.pincode].filter(Boolean).join(', '),
-          paymentMethod: 'Prepaid (Razorpay / Online UPI)'
+          paymentMethod: 'UPI Prepaid'
         });
         const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
+        resend.emails.send({
           from: FROM,
           to: customerEmail,
           replyTo: REPLY_TO,
@@ -124,7 +99,6 @@ export default async function handler(req, res) {
       ok: true,
       verified: true,
       orderId: orderCode,
-      paymentId: razorpay_payment_id || null,
       status: 'confirmed'
     });
 

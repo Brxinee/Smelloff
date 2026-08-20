@@ -3915,6 +3915,12 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
 
 
+
+
+
+
+
+
 <!-- PDP-CONVERSION-LAYER:START -->
 <section class="pdp-conv" aria-labelledby="pdp-conv-problem">
   <div class="pdp-conv__inner">
@@ -4677,7 +4683,7 @@ window.createSupabaseOrder = function (opts) {
     }
 
     trackPurchase(amount, orderId);
-    soAttachOrder(orderId, amount, cartQty > 0 ? cartQty : 1, method === 'cod' ? 'cod' : 'razorpay');
+    soAttachOrder(orderId, amount, cartQty > 0 ? cartQty : 1, method === 'cod' ? 'cod' : 'upi');
     setCartQty(0);
     // Unlock review submission (client-side gate — not tamper-proof).
     try {
@@ -4693,17 +4699,6 @@ window.createSupabaseOrder = function (opts) {
   }
 
   var _submittingOrder = false;
-
-  function loadRazorpaySdk() {
-    return new Promise(function(resolve) {
-      if (window.Razorpay) return resolve(true);
-      var s = document.createElement('script');
-      s.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      s.onload = function() { resolve(true); };
-      s.onerror = function() { resolve(false); };
-      document.head.appendChild(s);
-    });
-  }
 
   async function submitOrder() {
     if (_submittingOrder) return;
@@ -4748,14 +4743,14 @@ window.createSupabaseOrder = function (opts) {
     const total = totals.subtotal + totals.shipping;
 
     try {
-      showLoadingScreen(isCod ? 'Placing your order…' : 'Securing payment…', isCod ? 'Confirming with our team' : 'Connecting to gateway');
+      showLoadingScreen(isCod ? 'Placing your order…' : 'Securing UPI session…', isCod ? 'Confirming with our team' : 'Generating secure payment link');
 
       const createRes = await fetch('/api/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           quantity: reqQty,
-          paymentMethod: isCod ? 'cod' : 'razorpay',
+          paymentMethod: isCod ? 'cod' : 'upi',
           customer: customerPayload
         })
       });
@@ -4766,113 +4761,30 @@ window.createSupabaseOrder = function (opts) {
       }
 
       const orderId = orderData.orderId;
-      const order = collectOrder(orderId, isCod ? 'COD' : 'PREPAID');
+      const order = collectOrder(orderId, isCod ? 'COD' : 'UPI_PENDING');
       logOrderToSheets(order);
       smfCartBeacon('cart_update', { name: order.name, email: order.email, phone: order.phone });
 
       if (isCod) {
-        if (order.email) {
-          SmelloffEmail.send('orderConfirmation', order.email, {
-            orderId: order.orderId,
-            customerName: order.name || 'there',
-            amount: String(orderData.amount || order.total),
-            codFee: order.codFee,
-            address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '),
-            paymentMethod: 'Cash on Delivery'
-          }).catch(console.error);
-        }
         setTimeout(() => {
           _submittingOrder = false;
           btn.disabled = false;
           showSuccess(orderId, 'cod');
-        }, 1500);
+        }, 1200);
         return;
       }
 
-      // Online / Razorpay flow
-      const hasSdk = await loadRazorpaySdk();
-      if (orderData.razorpayOrderId && hasSdk && window.Razorpay) {
-        hideLoadingScreen();
-        const rzpOptions = {
-          key: orderData.keyId,
-          amount: orderData.amountPaise,
-          currency: 'INR',
-          name: 'Smelloff',
-          description: 'ODORSTRIKE Fabric Odor Spray (50ml)',
-          image: 'https://smelloff.in/assets/odorstrike-bottle.webp',
-          order_id: orderData.razorpayOrderId,
-          prefill: {
-            name: customerPayload.name,
-            contact: customerPayload.phone,
-            email: customerPayload.email
-          },
-          theme: {
-            color: '#25f47a',
-            backdrop_color: 'rgba(8, 9, 10, 0.85)'
-          },
-          handler: async function(rzpResp) {
-            showLoadingScreen('Verifying payment…', 'Confirming with bank');
-            try {
-              const verifyRes = await fetch('/api/verify-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  orderCode: orderId,
-                  razorpay_order_id: rzpResp.razorpay_order_id,
-                  razorpay_payment_id: rzpResp.razorpay_payment_id,
-                  razorpay_signature: rzpResp.razorpay_signature,
-                  customerEmail: customerPayload.email,
-                  customerName: customerPayload.name,
-                  amount: orderData.amount,
-                  address: customerPayload
-                })
-              });
-              const verifyData = await verifyRes.json();
-              if (verifyData && verifyData.ok) {
-                showSuccess(orderId, 'prepaid');
-              } else {
-                showSuccess(orderId, 'prepaid'); // Recovery safe
-              }
-            } catch (e) {
-              showSuccess(orderId, 'prepaid');
-            } finally {
-              _submittingOrder = false;
-              btn.disabled = false;
-            }
-          },
-          modal: {
-            ondismiss: function() {
-              _submittingOrder = false;
-              btn.disabled = false;
-              btnText.textContent = (payMethod === 'cod' ? 'PLACE COD ORDER · ₹' : 'OPEN UPI APP · ₹') + orderTotals().total;
-              hideLoadingScreen();
-            }
-          }
-        };
-
-        const rzpInstance = new window.Razorpay(rzpOptions);
-        rzpInstance.on('payment.failed', function(resp) {
-          _submittingOrder = false;
-          btn.disabled = false;
-          btnText.textContent = (payMethod === 'cod' ? 'PLACE COD ORDER · ₹' : 'OPEN UPI APP · ₹') + orderTotals().total;
-          hideLoadingScreen();
-          showError('Payment not completed. Please try another UPI app or choose Cash on Delivery.');
-        });
-        rzpInstance.open();
-        return;
-      }
-
-      // Direct UPI fallback flow if Razorpay is not configured or in sandbox
-      const upiLink = buildUpiLink(orderData.amount || total, orderId, selectedUpiApp);
+      // Direct UPI Flow (Prepaid - initial state upi_pending)
+      const upiLink = buildUpiLink(orderData.total || total, orderId, selectedUpiApp);
       setTimeout(function() {
         _submittingOrder = false;
         btn.disabled = false;
-        showUpiSuccess(orderId, orderData.amount || total, upiLink);
+        showUpiSuccess(orderId, orderData.total || total, upiLink);
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         if (isMobile) {
           setTimeout(function(){ window.location.href = upiLink; }, 200);
         }
-      }, 1500);
+      }, 1200);
 
     } catch (err) {
       _submittingOrder = false;
