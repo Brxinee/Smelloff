@@ -67,6 +67,10 @@ app.get('/index', (req, res) => {
   res.redirect(301, '/');
 });
 
+app.get('/solutions/index', (req, res) => {
+  res.redirect(301, '/solutions');
+});
+
 app.get('/blog/index', (req, res) => {
   res.redirect(301, '/blog');
 });

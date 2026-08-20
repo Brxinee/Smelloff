@@ -4,21 +4,44 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const FILE = path.resolve(HERE, '..', '..', 'solutions', 'index.html');
+const REPO = path.resolve(HERE, '..', '..');
 const CHECK = process.argv.includes('--check');
 
-let html = fs.readFileSync(FILE, 'utf8');
-const next = html.replace('https://smelloff.in/solutions/', 'https://smelloff.in/solutions');
-
-if (CHECK) {
-  if (next !== html) {
-    console.error('Canonical drift detected in /solutions.');
-    process.exit(1);
+const htmlFiles = [];
+function walk(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (['node_modules', '.git', '.github', 'scripts', 'docs', 'api', 'supabase', '.vercel', '.thumbnail-sources', '_shared', 'emails'].includes(entry.name)) continue;
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walk(full);
+    else if (entry.name.endsWith('.html')) htmlFiles.push(full);
   }
-  console.log('Canonical hardening: clean');
-} else if (next !== html) {
-  fs.writeFileSync(FILE, next);
-  console.log('Canonical hardening applied: /solutions');
-} else {
-  console.log('Canonical hardening already clean.');
+}
+walk(REPO);
+
+let drift = false;
+
+for (const file of htmlFiles) {
+  const rel = path.relative(REPO, file);
+  let html = fs.readFileSync(file, 'utf8');
+
+  // Replace trailing slashes in canonical tags or breadcrumbs (except root https://smelloff.in/)
+  const next = html
+    .replace(/href=["']https:\/\/smelloff\.in\/([a-zA-Z0-9_-]+)\/["']/g, 'href="https://smelloff.in/$1"')
+    .replace(/"item":\s*"https:\/\/smelloff\.in\/([a-zA-Z0-9_-]+)\/"/g, '"item": "https://smelloff.in/$1"');
+
+  if (next !== html) {
+    if (CHECK) {
+      console.error(`Canonical / Breadcrumb trailing-slash drift detected in ${rel}`);
+      drift = true;
+    } else {
+      fs.writeFileSync(file, next);
+      console.log(`Canonical hardening applied to ${rel}`);
+    }
+  }
+}
+
+if (CHECK && drift) {
+  process.exit(1);
+} else if (!drift) {
+  console.log('Canonical hardening: clean across all HTML files.');
 }

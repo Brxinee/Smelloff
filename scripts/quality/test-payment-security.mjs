@@ -76,7 +76,7 @@ await runAttackTest(1, 'Call POST /api/verify-payment (manual UTR) -> Blocked & 
   };
   await verifyHandler(req, res);
   assert.strictEqual(res.getStatusCode(), 410);
-  assert.match(res.getData().error, /Manual UTR submission is deprecated and disabled/i);
+  assert.match(res.getData().error, /payment verification is retired/i);
 });
 
 // ATTACK 2: Call /api/payment-status with invalid order code format
@@ -180,21 +180,21 @@ await runAttackTest(10, 'Call admin verify endpoint -> Blocked & Deprecated (410
   };
   await adminVerifyHandler(req, res);
   assert.strictEqual(res.getStatusCode(), 410);
-  assert.match(res.getData().error, /Manual UTR admin approval is deprecated/i);
+  assert.match(res.getData().error, /payment approval is retired/i);
 });
 
-// ATTACK 11: Forge webhook with status=confirmed without auth
-await runAttackTest(11, 'Forge webhook call without server secret -> 401 Unauthorized', async () => {
+// ATTACK 11: Call retired legacy webhook endpoint -> 410 Gone
+await runAttackTest(11, 'Call legacy webhook -> 410 Gone', async () => {
   const { default: webhookHandler } = await import('../../api/webhook.js');
   const res = createMockRes();
   const req = {
     method: 'POST',
-    headers: {}, // No authorization header
+    headers: {},
     body: { orderCode: 'SMF-20260820-1234', status: 'confirmed' }
   };
   await webhookHandler(req, res);
-  assert.strictEqual(res.getStatusCode(), 401);
-  assert.match(res.getData().error, /Unauthorized webhook/i);
+  assert.strictEqual(res.getStatusCode(), 410);
+  assert.match(res.getData().error, /webhook is retired/i);
 });
 
 // ATTACK 12: Call webhook repeatedly with same status -> Idempotent handling

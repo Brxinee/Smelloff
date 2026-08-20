@@ -158,21 +158,76 @@ const CFG = window.SMELLOFF_CONFIG;
   function validateForm() {
     // Clear previous red borders
     document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(i){i.style.borderColor='';});
-    // Email is OPTIONAL — not in required list
-    const fields = ['f_phone','f_name','f_addr','f_pin','f_city','f_state'];
-    for (const id of fields) {
-      const el = document.getElementById(id);
-      if (!el) { showError('Please fill all required fields.'); return false; }
-      if (!el.value.trim()) { el.style.borderColor='#ff6b6b'; el.focus(); showError('Please fill all required fields.'); return false; }
+    
+    var phoneEl = document.getElementById('f_phone');
+    var nameEl = document.getElementById('f_name');
+    var addrEl = document.getElementById('f_addr');
+    var pinEl = document.getElementById('f_pin');
+    var cityEl = document.getElementById('f_city');
+    var stateEl = document.getElementById('f_state');
+    var emailEl = document.getElementById('f_email');
+
+    // Phone validation (required, 10-digit Indian mobile starting 6-9)
+    var phoneVal = phoneEl ? phoneEl.value.trim() : '';
+    if (!phoneVal) {
+      if (phoneEl) { phoneEl.style.borderColor='#ff6b6b'; phoneEl.focus(); }
+      showError('Enter your 10-digit mobile number for delivery updates.');
+      return false;
     }
-    const phone = document.getElementById('f_phone').value.trim();
-    if (!/^[6-9]\d{9}$/.test(phone)) { document.getElementById('f_phone').style.borderColor='#ff6b6b'; showError('Enter a valid 10-digit mobile number.'); return false; }
-    const pin = document.getElementById('f_pin').value.trim();
-    if (!/^\d{6}$/.test(pin)) { document.getElementById('f_pin').style.borderColor='#ff6b6b'; showError('Enter a valid 6-digit pincode.'); return false; }
-    // Email is OPTIONAL — only validate if non-empty
-    const emailEl = document.getElementById('f_email');
-    const email = emailEl ? emailEl.value.trim() : '';
-    if (email && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) { if (emailEl) emailEl.style.borderColor='#ff6b6b'; showError('Enter a valid email or leave it blank.'); return false; }
+    if (!/^[6-9]\d{9}$/.test(phoneVal)) {
+      if (phoneEl) { phoneEl.style.borderColor='#ff6b6b'; phoneEl.focus(); }
+      showError('Enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.');
+      return false;
+    }
+
+    // Full name validation
+    var nameVal = nameEl ? nameEl.value.trim() : '';
+    if (!nameVal || nameVal.length < 2) {
+      if (nameEl) { nameEl.style.borderColor='#ff6b6b'; nameEl.focus(); }
+      showError('Enter your full name for the package label.');
+      return false;
+    }
+
+    // Pincode validation
+    var pinVal = pinEl ? pinEl.value.trim() : '';
+    if (!pinVal || !/^\d{6}$/.test(pinVal)) {
+      if (pinEl) { pinEl.style.borderColor='#ff6b6b'; pinEl.focus(); }
+      showError('Enter a valid 6-digit Indian postal PIN code.');
+      return false;
+    }
+
+    // City validation
+    var cityVal = cityEl ? cityEl.value.trim() : '';
+    if (!cityVal) {
+      if (cityEl) { cityEl.style.borderColor='#ff6b6b'; cityEl.focus(); }
+      showError('Enter your city name.');
+      return false;
+    }
+
+    // State validation
+    var stateVal = stateEl ? stateEl.value.trim() : '';
+    if (!stateVal) {
+      if (stateEl) { stateEl.style.borderColor='#ff6b6b'; stateEl.focus(); }
+      showError('Enter your state name.');
+      return false;
+    }
+
+    // Address validation
+    var addrVal = addrEl ? addrEl.value.trim() : '';
+    if (!addrVal || addrVal.length < 5) {
+      if (addrEl) { addrEl.style.borderColor='#ff6b6b'; addrEl.focus(); }
+      showError('Enter your complete address (house/flat no., street, landmark).');
+      return false;
+    }
+
+    // Email validation (optional - only validate format if provided)
+    var emailVal = emailEl ? emailEl.value.trim() : '';
+    if (emailVal && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(emailVal)) {
+      if (emailEl) { emailEl.style.borderColor='#ff6b6b'; emailEl.focus(); }
+      showError('Enter a valid email address (e.g. name@domain.com) or leave it blank.');
+      return false;
+    }
+
     return true;
   }
 

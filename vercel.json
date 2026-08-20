@@ -36,6 +36,11 @@
       "permanent": true
     },
     {
+      "source": "/solutions/index",
+      "destination": "/solutions",
+      "permanent": true
+    },
+    {
       "source": "/blog/zinc-ricinoleate-fabric-odor-ingredient",
       "destination": "/blog/zinc-pca-fabric-odor-ingredient-guide",
       "permanent": true
@@ -464,15 +469,6 @@
         {
           "key": "Service-Worker-Allowed",
           "value": "/"
-        }
-      ]
-    },
-    {
-      "source": "/blog/cricket-jersey-smell-how-to-fix",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, follow"
         }
       ]
     }

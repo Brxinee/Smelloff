@@ -221,6 +221,10 @@
   color:var(--acid);
 }
 
+@media(max-width:640px){
+  .sf-hdr__cta{display:none}
+}
+
 @media(min-width:900px){
   .sf-nav{display:flex}
   .sf-burger{display:none}
