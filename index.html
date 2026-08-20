@@ -614,38 +614,6 @@
     .rm-cta:hover{transform:none}
   }
 
-  /* ============ Featured product ============ */
-  .product{border-top:2px solid var(--rule)}
-  .product-grid{display:grid;grid-template-columns:1fr;gap:36px;align-items:center}
-  .product-visual{
-    border:3px solid var(--text);
-    box-shadow:8px 8px 0 var(--acid);
-    background:#0e0e0e;
-    padding:24px;
-  }
-  .product-visual img{display:block;width:100%;height:auto}
-  @media(min-width:768px){
-    .product-grid{grid-template-columns:5fr 6fr;gap:48px}
-  }
-
-  /* Hinglish band */
-  .band{
-    margin-top:64px;
-    background:var(--acid);
-    border-top:3px solid var(--ink);
-    border-bottom:3px solid var(--ink);
-    padding:26px 0;
-    overflow:hidden;
-  }
-  .band p{
-    font-family:var(--display);font-weight:900;
-    font-size:clamp(30px,6.5vw,60px);
-    line-height:1.04;
-    color:var(--ink);
-    text-align:center;
-    letter-spacing:-.01em;
-  }
-
   /* ============ Brand proof ============ */
   .proof{border-top:2px solid var(--rule)}
   .trust-row{
@@ -822,31 +790,9 @@
   .ticker-track span{padding:0 26px}
   .ticker-track .dot{color:var(--ink);opacity:.5}
 
-  /* Hinglish band as a moving marquee (static, centred fallback below) */
-  .band-marquee{display:none}
-  .band .band-static{margin:0}
-
   @media (prefers-reduced-motion: no-preference){
     .ticker-track{animation:ticker 28s linear infinite;will-change:transform}
     @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-    /* Keep the static line in the accessibility tree (screen readers still
-       get the phrase) but hide it visually; the marquee is aria-hidden. */
-    .band .band-static{
-      position:absolute;width:1px;height:1px;padding:0;margin:-1px;
-      overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
-    }
-    .band-marquee{
-      display:block;overflow:hidden;white-space:nowrap;
-    }
-    .bm-track{
-      display:inline-block;
-      font-family:var(--display);font-weight:900;
-      font-size:clamp(30px,6.5vw,60px);line-height:1.04;letter-spacing:-.01em;
-      color:var(--ink);
-      animation:ticker 30s linear infinite;will-change:transform;
-    }
-    .bm-track span{padding:0 32px}
 
     /* Scroll-reveal — only when JS is on AND motion is allowed. Never on the
        hero (LCP), so the headline paints immediately. Transform-only (no
@@ -899,33 +845,6 @@
   }
   .contrast-col.is-os h3{color:var(--acid)}
   .contrast-col p{font-size:14px;color:var(--muted);line-height:1.45}
-
-  /* Science & Proof Cards */
-  .sci-drawer{
-    margin-top:28px;border:1px solid var(--border-dark);border-radius:12px;background:var(--surface);
-    overflow:hidden;
-  }
-  .sci-drawer summary{
-    padding:20px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
-    font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);
-    font-weight:700;user-select:none;list-style:none;
-  }
-  .sci-drawer summary::-webkit-details-marker{display:none}
-  .sci-drawer summary svg{transition:transform .2s ease;flex-shrink:0}
-  .sci-drawer[open] summary svg{transform:rotate(180deg)}
-  .sci-drawer-body{padding:0 24px 24px}
-  .science-grid{display:grid;grid-template-columns:1fr;gap:20px;margin-top:12px}
-  .sci-card{
-    background:var(--ink);border:1px solid var(--border-dark);
-    padding:24px 20px;border-radius:8px;
-  }
-  .sci-badge{
-    display:inline-block;font-family:var(--mono);font-size:11px;
-    letter-spacing:.14em;text-transform:uppercase;color:var(--acid);
-    background:rgba(184,255,87,.1);padding:4px 10px;border-radius:4px;margin-bottom:12px;
-  }
-  .sci-title{font-family:var(--display);font-size:20px;font-weight:900;margin-bottom:8px;color:var(--text)}
-  .sci-card p{font-size:14.5px;color:var(--muted);line-height:1.5}
 
   /* Tactical Use Cases */
   .cases-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:36px}
@@ -981,17 +900,15 @@
   @media(min-width:768px){
     .ritual-grid{grid-template-columns:repeat(3,1fr);gap:18px}
     .contrast-grid{grid-template-columns:repeat(3,1fr);gap:18px}
-    .science-grid{grid-template-columns:repeat(3,1fr);gap:20px}
     .cases-grid{grid-template-columns:repeat(3,1fr);gap:20px}
     .demo-strip{grid-template-columns:repeat(3,1fr);gap:20px}
   }
 
   /* Punchy hovers */
-  .zone,.faq-item,.trust-row li,.product-visual,.voice,.ritual-card,.sci-card,.case-card,.demo-card,.contrast-col{transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease}
+  .zone,.faq-item,.trust-row li,.voice,.ritual-card,.case-card,.demo-card,.contrast-col{transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease}
   @media(hover:hover){
-    .zone:hover,.ritual-card:hover,.sci-card:hover,.case-card:hover,.demo-card:hover{transform:translateY(-3px);border-color:var(--acid)}
+    .zone:hover,.ritual-card:hover,.case-card:hover,.demo-card:hover{transform:translateY(-3px);border-color:var(--acid)}
     .faq-item:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--acid)}
-    .product-visual:hover{transform:translate(-3px,-3px);box-shadow:12px 12px 0 var(--acid)}
     .voice:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--acid)}
     .benefits-strip .trust-row li:hover{background:var(--surface-2);color:var(--acid)}
   }
@@ -1276,42 +1193,7 @@
     </div>
   </section>
 
-  <!-- ============ 4 · THE CHEMISTRY (HOW IT WORKS) ============ -->
-  <section class="science-section" id="how-it-works" aria-labelledby="scienceTitle">
-    <div class="wrap">
-      <p class="eyebrow reveal">The Chemistry</p>
-      <h2 id="scienceTitle" class="reveal">Neutralize, don't mask.</h2>
-      <p class="section-body reveal">Traditional grooming relies on heavy fragrance to cover sweat. ODORSTRIKE uses active molecular chemistry to capture and neutralize odor on clothing fabric.</p>
-
-      <details class="sci-drawer reveal">
-        <summary>
-          <span>How the molecular formula works</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-        </summary>
-        <div class="sci-drawer-body">
-          <div class="science-grid">
-            <div class="sci-card">
-              <span class="sci-badge">HPβCD Active Matrix</span>
-              <h3 class="sci-title">Traps Sweat Molecules</h3>
-              <p>Ring-shaped cyclodextrin molecules create a molecular cage that physically locks in volatile organic sweat compounds.</p>
-            </div>
-            <div class="sci-card">
-              <span class="sci-badge">Zinc PCA Neutralizer</span>
-              <h3 class="sci-title">Chelation &amp; Neutralization</h3>
-              <p>Bio-active zinc complex chemically bonds with fatty acids and nitrogen-based odor sources.</p>
-            </div>
-            <div class="sci-card">
-              <span class="sci-badge">8-Hour Defense</span>
-              <h3 class="sci-title">Fabric Protection</h3>
-              <p>Delivers up to 8 hours of odor protection on fabric against environmental and daytime odor.</p>
-            </div>
-          </div>
-        </div>
-      </details>
-    </div>
-  </section>
-
-  <!-- ============ 5 · 3 STRONGEST USE CASES ============ -->
+  <!-- ============ 4 · 3 STRONGEST USE CASES ============ -->
   <section class="use-cases" id="use-cases" aria-labelledby="useCasesTitle">
     <div class="wrap">
       <p class="eyebrow reveal">Tactical Deployment</p>
@@ -1350,42 +1232,7 @@
     </div>
   </section>
 
-  <!-- ============ 6 · PRIMARY OFFER / PRODUCT PURCHASE ============ -->
-  <section class="product" id="odorstrike-featured" aria-labelledby="productTitle">
-    <div class="wrap">
-      <div class="product-grid">
-        <div class="product-visual reveal">
-          <picture>
-            <source srcset="/assets/odorstrike-bottle.avif" type="image/avif">
-            <source srcset="/assets/odorstrike-bottle.webp" type="image/webp">
-            <img src="/assets/odorstrike-bottle.jpg" alt="ODORSTRIKE 50ml pocket fabric odor eliminator mist bottle" width="1080" height="1080" loading="lazy" decoding="async">
-          </picture>
-        </div>
-        <div class="reveal">
-          <p class="eyebrow">The Signature Bottle</p>
-          <h2 id="productTitle">ODORSTRIKE — 50ml Pocket Mist</h2>
-          <div class="section-body">
-            <p>A pocket-sized fabric odor neutralizer mist for the clothes you're already wearing. Up to 8 hours of odor protection on fabric. Zero residue. Glycerine-free. Fabric only, never on skin.</p>
-            <p><strong>SKU:</strong> OS-001-50ML · ~250 precision sprays · ₹229 (Free shipping pan-India · ₹289 on COD)</p>
-          </div>
-          <div class="hero-cta-row">
-            <a class="btn" href="/odorstrike?buy=1">Buy ODORSTRIKE — ₹229</a>
-            <a class="btn btn-ghost" href="/odorstrike">View Full Details</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="band">
-      <p class="band-static">Smell Khatam. Confidence Qaayam.</p>
-      <div class="band-marquee" aria-hidden="true">
-        <div class="bm-track">
-          <span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 7 · VOICES (SOCIAL PROOF) ============ -->
+  <!-- ============ 5 · VOICES (SOCIAL PROOF) ============ -->
   <section class="voices" aria-labelledby="voicesTitle">
     <div class="wrap">
       <p class="eyebrow reveal">Early testers</p>
@@ -1408,7 +1255,7 @@
           <cite>Karan, 29 / Delhi</cite>
         </li>
       </ul>
-      <p class="voices-note reveal">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review</a> — worn, sweated and stain-tested across India.</p>
+      <p class="voices-note reveal"><a href="/reviews">View all customer reviews →</a> · Read our <a href="/blog/odorstrike-review-30-day-india-test">30-day wear test review</a> across India.</p>
     </div>
   </section>
 
