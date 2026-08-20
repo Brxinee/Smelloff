@@ -2398,83 +2398,6 @@
   /* ============================= */
   /* BEFORE/AFTER PROOF            */
   /* ============================= */
-  .proof{
-    background:var(--bg);
-    overflow:hidden;
-  }
-  .proof-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:0;
-    margin-top:60px;
-    border:1px solid var(--rule);
-  }
-  .proof-side{
-    padding:60px 40px;
-    text-align:center;
-    position:relative;
-  }
-  .proof-side:first-child{
-    border-right:1px solid var(--rule);
-    background:rgba(244,241,234,.03);
-  }
-  .proof-label{
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin-bottom:20px;
-  }
-  .proof-visual{
-    height:120px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-bottom:20px;
-  }
-  .odor-dot{
-    width:12px;height:12px;
-    border-radius:50%;
-    display:inline-block;
-    animation:drift 3s ease-in-out infinite;
-  }
-  .odor-dot:nth-child(2){animation-delay:.3s}
-  .odor-dot:nth-child(3){animation-delay:.6s}
-  .odor-dot:nth-child(4){animation-delay:.9s}
-  .odor-dot:nth-child(5){animation-delay:1.2s}
-  .odor-dot:nth-child(6){animation-delay:1.5s}
-  .odor-dot.active{background:var(--acid)}
-  .odor-dot.dead{background:#3a3a3a;opacity:.5}
-  @keyframes drift{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-6px)}
-  }
-  .proof-caption{
-    font-family:var(--display);
-    font-weight:900;
-    font-size:20px;
-    letter-spacing:-.01em;
-    line-height:1.2;
-  }
-  .proof-footer{
-    text-align:center;
-    margin-top:40px;
-    font-family:var(--display);
-    font-style:italic;
-    font-size:clamp(16px,2vw,22px);
-    color:var(--muted);
-    line-height:1.4;
-  }
-  @media(max-width:720px){
-    .proof-grid{grid-template-columns:1fr}
-    .proof-side:first-child{border-right:none;border-bottom:1px solid var(--rule)}
-    .proof-side{padding:40px 24px}
-  }
-
-  /* ============================= */
   /* USE CASES                     */
   /* ============================= */
   .use-cases{
@@ -3324,38 +3247,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </div>
 </section>
 
-<!-- BEFORE / AFTER PROOF -->
-<section class="proof">
-  <div class="section-tag">The proof</div>
-  <div class="proof-grid">
-    <div class="proof-side">
-      <div class="proof-label">Before</div>
-      <div class="proof-visual">
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-      </div>
-      <div class="proof-caption">Odor molecules floating free in fabric fibers</div>
-    </div>
-    <div class="proof-side">
-      <div class="proof-label">After ODORSTRIKE</div>
-      <div class="proof-visual">
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-      </div>
-      <div class="proof-caption">Captured. Neutralized. Gone.</div>
-    </div>
-  </div>
-  <p class="proof-footer">Odor molecules don't get masked. They get trapped, neutralized, and kept from coming back — for up to 8 hours on fabric. No one will know.</p>
-</section>
-
 <!-- MOMENTS YOU CAN'T REWASH FOR
      This block used to be labelled "content block for SEO word count", and it
      read like it: four cards headed POST GYM / RE-WEARS / TRAVEL / MONSOON.
@@ -3895,6 +3786,9 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       Last updated: April 2026
     </div>
   
+
+
+
 
 
 
