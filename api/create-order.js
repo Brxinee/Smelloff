@@ -3,12 +3,15 @@ import { calculateOrderTotal, BASE_PRODUCT } from '../shared/products-config.js'
 import { Resend } from 'resend';
 import { orderConfirmation } from './email-templates.js';
 import { isAllowedOrigin, clientIp, checkRateLimit, generateOrderToken } from './_security.js';
-import { createPayuUpiIntent, isPayuConfigured, payuConfigError } from './payu-upi.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
 const REPLY_TO = 'smelloffsupport@gmail.com';
+
+const UPI_VPA = process.env.UPI_VPA || process.env.UPI_ID || 'mr.brainy@ibl';
+const UPI_PAYEE_NAME = process.env.UPI_NAME || process.env.UPI_PAYEE_NAME || 'Smelloff';
+const UPI_MERCHANT_CODE = process.env.UPI_MERCHANT_CODE || '';
 
 function genOrderCode() {
   const d = new Date();
@@ -26,6 +29,34 @@ function genUpiTxnRef(orderCode) {
 function genPaymentAttemptId(orderCode) {
   const rand = crypto.randomBytes(4).toString('hex').toUpperCase();
   return `ATT-${orderCode}-${rand}`;
+}
+
+export function buildUpiLinks({ orderCode, upiTxnRef, amount }) {
+  const params = new URLSearchParams({
+    pa: UPI_VPA,
+    pn: UPI_PAYEE_NAME,
+    am: String(amount),
+    cu: 'INR',
+    tr: upiTxnRef,
+    tn: `ODORSTRIKE-${orderCode}`
+  });
+
+  if (UPI_MERCHANT_CODE) params.set('mc', UPI_MERCHANT_CODE);
+
+  const queryString = params.toString();
+  const genericUri = `upi://pay?${queryString}`;
+
+  return {
+    vpa: UPI_VPA,
+    payeeName: UPI_PAYEE_NAME,
+    generic: genericUri,
+    intentAndroidGpay: `intent://pay?${queryString}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end;`,
+    intentAndroidPhonepe: `intent://pay?${queryString}#Intent;scheme=upi;package=com.phonepe.app;scheme=upi;end;`,
+    intentAndroidPaytm: `intent://pay?${queryString}#Intent;scheme=upi;package=net.one97.paytm;scheme=upi;end;`,
+    gpayIos: `tez://upi/pay?${queryString}`,
+    phonepeIos: `phonepe://pay?${queryString}`,
+    paytmIos: `paytmmp://pay?${queryString}`
+  };
 }
 
 async function createSupabaseOrderRecord(orderData) {
@@ -81,12 +112,6 @@ export default async function handler(req, res) {
     const paymentMethod = String(body.paymentMethod || 'upi').toLowerCase();
     const isCod = paymentMethod === 'cod';
 
-    if (!isCod && !isPayuConfigured()) {
-      return res.status(503).json({
-        error: 'UPI payment is temporarily unavailable. Please try again shortly.'
-      });
-    }
-
     const customer = body.customer || {};
     const name = String(customer.name || '').trim().slice(0, 100);
     const phone = String(customer.phone || '').trim().replace(/\D/g, '').slice(0, 10);
@@ -102,35 +127,16 @@ export default async function handler(req, res) {
     if (!pincode || pincode.length !== 6) return res.status(400).json({ error: 'Valid 6-digit PIN code required' });
 
     const pricing = calculateOrderTotal(quantity, isCod ? 'cod' : 'upi');
-    const orderCode = body.orderCode && /^SMF-\d{8}-\d{4}$/.test(body.orderCode)
-      ? body.orderCode
-      : genOrderCode();
-
+    const orderCode = body.orderCode && /^SMF-\d{8}-\d{4}$/.test(body.orderCode) ? body.orderCode : genOrderCode();
     const orderToken = generateOrderToken(orderCode, phone);
     const paymentAttemptId = !isCod ? genPaymentAttemptId(orderCode) : null;
     const upiTxnRef = !isCod ? genUpiTxnRef(orderCode) : null;
 
-    let upiLinks = null;
-    if (!isCod) {
-      try {
-        const payuIntent = await createPayuUpiIntent({
-          transactionId: upiTxnRef,
-          amount: pricing.total
-        });
-        upiLinks = {
-          generic: payuIntent.intentUri,
-          gpay: payuIntent.intentUri,
-          phonepe: payuIntent.intentUri,
-          paytm: payuIntent.intentUri,
-          intentUrl: payuIntent.intentUrl,
-          transactionId: payuIntent.transactionId,
-          expiryTime: payuIntent.expiryTime
-        };
-      } catch (paymentErr) {
-        console.error('[create-order] PayU UPI intent error:', paymentErr.message);
-        return res.status(502).json({ error: 'Unable to start UPI payment. Please try again.' });
-      }
-    }
+    const upiLinks = !isCod ? buildUpiLinks({
+      orderCode,
+      upiTxnRef,
+      amount: pricing.total
+    }) : null;
 
     const orderRow = {
       order_code: orderCode,
@@ -154,9 +160,6 @@ export default async function handler(req, res) {
     };
 
     const dbOrder = await createSupabaseOrderRecord(orderRow);
-    if (!dbOrder && !isCod) {
-      return res.status(500).json({ error: 'Unable to create payment order. Please try again.' });
-    }
 
     if (isCod && email && process.env.RESEND_API_KEY) {
       try {
@@ -192,10 +195,11 @@ export default async function handler(req, res) {
       currency: pricing.currency,
       paymentAttemptId,
       upiTxnRef,
+      upiVpa: UPI_VPA,
+      upiPayeeName: UPI_PAYEE_NAME,
       upiLinks,
       dbId: dbOrder ? dbOrder.id : null,
-      customer: { name, phone, email },
-      configurationWarning: !isCod && !isPayuConfigured() ? payuConfigError() : null
+      customer: { name, phone, email }
     });
   } catch (err) {
     console.error('[create-order] Internal error:', err);
