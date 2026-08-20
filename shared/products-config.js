@@ -89,9 +89,7 @@ export const ORDER_LIFECYCLE = {
     initialStatus: 'upi_pending',
     validTransitions: [
       'upi_pending',
-      'verification_pending',
       'confirmed',
-      'payment_not_verified',
       'failed',
       'packed',
       'dispatched',
@@ -101,8 +99,6 @@ export const ORDER_LIFECYCLE = {
     ],
     transitionMap: {
       upi_pending: ['confirmed', 'failed', 'cancelled'],
-      verification_pending: ['confirmed', 'payment_not_verified', 'cancelled'],
-      payment_not_verified: ['confirmed', 'cancelled', 'upi_pending'],
       failed: ['upi_pending', 'cancelled'],
       confirmed: ['packed', 'dispatched', 'cancelled'],
       packed: ['dispatched', 'cancelled'],

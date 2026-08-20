@@ -169,18 +169,18 @@ await runAttackTest(9, 'Admin confirmation replay -> Idempotent response, zero d
   assert.strictEqual(isValidTransition('verification_pending', 'verification_pending', 'upi'), true);
 });
 
-// ATTACK 10: Call admin endpoint without admin credentials
-await runAttackTest(10, 'Call admin verify endpoint without credentials -> 401 Unauthorized', async () => {
+// ATTACK 10: Call admin endpoint -> Blocked & Deprecated (410 Gone)
+await runAttackTest(10, 'Call admin verify endpoint -> Blocked & Deprecated (410 Gone)', async () => {
   const { default: adminVerifyHandler } = await import('../../api/admin/verify-payment.js');
   const res = createMockRes();
   const req = {
     method: 'POST',
-    headers: {}, // No authorization header
+    headers: {},
     body: { orderCode: 'SMF-20260820-1234', action: 'confirm' }
   };
   await adminVerifyHandler(req, res);
-  assert.strictEqual(res.getStatusCode(), 401);
-  assert.match(res.getData().error, /Unauthorized/i);
+  assert.strictEqual(res.getStatusCode(), 410);
+  assert.match(res.getData().error, /Manual UTR admin approval is deprecated/i);
 });
 
 // ATTACK 11: Forge webhook with status=confirmed without auth
