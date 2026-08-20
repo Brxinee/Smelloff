@@ -87,13 +87,66 @@ export const APPROVED_CLAIMS = {
 export const ORDER_LIFECYCLE = {
   PREPAID_UPI: {
     initialStatus: 'upi_pending',
-    validTransitions: ['upi_pending', 'confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered', 'cancelled']
+    validTransitions: [
+      'upi_pending',
+      'verification_pending',
+      'confirmed',
+      'payment_not_verified',
+      'packed',
+      'dispatched',
+      'out_for_delivery',
+      'delivered',
+      'cancelled'
+    ],
+    transitionMap: {
+      upi_pending: ['verification_pending', 'cancelled'],
+      verification_pending: ['verification_pending', 'confirmed', 'payment_not_verified', 'cancelled'],
+      payment_not_verified: ['verification_pending', 'cancelled'],
+      confirmed: ['packed', 'dispatched', 'cancelled'],
+      packed: ['dispatched', 'cancelled'],
+      dispatched: ['out_for_delivery', 'delivered', 'cancelled'],
+      out_for_delivery: ['delivered', 'cancelled'],
+      delivered: [],
+      cancelled: []
+    }
   },
   COD: {
     initialStatus: 'placed',
-    validTransitions: ['placed', 'confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered', 'cancelled']
+    validTransitions: [
+      'placed',
+      'confirmed',
+      'packed',
+      'dispatched',
+      'out_for_delivery',
+      'delivered',
+      'cancelled'
+    ],
+    transitionMap: {
+      placed: ['confirmed', 'packed', 'dispatched', 'cancelled'],
+      confirmed: ['packed', 'dispatched', 'cancelled'],
+      packed: ['dispatched', 'cancelled'],
+      dispatched: ['out_for_delivery', 'delivered', 'cancelled'],
+      out_for_delivery: ['delivered', 'cancelled'],
+      delivered: [],
+      cancelled: []
+    }
   }
 };
+
+/**
+ * Validate order state transitions strictly against the lifecycle rules.
+ */
+export function isValidTransition(currentStatus, targetStatus, paymentMethod = 'prepaid') {
+  if (!currentStatus || !targetStatus) return false;
+  if (currentStatus === targetStatus) return true; // Idempotent no-op
+
+  const isCod = String(paymentMethod || '').toLowerCase() === 'cod';
+  const lifecycle = isCod ? ORDER_LIFECYCLE.COD : ORDER_LIFECYCLE.PREPAID_UPI;
+
+  const allowedNext = lifecycle.transitionMap[currentStatus];
+  if (!allowedNext || !Array.isArray(allowedNext)) return false;
+  return allowedNext.includes(targetStatus);
+}
 
 /**
  * Authoritative Server-side Price & Total Calculator

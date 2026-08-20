@@ -438,12 +438,18 @@
     var cancelled = o.status === 'cancelled';
     show(document.getElementById('rCancelled'), cancelled);
 
-    // upi_pending sits between "placed" and "confirmed"
-    var effective = o.status === 'upi_pending' ? 'placed' : o.status;
+    // upi_pending / verification_pending / payment_not_verified sit between "placed" and "confirmed"
+    var effective = (o.status === 'upi_pending' || o.status === 'verification_pending' || o.status === 'payment_not_verified') ? 'placed' : o.status;
     var idx = STEPS.indexOf(effective);
-    document.getElementById('dPlaced').textContent = o.status === 'upi_pending'
-      ? 'Order received — awaiting UPI payment confirmation. Sent your UTR on WhatsApp yet?'
-      : 'We’ve received your order.';
+    if (o.status === 'upi_pending') {
+      document.getElementById('dPlaced').textContent = 'Order received — awaiting UPI payment. Sent your UTR on WhatsApp yet?';
+    } else if (o.status === 'verification_pending') {
+      document.getElementById('dPlaced').textContent = 'UTR submitted — payment verification in progress. Our team is verifying your transaction.';
+    } else if (o.status === 'payment_not_verified') {
+      document.getElementById('dPlaced').textContent = 'Payment reference could not be verified. Please check your UTR or contact us on WhatsApp.';
+    } else {
+      document.getElementById('dPlaced').textContent = 'We’ve received your order.';
+    }
     var lis = document.querySelectorAll('#rSteps .t-step');
     lis.forEach(function(li, i){
       li.classList.remove('done','current');
@@ -455,7 +461,7 @@
       var box = li.querySelector('.t-step-time');
       if (!box) { box = document.createElement('div'); box.className = 't-step-time'; li.querySelector('div').appendChild(box); }
       var step = li.getAttribute('data-step');
-      var t = statusTime[step] || (step === 'placed' ? statusTime.upi_pending : null);
+      var t = statusTime[step] || (step === 'placed' ? (statusTime.verification_pending || statusTime.upi_pending) : null);
       box.textContent = t ? (fmtDate(t, false) + ' · ' + fmtTime(t)) : '';
     });
 
@@ -484,7 +490,7 @@
       } else if (dispatched) {
         etaVal.textContent = fmtDate(addDays(dispatched, 2), false) + ' – ' + fmtDate(addDays(dispatched, 5), false);
         eta.style.display = 'flex';
-      } else if (placed && o.status !== 'upi_pending') {
+      } else if (placed && o.status !== 'upi_pending' && o.status !== 'verification_pending' && o.status !== 'payment_not_verified') {
         etaVal.textContent = fmtDate(addDays(placed, 3), false) + ' – ' + fmtDate(addDays(placed, 7), false);
         eta.style.display = 'flex';
       } else {

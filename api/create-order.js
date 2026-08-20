@@ -2,22 +2,12 @@ import crypto from 'node:crypto';
 import { calculateOrderTotal, BASE_PRODUCT } from '../shared/products-config.js';
 import { Resend } from 'resend';
 import { orderConfirmation } from './email-templates.js';
+import { isAllowedOrigin, clientIp, checkRateLimit, generateOrderToken } from './_security.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
 const REPLY_TO = 'smelloffsupport@gmail.com';
-
-const ALLOWED_ORIGINS = new Set(['https://smelloff.in', 'https://www.smelloff.in']);
-
-function isAllowedOrigin(origin) {
-  if (!origin) return true;
-  if (ALLOWED_ORIGINS.has(origin)) return true;
-  if (process.env.VERCEL_ENV !== 'production') {
-    if (origin.endsWith('.vercel.app') || origin.endsWith('.run.app') || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) return true;
-  }
-  return false;
-}
 
 // Generates unique, non-colliding order code
 function genOrderCode() {
@@ -69,6 +59,11 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
+  const ip = clientIp(req);
+  if (!checkRateLimit(`create-order:${ip}`, 15, 10 * 60 * 1000)) {
+    return res.status(429).json({ error: 'Too many order creation attempts. Please slow down.' });
+  }
+
   try {
     const body = req.body && typeof req.body === 'object' ? req.body : {};
     
@@ -108,6 +103,8 @@ export default async function handler(req, res) {
     const orderCode = body.orderCode && /^SMF-\d{8}-\d{4}$/.test(body.orderCode) 
       ? body.orderCode 
       : genOrderCode();
+
+    const orderToken = generateOrderToken(orderCode, phone);
 
     const orderRow = {
       order_code: orderCode,
@@ -166,6 +163,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       orderId: orderCode,
+      orderToken,
       status: pricing.status,
       method: isCod ? 'cod' : 'upi',
       quantity: pricing.qty,

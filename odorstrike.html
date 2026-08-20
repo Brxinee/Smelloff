@@ -3821,9 +3821,15 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </div>
 
         <div class="upi-help" style="margin-top:14px;">
-          <strong>After paying:</strong> send screenshot + UTR to WhatsApp for instant confirmation.
-          <br>
-          <a id="waSuccessUtrLink" href="https://wa.me/919392974031" target="_blank" rel="noopener" class="wa-utr-btn">Share UTR on WhatsApp →</a>
+          <strong>After paying:</strong> Enter your 12-digit UTR below or send to WhatsApp:
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <input type="text" id="upiUtrInput" placeholder="12-digit UTR / Ref No." maxlength="24" style="flex:1;padding:8px 10px;background:#111;border:1px solid #333;color:#fff;border-radius:4px;font-size:13px;text-transform:uppercase;">
+            <button type="button" id="submitUtrBtn" onclick="submitOrderUtr()" style="padding:8px 14px;background:var(--acid,#d4ff00);color:#000;font-weight:600;border:none;border-radius:4px;cursor:pointer;font-size:13px;">Submit UTR</button>
+          </div>
+          <div id="utrFeedback" style="display:none;font-size:12px;margin-top:6px;line-height:1.4;"></div>
+          <div style="margin-top:10px;">
+            <a id="waSuccessUtrLink" href="https://wa.me/919392974031" target="_blank" rel="noopener" class="wa-utr-btn">Or Share UTR on WhatsApp →</a>
+          </div>
         </div>
 
         <div class="upi-policy-link" style="margin-top:12px;font-size:11px;">
@@ -3889,6 +3895,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       Last updated: April 2026
     </div>
   
+
+
+
+
 
 
 
@@ -4761,6 +4771,9 @@ window.createSupabaseOrder = function (opts) {
       }
 
       const orderId = orderData.orderId;
+      if (orderData.orderToken) {
+        try { localStorage.setItem('smelloff_order_token_' + orderId, orderData.orderToken); } catch (e) {}
+      }
       const order = collectOrder(orderId, isCod ? 'COD' : 'UPI_PENDING');
       logOrderToSheets(order);
       smfCartBeacon('cart_update', { name: order.name, email: order.email, phone: order.phone });
@@ -4934,6 +4947,14 @@ window.createSupabaseOrder = function (opts) {
       qrImg.onerror = function(){ qrImg.style.display = 'none'; };
     }
 
+    // Reset direct UTR input state
+    var utrInput = document.getElementById('upiUtrInput');
+    if (utrInput) { utrInput.value = ''; utrInput.disabled = false; }
+    var utrFb = document.getElementById('utrFeedback');
+    if (utrFb) { utrFb.style.display = 'none'; utrFb.textContent = ''; }
+    var submitUtrBtn = document.getElementById('submitUtrBtn');
+    if (submitUtrBtn) { submitUtrBtn.disabled = false; submitUtrBtn.textContent = 'Submit UTR'; submitUtrBtn.style.opacity = '1'; }
+
     trackPurchase(total, orderId);
     setCartQty(0);
     try {
@@ -4946,6 +4967,63 @@ window.createSupabaseOrder = function (opts) {
       if (emailNote) emailNote.style.display = buyerEmail ? 'block' : 'none';
     } catch (e) {}
   }
+
+  window.submitOrderUtr = async function() {
+    var utrInput = document.getElementById('upiUtrInput');
+    var feedback = document.getElementById('utrFeedback');
+    var btn = document.getElementById('submitUtrBtn');
+    var utr = (utrInput ? utrInput.value : '').trim();
+    var orderIdEl = document.getElementById('orderIdDisplay');
+    var orderId = orderIdEl ? orderIdEl.textContent.trim() : '';
+    var phone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || localStorage.getItem('smelloff_last_phone') || '';
+    var token = localStorage.getItem('smelloff_order_token_' + orderId) || '';
+
+    if (!utr || utr.length < 10) {
+      feedback.style.display = 'block';
+      feedback.style.color = '#ff6b6b';
+      feedback.textContent = 'Please enter a valid 12-digit UPI reference / UTR number.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+    feedback.style.display = 'none';
+
+    try {
+      var res = await fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderCode: orderId,
+          upiRef: utr,
+          phone: phone,
+          orderToken: token
+        })
+      });
+      var data = await res.json();
+      if (!res.ok || !data.ok) {
+        feedback.style.display = 'block';
+        feedback.style.color = '#ff6b6b';
+        feedback.textContent = data.error || 'Failed to submit payment reference. Please try again.';
+        btn.disabled = false;
+        btn.textContent = 'Submit UTR';
+        return;
+      }
+
+      feedback.style.display = 'block';
+      feedback.style.color = 'var(--acid, #d4ff00)';
+      feedback.textContent = '✓ ' + (data.message || 'Payment reference submitted! Verification in progress.');
+      btn.textContent = 'Submitted';
+      btn.style.opacity = '0.7';
+      if (utrInput) utrInput.disabled = true;
+    } catch (e) {
+      feedback.style.display = 'block';
+      feedback.style.color = '#ff6b6b';
+      feedback.textContent = 'Network error submitting UTR. Please share it via WhatsApp.';
+      btn.disabled = false;
+      btn.textContent = 'Submit UTR';
+    }
+  };
 
   // ==============================
   // PINCODE → CITY/STATE AUTOFILL (checkout)

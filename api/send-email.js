@@ -10,6 +10,7 @@ import {
   orderCancelled,
   refundProcessed,
 } from './email-templates.js';
+import { isAdminAuthorized } from './_security.js';
 
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
 const REPLY_TO = 'smelloffsupport@gmail.com';
@@ -25,6 +26,15 @@ const TEMPLATES = {
   orderCancelled,
   refundProcessed,
 };
+
+const RESTRICTED_TEMPLATES = new Set([
+  'orderConfirmation',
+  'orderShipped',
+  'outForDelivery',
+  'orderDelivered',
+  'orderCancelled',
+  'refundProcessed'
+]);
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ALLOWED_ORIGINS = new Set(['https://smelloff.in', 'https://www.smelloff.in']);
@@ -102,11 +112,6 @@ export default async function handler(req, res) {
     || 'unknown';
   if (rateLimited(ip)) return res.status(429).json({ error: 'Too many requests. Please slow down.' });
 
-  if (!process.env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY missing');
-    return res.status(500).json({ error: 'Email service not configured' });
-  }
-
   try {
     const rawBody = req.body && typeof req.body === 'object' ? req.body : {};
     if (JSON.stringify(rawBody).length > MAX_BODY_BYTES) {
@@ -119,6 +124,16 @@ export default async function handler(req, res) {
 
     const builder = TEMPLATES[type];
     if (!builder) return res.status(400).json({ error: 'Unknown email template' });
+
+    // Protect sensitive order lifecycle emails from unauthenticated public invocation
+    if (RESTRICTED_TEMPLATES.has(type) && !isAdminAuthorized(req)) {
+      return res.status(401).json({ error: 'Unauthorized. Transactional template requires admin authorization.' });
+    }
+
+    if (!process.env.RESEND_API_KEY) {
+      console.error('RESEND_API_KEY missing');
+      return res.status(500).json({ error: 'Email service not configured' });
+    }
 
     const data = sanitizeData(rawBody.data || {});
     const { subject, html } = builder(data || {});
