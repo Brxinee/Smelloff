@@ -3781,7 +3781,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <div class="policy-overlay" id="paymentFailedOverlay" role="dialog" aria-modal="true" aria-labelledby="pfTitle">
   <nav class="po-nav">
     <button type="button" class="po-back" onclick="closePaymentFailedOverlay()">← Back</button>
-    <span class="po-logo"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:16px;width:auto;display:block"></span>
+    <span class="po-logo"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="73" height="16" style="height:16px;width:auto;display:block"></span>
     <button type="button" class="po-close" onclick="closePaymentFailedOverlay()" aria-label="Close">×</button>
   </nav>
   <main class="po-main">
@@ -3827,6 +3827,21 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       Last updated: April 2026
     </div>
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5578,7 +5593,7 @@ window.createSupabaseOrder = function (opts) {
         var rText = r.text || r.t || r.body || '';
         var isBuyer = r.verified || r.buyer;
         return '<div class="vr-card">'
-          + (r.photo ? '<img src="'+esc(r.photo)+'" alt="Customer photo — '+esc(rName)+'" loading="lazy" decoding="async">' : '')
+          + (r.photo ? '<img src="'+esc(r.photo)+'" alt="Customer photo — '+esc(rName)+'" width="200" height="200" loading="lazy" decoding="async">' : '')
           + '<div class="vr-head"><span class="vr-name">'+esc(rName)+'</span>'
           + (isBuyer ? '<span class="vr-badge">Verified purchase</span>' : '<span class="vr-badge">Beta tester</span>')
           + '</div><div class="vr-meta">'+stars(rRating)+(rCity ? ' · '+esc(rCity) : '')+'</div>'

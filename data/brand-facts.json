@@ -1,0 +1,65 @@
+{
+  "brand": {
+    "name": "Smelloff",
+    "location": "Hyderabad, India",
+    "founder": "Manoj",
+    "mission": "To create the best fabric odor eliminators engineered specifically for the Indian climate and lifestyle.",
+    "contact": {
+      "email": "support@smelloff.in"
+    },
+    "urls": {
+      "home": "https://smelloff.in",
+      "product": "https://smelloff.in/odorstrike",
+      "blog": "https://smelloff.in/blog"
+    }
+  },
+  "products": [
+    {
+      "id": "OS-001-50ML",
+      "sku": "OS-001-50ML",
+      "name": "Smelloff ODORSTRIKE Fabric Odor Eliminator Spray",
+      "size": "50ml",
+      "format": "Liquid spray",
+      "price": 229,
+      "currency": "INR",
+      "availability": "in_stock",
+      "description": "Pocket-sized fabric odor control mist for clothes. Fabric only. Made for in-between-wash odor emergencies when a shirt, hoodie, jacket or other clothing carries unwanted odor.",
+      "not_for": ["Skin", "Pets", "Leather", "Silk", "Suede"],
+      "claims": [
+        { "claim": "Up to 8 hours of odor protection on fabric", "status": "APPROVED" },
+        { "claim": "Not a deodorant", "status": "APPROVED" },
+        { "claim": "Not a perfume", "status": "APPROVED" },
+        { "claim": "Contains Zinc Ricinoleate", "status": "APPROVED" },
+        { "claim": "Contains HPBCD", "status": "APPROVED" },
+        { "claim": "Instantly", "status": "PROHIBITED" },
+        { "claim": "Removes 100% of odors forever", "status": "PROHIBITED" }
+      ],
+      "ingredients": [
+        "Aqua (Water)",
+        "Zinc Ricinoleate (Odor absorber)",
+        "Hydroxypropyl Beta-Cyclodextrin (HPBCD) (Odor trapper)",
+        "Zinc PCA (Antibacterial odor control)",
+        "Ethanol (Fast-drying solvent)",
+        "Fragrance (Mild fresh scent)"
+      ],
+      "how_to_use": [
+        "1. Identify the odor source on the garment.",
+        "2. Hold bottle 15cm away from the fabric.",
+        "3. Spray 3-4 times directly onto the smelly area (underarms, collars).",
+        "4. Let it dry completely before wearing (usually takes 30-60 seconds depending on humidity)."
+      ]
+    }
+  ],
+  "policies": {
+    "shipping": {
+      "cost": 0,
+      "currency": "INR",
+      "estimated_days": "3-7",
+      "details": "Free standard shipping across India."
+    },
+    "returns": {
+      "window_days": 7,
+      "details": "7-day return policy for unused, sealed bottles. Used bottles cannot be returned for hygiene reasons."
+    }
+  }
+}

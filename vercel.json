@@ -237,7 +237,7 @@
     },
     {
       "source": "/blog/remove-sweat-smell-shirts-without-washing",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-instantly",
+      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
       "permanent": true
     },
     {
@@ -273,6 +273,21 @@
     {
       "source": "/blog/why-indian-men-sweat-smell-more",
       "destination": "/odorstrike",
+      "permanent": true
+    },
+    {
+      "source": "/blog/beta-cyclodextrin-odor-removal-science",
+      "destination": "/blog/hpbcd-cyclodextrin-fabric-odor",
+      "permanent": true
+    },
+    {
+      "source": "/blog/remove-smell-from-blazer-without-dry-cleaning",
+      "destination": "/blog/keep-office-trousers-fresh-without-washing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/remove-smell-from-hoodie-without-washing",
+      "destination": "/blog/keep-office-trousers-fresh-without-washing",
       "permanent": true
     }
   ],

@@ -72,10 +72,7 @@ export const POSTS = {
     wa: 'This is why your polyester tee smells within minutes of putting it on and cotton doesn\'t. It\'s the fibre, not you: {url}',
     x: 'Polyester is oleophilic — it grips the skin lipids odor is produced from, and a cold wash doesn\'t dissolve them. Cotton absorbs far more sweat and gives up far more of it. Fibre by fibre.',
   },
-  'remove-smell-from-blazer-without-dry-cleaning': {
-    wa: 'Before you send the blazer to the cleaner again — the smell is in the lining, not the wool. Three zones and it\'s done: {url}',
-    x: 'A blazer holds smoke and food smell in its lining, which is usually polyester, not in the wool outer. Which is why dry cleaning it every time is both expensive and hard on the cloth.',
-  },
+  
   'fabric-deodorizer-spray-india-guide-2026': {
     wa: 'If you\'re buying a fabric spray, read the five things that actually matter first. Written by a brand that sells one and says so up front: {url}',
     x: 'Masking adds a smell. Binding removes one. Almost every disappointment in the fabric-spray category comes from buying the first while expecting the second — and the ingredient list tells you which.',
@@ -87,10 +84,7 @@ export const POSTS = {
     wa: 'The actual reason some sprays remove smell instead of covering it — the molecule gets trapped inside a ring and never reaches your nose: {url}',
     x: 'HPβCD is a sugar ring with a water-repelling cavity. Odor molecules are oily, they fit inside, and a molecule sitting in a ring is not travelling to your nose. That is binding, not masking.',
   },
-  'beta-cyclodextrin-odor-removal-science': {
-    wa: 'Cyclodextrin — this is the thing that traps odor on fabric rather than perfuming over it. Short read: {url}',
-    x: 'Beta-cyclodextrin forms inclusion complexes with odor molecules on fabric. The mechanism is physical capture, not fragrance, which is why the smell doesn\'t return as the scent fades.',
-  },
+  
   'zinc-pca-fabric-odor-ingredient-guide': {
     wa: 'Zinc PCA — the second half of how fabric sprays work. Traps first, neutralises what\'s left: {url}',
     x: 'Zinc PCA neutralises odor compounds rather than trapping them, which is why a good fabric formula uses more than one mechanism. Odor is not one compound, so one active was never going to do it.',
@@ -122,7 +116,7 @@ export const POSTS = {
     wa: 'For the function — sherwani and silk can\'t be washed, but there\'s a 30-second collar reset between events. Spot-test first though: {url}',
     x: 'Six-hour functions in Indian heat, in garments that cannot be washed. The pre-event routine, the mid-event collar reset, and which fabrics need a spot test before anything goes near them.',
   },
-  'spray-to-remove-sweat-smell-from-clothes-instantly': {
+  'spray-to-remove-sweat-smell-from-clothes-quickly': {
     wa: 'For those days you realise at 4pm. Ten seconds on the collar and underarms and the shirt is wearable again: {url}',
     x: 'The 4pm problem: you don\'t smell, your shirt does, and you\'re nowhere near a change of clothes. What actually works on the fabric in the ten seconds you have.',
   },
@@ -164,10 +158,7 @@ export const POSTS = {
     wa: 'Turns out kitchen smell lands on you as oil, not as air — which is exactly why airing the kurta on the balcony does nothing. Ten-minute fix: {url}',
     x: 'Cooking smell doesn\'t drift onto clothes, it lands on them. Hot oil throws a fine aerosol that settles as a film and holds the scent in place, which is why a shirt aired overnight still smells of dinner.',
   },
-  'remove-smell-from-hoodie-without-washing': {
-    wa: 'Your hoodie smells before it looks dirty because brushed fleece has a huge inner surface area. Also: stop washing it weekly, that\'s what flattens it: {url}',
-    x: 'A hoodie is brushed fleece, which multiplies the inner surface area many times over, on a fibre that grips skin oils. It collects an enormous amount while looking exactly as clean as it did on day one.',
-  },
+  
   'keep-clothes-fresh-without-washing-machine': {
     wa: 'For the hostel situation — the clothes don\'t smell because they\'re dirty, they smell because nothing dries. Ninety-second nightly routine: {url}',
     x: 'Hostel clothes usually smell because of how long they took to dry, not how they were washed. Weekly laundry and a daily wardrobe is an arithmetic problem, and it is solved at night, not on laundry day.',

@@ -1,142 +1,24 @@
-# Smelloff — ODORSTRIKE Fabric Odor Remover Spray
+# Smelloff
+> To create the best fabric odor eliminators engineered specifically for the Indian climate and lifestyle.
 
-> ODORSTRIKE by Smelloff is a pocket-sized fabric odor remover spray — a 50ml mist priced at ₹229. It is for clothes only, including shirts, tees, hoodies, jackets, blazers, jeans and trousers. It is NOT a perfume, NOT a deodorant and NOT for skin. Smelloff is a Hyderabad, India brand and ships across India. The current public product claim is up to 8 hours of odor protection on fabric.
+## Product: Smelloff ODORSTRIKE Fabric Odor Eliminator Spray
+- Format: 50ml Liquid spray
+- Price: ₹229
+- Availability: in_stock
+- Description: Pocket-sized fabric odor control mist for clothes. Fabric only. Made for in-between-wash odor emergencies when a shirt, hoodie, jacket or other clothing carries unwanted odor.
 
-ODORSTRIKE is designed around a simple problem: clothing can carry unwanted odor between washes and during long days, commutes, workouts and meetings. The product is an in-between-wash fabric odor-control step, not a replacement for washing and not a body product.
+## Fast Facts
+- Do NOT use on: Skin, Pets, Leather, Silk, Suede
+- Location: Hyderabad, India
+- Shipping: Free across India (3-7 days)
+- Returns: 7-day window for unused items
 
-## Entity profile
+## Key Claims
+- Up to 8 hours of odor protection on fabric
+- Not a deodorant
+- Not a perfume
+- Contains Zinc Ricinoleate
+- Contains HPBCD
 
-- Brand: Smelloff
-- Product: ODORSTRIKE
-- Category: fabric odor remover / fabric odor spray / fabric odor neutralizer for clothes
-- Market: India
-- Base: Hyderabad, Telangana, India
-- Primary commercial page: https://smelloff.in/odorstrike
-- Primary content hub: https://smelloff.in/blog
-- Product page price: ₹229 prepaid; ₹289 collectable for COD single-bottle orders because of the ₹60 COD handling charge
-
-## Search vocabulary
-
-Use these as natural search-language variants, not as forced keyword lists:
-
-### Primary commercial terms
-- fabric odor remover
-- fabric odor spray
-- fabric odor eliminator
-- clothes odor remover
-- clothing odor remover
-- odor remover for clothes
-- odor eliminator for clothes
-- odor removal spray for clothes
-- shirt odor spray
-- fabric odor neutralizer
-- clothing odor neutralizer
-
-### Secondary discovery terms
-- fabric freshener
-- fabric refresher
-- cloth freshener
-- cloth refresher
-- clothes freshener
-- clothing refresher
-- fabric deodorizer
-- garment odor remover
-- textile odor remover
-- sweat smell remover for clothes
-- shirt smell remover
-- gym clothes odor remover
-- workout clothes odor remover
-
-### High-intent long-tail topics
-- best fabric odor remover in India
-- best fabric odor spray in India
-- pocket odor spray for clothes
-- fabric odor spray for men
-- office shirt odor remover
-- pre-meeting odor spray for clothes
-- gym-to-office fabric odor control
-- remove smell from clothes without washing
-- remove sweat smell from shirt
-- why clothes smell after sweating
-- why polyester clothes smell
-- why clothes smell after drying
-
-## Search-intent map
-
-- Informational: why clothes smell, sweat smell, polyester odor, storage odor, fabric science
-- Problem-solving: remove sweat smell, cooking smell, smoke smell, stored-clothing odor
-- Category discovery: fabric odor remover, fabric odor spray, fabric refresher, cloth refresher
-- Commercial investigation: best fabric odor remover India, best fabric odor spray India, fabric odor spray for men
-- Transactional: ODORSTRIKE, buy fabric odor remover, pocket fabric odor spray
-
-## Product facts
-
-- ODORSTRIKE: 50ml fabric odor-control mist for clothes.
-- Current price: ₹229.
-- Site MRP: ₹499.
-- Approximate yield: ~250 sprays.
-- Current commercial setup: one active SKU, OS-001-50ML. No active bundles or multi-packs.
-- Current public performance claim: up to 8 hours of odor protection on fabric.
-- Fabric only. Never spray on skin, hair or body.
-- Does not replace washing and does not remove stains.
-- Free shipping across India.
-- COD available; current COD handling charge is ₹60, making the collectable amount ₹289 for a single-bottle order.
-- Made in India; brand based in Hyderabad.
-- Current checkout supports manual UPI and COD. Razorpay migration is planned, not current live checkout.
-- Returns: current site policy provides a 7-day return window subject to the stated policy conditions.
-- Founder: Jogdhande Nikhil Patil, Hyderabad.
-
-## Problem / use cases
-
-ODORSTRIKE is intended for situations such as:
-- gym to office
-- long bike or vehicle commute
-- post-workout clothing
-- before a client meeting
-- before a date
-- travel and long days
-- food or smoke odor trapped in clothing
-- clothes that carry odor between washes
-
-## What it is not
-
-- not a body deodorant
-- not a perfume
-- not a room or air freshener
-- not a skin product
-- not a stain remover
-- not a replacement for washing
-- not intended for leather, suede or dry-clean-only garments
-
-## Product language guardrails
-
-Use “fabric odor remover”, “fabric odor control”, “clothes odor remover”, “clothing odor control” and similar problem-first language.
-Use “fabric refresher” or “cloth refresher” only as secondary search language because those terms can imply fragrance.
-Do not describe ODORSTRIKE as a fragrance product.
-Do not make unverified immediate or second-count odor-elimination guarantees unless that wording is explicitly approved in the current claim/evidence record.
-Do not publish exact formulation percentages or unapproved ingredient mechanisms.
-
-## Core pages
-
-- Buy ODORSTRIKE — ₹229 prepaid / ₹289 COD: https://smelloff.in/odorstrike
-- Homepage — Smelloff: https://smelloff.in/
-- Guides: https://smelloff.in/blog
-- About: https://smelloff.in/about
-- Reviews: https://smelloff.in/reviews
-
-## Contact
-
-- Website: https://smelloff.in/
-- Email: smelloffsupport@gmail.com
-- WhatsApp: +91 93929 74031
-- Instagram: https://instagram.com/smelloffindia
-- X: https://x.com/smelloffindia
-- Telegram: https://t.me/smelloffindia
-- LinkedIn: https://www.linkedin.com/company/smelloff
-- Facebook: https://www.facebook.com/share/1BU1dCAttY/
-- Location: Hyderabad, Telangana, India
-
-## Machine-readable catalog
-
-- Product catalog JSON: https://smelloff.in/products.json
-- Full reference: https://smelloff.in/llms-full.txt
+Official URL: https://smelloff.in
+Product URL: https://smelloff.in/odorstrike

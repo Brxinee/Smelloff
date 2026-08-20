@@ -231,7 +231,7 @@ const PAGES = [
     'zinc-pca-fabric-odor-ingredient-guide', 'beta-cyclodextrin-odor-removal-science',
     // buyer-intent posts recovered from the 2026-07-28 prune
     'best-fabric-odor-spray-india-2026-body-odor', 'best-deodorant-spray-for-clothes-not-skin',
-    'deodorant-vs-fabric-mist', 'spray-to-remove-sweat-smell-from-clothes-instantly',
+    'deodorant-vs-fabric-mist', 'spray-to-remove-sweat-smell-from-clothes-quickly',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
   // posts generated with no chrome of their own: the markers get inserted
   ...[
@@ -242,7 +242,7 @@ const PAGES = [
   ...[
     'damp-clothes-musty-smell-monsoon-fix', 'how-often-to-wash-jeans-india',
     'keep-clothes-fresh-while-travelling', 'which-fabrics-hold-odor-most',
-    'remove-smell-from-blazer-without-dry-cleaning', 'fabric-deodorizer-spray-india-guide-2026',
+    'fabric-deodorizer-spray-india-guide-2026',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
   // 2026-08 second series: the six built from the SEO strategy brief. Four of
   // the brief's six topics were out of scope under CLAUDE.md "Positioning:
