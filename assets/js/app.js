@@ -429,7 +429,7 @@ const CFG = window.SMELLOFF_CONFIG;
       }).catch(function(e){ console.error('Order email failed:', e); });
     }
 
-    const upiLink = buildUpiLink(total, orderId);
+    const upiLink = buildUpiPaymentUri(total);
     showLoadingScreen('Confirming payment…', 'Securing your UPI session');
     setTimeout(function() {
       btn.disabled = false;
@@ -501,37 +501,12 @@ const CFG = window.SMELLOFF_CONFIG;
     if (wrap) { wrap.style.display = 'none'; wrap.classList.remove('expired'); }
   };
 
-  function getAppUpiLink(app, amount, orderId) {
+  function buildUpiPaymentUri(amount) {
     const pa = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || 'mr.brainy@ibl';
     const pn = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_NAME) || 'Smelloff';
     const am = String(amount || 229);
-    const tn = 'ODORSTRIKE-' + (orderId || '');
-    const params = new URLSearchParams({ pa, pn, am, cu: 'INR', tn }).toString();
-    const isAndroid = /Android/i.test(navigator.userAgent);
-
-    if (app === 'gpay') {
-      if (isAndroid) {
-        return `intent://pay?${params}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end;`;
-      }
-      return `tez://upi/pay?${params}`;
-    }
-    if (app === 'phonepe') {
-      if (isAndroid) {
-        return `intent://pay?${params}#Intent;scheme=upi;package=com.phonepe.app;scheme=upi;end;`;
-      }
-      return `phonepe://pay?${params}`;
-    }
-    if (app === 'paytm') {
-      if (isAndroid) {
-        return `intent://pay?${params}#Intent;scheme=upi;package=net.one97.paytm;scheme=upi;end;`;
-      }
-      return `paytmmp://pay?${params}`;
-    }
-    return `upi://pay?${params}`;
-  }
-
-  function buildUpiLink(amount, orderId, app) {
-    return getAppUpiLink(app || 'any', amount, orderId);
+    const params = new URLSearchParams({ pa, pn, am, cu: 'INR' });
+    return `upi://pay?${params.toString()}`;
   }
 
   function showUpiSuccess(orderId, total, upiLink) {
@@ -541,20 +516,24 @@ const CFG = window.SMELLOFF_CONFIG;
     s.style.display = 'block';
     document.getElementById('successTag').textContent = 'Order received';
     document.getElementById('successHeading').textContent = 'Pay ₹' + total + ' via UPI';
-    document.getElementById('successMsg').textContent = 'Order received. Send your UTR to WhatsApp to confirm. We\'ll ship within 48 hours of confirmation.';
+    document.getElementById('successMsg').textContent = 'Order received. Open your UPI app or scan the QR code to pay.';
     document.getElementById('orderIdDisplay').textContent = orderId;
     var upiTrk = document.getElementById('successTrackLink');
     if (upiTrk) { upiTrk.href = '/track-order?code=' + encodeURIComponent(orderId); upiTrk.style.display = 'inline-block'; }
     try { localStorage.setItem('smelloff_last_order', JSON.stringify({ code: orderId, ts: Date.now() })); } catch (e) {}
 
+    const activeUpiUri = upiLink || buildUpiPaymentUri(total);
+
     // Populate UPI block
-    document.getElementById('upiBlock').style.display = 'block';
-    document.getElementById('upiIdShow').textContent = CFG.UPI_ID;
-    document.getElementById('upiAmountShow').textContent = '₹' + total;
-    document.getElementById('upiNoteShow').textContent = 'ODORSTRIKE-' + orderId;
+    if (document.getElementById('upiBlock')) document.getElementById('upiBlock').style.display = 'block';
+    if (document.getElementById('upiIdShow')) document.getElementById('upiIdShow').textContent = CFG.UPI_ID;
+    if (document.getElementById('upiAmountShow')) document.getElementById('upiAmountShow').textContent = '₹' + total;
+    if (document.getElementById('upiNoteShow')) document.getElementById('upiNoteShow').textContent = orderId;
     const openBtn = document.getElementById('upiOpenBtn');
-    openBtn.href = upiLink;
-    openBtn.textContent = 'Open UPI app · ₹' + total;
+    if (openBtn) {
+      openBtn.href = activeUpiUri;
+      openBtn.textContent = 'Open UPI app · ₹' + total;
+    }
 
     // Prefill WhatsApp UTR link with order context so merchant can match UTR to order
     const name = (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';

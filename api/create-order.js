@@ -13,6 +13,7 @@ const UPI_VPA = process.env.UPI_VPA || process.env.UPI_ID || 'mr.brainy@ibl';
 const UPI_PAYEE_NAME = process.env.UPI_NAME || process.env.UPI_PAYEE_NAME || 'Smelloff';
 const UPI_MERCHANT_CODE = process.env.UPI_MERCHANT_CODE || '';
 
+// Generates unique, non-colliding order code
 function genOrderCode() {
   const d = new Date();
   const yyyymmdd = d.toISOString().slice(0, 10).replace(/-/g, '');
@@ -20,45 +21,32 @@ function genOrderCode() {
   return `SMF-${yyyymmdd}-${rand}`;
 }
 
+// Generates unique, non-colliding UPI transaction reference (NPCI tr parameter)
 function genUpiTxnRef(orderCode) {
   const cleanCode = orderCode.replace(/[^A-Z0-9]/gi, '').slice(-8);
   const rand = crypto.randomBytes(3).toString('hex').toUpperCase();
   return `TXN${cleanCode}${rand}`;
 }
 
+// Generates unique payment attempt identifier
 function genPaymentAttemptId(orderCode) {
   const rand = crypto.randomBytes(4).toString('hex').toUpperCase();
   return `ATT-${orderCode}-${rand}`;
 }
 
-export function buildUpiLinks({ orderCode, upiTxnRef, amount }) {
+// Builds canonical UPI payment URI containing ONLY pa, pn, am, cu
+export function buildUpiPaymentUri(amount) {
   const params = new URLSearchParams({
     pa: UPI_VPA,
     pn: UPI_PAYEE_NAME,
     am: String(amount),
-    cu: 'INR',
-    tr: upiTxnRef,
-    tn: `ODORSTRIKE-${orderCode}`
+    cu: 'INR'
   });
 
-  if (UPI_MERCHANT_CODE) params.set('mc', UPI_MERCHANT_CODE);
-
-  const queryString = params.toString();
-  const genericUri = `upi://pay?${queryString}`;
-
-  return {
-    vpa: UPI_VPA,
-    payeeName: UPI_PAYEE_NAME,
-    generic: genericUri,
-    intentAndroidGpay: `intent://pay?${queryString}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end;`,
-    intentAndroidPhonepe: `intent://pay?${queryString}#Intent;scheme=upi;package=com.phonepe.app;scheme=upi;end;`,
-    intentAndroidPaytm: `intent://pay?${queryString}#Intent;scheme=upi;package=net.one97.paytm;scheme=upi;end;`,
-    gpayIos: `tez://upi/pay?${queryString}`,
-    phonepeIos: `phonepe://pay?${queryString}`,
-    paytmIos: `paytmmp://pay?${queryString}`
-  };
+  return `upi://pay?${params.toString()}`;
 }
 
+// Supabase persistence with service role
 async function createSupabaseOrderRecord(orderData) {
   if (!SERVICE_KEY) return null;
   try {
@@ -107,8 +95,11 @@ export default async function handler(req, res) {
 
   try {
     const body = req.body && typeof req.body === 'object' ? req.body : {};
+    
+    // Server-enforced quantity validation (bounded [1..5])
     const rawQty = parseInt(body.quantity, 10);
     const quantity = (isNaN(rawQty) || rawQty < 1) ? 1 : Math.min(rawQty, BASE_PRODUCT.maxQuantity);
+    
     const paymentMethod = String(body.paymentMethod || 'upi').toLowerCase();
     const isCod = paymentMethod === 'cod';
 
@@ -121,46 +112,66 @@ export default async function handler(req, res) {
     const state = String(customer.state || '').trim().slice(0, 100);
     const pincode = String(customer.pincode || '').replace(/\D/g, '').slice(0, 6);
 
-    if (!phone || phone.length < 10) return res.status(400).json({ error: 'Valid 10-digit mobile number required' });
-    if (!name || name.length < 2) return res.status(400).json({ error: 'Customer name required' });
-    if (!address || address.length < 5) return res.status(400).json({ error: 'Delivery address required' });
-    if (!pincode || pincode.length !== 6) return res.status(400).json({ error: 'Valid 6-digit PIN code required' });
+    if (!phone || phone.length < 10) {
+      return res.status(400).json({ error: 'Valid 10-digit mobile number required' });
+    }
+    if (!name || name.length < 2) {
+      return res.status(400).json({ error: 'Customer name required' });
+    }
+    if (!address || address.length < 5) {
+      return res.status(400).json({ error: 'Delivery address required' });
+    }
+    if (!pincode || pincode.length !== 6) {
+      return res.status(400).json({ error: 'Valid 6-digit PIN code required' });
+    }
 
+    // Authoritative pricing and status calculation
     const pricing = calculateOrderTotal(quantity, isCod ? 'cod' : 'upi');
-    const orderCode = body.orderCode && /^SMF-\d{8}-\d{4}$/.test(body.orderCode) ? body.orderCode : genOrderCode();
+    
+    // Idempotent order code generation
+    const orderCode = body.orderCode && /^SMF-\d{8}-\d{4}$/.test(body.orderCode) 
+      ? body.orderCode 
+      : genOrderCode();
+
     const orderToken = generateOrderToken(orderCode, phone);
     const paymentAttemptId = !isCod ? genPaymentAttemptId(orderCode) : null;
     const upiTxnRef = !isCod ? genUpiTxnRef(orderCode) : null;
 
-    const upiLinks = !isCod ? buildUpiLinks({
-      orderCode,
-      upiTxnRef,
-      amount: pricing.total
-    }) : null;
+    const upiUri = !isCod ? buildUpiPaymentUri(pricing.total) : null;
 
     const orderRow = {
       order_code: orderCode,
       customer_phone: phone,
       customer_email: email || null,
-      address: { name, line: address, city, state, pincode },
-      items: [{
-        sku: pricing.sku,
-        name: pricing.title,
-        quantity: pricing.qty,
-        unit_price: pricing.unitPrice,
-        total_price: pricing.subtotal
-      }],
-      amount: pricing.amountPaise,
+      address: {
+        name,
+        line: address,
+        city,
+        state,
+        pincode
+      },
+      items: [
+        {
+          sku: pricing.sku,
+          name: pricing.title,
+          quantity: pricing.qty,
+          unit_price: pricing.unitPrice,
+          total_price: pricing.subtotal
+        }
+      ],
+      amount: pricing.amountPaise, // amount in paise
       cod_fee: isCod ? pricing.codFee * 100 : 0,
       payment_method: isCod ? 'cod' : 'upi',
-      status: pricing.status,
+      status: pricing.status, // 'placed' for COD, 'upi_pending' for prepaid UPI
       payment_attempt_id: paymentAttemptId,
       upi_transaction_ref: upiTxnRef,
       created_at: new Date().toISOString()
     };
 
+    // Save order into Supabase
     const dbOrder = await createSupabaseOrderRecord(orderRow);
 
+    // Send confirmation email for COD immediately if email is provided
     if (isCod && email && process.env.RESEND_API_KEY) {
       try {
         const { subject, html } = orderConfirmation({
@@ -172,8 +183,13 @@ export default async function handler(req, res) {
           paymentMethod: 'Cash on Delivery'
         });
         const resend = new Resend(process.env.RESEND_API_KEY);
-        resend.emails.send({ from: FROM, to: email, replyTo: REPLY_TO, subject, html })
-          .catch(e => console.error('[create-order] Email send error:', e.message));
+        resend.emails.send({
+          from: FROM,
+          to: email,
+          replyTo: REPLY_TO,
+          subject,
+          html
+        }).catch(e => console.error('[create-order] Email send error:', e.message));
       } catch (emailErr) {
         console.error('[create-order] Email formatting exception:', emailErr.message);
       }
@@ -193,14 +209,13 @@ export default async function handler(req, res) {
       total: pricing.total,
       amountPaise: pricing.amountPaise,
       currency: pricing.currency,
-      paymentAttemptId,
-      upiTxnRef,
       upiVpa: UPI_VPA,
       upiPayeeName: UPI_PAYEE_NAME,
-      upiLinks,
+      upiUri,
       dbId: dbOrder ? dbOrder.id : null,
       customer: { name, phone, email }
     });
+
   } catch (err) {
     console.error('[create-order] Internal error:', err);
     return res.status(500).json({ error: 'Failed to create order. Please try again.' });

@@ -294,6 +294,61 @@ await runAttackTest(17, 'Transactional email endpoint rejects unauthenticated or
   assert.match(res.getData().error, /Unauthorized/i);
 });
 
+// ATTACK 18: Canonical UPI URI Builder Verification
+await runAttackTest(18, 'Canonical UPI URI builder has exactly 4 query parameters (pa, pn, am, cu) and no metadata', async () => {
+  const { buildUpiPaymentUri } = await import('../../api/create-order.js');
+  const uri = buildUpiPaymentUri(229);
+  assert.strictEqual(uri, 'upi://pay?pa=mr.brainy%40ibl&pn=Smelloff&am=229&cu=INR');
+
+  const parsed = new URL(uri);
+  const keys = Array.from(parsed.searchParams.keys());
+  assert.strictEqual(keys.length, 4);
+  assert.deepStrictEqual(keys.sort(), ['am', 'cu', 'pa', 'pn']);
+  assert.strictEqual(parsed.searchParams.get('pa'), 'mr.brainy@ibl');
+  assert.strictEqual(parsed.searchParams.get('pn'), 'Smelloff');
+  assert.strictEqual(parsed.searchParams.get('am'), '229');
+  assert.strictEqual(parsed.searchParams.get('cu'), 'INR');
+  assert.strictEqual(parsed.searchParams.get('tn'), null);
+  assert.strictEqual(parsed.searchParams.get('tr'), null);
+  assert.strictEqual(parsed.searchParams.get('mc'), null);
+});
+
+// ATTACK 19: Codebase Audit for Forbidden UPI Scheme Parameters & Duplicate Builders
+await runAttackTest(19, 'Audit payment codebase: zero tr/tn/intent/app schemes and no duplicate UPI builders', () => {
+  const activeFiles = [
+    'api/create-order.js',
+    'odorstrike.html',
+    'assets/js/app.js'
+  ];
+
+  const forbiddenRegexes = [
+    /[?&](tr|tn|mc)=/i,
+    /intent:\/\//i,
+    /tez:\/\//i,
+    /phonepe:\/\//i,
+    /paytmmp:\/\//i,
+    /package=com\.phonepe\.app/i,
+    /package=com\.google\.android\.apps\.nbu\.paisa\.user/i,
+    /package=net\.one97\.paytm/i,
+    /getAppUpiLink/i,
+    /buildUpiLinks/i
+  ];
+
+  for (const relPath of activeFiles) {
+    const fullPath = path.resolve(relPath);
+    if (fs.existsSync(fullPath)) {
+      const content = fs.readFileSync(fullPath, 'utf8');
+      for (const re of forbiddenRegexes) {
+        assert.strictEqual(
+          re.test(content),
+          false,
+          `Found forbidden UPI pattern ${re} in ${relPath}`
+        );
+      }
+    }
+  }
+});
+
 // Restore original env variables
 if (PREV_ADMIN_SECRET) process.env.ADMIN_SECRET = PREV_ADMIN_SECRET;
 else delete process.env.ADMIN_SECRET;

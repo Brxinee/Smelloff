@@ -3899,6 +3899,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
 
 
+
+
 <!-- PDP-CONVERSION-LAYER:START -->
 <section class="pdp-conv" aria-labelledby="pdp-conv-problem">
   <div class="pdp-conv__inner">
@@ -4758,13 +4760,11 @@ window.createSupabaseOrder = function (opts) {
       setTimeout(function() {
         _submittingOrder = false;
         btn.disabled = false;
-        showUpiPaymentScreen(orderId, orderData.total || total, orderData.upiLinks, orderToken);
+        const upiUri = orderData.upiUri || buildUpiPaymentUri(orderData.total || total);
+        showUpiPaymentScreen(orderId, orderData.total || total, upiUri, orderToken);
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        if (isMobile && orderData.upiLinks) {
-          const autoLink = orderData.upiLinks[selectedUpiApp] || orderData.upiLinks.generic;
-          if (autoLink) {
-            setTimeout(function(){ window.location.href = autoLink; }, 300);
-          }
+        if (isMobile && upiUri) {
+          setTimeout(function(){ window.location.href = upiUri; }, 300);
         }
       }, 1200);
 
@@ -4786,47 +4786,20 @@ window.createSupabaseOrder = function (opts) {
     });
   };
 
-  function getAppUpiLink(app, amount, orderId) {
+  function buildUpiPaymentUri(amount) {
     const pa = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || 'mr.brainy@ibl';
     const pn = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_NAME) || 'Smelloff';
     const am = String(amount || 229);
-    const tn = 'ODORSTRIKE-' + (orderId || '');
-    const params = new URLSearchParams({ pa, pn, am, cu: 'INR', tn }).toString();
-    const isAndroid = /Android/i.test(navigator.userAgent);
-
-    if (app === 'gpay') {
-      if (isAndroid) {
-        return `intent://pay?${params}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end;`;
-      }
-      return `tez://upi/pay?${params}`;
-    }
-    if (app === 'phonepe') {
-      if (isAndroid) {
-        return `intent://pay?${params}#Intent;scheme=upi;package=com.phonepe.app;scheme=upi;end;`;
-      }
-      return `phonepe://pay?${params}`;
-    }
-    if (app === 'paytm') {
-      if (isAndroid) {
-        return `intent://pay?${params}#Intent;scheme=upi;package=net.one97.paytm;scheme=upi;end;`;
-      }
-      return `paytmmp://pay?${params}`;
-    }
-    return `upi://pay?${params}`;
+    const params = new URLSearchParams({ pa, pn, am, cu: 'INR' });
+    return `upi://pay?${params.toString()}`;
   }
 
-  window.getAppUpiLink = getAppUpiLink;
+  window.buildUpiPaymentUri = buildUpiPaymentUri;
 
   window.launchSpecificUpi = function(app, event) {
     if (event) event.preventDefault();
-    if (_currentUpiOrder && _currentUpiOrder.upiLinks && _currentUpiOrder.upiLinks[app]) {
-      window.location.href = _currentUpiOrder.upiLinks[app];
-      return;
-    }
-    const orderId = document.getElementById('upiOrderIdDisplay') ? document.getElementById('upiOrderIdDisplay').textContent.trim() : '';
-    const t = orderTotals();
-    const link = getAppUpiLink(app, t.subtotal + t.shipping, orderId);
-    window.location.href = link;
+    const uri = (_currentUpiOrder && _currentUpiOrder.upiUri) || buildUpiPaymentUri(orderTotals().total);
+    window.location.href = uri;
   };
 
   // Copy UPI ID to clipboard with brief "Copied ✓" confirmation
@@ -4850,7 +4823,7 @@ window.createSupabaseOrder = function (opts) {
     } catch (e) { console.warn('[Smelloff] UPI copy failed:', e); }
   };
 
-  function showUpiPaymentScreen(orderId, total, upiLinks, orderToken) {
+  function showUpiPaymentScreen(orderId, total, upiUri, orderToken) {
     hideLoadingScreen(false);
     document.getElementById('checkoutForm').style.display = 'none';
     var successScreen = document.getElementById('successScreen');
@@ -4869,21 +4842,22 @@ window.createSupabaseOrder = function (opts) {
     const amtShow = document.getElementById('upiAmountShow');
     if (amtShow) amtShow.textContent = '₹' + total;
     const noteShow = document.getElementById('upiNoteShow');
-    if (noteShow) noteShow.textContent = 'ODORSTRIKE-' + orderId;
+    if (noteShow) noteShow.textContent = orderId;
 
-    // Update 1-click deep links in screen
+    const activeUpiUri = upiUri || buildUpiPaymentUri(total);
+
+    // Update 1-click deep links in screen (all point to canonical upiUri)
     var gpayBtn = document.getElementById('upiGpayBtn');
-    if (gpayBtn) gpayBtn.href = (upiLinks && upiLinks.gpay) || getAppUpiLink('gpay', total, orderId);
+    if (gpayBtn) gpayBtn.href = activeUpiUri;
     var phonepeBtn = document.getElementById('upiPhonepeBtn');
-    if (phonepeBtn) phonepeBtn.href = (upiLinks && upiLinks.phonepe) || getAppUpiLink('phonepe', total, orderId);
+    if (phonepeBtn) phonepeBtn.href = activeUpiUri;
     var paytmBtn = document.getElementById('upiPaytmBtn');
-    if (paytmBtn) paytmBtn.href = (upiLinks && upiLinks.paytm) || getAppUpiLink('paytm', total, orderId);
+    if (paytmBtn) paytmBtn.href = activeUpiUri;
     var openBtn = document.getElementById('upiOpenBtn');
-    if (openBtn) openBtn.href = (upiLinks && upiLinks.generic) || getAppUpiLink('any', total, orderId);
+    if (openBtn) openBtn.href = activeUpiUri;
 
-    // Dynamic QR for UPI deep link
-    const genericLink = (upiLinks && upiLinks.generic) || getAppUpiLink('any', total, orderId);
-    const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=8&data=' + encodeURIComponent(genericLink);
+    // Dynamic QR for canonical UPI URI
+    const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=8&data=' + encodeURIComponent(activeUpiUri);
     const qrImg = document.getElementById('upiQR');
     if (qrImg) {
       qrImg.style.display = '';
@@ -4905,7 +4879,7 @@ window.createSupabaseOrder = function (opts) {
     _currentUpiOrder = {
       orderId: orderId,
       total: total,
-      upiLinks: upiLinks,
+      upiUri: activeUpiUri,
       orderToken: orderToken
     };
 
