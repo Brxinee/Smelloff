@@ -80,6 +80,15 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'Order not found' });
     }
 
+    if (order.status === targetStatus) {
+      return res.status(200).json({
+        ok: true,
+        orderId: orderCode,
+        status: targetStatus,
+        idempotent: true
+      });
+    }
+
     if (!isValidTransition(order.status, targetStatus, order.payment_method)) {
       return res.status(400).json({
         error: `Invalid state transition from '${order.status}' to '${targetStatus}'`

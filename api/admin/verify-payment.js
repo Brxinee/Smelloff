@@ -27,6 +27,27 @@ async function fetchOrderByCode(orderCode) {
   }
 }
 
+async function checkUtrConflict(utr, currentOrderCode) {
+  if (!SERVICE_KEY || !utr) return false;
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/orders?upi_ref=eq.${encodeURIComponent(utr)}&order_code=neq.${encodeURIComponent(currentOrderCode)}&status=in.(confirmed,verification_pending)&select=order_code`,
+      {
+        headers: {
+          apikey: SERVICE_KEY,
+          Authorization: `Bearer ${SERVICE_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    if (!res.ok) return false;
+    const data = await res.json().catch(() => []);
+    return Array.isArray(data) && data.length > 0;
+  } catch {
+    return false;
+  }
+}
+
 async function listPendingVerificationOrders() {
   if (!SERVICE_KEY) return [];
   try {
@@ -126,13 +147,46 @@ export default async function handler(req, res) {
     }
 
     if (action === 'confirm' || action === 'approve') {
+      const confirmedOrFulfilled = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
+      if (confirmedOrFulfilled.includes(order.status)) {
+        return res.status(200).json({
+          ok: true,
+          action: 'already_confirmed',
+          idempotent: true,
+          orderId: orderCode,
+          status: order.status,
+          upiRef: order.upi_ref || null,
+          emailSent: false,
+          message: `Order is already in state '${order.status}'. No duplicate confirmation or email triggered.`
+        });
+      }
+
       if (!isValidTransition(order.status, 'confirmed', order.payment_method)) {
         return res.status(400).json({
           error: `Cannot transition order from status '${order.status}' to 'confirmed'.`
         });
       }
 
-      const finalUtr = explicitUtr || order.upi_ref || null;
+      const isCod = order.payment_method === 'cod';
+      const finalUtr = explicitUtr || (order.upi_ref ? validateAndNormalizeUtr(order.upi_ref) : null);
+
+      // Enforce payment evidence for prepaid UPI orders
+      if (!isCod && !finalUtr) {
+        return res.status(400).json({
+          error: 'Cannot confirm prepaid UPI order without valid payment evidence (UTR / UPI reference required).'
+        });
+      }
+
+      // Check for UTR conflicts if confirming with a UTR
+      if (finalUtr) {
+        const isConflict = await checkUtrConflict(finalUtr, orderCode);
+        if (isConflict) {
+          return res.status(409).json({
+            error: 'This UPI reference (UTR) has already been associated with another order.'
+          });
+        }
+      }
+
       const updatedOrder = await updateSupabaseOrderStatus(orderCode, 'confirmed', finalUtr);
       if (!updatedOrder) {
         return res.status(500).json({ error: 'Failed to update order status in database.' });
@@ -154,7 +208,7 @@ export default async function handler(req, res) {
             customerName: addr.name || 'there',
             amount: amountRupees,
             address: addrFormatted,
-            paymentMethod: order.payment_method === 'cod' ? 'Cash on Delivery' : 'UPI Prepaid (Verified)'
+            paymentMethod: isCod ? 'Cash on Delivery' : 'UPI Prepaid (Verified)'
           });
 
           const resend = new Resend(process.env.RESEND_API_KEY);
@@ -182,6 +236,17 @@ export default async function handler(req, res) {
     }
 
     if (action === 'reject') {
+      if (order.status === 'payment_not_verified') {
+        return res.status(200).json({
+          ok: true,
+          action: 'already_rejected',
+          idempotent: true,
+          orderId: orderCode,
+          status: 'payment_not_verified',
+          message: 'Order is already marked as payment_not_verified.'
+        });
+      }
+
       if (!isValidTransition(order.status, 'payment_not_verified', order.payment_method)) {
         return res.status(400).json({
           error: `Cannot transition order from status '${order.status}' to 'payment_not_verified'.`

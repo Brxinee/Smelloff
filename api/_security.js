@@ -50,34 +50,49 @@ export function checkRateLimit(key, limit = 10, windowMs = 10 * 60 * 1000) {
   return true; // Allowed
 }
 
-function getSecuritySecret() {
-  return (
+export function getSecuritySecret() {
+  const secret =
     process.env.ORDER_SECURITY_SECRET ||
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.ADMIN_SECRET ||
-    'smelloff-default-order-signing-salt-2026'
-  );
+    process.env.ADMIN_SECRET;
+
+  if (!secret || typeof secret !== 'string' || secret.trim().length === 0) {
+    console.error('[security] Security secret not configured in environment. Failing closed.');
+    return null;
+  }
+  return secret.trim();
 }
 
 /**
  * Generates an HMAC signature for an order to prevent unauthenticated mutation.
+ * Fails closed (returns null) if no cryptographic secret is configured or inputs are invalid.
  */
 export function generateOrderToken(orderCode, phone) {
-  const cleanPhone = String(phone || '').replace(/\D/g, '').slice(-10);
   const secret = getSecuritySecret();
+  if (!secret) return null;
+
+  const cleanPhone = String(phone || '').replace(/\D/g, '').slice(-10);
+  if (!cleanPhone || cleanPhone.length !== 10) return null;
+
+  const cleanOrderCode = String(orderCode || '').trim().toUpperCase();
+  if (!cleanOrderCode || !/^SMF-\d{8}-\d{4}$/.test(cleanOrderCode)) return null;
+
   return crypto
     .createHmac('sha256', secret)
-    .update(`${orderCode}:${cleanPhone}`)
+    .update(`${cleanOrderCode}:${cleanPhone}`)
     .digest('hex')
     .slice(0, 32);
 }
 
 /**
- * Validates the order token.
+ * Validates the order token in constant time.
+ * Fails closed if token or inputs are invalid or secret is unavailable.
  */
 export function verifyOrderToken(orderCode, phone, token) {
   if (!token || typeof token !== 'string') return false;
   const expected = generateOrderToken(orderCode, phone);
+  if (!expected) return false;
+
   try {
     const expectedBuf = Buffer.from(expected, 'utf8');
     const actualBuf = Buffer.from(token, 'utf8');
@@ -89,11 +104,13 @@ export function verifyOrderToken(orderCode, phone, token) {
 }
 
 /**
- * Validates admin authorization via Bearer token or x-admin-key.
+ * Validates admin authorization via Bearer token or x-admin-key in constant time.
  */
 export function isAdminAuthorized(req) {
   const adminSecret = process.env.ADMIN_SECRET || process.env.ADMIN_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!adminSecret) return false; // Fail closed if no admin secret configured
+  if (!adminSecret || typeof adminSecret !== 'string' || adminSecret.trim().length === 0) {
+    return false; // Fail closed if no admin secret configured
+  }
 
   const authHeader = String(req.headers['authorization'] || '').trim();
   const customHeader = String(req.headers['x-admin-key'] || req.headers['x-admin-secret'] || '').trim();
@@ -108,7 +125,7 @@ export function isAdminAuthorized(req) {
   if (!token) return false;
 
   try {
-    const expectedBuf = Buffer.from(adminSecret, 'utf8');
+    const expectedBuf = Buffer.from(adminSecret.trim(), 'utf8');
     const actualBuf = Buffer.from(token, 'utf8');
     if (expectedBuf.length !== actualBuf.length) return false;
     return crypto.timingSafeEqual(expectedBuf, actualBuf);
