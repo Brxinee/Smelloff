@@ -614,54 +614,36 @@
     .rm-cta:hover{transform:none}
   }
 
-  /* ============ Brand proof ============ */
-  .proof{border-top:2px solid var(--rule)}
-  .trust-row{
-    margin-top:40px;
-    display:grid;grid-template-columns:repeat(2,1fr);gap:14px;
-    list-style:none;
-  }
-  .trust-row li{
-    border:2px solid var(--text);
-    padding:18px 14px;
-    display:flex;align-items:center;gap:12px;
-    font-family:var(--mono);font-weight:400;
-    font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-  }
-  .trust-row svg{flex:0 0 28px;width:28px;height:28px}
-  .trust-row .mask-ico{flex:0 0 28px;width:28px;height:28px}
-  @media(min-width:768px){
-    .trust-row{grid-template-columns:repeat(4,1fr);gap:20px}
-    .trust-row li{padding:22px 18px;font-size:13px}
-  }
-
   /* ============ Benefits strip ============
-     Was buried above the FAQ as part of the "proof" section. Promoted to
-     directly under the hero: these four facts (made in India, ships
-     pan-India, COD, Hyderabad) are the objection-killers, and they were
-     doing no work eight screens down. */
+     Promoted to directly under the hero: these four facts (made in India,
+     ships pan-India, COD, Hyderabad) are the objection-killers. */
   .benefits-strip{
     border-top:var(--bw-thin) solid var(--rule);
     border-bottom:var(--bw-thin) solid var(--rule);
     background:var(--surface);
     padding:0;
   }
-  .benefits-strip .trust-row{margin:0;border:0;gap:0}
+  .benefits-strip .trust-row{margin:0;border:0;gap:0;list-style:none;display:grid;grid-template-columns:repeat(2,1fr)}
   .benefits-strip .trust-row li{
     border:0;
     border-right:1px solid var(--rule);
     padding:20px 16px;
     justify-content:center;
+    display:flex;align-items:center;gap:12px;
+    font-family:var(--mono);font-weight:400;
+    font-size:12px;letter-spacing:.1em;text-transform:uppercase;
   }
+  .benefits-strip .trust-row .mask-ico{flex:0 0 28px;width:28px;height:28px}
   .benefits-strip .trust-row li:last-child{border-right:0}
+  @media(min-width:768px){
+    .benefits-strip .trust-row{grid-template-columns:repeat(4,1fr)}
+    .benefits-strip .trust-row li{padding:22px 18px;font-size:13px}
+  }
   @media(max-width:767px){
     .benefits-strip .trust-row li:nth-child(2n){border-right:0}
     .benefits-strip .trust-row li:nth-child(-n+2){border-bottom:1px solid var(--rule)}
   }
 
-  /* ============ Problem ============
-     Names why the alternatives fail before pitching the fix. Four blunt
-     answers in acid, each with the reason underneath. */
   /* ============ Voices (social proof) ============ */
   .voices{border-top:var(--bw-thin) solid var(--rule)}
   .voice-grid{
@@ -697,23 +679,6 @@
   .voices-note a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
   @media(min-width:768px){
     .voice-grid{grid-template-columns:repeat(3,1fr);gap:24px}
-  }
-
-  /* ============ Founder ============ */
-  .founder{border-top:var(--bw-thin) solid var(--rule)}
-  .founder-grid{display:grid;grid-template-columns:1fr;gap:32px;align-items:start}
-  .founder-body p+p{margin-top:16px}
-  .founder-body{max-width:62ch;font-size:var(--fs-lead);line-height:1.5}
-  .founder-body a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
-  .founder-sig{
-    margin-top:26px;padding-top:18px;
-    border-top:1px solid var(--rule);
-    font-family:var(--mono);font-size:12px;
-    letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
-  }
-  .founder-sig strong{color:var(--text);font-weight:400}
-  @media(min-width:900px){
-    .founder-grid{grid-template-columns:auto 1fr;gap:56px}
   }
 
   /* ============ FAQ ============ */

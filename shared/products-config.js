@@ -92,6 +92,7 @@ export const ORDER_LIFECYCLE = {
       'verification_pending',
       'confirmed',
       'payment_not_verified',
+      'failed',
       'packed',
       'dispatched',
       'out_for_delivery',
@@ -99,9 +100,10 @@ export const ORDER_LIFECYCLE = {
       'cancelled'
     ],
     transitionMap: {
-      upi_pending: ['verification_pending', 'cancelled'],
-      verification_pending: ['verification_pending', 'confirmed', 'payment_not_verified', 'cancelled'],
-      payment_not_verified: ['verification_pending', 'cancelled'],
+      upi_pending: ['confirmed', 'failed', 'cancelled', 'verification_pending'],
+      verification_pending: ['confirmed', 'payment_not_verified', 'cancelled'],
+      payment_not_verified: ['confirmed', 'cancelled', 'upi_pending'],
+      failed: ['upi_pending', 'cancelled'],
       confirmed: ['packed', 'dispatched', 'cancelled'],
       packed: ['dispatched', 'cancelled'],
       dispatched: ['out_for_delivery', 'delivered', 'cancelled'],

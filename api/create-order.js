@@ -9,12 +9,60 @@ const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
 const REPLY_TO = 'smelloffsupport@gmail.com';
 
+const UPI_VPA = process.env.UPI_VPA || process.env.UPI_ID || 'mr.brainy@ibl';
+const UPI_PAYEE_NAME = process.env.UPI_NAME || process.env.UPI_PAYEE_NAME || 'Smelloff';
+const UPI_MERCHANT_CODE = process.env.UPI_MERCHANT_CODE || '';
+
 // Generates unique, non-colliding order code
 function genOrderCode() {
   const d = new Date();
   const yyyymmdd = d.toISOString().slice(0, 10).replace(/-/g, '');
   const rand = String(crypto.randomInt(1000, 10000));
   return `SMF-${yyyymmdd}-${rand}`;
+}
+
+// Generates unique, non-colliding UPI transaction reference (NPCI tr parameter)
+function genUpiTxnRef(orderCode) {
+  const cleanCode = orderCode.replace(/[^A-Z0-9]/gi, '').slice(-8);
+  const rand = crypto.randomBytes(3).toString('hex').toUpperCase();
+  return `TXN${cleanCode}${rand}`;
+}
+
+// Generates unique payment attempt identifier
+function genPaymentAttemptId(orderCode) {
+  const rand = crypto.randomBytes(4).toString('hex').toUpperCase();
+  return `ATT-${orderCode}-${rand}`;
+}
+
+// Builds UPI payment links with authoritative reference parameters
+export function buildUpiLinks({ orderCode, upiTxnRef, amount }) {
+  const params = new URLSearchParams({
+    pa: UPI_VPA,
+    pn: UPI_PAYEE_NAME,
+    am: String(amount),
+    cu: 'INR',
+    tr: upiTxnRef,
+    tn: `ODORSTRIKE-${orderCode}`
+  });
+
+  if (UPI_MERCHANT_CODE) {
+    params.set('mc', UPI_MERCHANT_CODE);
+  }
+
+  const queryString = params.toString();
+  const genericUri = `upi://pay?${queryString}`;
+
+  return {
+    vpa: UPI_VPA,
+    payeeName: UPI_PAYEE_NAME,
+    generic: genericUri,
+    intentAndroidGpay: `intent://pay?${queryString}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end;`,
+    intentAndroidPhonepe: `intent://pay?${queryString}#Intent;scheme=upi;package=com.phonepe.app;scheme=upi;end;`,
+    intentAndroidPaytm: `intent://pay?${queryString}#Intent;scheme=upi;package=net.one97.paytm;scheme=upi;end;`,
+    gpayIos: `tez://upi/pay?${queryString}`,
+    phonepeIos: `phonepe://pay?${queryString}`,
+    paytmIos: `paytmmp://pay?${queryString}`
+  };
 }
 
 // Supabase persistence with service role
@@ -60,7 +108,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const ip = clientIp(req);
-  if (!checkRateLimit(`create-order:${ip}`, 15, 10 * 60 * 1000)) {
+  if (!checkRateLimit(`create-order:${ip}`, 20, 10 * 60 * 1000)) {
     return res.status(429).json({ error: 'Too many order creation attempts. Please slow down.' });
   }
 
@@ -78,7 +126,7 @@ export default async function handler(req, res) {
     const name = String(customer.name || '').trim().slice(0, 100);
     const phone = String(customer.phone || '').trim().replace(/\D/g, '').slice(0, 10);
     const email = String(customer.email || '').trim().toLowerCase().slice(0, 120);
-    const address = String(customer.address || '').trim().slice(0, 300);
+    const address = String(customer.address || customer.f_addr || customer.line || '').trim().slice(0, 300);
     const city = String(customer.city || '').trim().slice(0, 100);
     const state = String(customer.state || '').trim().slice(0, 100);
     const pincode = String(customer.pincode || '').replace(/\D/g, '').slice(0, 6);
@@ -105,6 +153,14 @@ export default async function handler(req, res) {
       : genOrderCode();
 
     const orderToken = generateOrderToken(orderCode, phone);
+    const paymentAttemptId = !isCod ? genPaymentAttemptId(orderCode) : null;
+    const upiTxnRef = !isCod ? genUpiTxnRef(orderCode) : null;
+
+    const upiLinks = !isCod ? buildUpiLinks({
+      orderCode,
+      upiTxnRef,
+      amount: pricing.total
+    }) : null;
 
     const orderRow = {
       order_code: orderCode,
@@ -130,6 +186,8 @@ export default async function handler(req, res) {
       cod_fee: isCod ? pricing.codFee * 100 : 0,
       payment_method: isCod ? 'cod' : 'upi',
       status: pricing.status, // 'placed' for COD, 'upi_pending' for prepaid UPI
+      payment_attempt_id: paymentAttemptId,
+      upi_transaction_ref: upiTxnRef,
       created_at: new Date().toISOString()
     };
 
@@ -174,6 +232,11 @@ export default async function handler(req, res) {
       total: pricing.total,
       amountPaise: pricing.amountPaise,
       currency: pricing.currency,
+      paymentAttemptId,
+      upiTxnRef,
+      upiVpa: UPI_VPA,
+      upiPayeeName: UPI_PAYEE_NAME,
+      upiLinks,
       dbId: dbOrder ? dbOrder.id : null,
       customer: { name, phone, email }
     });

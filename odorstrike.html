@@ -2046,13 +2046,20 @@
     margin-bottom:16px;
   }
   .success-reassure{font-size:12px !important;color:var(--acid) !important}
+  .upi-payment-screen{
+    text-align:center;
+    padding:10px 0;
+  }
+  .upi-payment-screen h3{font-size:26px;margin-bottom:6px;color:var(--text)}
   .upi-block{
     border:1px dashed rgba(184,255,87,.25);
-    padding:20px 16px;
-    margin-top:8px;
+    padding:16px 14px;
+    margin-top:12px;
+    background:rgba(255,255,255,.02);
+    border-radius:6px;
   }
   .qr-wrap{text-align:center;margin-bottom:12px}
-  .upi-qr{width:180px;height:180px;background:#fff;padding:8px;border-radius:4px}
+  .upi-qr{width:180px;height:180px;background:#fff;padding:8px;border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,.4)}
   .upi-row{
     display:flex;justify-content:space-between;align-items:baseline;
     padding:8px 0;
@@ -2066,28 +2073,75 @@
   }
   .upi-row .val{font-family:var(--mono);font-size:13px}
   .upi-row .val.acid{color:var(--acid);font-weight:500}
-  .upi-cta{
-    display:block;
+  .upi-verify-status-box{
+    margin-top:14px;
+    padding:14px 12px;
+    background:rgba(184,255,87,.05);
+    border:1px solid rgba(184,255,87,.2);
+    border-radius:6px;
     text-align:center;
-    margin-top:16px;
-    padding:14px;
+  }
+  .upi-pulse-indicator{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:4px;
+  }
+  .upi-pulse-dot{
+    width:9px;
+    height:9px;
+    background:var(--acid);
+    border-radius:50%;
+    box-shadow:0 0 10px rgba(184,255,87,.8);
+    animation:upiPulse 1.4s infinite;
+  }
+  @keyframes upiPulse{
+    0%{transform:scale(0.85);opacity:0.6}
+    50%{transform:scale(1.25);opacity:1}
+    100%{transform:scale(0.85);opacity:0.6}
+  }
+  .upi-pulse-text{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:600;
+    color:var(--text);
+    letter-spacing:.05em;
+  }
+  .upi-auto-note{
+    font-size:11px;
+    color:var(--muted);
+    margin:4px 0 10px;
+    line-height:1.4;
+  }
+  .upi-check-now-btn{
+    width:100%;
+    padding:10px 14px;
     background:var(--acid);
     color:var(--ink);
+    border:none;
+    border-radius:4px;
     font-family:var(--mono);
-    font-size:12px;letter-spacing:.15em;text-transform:uppercase;
-    text-decoration:none;
-    font-weight:500;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:700;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  .upi-check-now-btn:hover{background:#a3e84d}
+  .upi-check-now-btn:disabled{opacity:.5;cursor:not-allowed}
+  .upi-status-feedback{
+    margin-top:8px;
+    font-family:var(--mono);
+    font-size:11px;
+    line-height:1.4;
   }
   .upi-policy-link{
-    font-size:12px;color:var(--muted);
-    margin-top:12px;text-align:center;
+    font-size:11px;color:var(--muted);
+    margin-top:10px;text-align:center;
   }
   .upi-policy-link a{color:var(--acid);text-decoration:none}
-  .upi-help{
-    font-size:13px;color:var(--muted);line-height:1.5;
-    margin-top:14px;
-  }
-  .upi-help a{color:var(--acid);text-decoration:none}
 
   .loader{
     display:inline-block;
@@ -3635,7 +3689,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <span class="upi-inline-val acid" id="upiAmountInline">₹229</span>
         </div>
         <p class="pay-help">
-          After paying, send screenshot + UTR to WhatsApp for instant confirmation.
+          Pay via Google Pay, PhonePe, Paytm, or any UPI app. Instant automated verification.
         </p>
       </div>
 
@@ -3661,19 +3715,14 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <div class="ls-sub" id="loadingSub">Hang tight</div>
     </div>
 
-    <!-- Success state -->
-    <div id="successScreen" class="success-screen" style="display:none">
-      <div class="overlay-tag" id="successTag">Order confirmed</div>
-      <h3 id="successHeading">You're done.</h3>
-      <p id="successMsg">We'll ship your ODORSTRIKE within 48 hours.</p>
-      <div class="order-id" id="orderIdDisplay" role="group" aria-label="Order ID"></div>
-      <br>
-      <a class="success-track-link" id="successTrackLink" href="/track-order" style="display:none">Track this order anytime →</a>
+    <!-- Active UPI Payment Screen -->
+    <div id="upiPaymentScreen" class="upi-payment-screen" style="display:none">
+      <div class="overlay-tag">Payment · Direct UPI</div>
+      <h3 id="upiPayTitle">Pay ₹229 via UPI</h3>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Open your UPI app or scan the QR code to complete payment.</p>
+      <div class="order-id" id="upiOrderIdDisplay" role="group" aria-label="Order ID"></div>
 
-      <p class="success-reassure" id="successEmailNote" style="display:none">Check your email — we just sent your order confirmation.</p>
-
-      <!-- Optional UPI block (shown only when UPI was the chosen method) -->
-      <div id="upiBlock" class="upi-block" style="display:none;text-align:left">
+      <div class="upi-block" style="text-align:left">
         <div class="upi-app-launch-head">Tap to launch your UPI app directly:</div>
         <div class="upi-launch-grid" id="upiLaunchGrid">
           <a class="upi-launch-btn gpay" id="upiGpayBtn" href="#" onclick="launchSpecificUpi('gpay', event)">
@@ -3700,33 +3749,48 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <div class="upi-row" style="margin-top:12px;">
           <span class="lbl">UPI ID</span>
           <span class="val" id="upiIdShow">mr.brainy@ibl</span>
-          <button type="button" class="upi-copy" style="margin-left:auto;" onclick="copyUpiId()">Copy</button>
+          <button type="button" class="upi-copy" id="upiSuccessCopyBtn" style="margin-left:auto;" onclick="copyUpiId('upiSuccessCopyBtn')">Copy</button>
         </div>
         <div class="upi-row">
           <span class="lbl">Amount</span>
           <span class="val acid" id="upiAmountShow">₹229</span>
         </div>
         <div class="upi-row">
-          <span class="lbl">Note</span>
-          <span class="val" id="upiNoteShow">Smelloff</span>
+          <span class="lbl">Reference</span>
+          <span class="val" id="upiNoteShow">ODORSTRIKE</span>
         </div>
 
-        <div class="upi-help" style="margin-top:14px;">
-          <strong>After paying:</strong> Enter your 12-digit UTR below or send to WhatsApp:
-          <div style="display:flex;gap:8px;margin-top:8px;">
-            <input type="text" id="upiUtrInput" placeholder="12-digit UTR / Ref No." maxlength="24" style="flex:1;padding:8px 10px;background:#111;border:1px solid #333;color:#fff;border-radius:4px;font-size:13px;text-transform:uppercase;">
-            <button type="button" id="submitUtrBtn" onclick="submitOrderUtr()" style="padding:8px 14px;background:var(--acid,#d4ff00);color:#000;font-weight:600;border:none;border-radius:4px;cursor:pointer;font-size:13px;">Submit UTR</button>
+        <!-- Automated Status Polling Card -->
+        <div class="upi-verify-status-box" id="upiVerifyStatusBox">
+          <div class="upi-pulse-indicator">
+            <span class="upi-pulse-dot" aria-hidden="true"></span>
+            <span class="upi-pulse-text" id="upiPollingStatusText">Waiting for payment confirmation…</span>
           </div>
-          <div id="utrFeedback" style="display:none;font-size:12px;margin-top:6px;line-height:1.4;"></div>
-          <div style="margin-top:10px;">
-            <a id="waSuccessUtrLink" href="https://wa.me/919392974031" target="_blank" rel="noopener" class="wa-utr-btn">Or Share UTR on WhatsApp →</a>
-          </div>
+          <p class="upi-auto-note">Verifying automatically with the bank. No UTR or screenshot required.</p>
+          <button type="button" class="upi-check-now-btn" id="upiCheckNowBtn" onclick="checkCurrentPaymentStatus(true)">
+            I've Completed Payment · Check Status
+          </button>
+          <div id="upiStatusFeedback" class="upi-status-feedback" style="display:none"></div>
         </div>
 
-        <div class="upi-policy-link" style="margin-top:12px;font-size:11px;">
+        <div class="upi-policy-link">
           Payment issue? <a href="/payment-failed" onclick="openPaymentFailedOverlay();return false;">See our Payment Failed Policy</a>
         </div>
       </div>
+
+      <button class="submit-btn" style="margin-top:14px;background:#181818;color:#fff;border:1px solid #333;" onclick="closeCheckout()">Cancel / Close</button>
+    </div>
+
+    <!-- Success / Confirmed state -->
+    <div id="successScreen" class="success-screen" style="display:none">
+      <div class="overlay-tag" id="successTag">Order confirmed ✓</div>
+      <h3 id="successHeading">You're done.</h3>
+      <p id="successMsg">We'll ship your ODORSTRIKE within 48 hours.</p>
+      <div class="order-id" id="orderIdDisplay" role="group" aria-label="Order ID"></div>
+      <br>
+      <a class="success-track-link" id="successTrackLink" href="/track-order" style="display:none">Track this order anytime →</a>
+
+      <p class="success-reassure" id="successEmailNote" style="display:none">Check your email — we just sent your order confirmation.</p>
 
       <p style="font-size:12px;margin-top:14px">Questions? WhatsApp <a id="waSuccessQuestionsLink" href="https://wa.me/919392974031" style="color:var(--acid);font-weight:500">+91 93929 74031</a></p>
       <button class="submit-btn" onclick="closeCheckout()">Close</button>
@@ -3747,14 +3811,14 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <div class="po-eyebrow">Policy · Payment Failed</div>
     <h2 id="pfTitle">Payment Failed / Failed Transaction Policy</h2>
 
-    <p>At Smelloff, we currently accept payments via UPI (direct transfer to our UPI ID and QR code). Since payments are processed manually, here's what happens if something goes wrong:</p>
+    <p>At Smelloff, we accept payments via direct UPI (Google Pay, PhonePe, Paytm, BHIM, QR code) and Cash on Delivery. Payments made via UPI are verified automatically.</p>
 
     <h2>1. Money debited but order not confirmed</h2>
-    <p>If your UPI app shows the payment as successful but you didn't receive an order confirmation from us within 30 minutes:</p>
+    <p>If your UPI app shows the payment as successful but you didn't receive an instant confirmation:</p>
     <ul>
-      <li>Email us at <a href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a> with your UPI transaction ID (UTR), screenshot of the payment, and the phone number/email used to place the order.</li>
-      <li>We'll verify the payment against our records within 24 hours.</li>
-      <li>If confirmed, we'll process your order immediately. If the payment didn't reach us, we'll issue a full refund to your original UPI ID within 5–7 business days.</li>
+      <li>Email us at <a href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a> with your Order ID, phone number, and payment transaction reference.</li>
+      <li>We'll check the payment against our records within 24 hours.</li>
+      <li>If confirmed, your order status is updated immediately. If the payment failed to settle, we'll guide you or issue a full refund within 5–7 business days.</li>
     </ul>
 
     <h2>2. Payment failed at your end</h2>
@@ -3764,21 +3828,21 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <p>UPI pending transactions usually auto-resolve within 24–48 hours. If money is debited and stays pending beyond that, it auto-reverses to your account. If it doesn't, contact your bank — we cannot release a refund for a payment we never received.</p>
 
     <h2>4. Duplicate payment</h2>
-    <p>If you accidentally paid twice for the same order, email us with both UTRs. We'll refund the duplicate amount within 5–7 business days.</p>
+    <p>If you accidentally paid twice for the same order, email us with your Order ID. We'll refund the duplicate amount within 5–7 business days.</p>
 
     <h2>5. Wrong amount paid</h2>
     <ul>
-      <li><strong>Paid less:</strong> We'll email you a request for the balance before dispatching.</li>
+      <li><strong>Paid less:</strong> We'll request the balance before dispatching.</li>
       <li><strong>Paid more:</strong> We'll refund the excess within 5–7 business days.</li>
     </ul>
 
     <h2>Refund Timeline</h2>
-    <p>All verified refunds are processed within 5–7 business days to your original UPI ID. Bank processing may take an additional 2–3 days.</p>
+    <p>All verified refunds are processed within 5–7 business days to your original UPI account. Bank processing may take an additional 2–3 days.</p>
 
     <h2>Contact for Payment Issues</h2>
     <div class="po-callout">
       <p><strong>Email:</strong> <a href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a></p>
-      <p>Always include your UTR/transaction ID — we cannot trace payments without it.</p>
+      <p>Always include your Order ID and phone number so we can look up your order immediately.</p>
     </div>
 
     <div class="po-meta">
@@ -3786,6 +3850,14 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       Last updated: April 2026
     </div>
   
+
+
+
+
+
+
+
+
 
 
 
@@ -4518,6 +4590,8 @@ window.createSupabaseOrder = function (opts) {
     if (cf) cf.style.display = 'none';
     var ss = document.getElementById('successScreen');
     if (ss) ss.style.display = 'none';
+    var upiScreen = document.getElementById('upiPaymentScreen');
+    if (upiScreen) upiScreen.style.display = 'none';
     var ls = document.getElementById('loadingScreen');
     if (!ls) return;
     var ll = document.getElementById('loadingLabel');
@@ -4528,19 +4602,38 @@ window.createSupabaseOrder = function (opts) {
     ls.classList.add('active');
   }
 
-  function hideLoadingScreen() {
+  function hideLoadingScreen(restoreForm) {
     var ls = document.getElementById('loadingScreen');
     if (ls) { ls.classList.remove('active'); ls.style.display = 'none'; }
+    if (restoreForm !== false) {
+      var cf = document.getElementById('checkoutForm');
+      var ss = document.getElementById('successScreen');
+      var upiScreen = document.getElementById('upiPaymentScreen');
+      if (cf && (!ss || ss.style.display === 'none') && (!upiScreen || upiScreen.style.display === 'none')) {
+        cf.style.display = 'block';
+      }
+    }
+  }
+
+  var _paymentPollingTimer = null;
+  var _currentUpiOrder = null;
+
+  function stopPaymentPolling() {
+    if (_paymentPollingTimer) {
+      clearInterval(_paymentPollingTimer);
+      _paymentPollingTimer = null;
+    }
   }
 
   function showSuccess(orderId, method) {
-    hideLoadingScreen();
+    stopPaymentPolling();
+    hideLoadingScreen(false);
     var cff = document.getElementById('checkoutForm');
     if (cff) cff.style.display = 'none';
+    var upiScreen = document.getElementById('upiPaymentScreen');
+    if (upiScreen) upiScreen.style.display = 'none';
     var ssc = document.getElementById('successScreen');
     if (ssc) ssc.style.display = 'block';
-    var ub = document.getElementById('upiBlock');
-    if (ub) ub.style.display = 'none';
     var oid = document.getElementById('orderIdDisplay');
     if (oid) oid.textContent = orderId;
     var trk = document.getElementById('successTrackLink');
@@ -4557,15 +4650,6 @@ window.createSupabaseOrder = function (opts) {
       document.getElementById('successHeading').textContent = "COD order placed.";
       document.getElementById('successMsg').textContent = 'Our team will call to confirm within 24 hours. Pay ₹' + amount + ' to the delivery person on arrival.';
 
-      // Google Customer Reviews opt-in. COD only, deliberately: this is a real
-      // placed order the moment it exists (₹0 advance, confirmed by phone), so
-      // it is a genuine order-confirmation event. The UPI path is not — see
-      // the note in showUpiSuccess(). COD is the default and the majority
-      // path, so this covers most orders.
-      //
-      // Consent-gated and no-ops without an email address; all of that lives
-      // in assets/js/google-customer-reviews.js. Wrapped because nothing on
-      // the screen that confirms someone's order may ever throw.
       try {
         var gcrEmail = document.getElementById('f_email');
         if (typeof window.smfGoogleReviewOptIn === 'function') {
@@ -4576,22 +4660,11 @@ window.createSupabaseOrder = function (opts) {
         }
       } catch (e) {}
     } else {
-      document.getElementById('successTag').textContent = 'Order confirmed';
+      document.getElementById('successTag').textContent = 'Order confirmed ✓';
       document.getElementById('successHeading').textContent = "You're done.";
-      document.getElementById('successMsg').textContent = 'Our team ships your ODORSTRIKE within 48 hours.';
+      document.getElementById('successMsg').textContent = 'Payment verified. Our team ships your ODORSTRIKE within 48 hours.';
     }
 
-    // Inject order ID, name, phone into WhatsApp links so the merchant can match UTR to order.
-    var utrLink = document.getElementById('waSuccessUtrLink');
-    if (utrLink) {
-      utrLink.href = 'https://wa.me/919392974031?text=' + encodeURIComponent(
-        'Order ' + orderId + '\n' +
-        'Name: ' + name + '\n' +
-        'Phone: ' + phone + '\n' +
-        'Amount: ₹' + amount + '\n' +
-        'UTR: [paste here]'
-      );
-    }
     var qLink = document.getElementById('waSuccessQuestionsLink');
     if (qLink) {
       qLink.href = 'https://wa.me/919392974031?text=' + encodeURIComponent(
@@ -4648,10 +4721,10 @@ window.createSupabaseOrder = function (opts) {
       name: (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : ''),
       phone: (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : ''),
       email: (document.getElementById('f_email') ? document.getElementById('f_email').value.trim() : ''),
-      address: (document.getElementById('f_address') ? document.getElementById('f_address').value.trim() : ''),
+      address: (document.getElementById('f_addr') || document.getElementById('f_address') ? (document.getElementById('f_addr') || document.getElementById('f_address')).value.trim() : ''),
       city: (document.getElementById('f_city') ? document.getElementById('f_city').value.trim() : ''),
       state: (document.getElementById('f_state') ? document.getElementById('f_state').value.trim() : ''),
-      pincode: (document.getElementById('f_pincode') ? document.getElementById('f_pincode').value.trim() : '')
+      pincode: (document.getElementById('f_pin') || document.getElementById('f_pincode') ? (document.getElementById('f_pin') || document.getElementById('f_pincode')).value.trim() : '')
     };
 
     const isCod = payMethod === 'cod';
@@ -4678,8 +4751,9 @@ window.createSupabaseOrder = function (opts) {
       }
 
       const orderId = orderData.orderId;
-      if (orderData.orderToken) {
-        try { localStorage.setItem('smelloff_order_token_' + orderId, orderData.orderToken); } catch (e) {}
+      const orderToken = orderData.orderToken || '';
+      if (orderToken) {
+        try { localStorage.setItem('smelloff_order_token_' + orderId, orderToken); } catch (e) {}
       }
       const order = collectOrder(orderId, isCod ? 'COD' : 'UPI_PENDING');
       logOrderToSheets(order);
@@ -4694,15 +4768,17 @@ window.createSupabaseOrder = function (opts) {
         return;
       }
 
-      // Direct UPI Flow (Prepaid - initial state upi_pending)
-      const upiLink = buildUpiLink(orderData.total || total, orderId, selectedUpiApp);
+      // Direct UPI Flow (Prepaid)
       setTimeout(function() {
         _submittingOrder = false;
         btn.disabled = false;
-        showUpiSuccess(orderId, orderData.total || total, upiLink);
+        showUpiPaymentScreen(orderId, orderData.total || total, orderData.upiLinks, orderToken);
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        if (isMobile) {
-          setTimeout(function(){ window.location.href = upiLink; }, 200);
+        if (isMobile && orderData.upiLinks) {
+          const autoLink = orderData.upiLinks[selectedUpiApp] || orderData.upiLinks.generic;
+          if (autoLink) {
+            setTimeout(function(){ window.location.href = autoLink; }, 300);
+          }
         }
       }, 1200);
 
@@ -4710,7 +4786,7 @@ window.createSupabaseOrder = function (opts) {
       _submittingOrder = false;
       btn.disabled = false;
       btnText.textContent = (payMethod === 'cod' ? 'PLACE COD ORDER · ₹' : 'OPEN UPI APP · ₹') + orderTotals().total;
-      hideLoadingScreen();
+      hideLoadingScreen(true);
       showError(err.message || 'Payment initiation failed. Please try again or choose Cash on Delivery.');
     }
   }
@@ -4757,21 +4833,24 @@ window.createSupabaseOrder = function (opts) {
 
   window.launchSpecificUpi = function(app, event) {
     if (event) event.preventDefault();
-    const orderId = document.getElementById('orderIdDisplay') ? document.getElementById('orderIdDisplay').textContent.trim() : '';
+    if (_currentUpiOrder && _currentUpiOrder.upiLinks && _currentUpiOrder.upiLinks[app]) {
+      window.location.href = _currentUpiOrder.upiLinks[app];
+      return;
+    }
+    const orderId = document.getElementById('upiOrderIdDisplay') ? document.getElementById('upiOrderIdDisplay').textContent.trim() : '';
     const t = orderTotals();
     const link = getAppUpiLink(app, t.subtotal + t.shipping, orderId);
     window.location.href = link;
   };
 
   // Copy UPI ID to clipboard with brief "Copied ✓" confirmation
-  window.copyUpiId = async function() {
+  window.copyUpiId = async function(btnId) {
     const id = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || 'mr.brainy@ibl';
-    const btn = document.getElementById('upiCopyBtn');
+    const btn = document.getElementById(btnId || 'upiCopyBtn');
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(id);
       } else {
-        // Fallback for older browsers
         const ta = document.createElement('textarea');
         ta.value = id; document.body.appendChild(ta); ta.select();
         document.execCommand('copy'); ta.remove();
@@ -4785,68 +4864,40 @@ window.createSupabaseOrder = function (opts) {
     } catch (e) { console.warn('[Smelloff] UPI copy failed:', e); }
   };
 
-  function buildUpiLink(amount, orderId, app) {
-    return getAppUpiLink(app || selectedUpiApp, amount, orderId);
-  }
-
-  // No Google Customer Reviews opt-in here, on purpose. A UPI order at this
-  // point is `upi_pending`: the customer still has to copy the VPA, pay,
-  // screenshot it and WhatsApp us the UTR, and some never do. Asking Google to
-  // survey an order that was never paid for produces surveys about deliveries
-  // that never happened. The right trigger for UPI is payment confirmation,
-  // which happens by hand in /admin, not on this screen. If that ever gets
-  // wired up, call window.smfGoogleReviewOptIn() from there — not from here.
-  function showUpiSuccess(orderId, total, upiLink) {
-    hideLoadingScreen();
+  function showUpiPaymentScreen(orderId, total, upiLinks, orderToken) {
+    hideLoadingScreen(false);
     document.getElementById('checkoutForm').style.display = 'none';
-    const s = document.getElementById('successScreen');
-    s.style.display = 'block';
-    document.getElementById('successTag').textContent = 'Order received';
-    document.getElementById('successHeading').textContent = 'Pay ₹' + total + ' via UPI';
-    document.getElementById('successMsg').textContent = 'Order received. Send your UTR to WhatsApp to confirm. We\'ll ship within 48 hours of confirmation.';
-    document.getElementById('orderIdDisplay').textContent = orderId;
-    var upiTrk = document.getElementById('successTrackLink');
-    if (upiTrk) { upiTrk.href = '/track-order?code=' + encodeURIComponent(orderId); upiTrk.style.display = 'inline-block'; }
-    try { localStorage.setItem('smelloff_last_order', JSON.stringify({ code: orderId, ts: Date.now() })); } catch (e) {}
+    var successScreen = document.getElementById('successScreen');
+    if (successScreen) successScreen.style.display = 'none';
 
-    // Populate UPI block
-    document.getElementById('upiBlock').style.display = 'block';
-    document.getElementById('upiIdShow').textContent = CFG.UPI_ID;
-    document.getElementById('upiAmountShow').textContent = '₹' + total;
-    document.getElementById('upiNoteShow').textContent = 'ODORSTRIKE-' + orderId;
+    const upiScreen = document.getElementById('upiPaymentScreen');
+    if (upiScreen) upiScreen.style.display = 'block';
 
-    // Update 1-click deep links in success screen
+    const titleEl = document.getElementById('upiPayTitle');
+    if (titleEl) titleEl.textContent = 'Pay ₹' + total + ' via UPI';
+    const oidEl = document.getElementById('upiOrderIdDisplay');
+    if (oidEl) oidEl.textContent = orderId;
+
+    const idShow = document.getElementById('upiIdShow');
+    if (idShow) idShow.textContent = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || 'mr.brainy@ibl';
+    const amtShow = document.getElementById('upiAmountShow');
+    if (amtShow) amtShow.textContent = '₹' + total;
+    const noteShow = document.getElementById('upiNoteShow');
+    if (noteShow) noteShow.textContent = 'ODORSTRIKE-' + orderId;
+
+    // Update 1-click deep links in screen
     var gpayBtn = document.getElementById('upiGpayBtn');
-    if (gpayBtn) gpayBtn.href = getAppUpiLink('gpay', total, orderId);
+    if (gpayBtn) gpayBtn.href = (upiLinks && upiLinks.gpay) || getAppUpiLink('gpay', total, orderId);
     var phonepeBtn = document.getElementById('upiPhonepeBtn');
-    if (phonepeBtn) phonepeBtn.href = getAppUpiLink('phonepe', total, orderId);
+    if (phonepeBtn) phonepeBtn.href = (upiLinks && upiLinks.phonepe) || getAppUpiLink('phonepe', total, orderId);
     var paytmBtn = document.getElementById('upiPaytmBtn');
-    if (paytmBtn) paytmBtn.href = getAppUpiLink('paytm', total, orderId);
+    if (paytmBtn) paytmBtn.href = (upiLinks && upiLinks.paytm) || getAppUpiLink('paytm', total, orderId);
     var openBtn = document.getElementById('upiOpenBtn');
-    if (openBtn) openBtn.href = getAppUpiLink('any', total, orderId);
+    if (openBtn) openBtn.href = (upiLinks && upiLinks.generic) || getAppUpiLink('any', total, orderId);
 
-    // Prefill WhatsApp UTR link with order context so merchant can match UTR to order
-    const name = (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
-    const phone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || '';
-    const utrLink = document.getElementById('waSuccessUtrLink');
-    if (utrLink) {
-      utrLink.href = 'https://wa.me/919392974031?text=' + encodeURIComponent(
-        'Order ' + orderId + '\n' +
-        'Name: ' + name + '\n' +
-        'Phone: ' + phone + '\n' +
-        'Amount: ₹' + total + '\n' +
-        'UTR: [paste here]'
-      );
-    }
-    const qLink = document.getElementById('waSuccessQuestionsLink');
-    if (qLink) {
-      qLink.href = 'https://wa.me/919392974031?text=' + encodeURIComponent(
-        'Hi Smelloff, I have a question about my order.\nOrder ID: ' + orderId
-      );
-    }
-
-    // QR for the UPI deep link (any UPI app reads this)
-    const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=8&data=' + encodeURIComponent(upiLink);
+    // Dynamic QR for UPI deep link
+    const genericLink = (upiLinks && upiLinks.generic) || getAppUpiLink('any', total, orderId);
+    const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=8&data=' + encodeURIComponent(genericLink);
     const qrImg = document.getElementById('upiQR');
     if (qrImg) {
       qrImg.style.display = '';
@@ -4854,81 +4905,110 @@ window.createSupabaseOrder = function (opts) {
       qrImg.onerror = function(){ qrImg.style.display = 'none'; };
     }
 
-    // Reset direct UTR input state
-    var utrInput = document.getElementById('upiUtrInput');
-    if (utrInput) { utrInput.value = ''; utrInput.disabled = false; }
-    var utrFb = document.getElementById('utrFeedback');
-    if (utrFb) { utrFb.style.display = 'none'; utrFb.textContent = ''; }
-    var submitUtrBtn = document.getElementById('submitUtrBtn');
-    if (submitUtrBtn) { submitUtrBtn.disabled = false; submitUtrBtn.textContent = 'Submit UTR'; submitUtrBtn.style.opacity = '1'; }
+    // Reset status box UI
+    const statusText = document.getElementById('upiPollingStatusText');
+    if (statusText) statusText.textContent = 'Waiting for payment confirmation…';
+    const checkBtn = document.getElementById('upiCheckNowBtn');
+    if (checkBtn) {
+      checkBtn.disabled = false;
+      checkBtn.textContent = "I've Completed Payment · Check Status";
+    }
+    const feedback = document.getElementById('upiStatusFeedback');
+    if (feedback) { feedback.style.display = 'none'; feedback.textContent = ''; }
 
-    trackPurchase(total, orderId);
-    setCartQty(0);
-    try {
-      const buyerEmail = (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
-      const buyerPhone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value : '').trim();
-      localStorage.setItem('smelloff_purchased', 'true');
-      if (buyerEmail) localStorage.setItem('smelloff_purchased_email', buyerEmail);
-      if (buyerPhone) localStorage.setItem('smelloff_last_phone', buyerPhone);
-      var emailNote = document.getElementById('successEmailNote');
-      if (emailNote) emailNote.style.display = buyerEmail ? 'block' : 'none';
-    } catch (e) {}
+    _currentUpiOrder = {
+      orderId: orderId,
+      total: total,
+      upiLinks: upiLinks,
+      orderToken: orderToken
+    };
+
+    // Start background status polling
+    startPaymentPolling(orderId, orderToken, total);
   }
 
-  window.submitOrderUtr = async function() {
-    var utrInput = document.getElementById('upiUtrInput');
-    var feedback = document.getElementById('utrFeedback');
-    var btn = document.getElementById('submitUtrBtn');
-    var utr = (utrInput ? utrInput.value : '').trim();
-    var orderIdEl = document.getElementById('orderIdDisplay');
-    var orderId = orderIdEl ? orderIdEl.textContent.trim() : '';
-    var phone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || localStorage.getItem('smelloff_last_phone') || '';
-    var token = localStorage.getItem('smelloff_order_token_' + orderId) || '';
+  function startPaymentPolling(orderId, orderToken, total) {
+    stopPaymentPolling();
+    var pollCount = 0;
+    var maxPolls = 80; // 80 * 2.5s = ~3.3 minutes of active polling
 
-    if (!utr || utr.length < 10) {
-      feedback.style.display = 'block';
-      feedback.style.color = '#ff6b6b';
-      feedback.textContent = 'Please enter a valid 12-digit UPI reference / UTR number.';
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Submitting...';
-    feedback.style.display = 'none';
-
-    try {
-      var res = await fetch('/api/verify-payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderCode: orderId,
-          upiRef: utr,
-          phone: phone,
-          orderToken: token
-        })
-      });
-      var data = await res.json();
-      if (!res.ok || !data.ok) {
-        feedback.style.display = 'block';
-        feedback.style.color = '#ff6b6b';
-        feedback.textContent = data.error || 'Failed to submit payment reference. Please try again.';
-        btn.disabled = false;
-        btn.textContent = 'Submit UTR';
+    _paymentPollingTimer = setInterval(async function() {
+      pollCount++;
+      if (pollCount > maxPolls) {
+        stopPaymentPolling();
+        var statusText = document.getElementById('upiPollingStatusText');
+        if (statusText) statusText.textContent = 'Polling paused · Tap below to verify';
         return;
       }
 
-      feedback.style.display = 'block';
-      feedback.style.color = 'var(--acid, #d4ff00)';
-      feedback.textContent = '✓ ' + (data.message || 'Payment reference submitted! Verification in progress.');
-      btn.textContent = 'Submitted';
-      btn.style.opacity = '0.7';
-      if (utrInput) utrInput.disabled = true;
+      var verified = await pollPaymentStatus(orderId, orderToken, total, false);
+      if (verified) {
+        stopPaymentPolling();
+      }
+    }, 2500);
+  }
+
+  async function pollPaymentStatus(orderId, orderToken, total, isManual) {
+    try {
+      var url = '/api/payment-status?orderCode=' + encodeURIComponent(orderId);
+      if (orderToken) {
+        url += '&orderToken=' + encodeURIComponent(orderToken);
+      }
+      var phone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || localStorage.getItem('smelloff_last_phone') || '';
+      if (phone) {
+        url += '&phone=' + encodeURIComponent(phone);
+      }
+
+      var res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
+      if (!res.ok) return false;
+      var data = await res.json();
+      if (!data || !data.ok) return false;
+
+      if (data.status === 'confirmed' || data.verified === true) {
+        stopPaymentPolling();
+        showSuccess(orderId, 'upi');
+        return true;
+      }
+
+      if (data.status === 'failed') {
+        stopPaymentPolling();
+        var fb = document.getElementById('upiStatusFeedback');
+        if (fb) {
+          fb.style.display = 'block';
+          fb.style.color = '#ff6b6b';
+          fb.textContent = 'Payment could not be completed. Please tap a UPI app above to retry.';
+        }
+        return false;
+      }
+
+      return false;
     } catch (e) {
-      feedback.style.display = 'block';
-      feedback.style.color = '#ff6b6b';
-      feedback.textContent = 'Network error submitting UTR. Please share it via WhatsApp.';
+      console.warn('[Smelloff] payment poll error:', e);
+      return false;
+    }
+  }
+
+  window.checkCurrentPaymentStatus = async function(isManual) {
+    if (!_currentUpiOrder) return;
+    var btn = document.getElementById('upiCheckNowBtn');
+    var fb = document.getElementById('upiStatusFeedback');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Checking with bank…';
+    }
+    if (fb) fb.style.display = 'none';
+
+    var verified = await pollPaymentStatus(_currentUpiOrder.orderId, _currentUpiOrder.orderToken, _currentUpiOrder.total, true);
+
+    if (btn) {
       btn.disabled = false;
-      btn.textContent = 'Submit UTR';
+      btn.textContent = "I've Completed Payment · Check Status";
+    }
+
+    if (!verified && fb) {
+      fb.style.display = 'block';
+      fb.style.color = '#ffc107';
+      fb.textContent = 'Payment not confirmed yet. It takes 5–15 seconds after authorizing in your UPI app. Checking automatically…';
     }
   };
 

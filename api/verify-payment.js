@@ -5,6 +5,7 @@ import {
   verifyOrderToken,
   validateAndNormalizeUtr
 } from './_security.js';
+import paymentStatusHandler from './payment-status.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -87,14 +88,19 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
   }
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Order-Token');
 
   if (req.method === 'OPTIONS') return res.status(204).end();
+
+  if (req.method === 'GET') {
+    return paymentStatusHandler(req, res);
+  }
+
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const ip = clientIp(req);
-  if (!checkRateLimit(`verify-payment:${ip}`, 10, 10 * 60 * 1000)) {
+  if (!checkRateLimit(`verify-payment:${ip}`, 30, 10 * 60 * 1000)) {
     return res.status(429).json({ error: 'Too many verification attempts. Please try again later.' });
   }
 
@@ -173,7 +179,7 @@ export default async function handler(req, res) {
       ok: true,
       orderId: orderCode,
       status: 'verification_pending',
-      message: 'Payment reference submitted for manual verification. Our team will verify your transaction shortly.'
+      message: 'Payment reference submitted for verification.'
     });
 
   } catch (err) {

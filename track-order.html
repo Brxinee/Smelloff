@@ -248,7 +248,7 @@
     <div class="t-code" id="rCode"></div>
     <p class="t-meta" id="rMeta"></p>
     <p class="t-updated" id="rUpdated"></p>
-    <div class="t-cancel-banner" id="rCancelled">This order was cancelled. If you paid by UPI, the refund is processed manually within 5–7 business days — WhatsApp us with your UTR if it hasn't arrived.</div>
+    <div class="t-cancel-banner" id="rCancelled">This order was cancelled. If you paid by UPI, the refund is processed within 5–7 business days to your original UPI account.</div>
     <div class="t-eta" id="rEta"><span class="lbl">Estimated delivery</span><span class="val" id="rEtaVal"></span></div>
     <ol class="t-steps" id="rSteps">
       <li class="t-step" data-step="placed"><span class="t-dot" aria-hidden="true"></span><div><div class="t-step-name">Order placed</div><div class="t-step-desc" id="dPlaced">We've received your order.</div></div></li>
@@ -442,11 +442,11 @@
     var effective = (o.status === 'upi_pending' || o.status === 'verification_pending' || o.status === 'payment_not_verified') ? 'placed' : o.status;
     var idx = STEPS.indexOf(effective);
     if (o.status === 'upi_pending') {
-      document.getElementById('dPlaced').textContent = 'Order received — awaiting UPI payment. Sent your UTR on WhatsApp yet?';
+      document.getElementById('dPlaced').textContent = 'Order received — awaiting UPI payment completion. Payment is verified automatically.';
     } else if (o.status === 'verification_pending') {
-      document.getElementById('dPlaced').textContent = 'UTR submitted — payment verification in progress. Our team is verifying your transaction.';
-    } else if (o.status === 'payment_not_verified') {
-      document.getElementById('dPlaced').textContent = 'Payment reference could not be verified. Please check your UTR or contact us on WhatsApp.';
+      document.getElementById('dPlaced').textContent = 'Payment verification in progress.';
+    } else if (o.status === 'payment_not_verified' || o.status === 'failed') {
+      document.getElementById('dPlaced').textContent = 'Payment could not be verified. Please retry payment or contact support.';
     } else {
       document.getElementById('dPlaced').textContent = 'We’ve received your order.';
     }

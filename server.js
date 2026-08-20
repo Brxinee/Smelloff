@@ -9,6 +9,7 @@ import metaCapiHandler from './api/meta-capi.js';
 import metaCapiDrainHandler from './api/meta-capi-drain.js';
 import createOrderHandler from './api/create-order.js';
 import verifyPaymentHandler from './api/verify-payment.js';
+import paymentStatusHandler from './api/payment-status.js';
 import adminVerifyPaymentHandler from './api/admin/verify-payment.js';
 import webhookHandler from './api/webhook.js';
 
@@ -91,10 +92,12 @@ app.all('/api/meta-capi', (req, res) => metaCapiHandler(req, res));
 app.all('/api/meta-capi-drain', (req, res) => metaCapiDrainHandler(req, res));
 app.all('/api/create-order', (req, res) => createOrderHandler(req, res));
 app.all('/api/verify-payment', (req, res) => verifyPaymentHandler(req, res));
+app.all('/api/payment-status', (req, res) => paymentStatusHandler(req, res));
 app.all('/api/admin/verify-payment', (req, res) => adminVerifyPaymentHandler(req, res));
 app.all('/api/webhook', (req, res) => webhookHandler(req, res));
 app.all('/api/payment/create-order', (req, res) => createOrderHandler(req, res));
 app.all('/api/payment/verify', (req, res) => verifyPaymentHandler(req, res));
+app.all('/api/payment/status', (req, res) => paymentStatusHandler(req, res));
 app.all('/api/payment/webhook', (req, res) => webhookHandler(req, res));
 
 // Clean URL & static file handling middleware
