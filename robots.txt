@@ -55,6 +55,9 @@ User-agent: GPTBot
 User-agent: OAI-SearchBot
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
 
 # Anthropic — Claude, Claude Search, and Claude in-app/browser fetches
 User-agent: ClaudeBot
@@ -63,38 +66,59 @@ User-agent: Claude-User
 User-agent: anthropic-ai
 User-agent: Claude-Web
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
 
 # Perplexity — including the Comet AI browser (Perplexity-User = live fetch)
 User-agent: PerplexityBot
 User-agent: Perplexity-User
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
 
 # Google — Gemini / AI Overviews (Google-Extended) + the AI-features crawler
 User-agent: Google-Extended
 User-agent: GoogleOther
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
 
 # Microsoft — Bing index powers Copilot and Edge/Copilot browsing
 User-agent: Bingbot
 User-agent: BingPreview
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
 
 # Apple — Applebot powers Siri / Spotlight; -Extended opts into Apple AI training
 User-agent: Applebot
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
 
 # Amazon (Alexa/Rufus AI), DuckDuckGo Assist, and Mistral's assistant
 User-agent: Amazonbot
 User-agent: DuckAssistBot
 User-agent: MistralAI-User
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
 
 # Meta AI (Llama / Meta AI assistant + link previews)
 User-agent: Meta-ExternalAgent
 User-agent: meta-externalagent
 User-agent: FacebookBot
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
 
 # ---------------------------------------------------------------------------
 # Model-training / dataset crawlers — allowed for maximum AI visibility.
@@ -112,6 +136,9 @@ User-agent: Webzio-Extended
 User-agent: AI2Bot
 User-agent: ImagesiftBot
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
 
 # AI/LLM context files (curated brand + product reference for answer engines)
 # Curated:        https://smelloff.in/llms.txt

@@ -247,6 +247,7 @@ function build() {
 }
 
 const { xml, count, withImages } = build();
+if (count >= 45000) console.warn("WARNING: Approaching 50,000 URL limit for a single sitemap. Prepare to implement sitemap index splitting.");
 const target = path.join(REPO, 'sitemap.xml');
 const current = fs.existsSync(target) ? fs.readFileSync(target, 'utf8') : '';
 
