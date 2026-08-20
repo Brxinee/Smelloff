@@ -1932,23 +1932,6 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,.3);
   }
-  .wa-utr-btn {
-    display: inline-block;
-    background: #25d366;
-    color: #000;
-    font-weight: 700;
-    padding: 10px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-top: 8px;
-  }
-  .wa-utr-btn:hover {
-    background: #1fbe58;
-  }
   .pay-help{
     font-size:13px;
     color:var(--muted);
@@ -3766,7 +3749,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
             <span class="upi-pulse-dot" aria-hidden="true"></span>
             <span class="upi-pulse-text" id="upiPollingStatusText">Waiting for payment confirmation…</span>
           </div>
-          <p class="upi-auto-note">Verifying automatically with the bank. No UTR or screenshot required.</p>
+          <p class="upi-auto-note">Verifying automatically with the bank.</p>
           <button type="button" class="upi-check-now-btn" id="upiCheckNowBtn" onclick="checkCurrentPaymentStatus(true)">
             I've Completed Payment · Check Status
           </button>
@@ -3850,6 +3833,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       Last updated: April 2026
     </div>
   
+
+
 
 
 
@@ -4035,12 +4020,9 @@ window.createSupabaseOrder = function (opts) {
   const COD_FEE = Number(CFG.COD_FEE) || 0;
 
   let currentVariant = 'solo';
-  // COD is the default because it is the only method that completes without
-  // leaving the page. The UPI path is manual — copy the VPA, switch to a
-  // payment app, pay, screenshot it, then send the screenshot and UTR over
-  // WhatsApp — and every one of those steps is a place to drop out. COD is
-  // ₹0 advance and one tap. Flip this back to 'prepaid' (and the markup below)
-  // if the RTO cost of COD ever outweighs the completed orders it wins.
+  // COD is the default because it completes in one tap. The UPI path launches
+  // any installed UPI app or displays a QR code, with real-time automatic status
+  // verification directly with the bank.
   let payMethod = 'cod'; // matches the default-active .pay-opt[data-method="cod"]
   // Quantity being checked out — sourced from the cart. Unit price stays ₹229
   // (single SKU); the order pipeline multiplies by this.
@@ -5182,7 +5164,7 @@ window.createSupabaseOrder = function (opts) {
     smfCartBeacon('checkout_start');
   }
 
-  // Fired when an order is PLACED (COD, or unpaid UPI awaiting a manual UTR).
+  // Fired when an order is PLACED (COD, or unpaid UPI awaiting verification).
   // This is INTENT, not confirmed revenue, so it emits `Lead` — NOT `Purchase`.
   // The real Purchase is emitted server-side (api/meta-capi-drain) only when the
   // order is CONFIRMED, with a Refund correction if a COD order is later

@@ -65,32 +65,32 @@ const PREV_SECURITY_SECRET = process.env.ORDER_SECURITY_SECRET;
 process.env.ADMIN_SECRET = 'test-admin-secret-key-32chars-xyz';
 process.env.ORDER_SECURITY_SECRET = 'test-order-signing-secret-32ch';
 
-// ATTACK 1: Call /api/verify-payment with only an orderCode (no UTR, no auth)
-await runAttackTest(1, 'Call /api/verify-payment with only an orderCode -> Rejected (400 Missing UTR)', async () => {
+// ATTACK 1: Call POST /api/verify-payment (manual UTR submission attempt)
+await runAttackTest(1, 'Call POST /api/verify-payment (manual UTR) -> Blocked & Deprecated (410 Gone)', async () => {
   const { default: verifyHandler } = await import('../../api/verify-payment.js');
   const res = createMockRes();
   const req = {
     method: 'POST',
     headers: {},
-    body: { orderCode: 'SMF-20260820-1234' }
+    body: { orderCode: 'SMF-20260820-1234', upiRef: '123456789012' }
   };
   await verifyHandler(req, res);
-  assert.strictEqual(res.getStatusCode(), 400);
-  assert.match(res.getData().error, /valid 12-digit UPI reference/i);
+  assert.strictEqual(res.getStatusCode(), 410);
+  assert.match(res.getData().error, /Manual UTR submission is deprecated and disabled/i);
 });
 
-// ATTACK 2: Call /api/verify-payment with orderCode + fake/malformed UTR
-await runAttackTest(2, 'Call /api/verify-payment with malformed UTR -> Rejected (400 Invalid format)', async () => {
-  const { default: verifyHandler } = await import('../../api/verify-payment.js');
+// ATTACK 2: Call /api/payment-status with invalid order code format
+await runAttackTest(2, 'Call /api/payment-status with malformed order code -> Rejected (400 Bad Request)', async () => {
+  const { default: paymentStatusHandler } = await import('../../api/payment-status.js');
   const res = createMockRes();
   const req = {
-    method: 'POST',
+    method: 'GET',
     headers: {},
-    body: { orderCode: 'SMF-20260820-1234', upiRef: '123' } // Too short
+    query: { orderCode: 'INVALID-CODE' }
   };
-  await verifyHandler(req, res);
+  await paymentStatusHandler(req, res);
   assert.strictEqual(res.getStatusCode(), 400);
-  assert.match(res.getData().error, /valid 12-digit UPI reference/i);
+  assert.match(res.getData().error, /Valid order code required/i);
 });
 
 // ATTACK 3: Use another customer's phone or order token
@@ -261,15 +261,19 @@ await runAttackTest(15, 'Audit codebase: zero occurrences of fallback salt "smel
   }
 });
 
-// Extra Check: Admin confirmation requires payment evidence (UTR) for UPI orders
-await runAttackTest(16, 'Admin confirmation requires evidence: prepaid UPI cannot be confirmed with blank UTR', () => {
-  const isCod = false;
-  const explicitUtr = null;
-  const existingOrderUtr = null;
-  const finalUtr = explicitUtr || (existingOrderUtr ? validateAndNormalizeUtr(existingOrderUtr) : null);
-  
-  const canConfirmWithoutEvidence = isCod || Boolean(finalUtr);
-  assert.strictEqual(canConfirmWithoutEvidence, false);
+// Extra Check: Payment status verification fails closed when status API is not configured
+await runAttackTest(16, 'Status check fails closed when merchant status API is unconfigured', async () => {
+  const prevUrl = process.env.UPI_STATUS_API_URL;
+  const prevCheck = process.env.UPI_CHECK_URL;
+  delete process.env.UPI_STATUS_API_URL;
+  delete process.env.UPI_CHECK_URL;
+
+  const { checkBankUpiStatus } = await import('../../api/payment-status.js');
+  const res = await checkBankUpiStatus({ order_code: 'SMF-20260820-1234', amount: 22900 });
+  assert.strictEqual(res, null);
+
+  if (prevUrl) process.env.UPI_STATUS_API_URL = prevUrl;
+  if (prevCheck) process.env.UPI_CHECK_URL = prevCheck;
 });
 
 // Extra Check: Sensitive transactional email endpoint prevents spoofing

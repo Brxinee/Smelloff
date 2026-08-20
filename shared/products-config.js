@@ -100,7 +100,7 @@ export const ORDER_LIFECYCLE = {
       'cancelled'
     ],
     transitionMap: {
-      upi_pending: ['confirmed', 'failed', 'cancelled', 'verification_pending'],
+      upi_pending: ['confirmed', 'failed', 'cancelled'],
       verification_pending: ['confirmed', 'payment_not_verified', 'cancelled'],
       payment_not_verified: ['confirmed', 'cancelled', 'upi_pending'],
       failed: ['upi_pending', 'cancelled'],

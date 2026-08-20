@@ -62,7 +62,7 @@ async function markOrderConfirmed(orderCode, txnDetails = {}) {
   }
 }
 
-async function checkBankUpiStatus(order) {
+export async function checkBankUpiStatus(order) {
   const statusApiUrl = process.env.UPI_STATUS_API_URL || process.env.UPI_CHECK_URL;
   const statusApiKey = process.env.UPI_STATUS_API_KEY || process.env.UPI_SECRET_KEY;
   if (!statusApiUrl) return null;

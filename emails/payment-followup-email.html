@@ -1,5 +1,5 @@
-<!-- SUBJECT: Action needed: confirm your ODORSTRIKE order -->
-<!-- PREVIEW: Send us your UPI transaction ID and we'll ship today -->
+<!-- SUBJECT: Complete your ODORSTRIKE order payment -->
+<!-- PREVIEW: Your ODORSTRIKE order is awaiting UPI payment confirmation -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,13 +8,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="color-scheme" content="dark">
 <meta name="supported-color-schemes" content="dark">
-<title>Action needed — confirm your ODORSTRIKE order</title>
+<title>Complete your ODORSTRIKE order payment</title>
 </head>
 <body style="margin:0;padding:0;background-color:#080808;font-family:Arial,Helvetica,sans-serif;color:#FFFFFF;-webkit-font-smoothing:antialiased;">
 
 <!-- Hidden preview text -->
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;height:0;width:0;">
-We need your UTR to confirm your ODORSTRIKE order
+Complete your ODORSTRIKE UPI payment to finalize your order
 </div>
 <div style="display:none;max-height:0;overflow:hidden;">&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
 
@@ -45,10 +45,10 @@ We need your UTR to confirm your ODORSTRIKE order
         <tr>
           <td style="background-color:#080808;padding:36px 32px 24px;">
             <h1 style="margin:0 0 16px;font-family:Impact,'Arial Black',sans-serif;font-weight:900;font-size:34px;line-height:1.05;letter-spacing:1px;text-transform:uppercase;color:#FFFFFF;">
-              We need your UTR to confirm your order
+              Complete your payment
             </h1>
             <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#C5C5C5;">
-              Hey {{customer_name}}, we received your order for ODORSTRIKE but haven't matched your UPI payment yet. Send us your transaction ID and we'll dispatch immediately.
+              Hey {{customer_name}}, we received your order for ODORSTRIKE. Please complete your UPI payment to dispatch your order immediately.
             </p>
           </td>
         </tr>
@@ -86,38 +86,19 @@ We need your UTR to confirm your ODORSTRIKE order
         <tr>
           <td style="background-color:#080808;padding:8px 32px 24px;">
             <p style="margin:0 0 12px;font-family:Impact,'Arial Black',sans-serif;font-size:18px;text-transform:uppercase;letter-spacing:1.5px;color:#FFFFFF;font-weight:900;">
-              Reply to this email with:
+              Automatic verification:
             </p>
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;">
-              <tr>
-                <td style="vertical-align:top;padding:6px 12px 6px 0;font-family:Impact,'Arial Black',sans-serif;font-size:14px;color:#B8FF57;font-weight:900;line-height:1.5;">01</td>
-                <td style="vertical-align:top;padding:6px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:#C5C5C5;">
-                  Your <strong style="color:#FFFFFF;">UPI Transaction ID (UTR)</strong> — 12-digit number from your UPI app
-                </td>
-              </tr>
-              <tr>
-                <td style="vertical-align:top;padding:6px 12px 6px 0;font-family:Impact,'Arial Black',sans-serif;font-size:14px;color:#B8FF57;font-weight:900;line-height:1.5;">02</td>
-                <td style="vertical-align:top;padding:6px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:#C5C5C5;">
-                  <strong style="color:#FFFFFF;">Screenshot</strong> of the successful payment
-                </td>
-              </tr>
-            </table>
+            <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:#C5C5C5;">
+              Once your UPI payment completes, your order updates automatically. You can check your live order status anytime below.
+            </p>
 
-            <!-- CTA BUTTON (with MSO/Outlook fallback) -->
+            <!-- CTA BUTTON -->
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 0;">
               <tr>
                 <td>
-                  <!--[if mso]>
-                  <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{utr_field_link}}" style="height:48px;v-text-anchor:middle;width:240px;" arcsize="8%" stroke="f" fillcolor="#B8FF57">
-                    <w:anchorlock/>
-                    <center style="color:#080808;font-family:Impact,sans-serif;font-size:15px;font-weight:bold;letter-spacing:2px;">SUBMIT UTR HERE</center>
-                  </v:roundrect>
-                  <![endif]-->
-                  <!--[if !mso]><!-- -->
-                  <a href="{{utr_field_link}}" style="background-color:#B8FF57;color:#080808;display:inline-block;font-family:Impact,'Arial Black',sans-serif;font-size:15px;font-weight:900;line-height:48px;text-align:center;text-decoration:none;text-transform:uppercase;letter-spacing:2px;width:240px;border-radius:4px;mso-hide:all;">
-                    SUBMIT UTR HERE
+                  <a href="{{payment_status_link}}" style="background-color:#B8FF57;color:#080808;display:inline-block;font-family:Impact,'Arial Black',sans-serif;font-size:15px;font-weight:900;line-height:48px;text-align:center;text-decoration:none;text-transform:uppercase;letter-spacing:2px;width:240px;border-radius:4px;">
+                    CHECK STATUS
                   </a>
-                  <!--<![endif]-->
                 </td>
               </tr>
             </table>
@@ -131,10 +112,10 @@ We need your UTR to confirm your ODORSTRIKE order
               <tr>
                 <td style="padding:18px 0 0;">
                   <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#888;">
-                    <strong style="color:#FFFFFF;">Verified within 24 hours.</strong> If we can't trace your payment, full refund issued to your UPI ID within 5–7 business days.
+                    <strong style="color:#FFFFFF;">Automatic order verification.</strong> If you need any help, reach us anytime at <a href="mailto:smelloffsupport@gmail.com" style="color:#B8FF57;text-decoration:none;">smelloffsupport@gmail.com</a>.
                   </p>
                   <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#888;">
-                    <a href="https://smelloff.in/payment-failed" style="color:#B8FF57;text-decoration:none;border-bottom:1px solid rgba(184,255,87,0.3);">Read our Payment Failed Policy</a>
+                    <a href="https://smelloff.in/payment-failed" style="color:#B8FF57;text-decoration:none;border-bottom:1px solid rgba(184,255,87,0.3);">Read our Payment Policy</a>
                   </p>
                 </td>
               </tr>
