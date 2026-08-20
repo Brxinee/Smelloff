@@ -7,6 +7,9 @@ import sendEmailHandler from './api/send-email.js';
 import trackHandler from './api/track.js';
 import metaCapiHandler from './api/meta-capi.js';
 import metaCapiDrainHandler from './api/meta-capi-drain.js';
+import createOrderHandler from './api/create-order.js';
+import verifyPaymentHandler from './api/verify-payment.js';
+import webhookHandler from './api/webhook.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -85,6 +88,12 @@ app.all('/api/send-email', (req, res) => sendEmailHandler(req, res));
 app.all('/api/track', (req, res) => trackHandler(req, res));
 app.all('/api/meta-capi', (req, res) => metaCapiHandler(req, res));
 app.all('/api/meta-capi-drain', (req, res) => metaCapiDrainHandler(req, res));
+app.all('/api/create-order', (req, res) => createOrderHandler(req, res));
+app.all('/api/verify-payment', (req, res) => verifyPaymentHandler(req, res));
+app.all('/api/webhook', (req, res) => webhookHandler(req, res));
+app.all('/api/payment/create-order', (req, res) => createOrderHandler(req, res));
+app.all('/api/payment/verify', (req, res) => verifyPaymentHandler(req, res));
+app.all('/api/payment/webhook', (req, res) => webhookHandler(req, res));
 
 // Clean URL & static file handling middleware
 app.use((req, res, next) => {

@@ -4,9 +4,9 @@ const CFG = window.SMELLOFF_CONFIG;
   // SKU) and CFG.PRICES.duo/.trio no longer exist. Kept only so the file still
   // parses; no `mrp` field, because there is no real price above ₹229 to strike.
   const VARIANTS = {
-    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: CFG.PRICES.solo, label: 'solo' },
-    duo:  { title: 'ODORSTRIKE 50ml × 2',  units: '2 × 50ml', amount: CFG.PRICES.duo,  label: 'duo'  },
-    trio: { title: 'ODORSTRIKE 50ml × 3',  units: '3 × 50ml', amount: CFG.PRICES.trio, label: 'trio' }
+    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: (CFG && CFG.PRICES && CFG.PRICES.solo) || 229, mrp: (CFG && CFG.MRP && CFG.MRP.solo) || 499, label: 'solo', qty: 1 },
+    duo:  { title: 'ODORSTRIKE 50ml × 2',  units: '2 × 50ml', amount: ((CFG && CFG.PRICES && CFG.PRICES.solo) || 229) * 2, mrp: ((CFG && CFG.MRP && CFG.MRP.solo) || 499) * 2, label: 'duo', qty: 2 },
+    trio: { title: 'ODORSTRIKE 50ml × 3',  units: '3 × 50ml', amount: ((CFG && CFG.PRICES && CFG.PRICES.solo) || 229) * 3, mrp: ((CFG && CFG.MRP && CFG.MRP.solo) || 499) * 3, label: 'trio', qty: 3 }
   };
 
   let currentVariant = 'solo';
