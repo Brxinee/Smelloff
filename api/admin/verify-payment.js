@@ -2,6 +2,7 @@ import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized, validateA
 import { isValidTransition } from '../../shared/products-config.js';
 import { orderConfirmation } from '../email-templates.js';
 import { Resend } from 'resend';
+import { createShiprocketOrder, extractShiprocketIds, isShiprocketConfigured } from '../_shiprocket.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -46,6 +47,70 @@ async function updateOrderStatus(orderCode, patchBody) {
   } catch (err) {
     console.error('[admin-verify] Supabase update error:', err.message);
     return null;
+  }
+}
+
+async function persistShiprocketState(orderCode, patchBody) {
+  if (!SERVICE_KEY || !orderCode) return false;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`, {
+      method: 'PATCH',
+      headers: {
+        apikey: SERVICE_KEY,
+        Authorization: `Bearer ${SERVICE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify(patchBody)
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('[admin-verify] Shiprocket state patch error:', err.message);
+    return false;
+  }
+}
+
+async function syncConfirmedOrderToShiprocket(order) {
+  if (!isShiprocketConfigured()) return { status: 'not_configured' };
+  if (!order) return { status: 'skipped' };
+  if (order.shiprocket_order_id) {
+    return {
+      status: 'already_synced',
+      shiprocketOrderId: order.shiprocket_order_id,
+      shipmentId: order.shiprocket_shipment_id,
+      awb: order.shiprocket_awb
+    };
+  }
+
+  try {
+    const response = await createShiprocketOrder(order);
+    const ids = extractShiprocketIds(response);
+    const saved = await persistShiprocketState(order.order_code, {
+      shiprocket_order_id: ids.orderId ? Number(ids.orderId) : null,
+      shiprocket_shipment_id: ids.shipmentId ? Number(ids.shipmentId) : null,
+      shiprocket_awb: ids.awb ? String(ids.awb) : null,
+      shiprocket_courier: ids.courier ? String(ids.courier) : null,
+      shiprocket_status: 'ORDER_CREATED',
+      shiprocket_synced_at: new Date().toISOString(),
+      shiprocket_error: null
+    });
+
+    if (!saved) return { status: 'failed', error: 'Shiprocket order created but local sync state was not saved.' };
+
+    return {
+      status: 'synced',
+      shiprocketOrderId: ids.orderId,
+      shipmentId: ids.shipmentId,
+      awb: ids.awb,
+      courier: ids.courier
+    };
+  } catch (err) {
+    await persistShiprocketState(order.order_code, {
+      shiprocket_error: String(err.message || 'Shiprocket sync failed').slice(0, 1000),
+      shiprocket_synced_at: new Date().toISOString()
+    });
+    console.error('[admin-verify] Shiprocket sync failed:', err.message);
+    return { status: 'failed', error: String(err.message || 'Shiprocket sync failed').slice(0, 500) };
   }
 }
 
@@ -95,11 +160,13 @@ export default async function handler(req, res) {
     if (action === 'confirm' || action === 'approve') {
       const alreadyConfirmed = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'].includes(order.status);
       if (alreadyConfirmed) {
+        const shippingSync = await syncConfirmedOrderToShiprocket(order);
         return res.status(200).json({
           ok: true,
           orderId: orderCode,
           status: order.status,
           verified: true,
+          shippingSync,
           message: 'Order is already confirmed.'
         });
       }
@@ -121,6 +188,16 @@ export default async function handler(req, res) {
       }
 
       const updated = await updateOrderStatus(orderCode, patchBody);
+      if (!updated) {
+        return res.status(500).json({ error: 'Payment was verified but the order could not be updated.' });
+      }
+
+      // Payment is now confirmed, so the order is eligible to enter Shiprocket.
+      const shippingSync = await syncConfirmedOrderToShiprocket({
+        ...order,
+        ...updated,
+        status: 'confirmed'
+      });
 
       // Send confirmation email if email present
       if (order.customer_email && process.env.RESEND_API_KEY) {
@@ -153,6 +230,7 @@ export default async function handler(req, res) {
         orderId: orderCode,
         status: 'confirmed',
         verified: true,
+        shippingSync,
         message: 'Payment verified and order confirmed successfully.'
       });
     }
@@ -168,7 +246,7 @@ export default async function handler(req, res) {
         status: 'payment_not_verified',
         updated_at: new Date().toISOString()
       };
-      const updated = await updateOrderStatus(orderCode, patchBody);
+      await updateOrderStatus(orderCode, patchBody);
 
       return res.status(200).json({
         ok: true,
@@ -190,7 +268,7 @@ export default async function handler(req, res) {
         status: 'cancelled',
         updated_at: new Date().toISOString()
       };
-      const updated = await updateOrderStatus(orderCode, patchBody);
+      await updateOrderStatus(orderCode, patchBody);
 
       return res.status(200).json({
         ok: true,
