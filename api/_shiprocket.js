@@ -2,13 +2,17 @@ const API_BASE = 'https://apiv2.shiprocket.in/v1/external';
 
 let tokenCache = null;
 let tokenExpiresAt = 0;
+let pickupLocationCache = null;
+let pickupLocationCacheExpiresAt = 0;
+
+const DEFAULT_PICKUP_LOCATION = 'Opposite ANcorner bakery';
 
 export function isShiprocketConfigured() {
-  return Boolean(process.env.SHIPROCKET_EMAIL && process.env.SHIPROCKET_PASSWORD && process.env.SHIPROCKET_PICKUP_LOCATION);
+  return Boolean(process.env.SHIPROCKET_EMAIL && process.env.SHIPROCKET_PASSWORD);
 }
 
 function missingConfigError() {
-  const err = new Error('Shiprocket is not configured. Set SHIPROCKET_EMAIL, SHIPROCKET_PASSWORD and SHIPROCKET_PICKUP_LOCATION.');
+  const err = new Error('Shiprocket is not configured. Set SHIPROCKET_EMAIL and SHIPROCKET_PASSWORD.');
   err.code = 'SHIPROCKET_NOT_CONFIGURED';
   return err;
 }
@@ -48,8 +52,6 @@ async function login() {
   }
 
   tokenCache = data.token;
-  // Shiprocket tokens are documented as valid for 10 days. Refresh early so an
-  // in-memory token never gets used close to its expiry.
   tokenExpiresAt = Date.now() + (9 * 24 * 60 * 60 * 1000);
   return tokenCache;
 }
@@ -77,11 +79,11 @@ export async function shiprocketRequest(path, options = {}, retried = false) {
 
   const data = await parseResponse(response);
 
-  // Tokens can be revoked/expired before their documented lifetime. Retry once
-  // with a fresh token instead of surfacing a transient 401 to the order flow.
   if (response.status === 401 && !retried) {
     tokenCache = null;
     tokenExpiresAt = 0;
+    pickupLocationCache = null;
+    pickupLocationCacheExpiresAt = 0;
     return shiprocketRequest(path, options, true);
   }
 
@@ -97,12 +99,73 @@ export async function shiprocketRequest(path, options = {}, retried = false) {
   return data;
 }
 
+function norm(value) {
+  return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+function configuredPickupValue() {
+  return String(process.env.SHIPROCKET_PICKUP_LOCATION || DEFAULT_PICKUP_LOCATION).trim();
+}
+
+export async function resolvePickupLocation() {
+  if (pickupLocationCache && Date.now() < pickupLocationCacheExpiresAt) return pickupLocationCache;
+
+  const configured = configuredPickupValue();
+  const data = await shiprocketRequest('/settings/company/pickup', { method: 'GET' });
+  const locations = Array.isArray(data?.data?.shipping_address) ? data.data.shipping_address : [];
+
+  if (!locations.length) {
+    const err = new Error('Shiprocket has no pickup locations configured in the account.');
+    err.code = 'SHIPROCKET_NO_PICKUP_LOCATIONS';
+    throw err;
+  }
+
+  const target = norm(configured);
+  let match = locations.find(x => norm(x.pickup_location) === target);
+
+  // If Vercel contains the full pickup address instead of the Shiprocket pickup
+  // name, resolve it against the address + pin stored in Shiprocket.
+  if (!match) {
+    const wantedPin = (configured.match(/\b\d{6}\b/) || [])[0] || '';
+    if (wantedPin) {
+      match = locations.find(x => String(x.pin_code || '').trim() === wantedPin);
+    }
+  }
+
+  // Last-resort: the exact location name supplied for Smelloff, compared
+  // case-insensitively. This avoids failures caused by capitalization/spacing.
+  if (!match && norm(DEFAULT_PICKUP_LOCATION) !== target) {
+    match = locations.find(x => norm(x.pickup_location) === norm(DEFAULT_PICKUP_LOCATION));
+  }
+
+  if (!match) {
+    const available = locations.map(x => String(x.pickup_location || '').trim()).filter(Boolean);
+    const err = new Error(`Shiprocket pickup location not found: "${configured}". Available locations: ${available.join(', ') || 'none'}`);
+    err.code = 'SHIPROCKET_PICKUP_NOT_FOUND';
+    throw err;
+  }
+
+  pickupLocationCache = {
+    name: String(match.pickup_location || '').trim(),
+    address: String(match.address || '').trim(),
+    city: String(match.city || '').trim(),
+    state: String(match.state || '').trim(),
+    pinCode: String(match.pin_code || '').trim(),
+    id: match.id ?? null
+  };
+  pickupLocationCacheExpiresAt = Date.now() + 10 * 60 * 1000;
+
+  return pickupLocationCache;
+}
+
 export async function createShiprocketOrder(order) {
   const address = order.address || {};
   const item = Array.isArray(order.items) && order.items.length ? order.items[0] : {};
   const quantity = Math.max(1, Number(item.quantity || 1));
   const unitPrice = Number(item.unit_price || 0);
   const subtotal = Number(order.amount || 0) / 100 - Number(order.cod_fee || 0) / 100;
+
+  const pickup = await resolvePickupLocation();
 
   const perUnitWeightKg = Number(process.env.SHIPROCKET_ITEM_WEIGHT_KG || '0.12');
   const lengthCm = Number(process.env.SHIPROCKET_LENGTH_CM || '15');
@@ -115,7 +178,7 @@ export async function createShiprocketOrder(order) {
   const payload = {
     order_id: String(order.order_code),
     order_date: new Date(order.created_at || Date.now()).toISOString().slice(0, 10),
-    pickup_location: process.env.SHIPROCKET_PICKUP_LOCATION,
+    pickup_location: pickup.name,
     comment: `Smelloff order ${order.order_code}`,
 
     billing_customer_name: String(address.name || '').trim(),
