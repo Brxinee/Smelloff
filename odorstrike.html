@@ -3750,6 +3750,16 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <div id="upiStatusFeedback" class="upi-status-feedback" style="display:none"></div>
         </div>
 
+        <!-- Manual UTR Submission Card -->
+        <div class="upi-utr-box" id="upiUtrBox" style="margin-top:14px;padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:6px;text-align:left;">
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Have a 12-digit UTR / UPI Reference?</div>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="upiUtrInput" placeholder="Enter 12-digit UTR / UPI Ref" maxlength="24" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
+            <button type="button" id="upiSubmitUtrBtn" onclick="submitCustomerUtr()" style="background:var(--acid);color:var(--ink);border:none;border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:700;padding:8px 14px;cursor:pointer;white-space:nowrap;">Submit UTR</button>
+          </div>
+          <div id="upiUtrFeedback" style="display:none;font-size:11px;margin-top:8px;line-height:1.4;"></div>
+        </div>
+
         <div class="upi-policy-link">
           Payment issue? <a href="/payment-failed" onclick="openPaymentFailedOverlay();return false;">See our Payment Failed Policy</a>
         </div>
@@ -3827,6 +3837,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       Last updated: April 2026
     </div>
   
+
+
 
 
 
@@ -4996,6 +5008,84 @@ window.createSupabaseOrder = function (opts) {
       fb.style.display = 'block';
       fb.style.color = '#ffc107';
       fb.textContent = 'Payment not confirmed yet. It takes 5–15 seconds after authorizing in your UPI app. Checking automatically…';
+    }
+  };
+
+  window.submitCustomerUtr = async function() {
+    if (!_currentUpiOrder || !_currentUpiOrder.orderId) return;
+    var utrInput = document.getElementById('upiUtrInput');
+    var submitBtn = document.getElementById('upiSubmitUtrBtn');
+    var fb = document.getElementById('upiUtrFeedback');
+    var rawUtr = (utrInput ? utrInput.value : '').trim();
+
+    if (!rawUtr || rawUtr.length < 10) {
+      if (fb) {
+        fb.style.display = 'block';
+        fb.style.color = '#ff6b6b';
+        fb.textContent = 'Please enter a valid 10–24 character UTR / UPI Reference Number from your payment receipt.';
+      }
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+    }
+    if (fb) {
+      fb.style.display = 'none';
+      fb.textContent = '';
+    }
+
+    try {
+      var phone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || localStorage.getItem('smelloff_last_phone') || '';
+      var res = await fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Order-Token': _currentUpiOrder.orderToken || ''
+        },
+        body: JSON.stringify({
+          orderCode: _currentUpiOrder.orderId,
+          upiRef: rawUtr,
+          customerPhone: phone,
+          orderToken: _currentUpiOrder.orderToken || ''
+        })
+      });
+
+      var data = await res.json();
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || 'Failed to submit UTR');
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submitted ✓';
+      }
+
+      if (fb) {
+        fb.style.display = 'block';
+        fb.style.color = '#b8ff57';
+        fb.textContent = 'UTR submitted! Payment verification is in progress. Our team will verify and confirm your order shortly.';
+      }
+
+      var statusText = document.getElementById('upiPollingStatusText');
+      if (statusText) {
+        statusText.textContent = 'Verification in progress (UTR: ' + (data.upiRef || rawUtr) + ')';
+      }
+
+      if (data.status === 'confirmed' || data.verified === true) {
+        showSuccess(_currentUpiOrder.orderId, 'upi');
+      }
+    } catch (err) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit UTR';
+      }
+      if (fb) {
+        fb.style.display = 'block';
+        fb.style.color = '#ff6b6b';
+        fb.textContent = err.message || 'Error submitting UTR. Please try again.';
+      }
     }
   };
 

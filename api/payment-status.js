@@ -1,9 +1,4 @@
-import {
-  isAllowedOrigin,
-  clientIp,
-  checkRateLimit,
-  verifyOrderToken
-} from './_security.js';
+import { isAllowedOrigin, clientIp, checkRateLimit, verifyOrderToken } from './_security.js';
 import { Resend } from 'resend';
 import { orderConfirmation } from './email-templates.js';
 import { isValidTransition } from '../shared/products-config.js';
@@ -105,7 +100,6 @@ export default async function handler(req, res) {
 
   const origin = req.headers.origin;
   if (!isAllowedOrigin(origin)) return res.status(403).json({ error: 'Origin not allowed' });
-
   if (origin) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
@@ -137,15 +131,58 @@ export default async function handler(req, res) {
     const dbPhone = String(order.customer_phone || '').replace(/\D/g, '').slice(-10);
     const tokenValid = orderToken ? verifyOrderToken(orderCode, dbPhone, orderToken) : false;
     const phoneValid = customerPhone && dbPhone && customerPhone === dbPhone;
-    if (!tokenValid && !phoneValid) return res.status(403).json({ error: 'Order ownership verification failed. Valid order token or phone required.' });
+
+    if (!tokenValid && !phoneValid) {
+      return res.status(403).json({ error: 'Order ownership verification failed. Valid order token or phone required.' });
+    }
 
     const terminalConfirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
     if (terminalConfirmedStates.includes(order.status)) {
-      return res.status(200).json({ ok: true, orderId: orderCode, status: 'confirmed', orderStatus: order.status, verified: true, paymentMethod: order.payment_method, amount: order.amount ? order.amount / 100 : 229, verifiedAt: order.payment_verified_at || order.updated_at });
+      return res.status(200).json({
+        ok: true,
+        orderId: orderCode,
+        status: 'confirmed',
+        orderStatus: order.status,
+        verified: true,
+        paymentMethod: order.payment_method,
+        amount: order.amount ? order.amount / 100 : 229,
+        verifiedAt: order.payment_verified_at || order.updated_at
+      });
+    }
+
+    if (order.status === 'verification_pending') {
+      return res.status(200).json({
+        ok: true,
+        orderId: orderCode,
+        status: 'verification_pending',
+        verified: false,
+        paymentMethod: order.payment_method,
+        amount: order.amount ? order.amount / 100 : 229,
+        upiRef: order.upi_ref || null,
+        message: 'UTR submitted — awaiting payment verification by our team'
+      });
+    }
+
+    if (order.status === 'payment_not_verified') {
+      return res.status(200).json({
+        ok: true,
+        orderId: orderCode,
+        status: 'payment_not_verified',
+        verified: false,
+        paymentMethod: order.payment_method,
+        amount: order.amount ? order.amount / 100 : 229,
+        message: 'Payment could not be verified. Please check UTR or submit again.'
+      });
     }
 
     if (order.status === 'cancelled' || order.status === 'failed') {
-      return res.status(200).json({ ok: true, orderId: orderCode, status: order.status, verified: false, paymentMethod: order.payment_method });
+      return res.status(200).json({
+        ok: true,
+        orderId: orderCode,
+        status: order.status,
+        verified: false,
+        paymentMethod: order.payment_method
+      });
     }
 
     if (order.status === 'upi_pending') {
@@ -171,7 +208,15 @@ export default async function handler(req, res) {
             console.error('[payment-status] Email formatting error:', emailErr.message);
           }
         }
-        return res.status(200).json({ ok: true, orderId: orderCode, status: 'confirmed', verified: true, paymentMethod: 'upi', amount: order.amount ? order.amount / 100 : 229, verifiedAt: new Date().toISOString() });
+        return res.status(200).json({
+          ok: true,
+          orderId: orderCode,
+          status: 'confirmed',
+          verified: true,
+          paymentMethod: 'upi',
+          amount: order.amount ? order.amount / 100 : 229,
+          verifiedAt: new Date().toISOString()
+        });
       }
     }
 

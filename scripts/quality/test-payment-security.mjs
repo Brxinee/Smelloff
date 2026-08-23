@@ -65,18 +65,39 @@ const PREV_SECURITY_SECRET = process.env.ORDER_SECURITY_SECRET;
 process.env.ADMIN_SECRET = 'test-admin-secret-key-32chars-xyz';
 process.env.ORDER_SECURITY_SECRET = 'test-order-signing-secret-32ch';
 
-// ATTACK 1: Call POST /api/verify-payment (manual UTR submission attempt)
-await runAttackTest(1, 'Call POST /api/verify-payment (manual UTR) -> Blocked & Deprecated (410 Gone)', async () => {
+// ATTACK 1: Customer UTR submission authentication & validation
+await runAttackTest(1, 'Customer UTR submission -> Rejects unauthenticated / malformed submissions (400/403)', async () => {
   const { default: verifyHandler } = await import('../../api/verify-payment.js');
-  const res = createMockRes();
-  const req = {
+  
+  // 1a. Malformed order code
+  const res1 = createMockRes();
+  const req1 = {
     method: 'POST',
     headers: {},
-    body: { orderCode: 'SMF-20260820-1234', upiRef: '123456789012' }
+    body: { orderCode: 'INVALID-CODE', upiRef: '123456789012' }
   };
-  await verifyHandler(req, res);
-  assert.strictEqual(res.getStatusCode(), 410);
-  assert.match(res.getData().error, /payment verification is retired/i);
+  await verifyHandler(req1, res1);
+  assert.strictEqual(res1.getStatusCode(), 400);
+
+  // 1b. Malformed / empty UTR
+  const res2 = createMockRes();
+  const req2 = {
+    method: 'POST',
+    headers: {},
+    body: { orderCode: 'SMF-20260820-1234', upiRef: 'short' }
+  };
+  await verifyHandler(req2, res2);
+  assert.strictEqual(res2.getStatusCode(), 400);
+
+  // 1c. Unauthenticated submission without valid token/phone (order not found or auth failure)
+  const res3 = createMockRes();
+  const req3 = {
+    method: 'POST',
+    headers: {},
+    body: { orderCode: 'SMF-20260820-1234', upiRef: '123456789012', phone: '0000000000' }
+  };
+  await verifyHandler(req3, res3);
+  assert.strictEqual([403, 404].includes(res3.getStatusCode()), true);
 });
 
 // ATTACK 2: Call /api/payment-status with invalid order code format
@@ -153,7 +174,7 @@ await runAttackTest(7, 'Normalize UTR characters and reject symbol spam', () => 
 
 // ATTACK 8: Database migration uniqueness barrier for active UTRs
 await runAttackTest(8, 'Verify database migration contains partial unique index on orders.upi_ref', () => {
-  const migrationPath = path.resolve('supabase/migrations/20260820_unique_upi_ref.sql');
+  const migrationPath = path.resolve('supabase/migrations/20260820_finalize_upi_lifecycle.sql');
   assert.strictEqual(fs.existsSync(migrationPath), true);
   const content = fs.readFileSync(migrationPath, 'utf8');
   assert.match(content, /CREATE UNIQUE INDEX/i);
@@ -163,24 +184,22 @@ await runAttackTest(8, 'Verify database migration contains partial unique index 
 
 // ATTACK 9: Replay admin confirmation on already confirmed order
 await runAttackTest(9, 'Admin confirmation replay -> Idempotent response, zero duplicate emails', async () => {
-  const { default: adminVerifyHandler } = await import('../../api/admin/verify-payment.js');
-  // Vector tested by code inspection and transition state machine idempotency
   assert.strictEqual(isValidTransition('confirmed', 'confirmed', 'upi'), true);
   assert.strictEqual(isValidTransition('verification_pending', 'verification_pending', 'upi'), true);
 });
 
-// ATTACK 10: Call admin endpoint -> Blocked & Deprecated (410 Gone)
-await runAttackTest(10, 'Call admin verify endpoint -> Blocked & Deprecated (410 Gone)', async () => {
+// ATTACK 10: Call admin endpoint without credentials -> Blocked (401 Unauthorized)
+await runAttackTest(10, 'Call admin verify endpoint without credentials -> Blocked (401 Unauthorized)', async () => {
   const { default: adminVerifyHandler } = await import('../../api/admin/verify-payment.js');
   const res = createMockRes();
   const req = {
     method: 'POST',
-    headers: {},
+    headers: {}, // No Authorization header
     body: { orderCode: 'SMF-20260820-1234', action: 'confirm' }
   };
   await adminVerifyHandler(req, res);
-  assert.strictEqual(res.getStatusCode(), 410);
-  assert.match(res.getData().error, /payment approval is retired/i);
+  assert.strictEqual(res.getStatusCode(), 401);
+  assert.match(res.getData().error, /Unauthorized/i);
 });
 
 // ATTACK 11: Call retired legacy webhook endpoint -> 410 Gone
