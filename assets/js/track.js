@@ -10,6 +10,37 @@
   'use strict';
   if (window.smfTrack) return; // double-include guard
 
+  /* --- Search Console query-variant guard ---------------------------
+     The static site serves one document for clean and parameterized URLs.
+     Tracking/referral/cart/search/order-code parameters are state, not unique
+     content. Mark the parameterized document noindex while leaving the query
+     string intact so real visitor functionality continues to work.
+
+     This directly addresses URLs such as:
+       /?q=...
+       /odorstrike?cart=open
+       /odorstrike?ref=...
+       /track-order?code=...
+     without sacrificing the canonical clean URL.
+  ---------------------------------------------------------------------- */
+  if (window.location.search) {
+    var robots = document.querySelector('meta[name="robots"]');
+    if (!robots) {
+      robots = document.createElement('meta');
+      robots.name = 'robots';
+      document.head.appendChild(robots);
+    }
+    robots.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
+
+    var googlebot = document.querySelector('meta[name="googlebot"]');
+    if (!googlebot) {
+      googlebot = document.createElement('meta');
+      googlebot.name = 'googlebot';
+      document.head.appendChild(googlebot);
+    }
+    googlebot.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
+  }
+
   var ENDPOINT = '/api/track';
   var noop = function () {};
 
@@ -60,7 +91,13 @@
   function send(payload) {
     try {
       payload = payload || {};
-      payload.path = payload.path || (location.pathname + location.search);
+      /*
+       * Never send query strings to analytics. Besides preventing duplicate
+       * analytics buckets for every UTM/cart/ref/order-code variant, this
+       * avoids leaking referral tokens or order tracking codes into the
+       * first-party analytics table.
+       */
+      payload.path = payload.path || location.pathname;
       payload.ref = payload.ref || document.referrer || '';
       if (sid) payload.session = sid;
       var body = JSON.stringify(payload);
