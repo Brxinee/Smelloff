@@ -35,15 +35,27 @@ function genPaymentAttemptId(orderCode) {
   return `ATT-${orderCode}-${rand}`;
 }
 
-// Builds canonical UPI payment URI containing ONLY pa, pn, am, cu
-export function buildUpiPaymentUri(amount) {
+// Builds a compatibility-first UPI payment URI.
+// Keep the URI small, but include a unique transaction reference so UPI apps
+// can correlate the payment cleanly. The optional merchant code is included
+// only when supplied by the configured merchant UPI provider.
+export function buildUpiPaymentUri(amount, orderCode = '') {
   const params = new URLSearchParams({
     pa: UPI_VPA,
-    pn: UPI_PAYEE_NAME,
     am: String(amount),
     cu: 'INR'
   });
 
+  if (orderCode) {
+    params.set('tr', String(orderCode));
+    params.set('tn', `ODORSTRIKE ${orderCode}`);
+  }
+
+  if (UPI_MERCHANT_CODE) params.set('mc', UPI_MERCHANT_CODE);
+
+  // Deliberately omit `pn`. Google Pay resolves the recipient name from the
+  // UPI handle; sending a second, potentially different payee label can create
+  // a visible mismatch for personal/non-merchant VPAs.
   return `upi://pay?${params.toString()}`;
 }
 
@@ -213,7 +225,7 @@ export default async function handler(req, res) {
     const paymentAttemptId = !isCod ? genPaymentAttemptId(orderCode) : null;
     const upiTxnRef = !isCod ? genUpiTxnRef(orderCode) : null;
 
-    const upiUri = !isCod ? buildUpiPaymentUri(pricing.total) : null;
+    const upiUri = !isCod ? buildUpiPaymentUri(pricing.total, orderCode) : null;
 
     const orderRow = {
       order_code: orderCode,
@@ -293,6 +305,7 @@ export default async function handler(req, res) {
       currency: pricing.currency,
       upiVpa: UPI_VPA,
       upiPayeeName: UPI_PAYEE_NAME,
+      upiMerchantCode: UPI_MERCHANT_CODE || null,
       upiUri,
       dbId: dbOrder ? dbOrder.id : null,
       customer: { name, phone, email },
