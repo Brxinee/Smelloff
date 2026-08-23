@@ -9,7 +9,10 @@ const redirectsConfig = JSON.parse(fs.readFileSync(path.join(REPO, 'vercel.json'
 const redirects = new Set();
 for (const rule of redirectsConfig.redirects || []) {
   // Only exact redirect sources are safe to classify statically.
-  if (rule.source && rule.destination && !/[:*+()]|\\[/.test(rule.source)) redirects.add(rule.source);
+  if (!rule.source || !rule.destination) continue;
+  const isPattern = rule.source.includes(':') || rule.source.includes('*') ||
+    rule.source.includes('+') || rule.source.includes('(') || rule.source.includes('[');
+  if (!isPattern) redirects.add(rule.source);
 }
 
 const SKIP_DIRS = new Set([
@@ -50,11 +53,14 @@ for (const file of htmlFiles) {
     }
     if (!url || !HOSTS.has(url.hostname.toLowerCase())) continue;
 
-    let pathname = cleanPath(url.pathname);
-    const original = pathname + url.search + url.hash;
+    const pathname = cleanPath(url.pathname);
 
     if (redirects.has(pathname)) {
       errors.push(`${rel}: ${raw} -> explicit redirect ${pathname}`);
+      continue;
+    }
+    if (/^\/policies\/(privacy|terms|returns|refund|shipping|cancellation|payment-failed)$/.test(pathname)) {
+      errors.push(`${rel}: ${raw} -> policy alias`);
       continue;
     }
     if (/\.html$/i.test(pathname)) {
@@ -81,8 +87,6 @@ for (const file of htmlFiles) {
       errors.push(`${rel}: ${raw} -> http host variant`);
       continue;
     }
-
-    void original;
   }
 }
 
