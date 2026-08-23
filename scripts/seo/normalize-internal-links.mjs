@@ -29,9 +29,11 @@ const vercel = JSON.parse(fs.readFileSync(path.join(REPO, 'vercel.json'), 'utf8'
 const redirects = new Map();
 for (const rule of vercel.redirects || []) {
   if (!rule.source || !rule.destination) continue;
-  // Pattern rules such as /r/:code are intentionally not treated as exact
-  // redirects here because their runtime parameters must remain functional.
-  if (/[:*+()]|\\[/.test(rule.source)) continue;
+  // Pattern rules such as /r/:code must stay dynamic and are not safe to
+  // classify as exact redirects here.
+  const isPattern = rule.source.includes(':') || rule.source.includes('*') ||
+    rule.source.includes('+') || rule.source.includes('(') || rule.source.includes('[');
+  if (isPattern) continue;
   redirects.set(rule.source, rule.destination);
 }
 
@@ -49,10 +51,6 @@ const htmlFiles = walk(REPO);
 
 function decodePathPart(value) {
   try { return decodeURIComponent(value); } catch { return value; }
-}
-
-function preserveSuffix(pathname, search, hash) {
-  return pathname + search + hash;
 }
 
 function exactRedirectTarget(pathname) {
@@ -94,9 +92,8 @@ function normalizeHref(rawHref) {
   let pathname = decodePathPart(url.pathname);
   if (pathname !== '/') pathname = pathname.replace(/\/+$/, '');
 
-  // Remove clean-URL extension variants when the extensionless page actually
-  // exists. This preserves unusual real .html assets while fixing /privacy.html,
-  // /refund.html and old blog .html variants that Vercel redirects.
+  // Remove .html when the extensionless page exists. This fixes legacy policy
+  // and blog links without touching unrelated static .html assets.
   if (/\.html$/i.test(pathname)) {
     const candidate = pathname.slice(0, -5) || '/';
     const candidateFile = candidate === '/'
@@ -105,8 +102,12 @@ function normalizeHref(rawHref) {
     if (fs.existsSync(candidateFile) || redirects.has(candidate)) pathname = candidate;
   }
 
-  // Follow explicit legacy slug redirects to their final internal target.
+  // Follow explicit legacy redirects to the final internal target.
   pathname = exactRedirectTarget(pathname);
+
+  // Handle the policy alias redirect declared with a parameterized Vercel rule.
+  const policy = pathname.match(/^\/policies\/(privacy|terms|returns|refund|shipping|cancellation|payment-failed)$/);
+  if (policy) pathname = `/${policy[1]}`;
 
   // Vercel's cleanUrls + trailingSlash:false make these canonical aliases.
   if (pathname === '/index') pathname = '/';
@@ -115,8 +116,8 @@ function normalizeHref(rawHref) {
   if (pathname !== '/') pathname = pathname.replace(/\/+$/, '');
 
   // Use root-relative canonical links. This removes http://, www and apex
-  // host variants from internal discovery without changing the destination.
-  return preserveSuffix(pathname, url.search, url.hash);
+  // host variants from internal discovery without changing query/hash state.
+  return pathname + url.search + url.hash;
 }
 
 const anchorHrefRe = /(<a\b[^>]*?\bhref\s*=\s*["'])([^"']+)(["'][^>]*>)/gi;
@@ -126,11 +127,9 @@ const changes = [];
 
 for (const file of htmlFiles) {
   const original = fs.readFileSync(file, 'utf8');
-  let changedInFile = 0;
   const updated = original.replace(anchorHrefRe, (full, prefix, href, suffix) => {
     const normalized = normalizeHref(href);
     if (normalized === href) return full;
-    changedInFile++;
     totalChanged++;
     changes.push(`${path.relative(REPO, file)}: ${href} -> ${normalized}`);
     return prefix + normalized + suffix;
