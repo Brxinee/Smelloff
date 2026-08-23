@@ -1,5 +1,5 @@
 import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized } from './_security.js';
-import { getShiprocketShipment, trackShiprocketAwb, extractShiprocketIds, isShiprocketConfigured } from './_shiprocket.js';
+import { createShiprocketOrder, getShiprocketShipment, trackShiprocketAwb, extractShiprocketIds, isShiprocketConfigured } from './_shiprocket.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -51,10 +51,9 @@ async function getOrder(orderCode) {
 
 async function listSyncCandidates(limit = 50) {
   const params = new URLSearchParams({
-    select: 'order_code,status,customer_phone,shiprocket_order_id,shiprocket_shipment_id,shiprocket_awb,shiprocket_courier,shiprocket_status,updated_at',
-    shiprocket_order_id: 'not.is.null',
-    status: 'in.(confirmed,packed,dispatched,out_for_delivery)',
-    order: 'updated_at.desc',
+    select: '*',
+    status: 'in.(placed,confirmed,packed,dispatched,out_for_delivery,delivered)',
+    order: 'created_at.desc',
     limit: String(Math.min(50, Math.max(1, limit)))
   });
   const response = await supabaseFetch(`orders?${params.toString()}`);
@@ -68,14 +67,55 @@ async function patchOrder(orderCode, patch) {
     headers: { Prefer: 'return=minimal' },
     body: JSON.stringify({
       ...patch,
-      shiprocket_synced_at: new Date().toISOString(),
-      shiprocket_error: null
+      shiprocket_synced_at: new Date().toISOString()
     })
   });
 }
 
+async function createMissingShiprocketOrder(order) {
+  if (!order || order.shiprocket_order_id) return null;
+  if (!['placed', 'confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'].includes(String(order.status || '').toLowerCase())) return null;
+
+  try {
+    const response = await createShiprocketOrder(order);
+    const ids = extractShiprocketIds(response);
+    const patch = {
+      shiprocket_order_id: ids.orderId ? Number(ids.orderId) : null,
+      shiprocket_shipment_id: ids.shipmentId ? Number(ids.shipmentId) : null,
+      shiprocket_awb: ids.awb ? String(ids.awb) : null,
+      shiprocket_courier: ids.courier ? String(ids.courier) : null,
+      shiprocket_status: 'ORDER_CREATED',
+      shiprocket_error: null
+    };
+    if (!patch.shiprocket_order_id) {
+      throw new Error('Shiprocket accepted the request but did not return an order ID.');
+    }
+    await patchOrder(order.order_code, patch);
+    return { status: 'created', ...patch };
+  } catch (err) {
+    await supabaseFetch(`orders?order_code=eq.${encodeURIComponent(order.order_code)}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({
+        shiprocket_error: String(err.message || 'Shiprocket create failed').slice(0, 1000),
+        shiprocket_synced_at: new Date().toISOString()
+      })
+    }).catch(() => {});
+    return { status: 'create_failed', error: String(err.message || 'Shiprocket create failed').slice(0, 500) };
+  }
+}
+
 async function syncSingleOrder(order) {
-  if (!order?.shiprocket_order_id) return { orderCode: order?.order_code, status: 'skipped' };
+  if (!order) return { orderCode: null, status: 'skipped' };
+
+  let createResult = null;
+  if (!order.shiprocket_order_id) {
+    createResult = await createMissingShiprocketOrder(order);
+    if (!order.shiprocket_order_id) {
+      return { orderCode: order.order_code, status: createResult?.status || 'skipped', error: createResult?.error || null };
+    }
+    order = { ...order, ...createResult };
+  }
 
   let shipment = null;
   let awb = order.shiprocket_awb || null;
@@ -110,32 +150,29 @@ async function syncSingleOrder(order) {
       ...statusPatch,
       ...(awb ? { shiprocket_awb: String(awb), tracking_id: String(awb), tracking_url: 'https://www.shiprocket.co/tracking/' } : {}),
       ...(courier ? { shiprocket_courier: String(courier), courier: String(courier) } : {}),
-      ...(shiprocketStatus ? { shiprocket_status: String(shiprocketStatus) } : {})
+      ...(shiprocketStatus ? { shiprocket_status: String(shiprocketStatus) } : {}),
+      shiprocket_error: null
     };
 
     if (Object.keys(patch).length) await patchOrder(order.order_code, patch);
 
     return {
       orderCode: order.order_code,
-      status: 'synced',
+      status: createResult ? 'created_and_synced' : 'synced',
       localStatus: statusPatch.status || order.status,
       shiprocketStatus,
       awb,
       courier
     };
   } catch (err) {
-    try {
-      await supabaseFetch(`orders?order_code=eq.${encodeURIComponent(order.order_code)}`, {
-        method: 'PATCH',
-        headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({
-          shiprocket_error: String(err.message || 'Shiprocket sync failed').slice(0, 1000),
-          shiprocket_synced_at: new Date().toISOString()
-        })
-      });
-    } catch {
-      // Keep the original Shiprocket error as the useful diagnostic.
-    }
+    await supabaseFetch(`orders?order_code=eq.${encodeURIComponent(order.order_code)}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({
+        shiprocket_error: String(err.message || 'Shiprocket sync failed').slice(0, 1000),
+        shiprocket_synced_at: new Date().toISOString()
+      })
+    }).catch(() => {});
     return { orderCode: order.order_code, status: 'failed', error: String(err.message || 'Shiprocket sync failed').slice(0, 500) };
   }
 }
