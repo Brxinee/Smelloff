@@ -7,6 +7,39 @@
 (function () {
   'use strict';
 
+  /* --- Search Console query-variant guard ---------------------------
+     Real pages such as /, /odorstrike and /track-order are sometimes reached
+     with functional/tracking query strings:
+       ?ref=...       partner attribution
+       ?cart=open    cart UI state
+       ?code=...      order tracking
+       ?q=...         search state
+     They are not separate documents and must never become competing index
+     candidates. Keep the parameters functional for real visitors, but mark
+     the rendered document noindex so Google drops the parameterized variant
+     instead of filing it under "Alternative page with proper canonical tag".
+
+     This is intentionally done client-side because this is a static HTML site
+     and the same file serves both the clean and parameterized URL.
+  ---------------------------------------------------------------------- */
+  if (window.location.search) {
+    var robots = document.querySelector('meta[name="robots"]');
+    if (!robots) {
+      robots = document.createElement('meta');
+      robots.name = 'robots';
+      document.head.appendChild(robots);
+    }
+    robots.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
+
+    var googlebot = document.querySelector('meta[name="googlebot"]');
+    if (!googlebot) {
+      googlebot = document.createElement('meta');
+      googlebot.name = 'googlebot';
+      document.head.appendChild(googlebot);
+    }
+    googlebot.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
+  }
+
   var KEY = 'smelloff_consent_v1';
   var GA4_ID = 'G-S1MJ58PD89';
   var META_PIXEL_ID = '1455100092891684';
