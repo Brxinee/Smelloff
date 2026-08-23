@@ -3,6 +3,7 @@ import { calculateOrderTotal, BASE_PRODUCT } from '../shared/products-config.js'
 import { Resend } from 'resend';
 import { orderConfirmation } from './email-templates.js';
 import { isAllowedOrigin, clientIp, checkRateLimit, generateOrderToken } from './_security.js';
+import { createShiprocketOrder, extractShiprocketIds, isShiprocketConfigured } from './_shiprocket.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -70,6 +71,81 @@ async function createSupabaseOrderRecord(orderData) {
   } catch (err) {
     console.error('[create-order] Supabase error:', err.message);
     return null;
+  }
+}
+
+async function persistShiprocketState(orderCode, patchBody) {
+  if (!SERVICE_KEY || !orderCode) return false;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`, {
+      method: 'PATCH',
+      headers: {
+        apikey: SERVICE_KEY,
+        Authorization: `Bearer ${SERVICE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify(patchBody)
+    });
+    if (!res.ok) {
+      console.error('[create-order] Shiprocket state patch failed:', res.status, await res.text().catch(() => ''));
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('[create-order] Shiprocket state patch error:', err.message);
+    return false;
+  }
+}
+
+async function syncOrderToShiprocket(orderRow, dbOrder) {
+  if (!isShiprocketConfigured()) return { status: 'not_configured' };
+  if (!dbOrder) return { status: 'skipped', reason: 'database_order_not_created' };
+
+  // Never create the same source order twice when the endpoint is retried.
+  if (dbOrder.shiprocket_order_id) {
+    return {
+      status: 'already_synced',
+      shiprocketOrderId: dbOrder.shiprocket_order_id,
+      shipmentId: dbOrder.shiprocket_shipment_id,
+      awb: dbOrder.shiprocket_awb
+    };
+  }
+
+  try {
+    const response = await createShiprocketOrder(orderRow);
+    const ids = extractShiprocketIds(response);
+    const patched = await persistShiprocketState(orderRow.order_code, {
+      shiprocket_order_id: ids.orderId ? Number(ids.orderId) : null,
+      shiprocket_shipment_id: ids.shipmentId ? Number(ids.shipmentId) : null,
+      shiprocket_awb: ids.awb ? String(ids.awb) : null,
+      shiprocket_courier: ids.courier ? String(ids.courier) : null,
+      shiprocket_status: 'ORDER_CREATED',
+      shiprocket_synced_at: new Date().toISOString(),
+      shiprocket_error: null
+    });
+
+    if (!patched) {
+      return { status: 'failed', error: 'Shiprocket order created but local sync state could not be saved.' };
+    }
+
+    return {
+      status: 'synced',
+      shiprocketOrderId: ids.orderId,
+      shipmentId: ids.shipmentId,
+      awb: ids.awb,
+      courier: ids.courier
+    };
+  } catch (err) {
+    await persistShiprocketState(orderRow.order_code, {
+      shiprocket_error: String(err.message || 'Shiprocket sync failed').slice(0, 1000),
+      shiprocket_synced_at: new Date().toISOString()
+    });
+    console.error('[create-order] Shiprocket sync failed:', err.message);
+    return {
+      status: 'failed',
+      error: String(err.message || 'Shiprocket sync failed').slice(0, 500)
+    };
   }
 }
 
@@ -171,6 +247,12 @@ export default async function handler(req, res) {
     // Save order into Supabase
     const dbOrder = await createSupabaseOrderRecord(orderRow);
 
+    // COD orders are immediately eligible for fulfilment and are synced to
+    // Shiprocket as soon as the local order record exists.
+    const shippingSync = isCod
+      ? await syncOrderToShiprocket(orderRow, dbOrder)
+      : { status: 'waiting_for_payment_verification' };
+
     // Send confirmation email for COD immediately if email is provided
     if (isCod && email && process.env.RESEND_API_KEY) {
       try {
@@ -213,7 +295,8 @@ export default async function handler(req, res) {
       upiPayeeName: UPI_PAYEE_NAME,
       upiUri,
       dbId: dbOrder ? dbOrder.id : null,
-      customer: { name, phone, email }
+      customer: { name, phone, email },
+      shippingSync
     });
 
   } catch (err) {
