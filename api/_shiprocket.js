@@ -6,6 +6,7 @@ let pickupLocationCache = null;
 let pickupLocationCacheExpiresAt = 0;
 
 const DEFAULT_PICKUP_LOCATION = 'Opposite ANcorner bakery';
+const DEFAULT_CHANNEL_ID = '41464314146431';
 
 export function isShiprocketConfigured() {
   return Boolean(process.env.SHIPROCKET_EMAIL && process.env.SHIPROCKET_PASSWORD);
@@ -107,6 +108,11 @@ function configuredPickupValue() {
   return String(process.env.SHIPROCKET_PICKUP_LOCATION || DEFAULT_PICKUP_LOCATION).trim();
 }
 
+function configuredChannelId() {
+  const raw = String(process.env.SHIPROCKET_CHANNEL_ID || DEFAULT_CHANNEL_ID).trim();
+  return raw && /^\d+$/.test(raw) ? Number(raw) : null;
+}
+
 export async function resolvePickupLocation() {
   if (pickupLocationCache && Date.now() < pickupLocationCacheExpiresAt) return pickupLocationCache;
 
@@ -123,8 +129,6 @@ export async function resolvePickupLocation() {
   const target = norm(configured);
   let match = locations.find(x => norm(x.pickup_location) === target);
 
-  // If Vercel contains the full pickup address instead of the Shiprocket pickup
-  // name, resolve it against the address + pin stored in Shiprocket.
   if (!match) {
     const wantedPin = (configured.match(/\b\d{6}\b/) || [])[0] || '';
     if (wantedPin) {
@@ -132,8 +136,6 @@ export async function resolvePickupLocation() {
     }
   }
 
-  // Last-resort: the exact location name supplied for Smelloff, compared
-  // case-insensitively. This avoids failures caused by capitalization/spacing.
   if (!match && norm(DEFAULT_PICKUP_LOCATION) !== target) {
     match = locations.find(x => norm(x.pickup_location) === norm(DEFAULT_PICKUP_LOCATION));
   }
@@ -166,6 +168,7 @@ export async function createShiprocketOrder(order) {
   const subtotal = Number(order.amount || 0) / 100 - Number(order.cod_fee || 0) / 100;
 
   const pickup = await resolvePickupLocation();
+  const channelId = configuredChannelId();
 
   const perUnitWeightKg = Number(process.env.SHIPROCKET_ITEM_WEIGHT_KG || '0.12');
   const lengthCm = Number(process.env.SHIPROCKET_LENGTH_CM || '15');
@@ -179,6 +182,7 @@ export async function createShiprocketOrder(order) {
     order_id: String(order.order_code),
     order_date: new Date(order.created_at || Date.now()).toISOString().slice(0, 10),
     pickup_location: pickup.name,
+    ...(channelId ? { channel_id: channelId } : {}),
     comment: `Smelloff order ${order.order_code}`,
 
     billing_customer_name: String(address.name || '').trim(),
