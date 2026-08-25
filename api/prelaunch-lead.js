@@ -89,6 +89,42 @@ async function sbLeadWrite(row) {
   }
 }
 
+export async function checkThresholdStatus() {
+  if (process.env.MOCK_THRESHOLD_REACHED === 'true') {
+    return true;
+  }
+
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+  if (!key) return false;
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/prelaunch_leads?select=id&limit=1`, {
+      method: 'GET',
+      headers: {
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+        Prefer: 'count=exact',
+      },
+    });
+
+    if (res.ok) {
+      const contentRange = res.headers.get('content-range');
+      if (contentRange) {
+        const parts = contentRange.split('/');
+        if (parts.length === 2) {
+          const count = parseInt(parts[1], 10);
+          if (!isNaN(count) && count >= 1000) {
+            return true;
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error('[prelaunch-lead] Threshold query error:', err.message);
+  }
+  return false;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   const origin = req.headers.origin;
@@ -97,11 +133,17 @@ export default async function handler(req, res) {
     if (origin && !isAllowedOrigin(origin)) return res.status(403).end();
     if (origin) {
       res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
       res.setHeader('Vary', 'Origin');
     }
     return res.status(204).end();
+  }
+
+  if (req.method === 'GET') {
+    const isDevTest = req.query?.test_threshold === '1' && process.env.NODE_ENV !== 'production';
+    const thresholdReached = isDevTest || await checkThresholdStatus();
+    return res.status(200).json({ threshold_reached: thresholdReached });
   }
 
   if (req.method !== 'POST') {
@@ -158,10 +200,13 @@ export default async function handler(req, res) {
 
     await sbLeadWrite(leadRecord);
 
+    const thresholdReached = await checkThresholdStatus();
+
     return res.status(200).json({
       success: true,
       message: "YOU'RE IN.",
       date: '22.09.2026',
+      threshold_reached: thresholdReached,
     });
   } catch (err) {
     console.error('[prelaunch-lead] Handler error:', err);
@@ -170,6 +215,7 @@ export default async function handler(req, res) {
       success: true,
       message: "YOU'RE IN.",
       date: '22.09.2026',
+      threshold_reached: false,
     });
   }
 }

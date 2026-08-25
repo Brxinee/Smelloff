@@ -112,6 +112,7 @@ app.all('/api/payment/verify', (req, res) => verifyPaymentHandler(req, res));
 app.all('/api/payment/status', (req, res) => paymentStatusHandler(req, res));
 app.all('/api/payment/webhook', (req, res) => webhookHandler(req, res));
 app.all('/api/prelaunch-lead', (req, res) => prelaunchLeadHandler(req, res));
+app.all('/api/prelaunch-status', (req, res) => prelaunchLeadHandler(req, res));
 
 // Clean URL & static file handling middleware
 app.use((req, res, next) => {

@@ -126,7 +126,32 @@
 
     /* Countdown */
     .countdown-wrap {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 480px; width: 100%; margin: 0 auto 48px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 480px; width: 100%; margin: 0 auto 36px;
+    }
+
+    /* Social Proof Hero Badge (Hidden until 1,000 threshold reached) */
+    .social-proof-hero {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: 0.22em;
+      color: rgba(244, 241, 234, 0.75); text-transform: uppercase; margin: -16px auto 36px;
+      display: none; align-items: center; justify-content: center; gap: 8px;
+    }
+    .social-proof-hero.is-unlocked {
+      display: flex !important; animation: spUnlockGlitch 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .sp-dot {
+      width: 6px; height: 6px; background-color: var(--acid); border-radius: 50%;
+      box-shadow: 0 0 8px var(--acid); display: inline-block;
+    }
+    @keyframes spUnlockGlitch {
+      0% { opacity: 0; transform: translateX(-6px); filter: blur(4px); }
+      30% { opacity: 0.3; transform: translateX(3px); filter: blur(2px); }
+      60% { opacity: 0.7; transform: translateX(-1px); filter: blur(0px); }
+      100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+    }
+
+    .fomo-sub {
+      font-family: var(--font-mono); font-size: 11px; color: var(--acid); letter-spacing: 0.12em;
+      text-transform: uppercase; margin-top: 14px; text-align: center; display: none;
     }
     .countdown-box {
       background: var(--surface); border: 1px solid var(--rule); padding: 16px 8px; text-align: center;
@@ -395,6 +420,11 @@
           </div>
         </div>
 
+        <!-- Social Proof Hero Indicator (Unlocked only at >= 1,000 unique registrations) -->
+        <div class="social-proof-hero" id="socialProofHero">
+          <span class="sp-dot"></span> 1,000+ ARE IN.
+        </div>
+
         <!-- Curiosity lines -->
         <div class="curiosity-statement">
           <div class="curiosity-main">YOU'LL KNOW ON 22.09.</div>
@@ -441,6 +471,10 @@
 
             <div class="trust-note">
               [✓] YOUR DETAILS STAY WITH SMELLOFF.
+            </div>
+
+            <div class="fomo-sub" id="fomoSub">
+              You probably don't want to miss what they're waiting for.
             </div>
           </form>
 
@@ -643,6 +677,50 @@
         if (emailEl.value.trim().includes('@')) trackEvent('email_completed', 'prelaunch_email');
       });
 
+      // Social proof 1,000+ threshold reveal logic
+      function applySocialProofThreshold(unlocked) {
+        if (!unlocked) return;
+
+        var spHero = document.getElementById('socialProofHero');
+        if (spHero && !spHero.classList.contains('is-unlocked')) {
+          spHero.classList.add('is-unlocked');
+        }
+
+        var formDesc = document.querySelector('.form-desc');
+        if (formDesc) {
+          formDesc.innerHTML = '1,000+ people are already waiting.<br>Get the first message when 22.09 happens.';
+        }
+
+        var fomoSub = document.getElementById('fomoSub');
+        if (fomoSub) {
+          fomoSub.style.display = 'block';
+        }
+
+        var successSub = document.querySelector('.success-sub');
+        if (successSub) {
+          successSub.textContent = '1,000+ people are already waiting for 22.09.';
+        }
+      }
+
+      async function checkPrelaunchStatus() {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var url = '/api/prelaunch-status';
+          if (params.get('test_threshold') === '1') {
+            url += '?test_threshold=1';
+          }
+          var res = await fetch(url);
+          if (res.ok) {
+            var data = await res.json();
+            if (data && data.threshold_reached) {
+              applySocialProofThreshold(true);
+            }
+          }
+        } catch (e) {}
+      }
+
+      checkPrelaunchStatus();
+
       // Handle main form submission
       var leadForm = document.getElementById('leadForm');
       var formError = document.getElementById('formError');
@@ -692,6 +770,9 @@
 
           var data = await res.json();
           if (res.ok && data.success) {
+            if (data.threshold_reached) {
+              applySocialProofThreshold(true);
+            }
             trackEvent('form_success', 'prelaunch_success');
             leadForm.style.display = 'none';
             document.getElementById('successState').style.display = 'block';
