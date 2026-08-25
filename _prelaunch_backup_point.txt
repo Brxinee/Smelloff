@@ -1,0 +1,1 @@
+This file marks the last main-branch commit before switching the public root to the temporary 22.09 pre-launch page. The original storefront remains recoverable from the Git history immediately before the index switch.
