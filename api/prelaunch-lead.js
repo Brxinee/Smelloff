@@ -1,43 +1,19 @@
 // /api/prelaunch-lead.js — Endpoint for SMELLOFF 22.09 Pre-Launch Campaign Lead Capture
-import crypto from 'node:crypto';
 import { checkRateLimit, clientIp, isAllowedOrigin } from './_security.js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
+const SUPABASE_URL = (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co')
+  .trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '');
+const CAMPAIGN = 'SMELLOFF_22_09_2026';
 
-/**
- * Normalizes Indian WhatsApp mobile numbers.
- * Accepts formats: 9876543210, +919876543210, 919876543210, 09876543210
- * Returns standard e164 +919876543210 or null if invalid.
- */
 export function normalizeWhatsAppNumber(rawPhone) {
   if (!rawPhone || typeof rawPhone !== 'string') return null;
-  // Remove all non-numeric characters except leading '+'
-  const cleaned = rawPhone.trim().replace(/[^\d+]/g, '');
-  const digits = cleaned.replace(/\D/g, '');
-
-  if (!digits) return null;
-
-  // 10 digits starting with 6, 7, 8, or 9
-  if (digits.length === 10 && /^[6-9]\d{9}$/.test(digits)) {
-    return `+91${digits}`;
-  }
-
-  // 11 digits starting with 0 followed by 6-9
-  if (digits.length === 11 && /^0[6-9]\d{9}$/.test(digits)) {
-    return `+91${digits.slice(1)}`;
-  }
-
-  // 12 digits starting with 91 followed by 6-9
-  if (digits.length === 12 && /^91[6-9]\d{9}$/.test(digits)) {
-    return `+91${digits.slice(2)}`;
-  }
-
+  const digits = rawPhone.replace(/\D/g, '');
+  if (digits.length === 10 && /^[6-9]\d{9}$/.test(digits)) return `+91${digits}`;
+  if (digits.length === 11 && /^0[6-9]\d{9}$/.test(digits)) return `+91${digits.slice(1)}`;
+  if (digits.length === 12 && /^91[6-9]\d{9}$/.test(digits)) return `+91${digits.slice(2)}`;
   return null;
 }
 
-/**
- * Validates email format.
- */
 export function isValidEmail(rawEmail) {
   if (!rawEmail || typeof rawEmail !== 'string') return false;
   const cleaned = rawEmail.trim().toLowerCase();
@@ -45,84 +21,62 @@ export function isValidEmail(rawEmail) {
   return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(cleaned);
 }
 
+function getKey() {
+  return process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+}
+
+async function sb(path, options = {}) {
+  const key = getKey();
+  if (!key) throw new Error('Supabase key is not configured.');
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...options,
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    },
+  });
+  const text = await res.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+  if (!res.ok) {
+    const err = new Error(typeof data === 'string' ? data : (data?.message || data?.hint || data?.error || `Supabase ${res.status}`));
+    err.status = res.status;
+    throw err;
+  }
+  return { data, headers: res.headers };
+}
+
 async function sbLeadWrite(row) {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
-  if (!key) {
-    console.warn('[prelaunch-lead] Supabase key not set. Skipping DB persist.');
-    return;
-  }
+  const payload = JSON.stringify(row);
+  // Emails are normalized to lowercase and the DB now has exact unique
+  // indexes on email and WhatsApp, so this upsert is deterministic.
+  await sb('prelaunch_leads?on_conflict=email', {
+    method: 'POST',
+    headers: { Prefer: 'resolution=merge-duplicates,return=representation' },
+    body: payload,
+  });
+}
 
-  // Attempt write to prelaunch_leads table with on_conflict merge
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/prelaunch_leads?on_conflict=email`, {
-      method: 'POST',
-      headers: {
-        apikey: key,
-        Authorization: `Bearer ${key}`,
-        'Content-Type': 'application/json',
-        Prefer: 'resolution=merge-duplicates,return=minimal',
-      },
-      body: JSON.stringify(row),
-    });
-
-    if (!res.ok) {
-      const errText = await res.text();
-      console.warn(`[prelaunch-lead] Supabase prelaunch_leads write error (${res.status}): ${errText}`);
-
-      // Fallback: write to standard waitlist table if prelaunch_leads table does not exist
-      await fetch(`${SUPABASE_URL}/rest/v1/waitlist?on_conflict=email`, {
-        method: 'POST',
-        headers: {
-          apikey: key,
-          Authorization: `Bearer ${key}`,
-          'Content-Type': 'application/json',
-          Prefer: 'resolution=merge-duplicates,return=minimal',
-        },
-        body: JSON.stringify({
-          email: row.email,
-          source: `prelaunch_2209:${row.whatsapp}`,
-        }),
-      });
-    }
-  } catch (err) {
-    console.error('[prelaunch-lead] DB Write failed:', err.message);
-  }
+async function countCampaignLeads() {
+  const { headers } = await sb(`prelaunch_leads?select=id&campaign=eq.${encodeURIComponent(CAMPAIGN)}&limit=1`, {
+    method: 'GET',
+    headers: { Prefer: 'count=exact' },
+  });
+  const range = headers.get('content-range') || '';
+  const total = Number(range.split('/')[1]);
+  return Number.isFinite(total) ? total : 0;
 }
 
 export async function checkThresholdStatus() {
-  if (process.env.MOCK_THRESHOLD_REACHED === 'true') {
-    return true;
-  }
-
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
-  if (!key) return false;
-
+  if (process.env.MOCK_THRESHOLD_REACHED === 'true') return true;
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/prelaunch_leads?select=id&limit=1`, {
-      method: 'GET',
-      headers: {
-        apikey: key,
-        Authorization: `Bearer ${key}`,
-        Prefer: 'count=exact',
-      },
-    });
-
-    if (res.ok) {
-      const contentRange = res.headers.get('content-range');
-      if (contentRange) {
-        const parts = contentRange.split('/');
-        if (parts.length === 2) {
-          const count = parseInt(parts[1], 10);
-          if (!isNaN(count) && count >= 1000) {
-            return true;
-          }
-        }
-      }
-    }
+    return (await countCampaignLeads()) >= 1000;
   } catch (err) {
     console.error('[prelaunch-lead] Threshold query error:', err.message);
+    return false;
   }
-  return false;
 }
 
 export default async function handler(req, res) {
@@ -146,9 +100,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ threshold_reached: thresholdReached });
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
   const ip = clientIp(req);
   if (!checkRateLimit(`pl-lead:${ip}`, 10, 60 * 1000)) {
@@ -157,10 +109,7 @@ export default async function handler(req, res) {
 
   try {
     const body = req.body && typeof req.body === 'object' ? req.body : {};
-
-    // Honeypot bot protection check
-    if (body.hp_field && String(body.hp_field).trim().length > 0) {
-      // Quietly return success to bots without recording
+    if (body.hp_field && String(body.hp_field).trim()) {
       return res.status(200).json({ success: true, message: "YOU'RE IN." });
     }
 
@@ -168,28 +117,17 @@ export default async function handler(req, res) {
     const rawWhatsapp = String(body.whatsapp || body.phone || '').trim();
     const rawEmail = String(body.email || '').trim().toLowerCase();
     const source = String(body.source || 'direct').trim().slice(0, 100);
-    const campaign = 'SMELLOFF_22_09_2026';
 
-    if (!name) {
-      return res.status(400).json({ error: 'Please enter your name.' });
-    }
-
+    if (!name) return res.status(400).json({ error: 'Please enter your name.' });
     const whatsapp = normalizeWhatsAppNumber(rawWhatsapp);
-    if (!whatsapp) {
-      return res.status(400).json({
-        error: 'Please enter a valid 10-digit Indian WhatsApp mobile number.',
-      });
-    }
-
-    if (!isValidEmail(rawEmail)) {
-      return res.status(400).json({ error: 'Please enter a valid email address.' });
-    }
+    if (!whatsapp) return res.status(400).json({ error: 'Please enter a valid 10-digit Indian WhatsApp mobile number.' });
+    if (!isValidEmail(rawEmail)) return res.status(400).json({ error: 'Please enter a valid email address.' });
 
     const leadRecord = {
       name,
       whatsapp,
       email: rawEmail,
-      campaign,
+      campaign: CAMPAIGN,
       source,
       consent_agreed: true,
       consent_timestamp: new Date().toISOString(),
@@ -199,7 +137,6 @@ export default async function handler(req, res) {
     };
 
     await sbLeadWrite(leadRecord);
-
     const thresholdReached = await checkThresholdStatus();
 
     return res.status(200).json({
@@ -210,12 +147,9 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error('[prelaunch-lead] Handler error:', err);
-    // Still return graceful status if unexpected error occurs
-    return res.status(200).json({
-      success: true,
-      message: "YOU'RE IN.",
-      date: '22.09.2026',
-      threshold_reached: false,
+    return res.status(err.status || 500).json({
+      success: false,
+      error: 'We could not save your details. Please try again.',
     });
   }
 }
