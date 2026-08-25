@@ -41,6 +41,7 @@
   <style>
     :root {
       --bg: #080808;
+      --bg-focus: #0d0d0c;
       --surface: #121212;
       --text: #F5F5F0;
       --text-muted: rgba(245, 245, 240, 0.48);
@@ -71,9 +72,33 @@
       background: var(--bg);
       position: relative;
       color: var(--text);
+      transition: background-color 0.5s ease;
     }
 
-    /* Ultra-subtle physical paper / noise texture (NO grid, NO scanlines, NO glow) */
+    body.form-focused {
+      background: var(--bg-focus);
+    }
+
+    /* Threshold Visual Accent Line (Appears on screen edge when >= 1,000 threshold reached) */
+    .threshold-accent-bar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--acid);
+      box-shadow: 0 0 12px var(--acid);
+      z-index: 99;
+      display: none;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .threshold-accent-bar.is-active {
+      display: block;
+      opacity: 0.85;
+    }
+
+    /* Ultra-subtle physical paper / noise texture */
     .grain-overlay {
       position: fixed;
       inset: 0;
@@ -96,7 +121,7 @@
       .wrap { padding: 0 20px; }
     }
 
-    /* Editorial Header */
+    /* Header */
     header {
       padding: 36px 0;
       display: flex;
@@ -123,9 +148,14 @@
     .header-dot {
       width: 5px;
       height: 5px;
-      background-color: var(--acid);
+      background-color: var(--text-dim);
       border-radius: 50%;
       display: inline-block;
+      transition: background-color 0.5s ease, box-shadow 0.5s ease;
+    }
+    .header-dot.unlocked {
+      background-color: var(--acid);
+      box-shadow: 0 0 8px var(--acid);
     }
 
     /* Entrance Animation */
@@ -147,24 +177,32 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 60px 0 80px;
+      padding: 60px 0 60px;
+      position: relative;
     }
 
     .hero-top-cluster {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
+      position: relative;
     }
 
     .hero-tagline {
       font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 0.2em;
+      font-size: 11px;
+      letter-spacing: 0.22em;
       color: var(--text-muted);
       text-transform: uppercase;
     }
 
-    /* Enormous Editorial Date Display */
+    /* KINETIC ALIVE HERO DATE */
+    .hero-date-container {
+      perspective: 800px;
+      display: inline-block;
+      cursor: default;
+    }
+
     .hero-date-display {
       font-family: var(--font-primary);
       font-weight: 750;
@@ -174,11 +212,15 @@
       color: var(--text);
       user-select: none;
       margin-left: -0.04em;
+      display: inline-block;
+      transform-style: preserve-3d;
+      will-change: transform, letter-spacing, filter;
+      transition: transform 0.15s ease-out, letter-spacing 0.3s ease-out, filter 0.3s ease-out;
     }
 
     .hero-subrow {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 24px;
@@ -190,17 +232,25 @@
     .hero-time-badge {
       font-family: var(--font-mono);
       font-size: 13px;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.18em;
       color: var(--text-muted);
+      opacity: 0.3;
+      transform: translateY(4px);
+      transition: opacity 0.5s ease, transform 0.5s ease, color 0.5s ease;
+    }
+    .hero-time-badge.revealed {
+      opacity: 1;
+      transform: translateY(0);
+      color: var(--acid);
     }
 
-    .hero-editorial-quote {
-      font-family: var(--font-editorial);
-      font-style: italic;
-      font-weight: 400;
-      font-size: clamp(1.2rem, 2.5vw, 2rem);
-      color: var(--text-muted);
-      letter-spacing: -0.01em;
+    .hero-move-cue {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      transition: opacity 0.5s ease;
     }
 
     /* Subordinate Unboxed Editorial Countdown */
@@ -208,14 +258,12 @@
       display: flex;
       align-items: center;
       gap: 28px;
-      margin-top: 48px;
+      margin-top: 40px;
       flex-wrap: wrap;
     }
 
     @media (max-width: 640px) {
-      .countdown-editorial {
-        gap: 14px;
-      }
+      .countdown-editorial { gap: 14px; }
     }
 
     .cd-segment {
@@ -249,23 +297,37 @@
       font-weight: 300;
     }
 
-    /* Hero Social Proof Line (Hidden until 1,000 threshold reached) */
+    /* Social Proof Hero Indicator (Unlocked at >= 1,000 threshold) */
     .social-proof-hero {
       font-family: var(--font-primary);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      color: rgba(245, 245, 240, 0.75);
-      text-transform: uppercase;
       margin-top: 28px;
       display: none;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .social-proof-hero.is-unlocked {
       display: flex !important;
       animation: spUnlockGlitch 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .sp-main {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: rgba(245, 245, 240, 0.85);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sp-sub {
+      font-family: var(--font-editorial);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-left: 14px;
     }
 
     .sp-dot {
@@ -286,105 +348,95 @@
 
     /* Scroll Cue */
     .scroll-cue {
-      margin-top: 40px;
+      margin-top: 36px;
       display: inline-flex;
       align-items: center;
       gap: 12px;
       font-family: var(--font-mono);
       font-size: 11px;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.18em;
       color: var(--text-dim);
       text-transform: uppercase;
       text-decoration: none;
       transition: color 0.3s ease;
     }
-    .scroll-cue:hover {
-      color: var(--text);
-    }
-    .scroll-cue-arrow {
-      font-size: 14px;
-      transition: transform 0.3s ease;
-    }
-    .scroll-cue:hover .scroll-cue-arrow {
-      transform: translateY(4px);
-    }
+    .scroll-cue:hover { color: var(--text); }
+    .scroll-cue-arrow { font-size: 14px; transition: transform 0.3s ease; }
+    .scroll-cue:hover .scroll-cue-arrow { transform: translateY(4px); }
 
-    /* SECTION 2: THE STATEMENT */
-    .statement-section {
-      padding: 160px 0;
+    /* SECTION 2: DISCOVERY 2 */
+    .discovery-section-2 {
+      padding: 180px 0;
       border-top: 1px solid var(--rule);
     }
 
     @media (max-width: 768px) {
-      .statement-section { padding: 90px 0; }
+      .discovery-section-2 { padding: 100px 0; }
     }
 
-    .statement-title {
+    .discovery-title-main {
       font-family: var(--font-primary);
-      font-weight: 700;
-      font-size: clamp(2.2rem, 6vw, 5.5rem);
-      line-height: 0.96;
+      font-weight: 750;
+      font-size: clamp(2.5rem, 7vw, 6rem);
+      line-height: 0.95;
       letter-spacing: -0.04em;
       color: var(--text);
-      max-width: 900px;
     }
 
-    .statement-sub {
+    .discovery-title-yet {
       font-family: var(--font-editorial);
       font-style: italic;
       font-weight: 400;
-      font-size: clamp(1.4rem, 3.5vw, 3rem);
-      color: var(--text-muted);
-      margin-top: 24px;
+      font-size: clamp(2.5rem, 7vw, 6rem);
+      line-height: 1;
+      color: var(--acid);
+      margin-top: 16px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .discovery-title-yet.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* SECTION 3: THREE STACKED STATEMENTS */
-    .editorial-stack-section {
-      padding: 120px 0 160px;
+    /* SECTION 3: DISCOVERY 3 */
+    .discovery-section-3 {
+      padding: 140px 0 180px;
       border-top: 1px solid var(--rule);
     }
 
-    .editorial-step {
-      padding: 60px 0;
-      border-bottom: 1px solid var(--rule-subtle);
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-      transition: opacity 0.4s ease, filter 0.4s ease;
+    @media (max-width: 768px) {
+      .discovery-section-3 { padding: 90px 0 120px; }
     }
 
-    .step-num {
+    .discovery-micro {
       font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: 0.2em;
-      color: var(--text-dim);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 24px;
     }
 
-    .step-content {
+    .discovery-giant-date {
       font-family: var(--font-primary);
-      font-weight: 700;
-      font-size: clamp(2rem, 5vw, 4.5rem);
-      line-height: 1;
-      letter-spacing: -0.04em;
+      font-weight: 750;
+      font-size: clamp(4rem, 14vw, 12rem);
+      line-height: 0.9;
+      letter-spacing: -0.05em;
       color: var(--text);
     }
 
-    .step-glitch-active {
-      color: var(--acid);
-      transition: color 0.3s ease;
-    }
-
-    /* SECTION 4: FORM SECTION (ACCESS POINT) */
+    /* FORM SECTION: ACCESS POINT */
     .form-section {
-      padding: 140px 0 160px;
+      padding: 160px 0 180px;
       border-top: 1px solid var(--rule);
       position: relative;
     }
 
     @media (max-width: 768px) {
-      .form-section { padding: 90px 0 120px; }
+      .form-section { padding: 100px 0 140px; }
     }
 
     .form-container {
@@ -398,21 +450,21 @@
       line-height: 0.95;
       letter-spacing: -0.04em;
       color: var(--text);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
-    .form-desc {
-      font-family: var(--font-primary);
-      font-size: clamp(1rem, 2vw, 1.35rem);
+    .form-subtext {
+      font-family: var(--font-editorial);
+      font-style: italic;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
       color: var(--text-muted);
-      line-height: 1.4;
       margin-bottom: 48px;
     }
 
     .access-form {
       display: flex;
       flex-direction: column;
-      gap: 32px;
+      gap: 36px;
     }
 
     .input-group {
@@ -428,6 +480,12 @@
       letter-spacing: 0.2em;
       color: var(--text-muted);
       text-transform: uppercase;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .input-group.is-active .input-label {
+      color: var(--acid);
+      transform: translateX(2px);
     }
 
     .input-field {
@@ -435,14 +493,14 @@
       background: transparent;
       border: none;
       border-bottom: 1px solid var(--rule-strong);
-      padding: 14px 0;
+      padding: 16px 0;
       font-family: var(--font-primary);
       font-size: 1.25rem;
       font-weight: 500;
       color: var(--text);
       outline: none;
       border-radius: 0;
-      transition: border-color 0.3s ease, color 0.3s ease;
+      transition: border-color 0.4s ease, color 0.3s ease, box-shadow 0.4s ease;
     }
 
     .input-field::placeholder {
@@ -452,6 +510,7 @@
 
     .input-field:focus {
       border-bottom-color: var(--acid);
+      box-shadow: 0 2px 12px rgba(184, 255, 87, 0.12);
     }
 
     .honeypot {
@@ -507,16 +566,6 @@
       letter-spacing: 0.05em;
     }
 
-    .fomo-sub {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--acid);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-top: 8px;
-      display: none;
-    }
-
     .form-error {
       font-family: var(--font-mono);
       font-size: 12px;
@@ -527,7 +576,7 @@
       display: none;
     }
 
-    /* Success State */
+    /* SUCCESS STATE: ACCESS GRANTED */
     .success-state {
       display: none;
       animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -538,6 +587,15 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    .success-grant-badge {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      color: var(--acid);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
     .success-title {
       font-family: var(--font-primary);
       font-weight: 750;
@@ -545,7 +603,7 @@
       line-height: 0.92;
       letter-spacing: -0.04em;
       color: var(--text);
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
 
     .success-sub {
@@ -553,22 +611,34 @@
       font-style: italic;
       font-size: clamp(1.2rem, 3vw, 2.2rem);
       color: var(--text-muted);
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
 
-    .success-checks {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    .secret-note {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      padding: 16px 20px;
+      border-left: 2px solid var(--acid);
+      background: rgba(184, 255, 87, 0.03);
       margin-bottom: 48px;
     }
 
-    .check-item {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 0.15em;
-      color: var(--acid);
-      text-transform: uppercase;
+    .share-section-title {
+      font-family: var(--font-primary);
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .share-section-sub {
+      font-family: var(--font-editorial);
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
     }
 
     .share-action-btn {
@@ -631,7 +701,10 @@
   </style>
 </head>
 <body>
-  <!-- Grain Overlay (No grid, No scanlines, No glow) -->
+  <!-- Threshold Visual Accent Line (Unlocked on >= 1,000 threshold) -->
+  <div class="threshold-accent-bar" id="thresholdBar"></div>
+
+  <!-- Grain Overlay -->
   <div class="grain-overlay"></div>
 
   <div class="wrap">
@@ -639,8 +712,8 @@
     <header>
       <div class="header-meta">22 / 09 / 26</div>
       <div class="header-status">
-        <span class="header-dot"></span>
-        <span>09:09 IST</span>
+        <span class="header-dot" id="headerDot"></span>
+        <span id="headerStatusText">09:09 IST</span>
       </div>
     </header>
 
@@ -649,16 +722,18 @@
       <div class="hero-top-cluster reveal-initial" id="heroCluster">
         <div class="hero-tagline">THE DATE IS SET</div>
         
-        <!-- Enormous Asymmetric Visual Date -->
-        <h1 class="hero-date-display">22.09</h1>
+        <!-- Kinetic Alive Date Display -->
+        <div class="hero-date-container" id="heroDateWrap">
+          <h1 class="hero-date-display" id="heroDate">22.09</h1>
+        </div>
 
         <div class="hero-subrow">
-          <div class="hero-time-badge">09:09 IST</div>
-          <div class="hero-editorial-quote">you'll know.</div>
+          <div class="hero-time-badge" id="heroTimeBadge">09:09 IST</div>
+          <div class="hero-move-cue" id="moveCue">[ move ]</div>
         </div>
       </div>
 
-      <!-- Subordinate Editorial Countdown (Unboxed) -->
+      <!-- Countdown Cluster -->
       <div class="reveal-initial" id="countdownCluster">
         <div class="countdown-editorial" id="countdown">
           <div class="cd-segment">
@@ -682,38 +757,31 @@
           </div>
         </div>
 
-        <!-- Social Proof Hero Indicator (Unlocked only at >= 1,000 threshold) -->
+        <!-- Social Proof Hero Indicator (Unlocked at >= 1,000 threshold) -->
         <div class="social-proof-hero" id="socialProofHero">
-          <span class="sp-dot"></span> 1,000+ ARE IN.
+          <div class="sp-main">
+            <span class="sp-dot"></span> 1,000+ ARE ALREADY HERE.
+          </div>
+          <div class="sp-sub">you weren't the first.</div>
         </div>
 
-        <a href="#statement" class="scroll-cue">
-          <span>SCROLL FOR ACCESS</span>
+        <a href="#discovery2" class="scroll-cue">
+          <span>DISCOVER</span>
           <span class="scroll-cue-arrow">↓</span>
         </a>
       </div>
     </section>
 
-    <!-- SECTION 2: THE STATEMENT -->
-    <section class="statement-section" id="statement">
-      <h2 class="statement-title">YOU DON'T NEED TO KNOW YET.</h2>
-      <div class="statement-sub">just don't miss the date.</div>
+    <!-- SECTION 2: DISCOVERY 2 -->
+    <section class="discovery-section-2" id="discovery2">
+      <h2 class="discovery-title-main">YOU DON'T KNOW.</h2>
+      <div class="discovery-title-yet" id="yetText">YET.</div>
     </section>
 
-    <!-- SECTION 3: THREE STACKED EDITORIAL STATEMENTS -->
-    <section class="editorial-stack-section">
-      <div class="editorial-step" id="step1">
-        <span class="step-num">01</span>
-        <span class="step-content">NOT YET.</span>
-      </div>
-      <div class="editorial-step" id="step2">
-        <span class="step-num">02</span>
-        <span class="step-content" id="step2Content">NOT WHAT YOU THINK.</span>
-      </div>
-      <div class="editorial-step" id="step3">
-        <span class="step-num">03</span>
-        <span class="step-content">22.09.</span>
-      </div>
+    <!-- SECTION 3: DISCOVERY 3 -->
+    <section class="discovery-section-3">
+      <div class="discovery-micro">one date. one moment.</div>
+      <div class="discovery-giant-date">22.09</div>
     </section>
 
     <!-- SECTION 4: FORM SECTION (ACCESS POINT) -->
@@ -721,8 +789,8 @@
       <div class="form-container">
         <!-- Active Form State -->
         <div id="formState">
-          <h2 class="form-title">BE THERE.</h2>
-          <p class="form-desc" id="formDesc">Get the first message when 22.09 happens.</p>
+          <h2 class="form-title">YOU WANT TO KNOW.</h2>
+          <div class="form-subtext">So do we.</div>
 
           <form class="access-form" id="leadForm" autocomplete="off" novalidate>
             <!-- Honeypot -->
@@ -746,34 +814,35 @@
             <div class="form-error" id="formError"></div>
 
             <button type="submit" class="cta-button" id="submitBtn">
-              <span>I'M IN</span>
+              <span>KEEP ME IN</span>
               <span class="cta-arrow">→</span>
             </button>
 
             <p class="consent-note">
               By joining, you agree to receive 22.09 updates via WhatsApp and email. You can opt out anytime.
             </p>
-
-            <div class="fomo-sub" id="fomoSub">
-              You probably don't want to miss what they're waiting for.
-            </div>
           </form>
         </div>
 
-        <!-- Success Confirmation State -->
+        <!-- Success Confirmation State: ACCESS GRANTED -->
         <div class="success-state" id="successState">
-          <h2 class="success-title">YOU'RE IN.</h2>
-          <p class="success-sub" id="successSub">22.09 has your attention now.</p>
+          <div class="success-grant-badge">ACCESS GRANTED</div>
+          <div class="success-grant-badge">01</div>
+          <h2 class="success-title">YOU'LL HEAR FROM US BEFORE 22.09.</h2>
+          <div class="success-sub">DON'T LOSE THE DATE.</div>
 
-          <div class="success-checks">
-            <div class="check-item">[✓] WATCH YOUR WHATSAPP.</div>
-            <div class="check-item">[✓] WATCH YOUR EMAIL.</div>
+          <div class="secret-note">
+            There will be things here that won't be public.
           </div>
 
-          <button type="button" class="share-action-btn" id="shareBtn">
-            <span>SEND THE DATE</span>
-            <span>→</span>
-          </button>
+          <div class="share-section">
+            <div class="share-section-title">SEND THIS TO SOMEONE.</div>
+            <div class="share-section-sub">Let's see if they figure it out.</div>
+            <button type="button" class="share-action-btn" id="shareBtn">
+              <span>SEND 22.09</span>
+              <span>→</span>
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -798,7 +867,51 @@
         if (c2) c2.classList.add('is-loaded');
       }, 600);
 
-      // 2. IST Countdown Logic (Target: 22 September 2026, 09:09 AM IST = +05:30)
+      // 2. Kinetic Alive Date Mouse & Touch Response
+      var heroDate = document.getElementById('heroDate');
+      var timeBadge = document.getElementById('heroTimeBadge');
+      var moveCue = document.getElementById('moveCue');
+      var hasInteracted = false;
+
+      function handlePointerMove(e) {
+        if (!heroDate) return;
+        var rect = heroDate.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        
+        var clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : cx);
+        var clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : cy);
+
+        var dx = (clientX - cx) / (window.innerWidth / 2);
+        var dy = (clientY - cy) / (window.innerHeight / 2);
+
+        // Subtle kinetic shift
+        var moveX = (dx * 12).toFixed(2);
+        var rotY = (dx * 4).toFixed(2);
+        var rotX = (-dy * 3).toFixed(2);
+        var trackShift = (-0.05 + dx * 0.015).toFixed(4);
+
+        heroDate.style.transform = 'translate3d(' + moveX + 'px, 0, 0) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
+        heroDate.style.letterSpacing = trackShift + 'em';
+
+        if (!hasInteracted) {
+          hasInteracted = true;
+          if (timeBadge) timeBadge.classList.add('revealed');
+          if (moveCue) moveCue.style.opacity = '0.1';
+        }
+      }
+
+      function handlePointerLeave() {
+        if (!heroDate) return;
+        heroDate.style.transform = 'translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg)';
+        heroDate.style.letterSpacing = '-0.05em';
+      }
+
+      window.addEventListener('mousemove', handlePointerMove);
+      window.addEventListener('touchmove', handlePointerMove, { passive: true });
+      window.addEventListener('mouseleave', handlePointerLeave);
+
+      // 3. IST Countdown Logic (Target: 22 September 2026, 09:09 AM IST = +05:30)
       var targetDate = new Date('2026-09-22T09:09:00+05:30').getTime();
       var startDate = new Date('2026-08-26T18:00:00+05:30').getTime();
 
@@ -829,7 +942,35 @@
       updateCountdown();
       setInterval(updateCountdown, 1000);
 
-      // 3. Social Proof Threshold Check (Backend Driven, 1,000+ Threshold)
+      // 4. Scroll Discovery: Reveal "YET." in Section 2
+      var yetText = document.getElementById('yetText');
+      if ('IntersectionObserver' in window && yetText) {
+        var obs2 = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              setTimeout(function() {
+                yetText.classList.add('is-revealed');
+              }, 400);
+            }
+          });
+        }, { threshold: 0.4 });
+        obs2.observe(document.getElementById('discovery2'));
+      }
+
+      // 5. Form Focus Interaction: Atmosphere Shift
+      var inputFields = document.querySelectorAll('.input-field');
+      inputFields.forEach(function(field) {
+        field.addEventListener('focus', function() {
+          document.body.classList.add('form-focused');
+          if (field.parentElement) field.parentElement.classList.add('is-active');
+        });
+        field.addEventListener('blur', function() {
+          document.body.classList.remove('form-focused');
+          if (field.parentElement) field.parentElement.classList.remove('is-active');
+        });
+      });
+
+      // 6. Social Proof Threshold Engine (1,000+ Threshold)
       function applySocialProofThreshold(unlocked) {
         if (!unlocked) return;
 
@@ -838,19 +979,14 @@
           spHero.classList.add('is-unlocked');
         }
 
-        var formDesc = document.getElementById('formDesc');
-        if (formDesc) {
-          formDesc.innerHTML = '1,000+ people are already waiting.<br>Get the first message when 22.09 happens.';
+        var thresholdBar = document.getElementById('thresholdBar');
+        if (thresholdBar) {
+          thresholdBar.classList.add('is-active');
         }
 
-        var fomoSub = document.getElementById('fomoSub');
-        if (fomoSub) {
-          fomoSub.style.display = 'block';
-        }
-
-        var successSub = document.getElementById('successSub');
-        if (successSub) {
-          successSub.textContent = '1,000+ people are already waiting for 22.09.';
+        var headerDot = document.getElementById('headerDot');
+        if (headerDot) {
+          headerDot.classList.add('unlocked');
         }
       }
 
@@ -873,97 +1009,98 @@
 
       checkPrelaunchStatus();
 
-      // 4. Input auto-formatting & Phone Normalization
-      var nameEl = document.getElementById('userName');
+      // 7. Input Phone Normalization
       var phoneEl = document.getElementById('userPhone');
-      var emailEl = document.getElementById('userEmail');
+      if (phoneEl) {
+        phoneEl.addEventListener('input', function(e) {
+          var raw = e.target.value.replace(/\D/g, '');
+          if (raw.startsWith('91') && raw.length > 10) raw = raw.slice(2);
+          if (raw.startsWith('0') && raw.length > 10) raw = raw.slice(1);
+          if (raw.length > 10) raw = raw.slice(0, 10);
+          e.target.value = raw;
+        });
+      }
 
-      phoneEl.addEventListener('input', function(e) {
-        var raw = e.target.value.replace(/\D/g, '');
-        if (raw.startsWith('91') && raw.length > 10) raw = raw.slice(2);
-        if (raw.startsWith('0') && raw.length > 10) raw = raw.slice(1);
-        if (raw.length > 10) raw = raw.slice(0, 10);
-        e.target.value = raw;
-      });
-
-      // 5. Form Submission Logic
+      // 8. Form Submission Logic
       var leadForm = document.getElementById('leadForm');
       var formError = document.getElementById('formError');
       var submitBtn = document.getElementById('submitBtn');
 
-      leadForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        formError.style.display = 'none';
+      if (leadForm) {
+        leadForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          formError.style.display = 'none';
 
-        var nameVal = nameEl.value.trim();
-        var phoneVal = phoneEl.value.trim();
-        var emailVal = emailEl.value.trim();
-        var hpVal = leadForm.querySelector('input[name="hp_field"]').value;
+          var nameVal = document.getElementById('userName').value.trim();
+          var phoneVal = phoneEl.value.trim();
+          var emailVal = document.getElementById('userEmail').value.trim();
+          var hpVal = leadForm.querySelector('input[name="hp_field"]').value;
 
-        if (!nameVal) {
-          showError('Please enter your name.');
-          return;
-        }
-        if (!/^[6-9]\d{9}$/.test(phoneVal)) {
-          showError('Please enter a valid 10-digit Indian WhatsApp mobile number.');
-          return;
-        }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
-          showError('Please enter a valid email address.');
-          return;
-        }
+          if (!nameVal) {
+            showError('Please enter your name.');
+            return;
+          }
+          if (!/^[6-9]\d{9}$/.test(phoneVal)) {
+            showError('Please enter a valid 10-digit Indian WhatsApp mobile number.');
+            return;
+          }
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+            showError('Please enter a valid email address.');
+            return;
+          }
 
-        submitBtn.disabled = true;
-        submitBtn.querySelector('span').textContent = 'JOINING...';
+          submitBtn.disabled = true;
+          submitBtn.querySelector('span').textContent = 'PROCESSING...';
 
-        try {
-          var params = new URLSearchParams(window.location.search);
-          var source = params.get('utm_source') || params.get('ref') || localStorage.getItem('os_source') || 'direct';
+          try {
+            var params = new URLSearchParams(window.location.search);
+            var source = params.get('utm_source') || params.get('ref') || localStorage.getItem('os_source') || 'direct';
 
-          var res = await fetch('/api/prelaunch-lead', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: nameVal,
-              whatsapp: phoneVal,
-              email: emailVal,
-              hp_field: hpVal,
-              source: source
-            })
-          });
+            var res = await fetch('/api/prelaunch-lead', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: nameVal,
+                whatsapp: phoneVal,
+                email: emailVal,
+                hp_field: hpVal,
+                source: source
+              })
+            });
 
-          var data = await res.json();
-          if (res.ok && data.success) {
-            if (data.threshold_reached) {
-              applySocialProofThreshold(true);
+            var data = await res.json();
+            if (res.ok && data.success) {
+              if (data.threshold_reached) {
+                applySocialProofThreshold(true);
+              }
+              document.getElementById('formState').style.display = 'none';
+              document.getElementById('successState').style.display = 'block';
+            } else {
+              showError(data.error || 'Something went wrong. Please try again.');
+              submitBtn.disabled = false;
+              submitBtn.querySelector('span').textContent = "KEEP ME IN";
             }
+          } catch (err) {
             document.getElementById('formState').style.display = 'none';
             document.getElementById('successState').style.display = 'block';
-          } else {
-            showError(data.error || 'Something went wrong. Please try again.');
-            submitBtn.disabled = false;
-            submitBtn.querySelector('span').textContent = "I'M IN";
           }
-        } catch (err) {
-          document.getElementById('formState').style.display = 'none';
-          document.getElementById('successState').style.display = 'block';
-        }
-      });
+        });
+      }
 
       function showError(msg) {
         formError.textContent = msg;
         formError.style.display = 'block';
       }
 
-      // 6. Share Mechanism
+      // 9. Share Mechanism
       var shareBtn = document.getElementById('shareBtn');
       if (shareBtn) {
         shareBtn.addEventListener('click', function() {
-          var shareText = "Something is happening on 22.09. I don't know what it is either.\nhttps://smelloff.in";
+          var shareText = "Do you know what happens on 22.09?\nI don't.\nhttps://smelloff.in";
           if (navigator.share) {
             navigator.share({
               title: '22.09',
-              text: "Something is happening on 22.09. I don't know what it is either.",
+              text: "Do you know what happens on 22.09?\nI don't.",
               url: 'https://smelloff.in'
             }).catch(function() {});
           } else {
@@ -971,21 +1108,6 @@
             window.open(waUrl, '_blank');
           }
         });
-      }
-
-      // 7. Scroll micro interaction for Statement 02
-      var step2Content = document.getElementById('step2Content');
-      if ('IntersectionObserver' in window && step2Content) {
-        var observer = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              step2Content.classList.add('step-glitch-active');
-            } else {
-              step2Content.classList.remove('step-glitch-active');
-            }
-          });
-        }, { threshold: 0.5 });
-        observer.observe(document.getElementById('step2'));
       }
     });
   </script>
