@@ -18,6 +18,10 @@ const ALLOWED_EVENTS = new Set([
   'begin_checkout', 'checkout_start', 'payment_method_select', 'checkout_field_fill',
   'checkout_error', 'add_payment_info', 'purchase', 'purchase_confirmed',
   'refund', 'contact_submit', 'review_submit', 'search', 'error',
+  'countdown_view', 'form_start', 'name_completed', 'phone_completed',
+  'email_completed', 'form_submit', 'form_success', 'share_click',
+  'whatsapp_share', 'copy_link', 'page_scroll_50', 'page_scroll_90',
+  'prelaunch_lead', 'prelaunch_share', 'prelaunch_scroll'
 ]);
 
 const CART_EVENTS = new Set(['add_to_cart', 'remove_from_cart', 'cart', 'cart_update', 'checkout_start']);

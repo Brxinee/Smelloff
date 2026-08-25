@@ -12,9 +12,17 @@ import verifyPaymentHandler from './api/verify-payment.js';
 import paymentStatusHandler from './api/payment-status.js';
 import adminVerifyPaymentHandler from './api/admin/verify-payment.js';
 import webhookHandler from './api/webhook.js';
+import prelaunchLeadHandler from './api/prelaunch-lead.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// =====================================================================
+// TEMPORARY SMELLOFF 22.09 PRE-LAUNCH MODE FLAG
+// Set to `true` to activate the pre-launch mystery campaign leading to 22.09.2026.
+// To instantly restore the original site, set PRELAUNCH_MODE = false (or PRELAUNCH_MODE=false in env).
+// =====================================================================
+const PRELAUNCH_MODE = process.env.PRELAUNCH_MODE !== 'false';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -103,6 +111,7 @@ app.all('/api/payment/create-order', (req, res) => createOrderHandler(req, res))
 app.all('/api/payment/verify', (req, res) => verifyPaymentHandler(req, res));
 app.all('/api/payment/status', (req, res) => paymentStatusHandler(req, res));
 app.all('/api/payment/webhook', (req, res) => webhookHandler(req, res));
+app.all('/api/prelaunch-lead', (req, res) => prelaunchLeadHandler(req, res));
 
 // Clean URL & static file handling middleware
 app.use((req, res, next) => {
@@ -111,6 +120,20 @@ app.use((req, res, next) => {
   let urlPath = decodeURIComponent(req.url.split('?')[0]);
   if (urlPath.endsWith('/') && urlPath !== '/') {
     urlPath = urlPath.slice(0, -1);
+  }
+
+  // Pre-launch mode intercept
+  if (PRELAUNCH_MODE) {
+    const isApi = urlPath.startsWith('/api/');
+    const isStaticAsset = /\.(css|js|png|jpg|jpeg|webp|avif|svg|woff2|woff|ttf|ico|json|xml|txt)$/i.test(urlPath);
+    const isPolicy = urlPath === '/privacy' || urlPath === '/terms';
+
+    if (!isApi && !isStaticAsset && !isPolicy) {
+      const prelaunchFile = path.join(__dirname, 'prelaunch.html');
+      if (fs.existsSync(prelaunchFile)) {
+        return res.sendFile(prelaunchFile);
+      }
+    }
   }
 
   let filePath = path.join(__dirname, urlPath);

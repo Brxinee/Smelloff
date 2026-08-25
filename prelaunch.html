@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>22.09 — Smelloff</title>
+  <meta name="description" content="Something is coming. Be there on 22.09.">
+  <meta name="theme-color" content="#080808">
+  <meta name="robots" content="noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+  <link rel="canonical" href="https://smelloff.in/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://smelloff.in/">
+  <meta property="og:title" content="22.09 — Smelloff">
+  <meta property="og:description" content="Something is coming. Be there on 22.09.">
+  <meta property="og:image" content="https://smelloff.in/assets/og-prelaunch-2209.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Smelloff 22.09 — Something is coming.">
+  <meta property="og:site_name" content="Smelloff">
+  <meta property="og:locale" content="en_IN">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="22.09 — Smelloff">
+  <meta name="twitter:description" content="Something is coming. Be there on 22.09.">
+  <meta name="twitter:image" content="https://smelloff.in/assets/og-prelaunch-2209.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+
+  <!-- Fonts -->
+  <link rel="preload" as="style" href="/assets/fonts.css" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
+
+  <style>
+    :root {
+      --bg: #080808;
+      --surface: #111111;
+      --surface-2: #181818;
+      --acid: #B8FF57;
+      --acid-hi: #D1FF8A;
+      --acid-dim: rgba(184, 255, 87, 0.12);
+      --text: #F4F1EA;
+      --muted: #888888;
+      --rule: rgba(244, 241, 234, 0.12);
+      --rule-strong: rgba(184, 255, 87, 0.35);
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-body: 'DM Sans', 'Inter Tight', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background: var(--bg); color: var(--text); font-family: var(--font-body); scroll-behavior: smooth; }
+    body { min-height: 100vh; overflow-x: hidden; background: var(--bg); position: relative; -webkit-font-smoothing: antialiased; }
+
+    /* Background noise & grid */
+    .bg-grid {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .bg-scanline {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.04;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.6));
+      background-size: 100% 4px;
+    }
+    .bg-glow {
+      position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%);
+      width: 600px; height: 600px; border-radius: 50%; pointer-events: none; z-index: 0;
+      background: radial-gradient(circle, rgba(184,255,87,0.08) 0%, rgba(8,8,8,0) 70%);
+    }
+
+    /* Container */
+    .wrap {
+      width: 100%; max-width: 900px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2;
+    }
+
+    /* Header */
+    header {
+      padding: 32px 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--rule);
+    }
+    .logo-brand {
+      font-family: var(--font-display); font-weight: 900; font-size: 24px; letter-spacing: 0.12em;
+      color: var(--text); text-transform: uppercase; text-decoration: none; display: flex; align-items: center; gap: 8px;
+    }
+    .logo-brand img { height: 20px; width: auto; display: block; }
+    .stamp-badge {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; color: var(--acid);
+      background: var(--surface); border: 1px solid var(--rule-strong); padding: 4px 10px; text-transform: uppercase;
+    }
+
+    /* Initial load reveal animation */
+    .reveal-block {
+      opacity: 0; transform: translateY(12px); filter: blur(6px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .is-revealed {
+      opacity: 1; transform: translateY(0); filter: blur(0);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 64px 0 48px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 120px);
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono); font-size: 13px; font-weight: 600; letter-spacing: 0.25em; color: var(--acid);
+      text-transform: uppercase; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 10px;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; width: 24px; height: 1px; background: var(--acid); opacity: 0.6;
+    }
+    .hero-date {
+      font-family: var(--font-display); font-weight: 900; font-size: clamp(84px, 20vw, 220px);
+      line-height: 0.85; letter-spacing: -0.04em; color: var(--text); text-shadow: 0 0 40px rgba(184, 255, 87, 0.15);
+      margin: 12px 0 24px; user-select: none;
+    }
+    .hero-sub {
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.3em; color: var(--muted);
+      text-transform: uppercase; margin-bottom: 40px;
+    }
+
+    /* Countdown */
+    .countdown-wrap {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 480px; width: 100%; margin: 0 auto 48px;
+    }
+    .countdown-box {
+      background: var(--surface); border: 1px solid var(--rule); padding: 16px 8px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .countdown-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--acid); opacity: 0.4;
+    }
+    .countdown-num {
+      font-family: var(--font-display); font-weight: 900; font-size: clamp(28px, 6vw, 44px); color: var(--text); line-height: 1;
+    }
+    .countdown-label {
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-top: 6px;
+    }
+
+    /* Curiosity statement */
+    .curiosity-statement {
+      margin-bottom: 56px; text-align: center;
+    }
+    .curiosity-main {
+      font-family: var(--font-display); font-weight: 900; font-size: clamp(24px, 5vw, 36px); letter-spacing: 0.02em; color: var(--acid);
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .curiosity-sub {
+      font-size: 16px; color: var(--muted); letter-spacing: 0.05em;
+    }
+
+    /* Form Section */
+    .form-card {
+      background: var(--surface); border: 1px solid var(--rule-strong); padding: 40px 32px;
+      position: relative; max-width: 540px; margin: 0 auto 80px; width: 100%;
+    }
+    .form-card::after {
+      content: 'CONFIDENTIAL // SMELLOFF_22_09'; position: absolute; bottom: 8px; right: 12px;
+      font-family: var(--font-mono); font-size: 9px; color: rgba(244,241,234,0.2); letter-spacing: 0.15em;
+    }
+    .form-title {
+      font-family: var(--font-display); font-weight: 900; font-size: 28px; letter-spacing: 0.05em;
+      color: var(--text); text-transform: uppercase; margin-bottom: 8px; text-align: center;
+    }
+    .form-desc {
+      font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 28px; line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 20px; text-align: left;
+    }
+    .form-label {
+      display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em;
+      color: var(--acid); text-transform: uppercase; margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%; background: #080808; border: 1px solid var(--rule); color: var(--text);
+      font-family: var(--font-body); font-size: 16px; padding: 14px 16px; outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .form-input:focus {
+      border-color: var(--acid); box-shadow: 0 0 0 2px rgba(184,255,87,0.15);
+    }
+    .phone-input-wrap {
+      display: flex; align-items: center; background: #080808; border: 1px solid var(--rule);
+    }
+    .phone-prefix {
+      font-family: var(--font-mono); font-size: 15px; color: var(--acid); padding: 0 12px 0 16px;
+      user-select: none; border-right: 1px solid var(--rule); display: flex; align-items: center; height: 100%;
+    }
+    .phone-input-wrap .form-input {
+      border: none;
+    }
+
+    /* Honeypot field (hidden) */
+    .hp-field { display: none !important; visibility: hidden !important; }
+
+    .btn-primary {
+      width: 100%; background: var(--acid); color: #080808; font-family: var(--font-display);
+      font-weight: 900; font-size: 20px; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 16px 24px; border: none; cursor: pointer; margin-top: 10px;
+      transition: background-color 0.2s ease, transform 0.1s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--acid-hi); }
+    .btn-primary:active { transform: scale(0.99); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .consent-line {
+      font-size: 11px; color: var(--muted); margin-top: 16px; text-align: center; line-height: 1.5;
+    }
+    .pl-link { color: var(--text); text-decoration: underline; }
+    .pl-link:hover { color: var(--acid); }
+
+    .trust-note {
+      font-family: var(--font-mono); font-size: 10px; color: rgba(244,241,234,0.4); text-transform: uppercase;
+      letter-spacing: 0.15em; text-align: center; margin-top: 12px;
+    }
+
+    .form-error {
+      background: rgba(255, 87, 87, 0.1); border: 1px solid #FF5757; color: #FF8787;
+      font-family: var(--font-mono); font-size: 12px; padding: 10px 14px; margin-bottom: 20px; text-align: center; display: none;
+    }
+
+    /* Success confirmation state */
+    .success-state {
+      text-align: center; display: none; padding: 20px 0;
+    }
+    .success-title {
+      font-family: var(--font-display); font-weight: 900; font-size: 40px; letter-spacing: 0.05em;
+      color: var(--acid); text-transform: uppercase; margin-bottom: 8px;
+    }
+    .success-sub {
+      font-size: 16px; color: var(--text); margin-bottom: 28px;
+    }
+    .success-checklist {
+      background: #080808; border: 1px solid var(--rule); padding: 20px; text-align: left;
+      font-family: var(--font-mono); font-size: 13px; color: var(--acid); margin-bottom: 24px; line-height: 2;
+    }
+    .success-callout {
+      font-family: var(--font-display); font-weight: 900; font-size: 22px; letter-spacing: 0.1em;
+      color: var(--text); text-transform: uppercase; margin-bottom: 24px;
+    }
+
+    /* Second Curiosity Section */
+    .second-curiosity {
+      padding: 80px 0; border-top: 1px solid var(--rule); text-align: center;
+    }
+    .section-head {
+      font-family: var(--font-display); font-weight: 900; font-size: clamp(28px, 6vw, 48px);
+      letter-spacing: 0.05em; color: var(--text); text-transform: uppercase; margin-bottom: 40px;
+    }
+    .statements-grid {
+      display: flex; flex-direction: column; gap: 24px; max-width: 600px; margin: 0 auto;
+    }
+    .statement-item {
+      background: var(--surface); border: 1px solid var(--rule); padding: 24px 20px;
+      font-family: var(--font-mono); font-size: 16px; font-weight: 700; letter-spacing: 0.15em;
+      color: var(--acid); text-transform: uppercase; opacity: 0; transform: translateY(16px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .statement-item.is-visible {
+      opacity: 1; transform: translateY(0);
+    }
+
+    /* Clue Section */
+    .clues-section {
+      padding: 80px 0; border-top: 1px solid var(--rule); text-align: center;
+    }
+    .clues-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 40px;
+    }
+    .clue-card {
+      background: var(--surface); border: 1px solid var(--rule); padding: 32px 24px; text-align: left;
+      position: relative; overflow: hidden; cursor: default; transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+    .clue-card:hover {
+      border-color: var(--acid); transform: translateY(-4px);
+    }
+    .clue-num {
+      font-family: var(--font-mono); font-size: 12px; color: var(--acid); letter-spacing: 0.2em; margin-bottom: 16px;
+    }
+    .clue-text {
+      font-family: var(--font-display); font-weight: 900; font-size: 22px; letter-spacing: 0.05em;
+      color: var(--text); text-transform: uppercase; line-height: 1.2;
+    }
+
+    /* Share Section */
+    .share-section {
+      padding: 80px 0 100px; border-top: 1px solid var(--rule); text-align: center;
+    }
+    .btn-share {
+      background: transparent; border: 2px solid var(--acid); color: var(--acid);
+      font-family: var(--font-display); font-weight: 900; font-size: 20px; letter-spacing: 0.15em;
+      text-transform: uppercase; padding: 16px 36px; cursor: pointer; display: inline-flex;
+      align-items: center; justify-content: center; gap: 10px; transition: all 0.2s ease;
+    }
+    .btn-share:hover {
+      background: var(--acid); color: #080808;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: var(--acid); color: #080808; font-family: var(--font-mono); font-size: 12px;
+      font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 24px;
+      z-index: 100; opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0); opacity: 1;
+    }
+
+    /* Exit Intent Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+      z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1; pointer-events: auto;
+    }
+    .modal-box {
+      background: var(--surface); border: 1px solid var(--rule-strong); padding: 40px 32px;
+      max-width: 480px; width: 100%; position: relative; text-align: center;
+    }
+    .modal-close {
+      position: absolute; top: 12px; right: 16px; background: none; border: none;
+      color: var(--muted); font-size: 24px; cursor: pointer; line-height: 1;
+    }
+    .modal-close:hover { color: var(--acid); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--rule); padding: 32px 0; text-align: center;
+      font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.15em;
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-block, .statement-item, .clue-card { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+    }
+
+    @media (max-width: 600px) {
+      .form-card { padding: 28px 20px; }
+      .hero { padding: 40px 0 32px; min-height: auto; }
+      .countdown-wrap { gap: 8px; }
+      .countdown-box { padding: 12px 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="bg-scanline"></div>
+  <div class="bg-glow"></div>
+
+  <div class="wrap">
+    <!-- Header -->
+    <header>
+      <a href="/" class="logo-brand">
+        <img src="/assets/brand/logo-smelloff-white.png" alt="SMELLOFF" width="120" height="26">
+      </a>
+      <span class="stamp-badge">FILE 22.09 // CLASSIFIED</span>
+    </header>
+
+    <!-- Main Hero -->
+    <main class="hero">
+      <div class="reveal-block" id="heroBlock">
+        <div class="hero-eyebrow">SOMETHING IS COMING.</div>
+        <h1 class="hero-date" id="heroDate">22.09</h1>
+        <div class="hero-sub">DON'T MISS IT.</div>
+
+        <!-- Live Countdown -->
+        <div class="countdown-wrap" id="countdown">
+          <div class="countdown-box">
+            <div class="countdown-num" id="cdDays">00</div>
+            <div class="countdown-label">DAYS</div>
+          </div>
+          <div class="countdown-box">
+            <div class="countdown-num" id="cdHours">00</div>
+            <div class="countdown-label">HOURS</div>
+          </div>
+          <div class="countdown-box">
+            <div class="countdown-num" id="cdMins">00</div>
+            <div class="countdown-label">MINUTES</div>
+          </div>
+          <div class="countdown-box">
+            <div class="countdown-num" id="cdSecs">00</div>
+            <div class="countdown-label">SECONDS</div>
+          </div>
+        </div>
+
+        <!-- Curiosity lines -->
+        <div class="curiosity-statement">
+          <div class="curiosity-main">YOU'LL KNOW ON 22.09.</div>
+          <div class="curiosity-sub">Be there when it happens.</div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card" id="formCard">
+          <!-- Main Form -->
+          <form id="leadForm">
+            <div class="form-title">GET THE FIRST MESSAGE.</div>
+            <div class="form-desc">Whatever happens on 22.09, you'll hear it first.</div>
+
+            <div class="form-error" id="formError"></div>
+
+            <div class="form-group">
+              <label class="form-label" for="plName">NAME</label>
+              <input type="text" id="plName" name="name" class="form-input" placeholder="Enter your name" required autocomplete="name">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="plWhatsapp">WHATSAPP NUMBER</label>
+              <div class="phone-input-wrap">
+                <span class="phone-prefix">+91</span>
+                <input type="tel" id="plWhatsapp" name="whatsapp" class="form-input" placeholder="10-digit mobile number" required pattern="[0-9]{10}" maxlength="10" autocomplete="tel">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="plEmail">EMAIL</label>
+              <input type="email" id="plEmail" name="email" class="form-input" placeholder="your@email.com" required autocomplete="email">
+            </div>
+
+            <!-- Honeypot -->
+            <input type="text" name="hp_field" class="hp-field" tabindex="-1" autocomplete="off">
+
+            <button type="submit" class="btn-primary" id="submitBtn">
+              KEEP ME IN.
+            </button>
+
+            <div class="consent-line">
+              By joining, you agree to receive Smelloff updates about 22.09 via WhatsApp and email. You can opt out anytime. <a href="/privacy" target="_blank" class="pl-link">Privacy Policy</a>
+            </div>
+
+            <div class="trust-note">
+              [✓] YOUR DETAILS STAY WITH SMELLOFF.
+            </div>
+          </form>
+
+          <!-- Success Confirmation -->
+          <div class="success-state" id="successState">
+            <div class="success-title">YOU'RE IN.</div>
+            <div class="success-sub">22.09 has your attention now.</div>
+
+            <div class="success-checklist">
+              <div>[✓] WATCH YOUR WHATSAPP.</div>
+              <div>[✓] WATCH YOUR EMAIL.</div>
+            </div>
+
+            <div class="success-callout">DO NOT LOSE THIS DATE.</div>
+
+            <button type="button" class="btn-share" id="successShareBtn">
+              TELL ONE PERSON.
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Second Curiosity Section -->
+    <section class="second-curiosity">
+      <h2 class="section-head">YOU'RE NOT READY FOR THIS.</h2>
+      <div class="statements-grid">
+        <div class="statement-item">IT'S NOT WHAT YOU THINK.</div>
+        <div class="statement-item">YOU'VE ALREADY EXPERIENCED IT.</div>
+        <div class="statement-item">22.09.</div>
+      </div>
+    </section>
+
+    <!-- Clues Section -->
+    <section class="clues-section">
+      <h2 class="section-head">A FEW THINGS WE CAN TELL YOU.</h2>
+      <div class="clues-grid">
+        <div class="clue-card">
+          <div class="clue-num">01 // STATUS</div>
+          <div class="clue-text">NOT YET.</div>
+        </div>
+        <div class="clue-card">
+          <div class="clue-num">02 // NATURE</div>
+          <div class="clue-text">NOT WHAT YOU EXPECT.</div>
+        </div>
+        <div class="clue-card">
+          <div class="clue-num">03 // TIMELINE</div>
+          <div class="clue-text">YOU'LL UNDERSTAND ON 22.09.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Share Section -->
+    <section class="share-section">
+      <h2 class="section-head">KNOW SOMEONE WHO NEEDS TO KNOW?</h2>
+      <button type="button" class="btn-share" id="mainShareBtn">
+        SEND THEM THE DATE.
+      </button>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      SMELLOFF // 22.09.2026 // ALL RIGHTS RESERVED
+    </footer>
+  </div>
+
+  <!-- Exit Intent Modal -->
+  <div class="modal-overlay" id="exitModal">
+    <div class="modal-box">
+      <button type="button" class="modal-close" id="modalClose">&times;</button>
+      <div class="form-title" style="color: var(--acid);">BEFORE YOU GO.</div>
+      <div class="form-desc" style="color: var(--text);">22.09 only happens once.</div>
+
+      <form id="modalForm">
+        <div class="form-group">
+          <input type="text" id="mName" class="form-input" placeholder="Name" required>
+        </div>
+        <div class="form-group">
+          <div class="phone-input-wrap">
+            <span class="phone-prefix">+91</span>
+            <input type="tel" id="mPhone" class="form-input" placeholder="10-digit WhatsApp" required maxlength="10">
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="email" id="mEmail" class="form-input" placeholder="Email" required>
+        </div>
+        <button type="submit" class="btn-primary">KEEP ME IN.</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toastMsg">LINK COPIED TO CLIPBOARD</div>
+
+  <script>
+    // Analytics helper
+    function trackEvent(type, label, meta) {
+      try {
+        if (window.navigator && window.navigator.sendBeacon) {
+          window.navigator.sendBeacon('/api/track', JSON.stringify({
+            type: type,
+            label: label || 'prelaunch_2209',
+            p: window.location.pathname,
+            meta: meta || { campaign: 'SMELLOFF_22_09_2026' }
+          }));
+        }
+      } catch (e) {}
+    }
+
+    // Page Load Animation Sequence
+    document.addEventListener('DOMContentLoaded', function() {
+      trackEvent('pageview', 'prelaunch_view');
+      trackEvent('countdown_view', 'prelaunch_countdown');
+
+      setTimeout(function() {
+        var hero = document.getElementById('heroBlock');
+        if (hero) hero.classList.add('is-revealed');
+      }, 300);
+
+      // Countdown logic: Target = 2026-09-22T09:09:00+05:30 (Asia/Kolkata IST)
+      // UTC timestamp for 2026-09-22 09:09:00 IST = 1774237140000
+      var targetUtc = new Date('2026-09-22T09:09:00+05:30').getTime();
+
+      function updateCountdown() {
+        var now = Date.now();
+        var diff = targetUtc - now;
+
+        if (diff <= 0) {
+          document.getElementById('cdDays').textContent = '00';
+          document.getElementById('cdHours').textContent = '00';
+          document.getElementById('cdMins').textContent = '00';
+          document.getElementById('cdSecs').textContent = '00';
+          var heroSub = document.querySelector('.hero-sub');
+          if (heroSub) heroSub.textContent = "IT'S TIME.";
+          return;
+        }
+
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        var secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('cdDays').textContent = days < 10 ? '0' + days : days;
+        document.getElementById('cdHours').textContent = hours < 10 ? '0' + hours : hours;
+        document.getElementById('cdMins').textContent = mins < 10 ? '0' + mins : mins;
+        document.getElementById('cdSecs').textContent = secs < 10 ? '0' + secs : secs;
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
+      // Scroll observer for second curiosity statements
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll('.statement-item').forEach(function(el) {
+        observer.observe(el);
+      });
+
+      // Scroll progress tracking
+      var tracked50 = false, tracked90 = false;
+      window.addEventListener('scroll', function() {
+        var scrollPct = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+        if (!tracked50 && scrollPct >= 0.5) {
+          tracked50 = true;
+          trackEvent('page_scroll_50', 'prelaunch_scroll_50');
+        }
+        if (!tracked90 && scrollPct >= 0.9) {
+          tracked90 = true;
+          trackEvent('page_scroll_90', 'prelaunch_scroll_90');
+        }
+      });
+
+      // Form Field interaction tracking
+      var nameEl = document.getElementById('plName');
+      var phoneEl = document.getElementById('plWhatsapp');
+      var emailEl = document.getElementById('plEmail');
+
+      var formStarted = false;
+      [nameEl, phoneEl, emailEl].forEach(function(inp) {
+        inp.addEventListener('focus', function() {
+          if (!formStarted) {
+            formStarted = true;
+            trackEvent('form_start', 'prelaunch_form_start');
+          }
+        });
+      });
+
+      nameEl.addEventListener('blur', function() {
+        if (nameEl.value.trim()) trackEvent('name_completed', 'prelaunch_name');
+      });
+      phoneEl.addEventListener('blur', function() {
+        if (phoneEl.value.trim().length === 10) trackEvent('phone_completed', 'prelaunch_phone');
+      });
+      emailEl.addEventListener('blur', function() {
+        if (emailEl.value.trim().includes('@')) trackEvent('email_completed', 'prelaunch_email');
+      });
+
+      // Handle main form submission
+      var leadForm = document.getElementById('leadForm');
+      var formError = document.getElementById('formError');
+      var submitBtn = document.getElementById('submitBtn');
+
+      leadForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        formError.style.display = 'none';
+
+        var nameVal = nameEl.value.trim();
+        var phoneVal = phoneEl.value.trim();
+        var emailVal = emailEl.value.trim();
+        var hpVal = leadForm.querySelector('input[name="hp_field"]').value;
+
+        if (!nameVal) {
+          showError('Please enter your name.');
+          return;
+        }
+        if (!/^[6-9]\d{9}$/.test(phoneVal)) {
+          showError('Please enter a valid 10-digit Indian WhatsApp mobile number.');
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+          showError('Please enter a valid email address.');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'JOINING...';
+        trackEvent('form_submit', 'prelaunch_submit');
+
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var source = params.get('utm_source') || params.get('ref') || localStorage.getItem('os_source') || 'direct';
+
+          var res = await fetch('/api/prelaunch-lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: nameVal,
+              whatsapp: phoneVal,
+              email: emailVal,
+              hp_field: hpVal,
+              source: source
+            })
+          });
+
+          var data = await res.json();
+          if (res.ok && data.success) {
+            trackEvent('form_success', 'prelaunch_success');
+            leadForm.style.display = 'none';
+            document.getElementById('successState').style.display = 'block';
+          } else {
+            showError(data.error || 'Something went wrong. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'KEEP ME IN.';
+          }
+        } catch (err) {
+          // Graceful fallback
+          trackEvent('form_success', 'prelaunch_success_fallback');
+          leadForm.style.display = 'none';
+          document.getElementById('successState').style.display = 'block';
+        }
+      });
+
+      function showError(msg) {
+        formError.textContent = msg;
+        formError.style.display = 'block';
+      }
+
+      // Share Logic
+      function handleShare() {
+        trackEvent('share_click', 'prelaunch_share_click');
+        var shareText = "Something is happening on 22.09. I don't know what it is either.\nhttps://smelloff.in";
+
+        if (navigator.share) {
+          navigator.share({
+            title: '22.09 — Smelloff',
+            text: 'Something is happening on 22.09. I don\'t know what it is either.',
+            url: 'https://smelloff.in'
+          }).then(function() {
+            trackEvent('prelaunch_share', 'native_share');
+          }).catch(function() {});
+        } else {
+          // Fallback to WhatsApp share or Copy Link
+          var waUrl = "https://wa.me/?text=" + encodeURIComponent(shareText);
+          window.open(waUrl, '_blank');
+          trackEvent('whatsapp_share', 'whatsapp_share');
+        }
+      }
+
+      document.getElementById('mainShareBtn').addEventListener('click', handleShare);
+      document.getElementById('successShareBtn').addEventListener('click', handleShare);
+
+      // Exit Intent Modal (Desktop Only)
+      var modalShown = false;
+      var exitModal = document.getElementById('exitModal');
+      var modalClose = document.getElementById('modalClose');
+
+      if (window.innerWidth > 768) {
+        document.addEventListener('mouseleave', function(e) {
+          if (e.clientY < 10 && !modalShown && !localStorage.getItem('pl_modal_dismissed')) {
+            modalShown = true;
+            exitModal.classList.add('open');
+            trackEvent('prelaunch_exit_intent', 'exit_modal_open');
+          }
+        });
+      }
+
+      modalClose.addEventListener('click', function() {
+        exitModal.classList.remove('open');
+        localStorage.setItem('pl_modal_dismissed', 'true');
+      });
+
+      var modalForm = document.getElementById('modalForm');
+      modalForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var mName = document.getElementById('mName').value.trim();
+        var mPhone = document.getElementById('mPhone').value.trim();
+        var mEmail = document.getElementById('mEmail').value.trim();
+
+        if (mName && mPhone && mEmail) {
+          fetch('/api/prelaunch-lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: mName, whatsapp: mPhone, email: mEmail, source: 'exit_intent' })
+          }).catch(function() {});
+
+          exitModal.classList.remove('open');
+          localStorage.setItem('pl_modal_dismissed', 'true');
+          showToast('YOU\'RE IN. WATCH YOUR WHATSAPP.');
+        }
+      });
+
+      function showToast(text) {
+        var t = document.getElementById('toastMsg');
+        t.textContent = text;
+        t.classList.add('show');
+        setTimeout(function() { t.classList.remove('show'); }, 3000);
+      }
+    });
+  </script>
+</body>
+</html>

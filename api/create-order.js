@@ -42,6 +42,7 @@ function genPaymentAttemptId(orderCode) {
 export function buildUpiPaymentUri(amount, orderCode = '') {
   const params = new URLSearchParams({
     pa: UPI_VPA,
+    pn: UPI_PAYEE_NAME,
     am: String(amount),
     cu: 'INR'
   });
@@ -53,9 +54,6 @@ export function buildUpiPaymentUri(amount, orderCode = '') {
 
   if (UPI_MERCHANT_CODE) params.set('mc', UPI_MERCHANT_CODE);
 
-  // Deliberately omit `pn`. Google Pay resolves the recipient name from the
-  // UPI handle; sending a second, potentially different payee label can create
-  // a visible mismatch for personal/non-merchant VPAs.
   return `upi://pay?${params.toString()}`;
 }
 
