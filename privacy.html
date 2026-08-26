@@ -2,9 +2,9 @@
 <html lang="en-IN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Privacy Policy // FILE 01</title>
-<meta name="description" content="FILE 01 — Privacy Policy and data processing disclosures. Information collected, processing purposes, communication preferences, and data rights.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FILE 01 // Privacy Policy</title>
+<meta name="description" content="FILE 01 — Privacy Policy and data governance disclosures for 22.09. Information collection, processing protocols, communication preferences, and statutory data rights.">
 <link rel="canonical" href="https://smelloff.in/privacy">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 <meta name="geo.region" content="IN-TG">
@@ -16,8 +16,8 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://smelloff.in/privacy">
-<meta property="og:title" content="Privacy Policy // FILE 01">
-<meta property="og:description" content="FILE 01 — Privacy Policy and data processing directives.">
+<meta property="og:title" content="FILE 01 // Privacy Policy">
+<meta property="og:description" content="YOU WANT TO KNOW. SO DO WE. // Reference 22.09">
 <meta property="og:site_name" content="22.09">
 <meta property="og:image" content="https://smelloff.in/assets/og-prelaunch-2209.png">
 <meta property="og:image:width" content="1200">
@@ -26,8 +26,8 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Privacy Policy // FILE 01">
-<meta name="twitter:description" content="FILE 01 — Privacy Policy and data processing directives.">
+<meta name="twitter:title" content="FILE 01 // Privacy Policy">
+<meta name="twitter:description" content="YOU WANT TO KNOW. SO DO WE. // Reference 22.09">
 <meta name="twitter:image" content="https://smelloff.in/assets/og-prelaunch-2209.png">
 
 <!-- Favicon -->
@@ -35,66 +35,81 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
 
-<!-- Preload Typography -->
-<link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
+<!-- Typography: Google Fonts + Preload Fallback -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,600&family=Inter+Tight:ital,wght@0,400..800;1,400..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="/assets/fonts.css" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
 
 <style>
   :root {
     --bg: #080808;
-    --bg-surface: #111111;
-    --bg-surface-elevated: #161616;
+    --bg-surface: #0f0f0f;
+    --bg-surface-elevated: #151515;
     --text: #F5F5F0;
-    --text-muted: rgba(245, 245, 240, 0.65);
-    --text-dim: rgba(245, 245, 240, 0.35);
+    --text-muted: rgba(245, 245, 240, 0.58);
+    --text-dim: rgba(245, 245, 240, 0.26);
     --acid: #B8FF57;
     --acid-dim: rgba(184, 255, 87, 0.12);
-    --acid-border: rgba(184, 255, 87, 0.35);
-    --rule: rgba(245, 245, 240, 0.12);
-    --rule-strong: rgba(245, 245, 240, 0.22);
-    --font-heading: 'Barlow Condensed', -apple-system, sans-serif;
-    --font-body: 'DM Sans', -apple-system, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --font-editorial: 'Fraunces', serif;
+    --acid-glow: rgba(184, 255, 87, 0.35);
+    --rule: rgba(245, 245, 240, 0.10);
+    --rule-strong: rgba(245, 245, 240, 0.20);
+    --font-primary: 'Inter Tight', 'Inter Tight Fallback', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-editorial: 'Fraunces', 'Fraunces Fallback', Georgia, serif;
+    --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html { background: var(--bg); color: var(--text); font-family: var(--font-body); scroll-behavior: smooth; }
+  
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-primary);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     background: var(--bg);
     color: var(--text);
     font-size: 16px;
     line-height: 1.75;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow-x: hidden;
   }
-  ::selection { background: var(--acid); color: #080808; }
 
-  /* Grain texture */
-  .grain {
+  ::selection {
+    background: var(--acid);
+    color: #080808;
+  }
+
+  /* Physical noise grain overlay matching prelaunch */
+  .grain-overlay {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 100;
-    opacity: 0.04;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
-  /* Accessibility skip link */
+  /* Skip Link for Accessibility */
   .skip-link {
     position: absolute;
     top: -100px;
-    left: 20px;
+    left: 24px;
     background: var(--acid);
     color: #080808;
-    padding: 12px 18px;
+    padding: 10px 18px;
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
+    letter-spacing: 0.1em;
     z-index: 200;
     text-decoration: none;
     border-radius: 2px;
@@ -105,23 +120,28 @@
   /* Container */
   .wrap {
     width: 100%;
-    max-width: 860px;
+    max-width: 820px;
     margin: 0 auto;
-    padding: 0 24px;
-  }
-  @media (max-width: 600px) {
-    .wrap { padding: 0 18px; }
+    padding: 0 28px;
+    position: relative;
+    z-index: 2;
   }
 
-  /* Top Navigation Bar */
+  @media (max-width: 640px) {
+    .wrap { padding: 0 20px; }
+  }
+
+  /* Sticky Top Bar / File Header */
   .top-bar {
-    border-bottom: 1px solid var(--rule);
-    background: rgba(8, 8, 8, 0.94);
-    backdrop-filter: blur(8px);
     position: sticky;
     top: 0;
     z-index: 50;
+    background: rgba(8, 8, 8, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
     padding: 16px 0;
+    transition: border-color 0.3s ease;
   }
   .top-bar-inner {
     display: flex;
@@ -129,24 +149,32 @@
     justify-content: space-between;
     gap: 16px;
   }
-  .back-btn {
+  .nav-back {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-muted);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 0;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, transform 0.2s ease;
   }
-  .back-btn:hover { color: var(--acid); }
+  .nav-back:hover {
+    color: var(--acid);
+    transform: translateX(-2px);
+  }
+  .file-badge-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
   .file-badge {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.2em;
+    font-weight: 600;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--text);
     display: inline-flex;
@@ -154,7 +182,7 @@
     gap: 8px;
     background: var(--bg-surface);
     border: 1px solid var(--rule-strong);
-    padding: 6px 14px;
+    padding: 5px 12px;
     border-radius: 2px;
   }
   .file-badge-dot {
@@ -163,94 +191,132 @@
     background: var(--acid);
     border-radius: 50%;
     box-shadow: 0 0 8px var(--acid);
+    animation: pulseGlow 2.5s infinite ease-in-out;
   }
-  .case-meta {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  @media (max-width: 640px) {
-    .case-meta .hide-mobile { display: none; }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 12px var(--acid); }
   }
 
-  /* Hero Header */
-  .hero-header {
-    padding: 54px 0 36px;
-    border-bottom: 1px solid var(--rule);
-  }
-  .doc-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    color: var(--acid);
-    margin-bottom: 16px;
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .doc-eyebrow::before {
-    content: '';
-    width: 20px;
-    height: 2px;
-    background: var(--acid);
-  }
-  .hero-title {
-    font-family: var(--font-heading);
-    font-weight: 900;
-    font-size: clamp(44px, 9vw, 84px);
-    line-height: 0.94;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    color: var(--text);
-    margin-bottom: 12px;
-  }
-  .hero-sub {
-    font-family: var(--font-editorial);
-    font-style: italic;
-    font-size: clamp(26px, 5vw, 40px);
-    line-height: 1.1;
-    color: var(--acid);
-    margin-bottom: 24px;
-    letter-spacing: -0.01em;
-  }
-  .hero-dek {
-    font-family: var(--font-body);
-    font-size: 17px;
-    line-height: 1.65;
-    color: var(--text-muted);
-    max-width: 720px;
-  }
-
-  /* Table of Contents / Section Directory */
-  .toc-bar {
-    margin: 32px 0 40px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--rule);
-  }
-  .toc-label {
+  .meta-status {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-dim);
-    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  .toc-chips {
+  .next-file-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .next-file-link:hover {
+    color: var(--acid);
+  }
+
+  @media (max-width: 640px) {
+    .meta-status .hide-mobile { display: none; }
+  }
+
+  /* Progress tracker in top bar */
+  .section-tracker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--acid);
+  }
+
+  /* Hero Header */
+  .hero-header {
+    padding: 72px 0 48px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--acid);
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 1.5px;
+    background: var(--acid);
+  }
+  .hero-title {
+    font-family: var(--font-primary);
+    font-weight: 800;
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .hero-subtitle {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    line-height: 1.1;
+    color: var(--acid);
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .hero-micro-ref {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  .hero-dek {
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    max-width: 680px;
+  }
+
+  /* Quick Index / Directory Bar */
+  .directory-nav {
+    margin: 36px 0 44px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .directory-title {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .directory-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
   }
-  .toc-chip {
+  .dir-chip {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-muted);
     background: var(--bg-surface);
@@ -260,73 +326,82 @@
     text-decoration: none;
     transition: all 0.2s ease;
   }
-  .toc-chip:hover, .toc-chip:focus {
+  .dir-chip:hover, .dir-chip:focus-visible {
     color: #080808;
     background: var(--acid);
     border-color: var(--acid);
   }
 
-  /* Main Legal Content */
-  .legal-content {
+  /* Document Body / Sections */
+  .doc-container {
     flex: 1;
-    padding-bottom: 80px;
+    padding-bottom: 60px;
   }
-  .legal-section {
-    padding: 36px 0;
+  .file-entry {
+    padding: 44px 0;
     border-bottom: 1px solid var(--rule);
     scroll-margin-top: 80px;
+    transition: opacity 0.3s ease;
   }
-  .section-num {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    color: var(--acid);
-    margin-bottom: 8px;
-    display: block;
-  }
-  .section-heading {
-    font-family: var(--font-heading);
-    font-weight: 900;
-    font-size: clamp(26px, 4.5vw, 36px);
-    line-height: 1.1;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--text);
+  .entry-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
     margin-bottom: 20px;
   }
-  .legal-p {
+  .entry-num {
+    font-family: var(--font-primary);
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--acid);
+    flex-shrink: 0;
+  }
+  .entry-title {
+    font-family: var(--font-primary);
+    font-weight: 750;
+    font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .entry-p {
     font-size: 16px;
     line-height: 1.75;
     color: var(--text-muted);
     margin-bottom: 16px;
+    max-width: 720px;
   }
-  .legal-p strong {
+  .entry-p strong {
     color: var(--text);
     font-weight: 600;
   }
-  .legal-list {
-    padding-left: 20px;
+  .entry-list {
+    padding-left: 22px;
     margin: 16px 0 20px;
+    max-width: 720px;
   }
-  .legal-list li {
+  .entry-list li {
     font-size: 15.5px;
-    line-height: 1.7;
+    line-height: 1.75;
     color: var(--text-muted);
     margin-bottom: 10px;
     padding-left: 4px;
   }
-  .legal-list li strong {
+  .entry-list li strong {
     color: var(--text);
   }
-  .legal-list li::marker {
+  .entry-list li::marker {
     color: var(--acid);
   }
+
   .legal-link {
     color: var(--text);
     text-decoration: underline;
     text-decoration-color: var(--acid);
-    text-decoration-thickness: 2px;
+    text-decoration-thickness: 1.5px;
     text-underline-offset: 3px;
     transition: color 0.2s ease;
   }
@@ -334,131 +409,152 @@
     color: var(--acid);
   }
 
-  /* Data Table */
-  .data-grid {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 14.5px;
-  }
-  .data-grid th {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    text-align: left;
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--rule-strong);
-    background: var(--bg-surface);
-  }
-  .data-grid td {
-    padding: 14px;
-    border-bottom: 1px solid var(--rule);
-    color: var(--text-muted);
-    vertical-align: top;
-    line-height: 1.6;
-  }
-  .data-grid td strong {
-    color: var(--text);
-    font-weight: 600;
-  }
-
-  /* Contact / Officer Box */
-  .officer-box {
+  /* Statutory Officer Container */
+  .officer-card {
     background: var(--bg-surface);
     border: 1px solid var(--rule-strong);
-    padding: 24px;
-    margin-top: 20px;
+    padding: 24px 28px;
+    margin: 24px 0 12px;
     border-radius: 2px;
+    max-width: 720px;
   }
-  .officer-box p {
+  .officer-row {
     font-size: 15px;
     line-height: 1.7;
     color: var(--text-muted);
     margin-bottom: 8px;
   }
-  .officer-box p strong {
+  .officer-row:last-child { margin-bottom: 0; }
+  .officer-row strong {
     color: var(--text);
+    font-weight: 600;
   }
 
-  /* Non-operative decorative campaign clue */
-  .mystery-insight-box {
+  /* Curiosity Microcopy: Non-Contractual Visual Accent */
+  .curiosity-strip {
     background: rgba(184, 255, 87, 0.02);
-    border: 1px dashed var(--acid-border);
-    padding: 24px;
-    margin: 40px 0 20px;
+    border: 1px dashed var(--acid-glow);
+    padding: 28px 24px;
+    margin: 54px 0 28px;
     text-align: center;
     border-radius: 2px;
   }
-  .mystery-insight-text {
+  .curiosity-text {
     font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.22em;
+    font-size: 11.5px;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--acid);
-    margin: 0;
   }
 
-  /* Metadata Clue Footer */
-  .doc-clue-footer {
-    padding: 40px 0 20px;
+  /* Anomaly Box */
+  .anomaly-cluster {
+    margin: 60px 0 40px;
+    padding: 36px 0;
     border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    text-align: center;
+  }
+  .anomaly-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .anomaly-statement {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  /* Exploration CTA Switcher */
+  .file-switch-box {
+    margin: 48px 0 60px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 16px;
+    justify-content: flex-end;
+  }
+  .file-switch-btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #080808;
+    background: var(--acid);
+    padding: 14px 28px;
+    text-decoration: none;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .file-switch-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px var(--acid-glow);
+  }
+
+  /* Pre-Footer Suspense Spacing */
+  .suspense-terminus {
+    padding: 100px 0 60px;
+    text-align: center;
+  }
+  .suspense-date {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    letter-spacing: 0.26em;
     color: var(--text-dim);
+    margin-bottom: 14px;
+    text-transform: uppercase;
   }
-  .doc-clue-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .doc-clue-val {
-    color: var(--text-muted);
+  .suspense-line {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.22em;
+    color: var(--acid);
+    text-transform: uppercase;
   }
 
-  /* Universal Campaign Footer */
-  footer.campaign-footer {
-    border-top: 1px solid var(--rule-strong);
-    background: #050505;
+  /* Footer matching 22.09 Landing Page */
+  footer {
+    border-top: 1px solid var(--rule);
     padding: 44px 0 60px;
+    background: var(--bg);
     margin-top: auto;
   }
   .footer-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  .footer-nav {
-    display: flex;
     gap: 24px;
+    flex-wrap: wrap;
   }
-  .footer-nav-link {
+  .footer-links {
+    display: flex;
+    gap: 28px;
+  }
+  .footer-link {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--text-dim);
     text-decoration: none;
-    transition: color 0.2s ease;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
   }
-  .footer-nav-link.is-active {
+  .footer-link:hover {
+    color: var(--text-muted);
+  }
+  .footer-link.is-active {
     color: var(--acid);
   }
-  .footer-nav-link:hover {
-    color: var(--text);
-  }
-  .footer-campaign-date {
+  .footer-copy {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 0.18em;
     color: var(--text-dim);
   }
@@ -471,6 +567,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+    .file-badge-dot { animation: none; }
   }
 </style>
 
@@ -479,306 +576,308 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Privacy Policy // FILE 01",
+  "name": "FILE 01 // Privacy Policy",
   "url": "https://smelloff.in/privacy",
-  "description": "Privacy policy, data processing disclosures, and user rights.",
+  "description": "FILE 01 — Privacy Policy and data processing governance disclosures.",
   "inLanguage": "en-IN"
 }
 </script>
 </head>
 <body>
   <!-- Physical Grain Overlay -->
-  <div class="grain" aria-hidden="true"></div>
+  <div class="grain-overlay" aria-hidden="true"></div>
 
   <!-- Accessibility Skip Link -->
   <a href="#content" class="skip-link">Skip to Privacy Document</a>
 
-  <!-- Top Navigation Header -->
+  <!-- Top Sticky Navigation Bar -->
   <header class="top-bar">
     <div class="wrap">
       <div class="top-bar-inner">
-        <a href="/" class="back-btn" aria-label="Return to 22.09">
+        <a href="/" class="nav-back" aria-label="Return to 22.09">
           <span>←</span>
           <span>RETURN TO 22.09</span>
         </a>
-        <div class="file-badge">
-          <span class="file-badge-dot" aria-hidden="true"></span>
-          <span>FILE 01</span>
+        <div class="file-badge-group">
+          <div class="file-badge">
+            <span class="file-badge-dot" aria-hidden="true"></span>
+            <span>FILE 01</span>
+          </div>
+          <span class="section-tracker" id="activeSectionTracker">01 / 12</span>
         </div>
-        <div class="case-meta">
-          <span>CASE / 01</span>
-          <span class="hide-mobile">· STATUS: OPEN</span>
+        <div class="meta-status">
+          <a href="/terms" class="next-file-link">NEXT FILE → TERMS</a>
         </div>
       </div>
     </div>
   </header>
 
-  <main id="content" class="wrap legal-content">
+  <main id="content" class="wrap doc-container">
     <!-- Hero Header -->
     <header class="hero-header">
-      <div class="doc-eyebrow">FILE 01</div>
+      <div class="hero-eyebrow">FILE 01</div>
       <h1 class="hero-title">YOU WANT TO KNOW.</h1>
-      <div class="hero-sub">So do we.</div>
+      <div class="hero-subtitle">So do we.</div>
+      <div class="hero-micro-ref">REFERENCE // 22.09</div>
       <p class="hero-dek">
-        This document explains what information is collected across this website, why it is collected, how it is processed, and the choices and rights you have regarding your personal data.
+        This Privacy Policy details the data collection, technical telemetry, and processing protocols governing your interactions across our digital platforms, pre-launch campaign sequences, and communication channels.
       </p>
     </header>
 
-    <!-- Quick Navigation Index -->
-    <nav class="toc-bar" aria-label="Privacy Policy Sections">
-      <div class="toc-label">DIRECTORY INDEX / JUMP TO SECTION</div>
-      <div class="toc-chips">
-        <a href="#sec-01" class="toc-chip">01 · Collect</a>
-        <a href="#sec-02" class="toc-chip">02 · Purpose</a>
-        <a href="#sec-03" class="toc-chip">03 · How Used</a>
-        <a href="#sec-04" class="toc-chip">04 · Providers</a>
-        <a href="#sec-05" class="toc-chip">05 · Cookies</a>
-        <a href="#sec-06" class="toc-chip">06 · Communications</a>
-        <a href="#sec-07" class="toc-chip">07 · Retention</a>
-        <a href="#sec-08" class="toc-chip">08 · Choices</a>
-        <a href="#sec-09" class="toc-chip">09 · Security</a>
-        <a href="#sec-10" class="toc-chip">10 · Children</a>
-        <a href="#sec-11" class="toc-chip">11 · Policy Changes</a>
-        <a href="#sec-12" class="toc-chip">12 · Contact</a>
+    <!-- Quick Directory Index -->
+    <nav class="directory-nav" aria-label="Document Sections Directory">
+      <div class="directory-title">DIRECTORY INDEX // DIRECT ACCESS</div>
+      <div class="directory-chips">
+        <a href="#sec-01" class="dir-chip">01 · Collection</a>
+        <a href="#sec-02" class="dir-chip">02 · Purpose</a>
+        <a href="#sec-03" class="dir-chip">03 · Processing</a>
+        <a href="#sec-04" class="dir-chip">04 · Processors</a>
+        <a href="#sec-05" class="dir-chip">05 · Cookies</a>
+        <a href="#sec-06" class="dir-chip">06 · Comms</a>
+        <a href="#sec-07" class="dir-chip">07 · Retention</a>
+        <a href="#sec-08" class="dir-chip">08 · Rights</a>
+        <a href="#sec-09" class="dir-chip">09 · Security</a>
+        <a href="#sec-10" class="dir-chip">10 · Minors</a>
+        <a href="#sec-11" class="dir-chip">11 · Amendments</a>
+        <a href="#sec-12" class="dir-chip">12 · Grievance</a>
       </div>
     </nav>
 
     <!-- SECTION 01 -->
-    <section id="sec-01" class="legal-section">
-      <span class="section-num">01</span>
-      <h2 class="section-heading">INFORMATION WE COLLECT</h2>
-      <p class="legal-p">
-        We collect only the information necessary to fulfill user submissions, process authorized transactions, deliver communications, and secure website infrastructure:
+    <section id="sec-01" class="file-entry" data-sec="01">
+      <div class="entry-header">
+        <span class="entry-num">01</span>
+        <h2 class="entry-title">INFORMATION WE COLLECT</h2>
+      </div>
+      <p class="entry-p">
+        We collect only the technical, transactional, and contact parameters necessary to maintain digital operations and deliver requested campaign communications:
       </p>
-
-      <table class="data-grid" aria-label="Categories of collected personal data">
-        <thead>
-          <tr>
-            <th>Channel</th>
-            <th>Data Categories Collected</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Campaign Access Submissions</strong></td>
-            <td>Name, 10-digit Indian mobile / WhatsApp number, email address, submission timestamp, referral parameters (UTM tags), and affirmative consent status.</td>
-          </tr>
-          <tr>
-            <td><strong>Storefront Orders &amp; Transactions</strong></td>
-            <td>Full recipient name, contact telephone number, shipping address, city, state, postal PIN code, item selections, and chosen payment method.</td>
-          </tr>
-          <tr>
-            <td><strong>Payment Verification</strong></td>
-            <td>UPI Transaction Reference ID (UTR / Reference number) and timestamp for automated or manual verification. <em>Card numbers, bank credentials, and UPI PINs are never collected or stored.</em></td>
-          </tr>
-          <tr>
-            <td><strong>Technical Telemetry</strong></td>
-            <td>Salted / hashed IP address (for rate limiting and fraud prevention), browser type, device operating characteristics, and access timestamps.</td>
-          </tr>
-        </tbody>
-      </table>
+      <ul class="entry-list">
+        <li><strong>Submitted Contact Data:</strong> Valid mobile telephone numbers and email addresses provided when participating in campaign access sequences or registering for updates.</li>
+        <li><strong>Transactional Records:</strong> Name, physical delivery address, billing details, and order identifiers generated during checkout sequences.</li>
+        <li><strong>Automated Telemetry:</strong> Anonymized Internet Protocol (IP) addresses, browser user-agent tokens, referring URLs, screen dimensions, and navigation timestamps collected via server logging.</li>
+        <li><strong>Communication Histories:</strong> Records of inbound support inquiries, WhatsApp status updates, and email interaction telemetry.</li>
+      </ul>
     </section>
 
     <!-- SECTION 02 -->
-    <section id="sec-02" class="legal-section">
-      <span class="section-num">02</span>
-      <h2 class="section-heading">WHY WE COLLECT IT</h2>
-      <p class="legal-p">
-        Every category of data collected corresponds to a specific, legitimate operational necessity:
+    <section id="sec-02" class="file-entry" data-sec="02">
+      <div class="entry-header">
+        <span class="entry-num">02</span>
+        <h2 class="entry-title">WHY WE COLLECT IT</h2>
+      </div>
+      <p class="entry-p">
+        Personal data is processed strictly under legitimate operational, contractual, and legal frameworks:
       </p>
-      <ul class="legal-list">
-        <li><strong>Campaign Dispatches:</strong> To send requested campaign briefings, updates, and milestone access notifications.</li>
-        <li><strong>Order Fulfillment:</strong> To pack, route, and physically dispatch orders to your specified destination.</li>
-        <li><strong>Transactional Notifications:</strong> To provide order receipts, real-time shipment tracking numbers, and delivery status updates.</li>
-        <li><strong>Customer Support:</strong> To answer inquiries, troubleshoot issues, process eligible returns, or resolve delivery exceptions.</li>
-        <li><strong>System Integrity:</strong> To prevent denial-of-service attempts, spam bots, and unauthorized automated API activity.</li>
+      <ul class="entry-list">
+        <li><strong>Sequence Delivery:</strong> Transmitting priority pre-launch announcements, release alerts, and operational updates via WhatsApp and transactional email.</li>
+        <li><strong>Verification:</strong> Authenticating contact records to prevent automated bot entries and preserve campaign integrity.</li>
+        <li><strong>Order Fulfillment:</strong> Routing physical logistics, processing transaction receipts, and verifying delivery addresses.</li>
+        <li><strong>Platform Security:</strong> Monitoring infrastructure logs to identify and mitigate malicious traffic, rate-limit violations, and security anomalies.</li>
       </ul>
     </section>
 
     <!-- SECTION 03 -->
-    <section id="sec-03" class="legal-section">
-      <span class="section-num">03</span>
-      <h2 class="section-heading">HOW INFORMATION IS USED</h2>
-      <p class="legal-p">
-        Personal information is processed in accordance with applicable Indian data protection principles, including the Information Technology Act, 2000, the SPDI Rules 2011, and the foundational notice and consent framework of the Digital Personal Data Protection Act, 2023.
-      </p>
-      <p class="legal-p">
-        We do not sell, rent, or trade contact databases to third-party data brokers. Information is processed strictly for the operational purposes for which it was supplied.
+    <section id="sec-03" class="file-entry" data-sec="03">
+      <div class="entry-header">
+        <span class="entry-num">03</span>
+        <h2 class="entry-title">HOW INFORMATION IS USED</h2>
+      </div>
+      <p class="entry-p">
+        Your data is never sold, rented, or monetized with external data brokers. Information is utilized exclusively to maintain the active digital session, dispatch requested dispatches, process transactions, and fulfill regulatory compliance obligations.
       </p>
     </section>
 
     <!-- SECTION 04 -->
-    <section id="sec-04" class="legal-section">
-      <span class="section-num">04</span>
-      <h2 class="section-heading">SERVICE PROVIDERS</h2>
-      <p class="legal-p">
-        We engage vetted technical service providers to maintain website infrastructure and fulfill services. These providers have access only to the data necessary for their specific role:
+    <section id="sec-04" class="file-entry" data-sec="04">
+      <div class="entry-header">
+        <span class="entry-num">04</span>
+        <h2 class="entry-title">SERVICE PROVIDERS &amp; PROCESSORS</h2>
+      </div>
+      <p class="entry-p">
+        Data processing is conducted in coordination with vetted technical infrastructure partners:
       </p>
-      <ul class="legal-list">
-        <li><strong>Database Hosting:</strong> <em>Supabase Inc.</em> — provides secure, encrypted cloud database storage for records and transactions.</li>
-        <li><strong>Email Services:</strong> <em>Resend Technologies Inc.</em> — handles transactional emails, receipts, and requested campaign updates.</li>
-        <li><strong>Logistics Network:</strong> <em>Shiprocket (BigFoot Retail Solutions Pvt. Ltd.)</em> and partnered carrier fleets (Delhivery, Blue Dart, XpressBees, India Post, Shadowfax) — receive recipient contact and address details solely to route and deliver physical packages.</li>
-        <li><strong>Cloud Infrastructure:</strong> <em>Google Cloud Platform</em> — hosts web servers and application logic over encrypted connections.</li>
-        <li><strong>Legal Compliance:</strong> Information may be disclosed where strictly mandated by applicable law, court order, tax audit, or governmental directive.</li>
+      <ul class="entry-list">
+        <li><strong>Cloud &amp; Database Hosting:</strong> Scalable cloud databases and compute environments for secure record storage and server execution.</li>
+        <li><strong>Messaging &amp; Email Gateways:</strong> Transactional communications infrastructure for WhatsApp notifications and automated status emails.</li>
+        <li><strong>Payment Gateways:</strong> Authorized banking gateways for encrypted transaction settlement (we do not store raw card numbers or CVVs).</li>
+        <li><strong>Logistics Partners:</strong> Domestic courier networks for physical package transit and address routing.</li>
       </ul>
     </section>
 
     <!-- SECTION 05 -->
-    <section id="sec-05" class="legal-section">
-      <span class="section-num">05</span>
-      <h2 class="section-heading">COOKIES &amp; ANALYTICS</h2>
-      <p class="legal-p">
-        We maintain a minimal and privacy-conscious approach to website storage:
+    <section id="sec-05" class="file-entry" data-sec="05">
+      <div class="entry-header">
+        <span class="entry-num">05</span>
+        <h2 class="entry-title">COOKIES &amp; TELEMETRY</h2>
+      </div>
+      <p class="entry-p">
+        We utilize essential first-party cookies and lightweight client storage mechanisms strictly to preserve session state, track sequence completion, and ensure rate-limiting security.
       </p>
-      <ul class="legal-list">
-        <li><strong>Essential Storage:</strong> Local storage is used for core functions such as preserving cart state, submission feedback, and consent preferences.</li>
-        <li><strong>Cookieless Telemetry:</strong> First-party pageview and event metrics use temporary, salted hashes without tracking individual users across third-party websites.</li>
-        <li><strong>Consent-Gated Analytics:</strong> Optional third-party analytics (Google Analytics, Meta Pixel / Conversions API) only operate when affirmative consent has been granted. You can clear your storage or manage preferences at any time.</li>
-      </ul>
+      <p class="entry-p">
+        You may modify your web browser preferences to decline non-essential cookies; however, certain visual state transitions and interactive elements may operate in fallback modes.
+      </p>
     </section>
 
+    <!-- Subtle Curiosity Microcopy -->
+    <div class="curiosity-strip" aria-hidden="true">
+      <p class="curiosity-text">« YOU ARE LOOKING IN THE RIGHT PLACE. »</p>
+    </div>
+
     <!-- SECTION 06 -->
-    <section id="sec-06" class="legal-section">
-      <span class="section-num">06</span>
-      <h2 class="section-heading">COMMUNICATIONS</h2>
-      <p class="legal-p">
-        When you submit your contact details on the website or during checkout, you consent to receive direct transactional and campaign communications.
+    <section id="sec-06" class="file-entry" data-sec="06">
+      <div class="entry-header">
+        <span class="entry-num">06</span>
+        <h2 class="entry-title">COMMUNICATIONS &amp; OPT-OUT</h2>
+      </div>
+      <p class="entry-p">
+        You retain sovereign control over digital notifications. Every communication dispatch includes instantaneous opt-out mechanisms:
       </p>
-      <p class="legal-p">
-        You retain immediate control over all communication channels:
-      </p>
-      <ul class="legal-list">
-        <li><strong>WhatsApp Messages:</strong> You can opt out at any time by replying with the word <strong>"STOP"</strong> or <strong>"UNSUBSCRIBE"</strong>.</li>
-        <li><strong>Email Updates:</strong> Every campaign email includes a direct, one-click unsubscribe link in the footer.</li>
-        <li><strong>Direct Opt-Out:</strong> You may also email <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a> with the subject "Opt Out" to have your contact details removed from future broadcasts.</li>
+      <ul class="entry-list">
+        <li><strong>Email:</strong> Unsubscribe links positioned in the footer of every broadcast.</li>
+        <li><strong>WhatsApp:</strong> Reply <strong>STOP</strong> or <strong>UNSUBSCRIBE</strong> at any time to immediately suspend automated sequence dispatches.</li>
+        <li><strong>Direct Support:</strong> Transmit an opt-out directive to our support email at any time.</li>
       </ul>
     </section>
 
     <!-- SECTION 07 -->
-    <section id="sec-07" class="legal-section">
-      <span class="section-num">07</span>
-      <h2 class="section-heading">RETENTION</h2>
-      <p class="legal-p">
-        Data is retained only for the duration necessary to satisfy the purposes for which it was gathered:
+    <section id="sec-07" class="file-entry" data-sec="07">
+      <div class="entry-header">
+        <span class="entry-num">07</span>
+        <h2 class="entry-title">DATA RETENTION</h2>
+      </div>
+      <p class="entry-p">
+        Contact data collected for campaign sequences is retained for the active lifecycle of the campaign or until an opt-out/erasure request is submitted. Transactional and invoice records are preserved as mandated by applicable Indian taxation and accounting statutes.
       </p>
-      <ul class="legal-list">
-        <li><strong>Campaign Contacts:</strong> Retained for the duration of the campaign lifecycle or until an opt-out / erasure request is received.</li>
-        <li><strong>Commercial Transaction Records:</strong> Invoices, payment verifications, and delivery records are retained for at least 72 months to satisfy mandatory statutory accounting and tax (GST) requirements under Indian law.</li>
-        <li><strong>Customer Inquiries:</strong> Retained for 180 days following resolution, after which they are archived or deleted.</li>
-      </ul>
     </section>
 
     <!-- SECTION 08 -->
-    <section id="sec-08" class="legal-section">
-      <span class="section-num">08</span>
-      <h2 class="section-heading">YOUR CHOICES</h2>
-      <p class="legal-p">
-        Under applicable Indian law, you have specific rights regarding your personal information:
+    <section id="sec-08" class="file-entry" data-sec="08">
+      <div class="entry-header">
+        <span class="entry-num">08</span>
+        <h2 class="entry-title">YOUR DATA RIGHTS</h2>
+      </div>
+      <p class="entry-p">
+        Under applicable Indian data protection frameworks (including the Information Technology Act, 2000 and Digital Personal Data Protection Act, 2023), you hold the right to:
       </p>
-      <ul class="legal-list">
-        <li><strong>Access:</strong> The right to request a summary of the personal data held about you.</li>
-        <li><strong>Correction:</strong> The right to update or correct inaccurate or incomplete data.</li>
-        <li><strong>Erasure:</strong> The right to request deletion of your information, subject to mandatory legal and statutory retention requirements.</li>
-        <li><strong>Withdrawal of Consent:</strong> The right to withdraw consent for marketing or non-essential communications at any time.</li>
-        <li><strong>Grievance Redressal:</strong> The right to have data-related concerns investigated by our designated Grievance Officer.</li>
+      <ul class="entry-list">
+        <li>Request confirmation regarding the processing of your personal information.</li>
+        <li>Request correction or rectification of inaccurate or outdated records.</li>
+        <li>Request complete erasure or withdrawal of previously granted consent.</li>
+        <li>Lodge a grievance with our designated data officer.</li>
       </ul>
-      <p class="legal-p">
-        To exercise any right, submit a request to <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a> from your registered email address.
-      </p>
     </section>
 
     <!-- SECTION 09 -->
-    <section id="sec-09" class="legal-section">
-      <span class="section-num">09</span>
-      <h2 class="section-heading">SECURITY</h2>
-      <p class="legal-p">
-        We implement administrative, technical, and physical safeguards to protect information against unauthorized access, loss, or alteration. All web communications utilize TLS encryption, and database access is restricted via role-based credentials. While we maintain rigorous safeguards, no digital system can guarantee absolute security.
+    <section id="sec-09" class="file-entry" data-sec="09">
+      <div class="entry-header">
+        <span class="entry-num">09</span>
+        <h2 class="entry-title">SECURITY SAFEGUARDS</h2>
+      </div>
+      <p class="entry-p">
+        We implement industry-standard administrative, physical, and technical safeguards. All data transmission between your browser and our servers is secured using Transport Layer Security (TLS/HTTPS). Server endpoints enforce strict credential scoping and automated brute-force protections.
       </p>
     </section>
 
     <!-- SECTION 10 -->
-    <section id="sec-10" class="legal-section">
-      <span class="section-num">10</span>
-      <h2 class="section-heading">CHILDREN</h2>
-      <p class="legal-p">
-        This website and its associated campaigns are intended solely for individuals aged 18 and older. We do not knowingly solicit or collect data from minors. If personal data of a minor is found to have been submitted, it will be promptly removed.
+    <section id="sec-10" class="file-entry" data-sec="10">
+      <div class="entry-header">
+        <span class="entry-num">10</span>
+        <h2 class="entry-title">CHILDREN'S PRIVACY</h2>
+      </div>
+      <p class="entry-p">
+        Our digital platforms, campaign sequences, and commercial offerings are directed strictly to individuals aged 18 years and older. We do not knowingly solicit or collect personal information from minors.
       </p>
     </section>
 
     <!-- SECTION 11 -->
-    <section id="sec-11" class="legal-section">
-      <span class="section-num">11</span>
-      <h2 class="section-heading">POLICY CHANGES</h2>
-      <p class="legal-p">
-        This Privacy Policy may be updated periodically to reflect changes in technical features, operational practices, or statutory requirements. Revised versions will be published on this page with an updated revision date.
+    <section id="sec-11" class="file-entry" data-sec="11">
+      <div class="entry-header">
+        <span class="entry-num">11</span>
+        <h2 class="entry-title">POLICY AMENDMENTS</h2>
+      </div>
+      <p class="entry-p">
+        We reserve the right to revise this Privacy Policy to reflect technical, operational, or statutory adjustments. The updated revision date will be reflected at the head and base of this document. Continued engagement with our services following revisions constitutes acceptance.
       </p>
     </section>
 
     <!-- SECTION 12 -->
-    <section id="sec-12" class="legal-section">
-      <span class="section-num">12</span>
-      <h2 class="section-heading">CONTACT</h2>
-      <p class="legal-p">
-        For questions regarding this policy, data rights, or consumer grievances in compliance with the Information Technology Act, 2000 and Consumer Protection (E-Commerce) Rules, 2020:
+    <section id="sec-12" class="file-entry" data-sec="12">
+      <div class="entry-header">
+        <span class="entry-num">12</span>
+        <h2 class="entry-title">GRIEVANCE REDRESSAL &amp; CONTACT</h2>
+      </div>
+      <p class="entry-p">
+        For questions regarding data practices, to exercise your privacy rights, or to submit a grievance under the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011:
       </p>
 
-      <div class="officer-box">
-        <p><strong>Designated Grievance Officer:</strong> Jogdhande Nikhil Patil</p>
-        <p><strong>Operating Entity:</strong> Sole Proprietorship</p>
-        <p><strong>Email:</strong> <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a></p>
-        <p><strong>Alternative Contact:</strong> <a href="mailto:support@smelloff.in" class="legal-link">support@smelloff.in</a></p>
-        <p><strong>Phone / WhatsApp:</strong> +91 93929 74031</p>
-        <p><strong>Registered Address:</strong> Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India</p>
-        <p><strong>Response Timeline:</strong> Acknowledgment within 48 hours; resolution within 15 business days.</p>
+      <div class="officer-card">
+        <p class="officer-row"><strong>Designated Grievance Officer:</strong> Jogdhande Nikhil Patil</p>
+        <p class="officer-row"><strong>Entity Classification:</strong> Sole Proprietorship</p>
+        <p class="officer-row"><strong>Email:</strong> <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a></p>
+        <p class="officer-row"><strong>Direct Support / WhatsApp:</strong> +91 93929 74031</p>
+        <p class="officer-row"><strong>Operating Address:</strong> Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India</p>
+        <p class="officer-row"><strong>Response Timeline:</strong> Acknowledged within 48 hours; resolved within 15 business days.</p>
       </div>
     </section>
 
-    <!-- Subtle Campaign Clue Box -->
-    <div class="mystery-insight-box">
-      <p class="mystery-insight-text">« YOU ARE LOOKING IN THE RIGHT PLACE. »</p>
+    <!-- The "Wait, What?" Anomaly -->
+    <div class="anomaly-cluster" aria-label="Campaign Anomaly Note">
+      <div class="anomaly-meta">01 / 02</div>
+      <div class="anomaly-statement">« YOU WERE EXPECTED TO FIND THIS. »</div>
     </div>
 
-    <!-- Cross-Page Clue Footer -->
-    <div class="doc-clue-footer" aria-label="Document Metadata">
-      <div class="doc-clue-item">
-        <span>FILE:</span>
-        <span class="doc-clue-val">01</span>
-      </div>
-      <div class="doc-clue-item">
-        <span>STATUS:</span>
-        <span class="doc-clue-val">OPEN</span>
-      </div>
-      <div class="doc-clue-item">
-        <span>AUDITED:</span>
-        <span class="doc-clue-val">AUGUST 2026</span>
-      </div>
-      <div class="doc-clue-item">
-        <span>REFERENCE:</span>
-        <span class="doc-clue-val" id="campaignDateTag">22.09.2026</span>
-      </div>
+    <!-- Switcher to Next File -->
+    <div class="file-switch-box">
+      <a href="/terms" class="file-switch-btn">
+        <span>OPEN FILE 02</span>
+        <span>→</span>
+      </a>
+    </div>
+
+    <!-- Suspense Terminus Spacing -->
+    <div class="suspense-terminus">
+      <div class="suspense-date">22.09.2026</div>
+      <div class="suspense-line">« YOU'LL KNOW SOON ENOUGH. »</div>
     </div>
   </main>
 
-  <!-- Universal Campaign Footer -->
-  <footer class="campaign-footer">
+  <!-- Footer matching 22.09 Landing Page -->
+  <footer>
     <div class="wrap footer-inner">
-      <div class="footer-nav">
-        <a href="/privacy" class="footer-nav-link is-active" aria-current="page">PRIVACY</a>
-        <a href="/terms" class="footer-nav-link">TERMS</a>
+      <div class="footer-links">
+        <a href="/privacy" class="footer-link is-active" aria-current="page">PRIVACY</a>
+        <a href="/terms" class="footer-link">TERMS</a>
       </div>
-      <div class="footer-campaign-date" id="footerDateDisplay">22.09.2026</div>
+      <div class="footer-copy">22.09.2026</div>
     </div>
   </footer>
 
   <script>
-    (function() {
-      const CAMPAIGN_DATE = "2026-09-22";
-      const formattedDate = "22.09.2026";
-      const dateEl = document.getElementById('footerDateDisplay');
-      if (dateEl) dateEl.textContent = formattedDate;
-      const tagEl = document.getElementById('campaignDateTag');
-      if (tagEl) tagEl.textContent = formattedDate;
-    })();
+    document.addEventListener('DOMContentLoaded', function() {
+      // Dynamic Section Tracker on scroll
+      var tracker = document.getElementById('activeSectionTracker');
+      var sections = document.querySelectorAll('.file-entry');
+      
+      if ('IntersectionObserver' in window && tracker && sections.length > 0) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              var secNum = entry.target.getAttribute('data-sec');
+              if (secNum) {
+                tracker.textContent = secNum + ' / 12';
+              }
+            }
+          });
+        }, {
+          rootMargin: '-20% 0px -70% 0px'
+        });
+
+        sections.forEach(function(section) {
+          observer.observe(section);
+        });
+      }
+    });
   </script>
 </body>
 </html>

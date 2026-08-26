@@ -2,9 +2,9 @@
 <html lang="en-IN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Terms &amp; Conditions // FILE 02</title>
-<meta name="description" content="FILE 02 — Terms & Conditions governing website access, submissions, transactions, deliveries, and consumer rights.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FILE 02 // Terms &amp; Conditions</title>
+<meta name="description" content="FILE 02 — Terms & Conditions governing website access, submissions, transaction terms, delivery protocols, and statutory consumer rights for 22.09.">
 <link rel="canonical" href="https://smelloff.in/terms">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 <meta name="geo.region" content="IN-TG">
@@ -16,8 +16,8 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://smelloff.in/terms">
-<meta property="og:title" content="Terms &amp; Conditions // FILE 02">
-<meta property="og:description" content="FILE 02 — Terms & Conditions governing access, transactions, and consumer terms.">
+<meta property="og:title" content="FILE 02 // Terms &amp; Conditions">
+<meta property="og:description" content="BEFORE YOU ENTER. READ THIS. // Reference 22.09">
 <meta property="og:site_name" content="22.09">
 <meta property="og:image" content="https://smelloff.in/assets/og-prelaunch-2209.png">
 <meta property="og:image:width" content="1200">
@@ -26,8 +26,8 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Terms &amp; Conditions // FILE 02">
-<meta name="twitter:description" content="FILE 02 — Terms & Conditions governing access, transactions, and consumer terms.">
+<meta name="twitter:title" content="FILE 02 // Terms &amp; Conditions">
+<meta name="twitter:description" content="BEFORE YOU ENTER. READ THIS. // Reference 22.09">
 <meta name="twitter:image" content="https://smelloff.in/assets/og-prelaunch-2209.png">
 
 <!-- Favicon -->
@@ -35,66 +35,81 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
 
-<!-- Preload Typography -->
-<link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
+<!-- Typography: Google Fonts + Preload Fallback -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,600&family=Inter+Tight:ital,wght@0,400..800;1,400..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="/assets/fonts.css" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css"></noscript>
 
 <style>
   :root {
     --bg: #080808;
-    --bg-surface: #111111;
-    --bg-surface-elevated: #161616;
+    --bg-surface: #0f0f0f;
+    --bg-surface-elevated: #151515;
     --text: #F5F5F0;
-    --text-muted: rgba(245, 245, 240, 0.65);
-    --text-dim: rgba(245, 245, 240, 0.35);
+    --text-muted: rgba(245, 245, 240, 0.58);
+    --text-dim: rgba(245, 245, 240, 0.26);
     --acid: #B8FF57;
     --acid-dim: rgba(184, 255, 87, 0.12);
-    --acid-border: rgba(184, 255, 87, 0.35);
-    --rule: rgba(245, 245, 240, 0.12);
-    --rule-strong: rgba(245, 245, 240, 0.22);
-    --font-heading: 'Barlow Condensed', -apple-system, sans-serif;
-    --font-body: 'DM Sans', -apple-system, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --font-editorial: 'Fraunces', serif;
+    --acid-glow: rgba(184, 255, 87, 0.35);
+    --rule: rgba(245, 245, 240, 0.10);
+    --rule-strong: rgba(245, 245, 240, 0.20);
+    --font-primary: 'Inter Tight', 'Inter Tight Fallback', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-editorial: 'Fraunces', 'Fraunces Fallback', Georgia, serif;
+    --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html { background: var(--bg); color: var(--text); font-family: var(--font-body); scroll-behavior: smooth; }
+  
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-primary);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     background: var(--bg);
     color: var(--text);
     font-size: 16px;
     line-height: 1.75;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow-x: hidden;
   }
-  ::selection { background: var(--acid); color: #080808; }
 
-  /* Grain texture */
-  .grain {
+  ::selection {
+    background: var(--acid);
+    color: #080808;
+  }
+
+  /* Physical noise grain overlay matching prelaunch */
+  .grain-overlay {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 100;
-    opacity: 0.04;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
-  /* Accessibility skip link */
+  /* Skip Link for Accessibility */
   .skip-link {
     position: absolute;
     top: -100px;
-    left: 20px;
+    left: 24px;
     background: var(--acid);
     color: #080808;
-    padding: 12px 18px;
+    padding: 10px 18px;
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
+    letter-spacing: 0.1em;
     z-index: 200;
     text-decoration: none;
     border-radius: 2px;
@@ -105,23 +120,28 @@
   /* Container */
   .wrap {
     width: 100%;
-    max-width: 860px;
+    max-width: 820px;
     margin: 0 auto;
-    padding: 0 24px;
-  }
-  @media (max-width: 600px) {
-    .wrap { padding: 0 18px; }
+    padding: 0 28px;
+    position: relative;
+    z-index: 2;
   }
 
-  /* Top Navigation Bar */
+  @media (max-width: 640px) {
+    .wrap { padding: 0 20px; }
+  }
+
+  /* Sticky Top Bar / File Header */
   .top-bar {
-    border-bottom: 1px solid var(--rule);
-    background: rgba(8, 8, 8, 0.94);
-    backdrop-filter: blur(8px);
     position: sticky;
     top: 0;
     z-index: 50;
+    background: rgba(8, 8, 8, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
     padding: 16px 0;
+    transition: border-color 0.3s ease;
   }
   .top-bar-inner {
     display: flex;
@@ -129,24 +149,32 @@
     justify-content: space-between;
     gap: 16px;
   }
-  .back-btn {
+  .nav-back {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-muted);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 0;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, transform 0.2s ease;
   }
-  .back-btn:hover { color: var(--acid); }
+  .nav-back:hover {
+    color: var(--acid);
+    transform: translateX(-2px);
+  }
+  .file-badge-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
   .file-badge {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.2em;
+    font-weight: 600;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--text);
     display: inline-flex;
@@ -154,7 +182,7 @@
     gap: 8px;
     background: var(--bg-surface);
     border: 1px solid var(--rule-strong);
-    padding: 6px 14px;
+    padding: 5px 12px;
     border-radius: 2px;
   }
   .file-badge-dot {
@@ -163,94 +191,132 @@
     background: var(--acid);
     border-radius: 50%;
     box-shadow: 0 0 8px var(--acid);
+    animation: pulseGlow 2.5s infinite ease-in-out;
   }
-  .case-meta {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  @media (max-width: 640px) {
-    .case-meta .hide-mobile { display: none; }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 12px var(--acid); }
   }
 
-  /* Hero Header */
-  .hero-header {
-    padding: 54px 0 36px;
-    border-bottom: 1px solid var(--rule);
-  }
-  .doc-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    color: var(--acid);
-    margin-bottom: 16px;
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .doc-eyebrow::before {
-    content: '';
-    width: 20px;
-    height: 2px;
-    background: var(--acid);
-  }
-  .hero-title {
-    font-family: var(--font-heading);
-    font-weight: 900;
-    font-size: clamp(44px, 9vw, 84px);
-    line-height: 0.94;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    color: var(--text);
-    margin-bottom: 12px;
-  }
-  .hero-sub {
-    font-family: var(--font-editorial);
-    font-style: italic;
-    font-size: clamp(26px, 5vw, 40px);
-    line-height: 1.1;
-    color: var(--acid);
-    margin-bottom: 24px;
-    letter-spacing: -0.01em;
-  }
-  .hero-dek {
-    font-family: var(--font-body);
-    font-size: 17px;
-    line-height: 1.65;
-    color: var(--text-muted);
-    max-width: 720px;
-  }
-
-  /* Table of Contents */
-  .toc-bar {
-    margin: 32px 0 40px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--rule);
-  }
-  .toc-label {
+  .meta-status {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-dim);
-    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  .toc-chips {
+  .prev-file-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .prev-file-link:hover {
+    color: var(--acid);
+  }
+
+  @media (max-width: 640px) {
+    .meta-status .hide-mobile { display: none; }
+  }
+
+  /* Progress tracker in top bar */
+  .section-tracker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--acid);
+  }
+
+  /* Hero Header */
+  .hero-header {
+    padding: 72px 0 48px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--acid);
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 1.5px;
+    background: var(--acid);
+  }
+  .hero-title {
+    font-family: var(--font-primary);
+    font-weight: 800;
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .hero-subtitle {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    line-height: 1.1;
+    color: var(--acid);
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .hero-micro-ref {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  .hero-dek {
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    max-width: 680px;
+  }
+
+  /* Quick Index / Directory Bar */
+  .directory-nav {
+    margin: 36px 0 44px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .directory-title {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .directory-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
   }
-  .toc-chip {
+  .dir-chip {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-muted);
     background: var(--bg-surface);
@@ -260,73 +326,82 @@
     text-decoration: none;
     transition: all 0.2s ease;
   }
-  .toc-chip:hover, .toc-chip:focus {
+  .dir-chip:hover, .dir-chip:focus-visible {
     color: #080808;
     background: var(--acid);
     border-color: var(--acid);
   }
 
-  /* Main Legal Content */
-  .legal-content {
+  /* Document Body / Sections */
+  .doc-container {
     flex: 1;
-    padding-bottom: 80px;
+    padding-bottom: 60px;
   }
-  .legal-section {
-    padding: 36px 0;
+  .file-entry {
+    padding: 44px 0;
     border-bottom: 1px solid var(--rule);
     scroll-margin-top: 80px;
+    transition: opacity 0.3s ease;
   }
-  .section-num {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    color: var(--acid);
-    margin-bottom: 8px;
-    display: block;
-  }
-  .section-heading {
-    font-family: var(--font-heading);
-    font-weight: 900;
-    font-size: clamp(26px, 4.5vw, 36px);
-    line-height: 1.1;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--text);
+  .entry-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
     margin-bottom: 20px;
   }
-  .legal-p {
+  .entry-num {
+    font-family: var(--font-primary);
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--acid);
+    flex-shrink: 0;
+  }
+  .entry-title {
+    font-family: var(--font-primary);
+    font-weight: 750;
+    font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .entry-p {
     font-size: 16px;
     line-height: 1.75;
     color: var(--text-muted);
     margin-bottom: 16px;
+    max-width: 720px;
   }
-  .legal-p strong {
+  .entry-p strong {
     color: var(--text);
     font-weight: 600;
   }
-  .legal-list {
-    padding-left: 20px;
+  .entry-list {
+    padding-left: 22px;
     margin: 16px 0 20px;
+    max-width: 720px;
   }
-  .legal-list li {
+  .entry-list li {
     font-size: 15.5px;
-    line-height: 1.7;
+    line-height: 1.75;
     color: var(--text-muted);
     margin-bottom: 10px;
     padding-left: 4px;
   }
-  .legal-list li strong {
+  .entry-list li strong {
     color: var(--text);
   }
-  .legal-list li::marker {
+  .entry-list li::marker {
     color: var(--acid);
   }
+
   .legal-link {
     color: var(--text);
     text-decoration: underline;
     text-decoration-color: var(--acid);
-    text-decoration-thickness: 2px;
+    text-decoration-thickness: 1.5px;
     text-underline-offset: 3px;
     transition: color 0.2s ease;
   }
@@ -334,101 +409,152 @@
     color: var(--acid);
   }
 
-  /* Contact / Officer Box */
-  .officer-box {
+  /* Statutory Officer Container */
+  .officer-card {
     background: var(--bg-surface);
     border: 1px solid var(--rule-strong);
-    padding: 24px;
-    margin-top: 20px;
+    padding: 24px 28px;
+    margin: 24px 0 12px;
     border-radius: 2px;
+    max-width: 720px;
   }
-  .officer-box p {
+  .officer-row {
     font-size: 15px;
     line-height: 1.7;
     color: var(--text-muted);
     margin-bottom: 8px;
   }
-  .officer-box p strong {
+  .officer-row:last-child { margin-bottom: 0; }
+  .officer-row strong {
     color: var(--text);
+    font-weight: 600;
   }
 
-  /* Non-operative decorative campaign clue */
-  .mystery-insight-box {
+  /* Curiosity Microcopy: Non-Contractual Visual Accent */
+  .curiosity-strip {
     background: rgba(184, 255, 87, 0.02);
-    border: 1px dashed var(--acid-border);
-    padding: 24px;
-    margin: 40px 0 20px;
+    border: 1px dashed var(--acid-glow);
+    padding: 28px 24px;
+    margin: 54px 0 28px;
     text-align: center;
     border-radius: 2px;
   }
-  .mystery-insight-text {
+  .curiosity-text {
     font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.22em;
+    font-size: 11.5px;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--acid);
-    margin: 0;
   }
 
-  /* Metadata Clue Footer */
-  .doc-clue-footer {
-    padding: 40px 0 20px;
+  /* Anomaly Box */
+  .anomaly-cluster {
+    margin: 60px 0 40px;
+    padding: 36px 0;
     border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    text-align: center;
+  }
+  .anomaly-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .anomaly-statement {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  /* Exploration CTA Switcher */
+  .file-switch-box {
+    margin: 48px 0 60px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 16px;
+    justify-content: flex-start;
+  }
+  .file-switch-btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #080808;
+    background: var(--acid);
+    padding: 14px 28px;
+    text-decoration: none;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .file-switch-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px var(--acid-glow);
+  }
+
+  /* Pre-Footer Suspense Spacing */
+  .suspense-terminus {
+    padding: 100px 0 60px;
+    text-align: center;
+  }
+  .suspense-date {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    letter-spacing: 0.26em;
     color: var(--text-dim);
+    margin-bottom: 14px;
+    text-transform: uppercase;
   }
-  .doc-clue-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .doc-clue-val {
-    color: var(--text-muted);
+  .suspense-line {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.22em;
+    color: var(--acid);
+    text-transform: uppercase;
   }
 
-  /* Universal Campaign Footer */
-  footer.campaign-footer {
-    border-top: 1px solid var(--rule-strong);
-    background: #050505;
+  /* Footer matching 22.09 Landing Page */
+  footer {
+    border-top: 1px solid var(--rule);
     padding: 44px 0 60px;
+    background: var(--bg);
     margin-top: auto;
   }
   .footer-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  .footer-nav {
-    display: flex;
     gap: 24px;
+    flex-wrap: wrap;
   }
-  .footer-nav-link {
+  .footer-links {
+    display: flex;
+    gap: 28px;
+  }
+  .footer-link {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--text-dim);
     text-decoration: none;
-    transition: color 0.2s ease;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
   }
-  .footer-nav-link.is-active {
+  .footer-link:hover {
+    color: var(--text-muted);
+  }
+  .footer-link.is-active {
     color: var(--acid);
   }
-  .footer-nav-link:hover {
-    color: var(--text);
-  }
-  .footer-campaign-date {
+  .footer-copy {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 0.18em;
     color: var(--text-dim);
   }
@@ -441,6 +567,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+    .file-badge-dot { animation: none; }
   }
 </style>
 
@@ -449,300 +576,346 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Terms & Conditions // FILE 02",
+  "name": "FILE 02 // Terms & Conditions",
   "url": "https://smelloff.in/terms",
-  "description": "Terms & Conditions governing website access, transactions, and consumer terms.",
+  "description": "FILE 02 — Terms & Conditions governing access, transactions, and consumer terms.",
   "inLanguage": "en-IN"
 }
 </script>
 </head>
 <body>
   <!-- Physical Grain Overlay -->
-  <div class="grain" aria-hidden="true"></div>
+  <div class="grain-overlay" aria-hidden="true"></div>
 
   <!-- Accessibility Skip Link -->
   <a href="#content" class="skip-link">Skip to Terms Document</a>
 
-  <!-- Top Navigation Header -->
+  <!-- Top Sticky Navigation Bar -->
   <header class="top-bar">
     <div class="wrap">
       <div class="top-bar-inner">
-        <a href="/" class="back-btn" aria-label="Return to 22.09">
+        <a href="/" class="nav-back" aria-label="Return to 22.09">
           <span>←</span>
           <span>RETURN TO 22.09</span>
         </a>
-        <div class="file-badge">
-          <span class="file-badge-dot" aria-hidden="true"></span>
-          <span>FILE 02</span>
+        <div class="file-badge-group">
+          <div class="file-badge">
+            <span class="file-badge-dot" aria-hidden="true"></span>
+            <span>FILE 02</span>
+          </div>
+          <span class="section-tracker" id="activeSectionTracker">01 / 14</span>
         </div>
-        <div class="case-meta">
-          <span>CASE / 02</span>
-          <span class="hide-mobile">· STATUS: OPEN</span>
+        <div class="meta-status">
+          <a href="/privacy" class="prev-file-link">← PREVIOUS FILE</a>
         </div>
       </div>
     </div>
   </header>
 
-  <main id="content" class="wrap legal-content">
+  <main id="content" class="wrap doc-container">
     <!-- Hero Header -->
     <header class="hero-header">
-      <div class="doc-eyebrow">FILE 02</div>
+      <div class="hero-eyebrow">FILE 02</div>
       <h1 class="hero-title">BEFORE YOU ENTER.</h1>
-      <div class="hero-sub">Read this.</div>
+      <div class="hero-subtitle">Read this.</div>
+      <div class="hero-micro-ref">REFERENCE // 22.09</div>
       <p class="hero-dek">
-        These Terms &amp; Conditions govern your access to this website, your participation in campaign sequences, and any transactions or submissions made across our digital platforms.
+        These Terms &amp; Conditions govern your access to this website, your participation in campaign sequences, and any transactions, submissions, or orders initiated across our digital platforms.
       </p>
     </header>
 
-    <!-- Quick Navigation Index -->
-    <nav class="toc-bar" aria-label="Terms and Conditions Sections">
-      <div class="toc-label">DIRECTORY INDEX / JUMP TO SECTION</div>
-      <div class="toc-chips">
-        <a href="#sec-01" class="toc-chip">01 · Website Use</a>
-        <a href="#sec-02" class="toc-chip">02 · Access</a>
-        <a href="#sec-03" class="toc-chip">03 · Submissions</a>
-        <a href="#sec-04" class="toc-chip">04 · Orders</a>
-        <a href="#sec-05" class="toc-chip">05 · Pricing</a>
-        <a href="#sec-06" class="toc-chip">06 · Delivery</a>
-        <a href="#sec-07" class="toc-chip">07 · Refunds</a>
-        <a href="#sec-08" class="toc-chip">08 · IP Rights</a>
-        <a href="#sec-09" class="toc-chip">09 · User Content</a>
-        <a href="#sec-10" class="toc-chip">10 · Prohibited</a>
-        <a href="#sec-11" class="toc-chip">11 · Disclaimers</a>
-        <a href="#sec-12" class="toc-chip">12 · Liability</a>
-        <a href="#sec-13" class="toc-chip">13 · Law</a>
-        <a href="#sec-14" class="toc-chip">14 · Contact</a>
+    <!-- Quick Directory Index -->
+    <nav class="directory-nav" aria-label="Document Sections Directory">
+      <div class="directory-title">DIRECTORY INDEX // DIRECT ACCESS</div>
+      <div class="directory-chips">
+        <a href="#sec-01" class="dir-chip">01 · Use</a>
+        <a href="#sec-02" class="dir-chip">02 · Access</a>
+        <a href="#sec-03" class="dir-chip">03 · Accounts</a>
+        <a href="#sec-04" class="dir-chip">04 · Orders</a>
+        <a href="#sec-05" class="dir-chip">05 · Pricing</a>
+        <a href="#sec-06" class="dir-chip">06 · Delivery</a>
+        <a href="#sec-07" class="dir-chip">07 · Refunds</a>
+        <a href="#sec-08" class="dir-chip">08 · IP Rights</a>
+        <a href="#sec-09" class="dir-chip">09 · User Content</a>
+        <a href="#sec-10" class="dir-chip">10 · Prohibited</a>
+        <a href="#sec-11" class="dir-chip">11 · Disclaimers</a>
+        <a href="#sec-12" class="dir-chip">12 · Liability</a>
+        <a href="#sec-13" class="dir-chip">13 · Law</a>
+        <a href="#sec-14" class="dir-chip">14 · Grievance</a>
       </div>
     </nav>
 
     <!-- SECTION 01 -->
-    <section id="sec-01" class="legal-section">
-      <span class="section-num">01</span>
-      <h2 class="section-heading">USING THIS WEBSITE</h2>
-      <p class="legal-p">
-        By accessing or browsing this website, you acknowledge that you have read, understood, and agreed to be legally bound by these Terms &amp; Conditions, together with our Privacy Policy.
+    <section id="sec-01" class="file-entry" data-sec="01">
+      <div class="entry-header">
+        <span class="entry-num">01</span>
+        <h2 class="entry-title">USING THIS WEBSITE</h2>
+      </div>
+      <p class="entry-p">
+        By accessing or navigating this website, you acknowledge that you have reviewed, understood, and agreed to be legally bound by these Terms &amp; Conditions, together with our Privacy Policy.
       </p>
-      <p class="legal-p">
-        If you do not agree with any part of these terms, you should discontinue using the website and its associated services immediately.
+      <p class="entry-p">
+        If you disagree with any provision contained herein, your sole and immediate remedy is to discontinue browsing and terminate your session.
       </p>
     </section>
 
     <!-- SECTION 02 -->
-    <section id="sec-02" class="legal-section">
-      <span class="section-num">02</span>
-      <h2 class="section-heading">ACCESS</h2>
-      <p class="legal-p">
-        You represent that you are at least 18 years of age and legally competent to enter into binding agreements under the Indian Contract Act, 1872.
+    <section id="sec-02" class="file-entry" data-sec="02">
+      <div class="entry-header">
+        <span class="entry-num">02</span>
+        <h2 class="entry-title">ACCESS &amp; ELIGIBILITY</h2>
+      </div>
+      <p class="entry-p">
+        You represent that you are at least 18 years of age and legally competent to execute binding contracts under the Indian Contract Act, 1872.
       </p>
-      <p class="legal-p">
-        Access to specific features or campaign sequences is provided on a temporary, revocable basis. We reserve the right to withdraw, modify, or restrict access to any part of the site without prior liability.
+      <p class="entry-p">
+        Access to specific sequences, reservations, or interactive functions is extended on a temporary, revocable basis. We reserve the authority to modify, suspend, or withdraw site availability at any time without prior liability.
       </p>
     </section>
 
     <!-- SECTION 03 -->
-    <section id="sec-03" class="legal-section">
-      <span class="section-num">03</span>
-      <h2 class="section-heading">ACCOUNTS / SUBMISSIONS</h2>
-      <p class="legal-p">
-        Where you submit contact information to join campaign sequences or request updates:
+    <section id="sec-03" class="file-entry" data-sec="03">
+      <div class="entry-header">
+        <span class="entry-num">03</span>
+        <h2 class="entry-title">ACCOUNTS &amp; SUBMISSIONS</h2>
+      </div>
+      <p class="entry-p">
+        Where you submit contact coordinates to receive sequence dispatches or reserve access:
       </p>
-      <ul class="legal-list">
-        <li>You agree to provide true, current, and accurate details (such as your valid mobile number and email address).</li>
-        <li>You are solely responsible for all activity stemming from your registered contact information.</li>
-        <li>We reserve the right to suspend or remove any submission containing invalid or fraudulent details.</li>
+      <ul class="entry-list">
+        <li>You agree to provide true, current, and verified details (including your authentic mobile telephone number and email address).</li>
+        <li>You remain solely accountable for all activities originating under your submitted contact credentials.</li>
+        <li>We reserve the right to disqualify or purge any entry containing fictitious, automated, or invalid contact parameters.</li>
       </ul>
     </section>
 
     <!-- SECTION 04 -->
-    <section id="sec-04" class="legal-section">
-      <span class="section-num">04</span>
-      <h2 class="section-heading">ORDERS AND TRANSACTIONS</h2>
-      <p class="legal-p">
-        When placing an order or initiating a transaction through the website:
+    <section id="sec-04" class="file-entry" data-sec="04">
+      <div class="entry-header">
+        <span class="entry-num">04</span>
+        <h2 class="entry-title">ORDERS AND TRANSACTIONS</h2>
+      </div>
+      <p class="entry-p">
+        When initiating a commercial transaction through the platform:
       </p>
-      <ul class="legal-list">
-        <li><strong>Order Acceptance:</strong> Submitting an order constitutes an offer to purchase. An order is confirmed only upon automated verification of payment or formal acceptance of a Cash on Delivery (COD) request.</li>
-        <li><strong>Verification:</strong> We reserve the right to verify recipient details and delivery addresses via automated SMS, email, or telephone verification prior to dispatch.</li>
-        <li><strong>Cancellation by Operator:</strong> We reserve the right to decline or cancel orders due to stock unavailability, pricing errors, suspected fraudulent activity, or unserviceable delivery locations.</li>
+      <ul class="entry-list">
+        <li><strong>Order Acceptance:</strong> Submitting an order constitutes an offer to purchase. Binding order confirmation occurs upon automated verification of electronic payment or formal system acceptance of a verified Cash on Delivery (COD) request.</li>
+        <li><strong>Verification:</strong> We reserve the right to verify recipient identity and delivery address authenticity via automated SMS or telephone verification prior to dispatch.</li>
+        <li><strong>Cancellation Authority:</strong> We reserve the right to decline or cancel orders resulting from inventory constraints, pricing errors, suspected fraudulent transactions, or unserviceable destination PIN codes.</li>
       </ul>
     </section>
 
     <!-- SECTION 05 -->
-    <section id="sec-05" class="legal-section">
-      <span class="section-num">05</span>
-      <h2 class="section-heading">PRICING</h2>
-      <p class="legal-p">
-        All prices displayed on the website are denominated in Indian Rupees (INR, ₹) and include all applicable Goods and Services Tax (GST) unless explicitly noted.
+    <section id="sec-05" class="file-entry" data-sec="05">
+      <div class="entry-header">
+        <span class="entry-num">05</span>
+        <h2 class="entry-title">PRICING &amp; TAXES</h2>
+      </div>
+      <p class="entry-p">
+        All prices displayed across our platform are denominated in Indian Rupees (INR, ₹) and include all applicable Goods and Services Tax (GST) unless explicitly indicated otherwise.
       </p>
-      <p class="legal-p">
-        Prices, applicable delivery fees, and COD handling surcharges are presented transparently at checkout prior to final transaction confirmation. We reserve the right to correct typographical or technical pricing errors.
+      <p class="entry-p">
+        Total payable amounts, including any applicable logistics charges or COD handling fees, are itemized transparently at checkout prior to final transaction execution. We reserve the right to correct typographical or technical pricing discrepancies.
       </p>
     </section>
 
     <!-- SECTION 06 -->
-    <section id="sec-06" class="legal-section">
-      <span class="section-num">06</span>
-      <h2 class="section-heading">DELIVERY</h2>
-      <p class="legal-p">
-        Physical deliveries are handled across serviceable PIN codes in India through third-party logistics networks:
+    <section id="sec-06" class="file-entry" data-sec="06">
+      <div class="entry-header">
+        <span class="entry-num">06</span>
+        <h2 class="entry-title">DELIVERY &amp; DISPATCH</h2>
+      </div>
+      <p class="entry-p">
+        Physical shipments are handled across serviceable PIN codes throughout India through authorized logistics networks:
       </p>
-      <ul class="legal-list">
-        <li><strong>Dispatch:</strong> Confirmed orders are typically processed and handed over to logistics partners within 24 to 48 business hours.</li>
-        <li><strong>Estimated Timelines:</strong> Deliveries typically take between 3 and 7 business days depending on destination location and regional logistics conditions.</li>
-        <li><strong>Tracking:</strong> Tracking credentials and status updates are provided via email or SMS upon carrier handover.</li>
-        <li><strong>Risk of Loss:</strong> Title and risk of loss pass to you upon successful physical delivery by the carrier to your designated address.</li>
+      <ul class="entry-list">
+        <li><strong>Dispatch Window:</strong> Verified orders are typically processed and transferred to carrier networks within 24 to 48 business hours.</li>
+        <li><strong>Transit Timelines:</strong> Deliveries typically conclude within 3 to 7 business days depending on destination geography and regional logistics conditions.</li>
+        <li><strong>Tracking:</strong> Tracking credentials and tracking links are dispatched electronically upon carrier handover.</li>
+        <li><strong>Transfer of Risk:</strong> Title and risk of loss pass to the customer upon verified physical delivery to the designated destination address.</li>
       </ul>
     </section>
 
+    <!-- Subtle Curiosity Microcopy -->
+    <div class="curiosity-strip" aria-hidden="true">
+      <p class="curiosity-text">« THERE'S MORE TO THIS THAN YOU THINK. »</p>
+    </div>
+
     <!-- SECTION 07 -->
-    <section id="sec-07" class="legal-section">
-      <span class="section-num">07</span>
-      <h2 class="section-heading">CANCELLATIONS / REFUNDS</h2>
-      <p class="legal-p">
-        We maintain clear, fair consumer policies for cancellations and returns:
+    <section id="sec-07" class="file-entry" data-sec="07">
+      <div class="entry-header">
+        <span class="entry-num">07</span>
+        <h2 class="entry-title">CANCELLATIONS &amp; REFUNDS</h2>
+      </div>
+      <p class="entry-p">
+        We maintain transparent, fair consumer satisfaction protocols:
       </p>
-      <ul class="legal-list">
-        <li><strong>Pre-Dispatch Cancellation:</strong> You may cancel an order at any time before it has been dispatched by contacting support.</li>
-        <li><strong>7-Day Return Window:</strong> You may request a return within 7 calendar days of delivery, provided the item is in its original, unopened condition with all factory seals intact.</li>
-        <li><strong>Hygiene &amp; Safety Exclusions:</strong> Opened, modified, or partially consumed items cannot be returned due to hygiene and consumer safety standards.</li>
-        <li><strong>Damaged or Defective Goods:</strong> If an item arrives damaged, defective, or leaking, report the issue with clear photo documentation within 48 hours of delivery for a prompt replacement or full refund.</li>
-        <li><strong>Refund Timelines:</strong> Approved refunds are credited to the original payment source (or via direct bank transfer for COD) within 5 to 7 business days.</li>
+      <ul class="entry-list">
+        <li><strong>Pre-Dispatch Cancellation:</strong> You may cancel an order prior to warehouse dispatch by contacting customer support.</li>
+        <li><strong>7-Day Return Window:</strong> You may initiate a return within 7 calendar days of verified delivery, provided the item remains in its original, unopened condition with all factory security seals intact.</li>
+        <li><strong>Hygiene &amp; Safety Exclusions:</strong> Opened, unsealed, tested, or partially consumed items cannot be returned due to consumer hygiene and statutory product safety standards.</li>
+        <li><strong>Damaged or Defective Deliveries:</strong> If a package arrives physically damaged or defective, notify support within 48 hours of delivery with photographic documentation for an immediate replacement or full refund.</li>
+        <li><strong>Settlement Timelines:</strong> Approved refunds are credited to the original payment instrument (or via direct bank transfer for COD transactions) within 5 to 7 business days.</li>
       </ul>
     </section>
 
     <!-- SECTION 08 -->
-    <section id="sec-08" class="legal-section">
-      <span class="section-num">08</span>
-      <h2 class="section-heading">INTELLECTUAL PROPERTY</h2>
-      <p class="legal-p">
-        All content, source code, visual design, typographic layouts, graphics, trademarks, audio/visual elements, and campaign materials hosted on this website are the intellectual property of the operator and protected under applicable copyright, trademark, and proprietary laws.
+    <section id="sec-08" class="file-entry" data-sec="08">
+      <div class="entry-header">
+        <span class="entry-num">08</span>
+        <h2 class="entry-title">INTELLECTUAL PROPERTY</h2>
+      </div>
+      <p class="entry-p">
+        All digital assets, source code, visual layouts, typography, logos, trademarks, audio-visual compositions, and campaign sequences hosted on this platform represent the intellectual property of the operator and are protected under Indian copyright, trademark, and related proprietary statutes.
       </p>
-      <p class="legal-p">
-        You may not copy, reproduce, scrape, modify, distribute, or reverse-engineer any portion of the website without prior express written authorization.
+      <p class="entry-p">
+        Unauthorized reproduction, scraping, framing, modification, distribution, or reverse-engineering of any platform asset is strictly prohibited without prior written authorization.
       </p>
     </section>
 
     <!-- SECTION 09 -->
-    <section id="sec-09" class="legal-section">
-      <span class="section-num">09</span>
-      <h2 class="section-heading">USER CONTENT</h2>
-      <p class="legal-p">
-        Any feedback, reviews, suggestions, or materials you transmit to us (excluding personal contact data protected by the Privacy Policy) shall be treated as non-confidential. You grant the operator a royalty-free, perpetual license to use, display, and adapt such content for service improvements and operational needs.
+    <section id="sec-09" class="file-entry" data-sec="09">
+      <div class="entry-header">
+        <span class="entry-num">09</span>
+        <h2 class="entry-title">USER CONTENT &amp; FEEDBACK</h2>
+      </div>
+      <p class="entry-p">
+        Any feedback, recommendations, submissions, or non-personal communications transmitted to us shall be treated as non-confidential. You grant the operator a perpetual, royalty-free license to utilize, adapt, and incorporate such feedback into platform improvements.
       </p>
     </section>
 
     <!-- SECTION 10 -->
-    <section id="sec-10" class="legal-section">
-      <span class="section-num">10</span>
-      <h2 class="section-heading">PROHIBITED USE</h2>
-      <p class="legal-p">
-        You agree not to engage in any of the following activities:
+    <section id="sec-10" class="file-entry" data-sec="10">
+      <div class="entry-header">
+        <span class="entry-num">10</span>
+        <h2 class="entry-title">PROHIBITED ACTIVITIES</h2>
+      </div>
+      <p class="entry-p">
+        Users are strictly prohibited from engaging in:
       </p>
-      <ul class="legal-list">
-        <li>Submitting fraudulent, automated, or scripted requests.</li>
-        <li>Attempting to bypass security mechanisms, rate limits, or authentication controls.</li>
-        <li>Introducing malware, viruses, or disruptive scripts to the server infrastructure.</li>
-        <li>Using the website for any purpose that violates applicable Indian or international laws.</li>
+      <ul class="entry-list">
+        <li>Deploying automated scrapers, bots, or extraction scripts across site endpoints.</li>
+        <li>Attempting to bypass security perimeters, rate limit controls, or token validations.</li>
+        <li>Transmitting corrupted files, virus payloads, or malicious scripts.</li>
+        <li>Utilizing the platform for any activity in violation of Indian or international law.</li>
       </ul>
     </section>
 
     <!-- SECTION 11 -->
-    <section id="sec-11" class="legal-section">
-      <span class="section-num">11</span>
-      <h2 class="section-heading">DISCLAIMERS</h2>
-      <p class="legal-p">
-        This website and all associated services are provided on an "as is" and "as available" basis. To the fullest extent permitted by Indian law, we disclaim all warranties, express or implied, regarding website uptime, uninterrupted operation, or error-free performance.
+    <section id="sec-11" class="file-entry" data-sec="11">
+      <div class="entry-header">
+        <span class="entry-num">11</span>
+        <h2 class="entry-title">DISCLAIMERS &amp; WARRANTIES</h2>
+      </div>
+      <p class="entry-p">
+        This website and its associated digital services are provided on an "as is" and "as available" basis. To the maximum extent permitted by applicable Indian law, we disclaim all warranties, express or implied, concerning uninterrupted uptime, absolute accuracy, or defect-free execution.
       </p>
     </section>
 
     <!-- SECTION 12 -->
-    <section id="sec-12" class="legal-section">
-      <span class="section-num">12</span>
-      <h2 class="section-heading">LIABILITY</h2>
-      <p class="legal-p">
-        In no event shall the operator or its service providers be liable for any indirect, incidental, special, or consequential damages arising out of your access to or use of the website.
+    <section id="sec-12" class="file-entry" data-sec="12">
+      <div class="entry-header">
+        <span class="entry-num">12</span>
+        <h2 class="entry-title">LIMITATION OF LIABILITY</h2>
+      </div>
+      <p class="entry-p">
+        In no circumstance shall the operating entity, its officers, or technical providers be liable for indirect, incidental, punitive, or consequential damages resulting from website access or inability to access services.
       </p>
-      <p class="legal-p">
-        Our maximum aggregate liability for any direct claim arising from a transaction shall be strictly limited to the actual amount paid by you for that specific transaction.
+      <p class="entry-p">
+        Our maximum aggregate liability for any proven direct claim arising under a transaction shall be strictly capped at the actual transaction value paid by the customer.
       </p>
     </section>
 
     <!-- SECTION 13 -->
-    <section id="sec-13" class="legal-section">
-      <span class="section-num">13</span>
-      <h2 class="section-heading">GOVERNING LAW</h2>
-      <p class="legal-p">
-        These Terms &amp; Conditions shall be governed by and construed in accordance with the substantive laws of India.
+    <section id="sec-13" class="file-entry" data-sec="13">
+      <div class="entry-header">
+        <span class="entry-num">13</span>
+        <h2 class="entry-title">GOVERNING LAW &amp; JURISDICTION</h2>
+      </div>
+      <p class="entry-p">
+        These Terms &amp; Conditions shall be governed by and interpreted under the substantive laws of the Republic of India.
       </p>
-      <p class="legal-p">
-        Any disputes, claims, or legal actions arising out of or in connection with these terms or website usage shall be subject to the exclusive jurisdiction of the competent courts in <strong>Hyderabad, Telangana, India</strong>.
+      <p class="entry-p">
+        Any disputes, claims, or proceedings arising under or related to these terms shall be subject to the exclusive jurisdiction of the competent courts situated in <strong>Hyderabad, Telangana, India</strong>.
       </p>
     </section>
 
     <!-- SECTION 14 -->
-    <section id="sec-14" class="legal-section">
-      <span class="section-num">14</span>
-      <h2 class="section-heading">CONTACT</h2>
-      <p class="legal-p">
-        For inquiries regarding these Terms &amp; Conditions or to reach our designated Grievance Officer under the Consumer Protection (E-Commerce) Rules, 2020:
+    <section id="sec-14" class="file-entry" data-sec="14">
+      <div class="entry-header">
+        <span class="entry-num">14</span>
+        <h2 class="entry-title">GRIEVANCE REDRESSAL &amp; CONTACT</h2>
+      </div>
+      <p class="entry-p">
+        In compliance with the Consumer Protection (E-Commerce) Rules, 2020 and Information Technology Act, 2000, our designated Grievance Officer details are published below:
       </p>
 
-      <div class="officer-box">
-        <p><strong>Designated Grievance Officer:</strong> Jogdhande Nikhil Patil</p>
-        <p><strong>Operating Entity:</strong> Sole Proprietorship</p>
-        <p><strong>Email:</strong> <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a></p>
-        <p><strong>Phone / WhatsApp:</strong> +91 93929 74031</p>
-        <p><strong>Registered Address:</strong> Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India</p>
-        <p><strong>Grievance Resolution:</strong> Acknowledged within 48 hours; resolved within 15 business days.</p>
+      <div class="officer-card">
+        <p class="officer-row"><strong>Designated Grievance Officer:</strong> Jogdhande Nikhil Patil</p>
+        <p class="officer-row"><strong>Entity Classification:</strong> Sole Proprietorship</p>
+        <p class="officer-row"><strong>Email:</strong> <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a></p>
+        <p class="officer-row"><strong>Direct Support / WhatsApp:</strong> +91 93929 74031</p>
+        <p class="officer-row"><strong>Operating Address:</strong> Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India</p>
+        <p class="officer-row"><strong>Resolution Commitment:</strong> Acknowledged within 48 hours; resolved within 15 business days.</p>
       </div>
     </section>
 
-    <!-- Subtle Campaign Clue Box -->
-    <div class="mystery-insight-box">
-      <p class="mystery-insight-text">« YOU HAVE NOT SEEN THE WHOLE PICTURE YET. »</p>
+    <!-- The "Wait, What?" Anomaly -->
+    <div class="anomaly-cluster" aria-label="Campaign Anomaly Note">
+      <div class="anomaly-meta">02 / 02</div>
+      <div class="anomaly-statement">« NOT EVERYTHING IS VISIBLE YET. »</div>
     </div>
 
-    <!-- Cross-Page Clue Footer -->
-    <div class="doc-clue-footer" aria-label="Document Metadata">
-      <div class="doc-clue-item">
-        <span>FILE:</span>
-        <span class="doc-clue-val">02</span>
-      </div>
-      <div class="doc-clue-item">
-        <span>STATUS:</span>
-        <span class="doc-clue-val">OPEN</span>
-      </div>
-      <div class="doc-clue-item">
-        <span>AUDITED:</span>
-        <span class="doc-clue-val">AUGUST 2026</span>
-      </div>
-      <div class="doc-clue-item">
-        <span>REFERENCE:</span>
-        <span class="doc-clue-val" id="campaignDateTag">22.09.2026</span>
-      </div>
+    <!-- Switcher to Return to File 01 -->
+    <div class="file-switch-box">
+      <a href="/privacy" class="file-switch-btn">
+        <span>← RETURN TO FILE 01</span>
+      </a>
+    </div>
+
+    <!-- Suspense Terminus Spacing -->
+    <div class="suspense-terminus">
+      <div class="suspense-date">22.09.2026</div>
+      <div class="suspense-line">« NOT YET. »</div>
     </div>
   </main>
 
-  <!-- Universal Campaign Footer -->
-  <footer class="campaign-footer">
+  <!-- Footer matching 22.09 Landing Page -->
+  <footer>
     <div class="wrap footer-inner">
-      <div class="footer-nav">
-        <a href="/privacy" class="footer-nav-link">PRIVACY</a>
-        <a href="/terms" class="footer-nav-link is-active" aria-current="page">TERMS</a>
+      <div class="footer-links">
+        <a href="/privacy" class="footer-link">PRIVACY</a>
+        <a href="/terms" class="footer-link is-active" aria-current="page">TERMS</a>
       </div>
-      <div class="footer-campaign-date" id="footerDateDisplay">22.09.2026</div>
+      <div class="footer-copy">22.09.2026</div>
     </div>
   </footer>
 
   <script>
-    (function() {
-      const CAMPAIGN_DATE = "2026-09-22";
-      const formattedDate = "22.09.2026";
-      const dateEl = document.getElementById('footerDateDisplay');
-      if (dateEl) dateEl.textContent = formattedDate;
-      const tagEl = document.getElementById('campaignDateTag');
-      if (tagEl) tagEl.textContent = formattedDate;
-    })();
+    document.addEventListener('DOMContentLoaded', function() {
+      // Dynamic Section Tracker on scroll
+      var tracker = document.getElementById('activeSectionTracker');
+      var sections = document.querySelectorAll('.file-entry');
+      
+      if ('IntersectionObserver' in window && tracker && sections.length > 0) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              var secNum = entry.target.getAttribute('data-sec');
+              if (secNum) {
+                tracker.textContent = secNum + ' / 14';
+              }
+            }
+          });
+        }, {
+          rootMargin: '-20% 0px -70% 0px'
+        });
+
+        sections.forEach(function(section) {
+          observer.observe(section);
+        });
+      }
+    });
   </script>
 </body>
 </html>
