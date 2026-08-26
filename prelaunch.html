@@ -561,9 +561,21 @@
     .consent-note {
       font-family: var(--font-mono);
       font-size: 11px;
-      line-height: 1.5;
-      color: var(--text-dim);
-      letter-spacing: 0.05em;
+      line-height: 1.6;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .consent-link {
+      color: var(--text);
+      text-decoration: underline;
+      text-decoration-color: var(--acid);
+      text-underline-offset: 2px;
+      transition: color 0.2s ease;
+    }
+
+    .consent-link:hover {
+      color: var(--acid);
     }
 
     .form-error {
@@ -819,7 +831,7 @@
             </button>
 
             <p class="consent-note">
-              By joining, you agree to receive 22.09 updates via WhatsApp and email. You can opt out anytime.
+              By joining, you agree to receive 22.09 updates and priority notifications via WhatsApp and email. You can opt out anytime with one click or by replying STOP. Read our <a href="/privacy" class="consent-link">Privacy Policy (File 01)</a>.
             </p>
           </form>
         </div>

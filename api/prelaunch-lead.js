@@ -25,6 +25,9 @@ function getKey() {
   return process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
 }
 
+// In-memory fallback for local development / unconfigured environments
+const localMemoryLeads = new Map();
+
 async function sb(path, options = {}) {
   const key = getKey();
   if (!key) throw new Error('Supabase key is not configured.');
@@ -49,6 +52,12 @@ async function sb(path, options = {}) {
 }
 
 async function sbLeadWrite(row) {
+  const key = getKey();
+  if (!key) {
+    // Store in local memory map to allow seamless local testing
+    localMemoryLeads.set(row.email, row);
+    return;
+  }
   const payload = JSON.stringify(row);
   // Emails are normalized to lowercase and the DB now has exact unique
   // indexes on email and WhatsApp, so this upsert is deterministic.
@@ -60,6 +69,10 @@ async function sbLeadWrite(row) {
 }
 
 async function countCampaignLeads() {
+  const key = getKey();
+  if (!key) {
+    return localMemoryLeads.size;
+  }
   const { headers } = await sb(`prelaunch_leads?select=id&campaign=eq.${encodeURIComponent(CAMPAIGN)}&limit=1`, {
     method: 'GET',
     headers: { Prefer: 'count=exact' },
@@ -71,10 +84,11 @@ async function countCampaignLeads() {
 
 export async function checkThresholdStatus() {
   if (process.env.MOCK_THRESHOLD_REACHED === 'true') return true;
+  if (!getKey()) return localMemoryLeads.size >= 1000;
   try {
     return (await countCampaignLeads()) >= 1000;
   } catch (err) {
-    console.error('[prelaunch-lead] Threshold query error:', err.message);
+    console.warn('[prelaunch-lead] Threshold query warning:', err.message);
     return false;
   }
 }
