@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Privacy Policy — Smelloff</title>
-<meta name="description" content="FILE 01 — Smelloff Privacy Policy. Clear, truthful disclosure of what information is collected, how it is processed, and your data protection rights for the 22.09 campaign and ODORSTRIKE.">
+<title>Privacy Policy // FILE 01</title>
+<meta name="description" content="FILE 01 — Privacy Policy and data processing disclosures. Information collected, processing purposes, communication preferences, and data rights.">
 <link rel="canonical" href="https://smelloff.in/privacy">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 <meta name="geo.region" content="IN-TG">
@@ -16,9 +16,9 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://smelloff.in/privacy">
-<meta property="og:title" content="Privacy Policy — Smelloff">
-<meta property="og:description" content="FILE 01 — Privacy Policy for Smelloff and the 22.09 campaign. Clear, plain-English data protection disclosures.">
-<meta property="og:site_name" content="Smelloff">
+<meta property="og:title" content="Privacy Policy // FILE 01">
+<meta property="og:description" content="FILE 01 — Privacy Policy and data processing directives.">
+<meta property="og:site_name" content="22.09">
 <meta property="og:image" content="https://smelloff.in/assets/og-prelaunch-2209.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -26,8 +26,8 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Privacy Policy — Smelloff">
-<meta name="twitter:description" content="FILE 01 — Privacy Policy for Smelloff and the 22.09 campaign.">
+<meta name="twitter:title" content="Privacy Policy // FILE 01">
+<meta name="twitter:description" content="FILE 01 — Privacy Policy and data processing directives.">
 <meta name="twitter:image" content="https://smelloff.in/assets/og-prelaunch-2209.png">
 
 <!-- Favicon -->
@@ -64,7 +64,7 @@
     background: var(--bg);
     color: var(--text);
     font-size: 16px;
-    line-height: 1.7;
+    line-height: 1.75;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
@@ -84,7 +84,7 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* Accessibility skip */
+  /* Accessibility skip link */
   .skip-link {
     position: absolute;
     top: -100px;
@@ -97,12 +97,12 @@
     font-weight: 700;
     z-index: 200;
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: 2px;
     transition: top 0.2s ease;
   }
   .skip-link:focus { top: 20px; }
 
-  /* Layout Container */
+  /* Container */
   .wrap {
     width: 100%;
     max-width: 860px;
@@ -116,12 +116,12 @@
   /* Top Navigation Bar */
   .top-bar {
     border-bottom: 1px solid var(--rule);
-    background: rgba(8, 8, 8, 0.92);
+    background: rgba(8, 8, 8, 0.94);
     backdrop-filter: blur(8px);
     position: sticky;
     top: 0;
     z-index: 50;
-    padding: 18px 0;
+    padding: 16px 0;
   }
   .top-bar-inner {
     display: flex;
@@ -186,8 +186,8 @@
   .doc-eyebrow {
     font-family: var(--font-mono);
     font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.24em;
+    font-weight: 600;
+    letter-spacing: 0.26em;
     text-transform: uppercase;
     color: var(--acid);
     margin-bottom: 16px;
@@ -204,7 +204,7 @@
   .hero-title {
     font-family: var(--font-heading);
     font-weight: 900;
-    font-size: clamp(46px, 9vw, 84px);
+    font-size: clamp(44px, 9vw, 84px);
     line-height: 0.94;
     letter-spacing: 0.01em;
     text-transform: uppercase;
@@ -214,7 +214,7 @@
   .hero-sub {
     font-family: var(--font-editorial);
     font-style: italic;
-    font-size: clamp(28px, 5vw, 42px);
+    font-size: clamp(26px, 5vw, 40px);
     line-height: 1.1;
     color: var(--acid);
     margin-bottom: 24px;
@@ -228,62 +228,9 @@
     max-width: 720px;
   }
 
-  /* Plain English Callout Panel */
-  .plain-summary-panel {
-    background: var(--bg-surface);
-    border: 1px solid var(--rule-strong);
-    border-left: 3px solid var(--acid);
-    padding: 28px 24px;
-    margin: 36px 0 44px;
-    border-radius: 2px;
-  }
-  .plain-summary-title {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--acid);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .plain-summary-text {
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--text);
-    margin-bottom: 12px;
-  }
-  .plain-summary-points {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-top: 18px;
-    padding-top: 18px;
-    border-top: 1px solid var(--rule);
-  }
-  @media (min-width: 640px) {
-    .plain-summary-points { grid-template-columns: repeat(3, 1fr); }
-  }
-  .plain-point {
-    font-size: 14px;
-    color: var(--text-muted);
-    line-height: 1.55;
-  }
-  .plain-point strong {
-    color: var(--text);
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  /* Table of Contents / Fast Navigation */
+  /* Table of Contents / Section Directory */
   .toc-bar {
-    margin: 0 0 48px;
+    margin: 32px 0 40px;
     padding: 16px 0;
     border-bottom: 1px solid var(--rule);
   }
@@ -319,7 +266,7 @@
     border-color: var(--acid);
   }
 
-  /* Main Legal Content Section */
+  /* Main Legal Content */
   .legal-content {
     flex: 1;
     padding-bottom: 80px;
@@ -387,7 +334,7 @@
     color: var(--acid);
   }
 
-  /* Specific Table / Data Grid */
+  /* Data Table */
   .data-grid {
     width: 100%;
     border-collapse: collapse;
@@ -417,7 +364,7 @@
     font-weight: 600;
   }
 
-  /* Contact & Grievance Officer Card */
+  /* Contact / Officer Box */
   .officer-box {
     background: var(--bg-surface);
     border: 1px solid var(--rule-strong);
@@ -435,7 +382,25 @@
     color: var(--text);
   }
 
-  /* Document Clues Metadata Section */
+  /* Non-operative decorative campaign clue */
+  .mystery-insight-box {
+    background: rgba(184, 255, 87, 0.02);
+    border: 1px dashed var(--acid-border);
+    padding: 24px;
+    margin: 40px 0 20px;
+    text-align: center;
+    border-radius: 2px;
+  }
+  .mystery-insight-text {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--acid);
+    margin: 0;
+  }
+
+  /* Metadata Clue Footer */
   .doc-clue-footer {
     padding: 40px 0 20px;
     border-top: 1px solid var(--rule);
@@ -514,24 +479,10 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Privacy Policy — Smelloff",
+  "name": "Privacy Policy // FILE 01",
   "url": "https://smelloff.in/privacy",
-  "description": "Smelloff and ODORSTRIKE privacy policy, data protection disclosures, and user rights.",
-  "inLanguage": "en-IN",
-  "publisher": {
-    "@type": "Organization",
-    "name": "Smelloff",
-    "url": "https://smelloff.in",
-    "email": "smelloffsupport@gmail.com",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Sanathnagar, Erragadda",
-      "addressLocality": "Hyderabad",
-      "addressRegion": "Telangana",
-      "postalCode": "500018",
-      "addressCountry": "IN"
-    }
-  }
+  "description": "Privacy policy, data processing disclosures, and user rights.",
+  "inLanguage": "en-IN"
 }
 </script>
 </head>
@@ -565,44 +516,13 @@
   <main id="content" class="wrap legal-content">
     <!-- Hero Header -->
     <header class="hero-header">
-      <div class="doc-eyebrow">FILE 01 // DATA DIRECTIVE</div>
+      <div class="doc-eyebrow">FILE 01</div>
       <h1 class="hero-title">YOU WANT TO KNOW.</h1>
       <div class="hero-sub">So do we.</div>
       <p class="hero-dek">
-        This document explains what information Smelloff collects, why we collect it, how it is processed, and the exact choices you have regarding your personal data during the 22.09 campaign and when ordering ODORSTRIKE.
+        This document explains what information is collected across this website, why it is collected, how it is processed, and the choices and rights you have regarding your personal data.
       </p>
     </header>
-
-    <!-- Plain English Summary Panel -->
-    <section class="plain-summary-panel" aria-labelledby="plain-summary-heading">
-      <div class="plain-summary-title" id="plain-summary-heading">
-        <span>⚡</span>
-        <span>WHAT THIS REALLY MEANS</span>
-      </div>
-      <p class="plain-summary-text">
-        You give us information when you join the 22.09 updates, contact us, place an order, or use parts of our website that require information.
-      </p>
-      <p class="plain-summary-text">
-        We use that information to provide services, communicate with you, operate the website, improve the experience, and send marketing communications where permitted.
-      </p>
-      <p class="plain-summary-text">
-        You can unsubscribe from marketing communications anytime with one click or by replying STOP.
-      </p>
-      <div class="plain-summary-points">
-        <div class="plain-point">
-          <strong>Collection</strong>
-          Only the contact, delivery, or technical details necessary to fulfill your request.
-        </div>
-        <div class="plain-point">
-          <strong>No Selling</strong>
-          We never sell, rent, or trade your personal information to third-party brokers.
-        </div>
-        <div class="plain-point">
-          <strong>Full Control</strong>
-          Direct rights to access, correct, delete, or withdraw consent at any time.
-        </div>
-      </div>
-    </section>
 
     <!-- Quick Navigation Index -->
     <nav class="toc-bar" aria-label="Privacy Policy Sections">
@@ -611,14 +531,14 @@
         <a href="#sec-01" class="toc-chip">01 · Collect</a>
         <a href="#sec-02" class="toc-chip">02 · Purpose</a>
         <a href="#sec-03" class="toc-chip">03 · How Used</a>
-        <a href="#sec-04" class="toc-chip">04 · Processors</a>
+        <a href="#sec-04" class="toc-chip">04 · Providers</a>
         <a href="#sec-05" class="toc-chip">05 · Cookies</a>
-        <a href="#sec-06" class="toc-chip">06 · WhatsApp & Email</a>
+        <a href="#sec-06" class="toc-chip">06 · Communications</a>
         <a href="#sec-07" class="toc-chip">07 · Retention</a>
-        <a href="#sec-08" class="toc-chip">08 · Your Rights</a>
+        <a href="#sec-08" class="toc-chip">08 · Choices</a>
         <a href="#sec-09" class="toc-chip">09 · Security</a>
         <a href="#sec-10" class="toc-chip">10 · Children</a>
-        <a href="#sec-11" class="toc-chip">11 · Updates</a>
+        <a href="#sec-11" class="toc-chip">11 · Policy Changes</a>
         <a href="#sec-12" class="toc-chip">12 · Contact</a>
       </div>
     </nav>
@@ -626,34 +546,34 @@
     <!-- SECTION 01 -->
     <section id="sec-01" class="legal-section">
       <span class="section-num">01</span>
-      <h2 class="section-heading">WHAT WE COLLECT</h2>
+      <h2 class="section-heading">INFORMATION WE COLLECT</h2>
       <p class="legal-p">
-        We collect only the information necessary to provide you with access to the 22.09 campaign, deliver product orders, communicate updates, and secure our systems. Depending on how you interact with Smelloff, this includes:
+        We collect only the information necessary to fulfill user submissions, process authorized transactions, deliver communications, and secure website infrastructure:
       </p>
 
       <table class="data-grid" aria-label="Categories of collected personal data">
         <thead>
           <tr>
-            <th>Interaction</th>
+            <th>Channel</th>
             <th>Data Categories Collected</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>22.09 Campaign Access Form</strong></td>
-            <td>Full name, 10-digit Indian WhatsApp mobile number, email address, campaign referral source / UTM tags, timestamp, and affirmative consent status.</td>
+            <td><strong>Campaign Access Submissions</strong></td>
+            <td>Name, 10-digit Indian mobile / WhatsApp number, email address, submission timestamp, referral parameters (UTM tags), and affirmative consent status.</td>
           </tr>
           <tr>
-            <td><strong>Storefront Orders & Checkout</strong></td>
-            <td>Customer name, phone number, shipping address, PIN code, city, state, selected product quantity, and payment preference (Prepaid UPI or Cash on Delivery).</td>
+            <td><strong>Storefront Orders &amp; Transactions</strong></td>
+            <td>Full recipient name, contact telephone number, shipping address, city, state, postal PIN code, item selections, and chosen payment method.</td>
           </tr>
           <tr>
             <td><strong>Payment Verification</strong></td>
-            <td>UPI Transaction Reference ID (UTR / Reference number) and timestamp for manual or automated verification. <em>Note: Smelloff does not collect, handle, or store your credit/debit card numbers or UPI PINs.</em></td>
+            <td>UPI Transaction Reference ID (UTR / Reference number) and timestamp for automated or manual verification. <em>Card numbers, bank credentials, and UPI PINs are never collected or stored.</em></td>
           </tr>
           <tr>
-            <td><strong>Technical & Browsing Information</strong></td>
-            <td>IP address (anonymized/salted for spam prevention), browser type, device characteristics, request timestamp, and essential session identifiers.</td>
+            <td><strong>Technical Telemetry</strong></td>
+            <td>Salted / hashed IP address (for rate limiting and fraud prevention), browser type, device operating characteristics, and access timestamps.</td>
           </tr>
         </tbody>
       </table>
@@ -664,106 +584,106 @@
       <span class="section-num">02</span>
       <h2 class="section-heading">WHY WE COLLECT IT</h2>
       <p class="legal-p">
-        Every category of collected data corresponds to a specific, legitimate operational necessity:
+        Every category of data collected corresponds to a specific, legitimate operational necessity:
       </p>
       <ul class="legal-list">
-        <li><strong>Campaign Notification:</strong> To send you the reveal briefing and priority access for 22.09 as requested by you when completing the access form.</li>
-        <li><strong>Order Fulfillment:</strong> To pack, dispatch, route, and deliver physical ODORSTRIKE bottles to your designated shipping address across India.</li>
-        <li><strong>Transactional Communication:</strong> To dispatch order confirmation emails, real-time shipment tracking numbers via courier integration, and delivery status notifications.</li>
-        <li><strong>Customer Support:</strong> To address your questions, resolve shipping delays, assist with damaged shipments, or process eligible return requests.</li>
-        <li><strong>Security & Abuse Prevention:</strong> To protect our API endpoints against bot attacks, spam submissions, and unauthorized automated requests.</li>
+        <li><strong>Campaign Dispatches:</strong> To send requested campaign briefings, updates, and milestone access notifications.</li>
+        <li><strong>Order Fulfillment:</strong> To pack, route, and physically dispatch orders to your specified destination.</li>
+        <li><strong>Transactional Notifications:</strong> To provide order receipts, real-time shipment tracking numbers, and delivery status updates.</li>
+        <li><strong>Customer Support:</strong> To answer inquiries, troubleshoot issues, process eligible returns, or resolve delivery exceptions.</li>
+        <li><strong>System Integrity:</strong> To prevent denial-of-service attempts, spam bots, and unauthorized automated API activity.</li>
       </ul>
     </section>
 
     <!-- SECTION 03 -->
     <section id="sec-03" class="legal-section">
       <span class="section-num">03</span>
-      <h2 class="section-heading">HOW WE USE IT</h2>
+      <h2 class="section-heading">HOW INFORMATION IS USED</h2>
       <p class="legal-p">
-        Your data is processed strictly in accordance with Indian data protection laws, including the Information Technology Act, 2000, the SPDI Rules 2011, and the foundational notice and consent principles of the Digital Personal Data Protection Act, 2023.
+        Personal information is processed in accordance with applicable Indian data protection principles, including the Information Technology Act, 2000, the SPDI Rules 2011, and the foundational notice and consent framework of the Digital Personal Data Protection Act, 2023.
       </p>
       <p class="legal-p">
-        We do not use your personal information for automated profiling that produces legal effects, nor do we sell, rent, or lease contact lists to third-party advertisers. Processing is restricted to service execution, lawful order compliance, and direct brand communications for which you gave explicit consent.
+        We do not sell, rent, or trade contact databases to third-party data brokers. Information is processed strictly for the operational purposes for which it was supplied.
       </p>
     </section>
 
     <!-- SECTION 04 -->
     <section id="sec-04" class="legal-section">
       <span class="section-num">04</span>
-      <h2 class="section-heading">WHO MAY PROCESS IT</h2>
+      <h2 class="section-heading">SERVICE PROVIDERS</h2>
       <p class="legal-p">
-        To operate our infrastructure and deliver products, Smelloff collaborates with trusted technical data processors under strict confidentiality agreements. We only disclose the minimum information required for each specific function:
+        We engage vetted technical service providers to maintain website infrastructure and fulfill services. These providers have access only to the data necessary for their specific role:
       </p>
       <ul class="legal-list">
-        <li><strong>Database Infrastructure:</strong> <em>Supabase Inc.</em> — provides secure, encrypted cloud database storage for order records, prelaunch access signups, and transaction tracking.</li>
-        <li><strong>Email Transmission:</strong> <em>Resend Technologies Inc.</em> — delivers transactional receipt emails, order confirmations, and requested 22.09 campaign briefings.</li>
-        <li><strong>Logistics & Courier Network:</strong> <em>Shiprocket (BigFoot Retail Solutions Pvt. Ltd.)</em> and partnered carrier fleets (Delhivery, Blue Dart, XpressBees, India Post, Shadowfax) — receive recipient name, address, PIN code, and mobile number solely to route and physically deliver packages.</li>
-        <li><strong>Web Hosting:</strong> <em>Google Cloud Platform / Cloud Run</em> — hosts website files, secure API routes, and serves encrypted HTTPS web traffic.</li>
-        <li><strong>Statutory Authorities:</strong> We may disclose information if strictly required by applicable Indian law, court order, tax audit (GST compliance), or governmental subpoena.</li>
+        <li><strong>Database Hosting:</strong> <em>Supabase Inc.</em> — provides secure, encrypted cloud database storage for records and transactions.</li>
+        <li><strong>Email Services:</strong> <em>Resend Technologies Inc.</em> — handles transactional emails, receipts, and requested campaign updates.</li>
+        <li><strong>Logistics Network:</strong> <em>Shiprocket (BigFoot Retail Solutions Pvt. Ltd.)</em> and partnered carrier fleets (Delhivery, Blue Dart, XpressBees, India Post, Shadowfax) — receive recipient contact and address details solely to route and deliver physical packages.</li>
+        <li><strong>Cloud Infrastructure:</strong> <em>Google Cloud Platform</em> — hosts web servers and application logic over encrypted connections.</li>
+        <li><strong>Legal Compliance:</strong> Information may be disclosed where strictly mandated by applicable law, court order, tax audit, or governmental directive.</li>
       </ul>
     </section>
 
     <!-- SECTION 05 -->
     <section id="sec-05" class="legal-section">
       <span class="section-num">05</span>
-      <h2 class="section-heading">COOKIES & ANALYTICS</h2>
+      <h2 class="section-heading">COOKIES &amp; ANALYTICS</h2>
       <p class="legal-p">
-        Smelloff utilizes a privacy-first approach to web analytics and storage:
+        We maintain a minimal and privacy-conscious approach to website storage:
       </p>
       <ul class="legal-list">
-        <li><strong>Essential Storage:</strong> Local storage is used for essential site functions, such as remembering your cart state, consent banner status, and form session flow. These do not track you across external websites.</li>
-        <li><strong>First-Party Anonymous Telemetry:</strong> We record lightweight, cookieless page performance metrics using salted, rotated hashes to prevent individual profiling.</li>
-        <li><strong>Consent-Gated Third-Party Analytics:</strong> Optional tracking tags (Google Analytics 4, Meta Pixel / CAPI, Microsoft Clarity) are strictly gated and do not execute unless affirmative consent is granted. You can withdraw consent or clear your browser storage at any time.</li>
+        <li><strong>Essential Storage:</strong> Local storage is used for core functions such as preserving cart state, submission feedback, and consent preferences.</li>
+        <li><strong>Cookieless Telemetry:</strong> First-party pageview and event metrics use temporary, salted hashes without tracking individual users across third-party websites.</li>
+        <li><strong>Consent-Gated Analytics:</strong> Optional third-party analytics (Google Analytics, Meta Pixel / Conversions API) only operate when affirmative consent has been granted. You can clear your storage or manage preferences at any time.</li>
       </ul>
     </section>
 
     <!-- SECTION 06 -->
     <section id="sec-06" class="legal-section">
       <span class="section-num">06</span>
-      <h2 class="section-heading">WHATSAPP & EMAIL COMMUNICATIONS</h2>
+      <h2 class="section-heading">COMMUNICATIONS</h2>
       <p class="legal-p">
-        When you submit your mobile number and email in the 22.09 campaign form or during checkout, you consent to receive direct communications regarding the 22.09 reveal and your order updates.
+        When you submit your contact details on the website or during checkout, you consent to receive direct transactional and campaign communications.
       </p>
       <p class="legal-p">
-        We respect your attention and maintain zero tolerance for unsolicited spam:
+        You retain immediate control over all communication channels:
       </p>
       <ul class="legal-list">
-        <li><strong>WhatsApp Updates:</strong> We send milestone notifications related to 22.09 and real-time shipping updates for orders. You can immediately stop WhatsApp messages by replying with the single word <strong>"STOP"</strong> or <strong>"UNSUBSCRIBE"</strong>.</li>
-        <li><strong>Email Updates:</strong> Every marketing or campaign email includes a direct, one-click unsubscribe link at the bottom. Clicking it instantly removes your address from future campaign dispatches.</li>
-        <li><strong>Manual Opt-Out:</strong> You may also email <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a> with the subject "Opt Out" and your registered contact details.</li>
+        <li><strong>WhatsApp Messages:</strong> You can opt out at any time by replying with the word <strong>"STOP"</strong> or <strong>"UNSUBSCRIBE"</strong>.</li>
+        <li><strong>Email Updates:</strong> Every campaign email includes a direct, one-click unsubscribe link in the footer.</li>
+        <li><strong>Direct Opt-Out:</strong> You may also email <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a> with the subject "Opt Out" to have your contact details removed from future broadcasts.</li>
       </ul>
     </section>
 
     <!-- SECTION 07 -->
     <section id="sec-07" class="legal-section">
       <span class="section-num">07</span>
-      <h2 class="section-heading">HOW LONG WE KEEP INFORMATION</h2>
+      <h2 class="section-heading">RETENTION</h2>
       <p class="legal-p">
-        Data is retained only as long as necessary to fulfill the purposes outlined in this policy:
+        Data is retained only for the duration necessary to satisfy the purposes for which it was gathered:
       </p>
       <ul class="legal-list">
-        <li><strong>Campaign Signups:</strong> Retained until the conclusion of the 22.09 campaign lifecycle, or until you request deletion/unsubscribe.</li>
-        <li><strong>Commercial Order Records:</strong> Under Section 36 of the Central Goods and Services Tax (CGST) Act, 2017 and applicable Indian commercial law, invoices, transaction details, and delivery proofs must be retained for a mandatory period of at least 72 months (6 years) from the due date of filing the annual return.</li>
-        <li><strong>Support & Inquiry Logs:</strong> Retained for 180 days following the resolution of your inquiry, after which they are purged or anonymized.</li>
+        <li><strong>Campaign Contacts:</strong> Retained for the duration of the campaign lifecycle or until an opt-out / erasure request is received.</li>
+        <li><strong>Commercial Transaction Records:</strong> Invoices, payment verifications, and delivery records are retained for at least 72 months to satisfy mandatory statutory accounting and tax (GST) requirements under Indian law.</li>
+        <li><strong>Customer Inquiries:</strong> Retained for 180 days following resolution, after which they are archived or deleted.</li>
       </ul>
     </section>
 
     <!-- SECTION 08 -->
     <section id="sec-08" class="legal-section">
       <span class="section-num">08</span>
-      <h2 class="section-heading">YOUR CHOICES & RIGHTS</h2>
+      <h2 class="section-heading">YOUR CHOICES</h2>
       <p class="legal-p">
-        You possess comprehensive rights regarding your personal information under applicable Indian law:
+        Under applicable Indian law, you have specific rights regarding your personal information:
       </p>
       <ul class="legal-list">
-        <li><strong>Right to Summary & Access:</strong> You can request a summary of the personal data we hold about you and the processing activities undertaken.</li>
-        <li><strong>Right to Correction & Updating:</strong> You may request correction of inaccurate, outdated, or incomplete personal details.</li>
-        <li><strong>Right to Erasure:</strong> You can request the deletion of your personal information (excluding records required by statutory tax and accounting mandates).</li>
-        <li><strong>Right to Withdraw Consent:</strong> You may withdraw previously granted marketing consent at any time without penalty.</li>
-        <li><strong>Right to Grievance Redressal:</strong> You have the right to register a grievance with our designated Grievance Officer and receive an expeditious resolution.</li>
+        <li><strong>Access:</strong> The right to request a summary of the personal data held about you.</li>
+        <li><strong>Correction:</strong> The right to update or correct inaccurate or incomplete data.</li>
+        <li><strong>Erasure:</strong> The right to request deletion of your information, subject to mandatory legal and statutory retention requirements.</li>
+        <li><strong>Withdrawal of Consent:</strong> The right to withdraw consent for marketing or non-essential communications at any time.</li>
+        <li><strong>Grievance Redressal:</strong> The right to have data-related concerns investigated by our designated Grievance Officer.</li>
       </ul>
       <p class="legal-p">
-        To exercise any of these rights, email <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a> from your registered email address with your specific request.
+        To exercise any right, submit a request to <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a> from your registered email address.
       </p>
     </section>
 
@@ -772,10 +692,7 @@
       <span class="section-num">09</span>
       <h2 class="section-heading">SECURITY</h2>
       <p class="legal-p">
-        We implement robust technical and organizational security measures to protect your information against unauthorized access, alteration, disclosure, or destruction. All data transmissions between your browser and our servers are encrypted using modern Transport Layer Security (TLS 1.2 / TLS 1.3). Database access is strictly restricted through role-based access control (RBAC), environment secret isolation, and encrypted cloud storage.
-      </p>
-      <p class="legal-p">
-        While we maintain rigorous security protocols, no digital transmission or electronic storage system is 100% invulnerable. We encourage you to maintain privacy vigilance on your personal devices.
+        We implement administrative, technical, and physical safeguards to protect information against unauthorized access, loss, or alteration. All web communications utilize TLS encryption, and database access is restricted via role-based credentials. While we maintain rigorous safeguards, no digital system can guarantee absolute security.
       </p>
     </section>
 
@@ -784,54 +701,59 @@
       <span class="section-num">10</span>
       <h2 class="section-heading">CHILDREN</h2>
       <p class="legal-p">
-        Smelloff products, website experiences, and campaigns are intended strictly for individuals aged 18 and older. We do not knowingly solicit, collect, or process personal information from children or minors under the age of 18. If we discover that personal information of a minor has been inadvertently submitted, we will immediately delete that record from our active databases.
+        This website and its associated campaigns are intended solely for individuals aged 18 and older. We do not knowingly solicit or collect data from minors. If personal data of a minor is found to have been submitted, it will be promptly removed.
       </p>
     </section>
 
     <!-- SECTION 11 -->
     <section id="sec-11" class="legal-section">
       <span class="section-num">11</span>
-      <h2 class="section-heading">CHANGES TO THIS POLICY</h2>
+      <h2 class="section-heading">POLICY CHANGES</h2>
       <p class="legal-p">
-        We may update this Privacy Policy periodically to reflect changes in our operational practices, technical features, or legal obligations. When changes are made, the revised policy will be posted on this page with an updated revision date. We encourage you to review this page periodically to stay informed about our data protection standards.
+        This Privacy Policy may be updated periodically to reflect changes in technical features, operational practices, or statutory requirements. Revised versions will be published on this page with an updated revision date.
       </p>
     </section>
 
     <!-- SECTION 12 -->
     <section id="sec-12" class="legal-section">
       <span class="section-num">12</span>
-      <h2 class="section-heading">CONTACT & GRIEVANCE REDRESSAL</h2>
+      <h2 class="section-heading">CONTACT</h2>
       <p class="legal-p">
-        In compliance with the Information Technology Act 2000, Consumer Protection (E-Commerce) Rules 2020, and DPDP Act framework, the contact details of our designated Grievance Officer are provided below:
+        For questions regarding this policy, data rights, or consumer grievances in compliance with the Information Technology Act, 2000 and Consumer Protection (E-Commerce) Rules, 2020:
       </p>
 
       <div class="officer-box">
-        <p><strong>Grievance Officer:</strong> Jogdhande Nikhil Patil</p>
-        <p><strong>Entity Name:</strong> Smelloff (Sole Proprietorship)</p>
+        <p><strong>Designated Grievance Officer:</strong> Jogdhande Nikhil Patil</p>
+        <p><strong>Operating Entity:</strong> Sole Proprietorship</p>
         <p><strong>Email:</strong> <a href="mailto:smelloffsupport@gmail.com" class="legal-link">smelloffsupport@gmail.com</a></p>
         <p><strong>Alternative Contact:</strong> <a href="mailto:support@smelloff.in" class="legal-link">support@smelloff.in</a></p>
         <p><strong>Phone / WhatsApp:</strong> +91 93929 74031</p>
         <p><strong>Registered Address:</strong> Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India</p>
-        <p><strong>Resolution SLA:</strong> Grievance requests are acknowledged within 48 hours and resolved within 15 business days.</p>
+        <p><strong>Response Timeline:</strong> Acknowledgment within 48 hours; resolution within 15 business days.</p>
       </div>
     </section>
 
-    <!-- Cross-Page Mystery Clue Footer -->
+    <!-- Subtle Campaign Clue Box -->
+    <div class="mystery-insight-box">
+      <p class="mystery-insight-text">« YOU ARE LOOKING IN THE RIGHT PLACE. »</p>
+    </div>
+
+    <!-- Cross-Page Clue Footer -->
     <div class="doc-clue-footer" aria-label="Document Metadata">
       <div class="doc-clue-item">
-        <span>DOCUMENT:</span>
-        <span class="doc-clue-val">FILE 01 — DATA</span>
+        <span>FILE:</span>
+        <span class="doc-clue-val">01</span>
       </div>
       <div class="doc-clue-item">
-        <span>CASE STATUS:</span>
+        <span>STATUS:</span>
         <span class="doc-clue-val">OPEN</span>
       </div>
       <div class="doc-clue-item">
-        <span>LAST AUDITED:</span>
+        <span>AUDITED:</span>
         <span class="doc-clue-val">AUGUST 2026</span>
       </div>
       <div class="doc-clue-item">
-        <span>INDEX REF:</span>
+        <span>REFERENCE:</span>
         <span class="doc-clue-val" id="campaignDateTag">22.09.2026</span>
       </div>
     </div>
