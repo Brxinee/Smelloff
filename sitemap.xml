@@ -5,14 +5,9 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://smelloff.in/</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-09-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://smelloff.in/assets/og-brand.jpg</image:loc>
-      <image:title>Fabric Odor Remover for Clothes | Smelloff India</image:title>
-      <image:caption>Smelloff — Smell Proof. Always. No One Will Know.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>https://smelloff.in/odorstrike</loc>
@@ -94,7 +89,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/fabric-deodorizer-spray-india-guide-2026</loc>
-    <lastmod>2026-08-20</lastmod>
+    <lastmod>2026-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -312,7 +307,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/which-fabrics-hold-odor-most</loc>
-    <lastmod>2026-08-20</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
