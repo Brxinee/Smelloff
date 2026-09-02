@@ -291,7 +291,7 @@ const PAGES = [
     'solutions/denim-outerwear-dry-care.html',
   ].map((f) => ({ file: f, header: 'header', footer: 'footer', buy: true })),
   { file: 'index.html', header: 'header.site', footer: 'footer' },
-  { file: 'odorstrike.html', header: 'nav.site-nav', footer: 'footer', cart: 'drawer', skip: 'product-hero' },
+  { file: 'odorstrike.html', header: 'nav.site-nav', footer: 'footer', cart: 'drawer', skip: 'so-pdp' },
 ];
 
 function findBlock(html, selector) {
