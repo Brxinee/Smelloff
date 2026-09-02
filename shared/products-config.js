@@ -34,11 +34,11 @@ export const BASE_PRODUCT = {
 };
 
 export const BUNDLES_CONFIG = {
-  enabled: false, // Flagged for controlled experimentation; when enabled, maps strictly to integer multiples of OS-001-50ML
+  enabled: true, // Enabled for single source of truth bundle pricing
   variants: {
     solo: { id: 'solo', qty: 1, title: '1 × 50ml Bottle', sku: 'OS-001-50ML', price: 229, mrp: 499, badge: 'Standard' },
-    duo:  { id: 'duo',  qty: 2, title: '2 × 50ml Bottles', sku: 'OS-001-50ML', price: 458, mrp: 998, badge: 'Home & Commute' },
-    trio: { id: 'trio', qty: 3, title: '3 × 50ml Bottles', sku: 'OS-001-50ML', price: 687, mrp: 1497, badge: 'Triple Pack' }
+    duo:  { id: 'duo',  qty: 2, title: '2 × 50ml Bottles', sku: 'OS-001-50ML', price: 429, mrp: 998, badge: 'Home & Commute' },
+    trio: { id: 'trio', qty: 3, title: '3 × 50ml Bottles', sku: 'OS-001-50ML', price: 599, mrp: 1497, badge: 'Triple Pack' }
   }
 };
 
@@ -155,9 +155,19 @@ export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {
   if (isNaN(qty) || qty < 1) qty = 1;
   if (qty > BASE_PRODUCT.maxQuantity) qty = BASE_PRODUCT.maxQuantity;
 
-  const unitPrice = BASE_PRODUCT.price;
+  let subtotal = 0;
+  if (qty === 1) {
+    subtotal = BUNDLES_CONFIG.variants.solo.price; // 229
+  } else if (qty === 2) {
+    subtotal = BUNDLES_CONFIG.variants.duo.price; // 429
+  } else if (qty === 3) {
+    subtotal = BUNDLES_CONFIG.variants.trio.price; // 599
+  } else {
+    subtotal = qty * BASE_PRODUCT.price;
+  }
+
+  const unitPrice = Math.round((subtotal / qty) * 100) / 100;
   const unitMrp = BASE_PRODUCT.mrp;
-  const subtotal = qty * unitPrice;
   const mrpTotal = qty * unitMrp;
   const shipping = BASE_PRODUCT.shippingCost;
   const isCod = String(paymentMethod || '').toLowerCase() === 'cod';
@@ -181,4 +191,8 @@ export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {
     isCod,
     status: isCod ? ORDER_LIFECYCLE.COD.initialStatus : ORDER_LIFECYCLE.PREPAID_UPI.initialStatus
   };
+}
+
+export function getPricingForQuantity(quantity = 1, paymentMethod = 'prepaid') {
+  return calculateOrderTotal(quantity, paymentMethod);
 }

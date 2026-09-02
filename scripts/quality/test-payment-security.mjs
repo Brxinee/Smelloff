@@ -134,14 +134,71 @@ await runAttackTest(3, 'Order ownership forgery with mismatched phone/token -> B
 
 // ATTACK 4: Attempt client-side price tampering in calculateOrderTotal
 await runAttackTest(4, 'Tamper with unit price or amount -> Server strictly recalculates authoritative total', () => {
-  const authoritative1 = calculateOrderTotal(1, 'upi');
-  assert.strictEqual(authoritative1.total, 229);
-  assert.strictEqual(authoritative1.amountPaise, 22900);
-  assert.strictEqual(authoritative1.unitPrice, 229);
+  // Quantity 1 - Prepaid (Solo ₹229)
+  const q1Prepaid = calculateOrderTotal(1, 'upi');
+  assert.strictEqual(q1Prepaid.qty, 1);
+  assert.strictEqual(q1Prepaid.subtotal, 229);
+  assert.strictEqual(q1Prepaid.mrpTotal, 499);
+  assert.strictEqual(q1Prepaid.codFee, 0);
+  assert.strictEqual(q1Prepaid.total, 229);
+  assert.strictEqual(q1Prepaid.amountPaise, 22900);
+  assert.strictEqual(q1Prepaid.unitPrice, 229);
+  assert.strictEqual(q1Prepaid.sku, 'OS-001-50ML');
+  assert.strictEqual(q1Prepaid.isCod, false);
 
-  const authoritative2 = calculateOrderTotal(2, 'upi');
-  assert.strictEqual(authoritative2.total, 458);
-  assert.strictEqual(authoritative2.amountPaise, 45800);
+  // Quantity 1 - COD (Solo ₹229 + ₹60 = ₹289)
+  const q1Cod = calculateOrderTotal(1, 'cod');
+  assert.strictEqual(q1Cod.qty, 1);
+  assert.strictEqual(q1Cod.subtotal, 229);
+  assert.strictEqual(q1Cod.mrpTotal, 499);
+  assert.strictEqual(q1Cod.codFee, 60);
+  assert.strictEqual(q1Cod.total, 289);
+  assert.strictEqual(q1Cod.amountPaise, 28900);
+  assert.strictEqual(q1Cod.isCod, true);
+
+  // Quantity 2 - Prepaid (Duo ₹429)
+  const q2Prepaid = calculateOrderTotal(2, 'upi');
+  assert.strictEqual(q2Prepaid.qty, 2);
+  assert.strictEqual(q2Prepaid.subtotal, 429);
+  assert.strictEqual(q2Prepaid.mrpTotal, 998);
+  assert.strictEqual(q2Prepaid.codFee, 0);
+  assert.strictEqual(q2Prepaid.total, 429);
+  assert.strictEqual(q2Prepaid.amountPaise, 42900);
+
+  // Quantity 2 - COD (Duo ₹429 + ₹60 = ₹489)
+  const q2Cod = calculateOrderTotal(2, 'cod');
+  assert.strictEqual(q2Cod.qty, 2);
+  assert.strictEqual(q2Cod.subtotal, 429);
+  assert.strictEqual(q2Cod.mrpTotal, 998);
+  assert.strictEqual(q2Cod.codFee, 60);
+  assert.strictEqual(q2Cod.total, 489);
+  assert.strictEqual(q2Cod.amountPaise, 48900);
+
+  // Quantity 3 - Prepaid (Trio ₹599)
+  const q3Prepaid = calculateOrderTotal(3, 'upi');
+  assert.strictEqual(q3Prepaid.qty, 3);
+  assert.strictEqual(q3Prepaid.subtotal, 599);
+  assert.strictEqual(q3Prepaid.mrpTotal, 1497);
+  assert.strictEqual(q3Prepaid.codFee, 0);
+  assert.strictEqual(q3Prepaid.total, 599);
+  assert.strictEqual(q3Prepaid.amountPaise, 59900);
+
+  // Quantity 3 - COD (Trio ₹599 + ₹60 = ₹659)
+  const q3Cod = calculateOrderTotal(3, 'cod');
+  assert.strictEqual(q3Cod.qty, 3);
+  assert.strictEqual(q3Cod.subtotal, 599);
+  assert.strictEqual(q3Cod.mrpTotal, 1497);
+  assert.strictEqual(q3Cod.codFee, 60);
+  assert.strictEqual(q3Cod.total, 659);
+  assert.strictEqual(q3Cod.amountPaise, 65900);
+
+  // Malicious price overrides from client (e.g., client passes price = 1, subtotal = 1, total = 1, price = 9999)
+  // Server ignores client parameters and recomputes purely from quantity (2) + method (upi)
+  const maliciousClientPayload = { quantity: 2, price: 1, subtotal: 1, total: 1, amountPaise: 100 };
+  const recalculated = calculateOrderTotal(maliciousClientPayload.quantity, 'upi');
+  assert.strictEqual(recalculated.total, 429);
+  assert.strictEqual(recalculated.amountPaise, 42900);
+  assert.notStrictEqual(recalculated.total, maliciousClientPayload.total);
 });
 
 // ATTACK 5: Attempt SKU injection or alteration

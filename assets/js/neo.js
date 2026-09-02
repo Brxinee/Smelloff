@@ -66,7 +66,7 @@
     document.querySelectorAll('.nb-qty-btn[data-step="1"]').forEach(function(b){ b.disabled = _nbQty >= 3; });
     var per = document.getElementById('nbQtyPer');
     if (per){
-      var prices = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES) || { solo:229, duo:399, trio:549 };
+      var prices = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES) || { solo:229, duo:429, trio:599 };
       var total = _nbQty === 3 ? prices.trio : _nbQty === 2 ? prices.duo : prices.solo;
       per.textContent = '₹' + Math.floor(total / _nbQty) + ' per bottle' + (_nbQty >= 3 ? ' · max 3 per order' : '');
     }

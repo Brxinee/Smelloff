@@ -5,8 +5,8 @@ const CFG = window.SMELLOFF_CONFIG;
   // parses; no `mrp` field, because there is no real price above ₹229 to strike.
   const VARIANTS = {
     solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: (CFG && CFG.PRICES && CFG.PRICES.solo) || 229, mrp: (CFG && CFG.MRP && CFG.MRP.solo) || 499, label: 'solo', qty: 1 },
-    duo:  { title: 'ODORSTRIKE 50ml × 2',  units: '2 × 50ml', amount: ((CFG && CFG.PRICES && CFG.PRICES.solo) || 229) * 2, mrp: ((CFG && CFG.MRP && CFG.MRP.solo) || 499) * 2, label: 'duo', qty: 2 },
-    trio: { title: 'ODORSTRIKE 50ml × 3',  units: '3 × 50ml', amount: ((CFG && CFG.PRICES && CFG.PRICES.solo) || 229) * 3, mrp: ((CFG && CFG.MRP && CFG.MRP.solo) || 499) * 3, label: 'trio', qty: 3 }
+    duo:  { title: 'ODORSTRIKE 50ml × 2',  units: '2 × 50ml', amount: (CFG && CFG.PRICES && CFG.PRICES.duo) || 429, mrp: (CFG && CFG.MRP && CFG.MRP.duo) || 998, label: 'duo', qty: 2 },
+    trio: { title: 'ODORSTRIKE 50ml × 3',  units: '3 × 50ml', amount: (CFG && CFG.PRICES && CFG.PRICES.trio) || 599, mrp: (CFG && CFG.MRP && CFG.MRP.trio) || 1497, label: 'trio', qty: 3 }
   };
 
   let currentVariant = 'solo';
@@ -790,7 +790,7 @@ const CFG = window.SMELLOFF_CONFIG;
       b.setAttribute('aria-checked', active ? 'true' : 'false');
     });
     var variant = qty === 3 ? 'trio' : qty === 2 ? 'duo' : 'solo';
-    var price = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES[variant]) || (qty === 3 ? 549 : qty === 2 ? 399 : 229);
+    var price = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES[variant]) || (qty === 3 ? 599 : qty === 2 ? 429 : 229);
     var sprays = qty === 3 ? 750 : qty === 2 ? 500 : 250;
     var perSpray = (price / sprays).toFixed(2);
 
@@ -879,7 +879,7 @@ const CFG = window.SMELLOFF_CONFIG;
       if (fired) return;
       if (entries[0].isIntersecting) {
         fired = true;
-        var vcPrice = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES[_buyBoxQty === 3 ? 'trio' : _buyBoxQty === 2 ? 'duo' : 'solo']) || (_buyBoxQty === 3 ? 549 : _buyBoxQty === 2 ? 399 : 229);
+        var vcPrice = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES[_buyBoxQty === 3 ? 'trio' : _buyBoxQty === 2 ? 'duo' : 'solo']) || (_buyBoxQty === 3 ? 599 : _buyBoxQty === 2 ? 429 : 229);
         if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', { content_name: 'ODORSTRIKE', value: vcPrice, currency: 'INR' });
         if (typeof gtag !== 'undefined') gtag('event', 'view_item', { currency: 'INR', value: vcPrice, items: [{ item_id: 'OS-001-50ML', item_name: 'ODORSTRIKE Fabric Odor Mist' }] });
         obs.disconnect();
@@ -1408,8 +1408,8 @@ const CFG = window.SMELLOFF_CONFIG;
     const STORAGE_KEY = 'smelloff_cart';
     const PRODUCTS = {
       solo: { id: 'solo', name: 'ODORSTRIKE 50ml × 1', price: 229, variant: 'solo' },
-      duo:  { id: 'duo',  name: 'ODORSTRIKE 50ml × 2',  price: 399, variant: 'duo'  },
-      trio: { id: 'trio', name: 'ODORSTRIKE 50ml × 3',  price: 549, variant: 'trio' }
+      duo:  { id: 'duo',  name: 'ODORSTRIKE 50ml × 2',  price: 429, variant: 'duo'  },
+      trio: { id: 'trio', name: 'ODORSTRIKE 50ml × 3',  price: 599, variant: 'trio' }
     };
 
     let cart = load();

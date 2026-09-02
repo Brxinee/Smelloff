@@ -4011,6 +4011,9 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
 
 
+
+
+
 <!-- PDP-CONVERSION-LAYER:START -->
 <section class="pdp-conv" aria-labelledby="pdp-conv-problem">
   <div class="pdp-conv__inner">
@@ -4200,13 +4203,16 @@ window.createSupabaseOrder = function (opts) {
     if (line) line.style.display = hasItems ? 'flex' : 'none';
     if (foot) foot.style.display = hasItems ? 'block' : 'none';
     if (hasItems) {
-      var price = (CFG.PRICES && CFG.PRICES.solo) || 229;
-      var sub = price * qty;
+      var sub = 229;
+      if (qty === 1) sub = 229;
+      else if (qty === 2) sub = 429;
+      else if (qty === 3) sub = 599;
+      else sub = 229 * qty;
       var qv = document.getElementById('cartQtyVal'); if (qv) qv.textContent = String(qty);
       var st = document.getElementById('cartSubtotal'); if (st) st.textContent = '₹' + sub;
       var ca = document.getElementById('cartCheckoutAmt'); if (ca) ca.textContent = '₹' + sub;
       var unit = document.querySelector('#cartLine .cart-line-unit');
-      if (unit) unit.textContent = '₹' + price + ' · ' + qty + ' × 50ml';
+      if (unit) unit.textContent = '₹' + sub + ' · ' + qty + ' × 50ml';
     }
   }
   // One switch for "a modal owns the screen": locks scroll and drops the
@@ -4360,10 +4366,13 @@ window.createSupabaseOrder = function (opts) {
   // from here, so the summary, the UPI panel, the COD panel and the submit button
   // cannot drift apart — which is exactly how they drifted before.
   function orderTotals() {
-    const v = VARIANTS[currentVariant] || {};
     const qty = cartQty > 0 ? cartQty : 1;
-    const unit = Number(v.amount) || CFG.PRICES.solo;
-    const subtotal = unit * qty;
+    let subtotal = 229;
+    if (qty === 1) subtotal = 229;
+    else if (qty === 2) subtotal = 429;
+    else if (qty === 3) subtotal = 599;
+    else subtotal = 229 * qty;
+    const unit = Math.round((subtotal / qty) * 100) / 100;
     const shipping = Number(calcShipping(subtotal)) || 0;
     const codFee = payMethod === 'cod' ? COD_FEE : 0;
     return { qty: qty, unit: unit, subtotal: subtotal, shipping: shipping,
