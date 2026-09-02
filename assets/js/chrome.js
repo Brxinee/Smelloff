@@ -288,6 +288,19 @@
     }
   }
 
+  /* --- FAQ: one open panel at a time (native name= is the modern path;
+     this is the fallback for browsers that ignore exclusive details). */
+  document.addEventListener('toggle', function (event) {
+    var opened = event.target;
+    if (!opened || opened.tagName !== 'DETAILS' || !opened.open) return;
+    var group = opened.closest('.so-faq');
+    if (!group) return;
+    var items = group.querySelectorAll('details');
+    for (var i = 0; i < items.length; i++) {
+      if (items[i] !== opened) items[i].open = false;
+    }
+  }, true);
+
   /* --- mobile CTA analytics hook ---------------------------------- */
   document.addEventListener('click', function (event) {
     var target = event.target && event.target.closest ? event.target.closest('[data-smelloff-buy]') : null;
