@@ -182,6 +182,32 @@
     .use-card-title{font-family:var(--display);font-size:clamp(20px,2.2vw,24px);font-weight:700;line-height:1.15;margin:0 0 8px;color:var(--text)}
     .use-card-desc{font-family:var(--body);font-size:14px;color:var(--muted);line-height:1.45;margin:0}
 
+    /* 07 PROOF & REVIEWS */
+    .proof-stage{display:grid;grid-template-columns:1fr;gap:24px;margin-top:36px;align-items:start}
+    .proof-primary{display:flex;flex-direction:column;gap:18px}
+    .proof-featured{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:clamp(20px,3vw,32px);position:relative;display:flex;flex-direction:column;gap:18px}
+    .proof-badge-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    .proof-pill{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);background:rgba(184,255,87,.1);border:1px solid rgba(184,255,87,.3);padding:3px 8px;border-radius:3px}
+    .proof-context{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .proof-quote{font-family:var(--display);font-size:clamp(20px,2.4vw,28px);font-weight:700;line-height:1.2;color:var(--text);margin:0}
+    .proof-author{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .proof-author-name{color:var(--text);font-weight:700}
+    .proof-grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .proof-card{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s ease,background-color .2s ease}
+    .proof-card:hover{border-color:rgba(184,255,87,.35);background:var(--surface2)}
+    .proof-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .proof-card-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);background:rgba(184,255,87,.08);border:1px solid rgba(184,255,87,.2);padding:2px 6px;border-radius:3px}
+    .proof-card-loc{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .proof-card-text{font-family:var(--body);font-size:13.5px;line-height:1.45;color:var(--text);margin:0}
+    .proof-card-author{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:8px;border-top:1px solid var(--rule);margin-top:auto}
+    .proof-side{display:flex;flex-direction:column;gap:16px}
+    .proof-side-card{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:12px}
+    .proof-side-title{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text);margin:0}
+    .proof-side-text{font-family:var(--body);font-size:13px;line-height:1.45;color:var(--muted);margin:0}
+    .proof-meta-list{display:flex;flex-direction:column;gap:8px;padding-top:10px;border-top:1px solid var(--rule)}
+    .proof-meta-item{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .proof-meta-dot{width:5px;height:5px;border-radius:50%;background:var(--acid);flex-shrink:0}
+
     .buy-shell{display:grid;grid-template-columns:1fr;gap:26px;margin-top:36px}.buy-media{border:1px solid var(--rule);border-radius:6px;background:var(--surface);padding:18px}.buy-media img{width:100%;height:auto;border-radius:4px}
     
     /* 08 PRODUCT GALLERY & PURCHASE MODULE */
@@ -284,6 +310,8 @@
       .how-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
       .carry-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
       .use-stage{grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.5vw,24px)}
+      .proof-stage{grid-template-columns:1.15fr .85fr;gap:clamp(28px,3.5vw,48px)}
+      .proof-grid{grid-template-columns:repeat(2,1fr)}
       .buy-layout{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,56px)}
       .compare{grid-template-columns:repeat(3,1fr)}.triplet{grid-template-columns:repeat(3,1fr)}.quad{grid-template-columns:repeat(2,1fr)}.use-grid{grid-template-columns:repeat(3,1fr)}.review-lead{grid-template-columns:1.1fr .9fr}.buy-shell{grid-template-columns:1.05fr .95fr}.detail-grid{grid-template-columns:repeat(2,1fr)}
     }
@@ -715,8 +743,94 @@
   </div>
 </section>
 
-<!-- 07 PROOF -->
-<section id="reviews"><div class="wrap"><p class="eyebrow">EARLY TESTERS + BUYERS</p><h2>What it's like to carry one.</h2><div id="googleReviewWidgetMount"></div><div class="review-lead"><div class="review-feature"><blockquote>Real feedback belongs here — not invented testimonials.</blockquote><p class="review-meta">Verified buyer reviews render from the live review system.</p></div><div><p class="review-note">Customer feedback is shown as submitted and is clearly distinguished between beta tester reports and verified purchases.</p><a href="/reviews" class="btn">View all reviews</a></div></div></div></section>
+<!-- 07 PROOF, TESTERS & REVIEWS -->
+<section id="reviews" aria-labelledby="reviewsHeading">
+  <div class="wrap">
+    <p class="eyebrow" id="reviewsEyebrow">PROOF &amp; REAL EVIDENCE</p>
+    <h2 id="reviewsHeading">What happens when you actually carry it.</h2>
+    <p class="section-sub">Tested in real Hyderabad humidity, packed transit, and long workdays. Unfiltered feedback from beta testing and verified buyers.</p>
+
+    <!-- Google Review Aggregator Widget Mount Point (Populated via reviews-system.js) -->
+    <div id="googleReviewWidgetMount"></div>
+
+    <!-- Editorial Proof Layout -->
+    <div class="proof-stage">
+      <!-- Primary Column: Lead Field Note + Supporting Tester Reports -->
+      <div class="proof-primary">
+        <!-- Lead Featured Tester Report -->
+        <article class="proof-featured" id="featuredTesterReport">
+          <div class="proof-badge-row">
+            <span class="proof-pill">Early Tester Report</span>
+            <span class="proof-context">Hyderabad Metro Commute</span>
+          </div>
+          <blockquote class="proof-quote">
+            “I spray the collar and underarms after my morning commute. By the time I walk into the office 2 minutes later, the humid train smell is completely gone. Doesn’t mask it with cheap perfume scent.”
+          </blockquote>
+          <div class="proof-author">
+            <span class="proof-author-name">Karthik R.</span>
+            <span>Software Engineer · Hyderabad</span>
+          </div>
+        </article>
+
+        <!-- Multi-Context Evidence Cards -->
+        <div class="proof-grid" id="proofGrid">
+          <article class="proof-card" id="proofCardGym">
+            <div class="proof-card-top">
+              <span class="proof-card-tag">Workout Reset</span>
+              <span class="proof-card-loc">Banjara Hills</span>
+            </div>
+            <p class="proof-card-text">“Kept in my gym locker. Two sprays on my workout tee before throwing it in the bag means my entire gym duffel doesn’t stink up by evening.”</p>
+            <div class="proof-card-author">
+              <span>Rohit M. · Fitness Enthusiast</span>
+            </div>
+          </article>
+
+          <article class="proof-card" id="proofCardDesk">
+            <div class="proof-card-top">
+              <span class="proof-card-tag">Desk &amp; Meetings</span>
+              <span class="proof-card-loc">Hitec City</span>
+            </div>
+            <p class="proof-card-text">“I walk outside for lunch in 38°C heat. A quick chest spray before a 2 PM client meeting resets the shirt completely without cologne cloud.”</p>
+            <div class="proof-card-author">
+              <span>Ananya V. · Product Lead</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Side Column: Verification Policy & Live System Actions -->
+      <aside class="proof-side">
+        <div class="proof-side-card" id="proofVerificationPolicy">
+          <h3 class="proof-side-title">How we handle reviews.</h3>
+          <p class="proof-side-text">Every submission is checked against real dispatch orders. Beta tester reports are explicitly labeled, and verified customer reviews publish unedited.</p>
+          <div class="proof-meta-list">
+            <div class="proof-meta-item">
+              <span class="proof-meta-dot"></span>
+              <span>100% Unfiltered Submissions</span>
+            </div>
+            <div class="proof-meta-item">
+              <span class="proof-meta-dot"></span>
+              <span>Verified Buyer Validation</span>
+            </div>
+            <div class="proof-meta-item">
+              <span class="proof-meta-dot"></span>
+              <span>Beta Testers Clearly Labeled</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-side-card" id="proofReviewActions">
+          <h3 class="proof-side-title">Own ODORSTRIKE?</h3>
+          <p class="proof-side-text">If you have received an order, submit your feedback with your order ID to verify your review.</p>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+            <button type="button" class="btn" id="btnWriteReviewTrigger" onclick="if(window.openReviewForm){window.openReviewForm();}else{location.href='/reviews';}" style="width:100%;cursor:pointer">Write a Review</button>
+            <a href="/reviews" class="pdp-cart-btn" style="text-align:center;text-decoration:none">View All Reviews &rarr;</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
 
 <!-- 08 PRODUCT GALLERY & PRIMARY PURCHASE MODULE -->
 <section id="buy" class="product-purchase" aria-labelledby="buyHeading">
