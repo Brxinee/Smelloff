@@ -135,6 +135,25 @@
     .review-lead{display:grid;grid-template-columns:1fr;gap:20px;margin-top:34px}.review-feature{border:1px solid var(--rule);border-radius:6px;padding:26px;background:var(--surface)}.review-feature blockquote{font-family:var(--display);font-size:28px;line-height:1.12;margin:0}.review-meta{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--acid);text-transform:uppercase;margin-top:20px}.review-note{color:var(--muted);font-size:14px}
     .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 28px;background:var(--acid);color:var(--ink);text-decoration:none;border:1px solid var(--acid);border-radius:4px;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;transition:background .15s ease,border-color .15s ease,transform .15s ease}
     .btn:hover{background:#d1ff8a;border-color:#d1ff8a;transform:translateY(-1px)}
+    
+    /* 04 HOW IT WORKS */
+    .how-stage{display:grid;grid-template-columns:1fr;gap:24px;margin-top:36px;align-items:start}
+    .how-media{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:clamp(14px,2.5vw,22px);position:relative}
+    .how-media picture, .how-media img{width:100%;height:auto;border-radius:4px;display:block;object-fit:cover}
+    .how-media-caption{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .how-media-caption .dot{color:var(--acid)}
+    .how-flow{display:flex;flex-direction:column;gap:10px}
+    .how-step{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:clamp(16px,2vw,20px);transition:border-color .2s ease,background-color .2s ease}
+    .how-step:hover{border-color:rgba(184,255,87,.35);background:var(--surface2)}
+    .how-step-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+    .how-step-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--acid);letter-spacing:.14em;text-transform:uppercase}
+    .how-step-param{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;background:var(--surface2);border:1px solid var(--rule);padding:2px 6px;border-radius:3px}
+    .how-step-title{font-family:var(--display);font-size:clamp(20px,2.2vw,24px);font-weight:700;line-height:1.15;margin:0 0 6px;color:var(--text)}
+    .how-step-desc{font-family:var(--body);font-size:14px;color:var(--muted);line-height:1.45;margin:0}
+    .how-footer{margin-top:14px;padding:12px 14px;border:1px dashed var(--rule);border-radius:6px;background:rgba(255,255,255,.015);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    .how-safety{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid);font-weight:700}
+    .how-note{font-family:var(--body);font-size:13px;color:var(--muted);margin:0}
+
     .buy-shell{display:grid;grid-template-columns:1fr;gap:26px;margin-top:36px}.buy-media{border:1px solid var(--rule);border-radius:6px;background:var(--surface);padding:18px}.buy-media img{width:100%;height:auto;border-radius:4px}
     
     /* 08 PRODUCT GALLERY & PURCHASE MODULE */
@@ -234,6 +253,7 @@
       .hero-grid{grid-template-columns:1.15fr .85fr;gap:clamp(32px,5vw,64px)}
       .hero-copy{display:flex}
       .remembers-stage{grid-template-columns:minmax(160px,210px) 1fr;gap:clamp(28px,4vw,48px)}
+      .how-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
       .buy-layout{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,56px)}
       .compare{grid-template-columns:repeat(3,1fr)}.triplet{grid-template-columns:repeat(3,1fr)}.quad{grid-template-columns:repeat(2,1fr)}.use-grid{grid-template-columns:repeat(3,1fr)}.review-lead{grid-template-columns:1.1fr .9fr}.buy-shell{grid-template-columns:1.05fr .95fr}.detail-grid{grid-template-columns:repeat(2,1fr)}
     }
@@ -476,7 +496,77 @@
 </section>
 
 <!-- 04 HOW IT WORKS -->
-<section id="how-it-works"><div class="wrap"><p class="eyebrow">HOW IT WORKS</p><h2>Spray. Let it dry. Move.</h2><div class="buy-shell"><div class="buy-media"><img src="/assets/pdp-03-how-to-use.webp" width="1196" height="1315" loading="lazy" decoding="async" alt="How to use ODORSTRIKE on clothing"></div><div><div class="triplet" style="margin-top:0"><div class="trip"><span class="trip-num">01 · TARGET FABRIC</span><h3>Choose the area.</h3><p>Focus on shirt collars, underarms, chest, or outerwear lining.</p></div><div class="trip"><span class="trip-num">02 · 2–3 PUMPS</span><h3>Hold 10–15cm away.</h3><p>Apply 2–3 light pumps of fine mist. Do not soak or oversaturate.</p></div><div class="trip"><span class="trip-num">03 · LET DRY</span><h3>Allow 30–60 seconds.</h3><p>Dries quickly without residue or staining on everyday washable fabrics.</p></div></div></div></div></div></section>
+<section id="how-it-works" aria-labelledby="howHeading">
+  <div class="wrap">
+    <p class="eyebrow">HOW IT WORKS · 4-STEP APPLICATION</p>
+    <h2 id="howHeading">Spray. Let it dry. Move.</h2>
+    <p class="section-copy">A physical 10-second fabric refresh. 2–3 fine mist pumps neutralize trapped odor in clothing fibers between wears.</p>
+    
+    <div class="how-stage">
+      <!-- DEMONSTRATION VISUAL -->
+      <div class="how-media">
+        <picture>
+          <source srcset="/assets/pdp-03-how-to-use@640.webp" media="(max-width: 640px)">
+          <img src="/assets/pdp-03-how-to-use.webp" width="1196" height="1315" loading="lazy" decoding="async" alt="Demonstration of applying ODORSTRIKE fine mist to shirt fabric from 10–15cm away">
+        </picture>
+        <div class="how-media-caption">
+          <span>Targeted Fabric Mist</span>
+          <span class="dot">·</span>
+          <span>50ml (~250 Sprays)</span>
+        </div>
+      </div>
+
+      <!-- INSTRUCTIONAL FLOW -->
+      <div class="how-flow" role="list" aria-label="Step-by-step application instructions">
+        <!-- STEP 01 -->
+        <div class="how-step" role="listitem">
+          <div class="how-step-header">
+            <span class="how-step-num">01 · TARGET</span>
+            <span class="how-step-param">Target Fabric</span>
+          </div>
+          <h3 class="how-step-title">Identify the odor zone.</h3>
+          <p class="how-step-desc">Target clothing fabric holding unwanted scent — shirt collars, underarm fabric, chest panels, or outerwear lining. (Fabric only · not for skin).</p>
+        </div>
+
+        <!-- STEP 02 -->
+        <div class="how-step" role="listitem">
+          <div class="how-step-header">
+            <span class="how-step-num">02 · SPRAY</span>
+            <span class="how-step-param">10–15cm Away</span>
+          </div>
+          <h3 class="how-step-title">Apply 2–3 light pumps.</h3>
+          <p class="how-step-desc">Hold the nozzle 10–15cm from the fabric and spray evenly across the textile. A light mist is enough — do not oversaturate or soak.</p>
+        </div>
+
+        <!-- STEP 03 -->
+        <div class="how-step" role="listitem">
+          <div class="how-step-header">
+            <span class="how-step-num">03 · DRY</span>
+            <span class="how-step-param">30–60 Seconds</span>
+          </div>
+          <h3 class="how-step-title">Allow 30–60s to dry.</h3>
+          <p class="how-step-desc">Let the fine mist air-dry naturally on the garment. Active neutralizers clear trapped odorants with zero stiff residue or fabric staining.</p>
+        </div>
+
+        <!-- STEP 04 -->
+        <div class="how-step" role="listitem">
+          <div class="how-step-header">
+            <span class="how-step-num">04 · MOVE</span>
+            <span class="how-step-param">Ready to Wear</span>
+          </div>
+          <h3 class="how-step-title">Put it on and go.</h3>
+          <p class="how-step-desc">Your clothes are neutral and refreshed. Move on to your dinner, evening plans, or next meeting with clean confidence.</p>
+        </div>
+
+        <!-- SAFETY & REFRESH BOUNDARY -->
+        <div class="how-footer">
+          <span class="how-safety">Fabric Only · Do Not Saturate</span>
+          <p class="how-note">Between-wash fabric tool. Does not replace regular washing for stained or physically soiled clothes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- 05 WHY YOU'D CARRY IT -->
 <section id="why-carry"><div class="wrap"><p class="eyebrow">ENGINEERED FOR REAL WEAR</p><h2>Why you'd carry it.</h2><p class="section-copy">A dedicated fabric tool built for the moments between morning and the laundry basket.</p><div class="quad"><div class="trip"><span class="trip-num">01 · FORMAT</span><h3>50ml Pocket Size</h3><p>Compact bottle designed to fit into pockets, laptop sleeves, or gym bags (~250 sprays).</p></div><div class="trip"><span class="trip-num">02 · TARGETED</span><h3>Fabric-First Formula</h3><p>Formulated with active odor neutralizers specifically for textile fibers, not skin.</p></div><div class="trip"><span class="trip-num">03 · PURPOSE</span><h3>Between-Wash Utility</h3><p>Keeps shirts, hoodies, and jackets fresh between wears without replacing regular washing.</p></div><div class="trip"><span class="trip-num">04 · SPEED</span><h3>Quick Application</h3><p>2–3 light pumps dry in 30–60 seconds so you can reset your clothes and keep moving.</p></div></div></div></section>
