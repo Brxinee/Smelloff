@@ -24,7 +24,7 @@ export const BASE_PRODUCT = {
   countryOfOrigin: 'India',
   sprayCapacity: '~250 fine mist sprays per 50ml bottle',
   ingredientsSummary: 'Odor-trapping cyclodextrin complex, fabric neutralizers, purified aqueous carrier',
-  usageInstructions: 'Hold bottle 10–15cm from clothing. Mist 2–3 sprays evenly over sweat-prone fabric zones (underarms, chest, collar). Allow 30 seconds to air-dry.',
+  usageInstructions: 'Hold bottle 10–15cm from clothing. Mist 2–3 sprays evenly over sweat-prone fabric zones (underarms, chest, collar). Allow 30–60 seconds to air-dry.',
   manufacturer: {
     name: 'Smelloff',
     address: 'Hyderabad, Telangana 500081, India',
