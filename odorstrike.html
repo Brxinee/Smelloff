@@ -78,7 +78,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebPage","@id":"https://smelloff.in/odorstrike#webpage","name":"Smelloff ODORSTRIKE — Fabric Odor Remover Spray","url":"https://smelloff.in/odorstrike","description":"A pocket-sized fabric odor-control mist for clothing. Not a perfume, not a deodorant.","inLanguage":"en-IN","isPartOf":{"@type":"WebSite","name":"Smelloff","url":"https://smelloff.in"},"about":{"@type":"Thing","name":"Fabric Odor Elimination"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://smelloff.in/assets/odorstrike-bottle.webp"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".hero h1",".ph-tagline",".problem h2"]}}
 </script>
-<!-- JSON-LD Product (single SKU — ₹229, no bundles) -->
+<!-- JSON-LD Product (SKU OS-001-50ML — Solo ₹229, Duo ₹429, Trio ₹599) -->
 <!-- RATING IS GATED — no "aggregateRating" is emitted right now.
      The only testimonials so far are pre-launch beta quotes, and a SERP star
      rating not computed from real verified-purchase reviews is a Google
@@ -110,35 +110,66 @@
   "sku":"OS-001-50ML",
   "mpn":"SMLF-ODST-50",
   "offers":{
-    "@type":"Offer",
-    "name":"ODORSTRIKE 50ml — Single Bottle",
-    "sku":"OS-001-50ML",
+    "@type":"AggregateOffer",
     "priceCurrency":"INR",
-    "price":"229.00",
-    "availability":"https://schema.org/InStock",
-    "itemCondition":"https://schema.org/NewCondition",
-    "url":"https://smelloff.in/odorstrike#buy",
-    "seller":{"@type":"Organization","name":"Smelloff","@id":"https://smelloff.in/#organization"},
-    "validFrom":"2026-04-18",
-    "priceValidUntil":"2027-12-31",
-    "shippingDetails":{
-      "@type":"OfferShippingDetails",
-      "shippingRate":{"@type":"MonetaryAmount","value":"0.00","currency":"INR"},
-      "shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},
-      "deliveryTime":{
-        "@type":"ShippingDeliveryTime",
-        "handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},
-        "transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}
+    "lowPrice":"229.00",
+    "highPrice":"599.00",
+    "offerCount":"3",
+    "offers":[
+      {
+        "@type":"Offer",
+        "name":"ODORSTRIKE 50ml — Solo (1 Bottle)",
+        "sku":"OS-001-50ML",
+        "priceCurrency":"INR",
+        "price":"229.00",
+        "availability":"https://schema.org/InStock",
+        "itemCondition":"https://schema.org/NewCondition",
+        "url":"https://smelloff.in/odorstrike#buy",
+        "seller":{"@type":"Organization","name":"Smelloff","@id":"https://smelloff.in/#organization"},
+        "validFrom":"2026-04-18",
+        "priceValidUntil":"2027-12-31",
+        "shippingDetails":{
+          "@type":"OfferShippingDetails",
+          "shippingRate":{"@type":"MonetaryAmount","value":"0.00","currency":"INR"},
+          "shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},
+          "deliveryTime":{
+            "@type":"ShippingDeliveryTime",
+            "handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":1,"unitCode":"DAY"},
+            "transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}
+          }
+        },
+        "hasMerchantReturnPolicy":{
+          "@type":"MerchantReturnPolicy",
+          "applicableCountry":"IN",
+          "returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays":7,
+          "returnMethod":"https://schema.org/ReturnByMail",
+          "returnFees":"https://schema.org/FreeReturn"
+        }
+      },
+      {
+        "@type":"Offer",
+        "name":"ODORSTRIKE 50ml — Duo Pack (2 Bottles)",
+        "sku":"OS-001-50ML",
+        "priceCurrency":"INR",
+        "price":"429.00",
+        "availability":"https://schema.org/InStock",
+        "itemCondition":"https://schema.org/NewCondition",
+        "url":"https://smelloff.in/odorstrike#buy",
+        "seller":{"@type":"Organization","name":"Smelloff","@id":"https://smelloff.in/#organization"}
+      },
+      {
+        "@type":"Offer",
+        "name":"ODORSTRIKE 50ml — Trio Pack (3 Bottles)",
+        "sku":"OS-001-50ML",
+        "priceCurrency":"INR",
+        "price":"599.00",
+        "availability":"https://schema.org/InStock",
+        "itemCondition":"https://schema.org/NewCondition",
+        "url":"https://smelloff.in/odorstrike#buy",
+        "seller":{"@type":"Organization","name":"Smelloff","@id":"https://smelloff.in/#organization"}
       }
-    },
-    "hasMerchantReturnPolicy":{
-      "@type":"MerchantReturnPolicy",
-      "applicableCountry":"IN",
-      "returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow",
-      "merchantReturnDays":7,
-      "returnMethod":"https://schema.org/ReturnByMail",
-      "returnFees":"https://schema.org/FreeReturn"
-    }
+    ]
   }
 }
 </script>
@@ -149,7 +180,7 @@
   "@type":"FAQPage",
   "mainEntity":[
     {"@type":"Question","name":"Is ODORSTRIKE safe on skin?","acceptedAnswer":{"@type":"Answer","text":"No. ODORSTRIKE is formulated exclusively for fabric — its solvent and odor actives are designed for fibres, not skin. Do not spray on skin, face, or eyes. If contact occurs, rinse with water."}},
-    {"@type":"Question","name":"Will it stain my clothes?","acceptedAnswer":{"@type":"Answer","text":"No. The formula is glycerine-free and dries fast with zero residue — nothing sticky is left behind, even on dark fabric. Works on cotton, polyester, denim, and wool. Test a small hidden area first on delicate fabrics like silk."}},
+    {"@type":"Question","name":"Will it stain my clothes?","acceptedAnswer":{"@type":"Answer","text":"No. The formula is glycerine-free and dries cleanly within 30–60 seconds with zero residue — nothing sticky is left behind, even on dark fabric. Works on cotton, polyester, denim, and wool. Test a small hidden area first on delicate fabrics like silk."}},
     {"@type":"Question","name":"How long does the protection last?","acceptedAnswer":{"@type":"Answer","text":"Up to 8 hours of odor protection on fabric under normal office or commute conditions. After heavy gym sessions or long rides, re-spray worn areas. See the full system for staying fresh through an 11-hour office day on the Smelloff blog."}},
     {"@type":"Question","name":"How many uses per bottle?","acceptedAnswer":{"@type":"Answer","text":"Approximately 250 sprays per 50ml bottle. At 2–3 sprays per use, that's roughly 80–125 uses — enough for 2–3 months of daily use."}},
     {"@type":"Question","name":"Does it work on dry-clean-only fabric?","acceptedAnswer":{"@type":"Answer","text":"We don't recommend it for dry-clean-only items, leather, or suede. Stick to machine-washable fabrics like cotton, polyester, denim, and wool."}},
@@ -175,19 +206,19 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Hold Distance",
-      "text": "Hold the ODORSTRIKE 50ml bottle approximately 15cm away from the target fabric."
+      "text": "Hold the ODORSTRIKE 50ml bottle 10–15cm away from target fabric zones."
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Apply Spray",
-      "text": "Apply 2 to 3 pumps directly onto smelly areas such as shirt collars, armpit zones, or sleeves."
+      "name": "Apply Mist",
+      "text": "Apply 2 to 3 light pumps directly onto sweat-prone fabric areas such as collars and underarms."
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Shake and Dry",
-      "text": "Give the fabric a quick shake. Allow 10 seconds for the fast-drying mist to flash off and bind to odor molecules."
+      "name": "Allow to Dry",
+      "text": "Allow 30–60 seconds for the fabric to air dry completely before wearing. The fine mist evaporates cleanly while the odor-trapping complex neutralizes sweat and trapped odors."
     }
   ]
 }
@@ -1403,7 +1434,7 @@
   }
   .price-grid{
     display:grid;
-    grid-template-columns:minmax(0,440px);
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
     justify-content:center;
     gap:24px;
     max-width:1100px;
@@ -1417,6 +1448,8 @@
     transition:all .3s ease;
     position:relative;
     cursor:pointer;
+    display:flex;
+    flex-direction:column;
   }
   .price-card:hover{
     transform:translateY(-4px);
@@ -1427,11 +1460,9 @@
     color:var(--ink);
     border-color:var(--acid);
   }
-  /* Ribbon. It used to sit at left:24px, which put half of it over the
-     card's rounded top-left corner once the card gained a radius — it read
-     as a rendering fault. Centred on the top edge it reads as a ribbon. */
+  /* Ribbon. Centred on the top edge it reads as a clean badge. */
   .price-card.featured::before{
-    content:'ONE SKU. NO BUNDLES.';
+    content:'MOST POPULAR · SAVE ₹29';
     position:absolute;
     top:-13px;left:50%;
     transform:translateX(-50%);
@@ -3007,7 +3038,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <img src="/assets/pdp-03-how-to-use.webp"
                srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="Three steps: spray the fabric from 15 cm away, wait 10 seconds, then wear it and stay fresh for up to 8 hours." width="1196" height="1315" loading="lazy" decoding="async">
+                alt="Three steps: hold 10–15cm away, spray 2–3 pumps onto target fabric zones, allow 30–60 seconds to dry before wearing for up to 8 hours of odor protection." width="1196" height="1315" loading="lazy" decoding="async">
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
@@ -3023,7 +3054,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <img src="/assets/pdp-05-proof.webp"
                srcset="/assets/pdp-05-proof@640.webp 640w, /assets/pdp-05-proof.webp 1195w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="No white marks, no residue — a black t-shirt sprayed with ODORSTRIKE beside one sprayed with an ordinary spray. Dries without promising an exact time, leaves no stains on black and dark colours, and won't damage or fade fabric." width="1195" height="1316" loading="lazy" decoding="async">
+               alt="No white marks, no residue — a black t-shirt sprayed with ODORSTRIKE beside one sprayed with an ordinary spray. Dries cleanly within 30–60 seconds, leaves no stains on black and dark colours, and won't damage or fade fabric." width="1195" height="1316" loading="lazy" decoding="async">
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
@@ -3312,7 +3343,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <div class="use-card">
       <div class="use-label">01 — POST GYM</div>
       <h3>Same shirt, next meeting</h3>
-      <p>Your gym tee smells like a locker after one session. You don't have time to change, wash, or hang-dry. Two sprays across the chest and armpit zones, wait ten seconds, walk out clean. Works on sweat-soaked cotton, technical synthetics, and fleece.</p>
+      <p>Your gym tee smells like a locker after one session. You don't have time to change, wash, or hang-dry. Two to three sprays across the chest and armpit zones, give it 30–60 seconds to air dry, walk out clean. Works on sweat-soaked cotton, technical synthetics, and fleece.</p>
     </div>
     <div class="use-card">
       <div class="use-label">02 — RE-WEARS</div>
@@ -3331,36 +3362,29 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     </div>
   </div>
 
-  <!-- THE 30-SECOND RESET
-       Was a plain numbered <ol> headed "How to use". Same three instructions,
-       same accurate detail — but the middle beat now runs the actual ten
-       seconds in front of you, once, when it scrolls into view. The claim is
-       already the site's locked one ("10-second dry"), so the timer is a
-       demonstration of a real number rather than a new assertion.
-       Still an <ol>: the steps are sequential and must read as a list with
-       JS off, with a screen reader, and in print. The ring is decorative. -->
+  <!-- THE 30-SECOND RESET -->
   <div class="reset30" id="reset30">
     <div class="htu-head">
       <div class="section-tag">The 30-second reset</div>
-      <h3>Spray. Count to ten. Walk in.</h3>
+      <h3>Spray. Allow to dry. Walk in.</h3>
     </div>
     <ol class="r30-steps">
       <li class="r30-step">
         <span class="r30-num">01</span>
-        <p class="r30-title">Hold it 15cm away</p>
-        <p class="r30-body">Closer and you oversaturate. Further and the mist disperses before it lands.</p>
+        <p class="r30-title">Hold 10–15cm away</p>
+        <p class="r30-body">Hold 10–15cm from clothing. Closer and you oversaturate; further and the mist disperses before it lands.</p>
       </li>
       <li class="r30-step">
         <span class="r30-num">02</span>
-        <p class="r30-title">Two pumps per zone</p>
-        <p class="r30-body">Collar, underarms, chest. Skip what doesn't smell — you're neutralizing, not perfuming.</p>
+        <p class="r30-title">Two to three pumps</p>
+        <p class="r30-body">Collar, underarms, chest. Apply directly over sweat-prone fabric zones. You're neutralizing fabric odor, not skin.</p>
       </li>
       <li class="r30-step r30-step--timer">
         <span class="r30-num">03</span>
         <!-- The ring is aria-hidden; the sentence below it carries the meaning. -->
-        <span class="r30-ring" aria-hidden="true"><span class="r30-ring-fill"></span><span class="r30-ring-num">10</span></span>
-        <p class="r30-title">Ten seconds</p>
-        <p class="r30-body">The carrier flashes off, the actives bind to the odor, the fabric is dry. Nobody knows you used it.</p>
+        <span class="r30-ring" aria-hidden="true"><span class="r30-ring-fill"></span><span class="r30-ring-num">30</span></span>
+        <p class="r30-title">30–60 seconds</p>
+        <p class="r30-body">Allow 30–60 seconds to air dry. The aqueous carrier flashes off, the cyclodextrin complex traps the odor, and the fabric is fresh.</p>
       </li>
     </ol>
   </div>
@@ -3370,27 +3394,44 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <section class="pricing" id="buy">
   <div class="section-tag" style="justify-content:center">Buy</div>
   <h2>Smell Proof. Always.</h2>
-  <p class="sub">One bottle. One price. Free shipping pan-India. COD available for ₹60 more.</p>
+  <p class="sub">Choose your pack. Free shipping pan-India on prepaid UPI. COD available (+₹60 handling).</p>
 
   <div class="price-grid">
-    <div class="price-card featured">
-      <div class="pack-size">ODORSTRIKE — 50ML POCKET</div>
+    <div class="price-card" onclick="buyQty(1)" tabindex="0" role="button" aria-label="Buy Solo Pack 1 Bottle for ₹229" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();buyQty(1)}">
+      <div class="pack-size">SOLO · 1 BOTTLE</div>
       <div class="mrp-strike">M.R.P. ₹499</div>
       <h3>₹229</h3>
       <div class="per-unit">1 bottle · ~250 sprays · up to 8hr protection</div>
-      <!-- 54% = (499 − 229) / 499, rounded. Keep this in step with CFG.MRP.solo
-           and CFG.PRICES.solo — a discount % that doesn't match the two prices
-           shown on the same card is a misleading-price claim. -->
-      <div class="save">54% OFF</div>
-      <div class="cod-line">₹229 prepaid by UPI · ₹289 on delivery (COD +₹60)</div>
-      <button onclick="buyNow()">Buy now</button>
+      <div class="save">TRY IT</div>
+      <div class="cod-line">₹229 prepaid UPI · ₹289 COD (+₹60)</div>
+      <button type="button" onclick="event.stopPropagation();buyQty(1)">Buy Solo · ₹229</button>
+    </div>
+
+    <div class="price-card featured" onclick="buyQty(2)" tabindex="0" role="button" aria-label="Buy Duo Pack 2 Bottles for ₹429 Save ₹29" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();buyQty(2)}">
+      <div class="pack-size">DUO · 2 BOTTLES</div>
+      <div class="mrp-strike">M.R.P. ₹998</div>
+      <h3>₹429</h3>
+      <div class="per-unit">2 × 50ml (₹214.50/ea) · Home + Bag</div>
+      <div class="save">SAVE ₹29</div>
+      <div class="cod-line">₹429 prepaid UPI · ₹489 COD (+₹60)</div>
+      <button type="button" onclick="event.stopPropagation();buyQty(2)">Buy Duo · ₹429</button>
+    </div>
+
+    <div class="price-card" onclick="buyQty(3)" tabindex="0" role="button" aria-label="Buy Trio Pack 3 Bottles for ₹599 Save ₹88" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();buyQty(3)}">
+      <div class="pack-size">TRIO · 3 BOTTLES</div>
+      <div class="mrp-strike">M.R.P. ₹1497</div>
+      <h3>₹599</h3>
+      <div class="per-unit">3 × 50ml (₹199.67/ea) · Home + Office + Travel</div>
+      <div class="save">SAVE ₹88</div>
+      <div class="cod-line">₹599 prepaid UPI · ₹659 COD (+₹60)</div>
+      <button type="button" onclick="event.stopPropagation();buyQty(3)">Buy Trio · ₹599</button>
     </div>
   </div>
   <!-- Gated proof (adjacent to buy tile): rating summary renders here ONLY when
        CFG.VERIFIED_REVIEWS has real entries; bottles-sold only when CFG.BOTTLES_SOLD > 0 -->
   <div id="buyProofMount"></div>
   <div class="buy-trust"><a href="#reviews">Read early tester reviews</a><span>COD available</span><span>Made in India</span><span>Secure UPI checkout</span></div>
-  <p class="pay-modes">UPI ₹229 · Cash on Delivery ₹289 · ₹0 advance either way</p>
+  <p class="pay-modes">Prepaid UPI (Free Shipping) · Cash on Delivery (+₹60) · ₹0 advance either way</p>
 </section>
 
 <!-- REVIEWS -->
@@ -3648,12 +3689,12 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
       <label id="paymentMethodLabel">Payment</label>
       <div class="pay-toggle" role="radiogroup" aria-labelledby="paymentMethodLabel">
-        <div class="pay-opt active" data-method="cod" onclick="selectPay('cod')" tabindex="0" role="radio" aria-checked="true" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPay('cod')}">Cash on delivery</div>
-        <div class="pay-opt" data-method="prepaid" onclick="selectPay('prepaid')" tabindex="0" role="radio" aria-checked="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPay('prepaid')}">Pay via UPI</div>
+        <div class="pay-opt active" data-method="prepaid" onclick="selectPay('prepaid')" tabindex="0" role="radio" aria-checked="true" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPay('prepaid')}">Pay via UPI</div>
+        <div class="pay-opt" data-method="cod" onclick="selectPay('cod')" tabindex="0" role="radio" aria-checked="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPay('cod')}">Cash on delivery</div>
       </div>
 
       <!-- UPI panel (shown when prepaid selected) -->
-      <div id="upiPayPanel" class="pay-panel" style="display:none">
+      <div id="upiPayPanel" class="pay-panel" style="display:block">
         <span class="upi-panel-title">Select 1-Click UPI App</span>
         <div class="upi-apps-grid" role="radiogroup" aria-label="Select UPI App">
           <button type="button" class="upi-app-btn active" data-app="any" onclick="setUpiApp('any')">
@@ -3692,7 +3733,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       </div>
 
       <!-- COD panel (shown when cod selected) -->
-      <div id="codPayPanel" class="pay-panel">
+      <div id="codPayPanel" class="pay-panel" style="display:none">
         <p class="pay-cod" id="codPayDesc">₹0 advance · pay ₹289 on delivery (includes the ₹60 COD handling charge)</p>
         <p class="pay-note-cod">Paying by UPI instead skips the ₹60 charge</p>
       </div>
@@ -4072,6 +4113,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
 
 
+
+
 <!-- PDP-CONVERSION-LAYER:START -->
 <section class="pdp-conv" aria-labelledby="pdp-conv-problem">
   <div class="pdp-conv__inner">
@@ -4188,26 +4231,26 @@ window.createSupabaseOrder = function (opts) {
 <!-- ============================= -->
 <script>
   const CFG = window.SMELLOFF_CONFIG;
-  // ₹229 solo is the only SKU. No duo/trio/bundles.
+  // Active Commercial Bundles: Solo ₹229, Duo ₹429 (Save ₹29), Trio ₹599 (Save ₹88)
   const VARIANTS = {
-    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: CFG.PRICES.solo, mrp: CFG.MRP.solo }
+    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: CFG.PRICES.solo, mrp: CFG.MRP.solo },
+    duo:  { title: 'ODORSTRIKE 50ml Duo', units: '2 × 50ml', amount: CFG.PRICES.duo, mrp: CFG.MRP.duo },
+    trio: { title: 'ODORSTRIKE 50ml Trio', units: '3 × 50ml', amount: CFG.PRICES.trio, mrp: CFG.MRP.trio }
   };
   // Surcharge for choosing Cash on Delivery. Read once here so the whole page has
   // one number; the static markup that quotes it is listed at CFG.COD_FEE.
   const COD_FEE = Number(CFG.COD_FEE) || 0;
 
   let currentVariant = 'solo';
-  // COD is the default because it completes in one tap. The UPI path launches
-  // any installed UPI app or displays a QR code, with real-time automatic status
-  // verification directly with the bank.
-  let payMethod = 'cod'; // matches the default-active .pay-opt[data-method="cod"]
+  // Prepaid UPI is the friction-free default with Free Pan-India Shipping.
+  let payMethod = 'prepaid'; // matches the default-active .pay-opt[data-method="prepaid"]
   // Quantity being checked out — sourced from the cart. Unit price stays ₹229
   // (single SKU); the order pipeline multiplies by this.
   let cartQty = 1;
   function unitPrice() { return Number(VARIANTS[currentVariant].amount) || 0; }
 
   // ============================================================
-  // CART — single-SKU (ODORSTRIKE 50ml), quantity persists in localStorage.
+  // CART — ODORSTRIKE 50ml (Solo, Duo, Trio supported), quantity persists in localStorage.
   // Buy CTAs add to the cart and open the drawer; checkout reads cart qty.
   // ============================================================
   var CART_KEY = 'smelloff_cart_v1';
@@ -4439,9 +4482,16 @@ window.createSupabaseOrder = function (opts) {
     closeCartDrawer();
     openCheckout('solo');
   }
+  function buyQty(n) {
+    pdpQty = Math.max(1, Math.min(5, parseInt(n, 10) || 1));
+    setCartQty(pdpQty);
+    renderPdpQty();
+    buyNow();
+  }
   window.openCartDrawer = openCartDrawer;
   window.closeCartDrawer = closeCartDrawer;
   window.buyNow = buyNow;
+  window.buyQty = buyQty;
   window.addToCart = addToCart;
   window.pdpQtyStep = pdpQtyStep;
   window.cartInc = cartInc;
