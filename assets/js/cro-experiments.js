@@ -170,6 +170,9 @@
   function applyHeroExperiment() {
     var variant = activeVariants.exp_hero_clarity;
     if (variant === 'control') return;
+    // Stage 2 locked the homepage ATF as category-first. Do not rewrite it.
+    // Assignment + tracking still run; only the DOM mutation is skipped.
+    if (document.querySelector('section.so-hero')) return;
 
     var heroTitle = document.getElementById('heroHeadline') || document.getElementById('heroTitle') || document.querySelector('.product-info h1');
     var heroSub = document.getElementById('heroSubheading') || document.querySelector('.hero-sub') || document.querySelector('.ph-tagline');
