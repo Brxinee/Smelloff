@@ -17,13 +17,14 @@
   <meta name="twitter:title" content="Fabric Odor Remover for Clothes | Smelloff India">
   <meta name="twitter:description" content="ODORSTRIKE is a pocket-sized fabric odor neutralizer made for clothing. Not perfume. Not body deodorant. Made in India.">
   <meta name="twitter:image" content="https://smelloff.in/assets/og-brand.jpg">
-  <meta name="theme-color" content="#080808">
+  <meta name="theme-color" content="#161410">
   <link rel="icon" href="/favicon.ico?v=2">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
   <link rel="manifest" href="/manifest.json">
-  <link rel="preload" as="image" type="image/webp" href="/assets/lifestyle/gym-handled@1400.webp" imagesrcset="/assets/lifestyle/gym-handled@800.webp 800w, /assets/lifestyle/gym-handled@1400.webp 1400w" imagesizes="(min-width:768px) 50vw, 100vw" fetchpriority="high">
+  <link rel="preload" as="image" type="image/webp" href="/assets/pdp-01-hero.webp" imagesrcset="/assets/pdp-01-hero@640.webp 640w, /assets/pdp-01-hero.webp 1196w" imagesizes="(min-width:1024px) 58vw, (min-width:768px) 54vw, 100vw" fetchpriority="high">
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/dm-sans-normal-latin-400.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-mono-normal-latin-400.woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/tokens.css?v=c7d7898f">
 
   <script type="application/ld+json" id="product-jsonld">
   {
@@ -57,29 +58,7 @@
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--text);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased}img{max-width:100%;display:block}a{color:inherit}
     .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding-inline:var(--gutter)}
     .skip{position:absolute;left:-9999px;top:0;background:var(--acid);color:var(--ink);padding:12px 18px;font-weight:700;z-index:200}.skip:focus{left:0}
-    .hero{padding:0;overflow:hidden;border-bottom:1px solid var(--rule)}
-    .hero-grid{display:grid;grid-template-columns:1fr;gap:0;align-items:stretch}
-    .hero-copy{display:flex;flex-direction:column;justify-content:center;max-width:640px;width:100%;padding:clamp(36px,6vw,88px) var(--gutter)}
-    .hero-eyebrow{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 16px}
-    .hero-eyebrow__brand{font-weight:700;color:var(--acid)}
-    .hero-eyebrow__sep{color:var(--rule)}
-    .hero-eyebrow__cat{color:var(--muted)}
-    .hero h1{font-family:var(--display);font-size:clamp(38px,5.5vw,64px);line-height:1.02;letter-spacing:-.025em;margin:0;font-weight:700;color:var(--text)}
-    .hero h1 .acid{color:var(--acid)}
-    .hero-sub{font-family:var(--body);max-width:44ch;color:var(--muted);font-size:clamp(16px,1.8vw,19px);margin:18px 0 0;line-height:1.55}
-    .hero-action{margin-top:28px;padding-top:22px;border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:16px}
-    .hero-price-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-    .hero-price{font-family:var(--display);font-weight:700;font-size:clamp(36px,4.5vw,48px);line-height:1;color:var(--acid)}
-    .hero-shipping{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-    .hero-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 28px;background:var(--acid);color:var(--ink);text-decoration:none;border:1px solid var(--acid);border-radius:4px;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;transition:background .15s ease,border-color .15s ease,transform .15s ease;width:fit-content}
-    .hero-btn:hover{background:#d1ff8a;border-color:#d1ff8a;transform:translateY(-1px)}
-    .hero-btn:active{transform:translateY(0)}
-    .hero-boundary{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 0 0;line-height:1.6}
-    .hero-visual{position:relative;margin:0;min-height:min(78vw,560px);background:#101010;overflow:hidden}
-    .hero-visual img,.hero-visual picture{position:absolute;inset:0;height:100%;width:100%;max-width:none;object-fit:cover;object-position:88% 46%;filter:none}
-    .hero-visual picture{display:block}
-    .hero-visual picture img{position:absolute;inset:0;height:100%;width:100%;object-fit:cover;object-position:88% 46%}
-    .hero-visual figcaption{position:absolute;left:16px;bottom:14px;right:auto;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#fff;background:rgba(8,8,8,.55);padding:6px 10px;border-radius:3px;opacity:1}
+    /* Stage 2 hero lives in chrome.css as .so-hero — old .hero rules removed. */
     .ticker{background:var(--acid);color:var(--ink);overflow:hidden;white-space:nowrap;border-block:1px solid var(--rule)}.ticker-track{display:inline-block;padding:11px 0;font-family:var(--display);font-size:clamp(20px,3vw,30px);font-weight:700;animation:ticker 28s linear infinite}.ticker span{padding:0 24px}.ticker .dot{opacity:.45}@keyframes ticker{to{transform:translateX(-50%)}}
     section{padding:var(--section-y) 0;border-top:1px solid var(--rule)}.eyebrow{margin-bottom:15px}h2{font-family:var(--display);font-size:clamp(36px,5vw,58px);line-height:1;letter-spacing:-.02em;margin:0 0 20px;max-width:14ch;font-weight:700}.section-copy{max-width:680px;color:var(--muted);font-size:17px}
     .remembers{padding:var(--section-y) 0}
@@ -356,11 +335,6 @@
 
     .small-note{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
     @media(min-width:768px){
-      .hero-grid{grid-template-columns:1fr 1fr;gap:0;min-height:min(86vh,760px)}
-      .hero-copy{display:flex;max-width:none;padding:clamp(48px,7vw,96px) clamp(28px,5vw,72px)}
-      .hero-visual{min-height:100%}
-      .hero-visual img,.hero-visual picture img{object-position:72% 50%}
-      .hero h1{font-size:clamp(56px,7vw,92px);line-height:.9;letter-spacing:-.035em;max-width:8ch}
       .remembers-stage{grid-template-columns:minmax(160px,210px) 1fr;gap:clamp(28px,4vw,48px)}
       .how-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
       .carry-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
@@ -374,18 +348,6 @@
     }
     @media(min-width:1024px){.quad{grid-template-columns:repeat(4,1fr)}}
     @media(max-width:767px){
-      .hero{padding:0}
-      .hero-grid{display:flex;flex-direction:column;gap:0}
-      .hero-copy{display:contents}
-      .hero-eyebrow{order:2;margin:20px var(--gutter) 0}
-      .hero-visual{order:1;padding:0;min-height:0;aspect-ratio:5/6;max-height:72vh}
-      .hero-visual img,.hero-visual picture img{object-position:88% 46%}
-      .hero-visual figcaption{left:12px;bottom:12px}
-      .hero h1{order:3;font-size:clamp(42px,12vw,64px);line-height:.92;letter-spacing:-.03em;padding-inline:var(--gutter);margin-top:16px}
-      .hero-sub{order:4;font-size:15px;margin-top:12px;line-height:1.5;padding-inline:var(--gutter)}
-      .hero-action{order:5;margin-top:20px;padding:16px var(--gutter) 0;gap:12px}
-      .hero-btn{width:100%}
-      .hero-boundary{order:6;font-size:10px;margin:14px var(--gutter) 28px;text-align:left}
       .remembers-stage{grid-template-columns:1fr;gap:20px;padding:20px 16px;text-align:left}
       .rm-timeline-steps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:4px;gap:6px}
       .rm-timeline-steps::-webkit-scrollbar{display:none}
@@ -404,7 +366,7 @@
 
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=5dcc0595">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=f9a1b8b9">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=70d470c9">
 <script src="/assets/js/chrome.js?v=08f2d603" defer></script>
 <script type="module" src="/assets/js/buy-module.js?v=19524b71"></script>
 </head>
@@ -455,32 +417,31 @@
 
 <main id="sf-main" tabindex="-1">
 <!-- 01 HERO -->
-<section class="hero" aria-labelledby="heroTitle"><div class="hero-grid">
-  <div class="hero-copy">
-    <div class="hero-eyebrow">
-      <span class="hero-eyebrow__brand">ODORSTRIKE</span>
-      <span class="hero-eyebrow__sep">·</span>
-      <span class="hero-eyebrow__cat">50ML FABRIC ODOR MIST</span>
-    </div>
-    <h1 id="heroTitle">Smell, <span class="acid">handled.</span></h1>
-    <p class="hero-sub">People don't fear smelling bad — they fear others noticing it. Pocket-sized odor killer for your clothes. Anytime, anywhere.</p>
-    <div class="hero-action">
-      <div class="hero-price-row">
-        <span class="hero-price">₹229</span>
-        <span class="hero-shipping">FREE SHIPPING WITH PREPAID UPI</span>
+<section class="so-hero" aria-labelledby="heroTitle">
+  <div class="so-hero__stage">
+    <figure class="so-hero__visual">
+      <picture>
+        <source type="image/webp" srcset="/assets/pdp-01-hero@640.webp 640w, /assets/pdp-01-hero.webp 1196w" sizes="(min-width:1024px) 58vw, (min-width:768px) 54vw, 100vw">
+        <img src="/assets/pdp-01-hero.webp" alt="ODORSTRIKE 50ml fabric-only odor mist bottle on clothing" width="1196" height="1315" fetchpriority="high" decoding="async" loading="eager">
+      </picture>
+    </figure>
+    <div class="so-hero__copy">
+      <p class="so-hero__brand">ODORSTRIKE · 50ml</p>
+      <h1 id="heroTitle">Fabric-only odor mist for clothes</h1>
+      <p class="so-hero__hook">People don’t fear smelling bad. They fear others noticing it.</p>
+      <div class="so-hero__commerce">
+        <span class="so-hero__amount">₹229</span>
+        <p class="so-hero__pay">Prepaid UPI · Free shipping</p>
+        <p class="so-hero__cod">COD ₹289 · ₹60 handling</p>
       </div>
-      <a class="hero-btn" href="/odorstrike?buy=1">BUY ODORSTRIKE →</a>
+      <div class="so-hero__actions">
+        <a class="so-btn so-btn--p1" href="/odorstrike?buy=1" data-smelloff-buy="hero">Buy ODORSTRIKE — ₹229</a>
+        <a class="so-btn so-btn--p3" href="/#how-it-works">How it works</a>
+      </div>
+      <p class="so-hero__bound">Fabric only · Not for skin · ~250 sprays</p>
     </div>
-    <p class="hero-boundary">FABRIC ONLY · NOT PERFUME · NOT DEODORANT · NOT FOR SKIN</p>
   </div>
-  <figure class="hero-visual">
-    <picture>
-      <source type="image/webp" srcset="/assets/lifestyle/gym-handled@800.webp 800w, /assets/lifestyle/gym-handled@1400.webp 1400w" sizes="(min-width:768px) 50vw, 100vw">
-      <img src="/assets/lifestyle/gym-handled@1400.webp" alt="ODORSTRIKE fabric odor mist with gym bag — smell, handled" width="1400" height="933" fetchpriority="high" decoding="async">
-    </picture>
-    <figcaption>50ML · GYMWEAR · FABRIC ONLY</figcaption>
-  </figure>
-</div></section>
+</section>
 
 <!-- 02 THE PROBLEM -->
 <section class="remembers" id="remembers" data-step="0" aria-labelledby="remembersTitle">
@@ -1423,7 +1384,7 @@
 <script src="/assets/js/reviews-system.js?v=6a8f5821" defer></script>
 <script src="/assets/js/track.js?v=9f33b0f6" defer></script>
 <script src="/assets/js/consent-analytics.js?v=0982d63f" defer></script>
-<script src="/assets/js/cro-experiments.js?v=e130439b" defer></script>
+<script src="/assets/js/cro-experiments.js?v=fe084ccc" defer></script>
 <script>
 (function(){
   // 1. Shirt timeline interactive scrub
