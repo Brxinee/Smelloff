@@ -2947,12 +2947,11 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       </div>
     </div>
     <div class="cart-foot" id="cartFoot" style="display:none">
-      <div class="cart-upsell">Two bottles: one at home, one that travels with you. Free shipping either way.</div>
       <div class="cart-subtotal">
         <span>Subtotal</span>
         <span class="cart-sub-amt" id="cartSubtotal">₹229</span>
       </div>
-      <div class="cart-ship-note">Free shipping across India · COD adds ₹60 at checkout</div>
+      <div class="cart-ship-note">Free shipping pan-India on UPI · Cash on Delivery available (+₹60)</div>
       <button class="cart-checkout" id="cartCheckoutBtn" onclick="checkoutFromCart()">Checkout · <span id="cartCheckoutAmt">₹229</span></button>
     </div>
   </aside>
@@ -4065,6 +4064,11 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
 
 
+
+
+
+
+
 <!-- PDP-CONVERSION-LAYER:START -->
 <section class="pdp-conv" aria-labelledby="pdp-conv-problem">
   <div class="pdp-conv__inner">
@@ -4255,15 +4259,32 @@ window.createSupabaseOrder = function (opts) {
     if (foot) foot.style.display = hasItems ? 'block' : 'none';
     if (hasItems) {
       var sub = 229;
-      if (qty === 1) sub = 229;
-      else if (qty === 2) sub = 429;
-      else if (qty === 3) sub = 599;
-      else sub = 229 * qty;
+      var unitText = '1 × 50ml Bottle · ₹229';
+      var nameText = 'ODORSTRIKE 50ml';
+      if (qty === 1) {
+        sub = 229;
+        unitText = '1 × 50ml Bottle · ₹229';
+        nameText = 'ODORSTRIKE 50ml';
+      } else if (qty === 2) {
+        sub = 429;
+        unitText = '2 × 50ml Bottles (Duo Pack · Save ₹29) · ₹429';
+        nameText = 'ODORSTRIKE 50ml (Duo)';
+      } else if (qty === 3) {
+        sub = 599;
+        unitText = '3 × 50ml Bottles (Trio Pack · Save ₹88) · ₹599';
+        nameText = 'ODORSTRIKE 50ml (Trio)';
+      } else {
+        sub = 229 * qty;
+        unitText = qty + ' × 50ml Bottles · ₹' + sub;
+        nameText = 'ODORSTRIKE 50ml (' + qty + ' Pack)';
+      }
       var qv = document.getElementById('cartQtyVal'); if (qv) qv.textContent = String(qty);
       var st = document.getElementById('cartSubtotal'); if (st) st.textContent = '₹' + sub;
       var ca = document.getElementById('cartCheckoutAmt'); if (ca) ca.textContent = '₹' + sub;
+      var lnName = document.querySelector('#cartLine .cart-line-name');
+      if (lnName) lnName.textContent = nameText;
       var unit = document.querySelector('#cartLine .cart-line-unit');
-      if (unit) unit.textContent = '₹' + sub + ' · ' + qty + ' × 50ml';
+      if (unit) unit.textContent = unitText;
     }
   }
   // One switch for "a modal owns the screen": locks scroll and drops the
@@ -4284,17 +4305,53 @@ window.createSupabaseOrder = function (opts) {
   }
   window.syncModalState = syncModalState;
 
+  var _cartTrigger = null;
   function openCartDrawer() {
+    _cartTrigger = document.activeElement;
     renderCart();
     var ov = document.getElementById('cartOverlay');
     if (ov) ov.classList.add('active');
     syncModalState();
+    trapFocusInCartDrawer();
+    setTimeout(function() {
+      var closeBtn = ov ? ov.querySelector('.cart-close') : null;
+      if (closeBtn) closeBtn.focus();
+    }, 60);
   }
   function closeCartDrawer() {
     var ov = document.getElementById('cartOverlay');
     if (ov) ov.classList.remove('active');
     syncModalState();
+    if (_cartTrigger && typeof _cartTrigger.focus === 'function') {
+      setTimeout(function() { _cartTrigger.focus(); _cartTrigger = null; }, 50);
+    }
   }
+  var _cartFocusTrapHandler = null;
+  function trapFocusInCartDrawer() {
+    var overlay = document.getElementById('cartOverlay');
+    if (!overlay) return;
+    if (_cartFocusTrapHandler) overlay.removeEventListener('keydown', _cartFocusTrapHandler);
+    var visibleFocusable = function () {
+      var all = overlay.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      return Array.prototype.filter.call(all, function (el) {
+        return el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+      });
+    };
+    _cartFocusTrapHandler = function(e) {
+      if (e.key !== 'Tab') return;
+      var f = visibleFocusable();
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (f.indexOf(document.activeElement) === -1) { e.preventDefault(); (e.shiftKey ? last : first).focus(); return; }
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    overlay.addEventListener('keydown', _cartFocusTrapHandler);
+  }
+
   // Mirror cart changes to the first-party beacon (assets/js/track.js) so the
   // admin's Carts tab sees live baskets and can recover abandoned ones.
   // Prices go over the wire in paise, matching orders.amount.
@@ -4335,16 +4392,20 @@ window.createSupabaseOrder = function (opts) {
     var v = document.getElementById('pdpQtyVal');
     if (v) v.textContent = String(pdpQty);
     var t = document.getElementById('pdpBuyText');
-    if (t) t.textContent = 'Buy now · ₹' + (unitPrice() * pdpQty);
+    var bundleTotal = 229;
+    if (pdpQty === 2) bundleTotal = 429;
+    else if (pdpQty === 3) bundleTotal = 599;
+    else bundleTotal = 229 * pdpQty;
+    if (t) t.textContent = 'Buy now · ₹' + bundleTotal;
     var dec = document.getElementById('pdpQtyDec');
     if (dec) dec.disabled = pdpQty <= 1;
   }
   function pdpQtyStep(d) {
-    pdpQty = Math.max(1, Math.min(99, pdpQty + d));
+    pdpQty = Math.max(1, Math.min(5, pdpQty + d));
     renderPdpQty();
   }
   function buyNow() {
-    setCartQty(Math.max(1, pdpQty));
+    setCartQty(Math.max(1, Math.min(5, pdpQty)));
     trackAddToCart();
     smfCartBeacon('add_to_cart');
     closeCartDrawer();
@@ -4353,7 +4414,7 @@ window.createSupabaseOrder = function (opts) {
   // "Add to cart" is the browse path: add a unit and show the drawer, so the
   // qty controls and the subtotal are visible and the page stays behind it.
   function addToCart() {
-    setCartQty(Math.max(1, pdpQty));
+    setCartQty(Math.max(1, Math.min(5, pdpQty)));
     trackAddToCart();
     smfCartBeacon('add_to_cart');
     openCartDrawer();
@@ -4362,16 +4423,16 @@ window.createSupabaseOrder = function (opts) {
   // can never disagree about how many bottles are being bought.
   function syncPdpQtyFromCart() {
     var q = getCartQty();
-    pdpQty = q > 0 ? q : 1;
+    pdpQty = q > 0 ? Math.min(5, q) : 1;
     renderPdpQty();
   }
-  function cartInc() { setCartQty(getCartQty() + 1); syncPdpQtyFromCart(); smfCartBeacon('cart_update'); }
+  function cartInc() { var next = Math.min(5, getCartQty() + 1); setCartQty(next); syncPdpQtyFromCart(); smfCartBeacon('cart_update'); }
   function cartDec() { var q = getCartQty(); if (q <= 1) setCartQty(0); else setCartQty(q - 1); syncPdpQtyFromCart(); smfCartBeacon('cart_update'); }
   function cartRemove() { setCartQty(0); syncPdpQtyFromCart(); smfCartBeacon('remove_from_cart'); }
   function checkoutFromCart() {
     var q = getCartQty();
     if (q < 1) return;
-    cartQty = q;
+    cartQty = Math.min(5, q);
     closeCartDrawer();
     openCheckout('solo');
   }
@@ -4419,14 +4480,15 @@ window.createSupabaseOrder = function (opts) {
   function orderTotals() {
     const qty = cartQty > 0 ? cartQty : 1;
     let subtotal = 229;
-    if (qty === 1) subtotal = 229;
-    else if (qty === 2) subtotal = 429;
-    else if (qty === 3) subtotal = 599;
-    else subtotal = 229 * qty;
+    let savings = 0;
+    if (qty === 1) { subtotal = 229; savings = 0; }
+    else if (qty === 2) { subtotal = 429; savings = 29; }
+    else if (qty === 3) { subtotal = 599; savings = 88; }
+    else { subtotal = 229 * qty; savings = 0; }
     const unit = Math.round((subtotal / qty) * 100) / 100;
     const shipping = Number(calcShipping(subtotal)) || 0;
     const codFee = payMethod === 'cod' ? COD_FEE : 0;
-    return { qty: qty, unit: unit, subtotal: subtotal, shipping: shipping,
+    return { qty: qty, unit: unit, subtotal: subtotal, savings: savings, shipping: shipping,
              codFee: codFee, total: subtotal + shipping + codFee };
   }
 
@@ -4437,18 +4499,19 @@ window.createSupabaseOrder = function (opts) {
       var el = document.getElementById(id);
       if (el) el.textContent = text;
     };
-    set('checkoutVariant', t.qty + ' × 50ml');
-    set('checkoutAmount', '₹' + t.unit + (t.qty > 1 ? ' × ' + t.qty : ''));
+    var bundleTitle = '1 × 50ml Bottle';
+    if (t.qty === 2) bundleTitle = '2 × 50ml Bottles (Duo Pack · Save ₹29)';
+    else if (t.qty === 3) bundleTitle = '3 × 50ml Bottles (Trio Pack · Save ₹88)';
+    else if (t.qty > 3) bundleTitle = t.qty + ' × 50ml Bottles';
+    set('checkoutVariant', bundleTitle);
+    set('checkoutAmount', '₹' + t.subtotal);
     set('checkoutShipping', 'Free ✓');
     set('checkoutCodFee', isCod ? '+₹' + COD_FEE : 'Not applied ✓');
     set('checkoutTotal', '₹' + t.total);
     // The UPI panel only ever shows the prepaid figure — no COD fee applies there.
     set('upiAmountInline', '₹' + (t.subtotal + t.shipping));
     set('submitText', (isCod ? 'Place COD order · ₹' : 'Open UPI app · ₹') + t.total);
-    // Only rewrite the COD panel while COD is actually selected. Rewriting it
-    // unconditionally left it reading "pay ₹229 on delivery (includes the ₹60
-    // COD handling charge)" whenever UPI was chosen — hidden, but wrong, and it
-    // would have surfaced the moment anyone switched back.
+    // Only rewrite the COD panel while COD is actually selected.
     if (isCod) {
       set('codPayDesc', '₹0 advance · pay ₹' + t.total + ' on delivery (includes the ₹' + COD_FEE + ' COD handling charge)');
     }
@@ -4634,22 +4697,78 @@ window.createSupabaseOrder = function (opts) {
 
   function validateForm() {
     // Clear previous red borders
-    document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(i){i.style.borderColor='';});
-    // Email is OPTIONAL — not in required list
-    const fields = ['f_phone','f_name','f_addr','f_pin','f_city','f_state'];
-    for (const id of fields) {
-      const el = document.getElementById(id);
-      if (!el) { showError('Please fill all required fields.'); return false; }
-      if (!el.value.trim()) { el.style.borderColor='#ff6b6b'; el.focus(); showError('Please fill all required fields.'); return false; }
+    document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(i){
+      i.style.borderColor = '';
+      i.removeAttribute('aria-invalid');
+    });
+    hideError();
+
+    const phoneEl = document.getElementById('f_phone');
+    const phone = phoneEl ? phoneEl.value.trim() : '';
+    if (!phone) {
+      if (phoneEl) { phoneEl.style.borderColor='#ff6b6b'; phoneEl.setAttribute('aria-invalid','true'); phoneEl.focus(); }
+      showError('Please enter your 10-digit mobile number.');
+      return false;
     }
-    const phone = document.getElementById('f_phone').value.trim();
-    if (!/^[6-9]\d{9}$/.test(phone)) { document.getElementById('f_phone').style.borderColor='#ff6b6b'; showError('Enter a valid 10-digit mobile number.'); return false; }
-    const pin = document.getElementById('f_pin').value.trim();
-    if (!/^\d{6}$/.test(pin)) { document.getElementById('f_pin').style.borderColor='#ff6b6b'; showError('Enter a valid 6-digit pincode.'); return false; }
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      if (phoneEl) { phoneEl.style.borderColor='#ff6b6b'; phoneEl.setAttribute('aria-invalid','true'); phoneEl.focus(); }
+      showError('Enter a valid 10-digit mobile number (e.g. 9876543210).');
+      return false;
+    }
+
+    const nameEl = document.getElementById('f_name');
+    const name = nameEl ? nameEl.value.trim() : '';
+    if (!name) {
+      if (nameEl) { nameEl.style.borderColor='#ff6b6b'; nameEl.setAttribute('aria-invalid','true'); nameEl.focus(); }
+      showError('Please enter your full name.');
+      return false;
+    }
+
+    const pinEl = document.getElementById('f_pin');
+    const pin = pinEl ? pinEl.value.trim() : '';
+    if (!pin) {
+      if (pinEl) { pinEl.style.borderColor='#ff6b6b'; pinEl.setAttribute('aria-invalid','true'); pinEl.focus(); }
+      showError('Please enter your 6-digit delivery pincode.');
+      return false;
+    }
+    if (!/^\d{6}$/.test(pin)) {
+      if (pinEl) { pinEl.style.borderColor='#ff6b6b'; pinEl.setAttribute('aria-invalid','true'); pinEl.focus(); }
+      showError('Enter a valid 6-digit delivery pincode.');
+      return false;
+    }
+
+    const cityEl = document.getElementById('f_city');
+    const city = cityEl ? cityEl.value.trim() : '';
+    if (!city) {
+      if (cityEl) { cityEl.style.borderColor='#ff6b6b'; cityEl.setAttribute('aria-invalid','true'); cityEl.focus(); }
+      showError('Please enter your city.');
+      return false;
+    }
+
+    const stateEl = document.getElementById('f_state');
+    const state = stateEl ? stateEl.value.trim() : '';
+    if (!state) {
+      if (stateEl) { stateEl.style.borderColor='#ff6b6b'; stateEl.setAttribute('aria-invalid','true'); stateEl.focus(); }
+      showError('Please enter your state.');
+      return false;
+    }
+
+    const addrEl = document.getElementById('f_addr');
+    const addr = addrEl ? addrEl.value.trim() : '';
+    if (!addr) {
+      if (addrEl) { addrEl.style.borderColor='#ff6b6b'; addrEl.setAttribute('aria-invalid','true'); addrEl.focus(); }
+      showError('Please enter your delivery street and house address.');
+      return false;
+    }
+
     // Email is OPTIONAL — only validate if non-empty
     const emailEl = document.getElementById('f_email');
     const email = emailEl ? emailEl.value.trim() : '';
-    if (email && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) { if (emailEl) emailEl.style.borderColor='#ff6b6b'; showError('Enter a valid email or leave it blank.'); return false; }
+    if (email && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) {
+      if (emailEl) { emailEl.style.borderColor='#ff6b6b'; emailEl.setAttribute('aria-invalid','true'); emailEl.focus(); }
+      showError('Enter a valid email address or leave it blank.');
+      return false;
+    }
     return true;
   }
 
@@ -5533,20 +5652,29 @@ window.createSupabaseOrder = function (opts) {
 
   // Deep links from other pages.
   //   ?cart=open  — header cart button elsewhere on the site: show the drawer.
-  //   ?buy=1      — a "Buy now" CTA on the homepage or a policy page: open the
-  //                 checkout form straight away. Someone who clicked Buy on
-  //                 another page has already decided; landing them on an
-  //                 anchor and making them find the button again is a wasted
-  //                 step on the highest-intent click the site gets.
+  //   ?buy=1/2/3  — a "Buy now" CTA on the homepage or a policy page: set bundle qty and open checkout form straight away.
   try {
     var _q = new URLSearchParams(location.search);
-    if (_q.get('cart') === 'open') openCartDrawer();
-    else if (_q.get('buy') === '1') buyNow();
+    var _buyParam = _q.get('buy');
+    if (_q.get('cart') === 'open') {
+      openCartDrawer();
+    } else if (_buyParam) {
+      var bQty = parseInt(_buyParam, 10);
+      if (!isNaN(bQty) && bQty > 0) {
+        pdpQty = Math.max(1, Math.min(5, bQty));
+        setCartQty(pdpQty);
+        renderPdpQty();
+        buyNow();
+      } else {
+        buyNow();
+      }
+    }
   } catch (e) {}
 
-  // Clear red border on input focus
+  // Clear red border and error message on input and focus
   document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(input){
-    input.addEventListener('focus',function(){this.style.borderColor='';});
+    input.addEventListener('focus', function(){ this.style.borderColor=''; this.removeAttribute('aria-invalid'); hideError(); });
+    input.addEventListener('input', function(){ this.style.borderColor=''; this.removeAttribute('aria-invalid'); hideError(); });
   });
 
   // Waitlist email capture — Supabase primary, Sheets backup, Resend welcome
