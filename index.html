@@ -21,7 +21,7 @@
   <link rel="icon" href="/favicon.ico?v=2">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
   <link rel="manifest" href="/manifest.json">
-  <link rel="preload" as="image" type="image/webp" href="/assets/odorstrike-bottle-cutout.webp" fetchpriority="high">
+  <link rel="preload" as="image" type="image/webp" href="/assets/lifestyle/gym-handled@1400.webp" imagesrcset="/assets/lifestyle/gym-handled@800.webp 800w, /assets/lifestyle/gym-handled@1400.webp 1400w" imagesizes="(min-width:768px) 50vw, 100vw" fetchpriority="high">
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/dm-sans-normal-latin-400.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-mono-normal-latin-400.woff2" crossorigin>
 
@@ -57,9 +57,9 @@
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--text);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased}img{max-width:100%;display:block}a{color:inherit}
     .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding-inline:var(--gutter)}
     .skip{position:absolute;left:-9999px;top:0;background:var(--acid);color:var(--ink);padding:12px 18px;font-weight:700;z-index:200}.skip:focus{left:0}
-    .hero{padding:clamp(40px,5vw,72px) 0 clamp(48px,6vw,80px);overflow:hidden}
-    .hero-grid{display:grid;grid-template-columns:1fr;gap:28px;align-items:center}
-    .hero-copy{display:flex;flex-direction:column;max-width:580px}
+    .hero{padding:0;overflow:hidden;border-bottom:1px solid var(--rule)}
+    .hero-grid{display:grid;grid-template-columns:1fr;gap:0;align-items:stretch}
+    .hero-copy{display:flex;flex-direction:column;justify-content:center;max-width:640px;width:100%;padding:clamp(36px,6vw,88px) var(--gutter)}
     .hero-eyebrow{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 16px}
     .hero-eyebrow__brand{font-weight:700;color:var(--acid)}
     .hero-eyebrow__sep{color:var(--rule)}
@@ -75,9 +75,11 @@
     .hero-btn:hover{background:#d1ff8a;border-color:#d1ff8a;transform:translateY(-1px)}
     .hero-btn:active{transform:translateY(0)}
     .hero-boundary{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 0 0;line-height:1.6}
-    .hero-visual{position:relative;margin:0;display:flex;align-items:center;justify-content:center;padding:12px 0}
-    .hero-visual img{height:clamp(340px,42vw,500px);width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 24px 48px rgba(0,0,0,.85));transition:transform .3s ease}
-    .hero-visual figcaption{position:absolute;right:0;bottom:12px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);opacity:.75}
+    .hero-visual{position:relative;margin:0;min-height:min(78vw,560px);background:#101010;overflow:hidden}
+    .hero-visual img,.hero-visual picture{position:absolute;inset:0;height:100%;width:100%;max-width:none;object-fit:cover;object-position:88% 46%;filter:none}
+    .hero-visual picture{display:block}
+    .hero-visual picture img{position:absolute;inset:0;height:100%;width:100%;object-fit:cover;object-position:88% 46%}
+    .hero-visual figcaption{position:absolute;left:16px;bottom:14px;right:auto;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#fff;background:rgba(8,8,8,.55);padding:6px 10px;border-radius:3px;opacity:1}
     .ticker{background:var(--acid);color:var(--ink);overflow:hidden;white-space:nowrap;border-block:1px solid var(--rule)}.ticker-track{display:inline-block;padding:11px 0;font-family:var(--display);font-size:clamp(20px,3vw,30px);font-weight:700;animation:ticker 28s linear infinite}.ticker span{padding:0 24px}.ticker .dot{opacity:.45}@keyframes ticker{to{transform:translateX(-50%)}}
     section{padding:var(--section-y) 0;border-top:1px solid var(--rule)}.eyebrow{margin-bottom:15px}h2{font-family:var(--display);font-size:clamp(36px,5vw,58px);line-height:1;letter-spacing:-.02em;margin:0 0 20px;max-width:14ch;font-weight:700}.section-copy{max-width:680px;color:var(--muted);font-size:17px}
     .remembers{padding:var(--section-y) 0}
@@ -354,8 +356,11 @@
 
     .small-note{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
     @media(min-width:768px){
-      .hero-grid{grid-template-columns:1.15fr .85fr;gap:clamp(32px,5vw,64px)}
-      .hero-copy{display:flex}
+      .hero-grid{grid-template-columns:1fr 1fr;gap:0;min-height:min(86vh,760px)}
+      .hero-copy{display:flex;max-width:none;padding:clamp(48px,7vw,96px) clamp(28px,5vw,72px)}
+      .hero-visual{min-height:100%}
+      .hero-visual img,.hero-visual picture img{object-position:72% 50%}
+      .hero h1{font-size:clamp(56px,7vw,92px);line-height:.9;letter-spacing:-.035em;max-width:8ch}
       .remembers-stage{grid-template-columns:minmax(160px,210px) 1fr;gap:clamp(28px,4vw,48px)}
       .how-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
       .carry-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
@@ -369,18 +374,18 @@
     }
     @media(min-width:1024px){.quad{grid-template-columns:repeat(4,1fr)}}
     @media(max-width:767px){
-      .hero{padding:28px 0 36px}
+      .hero{padding:0}
       .hero-grid{display:flex;flex-direction:column;gap:0}
       .hero-copy{display:contents}
-      .hero-eyebrow{order:1;margin-bottom:12px}
-      .hero-visual{order:2;padding:6px 0 16px}
-      .hero-visual img{height:clamp(240px,56vw,300px)}
-      .hero-visual figcaption{position:static;margin-top:6px;text-align:center}
-      .hero h1{order:3;font-size:clamp(30px,7.8vw,40px);line-height:1.06}
-      .hero-sub{order:4;font-size:15px;margin-top:12px;line-height:1.5}
-      .hero-action{order:5;margin-top:20px;padding-top:16px;gap:12px}
+      .hero-eyebrow{order:2;margin:20px var(--gutter) 0}
+      .hero-visual{order:1;padding:0;min-height:0;aspect-ratio:5/6;max-height:72vh}
+      .hero-visual img,.hero-visual picture img{object-position:88% 46%}
+      .hero-visual figcaption{left:12px;bottom:12px}
+      .hero h1{order:3;font-size:clamp(42px,12vw,64px);line-height:.92;letter-spacing:-.03em;padding-inline:var(--gutter);margin-top:16px}
+      .hero-sub{order:4;font-size:15px;margin-top:12px;line-height:1.5;padding-inline:var(--gutter)}
+      .hero-action{order:5;margin-top:20px;padding:16px var(--gutter) 0;gap:12px}
       .hero-btn{width:100%}
-      .hero-boundary{order:6;font-size:10px;margin-top:14px;text-align:center}
+      .hero-boundary{order:6;font-size:10px;margin:14px var(--gutter) 28px;text-align:left}
       .remembers-stage{grid-template-columns:1fr;gap:20px;padding:20px 16px;text-align:left}
       .rm-timeline-steps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:4px;gap:6px}
       .rm-timeline-steps::-webkit-scrollbar{display:none}
@@ -414,15 +419,15 @@
 
 <main id="sf-main" tabindex="-1">
 <!-- 01 HERO -->
-<section class="hero" aria-labelledby="heroTitle"><div class="wrap"><div class="hero-grid">
+<section class="hero" aria-labelledby="heroTitle"><div class="hero-grid">
   <div class="hero-copy">
     <div class="hero-eyebrow">
       <span class="hero-eyebrow__brand">ODORSTRIKE</span>
       <span class="hero-eyebrow__sep">·</span>
       <span class="hero-eyebrow__cat">50ML FABRIC ODOR MIST</span>
     </div>
-    <h1 id="heroTitle">People don't fear smelling bad. <span class="acid">They fear others noticing it.</span></h1>
-    <p class="hero-sub">A pocket-sized fabric odor mist for the moments your clothes need a refresh between washes.</p>
+    <h1 id="heroTitle">Smell, <span class="acid">handled.</span></h1>
+    <p class="hero-sub">People don't fear smelling bad — they fear others noticing it. Pocket-sized odor killer for your clothes. Anytime, anywhere.</p>
     <div class="hero-action">
       <div class="hero-price-row">
         <span class="hero-price">₹229</span>
@@ -433,10 +438,13 @@
     <p class="hero-boundary">FABRIC ONLY · NOT PERFUME · NOT DEODORANT · NOT FOR SKIN</p>
   </div>
   <figure class="hero-visual">
-    <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml fabric odor mist bottle" width="241" height="915" fetchpriority="high" decoding="async">
-    <figcaption>50ML · ~250 SPRAYS</figcaption>
+    <picture>
+      <source type="image/webp" srcset="/assets/lifestyle/gym-handled@800.webp 800w, /assets/lifestyle/gym-handled@1400.webp 1400w" sizes="(min-width:768px) 50vw, 100vw">
+      <img src="/assets/lifestyle/gym-handled@1400.webp" alt="ODORSTRIKE fabric odor mist with gym bag — smell, handled" width="1400" height="933" fetchpriority="high" decoding="async">
+    </picture>
+    <figcaption>50ML · GYMWEAR · FABRIC ONLY</figcaption>
   </figure>
-</div></div></section>
+</div></section>
 
 <!-- 02 THE PROBLEM -->
 <section class="remembers" id="remembers" data-step="0" aria-labelledby="remembersTitle">
