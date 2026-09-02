@@ -18,8 +18,8 @@
        --nb-acid   = the single accent;
   text ON acid stays #080808 */
   --nb-paper:#080808;
-  --nb-head:'Barlow Condensed',sans-serif;
-  --nb-body:'DM Sans','Inter Tight',sans-serif;
+  --nb-head:var(--font-display, 'Space Grotesk', 'DM Sans', sans-serif);
+  --nb-body:var(--font-body, 'DM Sans', 'Inter Tight', sans-serif);
 }
 
 body{background:var(--nb-paper);color:var(--nb-ink);font-family:var(--nb-body)}

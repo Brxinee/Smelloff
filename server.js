@@ -12,7 +12,6 @@ import verifyPaymentHandler from './api/verify-payment.js';
 import paymentStatusHandler from './api/payment-status.js';
 import adminVerifyPaymentHandler from './api/admin/verify-payment.js';
 import webhookHandler from './api/webhook.js';
-import prelaunchLeadHandler from './api/prelaunch-lead.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -104,8 +103,6 @@ app.all('/api/payment/create-order', (req, res) => createOrderHandler(req, res))
 app.all('/api/payment/verify', (req, res) => verifyPaymentHandler(req, res));
 app.all('/api/payment/status', (req, res) => paymentStatusHandler(req, res));
 app.all('/api/payment/webhook', (req, res) => webhookHandler(req, res));
-app.all('/api/prelaunch-lead', (req, res) => prelaunchLeadHandler(req, res));
-app.all('/api/prelaunch-status', (req, res) => prelaunchLeadHandler(req, res));
 
 // Clean URL & static file handling middleware
 app.use((req, res, next) => {

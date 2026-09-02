@@ -100,6 +100,17 @@
       payload.path = payload.path || location.pathname;
       payload.ref = payload.ref || document.referrer || '';
       if (sid) payload.session = sid;
+      try {
+        var utmS = localStorage.getItem('smelloff_utm_source');
+        var utmM = localStorage.getItem('smelloff_utm_medium');
+        var utmC = localStorage.getItem('smelloff_utm_campaign');
+        if (utmS || utmM || utmC) {
+          payload.meta = payload.meta || {};
+          if (utmS && !payload.meta.utm_source) payload.meta.utm_source = utmS;
+          if (utmM && !payload.meta.utm_medium) payload.meta.utm_medium = utmM;
+          if (utmC && !payload.meta.utm_campaign) payload.meta.utm_campaign = utmC;
+        }
+      } catch (e) {}
       var body = JSON.stringify(payload);
       // sendBeacon survives page unloads; fetch keepalive is the fallback.
       if (navigator.sendBeacon) {

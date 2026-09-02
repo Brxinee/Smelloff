@@ -40,6 +40,8 @@
    from the real font files, so the local substitute occupies the same box as the
    webfont and the swap costs no layout shift. index.html declares these inline
    (it is self-contained); every page that links this file now gets them too. */
+@font-face{font-family:'DM Sans Fallback';src:local('Arial');size-adjust:102.5%;ascent-override:97.2%;descent-override:26.5%;line-gap-override:0%;}
+@font-face{font-family:'Space Grotesk Fallback';src:local('Arial');size-adjust:100.0%;ascent-override:95.0%;descent-override:25.0%;line-gap-override:0%;}
 @font-face{font-family:'Fraunces Fallback';src:local('Georgia');size-adjust:109.93%;ascent-override:88.96%;descent-override:23.20%;line-gap-override:0%;}
 @font-face{font-family:'Inter Tight Fallback';src:local('Arial');size-adjust:136.95%;ascent-override:70.74%;descent-override:17.61%;line-gap-override:0%;}
 @font-face{font-family:'JetBrains Mono Fallback';src:local('Courier New');size-adjust:99.98%;ascent-override:102.02%;descent-override:30.00%;line-gap-override:0%;}

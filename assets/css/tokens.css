@@ -1,161 +1,220 @@
 /* =====================================================================
    Smelloff — canonical design tokens. SINGLE SOURCE OF TRUTH.
    =====================================================================
-   Before this file existed there were three drifted copies of the system:
-   index.html (--text #F2F2F2), odorstrike.html (--text #f4f1ea) and
-   neo.css (--nb-ink #FFFFFF). Three different whites, three type scales.
-
-   Now: these values are canonical. index.html and odorstrike.html inline a
-   byte-identical copy of the :root block below (they are deliberately
-   self-contained single-file pages — see CLAUDE.md — so they cannot link
-   this file without adding a render-blocking request on the LCP path).
-   Every other page links this file.
-
-   If you change a value here, change it in those two inline blocks too.
-   Search for "TOKENS v1" to find them.
+   STAGE 1 REBUILD: Standardized typography hierarchy, color tokens,
+   surface elevations, spacing scale, layout boundaries, and form tokens.
    ===================================================================== */
 
 :root{
-  /* ---- Color -------------------------------------------------------- */
-  --ink:#080808;              /* brand black / page background */
-  --surface:#111111;          /* dark surface card / slab fill */
-  --surface-2:#161616;        /* raised slab, chips */
-  --surface-light:#FFFFFF;    /* white surface */
-  --bg-light:#F7F7F5;         /* light background for hybrid sections */
-  --text-dark:#0A0A0A;        /* primary dark text */
-  --text-dark-muted:#666666;  /* secondary light-bg text */
-  --text:#F4F1EA;             /* warm paper white */
-  --muted:#A0A0A0;            /* secondary dark-bg copy */
-  --text-2:#C9C5BD;           /* secondary copy — brighter than --muted */
-  --acid:#B8FF57;             /* acid green accent */
-  --acid-hi:#D1FF8A;          /* accent hover */
-  --acid-dim:rgba(184,255,87,.12);
-  --acid-rgb:184,255,87;
-  --on-acid:#080808;          /* text ON acid is always ink, never white */
-  --border-light:#E5E5E2;     /* light borders */
-  --border-dark:#252525;      /* dark borders */
-  --rule:rgba(244,241,234,.14);
-  --rule-soft:rgba(244,241,234,.08);
-  --rule-strong:rgba(244,241,234,.28);
-  --overlay:rgba(0,0,0,.75);
+  /* ---- Color Tokens -------------------------------------------------- */
+  --color-bg: #080808;                    /* Pure dark canvas */
+  --color-surface-1: #111111;             /* Primary elevated card surface */
+  --color-surface-2: #121212;             /* Secondary container surface */
+  --color-surface-3: #181818;             /* Raised chip / tertiary surface */
+  
+  --color-text-primary: #FFFFFF;          /* High contrast primary text */
+  --color-text-secondary: #A3A3A3;        /* Secondary reading text */
+  --color-text-muted: #777777;            /* Utility / subdued metadata text */
+  
+  --color-accent: #B8FF57;                /* Action acid lime green */
+  --color-accent-hover: #D1FF8A;          /* Accent interactive hover */
+  --color-accent-dim: rgba(184,255,87,.12);/* Subdued accent tint */
+  --color-accent-rgb: 184,255,87;
+  --color-on-accent: #080808;             /* Dark text on accent elements */
+  
+  --color-border: #262626;                /* Subtle structural border */
+  --color-border-strong: #333333;         /* Emphasized container border */
+  --color-overlay: rgba(0,0,0,.75);       /* Backdrop dimmer */
 
-  /* ---- Type families ------------------------------------------------ */
-  --display:'Fraunces','Fraunces Fallback',serif;
-  --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
-  --body:'Inter Tight','Inter Tight Fallback',sans-serif;
+  /* ---- Type Families ------------------------------------------------- */
+  --font-display: 'Space Grotesk', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'DM Sans', 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, monospace;
 
-  /* ---- Type scale ---------------------------------------------------
-     Display line-height is deliberately sub-1 so multi-line headlines
-     stack tight and read as a single mass. Tracking tightens as size
-     grows, which is what keeps large Fraunces from looking loose. */
-  --lh-display:.86;
-  --lh-body:1.55;
-  --ls-display:-.028em;
+  /* Legacy Family Aliases */
+  --display: var(--font-display);
+  --body: var(--font-body);
+  --mono: var(--font-mono);
 
-  /* --fs-h1 is consumed by exactly one rule: `.hero h1` on index.html. It was
-     clamp(58px,14vw,164px), tuned for the 20-character "Smell Proof. Always.".
-     The headline is now "Don't let them notice your sweat." — 33 characters —
-     and at 164px that wrapped to five lines, making the H1 705px tall instead
-     of 423px and pushing the price and Buy Now button 285px BELOW the fold on
-     a 1280×900 desktop. The old headline had them at the fold (+3px).
-     At 120px it wraps to three lines, 310px tall, and the CTA sits 111px ABOVE
-     the fold — better than before the copy change. The 58px floor is unchanged,
-     so phones render identically to the approved design (3 lines, 150px).
-     Re-measure the fold if this headline changes length again; don't eyeball it. */
-  --fs-h1:clamp(58px,11vw,120px);
-  --fs-h2:clamp(40px,7.6vw,84px);
-  --fs-h3:clamp(27px,3.6vw,42px);
-  --fs-h4:clamp(21px,2.2vw,27px);
-  --fs-lead:clamp(18px,1.5vw,22px);
-  --fs-body:17px;
-  --fs-sm:15px;
-  --fs-eyebrow:13px;
-  --ls-eyebrow:.2em;
+  /* ---- Typographic Hierarchy ----------------------------------------- */
+  --type-display-xl: clamp(48px, 6.5vw, 84px);  /* Hero headline */
+  --type-display-lg: clamp(32px, 4.5vw, 56px);  /* Major section headings */
+  --type-display-md: clamp(22px, 2.8vw, 36px);  /* Product titles / sub-headings */
+  --type-body-lg: clamp(17px, 1.8vw, 20px);     /* Hero supporting copy / lead */
+  --type-body-md: clamp(15px, 1.2vw, 17px);     /* Standard body copy */
+  --type-body-sm: 14px;                         /* Secondary captions / disclosures */
+  --type-label: 13px;                           /* Navigation / metadata / buttons */
+  --type-mono: 11px;                            /* Technical labels / SKU */
 
-  /* ---- Rhythm ------------------------------------------------------- */
-  --maxw:1160px;
-  --gutter:20px;
-  --section-y:clamp(56px,8vw,112px);
+  /* Legacy Type Scale Aliases */
+  --fs-h1: var(--type-display-xl);
+  --fs-h2: var(--type-display-lg);
+  --fs-h3: var(--type-display-md);
+  --fs-h4: clamp(19px, 2vw, 24px);
+  --fs-lead: var(--type-body-lg);
+  --fs-body: var(--type-body-md);
+  --fs-sm: var(--type-body-sm);
+  --fs-eyebrow: var(--type-mono);
 
-  /* ---- Form --------------------------------------------------------- */
-  --bw:3px;                   /* hard border weight — the brutalist edge */
-  --bw-thin:2px;
-  --r:0px;                    /* square by default; the brand is sharp */
-  --r-pill:100px;
-  --shadow-offset:6px;        /* hard offset shadow, never a blur */
+  /* ---- Line Heights -------------------------------------------------- */
+  --lh-display-xl: 0.94;
+  --lh-display-lg: 1.0;
+  --lh-display-md: 1.1;
+  --lh-body-lg: 1.55;
+  --lh-body-md: 1.6;
+  --lh-body-sm: 1.5;
+  --lh-btn: 1.15;
+  --lh-mono: 1.4;
 
-  /* ---- Motion ------------------------------------------------------- */
-  --ease:cubic-bezier(.19,1,.22,1);
-  --ease-snap:cubic-bezier(.2,.6,.2,1);
-  --dur:.2s;
+  --lh-display: var(--lh-display-xl);
+  --lh-body: var(--lh-body-md);
+
+  /* ---- Letter Spacing ------------------------------------------------ */
+  --ls-display: -0.02em;
+  --ls-body: 0em;
+  --ls-btn: 0.06em;
+  --ls-label: 0.08em;
+  --ls-mono: 0.12em;
+  --ls-eyebrow: var(--ls-mono);
+
+  /* ---- Spacing Scale ------------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 80px;
+  --space-10: 120px;
+
+  /* ---- Layout Boundaries --------------------------------------------- */
+  --max-width: 1200px;
+  --maxw: var(--max-width);
+  --page-gutter-mobile: 16px;
+  --page-gutter-desktop: 24px;
+  --gutter: var(--page-gutter-desktop);
+  --section-spacing: clamp(56px, 8vw, 96px);
+  --section-y: var(--section-spacing);
+  --grid-gap: clamp(16px, 2.5vw, 24px);
+  --card-padding: clamp(20px, 3vw, 32px);
+
+  /* ---- Border Radius & Form Boundaries ------------------------------- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+  --radius-card: 4px;
+  --radius-btn: 4px;
+  --radius-input: 4px;
+
+  --r: var(--radius-card);
+  --r-pill: var(--radius-pill);
+  --bw: 1px;
+  --bw-thin: 1px;
+  --border-weight: 1px;
+  --shadow-offset: 0px;
+
+  /* ---- Button Tokens ------------------------------------------------- */
+  --btn-height: 48px;
+  --btn-font-size: var(--type-label);
+  --btn-font-weight: 700;
+  --btn-letter-spacing: var(--ls-btn);
+  --btn-radius: var(--radius-btn);
+  --btn-primary-bg: var(--color-accent);
+  --btn-primary-text: var(--color-on-accent);
+  --btn-secondary-bg: transparent;
+  --btn-secondary-border: var(--color-border);
+  --btn-secondary-text: var(--color-text-primary);
+
+  /* ---- Input Tokens -------------------------------------------------- */
+  --input-bg: #080808;
+  --input-border: var(--color-border);
+  --input-border-focus: var(--color-accent);
+  --input-text: var(--color-text-primary);
+  --input-placeholder: var(--color-text-muted);
+  --input-radius: var(--radius-input);
+  --input-height: 48px;
+
+  /* ---- Motion & Transitions ------------------------------------------ */
+  --ease: cubic-bezier(.19,1,.22,1);
+  --ease-snap: cubic-bezier(.2,.6,.2,1);
+  --dur: .2s;
+
+  /* ---- Legacy Canonical Compatibility Bridges ----------------------- */
+  --ink: var(--color-bg);
+  --surface: var(--color-surface-1);
+  --surface-2: var(--color-surface-2);
+  --surface-3: var(--color-surface-3);
+  --surface-light: #FFFFFF;
+  --bg-light: #F7F7F5;
+  --text-dark: #0A0A0A;
+  --text-dark-muted: #666666;
+  --text: var(--color-text-primary);
+  --muted: var(--color-text-secondary);
+  --text-2: var(--color-text-secondary);
+  --acid: var(--color-accent);
+  --acid-hi: var(--color-accent-hover);
+  --acid-dim: var(--color-accent-dim);
+  --acid-rgb: var(--color-accent-rgb);
+  --on-acid: var(--color-on-accent);
+  --border-light: #E5E5E2;
+  --border-dark: var(--color-border);
+  --rule: var(--color-border);
+  --rule-soft: rgba(255,255,255,.06);
+  --rule-strong: var(--color-border-strong);
+  --overlay: var(--color-overlay);
 }
 
 /* =====================================================================
-   Legacy alias layer.
-
-   Three naming families grew up independently across this codebase:
-     A  --ink / --paper / --acid / --text / --muted / --rule
-        (index.html, odorstrike.html, faq.html)
-     B  --black / --card / --border / --white / --gray / --silver /
-        --green / --bg / --accent
-        (reviews, about, contact, track-order, 404, blog/index, blog.css)
-     C  --nb-*
-        (neo.css)
-
-   They also disagreed on values — three whites (#F4F1EA, #F5F5F5,
-   #FFFFFF), two card fills (#111111, #0F0F0F), two borders (#262626,
-   rgba(255,255,255,.12)) and four greys. Rewriting every rule in every
-   file would be a large, risky diff, so instead all three families now
-   resolve to the canonical tokens above. One value to change, everywhere.
-
-   New CSS should use the canonical names. These aliases are frozen —
-   don't add to them.
+   Legacy Alias Layer for Backwards Compatibility
    ===================================================================== */
 :root{
   /* Family A */
-  --paper:var(--text);
-  --bg:var(--ink);
-  --accent:var(--acid);
-  --text-secondary:var(--text-2);
+  --paper: var(--text);
+  --bg: var(--ink);
+  --accent: var(--acid);
+  --text-secondary: var(--text-2);
 
   /* Family B */
-  --black:var(--ink);
-  --white:var(--text);
-  --card:var(--surface);
-  --card-hover:var(--surface-2);
-  --bg-surface:var(--surface);
-  --bg-subtle:var(--surface-2);
-  --border:var(--rule);
-  --border-subtle:var(--rule-soft);
-  --line:var(--rule);
-  --gray:var(--muted);
-  --grey:var(--text-2);
-  --silver:var(--text-2);
-  --off-white:var(--text);
-  --green:var(--acid);
-  --green-light:var(--acid-hi);
-  --green-dim:var(--acid-dim);
-  --accent-hover:var(--acid-hi);
-  --accent-light:var(--acid-dim);
-  --accent-rgb:var(--acid-rgb);
-  --shadow:rgba(0,0,0,.40);
+  --black: var(--ink);
+  --white: var(--text);
+  --card: var(--surface);
+  --card-hover: var(--surface-2);
+  --bg-surface: var(--surface);
+  --bg-subtle: var(--surface-2);
+  --border: var(--rule);
+  --border-subtle: var(--rule-soft);
+  --line: var(--rule);
+  --gray: var(--muted);
+  --grey: var(--text-2);
+  --silver: var(--text-2);
+  --off-white: var(--text);
+  --green: var(--acid);
+  --green-light: var(--acid-hi);
+  --green-dim: var(--acid-dim);
+  --accent-hover: var(--acid-hi);
+  --accent-light: var(--acid-dim);
+  --accent-rgb: var(--acid-rgb);
+  --shadow: rgba(0,0,0,.40);
 
   /* Family C */
-  --nb-paper:var(--ink);
-  --nb-ink:var(--text);
-  --nb-white:var(--text);
-  --nb-surface:var(--surface);
-  --nb-surface-2:var(--surface-2);
-  --nb-chip:var(--surface-2);
-  --nb-line:var(--rule);
-  --nb-line-strong:var(--rule-strong);
-  --nb-black:var(--ink);
-  --nb-acid:var(--acid);
-  --nb-yellow:var(--acid);
-  --nb-muted:var(--muted);
-  --nb-shadow:none;
-  --nb-shadow-sm:none;
-  --nb-bw:1px;
-  --nb-r:2px;
-  --nb-r-sm:2px;
+  --nb-paper: var(--ink);
+  --nb-ink: var(--text);
+  --nb-white: var(--text);
+  --nb-surface: var(--surface);
+  --nb-surface-2: var(--surface-2);
+  --nb-chip: var(--surface-3);
+  --nb-line: var(--rule);
+  --nb-line-strong: var(--rule-strong);
+  --nb-black: var(--ink);
+  --nb-acid: var(--acid);
+  --nb-yellow: var(--acid);
+  --nb-muted: var(--muted);
+  --nb-shadow: none;
+  --nb-shadow-sm: none;
+  --nb-bw: 1px;
+  --nb-r: var(--radius-sm);
+  --nb-r-sm: var(--radius-sm);
 }

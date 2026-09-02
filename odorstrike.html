@@ -378,6 +378,19 @@
      Canonical design tokens for Smelloff storefront. */
   :root{
     /* ---- Color ---- */
+    --color-bg:#080808;
+    --color-surface-1:#111111;
+    --color-surface-2:#121212;
+    --color-surface-3:#181818;
+    --color-text-primary:#FFFFFF;
+    --color-text-secondary:#A3A3A3;
+    --color-text-muted:#777777;
+    --color-accent:#B8FF57;
+    --color-accent-hover:#D1FF8A;
+    --color-accent-dim:rgba(184,255,87,.12);
+    --color-border:#262626;
+    --color-border-strong:#333333;
+
     --ink:#080808;
     --surface:#111111;
     --surface-2:#161616;
@@ -385,47 +398,56 @@
     --bg-light:#F7F7F5;
     --text-dark:#0A0A0A;
     --text-dark-muted:#666666;
-    --text:#F4F1EA;
-    --muted:#A0A0A0;
-    --text-2:#C9C5BD;
+    --text:#FFFFFF;
+    --muted:#A3A3A3;
+    --text-2:#A3A3A3;
     --acid:#B8FF57;
     --acid-hi:#D1FF8A;
     --on-acid:#080808;
     --border-light:#E5E5E2;
-    --border-dark:#252525;
-    --rule:rgba(244,241,234,.14);
-    --rule-strong:rgba(244,241,234,.28);
+    --border-dark:#262626;
+    --rule:#262626;
+    --rule-strong:#333333;
+
     /* ---- Type families ---- */
-    --display:'Fraunces','Fraunces Fallback',serif;
-    --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
-    --body:'Inter Tight','Inter Tight Fallback',sans-serif;
+    --font-display:'Space Grotesk','DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    --font-body:'DM Sans','Inter Tight',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
+    --display:var(--font-display);
+    --body:var(--font-body);
+    --mono:var(--font-mono);
+
     /* ---- Type scale ---- */
-    --lh-display:.86;
+    --lh-display:.94;
     --lh-body:1.55;
-    --ls-display:-.028em;
-    --fs-h1:clamp(48px,9vw,96px);
-    --fs-h2:clamp(36px,6vw,68px);
-    --fs-h3:clamp(24px,3.2vw,36px);
+    --ls-display:-.02em;
+    --fs-h1:clamp(48px,6.5vw,84px);
+    --fs-h2:clamp(32px,4.5vw,56px);
+    --fs-h3:clamp(22px,2.8vw,36px);
     --fs-h4:clamp(19px,2vw,24px);
-    --fs-lead:clamp(17px,1.4vw,20px);
+    --fs-lead:clamp(17px,1.8vw,20px);
     --fs-body:16px;
     --fs-sm:14px;
     --fs-eyebrow:12px;
-    --ls-eyebrow:.18em;
+    --ls-eyebrow:.12em;
+
     /* ---- Rhythm ---- */
-    --maxw:1160px;
+    --maxw:1200px;
     --gutter:20px;
-    --section-y:clamp(56px,8vw,112px);
+    --section-y:clamp(56px,8vw,96px);
+
     /* ---- Form ---- */
-    --bw:2px;
+    --bw:1px;
     --bw-thin:1px;
     --r:4px;
-    --r-pill:100px;
-    --shadow-offset:4px;
+    --r-pill:999px;
+    --shadow-offset:0px;
+
     /* ---- Motion ---- */
     --ease:cubic-bezier(.19,1,.22,1);
     --ease-snap:cubic-bezier(.2,.6,.2,1);
     --dur:.2s;
+
     /* ---- Local aliases kept so this page's existing rules keep resolving ---- */
     --bg:var(--ink);
     --paper:var(--text);
@@ -3837,6 +3859,45 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       Last updated: April 2026
     </div>
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

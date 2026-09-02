@@ -20,8 +20,7 @@ const ALLOWED_EVENTS = new Set([
   'refund', 'contact_submit', 'review_submit', 'search', 'error',
   'countdown_view', 'form_start', 'name_completed', 'phone_completed',
   'email_completed', 'form_submit', 'form_success', 'share_click',
-  'whatsapp_share', 'copy_link', 'page_scroll_50', 'page_scroll_90',
-  'prelaunch_lead', 'prelaunch_share', 'prelaunch_scroll'
+  'whatsapp_share', 'copy_link', 'page_scroll_50', 'page_scroll_90'
 ]);
 
 const CART_EVENTS = new Set(['add_to_cart', 'remove_from_cart', 'cart', 'cart_update', 'checkout_start']);
