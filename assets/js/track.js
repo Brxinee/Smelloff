@@ -18,7 +18,7 @@
 
      This directly addresses URLs such as:
        /?q=...
-       /odorstrike?cart=open
+       /?cart=open
        /odorstrike?ref=...
        /track-order?code=...
      without sacrificing the canonical clean URL.
@@ -137,8 +137,8 @@
   history.pushState = function () { _ps.apply(this, arguments); send({ type: 'pageview' }); };
   addEventListener('popstate', function () { send({ type: 'pageview' }); });
 
-  // The PDP is the top of the shopping funnel.
-  if (/^\/odorstrike\/?$/.test(location.pathname)) {
+  // Homepage is the product page. /odorstrike still 301s here.
+  if (location.pathname === '/' || location.pathname === '' || /^\/odorstrike\/?$/.test(location.pathname)) {
     send({ type: 'product_view', label: 'ODORSTRIKE Fabric Mist' });
   }
 

@@ -10,13 +10,13 @@
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{background:var(--black);color:var(--off-white);font-family:var(--body);font-size:18px;line-height:1.75;-webkit-font-smoothing:antialiased;touch-action:pan-x pan-y}
+body{background:var(--so-cotton,#EFE6D4);color:var(--so-cotton-ink,#1B1814);font-family:var(--so-font-body,var(--body));font-size:18px;line-height:1.75;-webkit-font-smoothing:antialiased;touch-action:pan-x pan-y}
 /* Article text is selectable. Blocking selection site-wide stopped readers
    copying a quote or an ingredient name out of a guide — on pages whose whole
    job is being quoted. Only the interactive chrome opts out. */
 button,.b-card-arrow,.nb-btn,.share-btn{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
-::selection{background:var(--acid);color:var(--black)}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+::selection{background:var(--so-cotton-ink,#1B1814);color:var(--so-cotton,#EFE6D4)}
+body::before{display:none}
 
 /* Reading progress bar */
 #progress-bar{position:fixed;top:0;left:0;height:2px;width:0%;background:var(--acid);z-index:200;transition:width .1s linear}
@@ -52,12 +52,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;o
 .article-category{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--acid)}
 .article-read-time,.article-date{font-size:13px;color:var(--grey)}
 .blog-hero{width:100%;height:auto;border-radius:2px;margin:18px 0 6px;display:block}
-h1{font-family:var(--display);font-weight:900;font-size:clamp(38px,6.4vw,64px);letter-spacing:var(--ls-display);line-height:var(--lh-display);color:var(--off-white);margin-bottom:20px}
+h1{font-family:var(--so-font-display,Georgia,serif);font-weight:600;font-size:clamp(38px,6.4vw,64px);letter-spacing:var(--ls-display);line-height:1.08;color:var(--so-cotton-ink,#1B1814);margin-bottom:20px;text-wrap:balance}
 h1 em{font-style:italic;color:var(--grey)}
 .article-dek{font-family:var(--display);font-style:italic;color:var(--grey);font-size:20px;line-height:1.5;border-top:1px solid var(--line);padding-top:24px;margin-top:24px}
-h2{font-family:var(--display);font-weight:900;font-size:clamp(27px,3.6vw,38px);letter-spacing:-.02em;line-height:1.05;color:var(--off-white);margin:52px 0 20px}
-h3{font-family:var(--display);font-weight:900;font-size:21px;letter-spacing:-.01em;color:var(--off-white);margin:36px 0 14px}
-p{margin-bottom:24px;color:var(--off-white)}
+h2{font-family:var(--so-font-display,Georgia,serif);font-weight:600;font-size:clamp(27px,3.6vw,38px);letter-spacing:-.02em;line-height:1.12;color:var(--so-cotton-ink,#1B1814);margin:52px 0 20px;text-wrap:balance}
+h3{font-family:var(--so-font-display,Georgia,serif);font-weight:600;font-size:21px;letter-spacing:-.01em;color:var(--so-cotton-ink,#1B1814);margin:36px 0 14px}
+p{margin-bottom:24px;color:var(--so-cotton-muted,#5E584E)}
 p:last-child{margin-bottom:0}
 ul,ol{margin:0 0 24px 22px;color:var(--off-white)}
 li{margin-bottom:10px}

@@ -21,7 +21,7 @@
 - Contains HPBCD
 
 Official URL: https://smelloff.in
-Product URL: https://smelloff.in/odorstrike
+Product URL: https://smelloff.in/
 
 ## Ingredients
 - Aqua (Water)

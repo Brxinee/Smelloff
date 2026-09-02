@@ -1,6 +1,6 @@
 /* =====================================================================
    Smelloff BuyModule — hydrates [data-so-buy] from SMELLOFF_PRODUCT_TRUTH.
-   Does not rewrite checkout. CTA wraps /odorstrike?buy=1 or window.buyNow().
+   Does not rewrite checkout. CTA wraps /?buy=1 or window.buyNow().
    ===================================================================== */
 import { SMELLOFF_PRODUCT_TRUTH as T } from '/shared/product-truth.js';
 
@@ -16,7 +16,22 @@ function waHref() {
 
 function checkoutHref() {
   if (typeof window.buyNow === 'function') return '#';
-  return '/odorstrike?buy=1';
+  return '/?buy=1';
+}
+
+function packQty(root) {
+  var pressed = document.querySelector('[data-so-pack][aria-pressed="true"]');
+  if (pressed) {
+    var n = parseInt(pressed.getAttribute('data-so-pack'), 10);
+    if (n >= 1 && n <= 5) return n;
+  }
+  return 1;
+}
+
+function packSubtotal(qty) {
+  if (qty === 2) return T.pricePrepaid === 229 ? 429 : qty * T.pricePrepaid;
+  if (qty === 3) return 599;
+  return T.pricePrepaid * qty;
 }
 
 function setPay(root, method) {
@@ -28,7 +43,7 @@ function setPay(root, method) {
   }
   var cta = root.querySelector('[data-so-cta]');
   if (cta) {
-    var amount = prepaid ? T.pricePrepaid : T.priceCod;
+    var amount = packSubtotal(packQty(root)) + (prepaid ? 0 : T.codFee);
     cta.textContent = 'Buy ODORSTRIKE — ' + rupee(amount);
   }
   root.setAttribute('data-pay', method);

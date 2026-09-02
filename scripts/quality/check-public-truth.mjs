@@ -21,7 +21,7 @@ const product = items[0];
 if (product) {
   if (product.sku !== T.sku) errors.push(`Active SKU mismatch: ${product.sku}`);
   if (Number(product.price) !== T.pricePrepaid) errors.push(`Active price mismatch: ${product.price}`);
-  if (product.url !== 'https://smelloff.in/odorstrike') errors.push(`Product URL mismatch: ${product.url}`);
+  if (product.url !== 'https://smelloff.in/') errors.push(`Product URL mismatch: ${product.url}`);
   if (product.availability !== 'in_stock') errors.push(`Unexpected product availability: ${product.availability}`);
 }
 
