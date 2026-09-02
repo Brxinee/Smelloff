@@ -29,7 +29,7 @@
   /* neo tokens (de-overloaded by role) */
   --nb-ink:#FFFFFF;
 }
-body{background:var(--bg);color:var(--text);font-family:'DM Sans','Inter Tight',sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body,'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif)}
 ::selection{background:var(--nb-acid);color:var(--nb-ink)}
 
 /* Anchor jumps + sticky nav: keep targets clear of the fixed black bar */
@@ -55,10 +55,10 @@ html{scroll-padding-top:88px}
 .b-menu-toggle span{background:var(--nb-surface)}
 .b-menu-toggle:hover{border-color:var(--nb-acid)}
 .buy-pill{
-  font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;
+  font-family:var(--font-mono,'JetBrains Mono',monospace);font-weight:700;text-transform:uppercase;
   letter-spacing:.08em;
   background:var(--nb-acid)!important;color:var(--nb-ink)!important;
-  border:1px solid var(--nb-line)!important;border-radius:2px!important;
+  border:1px solid var(--nb-line)!important;border-radius:4px!important;
   box-shadow:none;
 }
 .drop-cap::first-letter{color:var(--nb-ink)!important}
@@ -67,10 +67,10 @@ html{scroll-padding-top:88px}
 .p-logo,.b-logo{color:#fff}
 .p-logo .p-dot{background:var(--nb-acid)}
 .p-cta,.b-buy-btn{
-  font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;
+  font-family:var(--font-mono,'JetBrains Mono',monospace);font-weight:700;text-transform:uppercase;
   letter-spacing:.08em;
   background:var(--nb-acid)!important;color:var(--nb-ink)!important;
-  border:1px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:4px;
   box-shadow:none;
 }
 .p-cta:hover{background:var(--nb-acid)}
@@ -86,21 +86,21 @@ html{scroll-padding-top:88px}
 .p-main a.inline:hover,.p-main p a:hover,.p-main li a:hover{border-bottom-color:var(--nb-line)}
 .p-main .callout{
   background:var(--nb-surface);border:1px solid var(--nb-line);border-left:3px solid var(--nb-acid);
-  border-radius:2px;box-shadow:none;
+  border-radius:4px;box-shadow:none;
 }
 
 /* ── Forms (track-order, contact, reviews) ─────────────────────── */
 main input[type="text"],main input[type="tel"],main input[type="email"],
 main input[type="search"],main textarea,main select{
   background:var(--nb-surface);color:var(--nb-ink);
-  border:1px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:4px;
 }
 main input::placeholder,main textarea::placeholder{color:#6B6B64}
 main button[type="submit"],.c-btn,.agg-cta,.to-btn{
-  font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;
+  font-family:var(--font-mono,'JetBrains Mono',monospace);font-weight:700;text-transform:uppercase;
   letter-spacing:.08em;
   background:var(--nb-acid);color:var(--nb-ink);
-  border:1px solid var(--nb-line);border-radius:2px;
+  border:1px solid var(--nb-line);border-radius:4px;
   box-shadow:none;cursor:pointer;
   transition:transform .12s ease,box-shadow .12s ease;
 }
