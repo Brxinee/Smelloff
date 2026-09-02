@@ -169,6 +169,19 @@
     .carry-item-title{font-family:var(--display);font-size:clamp(20px,2.2vw,24px);font-weight:700;line-height:1.15;margin:0 0 6px;color:var(--text)}
     .carry-item-desc{font-family:var(--body);font-size:14px;color:var(--muted);line-height:1.45;margin:0}
 
+    /* 06 REAL LIFE / USE CASES */
+    .use-stage{display:grid;grid-template-columns:1fr;gap:18px;margin-top:36px}
+    .use-card{background:var(--surface);border:1px solid var(--rule);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s ease,background-color .2s ease}
+    .use-card:hover{border-color:rgba(184,255,87,.35);background:var(--surface2)}
+    .use-card-media{position:relative;aspect-ratio:16/10;overflow:hidden;background:#0c0c0c}
+    .use-card-media img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease;display:block}
+    .use-card:hover .use-card-media img{transform:scale(1.03)}
+    .use-card-badge{position:absolute;top:12px;left:12px;background:rgba(8,8,8,.85);backdrop-filter:blur(4px);border:1px solid var(--rule);border-radius:4px;padding:4px 8px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);font-weight:700}
+    .use-card-body{padding:clamp(16px,2vw,22px);display:flex;flex-direction:column;flex-grow:1}
+    .use-card-meta{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+    .use-card-title{font-family:var(--display);font-size:clamp(20px,2.2vw,24px);font-weight:700;line-height:1.15;margin:0 0 8px;color:var(--text)}
+    .use-card-desc{font-family:var(--body);font-size:14px;color:var(--muted);line-height:1.45;margin:0}
+
     .buy-shell{display:grid;grid-template-columns:1fr;gap:26px;margin-top:36px}.buy-media{border:1px solid var(--rule);border-radius:6px;background:var(--surface);padding:18px}.buy-media img{width:100%;height:auto;border-radius:4px}
     
     /* 08 PRODUCT GALLERY & PURCHASE MODULE */
@@ -270,6 +283,7 @@
       .remembers-stage{grid-template-columns:minmax(160px,210px) 1fr;gap:clamp(28px,4vw,48px)}
       .how-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
       .carry-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
+      .use-stage{grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.5vw,24px)}
       .buy-layout{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,56px)}
       .compare{grid-template-columns:repeat(3,1fr)}.triplet{grid-template-columns:repeat(3,1fr)}.quad{grid-template-columns:repeat(2,1fr)}.use-grid{grid-template-columns:repeat(3,1fr)}.review-lead{grid-template-columns:1.1fr .9fr}.buy-shell{grid-template-columns:1.05fr .95fr}.detail-grid{grid-template-columns:repeat(2,1fr)}
     }
@@ -652,7 +666,54 @@
 </section>
 
 <!-- 06 REAL LIFE -->
-<section id="use-cases"><div class="wrap"><p class="eyebrow">REAL LIFE</p><h2>Built for the moments you can't rewash for.</h2><div class="use-grid"><div class="use"><img src="/assets/shot-gymbag.webp" width="1400" height="933" loading="lazy" alt="ODORSTRIKE in a gym bag"><div class="use-copy"><h3>Post-gym</h3><p>Before the ride home, office or plans after.</p></div></div><div class="use"><img src="/assets/shot-pocket.webp" width="1400" height="933" loading="lazy" alt="ODORSTRIKE in a pocket"><div class="use-copy"><h3>Commute</h3><p>Heat, traffic, long rides, crowded transport.</p></div></div><div class="use"><img src="/assets/shot-flatlay.webp" width="1400" height="933" loading="lazy" alt="ODORSTRIKE daily carry flatlay"><div class="use-copy"><h3>Long day</h3><p>Office, dinner, travel — one shirt, more than one setting.</p></div></div></div></div></section>
+<section id="use-cases" aria-labelledby="useCasesHeading">
+  <div class="wrap">
+    <p class="eyebrow">REAL-LIFE CONTEXT · EVERYDAY CARRY</p>
+    <h2 id="useCasesHeading">Built for the moments you can't rewash for.</h2>
+    <p class="section-copy">You're halfway through the day, your clothes have absorbed the environment, and you still have somewhere to be. Pull it out, apply a few pumps to the fabric, and keep moving.</p>
+    
+    <div class="use-stage" role="list" aria-label="Everyday real-life use cases">
+      <!-- USE CASE 01: POST-GYM (FEATURED) -->
+      <div class="use-card" role="listitem">
+        <div class="use-card-media">
+          <img src="/assets/shot-gymbag.webp" width="1400" height="933" loading="lazy" decoding="async" alt="ODORSTRIKE 50ml bottle kept in a gym bag alongside workout clothes">
+          <span class="use-card-badge">01 · POST-GYM</span>
+        </div>
+        <div class="use-card-body">
+          <span class="use-card-meta">Activewear & Hoodies</span>
+          <h3 class="use-card-title">Workout done. Plans after.</h3>
+          <p class="use-card-desc">A quick fabric reset for gym shirts, hoodies, or activewear before the ride home, dinner with friends, or heading straight back into your day.</p>
+        </div>
+      </div>
+
+      <!-- USE CASE 02: COMMUTE -->
+      <div class="use-card" role="listitem">
+        <div class="use-card-media">
+          <img src="/assets/shot-pocket.webp" width="1400" height="933" loading="lazy" decoding="async" alt="ODORSTRIKE pocket-sized bottle kept in a jacket pocket ready for daily commutes">
+          <span class="use-card-badge">02 · COMMUTE</span>
+        </div>
+        <div class="use-card-body">
+          <span class="use-card-meta">Transit & Heat</span>
+          <h3 class="use-card-title">Crowded transit & traffic.</h3>
+          <p class="use-card-desc">Kept in a jacket or pocket to reset trapped commute and street odors from clothing fibers the moment you step out of transit.</p>
+        </div>
+      </div>
+
+      <!-- USE CASE 03: LONG DAYS -->
+      <div class="use-card" role="listitem">
+        <div class="use-card-media">
+          <img src="/assets/shot-flatlay.webp" width="1400" height="933" loading="lazy" decoding="async" alt="ODORSTRIKE daily carry flatlay with everyday essentials">
+          <span class="use-card-badge">03 · LONG DAYS</span>
+        </div>
+        <div class="use-card-body">
+          <span class="use-card-meta">Office to Evening</span>
+          <h3 class="use-card-title">One shirt. Multiple settings.</h3>
+          <p class="use-card-desc">Clear trapped coffee, food, or closed-room odors from your collar and chest before transitioning from work into evening plans.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- 07 PROOF -->
 <section id="reviews"><div class="wrap"><p class="eyebrow">EARLY TESTERS + BUYERS</p><h2>What it's like to carry one.</h2><div id="googleReviewWidgetMount"></div><div class="review-lead"><div class="review-feature"><blockquote>Real feedback belongs here — not invented testimonials.</blockquote><p class="review-meta">Verified buyer reviews render from the live review system.</p></div><div><p class="review-note">Customer feedback is shown as submitted and is clearly distinguished between beta tester reports and verified purchases.</p><a href="/reviews" class="btn">View all reviews</a></div></div></div></section>
