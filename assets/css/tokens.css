@@ -1,8 +1,9 @@
 /* =====================================================================
    Smelloff — canonical design tokens. SINGLE SOURCE OF TRUTH.
    =====================================================================
-   STAGE 1 REBUILD: Standardized typography hierarchy, color tokens,
-   surface elevations, spacing scale, layout boundaries, and form tokens.
+   Stage 0 locked commercial facts. Stage 1 adds --so-* chrome tokens.
+   Existing --ink / --acid / --color-* aliases stay so homepage + PDP
+   content sections do not flip until later stages restyle them.
    ===================================================================== */
 
 :root{
@@ -217,4 +218,84 @@
   --nb-bw: 1px;
   --nb-r: var(--radius-sm);
   --nb-r-sm: var(--radius-sm);
+}
+
+/* =====================================================================
+   STAGE 1 — chrome design system (--so-*)
+   Header, footer, buttons, BuyModule, sticky bar consume these.
+   Homepage / PDP content keeps --ink / --acid until later stages.
+   Lime is reserved for the primary purchase action. Not nav. Not rules.
+   ===================================================================== */
+:root{
+  --so-chrome: #161410;
+  --so-chrome-2: #1D1A15;
+  --so-chrome-ink: #F4F0E8;
+  --so-chrome-muted: #A8A196;
+  --so-chrome-faint: #7E786E;
+  --so-chrome-line: rgba(244, 240, 232, 0.10);
+  --so-chrome-line-strong: rgba(244, 240, 232, 0.18);
+  --so-chrome-overlay: rgba(10, 9, 8, 0.55);
+
+  --so-cotton: #EFE6D4;
+  --so-cotton-2: #F7F1E5;
+  --so-cotton-ink: #1B1814;
+  --so-cotton-muted: #5E584E;
+  --so-cotton-faint: #8A8378;
+  --so-cotton-line: rgba(27, 24, 20, 0.12);
+  --so-cotton-line-strong: rgba(27, 24, 20, 0.22);
+
+  --so-lime: #B8FF57;
+  --so-lime-hover: #C9FF78;
+  --so-lime-ink: #161410;
+
+  --so-success: #2C6A46;
+  --so-error: #B42318;
+
+  --so-font-body: 'DM Sans', 'DM Sans Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --so-font-display: 'DM Sans', 'DM Sans Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --so-font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, monospace;
+
+  --so-size-xs: 0.75rem;
+  --so-size-sm: 0.8125rem;
+  --so-size-md: 0.9375rem;
+  --so-size-lg: 1.0625rem;
+  --so-size-price: 1.75rem;
+  --so-size-nav: 0.875rem;
+
+  --so-lh-tight: 1.15;
+  --so-lh-body: 1.5;
+  --so-ls-tight: -0.02em;
+  --so-ls-none: 0;
+
+  --so-space-1: 4px;
+  --so-space-2: 8px;
+  --so-space-3: 12px;
+  --so-space-4: 16px;
+  --so-space-5: 24px;
+  --so-space-6: 32px;
+  --so-space-7: 48px;
+  --so-space-8: 64px;
+
+  --so-max: 1200px;
+  --so-gutter: 20px;
+  --so-section: clamp(56px, 8vw, 96px);
+
+  --so-radius-sm: 6px;
+  --so-radius-md: 10px;
+  --so-radius-lg: 14px;
+  --so-radius-btn: 8px;
+
+  --so-control: 48px;
+  --so-tap: 44px;
+  --so-hdr: 64px;
+
+  --so-shadow-buy:
+    0 0 0 1px rgba(27, 24, 20, 0.06),
+    0 1px 2px rgba(27, 24, 20, 0.05),
+    0 8px 24px rgba(27, 24, 20, 0.06);
+
+  --so-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --so-dur-quick: 150ms;
+  --so-dur: 180ms;
+  --so-dur-menu: 250ms;
 }

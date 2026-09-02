@@ -1,42 +1,40 @@
-<!-- CANONICAL GLOBAL FOOTER (2e) — identical on every blog page.
-     Multi-column grid (Brand / Shop / Guides / Company) + bottom bar.
-     All links are static <a> tags (crawlable). ~16 links total.
-     Year: hardcoded 2026 fallback; JS upgrades it. Styling in /assets/css/blog.css. -->
+<!-- CANONICAL GLOBAL FOOTER — stamped by scripts/apply-chrome.mjs.
+     Groups: Shop / Support / Company / Legal. -->
 <footer class="blog-footer" aria-labelledby="footer-brand">
   <div class="footer-grid">
     <div class="footer-brand">
-      <a href="/" class="bf-brand" id="footer-brand" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:24px;width:auto;display:block;margin:0 auto"></a>
-      <p class="bf-desc">Fabric-only odor elimination mist. Made in Hyderabad.</p>
-      <p class="bf-tag">Smell Proof. Always.</p>
-      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px"><a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-instagram-white.png" alt="Instagram" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-x.png" alt="X (Twitter)" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-telegram-white.png" alt="Telegram" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-linkedin-white.png" alt="LinkedIn" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-facebook-white.png" alt="Facebook" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://wa.me/919392974031" target="_blank" rel="noopener" aria-label="WhatsApp" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-whatsapp-white.png" alt="WhatsApp" width="20" height="20" style="opacity:.85" loading="lazy"></a></div>
+      <a href="/" class="bf-brand" id="footer-brand" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" style="height:22px;width:auto;display:block"></a>
+      <p class="bf-desc">Fabric-only odor mist. Made in Hyderabad, India.</p>
     </div>
     <nav class="footer-col" aria-label="Shop">
       <p class="footer-col-label">Shop</p>
-      <a href="/">Home</a>
-      <a href="/odorstrike#buy">Buy ODORSTRIKE</a>
+      <a href="/odorstrike">ODORSTRIKE</a>
+      <a href="/blog/how-to-use-odorstrike">How to use</a>
+      <a href="/reviews">Reviews</a>
+      <a href="/blog">Guides</a>
+      <a href="/track-order">Track order</a>
     </nav>
-    <nav class="footer-col" aria-label="Guides">
-      <p class="footer-col-label">Guides & Solutions</p>
-      <a href="/blog">All Guides</a>
-      <a href="/solutions">Regional Solutions</a>
-      <a href="/blog/odorstrike-review-30-day-india-test">30-day review</a>
-      <a href="/blog/why-i-built-odorstrike">Founder story</a>
-      <a href="/blog/odorstrike-vs-febreze-india">ODORSTRIKE vs Febreze</a>
-      <a href="/blog/zinc-pca-fabric-odor-ingredient-guide">Zinc PCA explained</a>
+    <nav class="footer-col" aria-label="Support">
+      <p class="footer-col-label">Support</p>
+      <a href="/shipping">Shipping</a>
+      <a href="/returns">Returns</a>
+      <a href="/faq">FAQ</a>
+      <a href="/contact">Contact</a>
     </nav>
     <nav class="footer-col" aria-label="Company">
       <p class="footer-col-label">Company</p>
       <a href="/about">About</a>
-      <a href="https://partners.smelloff.in">Partner Program</a>
+      <a href="https://partners.smelloff.in">Partners</a>
+    </nav>
+    <nav class="footer-col" aria-label="Legal">
+      <p class="footer-col-label">Legal</p>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="/shipping">Shipping</a>
-      <a href="/returns">Returns</a>
-      <a href="/refund">Refund</a>
+      <a href="/refund">Refunds</a>
+      <a href="/cancellation">Cancellation</a>
     </nav>
   </div>
   <div class="footer-bottom">
-    <span>&copy; <span id="year">2026</span> SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad</span>
-    <button class="footer-top" type="button" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&uarr;</button>
+    <span>&copy; <span id="year">2026</span> SMELLOFF · Made in Hyderabad, India · Fabric only</span>
   </div>
 </footer>

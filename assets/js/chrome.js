@@ -1,11 +1,11 @@
 /* =====================================================================
-   Smelloff — shared site chrome behaviour  (v2, 2026-08-17)
+   Smelloff — shared site chrome behaviour  (v3, Stage 1)
    =====================================================================
    Shared behaviour for the unified site chrome:
-     1. mobile burger + keyboard escape
+     1. mobile burger — a11y (escape, focus trap, body lock)
      2. cart count badge
      3. current-page nav state
-     4. cross-site mobile purchase bar on non-checkout pages
+     4. mobile sticky buy bar (IntersectionObserver vs #buy)
      5. campaign attribution persistence for internal navigation
      6. new blog guides injection/filtering on /blog
    Safe on pages without the shared header.
@@ -13,22 +13,98 @@
 (function () {
   'use strict';
 
+  function truth() {
+    return window.SMELLOFF_TRUTH || {
+      productName: 'ODORSTRIKE',
+      size: '50ml',
+      category: 'Fabric-only odor mist',
+      pricePrepaid: 229,
+      priceCod: 289,
+      codFee: 60,
+      spraysApprox: 250,
+      whatsappNumber: '+919392974031'
+    };
+  }
+
+  function rupee(n) { return '₹' + n; }
+
   /* --- burger ------------------------------------------------------- */
   var burger = document.querySelector('.sf-burger');
   var menu = document.getElementById('sfMenu');
+  var hdr = document.querySelector('.sf-hdr');
+  var lastMenuFocus = null;
+
+  function menuFocusables() {
+    var nodes = [];
+    if (burger) nodes.push(burger);
+    if (menu) {
+      var links = menu.querySelectorAll('a[href], button:not([disabled])');
+      for (var i = 0; i < links.length; i++) nodes.push(links[i]);
+    }
+    return nodes;
+  }
+
+  function openMenu() {
+    if (!burger || !menu) return;
+    lastMenuFocus = document.activeElement;
+    menu.classList.add('is-open');
+    burger.setAttribute('aria-expanded', 'true');
+    burger.setAttribute('aria-label', 'Close menu');
+    document.documentElement.classList.add('so-nav-open');
+    var items = menu.querySelectorAll('a[href]');
+    if (items[0]) items[0].focus();
+  }
+
+  function closeMenu(opts) {
+    if (!burger || !menu) return;
+    if (!menu.classList.contains('is-open')) return;
+    menu.classList.remove('is-open');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Open menu');
+    document.documentElement.classList.remove('so-nav-open');
+    if (!opts || opts.focus !== false) burger.focus();
+  }
+
   if (burger && menu) {
+    if (hdr && !document.querySelector('.sf-hdr__scrim')) {
+      var scrim = document.createElement('div');
+      scrim.className = 'sf-hdr__scrim';
+      scrim.setAttribute('hidden', '');
+      hdr.insertAdjacentElement('afterend', scrim);
+      scrim.addEventListener('click', function () { closeMenu(); });
+    }
+
     burger.addEventListener('click', function () {
-      var open = menu.classList.toggle('is-open');
-      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      if (menu.classList.contains('is-open')) closeMenu({ focus: false });
+      else openMenu();
     });
+
+    menu.addEventListener('click', function (e) {
+      if (e.target && e.target.closest && e.target.closest('a')) closeMenu({ focus: false });
+    });
+
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && menu.classList.contains('is-open')) {
-        menu.classList.remove('is-open');
-        burger.setAttribute('aria-expanded', 'false');
-        burger.setAttribute('aria-label', 'Open menu');
-        burger.focus();
+      if (!menu.classList.contains('is-open')) return;
+      if (e.key === 'Escape') {
+        closeMenu();
+        return;
       }
+      if (e.key !== 'Tab') return;
+      var nodes = menuFocusables();
+      if (!nodes.length) return;
+      var first = nodes[0];
+      var last = nodes[nodes.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.matchMedia('(min-width: 960px)').matches) closeMenu({ focus: false });
     });
   }
 
@@ -60,8 +136,6 @@
   }
 
   /* --- attribution -------------------------------------------------- */
-  // Preserve campaign source/medium/campaign/content across the visitor's
-  // internal click path. This does not store raw query strings or PII.
   try {
     var params = new URLSearchParams(location.search);
     var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
@@ -72,10 +146,6 @@
   } catch (e) { /* storage blocked */ }
 
   /* --- new blog guides --------------------------------------------- */
-  // The blog index is intentionally mostly static for fast SSR, so newly
-  // published guides are injected here from a small first-party data array.
-  // The extra guides participate in the existing category/search controls and
-  // never alter the existing article markup or analytics integrations.
   if (path === '/blog' && document.getElementById('latestGrid') && !document.getElementById('smelloff-new-guides')) {
     var NEW_GUIDES = [
       {slug:'why-clothes-smell-bad-again-after-sweating',cat:'how-to',label:'Fabric Science',time:'8 min',title:'Why Do Clothes Smell Bad Again After You Start Sweating?',desc:'Why heat and moisture can bring retained odorants back to life on a shirt.',img:'/blog/assets/why-clothes-smell-bad-again-after-sweating.svg'},
@@ -98,7 +168,7 @@
     for (var n = 0; n < NEW_GUIDES.length; n++) {
       var g = NEW_GUIDES[n];
       cards += '<a href="/blog/' + g.slug + '" class="b-card" data-new-guide="true" data-cat="' + g.cat + '">' +
-        '<div class="b-card-thumb"><img loading="lazy" src="' + g.img + '" alt="' + g.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') + '" width="1600" height="900" decoding="async"></div>' +
+        '<div class="b-card-thumb"><img loading="lazy" src="' + g.img + '" alt="' + g.title.replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"') + '" width="1600" height="900" decoding="async"></div>' +
         '<div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">' + g.label + '</span><span class="b-card-sep">·</span><span>' + g.time + '</span><span class="b-card-sep">·</span><span>New</span></div>' +
         '<h3>' + g.title + '</h3><p>' + g.desc + '</p><span class="b-card-arrow">Read Guide</span></div></a>';
     }
@@ -154,36 +224,68 @@
     updateNewGuideFilter();
   }
 
-  /* --- mobile purchase bar ----------------------------------------- */
-  // The product page has its own purchase UI and must not get a duplicate
-  // bottom bar. Transaction/status/legal pages also stay uncluttered.
-  var excluded = /(^|\/)(odorstrike|track-order|payment-failed|returns|refunds|cancellation|privacy|terms)(\/|$)/i.test(path);
-  var isContentPage = /(^|\/)(blog|faq|reviews|about|contact)(\/|$)/i.test(path) || path === '' || path === '/';
+  /* --- mobile sticky buy bar ----------------------------------------
+     PDP already has #mobileBar + IntersectionObserver in its own page
+     script. Legal / checkout pages stay clean. Content pages get one
+     compact bar that appears after #buy (or the top of the page) leaves
+     view — never over the hero CTA. */
+  var excluded = /(^|\/)(odorstrike|track-order|payment-failed|returns|refunds|refund|cancellation|privacy|terms)(\/|$)/i.test(path);
+  var isContentPage = /(^|\/)(blog|faq|reviews|about|contact|solutions)(\/|$)/i.test(path) || path === '' || path === '/';
 
-  if (!excluded && isContentPage && !document.getElementById('smelloff-mobile-buybar')) {
-    var style = document.createElement('style');
-    style.id = 'smelloff-mobile-buybar-style';
-    style.textContent = [
-      '#smelloff-mobile-buybar{display:none}',
-      '@media(max-width:899px){',
-      '#smelloff-mobile-buybar{position:fixed;left:0;right:0;bottom:0;z-index:80;display:flex;align-items:center;gap:12px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(8,8,8,.96);border-top:1px solid rgba(184,255,87,.22);box-shadow:0 -10px 30px rgba(0,0,0,.28);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}',
-      '#smelloff-mobile-buybar .smb-copy{min-width:0;flex:1}',
-      '#smelloff-mobile-buybar .smb-title{display:block;color:#f4f1ea;font:700 12px/1.15 "DM Sans",system-ui,sans-serif;letter-spacing:.02em}',
-      '#smelloff-mobile-buybar .smb-meta{display:block;color:#a7a39b;font:500 10px/1.25 "JetBrains Mono",monospace;margin-top:3px;white-space:nowrap}',
-      '#smelloff-mobile-buybar .smb-cta{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:44px;padding:0 16px;border-radius:11px;background:#b8ff57;color:#080808;text-decoration:none;font:800 11px/1 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}',
-      '#smelloff-mobile-buybar .smb-cta:focus-visible{outline:2px solid #f4f1ea;outline-offset:2px}',
-      'body{padding-bottom:64px}',
-      '}',
-      '@media(prefers-reduced-motion:reduce){#smelloff-mobile-buybar{backdrop-filter:none;-webkit-backdrop-filter:none}}'
-    ].join('');
-    document.head.appendChild(style);
-
+  if (!excluded && isContentPage && !document.getElementById('soSticky') && !document.getElementById('mobileBar')) {
+    var T = truth();
+    var hasBuy = !!document.getElementById('buy');
+    var ctaHref = hasBuy ? '#buy' : '/odorstrike?buy=1';
     var bar = document.createElement('div');
-    bar.id = 'smelloff-mobile-buybar';
+    bar.className = 'so-sticky';
+    bar.id = 'soSticky';
     bar.setAttribute('role', 'region');
-    bar.setAttribute('aria-label', 'Buy ODORSTRIKE');
-    bar.innerHTML = '<div class="smb-copy"><span class="smb-title">ODORSTRIKE · fabric odor control</span><span class="smb-meta">50ml · ~250 sprays · ₹229 · free shipping</span></div><a class="smb-cta" href="/odorstrike" data-smelloff-buy="mobile_sticky">Buy now</a>';
+    bar.setAttribute('aria-label', 'Buy ' + T.productName);
+    bar.innerHTML =
+      '<div class="so-sticky__copy">' +
+        '<span class="so-sticky__name">' + T.productName + '</span>' +
+        '<span class="so-sticky__price">' + rupee(T.pricePrepaid) + '</span>' +
+      '</div>' +
+      '<a class="so-btn so-btn--p1" href="' + ctaHref + '" data-smelloff-buy="mobile_sticky">Buy</a>';
     document.body.appendChild(bar);
+
+    var buy = document.getElementById('buy');
+    var buyInView = false;
+    var scrolledEnough = false;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function updateSticky() {
+      var show = scrolledEnough && !buyInView;
+      bar.classList.toggle('is-visible', show);
+      document.documentElement.classList.toggle('so-sticky-on', show);
+      bar.setAttribute('aria-hidden', show ? 'false' : 'true');
+    }
+
+    if (buy && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        buyInView = entries[0].isIntersecting;
+        updateSticky();
+      }, { threshold: 0.08 }).observe(buy);
+    }
+
+    var ticking = false;
+    function onScroll() {
+      scrolledEnough = window.scrollY > (hasBuy ? 280 : 360);
+      ticking = false;
+      updateSticky();
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        window.requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    }, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    onScroll();
+
+    if (reduce) {
+      bar.style.transition = 'none';
+    }
   }
 
   /* --- mobile CTA analytics hook ---------------------------------- */
