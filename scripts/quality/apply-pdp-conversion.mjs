@@ -32,7 +32,7 @@ const conversionHtml = `${START}
       <div>
         <p class="pdp-conv__eyebrow">The promise</p>
         <h2>Control the smell on the fabric.</h2>
-        <p class="pdp-conv__sub">The current approved performance language is simple: up to 8 hours of odor protection on fabric. No exaggerated “instant” guarantee.</p>
+        <p class="pdp-conv__sub">The current approved performance language is simple: up to 8 hours of odor protection on fabric under normal office/commute conditions. No exaggerated “instant” guarantee.</p>
         <div class="pdp-conv__cta"><a href="#buy" data-track="pdp_conversion_cta">Buy ODORSTRIKE · ₹229</a><small>50ml · free shipping · COD available</small></div>
       </div>
       <div class="pdp-conv__proofbox">
@@ -78,7 +78,7 @@ function apply() {
     ['<title>ODORSTRIKE Fabric Odor Spray for Clothes ₹229 | Smelloff</title>', '<title>ODORSTRIKE Fabric Odor Control for Clothes ₹229 | Smelloff</title>'],
     ['<meta name="description" content="Pocket fabric odor spray for clothes — not a perfume, not a deo. Kills sweat smell in seconds, up to 8 hours protection. 50ml · ₹229 · COD across India.">', '<meta name="description" content="Pocket-sized fabric odor control for clothes. Not a perfume, not a deodorant, not for skin. 50ml · ₹229 · up to 8 hours odor protection on fabric.">'],
     ['Pocket fabric odor spray for clothes. Not perfume. Not deodorant. Not body spray. Kills sweat smell in seconds — up to 8 hours odor protection on fabric.', 'Pocket-sized fabric odor control for clothes. Not perfume. Not deodorant. Not body spray. Up to 8 hours odor protection on fabric.'],
-    ['A pocket-sized fabric odor remover spray. 50ml mist that kills sweat smell, gym odor, and shirt stink in seconds — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them, Triethyl Citrate prevents new odor, and Zinc Gluconate stops regrowth. Up to 8 hours odor protection on fabric. Glycerine-free, zero residue, dries fast. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.', 'A pocket-sized fabric odor-control mist for clothes. 50ml. HPβCD (cyclodextrin) and Zinc PCA are part of the approved product language. Up to 8 hours of odor protection on fabric. Not a perfume. Not a deodorant. Fabric-only.'],
+    ['A pocket-sized fabric odor remover spray. 50ml mist that kills sweat smell, gym odor, and shirt stink in seconds — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them, Triethyl Citrate prevents new odor, and Zinc Gluconate stops regrowth. Up to 8 hours odor protection on fabric. Glycerine-free, zero residue, dries fast. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.', 'A pocket-sized fabric odor-control mist for clothes. 50ml. HPβCD (cyclodextrin) and Zinc PCA are part of the approved product language. up to 8 hours of odor protection on fabric under normal office/commute conditions. Not a perfume. Not a deodorant. Fabric-only.'],
     ['"material":"HPβCD (Cyclodextrin), Zinc PCA, Triethyl Citrate, Zinc Gluconate"', '"material":"HPβCD (Cyclodextrin), Zinc PCA"'],
     ['"name": "How to Eliminate Odor from Clothes Instantly"', '"name": "How to Use ODORSTRIKE on Clothes"'],
     ['"description": "Step-by-step guide to applying ODORSTRIKE fabric spray to eliminate sweat and food smells from clothing."', '"description": "Step-by-step guide to applying ODORSTRIKE to clothing as an in-between-wash fabric odor-control step."'],

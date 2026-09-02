@@ -396,7 +396,7 @@
         window.renderGoogleReviewWidget('googleReviewWidgetMount', avg, totalCount, buyerList.length);
       }
 
-      // If verified buyers exist, update aggregateRating schema strictly from verified buyers
+      // If early testers exist, update aggregateRating schema strictly from early testers
       if (buyerList.length > 0) {
         var buyerSum = buyerList.reduce(function(acc, item){ return acc + item.r; }, 0);
         var buyerAvg = buyerSum / buyerList.length;

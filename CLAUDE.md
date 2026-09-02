@@ -533,7 +533,7 @@ by "Positioning: clothing only" above**, and were replaced rather than published
 - **The report also invented product facts.** It specified an "isopropyl solvent
   base" as the formulation and a "10 minute" dry time. Neither is ours. Every
   post uses only the locked claims: the v3.1 actives by name, no percentages,
-  "dry in about 10 seconds", "up to 8 hours of odor protection on fabric".
+  "dry in about 10 seconds", "up to 8 hours of odor protection on fabric under normal office/commute conditions".
   Treat any external brief as keyword research, never as a source of formula copy.
 - Each post carries Article + HowTo + FAQPage + Speakable + BreadcrumbList
   JSON-LD, a `.quick-answer` block, six question-shaped H2s, an on-page FAQ

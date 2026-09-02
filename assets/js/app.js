@@ -1267,7 +1267,7 @@ const CFG = window.SMELLOFF_CONFIG;
       var orderUuid = '';
       try { orderUuid = localStorage.getItem('smelloff_order_uuid') || ''; } catch (e) {}
       if (!orderUuid) {
-        errEl.textContent = 'Reviews are for verified buyers — we couldn’t find your purchase on this device.';
+        errEl.textContent = 'Reviews are for early testers — we couldn’t find your purchase on this device.';
         errEl.style.display = 'block';
         return;
       }
