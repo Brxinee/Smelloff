@@ -57,15 +57,27 @@
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--text);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased}img{max-width:100%;display:block}a{color:inherit}
     .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding-inline:var(--gutter)}
     .skip{position:absolute;left:-9999px;top:0;background:var(--acid);color:var(--ink);padding:12px 18px;font-weight:700;z-index:200}.skip:focus{left:0}
-    .hero{padding:clamp(42px,6vw,76px) 0 clamp(56px,7vw,88px);overflow:hidden}
-    .hero-grid{display:grid;grid-template-columns:1fr;gap:26px;align-items:center}
-    .hero-copy{max-width:590px}.hero-eyebrow,.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acid);margin:0 0 16px}
-    .hero h1{font-family:var(--display);font-size:clamp(46px,7vw,78px);line-height:.98;letter-spacing:-.025em;margin:0;font-weight:700}.hero h1 .acid{color:var(--acid)}
-    .hero-sub{max-width:40ch;color:var(--muted);font-size:clamp(17px,2vw,20px);margin:22px 0 0;line-height:1.5}
-    .hero-hook{display:inline-block;margin-top:24px;background:var(--acid);color:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 16px;font-weight:700;border-radius:4px}
-    .hero-visual{position:relative;min-height:clamp(360px,58vw,560px);display:flex;align-items:center;justify-content:center}.hero-visual img{position:relative;z-index:1;height:clamp(330px,56vw,520px);width:auto;filter:drop-shadow(0 20px 40px rgba(0,0,0,.7))}.hero-visual figcaption{position:absolute;right:0;top:50%;transform:translateY(-50%) rotate(90deg);font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);z-index:2}
-    .hero-offer{margin-top:30px;padding-top:22px;border-top:1px solid var(--rule);display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}.hero-price{font-family:var(--display);font-weight:700;font-size:clamp(42px,6vw,60px);line-height:1;color:var(--acid)}.hero-mrp{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:line-through;padding-bottom:8px}.hero-meta{font-family:var(--mono);font-size:10px;line-height:1.6;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding-bottom:6px}
-    .hero-cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;background:var(--acid);color:var(--ink);text-decoration:none;border:1px solid var(--acid);border-radius:4px;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;transition:background .15s ease,border-color .15s ease,transform .15s ease}.btn:hover{background:#d1ff8a;border-color:#d1ff8a;transform:translateY(-1px)}.btn:active{transform:translateY(0)}.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--rule)}.btn-ghost:hover{background:rgba(255,255,255,.04);color:var(--acid);border-color:var(--acid)}
+    .hero{padding:clamp(40px,5vw,72px) 0 clamp(48px,6vw,80px);overflow:hidden}
+    .hero-grid{display:grid;grid-template-columns:1fr;gap:28px;align-items:center}
+    .hero-copy{display:flex;flex-direction:column;max-width:580px}
+    .hero-eyebrow{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 16px}
+    .hero-eyebrow__brand{font-weight:700;color:var(--acid)}
+    .hero-eyebrow__sep{color:var(--rule)}
+    .hero-eyebrow__cat{color:var(--muted)}
+    .hero h1{font-family:var(--display);font-size:clamp(38px,5.5vw,64px);line-height:1.02;letter-spacing:-.025em;margin:0;font-weight:700;color:var(--text)}
+    .hero h1 .acid{color:var(--acid)}
+    .hero-sub{font-family:var(--body);max-width:44ch;color:var(--muted);font-size:clamp(16px,1.8vw,19px);margin:18px 0 0;line-height:1.55}
+    .hero-action{margin-top:28px;padding-top:22px;border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:16px}
+    .hero-price-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+    .hero-price{font-family:var(--display);font-weight:700;font-size:clamp(36px,4.5vw,48px);line-height:1;color:var(--acid)}
+    .hero-shipping{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .hero-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 28px;background:var(--acid);color:var(--ink);text-decoration:none;border:1px solid var(--acid);border-radius:4px;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;transition:background .15s ease,border-color .15s ease,transform .15s ease;width:fit-content}
+    .hero-btn:hover{background:#d1ff8a;border-color:#d1ff8a;transform:translateY(-1px)}
+    .hero-btn:active{transform:translateY(0)}
+    .hero-boundary{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 0 0;line-height:1.6}
+    .hero-visual{position:relative;margin:0;display:flex;align-items:center;justify-content:center;padding:12px 0}
+    .hero-visual img{height:clamp(340px,42vw,500px);width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 24px 48px rgba(0,0,0,.85));transition:transform .3s ease}
+    .hero-visual figcaption{position:absolute;right:0;bottom:12px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);opacity:.75}
     .ticker{background:var(--acid);color:var(--ink);overflow:hidden;white-space:nowrap;border-block:1px solid var(--rule)}.ticker-track{display:inline-block;padding:11px 0;font-family:var(--display);font-size:clamp(20px,3vw,30px);font-weight:700;animation:ticker 28s linear infinite}.ticker span{padding:0 24px}.ticker .dot{opacity:.45}@keyframes ticker{to{transform:translateX(-50%)}}
     section{padding:var(--section-y) 0;border-top:1px solid var(--rule)}.eyebrow{margin-bottom:15px}h2{font-family:var(--display);font-size:clamp(36px,5vw,58px);line-height:1;letter-spacing:-.02em;margin:0 0 20px;max-width:14ch;font-weight:700}.section-copy{max-width:680px;color:var(--muted);font-size:17px}
     .remembers-stage{margin-top:40px;background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:28px;display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center}.shirt-wrap{width:170px;height:186px;position:relative}.shirt{width:100%;height:100%}.shirt path{fill:none;stroke:var(--muted);stroke-width:2.5}.haze{opacity:0;transition:opacity .35s ease,transform .35s ease;transform-origin:60px 60px}.remembers[data-step="1"] .haze{opacity:.2;transform:scale(.7)}.remembers[data-step="2"] .haze{opacity:.35;transform:scale(.82)}.remembers[data-step="3"] .haze{opacity:.55;transform:scale(.94)}.remembers[data-step="4"] .haze{opacity:.75}.remembers[data-step="5"] .haze{opacity:1;transform:scale(1.05)}.remembers[data-step="6"] .haze{opacity:0;transform:scale(.5)}.remembers[data-step="6"] .shirt path{stroke:var(--acid)}.rm-time{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--acid);margin:0 0 9px}.rm-event{font-family:var(--display);font-size:clamp(24px,4vw,34px);line-height:1.12;margin:0}.rm-state{display:inline-block;margin-top:14px;border:1px solid var(--rule);border-radius:4px;padding:6px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.remembers[data-step="6"] .rm-state{background:var(--acid);color:var(--ink);border-color:var(--acid)}.rm-control{margin-top:24px}.scrub{width:100%;accent-color:var(--acid);height:44px}.rm-axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted)}
@@ -78,10 +90,28 @@
     .faq-list{max-width:820px}.faq-item{border:1px solid var(--rule);border-radius:6px;background:var(--surface);padding:0 18px;margin-bottom:10px}.faq-item summary{cursor:pointer;padding:18px 0;font-family:var(--display);font-size:24px;list-style:none}.faq-item summary::-webkit-details-marker{display:none}.faq-item p{margin:0 0 18px;color:var(--muted);font-size:14px}
     .final{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:32px;margin-top:34px}.final h2{margin-bottom:14px}.final p{max-width:55ch;color:var(--muted)}
     .small-note{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-    @media(min-width:768px){.hero-grid{grid-template-columns:1.05fr .95fr;grid-template-areas:'copy visual' 'buy visual';gap:38px 48px}.hero-copy{grid-area:copy}.hero-visual{grid-area:visual}.hero-buy{grid-area:buy}.compare{grid-template-columns:repeat(3,1fr)}.triplet{grid-template-columns:repeat(3,1fr)}.quad{grid-template-columns:repeat(2,1fr)}.use-grid{grid-template-columns:repeat(3,1fr)}.review-lead{grid-template-columns:1.1fr .9fr}.buy-shell{grid-template-columns:1.05fr .95fr}.pack-grid{grid-template-columns:repeat(3,1fr)}.detail-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:768px){
+      .hero-grid{grid-template-columns:1.15fr .85fr;gap:clamp(32px,5vw,64px)}
+      .hero-copy{display:flex}
+      .compare{grid-template-columns:repeat(3,1fr)}.triplet{grid-template-columns:repeat(3,1fr)}.quad{grid-template-columns:repeat(2,1fr)}.use-grid{grid-template-columns:repeat(3,1fr)}.review-lead{grid-template-columns:1.1fr .9fr}.buy-shell{grid-template-columns:1.05fr .95fr}.pack-grid{grid-template-columns:repeat(3,1fr)}.detail-grid{grid-template-columns:repeat(2,1fr)}
+    }
     @media(min-width:1024px){.quad{grid-template-columns:repeat(4,1fr)}}
-    @media(max-width:767px){.remembers-stage{grid-template-columns:1fr}.shirt-wrap{justify-self:center}.hero-visual figcaption{display:none}.ticker-track{animation:none}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ticker-track{animation:none!important}.haze{transition:none}.btn{transition:none}}
+    @media(max-width:767px){
+      .hero{padding:28px 0 36px}
+      .hero-grid{display:flex;flex-direction:column;gap:0}
+      .hero-copy{display:contents}
+      .hero-eyebrow{order:1;margin-bottom:12px}
+      .hero-visual{order:2;padding:6px 0 16px}
+      .hero-visual img{height:clamp(240px,56vw,300px)}
+      .hero-visual figcaption{position:static;margin-top:6px;text-align:center}
+      .hero h1{order:3;font-size:clamp(30px,7.8vw,40px);line-height:1.06}
+      .hero-sub{order:4;font-size:15px;margin-top:12px;line-height:1.5}
+      .hero-action{order:5;margin-top:20px;padding-top:16px;gap:12px}
+      .hero-btn{width:100%}
+      .hero-boundary{order:6;font-size:10px;margin-top:14px;text-align:center}
+      .remembers-stage{grid-template-columns:1fr}.shirt-wrap{justify-self:center}.ticker-track{animation:none}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ticker-track{animation:none!important}.haze{transition:none}.btn,.hero-btn{transition:none}}
   </style>
 
   <link rel="stylesheet" href="/assets/css/chrome.css?v=a74d5e0c">
@@ -102,9 +132,27 @@
 <main id="sf-main" tabindex="-1">
 <!-- 01 HERO -->
 <section class="hero" aria-labelledby="heroTitle"><div class="wrap"><div class="hero-grid">
-  <div class="hero-copy"><p class="hero-eyebrow">ODORSTRIKE · FABRIC ODOR MIST</p><h1 id="heroTitle">Don't let them notice your <span class="acid">sweat.</span></h1><p class="hero-sub">A pocket-sized mist for clothes when you need a fabric refresh between washes. Not perfume. Not body deodorant.</p><span class="hero-hook">SMELLOFF · SMELL PROOF. ALWAYS.</span></div>
-  <figure class="hero-visual"><img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml fabric odor mist bottle" width="241" height="915" fetchpriority="high" decoding="async"><figcaption>50ML · ~250 SPRAYS</figcaption></figure>
-  <div class="hero-buy"><div class="hero-offer"><span class="hero-price">₹229</span><span class="hero-mrp">M.R.P. ₹499</span><span class="hero-meta">50ML · FABRIC ONLY<br>FREE SHIPPING PREPAID · ₹289 COD</span></div><div class="hero-cta-row"><a class="btn" href="/odorstrike?buy=1">Buy Now — ₹229</a><a class="btn btn-ghost" href="/odorstrike">See ODORSTRIKE</a></div><p class="small-note">FABRIC ONLY · NOT PERFUME · NOT DEODORANT · NOT FOR SKIN</p></div>
+  <div class="hero-copy">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow__brand">ODORSTRIKE</span>
+      <span class="hero-eyebrow__sep">·</span>
+      <span class="hero-eyebrow__cat">50ML FABRIC ODOR MIST</span>
+    </div>
+    <h1 id="heroTitle">People don't fear smelling bad. <span class="acid">They fear others noticing it.</span></h1>
+    <p class="hero-sub">A pocket-sized fabric odor mist for the moments your clothes need a refresh between washes.</p>
+    <div class="hero-action">
+      <div class="hero-price-row">
+        <span class="hero-price">₹229</span>
+        <span class="hero-shipping">FREE SHIPPING WITH PREPAID UPI</span>
+      </div>
+      <a class="hero-btn" href="/odorstrike?buy=1">BUY ODORSTRIKE →</a>
+    </div>
+    <p class="hero-boundary">FABRIC ONLY · NOT PERFUME · NOT DEODORANT · NOT FOR SKIN</p>
+  </div>
+  <figure class="hero-visual">
+    <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml fabric odor mist bottle" width="241" height="915" fetchpriority="high" decoding="async">
+    <figcaption>50ML · ~250 SPRAYS</figcaption>
+  </figure>
 </div></div></section>
 
 <!-- 02 THE PROBLEM -->
