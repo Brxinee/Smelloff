@@ -16,9 +16,6 @@ function waHref() {
 
 function checkoutHref() {
   if (typeof window.buyNow === 'function') return '#';
-  if (document.getElementById('buy') && location.pathname.replace(/\/index\.html$/, '/') === '/') {
-    return '#buy';
-  }
   return '/odorstrike?buy=1';
 }
 
