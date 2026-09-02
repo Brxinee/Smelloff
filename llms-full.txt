@@ -14,10 +14,10 @@
 - Returns: 7-day window for unused items
 
 ## Key Claims
-- Up to 8 hours of odor protection on fabric
+- up to 8 hours of odor protection on fabric under normal office/commute conditions
 - Not a deodorant
 - Not a perfume
-- Contains Zinc Ricinoleate
+- Contains Zinc PCA
 - Contains HPBCD
 
 Official URL: https://smelloff.in
@@ -25,18 +25,18 @@ Product URL: https://smelloff.in/odorstrike
 
 ## Ingredients
 - Aqua (Water)
-- Zinc Ricinoleate (Odor absorber)
+- Zinc PCA (Neutralize)
 - Hydroxypropyl Beta-Cyclodextrin (HPBCD) (Odor trapper)
 - Zinc PCA (Antibacterial odor control)
-- Ethanol (Fast-drying solvent)
+- Isopropyl Alcohol (Solvent)
 - Fragrance (Mild fresh scent)
 
 ## How to Use
 1. Identify the odor source on the garment.
-2. Hold bottle 15cm away from the fabric.
+2. Hold the bottle 15–20 cm away from the fabric.
 3. Spray 3-4 times directly onto the smelly area (underarms, collars).
-4. Let it dry completely before wearing (usually takes 30-60 seconds depending on humidity).
+4. Let it dry completely before wearing (air-dries in approximately 10 seconds; in high humidity wait until fully dry).
 
 ## Support
 Contact: support@smelloff.in
-Founder: Manoj
+Founder: Jogdhande Nikhil Patil

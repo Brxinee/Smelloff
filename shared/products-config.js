@@ -1,35 +1,41 @@
+import { SMELLOFF_PRODUCT_TRUTH as T } from './product-truth.js';
+
+export { SMELLOFF_PRODUCT_TRUTH } from './product-truth.js';
+
 // Centralized commercial single source of truth for Smelloff / ODORSTRIKE.
 // Authoritative definitions for SKU, pricing, MRP, COD fee, quantity limits,
 // approved claims, order states, and server calculation logic.
+// Customer-facing facts (dose, distance, dry time, formula, testers) live in
+// shared/product-truth.js — keep this file's copy in lockstep.
 
 export const BASE_PRODUCT = {
   id: 'odorstrike-50ml',
-  sku: 'OS-001-50ML',
-  mpn: 'SMLF-ODST-50',
+  sku: T.sku,
+  mpn: T.mpn,
   title: 'Smelloff ODORSTRIKE Fabric Odor Eliminator Spray (50ml)',
   shortTitle: 'ODORSTRIKE 50ml',
-  brand: 'Smelloff',
+  brand: T.brand,
   category: 'Fabric Odor Eliminator Spray for Clothes',
-  size: '50ml',
+  size: T.size,
   netQuantity: '50ml / 1.69 fl oz',
-  price: 229,
-  mrp: 499,
-  currency: 'INR',
+  price: T.pricePrepaid,
+  mrp: T.mrp,
+  currency: T.currency,
   shippingCost: 0,
-  codFee: 60,
+  codFee: T.codFee,
   allowedQuantities: [1, 2, 3, 4, 5],
   minQuantity: 1,
   maxQuantity: 5,
   availability: 'in_stock',
   countryOfOrigin: 'India',
-  sprayCapacity: '~250 fine mist sprays per 50ml bottle',
-  ingredientsSummary: 'Odor-trapping cyclodextrin complex, fabric neutralizers, purified aqueous carrier',
-  usageInstructions: 'Hold bottle 10–15cm from clothing. Mist 2–3 sprays evenly over sweat-prone fabric zones (underarms, chest, collar). Allow 30–60 seconds to air-dry.',
+  sprayCapacity: `~${T.spraysApprox} fine mist sprays per 50ml bottle`,
+  ingredientsSummary: 'Formula v3.1 — HPβCD and Zinc PCA as hero actives in an 11-ingredient INCI, not the only ingredients',
+  usageInstructions: `Hold bottle ${T.sprayDistance} from clothing. ${T.targetedDose} for a targeted/midday reset; ${T.fullShirtDose} for a full shirt; ${T.jacketDose} for a jacket. Allow ${T.dryTime} to air-dry.`,
   manufacturer: {
-    name: 'Smelloff',
-    address: 'Hyderabad, Telangana 500081, India',
-    email: 'smelloffsupport@gmail.com',
-    phone: '+919392974031'
+    name: T.manufacturer.name,
+    address: T.manufacturer.address,
+    email: T.manufacturer.email,
+    phone: T.whatsappNumber
   }
 };
 
@@ -57,17 +63,17 @@ export const APPROVED_CLAIMS = {
     source: 'Active cyclodextrin mechanism testing'
   },
   PROTECTION_DURATION: {
-    claim: 'Up to 8 hours of odor protection on fabric under typical daily wear.',
+    claim: 'Up to 8 hours of odor protection on fabric under normal office/commute conditions.',
     status: 'QUALIFIED',
     source: 'Fabric wear retention testing (qualified conditions)'
   },
   FABRIC_SAFETY: {
-    claim: 'Safe for regular use on everyday washable clothing fabrics (cotton, polyester, denim, blends).',
+    claim: 'Safe for regular use on everyday washable clothing fabrics (cotton, polyester, denim, blends, wool). Patch-test silk.',
     status: 'VERIFIED',
     source: 'Fabric compatibility audit'
   },
   NON_STAINING: {
-    claim: 'Dries clear with zero residue when sprayed from recommended 10–15cm distance.',
+    claim: 'Dries clear with zero residue when sprayed from recommended 15–20 cm distance.',
     status: 'VERIFIED',
     source: 'Aqueous mist dispersion testing'
   },

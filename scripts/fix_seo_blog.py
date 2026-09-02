@@ -213,7 +213,7 @@ blog_posts = [
     ("hostel-clothes-smell-college-guide", "Hostel & College Clothes Smell — The Survival Guide"),
     ("how-to-not-smell-sweaty-at-work", "How to Not Smell Sweaty at Work"),
     ("indian-summer-sweat-smell-guide", "Indian Summer Sweat Smell — The Heat & Humidity Playbook"),
-    ("is-zinc-ricinoleate-safe-for-clothes", "Is Zinc Ricinoleate Safe for Clothes?"),
+    ("is-zinc-ricinoleate-safe-for-clothes", "Is Zinc PCA Safe for Clothes?"),
     ("keep-gym-clothes-fresh-in-bag", "How to Keep Gym Clothes Fresh in Your Bag"),
     ("mumbai-humidity-sweat-smell-survival-guide", "Mumbai Humidity Sweat Smell Survival Guide"),
     ("odorstrike-review-30-day-india-test", "ODORSTRIKE Review: 30 Days, 4 Shirts, Real Results"),
@@ -226,7 +226,7 @@ blog_posts = [
     ("why-deodorant-stops-working-after-3-hours", "Why Deodorant Stops Working After 3 Hours"),
     ("why-i-built-odorstrike", "Why I Built ODORSTRIKE — Founder's Note"),
     ("why-indian-men-sweat-smell-more", "Why Indian Men Have Stronger Sweat Smell"),
-    ("zinc-ricinoleate-fabric-odor-ingredient", "Zinc Ricinoleate — The Ingredient That Kills Fabric Odor"),
+    ("zinc-ricinoleate-fabric-odor-ingredient", "Zinc PCA — The Ingredient That Kills Fabric Odor"),
 ]
 
 fixed_count = 0

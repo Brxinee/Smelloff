@@ -177,7 +177,7 @@
     if (variant === 'action_reset') {
       // Variant A: Problem & Behavior Framing
       if (heroTitle) heroTitle.innerHTML = 'Target Sweat Odor<br>At The Clothing Weave.';
-      if (heroSub) heroSub.innerHTML = 'Stop spraying heavy perfume over sweaty shirts. ODORSTRIKE mist neutralizes odor compounds directly on fabric fibers with up to 8 hours of protection.';
+      if (heroSub) heroSub.innerHTML = 'Stop spraying heavy perfume over sweaty shirts. ODORSTRIKE mist neutralizes odor compounds directly on fabric fibers with up to 8 hours of odor protection on fabric under normal office/commute conditions.';
     } else if (variant === 'clothes_deodorant') {
       // Variant B: Category & Product Clarity Framing
       if (heroTitle) heroTitle.innerHTML = 'Pocket Fabric Odor Spray<br>For Your Clothes.';

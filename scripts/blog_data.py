@@ -62,13 +62,13 @@ POSTS.append({
     "It's not a deodorant. It's not a perfume. It's not a detergent. It's a fabric odor eliminator — a fourth category that a lot of Indian men don't yet know exists."
   </div>
 
-  <h2>Inside the Formula: Zinc Ricinoleate + β-Cyclodextrin</h2>
+  <h2>Inside the Formula: Zinc PCA + β-Cyclodextrin</h2>
 
   <p>The reason a real fabric mist works where deodorant can't is the chemistry. ODORSTRIKE uses two complementary actives.</p>
 
-  <p><strong>Zinc Ricinoleate (1.5%)</strong> is a zinc salt of ricinoleic acid (derived from castor oil). It chemically binds to the thiol and amine groups in volatile odor molecules — the compounds bacteria produce when they break down sweat. Once bound, these molecules are no longer volatile, which means your nose can't detect them. This is true neutralisation, not masking. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc Ricinoleate actually works</a> covers the full mechanism.</p>
+  <p><strong>Zinc PCA (1.5%)</strong> is a zinc salt of ricinoleic acid (derived from castor oil). It chemically binds to the thiol and amine groups in volatile odor molecules — the compounds bacteria produce when they break down sweat. Once bound, these molecules are no longer volatile, which means your nose can't detect them. This is true neutralisation, not masking. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc PCA actually works</a> covers the full mechanism.</p>
 
-  <p><strong>β-Cyclodextrin (1.5%)</strong> is a ring-shaped sugar molecule with a hydrophobic cavity. It physically encapsulates odor molecules — traps them inside the ring like a cage. Combined with Zinc Ricinoleate, you get bind-and-trap dual action: chemical neutralisation plus physical capture.</p>
+  <p><strong>β-Cyclodextrin (1.5%)</strong> is a ring-shaped sugar molecule with a hydrophobic cavity. It physically encapsulates odor molecules — traps them inside the ring like a cage. Combined with Zinc PCA, you get bind-and-trap dual action: chemical neutralisation plus physical capture.</p>
 
   <p>The rest of the formula is engineered around delivery: 86% distilled water as the carrier, 5% IPA for fast flash-off (under 10 seconds on cotton), and a tiny 1% fragrance load — just enough to leave the shirt smelling neutral, not perfumed.</p>
 
@@ -106,7 +106,7 @@ POSTS.append({
     "faqs": [
         {
             "q": "What is the alternative to deodorant for clothes smell?",
-            "a": "A fabric odor eliminator spray, also called a fabric mist. It is applied directly to clothing and neutralises odor molecules trapped in fabric fibres, rather than masking them or treating skin. ODORSTRIKE by Smelloff is India's pocket-sized example: 50 ml, Zinc Ricinoleate-based, ₹229, designed for Indian climate and fabrics."
+            "a": "A fabric odor eliminator spray, also called a fabric mist. It is applied directly to clothing and neutralises odor molecules trapped in fabric fibres, rather than masking them or treating skin. ODORSTRIKE by Smelloff is India's pocket-sized example: 50 ml, Zinc PCA-based, ₹229, designed for Indian climate and fabrics."
         },
         {
             "q": "Can a fabric spray replace deodorant?",
@@ -163,7 +163,7 @@ POSTS.append({
 
   <div class="callout">
     <div class="callout-label">The Five Contestants</div>
-    <p><strong>1.</strong> ODORSTRIKE 50 ml fabric mist (Zinc Ricinoleate + β-Cyclodextrin)<br>
+    <p><strong>1.</strong> ODORSTRIKE 50 ml fabric mist (Zinc PCA + β-Cyclodextrin)<br>
     <strong>2.</strong> Febreze fabric refresher (β-Cyclodextrin only, fragranced)<br>
     <strong>3.</strong> Designer cologne (alcohol + fragrance)<br>
     <strong>4.</strong> Plain distilled water in a spray bottle<br>
@@ -173,7 +173,7 @@ POSTS.append({
   <h2>The Results, Ranked</h2>
 
   <h3>1. ODORSTRIKE — 10 second contact, full neutralisation</h3>
-  <p>Two pumps on the underarm, one on the collar, one on the back panel. At 10 seconds the shirt was dry to the touch. At 10 seconds the smell was gone — not replaced with fragrance, just absent. At 10 minutes, still absent. At one hour, still absent. The Zinc Ricinoleate binds the volatile odor molecules at the molecular level so your nose has nothing to detect. β-Cyclodextrin traps anything else. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">the science behind why Zinc Ricinoleate works on contact</a> goes deep on the chemistry.</p>
+  <p>Two pumps on the underarm, one on the collar, one on the back panel. At 10 seconds the shirt was dry to the touch. At 10 seconds the smell was gone — not replaced with fragrance, just absent. At 10 minutes, still absent. At one hour, still absent. The Zinc PCA binds the volatile odor molecules at the molecular level so your nose has nothing to detect. β-Cyclodextrin traps anything else. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">the science behind why Zinc PCA works on contact</a> goes deep on the chemistry.</p>
 
   <h3>2. Febreze fabric refresher — 5 minutes, 80% effective</h3>
   <p>Sprayed identical zones. At 10 seconds the shirt was visibly damp and smelled like Febreze fragrance over sweat. At 5 minutes, mostly dry, smell mostly gone, but the fragrance lingered heavily. Honest verdict: Febreze works for living-room upholstery and home use. The 370 ml bottle does not fit in a pocket; the heavy fragrance does not suit Indian humidity; the dry time is too long for a "before a meeting" rescue. <a href="/blog/odorstrike-vs-febreze-india" class="inline-cta">the ODORSTRIKE vs Febreze deep dive</a> covers the full comparison.</p>
@@ -191,7 +191,7 @@ POSTS.append({
 
   <p>The 10-second flash-off isn't a marketing line — it's a formulation choice. The carrier is 86% distilled water with 5% IPA (isopropyl alcohol). The IPA serves two functions: it carries the actives deep into the fibre structure where odor compounds actually live, and it evaporates fast enough to leave the shirt dry.</p>
 
-  <p>The actives — Zinc Ricinoleate and β-Cyclodextrin — both work in the contact moment. Zinc Ricinoleate doesn't need to "develop." It binds to thiol and amine groups on volatile odor molecules the instant the spray touches them. β-Cyclodextrin's molecular cage forms immediately around hydrophobic odor molecules. Both mechanisms are first-order chemistry: contact = effect.</p>
+  <p>The actives — Zinc PCA and β-Cyclodextrin — both work in the contact moment. Zinc PCA doesn't need to "develop." It binds to thiol and amine groups on volatile odor molecules the instant the spray touches them. β-Cyclodextrin's molecular cage forms immediately around hydrophobic odor molecules. Both mechanisms are first-order chemistry: contact = effect.</p>
 
   <div class="pull-quote">
     "The reason 10 seconds is enough is that the actives don't need time. They need contact. Once they touch the molecules, the molecules stop being detectable. The remaining 9 seconds are for the water to leave."
@@ -222,14 +222,14 @@ POSTS.append({
 
   <h2>The Verdict</h2>
 
-  <p>If you searched "spray to remove sweat smell from clothes instantly," the answer is a fabric odor mist with Zinc Ricinoleate. ODORSTRIKE is India's pocket-sized version — 50 ml, ₹229 launch (₹579 MRP), made in Hyderabad, ships pan-India with COD. It dries in 10 seconds, neutralises rather than masks, and fits in any pocket.</p>
+  <p>If you searched "spray to remove sweat smell from clothes instantly," the answer is a fabric odor mist with Zinc PCA. ODORSTRIKE is India's pocket-sized version — 50 ml, ₹229 launch (₹579 MRP), made in Hyderabad, ships pan-India with COD. It dries in 10 seconds, neutralises rather than masks, and fits in any pocket.</p>
 
   <p>That's it. The category is small. The chemistry is settled. The tool exists. Use it before the next meeting.</p>
 """,
     "faqs": [
         {
             "q": "What spray removes sweat smell from clothes instantly?",
-            "a": "A fabric odor mist with Zinc Ricinoleate, such as ODORSTRIKE. Zinc Ricinoleate binds to volatile odor molecules on contact, neutralising them at the molecular level rather than masking with fragrance. ODORSTRIKE dries in 10 seconds on cotton and polyester, comes in a 50 ml pocket bottle, and is priced at ₹229 in India."
+            "a": "A fabric odor mist with Zinc PCA, such as ODORSTRIKE. Zinc PCA binds to volatile odor molecules on contact, neutralising them at the molecular level rather than masking with fragrance. ODORSTRIKE dries in 10 seconds on cotton and polyester, comes in a 50 ml pocket bottle, and is priced at ₹229 in India."
         },
         {
             "q": "Does Febreze remove sweat smell instantly?",
@@ -237,11 +237,11 @@ POSTS.append({
         },
         {
             "q": "Can I use perfume to remove sweat smell from clothes?",
-            "a": "No. Perfume masks odor with stronger fragrance and frequently combines with bacterial sweat compounds to produce a worse smell. A fabric mist with Zinc Ricinoleate binds odor molecules and removes them at the molecular level. Use neutralisation, not masking, for any meaningful sweat-smell fix."
+            "a": "No. Perfume masks odor with stronger fragrance and frequently combines with bacterial sweat compounds to produce a worse smell. A fabric mist with Zinc PCA binds odor molecules and removes them at the molecular level. Use neutralisation, not masking, for any meaningful sweat-smell fix."
         },
         {
             "q": "Is it safe to spray fabric mist on a wet sweaty shirt?",
-            "a": "Yes. Fabric odor mists like ODORSTRIKE are formulated to work on damp fabric. Zinc Ricinoleate binds odor molecules whether the fabric is dry or slightly damp. Use 2 to 3 pumps per zone — collar, underarm, back panel. Do not soak the shirt; that delays drying without improving results."
+            "a": "Yes. Fabric odor mists like ODORSTRIKE are formulated to work on damp fabric. Zinc PCA binds odor molecules whether the fabric is dry or slightly damp. Use 2 to 3 pumps per zone — collar, underarm, back panel. Do not soak the shirt; that delays drying without improving results."
         },
     ],
 })
@@ -255,7 +255,7 @@ POSTS.append({
     "headline": "The Best Deodorant Spray for Clothes (Not Skin) in India",
     "h1": "The Best <em>Deodorant Spray</em> for Clothes (Not Skin) in India — 2026",
     "dek": "Most people search for a 'deodorant spray for clothes' because that's the closest mental model. The right tool actually has a different name — and a very different formula. Here's what to buy.",
-    "description": "Deodorants are for skin. Your shirt needs a different tool. Here's the best fabric-only deodorant spray in India — Zinc Ricinoleate, 50ml, ₹229.",
+    "description": "Deodorants are for skin. Your shirt needs a different tool. Here's the best fabric-only deodorant spray in India — Zinc PCA, 50ml, ₹229.",
     "keywords": "best deodorant spray for clothes not skin, deodorant for clothes india, fabric deodorant spray, clothes deodorant india, fabric odor mist, odorstrike",
     "section": "Category Education",
     "read_time": "7 min read",
@@ -297,8 +297,8 @@ POSTS.append({
   <p>Full disclosure: I built ODORSTRIKE, so this section is biased by construction. The bias is also what gives me the formulation specs. Here they are, with the receipts.</p>
 
   <ul>
-    <li><strong>Active 1: Zinc Ricinoleate (1.5%).</strong> Binds thiol and amine groups on volatile odor molecules. True molecular neutralisation. Used in commercial deodorants and stoma-care products for decades.</li>
-    <li><strong>Active 2: β-Cyclodextrin (1.5%).</strong> Ring-shaped sugar molecule that physically encapsulates odor molecules. Pairs with Zinc Ricinoleate for bind-and-trap dual action.</li>
+    <li><strong>Active 1: Zinc PCA (1.5%).</strong> Binds thiol and amine groups on volatile odor molecules. True molecular neutralisation. Used in commercial deodorants and stoma-care products for decades.</li>
+    <li><strong>Active 2: β-Cyclodextrin (1.5%).</strong> Ring-shaped sugar molecule that physically encapsulates odor molecules. Pairs with Zinc PCA for bind-and-trap dual action.</li>
     <li><strong>Carrier: 86% distilled water + 5% IPA.</strong> Flash-off in under 10 seconds on cotton. Penetrates fibre structure where odor compounds actually live.</li>
     <li><strong>Fragrance load: 1%.</strong> Light enough that the shirt smells neutral, not perfumed. Fades in 60 seconds.</li>
     <li><strong>Bottle: 50 ml. ~400–500 sprays. Pocket fit.</strong></li>
@@ -306,7 +306,7 @@ POSTS.append({
     <li><strong>Tested on:</strong> Cotton, polyester, denim, wool. Spot-test recommended on silk; not for leather or suede.</li>
   </ul>
 
-  <p>The full ingredient breakdown is on <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc Ricinoleate actually works</a>. The honest 30-day field test is on <a href="/blog/odorstrike-review-30-day-india-test" class="inline-cta">ODORSTRIKE Review</a>.</p>
+  <p>The full ingredient breakdown is on <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc PCA actually works</a>. The honest 30-day field test is on <a href="/blog/odorstrike-review-30-day-india-test" class="inline-cta">ODORSTRIKE Review</a>.</p>
 
   <div class="pull-quote">
     "The category isn't deodorant for clothes. It's a fabric odor mist. The product that fits the use case in India in 2026 is ODORSTRIKE — pocket-sized, neutralisation-based, priced at ₹229."
@@ -344,7 +344,7 @@ POSTS.append({
 
   <ul>
     <li>Ingredients listed openly on the label. If it just says "fragrance" with nothing else, skip.</li>
-    <li>Active named on the product or product page (Zinc Ricinoleate, β-Cyclodextrin, or both).</li>
+    <li>Active named on the product or product page (Zinc PCA, β-Cyclodextrin, or both).</li>
     <li>Fabric-only labelling. If the bottle says "for skin and fabric," it's a skin product wearing a fabric costume.</li>
     <li>₹/spray cost. ODORSTRIKE: ~₹0.45/spray on launch price. Reasonable benchmark.</li>
     <li>COD availability for your pin code if you're in tier-2/tier-3 India.</li>
@@ -356,11 +356,11 @@ POSTS.append({
     "faqs": [
         {
             "q": "What is the best deodorant spray for clothes (not skin) in India?",
-            "a": "ODORSTRIKE by Smelloff is the closest fit in 2026. It is a fabric odor eliminator mist, 50 ml, ₹229, with Zinc Ricinoleate (1.5%) and β-Cyclodextrin actives. It dries in 10 seconds, leaves no stain or residue, fits in a pocket, and ships pan-India with COD. The category is technically called a fabric odor mist, not a deodorant."
+            "a": "ODORSTRIKE by Smelloff is the closest fit in 2026. It is a fabric odor eliminator mist, 50 ml, ₹229, with Zinc PCA (1.5%) and β-Cyclodextrin actives. It dries in 10 seconds, leaves no stain or residue, fits in a pocket, and ships pan-India with COD. The category is technically called a fabric odor mist, not a deodorant."
         },
         {
             "q": "Is there a deodorant for clothes only?",
-            "a": "Yes. The correct category name is a fabric odor eliminator or fabric odor mist. These products are formulated for fabric, not skin, and use ingredients like Zinc Ricinoleate or β-Cyclodextrin to neutralise odor molecules in the fabric. ODORSTRIKE is India's pocket-sized example."
+            "a": "Yes. The correct category name is a fabric odor eliminator or fabric odor mist. These products are formulated for fabric, not skin, and use ingredients like Zinc PCA or β-Cyclodextrin to neutralise odor molecules in the fabric. ODORSTRIKE is India's pocket-sized example."
         },
         {
             "q": "Can I use my regular deodorant on clothes?",
@@ -508,7 +508,7 @@ POSTS.append({
   <ul>
     <li><strong>White cotton:</strong> No watermark, no residue, no discoloration. Indistinguishable from un-sprayed swatch.</li>
     <li><strong>Black polyester:</strong> No white mark, no fabric stiffness, no fragrance halo. Pass.</li>
-    <li><strong>Silk lining:</strong> A faint watermark visible at 60 seconds. Vanished by 90 seconds. No permanent mark after 24 hours. Spot-test recommended on raw silk; avoid soaking. <a href="/blog/does-fabric-spray-stain-clothes" class="inline-cta">is Zinc Ricinoleate safe for clothes</a> covers the silk caveat in detail.</li>
+    <li><strong>Silk lining:</strong> A faint watermark visible at 60 seconds. Vanished by 90 seconds. No permanent mark after 24 hours. Spot-test recommended on raw silk; avoid soaking. <a href="/blog/does-fabric-spray-stain-clothes" class="inline-cta">is Zinc PCA safe for clothes</a> covers the silk caveat in detail.</li>
   </ul>
 
   <h2>The Score Card</h2>
@@ -538,7 +538,7 @@ POSTS.append({
     "faqs": [
         {
             "q": "Does ODORSTRIKE actually work on sweat smell?",
-            "a": "Yes, when used as a pre-wear or post-wash layer on fabric. Zinc Ricinoleate binds to volatile odor molecules at the molecular level on contact. In a 30-day field test across cotton office shirts, polyester gym tees, denim and a sherwani, ODORSTRIKE delivered 1–3/10 end-of-wear smell ratings versus 5–6/10 baselines. It is not a substitute for washing visibly soiled clothes."
+            "a": "Yes, when used as a pre-wear or post-wash layer on fabric. Zinc PCA binds to volatile odor molecules at the molecular level on contact. In a 30-day field test across cotton office shirts, polyester gym tees, denim and a sherwani, ODORSTRIKE delivered 1–3/10 end-of-wear smell ratings versus 5–6/10 baselines. It is not a substitute for washing visibly soiled clothes."
         },
         {
             "q": "Is ODORSTRIKE worth ₹229 for daily office use?",
@@ -677,7 +677,7 @@ POSTS.append({
 
   <p>This is a question I get a lot, so I'll answer honestly. Amazon takes roughly 26% of every D2C sale in India — referral fees, FBA, returns, advertising — by the time you're done, the marketplace has more of your margin than you do.</p>
 
-  <p>For a single-founder brand at launch, that margin matters. I'm reinvesting it in two places: better formulation (the v2 will move from 1.5% to 1.7% Zinc Ricinoleate after testing), and better unboxing (the duo and trio ship with a free fabric microfibre cloth that costs me ₹14/piece — Amazon would eat that line item).</p>
+  <p>For a single-founder brand at launch, that margin matters. I'm reinvesting it in two places: better formulation (the v2 will move from 1.5% to 1.7% Zinc PCA after testing), and better unboxing (the duo and trio ship with a free fabric microfibre cloth that costs me ₹14/piece — Amazon would eat that line item).</p>
 
   <p>Amazon listing is planned for Q3 2026 once unit economics stabilise. Until then, smelloff.in is the only authorised seller. Anyone selling "ODORSTRIKE" on Amazon, Flipkart, or Meesho before that announcement is not authentic stock — please report it to <a href="mailto:smelloffsupport@gmail.com" class="inline-cta">smelloffsupport@gmail.com</a>.</p>
 
@@ -778,7 +778,7 @@ POSTS.append({
   <h2>The 5-Tool Mumbai Survival Kit</h2>
 
   <h3>Tool 1: A pocket fabric mist (the foundation)</h3>
-  <p>This is the only tool that addresses the actual problem zone — the shirt itself. ODORSTRIKE 50 ml fits in a back pocket or a slim sling. 2–3 pumps on collar and underarm fabric, 10 seconds dry, and the AC-rehydration cycle is broken. Use it in the morning before wear, mid-day at the office (a 30-second bathroom stop), and again before evening commitments. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc Ricinoleate works</a> on the science.</p>
+  <p>This is the only tool that addresses the actual problem zone — the shirt itself. ODORSTRIKE 50 ml fits in a back pocket or a slim sling. 2–3 pumps on collar and underarm fabric, 10 seconds dry, and the AC-rehydration cycle is broken. Use it in the morning before wear, mid-day at the office (a 30-second bathroom stop), and again before evening commitments. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc PCA works</a> on the science.</p>
 
   <h3>Tool 2: Fabric choice — cotton over polyester for office</h3>
   <p>If you have a choice in your dress code, lean cotton. 100% cotton breathes, releases moisture, and accumulates less compound load than polyester. Polyester re-releases stored odor compounds under heat — meaning a freshly washed polyester shirt in a Mumbai humidity cycle smells worse by hour 6 than a freshly washed cotton shirt. Linen is even better, where the office allows it.</p>
@@ -803,7 +803,7 @@ POSTS.append({
   <p>Monsoon-specific tweaks:</p>
   <ul>
     <li><strong>Always dry clothes indoors with airflow.</strong> A standing fan beats no fan. A dehumidifier (where available) is the gold standard.</li>
-    <li><strong>Add ODORSTRIKE post-wash to slightly damp clothing</strong> before final hang-dry — Zinc Ricinoleate works on damp fabric and pre-empts the musty bacterial bloom.</li>
+    <li><strong>Add ODORSTRIKE post-wash to slightly damp clothing</strong> before final hang-dry — Zinc PCA works on damp fabric and pre-empts the musty bacterial bloom.</li>
     <li><strong>Pack a small towel</strong> in your sling for face/neck dab. Reduces sweat-on-fabric transfer at the highest-risk zone.</li>
     <li><strong>Rotate two pairs of work shoes.</strong> Wet shoes are a separate odor problem; rotation lets one fully dry.</li>
   </ul>
@@ -835,7 +835,7 @@ POSTS.append({
         },
         {
             "q": "What spray works best for Mumbai office sweat smell?",
-            "a": "A fabric odor mist with Zinc Ricinoleate is the right tool. ODORSTRIKE is purpose-built for Indian humidity — 50 ml pocket size, 10-second dry time, low fragrance load (1%), and a Zinc Ricinoleate + β-Cyclodextrin formula that neutralises odor on contact. Available pan-India direct at smelloff.in for ₹229 with COD."
+            "a": "A fabric odor mist with Zinc PCA is the right tool. ODORSTRIKE is purpose-built for Indian humidity — 50 ml pocket size, 10-second dry time, low fragrance load (1%), and a Zinc PCA + β-Cyclodextrin formula that neutralises odor on contact. Available pan-India direct at smelloff.in for ₹229 with COD."
         },
     ],
 })
@@ -849,7 +849,7 @@ POSTS.append({
     "headline": "The Best Body Odor Remover Spray for Men in India",
     "h1": "The Best Body Odor Remover Spray for Men in India <em>(2026)</em>",
     "dek": "Indian male body odor is a structural problem — climate, diet, fabric, biology. Most body-odor sprays sold in India treat skin only. Here's the men-specific guide that addresses the actual battlefield.",
-    "description": "Indian male body odor needs a fabric solution, not just skin. Tested fabric mists ranked: Zinc Ricinoleate, pocket size, ₹229, no stain. The men-specific guide.",
+    "description": "Indian male body odor needs a fabric solution, not just skin. Tested fabric mists ranked: Zinc PCA, pocket size, ₹229, no stain. The men-specific guide.",
     "keywords": "best body odor remover spray for men india, body odor spray men india, best body odor spray india, mens body odor spray, fabric odor spray for men, odorstrike men",
     "section": "Buyer's Guide",
     "read_time": "8 min read",
@@ -886,7 +886,7 @@ POSTS.append({
   <ol>
     <li><strong>Neutralise, not mask.</strong> Bind to or trap odor molecules. Fragrance-only products fail this test.</li>
     <li><strong>Work on fabric, not just skin.</strong> Or: pair with a fabric-only product. Body odor lives mostly on the shirt by hour 4.</li>
-    <li><strong>Handle sulfur compounds.</strong> Indian-diet sweat has higher sulfur volatile load. Zinc Ricinoleate binds thiol groups specifically — built for this profile.</li>
+    <li><strong>Handle sulfur compounds.</strong> Indian-diet sweat has higher sulfur volatile load. Zinc PCA binds thiol groups specifically — built for this profile.</li>
     <li><strong>Survive 30°C+ commutes.</strong> Bike commute, autorickshaw, local train. Heavy fragrance loads break down in heat and stop working.</li>
     <li><strong>Pocket size.</strong> Indian men's daily kit is minimal — wallet, phone, keys, maybe one bottle. The product needs to fit that constraint.</li>
     <li><strong>Affordable for daily use.</strong> Per-spray cost under ₹1 is the practical benchmark for daily personal use.</li>
@@ -895,7 +895,7 @@ POSTS.append({
   <h2>The Categories You'll Find in India — Ranked</h2>
 
   <h3>1. Fabric Odor Mist (the right tool)</h3>
-  <p>Pocket-sized sprays formulated for fabric, with Zinc Ricinoleate or β-Cyclodextrin actives. ODORSTRIKE is the clearest Indian example — 50 ml, ₹229, both actives, made in Hyderabad. Addresses the fabric front decisively.</p>
+  <p>Pocket-sized sprays formulated for fabric, with Zinc PCA or β-Cyclodextrin actives. ODORSTRIKE is the clearest Indian example — 50 ml, ₹229, both actives, made in Hyderabad. Addresses the fabric front decisively.</p>
 
   <h3>2. Antiperspirant (the skin partner)</h3>
   <p>Aluminum-based products that physically block sweat ducts. Effective on skin, no claim on fabric. Major brands available in India: Nivea, Dove, Old Spice, Park Avenue. Use morning before wear. Not a body odor spray on its own — a complement.</p>
@@ -922,7 +922,7 @@ POSTS.append({
   <p>This is the most over-marketed category in India. Pick whatever your skin tolerates without irritation. Aluminum antiperspirants for sweat-blocking. Alcohol-based deodorants for skin-bacteria control. Roll-on, stick, spray — the format doesn't matter as long as you apply consistently in the morning.</p>
 
   <h3>Fabric-side: ODORSTRIKE</h3>
-  <p>50 ml pocket bottle, ₹229. Two actives — Zinc Ricinoleate (1.5%) for chemical binding of thiol/amine groups in odor molecules, β-Cyclodextrin (1.5%) for physical encapsulation. Distilled water + 5% IPA carrier dries in 10 seconds. Tested on cotton, polyester, denim, wool. Made in Hyderabad. Pan-India COD. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">where to buy</a>.</p>
+  <p>50 ml pocket bottle, ₹229. Two actives — Zinc PCA (1.5%) for chemical binding of thiol/amine groups in odor molecules, β-Cyclodextrin (1.5%) for physical encapsulation. Distilled water + 5% IPA carrier dries in 10 seconds. Tested on cotton, polyester, denim, wool. Made in Hyderabad. Pan-India COD. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">where to buy</a>.</p>
 
   <p>Apply: collar and underarm fabric of the shirt before wear. Mid-day reset before any 2–5 PM meeting. Post-gym before re-dressing. Pre-event for any 4+ hour commitment in formal wear.</p>
 
@@ -954,11 +954,11 @@ POSTS.append({
     "faqs": [
         {
             "q": "What is the best body odor remover spray for men in India?",
-            "a": "For Indian male body odor, use a two-tool stack: a deodorant or antiperspirant for skin in the morning, and a fabric odor mist for the shirt. ODORSTRIKE is India's pocket fabric mist — 50 ml, ₹229, Zinc Ricinoleate + β-Cyclodextrin. The fabric front handles the majority of body odor on Indian men, which lives in the shirt by mid-day."
+            "a": "For Indian male body odor, use a two-tool stack: a deodorant or antiperspirant for skin in the morning, and a fabric odor mist for the shirt. ODORSTRIKE is India's pocket fabric mist — 50 ml, ₹229, Zinc PCA + β-Cyclodextrin. The fabric front handles the majority of body odor on Indian men, which lives in the shirt by mid-day."
         },
         {
             "q": "Can a body spray remove sweat smell from clothes?",
-            "a": "No. Body sprays are skin products formulated to release fragrance from the body. Sprayed on fabric, they leave fragrance for 1–3 hours, then fade — and the original sweat smell returns layered with stale fragrance. Use a dedicated fabric odor mist with Zinc Ricinoleate for fabric, and keep body spray for skin."
+            "a": "No. Body sprays are skin products formulated to release fragrance from the body. Sprayed on fabric, they leave fragrance for 1–3 hours, then fade — and the original sweat smell returns layered with stale fragrance. Use a dedicated fabric odor mist with Zinc PCA for fabric, and keep body spray for skin."
         },
         {
             "q": "Why does deodorant alone not work for Indian men?",
@@ -1039,7 +1039,7 @@ POSTS.append({
   <p>This isn't theoretical. It's the protocol I run on my own shirts since I figured this out.</p>
 
   <h3>Move 1: Treat at hang-dry</h3>
-  <p>After the wash cycle, before the shirt is fully dry: 2–3 pumps of ODORSTRIKE on the underarm fabric, collar, and back panel. The Zinc Ricinoleate binds any residual odor compounds the wash didn't remove. The IPA carrier inhibits bacterial recolonisation during the indoor drying window. Then hang to dry as normal.</p>
+  <p>After the wash cycle, before the shirt is fully dry: 2–3 pumps of ODORSTRIKE on the underarm fabric, collar, and back panel. The Zinc PCA binds any residual odor compounds the wash didn't remove. The IPA carrier inhibits bacterial recolonisation during the indoor drying window. Then hang to dry as normal.</p>
 
   <p>Total time added: 10 seconds. Total spray cost: ~₹2.</p>
 
@@ -1084,7 +1084,7 @@ POSTS.append({
         },
         {
             "q": "Does washing not remove sweat smell completely?",
-            "a": "Standard cold-water or warm-cycle washes remove surface sweat but leave deeply embedded odor compounds in polyester and synthetic fibres. The hydrophobic fibre structure protects these compounds from water-based detergents. Hot wash above 60°C helps but is not safe for most polyester care labels. A fabric mist with Zinc Ricinoleate addresses the residual load."
+            "a": "Standard cold-water or warm-cycle washes remove surface sweat but leave deeply embedded odor compounds in polyester and synthetic fibres. The hydrophobic fibre structure protects these compounds from water-based detergents. Hot wash above 60°C helps but is not safe for most polyester care labels. A fabric mist with Zinc PCA addresses the residual load."
         },
         {
             "q": "How can I stop my office shirt from smelling by 3 PM?",
@@ -1177,7 +1177,7 @@ POSTS.append({
 
   <p>Instead of layering fragrance on top of bacterial sweat compounds, the correct intervention is to bind the sweat compounds themselves and remove them from the volatile state.</p>
 
-  <p>This is what Zinc Ricinoleate does. It binds to thiol (-SH) groups in sulfur compounds and amine (-NH₂) groups in volatile amines. Once bound, the molecules are no longer volatile — your nose can't detect them, the fragrance has nothing to react with, and the bacterial substrate is reduced. β-Cyclodextrin physically traps the residual molecules. The combination removes the chemistry, not masks it. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc Ricinoleate works</a>.</p>
+  <p>This is what Zinc PCA does. It binds to thiol (-SH) groups in sulfur compounds and amine (-NH₂) groups in volatile amines. Once bound, the molecules are no longer volatile — your nose can't detect them, the fragrance has nothing to react with, and the bacterial substrate is reduced. β-Cyclodextrin physically traps the residual molecules. The combination removes the chemistry, not masks it. <a href="/blog/zinc-pca-fabric-odor-ingredient-guide" class="inline-cta">how Zinc PCA works</a>.</p>
 
   <p>ODORSTRIKE pairs both actives in a 50 ml pocket bottle, dries in 10 seconds, and contains only 1% fragrance load (deliberately low — to avoid the exact problem this article is about).</p>
 
@@ -1205,7 +1205,7 @@ POSTS.append({
 
   <ul>
     <li><strong>If you have access to a spare shirt</strong> — change. The compromised shirt needs a wash, not another spray.</li>
-    <li><strong>If you have ODORSTRIKE</strong> — spray collar, underarm fabric, back panel. The Zinc Ricinoleate will partially neutralise the new volatile mix. It won't fully reverse the cologne reactions, but it will reduce the persistent off-notes.</li>
+    <li><strong>If you have ODORSTRIKE</strong> — spray collar, underarm fabric, back panel. The Zinc PCA will partially neutralise the new volatile mix. It won't fully reverse the cologne reactions, but it will reduce the persistent off-notes.</li>
     <li><strong>If you have neither</strong> — wash your hands, neck, and underarm skin with cold water. This reduces fresh sweat input. Avoid touching the cologne-sprayed zones for the rest of the day. The smell will continue developing.</li>
   </ul>
 
@@ -1226,7 +1226,7 @@ POSTS.append({
         },
         {
             "q": "What is the alternative to spraying perfume on sweaty clothes?",
-            "a": "A fabric odor mist with Zinc Ricinoleate, such as ODORSTRIKE. Zinc Ricinoleate binds thiol and amine groups on volatile sweat compounds, removing them from the volatile state. β-Cyclodextrin physically traps residual molecules. The result is true neutralisation rather than masking — and no chemical reaction with the sweat compounds underneath."
+            "a": "A fabric odor mist with Zinc PCA, such as ODORSTRIKE. Zinc PCA binds thiol and amine groups on volatile sweat compounds, removing them from the volatile state. β-Cyclodextrin physically traps residual molecules. The result is true neutralisation rather than masking — and no chemical reaction with the sweat compounds underneath."
         },
     ],
 })
@@ -1313,7 +1313,7 @@ POSTS.append({
   <h3>Morning addition</h3>
   <p>After deodorant on skin: ODORSTRIKE on the shirt's underarm fabric (2 pumps each side), collar (1 pump), back panel (1 pump). 10 seconds dry. Wear.</p>
 
-  <p>This pre-empts the fabric-bacterial reactivation cycle that begins at 11 AM. The Zinc Ricinoleate binds odor compounds as they're produced. β-Cyclodextrin traps residual molecules. By 3 PM, the fabric volatile load is 60–70% lower than untreated baseline.</p>
+  <p>This pre-empts the fabric-bacterial reactivation cycle that begins at 11 AM. The Zinc PCA binds odor compounds as they're produced. β-Cyclodextrin traps residual molecules. By 3 PM, the fabric volatile load is 60–70% lower than untreated baseline.</p>
 
   <h3>Mid-day reset</h3>
   <p>After lunch, before any 2–5 PM commitment: 30 seconds in a bathroom stall. ODORSTRIKE on the inside collar (from above) and underarm fabric (through the armhole, from outside). Don't remove the shirt. Walk out in 30 seconds.</p>

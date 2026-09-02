@@ -2,7 +2,7 @@
   "brand": {
     "name": "Smelloff",
     "location": "Hyderabad, India",
-    "founder": "Manoj",
+    "founder": "Jogdhande Nikhil Patil",
     "mission": "To create the best fabric odor eliminators engineered specifically for the Indian climate and lifestyle.",
     "contact": {
       "email": "support@smelloff.in"
@@ -21,32 +21,41 @@
       "size": "50ml",
       "format": "Liquid spray",
       "price": 229,
+      "codFee": 60,
+      "priceCod": 289,
       "currency": "INR",
       "availability": "in_stock",
+      "formulaVersion": "v3.1",
       "description": "Pocket-sized fabric odor control mist for clothes. Fabric only. Made for in-between-wash odor emergencies when a shirt, hoodie, jacket or other clothing carries unwanted odor.",
-      "not_for": ["Skin", "Pets", "Leather", "Silk", "Suede"],
+      "not_for": ["Skin", "Pets", "Leather", "Suede", "Dry-clean-only"],
+      "patch_test": ["Silk", "Zari", "Heavy embroidery"],
       "claims": [
-        { "claim": "Up to 8 hours of odor protection on fabric", "status": "APPROVED" },
+        { "claim": "Up to 8 hours of odor protection on fabric under normal office/commute conditions", "status": "APPROVED" },
         { "claim": "Not a deodorant", "status": "APPROVED" },
         { "claim": "Not a perfume", "status": "APPROVED" },
-        { "claim": "Contains Zinc Ricinoleate", "status": "APPROVED" },
-        { "claim": "Contains HPBCD", "status": "APPROVED" },
+        { "claim": "Contains Zinc PCA", "status": "APPROVED" },
+        { "claim": "Contains HPβCD", "status": "APPROVED" },
         { "claim": "Instantly", "status": "PROHIBITED" },
         { "claim": "Removes 100% of odors forever", "status": "PROHIBITED" }
       ],
       "ingredients": [
-        "Aqua (Water)",
-        "Zinc Ricinoleate (Odor absorber)",
-        "Hydroxypropyl Beta-Cyclodextrin (HPBCD) (Odor trapper)",
-        "Zinc PCA (Antibacterial odor control)",
-        "Ethanol (Fast-drying solvent)",
-        "Fragrance (Mild fresh scent)"
+        "Water (Base)",
+        "Isopropyl Alcohol (Solvent)",
+        "Triethyl Citrate (Prevent)",
+        "HPβCD / Hydroxypropyl Beta-Cyclodextrin (Trap)",
+        "Polysorbate 20 (Emulsifier)",
+        "Zinc PCA (Neutralize)",
+        "PE9010 (Preservative)",
+        "Fragrance (Light scent)",
+        "Zinc Gluconate (Anti-regrowth)",
+        "Ethylhexylglycerin (Preservative booster)",
+        "Citric Acid (pH balancer)"
       ],
       "how_to_use": [
         "1. Identify the odor source on the garment.",
-        "2. Hold bottle 15cm away from the fabric.",
-        "3. Spray 3-4 times directly onto the smelly area (underarms, collars).",
-        "4. Let it dry completely before wearing (usually takes 30-60 seconds depending on humidity)."
+        "2. Hold bottle 15–20 cm away from the fabric.",
+        "3. 2–3 sprays for a targeted/midday reset; 4–5 sprays for a full shirt; 5–6 sprays for a jacket.",
+        "4. Allow approximately 10 seconds to air-dry before wearing."
       ]
     }
   ],
@@ -54,12 +63,17 @@
     "shipping": {
       "cost": 0,
       "currency": "INR",
+      "prepaid": "Free shipping on prepaid UPI",
+      "cod": "₹60 handling; ₹289 collectable. Dispatched after phone confirmation.",
+      "dispatch": "Within 48 hours of confirmation",
       "estimated_days": "3-7",
-      "details": "Free standard shipping across India."
+      "details": "Free standard shipping across India on prepaid UPI."
     },
     "returns": {
       "window_days": 7,
-      "details": "7-day return policy for unused, sealed bottles. Used bottles cannot be returned for hygiene reasons."
+      "minimum_full": "80%",
+      "reverse_pickup": true,
+      "details": "7-day return window from delivery. Bottle must be at least 80% full and in original packaging. Reverse pickup where serviceable."
     }
   }
 }
