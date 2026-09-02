@@ -154,6 +154,21 @@
     .how-safety{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid);font-weight:700}
     .how-note{font-family:var(--body);font-size:13px;color:var(--muted);margin:0}
 
+    /* 05 WHY YOU'D CARRY IT */
+    .carry-stage{display:grid;grid-template-columns:1fr;gap:24px;margin-top:36px;align-items:start}
+    .carry-media{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:clamp(14px,2.5vw,22px);position:relative}
+    .carry-media picture, .carry-media img{width:100%;height:auto;border-radius:4px;display:block;object-fit:cover}
+    .carry-media-caption{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .carry-media-caption .dot{color:var(--acid)}
+    .carry-flow{display:flex;flex-direction:column;gap:10px}
+    .carry-item{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:clamp(16px,2vw,20px);transition:border-color .2s ease,background-color .2s ease}
+    .carry-item:hover{border-color:rgba(184,255,87,.35);background:var(--surface2)}
+    .carry-item-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+    .carry-item-tag{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--acid);letter-spacing:.14em;text-transform:uppercase}
+    .carry-item-meta{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;background:var(--surface2);border:1px solid var(--rule);padding:2px 6px;border-radius:3px}
+    .carry-item-title{font-family:var(--display);font-size:clamp(20px,2.2vw,24px);font-weight:700;line-height:1.15;margin:0 0 6px;color:var(--text)}
+    .carry-item-desc{font-family:var(--body);font-size:14px;color:var(--muted);line-height:1.45;margin:0}
+
     .buy-shell{display:grid;grid-template-columns:1fr;gap:26px;margin-top:36px}.buy-media{border:1px solid var(--rule);border-radius:6px;background:var(--surface);padding:18px}.buy-media img{width:100%;height:auto;border-radius:4px}
     
     /* 08 PRODUCT GALLERY & PURCHASE MODULE */
@@ -254,6 +269,7 @@
       .hero-copy{display:flex}
       .remembers-stage{grid-template-columns:minmax(160px,210px) 1fr;gap:clamp(28px,4vw,48px)}
       .how-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
+      .carry-stage{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,52px)}
       .buy-layout{grid-template-columns:1.05fr .95fr;gap:clamp(32px,4vw,56px)}
       .compare{grid-template-columns:repeat(3,1fr)}.triplet{grid-template-columns:repeat(3,1fr)}.quad{grid-template-columns:repeat(2,1fr)}.use-grid{grid-template-columns:repeat(3,1fr)}.review-lead{grid-template-columns:1.1fr .9fr}.buy-shell{grid-template-columns:1.05fr .95fr}.detail-grid{grid-template-columns:repeat(2,1fr)}
     }
@@ -569,7 +585,71 @@
 </section>
 
 <!-- 05 WHY YOU'D CARRY IT -->
-<section id="why-carry"><div class="wrap"><p class="eyebrow">ENGINEERED FOR REAL WEAR</p><h2>Why you'd carry it.</h2><p class="section-copy">A dedicated fabric tool built for the moments between morning and the laundry basket.</p><div class="quad"><div class="trip"><span class="trip-num">01 · FORMAT</span><h3>50ml Pocket Size</h3><p>Compact bottle designed to fit into pockets, laptop sleeves, or gym bags (~250 sprays).</p></div><div class="trip"><span class="trip-num">02 · TARGETED</span><h3>Fabric-First Formula</h3><p>Formulated with active odor neutralizers specifically for textile fibers, not skin.</p></div><div class="trip"><span class="trip-num">03 · PURPOSE</span><h3>Between-Wash Utility</h3><p>Keeps shirts, hoodies, and jackets fresh between wears without replacing regular washing.</p></div><div class="trip"><span class="trip-num">04 · SPEED</span><h3>Quick Application</h3><p>2–3 light pumps dry in 30–60 seconds so you can reset your clothes and keep moving.</p></div></div></div></section>
+<section id="why-carry" aria-labelledby="whyHeading">
+  <div class="wrap">
+    <p class="eyebrow">POCKET UTILITY · 50ML FORM FACTOR</p>
+    <h2 id="whyHeading">Small enough to carry. Useful enough to keep.</h2>
+    <p class="section-copy">A dedicated fabric tool built for the moments between morning and the laundry basket. Kept in a pocket, jacket, or everyday bag for when clothes need a clean reset.</p>
+    
+    <div class="carry-stage">
+      <!-- PORTABILITY / SCALE VISUAL -->
+      <div class="carry-media">
+        <picture>
+          <source srcset="/assets/pdp-04-pocket-size@640.webp" media="(max-width: 640px)">
+          <img src="/assets/pdp-04-pocket-size.webp" width="1196" height="1315" loading="lazy" decoding="async" alt="ODORSTRIKE 50ml pocket-sized bottle shown in everyday carry scale">
+        </picture>
+        <div class="carry-media-caption">
+          <span>Daily Carry Format</span>
+          <span class="dot">·</span>
+          <span>50ml (~250 Sprays)</span>
+        </div>
+      </div>
+
+      <!-- DESIRABILITY & UTILITY BLOCKS -->
+      <div class="carry-flow" role="list" aria-label="Product utility and carry reasons">
+        <!-- REASON 01 -->
+        <div class="carry-item" role="listitem">
+          <div class="carry-item-header">
+            <span class="carry-item-tag">01 · SCALE</span>
+            <span class="carry-item-meta">50ml Format</span>
+          </div>
+          <h3 class="carry-item-title">Pocket-sized daily carry.</h3>
+          <p class="carry-item-desc">Engineered slim to fit inside pockets, laptop sleeves, or gym bags with ~250 fine mist pumps per bottle.</p>
+        </div>
+
+        <!-- REASON 02 -->
+        <div class="carry-item" role="listitem">
+          <div class="carry-item-header">
+            <span class="carry-item-tag">02 · TARGETED</span>
+            <span class="carry-item-meta">Textile-First</span>
+          </div>
+          <h3 class="carry-item-title">Made for clothing, not skin.</h3>
+          <p class="carry-item-desc">Formulated with active odor neutralizers specifically for fabric fibers, treating shirts, hoodies, jackets, and denim directly.</p>
+        </div>
+
+        <!-- REASON 03 -->
+        <div class="carry-item" role="listitem">
+          <div class="carry-item-header">
+            <span class="carry-item-tag">03 · UTILITY</span>
+            <span class="carry-item-meta">Between-Wash</span>
+          </div>
+          <h3 class="carry-item-title">For the moments between washes.</h3>
+          <p class="carry-item-desc">Perfect when you need to wear a clean-looking garment again before laundering or during long days on the move.</p>
+        </div>
+
+        <!-- REASON 04 -->
+        <div class="carry-item" role="listitem">
+          <div class="carry-item-header">
+            <span class="carry-item-tag">04 · FINISH</span>
+            <span class="carry-item-meta">Zero Trace</span>
+          </div>
+          <h3 class="carry-item-title">Quick, clean, residue-free.</h3>
+          <p class="carry-item-desc">Lightweight mist air-dries cleanly with no white marks, stiff spots, or synthetic heaviness on dark or light garments.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- 06 REAL LIFE -->
 <section id="use-cases"><div class="wrap"><p class="eyebrow">REAL LIFE</p><h2>Built for the moments you can't rewash for.</h2><div class="use-grid"><div class="use"><img src="/assets/shot-gymbag.webp" width="1400" height="933" loading="lazy" alt="ODORSTRIKE in a gym bag"><div class="use-copy"><h3>Post-gym</h3><p>Before the ride home, office or plans after.</p></div></div><div class="use"><img src="/assets/shot-pocket.webp" width="1400" height="933" loading="lazy" alt="ODORSTRIKE in a pocket"><div class="use-copy"><h3>Commute</h3><p>Heat, traffic, long rides, crowded transport.</p></div></div><div class="use"><img src="/assets/shot-flatlay.webp" width="1400" height="933" loading="lazy" alt="ODORSTRIKE daily carry flatlay"><div class="use-copy"><h3>Long day</h3><p>Office, dinner, travel — one shirt, more than one setting.</p></div></div></div></div></section>
