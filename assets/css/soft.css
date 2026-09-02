@@ -123,9 +123,15 @@
   border:var(--hair-strong) solid var(--rule-strong) !important;
   color:var(--text) !important;
 }
-.btn-ghost:hover,.nb-btn--ghost:hover{
-  border-color:var(--acid) !important;
-  color:var(--acid) !important;
+/* Stage 1 chrome buttons must not inherit bounce / uppercase / pill radius. */
+.so-btn,.so-btn:hover,.so-btn:active,
+.sf-hdr__cta,.sf-hdr__cta:hover,.sf-hdr__cta:active,
+.so-pay__opt,.so-sticky .so-btn,
+.mobile-bar#mobileBar .mb-btn{
+  animation:none !important;
+  text-transform:none !important;
+  letter-spacing:0 !important;
+  border-radius:var(--so-radius-btn, 8px) !important;
 }
 
 /* ---------------------------------------------------------------------

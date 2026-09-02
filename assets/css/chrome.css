@@ -78,91 +78,106 @@
 }
 
 /* ---------------------------------------------------------------------
-   1 · HEADER
-   Sticky, hairline-ruled, logo left / cart + links + CTA right, with a
-   burger that reveals the same links stacked on small screens.
+   1 · HEADER  (Stage 1)
+   Warm charcoal, sentence-case nav, lime reserved for Buy.
+   Brand + Buy + menu on mobile. Cart hides only below 360px.
    --------------------------------------------------------------------- */
 .sf-hdr{
   position:sticky;top:0;z-index:70;
-  background:var(--ink);
-  border-bottom:1px solid var(--rule);
+  background:var(--so-chrome, #161410);
+  color:var(--so-chrome-ink, #F4F0E8);
+  border-bottom:1px solid var(--so-chrome-line, rgba(244,240,232,.10));
 }
 .sf-hdr__row{
   display:flex;align-items:center;justify-content:space-between;
-  gap:12px;min-height:64px;
+  gap:12px;min-height:var(--so-hdr, 64px);
 }
-.sf-hdr__logo{display:flex;align-items:center;min-height:44px}
-.sf-hdr__logo img{height:24px;width:auto;display:block}
-.sf-hdr__right{display:flex;align-items:center;gap:10px}
+.sf-hdr__logo{display:flex;align-items:center;min-height:var(--so-tap, 44px);flex:0 0 auto}
+.sf-hdr__logo img{height:22px;width:auto;display:block}
+.sf-hdr__right{display:flex;align-items:center;gap:6px;min-width:0}
 
-/* Cart — borderless icon with an acid count badge. Lifted verbatim from
-   the homepage so the control is pixel-identical everywhere. */
 .sf-cart{
   display:inline-flex;align-items:center;gap:5px;
-  height:44px;padding:0 4px;
-  background:transparent;color:var(--text);text-decoration:none;
+  height:var(--so-tap, 44px);padding:0 6px;
+  background:transparent;color:inherit;text-decoration:none;
   border:0;cursor:pointer;line-height:1;
+  border-radius:var(--so-radius-sm, 6px);
 }
-.sf-cart:hover{color:var(--acid)}
-.sf-cart svg{width:25px;height:25px;display:block;transform-origin:60% 100%}
-@keyframes sfCartNudge{
-  0%,100%{transform:translateX(0) rotate(0)}
-  25%{transform:translateX(-2px) rotate(-4deg)}
-  60%{transform:translateX(2px) rotate(3deg)}
-}
-@media (prefers-reduced-motion: no-preference){
-  .sf-cart:hover svg{animation:sfCartNudge .55s ease}
-}
+.sf-cart:hover{color:var(--so-chrome-ink, #F4F0E8);background:rgba(244,240,232,.06)}
+.sf-cart svg{width:22px;height:22px;display:block}
 .sf-cart__count{
-  background:var(--acid);color:var(--on-acid);
-  min-width:18px;height:18px;padding:0 5px;border-radius:var(--sq-pill,100px);
+  background:var(--so-lime, #B8FF57);color:var(--so-lime-ink, #161410);
+  min-width:18px;height:18px;padding:0 5px;border-radius:999px;
   display:inline-flex;align-items:center;justify-content:center;
-  font-family:var(--body);
+  font-family:var(--so-font-body, var(--body));
   font-size:11px;font-weight:700;letter-spacing:0;
+  font-variant-numeric:tabular-nums;
 }
-/* Two empty-states to honour: `hidden` (set by chrome.js from localStorage)
-   and `data-empty="1"` (set by the /odorstrike checkout's own cart code).
-   Without the second one the product page showed a permanent acid "0". */
 .sf-cart__count[hidden],
 .sf-cart__count[data-empty="1"]{display:none}
 
-.sf-nav{display:none;align-items:center;gap:6px;list-style:none;margin:0;padding:0}
+.sf-nav-wrap{display:none}
+.sf-nav{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}
 .sf-nav a{
-  display:inline-block;padding:12px 14px;
-  border-radius:var(--sq-sm,11px);
-  font-family:var(--mono);
-  font-size:13px;color:var(--text);text-decoration:none;
-  letter-spacing:.12em;text-transform:uppercase;
-  transition:color .2s var(--ease);
+  display:inline-flex;align-items:center;
+  padding:10px 11px;min-height:var(--so-tap, 44px);
+  border-radius:var(--so-radius-sm, 6px);
+  font-family:var(--so-font-body, var(--body));
+  font-size:var(--so-size-nav, 0.875rem);
+  font-weight:500;
+  color:var(--so-chrome-muted, #A8A196);
+  text-decoration:none;
+  letter-spacing:0;
+  text-transform:none;
+  transition:color var(--so-dur, 180ms) var(--so-ease), background-color var(--so-dur, 180ms) var(--so-ease);
 }
-.sf-nav a:hover{color:var(--acid)}
-/* Current page reads as current — none of the old headers did this. */
-.sf-nav a[aria-current="page"]{color:var(--acid)}
+.sf-nav a:hover{color:var(--so-chrome-ink, #F4F0E8);background:rgba(244,240,232,.06)}
+.sf-nav a[aria-current="page"]{color:var(--so-chrome-ink, #F4F0E8)}
 
 .sf-hdr__cta{
   display:inline-flex;align-items:center;justify-content:center;
-  background:var(--acid);color:var(--on-acid);text-decoration:none;
-  border:0;border-radius:var(--sq-sm,11px);
-  font-family:var(--mono);
-  font-size:13px;letter-spacing:.12em;text-transform:uppercase;
-  padding:12px 18px;min-height:44px;
-  transition:background-color .2s var(--ease);
+  background:var(--so-lime, #B8FF57);color:var(--so-lime-ink, #161410);
+  text-decoration:none;border:0;
+  border-radius:var(--so-radius-btn, 8px);
+  font-family:var(--so-font-body, var(--body));
+  font-size:0.8125rem;font-weight:650;letter-spacing:0;
+  text-transform:none;
+  padding:0 14px;min-height:var(--so-tap, 44px);
+  white-space:nowrap;
+  width:auto;
+  font-variant-numeric:tabular-nums;
+  transition:background-color var(--so-dur, 180ms) var(--so-ease), transform var(--so-dur-quick, 150ms) var(--so-ease);
 }
-.sf-hdr__cta:hover{background:var(--acid-hi)}
+.sf-hdr__cta:hover{background:var(--so-lime-hover, #C9FF78)}
+.sf-hdr__cta:active{transform:scale(0.96)}
 
 .sf-burger{
   display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:6px;width:44px;height:44px;background:none;padding:0;
-  border:0;color:var(--text);cursor:pointer;
+  gap:5px;width:var(--so-tap, 44px);height:var(--so-tap, 44px);background:none;padding:0;
+  border:0;color:inherit;cursor:pointer;
+  border-radius:var(--so-radius-sm, 6px);
 }
 .sf-burger span{
-  display:block;width:26px;height:3px;border-radius:100px;background:currentColor;
-  transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease;
+  display:block;width:18px;height:1.5px;border-radius:1px;background:currentColor;
+  transition:transform var(--so-dur-menu, 250ms) var(--so-ease), opacity var(--so-dur, 180ms) ease;
 }
-.sf-burger:hover{color:var(--acid)}
-.sf-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(9px) rotate(45deg)}
+.sf-burger:hover{background:rgba(244,240,232,.06)}
+.sf-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
 .sf-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
-.sf-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
+.sf-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+.sf-hdr__scrim{
+  display:none;
+  position:fixed;inset:0;top:var(--so-hdr, 64px);
+  background:var(--so-chrome-overlay, rgba(10,9,8,.55));
+  z-index:69;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity var(--so-dur-menu, 250ms) var(--so-ease);
+}
+html.so-nav-open .sf-hdr__scrim{
+  display:block;opacity:1;pointer-events:auto;
+}
 
 .sf-hdr__menu{
   display:block;
@@ -173,169 +188,142 @@
   pointer-events:none;
   border-top:1px solid transparent;
   padding:0;
-  list-style:none;margin:0;
-  transition:max-height .38s cubic-bezier(.16,1,.3,1),
-             opacity .3s cubic-bezier(.16,1,.3,1),
-             padding .38s cubic-bezier(.16,1,.3,1),
-             border-color .38s cubic-bezier(.16,1,.3,1),
-             visibility .38s;
+  margin:0;
+  transition:max-height var(--so-dur-menu, 250ms) var(--so-ease),
+             opacity var(--so-dur, 180ms) var(--so-ease),
+             padding var(--so-dur-menu, 250ms) var(--so-ease),
+             border-color var(--so-dur-menu, 250ms) var(--so-ease),
+             visibility var(--so-dur-menu, 250ms);
 }
+.sf-hdr__menu ul{list-style:none;margin:0;padding:0}
 .sf-hdr__menu.is-open{
-  max-height:480px;
+  max-height:min(72vh, 520px);
   opacity:1;
   visibility:visible;
   pointer-events:auto;
-  border-top:1px solid var(--rule);
+  border-top:1px solid var(--so-chrome-line, rgba(244,240,232,.10));
   padding:8px 0 16px;
+  overflow-y:auto;
 }
-.sf-hdr__menu li{
-  opacity:0;
-  transform:translateY(-8px);
-  transition:opacity .28s cubic-bezier(.16,1,.3,1),
-             transform .32s cubic-bezier(.16,1,.3,1);
-}
-.sf-hdr__menu.is-open li{
-  opacity:1;
-  transform:translateY(0);
-}
-.sf-hdr__menu.is-open li:nth-child(1){transition-delay:.04s}
-.sf-hdr__menu.is-open li:nth-child(2){transition-delay:.08s}
-.sf-hdr__menu.is-open li:nth-child(3){transition-delay:.12s}
-.sf-hdr__menu.is-open li:nth-child(4){transition-delay:.16s}
-.sf-hdr__menu.is-open li:nth-child(5){transition-delay:.20s}
-.sf-hdr__menu.is-open li:nth-child(6){transition-delay:.24s}
-
 .sf-hdr__menu a{
-  display:block;padding:14px 4px;min-height:44px;
-  color:var(--text);text-decoration:none;
-  font-family:var(--mono);
-  font-size:15px;text-transform:uppercase;letter-spacing:.1em;
-  border-bottom:1px solid var(--rule);
-  transition:color .2s var(--ease), padding-left .2s var(--ease);
+  display:flex;align-items:center;padding:12px 4px;min-height:var(--so-tap, 44px);
+  color:var(--so-chrome-ink, #F4F0E8);text-decoration:none;
+  font-family:var(--so-font-body, var(--body));
+  font-size:1.0625rem;font-weight:500;
+  text-transform:none;letter-spacing:0;
+  border-bottom:1px solid var(--so-chrome-line, rgba(244,240,232,.10));
 }
-.sf-hdr__menu a:hover{
-  color:var(--acid);
-  padding-left:10px;
-}
-.sf-hdr__menu a[aria-current="page"]{
-  color:var(--acid);
+.sf-hdr__menu a:hover{color:var(--so-chrome-ink, #F4F0E8)}
+.sf-hdr__menu a[aria-current="page"]{color:var(--so-chrome-ink, #F4F0E8)}
+
+html.so-nav-open,
+html.so-nav-open body{
+  overflow:hidden;
 }
 
-@media(max-width:640px){
-  .sf-hdr__cta{display:none}
+@media(max-width:359px){
+  .sf-cart{display:none}
 }
 
-@media(min-width:900px){
-  .sf-nav{display:flex}
+@media(min-width:960px){
+  .sf-nav-wrap{display:block}
   .sf-burger{display:none}
   .sf-hdr__menu{display:none !important}
-  .sf-hdr__logo img{height:28px}
+  .sf-hdr__scrim{display:none !important}
+  .sf-hdr__logo img{height:24px}
+  html.so-nav-open,
+  html.so-nav-open body{overflow:unset}
 }
 @media(prefers-reduced-motion:reduce){
-  .sf-cart:hover svg{animation:none}
-  .sf-burger span{transition:none}
-  .sf-hdr__menu, .sf-hdr__menu li{transition:none !important; transform:none !important}
+  .sf-burger span,
+  .sf-hdr__menu,
+  .sf-hdr__cta,
+  .sf-hdr__scrim{transition:none !important}
+  .sf-hdr__cta:active{transform:none}
 }
 
+
 /* ---------------------------------------------------------------------
-   2 · FOOTER
-   Four columns on desktop, stacked on mobile, acid rule on top. The old
-   `.p-footer` was a single flat run of 12 links with no grouping — this
-   restores the homepage's Shop / Support / Legal structure everywhere.
+   2 · FOOTER  (Stage 1)
+   Quiet charcoal, four groups: Shop / Support / Company / Legal.
+   No acid rule. No loud marketing copy.
    --------------------------------------------------------------------- */
 .sf-ftr{
-  border-top:2px solid var(--acid);
+  border-top:1px solid var(--so-chrome-line, rgba(244,240,232,.10));
   padding:40px 0 28px;
-  background:var(--ink);
-  /* Three pages (contact, reviews, track-order) centre-align their page
-     wrapper, and that inherited straight into the footer — so the same
-     footer read centred there and left-aligned everywhere else. Pin it. */
+  background:var(--so-chrome, #161410);
+  color:var(--so-chrome-ink, #F4F0E8);
   text-align:left;
 }
 
-/* Mobile puts the three link groups SIDE BY SIDE, not stacked.
-   Stacked one per row, the footer ran ~1200px — taller than the phone
-   viewport itself, so it alone was a screen and a half of scrolling. Three
-   short columns plus tighter rows brings it under 500px, and it still reads
-   as three labelled groups rather than one undifferentiated list. */
 .sf-ftr__grid{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:22px 12px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:28px 16px;
   align-items:start;
 }
-/* Brand and socials are full-width bands above and below the columns —
-   at every width, so the footer reads the same on a phone and a desktop. */
 .sf-ftr__brand,.sf-ftr__socials{grid-column:1 / -1}
 @media(min-width:768px){
-  /* Brand takes the wide first column and the three link groups sit beside
-     it; the socials keep their own full-width row underneath. */
-  .sf-ftr__grid{grid-template-columns:2fr 1fr 1fr 1fr;gap:28px 36px}
+  .sf-ftr__grid{grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:28px 28px}
   .sf-ftr__brand{grid-column:1}
 }
-.sf-ftr__brand img{height:24px;width:auto;display:block}
+.sf-ftr__brand img{height:22px;width:auto;display:block}
 .sf-ftr__brand p{
-  color:var(--muted);margin-top:8px;
-  font-size:var(--fs-sm);max-width:34ch;
+  color:var(--so-chrome-muted, #A8A196);margin-top:10px;
+  font-family:var(--so-font-body, var(--body));
+  font-size:var(--so-size-sm, 0.8125rem);
+  line-height:var(--so-lh-body, 1.5);
+  max-width:34ch;
 }
 .sf-ftr h3{
-  font-family:var(--mono);font-weight:400;
-  font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--acid);margin:0 0 8px;
+  font-family:var(--so-font-body, var(--body));font-weight:600;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--so-chrome-faint, #7E786E);margin:0 0 10px;
 }
 .sf-ftr ul{list-style:none;margin:0;padding:0}
 .sf-ftr li{margin:0}
-/* Rows were 40px tall with 8px of padding each — that alone accounted for
-   most of the footer's height. 34px still clears the 24px WCAG 2.2 target
-   minimum with the gap between rows counted in. */
 .sf-ftr ul a{
   display:block;padding:5px 0;min-height:34px;
-  color:var(--text);text-decoration:none;
+  color:var(--so-chrome-ink, #F4F0E8);text-decoration:none;
+  font-family:var(--so-font-body, var(--body));
   font-size:13.5px;line-height:1.55;
-  transition:color .2s var(--ease);
+  transition:color var(--so-dur, 180ms) var(--so-ease);
 }
 @media(min-width:768px){
-  .sf-ftr ul a{font-size:var(--fs-sm)}
+  .sf-ftr ul a{font-size:var(--so-size-sm, 0.8125rem)}
 }
-.sf-ftr ul a:hover{color:var(--acid)}
+.sf-ftr ul a:hover{color:var(--so-chrome-muted, #A8A196)}
 .sf-ftr__socials{
   display:flex;flex-wrap:wrap;gap:2px;margin-top:4px;
 }
-/* Six icons have to sit on one row down to 320px, so they shrink rather
-   than wrap into a ragged second line. */
 .sf-ftr__socials a{
   display:inline-flex;align-items:center;justify-content:center;
   flex:0 0 auto;
   width:clamp(36px,11vw,40px);height:40px;
-  border-radius:var(--sq-pill,100px);
+  border-radius:var(--so-radius-sm, 6px);
 }
-.sf-ftr__socials img{width:19px;height:19px;opacity:.85}
+.sf-ftr__socials img{width:18px;height:18px;opacity:.8}
 .sf-ftr__socials a:hover img{opacity:1}
 .sf-ftr__bottom{
   margin-top:28px;padding-top:16px;
-  border-top:1px solid var(--rule);
+  border-top:1px solid var(--so-chrome-line, rgba(244,240,232,.10));
   display:flex;flex-direction:column;gap:8px;
-  font-family:var(--mono);
-  font-size:10.5px;line-height:1.6;color:var(--muted);
-  letter-spacing:.05em;text-transform:uppercase;
+  font-family:var(--so-font-body, var(--body));
+  font-size:12px;line-height:1.6;color:var(--so-chrome-faint, #7E786E);
+  letter-spacing:0;text-transform:none;
 }
 @media(min-width:768px){
   .sf-ftr__bottom{
     flex-direction:row;justify-content:space-between;gap:24px;
-    font-size:11.5px;
   }
 }
-/* Trademark / affiliation notice — see the note in apply-chrome.mjs.
-   Sentence case and not uppercase, unlike the line above it: this is a legal
-   disclaimer meant to be read if anyone looks for it, and 10.5px of
-   wide-tracked uppercase across three lines is not readable prose. Kept
-   quiet (muted, small, last) because it is a notice, not a message. */
 .sf-ftr__disclaimer{
   margin-top:14px;
   font-size:11px;line-height:1.6;
-  color:var(--muted);
+  color:var(--so-chrome-faint, #7E786E);
   max-width:78ch;
 }
+
 
 /* ---------------------------------------------------------------------
    3 · LONG-FORM PROSE  (policies, guides, about)
@@ -421,20 +409,22 @@
    --------------------------------------------------------------------- */
 .sf-skip{
   position:absolute;left:-9999px;top:0;z-index:200;
-  background:var(--acid);color:var(--on-acid);padding:12px 20px;
-  font-weight:700;text-decoration:none;
+  background:var(--so-lime, #B8FF57);color:var(--so-lime-ink, #161410);padding:12px 20px;
+  font-family:var(--so-font-body, var(--body));
+  font-weight:650;text-decoration:none;
+  border-radius:var(--so-radius-btn, 8px);
 }
-.sf-skip:focus{left:0}
-/* The target needs tabindex="-1" for focus to actually move to it — without
-   it the page scrolls but focus stays on the link, so the next Tab goes
-   straight back into the nav and the skip link has achieved nothing. That
-   in turn draws a focus ring around the entire page body, which is noise. */
+.sf-skip:focus{left:8px;top:8px}
 #sf-main:focus{outline:none}
 .sf-hdr a:focus-visible,.sf-hdr button:focus-visible,
-.sf-ftr a:focus-visible{
-  outline:3px solid var(--acid);
+.sf-ftr a:focus-visible,
+.so-btn:focus-visible,
+.so-buy button:focus-visible,
+.so-buy a:focus-visible,
+.so-sticky a:focus-visible{
+  outline:2px solid var(--so-lime, #B8FF57);
   outline-offset:3px;
-  border-radius:var(--sq-xs,8px);
+  border-radius:var(--so-radius-sm, 6px);
 }
 
 /* =====================================================================
@@ -857,4 +847,246 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   background: #c7ff73;
   transform: translateY(-1px);
 }
+
+/* =====================================================================
+   7 · STAGE 1 BUTTON SYSTEM
+   P1 = primary purchase. P2 = secondary. P3 = text/link.
+   Lime is P1 only. No bounce, no glow, no uppercase shouting.
+   ===================================================================== */
+.so-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:var(--so-control, 48px);
+  padding:0 18px;
+  border:1px solid transparent;
+  border-radius:var(--so-radius-btn, 8px);
+  font-family:var(--so-font-body, var(--body));
+  font-size:0.9375rem;font-weight:650;letter-spacing:0;
+  text-transform:none;text-decoration:none;line-height:1.2;
+  font-variant-numeric:tabular-nums;
+  cursor:pointer;
+  background:transparent;color:inherit;
+  transition:background-color var(--so-dur, 180ms) var(--so-ease),
+             color var(--so-dur, 180ms) var(--so-ease),
+             border-color var(--so-dur, 180ms) var(--so-ease),
+             transform var(--so-dur-quick, 150ms) var(--so-ease),
+             opacity var(--so-dur, 180ms) var(--so-ease);
+}
+.so-btn:active:not(:disabled){transform:scale(0.96)}
+.so-btn:disabled,
+.so-btn[aria-disabled="true"]{opacity:.5;cursor:not-allowed;transform:none}
+.so-btn.is-loading{opacity:.7;pointer-events:none}
+
+.so-btn--p1{
+  background:var(--so-lime, #B8FF57);
+  color:var(--so-lime-ink, #161410);
+  width:100%;
+}
+.sf-hdr__cta.so-btn--p1,
+.so-sticky .so-btn--p1{width:auto}
+.so-btn--p1:hover:not(:disabled){background:var(--so-lime-hover, #C9FF78)}
+
+.so-btn--p2{
+  background:transparent;
+  color:var(--so-cotton-ink, #1B1814);
+  border-color:var(--so-cotton-line-strong, rgba(27,24,20,.22));
+  width:100%;
+}
+.so-btn--p2:hover:not(:disabled){background:rgba(27,24,20,.04)}
+.sf-hdr .so-btn--p2,
+.sf-ftr .so-btn--p2{
+  color:var(--so-chrome-ink, #F4F0E8);
+  border-color:var(--so-chrome-line-strong, rgba(244,240,232,.18));
+}
+
+.so-btn--p3{
+  min-height:var(--so-tap, 44px);
+  padding:0;
+  border:0;border-radius:0;width:auto;
+  background:transparent;
+  color:inherit;
+  font-weight:550;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  text-decoration-thickness:1px;
+}
+.so-btn--p3:hover{opacity:.8}
+.so-btn--p3:active{transform:none}
+
+/* =====================================================================
+   8 · SHARED BUY MODULE
+   Cotton surface. Consumes Stage 0 truth. Does not replace PDP #buy.
+   ===================================================================== */
+.so-buy{
+  background:var(--so-cotton, #EFE6D4);
+  color:var(--so-cotton-ink, #1B1814);
+  border-top:1px solid var(--so-cotton-line, rgba(27,24,20,.12));
+  padding:28px 0 32px;
+}
+.so-buy__panel{
+  max-width:440px;
+  margin:0 auto;
+  padding:22px 20px 20px;
+  background:var(--so-cotton-2, #F7F1E5);
+  border:1px solid var(--so-cotton-line, rgba(27,24,20,.12));
+  border-radius:var(--so-radius-lg, 14px);
+  box-shadow:var(--so-shadow-buy);
+}
+.so-buy__kicker{
+  margin:0 0 4px;
+  font-family:var(--so-font-mono, var(--mono));
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--so-cotton-faint, #8A8378);
+}
+.so-buy__name{
+  margin:0;
+  font-family:var(--so-font-display, var(--so-font-body));
+  font-size:1.5rem;font-weight:650;letter-spacing:var(--so-ls-tight);
+  line-height:1.15;
+}
+.so-buy__cat{
+  margin:6px 0 18px;
+  font-size:var(--so-size-sm, 0.8125rem);
+  color:var(--so-cotton-muted, #5E584E);
+  line-height:1.45;
+}
+
+.so-pay{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  margin:0 0 16px;
+}
+.so-pay__opt{
+  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+  min-height:72px;padding:12px 12px 11px;
+  text-align:left;cursor:pointer;
+  background:transparent;
+  color:inherit;
+  border:1px solid var(--so-cotton-line, rgba(27,24,20,.12));
+  border-radius:var(--so-radius-md, 10px);
+  font-family:var(--so-font-body, var(--body));
+}
+.so-pay__opt[aria-pressed="true"]{
+  border-color:var(--so-cotton-ink, #1B1814);
+  background:#fff;
+}
+.so-pay__label{
+  font-size:11px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--so-cotton-faint, #8A8378);
+}
+.so-pay__opt[aria-pressed="true"] .so-pay__label{color:var(--so-cotton-ink, #1B1814)}
+.so-pay__price{
+  font-family:var(--so-font-mono, var(--mono));
+  font-size:1.25rem;font-weight:400;line-height:1.2;
+  font-variant-numeric:tabular-nums;
+}
+.so-pay__note{
+  font-size:11px;color:var(--so-cotton-muted, #5E584E);
+}
+
+.so-buy__cta{margin-top:2px}
+.so-buy__wa{
+  margin-top:10px;
+  display:flex;justify-content:center;
+}
+.so-buy .so-btn--p3{color:var(--so-cotton-muted, #5E584E);font-size:0.8125rem}
+
+.so-buy__trust{
+  display:flex;flex-wrap:wrap;gap:6px 14px;
+  margin:16px 0 0;
+  padding-top:14px;
+  border-top:1px solid var(--so-cotton-line, rgba(27,24,20,.12));
+  list-style:none;
+}
+.so-buy__trust li{
+  font-size:12px;color:var(--so-cotton-muted, #5E584E);
+  line-height:1.4;
+}
+
+@media(max-width:359px){
+  .so-pay{grid-template-columns:1fr}
+}
+
+/* =====================================================================
+   9 · MOBILE STICKY BUY BAR
+   Shown after #buy (or the hero) leaves view. Hidden on desktop.
+   ===================================================================== */
+.so-sticky{
+  display:none;
+}
+@media(max-width:767px){
+  .so-sticky{
+    position:fixed;left:0;right:0;bottom:0;z-index:80;
+    display:flex;align-items:center;gap:12px;
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+    background:var(--so-chrome, #161410);
+    color:var(--so-chrome-ink, #F4F0E8);
+    border-top:1px solid var(--so-chrome-line, rgba(244,240,232,.10));
+    transform:translateY(110%);
+    pointer-events:none;
+    visibility:hidden;
+    transition:transform var(--so-dur-menu, 250ms) var(--so-ease),
+               visibility var(--so-dur-menu, 250ms);
+  }
+  .so-sticky.is-visible{
+    transform:translateY(0);
+    pointer-events:auto;
+    visibility:visible;
+  }
+  .so-sticky__copy{min-width:0;flex:1}
+  .so-sticky__name{
+    display:block;
+    font-family:var(--so-font-body, var(--body));
+    font-size:12px;font-weight:650;letter-spacing:0;line-height:1.2;
+  }
+  .so-sticky__price{
+    display:block;
+    font-family:var(--so-font-mono, var(--mono));
+    font-size:11px;color:var(--so-chrome-muted, #A8A196);
+    margin-top:3px;
+    font-variant-numeric:tabular-nums;
+  }
+  .so-sticky .so-btn{
+    flex:0 0 auto;width:auto;min-width:96px;
+    min-height:var(--so-tap, 44px);
+    padding:0 16px;font-size:0.8125rem;
+  }
+  html.so-sticky-on body{padding-bottom:72px}
+  html.so-nav-open .so-sticky{visibility:hidden;pointer-events:none}
+
+  /* Align the PDP's existing #mobileBar to the same chrome without
+     rewriting odorstrike.html checkout markup. */
+  .mobile-bar#mobileBar{
+    left:0;right:0;bottom:0;
+    align-items:center;gap:12px;
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+    background:var(--so-chrome, #161410);
+    color:var(--so-chrome-ink, #F4F0E8);
+    border-top:1px solid var(--so-chrome-line, rgba(244,240,232,.10));
+    box-shadow:none;
+  }
+  .mobile-bar#mobileBar .mb-label{
+    color:var(--so-chrome-ink, #F4F0E8);
+    font-family:var(--so-font-body, var(--body));
+    font-size:12px;font-weight:650;letter-spacing:0;text-transform:none;
+  }
+  .mobile-bar#mobileBar .mb-btn{
+    background:var(--so-lime, #B8FF57);
+    color:var(--so-lime-ink, #161410);
+    border-radius:var(--so-radius-btn, 8px);
+    font-family:var(--so-font-body, var(--body));
+    font-size:0.8125rem;font-weight:650;letter-spacing:0;
+    text-transform:none;min-height:44px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .so-sticky,
+  .so-btn{transition:none}
+  .so-btn:active,
+  .sf-hdr__cta:active{transform:none}
+}
+
+/* Links in chrome: visited is not restyled (product nav, not articles). */
+.sf-hdr a[target="_blank"]::after,
+.sf-ftr a[target="_blank"] .visually-hidden{/* icons already labelled */}
+.sf-ftr a[href^="http"]:not([href*="smelloff.in"]){/* external: rel set in markup */}
+
 
