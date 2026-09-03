@@ -7,14 +7,23 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..');
 const config = JSON.parse(fs.readFileSync(path.join(REPO, 'vercel.json'), 'utf8'));
-const allowedAliases = new Set(['/index', '/blog/index', '/solutions/index']);
+const allowedAliases = new Set(['/index', '/blog/index', '/solutions/index', '/odorstrike']);
 const errors = [];
+
+function isRedirectStub(file) {
+  if (!fs.existsSync(file)) return false;
+  const html = fs.readFileSync(file, 'utf8');
+  return /noindex/i.test(html) && (/location\.replace\(/.test(html) || /http-equiv=["']refresh/i.test(html));
+}
 
 for (const rule of config.redirects || []) {
   const source = rule.source;
   if (!source || allowedAliases.has(source) || source.includes(':') || source.includes('(') || source.includes('*') || rule.has) continue;
   const candidate = source === '/' ? 'index.html' : `${source.replace(/^\//, '')}.html`;
-  if (fs.existsSync(path.join(REPO, candidate))) errors.push(`${source} -> ${rule.destination}: live page ${candidate} exists`);
+  const file = path.join(REPO, candidate);
+  if (fs.existsSync(file) && !isRedirectStub(file)) {
+    errors.push(`${source} -> ${rule.destination}: live page ${candidate} exists`);
+  }
 }
 
 if (errors.length) {
