@@ -212,10 +212,11 @@
 <link rel="alternate" type="application/rss+xml" title="Smelloff guides" href="https://smelloff.in/feed.xml">
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=5dcc0595">
-<link rel="stylesheet" href="/assets/css/checkout.css?v=5de537af">
+<link rel="stylesheet" href="/assets/css/checkout.css?v=fc28a660">
 <link rel="stylesheet" href="/assets/css/chrome.css?v=efeda65b">
 <script src="/assets/js/chrome.js?v=fc00af59" defer></script>
-<script src="/assets/js/checkout.js?v=aed31af9" defer></script>
+<script src="/assets/js/qr-creator.min.js?v=bfc60e4e" defer></script>
+<script src="/assets/js/checkout.js?v=6066bd0c" defer></script>
 <script type="module" src="/assets/js/buy-module.js?v=266185f8"></script>
 </head>
 <body>
@@ -466,41 +467,22 @@
 
       <!-- UPI panel (shown when prepaid selected) -->
       <div id="upiPayPanel" class="pay-panel" style="display:block">
-        <span class="upi-panel-title">Select 1-Click UPI App</span>
-        <div class="upi-apps-grid" role="radiogroup" aria-label="Select UPI App">
-          <button type="button" class="upi-app-btn active" data-app="any" onclick="setUpiApp('any')">
-            <img loading="lazy" decoding="async" src="/assets/pay-upi.png" width="18" height="18" alt="">
-            <span>Any App</span>
-          </button>
-          <button type="button" class="upi-app-btn" data-app="gpay" onclick="setUpiApp('gpay')">
-            <img loading="lazy" decoding="async" src="/assets/pay-gpay.png" width="18" height="18" alt="">
-            <span>Google Pay</span>
-          </button>
-          <button type="button" class="upi-app-btn" data-app="phonepe" onclick="setUpiApp('phonepe')">
-            <img loading="lazy" decoding="async" src="/assets/pay-phonepe.png" width="18" height="18" alt="">
-            <span>PhonePe</span>
-          </button>
-          <button type="button" class="upi-app-btn" data-app="paytm" onclick="setUpiApp('paytm')">
-            <img loading="lazy" decoding="async" src="/assets/pay-paytm.png" width="18" height="18" alt="">
-            <span>Paytm</span>
-          </button>
-        </div>
+        <p class="pay-help" style="margin-top:0">
+          Next screen: scan a QR in PhonePe, GPay or Paytm, or pay to this UPI ID. Apps opened from the website are often declined — scan instead.
+        </p>
         <div class="upi-inline-row">
           <span class="upi-inline-lbl">UPI ID</span>
           <span class="upi-inline-val" id="upiInlineId">mr.brainy@ibl</span>
           <button type="button" class="upi-copy" id="upiCopyBtn" onclick="copyUpiId()">Tap to copy</button>
         </div>
         <div class="upi-inline-row">
-          <span class="upi-inline-lbl">Payee</span>
-          <span class="upi-inline-val">Smelloff</span>
+          <span class="upi-inline-lbl">Payee in app</span>
+          <span class="upi-inline-val">Jog Dhand Nikhil</span>
         </div>
         <div class="upi-inline-row">
           <span class="upi-inline-lbl">Amount</span>
           <span class="upi-inline-val acid" id="upiAmountInline">₹229</span>
         </div>
-        <p class="pay-help">
-          Pay via Google Pay, PhonePe, Paytm, or any UPI app. Instant automated verification.
-        </p>
       </div>
 
       <!-- COD panel (shown when cod selected) -->
@@ -514,7 +496,7 @@
 
       <p class="checkout-reassure">Your details are private and never shared. COD = pay nothing now.</p>
       <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
-        <span id="submitText">Open UPI app · ₹229</span>
+        <span id="submitText">Pay via UPI · ₹229</span>
       </button>
     </div>
 
@@ -525,38 +507,30 @@
       <div class="ls-sub" id="loadingSub">Hang tight</div>
     </div>
 
-    <!-- Active UPI Payment Screen -->
+    <!-- Active UPI Payment Screen: QR + UPI ID are the working P2P path.
+         PhonePe (and some other apps) decline website-launched upi:// intents
+         to a personal VPA. Scanning this QR or paying to the ID still works. -->
     <div id="upiPaymentScreen" class="upi-payment-screen" style="display:none">
-      <div class="overlay-tag">Payment · Direct UPI</div>
+      <div class="overlay-tag">Payment · Scan QR or UPI ID</div>
       <h3 id="upiPayTitle">Pay ₹229 via UPI</h3>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Open your UPI app or scan the QR code to complete payment.</p>
+      <p class="upi-pay-lead">Open PhonePe, GPay or Paytm yourself and scan this QR. Paying to the UPI ID also works. Do not wait for the app to open from this page — PhonePe blocks that.</p>
       <div class="order-id" id="upiOrderIdDisplay" role="group" aria-label="Order ID"></div>
 
       <div class="upi-block" style="text-align:left">
-        <div class="upi-app-launch-head">Tap to launch your UPI app directly:</div>
-        <div class="upi-launch-grid" id="upiLaunchGrid">
-          <a class="upi-launch-btn gpay" id="upiGpayBtn" href="#" onclick="launchSpecificUpi('gpay', event)">
-            <img loading="lazy" decoding="async" src="/assets/pay-gpay.png" width="18" height="18" alt="">
-            <span>Google Pay</span>
-          </a>
-          <a class="upi-launch-btn phonepe" id="upiPhonepeBtn" href="#" onclick="launchSpecificUpi('phonepe', event)">
-            <img loading="lazy" decoding="async" src="/assets/pay-phonepe.png" width="18" height="18" alt="">
-            <span>PhonePe</span>
-          </a>
-          <a class="upi-launch-btn paytm" id="upiPaytmBtn" href="#" onclick="launchSpecificUpi('paytm', event)">
-            <img loading="lazy" decoding="async" src="/assets/pay-paytm.png" width="18" height="18" alt="">
-            <span>Paytm</span>
-          </a>
-          <a class="upi-launch-btn generic" id="upiOpenBtn" href="#" onclick="launchSpecificUpi('any', event)">
-            <img loading="lazy" decoding="async" src="/assets/pay-upi.png" width="18" height="18" alt="">
-            <span>Any UPI App</span>
-          </a>
+        <ol class="upi-steps">
+          <li>Open PhonePe, Google Pay, Paytm or BHIM</li>
+          <li>Tap <strong>Scan QR</strong>, or send money to the UPI ID</li>
+          <li>Confirm the amount and pay</li>
+          <li>Return here — we confirm automatically</li>
+        </ol>
+
+        <div class="qr-wrap" id="upiQRWrap">
+          <canvas id="upiQRCanvas" class="upi-qr" width="440" height="440" role="img" aria-label="UPI payment QR code for Smelloff"></canvas>
+          <img id="upiQR" class="upi-qr" alt="UPI payment QR code for Smelloff" width="220" height="220" decoding="async">
+          <p class="upi-qr-caption">Scan with any UPI app · amount is already filled in</p>
         </div>
 
-        <div class="qr-wrap" style="margin-top:14px;text-align:center;">
-          <img id="upiQR" class="upi-qr" alt="UPI payment QR code for Smelloff" width="180" height="180" loading="lazy" decoding="async" style="display:none;margin:0 auto;border-radius:8px;">
-        </div>
-        <div class="upi-row" style="margin-top:12px;">
+        <div class="upi-row">
           <span class="lbl">UPI ID</span>
           <span class="val" id="upiIdShow">mr.brainy@ibl</span>
           <button type="button" class="upi-copy" id="upiSuccessCopyBtn" style="margin-left:auto;" onclick="copyUpiId('upiSuccessCopyBtn')">Copy</button>
@@ -566,9 +540,39 @@
           <span class="val acid" id="upiAmountShow">₹229</span>
         </div>
         <div class="upi-row">
+          <span class="lbl">Payee in app</span>
+          <span class="val" id="upiPayeeShow">Jog Dhand Nikhil</span>
+        </div>
+        <div class="upi-row">
           <span class="lbl">Reference</span>
           <span class="val" id="upiNoteShow">ODORSTRIKE</span>
         </div>
+        <p class="upi-payee-note">Your app will show <strong>Jog Dhand Nikhil</strong> as the payee — that is Smelloff.</p>
+
+        <button type="button" class="submit-btn upi-copy-primary" id="upiPrimaryCopyBtn" onclick="copyUpiId('upiPrimaryCopyBtn')">Copy UPI ID</button>
+
+        <details class="upi-apps-optional">
+          <summary>Try opening an app instead</summary>
+          <p class="upi-app-hint" id="upiAppHint">PhonePe usually declines payments opened from a website. If that happens, scan the QR above.</p>
+          <div class="upi-launch-grid" id="upiLaunchGrid">
+            <a class="upi-launch-btn gpay" id="upiGpayBtn" href="#" onclick="launchSpecificUpi('gpay', event)">
+              <img loading="lazy" decoding="async" src="/assets/pay-gpay.png" width="18" height="18" alt="">
+              <span>Google Pay</span>
+            </a>
+            <a class="upi-launch-btn phonepe" id="upiPhonepeBtn" href="#" onclick="launchSpecificUpi('phonepe', event)">
+              <img loading="lazy" decoding="async" src="/assets/pay-phonepe.png" width="18" height="18" alt="">
+              <span>PhonePe</span>
+            </a>
+            <a class="upi-launch-btn paytm" id="upiPaytmBtn" href="#" onclick="launchSpecificUpi('paytm', event)">
+              <img loading="lazy" decoding="async" src="/assets/pay-paytm.png" width="18" height="18" alt="">
+              <span>Paytm</span>
+            </a>
+            <a class="upi-launch-btn generic" id="upiOpenBtn" href="#" onclick="launchSpecificUpi('any', event)">
+              <img loading="lazy" decoding="async" src="/assets/pay-upi.png" width="18" height="18" alt="">
+              <span>Any UPI App</span>
+            </a>
+          </div>
+        </details>
 
         <!-- Automated Status Polling Card -->
         <div class="upi-verify-status-box" id="upiVerifyStatusBox">

@@ -338,6 +338,61 @@
     margin-bottom: 10px;
     font-weight: 600;
   }
+  .upi-pay-lead{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+    margin-bottom:12px;
+  }
+  .upi-steps{
+    margin:0 0 14px;
+    padding:0 0 0 18px;
+    color:var(--text);
+    font-size:13px;
+    line-height:1.55;
+  }
+  .upi-steps li{margin:0 0 6px}
+  .upi-qr-caption{
+    margin:8px 0 0;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.04em;
+    color:var(--muted);
+  }
+  .upi-payee-note{
+    margin:10px 0 0;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.45;
+  }
+  .upi-copy-primary{margin-top:14px}
+  .upi-apps-optional{
+    margin-top:14px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:6px;
+    padding:8px 12px;
+    background:rgba(255,255,255,.02);
+  }
+  .upi-apps-optional summary{
+    cursor:pointer;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    padding:4px 0;
+  }
+  .upi-apps-optional[open] summary{color:var(--acid);margin-bottom:8px}
+  .upi-app-hint{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.45;
+    margin:0 0 10px;
+  }
+  #upiIdShow, #upiInlineId{
+    user-select:all;
+    -webkit-user-select:all;
+  }
   .upi-launch-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -482,8 +537,10 @@
     background:rgba(255,255,255,.02);
     border-radius:6px;
   }
-  .qr-wrap{text-align:center;margin-bottom:12px}
-  .upi-qr{width:180px;height:180px;background:#fff;padding:8px;border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+  .qr-wrap{text-align:center;margin:4px 0 12px}
+  .upi-qr{width:220px;height:220px;background:#fff;padding:8px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.4);display:block;margin:0 auto;box-sizing:border-box}
+  #upiQR{display:none}
+  #upiQRCanvas{display:block}
   .upi-row{
     display:flex;justify-content:space-between;align-items:baseline;
     padding:8px 0;

@@ -35,7 +35,10 @@ function genPaymentAttemptId(orderCode) {
   return `ATT-${orderCode}-${rand}`;
 }
 
-// Builds a compatibility-first UPI payment URI.
+// Builds a compatibility-first UPI payment URI for QR encoding.
+// Do not auto-launch this URI from the browser: PhonePe (and some other
+// apps) decline website-opened intents to a personal VPA. Scanning the
+// QR or paying to the VPA is the working P2P path.
 // Keep the URI small, but include a unique transaction reference so UPI apps
 // can correlate the payment cleanly. The optional merchant code is included
 // only when supplied by the configured merchant UPI provider.
