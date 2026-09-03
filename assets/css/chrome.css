@@ -559,9 +559,7 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   align-items: center;
   justify-content: center;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.88);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s ease, visibility 0.25s ease;
@@ -577,8 +575,8 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   max-height: 90vh;
   overflow-y: auto;
   background: #111111;
-  border: 1px solid rgba(184, 255, 87, 0.3);
-  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   padding: 32px 24px;
   color: #ffffff;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);

@@ -2,14 +2,12 @@
    Safe-by-design: only same-origin GET requests are handled.
    Cross-origin (Supabase, analytics, Meta, Google Apps Script) and /api/
    are never intercepted, so the checkout/payment flow is untouched. */
-const VERSION = 'smelloff-v29-21st';
+const VERSION = 'smelloff-v30-raw';
 const STATIC_CACHE = 'static-' + VERSION;
 const PAGE_CACHE = 'pages-' + VERSION;
-const HOME_SKIN = '/assets/css/21st-home.css?v=2';
 
 const PRECACHE = [
   '/',
-  HOME_SKIN,
   '/assets/js/track.js?v=2',
   '/assets/fonts/fraunces-normal-latin-400.woff2',
   '/assets/fonts/inter-tight-normal-latin-400.woff2',
@@ -36,24 +34,6 @@ self.addEventListener('activate', (event) => {
 
 function isStaticAsset(url) {
   return /\.(?:css|js|mjs|woff2?|ttf|otf|png|jpg|jpeg|webp|svg|gif|avif|ico)$/i.test(url.pathname);
-}
-
-async function skinHomepageResponse(response) {
-  if (!response || !response.ok) return response;
-  const type = response.headers.get('content-type') || '';
-  if (!type.includes('text/html')) return response;
-  const source = await response.text();
-  if (source.includes('/assets/css/21st-home.css')) return new Response(source, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: response.headers
-  });
-  const tag = `<link rel="stylesheet" href="${HOME_SKIN}">`;
-  const styled = source.includes('</head>') ? source.replace('</head>', `${tag}</head>`) : source;
-  const headers = new Headers(response.headers);
-  headers.delete('content-length');
-  headers.set('content-type', 'text/html; charset=utf-8');
-  return new Response(styled, { status: response.status, statusText: response.statusText, headers });
 }
 
 self.addEventListener('fetch', (event) => {
@@ -83,12 +63,11 @@ self.addEventListener('fetch', (event) => {
     event.respondWith((async () => {
       try {
         const network = await fetch(req);
-        const response = url.pathname === '/' ? await skinHomepageResponse(network) : network;
-        if (response && response.ok) {
-          const copy = response.clone();
+        if (network && network.ok) {
+          const copy = network.clone();
           caches.open(PAGE_CACHE).then((c) => c.put(req, copy));
         }
-        return response;
+        return network;
       } catch (err) {
         const cached = await caches.match(req);
         return cached || caches.match('/');

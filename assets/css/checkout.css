@@ -574,7 +574,6 @@
     height:9px;
     background:var(--acid);
     border-radius:50%;
-    box-shadow:0 0 10px rgba(184,255,87,.8);
     animation:upiPulse 1.4s infinite;
   }
   @keyframes upiPulse{
@@ -647,7 +646,6 @@
   .glow-dot{
     width:16px;height:16px;border-radius:50%;
     background:var(--acid);
-    box-shadow:0 0 24px rgba(184,255,87,.8);
     animation:bounceDot .9s ease-in-out infinite;
   }
   @keyframes bounceDot{
