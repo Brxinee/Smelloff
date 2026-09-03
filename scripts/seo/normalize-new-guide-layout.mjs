@@ -43,9 +43,7 @@ function normalizeOne(slug) {
   let html = fs.readFileSync(file, 'utf8');
   const before = html;
 
-  html = html.replace(/(?:\s*<!-- \/?SF-CHROME:HEADER -->\s*|\s*<a class="sf-skip"[^>]*>Skip to content<\/a>\s*)*<header class="sf-hdr">[\s\S]*?<\/header>(?:\s*<!-- \/?SF-CHROME:HEADER -->\s*)*/gi, HEADER);
   html = normalizeFaq(html);
-  html = html.replace(/(?:\s*<!-- \/?SF-CHROME:FOOTER -->\s*|\s*<script src="\/assets\/js\/blog-share\.js[^"]*" defer><\/script>\s*)*<footer class="sf-ftr">[\s\S]*?<\/footer>(?:\s*<!-- \/?SF-CHROME:FOOTER -->\s*|\s*<script src="\/assets\/js\/blog-share\.js[^"]*" defer><\/script>\s*)*/gi, FOOTER.replace('__SLUG__', slug));
 
   html = html.replace(/(?:<div id="progress-bar"><\/div>\s*)+/g, '<div id="progress-bar"></div>\n');
   if (!html.includes('<div id="progress-bar"></div>')) {

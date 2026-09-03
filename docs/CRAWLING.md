@@ -105,9 +105,18 @@ Things worth doing in the UI, which no script can do for you:
 
 - **Submit `https://smelloff.in/sitemap.xml` once** under Sitemaps. It only has
   to be done once; after that Google re-reads it on its own schedule.
-- **Use the non-www property.** If the verified property is `www.smelloff.in`,
-  most of the site will look like redirects, because www 301s to the apex. A
-  Domain property covers both and is the safer choice.
+- **Use the Domain property `smelloff.in`.** A URL-prefix property on
+  `www.smelloff.in` will look like a pile of redirects, because www 301s to the
+  apex. Domain property covers both.
+- **Inspect and request indexing** on the canonical money URLs after a content
+  pass: `https://smelloff.in/`, `/blog/remove-cooking-smell-from-clothes`,
+  `/blog/hpbcd-cyclodextrin-fabric-odor`, `/blog/gym-clothes-smell-after-washing`,
+  `/blog/deodorant-vs-fabric-mist`, `/blog/best-fabric-odor-spray-india-2026-body-odor`.
+- **Ignore leftover Performance rows** on retired slugs
+  (`/blog/how-to-remove-cooking-smell-from-clothes`,
+  `/blog/beta-cyclodextrin-odor-removal-science`, `/blog/dri-fit-shirts-smell`,
+  `/odorstrike`, www host). Those are 301s. Clicks still land. Google reports the
+  requested URL for months after a move. Do not restore the old files.
 - **Ignore "Discovered – currently not indexed" on a young site.** It means
   Google knows the URL and hasn't got to it. More sitemap pings do not help;
   internal links from already-indexed pages do.
@@ -115,6 +124,12 @@ Things worth doing in the UI, which no script can do for you:
   worth acting on — it means two of our pages compete. The `/solutions/*`
   landing pages and their matching blog posts are the pair most likely to trip
   it (monsoon and post-gym both exist twice).
+
+GSC 2026-09-03 (last 6 months): 442 clicks, 12.3k impressions. ~78% of query
+clicks are branded (`smelloff`). Non-brand impressions cluster on cooking-smell,
+cyclodextrin, dri-fit/gym, "can deodorant be used on clothes", and long
+AI-overview questions about cheap fabric refreshers in India. Product snippets
+show at an average position ~25 — do not add fake `aggregateRating`.
 
 ---
 
