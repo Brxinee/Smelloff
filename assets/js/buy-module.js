@@ -75,6 +75,11 @@ function hydrate(root) {
     cta.addEventListener('click', function (e) {
       if (typeof window.buyNow === 'function') {
         e.preventDefault();
+        // Keep the payment method chosen in the homepage BuyModule when
+        // checkout opens. Without this, COD could display ₹289 here but
+        // silently open the checkout's prepaid state.
+        var selectedPay = root.getAttribute('data-pay') === 'cod' ? 'cod' : 'prepaid';
+        if (typeof window.selectPay === 'function') window.selectPay(selectedPay);
         window.buyNow();
       }
     });
