@@ -29,6 +29,7 @@ const vercel = JSON.parse(fs.readFileSync(path.join(REPO, 'vercel.json'), 'utf8'
 const redirects = new Map();
 for (const rule of vercel.redirects || []) {
   if (!rule.source || !rule.destination) continue;
+  if (rule.has) continue;
   // Pattern rules such as /r/:code must stay dynamic and are not safe to
   // classify as exact redirects here.
   const isPattern = rule.source.includes(':') || rule.source.includes('*') ||
@@ -53,17 +54,34 @@ function decodePathPart(value) {
   try { return decodeURIComponent(value); } catch { return value; }
 }
 
-function exactRedirectTarget(pathname) {
+function followRedirect(pathname) {
   let current = pathname;
+  let destSearch = '';
+  let destHash = '';
   const seen = new Set();
   for (let i = 0; i < 10; i++) {
-    if (seen.has(current)) return current;
+    if (seen.has(current)) break;
     seen.add(current);
     const destination = redirects.get(current);
-    if (!destination || !destination.startsWith('/')) return current;
-    current = destination;
+    if (!destination || !destination.startsWith('/')) break;
+    const destUrl = new URL(destination, 'https://smelloff.in');
+    current = destUrl.pathname || '/';
+    if (destUrl.search) destSearch = destUrl.search;
+    if (destUrl.hash) destHash = destUrl.hash;
   }
-  return current;
+  return { pathname: current, search: destSearch, hash: destHash };
+}
+
+function mergeSearch(baseSearch, extraSearch) {
+  const out = new URL('https://smelloff.in/');
+  for (const part of [baseSearch, extraSearch]) {
+    if (!part) continue;
+    const src = new URL('https://smelloff.in/' + (part.startsWith('?') ? part : `?${part}`));
+    src.searchParams.forEach((value, key) => {
+      if (!out.searchParams.has(key)) out.searchParams.set(key, value);
+    });
+  }
+  return out.search;
 }
 
 function normalizeHref(rawHref) {
@@ -103,7 +121,10 @@ function normalizeHref(rawHref) {
   }
 
   // Follow explicit legacy redirects to the final internal target.
-  pathname = exactRedirectTarget(pathname);
+  const followed = followRedirect(pathname);
+  pathname = followed.pathname;
+  const search = mergeSearch(followed.search, url.search);
+  const hash = followed.hash || url.hash;
 
   // Handle the policy alias redirect declared with a parameterized Vercel rule.
   const policy = pathname.match(/^\/policies\/(privacy|terms|returns|refund|shipping|cancellation|payment-failed)$/);
@@ -117,7 +138,7 @@ function normalizeHref(rawHref) {
 
   // Use root-relative canonical links. This removes http://, www and apex
   // host variants from internal discovery without changing query/hash state.
-  return pathname + url.search + url.hash;
+  return pathname + search + hash;
 }
 
 const anchorHrefRe = /(<a\b[^>]*?\bhref\s*=\s*["'])([^"']+)(["'][^>]*>)/gi;

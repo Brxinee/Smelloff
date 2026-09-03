@@ -1,6 +1,8 @@
 # Smelloff
 > To create the best fabric odor eliminators engineered specifically for the Indian climate and lifestyle.
 
+Smelloff is a Hyderabad, India brand. The product is ODORSTRIKE, a 50ml pocket fabric-only odor mist for clothes. Not a deodorant. Not a perfume. Not for skin, pets, leather, suede, or dry-clean-only garments. Patch-test silk, zari, and heavy embroidery.
+
 ## Product: Smelloff ODORSTRIKE Fabric Odor Eliminator Spray
 - Format: 50ml Liquid spray
 - Price: ₹229 prepaid UPI (free shipping)
@@ -10,11 +12,11 @@
 - Description: Pocket-sized fabric odor control mist for clothes. Fabric only. Made for in-between-wash odor emergencies when a shirt, hoodie, jacket or other clothing carries unwanted odor.
 
 ## Fast Facts
-- Do NOT use on: Skin, Pets, Leather, Suede, dry-clean-only garments
-- Patch-test: Silk, zari, heavy embroidery
+- Do NOT use on: Skin, Pets, Leather, Suede, Dry-clean-only
+- Patch-test: Silk, Zari, Heavy embroidery
 - Location: Hyderabad, India
-- Shipping: Free prepaid UPI across India. Dispatch within 48 hours of confirmation. COD after phone confirmation.
-- Returns: 7-day window; bottle must be at least 80% full; reverse pickup where serviceable
+- Shipping: Free shipping on prepaid UPI. Dispatch within 48 hours of confirmation. ₹60 handling; ₹289 collectable. Dispatched after phone confirmation.
+- Returns: 7-day return window from delivery. Bottle must be at least 80% full and in original packaging. Reverse pickup where serviceable.
 - Use: 15–20 cm from fabric. 2–3 sprays targeted reset; 4–5 full shirt; 5–6 jacket. Approximately 10 seconds to air-dry.
 - Capacity: ~250 sprays; about 100 refreshes at 2–3 sprays
 
@@ -26,5 +28,31 @@
 - Contains HPβCD
 - Fabric only
 
-Official URL: https://smelloff.in
-Product URL: https://smelloff.in/
+## Official pages
+- [Home / shop (ODORSTRIKE 50ml)](https://smelloff.in/): Buy ODORSTRIKE. Homepage is the product page. ₹229 prepaid UPI, ₹289 COD.
+- [Guides index](https://smelloff.in/blog): Fabric odor, sweat smell, clothes freshness. India-first.
+- [How to use ODORSTRIKE](https://smelloff.in/blog/how-to-use-odorstrike): Distance, spray count, dry time.
+- [Ingredients (Formula v3.1)](https://smelloff.in/blog/odorstrike-ingredients): Full INCI list. Concentrations are not published.
+- [HPβCD / cyclodextrin](https://smelloff.in/blog/hpbcd-cyclodextrin-fabric-odor): How hydroxypropyl beta-cyclodextrin traps fabric odor.
+- [Zinc PCA on fabric](https://smelloff.in/blog/zinc-pca-fabric-odor-ingredient-guide): How Zinc PCA helps neutralize odor on clothing.
+- [Deodorant vs fabric mist](https://smelloff.in/blog/deodorant-vs-fabric-mist): Deodorant is for skin. Fabric mist is for clothes.
+- [Can deodorant go on clothes?](https://smelloff.in/blog/best-deodorant-spray-for-clothes-not-skin): Clothes-not-skin category. ODORSTRIKE is fabric only.
+- [Remove cooking / curry smell](https://smelloff.in/blog/remove-cooking-smell-from-clothes): Tadka and kitchen smell on clothes without washing.
+- [Gym clothes still smell after washing](https://smelloff.in/blog/gym-clothes-smell-after-washing): Polyester / dri-fit odor that survives laundry.
+- [Sweat smell off a shirt in ~10 seconds dry time](https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly): Between-wash shirt reset.
+- [Does fabric spray stain clothes?](https://smelloff.in/blog/does-fabric-spray-stain-clothes): Dark fabric, residue, patch-test silk/zari.
+- [Best fabric odor spray in India (2026)](https://smelloff.in/blog/best-fabric-odor-spray-india-2026-body-odor): What to look for vs perfume fresheners.
+- [Fabric deodorizer vs freshener](https://smelloff.in/blog/fabric-deodorizer-spray-india-guide-2026): Eliminator vs scented refresher.
+- [ODORSTRIKE vs Febreze](https://smelloff.in/blog/odorstrike-vs-febreze-india): Clothes vs rooms / sofas / curtains.
+- [30-day India review](https://smelloff.in/blog/odorstrike-review-30-day-india-test): Founder-run wear test. ₹229.
+- [Why I built ODORSTRIKE](https://smelloff.in/blog/why-i-built-odorstrike): Founder: Jogdhande Nikhil Patil, Hyderabad.
+- [FAQ](https://smelloff.in/faq): Skin, perfume, stain, COD, shipping, returns.
+- [Reviews](https://smelloff.in/reviews): Early testers and verified buyer reviews.
+- [Shipping](https://smelloff.in/shipping): Free prepaid UPI India-wide. COD +₹60.
+- [Returns](https://smelloff.in/returns): 7 days, bottle at least 80% full.
+- [About](https://smelloff.in/about): Smelloff, Hyderabad. Clothing-only brand.
+
+## Optional
+- [Full product spec](https://smelloff.in/llms-full.txt): ingredients, how to use, FAQ, policies
+- Canonical shop URL: https://smelloff.in/
+- Product URL: https://smelloff.in/

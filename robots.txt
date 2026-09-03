@@ -114,7 +114,24 @@ Disallow: /outreach/
 # Meta AI (Llama / Meta AI assistant + link previews)
 User-agent: Meta-ExternalAgent
 User-agent: meta-externalagent
+User-agent: meta-externalfetcher
 User-agent: FacebookBot
+Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /outreach/
+
+# xAI / Grok, DeepSeek, Brave, Kagi, Phind, TikTok, Vertex
+User-agent: Grok
+User-agent: xAI
+User-agent: xAI-Bot
+User-agent: DeepseekBot
+User-agent: DeepSeekBot
+User-agent: Bravebot
+User-agent: KagiBot
+User-agent: PhindBot
+User-agent: TikTokSpider
+User-agent: Google-CloudVertexBot
 Allow: /
 Disallow: /api/
 Disallow: /admin
@@ -143,5 +160,6 @@ Disallow: /outreach/
 # AI/LLM context files (curated brand + product reference for answer engines)
 # Curated:        https://smelloff.in/llms.txt
 # Full reference: https://smelloff.in/llms-full.txt
+# Well-known:     https://smelloff.in/.well-known/llms.txt
 
 Sitemap: https://smelloff.in/sitemap.xml

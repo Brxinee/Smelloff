@@ -72,6 +72,17 @@ const PRIORITY_OVERRIDES = {
   '/blog/why-i-built-odorstrike': '0.7',
 };
 
+function decodeEntities(s) {
+  const ent = (name) => '&' + name + ';';
+  return String(s)
+    .replaceAll(ent('amp'), '&')
+    .replaceAll(ent('quot'), '"')
+    .replaceAll('&#39;', "'")
+    .replaceAll(ent('apos'), "'")
+    .replaceAll(ent('lt'), '<')
+    .replaceAll(ent('gt'), '>');
+}
+
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
@@ -148,8 +159,8 @@ function lastmodFor(html, urlPath, previous) {
 function imageFor(html, shared) {
   const loc = meta(html, /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)/);
   if (!loc || !loc.startsWith('http') || shared.has(loc)) return null;
-  const title = meta(html, /<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)/);
-  const alt = meta(html, /<meta[^>]+property=["']og:image:alt["'][^>]+content=["']([^"']+)/);
+  const title = decodeEntities(meta(html, /<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)/));
+  const alt = decodeEntities(meta(html, /<meta[^>]+property=["']og:image:alt["'][^>]+content=["']([^"']+)/));
   return { loc, title, caption: alt };
 }
 

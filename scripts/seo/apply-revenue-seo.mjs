@@ -24,10 +24,10 @@ const NEW_GUIDES = [
 
 const META = {
   '/index.html': {
-    title: 'Fabric Odor Remover for Clothes | Smelloff India',
-    description: 'Smelloff makes ODORSTRIKE, a pocket-sized fabric odor neutralizer for clothes. Remove sweat and clothing odor without perfume or body deodorant on your shirt.',
-    ogTitle: 'Fabric Odor Remover for Clothes | Smelloff India',
-    ogDescription: 'ODORSTRIKE is a pocket-sized fabric odor neutralizer made for clothing. Not perfume. Not body deodorant. Made in India.',
+    title: 'ODORSTRIKE Fabric Odor Spray for Clothes | Smelloff',
+    description: 'Smelloff makes ODORSTRIKE, a pocket-sized fabric odor spray for clothes. ₹229 prepaid UPI in India. Not perfume. Not deodorant. Fabric only.',
+    ogTitle: 'ODORSTRIKE Fabric Odor Spray for Clothes | Smelloff',
+    ogDescription: 'ODORSTRIKE is a pocket-sized fabric odor spray for clothing. Not perfume. Not body deodorant. Made in Hyderabad, India. ₹229.',
   },
   '/odorstrike.html': {
     title: 'Fabric Odor Spray for Clothes India ₹229 | ODORSTRIKE',
@@ -44,11 +44,11 @@ const META = {
 };
 
 const WINNERS = {
-  'remove-cooking-smell-from-clothes': ['How to Remove Curry & Cooking Smell From Clothes', 'How to remove curry, tadka and cooking smell from clothes without simply covering it with perfume.'],
+  'remove-cooking-smell-from-clothes': ['How to Remove Curry & Cooking Smell From Clothes', 'How to get curry, tadka and cooking smell out of clothes without washing — perfume only covers it.'],
   'best-fabric-odor-spray-india-2026-body-odor': ['Best Fabric Odor Spray in India: 2026 Guide', 'Compare fabric odor sprays for clothes in India and know what actually matters.'],
   'beta-cyclodextrin-odor-removal-science': ['Beta-Cyclodextrin for Odor Removal: How It Works', 'Learn how cyclodextrin-based odor control is used in fabric care.'],
   'dri-fit-shirts-smell': ['Why Dri-Fit Shirts Smell After Washing (And What Helps)', 'Why synthetic workout shirts can smell again after washing and what to change in washing, drying and between-wear care.'],
-  'deodorant-vs-fabric-mist': ['Deodorant vs Fabric Mist: Which Fixes Shirt Odor?', 'Deodorant is for skin; fabric odor control is for clothing. Learn which one solves the shirt problem and when.'],
+  'deodorant-vs-fabric-mist': ['Deodorant vs Fabric Mist: Which Fixes Shirt Odor?', 'Can deodorant be used on clothes? No — deodorant is for skin. A fabric mist is for the shirt. Here is the difference.'],
 };
 
 function esc(value) {

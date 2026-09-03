@@ -5,7 +5,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://smelloff.in/</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -251,7 +251,7 @@
     <priority>0.8</priority>
     <image:image>
       <image:loc>https://smelloff.in/blog/assets/remove-cooking-smell-from-clothes.jpg?v=4</image:loc>
-      <image:title>How to Remove Curry &amp;amp; Cooking Smell From Clothes</image:title>
+      <image:title>How to Remove Curry &amp; Cooking Smell From Clothes</image:title>
       <image:caption>A woman in an apron cooks at a hob, adding vegetables to a hot pan on a wooden kitchen counter</image:caption>
     </image:image>
   </url>
