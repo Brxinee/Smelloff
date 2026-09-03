@@ -372,6 +372,7 @@ function ensureAssets(html) {
   const checkoutCssTag = `<link rel="stylesheet" href="/assets/css/checkout.css?v=${hashOf('assets/css/checkout.css')}">`;
   const jsTag = `<script src="/assets/js/chrome.js?v=${hashOf('assets/js/chrome.js')}" defer></script>`;
   const checkoutJsTag = `<script src="/assets/js/checkout.js?v=${hashOf('assets/js/checkout.js')}" defer></script>`;
+  const qrJsTag = `<script src="/assets/js/qr-creator.min.js?v=${hashOf('assets/js/qr-creator.min.js')}" defer></script>`;
   const buyTag = `<script type="module" src="/assets/js/buy-module.js?v=${hashOf('assets/js/buy-module.js')}"></script>`;
   const tokensTag = `<link rel="stylesheet" href="/assets/css/tokens.css?v=${hashOf('assets/css/tokens.css')}">`;
   const fontsTag = `<link rel="stylesheet" href="/assets/fonts.css?v=${hashOf('assets/fonts.css')}">`;
@@ -389,6 +390,10 @@ function ensureAssets(html) {
   );
   html = html.replace(
     /[ \t]*<script[^>]+src="\/assets\/js\/checkout\.js[^"]*"[^>]*><\/script>\n?/g,
+    ''
+  );
+  html = html.replace(
+    /[ \t]*<script[^>]+src="\/assets\/js\/qr-creator\.min\.js[^"]*"[^>]*><\/script>\n?/g,
     ''
   );
   html = html.replace(
@@ -426,7 +431,7 @@ function ensureAssets(html) {
   return (
     next +
     `<!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->\n` +
-    `${softTag}\n${checkoutCssTag}\n${chromeTag}\n${jsTag}\n${checkoutJsTag}\n${buyTag}\n` +
+    `${softTag}\n${checkoutCssTag}\n${chromeTag}\n${jsTag}\n${qrJsTag}\n${checkoutJsTag}\n${buyTag}\n` +
     html.slice(headEnd)
   );
 }

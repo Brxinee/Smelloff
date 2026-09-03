@@ -357,7 +357,7 @@
     set('checkoutTotal', '₹' + t.total);
     // The UPI panel only ever shows the prepaid figure — no COD fee applies there.
     set('upiAmountInline', '₹' + (t.subtotal + t.shipping));
-    set('submitText', (isCod ? 'Place COD order · ₹' : 'Open UPI app · ₹') + t.total);
+    set('submitText', (isCod ? 'Place COD order · ₹' : 'Pay via UPI · ₹') + t.total);
     // Only rewrite the COD panel while COD is actually selected.
     if (isCod) {
       set('codPayDesc', '₹0 advance · pay ₹' + t.total + ' on delivery (includes the ₹' + COD_FEE + ' COD handling charge)');
@@ -380,6 +380,8 @@
     renderCheckoutPrices();
     document.getElementById('checkoutForm').style.display = 'block';
     document.getElementById('successScreen').style.display = 'none';
+    var upiPay = document.getElementById('upiPaymentScreen');
+    if (upiPay) upiPay.style.display = 'none';
     var lsEl = document.getElementById('loadingScreen');
     if (lsEl) { lsEl.classList.remove('active'); lsEl.style.display = 'none'; }
     document.getElementById('checkoutOverlay').classList.add('active');
@@ -406,6 +408,9 @@
     syncModalState();
     var lsEl = document.getElementById('loadingScreen');
     if (lsEl) { lsEl.classList.remove('active'); lsEl.style.display = 'none'; }
+    stopPaymentPolling();
+    var upiPayClose = document.getElementById('upiPaymentScreen');
+    if (upiPayClose) upiPayClose.style.display = 'none';
     const upiBlock = document.getElementById('upiBlock');
     if (upiBlock) upiBlock.style.display = 'none';
     // Reset the "Copied ✓" button state so a re-opened checkout starts clean
@@ -861,7 +866,7 @@
     const total = totals.subtotal + totals.shipping;
 
     try {
-      showLoadingScreen(isCod ? 'Placing your order…' : 'Securing UPI session…', isCod ? 'Confirming with our team' : 'Generating secure payment link');
+      showLoadingScreen(isCod ? 'Placing your order…' : 'Preparing UPI payment…', isCod ? 'Confirming with our team' : 'Generating your QR and UPI ID');
 
       const createRes = await fetch('/api/create-order', {
         method: 'POST',
@@ -896,22 +901,20 @@
         return;
       }
 
-      // Direct UPI Flow (Prepaid)
+      // Direct UPI Flow (Prepaid) — QR + UPI ID. Never auto-launch upi://
+      // from the browser: PhonePe (and some other apps) decline website-opened
+      // intents to a personal VPA. Scanning the QR is treated as P2P and works.
       setTimeout(function() {
         _submittingOrder = false;
         btn.disabled = false;
-        const upiUri = orderData.upiUri || buildUpiPaymentUri(orderData.total || total);
+        const upiUri = orderData.upiUri || buildUpiPaymentUri(orderData.total || total, orderId);
         showUpiPaymentScreen(orderId, orderData.total || total, upiUri, orderToken);
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        if (isMobile && upiUri) {
-          setTimeout(function(){ window.location.href = upiUri; }, 300);
-        }
-      }, 1200);
+      }, 200);
 
     } catch (err) {
       _submittingOrder = false;
       btn.disabled = false;
-      btnText.textContent = (payMethod === 'cod' ? 'PLACE COD ORDER · ₹' : 'OPEN UPI APP · ₹') + orderTotals().total;
+      btnText.textContent = (payMethod === 'cod' ? 'PLACE COD ORDER · ₹' : 'PAY VIA UPI · ₹') + orderTotals().total;
       hideLoadingScreen(true);
       showError(err.message || 'Payment initiation failed. Please try again or choose Cash on Delivery.');
     }
@@ -926,11 +929,12 @@
     });
   };
 
-  function buildUpiPaymentUri(amount) {
+  function buildUpiPaymentUri(amount, orderCode) {
     const pa = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || 'mr.brainy@ibl';
     const pn = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_NAME) || 'Smelloff';
     const am = String(amount || 229);
     const params = new URLSearchParams({ pa, pn, am, cu: 'INR' });
+    if (orderCode) params.set('tn', 'ODORSTRIKE ' + String(orderCode));
     return `upi://pay?${params.toString()}`;
   }
 
@@ -938,7 +942,24 @@
 
   window.launchSpecificUpi = function(app, event) {
     if (event) event.preventDefault();
-    const uri = (_currentUpiOrder && _currentUpiOrder.upiUri) || buildUpiPaymentUri(orderTotals().total);
+    var hint = document.getElementById('upiAppHint');
+    // PhonePe declines website-launched intents to this personal VPA.
+    // Keep the customer on the QR / UPI ID path instead of bouncing them
+    // into a "declined for security reasons" screen.
+    if (app === 'phonepe') {
+      if (hint) {
+        hint.textContent = 'PhonePe blocks payments opened from a website. Open PhonePe yourself and scan the QR, or pay to mr.brainy@ibl.';
+        hint.style.display = 'block';
+      }
+      var qr = document.getElementById('upiQRWrap') || document.getElementById('upiQRCanvas');
+      if (qr && qr.scrollIntoView) qr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    const uri = (_currentUpiOrder && _currentUpiOrder.upiUri) || buildUpiPaymentUri(orderTotals().total, _currentUpiOrder && _currentUpiOrder.orderId);
+    if (hint) {
+      hint.textContent = 'If the app says declined, come back and scan the QR. That path still works.';
+      hint.style.display = 'block';
+    }
     window.location.href = uri;
   };
 
@@ -984,26 +1005,19 @@
     const noteShow = document.getElementById('upiNoteShow');
     if (noteShow) noteShow.textContent = orderId;
 
-    const activeUpiUri = upiUri || buildUpiPaymentUri(total);
+    const activeUpiUri = upiUri || buildUpiPaymentUri(total, orderId);
 
-    // Update 1-click deep links in screen (all point to canonical upiUri)
+    // Update optional deep links (GPay/Paytm). PhonePe is intercepted in launchSpecificUpi.
     var gpayBtn = document.getElementById('upiGpayBtn');
     if (gpayBtn) gpayBtn.href = activeUpiUri;
     var phonepeBtn = document.getElementById('upiPhonepeBtn');
-    if (phonepeBtn) phonepeBtn.href = activeUpiUri;
+    if (phonepeBtn) phonepeBtn.href = '#upiQRWrap';
     var paytmBtn = document.getElementById('upiPaytmBtn');
     if (paytmBtn) paytmBtn.href = activeUpiUri;
     var openBtn = document.getElementById('upiOpenBtn');
     if (openBtn) openBtn.href = activeUpiUri;
 
-    // Dynamic QR for canonical UPI URI
-    const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=8&data=' + encodeURIComponent(activeUpiUri);
-    const qrImg = document.getElementById('upiQR');
-    if (qrImg) {
-      qrImg.style.display = '';
-      qrImg.src = qrSrc;
-      qrImg.onerror = function(){ qrImg.style.display = 'none'; };
-    }
+    renderUpiQr(activeUpiUri);
 
     // Reset status box UI
     const statusText = document.getElementById('upiPollingStatusText');
@@ -1025,6 +1039,45 @@
 
     // Start background status polling
     startPaymentPolling(orderId, orderToken, total);
+  }
+
+  window.showUpiPaymentScreen = showUpiPaymentScreen;
+
+  function renderUpiQr(uri) {
+    var canvas = document.getElementById('upiQRCanvas');
+    var img = document.getElementById('upiQR');
+    var wrap = document.getElementById('upiQRWrap');
+    if (wrap) wrap.style.display = '';
+    var localOk = false;
+    if (canvas && window.QrCreator && typeof window.QrCreator.render === 'function') {
+      try {
+        canvas.width = 440;
+        canvas.height = 440;
+        window.QrCreator.render({
+          text: String(uri),
+          radius: 0,
+          ecLevel: 'M',
+          fill: '#111111',
+          background: '#ffffff',
+          size: 440
+        }, canvas);
+        canvas.style.display = 'block';
+        if (img) img.style.display = 'none';
+        localOk = true;
+      } catch (e) {
+        localOk = false;
+      }
+    }
+    if (localOk) return;
+    if (canvas) canvas.style.display = 'none';
+    if (!img) return;
+    img.style.display = 'block';
+    var encoded = encodeURIComponent(uri);
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=440x440&ecc=M&margin=8&color=111111&bgcolor=ffffff&data=' + encoded;
+    img.onerror = function () {
+      img.onerror = function () { img.style.display = 'none'; };
+      img.src = 'https://quickchart.io/qr?format=png&margin=2&size=440&text=' + encoded;
+    };
   }
 
   function startPaymentPolling(orderId, orderToken, total) {
@@ -1076,7 +1129,7 @@
         if (fb) {
           fb.style.display = 'block';
           fb.style.color = '#ff6b6b';
-          fb.textContent = 'Payment could not be completed. Please tap a UPI app above to retry.';
+          fb.textContent = 'Payment could not be completed. Scan the QR or pay to the UPI ID, then tap check status.';
         }
         return false;
       }

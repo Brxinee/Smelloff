@@ -489,11 +489,8 @@ const CFG = window.SMELLOFF_CONFIG;
     setTimeout(function() {
       btn.disabled = false;
       showUpiSuccess(orderId, total, upiLink);
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (isMobile) {
-        // Defer one tick so the success screen renders before the UPI redirect.
-        setTimeout(function(){ window.location.href = upiLink; }, 150);
-      }
+      // Never auto-launch upi:// from the browser — PhonePe declines
+      // website-opened intents to a personal VPA. QR + UPI ID remain.
     }, 2400);
   }
 
