@@ -81,9 +81,9 @@
 </script>
 
 <!-- Fonts -->
-<link rel="preload" href="/assets/fonts.css?v=bcf0d083" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/assets/fonts.css?v=bcf0d083"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=b5d3ccb1">
+<link rel="preload" href="/assets/fonts.css?v=aac09570" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css?v=aac09570"></noscript>
+<link rel="stylesheet" href="/assets/css/tokens.css?v=4605ce3e">
 <meta name="theme-color" content="#080808">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -92,7 +92,7 @@
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://smelloff.in/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://smelloff.in/blog"}, {"@type": "ListItem", "position": 3, "name": "How to Keep Clothes Fresh While Travelling (Without Laundry)", "item": "https://smelloff.in/blog/keep-clothes-fresh-while-travelling"}]}
 </script>
-  <link rel="stylesheet" href="/assets/css/blog.css?v=c654947f">
+  <link rel="stylesheet" href="/assets/css/blog.css?v=6ebe88c6">
 <!-- JSON-LD FAQPage -->
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do you keep clothes fresh while travelling without laundry?", "acceptedAnswer": {"@type": "Answer", "text": "Treat each garment at the end of the day rather than the morning after. Hang it somewhere with airflow, turn the high-odor zones outward, and mist the collar, underarm panels and upper back with a water-based fabric odor mist. That gives the garment the whole night to dry and settle, so a second wear is a decision rather than a gamble. Pack for re-wear and it works."}}, {"@type": "Question", "name": "Can you take a fabric spray in hand luggage?", "acceptedAnswer": {"@type": "Answer", "text": "Liquids in cabin baggage must generally be in containers of 100ml or less, carried in a single transparent resealable bag. A 50ml bottle is comfortably inside that limit, which is one of the practical reasons ODORSTRIKE is that size. Rules do change and vary by airport and airline, so check the current requirement with your carrier before you fly."}}, {"@type": "Question", "name": "Which clothes can you re-wear on a trip and which cannot?", "acceptedAnswer": {"@type": "Answer", "text": "Outer layers re-wear well: jackets, blazers, jeans, chinos and overshirts sit away from the skin and pick up far less. Cotton shirts and kurtas usually manage two wears if treated between them. Anything worn directly against high-sweat areas gets one wear. Synthetic activewear is the worst case and should be treated as single-wear on a trip."}}, {"@type": "Question", "name": "How do you stop a suitcase from making clothes smell?", "acceptedAnswer": {"@type": "Answer", "text": "Keep worn clothes separate from clean ones and keep anything damp out of the case entirely. A damp towel or a shirt packed slightly wet will make the whole suitcase musty within a day, because the enclosed space stops it drying. Use one bag for worn items, air the case when you reach a room, and never pack anything that is not fully dry."}}]}
@@ -109,11 +109,11 @@
 <script src="/assets/js/consent-analytics.js?v=0982d63f" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=5dcc0595">
-<link rel="stylesheet" href="/assets/css/checkout.css?v=d54b9379">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=7f467eda">
-<script src="/assets/js/chrome.js?v=83edf779" defer></script>
-<script src="/assets/js/checkout.js?v=3924441a" defer></script>
-<script type="module" src="/assets/js/buy-module.js?v=f5cff3b1"></script>
+<link rel="stylesheet" href="/assets/css/checkout.css?v=5de537af">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=efeda65b">
+<script src="/assets/js/chrome.js?v=fc00af59" defer></script>
+<script src="/assets/js/checkout.js?v=aed31af9" defer></script>
+<script type="module" src="/assets/js/buy-module.js?v=266185f8"></script>
 </head>
 <body>
 
@@ -435,8 +435,8 @@
       <!-- An empty state with no way out is a dead end: the drawer is a
            full-height panel over the page, so "Your cart is empty" and
            nothing else left the only exit as the × in the corner. Anyone
-           arriving here from the header cart on another page (/odorstrike
-           ?cart=open) landed on a blank panel with no next step. -->
+           arriving here from the header cart on another page
+           (?cart=open) landed on a blank panel with no next step. -->
       <div class="cart-empty" id="cartEmpty">
         <p class="cart-empty-msg">Your cart is empty</p>
         <button type="button" class="cart-empty-cta" onclick="closeCartDrawer();var b=document.getElementById('buy');if(b)b.scrollIntoView({behavior:'smooth',block:'start'});else location.href='/#buy'">Shop ODORSTRIKE · ₹229</button>
@@ -658,11 +658,12 @@
 
         <!-- Manual UTR Submission Card -->
         <div class="upi-utr-box" id="upiUtrBox" style="margin-top:14px;padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:6px;text-align:left;">
-          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Have a 12-digit UTR / UPI Reference?</div>
+          <label for="upiUtrInput" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">UTR / UPI reference</label>
           <div style="display:flex;gap:6px;">
-            <input type="text" id="upiUtrInput" placeholder="Enter 12-digit UTR / UPI Ref" maxlength="24" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
+            <input type="text" id="upiUtrInput" placeholder="12-digit UTR / UPI Ref" maxlength="24" autocomplete="off" inputmode="text" aria-describedby="upiUtrHint" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
             <button type="button" id="upiSubmitUtrBtn" onclick="submitCustomerUtr()" style="background:var(--acid);color:var(--ink);border:none;border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:700;padding:8px 14px;cursor:pointer;white-space:nowrap;">Submit UTR</button>
           </div>
+          <p id="upiUtrHint" style="margin:6px 0 0;font-size:11px;color:var(--muted);line-height:1.4;">Paste the 12-digit reference from your UPI app if payment succeeded but this page did not update.</p>
           <div id="upiUtrFeedback" style="display:none;font-size:11px;margin-top:8px;line-height:1.4;"></div>
         </div>
 
@@ -702,7 +703,7 @@
     <span class="po-logo"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="73" height="16" style="height:16px;width:auto;display:block"></span>
     <button type="button" class="po-close" onclick="closePaymentFailedOverlay()" aria-label="Close">×</button>
   </nav>
-  <main class="po-main">
+  <div class="po-main">
     <div class="po-eyebrow">Policy · Payment Failed</div>
     <h2 id="pfTitle">Payment Failed / Failed Transaction Policy</h2>
 
@@ -742,232 +743,9 @@
 
     <div class="po-meta">
       Smelloff · Hyderabad, Telangana, India<br>
-      Last updated: April 2026
+      Last updated: August 2026
     </div>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main>
+  </div>
 </div>
 
 <!-- /SF-CHROME:CHECKOUT -->

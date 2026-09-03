@@ -8,7 +8,12 @@
   <link rel="canonical" href="https://smelloff.in/">
   <meta name="robots" content="noindex,follow">
   <meta http-equiv="refresh" content="0;url=/#buy">
-  <script>location.replace('/#buy');</script>
+  <script>
+    (function () {
+      var q = location.search || '';
+      location.replace('/' + q + '#buy');
+    })();
+  </script>
 </head>
 <body>
   <p>Taking you to <a href="/#buy">ODORSTRIKE</a>.</p>

@@ -81,9 +81,9 @@
 </script>
 
 <!-- Fonts -->
-<link rel="preload" href="/assets/fonts.css?v=bcf0d083" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/assets/fonts.css?v=bcf0d083"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=b5d3ccb1">
+<link rel="preload" href="/assets/fonts.css?v=aac09570" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css?v=aac09570"></noscript>
+<link rel="stylesheet" href="/assets/css/tokens.css?v=4605ce3e">
 <meta name="theme-color" content="#080808">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -92,7 +92,7 @@
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://smelloff.in/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://smelloff.in/blog"}, {"@type": "ListItem", "position": 3, "name": "Does Fabric Spray Stain Clothes? What Causes Marks and How to Avoid Them", "item": "https://smelloff.in/blog/does-fabric-spray-stain-clothes"}]}
 </script>
-  <link rel="stylesheet" href="/assets/css/blog.css?v=c654947f">
+  <link rel="stylesheet" href="/assets/css/blog.css?v=6ebe88c6">
 <!-- JSON-LD FAQPage -->
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Will fabric spray stain a white shirt?", "acceptedAnswer": {"@type": "Answer", "text": "A water-based fabric spray with no oils or dyes will not stain a white shirt, because there is nothing in it that dries coloured or greasy. Marks on white cotton almost always come from over-application: holding the nozzle too close soaks one patch, and that patch dries slower than the fabric around it, leaving a temporary ring. Spray from about 15–20 cm in a light even pass and the shirt dries uniformly."}}, {"@type": "Question", "name": "Is fabric spray safe on black polyester?", "acceptedAnswer": {"@type": "Answer", "text": "Black polyester is the fabric that exposes residue fastest, because anything powdery or waxy shows up white against a dark synthetic. Sprays built on zinc ricinoleate or containing glycerine are the usual culprits. ODORSTRIKE contains neither, and dries clear on dark synthetics without a chalky film. As with any spray, mist lightly rather than saturating one area."}}, {"@type": "Question", "name": "Can I use an odor spray on silk?", "acceptedAnswer": {"@type": "Answer", "text": "Silk needs a spot test first, every time. Silk is a protein fibre that water-marks easily, and the mark comes from the water itself rather than from the odor actives. Test a hidden seam or inside hem, let it dry fully, and check in daylight before spraying anywhere visible. The same caution applies to zari, heavy embroidery and anything labelled dry-clean only."}}, {"@type": "Question", "name": "What actually causes stains in fabric sprays?", "acceptedAnswer": {"@type": "Answer", "text": "Three things: oils used as fragrance carriers, dyes added for product colour, and a very high fragrance load that leaves a tacky film as it dries. Glycerine is a fourth, which is why it is excluded from ODORSTRIKE — it holds moisture and can leave a slightly tacky patch that then attracts dust. A formula built on water and a fast-evaporating alcohol has none of these."}}, {"@type": "Question", "name": "How do I avoid water marks when spraying?", "acceptedAnswer": {"@type": "Answer", "text": "Hold the bottle 15–20 cm from the fabric, keep the hand moving, and use two or three light passes rather than one heavy one. Do not spray until the cloth looks wet — a fabric mist works on contact, so a fine even coat is enough. Let it air-dry for about 10 seconds before you put the garment on."}}]}
@@ -102,11 +102,11 @@
 <script src="/assets/js/consent-analytics.js?v=0982d63f" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=5dcc0595">
-<link rel="stylesheet" href="/assets/css/checkout.css?v=d54b9379">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=7f467eda">
-<script src="/assets/js/chrome.js?v=83edf779" defer></script>
-<script src="/assets/js/checkout.js?v=3924441a" defer></script>
-<script type="module" src="/assets/js/buy-module.js?v=f5cff3b1"></script>
+<link rel="stylesheet" href="/assets/css/checkout.css?v=5de537af">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=efeda65b">
+<script src="/assets/js/chrome.js?v=fc00af59" defer></script>
+<script src="/assets/js/checkout.js?v=aed31af9" defer></script>
+<script type="module" src="/assets/js/buy-module.js?v=266185f8"></script>
 </head>
 <body>
 
@@ -430,8 +430,8 @@
       <!-- An empty state with no way out is a dead end: the drawer is a
            full-height panel over the page, so "Your cart is empty" and
            nothing else left the only exit as the × in the corner. Anyone
-           arriving here from the header cart on another page (/odorstrike
-           ?cart=open) landed on a blank panel with no next step. -->
+           arriving here from the header cart on another page
+           (?cart=open) landed on a blank panel with no next step. -->
       <div class="cart-empty" id="cartEmpty">
         <p class="cart-empty-msg">Your cart is empty</p>
         <button type="button" class="cart-empty-cta" onclick="closeCartDrawer();var b=document.getElementById('buy');if(b)b.scrollIntoView({behavior:'smooth',block:'start'});else location.href='/#buy'">Shop ODORSTRIKE · ₹229</button>
@@ -653,11 +653,12 @@
 
         <!-- Manual UTR Submission Card -->
         <div class="upi-utr-box" id="upiUtrBox" style="margin-top:14px;padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:6px;text-align:left;">
-          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Have a 12-digit UTR / UPI Reference?</div>
+          <label for="upiUtrInput" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">UTR / UPI reference</label>
           <div style="display:flex;gap:6px;">
-            <input type="text" id="upiUtrInput" placeholder="Enter 12-digit UTR / UPI Ref" maxlength="24" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
+            <input type="text" id="upiUtrInput" placeholder="12-digit UTR / UPI Ref" maxlength="24" autocomplete="off" inputmode="text" aria-describedby="upiUtrHint" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
             <button type="button" id="upiSubmitUtrBtn" onclick="submitCustomerUtr()" style="background:var(--acid);color:var(--ink);border:none;border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:700;padding:8px 14px;cursor:pointer;white-space:nowrap;">Submit UTR</button>
           </div>
+          <p id="upiUtrHint" style="margin:6px 0 0;font-size:11px;color:var(--muted);line-height:1.4;">Paste the 12-digit reference from your UPI app if payment succeeded but this page did not update.</p>
           <div id="upiUtrFeedback" style="display:none;font-size:11px;margin-top:8px;line-height:1.4;"></div>
         </div>
 
@@ -697,7 +698,7 @@
     <span class="po-logo"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="73" height="16" style="height:16px;width:auto;display:block"></span>
     <button type="button" class="po-close" onclick="closePaymentFailedOverlay()" aria-label="Close">×</button>
   </nav>
-  <main class="po-main">
+  <div class="po-main">
     <div class="po-eyebrow">Policy · Payment Failed</div>
     <h2 id="pfTitle">Payment Failed / Failed Transaction Policy</h2>
 
@@ -737,232 +738,9 @@
 
     <div class="po-meta">
       Smelloff · Hyderabad, Telangana, India<br>
-      Last updated: April 2026
+      Last updated: August 2026
     </div>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main>
+  </div>
 </div>
 
 <!-- /SF-CHROME:CHECKOUT -->

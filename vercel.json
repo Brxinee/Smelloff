@@ -27,7 +27,7 @@
     },
     {
       "source": "/odorstrike",
-      "destination": "/",
+      "destination": "/?buy=1",
       "permanent": true
     },
     {

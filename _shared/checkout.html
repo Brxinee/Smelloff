@@ -9,8 +9,8 @@
       <!-- An empty state with no way out is a dead end: the drawer is a
            full-height panel over the page, so "Your cart is empty" and
            nothing else left the only exit as the × in the corner. Anyone
-           arriving here from the header cart on another page (/odorstrike
-           ?cart=open) landed on a blank panel with no next step. -->
+           arriving here from the header cart on another page
+           (?cart=open) landed on a blank panel with no next step. -->
       <div class="cart-empty" id="cartEmpty">
         <p class="cart-empty-msg">Your cart is empty</p>
         <button type="button" class="cart-empty-cta" onclick="closeCartDrawer();var b=document.getElementById('buy');if(b)b.scrollIntoView({behavior:'smooth',block:'start'});else location.href='/#buy'">Shop ODORSTRIKE · ₹229</button>
@@ -232,11 +232,12 @@
 
         <!-- Manual UTR Submission Card -->
         <div class="upi-utr-box" id="upiUtrBox" style="margin-top:14px;padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:6px;text-align:left;">
-          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Have a 12-digit UTR / UPI Reference?</div>
+          <label for="upiUtrInput" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">UTR / UPI reference</label>
           <div style="display:flex;gap:6px;">
-            <input type="text" id="upiUtrInput" placeholder="Enter 12-digit UTR / UPI Ref" maxlength="24" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
+            <input type="text" id="upiUtrInput" placeholder="12-digit UTR / UPI Ref" maxlength="24" autocomplete="off" inputmode="text" aria-describedby="upiUtrHint" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
             <button type="button" id="upiSubmitUtrBtn" onclick="submitCustomerUtr()" style="background:var(--acid);color:var(--ink);border:none;border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:700;padding:8px 14px;cursor:pointer;white-space:nowrap;">Submit UTR</button>
           </div>
+          <p id="upiUtrHint" style="margin:6px 0 0;font-size:11px;color:var(--muted);line-height:1.4;">Paste the 12-digit reference from your UPI app if payment succeeded but this page did not update.</p>
           <div id="upiUtrFeedback" style="display:none;font-size:11px;margin-top:8px;line-height:1.4;"></div>
         </div>
 
@@ -276,7 +277,7 @@
     <span class="po-logo"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="73" height="16" style="height:16px;width:auto;display:block"></span>
     <button type="button" class="po-close" onclick="closePaymentFailedOverlay()" aria-label="Close">×</button>
   </nav>
-  <main class="po-main">
+  <div class="po-main">
     <div class="po-eyebrow">Policy · Payment Failed</div>
     <h2 id="pfTitle">Payment Failed / Failed Transaction Policy</h2>
 
@@ -316,232 +317,9 @@
 
     <div class="po-meta">
       Smelloff · Hyderabad, Telangana, India<br>
-      Last updated: April 2026
+      Last updated: August 2026
     </div>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main>
+  </div>
 </div>
 
 <!-- /SF-CHROME:CHECKOUT -->

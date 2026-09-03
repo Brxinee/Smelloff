@@ -248,7 +248,7 @@ const PAGES = [
     buy: ['faq.html', 'about.html', 'contact.html', 'reviews.html'].includes(f),
   })),
   { file: '404.html', header: 'nav.blog-nav', footer: 'footer.blog-footer' },
-  { file: 'blog/index.html', header: 'nav.b-nav', footer: 'footer.blog-footer', skip: 'b-hero' },
+  { file: 'blog/index.html', header: 'nav.b-nav', footer: 'footer.blog-footer' },
   ...[
     'why-i-built-odorstrike', 'odorstrike-review-30-day-india-test',
     'odorstrike-vs-febreze-india', 'ambi-pur-vs-odorstrike',
