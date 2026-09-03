@@ -1,3 +1,5 @@
+@import url('/assets/css/21st-home.css?v=2');
+
 /* =====================================================================
    Smelloff — canonical design tokens. SINGLE SOURCE OF TRUTH.
    =====================================================================
@@ -8,47 +10,39 @@
 
 :root{
   color-scheme: dark;
-  /* ---- Color Tokens -------------------------------------------------- */
-  --color-bg: #080808;                    /* Pure dark canvas */
-  --color-surface-1: #111111;             /* Primary elevated card surface */
-  --color-surface-2: #121212;             /* Secondary container surface */
-  --color-surface-3: #181818;             /* Raised chip / tertiary surface */
-  
-  --color-text-primary: #FFFFFF;          /* High contrast primary text */
-  --color-text-secondary: #A3A3A3;        /* Secondary reading text */
-  --color-text-muted: #777777;            /* Utility / subdued metadata text */
-  
-  --color-accent: #B8FF57;                /* Action acid lime green */
-  --color-accent-hover: #D1FF8A;          /* Accent interactive hover */
-  --color-accent-dim: rgba(184,255,87,.12);/* Subdued accent tint */
+  --color-bg: #080808;
+  --color-surface-1: #111111;
+  --color-surface-2: #121212;
+  --color-surface-3: #181818;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A3A3A3;
+  --color-text-muted: #777777;
+  --color-accent: #B8FF57;
+  --color-accent-hover: #D1FF8A;
+  --color-accent-dim: rgba(184,255,87,.12);
   --color-accent-rgb: 184,255,87;
-  --color-on-accent: #080808;             /* Dark text on accent elements */
-  
-  --color-border: #262626;                /* Subtle structural border */
-  --color-border-strong: #333333;         /* Emphasized container border */
-  --color-overlay: rgba(0,0,0,.75);       /* Backdrop dimmer */
+  --color-on-accent: #080808;
+  --color-border: #262626;
+  --color-border-strong: #333333;
+  --color-overlay: rgba(0,0,0,.75);
 
-  /* ---- Type Families ------------------------------------------------- */
   --font-display: 'Fraunces', 'Fraunces Fallback', Georgia, 'Times New Roman', serif;
   --font-body: 'DM Sans', 'DM Sans Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, monospace;
 
-  /* Legacy Family Aliases */
   --display: var(--font-display);
   --body: var(--font-body);
   --mono: var(--font-mono);
 
-  /* ---- Typographic Hierarchy ----------------------------------------- */
-  --type-display-xl: clamp(48px, 6.5vw, 84px);  /* Hero headline */
-  --type-display-lg: clamp(32px, 4.5vw, 56px);  /* Major section headings */
-  --type-display-md: clamp(22px, 2.8vw, 36px);  /* Product titles / sub-headings */
-  --type-body-lg: clamp(17px, 1.8vw, 20px);     /* Hero supporting copy / lead */
-  --type-body-md: clamp(15px, 1.2vw, 17px);     /* Standard body copy */
-  --type-body-sm: 14px;                         /* Secondary captions / disclosures */
-  --type-label: 13px;                           /* Navigation / metadata / buttons */
-  --type-mono: 11px;                            /* Technical labels / SKU */
+  --type-display-xl: clamp(48px, 6.5vw, 84px);
+  --type-display-lg: clamp(32px, 4.5vw, 56px);
+  --type-display-md: clamp(22px, 2.8vw, 36px);
+  --type-body-lg: clamp(17px, 1.8vw, 20px);
+  --type-body-md: clamp(15px, 1.2vw, 17px);
+  --type-body-sm: 14px;
+  --type-label: 13px;
+  --type-mono: 11px;
 
-  /* Legacy Type Scale Aliases */
   --fs-h1: var(--type-display-xl);
   --fs-h2: var(--type-display-lg);
   --fs-h3: var(--type-display-md);
@@ -58,7 +52,6 @@
   --fs-sm: var(--type-body-sm);
   --fs-eyebrow: var(--type-mono);
 
-  /* ---- Line Heights -------------------------------------------------- */
   --lh-display-xl: 0.94;
   --lh-display-lg: 1.0;
   --lh-display-md: 1.1;
@@ -71,7 +64,6 @@
   --lh-display: var(--lh-display-xl);
   --lh-body: var(--lh-body-md);
 
-  /* ---- Letter Spacing ------------------------------------------------ */
   --ls-display: -0.02em;
   --ls-body: 0em;
   --ls-btn: 0.06em;
@@ -79,7 +71,6 @@
   --ls-mono: 0.12em;
   --ls-eyebrow: var(--ls-mono);
 
-  /* ---- Spacing Scale ------------------------------------------------- */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -91,7 +82,6 @@
   --space-9: 80px;
   --space-10: 120px;
 
-  /* ---- Layout Boundaries --------------------------------------------- */
   --max-width: 1200px;
   --maxw: var(--max-width);
   --page-gutter-mobile: 16px;
@@ -102,7 +92,6 @@
   --grid-gap: clamp(16px, 2.5vw, 24px);
   --card-padding: clamp(20px, 3vw, 32px);
 
-  /* ---- Border Radius & Form Boundaries ------------------------------- */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
@@ -118,7 +107,6 @@
   --border-weight: 1px;
   --shadow-offset: 0px;
 
-  /* ---- Button Tokens ------------------------------------------------- */
   --btn-height: 48px;
   --btn-font-size: var(--type-label);
   --btn-font-weight: 700;
@@ -130,7 +118,6 @@
   --btn-secondary-border: var(--color-border);
   --btn-secondary-text: var(--color-text-primary);
 
-  /* ---- Input Tokens -------------------------------------------------- */
   --input-bg: #080808;
   --input-border: var(--color-border);
   --input-border-focus: var(--color-accent);
@@ -139,12 +126,10 @@
   --input-radius: var(--radius-input);
   --input-height: 48px;
 
-  /* ---- Motion & Transitions ------------------------------------------ */
   --ease: cubic-bezier(.19,1,.22,1);
   --ease-snap: cubic-bezier(.2,.6,.2,1);
   --dur: .2s;
 
-  /* ---- Legacy Canonical Compatibility Bridges ----------------------- */
   --ink: var(--color-bg);
   --surface: var(--color-surface-1);
   --surface-2: var(--color-surface-2);
@@ -169,17 +154,11 @@
   --overlay: var(--color-overlay);
 }
 
-/* =====================================================================
-   Legacy Alias Layer for Backwards Compatibility
-   ===================================================================== */
 :root{
-  /* Family A */
   --paper: var(--text);
   --bg: var(--ink);
   --accent: var(--acid);
   --text-secondary: var(--text-2);
-
-  /* Family B */
   --black: var(--ink);
   --white: var(--text);
   --card: var(--surface);
@@ -200,8 +179,6 @@
   --accent-light: var(--acid-dim);
   --accent-rgb: var(--acid-rgb);
   --shadow: rgba(0,0,0,.40);
-
-  /* Family C */
   --nb-paper: var(--ink);
   --nb-ink: var(--text);
   --nb-white: var(--text);
@@ -221,12 +198,6 @@
   --nb-r-sm: var(--radius-sm);
 }
 
-/* =====================================================================
-   STAGE 1 — chrome design system (--so-*)
-   Header, footer, buttons, BuyModule, sticky bar consume these.
-   Homepage / PDP content keeps --ink / --acid until later stages.
-   Lime is reserved for the primary purchase action. Not nav. Not rules.
-   ===================================================================== */
 :root{
   --so-chrome: #080808;
   --so-chrome-2: #111111;
@@ -236,7 +207,6 @@
   --so-chrome-line: rgba(255, 255, 255, 0.08);
   --so-chrome-line-strong: rgba(255, 255, 255, 0.16);
   --so-chrome-overlay: rgba(0, 0, 0, 0.72);
-
   --so-cotton: #0C0C0C;
   --so-cotton-2: #141414;
   --so-cotton-ink: #F4F4F4;
@@ -244,30 +214,24 @@
   --so-cotton-faint: #7A7A7A;
   --so-cotton-line: rgba(255, 255, 255, 0.08);
   --so-cotton-line-strong: rgba(255, 255, 255, 0.18);
-
   --so-lime: #B8FF57;
   --so-lime-hover: #D1FF8A;
   --so-lime-ink: #080808;
-
   --so-success: #2C6A46;
   --so-error: #B42318;
-
   --so-font-body: 'DM Sans', 'DM Sans Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --so-font-display: 'DM Sans', 'DM Sans Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --so-font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, monospace;
-
   --so-size-xs: 0.75rem;
   --so-size-sm: 0.8125rem;
   --so-size-md: 0.9375rem;
   --so-size-lg: 1.0625rem;
   --so-size-price: 1.75rem;
   --so-size-nav: 0.875rem;
-
   --so-lh-tight: 1.15;
   --so-lh-body: 1.5;
   --so-ls-tight: -0.02em;
   --so-ls-none: 0;
-
   --so-space-1: 4px;
   --so-space-2: 8px;
   --so-space-3: 12px;
@@ -276,24 +240,17 @@
   --so-space-6: 32px;
   --so-space-7: 48px;
   --so-space-8: 64px;
-
   --so-max: 1200px;
   --so-gutter: 20px;
   --so-section: clamp(56px, 8vw, 96px);
-
   --so-radius-sm: 6px;
   --so-radius-md: 10px;
   --so-radius-lg: 14px;
   --so-radius-btn: 8px;
-
   --so-control: 48px;
   --so-tap: 44px;
   --so-hdr: 64px;
-
-  --so-shadow-buy:
-    0 0 0 1px rgba(184, 255, 87, 0.14),
-    0 12px 40px rgba(0, 0, 0, 0.45);
-
+  --so-shadow-buy: 0 0 0 1px rgba(184, 255, 87, 0.14), 0 12px 40px rgba(0, 0, 0, 0.45);
   --so-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --so-dur-quick: 150ms;
   --so-dur: 180ms;
