@@ -1914,9 +1914,9 @@ body{overflow-x:clip}
     align-items:start;
   }
   .so-commerce .so-gallery__viewport{overflow:hidden}
-  .so-commerce .so-gallery__track{display:block}
-  .so-commerce .so-gallery__slide{display:none;flex:none}
-  .so-commerce .so-gallery__slide.is-on{display:block}
+  .so-commerce .so-gallery__track{display:block;height:100%}
+  .so-commerce .so-gallery__slide{display:none;flex:none;height:100%}
+  .so-commerce .so-gallery__slide.is-on{display:block;height:100%}
   .so-commerce .so-gallery__dots{display:none}
   .so-commerce .so-gallery__thumbs{
     display:grid;
@@ -2081,32 +2081,38 @@ body{overflow-x:clip}
   -webkit-overflow-scrolling:touch;
   border-radius:var(--so-radius-md, 10px);
   background:var(--so-chrome-2, #111111);
+  aspect-ratio:3/4;
 }
 .so-gallery__viewport::-webkit-scrollbar{display:none}
 .so-gallery__track{
   display:flex;
+  height:100%;
 }
 .so-gallery__slide{
   margin:0;
   flex:0 0 100%;
   scroll-snap-align:start;
   min-width:0;
+  height:100%;
+  overflow:hidden;
+}
+.so-gallery .gal-zoom-btn,
+.so-gallery picture{
+  display:block;
+  width:100%;
+  height:100%;
+  padding:0;border:0;background:none;
+  cursor:zoom-in;color:inherit;font:inherit;
 }
 .so-gallery__slide img{
   width:100%;
-  height:auto;
-  aspect-ratio:3/4;
+  height:100%;
   object-fit:cover;
   object-position:center 40%;
   display:block;
 }
 .so-gallery__slide--wide img{
-  aspect-ratio:3/2;
   object-position:center;
-}
-.so-gallery .gal-zoom-btn{
-  display:block;width:100%;padding:0;border:0;background:none;
-  cursor:zoom-in;color:inherit;font:inherit;
 }
 .so-gallery .gal-zoom-btn:focus-visible{
   outline:2px solid var(--so-lime, #B8FF57);
@@ -2272,9 +2278,9 @@ body{overflow-x:clip}
     top:calc(var(--so-hdr, 64px) + 16px);
   }
   .so-gallery__viewport{overflow:hidden}
-  .so-gallery__track{display:block}
-  .so-gallery__slide{display:none;flex:none}
-  .so-gallery__slide.is-on{display:block}
+  .so-gallery__track{display:block;height:100%}
+  .so-gallery__slide{display:none;flex:none;height:100%}
+  .so-gallery__slide.is-on{display:block;height:100%}
   .so-gallery__dots{display:none}
   .so-gallery__thumbs{
     display:grid;
