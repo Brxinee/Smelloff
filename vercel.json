@@ -16,6 +16,14 @@
     {
       "source": "/.well-known/llms-full.txt",
       "destination": "/llms-full.txt"
+    },
+    {
+      "source": "/.well-known/ai.txt",
+      "destination": "/llms.txt"
+    },
+    {
+      "source": "/ai.txt",
+      "destination": "/llms.txt"
     }
   ],
   "redirects": [
@@ -1128,6 +1136,16 @@
       "source": "/odorstrike/",
       "destination": "/",
       "statusCode": 301
+    },
+    {
+      "source": "/(.*)\\.html",
+      "destination": "/$1",
+      "statusCode": 301
+    },
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "statusCode": 301
     }
   ],
   "headers": [
@@ -1253,6 +1271,23 @@
         {
           "key": "Content-Type",
           "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow"
+        }
+      ]
+    },
+    {
+      "source": "/feed.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/rss+xml; charset=utf-8"
         },
         {
           "key": "Cache-Control",

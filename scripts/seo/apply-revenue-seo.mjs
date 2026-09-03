@@ -52,6 +52,13 @@ const WINNERS = {
   'fabric-deodorizer-spray-india-guide-2026': ['Fabric Freshener vs Deodorizer in India (2026)', 'A fabric freshener perfumes cloth. A deodorizer traps odor. What to buy for clothes in India — not sofas.'],
   'why-clothes-smell-musty-after-being-stored': ['Why Do Clothes Smell Musty After Being Stored?', 'Why clean clothes smell after storage, what humidity does, and how to reset them without a full rewash.'],
   'why-body-odor-comes-back-on-clothes-so-quickly': ['Why Body Odor Comes Back on Clothes So Quickly', 'Why a shirt can smell again after a shower — the odor is in the fabric, not only on skin.'],
+  'why-clothes-smell-bad-after-drying': ['Why Do Clothes Smell Bad After Drying?', 'Why laundry smells after drying — slow damp drying, retained odor, and the fix before you rewash.'],
+  'why-polyester-holds-odor-longer-than-cotton': ['Does Polyester Hold Odor Longer Than Cotton?', 'Why polyester and dri-fit hold sweat smell longer than cotton, and what actually resets it.'],
+  'best-deodorant-spray-for-clothes-not-skin': ['Cloth Deodorant Spray for Clothes, Not Skin', 'A spray for clothes not skin: cloth deodorant vs body deodorant. ODORSTRIKE is fabric only, ₹229.'],
+  'odorstrike-vs-febreze-india': ['Febreze Alternative in India for Clothes | ODORSTRIKE', 'ODORSTRIKE vs Febreze in India: clothes mist vs room/sofa freshener. ₹229 prepaid.'],
+  'keep-clothes-fresh-while-travelling': ['How to Keep Clothes Fresh in a Suitcase', 'How to keep clothes fresh while travelling and stop a suitcase smelling. Pack dry, isolate worn items.'],
+  'spray-to-remove-sweat-smell-from-clothes-quickly': ['Shirt Odor Spray: Sweat Smell Off Clothes Fast', 'Shirt odor spray for sweat smell on clothes. Fabric only, ~10 second dry. Not a skin deodorant.'],
+  'remove-mothball-almirah-smell-from-clothes': ['How to Get Naphthalene / Mothball Smell Out of Clothes', 'Naphthalene and mothball almirah smell on clothes: air, then mist. Perfume will not last.'],
 };
 
 function esc(value) {
