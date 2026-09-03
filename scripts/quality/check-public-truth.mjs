@@ -26,6 +26,7 @@ if (product) {
 }
 
 const llms = read('llms.txt');
+const llmsFull = read('llms-full.txt');
 const forbiddenPublicClaims = [
   /instant(?:ly)?/i,
   /unscented/i,
@@ -34,6 +35,7 @@ const forbiddenPublicClaims = [
 ];
 for (const pattern of forbiddenPublicClaims) {
   if (pattern.test(llms)) errors.push(`Unapproved public claim in llms.txt: ${pattern}`);
+  if (pattern.test(llmsFull)) errors.push(`Unapproved public claim in llms-full.txt: ${pattern}`);
 }
 
 if (!/₹229/.test(llms)) errors.push('llms.txt is missing the current ₹229 price.');
@@ -63,6 +65,7 @@ const customerFiles = [
   'shared/products-config.js',
   'data/brand-facts.json',
   'llms.txt',
+  'llms-full.txt',
   'blog/how-to-use-odorstrike.html',
   'blog/best-deodorant-spray-for-clothes-not-skin.html',
   'solutions/office-commute-fabric-refresher.html',
