@@ -56,8 +56,8 @@ const RULES = [
   [/^\/odorstrike$/,             { priority: '1.0',  changefreq: 'weekly'  }],
   [/^\/blog$/,                   { priority: '0.8',  changefreq: 'weekly'  }],
   [/^\/blog\//,                  { priority: '0.8',  changefreq: 'monthly' }],
-  [/^\/solutions$/,              { priority: '0.9',  changefreq: 'weekly'  }],
-  [/^\/solutions\//,             { priority: '0.85', changefreq: 'weekly'  }],
+  [/^\/solutions$/,              { priority: '0.5',  changefreq: 'monthly' }],
+  [/^\/solutions\//,             { priority: '0.5',  changefreq: 'monthly' }],
   [/^\/reviews$/,                { priority: '0.7',  changefreq: 'weekly'  }],
   [/^\/faq$/,                    { priority: '0.7',  changefreq: 'monthly' }],
   [/^\/about$/,                  { priority: '0.6',  changefreq: 'yearly'  }],
@@ -68,8 +68,17 @@ const RULES = [
  * rather than a function of where they sit. Kept tiny on purpose. */
 const PRIORITY_OVERRIDES = {
   '/blog/odorstrike-review-30-day-india-test': '0.85',
-  '/blog/odorstrike-vs-febreze-india': '0.85',
+  '/blog/odorstrike-vs-febreze-india': '0.9',
   '/blog/why-i-built-odorstrike': '0.7',
+  '/blog/gym-clothes-smell-after-washing': '0.9',
+  '/blog/remove-cooking-smell-from-clothes': '0.9',
+  '/blog/hpbcd-cyclodextrin-fabric-odor': '0.9',
+  '/blog/best-fabric-odor-spray-india-2026-body-odor': '0.9',
+  '/blog/deodorant-vs-fabric-mist': '0.9',
+  '/blog/best-deodorant-spray-for-clothes-not-skin': '0.85',
+  '/blog/why-clothes-smell-musty-after-being-stored': '0.85',
+  '/blog/why-clothes-smell-bad-after-drying': '0.85',
+  '/blog/why-polyester-holds-odor-longer-than-cotton': '0.85',
 };
 
 function decodeEntities(s) {

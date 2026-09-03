@@ -111,33 +111,49 @@ Things worth doing in the UI, which no script can do for you:
 - **Inspect and request indexing** on the canonical money URLs after a content
   pass: `https://smelloff.in/`, `/blog/remove-cooking-smell-from-clothes`,
   `/blog/hpbcd-cyclodextrin-fabric-odor`, `/blog/gym-clothes-smell-after-washing`,
-  `/blog/deodorant-vs-fabric-mist`, `/blog/best-fabric-odor-spray-india-2026-body-odor`.
+  `/blog/deodorant-vs-fabric-mist`, `/blog/best-fabric-odor-spray-india-2026-body-odor`,
+  `/blog/best-deodorant-spray-for-clothes-not-skin`,
+  `/blog/why-clothes-smell-musty-after-being-stored`,
+  `/blog/why-clothes-smell-bad-after-drying`,
+  `/blog/why-polyester-holds-odor-longer-than-cotton`.
 - **Ignore leftover Performance rows** on retired slugs
   (`/blog/how-to-remove-cooking-smell-from-clothes`,
   `/blog/beta-cyclodextrin-odor-removal-science`, `/blog/dri-fit-shirts-smell`,
   `/odorstrike`, www host). Those are 301s. Clicks still land. Google reports the
   requested URL for months after a move. Do not restore the old files.
+- **`.html` and trailing-slash URLs now 301** (not platform 308). GSC will
+  still show the old rows for a while.
+- **Submit `https://smelloff.in/feed.xml` is optional.** It is for Bing /
+  Perplexity / LLM fetchers, not Google Search. Google ignores `llms.txt`
+  (June 2026 AI optimization guide); keep it for ChatGPT / Claude / Perplexity.
 - **Ignore "Discovered – currently not indexed" on a young site.** It means
   Google knows the URL and hasn't got to it. More sitemap pings do not help;
   internal links from already-indexed pages do.
 - **Watch "Duplicate, Google chose a different canonical".** That is the signal
   worth acting on — it means two of our pages compete. The `/solutions/*`
   landing pages and their matching blog posts are the pair most likely to trip
-  it (monsoon and post-gym both exist twice).
+  it (monsoon and post-gym both exist twice). `/solutions` is now lower
+  sitemap priority than the matching guides.
 
 GSC 2026-09-03 (last 6 months): 442 clicks, 12.3k impressions. ~78% of query
 clicks are branded (`smelloff`). Non-brand impressions cluster on cooking-smell,
 cyclodextrin, dri-fit/gym, "can deodorant be used on clothes", and long
 AI-overview questions about cheap fabric refreshers in India. Product snippets
-show at an average position ~25 — do not add fake `aggregateRating`.
+show at an average position ~25 — do not add fake `aggregateRating`. Hidden
+FAQ JSON-LD (questions in schema but not on the page) is now synced by
+`scripts/seo/apply-gsc-aeo.mjs`.
 
 ---
 
 ## Known, not fixed
 
-**`/odorstrike` shares the generic `og-image.jpg` with fourteen policy pages.**
-That is a weak social card for the money page, and it is why the PDP no longer
-gets an image sitemap entry. The fix is to give the product page its own OG
-image — the gallery already has eight product creatives — but that changes how
-the checkout page looks when shared, so it is a brand decision rather than a
-build fix.
+**www → apex is still a platform 308** on the bare homepage (Vercel host-level
+www redirect fires before `vercel.json`). Content redirects in `vercel.json`
+are 301. Google treats 308 as permanent; Domain property `smelloff.in` covers
+both hosts. Do not restore www URLs.
+
+**Product snippets stay weak without reviews.** Do not fake `aggregateRating`.
+Merchant return + shipping schema is already on the homepage Product offers.
+
+**`/odorstrike` is a 301 to `/`.** The homepage carries the unique campaign
+OG image and the Product JSON-LD. Do not un-redirect `/odorstrike`.

@@ -161,6 +161,8 @@ Disallow: /outreach/
 # Curated:        https://smelloff.in/llms.txt
 # Full reference: https://smelloff.in/llms-full.txt
 # Well-known:     https://smelloff.in/.well-known/llms.txt
+# Alias:          https://smelloff.in/ai.txt
+# RSS (guides):   https://smelloff.in/feed.xml
 
 # IndexNow key (Bing/Copilot/Yandex): https://smelloff.in/163974d1a8d940cf89b0ec712246c779.txt
 Sitemap: https://smelloff.in/sitemap.xml
