@@ -45,10 +45,13 @@ const META = {
 
 const WINNERS = {
   'remove-cooking-smell-from-clothes': ['How to Remove Curry & Cooking Smell From Clothes', 'How to get curry, tadka and cooking smell out of clothes without washing — perfume only covers it.'],
-  'best-fabric-odor-spray-india-2026-body-odor': ['Best Fabric Odor Spray in India: 2026 Guide', 'Compare fabric odor sprays for clothes in India and know what actually matters.'],
-  'beta-cyclodextrin-odor-removal-science': ['Beta-Cyclodextrin for Odor Removal: How It Works', 'Learn how cyclodextrin-based odor control is used in fabric care.'],
-  'dri-fit-shirts-smell': ['Why Dri-Fit Shirts Smell After Washing (And What Helps)', 'Why synthetic workout shirts can smell again after washing and what to change in washing, drying and between-wear care.'],
+  'best-fabric-odor-spray-india-2026-body-odor': ['Best Fabric Freshener & Odor Spray in India 2026', 'Cheap fabric refresher vs popular brands in India: what actually works on clothes, not sofas. ODORSTRIKE is ₹229.'],
+  'hpbcd-cyclodextrin-fabric-odor': ['Beta-Cyclodextrin (HPβCD) Spray for Fabric Odor', 'What cyclodextrin spray does on clothes: HPβCD traps odor in fabric. Used in ODORSTRIKE, not as a deodorant.'],
+  'gym-clothes-smell-after-washing': ['Why Dri-Fit Shirts Smell After Washing (Gym Fix)', 'Why dri-fit and gym clothes still smell after washing — polyester holds odor oils a cold wash misses.'],
   'deodorant-vs-fabric-mist': ['Deodorant vs Fabric Mist: Which Fixes Shirt Odor?', 'Can deodorant be used on clothes? No — deodorant is for skin. A fabric mist is for the shirt. Here is the difference.'],
+  'fabric-deodorizer-spray-india-guide-2026': ['Fabric Freshener vs Deodorizer in India (2026)', 'A fabric freshener perfumes cloth. A deodorizer traps odor. What to buy for clothes in India — not sofas.'],
+  'why-clothes-smell-musty-after-being-stored': ['Why Do Clothes Smell Musty After Being Stored?', 'Why clean clothes smell after storage, what humidity does, and how to reset them without a full rewash.'],
+  'why-body-odor-comes-back-on-clothes-so-quickly': ['Why Body Odor Comes Back on Clothes So Quickly', 'Why a shirt can smell again after a shower — the odor is in the fabric, not only on skin.'],
 };
 
 function esc(value) {
