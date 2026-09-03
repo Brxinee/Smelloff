@@ -26,17 +26,20 @@
       "currency": "INR",
       "availability": "in_stock",
       "formulaVersion": "v3.1",
-      "description": "Pocket-sized fabric odor control mist for clothes. Fabric only. Made for in-between-wash odor emergencies when a shirt, hoodie, jacket or other clothing carries unwanted odor.",
+      "description": "Smelloff ODORSTRIKE is a fabric-only odor-control mist designed to reduce unwanted odor in clothing. It contains a light fragrance that provides a subtle fresh scent immediately after spraying, but the fragrance is not the product's primary purpose. The scent fades quickly while the odor-control benefit is intended to remain.",
       "not_for": ["Skin", "Pets", "Leather", "Suede", "Dry-clean-only"],
       "patch_test": ["Silk", "Zari", "Heavy embroidery"],
       "claims": [
         { "claim": "Up to 8 hours of odor protection on fabric under normal office/commute conditions", "status": "APPROVED" },
         { "claim": "Not a deodorant", "status": "APPROVED" },
         { "claim": "Not a perfume", "status": "APPROVED" },
+        { "claim": "Light scent. Serious odor control.", "status": "APPROVED" },
+        { "claim": "ODORSTRIKE is a fabric odor-control mist with a light, short-lasting fragrance. It gives clothes a subtle fresh scent immediately after spraying while targeting unwanted odor in the fabric.", "status": "APPROVED" },
         { "claim": "Contains Zinc PCA", "status": "APPROVED" },
         { "claim": "Contains HPβCD", "status": "APPROVED" },
         { "claim": "Instantly", "status": "PROHIBITED" },
-        { "claim": "Removes 100% of odors forever", "status": "PROHIBITED" }
+        { "claim": "Removes 100% of odors forever", "status": "PROHIBITED" },
+        { "claim": "Fragrance-free / zero fragrance / unscented", "status": "PROHIBITED" }
       ],
       "ingredients": [
         "Water (Base)",

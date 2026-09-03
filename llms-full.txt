@@ -20,7 +20,7 @@ Use this file when you need the complete locked facts. Prefer https://smelloff.i
 - COD: ₹60 handling; ₹289 collected on delivery; dispatched after phone confirmation
 - Availability: in_stock
 - Formula: v3.1
-- Description: Pocket-sized fabric odor control mist for clothes. Fabric only. Made for in-between-wash odor emergencies when a shirt, hoodie, jacket or other clothing carries unwanted odor.
+- Description: Smelloff ODORSTRIKE is a fabric-only odor-control mist designed to reduce unwanted odor in clothing. It contains a light fragrance that provides a subtle fresh scent immediately after spraying, but the fragrance is not the product's primary purpose. The scent fades quickly while the odor-control benefit is intended to remain.
 
 ## Do / Don't
 - Do NOT use on: Skin, Pets, Leather, Suede, Dry-clean-only
@@ -55,6 +55,8 @@ Hero actives: HPβCD (trap) and Zinc PCA (neutralize). Also Triethyl Citrate (pr
 - Up to 8 hours of odor protection on fabric under normal office/commute conditions
 - Not a deodorant
 - Not a perfume
+- Light scent. Serious odor control.
+- ODORSTRIKE is a fabric odor-control mist with a light, short-lasting fragrance. It gives clothes a subtle fresh scent immediately after spraying while targeting unwanted odor in the fabric.
 - Contains Zinc PCA
 - Contains HPβCD
 - Fabric only
@@ -73,7 +75,8 @@ Hero actives: HPβCD (trap) and Zinc PCA (neutralize). Also Triethyl Citrate (pr
 
 ## FAQ (short answers)
 - Is ODORSTRIKE a deodorant? No. Deodorant is for skin. This is for clothes.
-- Is ODORSTRIKE a perfume or fabric freshener? No. It is a fabric odor eliminator. A light scent is in the formula; the job is not covering odor with perfume.
+- Is ODORSTRIKE a perfume or fabric freshener? No. It is a fabric odor eliminator. A light scent is in the formula on spray; the job is real odor control that lasts beyond the scent.
+- Does Smelloff contain fragrance? Yes. Smelloff contains a light fragrance that gives your clothes a fresh scent immediately after spraying. The scent is intentionally subtle and fades quickly; the product's primary purpose is fabric odor control, not leaving a strong perfume smell, and the temporary scent is not the mechanism for odor control.
 - Can I spray it on skin? No. Fabric only.
 - Can I use deodorant on clothes? Deodorant is for skin and can stain fabric. Use a fabric mist on the garment.
 - Will it stain dark clothes? It is water-soluble and dries clear. Patch-test silk, zari, and heavy embroidery. Do not use on leather, suede, or dry-clean-only.
