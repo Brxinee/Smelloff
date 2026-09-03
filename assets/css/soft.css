@@ -24,13 +24,12 @@
    ===================================================================== */
 
 :root{
-  /* Squircle scale. 32px on cards is wimpdecaf's number; the rest are
-     proportional steps so nested shapes stay visually concentric. */
-  --sq-xs:8px;
-  --sq-sm:11px;    /* buttons — .6875rem */
-  --sq-md:18px;
-  --sq-lg:28px;    /* cards */
-  --sq-xl:36px;    /* large panels, gallery tiles */
+  /* Physical campaign scale: 4px-8px max for cards and panels. Precision machined. */
+  --sq-xs:4px;
+  --sq-sm:6px;    /* buttons & inputs */
+  --sq-md:6px;
+  --sq-lg:8px;    /* cards */
+  --sq-xl:8px;    /* panels, gallery tiles */
   --sq-pill:999px;
 
   /* Hairline outline replaces the old 3px hard border. */

@@ -34,7 +34,7 @@
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/dm-sans-normal-latin-400.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-mono-normal-latin-400.woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/css/tokens.css?v=edf76f3f">
+  <link rel="stylesheet" href="/assets/css/tokens.css?v=afb16d1f">
 
   <script type="application/ld+json" id="product-jsonld">
   {
@@ -141,9 +141,9 @@
 <link rel="alternate" type="application/rss+xml" title="Smelloff guides" href="https://smelloff.in/feed.xml">
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=5dcc0595">
-<link rel="stylesheet" href="/assets/css/checkout.css?v=fc28a660">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=2a9ee0bc">
-<script src="/assets/js/chrome.js?v=fc00af59" defer></script>
+<link rel="stylesheet" href="/assets/css/checkout.css?v=41fab4c9">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=4a90b7e1">
+<script src="/assets/js/chrome.js?v=6326c062" defer></script>
 <script src="/assets/js/qr-creator.min.js?v=bfc60e4e" defer></script>
 <script src="/assets/js/checkout.js?v=364045e7" defer></script>
 <script type="module" src="/assets/js/buy-module.js?v=024cc38d"></script>
@@ -206,17 +206,17 @@
     </figure>
     <div class="so-hero__copy">
       <p class="so-hero__brand">SMELLOFF · ODORSTRIKE</p>
-      <h1 id="heroTitle">Fabric-only odor mist for clothes</h1>
-      <p class="so-hero__hook">People don’t fear smelling bad. They fear others noticing it.</p>
-      <p class="so-lead" style="margin-top:4px;margin-bottom:16px;color:var(--so-cotton-muted,#A3A3A3);font-size:0.95rem;line-height:1.5;">For the shirt that made it through the commute, the heat, the long day, and still has somewhere to be.</p>
+      <p class="so-hero__cat">Fabric-only odor mist for clothes</p>
+      <h1 id="heroTitle">YOUR SHIRT REMEMBERS THE DAY.</h1>
+      <p class="so-hero__hook">For the shirt that made it through the commute, the humidity, and a 10-hour workday — when you still have somewhere to be.</p>
       <div class="so-hero__commerce">
         <span class="so-hero__amount">₹229</span>
-        <p class="so-hero__pay">Prepaid UPI · Free shipping</p>
+        <p class="so-hero__pay">Prepaid UPI · Free shipping pan-India</p>
         <p class="so-hero__cod">COD ₹289 · ₹60 handling</p>
       </div>
       <div class="so-hero__actions">
         <a class="so-btn so-btn--p1" href="#buy" data-smelloff-buy="hero">Buy ODORSTRIKE — ₹229</a>
-        <a class="so-btn so-btn--p3" href="/#how-it-works">How it works</a>
+        <a class="so-btn so-btn--p3" href="#how-it-works">How it works</a>
       </div>
       <p class="so-hero__bound">Fabric only · Not for skin · ~250 sprays</p>
     </div>
@@ -327,168 +327,159 @@
   </div>
 </section>
 
-<!-- 04 BUY MODULE (PDP) -->
-<section class="so-commerce" id="buy" aria-labelledby="buyHeading" data-so-buy>
+<!-- 04 THE PRODUCT -->
+<section class="so-block so-block--cotton" id="product" aria-labelledby="prodTitle">
   <div class="so-inner">
-    <p class="so-kicker">Shop ODORSTRIKE</p>
-    <h2 id="buyHeading">Pick your pack.</h2>
-    <p class="so-lead">ODORSTRIKE 50ml fabric-only odor mist. Choose how many you carry. Free shipping on prepaid UPI.</p>
+    <p class="so-kicker">02 · The Object</p>
+    <h2 id="prodTitle">ODORSTRIKE 50ml. Pocket-sized fabric defense.</h2>
+    <p class="so-lead">Engineered for everyday carry. Measured for ~250 sprays (~100 garment refreshes). 100% water-soluble, evaporates completely clear in approximately 10 seconds.</p>
+    
+    <div class="so-scale-visuals" style="margin-top:32px">
+      <figure class="so-scale-img">
+        <picture>
+          <source type="image/webp" srcset="/assets/campaign/edc@640.webp 640w, /assets/campaign/edc.webp 768w" sizes="(min-width:768px) 46vw, 100vw">
+          <img src="/assets/campaign/edc.jpg" alt="ODORSTRIKE 50ml bottle with everyday carry — keys, wallet and pocket items" width="768" height="1364" loading="lazy" decoding="async">
+        </picture>
+        <figcaption class="so-scale-cap">Everyday carry scale — 10.5 cm, engineered to fit jeans pockets, desk drawers, and laptop sleeves.</figcaption>
+      </figure>
 
-    <div class="so-shop">
-        <div class="so-gallery" id="gallery">
-          <span class="so-gallery__counter" id="galCounter" aria-live="polite">1 / 6</span>
-          <div class="so-gallery__viewport" tabindex="0" aria-label="ODORSTRIKE product photographs">
-            <div class="so-gallery__track">
-              <figure class="so-gallery__slide is-on">
-                <button type="button" class="gal-zoom-btn" aria-label="Zoom: ODORSTRIKE bottle">
-                  <picture>
-                    <source type="image/webp" srcset="/assets/campaign/bottle@640.webp 640w, /assets/campaign/bottle.webp 768w" sizes="(min-width:768px) 42vw, 100vw">
-                    <img src="/assets/campaign/bottle.jpg" alt="ODORSTRIKE 50ml fabric-only odor mist bottle" width="768" height="1364" loading="lazy" decoding="async">
-                  </picture>
-                </button>
-              </figure>
-              <figure class="so-gallery__slide so-gallery__slide--wide">
-                <button type="button" class="gal-zoom-btn" aria-label="Zoom: Smell, handled">
-                  <picture>
-                    <source type="image/webp" srcset="/assets/campaign/handled@640.webp 640w, /assets/campaign/handled.webp 1500w" sizes="(min-width:768px) 42vw, 100vw">
-                    <img src="/assets/campaign/handled.jpg" alt="ODORSTRIKE 50ml with gym bag — Smell, handled" width="1500" height="1000" loading="lazy" decoding="async">
-                  </picture>
-                </button>
-              </figure>
-              <figure class="so-gallery__slide">
-                <button type="button" class="gal-zoom-btn" aria-label="Zoom: everyday carry">
-                  <picture>
-                    <source type="image/webp" srcset="/assets/campaign/edc@640.webp 640w, /assets/campaign/edc.webp 768w" sizes="(min-width:768px) 42vw, 100vw">
-                    <img src="/assets/campaign/edc.jpg" alt="ODORSTRIKE 50ml with wallet, keys and earbuds" width="768" height="1364" loading="lazy" decoding="async">
-                  </picture>
-                </button>
-              </figure>
-              <figure class="so-gallery__slide">
-                <button type="button" class="gal-zoom-btn" aria-label="Zoom: office commute">
-                  <picture>
-                    <source type="image/webp" srcset="/assets/campaign/office@640.webp 640w, /assets/campaign/office.webp 768w" sizes="(min-width:768px) 42vw, 100vw">
-                    <img src="/assets/campaign/office.jpg" alt="ODORSTRIKE 50ml on a desk with jacket and backpack" width="768" height="1364" loading="lazy" decoding="async">
-                  </picture>
-                </button>
-              </figure>
-              <figure class="so-gallery__slide">
-                <button type="button" class="gal-zoom-btn" aria-label="Zoom: how to mist">
-                  <picture>
-                    <source type="image/webp" srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w" sizes="(min-width:768px) 42vw, 100vw">
-                    <img src="/assets/pdp-03-how-to-use.webp" alt="ODORSTRIKE misted onto a shirt from 15–20 cm" width="1196" height="1315" loading="lazy" decoding="async">
-                  </picture>
-                </button>
-              </figure>
-              <figure class="so-gallery__slide">
-                <button type="button" class="gal-zoom-btn" aria-label="Zoom: fabric only">
-                  <picture>
-                    <source type="image/webp" srcset="/assets/pdp-07-fabric-only@640.webp 640w, /assets/pdp-07-fabric-only.webp 1196w" sizes="(min-width:768px) 42vw, 100vw">
-                    <img src="/assets/pdp-07-fabric-only.webp" alt="ODORSTRIKE used on clothing fabric, not skin" width="1196" height="1315" loading="lazy" decoding="async">
-                  </picture>
-                </button>
-              </figure>
-            </div>
-          </div>
-          <div class="so-gallery__dots" role="tablist" aria-label="Gallery slides">
-            <button type="button" aria-label="Photo 1, bottle" aria-selected="true"></button>
-            <button type="button" aria-label="Photo 2, campaign" aria-selected="false"></button>
-            <button type="button" aria-label="Photo 3, everyday carry" aria-selected="false"></button>
-            <button type="button" aria-label="Photo 4, commute" aria-selected="false"></button>
-            <button type="button" aria-label="Photo 5, how to mist" aria-selected="false"></button>
-            <button type="button" aria-label="Photo 6, fabric only" aria-selected="false"></button>
-          </div>
-          <div class="so-gallery__thumbs" role="tablist" aria-label="Gallery thumbnails">
-            <button type="button" aria-label="Bottle" aria-selected="true"><img src="/assets/campaign/bottle@640.webp" alt="" width="120" height="213" loading="lazy" decoding="async"></button>
-            <button type="button" aria-label="Campaign" aria-selected="false"><img src="/assets/campaign/handled@640.webp" alt="" width="120" height="80" loading="lazy" decoding="async"></button>
-            <button type="button" aria-label="Everyday carry" aria-selected="false"><img src="/assets/campaign/edc@640.webp" alt="" width="120" height="213" loading="lazy" decoding="async"></button>
-            <button type="button" aria-label="Commute" aria-selected="false"><img src="/assets/campaign/office@640.webp" alt="" width="120" height="213" loading="lazy" decoding="async"></button>
-            <button type="button" aria-label="How to mist" aria-selected="false"><img src="/assets/pdp-03-how-to-use@640.webp" alt="" width="120" height="132" loading="lazy" decoding="async"></button>
-            <button type="button" aria-label="Fabric only" aria-selected="false"><img src="/assets/pdp-07-fabric-only@640.webp" alt="" width="120" height="132" loading="lazy" decoding="async"></button>
+      <div class="so-scale-facts">
+        <div class="so-scale-row">
+          <span class="so-scale-val">50 ML</span>
+          <div class="so-scale-desc">
+            <strong>Everyday Carry Volume</strong>
+            <p>Pocket-sized cylinder. Always with you when long days extend unexpectedly.</p>
           </div>
         </div>
-      <div>
-        <div class="so-packs" role="radiogroup" aria-label="Choose a pack">
-          <button type="button" class="so-pack" role="radio" data-so-pack="1" aria-checked="true" aria-pressed="true">
-            <span class="so-pack__qty">1 × 50ml</span>
-            <strong class="so-pack__name">One bottle</strong>
-            <span class="so-pack__price">₹229</span>
-            <span class="so-pack__note">Desk / everyday carry · prepaid UPI</span>
-          </button>
-          <button type="button" class="so-pack" role="radio" data-so-pack="2" aria-checked="false" aria-pressed="false">
-            <span class="so-pack__qty">2 × 50ml</span>
-            <strong class="so-pack__name">Two bottles</strong>
-            <span class="so-pack__price">₹429</span>
-            <span class="so-pack__note">Home & commute · ₹29 less than two singles</span>
-          </button>
-          <button type="button" class="so-pack" role="radio" data-so-pack="3" aria-checked="false" aria-pressed="false">
-            <span class="so-pack__qty">3 × 50ml</span>
-            <strong class="so-pack__name">Three bottles</strong>
-            <span class="so-pack__price">₹599</span>
-            <span class="so-pack__note">Home, desk & bag · ₹88 less than three singles</span>
-          </button>
-        </div>
-        <div class="so-buy__panel">
-          <p class="so-buy__kicker">Smelloff</p>
-          <h3 class="so-buy__name" data-so-name>ODORSTRIKE</h3>
-          <p class="so-buy__cat"><span data-so-pack-label>1 × 50ml</span> · fabric-only odor mist</p>
-          <div class="so-pay" role="group" aria-label="Payment method">
-            <button type="button" class="so-pay__opt" data-so-pay="prepaid" aria-pressed="true">
-              <span class="so-pay__label">Prepaid UPI</span>
-              <span class="so-pay__note">Free shipping</span>
-            </button>
-            <button type="button" class="so-pay__opt" data-so-pay="cod" aria-pressed="false">
-              <span class="so-pay__label">COD</span>
-              <span class="so-pay__note">+₹60 handling</span>
-            </button>
+        <div class="so-scale-row">
+          <span class="so-scale-val">~250</span>
+          <div class="so-scale-desc">
+            <strong>Micro-Atomizer Sprays</strong>
+            <p>Engineered micro-nozzle distributes fine vapor without saturating garment threads.</p>
           </div>
-          <a class="so-btn so-btn--p1 so-buy__cta" href="/?buy=1" data-so-cta data-smelloff-buy="home_buy">Buy ODORSTRIKE — ₹229</a>
-          <div class="so-buy__wa">
-            <a class="so-btn so-btn--p3" data-so-wa href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20would%20like%20to%20order%20ODORSTRIKE%2050ml.">Order on WhatsApp</a>
-          </div>
-          <ul class="so-buy__trust">
-            <li>Free shipping on prepaid UPI</li>
-            <li>COD adds ₹60 handling (₹289 total at door)</li>
-            <li>Dispatched within 48 hours of confirmation</li>
-            <li>Estimated delivery: 3–5 days (Metros) · 5–7 days (Pan-India)</li>
-            <li>Hyderabad, India</li>
-          </ul>
         </div>
-        <ul class="so-commerce__extra">
-          <li>7-day returns — bottle at least 80% full in original packaging. <a href="/returns">Returns policy</a>.</li>
-          <li>Fabric only. Never for skin, face, or eyes.</li>
-          <li>COD orders are dispatched after phone confirmation.</li>
-        </ul>
+        <div class="so-scale-row">
+          <span class="so-scale-val">~10s</span>
+          <div class="so-scale-desc">
+            <strong>Clear Evaporation</strong>
+            <p>Water-soluble carrier evaporates clear. Leaves zero chalky rings or white streaks.</p>
+          </div>
+        </div>
+        <div class="so-scale-row">
+          <span class="so-scale-val">FABRIC</span>
+          <div class="so-scale-desc">
+            <strong>Never on Skin</strong>
+            <p>Targeted strictly at textile fibers. Deodorant is for the body; ODORSTRIKE is for the shirt.</p>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <!-- Fabric Compatibility Sub-Module -->
+    <div style="margin-top:48px">
+      <h3 style="font-size:1.25rem;letter-spacing:-.01em;margin-bottom:16px;color:var(--so-cotton,#F5F5F0);">Tested Fabric Compatibility</h3>
+      <div class="so-fabric-grid">
+        <article class="so-fabric-card">
+          <span class="so-fabric-badge">Workwear</span>
+          <h4>Cotton & Poplin</h4>
+          <p>Crisp poplin, twill, and oxford weaves. Dries clear in ~10s without water marks.</p>
+        </article>
+        <article class="so-fabric-card">
+          <span class="so-fabric-badge">Activewear</span>
+          <h4>Polyester & Synthetics</h4>
+          <p>Penetrates synthetic gym weaves where sweat-causing lipids bind tenaciously.</p>
+        </article>
+        <article class="so-fabric-card">
+          <span class="so-fabric-badge">Heavy Cotton</span>
+          <h4>Denim & Outerwear</h4>
+          <p>Restores raw denim, jackets, and hoodies between rare laundry cycles.</p>
+        </article>
+        <article class="so-fabric-card">
+          <span class="so-fabric-badge">Colors</span>
+          <h4>Dark & Black Shirts</h4>
+          <p>Tested across 30+ cycles on black and navy textiles: zero white streaks or film.</p>
+        </article>
+      </div>
+      <p style="margin-top:16px;font-size:0.875rem;color:var(--so-cotton-muted,#A3A3A3);line-height:1.5;"><strong>Boundary:</strong> Patch-test silk, zari, and delicate weaves on an inside seam first. Do not use on leather, suede, or dry-clean-only garments.</p>
     </div>
   </div>
 </section>
 
-<!-- 05 HOW IT WORKS / SCIENCE -->
+<!-- 05 HOW IT WORKS / SCIENCE & RITUAL -->
 <section class="so-block so-formula" id="how-it-works" aria-labelledby="scienceTitle">
   <div class="so-inner">
-    <p class="so-kicker">Formula v3.1</p>
-    <h2 id="scienceTitle">Two hero actives. A four-layer neutralization system.</h2>
-    <p class="so-lead">Real chemistry, not fragrance masking. Designed specifically for textile fibers in high-humidity climates.</p>
+    <p class="so-kicker">03 · The Mechanism</p>
+    <h2 id="scienceTitle">Two active agents. A four-layer neutralization system.</h2>
+    <p class="so-lead">Real chemistry, not perfume masking. Engineered specifically for textile fibers in humid climates where sweat-causing bacteria and volatile odors linger.</p>
+    
     <div class="so-actives">
       <article>
         <h3>HPβCD</h3>
-        <p class="so-role">Trap</p>
-        <p>Hydroxypropyl-β-cyclodextrin. A ring-shaped host molecule that entraps volatile odor compounds in the fabric so they don’t lift into the air.</p>
+        <p class="so-role">Layer 1 · Physical Trap</p>
+        <p>Hydroxypropyl-β-cyclodextrin. A ring-shaped host molecule that entraps volatile odor compounds inside cavity cages so they cannot lift into the surrounding air.</p>
       </article>
       <article>
         <h3>Zinc PCA</h3>
-        <p class="so-role">Neutralize</p>
-        <p>A zinc salt that binds sweat-associated sulfur and nitrogen odor compounds on the textile. For clothing fibers — not a skin deodorant.</p>
+        <p class="so-role">Layer 2 · Chemical Neutralization</p>
+        <p>A zinc salt of pyrrolidone carboxylic acid that chemically binds sweat-associated sulfur and nitrogen odorants directly on textile fibers.</p>
       </article>
     </div>
+
     <ol class="so-layers">
-      <li><b>1 · Trap</b> HPβCD</li>
-      <li><b>2 · Neutralize</b> Zinc PCA</li>
-      <li><b>3 · Prevent</b> Triethyl Citrate</li>
-      <li><b>4 · Anti-regrowth</b> Zinc Gluconate</li>
+      <li><b>1 · Trap</b> HPβCD molecule rings</li>
+      <li><b>2 · Neutralize</b> Zinc PCA chemical bond</li>
+      <li><b>3 · Prevent</b> Triethyl Citrate enzymatic block</li>
+      <li><b>4 · Defend</b> Zinc Gluconate anti-regrowth</li>
     </ol>
-    <details>
-      <summary>Full formula v3.1</summary>
+
+    <!-- The Application Ritual -->
+    <div class="so-ritual__stage" style="margin-top:48px;border-top:1px solid var(--so-chrome-border,#262626);padding-top:40px;">
+      <figure class="so-media">
+        <picture>
+          <source type="image/webp" srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w" sizes="(min-width:768px) 46vw, 100vw">
+          <img src="/assets/pdp-03-how-to-use.webp" alt="ODORSTRIKE misted onto a shirt from 15–20 cm" width="1196" height="1315" loading="lazy" decoding="async">
+        </picture>
+      </figure>
+      <div>
+        <h3 style="font-size:1.5rem;letter-spacing:-.02em;margin-bottom:8px;">The Application Ritual</h3>
+        <p style="color:var(--so-cotton-muted,#A3A3A3);margin-bottom:24px;">Mist. Wait ten seconds. Wear it.</p>
+        <ol class="so-steps">
+          <li>
+            <b>01</b>
+            <div>
+              <h3>Mist</h3>
+              <p>Apply to clothing from approximately 15–20 cm away. A light, even mist is sufficient — do not soak the garment.</p>
+            </div>
+          </li>
+          <li>
+            <b>02</b>
+            <div>
+              <h3>Dry</h3>
+              <p>Let fabric air-dry for ~10 seconds. In humid weather, wait until fully dry before putting the shirt back on.</p>
+            </div>
+          </li>
+          <li>
+            <b>03</b>
+            <div>
+              <h3>Move</h3>
+              <p>Wear the garment. Odors stay trapped and neutralized throughout your day.</p>
+            </div>
+          </li>
+        </ol>
+        <div class="so-dose">
+          <h3>Target Dosage</h3>
+          <dl>
+            <div><dt>2–3 sprays</dt><dd>Targeted collar or underarm refresh</dd></div>
+            <div><dt>4–5 sprays</dt><dd>Full front and back of shirt</dd></div>
+            <div><dt>5–6 sprays</dt><dd>Jacket, blazer, or denim hoodie</dd></div>
+          </dl>
+        </div>
+        <p class="so-limit">Does not replace washing. Dirt, oils, and stains still need soap and laundry.</p>
+      </div>
+    </div>
+
+    <details style="margin-top:32px">
+      <summary>Full formula v3.1 INCI ingredients</summary>
       <ul class="so-inci">
         <li><b>Water</b> — base carrier</li>
         <li><b>Isopropyl Alcohol</b> — fast evaporation solvent</li>
@@ -502,15 +493,15 @@
         <li><b>Ethylhexylglycerin</b> — preservative booster</li>
         <li><b>Citric Acid</b> — pH balancer</li>
       </ul>
-      <a class="so-btn so-btn--p3 so-more" href="/blog/odorstrike-ingredients">Ingredient notes</a>
+      <a class="so-btn so-btn--p3 so-more" href="/blog/odorstrike-ingredients">Ingredient technical notes</a>
     </details>
   </div>
 </section>
 
-<!-- 06 SCENARIOS / BEFORE VS AFTER -->
-<section class="so-block" id="scenarios" aria-labelledby="scenariosTitle">
+<!-- 06 REAL LIFE / SCENARIOS -->
+<section class="so-block" id="real-life" aria-labelledby="scenariosTitle">
   <div class="so-inner">
-    <p class="so-kicker">Real scenarios</p>
+    <p class="so-kicker">04 · In the Field</p>
     <h2 id="scenariosTitle">Four moments ODORSTRIKE earns its pocket space.</h2>
     <p class="so-lead">Real Indian daily routines where washing is impossible, but smelling clean is non-negotiable.</p>
 
@@ -590,106 +581,12 @@
   </div>
 </section>
 
-<!-- 07 FABRIC SAFETY & COMPATIBILITY -->
-<section class="so-block" id="fabrics" aria-labelledby="fabricsTitle">
+<!-- 07 PROOF / TESTERS, COMPARISON & ORIGIN -->
+<section class="so-block so-block--cotton" id="proof" aria-labelledby="proofTitle">
   <div class="so-inner">
-    <p class="so-kicker">Fabric safety</p>
-    <h2 id="fabricsTitle">Engineered for everyday fabrics. Zero residue.</h2>
-    <p class="so-lead">100% water-soluble. Formulated to evaporate completely clear on all major apparel textiles.</p>
-
-    <div class="so-fabric-grid">
-      <div class="so-fabric-card">
-        <span class="so-fabric-badge">✓ Compatible</span>
-        <h3>Cotton & Blends</h3>
-        <p>Crisp poplin, twill, and oxford work shirts. Evaporates in ~10 seconds without puckering or water rings.</p>
-      </div>
-      <div class="so-fabric-card">
-        <span class="so-fabric-badge">✓ Compatible</span>
-        <h3>Polyester & Activewear</h3>
-        <p>Penetrates synthetic gym weaves where sweat-causing bacteria and lipids bind tenaciously.</p>
-      </div>
-      <div class="so-fabric-card">
-        <span class="so-fabric-badge">✓ Compatible</span>
-        <h3>Denim & Outerwear</h3>
-        <p>Restores heavy raw denim, jackets, and hoodies between rare laundry cycles without fading dye.</p>
-      </div>
-      <div class="so-fabric-card">
-        <span class="so-fabric-badge">✓ Compatible</span>
-        <h3>Linen & Rayon</h3>
-        <p>Dries light and clear across delicate open weaves without stiffening fabric fibers.</p>
-      </div>
-      <div class="so-fabric-card">
-        <span class="so-fabric-badge">✓ Zero Marks</span>
-        <h3>Dark & Black Shirts</h3>
-        <p>Tested on black and charcoal shirts across 30+ wash cycles. No white powder streaks or chalky rings.</p>
-      </div>
-      <div class="so-fabric-card so-fabric-card--boundary">
-        <span class="so-fabric-badge">! Honest Boundary</span>
-        <h3>Silk, Zari & Leather</h3>
-        <p>Patch-test silk, zari, and heavy embroidery on a hidden seam first. Do not use on leather, suede, or dry-clean-only garments.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 08 HOW TO USE -->
-<section class="so-block" id="how-to-use" aria-labelledby="useTitle">
-  <div class="so-inner">
-    <p class="so-kicker">The ritual</p>
-    <h2 id="useTitle">Mist. Dry. Move.</h2>
-    <p class="so-lead">Apply to clothing. Wait. Wear it.</p>
-
-    <div class="so-ritual__stage">
-      <figure class="so-media">
-        <picture>
-          <source type="image/webp" srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w" sizes="(min-width:768px) 46vw, 100vw">
-          <img src="/assets/pdp-03-how-to-use.webp" alt="ODORSTRIKE misted onto a shirt from 15–20 cm" width="1196" height="1315" loading="lazy" decoding="async">
-        </picture>
-      </figure>
-      <div>
-        <ol class="so-steps">
-          <li>
-            <b>01</b>
-            <div>
-              <h3>Mist</h3>
-              <p>Apply to clothing from approximately 15–20 cm away. A light mist is enough — do not soak the fabric.</p>
-            </div>
-          </li>
-          <li>
-            <b>02</b>
-            <div>
-              <h3>Dry</h3>
-              <p>Let the fabric air-dry for approximately 10 seconds. In high humidity, wait until it is fully dry before wearing.</p>
-            </div>
-          </li>
-          <li>
-            <b>03</b>
-            <div>
-              <h3>Move</h3>
-              <p>Wear the garment. Continue the day.</p>
-            </div>
-          </li>
-        </ol>
-        <div class="so-dose">
-          <h3>How much</h3>
-          <dl>
-            <div><dt>2–3 sprays</dt><dd>Targeted / midday refresh</dd></div>
-            <div><dt>4–5 sprays</dt><dd>Full shirt</dd></div>
-            <div><dt>5–6 sprays</dt><dd>Jacket</dd></div>
-          </dl>
-        </div>
-        <p class="so-limit">Does not replace washing. Dirt, oils, and stains still need laundry.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 09 REVIEWS / TESTERS -->
-<section class="so-block so-block--cotton" id="reviews" aria-labelledby="proofTitle">
-  <div class="so-inner">
-    <p class="so-kicker">Early testers</p>
-    <h2 id="proofTitle">What they reported, in their words.</h2>
-    <p class="so-lead">Pre-launch testers. Named. Not a rating widget. Not a customer count.</p>
+    <p class="so-kicker">05 · Real Proof</p>
+    <h2 id="proofTitle">What early testers reported, in their own words.</h2>
+    <p class="so-lead">Named early testers across Hyderabad and Bangalore. Honest notes from real commuters and athletes.</p>
 
     <figure class="so-proof__lead">
       <blockquote>“I spray the collar and underarms after my morning commute. By the time I walk into the office 2 minutes later, the humid train smell is completely gone. Doesn’t mask it with cheap perfume scent.”</blockquote>
@@ -708,142 +605,220 @@
     </div>
     <p class="so-proof__note">These are early-tester reports, labelled as such. They are not verified-purchase reviews or ratings.</p>
     <a class="so-btn so-btn--p3 so-more" href="/blog/odorstrike-review-30-day-india-test">Read the testing journal</a>
-  </div>
-</section>
 
-<!-- 10 COMPARISON TABLE -->
-<section class="so-block" id="compare" aria-labelledby="compareTitle">
-  <div class="so-inner">
-    <p class="so-kicker">Honest comparison</p>
-    <h2 id="compareTitle">How ODORSTRIKE compares to everyday alternatives.</h2>
-    <p class="so-lead">Different products solve different problems. Here is the objective technical breakdown.</p>
+    <!-- Technical Comparison Sub-Module -->
+    <div style="margin-top:56px;border-top:1px solid var(--so-cotton-border,#E0E0DB);padding-top:40px;">
+      <p class="so-kicker">Technical Comparison</p>
+      <h3 style="font-size:1.5rem;letter-spacing:-.02em;margin-bottom:8px;">How ODORSTRIKE compares to everyday alternatives.</h3>
+      <p style="color:var(--so-cotton-muted,#555);margin-bottom:24px;">Different products solve different problems. Here is the objective technical breakdown.</p>
+      
+      <div class="so-compare-wrap">
+        <table class="so-table">
+          <thead>
+            <tr>
+              <th>Feature / Need</th>
+              <th class="so-highlight">ODORSTRIKE</th>
+              <th>Body Deodorant</th>
+              <th>Perfume / Cologne</th>
+              <th>Washing Machine</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="so-feature">Target Surface</td>
+              <td class="so-highlight">Clothing fabric</td>
+              <td>Underarm skin</td>
+              <td>Skin & pulse points</td>
+              <td>Full garment soak</td>
+            </tr>
+            <tr>
+              <td class="so-feature">Odor Solution</td>
+              <td class="so-highlight">Molecular trap (HPβCD) + neutralizer (Zinc PCA)</td>
+              <td>Inhibits skin bacteria</td>
+              <td>Masks with fragrance oils</td>
+              <td>Surfactant wash & rinse</td>
+            </tr>
+            <tr>
+              <td class="so-feature">Residue on Dark Clothes</td>
+              <td class="so-highlight">100% clear (zero marks)</td>
+              <td>White chalky streaks</td>
+              <td>Oil/alcohol stain risk</td>
+              <td>Clean</td>
+            </tr>
+            <tr>
+              <td class="so-feature">Midday Convenience</td>
+              <td class="so-highlight">10.5cm pocket bottle</td>
+              <td>Skin only (shirt must come off)</td>
+              <td>Bulky glass bottle</td>
+              <td>Impossible midday</td>
+            </tr>
+            <tr>
+              <td class="so-feature">Drying Time</td>
+              <td class="so-highlight">~10 seconds air-dry</td>
+              <td>1–2 minutes on skin</td>
+              <td>1–2 minutes</td>
+              <td>1–2 hours</td>
+            </tr>
+            <tr>
+              <td class="so-feature">Cost per Refresh</td>
+              <td class="so-highlight">~₹2.30 per refresh</td>
+              <td>N/A on clothes</td>
+              <td>₹15–₹40 per spray</td>
+              <td>Water, power, soap</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-    <div class="so-compare-wrap">
-      <table class="so-table">
-        <thead>
-          <tr>
-            <th>Feature / Need</th>
-            <th class="so-highlight">ODORSTRIKE</th>
-            <th>Body Deodorant</th>
-            <th>Perfume / Cologne</th>
-            <th>Washing Machine</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="so-feature">Target Surface</td>
-            <td class="so-highlight">Clothing fabric</td>
-            <td>Underarm skin</td>
-            <td>Skin & pulse points</td>
-            <td>Full garment soak</td>
-          </tr>
-          <tr>
-            <td class="so-feature">Odor Solution</td>
-            <td class="so-highlight">Molecular trap (HPβCD) + neutralizer (Zinc PCA)</td>
-            <td>Inhibits skin bacteria</td>
-            <td>Masks with fragrance oils</td>
-            <td>Surfactant wash & rinse</td>
-          </tr>
-          <tr>
-            <td class="so-feature">Residue on Dark Clothes</td>
-            <td class="so-highlight">100% clear (zero marks)</td>
-            <td>White chalky streaks</td>
-            <td>Oil/alcohol stain risk</td>
-            <td>Clean</td>
-          </tr>
-          <tr>
-            <td class="so-feature">Midday Convenience</td>
-            <td class="so-highlight">10.5cm pocket bottle</td>
-            <td>Skin only (shirt must come off)</td>
-            <td>Bulky glass bottle</td>
-            <td>Impossible midday</td>
-          </tr>
-          <tr>
-            <td class="so-feature">Drying Time</td>
-            <td class="so-highlight">~10 seconds air-dry</td>
-            <td>1–2 minutes on skin</td>
-            <td>1–2 minutes</td>
-            <td>1–2 hours</td>
-          </tr>
-          <tr>
-            <td class="so-feature">Cost per Refresh</td>
-            <td class="so-highlight">~₹2.30 per refresh</td>
-            <td>N/A on clothes</td>
-            <td>₹15–₹40 per spray</td>
-            <td>Water, power, soap</td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Origin Note -->
+    <div class="so-story-box" id="brand-story" style="margin-top:48px;">
+      <blockquote>
+        <p>“I was tired of shirts smelling like a commute an hour into a workday. Deodorant stopped working at the skin level; perfumes just created an embarrassing cologne-sweat cloud. We built ODORSTRIKE in Hyderabad for the exact moments where you need your clothes to stay fresh without needing a washing machine mid-day.”</p>
+        <p>“We chose real molecular neutralizers over synthetic perfumes because people don’t want to smell like an aisle of room sprays. They just want their clothes to smell completely clean.”</p>
+      </blockquote>
+      <div class="so-story-author">
+        <div>
+          <cite>Jogdhande Nikhil Patil</cite>
+          <span>Founder, Smelloff</span>
+        </div>
+        <span class="so-story-loc">Formulated in Hyderabad</span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- 11 PRICING & BUNDLES -->
-<section class="so-block" id="bundles" aria-labelledby="bundlesTitle">
+<!-- 08 PURCHASE (PDP COMMERCE MODULE) -->
+<section class="so-commerce" id="buy" aria-labelledby="buyHeading" data-so-buy>
   <div class="so-inner">
-    <p class="so-kicker">Bundles & savings</p>
-    <h2 id="bundlesTitle">Choose your setup.</h2>
-    <p class="so-lead">Free shipping pan-India on prepaid UPI. Dispatched within 48 hours of confirmation.</p>
+    <p class="so-kicker">06 · Order ODORSTRIKE</p>
+    <h2 id="buyHeading">Choose your setup.</h2>
+    <p class="so-lead">ODORSTRIKE 50ml fabric-only odor mist. Choose how many you carry. Free shipping on prepaid UPI.</p>
 
-    <div class="so-bundles-grid">
-      <div class="so-bundle-card">
-        <div class="so-bundle-top">
-          <span class="so-bundle-pack">Solo Pack</span>
-          <h3>1 × 50ml Bottle</h3>
-          <div class="so-bundle-price-row">
-            <span class="so-bundle-price">₹229</span>
+    <div class="so-shop">
+      <div class="so-gallery" id="gallery">
+        <span class="so-gallery__counter" id="galCounter" aria-live="polite">1 / 6</span>
+        <div class="so-gallery__viewport" tabindex="0" aria-label="ODORSTRIKE product photographs">
+          <div class="so-gallery__track">
+            <figure class="so-gallery__slide is-on">
+              <button type="button" class="gal-zoom-btn" aria-label="Zoom: ODORSTRIKE bottle">
+                <picture>
+                  <source type="image/webp" srcset="/assets/campaign/bottle@640.webp 640w, /assets/campaign/bottle.webp 768w" sizes="(min-width:768px) 42vw, 100vw">
+                  <img src="/assets/campaign/bottle.jpg" alt="ODORSTRIKE 50ml fabric-only odor mist bottle" width="768" height="1364" loading="lazy" decoding="async">
+                </picture>
+              </button>
+            </figure>
+            <figure class="so-gallery__slide so-gallery__slide--wide">
+              <button type="button" class="gal-zoom-btn" aria-label="Zoom: Smell, handled">
+                <picture>
+                  <source type="image/webp" srcset="/assets/campaign/handled@640.webp 640w, /assets/campaign/handled.webp 1500w" sizes="(min-width:768px) 42vw, 100vw">
+                  <img src="/assets/campaign/handled.jpg" alt="ODORSTRIKE 50ml with gym bag — Smell, handled" width="1500" height="1000" loading="lazy" decoding="async">
+                </picture>
+              </button>
+            </figure>
+            <figure class="so-gallery__slide">
+              <button type="button" class="gal-zoom-btn" aria-label="Zoom: everyday carry">
+                <picture>
+                  <source type="image/webp" srcset="/assets/campaign/edc@640.webp 640w, /assets/campaign/edc.webp 768w" sizes="(min-width:768px) 42vw, 100vw">
+                  <img src="/assets/campaign/edc.jpg" alt="ODORSTRIKE 50ml with wallet, keys and earbuds" width="768" height="1364" loading="lazy" decoding="async">
+                </picture>
+              </button>
+            </figure>
+            <figure class="so-gallery__slide">
+              <button type="button" class="gal-zoom-btn" aria-label="Zoom: office commute">
+                <picture>
+                  <source type="image/webp" srcset="/assets/campaign/office@640.webp 640w, /assets/campaign/office.webp 768w" sizes="(min-width:768px) 42vw, 100vw">
+                  <img src="/assets/campaign/office.jpg" alt="ODORSTRIKE 50ml on a desk with jacket and backpack" width="768" height="1364" loading="lazy" decoding="async">
+                </picture>
+              </button>
+            </figure>
+            <figure class="so-gallery__slide">
+              <button type="button" class="gal-zoom-btn" aria-label="Zoom: how to mist">
+                <picture>
+                  <source type="image/webp" srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w" sizes="(min-width:768px) 42vw, 100vw">
+                  <img src="/assets/pdp-03-how-to-use.webp" alt="ODORSTRIKE misted onto a shirt from 15–20 cm" width="1196" height="1315" loading="lazy" decoding="async">
+                </picture>
+              </button>
+            </figure>
+            <figure class="so-gallery__slide">
+              <button type="button" class="gal-zoom-btn" aria-label="Zoom: fabric only">
+                <picture>
+                  <source type="image/webp" srcset="/assets/pdp-07-fabric-only@640.webp 640w, /assets/pdp-07-fabric-only.webp 1196w" sizes="(min-width:768px) 42vw, 100vw">
+                  <img src="/assets/pdp-07-fabric-only.webp" alt="ODORSTRIKE used on clothing fabric, not skin" width="1196" height="1315" loading="lazy" decoding="async">
+                </picture>
+              </button>
+            </figure>
           </div>
-          <p class="so-bundle-sub">Desk & EDC Carry</p>
         </div>
-        <ul class="so-bundle-list">
-          <li>1 × 50ml pocket bottle (10.5 cm)</li>
-          <li>~250 micro-fine sprays (~100 refreshes)</li>
-          <li>Free shipping pan-India on UPI</li>
-          <li>COD available (+₹60 handling)</li>
-          <li>7-day returns (bottle ≥ 80% full)</li>
-        </ul>
-        <button type="button" class="so-btn so-btn--p1" onclick="selectPackAndBuy(1)">Select Solo · ₹229</button>
+        <div class="so-gallery__dots" role="tablist" aria-label="Gallery slides">
+          <button type="button" aria-label="Photo 1, bottle" aria-selected="true"></button>
+          <button type="button" aria-label="Photo 2, campaign" aria-selected="false"></button>
+          <button type="button" aria-label="Photo 3, everyday carry" aria-selected="false"></button>
+          <button type="button" aria-label="Photo 4, commute" aria-selected="false"></button>
+          <button type="button" aria-label="Photo 5, how to mist" aria-selected="false"></button>
+          <button type="button" aria-label="Photo 6, fabric only" aria-selected="false"></button>
+        </div>
+        <div class="so-gallery__thumbs" role="tablist" aria-label="Gallery thumbnails">
+          <button type="button" aria-label="Bottle" aria-selected="true"><img src="/assets/campaign/bottle@640.webp" alt="" width="120" height="213" loading="lazy" decoding="async"></button>
+          <button type="button" aria-label="Campaign" aria-selected="false"><img src="/assets/campaign/handled@640.webp" alt="" width="120" height="80" loading="lazy" decoding="async"></button>
+          <button type="button" aria-label="Everyday carry" aria-selected="false"><img src="/assets/campaign/edc@640.webp" alt="" width="120" height="213" loading="lazy" decoding="async"></button>
+          <button type="button" aria-label="Commute" aria-selected="false"><img src="/assets/campaign/office@640.webp" alt="" width="120" height="213" loading="lazy" decoding="async"></button>
+          <button type="button" aria-label="How to mist" aria-selected="false"><img src="/assets/pdp-03-how-to-use@640.webp" alt="" width="120" height="132" loading="lazy" decoding="async"></button>
+          <button type="button" aria-label="Fabric only" aria-selected="false"><img src="/assets/pdp-07-fabric-only@640.webp" alt="" width="120" height="132" loading="lazy" decoding="async"></button>
+        </div>
       </div>
-
-      <div class="so-bundle-card so-bundle-card--popular">
-        <span class="so-bundle-badge">Most Popular</span>
-        <div class="so-bundle-top">
-          <span class="so-bundle-pack">Duo Pack</span>
-          <h3>2 × 50ml Bottles</h3>
-          <div class="so-bundle-price-row">
-            <span class="so-bundle-price">₹429</span>
-            <span class="so-bundle-save">Save ₹29</span>
-          </div>
-          <p class="so-bundle-sub">Home & Commute Bag</p>
+      <div>
+        <div class="so-packs" role="radiogroup" aria-label="Choose a pack">
+          <button type="button" class="so-pack" role="radio" data-so-pack="1" aria-checked="true" aria-pressed="true">
+            <span class="so-pack__qty">1 × 50ml</span>
+            <strong class="so-pack__name">Solo Bottle</strong>
+            <span class="so-pack__price">₹229</span>
+            <span class="so-pack__note">Desk / everyday carry · prepaid UPI</span>
+          </button>
+          <button type="button" class="so-pack" role="radio" data-so-pack="2" aria-checked="false" aria-pressed="false">
+            <span class="so-pack__qty">2 × 50ml</span>
+            <strong class="so-pack__name">Duo Pack</strong>
+            <span class="so-pack__price">₹429</span>
+            <span class="so-pack__note">Home & commute · Save ₹29</span>
+          </button>
+          <button type="button" class="so-pack" role="radio" data-so-pack="3" aria-checked="false" aria-pressed="false">
+            <span class="so-pack__qty">3 × 50ml</span>
+            <strong class="so-pack__name">Trio Pack</strong>
+            <span class="so-pack__price">₹599</span>
+            <span class="so-pack__note">Home, desk & bag · Save ₹88</span>
+          </button>
         </div>
-        <ul class="so-bundle-list">
-          <li>2 × 50ml pocket bottles</li>
-          <li>~500 micro-fine sprays (~200 refreshes)</li>
-          <li>Keep one at desk, one in your daily bag</li>
-          <li>Free shipping pan-India on UPI</li>
-          <li>Dispatched within 48 hours</li>
-        </ul>
-        <button type="button" class="so-btn so-btn--p1" onclick="selectPackAndBuy(2)">Select Duo · ₹429</button>
-      </div>
-
-      <div class="so-bundle-card">
-        <div class="so-bundle-top">
-          <span class="so-bundle-pack">Trio Pack</span>
-          <h3>3 × 50ml Bottles</h3>
-          <div class="so-bundle-price-row">
-            <span class="so-bundle-price">₹599</span>
-            <span class="so-bundle-save">Save ₹88</span>
+        <div class="so-buy__panel">
+          <p class="so-buy__kicker">Smelloff</p>
+          <h3 class="so-buy__name" data-so-name>ODORSTRIKE</h3>
+          <p class="so-buy__cat"><span data-so-pack-label>1 × 50ml</span> · fabric-only odor mist</p>
+          <div class="so-pay" role="group" aria-label="Payment method">
+            <button type="button" class="so-pay__opt" data-so-pay="prepaid" aria-pressed="true">
+              <span class="so-pay__label">Prepaid UPI</span>
+              <span class="so-pay__note">Free shipping pan-India</span>
+            </button>
+            <button type="button" class="so-pay__opt" data-so-pay="cod" aria-pressed="false">
+              <span class="so-pay__label">COD</span>
+              <span class="so-pay__note">+₹60 handling</span>
+            </button>
           </div>
-          <p class="so-bundle-sub">Desk, Gym & Wardrobe</p>
+          <a class="so-btn so-btn--p1 so-buy__cta" href="/?buy=1" data-so-cta data-smelloff-buy="home_buy">Buy ODORSTRIKE — ₹229</a>
+          <div class="so-buy__wa">
+            <a class="so-btn so-btn--p3" data-so-wa href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20would%20like%20to%20order%20ODORSTRIKE%2050ml.">Order on WhatsApp</a>
+          </div>
+          <ul class="so-buy__trust">
+            <li>Free shipping pan-India on prepaid UPI</li>
+            <li>COD adds ₹60 handling (₹289 total at door)</li>
+            <li>Dispatched within 48 hours of confirmation</li>
+            <li>Estimated delivery: 3–5 days (Metros) · 5–7 days (Pan-India)</li>
+            <li>Hyderabad, India</li>
+          </ul>
         </div>
-        <ul class="so-bundle-list">
-          <li>3 × 50ml pocket bottles</li>
-          <li>~750 micro-fine sprays (~300 refreshes)</li>
-          <li>Best per-bottle value (₹199 / bottle)</li>
-          <li>Free shipping pan-India on UPI</li>
-          <li>Full wardrobe & transit rotation</li>
+        <ul class="so-commerce__extra">
+          <li>7-day returns — bottle at least 80% full in original packaging. <a href="/returns">Returns policy</a>.</li>
+          <li>Fabric only. Never for skin, face, or eyes.</li>
+          <li>COD orders are dispatched after phone confirmation.</li>
         </ul>
-        <button type="button" class="so-btn so-btn--p1" onclick="selectPackAndBuy(3)">Select Trio · ₹599</button>
       </div>
     </div>
   </div>
@@ -901,27 +876,6 @@
       </details>
     </div>
     <a class="so-btn so-btn--p3 so-more" href="/faq">More questions</a>
-  </div>
-</section>
-
-<!-- 13 FOUNDER STORY -->
-<section class="so-block" id="brand-story" aria-labelledby="storyTitle">
-  <div class="so-inner">
-    <p class="so-kicker">Origin · Hyderabad, India</p>
-    <h2 id="storyTitle">Why we built ODORSTRIKE.</h2>
-    <div class="so-story-box">
-      <blockquote>
-        <p>“I was tired of shirts smelling like a commute an hour into a workday. Deodorant stopped working at the skin level; perfumes just created an embarrassing cologne-sweat cloud. We built ODORSTRIKE in Hyderabad for the exact moments where you need your clothes to stay fresh without needing a washing machine mid-day.”</p>
-        <p>“We chose real molecular neutralizers over synthetic perfumes because men don’t want to smell like an aisle of room sprays. They just want their clothes to smell completely clean.”</p>
-      </blockquote>
-      <div class="so-story-author">
-        <div>
-          <cite>Jogdhande Nikhil Patil</cite>
-          <span>Founder, Smelloff</span>
-        </div>
-        <span class="so-story-loc">Formulated in Hyderabad</span>
-      </div>
-    </div>
   </div>
 </section>
 
