@@ -49,7 +49,7 @@ function check() {
   if (!js.includes('window.selectPay') && !js.includes('function selectPay')) {
     errors.push('selectPay missing from checkout.js.');
   }
-  if (!html.includes('pdp-01-hero')) errors.push('hero gallery asset missing.');
+  if (!html.includes('/assets/campaign/bottle') && !html.includes('pdp-01-hero')) errors.push('hero gallery asset missing.');
   if (/Your shirt smells/.test(html)) errors.push('Legacy conversion hero remains.');
   if (/kills sweat smell in seconds|eliminate odor from clothes instantly/i.test(html)) {
     errors.push('Legacy instant-performance language remains.');

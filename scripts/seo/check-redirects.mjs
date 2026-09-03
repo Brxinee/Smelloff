@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..');
 const config = JSON.parse(fs.readFileSync(path.join(REPO, 'vercel.json'), 'utf8'));
-const allowedAliases = new Set(['/index', '/blog/index', '/solutions/index', '/odorstrike']);
+const allowedAliases = new Set(['/index', '/blog/index', '/solutions/index', '/odorstrike', '/shop']);
 const errors = [];
 
 function isRedirectStub(file) {

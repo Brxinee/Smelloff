@@ -81,9 +81,9 @@
 </script>
 
 <!-- Fonts -->
-<link rel="preload" href="/assets/fonts.css?v=bcf0d083" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/assets/fonts.css?v=bcf0d083"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=b5d3ccb1">
+<link rel="preload" href="/assets/fonts.css?v=aac09570" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css?v=aac09570"></noscript>
+<link rel="stylesheet" href="/assets/css/tokens.css?v=4605ce3e">
 <meta name="theme-color" content="#080808">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -92,7 +92,7 @@
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://smelloff.in/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://smelloff.in/blog"}, {"@type": "ListItem", "position": 3, "name": "Wedding and Festive Wear Odor: How to Freshen Formal Indian Outfits Without Washing", "item": "https://smelloff.in/blog/wedding-festive-wear-odor-guide"}]}
 </script>
-  <link rel="stylesheet" href="/assets/css/blog.css?v=c654947f">
+  <link rel="stylesheet" href="/assets/css/blog.css?v=6ebe88c6">
 <!-- JSON-LD FAQPage -->
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I freshen a sherwani between functions?", "acceptedAnswer": {"@type": "Answer", "text": "Air it first — an hour on a wide hanger in moving air does more than people expect, because a good share of what you are smelling is volatile and will simply leave. Then mist the inside collar, the underarm panels and the upper back with a residue-free fabric spray and let it dry. If the outer fabric is silk, brocade or zari, treat only the inner lining and spot-test first."}}, {"@type": "Question", "name": "Can I spray a silk kurta or saree?", "acceptedAnswer": {"@type": "Answer", "text": "Only after a spot test, and preferably on the lining rather than the face of the fabric. Silk is a protein fibre that water-marks readily, and the mark comes from water rather than from the odor actives. Test a hidden seam or inside hem, let it dry completely, and check in daylight. If there is any change in sheen or texture, restrict yourself to airing and a dry-clean afterwards."}}, {"@type": "Question", "name": "Why do formal clothes smell worse than office clothes?", "acceptedAnswer": {"@type": "Answer", "text": "Three things stack up. Formal Indian wear is layered and heavy, so heat and moisture stay against the body instead of evaporating. Functions run five to eight hours with no realistic chance to change. And event stress recruits the apocrine glands, which produce a lipid-rich sweat that odor bacteria break down into much sharper compounds than ordinary thermal sweat."}}, {"@type": "Question", "name": "Is dry cleaning the only option for a smelly wedding outfit?", "acceptedAnswer": {"@type": "Answer", "text": "Dry cleaning is the right call for a visible stain or an outfit going into storage for a season. It is an expensive and slow answer to odor alone, and repeated dry cleaning is hard on zari and delicate embroidery. For odor specifically, airing plus a targeted mist on the inner zones handles most of it, with dry cleaning reserved for end-of-season."}}, {"@type": "Question", "name": "What should I carry to a wedding for mid-event freshening?", "acceptedAnswer": {"@type": "Answer", "text": "A 50ml pocket mist is the practical size — it fits a sherwani pocket or a clutch and gets through security at hotel venues without issue. The mid-event routine is 30 seconds in a washroom: open the collar, two light sprays inside it, one on each underarm panel, ten seconds to dry. That is enough to reset the zone that people actually stand close to."}}]}
@@ -102,11 +102,11 @@
 <script src="/assets/js/consent-analytics.js?v=0982d63f" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=5dcc0595">
-<link rel="stylesheet" href="/assets/css/checkout.css?v=d54b9379">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=7f467eda">
-<script src="/assets/js/chrome.js?v=83edf779" defer></script>
-<script src="/assets/js/checkout.js?v=3924441a" defer></script>
-<script type="module" src="/assets/js/buy-module.js?v=f5cff3b1"></script>
+<link rel="stylesheet" href="/assets/css/checkout.css?v=5de537af">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=efeda65b">
+<script src="/assets/js/chrome.js?v=fc00af59" defer></script>
+<script src="/assets/js/checkout.js?v=aed31af9" defer></script>
+<script type="module" src="/assets/js/buy-module.js?v=266185f8"></script>
 </head>
 <body>
 
@@ -410,8 +410,8 @@
       <!-- An empty state with no way out is a dead end: the drawer is a
            full-height panel over the page, so "Your cart is empty" and
            nothing else left the only exit as the × in the corner. Anyone
-           arriving here from the header cart on another page (/odorstrike
-           ?cart=open) landed on a blank panel with no next step. -->
+           arriving here from the header cart on another page
+           (?cart=open) landed on a blank panel with no next step. -->
       <div class="cart-empty" id="cartEmpty">
         <p class="cart-empty-msg">Your cart is empty</p>
         <button type="button" class="cart-empty-cta" onclick="closeCartDrawer();var b=document.getElementById('buy');if(b)b.scrollIntoView({behavior:'smooth',block:'start'});else location.href='/#buy'">Shop ODORSTRIKE · ₹229</button>
@@ -633,11 +633,12 @@
 
         <!-- Manual UTR Submission Card -->
         <div class="upi-utr-box" id="upiUtrBox" style="margin-top:14px;padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:6px;text-align:left;">
-          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Have a 12-digit UTR / UPI Reference?</div>
+          <label for="upiUtrInput" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">UTR / UPI reference</label>
           <div style="display:flex;gap:6px;">
-            <input type="text" id="upiUtrInput" placeholder="Enter 12-digit UTR / UPI Ref" maxlength="24" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
+            <input type="text" id="upiUtrInput" placeholder="12-digit UTR / UPI Ref" maxlength="24" autocomplete="off" inputmode="text" aria-describedby="upiUtrHint" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
             <button type="button" id="upiSubmitUtrBtn" onclick="submitCustomerUtr()" style="background:var(--acid);color:var(--ink);border:none;border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:700;padding:8px 14px;cursor:pointer;white-space:nowrap;">Submit UTR</button>
           </div>
+          <p id="upiUtrHint" style="margin:6px 0 0;font-size:11px;color:var(--muted);line-height:1.4;">Paste the 12-digit reference from your UPI app if payment succeeded but this page did not update.</p>
           <div id="upiUtrFeedback" style="display:none;font-size:11px;margin-top:8px;line-height:1.4;"></div>
         </div>
 
@@ -677,7 +678,7 @@
     <span class="po-logo"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="73" height="16" style="height:16px;width:auto;display:block"></span>
     <button type="button" class="po-close" onclick="closePaymentFailedOverlay()" aria-label="Close">×</button>
   </nav>
-  <main class="po-main">
+  <div class="po-main">
     <div class="po-eyebrow">Policy · Payment Failed</div>
     <h2 id="pfTitle">Payment Failed / Failed Transaction Policy</h2>
 
@@ -717,232 +718,9 @@
 
     <div class="po-meta">
       Smelloff · Hyderabad, Telangana, India<br>
-      Last updated: April 2026
+      Last updated: August 2026
     </div>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main>
+  </div>
 </div>
 
 <!-- /SF-CHROME:CHECKOUT -->

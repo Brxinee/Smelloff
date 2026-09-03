@@ -132,7 +132,7 @@
   // button on every phone size. Always recomputed from what is actually open,
   // so closing the drawer while checkout is still up doesn't unlock the page.
   function syncModalState() {
-    var open = ['checkoutOverlay', 'cartOverlay'].some(function (id) {
+    var open = ['checkoutOverlay', 'cartOverlay', 'paymentFailedOverlay'].some(function (id) {
       var el = document.getElementById(id);
       return el && el.classList.contains('active');
     }) || (function () {
@@ -372,7 +372,11 @@
     // Sync quantity from the cart (default to 1 for any direct/legacy call).
     if (getCartQty() > 0) cartQty = getCartQty();
     if (!(cartQty > 0)) cartQty = 1;
-    document.getElementById('checkoutTitle').textContent = VARIANTS[variant].title;
+    var titleEl = document.getElementById('checkoutTitle');
+    if (titleEl) {
+      var packKey = cartQty === 2 ? 'duo' : cartQty === 3 ? 'trio' : variant;
+      titleEl.textContent = (VARIANTS[packKey] && VARIANTS[packKey].title) || VARIANTS[variant].title;
+    }
     renderCheckoutPrices();
     document.getElementById('checkoutForm').style.display = 'block';
     document.getElementById('successScreen').style.display = 'none';
@@ -1257,16 +1261,17 @@
   window.openPaymentFailedOverlay = function() {
     _pfPrevScroll = window.scrollY || 0;
     const o = document.getElementById('paymentFailedOverlay');
+    if (!o) return;
     o.classList.add('active');
     o.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
+    syncModalState();
   };
   window.closePaymentFailedOverlay = function() {
-    document.getElementById('paymentFailedOverlay').classList.remove('active');
-    // If checkout overlay is still open, keep body locked.
-    const checkoutOpen = document.getElementById('checkoutOverlay').classList.contains('active');
-    if (!checkoutOpen) {
-      document.body.style.overflow = '';
+    var o = document.getElementById('paymentFailedOverlay');
+    if (o) o.classList.remove('active');
+    syncModalState();
+    var checkoutOpen = document.getElementById('checkoutOverlay');
+    if (!checkoutOpen || !checkoutOpen.classList.contains('active')) {
       window.scrollTo(0, _pfPrevScroll);
     }
   };
@@ -1419,6 +1424,27 @@
     var viewer=document.getElementById('galViewer');
     if(!gallery||!viewer)return;
     var opener=null;
+    var trapHandler=null;
+
+    function trap(){
+      if(trapHandler) viewer.removeEventListener('keydown', trapHandler);
+      trapHandler=function(e){
+        if(e.key!=='Tab') return;
+        var all=viewer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        var f=Array.prototype.filter.call(all, function(el){
+          return el.getClientRects().length>0 && getComputedStyle(el).visibility!=='hidden';
+        });
+        if(!f.length){ e.preventDefault(); return; }
+        var first=f[0], last=f[f.length-1];
+        if(f.indexOf(document.activeElement)===-1){ e.preventDefault(); (e.shiftKey?last:first).focus(); return; }
+        if(e.shiftKey){
+          if(document.activeElement===first){ e.preventDefault(); last.focus(); }
+        } else {
+          if(document.activeElement===last){ e.preventDefault(); first.focus(); }
+        }
+      };
+      viewer.addEventListener('keydown', trapHandler);
+    }
 
     function open(img){
       var big=viewer.querySelector('img');
@@ -1431,11 +1457,13 @@
       viewer.appendChild(clone);
       viewer.classList.add('active');
       syncModalState();
+      trap();
       viewer.querySelector('.gal-viewer-close').focus();
     }
     function close(){
       if(!viewer.classList.contains('active'))return;
       viewer.classList.remove('active');
+      if(trapHandler){ viewer.removeEventListener('keydown', trapHandler); trapHandler=null; }
       syncModalState();
       if(opener){opener.focus();opener=null;}
     }
@@ -1531,11 +1559,11 @@
     if (!nodes.length) return;
     function apply(qty, origin) {
       pdpQty = Math.max(1, Math.min(5, qty));
-      setCartQty(pdpQty);
       renderPdpQty();
       for (var i = 0; i < nodes.length; i++) {
         var on = parseInt(nodes[i].getAttribute('data-so-pack'), 10) === pdpQty;
         nodes[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+        nodes[i].setAttribute('aria-checked', on ? 'true' : 'false');
       }
       var cta = document.querySelector('[data-so-buy] [data-so-cta], #buy [data-so-cta]');
       if (cta) {
@@ -1547,6 +1575,7 @@
         var payIsCod = !prepaid && document.querySelector('[data-so-buy] [data-so-pay="cod"][aria-pressed="true"], #buy [data-so-pay="cod"][aria-pressed="true"]');
         var amount = payIsCod ? (totals + 60) : totals;
         cta.textContent = 'Buy ODORSTRIKE — ₹' + amount;
+        if (cta.tagName === 'A') cta.setAttribute('href', '/?buy=' + pdpQty);
       }
       var label = document.querySelector('[data-so-pack-label]');
       if (label) label.textContent = pdpQty + ' × 50ml';

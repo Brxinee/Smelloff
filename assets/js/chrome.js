@@ -234,8 +234,9 @@
 
   if (!excluded && isContentPage && !document.getElementById('soSticky') && !document.getElementById('mobileBar')) {
     var T = truth();
-    var hasBuy = !!document.getElementById('buy');
-    var ctaHref = hasBuy ? '#buy' : '/?buy=1';
+    var buy = document.getElementById('buy') || document.querySelector('[data-so-buy]');
+    var hasBuy = !!buy;
+    var ctaHref = document.getElementById('buy') ? '#buy' : '/?buy=1';
     var bar = document.createElement('div');
     bar.className = 'so-sticky';
     bar.id = 'soSticky';
@@ -249,7 +250,6 @@
       '<a class="so-btn so-btn--p1" href="' + ctaHref + '" data-smelloff-buy="mobile_sticky">Buy</a>';
     document.body.appendChild(bar);
 
-    var buy = document.getElementById('buy');
     var buyInView = false;
     var scrolledEnough = false;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -20,7 +20,7 @@ function checkoutHref() {
 }
 
 function packQty(root) {
-  var pressed = document.querySelector('[data-so-pack][aria-pressed="true"]');
+  var pressed = document.querySelector('[data-so-pack][aria-checked="true"], [data-so-pack][aria-pressed="true"]');
   if (pressed) {
     var n = parseInt(pressed.getAttribute('data-so-pack'), 10);
     if (n >= 1 && n <= 5) return n;

@@ -63,8 +63,8 @@
   "wordCount": 1850
 }
 </script>
-<link rel="preload" href="/assets/fonts.css?v=bcf0d083" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/assets/fonts.css?v=bcf0d083"></noscript>
+<link rel="preload" href="/assets/fonts.css?v=aac09570" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css?v=aac09570"></noscript>
 <meta name="theme-color" content="#080808">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -79,21 +79,21 @@
   {"@type":"ListItem","position":3,"name":"The Spray That Removes Sweat Smell from Clothes quickly","item":"https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly"}
 ]}
 </script>
-  <link rel="stylesheet" href="/assets/css/blog.css?v=c654947f">
+  <link rel="stylesheet" href="/assets/css/blog.css?v=6ebe88c6">
 <!-- JSON-LD FAQPage -->
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How fast does a fabric spray actually kill sweat smell?", "acceptedAnswer": {"@type": "Answer", "text": "A fabric odor spray works within about 10 seconds, the time it takes ODORSTRIKE to dry on the cloth, because its actives bind to the sweat compounds on contact instead of waiting to perfume over them. You mist the collar, underarms and back, and the smell is neutralised as it dries. Masking sprays feel instant too, but the odor returns as the fragrance fades."}}, {"@type": "Question", "name": "Does Febreze remove sweat smell quickly?", "acceptedAnswer": {"@type": "Answer", "text": "Febreze reduces sweat smell but is not built for an instant on-the-body reset, because it is a large home bottle with a 2 to 4 minute dry time that leaves wet patches on a shirt. Its cyclodextrin does trap odor, yet the format suits sofas and curtains. A pocket 50ml fabric mist like ODORSTRIKE dries in about 10 seconds for a quick clothing reset."}}, {"@type": "Question", "name": "Can I use perfume or body spray to remove sweat smell from clothes?", "acceptedAnswer": {"@type": "Answer", "text": "Perfume or body spray cannot remove sweat smell from clothes; it only layers scent over the odor already in the fabric. Within an hour the fragrance fades and the sweat smell returns, often sharper for mixing with the perfume. To actually clear it you need a fabric neutraliser like ODORSTRIKE that breaks down the odor compounds in the fibres rather than covering them."}}, {"@type": "Question", "name": "Is it safe to spray fabric mist on a wet, sweaty shirt?", "acceptedAnswer": {"@type": "Answer", "text": "Spraying fabric mist on a damp, sweaty shirt is safe and still works, though a lightly aired shirt gives the cleanest result. ODORSTRIKE neutralises the odor compounds whether the fabric is dry or slightly damp, then dries clear in about 10 seconds. For a heavily soaked shirt, blot the worst moisture first, then mist the collar, underarms and back evenly."}}, {"@type": "Question", "name": "What does 'instant' really mean for a sweat-smell spray?", "acceptedAnswer": {"@type": "Answer", "text": "For a sweat-smell spray, instant means the odor is neutralised as the mist dries, not that a fragrance covers it for a few minutes. ODORSTRIKE binds to the sweat compounds on contact and dries clear in about 10 seconds, so the shirt reads as neutral right away and stays that way for up to 8 hours rather than smelling worse later."}}]}
 </script>
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
 <script src="/assets/js/consent-analytics.js?v=0982d63f" defer></script>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=b5d3ccb1">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=4605ce3e">
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=5dcc0595">
-<link rel="stylesheet" href="/assets/css/checkout.css?v=d54b9379">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=7f467eda">
-<script src="/assets/js/chrome.js?v=83edf779" defer></script>
-<script src="/assets/js/checkout.js?v=3924441a" defer></script>
-<script type="module" src="/assets/js/buy-module.js?v=f5cff3b1"></script>
+<link rel="stylesheet" href="/assets/css/checkout.css?v=5de537af">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=efeda65b">
+<script src="/assets/js/chrome.js?v=fc00af59" defer></script>
+<script src="/assets/js/checkout.js?v=aed31af9" defer></script>
+<script type="module" src="/assets/js/buy-module.js?v=266185f8"></script>
 </head>
 <body>
 
@@ -440,8 +440,8 @@
       <!-- An empty state with no way out is a dead end: the drawer is a
            full-height panel over the page, so "Your cart is empty" and
            nothing else left the only exit as the × in the corner. Anyone
-           arriving here from the header cart on another page (/odorstrike
-           ?cart=open) landed on a blank panel with no next step. -->
+           arriving here from the header cart on another page
+           (?cart=open) landed on a blank panel with no next step. -->
       <div class="cart-empty" id="cartEmpty">
         <p class="cart-empty-msg">Your cart is empty</p>
         <button type="button" class="cart-empty-cta" onclick="closeCartDrawer();var b=document.getElementById('buy');if(b)b.scrollIntoView({behavior:'smooth',block:'start'});else location.href='/#buy'">Shop ODORSTRIKE · ₹229</button>
@@ -663,11 +663,12 @@
 
         <!-- Manual UTR Submission Card -->
         <div class="upi-utr-box" id="upiUtrBox" style="margin-top:14px;padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:6px;text-align:left;">
-          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Have a 12-digit UTR / UPI Reference?</div>
+          <label for="upiUtrInput" style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">UTR / UPI reference</label>
           <div style="display:flex;gap:6px;">
-            <input type="text" id="upiUtrInput" placeholder="Enter 12-digit UTR / UPI Ref" maxlength="24" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
+            <input type="text" id="upiUtrInput" placeholder="12-digit UTR / UPI Ref" maxlength="24" autocomplete="off" inputmode="text" aria-describedby="upiUtrHint" style="flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff;font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;" />
             <button type="button" id="upiSubmitUtrBtn" onclick="submitCustomerUtr()" style="background:var(--acid);color:var(--ink);border:none;border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:700;padding:8px 14px;cursor:pointer;white-space:nowrap;">Submit UTR</button>
           </div>
+          <p id="upiUtrHint" style="margin:6px 0 0;font-size:11px;color:var(--muted);line-height:1.4;">Paste the 12-digit reference from your UPI app if payment succeeded but this page did not update.</p>
           <div id="upiUtrFeedback" style="display:none;font-size:11px;margin-top:8px;line-height:1.4;"></div>
         </div>
 
@@ -707,7 +708,7 @@
     <span class="po-logo"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="73" height="16" style="height:16px;width:auto;display:block"></span>
     <button type="button" class="po-close" onclick="closePaymentFailedOverlay()" aria-label="Close">×</button>
   </nav>
-  <main class="po-main">
+  <div class="po-main">
     <div class="po-eyebrow">Policy · Payment Failed</div>
     <h2 id="pfTitle">Payment Failed / Failed Transaction Policy</h2>
 
@@ -747,232 +748,9 @@
 
     <div class="po-meta">
       Smelloff · Hyderabad, Telangana, India<br>
-      Last updated: April 2026
+      Last updated: August 2026
     </div>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main>
+  </div>
 </div>
 
 <!-- /SF-CHROME:CHECKOUT -->

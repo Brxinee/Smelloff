@@ -7,6 +7,7 @@
    ===================================================================== */
 
 :root{
+  color-scheme: dark;
   /* ---- Color Tokens -------------------------------------------------- */
   --color-bg: #080808;                    /* Pure dark canvas */
   --color-surface-1: #111111;             /* Primary elevated card surface */
@@ -148,8 +149,8 @@
   --surface: var(--color-surface-1);
   --surface-2: var(--color-surface-2);
   --surface-3: var(--color-surface-3);
-  --surface-light: #FFFFFF;
-  --bg-light: #F7F7F5;
+  --surface-light: #111111;
+  --bg-light: #0C0C0C;
   --text-dark: #0A0A0A;
   --text-dark-muted: #666666;
   --text: var(--color-text-primary);
@@ -160,7 +161,7 @@
   --acid-dim: var(--color-accent-dim);
   --acid-rgb: var(--color-accent-rgb);
   --on-acid: var(--color-on-accent);
-  --border-light: #E5E5E2;
+  --border-light: #262626;
   --border-dark: var(--color-border);
   --rule: var(--color-border);
   --rule-soft: rgba(255,255,255,.06);
