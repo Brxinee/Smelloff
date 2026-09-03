@@ -9,6 +9,8 @@ export function isAllowedOrigin(origin) {
     if (
       origin.endsWith('.vercel.app') ||
       origin.endsWith('.run.app') ||
+      origin.endsWith('.googleusercontent.com') ||
+      origin.endsWith('.aistudio.google.com') ||
       origin.startsWith('http://localhost') ||
       origin.startsWith('http://127.0.0.1')
     ) {
