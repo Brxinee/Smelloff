@@ -36,6 +36,19 @@
   const COD_FEE = Number(CFG.COD_FEE) || 0;
 
   let currentVariant = 'solo';
+  // Canonical purchase state shared by pack, quantity, payment method and totals.
+  const purchaseState = { variant: 'solo', quantity: 1, paymentMethod: 'prepaid' };
+  function syncPurchaseState() {
+    const q = Math.max(1, Math.min(5, Number(purchaseState.quantity) || 1));
+    purchaseState.quantity = q;
+    if (purchaseState.paymentMethod !== 'cod') purchaseState.paymentMethod = 'prepaid';
+    if (!['solo', 'duo', 'trio'].includes(purchaseState.variant)) {
+      purchaseState.variant = q === 3 ? 'trio' : q === 2 ? 'duo' : 'solo';
+    }
+    currentVariant = purchaseState.variant;
+    cartQty = q;
+    payMethod = purchaseState.paymentMethod;
+  }
   // Prepaid UPI is the friction-free default with Free Pan-India Shipping.
   let payMethod = 'prepaid'; // matches the default-active .pay-opt[data-method="prepaid"]
   // Quantity being checked out — sourced from the cart. Unit price stays ₹229
@@ -245,11 +258,15 @@
     renderPdpQty();
   }
   function buyNow() {
-    setCartQty(Math.max(1, Math.min(5, pdpQty)));
+    const qty = Math.max(1, Math.min(5, Number(pdpQty) || 1));
+    purchaseState.quantity = qty;
+    purchaseState.variant = qty === 3 ? 'trio' : qty === 2 ? 'duo' : 'solo';
+    syncPurchaseState();
+    setCartQty(qty);
     trackAddToCart();
     smfCartBeacon('add_to_cart');
     closeCartDrawer();
-    openCheckout('solo');
+    openCheckout(purchaseState.variant);
   }
   // "Add to cart" is the browse path: add a unit and show the drawer, so the
   // qty controls and the subtotal are visible and the page stays behind it.
@@ -266,9 +283,9 @@
     pdpQty = q > 0 ? Math.min(5, q) : 1;
     renderPdpQty();
   }
-  function cartInc() { var next = Math.min(5, getCartQty() + 1); setCartQty(next); syncPdpQtyFromCart(); smfCartBeacon('cart_update'); }
-  function cartDec() { var q = getCartQty(); if (q <= 1) setCartQty(0); else setCartQty(q - 1); syncPdpQtyFromCart(); smfCartBeacon('cart_update'); }
-  function cartRemove() { setCartQty(0); syncPdpQtyFromCart(); smfCartBeacon('remove_from_cart'); }
+  function cartInc() { var next = Math.min(5, getCartQty() + 1); setCartQty(next); syncPdpQtyFromCart(); purchaseState.quantity = next; purchaseState.variant = next === 3 ? 'trio' : next === 2 ? 'duo' : 'solo'; syncPurchaseState(); smfCartBeacon('cart_update'); }
+  function cartDec() { var q = getCartQty(); var next = q <= 1 ? 0 : q - 1; if (q <= 1) setCartQty(0); else setCartQty(next); syncPdpQtyFromCart(); if (next > 0) { purchaseState.quantity = next; purchaseState.variant = next === 3 ? 'trio' : next === 2 ? 'duo' : 'solo'; } syncPurchaseState(); smfCartBeacon('cart_update'); }
+  function cartRemove() { setCartQty(0); syncPdpQtyFromCart(); purchaseState.quantity = 1; purchaseState.variant = 'solo'; syncPurchaseState(); smfCartBeacon('remove_from_cart'); }
   function checkoutFromCart() {
     var q = getCartQty();
     if (q < 1) return;
@@ -325,7 +342,8 @@
   // from here, so the summary, the UPI panel, the COD panel and the submit button
   // cannot drift apart — which is exactly how they drifted before.
   function orderTotals() {
-    const qty = cartQty > 0 ? cartQty : 1;
+    syncPurchaseState();
+    const qty = purchaseState.quantity > 0 ? purchaseState.quantity : 1;
     let subtotal = 229;
     let savings = 0;
     if (qty === 1) { subtotal = 229; savings = 0; }
@@ -369,6 +387,10 @@
   function openCheckout(variant) {
     _checkoutTrigger = document.activeElement;
     currentVariant = variant;
+    purchaseState.variant = ['solo', 'duo', 'trio'].includes(variant) ? variant : (cartQty === 3 ? 'trio' : cartQty === 2 ? 'duo' : 'solo');
+    purchaseState.quantity = purchaseState.variant === 'trio' ? 3 : purchaseState.variant === 'duo' ? 2 : Math.max(1, Math.min(5, cartQty || 1));
+    purchaseState.paymentMethod = payMethod === 'cod' ? 'cod' : 'prepaid';
+    syncPurchaseState();
     // Sync quantity from the cart (default to 1 for any direct/legacy call).
     if (getCartQty() > 0) cartQty = getCartQty();
     if (!(cartQty > 0)) cartQty = 1;
@@ -491,6 +513,7 @@
   window.submitOrder = submitOrder;
 
   function selectPay(method) {
+    purchaseState.paymentMethod = method === 'cod' ? 'cod' : 'prepaid';
     payMethod = method;
     document.querySelectorAll('.pay-opt').forEach(el => {
       var active = el.dataset.method === method;
