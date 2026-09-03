@@ -1,6 +1,7 @@
 /* =====================================================================
    Smelloff BuyModule — hydrates [data-so-buy] from SMELLOFF_PRODUCT_TRUTH.
-   Does not rewrite checkout. CTA wraps /?buy=1 or window.buyNow().
+   Does not own checkout math. Selections are handed to checkout.js
+   canonical purchase state (window.getPurchaseState / selectPay / buyNow).
    ===================================================================== */
 import { SMELLOFF_PRODUCT_TRUTH as T } from '/shared/product-truth.js';
 
@@ -20,33 +21,49 @@ function checkoutHref() {
 }
 
 function packQty(root) {
-  var pressed = document.querySelector('[data-so-pack][aria-checked="true"], [data-so-pack][aria-pressed="true"]');
+  var pressed = root.querySelector('[data-so-pack][aria-checked="true"], [data-so-pack][aria-pressed="true"]');
   if (pressed) {
     var n = parseInt(pressed.getAttribute('data-so-pack'), 10);
     if (n >= 1 && n <= 5) return n;
   }
+  if (typeof window.getPurchaseState === 'function') {
+    try {
+      var st = window.getPurchaseState();
+      if (st && st.quantity) return st.quantity;
+    } catch (e) {}
+  }
   return 1;
 }
 
-function packSubtotal(qty) {
-  if (qty === 2) return T.pricePrepaid === 229 ? 429 : qty * T.pricePrepaid;
-  if (qty === 3) return 599;
-  return T.pricePrepaid * qty;
+function displayTotal(root, method) {
+  if (typeof window.getPurchaseState === 'function') {
+    try {
+      var st = window.getPurchaseState();
+      var qty = packQty(root);
+      if (typeof window.setPurchaseQuantity === 'function') {
+        st = window.setPurchaseQuantity(qty) || st;
+      }
+      var pay = method || (root.getAttribute('data-pay') === 'cod' ? 'cod' : 'prepaid');
+      var sub = st && typeof st.subtotal === 'number' ? st.subtotal : T.pricePrepaid;
+      var fee = pay === 'cod' ? (T.codFee || 60) : 0;
+      return sub + fee;
+    } catch (e) {}
+  }
+  var qty = packQty(root);
+  var sub = qty === 2 ? 429 : qty === 3 ? 599 : T.pricePrepaid * qty;
+  return sub + (method === 'cod' ? (T.codFee || 60) : 0);
 }
 
 function setPay(root, method) {
-  var prepaid = method !== 'cod';
+  var pay = method === 'cod' ? 'cod' : 'prepaid';
   var opts = root.querySelectorAll('[data-so-pay]');
   for (var i = 0; i < opts.length; i++) {
-    var on = opts[i].getAttribute('data-so-pay') === method;
+    var on = opts[i].getAttribute('data-so-pay') === pay;
     opts[i].setAttribute('aria-pressed', on ? 'true' : 'false');
   }
   var cta = root.querySelector('[data-so-cta]');
-  if (cta) {
-    var amount = packSubtotal(packQty(root)) + (prepaid ? 0 : T.codFee);
-    cta.textContent = 'Buy ODORSTRIKE — ' + rupee(amount);
-  }
-  root.setAttribute('data-pay', method);
+  if (cta) cta.textContent = 'Buy ODORSTRIKE — ' + rupee(displayTotal(root, pay));
+  root.setAttribute('data-pay', pay);
 }
 
 function hydrate(root) {
@@ -75,9 +92,8 @@ function hydrate(root) {
     cta.addEventListener('click', function (e) {
       if (typeof window.buyNow === 'function') {
         e.preventDefault();
-        // Keep the payment method chosen in the homepage BuyModule when
-        // checkout opens. Without this, COD could display ₹289 here but
-        // silently open the checkout's prepaid state.
+        var qty = packQty(root);
+        if (typeof window.setPurchaseQuantity === 'function') window.setPurchaseQuantity(qty);
         var selectedPay = root.getAttribute('data-pay') === 'cod' ? 'cod' : 'prepaid';
         if (typeof window.selectPay === 'function') window.selectPay(selectedPay);
         window.buyNow();
@@ -88,9 +104,21 @@ function hydrate(root) {
   var opts = root.querySelectorAll('[data-so-pay]');
   for (var i = 0; i < opts.length; i++) {
     opts[i].addEventListener('click', function () {
-      setPay(root, this.getAttribute('data-so-pay'));
+      var pay = this.getAttribute('data-so-pay');
+      setPay(root, pay);
+      if (typeof window.selectPay === 'function') window.selectPay(pay);
     });
   }
+
+  var packs = root.querySelectorAll('[data-so-pack]');
+  for (var p = 0; p < packs.length; p++) {
+    packs[p].addEventListener('click', function () {
+      var qty = parseInt(this.getAttribute('data-so-pack'), 10) || 1;
+      if (typeof window.setPurchaseQuantity === 'function') window.setPurchaseQuantity(qty);
+      setPay(root, root.getAttribute('data-pay') === 'cod' ? 'cod' : 'prepaid');
+    });
+  }
+
   setPay(root, 'prepaid');
 }
 
