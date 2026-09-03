@@ -328,6 +328,8 @@
       for (var s = 0; s < slides.length; s++) slides[s].classList.toggle('is-on', s === i);
       for (var d = 0; d < dots.length; d++) dots[d].setAttribute('aria-selected', d === i ? 'true' : 'false');
       for (var t = 0; t < thumbs.length; t++) thumbs[t].setAttribute('aria-selected', t === i ? 'true' : 'false');
+      var counter = root.querySelector('.so-gallery__counter');
+      if (counter) counter.textContent = (i + 1) + ' / ' + slides.length;
       if (scroll && slides[i]) {
         slides[i].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', inline: 'start', block: 'nearest' });
       }
