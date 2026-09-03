@@ -1,0 +1,255 @@
+/* =====================================================================
+   Smelloff — 21st.dev-inspired homepage component layer
+   Vanilla CSS adaptation: bento surfaces, spotlight hero, magnetic CTAs,
+   layered product panel, proof cards and tactile micro-interactions.
+   ===================================================================== */
+
+:root{
+  --s21-max: min(1240px, calc(100vw - 32px));
+  --s21-radius: 18px;
+  --s21-radius-sm: 12px;
+  --s21-line: rgba(255,255,255,.105);
+  --s21-line-hot: rgba(184,255,87,.38);
+  --s21-panel: rgba(255,255,255,.035);
+  --s21-panel-hot: rgba(184,255,87,.055);
+  --s21-shadow: 0 30px 90px rgba(0,0,0,.42);
+}
+
+body{
+  background:
+    radial-gradient(800px 500px at 78% 3%, rgba(184,255,87,.09), transparent 62%),
+    radial-gradient(900px 600px at 14% 26%, rgba(255,255,255,.035), transparent 66%),
+    #080808;
+}
+
+/* Header feels like a floating app chrome rather than a flat bar. */
+.sf-hdr{
+  margin: 12px auto 0;
+  width: min(1220px, calc(100vw - 24px));
+  border: 1px solid rgba(255,255,255,.09)!important;
+  border-radius: 16px;
+  box-shadow: 0 16px 45px rgba(0,0,0,.22);
+}
+.sf-hdr__row{padding-inline:10px}
+
+/* Hero = spotlight + strong editorial type hierarchy. */
+.so-hero{
+  min-height: min(860px, calc(100svh - 82px));
+  display:grid;
+  align-items:center;
+  padding-block:clamp(28px,6vw,76px);
+}
+.so-hero__stage{
+  width:var(--s21-max);
+  margin-inline:auto;
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
+  gap:clamp(24px,5vw,76px);
+  align-items:center;
+  position:relative;
+}
+.so-hero__stage::before{
+  content:'';
+  position:absolute;
+  inset:8% 8% 4% 46%;
+  background:radial-gradient(circle, rgba(184,255,87,.12), transparent 66%);
+  filter:blur(35px);
+  pointer-events:none;
+}
+.so-hero__visual{
+  position:relative;
+  z-index:1;
+  margin:0;
+  overflow:hidden;
+  border:1px solid var(--s21-line);
+  border-radius:24px;
+  background:linear-gradient(145deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+  box-shadow:var(--s21-shadow);
+}
+.so-hero__visual::after{
+  content:'50ML · FABRIC ONLY';
+  position:absolute;
+  left:18px;bottom:18px;
+  padding:8px 10px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  background:rgba(8,8,8,.72);
+  backdrop-filter:blur(10px);
+  font:700 10px/1 'JetBrains Mono',monospace;
+  letter-spacing:.13em;
+  color:rgba(255,255,255,.82);
+}
+.so-hero__visual img{
+  transform:scale(1.015);
+  transition:transform .7s cubic-bezier(.22,1,.36,1),filter .7s ease;
+}
+.so-hero:hover .so-hero__visual img{transform:scale(1.035)}
+.so-hero__copy{position:relative;z-index:2;max-width:620px}
+.so-hero__brand{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin:0 0 16px;
+  padding:8px 10px;
+  border:1px solid var(--s21-line);
+  border-radius:999px;
+  background:var(--s21-panel);
+  font:700 10px/1 'JetBrains Mono',monospace;
+  letter-spacing:.14em;
+  color:#c8c8c3;
+}
+.so-hero__brand::before{
+  content:'';
+  width:7px;height:7px;border-radius:50%;
+  background:var(--so-lime,#b8ff57);
+  box-shadow:0 0 14px rgba(184,255,87,.65);
+}
+.so-hero h1{
+  font-size:clamp(3.3rem,7vw,6.8rem)!important;
+  letter-spacing:-.055em!important;
+  line-height:.9!important;
+  max-width:9ch;
+  text-wrap:balance;
+  margin-bottom:22px!important;
+}
+.so-hero__hook{
+  max-width:48ch;
+  font-size:clamp(1.05rem,1.5vw,1.28rem)!important;
+  line-height:1.5!important;
+  color:#d4d4d0!important;
+}
+.so-hero__commerce{
+  margin-top:24px;
+  padding-top:18px;
+  border-top:1px solid var(--s21-line);
+}
+.so-hero__amount{
+  font-size:clamp(2.3rem,4vw,3.4rem)!important;
+  letter-spacing:-.045em;
+}
+.so-hero__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.so-hero__actions .so-btn{
+  min-height:52px;
+  border-radius:12px;
+  padding-inline:20px;
+  transition:transform .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.so-hero__actions .so-btn--p1{
+  box-shadow:0 12px 35px rgba(184,255,87,.17), inset 0 0 0 1px rgba(0,0,0,.08);
+}
+.so-hero__actions .so-btn--p1:hover{transform:translateY(-2px);box-shadow:0 16px 42px rgba(184,255,87,.25)}
+.so-hero__actions .so-btn--p3:hover{transform:translateY(-2px);background:rgba(255,255,255,.055)}
+.so-hero__bound{margin-top:14px!important;color:#8e8e88!important}
+
+/* Section titles read like deliberate editorial blocks. */
+.so-inner{width:min(var(--s21-max),100%);margin-inline:auto}
+.so-kicker{font-weight:700!important;letter-spacing:.13em!important}
+.so-block h2{
+  font-size:clamp(2.2rem,5vw,4.4rem)!important;
+  letter-spacing:-.045em!important;
+  max-width:12ch;
+  text-wrap:balance;
+}
+.so-lead{max-width:58ch}
+
+/* Bento/card language across the homepage. */
+.so-cat__grid,.so-use,.so-proof__grid,.so-actives,.so-layers{
+  gap:14px!important;
+}
+.so-cat__card,.so-use>a,.so-proof__card,.so-actives article,.so-buy__panel,.so-dose,.so-object{
+  border:1px solid var(--s21-line)!important;
+  border-radius:var(--s21-radius)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018))!important;
+  box-shadow:0 18px 55px rgba(0,0,0,.18);
+}
+.so-cat__card,.so-proof__card,.so-actives article{transition:transform .28s cubic-bezier(.22,1,.36,1),border-color .28s ease,background .28s ease}
+.so-cat__card:hover,.so-proof__card:hover,.so-actives article:hover{transform:translateY(-5px);border-color:var(--s21-line-hot)!important;background:var(--s21-panel-hot)!important}
+.so-cat__card--on{box-shadow:0 0 0 1px rgba(184,255,87,.18),0 18px 55px rgba(0,0,0,.22)}
+.so-cat__card--on::before{content:'';display:block;width:42px;height:3px;background:#b8ff57;border-radius:99px;margin-bottom:18px;box-shadow:0 0 16px rgba(184,255,87,.38)}
+
+.so-use>a{overflow:hidden;padding:0!important;transition:transform .35s cubic-bezier(.22,1,.36,1),border-color .3s ease,box-shadow .3s ease}
+.so-use>a:hover{transform:translateY(-6px);border-color:rgba(184,255,87,.3)!important;box-shadow:0 28px 70px rgba(0,0,0,.32)}
+.so-use>a figure{overflow:hidden}
+.so-use>a img{transition:transform .65s cubic-bezier(.22,1,.36,1);filter:saturate(.92)}
+.so-use>a:hover img{transform:scale(1.045);filter:saturate(1)}
+.so-use__copy{padding:20px!important}
+
+.so-proof__lead{
+  position:relative;
+  margin-top:26px;
+  padding:clamp(24px,4vw,48px)!important;
+  border:1px solid rgba(184,255,87,.18)!important;
+  border-radius:24px!important;
+  background:radial-gradient(circle at 100% 0%,rgba(184,255,87,.08),transparent 45%),linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.018))!important;
+  box-shadow:var(--s21-shadow);
+}
+.so-proof__lead blockquote{font-size:clamp(1.35rem,2.2vw,2.1rem)!important;line-height:1.3!important;max-width:36ch}
+
+/* Formula becomes a clean 2x2 technology bento rather than a long text wall. */
+.so-actives article{padding:clamp(22px,3vw,32px)!important}
+.so-actives article h3{font-size:clamp(1.5rem,2.5vw,2.1rem)!important;letter-spacing:-.03em}
+.so-role{display:inline-flex!important;border:1px solid rgba(184,255,87,.2);border-radius:999px;padding:7px 9px!important;color:#b8ff57!important;background:rgba(184,255,87,.045)}
+.so-layers li{border:1px solid var(--s21-line)!important;border-radius:14px!important;background:rgba(255,255,255,.025)!important;padding:16px!important;transition:transform .2s ease,border-color .2s ease}
+.so-layers li:hover{transform:translateY(-3px);border-color:rgba(184,255,87,.28)!important}
+
+/* Embedded PDP: make it feel like the product's central app surface. */
+.so-commerce{position:relative}
+.so-commerce .so-inner{width:min(var(--s21-max),100%)}
+.so-commerce__stage{
+  background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+  border:1px solid var(--s21-line);
+  border-radius:24px;
+  padding:clamp(14px,2vw,22px);
+  box-shadow:var(--s21-shadow);
+}
+.so-packs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px!important}
+.so-pack{
+  position:relative;
+  min-height:130px;
+  padding:18px!important;
+  border-radius:14px!important;
+  border:1px solid var(--s21-line)!important;
+  background:rgba(255,255,255,.025)!important;
+  transition:transform .22s ease,border-color .22s ease,background .22s ease;
+}
+.so-pack:hover,.so-pack[aria-checked="true"]{transform:translateY(-3px);border-color:rgba(184,255,87,.36)!important;background:rgba(184,255,87,.055)!important}
+.so-pack[aria-checked="true"]::after{content:'SELECTED';position:absolute;right:12px;top:12px;font:700 9px/1 'JetBrains Mono',monospace;letter-spacing:.12em;color:#b8ff57}
+.so-buy__panel{box-shadow:0 30px 80px rgba(0,0,0,.3)!important}
+.so-buy__cta{
+  min-height:56px!important;
+  border-radius:13px!important;
+  font-size:15px!important;
+  box-shadow:0 14px 38px rgba(184,255,87,.16)!important;
+  transition:transform .2s ease,box-shadow .2s ease!important;
+}
+.so-buy__cta:hover{transform:translateY(-2px);box-shadow:0 18px 46px rgba(184,255,87,.25)!important}
+.so-pay{gap:10px!important}
+.so-pay__opt{border-radius:12px!important;transition:border-color .2s ease,background .2s ease}
+.so-pay__opt[aria-pressed="true"]{border-color:rgba(184,255,87,.35)!important;background:rgba(184,255,87,.055)!important}
+
+/* FAQ + closing CTA: stronger cards, calmer ending. */
+.so-faq details{border:1px solid var(--s21-line)!important;border-radius:14px!important;background:rgba(255,255,255,.02);padding-inline:18px!important;margin-bottom:9px;transition:border-color .2s ease,background .2s ease}
+.so-faq details[open]{border-color:rgba(184,255,87,.25)!important;background:rgba(184,255,87,.035)}
+.so-close__box{
+  border:1px solid rgba(184,255,87,.2)!important;
+  border-radius:24px!important;
+  background:radial-gradient(circle at 50% 0%,rgba(184,255,87,.09),transparent 45%),linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018))!important;
+  box-shadow:var(--s21-shadow);
+}
+.so-close__price{font-size:clamp(3rem,6vw,5.5rem)!important;letter-spacing:-.055em!important}
+
+@media(max-width:767px){
+  .sf-hdr{width:calc(100vw - 16px);margin-top:8px;border-radius:13px}
+  .so-hero{min-height:auto;padding-top:26px}
+  .so-hero__stage{grid-template-columns:1fr;gap:20px}
+  .so-hero__visual{order:1;border-radius:18px}
+  .so-hero__copy{order:2}
+  .so-hero h1{font-size:clamp(3rem,15vw,5rem)!important;max-width:10ch}
+  .so-packs{grid-template-columns:1fr!important}
+  .so-pack{min-height:104px}
+  .so-commerce__stage{padding:10px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .so-hero__visual img,.so-use>a img,.so-cat__card,.so-proof__card,.so-actives article,.so-pack,.so-buy__cta{transition:none!important}
+}
