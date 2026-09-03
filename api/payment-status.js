@@ -116,7 +116,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const params = req.method === 'GET' ? req.query : (req.body || {});
+    let params = {};
+    if (req.method === 'GET') {
+      try {
+        const rawUrl = req.url || '';
+        const parsed = new URL(rawUrl, 'https://smelloff.in');
+        params = Object.fromEntries(parsed.searchParams.entries());
+      } catch (parseErr) {
+        params = req.query || {};
+      }
+    } else {
+      params = req.body || {};
+    }
     const orderCode = String(params.orderCode || params.orderId || params.order_code || '').trim().toUpperCase();
     const customerPhone = String(params.phone || params.customerPhone || '').replace(/\D/g, '').slice(-10);
     const orderToken = String(params.orderToken || params.order_token || req.headers['x-order-token'] || '').trim();
