@@ -1130,8 +1130,8 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .so-hero__visual{
   margin:0;
   min-width:0;
-  height:clamp(200px, 28svh, 280px);
-  max-height:280px;
+  height:clamp(190px, 26svh, 250px);
+  max-height:250px;
   padding:0;
   background:#080808;
   display:block;
@@ -1184,13 +1184,13 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   margin:4px 0 0;
   font-size:14.5px;
   font-weight:600;
-  color:#E8E8E8;
+  color:#EDEDED;
   line-height:1.35;
 }
 .so-hero h1{
   margin:8px 0 0;
   font-family:var(--so-font-display, var(--so-font-body, var(--body)));
-  font-size:clamp(2rem, 6.8vw, 2.75rem);
+  font-size:clamp(1.95rem, 6.5vw, 2.65rem);
   font-weight:700;
   letter-spacing:-.03em;
   line-height:1.12;
@@ -1201,9 +1201,9 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .so-hero__hook{
   margin:10px 0 0;
   max-width:44ch;
-  font-size:clamp(1.0625rem, 2.5vw, 1.1875rem);
-  line-height:1.58;
-  color:#D6D6D6;
+  font-size:clamp(1.0625rem, 2.4vw, 1.1875rem);
+  line-height:1.6;
+  color:#DBDBDB;
   text-wrap:pretty;
 }
 .so-hero__story{
@@ -1232,14 +1232,14 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .so-hero__pay{
   margin:5px 0 0;
   font-size:15.5px;
-  color:#F0F0F0;
+  color:#F4F4F4;
   line-height:1.4;
   font-weight:600;
 }
 .so-hero__cod{
   margin:3px 0 0;
   font-size:13.5px;
-  color:#A0A0A0;
+  color:#A8A8A8;
   line-height:1.4;
 }
 .so-hero__actions{
@@ -1256,7 +1256,7 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   font-weight:700;
 }
 .so-hero .so-btn--p3{
-  color:#B0B0B0;
+  color:#CCCCCC;
   align-self:flex-start;
   font-size:15px;
   margin-top:4px;
@@ -1265,23 +1265,23 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   margin:10px 0 0;
   font-size:12.5px;
   line-height:1.45;
-  color:#999999;
+  color:#A0A0A0;
 }
 
 @media (max-height:720px) and (max-width:767px){
-  .so-hero__visual{height:clamp(180px, 26svh, 240px);max-height:240px}
+  .so-hero__visual{height:clamp(170px, 24svh, 220px);max-height:220px}
 }
 
 @media(min-width:360px){
-  .so-hero__visual{height:clamp(210px, 30svh, 290px);max-height:290px}
+  .so-hero__visual{height:clamp(200px, 28svh, 260px);max-height:260px}
   .so-hero__copy{padding:18px max(20px, env(safe-area-inset-right, 0px)) 26px max(20px, env(safe-area-inset-left, 0px))}
   .so-hero h1{margin-top:10px}
   .so-hero__commerce{margin-top:16px;padding-top:14px}
   .so-hero__actions{margin-top:16px;gap:10px}
 }
 @media(min-width:430px){
-  .so-hero__visual{height:clamp(230px, 32svh, 320px);max-height:320px}
-  .so-hero__copy{padding:22px 24px 30px}
+  .so-hero__visual{height:clamp(210px, 30svh, 280px);max-height:280px}
+  .so-hero__copy{padding:20px 24px 28px}
 }
 
 @media(min-width:768px){
