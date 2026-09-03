@@ -227,32 +227,32 @@
    Lime is reserved for the primary purchase action. Not nav. Not rules.
    ===================================================================== */
 :root{
-  --so-chrome: #161410;
-  --so-chrome-2: #1D1A15;
-  --so-chrome-ink: #F4F0E8;
-  --so-chrome-muted: #A8A196;
-  --so-chrome-faint: #7E786E;
-  --so-chrome-line: rgba(244, 240, 232, 0.10);
-  --so-chrome-line-strong: rgba(244, 240, 232, 0.18);
-  --so-chrome-overlay: rgba(10, 9, 8, 0.55);
+  --so-chrome: #080808;
+  --so-chrome-2: #111111;
+  --so-chrome-ink: #F4F4F4;
+  --so-chrome-muted: #A3A3A3;
+  --so-chrome-faint: #777777;
+  --so-chrome-line: rgba(255, 255, 255, 0.08);
+  --so-chrome-line-strong: rgba(255, 255, 255, 0.16);
+  --so-chrome-overlay: rgba(0, 0, 0, 0.72);
 
-  --so-cotton: #EFE6D4;
-  --so-cotton-2: #F7F1E5;
-  --so-cotton-ink: #1B1814;
-  --so-cotton-muted: #5E584E;
-  --so-cotton-faint: #8A8378;
-  --so-cotton-line: rgba(27, 24, 20, 0.12);
-  --so-cotton-line-strong: rgba(27, 24, 20, 0.22);
+  --so-cotton: #0C0C0C;
+  --so-cotton-2: #141414;
+  --so-cotton-ink: #F4F4F4;
+  --so-cotton-muted: #A3A3A3;
+  --so-cotton-faint: #7A7A7A;
+  --so-cotton-line: rgba(255, 255, 255, 0.08);
+  --so-cotton-line-strong: rgba(255, 255, 255, 0.18);
 
   --so-lime: #B8FF57;
-  --so-lime-hover: #C9FF78;
-  --so-lime-ink: #161410;
+  --so-lime-hover: #D1FF8A;
+  --so-lime-ink: #080808;
 
   --so-success: #2C6A46;
   --so-error: #B42318;
 
   --so-font-body: 'DM Sans', 'DM Sans Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --so-font-display: 'Fraunces', 'Fraunces Fallback', Georgia, 'Times New Roman', serif;
+  --so-font-display: 'DM Sans', 'DM Sans Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --so-font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, monospace;
 
   --so-size-xs: 0.75rem;
@@ -290,9 +290,8 @@
   --so-hdr: 64px;
 
   --so-shadow-buy:
-    0 0 0 1px rgba(27, 24, 20, 0.06),
-    0 1px 2px rgba(27, 24, 20, 0.05),
-    0 8px 24px rgba(27, 24, 20, 0.06);
+    0 0 0 1px rgba(184, 255, 87, 0.14),
+    0 12px 40px rgba(0, 0, 0, 0.45);
 
   --so-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --so-dur-quick: 150ms;
