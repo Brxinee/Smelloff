@@ -17,21 +17,55 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fix cropped content images
+      - name: Refine content image framing
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
+          import re
 
           path = Path('assets/css/chrome.css')
-          text = path.read_text()
+          text = path.read_text(encoding='utf-8')
 
-          old = '''.so-media img{\n  width:100%;\n  height:auto;\n  max-height:240px;\n  display:block;\n  object-fit:cover;'''
-          new = '''.so-media img{\n  width:100%;\n  height:auto;\n  max-height:560px;\n  display:block;\n  object-fit:contain;\n  object-position:center;'''
+          pattern = re.compile(
+              r'\.so-media\{.*?\n\}\n\.so-media picture\{.*?\n\}\n\.so-media img\{.*?\n\}\n@media\(min-width:768px\)\{.*?\n\}\n',
+              re.S,
+          )
 
-          if old not in text:
-              raise SystemExit('Expected .so-media image rule was not found; refusing to edit.')
+          new = '''.so-media{
+  margin:0;
+  width:100%;
+  aspect-ratio:4 / 5;
+  overflow:hidden;
+  border-radius:0;
+  border:0;
+  background:transparent;
+}
+.so-media picture{
+  display:block;
+  width:100%;
+  height:100%;
+}
+.so-media img{
+  width:100%;
+  height:100%;
+  max-height:none;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+  border-radius:0;
+}
+@media(min-width:768px){
+  .so-media{
+    aspect-ratio:4 / 5;
+  }
+}
+'''
 
-          path.write_text(text.replace(old, new, 1))
+          updated, count = pattern.subn(new, text, count=1)
+          if count != 1:
+              raise SystemExit('Expected .so-media block not found; refusing to edit blindly.')
+
+          path.write_text(updated, encoding='utf-8')
           PY
 
       - name: Commit fix
@@ -40,5 +74,5 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add assets/css/chrome.css
           git diff --cached --quiet && exit 0
-          git commit -m 'Fix content images to show full frame'
+          git commit -m 'Refine real-photo image framing'
           git push
