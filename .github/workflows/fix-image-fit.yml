@@ -1,4 +1,4 @@
-name: Preserve full product imagery
+name: Keep product photos cover-cropped
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Replace legacy crop override
+      - name: Strip letterbox override
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -26,41 +26,10 @@ jobs:
 
           path = Path('assets/css/chrome.css')
           css = path.read_text(encoding='utf-8')
-
-          # Remove the old workflow-generated crop block and any prior copy of
-          # our replacement, then append exactly one canonical full-image set.
-          css = re.sub(r'\n/\* FINAL REAL-PHOTO FRAMING.*\Z', '', css, flags=re.S)
-          css = re.sub(r'\n/\* FINAL PRODUCT IMAGE PRESERVATION.*\Z', '', css, flags=re.S)
-
-          css += r'''
-
-          /* FINAL PRODUCT IMAGE PRESERVATION — supplied photography is never cropped. */
-          .so-media{
-            width:100% !important;
-            aspect-ratio:auto !important;
-            height:auto !important;
-            overflow:hidden !important;
-            border:0 !important;
-            border-radius:0 !important;
-            background:transparent !important;
-          }
-          .so-media picture{
-            display:block !important;
-            width:100% !important;
-            height:auto !important;
-          }
-          .so-media img{
-            width:100% !important;
-            height:auto !important;
-            max-width:100% !important;
-            max-height:none !important;
-            object-fit:contain !important;
-            object-position:center center !important;
-            display:block !important;
-          }
-          '''
-
-          path.write_text(css, encoding='utf-8')
+          new = re.sub(r'\n/\* FINAL PRODUCT IMAGE PRESERVATION.*\Z', '', css, flags=re.S)
+          new = re.sub(r'\n/\* FINAL REAL-PHOTO FRAMING.*\Z', '', new, flags=re.S)
+          if new != css:
+              path.write_text(new, encoding='utf-8')
           PY
 
       - name: Commit only when needed
@@ -68,9 +37,9 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           if git diff --quiet -- assets/css/chrome.css; then
-            echo 'Image framing already clean.'
+            echo 'Cover crop already last in cascade.'
             exit 0
           fi
           git add assets/css/chrome.css
-          git commit -m 'Fix product imagery to preserve full frames'
+          git commit -m 'Remove letterbox override so product photos fill the frame'
           git push
