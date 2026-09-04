@@ -293,6 +293,20 @@ const PAGES = [
     'solutions/office-commute-fabric-refresher.html',
     'solutions/denim-outerwear-dry-care.html',
   ].map((f) => ({ file: f, header: 'header', footer: 'footer', buy: true })),
+  ...[
+    'why-shirt-zones-smell-after-washing',
+    'wash-refresh-or-wear',
+    'vinegar-baking-soda-fabric-softener',
+    'dry-air-clothes-indian-home',
+    'why-washing-machine-makes-clothes-smell',
+    'remove-incense-agarbatti-dhoop-smell',
+    'why-water-makes-clothing-odor-louder',
+    'why-clothes-smell-stale-in-ac-room',
+    'why-traffic-fumes-cling-to-clothes',
+    'deodorant-perfume-on-fabric',
+    'why-sweat-smells-stronger-on-some-shirts',
+    'how-odor-neutralizer-works-on-fabric'
+  ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
   { file: 'index.html', header: 'header.site', footer: 'footer' },
 ];
 

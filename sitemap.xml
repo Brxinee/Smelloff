@@ -9,9 +9,9 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://smelloff.in/assets/campaign/bottle.webp</image:loc>
+      <image:loc>https://smelloff.in/assets/campaign/bottle.webp?v=real1</image:loc>
       <image:title>ODORSTRIKE Fabric Odor Spray for Clothes | Smelloff</image:title>
-      <image:caption>ODORSTRIKE 50ml fabric-only odor mist bottle by Smelloff</image:caption>
+      <image:caption>ODORSTRIKE 11cm fabric odor mist bottle beside a wallet, earbuds and keys</image:caption>
     </image:image>
   </url>
   <url>
@@ -65,6 +65,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://smelloff.in/blog/deodorant-perfume-on-fabric</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/deodorant-perfume-on-fabric.svg</image:loc>
+      <image:title>Why Deodorant and Perfume Fail on a Sweaty Shirt</image:title>
+      <image:caption>Why Deodorant and Perfume Fail on a Sweaty Shirt</image:caption>
+    </image:image>
+  </url>
+  <url>
     <loc>https://smelloff.in/blog/deodorant-vs-fabric-mist</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
@@ -87,6 +98,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://smelloff.in/blog/dry-air-clothes-indian-home</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/dry-air-clothes-indian-home.svg</image:loc>
+      <image:title>How to Dry Clothes Indoors in an Indian Home Without Smell</image:title>
+      <image:caption>How to Dry Clothes Indoors in an Indian Home Without Smell</image:caption>
+    </image:image>
+  </url>
+  <url>
     <loc>https://smelloff.in/blog/fabric-deodorizer-spray-india-guide-2026</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
@@ -106,6 +128,17 @@
       <image:loc>https://smelloff.in/blog/assets/gym-clothes-smell-after-washing.jpg?v=4</image:loc>
       <image:title>Why Dri-Fit Shirts Smell After Washing (Gym Fix)</image:title>
       <image:caption>A woman in sportswear pinches her nose at the smell of gym clothes that have already been washed</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://smelloff.in/blog/how-odor-neutralizer-works-on-fabric</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/how-odor-neutralizer-works-on-fabric.svg</image:loc>
+      <image:title>How an Odor Neutralizer Works on Fabric</image:title>
+      <image:caption>How an Odor Neutralizer Works on Fabric</image:caption>
     </image:image>
   </url>
   <url>
@@ -261,6 +294,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://smelloff.in/blog/remove-incense-agarbatti-dhoop-smell</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/remove-incense-agarbatti-dhoop-smell.svg</image:loc>
+      <image:title>How to Remove Incense, Agarbatti and Dhoop Smell from Clothes</image:title>
+      <image:caption>How to Remove Incense, Agarbatti and Dhoop Smell from Clothes</image:caption>
+    </image:image>
+  </url>
+  <url>
     <loc>https://smelloff.in/blog/remove-mothball-almirah-smell-from-clothes</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
@@ -280,6 +324,28 @@
       <image:loc>https://smelloff.in/blog/assets/spray-to-remove-sweat-smell-from-clothes-quickly.jpg?v=4</image:loc>
       <image:title>Shirt Odor Spray: Sweat Smell Off Clothes Fast</image:title>
       <image:caption>An office worker wilting in the heat with a damp shirt, the moment a 10-second fabric spray is meant for</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://smelloff.in/blog/vinegar-baking-soda-fabric-softener</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/vinegar-baking-soda-fabric-softener.svg</image:loc>
+      <image:title>Does Vinegar, Baking Soda or Fabric Softener Remove Odor?</image:title>
+      <image:caption>Does Vinegar, Baking Soda or Fabric Softener Remove Odor?</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://smelloff.in/blog/wash-refresh-or-wear</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/wash-refresh-or-wear.svg</image:loc>
+      <image:title>Wash It, Refresh It, or Wear It</image:title>
+      <image:caption>Wash It, Refresh It, or Wear It</image:caption>
     </image:image>
   </url>
   <url>
@@ -377,6 +443,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://smelloff.in/blog/why-clothes-smell-stale-in-ac-room</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/why-clothes-smell-stale-in-ac-room.svg</image:loc>
+      <image:title>Why Clothes Smell Stale in an AC Room</image:title>
+      <image:caption>Why Clothes Smell Stale in an AC Room</image:caption>
+    </image:image>
+  </url>
+  <url>
     <loc>https://smelloff.in/blog/why-i-built-odorstrike</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>monthly</changefreq>
@@ -395,6 +472,61 @@
     <image:image>
       <image:loc>https://smelloff.in/blog/assets/why-polyester-holds-odor-longer-than-cotton.svg</image:loc>
       <image:title>Does Polyester Hold Odor Longer Than Cotton?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://smelloff.in/blog/why-shirt-zones-smell-after-washing</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/why-shirt-zones-smell-after-washing.svg</image:loc>
+      <image:title>Why Collar and Armpits Still Smell After Washing</image:title>
+      <image:caption>Why Collar and Armpits Still Smell After Washing</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://smelloff.in/blog/why-sweat-smells-stronger-on-some-shirts</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/why-sweat-smells-stronger-on-some-shirts.svg</image:loc>
+      <image:title>Why Sweat Smells Stronger on Some Shirts</image:title>
+      <image:caption>Why Sweat Smells Stronger on Some Shirts</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://smelloff.in/blog/why-traffic-fumes-cling-to-clothes</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/why-traffic-fumes-cling-to-clothes.svg</image:loc>
+      <image:title>Why Traffic Fumes Cling to Clothes</image:title>
+      <image:caption>Why Traffic Fumes Cling to Clothes</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://smelloff.in/blog/why-washing-machine-makes-clothes-smell</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/why-washing-machine-makes-clothes-smell.svg</image:loc>
+      <image:title>Why the Washing Machine Makes Clothes Smell</image:title>
+      <image:caption>Why the Washing Machine Makes Clothes Smell</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://smelloff.in/blog/why-water-makes-clothing-odor-louder</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://smelloff.in/blog/assets/why-water-makes-clothing-odor-louder.svg</image:loc>
+      <image:title>Why Clothes Smell Worse When They Get Wet — and in Humidity</image:title>
+      <image:caption>Why Clothes Smell Worse When They Get Wet — and in Humidity</image:caption>
     </image:image>
   </url>
   <url>
