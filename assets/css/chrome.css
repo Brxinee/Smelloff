@@ -3600,10 +3600,12 @@ html.sf-modal-open .so-sticky{
   }
 }
 
-/* FINAL REAL-PHOTO FRAMING — fill width, crop only top/bottom. */
+
+/* FINAL PRODUCT IMAGE PRESERVATION — never crop the supplied creative. */
 .so-media{
   width:100% !important;
-  aspect-ratio:4 / 5 !important;
+  aspect-ratio:auto !important;
+  height:auto !important;
   overflow:hidden !important;
   border:0 !important;
   border-radius:0 !important;
@@ -3612,13 +3614,14 @@ html.sf-modal-open .so-sticky{
 .so-media picture{
   display:block !important;
   width:100% !important;
-  height:100% !important;
+  height:auto !important;
 }
 .so-media img{
   width:100% !important;
-  height:100% !important;
+  height:auto !important;
+  max-width:100% !important;
   max-height:none !important;
-  object-fit:cover !important;
-  object-position:center !important;
+  object-fit:contain !important;
+  object-position:center center !important;
   display:block !important;
 }
