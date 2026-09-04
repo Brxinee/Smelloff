@@ -1523,7 +1523,7 @@ body{overflow-x:clip}
 }
 .so-prob__stage .so-media img{
   max-height:240px;
-  object-position:center 35%;
+  object-position:center 50%;
 }
 @media(min-width:768px){
   .so-prob__stage{
@@ -2193,6 +2193,12 @@ body{overflow-x:clip}
 }
 .so-gallery__slide--wide img{
   object-position:center;
+}
+.so-gallery__slide--edc img{
+  object-position:center 62%;
+}
+.so-gallery__slide--office img{
+  object-position:center 52%;
 }
 .so-gallery .gal-zoom-btn:focus-visible{
   outline:2px solid var(--so-lime, #B8FF57);
@@ -3398,7 +3404,7 @@ html.sf-modal-open .so-sticky{
 }
 .so-scenarios-3 .so-media img{
   max-height:240px;
-  object-position:center 35%;
+  object-position:center 58%;
 }
 @media(min-width:860px){
   .so-scenarios-3{
