@@ -7,7 +7,7 @@ node_modules/
 !.env.example
 .vercel/
 
-# Licensed Adobe Stock originals for blog thumbnails (5-15MB each).
-# Only the 1920x1080 composites in blog/assets/ are versioned.
-# Re-fetch by asset id — see docs/BLOG-THUMBNAILS.md.
+# Editorial stills and real product photographs used to encode delivery formats.
+# Only the 1920x1080 delivery formats in blog/assets/ are versioned.
+# See docs/BLOG-THUMBNAILS.md.
 .thumbnail-sources/

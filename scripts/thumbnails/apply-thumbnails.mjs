@@ -1,57 +1,68 @@
 /**
- * Wires the generated thumbnails into the blog markup.
+ * Wires photography-first thumbnails into blog markup.
  *
- *   node scripts/thumbnails/apply-thumbnails.mjs           # write
- *   node scripts/thumbnails/apply-thumbnails.mjs --check   # dry run, exits 1 if stale
+ *   node scripts/thumbnails/apply-thumbnails.mjs
+ *   node scripts/thumbnails/apply-thumbnails.mjs --check
  *
- * Idempotent, in the same spirit as scripts/apply-chrome.mjs: it REPLACES each
- * <picture> block rather than wrapping what it finds, so running it twice is a
- * no-op. The previous generator (scripts/build-blog-thumbnails.js) re-wrapped an
- * <img> that was already inside a <picture>, which is why every block on the
- * blog index had accumulated six <source> tags for two formats.
+ * Replaces <picture> blocks AND lone <img> heroes/cards that still point at
+ * SVG title cards, then keeps og:image / twitter:image / JSON-LD / sitemap
+ * on the 1920×1080 JPEG.
  *
- * Per the research's crawler checklist it keeps these in lockstep with the assets:
- *   - og:image / twitter:image  -> the 1920x1080 JPEG (never a logo or a square)
- *   - og:image:width/height     -> 1920 / 1080, so Discover can render a large card
- *   - JSON-LD Article "image"   -> a matching high-resolution array
- *   - <img width/height>        -> explicit, to hold CLS at zero
- *   - srcset/sizes              -> so phones fetch the 1200px step, not the 1920px one
- *
- * `max-image-preview:large` is already present in every post's robots meta; this
- * script asserts that rather than adding it, and fails loudly if one is missing.
+ * Idempotent: never wraps an <img> that is already inside <picture>.
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { POSTS, CANVAS, WIDTHS, validateConfig } from './thumbnails.config.mjs';
+import { POSTS, EXTRA_ASSETS, CANVAS, WIDTHS, CACHE_V, deliveryUrl, srcsetFor, validateConfig } from './thumbnails.config.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..');
 const BLOG = path.join(REPO, 'blog');
 const ORIGIN = 'https://smelloff.in';
-
-/** Bump when the pixels change — /assets/* is served `immutable` for a year. */
-const V = 4;
+const MANIFEST = path.join(REPO, 'blog-image-manifest.json');
 
 const CHECK = process.argv.includes('--check');
-const bySlug = new Map(POSTS.map((p) => [p.slug, p]));
+const ALL = [...POSTS, ...EXTRA_ASSETS];
+const bySlug = new Map(ALL.map((p) => [p.slug, p]));
 
-const asset = (slug, ext, w) =>
-  `/blog/assets/${slug}${w && w !== WIDTHS[0] ? `@${w}` : ''}.${ext}?v=${V}`;
+const PRODUCT_PHOTO = new Set([
+  'how-to-use-odorstrike',
+  'odorstrike-ingredients',
+  'what-is-fabric-odor-eliminator',
+]);
 
-const srcset = (slug, ext) =>
-  WIDTHS.slice()
-    .sort((a, b) => a - b)
-    .map((w) => `${asset(slug, ext, w)} ${w}w`)
-    .join(', ');
+const GRADE_D = new Set([
+  'deodorant-perfume-on-fabric',
+  'dry-air-clothes-indian-home',
+  'how-odor-neutralizer-works-on-fabric',
+  'how-to-freshen-clothes-stored-for-months',
+  'how-to-pack-sweaty-clothes-without-bag-smell',
+  'odor-on-clothes-vs-odor-in-clothes',
+  'remove-incense-agarbatti-dhoop-smell',
+  'vinegar-baking-soda-fabric-softener',
+  'wash-refresh-or-wear',
+  'why-body-odor-comes-back-on-clothes-so-quickly',
+  'why-clean-shirt-starts-smelling-within-hours',
+  'why-clothes-smell-bad-after-drying',
+  'why-clothes-smell-bad-again-after-sweating',
+  'why-clothes-smell-in-wardrobe-even-when-clean',
+  'why-clothes-smell-musty-after-being-stored',
+  'why-clothes-smell-stale-in-ac-room',
+  'why-polyester-holds-odor-longer-than-cotton',
+  'why-shirt-zones-smell-after-washing',
+  'why-sweat-smells-stronger-on-some-shirts',
+  'why-traffic-fumes-cling-to-clothes',
+  'why-washing-machine-makes-clothes-smell',
+  'why-water-makes-clothing-odor-louder',
+]);
 
-const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const asset = (slug, ext, w) => deliveryUrl(slug, ext, w);
+const srcset = (slug, ext) => srcsetFor(slug, ext);
 
-/**
- * The hero runs the full article column; index cards run roughly a third of a
- * 1200px grid. Both collapse to full-bleed on phones.
- */
+const esc = (s) =>
+  String(s).replace(/&/g, '&').replace(/"/g, '"').replace(/</g, '<');
+
 const SIZES = {
   hero: '(min-width: 900px) 820px, 100vw',
   card: '(min-width: 900px) 380px, 100vw',
@@ -69,34 +80,71 @@ function pictureBlock(post, { role, imgAttrs }) {
   );
 }
 
-/** Pulls the slug out of whatever <img>/<source> the old block pointed at. */
 function slugOf(block) {
-  const m = block.match(/\/blog\/assets\/([a-z0-9-]+?)(?:@\d+)?\.(?:jpg|png|webp|avif)/i);
+  const m = block.match(/\/blog\/assets\/([a-z0-9-]+?)(?:@\d+)?\.(?:jpg|png|webp|avif|svg)/i);
   return m ? m[1] : null;
+}
+
+function keepFromImg(img) {
+  const keep = [];
+  const cls = img.match(/\sclass="([^"]*)"/);
+  if (cls) keep.push(`class="${cls[1]}"`);
+  if (/\sfetchpriority="high"/.test(img)) keep.push('fetchpriority="high"');
+  if (/\sloading="lazy"/.test(img)) keep.push('loading="lazy"');
+  const style = img.match(/\sstyle="([^"]*)"/);
+  if (style) keep.push(`style="${style[1]}"`);
+  return keep.join(' ');
+}
+
+/** Collapse <picture>…<picture>inner</picture>…</picture> to the inner block. */
+function unwrapNestedPictures(html) {
+  const re =
+    /<picture>(?:(?!<\/picture>|<picture>)[\s\S])*?<picture>([\s\S]*?)<\/picture>(?:(?!<\/picture>|<picture>)[\s\S])*?<\/picture>/g;
+  let prev;
+  do {
+    prev = html;
+    html = html.replace(re, '<picture>$1</picture>');
+  } while (html !== prev);
+  return html;
+}
+
+function insidePicture(html, offset) {
+  const before = html.slice(0, offset);
+  return before.lastIndexOf('<picture') > before.lastIndexOf('</picture>');
 }
 
 function rewritePictures(html, role) {
   let touched = 0;
-  const out = html.replace(/<picture>[\s\S]*?<\/picture>/g, (block) => {
+  let out = unwrapNestedPictures(html);
+
+  out = out.replace(/<picture>[\s\S]*?<\/picture>/g, (block) => {
     const slug = slugOf(block);
     const post = slug && bySlug.get(slug);
     if (!post) return block;
-
-    // Carry the loading strategy and presentation from the block being replaced —
-    // the hero is fetchpriority=high, index cards are lazy, and the article hero
-    // has inline layout styles that belong to blog.css's territory, not ours.
     const img = block.match(/<img\b[^>]*>/)?.[0] ?? '';
-    const keep = [];
-    const cls = img.match(/\sclass="([^"]*)"/);
-    if (cls) keep.push(`class="${cls[1]}"`);
-    if (/\sfetchpriority="high"/.test(img)) keep.push('fetchpriority="high"');
-    if (/\sloading="lazy"/.test(img)) keep.push('loading="lazy"');
-    const style = img.match(/\sstyle="([^"]*)"/);
-    if (style) keep.push(`style="${style[1]}"`);
-
     touched++;
-    return pictureBlock(post, { role, imgAttrs: keep.join(' ') });
+    return pictureBlock(post, { role, imgAttrs: keepFromImg(img) });
   });
+
+  out = out.replace(
+    /<img\b[^>]*\/blog\/assets\/[a-z0-9-]+\.(?:svg|jpg|png|webp|avif)[^>]*>/gi,
+    (img, offset) => {
+      if (insidePicture(out, offset)) return img;
+      const slug = slugOf(img);
+      const post = slug && bySlug.get(slug);
+      if (!post) return img;
+      if (/class="[^"]*blog-inline/.test(img) || /class="[^"]*diagram/.test(img)) return img;
+      if (/\/blog\/assets\/(?:inline|diagrams)\//.test(img)) return img;
+      touched++;
+      const attrs = keepFromImg(img);
+      const withHero =
+        /\bblog-hero\b/.test(img) && !/\bclass=/.test(attrs)
+          ? `class="blog-hero" ${attrs}`.trim()
+          : attrs || (role === 'hero' ? 'class="blog-hero" fetchpriority="high"' : 'loading="lazy"');
+      return pictureBlock(post, { role, imgAttrs: withHero });
+    }
+  );
+
   return { out, touched };
 }
 
@@ -115,17 +163,33 @@ function rewriteHead(html, post) {
   set(/(<meta name="twitter:image" content=")[^"]*(">)/, `$1${jpg}$2`);
   set(/(<meta name="twitter:image:alt" content=")[^"]*(">)/, `$1${esc(post.alt)}$2`);
 
-  // og:image:type follows the format change from PNG to JPEG.
   if (/<meta property="og:image:type"/.test(s)) {
     set(/(<meta property="og:image:type" content=")[^"]*(">)/, `$1image/jpeg$2`);
-  } else {
+  } else if (/<meta property="og:image:height"/.test(s)) {
     s = s.replace(
       /(<meta property="og:image:height" content="[^"]*">)/,
       `$1\n<meta property="og:image:type" content="image/jpeg">`
     );
+  } else if (/<meta property="og:image"/.test(s)) {
+    s = s.replace(
+      /(<meta property="og:image" content="[^"]*">)/,
+      `$1\n<meta property="og:image:width" content="${CANVAS.width}">\n<meta property="og:image:height" content="${CANVAS.height}">\n<meta property="og:image:type" content="image/jpeg">`
+    );
   }
 
-  // JSON-LD Article image -> high-resolution array.
+  if (/<meta property="og:image:alt"/.test(s) === false && /<meta property="og:image"/.test(s)) {
+    s = s.replace(
+      /(<meta property="og:image" content="[^"]*">)/,
+      `$1\n<meta property="og:image:alt" content="${esc(post.alt)}">`
+    );
+  }
+  if (/<meta name="twitter:image:alt"/.test(s) === false && /<meta name="twitter:image"/.test(s)) {
+    s = s.replace(
+      /(<meta name="twitter:image" content="[^"]*">)/,
+      `$1\n<meta name="twitter:image:alt" content="${esc(post.alt)}">`
+    );
+  }
+
   s = s.replace(
     /("image":\s*)(?:"[^"]*"|\[[^\]]*\])/g,
     (m, key) => (m.includes('/blog/assets/') ? `${key}["${jpg}"]` : m)
@@ -134,17 +198,13 @@ function rewriteHead(html, post) {
   return s;
 }
 
-/**
- * sitemap.xml carries an <image:image> per post. It pointed at the retired PNGs,
- * so image search and Discover were being handed a URL that no longer resolves.
- */
 function rewriteSitemap(xml) {
   let s = xml;
   for (const post of POSTS) {
     const jpg = `${ORIGIN}${asset(post.slug, 'jpg')}`;
     s = s.replace(
       new RegExp(
-        `<image:loc>${ORIGIN}/blog/assets/${post.slug}\\.(?:png|jpg|webp)(?:\\?v=\\d+)?</image:loc>`,
+        `<image:loc>${ORIGIN}/blog/assets/${post.slug}\\.(?:png|jpg|webp|svg)(?:\\?v=\\d+)?</image:loc>`,
         'g'
       ),
       `<image:loc>${jpg}</image:loc>`
@@ -153,13 +213,118 @@ function rewriteSitemap(xml) {
   return s;
 }
 
+function collectInlines(html) {
+  const found = [];
+  const seen = new Set();
+  const re = /(?:src|srcset)="(\/blog\/assets\/(?:inline|diagrams)\/[^"?#]+)/g;
+  let m;
+  while ((m = re.exec(html))) {
+    const url = m[1];
+    if (seen.has(url)) continue;
+    seen.add(url);
+    const abs = path.join(REPO, url.replace(/^\//, ''));
+    found.push({
+      url,
+      purpose: url.includes('/diagrams/') ? 'science-diagram' : 'supporting-photo',
+      exists: fs.existsSync(abs),
+    });
+  }
+  return found;
+}
+
+function gradeOf(slug) {
+  if (PRODUCT_PHOTO.has(slug)) return 'B';
+  if (GRADE_D.has(slug)) return 'D';
+  return 'C';
+}
+
+function sourceKind(post) {
+  if (PRODUCT_PHOTO.has(post.slug)) return 'real-product-photo';
+  return 'editorial-still';
+}
+
+function buildManifest(inlineBySlug) {
+  const posts = POSTS.map((p) => {
+    const jpg = `${ORIGIN}${asset(p.slug, 'jpg')}`;
+    return {
+      slug: p.slug,
+      family: p.family,
+      grade: gradeOf(p.slug),
+      sourceKind: sourceKind(p),
+      imagePurpose: 'hero + index card + og:image + schema image',
+      filename: `blog/assets/${p.slug}.jpg`,
+      width: CANVAS.width,
+      height: CANVAS.height,
+      format: ['jpg', 'webp', 'avif'],
+      alt: p.alt,
+      focal: p.focal,
+      fit: p.fit || 'cover',
+      hero: `/blog/assets/${p.slug}.jpg?v=${CACHE_V}`,
+      thumbnail: `/blog/assets/${p.slug}.jpg?v=${CACHE_V}`,
+      ogImage: jpg,
+      schemaImage: jpg,
+      inlineImages: inlineBySlug.get(p.slug) || [],
+    };
+  });
+
+  return {
+    version: CACHE_V,
+    generated: '2026-09-05',
+    principle: 'TEXT lives in HTML. VISUAL is a photograph or a genuine diagram. No overlay headlines.',
+    canvas: CANVAS,
+    families: {
+      'fabric-problems': 'Close fabric, collars, underarms, wear',
+      laundry: 'Washing, drying, storage, humidity',
+      'real-life': 'Office, commute, meeting, travel, evening',
+      science: 'Fibres, mechanisms, comparisons',
+      product: 'ODORSTRIKE in authentic clothing situations',
+    },
+    counts: {
+      articles: POSTS.length,
+      A: posts.filter((p) => p.grade === 'A').length,
+      B: posts.filter((p) => p.grade === 'B').length,
+      C: posts.filter((p) => p.grade === 'C').length,
+      D: posts.filter((p) => p.grade === 'D').length,
+      inlineImages: posts.reduce((n, p) => n + p.inlineImages.length, 0),
+    },
+    posts,
+    extraAssets: EXTRA_ASSETS.map((p) => ({
+      slug: p.slug,
+      family: p.family,
+      note: 'Encoded photography for unpublished index cards. Not a live HTML guide.',
+      alt: p.alt,
+      filename: `blog/assets/${p.slug}.jpg`,
+    })),
+  };
+}
+
+function assertDeliveryAssets(post) {
+  const missing = [];
+  for (const ext of ['jpg', 'webp', 'avif']) {
+    const p = path.join(BLOG, 'assets', `${post.slug}.${ext}`);
+    if (!fs.existsSync(p)) missing.push(path.relative(REPO, p));
+  }
+  for (const w of WIDTHS.slice(1)) {
+    for (const ext of ['webp', 'avif']) {
+      const p = path.join(BLOG, 'assets', `${post.slug}@${w}.${ext}`);
+      if (!fs.existsSync(p)) missing.push(path.relative(REPO, p));
+    }
+  }
+  if (missing.length) {
+    throw new Error(`missing encoded assets for ${post.slug}:\n  - ${missing.join('\n  - ')}`);
+  }
+}
+
 function run() {
   validateConfig();
+  validateConfig(EXTRA_ASSETS);
   const stale = [];
   let files = 0;
   let blocks = 0;
+  const inlineBySlug = new Map();
 
   for (const post of POSTS) {
+    assertDeliveryAssets(post);
     const file = path.join(BLOG, `${post.slug}.html`);
     if (!fs.existsSync(file)) {
       throw new Error(`no post markup for slug "${post.slug}" (${file})`);
@@ -169,13 +334,18 @@ function run() {
     if (!/max-image-preview:large/.test(before)) {
       throw new Error(
         `${post.slug}.html is missing max-image-preview:large — without it Discover ` +
-          `only ever renders a small thumbnail, and every asset here is wasted`
+          `only ever renders a small thumbnail`
       );
     }
 
     const { out, touched } = rewritePictures(before, 'hero');
     const after = rewriteHead(out, post);
+    inlineBySlug.set(post.slug, collectInlines(after));
     blocks += touched;
+
+    if (/<picture>(?:(?!<\/picture>).)*<picture>/s.test(after)) {
+      throw new Error(`${post.slug}.html still has nested <picture> tags`);
+    }
 
     if (after !== before) {
       stale.push(`blog/${post.slug}.html`);
@@ -184,11 +354,13 @@ function run() {
     files++;
   }
 
-  // Blog index: cards only, no per-post head to rewrite.
   const indexFile = path.join(BLOG, 'index.html');
   const idxBefore = fs.readFileSync(indexFile, 'utf8');
   const { out: idxAfter, touched: idxTouched } = rewritePictures(idxBefore, 'card');
   blocks += idxTouched;
+  if (/<picture>(?:(?!<\/picture>).)*<picture>/s.test(idxAfter)) {
+    throw new Error('blog/index.html still has nested <picture> tags');
+  }
   if (idxAfter !== idxBefore) {
     stale.push('blog/index.html');
     if (!CHECK) fs.writeFileSync(indexFile, idxAfter);
@@ -202,7 +374,25 @@ function run() {
     if (!CHECK) fs.writeFileSync(sitemapFile, smAfter);
   }
 
-  console.log(`${files} posts + index + sitemap · ${blocks} <picture> blocks rebuilt at ?v=${V}`);
+  for (const extra of EXTRA_ASSETS) assertDeliveryAssets(extra);
+
+  const manifest = buildManifest(inlineBySlug);
+  const manifestJson = `${JSON.stringify(manifest, null, 2)}\n`;
+  if (CHECK) {
+    if (!fs.existsSync(MANIFEST)) {
+      stale.push('blog-image-manifest.json (missing)');
+    } else if (fs.readFileSync(MANIFEST, 'utf8') !== manifestJson) {
+      stale.push('blog-image-manifest.json');
+    }
+  } else {
+    const before = fs.existsSync(MANIFEST) ? fs.readFileSync(MANIFEST, 'utf8') : '';
+    if (before !== manifestJson) {
+      fs.writeFileSync(MANIFEST, manifestJson);
+      stale.push('blog-image-manifest.json');
+    }
+  }
+
+  console.log(`${files} posts + index + sitemap · ${blocks} image blocks rebuilt at ?v=${CACHE_V}`);
 
   if (CHECK) {
     if (stale.length) {

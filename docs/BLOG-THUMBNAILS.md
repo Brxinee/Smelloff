@@ -1,66 +1,63 @@
-# Blog thumbnails — licensed-photography set (2026-08-03)
+# Blog visual system — photography-first (2026-09-05)
 
-The 23 posts under `/blog` each have a **1920×1080 (16:9)** featured image: licensed
-Adobe Stock photography under a brand type layer, built by a script from a single
-config. This document is the operating manual.
+Every published guide has a **1920×1080 (16:9)** featured photograph. TEXT lives
+in HTML. VISUAL is a real-life image — not a title card, not an overlay
+headline, not a logo lockup.
 
-Source of truth: **`scripts/thumbnails/thumbnails.config.mjs`** — one entry per post,
-consumed by both renderers so copy and photography can't drift.
+Source of truth: **`scripts/thumbnails/thumbnails.config.mjs`**.
+Canonical map: **`blog-image-manifest.json`**.
 
 ```
-npm run thumbnails          # build the images, then wire them into the markup
+npm run thumbnails          # encode the images, then wire them into markup
 npm run thumbnails:build    # images only  (needs .thumbnail-sources/)
-npm run thumbnails:apply    # markup only  (no images needed)
-npm run thumbnails:check    # dry run — exits 1 if markup is out of sync
+npm run thumbnails:apply    # markup only  (no sources needed)
+npm run thumbnails:check    # dry run — exits 1 if markup or the manifest drift
 ```
 
-`npm run build` runs `thumbnails:check` + `node -c server.js`. It deliberately does
-**not** regenerate images: the source photography is not in the repo, so a build on
-a fresh clone (or on Vercel) must not depend on it.
+`npm run build` runs `thumbnails:check`. It does **not** regenerate pixels: the
+source stills are gitignored, so a Vercel build must not depend on them.
 
 ---
 
-## What changed, and what it reversed
+## What this set reversed
 
-This set replaced the 1200×630 mascot "tweet cards". It was specified by
-`High_CTR_Blog_Thumbnail_Research.pdf` (2026-08), which supersedes the earlier
-Gemini prompt research that the previous version of this file described.
+An earlier 2026-08 compositor baked a ≤6-word overlay onto licensed Adobe Stock
+because a CTR paper preferred text-on-image. Google’s 2026 Images / Discover
+guidance is the opposite authority for this site:
 
-Two rules from that earlier doc are **deliberately reversed**; don't restore them
-without new evidence:
+- preferred images should not be text-heavy
+- Schema.org `image` **and** `og:image` can both be selected as the preview
+- Discover wants large, representative photographs (≥1200px wide)
 
-- **"No text baked into the image."** The new research measures the opposite: a
-  short overlay outperforms a bare image, and interrogative framing runs ~20% above
-  a flat statement. Overlays are now baked in, capped at six words.
-- **1200×630 (the OG ratio).** Discover letterboxes it. 16:9 is what gets the
-  full-width card.
+So:
 
-The earlier doc also described an AI-generated photorealistic set as though it
-shipped. It never did — the assets in `blog/assets/` were still the mascot cards
-when this set replaced them. `scripts/thumbnail-prompts.json` is the residue of
-that plan and is now unused.
+- **No overlay copy in the image.** Headlines stay in HTML.
+- **No SVG title cards** as the default blog art. SVG is for genuine diagrams.
+- **16:9 at 1920×1080** stays. Discover letterboxes 1200×630.
+
+The Canva Autofill route and the overlay compositor are retired. Do not restore
+them without new evidence that beats Google’s current image-selection docs.
+
+https://developers.google.com/search/docs/appearance/google-images
+https://developers.google.com/search/docs/appearance/google-discover
 
 ---
 
 ## Why these specs
 
-The numbers are the reason, not decoration.
-
 | Spec | Value | Why |
 |---|---|---|
-| Dimensions | 1920×1080 | Discover wants ≥1200px wide and >300,000px total; this is 2,073,600px and clears the >920,000px benchmark |
+| Dimensions | 1920×1080 | Discover wants ≥1200px wide and >300,000px total; this is 2,073,600px |
 | Aspect | 16:9 | Prevents the crawler auto-cropping off-centre |
-| `max-image-preview:large` | in every post's robots meta | Without it the feed renders a small, low-CTR thumbnail no matter how good the asset is. `apply-thumbnails.mjs` **fails** if a post is missing it |
-| `og:image` / `twitter:image` | the 1920×1080 **JPEG** | Social scrapers are the one audience that still can't be trusted with WebP. Never a logo, never a square |
-| JSON-LD `image` | array of the same URL | The structural validator looks for a matching high-resolution array |
+| `max-image-preview:large` | in every post's robots meta | Without it the feed renders a small thumbnail no matter how good the asset is. `apply-thumbnails.mjs` **fails** if a post is missing it |
+| `og:image` / `twitter:image` | the 1920×1080 **JPEG** | Social scrapers still can't be trusted with WebP. Never a logo, never a square, never an SVG title card |
+| JSON-LD `image` | array of the same URL | Google 2026: schema image and og:image are both preview sources |
 | Page delivery | AVIF → WebP → JPEG via `<picture>` | Protects LCP |
 | `width` / `height` on `<img>` | always explicit | Holds CLS at zero |
-| Overlay text | **≤ 6 words** | Past 10 words CTR drops ~16%. `validateConfig()` throws above 6 |
-| Framing | a question wherever honest | ~20% above flat descriptive statements |
-| Visual anchor | a human face | 9.2% median CTR vs 6.1% for object-only compositions |
-| Never | watermarks, logo-as-subject, coloured borders | All three score as commercial noise and get suppressed |
+| Overlay text | **none** | TEXT = HTML. VISUAL = IMAGE |
+| Never | watermarks, logo-as-subject, coloured borders, baked headlines | Commercial noise; text-heavy frames get suppressed |
 
-Output per post (5 files, ~260KB total):
+Output per post (5 files):
 
 ```
 blog/assets/<slug>.jpg          1920×1080   og:image / twitter:image / schema
@@ -72,134 +69,76 @@ blog/assets/<slug>@1200.avif    1200×675    srcset step
 
 ---
 
-## The photography
+## Visual families
 
-Licensed **Adobe Stock**, bought against the Smelloff account. `photo` in the config
-is the Adobe Stock asset id.
+| Family | What you photograph |
+|---|---|
+| `fabric-problems` | Collars, underarms, fibre, wear |
+| `laundry` | Machines, drying, storage, humidity |
+| `real-life` | Office, commute, meeting, travel, India-first rooms |
+| `science` | Fibres, mechanisms — diagrams go *inline*, not in the hero |
+| `product` | Real ODORSTRIKE photography, pocket scale (~11cm) |
 
-The originals are **not committed** — 5–15MB each, and `.thumbnail-sources/` is
-gitignored. To rebuild images from scratch you need them back:
-
-1. In a session with the Adobe connector, license each id
-   (`asset_license_and_download_stock` → 1-hour presigned URL). Re-licensing an id
-   you already own does **not** charge again; it just refreshes the URL.
-2. Save each as `.thumbnail-sources/<assetId>.jpg`.
-3. `npm run thumbnails`.
-
-Override the folder with `THUMBNAIL_SOURCES=/path/to/originals`. The build fails
-naming the specific missing asset id rather than rendering a hole, so a partial
-folder is safe.
-
-### 2026-08/09 additions
-
-Six entries were added for the monsoon / denim / travel / fibre / formalwear /
-buyer's-guide series, licensed the same way. Two candidates were rejected on the
-clothing-only rule rather than on looks, which is what that rule is for:
-
-- an open-suitcase flat-lay with espadrilles and sandals in frame (footwear)
-- a clothes-rail shot whose subject had a raised arm and a bare underarm — the
-  same failure already documented for `best-deodorant-spray-for-clothes-not-skin`
-
-Check the frame, not just the caption, before licensing.
-
-### Brand constraints on photo choice
-
-Per CLAUDE.md "Positioning: clothing only" — not stylistic preferences:
-
-- **Never** spray being applied to skin, hair or body. ODORSTRIKE is fabric-only and
-  a thumbnail carries no copy to qualify it. (`best-deodorant-spray-for-clothes-not-skin`
-  first drew an underarm/deodorant frame, which argued the exact opposite of the post
-  it sat on — it is now a man smelling his *shirt*.)
-- **Never** shoes, helmets, gym gear, bags, sofas, curtains, room freshening.
-- Clothing, fabric, laundry, and the people wearing them.
-
-### Per-photo knobs
-
-- `focal` — `object-position` for the crop. The photo panel is ~1.17:1 and most stock
-  is 3:2, so **both** axes bite; use it to keep the face in frame.
-- `tone` — optional CSS `filter`. The lab/science stock is dim and low-contrast and
-  the scrim pushed it to mud; those entries carry a brightness/contrast lift.
-
-### Rendering note
-
-`--window-size` sizes the **window**, not the viewport — headless Chromium still
-reserves its chrome, so roughly the bottom 90 CSS px never reach `--screenshot`.
-`build-thumbnails.mjs` renders into a taller window and crops the canvas back out.
-`scripts/build_thumbnails.py` never hit this because its card was inset from the
-bottom edge; the site wordmark here is not.
+Problem article → problem image. Science article → science image. Product
+article → product image. Do not put the bottle on every card.
 
 ---
 
-## Canva Connect route (not yet runnable)
+## Product photography
 
-`scripts/canva_thumbnail_automation.js` implements the Autofill pipeline from the
-research PDF, driven by the same config.
+Use the real ODORSTRIKE files in `/assets/` (`pdp-03-how-to-use.webp`,
+`shot-studio.webp`, `shot-flatlay.webp`, `shot-pocket.webp`). Never regenerate
+the bottle, never alter the label, never invent a variant.
 
-**It needs a paid Canva plan.** Brand Templates and the Autofill API are
-Pro/Teams/Enterprise features; the connected account was on Free, and every
-brand-template call returns:
+Portrait product shots use `fit: 'contain'` so the 11cm bottle is padded on
+`#080808` instead of cropped into a giant.
 
-> This feature requires a Canva paid plan (such as Canva Pro, Canva Teams, or
-> Canva Enterprise).
-
-That is why the committed thumbnails came from the local compositor. **The script
-has never been run end-to-end against a live template.**
-
-To enable it:
-
-1. Canva Developer Portal → create a Public Integration; note Client ID/Secret.
-2. Scopes: `brandtemplate:content:read`, `brandtemplate:meta:read`,
-   `design:content:write`, `asset:read`, `asset:write`.
-3. Add your redirect URL under Authorized Redirects.
-4. Create a 1920×1080 Brand Template with a text field `headline_text` and an image
-   frame `main_visual`. Record the `brand_template_id`.
-5. ```
-   export CANVA_ACCESS_TOKEN="..."
-   export CANVA_TEMPLATE_ID="..."
-   node scripts/canva_thumbnail_automation.js --all
-   ```
-
-It writes designs into Canva and prints edit URLs; it does **not** write into
-`blog/assets/`. Export from Canva, drop the files in, then `npm run thumbnails:apply`.
-
-Three deliberate deviations from the PDF's reference script are documented in its
-header — most importantly the asset upload posts **raw binary** with an
-`Asset-Upload-Metadata` header, because the PDF's `{name, file_base64}` JSON body is
-rejected by the live endpoint with a 400.
+Clothing only. Never: skin spray, shoes, helmets, room spray, pet spray.
 
 ---
 
-## Changing a thumbnail
+## Sources
 
-Copy only:
+Editorial stills and the real product photographs live in `.thumbnail-sources/`
+(gitignored). Stage them with `node scripts/thumbnails/stage-sources.mjs` when
+the Imagine artefacts and `/assets/` product shots are on disk, then:
 
-1. Edit `top` / `hi` in the config (≤6 words combined — it throws otherwise).
-2. `npm run thumbnails`.
+```
+npm run thumbnails:build
+npm run thumbnails:apply
+```
 
-Swapping a photo:
+Override the folder with `THUMBNAIL_SOURCES=/path/to/originals`. The build
+fails naming the missing file rather than rendering a hole.
 
-1. License the new Adobe Stock id, save to `.thumbnail-sources/<id>.jpg`.
-2. Update `photo`, `focal` and **`alt`** together — alt must describe the image that
-   is actually there.
-3. `npm run thumbnails`.
+**Bump `V` in `apply-thumbnails.mjs` whenever the pixels change.** `/assets/*`
+is served `Cache-Control: immutable` for a year.
 
-**Bump `V` in `apply-thumbnails.mjs` whenever the pixels change.** `/assets/*` is
-served `Cache-Control: immutable` for a year, so without a new `?v=` returning
-visitors keep the old image indefinitely — the same trap CLAUDE.md documents for the
-shared CSS/JS layers.
+---
+
+## Inline images
+
+Inline figures exist only where they explain something:
+
+- `blog/assets/diagrams/*.svg` — genuine information diagrams (keep)
+- `blog/assets/inline/odorstrike-pocket-scale.*` — real bottle at pocket scale
+- `blog/assets/inline/shirt-collar-architecture.*` — collar construction
+
+Do not insert a photograph every few paragraphs.
 
 ---
 
 ## Retired
 
-- `scripts/build-blog-thumbnails.js` — **deleted**. It re-wrapped `<img>` elements
-  already inside a `<picture>`, so every block accumulated duplicate `<source>` tags
-  on each run; the blog index had six sources for two formats. (The previous version
-  of this file warned "do NOT let its `updateHtmlPictureTags()` step run" — a warning
-  in prose is not a fix.) `apply-thumbnails.mjs` replaces whole blocks and is
-  idempotent, with `--check` for CI.
-- `scripts/build_thumbnails.py` — the 1200×630 mascot tweet cards. Kept for reference
-  but guarded: exits unless `ALLOW_LEGACY_THUMBNAILS=1`, because it would overwrite
-  the current assets and most of its slug table was deleted in the 2026-07-28 prune.
-- `scripts/thumbnail-prompts.json` — generative prompts for the macro route that was
-  never run. Superseded by licensed photography.
+- SVG title cards in `blog/assets/<slug>.svg` — deleted 2026-09-05. They existed
+  to display a headline on black + acid green. That is not a thumbnail.
+- Overlay compositor in the previous `build-thumbnails.mjs` — replaced by a
+  sharp encode with no type layer.
+- `scripts/build_thumbnails.py` — 1200×630 mascot tweet cards. Guarded behind
+  `ALLOW_LEGACY_THUMBNAILS=1`.
+- `scripts/thumbnail-prompts.json` — unused generative residue.
+- Canva Autofill — never ran end-to-end; not the pipeline.
+
+`apply-thumbnails.mjs` unwraps nested `<picture>` tags and will not wrap an
+`<img>` that is already inside one. `--check` fails on nested pictures, missing
+`max-image-preview:large`, missing encoded assets, or a drifting manifest.
