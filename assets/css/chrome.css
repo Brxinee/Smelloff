@@ -3556,3 +3556,18 @@ html.sf-modal-open .so-sticky{
   object-position:center !important;
   display:block !important;
 }
+
+
+/* LIVE IMAGE FIT — full source photography, never crop. */
+.so-media img{
+  width:100% !important;
+  height:auto !important;
+  max-height:none !important;
+  object-fit:initial !important;
+  object-position:center !important;
+  display:block !important;
+}
+.so-media{
+  height:auto !important;
+  min-height:0 !important;
+}
