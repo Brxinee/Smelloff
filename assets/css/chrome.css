@@ -3721,3 +3721,29 @@ html body .so-gallery .gal-zoom-btn{
   }
 }
 
+
+
+/* FINAL PRODUCT IMAGE PRESERVATION — supplied photography is never cropped. */
+.so-media{
+  width:100% !important;
+  aspect-ratio:auto !important;
+  height:auto !important;
+  overflow:hidden !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+}
+.so-media picture{
+  display:block !important;
+  width:100% !important;
+  height:auto !important;
+}
+.so-media img{
+  width:100% !important;
+  height:auto !important;
+  max-width:100% !important;
+  max-height:none !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  display:block !important;
+}
