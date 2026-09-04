@@ -1,0 +1,44 @@
+name: Fix PDP images to full fit
+
+on:
+  push:
+    paths-ignore:
+      - 'assets/css/chrome.css'
+      - '.github/workflows/fix-pdp-images.yml'
+      - '.image-fit-trigger'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply full-image presentation
+        run: |
+          cat >> assets/css/chrome.css <<'CSS'
+
+          /* PDP photography: show the COMPLETE source image inside a
+             controlled responsive frame. Never crop product/lifestyle photos. */
+          .so-media img{
+            width:100% !important;
+            height:clamp(280px,52vw,520px) !important;
+            max-height:none !important;
+            object-fit:contain !important;
+            object-position:center !important;
+            display:block !important;
+          }
+          CSS
+
+      - name: Commit CSS fix and clean trigger files
+        run: |
+          rm -f .image-fit-trigger .github/workflows/fix-pdp-images.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/css/chrome.css .image-fit-trigger .github/workflows/fix-pdp-images.yml
+          git commit -m 'Fix PDP photography to show full images'
+          git push
