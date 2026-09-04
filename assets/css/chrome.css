@@ -3601,7 +3601,8 @@ html.sf-modal-open .so-sticky{
 }
 
 
-/* FINAL PRODUCT IMAGE PRESERVATION — never crop the supplied creative. */
+
+/* FINAL PRODUCT IMAGE PRESERVATION — supplied photography is never cropped. */
 .so-media{
   width:100% !important;
   aspect-ratio:auto !important;
