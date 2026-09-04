@@ -1453,9 +1453,10 @@ body{overflow-x:clip}
 .so-media img{
   width:100%;
   height:auto;
-  max-height:240px;
+  max-height:560px;
   display:block;
-  object-fit:cover;
+  object-fit:contain;
+  object-position:center;
   object-position:center;
   border-radius:0;
 }
