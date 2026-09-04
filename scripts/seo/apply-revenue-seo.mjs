@@ -10,16 +10,18 @@ const BLOG_DIR = path.join(REPO, 'blog');
 const CHECK = process.argv.includes('--check');
 
 const NEW_GUIDES = [
-  ['why-clothes-smell-bad-again-after-sweating', 'how-to', 'Fabric Science', '8 min', 'Why Do Clothes Smell Bad Again After You Start Sweating?', 'Why heat and moisture can bring retained odor back on a shirt.'],
-  ['why-clothes-smell-bad-after-drying', 'how-to', 'Fabric Care', '8 min', 'Why Do Clothes Smell Bad After Drying?', 'Slow drying, retained odor and the fix before you rewash everything.'],
-  ['why-clothes-smell-musty-after-being-stored', 'how-to', 'Fabric Care', '8 min', 'Why Do Clothes Smell Musty After Being Stored?', 'How humidity, trapped air and storage conditions change clean clothing.'],
-  ['why-clothes-smell-in-wardrobe-even-when-clean', 'how-to', 'Fabric Care', '8 min', 'Why Do Clothes Smell in the Wardrobe Even When They’re Clean?', 'Sometimes the wardrobe is the source of stale clothing odor.'],
-  ['why-polyester-holds-odor-longer-than-cotton', 'science', 'Fabric Science', '9 min', 'Why Does Polyester Hold Odor Longer Than Cotton?', 'What textile research says about polyester, cotton, sweat and odor.'],
-  ['why-clean-shirt-starts-smelling-within-hours', 'science', 'Fabric Science', '8 min', 'Why Does a Clean Shirt Start Smelling Within a Few Hours?', 'How sweat, skin oils, microbes and fabric history create fast odor return.'],
-  ['how-to-freshen-clothes-stored-for-months', 'how-to', 'How To', '8 min', 'How to Freshen Clothes After They’ve Been Stored for Months', 'A practical seasonal reset for stored clothing.'],
-  ['how-to-pack-sweaty-clothes-without-bag-smell', 'how-to', 'How To', '8 min', 'How to Pack Sweaty Clothes Without Making Your Bag Smell', 'Separate, dry and contain worn clothing before it turns your bag into an odor chamber.'],
-  ['why-body-odor-comes-back-on-clothes-so-quickly', 'science', 'Fabric Science', '9 min', 'Why Does Body Odor Come Back on Clothes So Quickly?', 'Why a shirt can retain odor even after the skin feels fresh.'],
-  ['odor-on-clothes-vs-odor-in-clothes', 'science', 'Fabric Science', '9 min', 'Odor on Clothes vs Odor in Clothes: What’s Actually Happening?', 'Surface odor, retained odor and why heat or moisture can make smell return.'],
+  ['deodorant-perfume-on-fabric', 'how-to', 'Fabric Odor', '10 min', 'Why Deodorant and Perfume Fail on a Sweaty Shirt', 'Deodorant belongs on skin. Perfume on a worn shirt can clash with fabric odor; here is what to do instead.'],
+  ['dry-air-clothes-indian-home', 'how-to', 'Fabric Care', '10 min', 'How to Dry Clothes Indoors in an Indian Home Without Smell', 'Space the load, move the air and check the seams before calling a shirt dry.'],
+  ['how-odor-neutralizer-works-on-fabric', 'science', 'Product Science', '9 min', 'How an Odor Neutralizer Works on Fabric', 'What odor-neutralizing ingredients can and cannot do once odor is in a garment.'],
+  ['remove-incense-agarbatti-dhoop-smell', 'how-to', 'How To', '9 min', 'How to Remove Incense, Agarbatti and Dhoop Smell From Clothes', 'Why smoke odor clings to clothing and the practical order of operations to reset it.'],
+  ['vinegar-baking-soda-fabric-softener', 'how-to', 'Laundry', '12 min', 'Does Vinegar, Baking Soda or Fabric Softener Remove Odor?', 'Three laundry additives, three different jobs, and where each one stops helping.'],
+  ['wash-refresh-or-wear', 'how-to', 'How To', '11 min', 'Wash It, Refresh It, or Wear It', 'A simple decision tree for when a shirt needs a wash, a fabric reset or another wear.'],
+  ['why-clothes-smell-stale-in-ac-room', 'how-to', 'Fabric Care', '9 min', 'Why Do Clothes Smell Stale in an AC Room?', 'How still indoor air, humidity and slow drying can turn clean clothing stale.'],
+  ['why-shirt-zones-smell-after-washing', 'how-to', 'Clothing Odor', '10 min', 'Why Collar and Armpits Still Smell After Washing', 'Why the collar and underarm seams can hold odor even when the rest of the shirt seems clean.'],
+  ['why-sweat-smells-stronger-on-some-shirts', 'science', 'Fabric Science', '10 min', 'Why Does Sweat Smell Stronger on Some Shirts?', 'Why the same sweat can smell different depending on fabric, moisture and retained residue.'],
+  ['why-traffic-fumes-cling-to-clothes', 'science', 'Fabric Science', '9 min', 'Why Do Traffic Fumes Cling to Clothes?', 'What happens when a commute leaves smoke and roadside odors on the outer face of a shirt.'],
+  ['why-washing-machine-makes-clothes-smell', 'how-to', 'Laundry', '10 min', 'Why Does My Washing Machine Make Clothes Smell Bad?', 'How machine residue, wet loads and slow drying can become the source of clothing odor.'],
+  ['why-water-makes-clothing-odor-louder', 'science', 'Fabric Science', '9 min', 'Why Does Water Make Clothing Odor Louder?', 'Why damp fabric can make previously quiet odor compounds noticeable again.'],
 ];
 
 const META = {
@@ -62,7 +64,7 @@ const WINNERS = {
 };
 
 function esc(value) {
-  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function replaceTitle(html, value) {
@@ -70,9 +72,9 @@ function replaceTitle(html, value) {
 }
 
 function replaceMeta(html, attr, key, value) {
-  const pattern = `<meta\\s+${attr}=["']${key}["'][^>]*content=["'][^"']*["'][^>]*>`;
+  const pattern = `<meta\\s+${attr}=[\"']${key}[\"'][^>]*content=[\"'][^\"']*[\"'][^>]*>`;
   const re = new RegExp(pattern, 'i');
-  const replacement = `<meta ${attr}="${key}" content="${esc(value)}">`;
+  const replacement = `<meta ${attr}=\"${key}\" content=\"${esc(value)}\">`;
   return re.test(html) ? html.replace(re, replacement) : html.replace('</head>', `${replacement}\n</head>`);
 }
 
@@ -108,9 +110,13 @@ function staticGuideCards() {
 
 function updateBlogIndex(html) {
   let out = applyMeta(html, META['/blog/index.html']);
-  out = out.replace(/29 Science Guides/g, '39 Science Guides');
-  out = out.replace(/All Guides \(29\)/g, 'All Guides (39)');
-  out = out.replace(/id="latestCount">29 guides</g, 'id="latestCount">39 guides</g');
+  const total = collectBlogUrls().length;
+  out = out.replace(/All Guides \(\d+\)/g, `All Guides (${total})`);
+  out = out.replace(/id=\"latestCount\">\d+ guides</g, `id=\"latestCount\">${total} guides</g`);
+  out = out.replace(/36 Science Guides/g, '50+ Fabric Guides');
+  out = out.replace(/Tested in 40°C Heat/g, 'India-first');
+  out = out.replace(/0% Oil \/ Fabric Safe/g, 'Fabric Only');
+  out = out.replace(/Peer-Reviewed Formulation/g, 'Source-led');
 
   const list = {
     '@context': 'https://schema.org',
