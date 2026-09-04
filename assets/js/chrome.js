@@ -236,6 +236,8 @@
     var T = truth();
     var buy = document.getElementById('buy') || document.querySelector('[data-so-buy]');
     var hasBuy = !!buy;
+    var heroAction = document.querySelector('.so-hero .so-btn--p1, [data-smelloff-buy="hero"], .so-hero__actions');
+    var topMarker = heroAction || document.querySelector('header.site, .sf-hdr, h1');
     var ctaHref = document.getElementById('buy') ? '#buy' : '/?buy=1';
     var bar = document.createElement('div');
     bar.className = 'so-sticky';
@@ -250,38 +252,62 @@
       '<a class="so-btn so-btn--p1" href="' + ctaHref + '" data-smelloff-buy="mobile_sticky">Buy</a>';
     document.body.appendChild(bar);
 
+    var buyBtn = bar.querySelector('.so-btn');
+    if (buyBtn && hasBuy) {
+      buyBtn.addEventListener('click', function (e) {
+        var target = document.getElementById('buy');
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+
     var buyInView = false;
-    var scrolledEnough = false;
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var topInView = true;
 
     function updateSticky() {
-      var show = scrolledEnough && !buyInView;
+      var show = !topInView && !buyInView;
       bar.classList.toggle('is-visible', show);
       document.documentElement.classList.toggle('so-sticky-on', show);
       bar.setAttribute('aria-hidden', show ? 'false' : 'true');
     }
 
-    if (buy && 'IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        buyInView = entries[0].isIntersecting;
-        updateSticky();
-      }, { threshold: 0.08 }).observe(buy);
-    }
-
-    var ticking = false;
-    function onScroll() {
-      scrolledEnough = window.scrollY > (hasBuy ? 280 : 360);
-      ticking = false;
-      updateSticky();
-    }
-    window.addEventListener('scroll', function () {
-      if (!ticking) {
-        window.requestAnimationFrame(onScroll);
-        ticking = true;
+    if ('IntersectionObserver' in window) {
+      if (topMarker) {
+        new IntersectionObserver(function (entries) {
+          topInView = entries[0].isIntersecting;
+          updateSticky();
+        }, { threshold: 0.05 }).observe(topMarker);
+      } else {
+        topInView = false;
       }
-    }, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-    onScroll();
+
+      if (buy) {
+        new IntersectionObserver(function (entries) {
+          buyInView = entries[0].isIntersecting;
+          updateSticky();
+        }, { threshold: 0.08 }).observe(buy);
+      }
+      updateSticky();
+    } else {
+      var ticking = false;
+      function onScroll() {
+        var show = window.scrollY > (hasBuy ? 280 : 360);
+        bar.classList.toggle('is-visible', show);
+        document.documentElement.classList.toggle('so-sticky-on', show);
+        bar.setAttribute('aria-hidden', show ? 'false' : 'true');
+        ticking = false;
+      }
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          window.requestAnimationFrame(onScroll);
+          ticking = true;
+        }
+      }, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      onScroll();
+    }
 
     if (reduce) {
       bar.style.transition = 'none';

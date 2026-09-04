@@ -110,15 +110,56 @@ function hydrate(root) {
     });
   }
 
-  var packs = root.querySelectorAll('[data-so-pack]');
-  for (var p = 0; p < packs.length; p++) {
-    packs[p].addEventListener('click', function () {
-      var qty = parseInt(this.getAttribute('data-so-pack'), 10) || 1;
-      if (typeof window.setPurchaseQuantity === 'function') window.setPurchaseQuantity(qty);
-      setPay(root, root.getAttribute('data-pay') === 'cod' ? 'cod' : 'prepaid');
-    });
+  var packs = Array.prototype.slice.call(root.querySelectorAll('[data-so-pack]'));
+  function selectPack(qty, focusIt) {
+    var chosen = null;
+    for (var p = 0; p < packs.length; p++) {
+      var btn = packs[p];
+      var btnQty = parseInt(btn.getAttribute('data-so-pack'), 10);
+      var isCurrent = btnQty === qty;
+      btn.setAttribute('aria-checked', isCurrent ? 'true' : 'false');
+      btn.setAttribute('aria-pressed', isCurrent ? 'true' : 'false');
+      btn.tabIndex = isCurrent ? 0 : -1;
+      if (isCurrent) chosen = btn;
+    }
+    var packLabel = root.querySelector('[data-so-pack-label]');
+    if (packLabel) {
+      packLabel.textContent = qty + ' × 50ml';
+    }
+    if (typeof window.setPurchaseQuantity === 'function') {
+      window.setPurchaseQuantity(qty);
+    }
+    setPay(root, root.getAttribute('data-pay') === 'cod' ? 'cod' : 'prepaid');
+    if (focusIt && chosen && typeof chosen.focus === 'function') {
+      chosen.focus();
+    }
   }
 
+  for (var p = 0; p < packs.length; p++) {
+    (function (idx) {
+      var btn = packs[idx];
+      btn.addEventListener('click', function () {
+        var qty = parseInt(this.getAttribute('data-so-pack'), 10) || 1;
+        selectPack(qty, false);
+      });
+      btn.addEventListener('keydown', function (e) {
+        var nextIdx = -1;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          nextIdx = (idx + 1) % packs.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          nextIdx = (idx - 1 + packs.length) % packs.length;
+        }
+        if (nextIdx >= 0) {
+          e.preventDefault();
+          var nextQty = parseInt(packs[nextIdx].getAttribute('data-so-pack'), 10) || 1;
+          selectPack(nextQty, true);
+        }
+      });
+    })(p);
+  }
+
+  var initialQty = packQty(root);
+  selectPack(initialQty, false);
   setPay(root, 'prepaid');
 }
 

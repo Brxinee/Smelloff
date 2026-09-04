@@ -1937,7 +1937,8 @@ body{overflow-x:clip}
   border-radius:var(--so-radius-md, 6px);
   font-family:var(--so-font-body, var(--body));
 }
-.so-pack[aria-pressed="true"]{
+.so-pack[aria-pressed="true"],
+.so-pack[aria-checked="true"]{
   border-color:var(--so-lime, #B8FF57);
   background:rgba(184,255,87,.08);
 }
@@ -1954,7 +1955,8 @@ body{overflow-x:clip}
   text-transform:uppercase;
   color:var(--so-cotton-faint, #8E8E8E);
 }
-.so-pack[aria-pressed="true"] .so-pack__qty{color:var(--so-cotton-ink, #F4F4F4)}
+.so-pack[aria-pressed="true"] .so-pack__qty,
+.so-pack[aria-checked="true"] .so-pack__qty{color:var(--so-cotton-ink, #F4F4F4)}
 .so-pack__name{
   grid-area:name;
   font-size:1.0625rem;
@@ -2634,7 +2636,8 @@ body:not(:has(.so-hero)) .b-card p{color:var(--so-cotton-muted, #A3A3A3)}
   outline:2px solid var(--so-cotton-ink, #F4F4F4);
   outline-offset:2px;
 }
-.so-pack[aria-pressed="true"]{
+.so-pack[aria-pressed="true"],
+.so-pack[aria-checked="true"]{
   box-shadow:0 0 0 1px var(--so-cotton-ink, #F4F4F4);
 }
 .so-pack__save{

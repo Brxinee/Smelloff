@@ -299,6 +299,29 @@
     renderPdpQty();
     buyNow();
   }
+  function setPurchaseQuantity(n) {
+    const q = Math.max(1, Math.min(5, parseInt(n, 10) || 1));
+    pdpQty = q;
+    purchaseState.quantity = q;
+    purchaseState.variant = q === 3 ? 'trio' : q === 2 ? 'duo' : 'solo';
+    currentVariant = purchaseState.variant;
+    syncPurchaseState();
+    setCartQty(q);
+    renderPdpQty();
+    return {
+      quantity: q,
+      variant: purchaseState.variant,
+      subtotal: q === 3 ? 599 : q === 2 ? 429 : 229 * q
+    };
+  }
+  function getPurchaseState() {
+    return {
+      quantity: purchaseState.quantity,
+      variant: purchaseState.variant,
+      paymentMethod: purchaseState.paymentMethod,
+      subtotal: purchaseState.quantity === 3 ? 599 : purchaseState.quantity === 2 ? 429 : 229 * purchaseState.quantity
+    };
+  }
   window.openCartDrawer = openCartDrawer;
   window.closeCartDrawer = closeCartDrawer;
   window.buyNow = buyNow;
@@ -309,6 +332,8 @@
   window.cartDec = cartDec;
   window.cartRemove = cartRemove;
   window.checkoutFromCart = checkoutFromCart;
+  window.setPurchaseQuantity = setPurchaseQuantity;
+  window.getPurchaseState = getPurchaseState;
 
   // Transactional email client (Resend via /api/send-email).
   // keepalive: true so the request survives page navigation (e.g. UPI redirect).
