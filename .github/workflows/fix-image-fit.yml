@@ -17,62 +17,38 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Refine content image framing
+      - name: Apply image framing override
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
+          cat >> assets/css/chrome.css <<'CSS'
 
-          path = Path('assets/css/chrome.css')
-          text = path.read_text(encoding='utf-8')
-
-          pattern = re.compile(
-              r'\.so-media\{.*?\n\}\n\.so-media picture\{.*?\n\}\n\.so-media img\{.*?\n\}\n@media\(min-width:768px\)\{.*?\n\}\n',
-              re.S,
-          )
-
-          new = '''.so-media{
-  margin:0;
-  width:100%;
-  aspect-ratio:4 / 5;
-  overflow:hidden;
-  border-radius:0;
-  border:0;
-  background:transparent;
-}
-.so-media picture{
-  display:block;
-  width:100%;
-  height:100%;
-}
-.so-media img{
-  width:100%;
-  height:100%;
-  max-height:none;
-  display:block;
-  object-fit:cover;
-  object-position:center;
-  border-radius:0;
-}
-@media(min-width:768px){
-  .so-media{
-    aspect-ratio:4 / 5;
-  }
-}
-'''
-
-          updated, count = pattern.subn(new, text, count=1)
-          if count != 1:
-              raise SystemExit('Expected .so-media block not found; refusing to edit blindly.')
-
-          path.write_text(updated, encoding='utf-8')
-          PY
+          /* FINAL REAL-PHOTO FRAMING — fill width, crop only top/bottom. */
+          .so-media{
+            width:100% !important;
+            aspect-ratio:4 / 5 !important;
+            overflow:hidden !important;
+            border:0 !important;
+            border-radius:0 !important;
+            background:transparent !important;
+          }
+          .so-media picture{
+            display:block !important;
+            width:100% !important;
+            height:100% !important;
+          }
+          .so-media img{
+            width:100% !important;
+            height:100% !important;
+            max-height:none !important;
+            object-fit:cover !important;
+            object-position:center !important;
+            display:block !important;
+          }
+          CSS
 
       - name: Commit fix
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add assets/css/chrome.css
-          git diff --cached --quiet && exit 0
-          git commit -m 'Refine real-photo image framing'
+          git commit -m 'Fix real-photo framing without side bars'
           git push
