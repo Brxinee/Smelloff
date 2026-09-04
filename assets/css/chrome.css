@@ -3571,3 +3571,26 @@ html.sf-modal-open .so-sticky{
   height:auto !important;
   min-height:0 !important;
 }
+
+/* FINAL REAL-PHOTO FRAMING — fill width, crop only top/bottom. */
+.so-media{
+  width:100% !important;
+  aspect-ratio:4 / 5 !important;
+  overflow:hidden !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+}
+.so-media picture{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+}
+.so-media img{
+  width:100% !important;
+  height:100% !important;
+  max-height:none !important;
+  object-fit:cover !important;
+  object-position:center !important;
+  display:block !important;
+}
