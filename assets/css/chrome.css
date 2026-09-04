@@ -1130,25 +1130,31 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .so-hero__visual{
   margin:0;
   min-width:0;
-  height:clamp(190px, 26svh, 250px);
-  max-height:250px;
-  padding:0;
+  height:clamp(260px, 44svh, 380px);
+  max-height:380px;
+  padding:16px 20px;
   background:#080808;
-  display:block;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   overflow:hidden;
   position:relative;
 }
 .so-hero__visual picture{
-  display:block;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   height:100%;
   width:100%;
 }
 .so-hero__visual img{
   display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center 36%;
+  width:auto;
+  height:auto;
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  object-position:center;
 }
 @media (prefers-reduced-motion: no-preference){
   .so-hero__visual img{
@@ -1162,12 +1168,11 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 }
 .so-hero__copy{
   min-width:0;
-  padding:16px max(20px, env(safe-area-inset-right, 0px)) 24px max(20px, env(safe-area-inset-left, 0px));
+  padding:20px max(20px, env(safe-area-inset-right, 0px)) 28px max(20px, env(safe-area-inset-left, 0px));
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
-  background:linear-gradient(180deg, rgba(8,8,8,0) 0%, #080808 18px);
-  margin-top:-18px;
+  background:#080808;
   position:relative;
   z-index:1;
 }
@@ -1305,29 +1310,34 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   .so-hero__visual{
     order:2;
     position:relative;
-    height:auto;
+    height:100%;
     max-height:none;
     min-height:0;
     min-width:0;
-    padding:0;
+    padding:clamp(20px, 3vw, 40px);
+    background:#080808;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
   .so-hero__visual picture{
-    display:block;
-    position:absolute;
-    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     height:100%;
     width:100%;
+    position:relative;
   }
   .so-hero__visual img{
-    position:absolute;
-    inset:0;
+    position:relative;
+    inset:auto;
     display:block;
-    height:100%;
-    width:100%;
-    max-height:none;
-    max-width:none;
-    object-fit:cover;
-    object-position:58% 50%;
+    height:auto;
+    width:auto;
+    max-height:100%;
+    max-width:100%;
+    object-fit:contain;
+    object-position:center;
   }
   .so-hero h1{font-size:clamp(2.3rem, 3.6vw, 3.4rem);max-width:14ch;line-height:1.08}
   .so-hero__hook{font-size:1.125rem;line-height:1.6;margin-top:16px}
@@ -2160,9 +2170,10 @@ body{overflow-x:clip}
   scroll-snap-type:x mandatory;
   scrollbar-width:none;
   -webkit-overflow-scrolling:touch;
-  border-radius:var(--so-radius-md, 10px);
-  background:var(--so-chrome-2, #111111);
-  aspect-ratio:3/4;
+  border-radius:var(--so-radius-md, 6px);
+  background:#080808;
+  border:1px solid var(--so-chrome-line, rgba(255,255,255,.08));
+  aspect-ratio:4/5;
 }
 .so-gallery__viewport::-webkit-scrollbar{display:none}
 .so-gallery__track{
@@ -2188,18 +2199,19 @@ body{overflow-x:clip}
 .so-gallery__slide img{
   width:100%;
   height:100%;
-  object-fit:cover;
-  object-position:center 40%;
+  object-fit:contain;
+  object-position:center;
   display:block;
+  background:#080808;
 }
 .so-gallery__slide--wide img{
   object-position:center;
 }
 .so-gallery__slide--edc img{
-  object-position:center 62%;
+  object-position:center;
 }
 .so-gallery__slide--office img{
-  object-position:center 52%;
+  object-position:center;
 }
 .so-gallery .gal-zoom-btn:focus-visible{
   outline:2px solid var(--so-lime, #B8FF57);
@@ -3404,8 +3416,9 @@ html.sf-modal-open .so-sticky{
   margin-top:28px;
 }
 .so-scenarios-3 .so-media img{
-  max-height:240px;
-  object-position:center 58%;
+  max-height:clamp(240px, 40vw, 360px);
+  object-fit:contain;
+  object-position:center;
 }
 @media(min-width:860px){
   .so-scenarios-3{
@@ -3413,7 +3426,7 @@ html.sf-modal-open .so-sticky{
     gap:48px;
   }
   .so-scenarios-3 .so-media img{
-    max-height:none;
+    max-height:480px;
   }
 }
 .so-scenario-list{
@@ -3546,51 +3559,43 @@ html.sf-modal-open .so-sticky{
 
 
 
-/* PDP photography: show the COMPLETE source image inside a
-   controlled responsive frame. Never crop product/lifestyle photos. */
-.so-media img{
+/* =====================================================================
+   PHOTOGRAPHY RULE: COMPLETE SOURCE IMAGE PRESERVATION.
+   Never crop product, ritual, EDC, or lifestyle photography.
+   The entire bottle and contextual everyday carry items must remain visible.
+   ===================================================================== */
+.so-media{
   width:100% !important;
-  height:clamp(280px,52vw,520px) !important;
-  max-height:none !important;
+  aspect-ratio:auto !important;
+  height:auto !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+  border-radius:var(--so-radius-md, 6px) !important;
+  border:1px solid var(--so-chrome-line, rgba(255,255,255,.08)) !important;
+  background:#080808 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.so-media picture{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+  height:100% !important;
+}
+.so-media img{
+  width:auto !important;
+  height:auto !important;
+  max-width:100% !important;
+  max-height:clamp(280px, 52vw, 560px) !important;
   object-fit:contain !important;
   object-position:center !important;
   display:block !important;
+  margin:0 auto !important;
 }
-
-
-/* LIVE IMAGE FIT — full source photography, never crop. */
-.so-media img{
-  width:100% !important;
-  height:auto !important;
-  max-height:none !important;
-  object-fit:initial !important;
-  object-position:center !important;
-  display:block !important;
-}
-.so-media{
-  height:auto !important;
-  min-height:0 !important;
-}
-
-/* FINAL REAL-PHOTO FRAMING — fill width, crop only top/bottom. */
-.so-media{
-  width:100% !important;
-  aspect-ratio:4 / 5 !important;
-  overflow:hidden !important;
-  border:0 !important;
-  border-radius:0 !important;
-  background:transparent !important;
-}
-.so-media picture{
-  display:block !important;
-  width:100% !important;
-  height:100% !important;
-}
-.so-media img{
-  width:100% !important;
-  height:100% !important;
-  max-height:none !important;
-  object-fit:cover !important;
-  object-position:center !important;
-  display:block !important;
+@media(min-width:768px){
+  .so-media img{
+    max-height:560px !important;
+  }
 }
