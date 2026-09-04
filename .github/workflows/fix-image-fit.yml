@@ -1,0 +1,44 @@
+name: Fix full image fit
+
+on:
+  push:
+    paths-ignore:
+      - 'assets/css/chrome.css'
+      - '.github/workflows/fix-image-fit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fix cropped content images
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('assets/css/chrome.css')
+          text = path.read_text()
+
+          old = '''.so-media img{\n  width:100%;\n  height:auto;\n  max-height:240px;\n  display:block;\n  object-fit:cover;'''
+          new = '''.so-media img{\n  width:100%;\n  height:auto;\n  max-height:560px;\n  display:block;\n  object-fit:contain;\n  object-position:center;'''
+
+          if old not in text:
+              raise SystemExit('Expected .so-media image rule was not found; refusing to edit.')
+
+          path.write_text(text.replace(old, new, 1))
+          PY
+
+      - name: Commit fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/css/chrome.css
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix content images to show full frame'
+          git push
