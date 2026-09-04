@@ -5,6 +5,7 @@ on:
     paths:
       - 'assets/css/chrome.css'
       - '.github/workflows/fix-image-fit.yml'
+      - 'scripts/qa/.image-fit-trigger'
   workflow_dispatch:
 
 permissions:
@@ -26,14 +27,14 @@ jobs:
           path = Path('assets/css/chrome.css')
           css = path.read_text(encoding='utf-8')
 
-          # Remove the bad workflow-generated block and any prior copy of our
-          # replacement, then append one canonical full-image rule set.
+          # Remove the old workflow-generated crop block and any prior copy of
+          # our replacement, then append exactly one canonical full-image set.
           css = re.sub(r'\n/\* FINAL REAL-PHOTO FRAMING.*\Z', '', css, flags=re.S)
           css = re.sub(r'\n/\* FINAL PRODUCT IMAGE PRESERVATION.*\Z', '', css, flags=re.S)
 
           css += r'''
 
-          /* FINAL PRODUCT IMAGE PRESERVATION — never crop the supplied creative. */
+          /* FINAL PRODUCT IMAGE PRESERVATION — supplied photography is never cropped. */
           .so-media{
             width:100% !important;
             aspect-ratio:auto !important;
