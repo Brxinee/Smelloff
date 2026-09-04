@@ -1,8 +1,8 @@
-name: Fix full image fit
+name: Preserve full product imagery
 
 on:
   push:
-    paths-ignore:
+    paths:
       - 'assets/css/chrome.css'
       - '.github/workflows/fix-image-fit.yml'
   workflow_dispatch:
@@ -17,14 +17,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Apply image framing override
+      - name: Replace legacy crop override
         run: |
-          cat >> assets/css/chrome.css <<'CSS'
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
 
-          /* FINAL REAL-PHOTO FRAMING — fill width, crop only top/bottom. */
+          path = Path('assets/css/chrome.css')
+          css = path.read_text(encoding='utf-8')
+
+          # Remove the bad workflow-generated block and any prior copy of our
+          # replacement, then append one canonical full-image rule set.
+          css = re.sub(r'\n/\* FINAL REAL-PHOTO FRAMING.*\Z', '', css, flags=re.S)
+          css = re.sub(r'\n/\* FINAL PRODUCT IMAGE PRESERVATION.*\Z', '', css, flags=re.S)
+
+          css += r'''
+
+          /* FINAL PRODUCT IMAGE PRESERVATION — never crop the supplied creative. */
           .so-media{
             width:100% !important;
-            aspect-ratio:4 / 5 !important;
+            aspect-ratio:auto !important;
+            height:auto !important;
             overflow:hidden !important;
             border:0 !important;
             border-radius:0 !important;
@@ -33,22 +46,30 @@ jobs:
           .so-media picture{
             display:block !important;
             width:100% !important;
-            height:100% !important;
+            height:auto !important;
           }
           .so-media img{
             width:100% !important;
-            height:100% !important;
+            height:auto !important;
+            max-width:100% !important;
             max-height:none !important;
-            object-fit:cover !important;
-            object-position:center !important;
+            object-fit:contain !important;
+            object-position:center center !important;
             display:block !important;
           }
-          CSS
+          '''
 
-      - name: Commit fix
+          path.write_text(css, encoding='utf-8')
+          PY
+
+      - name: Commit only when needed
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet -- assets/css/chrome.css; then
+            echo 'Image framing already clean.'
+            exit 0
+          fi
           git add assets/css/chrome.css
-          git commit -m 'Fix real-photo framing without side bars'
+          git commit -m 'Fix product imagery to preserve full frames'
           git push
