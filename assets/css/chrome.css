@@ -3545,3 +3545,14 @@ html.sf-modal-open .so-sticky{
 
 
 
+
+/* PDP photography: show the COMPLETE source image inside a
+   controlled responsive frame. Never crop product/lifestyle photos. */
+.so-media img{
+  width:100% !important;
+  height:clamp(280px,52vw,520px) !important;
+  max-height:none !important;
+  object-fit:contain !important;
+  object-position:center !important;
+  display:block !important;
+}
