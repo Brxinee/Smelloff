@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#080808"/>
+  <rect x="60" y="60" width="1480" height="780" rx="20" fill="none" stroke="#B8FF57" stroke-opacity=".22" stroke-width="2"/>
+  <rect x="90" y="85" width="330" height="54" rx="8" fill="#B8FF57"/>
+  <text x="112" y="121" font-family="Arial" font-size="24" font-weight="700" letter-spacing="3" fill="#080808">SMELLOFF GUIDE</text>
+  <text x="90" y="188" font-family="Arial" font-size="22" font-weight="700" letter-spacing="5" fill="#B8FF57">FABRIC SCIENCE</text>
+  <text x="90" y="360" font-family="Georgia,serif" font-size="64" font-weight="900" fill="#F4F1EA">WHY SWEAT SMELLS STRONGER ON SOM</text>
+  <text x="90" y="450" font-family="Georgia,serif" font-size="42" font-weight="700" fill="#B8FF57">SAME BODY</text>
+  <text x="90" y="760" font-family="Arial" font-size="22" fill="#8A8A85">smelloff.in · fabric odor · India</text>
+</svg>
