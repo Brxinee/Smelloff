@@ -4,6 +4,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { POSTS, CANVAS, deliveryUrl, srcsetFor } from '../thumbnails/thumbnails.config.mjs';
+
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..');
 const BLOG_DIR = path.join(REPO, 'blog');
@@ -70,10 +72,23 @@ function applyMeta(html, meta) {
 }
 function collectBlogUrls() { return fs.readdirSync(BLOG_DIR).filter(name => name.endsWith('.html') && name !== 'index.html').map(name => `/blog/${name.replace(/\.html$/i, '')}`).sort(); }
 function staticGuideCards() {
-  return NEW_GUIDES.map(([slug, cat, label, time, title, desc]) => `<a href="/blog/${slug}" class="b-card" data-cat="${cat}">
-  <div class="b-card-thumb"><img loading="lazy" src="/blog/assets/${slug}.svg" alt="${esc(title)}" width="1600" height="900" decoding="async"></div>
+  const bySlug = new Map(POSTS.map((p) => [p.slug, p]));
+  const sizes = '(min-width: 900px) 380px, 100vw';
+  return NEW_GUIDES.map(([slug, cat, label, time, title, desc]) => {
+    const post = bySlug.get(slug);
+    const alt = post ? post.alt : title;
+    const picture =
+      `<picture>` +
+      `<source type="image/avif" srcset="${srcsetFor(slug, 'avif')}" sizes="${sizes}">` +
+      `<source type="image/webp" srcset="${srcsetFor(slug, 'webp')}" sizes="${sizes}">` +
+      `<img loading="lazy" src="${deliveryUrl(slug, 'jpg')}" alt="${esc(alt)}" ` +
+      `width="${CANVAS.width}" height="${CANVAS.height}" decoding="async">` +
+      `</picture>`;
+    return `<a href="/blog/${slug}" class="b-card" data-cat="${cat}">
+  <div class="b-card-thumb">${picture}</div>
   <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">${esc(label)}</span><span class="b-card-sep">·</span><span>${esc(time)}</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>${esc(title)}</h3><p>${esc(desc)}</p><span class="b-card-arrow">Read Guide</span></div>
-</a>`).join('\n');
+</a>`;
+  }).join('\n');
 }
 function updateBlogIndex(html) {
   let out = applyMeta(html, META['/blog/index.html']); const total = collectBlogUrls().length;

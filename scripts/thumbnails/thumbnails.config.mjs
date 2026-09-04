@@ -1,327 +1,431 @@
 /**
- * Blog thumbnail source of truth.
+ * Smelloff blog visual system — source of truth.
  *
- * One entry per post. Consumed by BOTH renderers:
- *   - scripts/thumbnails/build-thumbnails.mjs   (local compositor, runs today)
- *   - scripts/canva_thumbnail_automation.js     (Canva Connect Autofill API)
- * so the copy and the photography can never drift between the two.
+ * Photography-first. No overlay headlines. TEXT lives in HTML.
+ * VISUAL is a real-life photograph (or a genuine science diagram used inline).
  *
- * Design rules below are lifted from High_CTR_Blog_Thumbnail_Research.pdf and are
- * enforced in code by validateConfig() — do not relax them by hand:
- *   - overlay text is 6 words or fewer (>10 words costs ~16% CTR)
- *   - interrogative framing wherever it is honest (~20% lift over flat statements)
- *   - a human face is the primary visual anchor (9.2% vs 6.1% median CTR)
- *   - white/acid type on a dark scrim, never low-contrast type on busy photography
+ *   node scripts/thumbnails/build-thumbnails.mjs
+ *   node scripts/thumbnails/apply-thumbnails.mjs
  *
- * `photo` is an Adobe Stock asset id, licensed to the Smelloff account. The
- * originals are NOT committed (5–15MB each); build-thumbnails.mjs reads them from
- * ASSET_SOURCE_DIR and only the 1920x1080 composites are versioned. Re-licensing
- * an id via the Adobe connector returns the same asset without a second charge.
- *
- * BRAND RULES that constrain photo choice (see CLAUDE.md "Positioning: clothing only"):
- *   - never a photo of spray being applied to skin, hair or body — ODORSTRIKE is
- *     fabric only, and a thumbnail carries no context to qualify it
- *   - never shoes, helmets, gym gear, bags, sofas, curtains or room freshening
- *   - clothing, fabric, laundry and the people wearing them only
+ * `source` is a file in `.thumbnail-sources/` (generated editorial stills, or
+ * a real ODORSTRIKE photograph). Original Adobe Stock ids are retired: Google
+ * 2026 guidance prefers representative photographs over text-heavy cards, and
+ * the overlay compositor is no longer the default renderer.
  */
 
-export const CANVAS = { width: 1920, height: 1080 }; // 16:9, 2,073,600px — clears the >920,000px Discover benchmark
+export const CANVAS = { width: 1920, height: 1080 };
 
 /** Widths emitted for the responsive srcset. The first is the canonical asset. */
 export const WIDTHS = [1920, 1200];
 
+/** Bump when encoded pixels change. `/blog/assets/*` is Cache-Control: immutable. */
+export const CACHE_V = 5;
+
+export function deliveryUrl(slug, ext, w) {
+  const suffix = w && w !== WIDTHS[0] ? `@${w}` : '';
+  return `/blog/assets/${slug}${suffix}.${ext}?v=${CACHE_V}`;
+}
+
+export function srcsetFor(slug, ext) {
+  return WIDTHS.slice()
+    .sort((a, b) => a - b)
+    .map((w) => `${deliveryUrl(slug, ext, w)} ${w}w`)
+    .join(', ');
+}
+
+export const FAMILIES = {
+  'fabric-problems': 'Close fabric, collars, underarms, wear',
+  laundry: 'Washing, drying, storage, humidity',
+  'real-life': 'Office, commute, meeting, travel, evening',
+  science: 'Fibres, mechanisms, comparisons',
+  product: 'ODORSTRIKE in authentic clothing situations',
+};
+
+/**
+ * One entry per published post. Extra index-only assets live in EXTRA_ASSETS.
+ *
+ * fit: 'cover' (default) or 'contain' (pad to 16:9 on #080808 — used for
+ * portrait product photography so the 11cm bottle is not cropped into a giant).
+ */
 export const POSTS = [
-  // 2026-08/09 series. Photo choice is bound by the clothing-only rule above:
-  // every frame was checked for footwear before licensing, and the suitcase
-  // shots that had sandals in them were rejected for that reason.
   {
-    slug: 'fabric-deodorizer-spray-india-guide-2026',
-    kicker: 'Buying guide',
-    top: 'Masking',
-    hi: 'or binding?',
-    // The source is 5120x2700, wider than the ~1.17:1 photo panel, so the crop
-    // is constrained horizontally and object-position Y has no travel — the
-    // frame is what it is. The photographer already crops the forehead, so this
-    // one is chin-and-hands rather than a full face; it was still the right
-    // pick over the alternatives, which had either a bare raised underarm or
-    // footwear on the wardrobe floor.
-    photo: 459888446,
-    focal: '50% 50%',
-    alt: 'A shopper works along a rail of hanging garments, comparing one against the next before choosing',
-  },
-  
-  {
-    slug: 'which-fabrics-hold-odor-most',
-    kicker: 'Fabric science',
-    top: 'Which fabric',
-    hi: 'holds the smell?',
-    photo: 512989785,
-    focal: '50% 50%',
-    alt: 'Overhead view of a pair of hands folding assorted cotton and knit garments into storage boxes',
+    slug: 'why-shirt-zones-smell-after-washing',
+    family: 'fabric-problems',
+    source: 'why-shirt-zones-smell-after-washing.jpg',
+    focal: '50% 45%',
+    alt: 'Close-up of a white office shirt on a hanger, inner collar band faintly yellowed and the underarm panel worn',
   },
   {
-    slug: 'keep-clothes-fresh-while-travelling',
-    kicker: 'Travel',
-    top: 'Four shirts.',
-    hi: 'Seven days?',
-    photo: 649242862,
-    focal: '50% 50%',
-    tone: 'brightness(1.22) contrast(1.04) saturate(1.08)',
-    alt: 'A traveller packs folded shirts and knitwear into an open suitcase before a trip',
+    slug: 'why-washing-machine-makes-clothes-smell',
+    family: 'laundry',
+    source: 'why-washing-machine-makes-clothes-smell.jpg',
+    focal: '55% 50%',
+    alt: 'Open front-loading washing machine in a compact Indian bathroom with a damp shirt hanging from the drum',
   },
   {
-    slug: 'how-often-to-wash-jeans-india',
-    kicker: 'Denim care',
-    top: 'How often',
-    hi: 'wash your jeans?',
-    photo: 315726352,
-    focal: '50% 55%',
-    alt: 'A neat stack of folded blue denim jeans in several washes against a pale background',
+    slug: 'remove-incense-agarbatti-dhoop-smell',
+    family: 'real-life',
+    source: 'remove-incense-agarbatti-dhoop-smell.jpg',
+    focal: '45% 50%',
+    alt: 'Agarbatti smoke drifting past a hanging cotton kurta in a warm Indian living room',
   },
   {
-    slug: 'damp-clothes-musty-smell-monsoon-fix',
-    kicker: 'Monsoon laundry',
-    top: 'Clean. Still musty.',
-    hi: 'Why?',
-    photo: 909948385,
-    focal: '50% 40%',
-    alt: 'A person hangs freshly washed white laundry on an indoor drying rack beside a washing machine',
+    slug: 'remove-cooking-smell-from-clothes',
+    family: 'real-life',
+    source: 'remove-cooking-smell-from-clothes.jpg',
+    focal: '40% 45%',
+    alt: 'Tadka in a steel kadhai sending oil haze toward a pale office shirt hanging on a nearby chair',
   },
   {
-    slug: 'gym-clothes-smell-after-washing',
-    kicker: 'Fabric science',
-    top: 'Washed.',
-    hi: 'Still stinks. Why?',
-    photo: 622041266,
-    focal: '50% 22%',
-    alt: 'A woman in sportswear pinches her nose at the smell of gym clothes that have already been washed',
-  },
-  {
-    slug: 'does-fabric-spray-stain-clothes',
-    kicker: 'Tested on 5 fabrics',
-    top: 'Will it stain',
-    hi: 'your shirt?',
-    photo: 631669633,
-    focal: '50% 62%',
-    tone: 'brightness(0.94) contrast(1.10) saturate(1.05)',
-    alt: 'A person holds out a white t-shirt marked with fresh stains to check whether a spray leaves a residue',
-  },
-  {
-    slug: 'how-to-use-odorstrike',
-    kicker: 'How to use',
-    top: 'Three zones.',
-    hi: 'Ten seconds.',
-    photo: 486933868,
-    focal: '50% 28%',
-    alt: 'A person holds freshly treated clean clothing close and breathes in, checking the fabric for odor',
-  },
-  {
-    slug: 'odorstrike-ingredients',
-    kicker: 'Full ingredient list',
-    top: "What's",
-    hi: 'actually inside?',
-    photo: 379375891,
-    focal: '52% 38%',
-    tone: 'brightness(1.30) contrast(1.06) saturate(1.14)',
-    alt: 'A researcher examines samples in a laboratory, standing in for the ingredient-by-ingredient breakdown of the formula',
-  },
-  
-  {
-    slug: 'hpbcd-cyclodextrin-fabric-odor',
-    kicker: 'Ingredient guide',
-    top: 'What actually',
-    hi: 'traps odor?',
-    photo: 479564969,
-    focal: '48% 28%',
-    tone: 'brightness(1.30) contrast(1.06) saturate(1.14)',
-    alt: 'A lab technician in a mask studies a sample under a microscope, representing how HPBCD captures odor molecules',
-  },
-  {
-    slug: 'zinc-pca-fabric-odor-ingredient-guide',
-    kicker: 'Ingredient guide',
-    top: 'The zinc that',
-    hi: 'kills odor',
-    photo: 345985748,
-    focal: '54% 30%',
-    tone: 'brightness(1.30) contrast(1.06) saturate(1.14)',
-    alt: 'A scientist holds laboratory glassware, representing the Zinc PCA that neutralises odor compounds on fabric',
-  },
-  {
-    slug: 'ambi-pur-vs-odorstrike',
-    kicker: 'Comparison',
-    top: 'Ambi Pur or',
-    hi: 'ODORSTRIKE?',
-    photo: 477677101,
-    focal: '50% 25%',
-    alt: 'A man weighs up a decision, framing the comparison between Ambi Pur and ODORSTRIKE for clothing odor',
-  },
-  {
-    slug: 'odorstrike-vs-febreze-india',
-    kicker: 'Comparison',
-    top: 'Febreze or',
-    hi: 'ODORSTRIKE?',
-    photo: 485285703,
-    focal: '50% 22%',
-    alt: 'A man shrugs with his palms open, framing the choice between Febreze and ODORSTRIKE in India',
-  },
-  {
-    slug: 'deodorant-vs-fabric-mist',
-    kicker: 'Head to head',
-    top: 'Deodorant or',
-    hi: 'fabric mist?',
-    photo: 488867373,
-    focal: '50% 28%',
-    alt: 'A man looks uncertain as he weighs deodorant against a fabric mist for stopping sweat smell',
-  },
-  {
-    slug: 'best-deodorant-spray-for-clothes-not-skin',
-    kicker: 'Tested · 5 sprays',
-    top: 'Five sprays.',
-    hi: 'One winner.',
-    // Deliberately NOT an armpit/underarm shot. The post's whole argument is
-    // "for the shirt, not the skin", and a raised-arm deodorant frame reads as
-    // the opposite at thumbnail size with no copy to qualify it.
-    photo: 291946281,
-    focal: '46% 24%',
-    alt: 'A man pulls his t-shirt up to his face to smell the fabric, checking the shirt rather than his skin',
-  },
-  {
-    slug: 'best-fabric-odor-spray-india-2026-body-odor',
-    kicker: 'India · 2026',
-    top: "India's best",
-    hi: 'odor spray?',
-    photo: 639590141,
-    focal: '50% 25%',
-    alt: 'A woman recoils from the smell of her own shirt, framing the search for the best fabric odor spray in India',
+    slug: 'why-traffic-fumes-cling-to-clothes',
+    family: 'real-life',
+    source: 'why-traffic-fumes-cling-to-clothes.jpg',
+    focal: '55% 40%',
+    alt: 'A formal shirt catching dust and exhaust haze inside an auto-rickshaw in Indian city traffic',
   },
   {
     slug: 'spray-to-remove-sweat-smell-from-clothes-quickly',
-    kicker: '10-second fix',
-    top: 'Sweat smell gone',
-    hi: 'in seconds',
-    photo: 1183970639,
-    focal: '44% 26%',
-    tone: 'brightness(1.18) contrast(1.08) saturate(1.06)',
-    alt: 'An office worker wilting in the heat with a damp shirt, the moment a 10-second fabric spray is meant for',
+    family: 'real-life',
+    source: 'spray-to-remove-sweat-smell-from-clothes-quickly.jpg',
+    focal: '50% 40%',
+    alt: 'Hands straightening a rumpled white office shirt in a washroom mirror before a meeting',
   },
   {
-    slug: 'wedding-festive-wear-odor-guide',
-    kicker: 'Festive wear',
-    // "Sherwani" named a garment nobody in the photograph is wearing.
-    top: 'Festive wear you',
-    hi: "can't wash?",
-    photo: 1582194482,
-    focal: '54% 26%',
-    alt: 'A couple in traditional Indian festive clothing, the kind of outfit that cannot simply be put through a wash',
-  },
-  {
-    slug: 'what-is-fabric-odor-eliminator',
-    kicker: 'Explainer',
-    top: 'Not a perfume.',
-    hi: 'Then what?',
-    photo: 303214866,
-    focal: '50% 22%',
-    alt: 'A young man looks puzzled, framing the question of what a fabric odor eliminator actually is',
-  },
-  {
-    slug: 'odorstrike-review-30-day-india-test',
-    kicker: '30-day India test',
-    top: '30 days.',
-    hi: 'Worth ₹229?',
-    photo: 278644495,
-    focal: '50% 22%',
-    alt: 'A man stands with his arms folded in a striped t-shirt after a 30-day test of ODORSTRIKE in India',
-  },
-  {
-    slug: 'why-i-built-odorstrike',
-    kicker: 'Founder story',
-    top: 'Why I built',
-    hi: 'ODORSTRIKE',
-    photo: 314264717,
-    focal: '50% 22%',
-    alt: 'A man stands confidently with his arms crossed, illustrating the founder story behind ODORSTRIKE',
-  },
-
-  // 2026-08 strategy series. Same clothing-only constraint as the batch above:
-  // every frame was checked for footwear, bags and bare-skin application before
-  // licensing. The nightclub frame was picked for the smoke post because the
-  // alternatives in that search were all backlit crowd silhouettes with no
-  // garment visible at all, which defeats the point of the image.
-  {
-    slug: 'remove-cooking-smell-from-clothes',
-    kicker: 'Everyday care',
-    top: 'Smell like',
-    hi: 'last night\'s dinner?',
-    photo: 359756867,
+    slug: 'why-sweat-smells-stronger-on-some-shirts',
+    family: 'fabric-problems',
+    source: 'why-sweat-smells-stronger-on-some-shirts.jpg',
     focal: '50% 50%',
-    alt: 'A woman in an apron cooks at a hob, adding vegetables to a hot pan on a wooden kitchen counter',
+    alt: 'A glossy polyester gym tee hanging beside a matte cotton oxford, showing two very different fibre surfaces',
   },
-  
+  {
+    slug: 'why-clothes-smell-in-wardrobe-even-when-clean',
+    family: 'laundry',
+    source: 'why-clothes-smell-in-wardrobe-even-when-clean.jpg',
+    focal: '50% 50%',
+    alt: 'Interior of a packed Indian wooden almirah with hanging formals in covers and folded stacks on the shelf',
+  },
+  {
+    slug: 'damp-clothes-musty-smell-monsoon-fix',
+    family: 'laundry',
+    source: 'damp-clothes-musty-smell-monsoon-fix.jpg',
+    focal: '50% 45%',
+    alt: 'Still-damp shirts hanging on an indoor rack beside a rain-streaked window during monsoon',
+  },
+  {
+    slug: 'why-water-makes-clothing-odor-louder',
+    family: 'science',
+    source: 'why-water-makes-clothing-odor-louder.jpg',
+    focal: '50% 50%',
+    alt: 'Macro of dark cotton fabric with water droplets soaking into the weave',
+  },
   {
     slug: 'keep-clothes-fresh-without-washing-machine',
-    kicker: 'Student life',
-    top: 'No machine.',
-    hi: 'Seven days?',
-    photo: 375341026,
-    focal: '50% 50%',
-    alt: 'A hand pegs laundry onto an outdoor washing line, with shirts and towels hanging in the sun',
+    family: 'laundry',
+    source: 'keep-clothes-fresh-without-washing-machine.jpg',
+    focal: '50% 55%',
+    alt: 'A hostel room with a bucket wash, a wrung shirt on a chair, and clothes hanging from a wall rope',
   },
   {
     slug: 'remove-cigarette-smoke-smell-from-clothes',
-    kicker: 'Smoke odor',
-    top: 'Still smells',
-    hi: 'of last night?',
-    photo: 133782212,
-    focal: '50% 45%',
-    alt: 'A group of friends dance closely together at a party under red and blue club lighting',
-  },
-  {
-    slug: 'remove-mothball-almirah-smell-from-clothes',
-    kicker: 'Storage odor',
-    top: 'Mothball smell',
-    hi: 'survives washing?',
-    photo: 391867480,
-    focal: '50% 50%',
-    alt: 'A hand reaches along a clothes rail of hanging knitwear and sweaters in a sunlit room',
+    family: 'real-life',
+    source: 'remove-cigarette-smoke-smell-from-clothes.jpg',
+    focal: '50% 40%',
+    alt: 'A dark jacket hanging on an Indian apartment balcony at night with city lights behind it',
   },
   {
     slug: 'keep-office-trousers-fresh-without-washing',
-    kicker: 'Formalwear',
-    top: 'Wash formals',
-    hi: 'every day?',
-    photo: 212698738,
+    family: 'real-life',
+    source: 'keep-office-trousers-fresh-without-washing.jpg',
+    focal: '50% 45%',
+    alt: 'Navy tailored office trousers hanging beside a belt and a worn commuter shirt at the end of the day',
+  },
+  {
+    slug: 'keep-clothes-fresh-while-travelling',
+    family: 'real-life',
+    source: 'keep-clothes-fresh-while-travelling.jpg',
+    focal: '50% 55%',
+    alt: 'Open suitcase on a hotel bed with folded shirts and a worn one kept separate in a bag',
+  },
+  {
+    slug: 'how-to-pack-sweaty-clothes-without-bag-smell',
+    family: 'real-life',
+    source: 'how-to-pack-sweaty-clothes-without-bag-smell.jpg',
     focal: '50% 50%',
-    alt: 'A cropped view of a man in a dark tailored suit and tie buttoning his jacket',
+    alt: 'A damp gym t-shirt being rolled into a separate wet bag on a locker-room bench',
+  },
+  {
+    slug: 'wedding-festive-wear-odor-guide',
+    family: 'real-life',
+    source: 'wedding-festive-wear-odor-guide.jpg',
+    focal: '50% 40%',
+    alt: 'An embroidered festive sherwani hanging in a dark bedroom with marigolds on a nearby chair',
+  },
+  {
+    slug: 'why-clothes-smell-stale-in-ac-room',
+    family: 'laundry',
+    source: 'why-clothes-smell-stale-in-ac-room.jpg',
+    focal: '50% 45%',
+    alt: 'A pale shirt hanging motionless in a closed air-conditioned Indian bedroom',
+  },
+  {
+    slug: 'vinegar-baking-soda-fabric-softener',
+    family: 'laundry',
+    source: 'vinegar-baking-soda-fabric-softener.jpg',
+    focal: '50% 50%',
+    alt: 'Vinegar, baking soda and fabric softener on a dark counter beside a crumpled grey t-shirt',
+  },
+  {
+    slug: 'how-often-to-wash-jeans-india',
+    family: 'fabric-problems',
+    source: 'how-often-to-wash-jeans-india.jpg',
+    focal: '50% 45%',
+    alt: 'A worn pair of indigo jeans hanging from a hook, waistband and coin pocket in focus',
+  },
+  {
+    slug: 'deodorant-perfume-on-fabric',
+    family: 'fabric-problems',
+    source: 'deodorant-perfume-on-fabric.jpg',
+    focal: '55% 45%',
+    alt: 'A deodorant stick and perfume bottle on a bathroom shelf with a sweat-damp office shirt hanging behind them',
+  },
+  {
+    slug: 'how-odor-neutralizer-works-on-fabric',
+    family: 'science',
+    source: 'how-odor-neutralizer-works-on-fabric.jpg',
+    focal: '50% 50%',
+    alt: 'Fine mist droplets settling into the weave of a dark shirt, the contact surface where odor control actually happens',
+  },
+  {
+    slug: 'how-to-freshen-clothes-stored-for-months',
+    family: 'laundry',
+    source: 'how-to-freshen-clothes-stored-for-months.jpg',
+    focal: '50% 55%',
+    alt: 'Hands lifting folded winter clothes from a stored steel trunk in a dim Indian storeroom',
+  },
+  {
+    slug: 'wash-refresh-or-wear',
+    family: 'real-life',
+    source: 'wash-refresh-or-wear.jpg',
+    focal: '50% 45%',
+    alt: 'Three garments in one bedroom: one in a hamper, one airing on a chair, one being worn toward the door',
+  },
+  {
+    slug: 'why-body-odor-comes-back-on-clothes-so-quickly',
+    family: 'fabric-problems',
+    source: 'why-body-odor-comes-back-on-clothes-so-quickly.jpg',
+    focal: '50% 35%',
+    alt: 'A once-crisp white shirt in a humid Indian office, collar open and the underarm panel darkened after a few hours',
+  },
+  {
+    slug: 'why-clean-shirt-starts-smelling-within-hours',
+    family: 'fabric-problems',
+    source: 'why-clean-shirt-starts-smelling-within-hours.jpg',
+    focal: '50% 40%',
+    alt: 'A freshly ironed white shirt on a hanger in humid morning light, already slightly limp before it is worn',
+  },
+  {
+    slug: 'why-clothes-smell-bad-after-drying',
+    family: 'laundry',
+    source: 'why-clothes-smell-bad-after-drying.jpg',
+    focal: '50% 45%',
+    alt: 'Washed clothes hanging limp on an indoor rack in a dim hallway with no sun, still faintly sour',
+  },
+  {
+    slug: 'why-clothes-smell-bad-again-after-sweating',
+    family: 'fabric-problems',
+    source: 'why-clothes-smell-bad-again-after-sweating.jpg',
+    focal: '50% 40%',
+    alt: 'A cotton shirt clinging at the chest and underarm in a doorway after a humid walk',
+  },
+  {
+    slug: 'why-clothes-smell-musty-after-being-stored',
+    family: 'laundry',
+    source: 'why-clothes-smell-musty-after-being-stored.jpg',
+    focal: '50% 50%',
+    alt: 'Folded clothes stacked on a plastic-covered almirah shelf, grey at the folds from closed storage',
+  },
+  {
+    slug: 'which-fabrics-hold-odor-most',
+    family: 'science',
+    source: 'which-fabrics-hold-odor-most.jpg',
+    focal: '50% 50%',
+    alt: 'Overhead still life of cotton, polyester, denim, wool and silk swatches on dark wood',
+  },
+  {
+    slug: 'gym-clothes-smell-after-washing',
+    family: 'laundry',
+    source: 'gym-clothes-smell-after-washing.jpg',
+    focal: '50% 50%',
+    alt: 'A washed black polyester gym t-shirt sitting damp in a laundry basket',
+  },
+  {
+    slug: 'does-fabric-spray-stain-clothes',
+    family: 'product',
+    source: 'does-fabric-spray-stain-clothes.jpg',
+    focal: '50% 50%',
+    alt: 'A white cotton t-shirt on a dark table with a small wet mist patch being checked for a drying ring',
+  },
+  {
+    slug: 'how-to-use-odorstrike',
+    family: 'product',
+    source: 'how-to-use-odorstrike.webp',
+    fit: 'contain',
+    focal: '50% 50%',
+    alt: 'ODORSTRIKE 50ml being misted onto a shirt collar — fabric only, bottle at real pocket scale',
+  },
+  {
+    slug: 'odorstrike-review-30-day-india-test',
+    family: 'product',
+    source: 'odorstrike-review-30-day-india-test.jpg',
+    focal: '50% 50%',
+    alt: 'Four test garments in a row: office cotton, gym polyester, indigo jeans and festive wear',
+  },
+  {
+    slug: 'why-i-built-odorstrike',
+    family: 'real-life',
+    source: 'why-i-built-odorstrike.jpg',
+    focal: '50% 40%',
+    alt: 'A formal shirt in the back of a hot Indian cab, collar damp from a long un-air-conditioned ride',
+  },
+  {
+    slug: 'fabric-deodorizer-spray-india-guide-2026',
+    family: 'real-life',
+    source: 'fabric-deodorizer-spray-india-guide-2026.jpg',
+    focal: '50% 45%',
+    alt: 'Hands comparing two hanging shirts on a clothing rail in a small Indian shop',
+  },
+  {
+    slug: 'ambi-pur-vs-odorstrike',
+    family: 'real-life',
+    source: 'ambi-pur-vs-odorstrike.jpg',
+    focal: '50% 50%',
+    alt: 'A large room-freshener aerosol aimed at empty air beside a crumpled office shirt that actually holds the smell',
+  },
+  {
+    slug: 'why-polyester-holds-odor-longer-than-cotton',
+    family: 'science',
+    source: 'why-polyester-holds-odor-longer-than-cotton.jpg',
+    focal: '50% 50%',
+    alt: 'Macro of polyester knit fibres with an oily sheen next to a more matte cotton weave',
+  },
+  {
+    slug: 'dry-air-clothes-indian-home',
+    family: 'laundry',
+    source: 'dry-air-clothes-indian-home.jpg',
+    focal: '50% 40%',
+    alt: 'A ceiling fan above an indoor clothes horse of shirts in a tiled Indian hallway',
+  },
+  {
+    slug: 'remove-mothball-almirah-smell-from-clothes',
+    family: 'laundry',
+    source: 'remove-mothball-almirah-smell-from-clothes.jpg',
+    focal: '50% 55%',
+    alt: 'White mothballs in a steel katori on a wooden almirah shelf beside folded woolens',
+  },
+  {
+    slug: 'odorstrike-vs-febreze-india',
+    family: 'real-life',
+    source: 'odorstrike-vs-febreze-india.jpg',
+    focal: '50% 45%',
+    alt: 'A living-room air-freshener can on a table while a hanging shirt by the window holds the actual odor',
+  },
+  {
+    slug: 'deodorant-vs-fabric-mist',
+    family: 'fabric-problems',
+    source: 'deodorant-vs-fabric-mist.jpg',
+    focal: '50% 40%',
+    alt: 'A man lifting a white t-shirt to his face to smell the fabric rather than his skin',
+  },
+  {
+    slug: 'zinc-pca-fabric-odor-ingredient-guide',
+    family: 'science',
+    source: 'zinc-pca-fabric-odor-ingredient-guide.jpg',
+    focal: '50% 50%',
+    alt: 'Zinc-coloured mineral crystal and a clear solution in a beaker beside a folded cotton swatch',
+  },
+  {
+    slug: 'odor-on-clothes-vs-odor-in-clothes',
+    family: 'science',
+    source: 'odor-on-clothes-vs-odor-in-clothes.jpg',
+    focal: '50% 50%',
+    alt: 'A white shirt folded back so the clean outer chest and the soiled inner collar band are both visible',
+  },
+  {
+    slug: 'hpbcd-cyclodextrin-fabric-odor',
+    family: 'science',
+    source: 'hpbcd-cyclodextrin-fabric-odor.jpg',
+    focal: '50% 50%',
+    alt: 'Ring-shaped laboratory glass on dark slate beside a cotton swatch, standing in for a cyclodextrin trap',
+  },
+  {
+    slug: 'odorstrike-ingredients',
+    family: 'product',
+    source: 'odorstrike-ingredients.webp',
+    fit: 'contain',
+    focal: '50% 50%',
+    alt: 'The real ODORSTRIKE 50ml bottle on dark stone, photographed at true pocket scale',
+  },
+  {
+    slug: 'what-is-fabric-odor-eliminator',
+    family: 'product',
+    source: 'what-is-fabric-odor-eliminator.webp',
+    focal: '50% 50%',
+    alt: 'ODORSTRIKE 50ml lying with a shirt, wallet and keys, showing pocket scale next to everyday objects',
+  },
+  {
+    slug: 'best-deodorant-spray-for-clothes-not-skin',
+    family: 'fabric-problems',
+    source: 'best-deodorant-spray-for-clothes-not-skin.jpg',
+    focal: '50% 50%',
+    alt: 'A pale office shirt laid collar-up on a dark desk so the inside collar and both underarm panels are visible',
+  },
+  {
+    slug: 'best-fabric-odor-spray-india-2026-body-odor',
+    family: 'real-life',
+    source: 'best-fabric-odor-spray-india-2026-body-odor.jpg',
+    focal: '55% 40%',
+    alt: 'A pale formal shirt on a motorbike in Indian summer traffic, fabric darkened with heat and city dust',
   },
 ];
 
-/**
- * Enforces the research's hard limits. Called by both renderers before any work
- * happens, so a bad edit fails loudly at the top of the run rather than shipping
- * a thumbnail that quietly underperforms.
- */
+/** Index-only photography (cards that currently have assets but no HTML guide). */
+export const EXTRA_ASSETS = [
+  {
+    slug: 'remove-smell-from-hoodie-without-washing',
+    family: 'fabric-problems',
+    source: 'remove-smell-from-hoodie-without-washing.jpg',
+    focal: '50% 50%',
+    alt: 'A charcoal hoodie turned inside-out, showing the large brushed-fleece inner surface that holds odor',
+  },
+  {
+    slug: 'remove-smell-from-blazer-without-dry-cleaning',
+    family: 'real-life',
+    source: 'remove-smell-from-blazer-without-dry-cleaning.jpg',
+    focal: '50% 40%',
+    alt: 'A navy blazer hanging on a wooden valet after an evening out, lining slightly open',
+  },
+];
+
 export function validateConfig(posts = POSTS) {
   const errors = [];
   const seenSlug = new Set();
 
   for (const p of posts) {
     const where = p.slug || '(missing slug)';
-
     if (!p.slug) errors.push('a post is missing "slug"');
     else if (seenSlug.has(p.slug)) errors.push(`${where}: duplicate slug`);
     seenSlug.add(p.slug);
 
-    const overlay = `${p.top ?? ''} ${p.hi ?? ''}`.trim();
-    if (!overlay) errors.push(`${where}: overlay text is empty`);
-
-    const words = overlay.split(/\s+/).filter(Boolean).length;
-    if (words > 6) {
-      errors.push(`${where}: overlay is ${words} words ("${overlay}") — the research caps this at 6`);
+    if (p.top || p.hi || p.kicker) {
+      errors.push(`${where}: overlay copy is forbidden — text belongs in HTML, not in the image`);
     }
-
-    if (!p.photo) errors.push(`${where}: missing "photo" (Adobe Stock asset id)`);
+    if (!p.source) errors.push(`${where}: missing "source"`);
+    if (!p.family || !FAMILIES[p.family]) errors.push(`${where}: missing or unknown family`);
     if (!p.alt) errors.push(`${where}: missing "alt"`);
     else if (p.alt.length < 40) errors.push(`${where}: alt is too terse to describe the image`);
+    else if (/\bbest fabric odor spray india\b/i.test(p.alt)) {
+      errors.push(`${where}: alt looks keyword-stuffed`);
+    }
   }
 
   if (errors.length) {
