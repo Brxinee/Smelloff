@@ -1,2 +1,0 @@
-canonical photography: intrinsic ratio, max-width/max-height fit, no crop frames
-
