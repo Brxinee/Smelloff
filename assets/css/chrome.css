@@ -2683,6 +2683,7 @@ body:not(:has(.so-hero)) .b-card p{color:var(--so-cotton-muted, #A3A3A3)}
 }
 .gal-viewer-close{
   position:absolute;top:16px;right:16px;
+  z-index:2;
   background:transparent;
   border:1px solid var(--so-chrome-line, rgba(255,255,255,.08));
   color:var(--so-chrome-ink, #F4F4F4);
