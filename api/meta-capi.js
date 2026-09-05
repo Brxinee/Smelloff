@@ -1,101 +1,85 @@
-// /api/meta-capi — browser-facing Conversions API mirror.
-//
-// The browser Pixel posts here (via sendBeacon) with the SAME `eventID` it
-// emitted client-side, so Meta DEDUPES the pair and we recover the ~20-40% of
-// events the Pixel loses to iOS ITP / ad-blockers / dropped sessions on Indian
-// mobile. It mirrors the funnel (ViewContent, AddToCart, InitiateCheckout,
-// AddPaymentInfo) and the intent signal `Lead` (fired when an order is PLACED).
-//
-// It does NOT own `Purchase`. Purchase is confirmed revenue and is emitted
-// server-side from the order lifecycle by api/meta-capi-drain.js — never from
-// the browser at placement, because an unpaid UPI order or a COD order that
-// later RTOs must not be reported as a sale. (A legacy cached page may still
-// POST an old Purchase beacon during rollout; it is honoured but shares the
-// event_id the server uses, so Meta + our log both dedupe it.)
-//
-// SAFETY: inert until META_CAPI_TOKEN is set (returns 204); fail-silent on any
-// error; never blocks the client. High-value events (Lead/Purchase/Refund) are
-// logged to Supabase and de-duplicated on (event_id, event_name); funnel events
-// are fire-and-forget and not logged (to avoid table bloat).
-
+import { isAllowedOrigin, checkRateLimit } from './_security.js';
 import {
   buildUserData, fbcFromFbclid, sendEvent,
   logInsertIfNew, logUpdate, clientIp, SKU,
 } from './_meta.js';
 
 const LOGGED = new Set(['Lead', 'Purchase', 'Refund']);
+const ALLOWED_EVENTS = new Set(['ViewContent', 'AddToCart', 'InitiateCheckout', 'AddPaymentInfo', 'Lead', 'Purchase', 'Refund']);
 const ID_PREFIX = { Purchase: 'purchase_', Refund: 'refund_', Lead: 'lead_' };
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   const origin = req.headers.origin;
-  if (origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Vary', 'Origin');
-  }
+  if (origin && !isAllowedOrigin(origin)) return res.status(403).json({ error: 'Origin not allowed' });
+  if (origin) res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  if (!process.env.META_CAPI_TOKEN) return res.status(204).end(); // inert until configured
+  if (!process.env.META_CAPI_TOKEN) return res.status(204).end();
+
+  const ip = clientIp(req) || 'unknown';
+  if (!checkRateLimit(`meta-capi:${ip}`, 120, 10 * 60 * 1000)) return res.status(429).end();
 
   try {
     const b = req.body && typeof req.body === 'object' ? req.body : {};
-    const custom = (b.custom && typeof b.custom === 'object') ? b.custom : {};
+    const custom = b.custom && typeof b.custom === 'object' ? b.custom : {};
+    const eventName = String(b.event_name || '');
+    if (!ALLOWED_EVENTS.has(eventName)) return res.status(204).end();
 
-    const event_name = String(b.event_name || 'Purchase'); // legacy beacons omit it
     const value = Number(custom.value != null ? custom.value : b.value);
     const orderId = b.orderId || b.order_id || null;
+    const eventId = b.eventId || b.event_id || (orderId && ID_PREFIX[eventName] ? ID_PREFIX[eventName] + orderId : undefined);
+    if (LOGGED.has(eventName) && !eventId) return res.status(204).end();
+    if (eventName !== 'Lead' && !(value > 0)) return res.status(204).end();
 
-    const event_id = b.eventId || b.event_id
-      || (orderId && ID_PREFIX[event_name] ? ID_PREFIX[event_name] + orderId : undefined);
-
-    // Value is required for commercial events; Lead may be value-less.
-    if (event_name !== 'Lead' && !(value > 0)) return res.status(204).end();
-
-    const ua = String(req.headers['user-agent'] || '');
-    const ip = clientIp(req);
-    let fbc = b.fbc ? String(b.fbc) : '';
-    if (!fbc && b.fbclid) fbc = fbcFromFbclid(b.fbclid);
+    let fbc = b.fbc ? String(b.fbc).slice(0, 256) : '';
+    if (!fbc && b.fbclid) fbc = fbcFromFbclid(String(b.fbclid).slice(0, 256));
 
     const user_data = buildUserData({
       email: b.email, phone: b.phone, name: b.name,
       firstName: b.firstName, lastName: b.lastName,
       city: b.city, state: b.state, zip: b.zip || b.pincode,
-      country: b.country, fbp: b.fbp, fbc, ip, ua,
+      country: b.country, fbp: b.fbp, fbc,
+      ip, ua: String(req.headers['user-agent'] || '').slice(0, 512),
     });
 
-    const custom_data = { currency: custom.currency || b.currency || 'INR' };
+    const custom_data = {
+      currency: String(custom.currency || b.currency || 'INR').slice(0, 8),
+      content_ids: custom.content_ids || b.content_ids || [SKU],
+      content_type: 'product',
+      num_items: Math.min(100, Math.max(1, Number(custom.num_items || b.num_items || 1))),
+    };
     if (value > 0) custom_data.value = value;
-    custom_data.content_ids = custom.content_ids || b.content_ids || [SKU];
-    custom_data.content_type = custom.content_type || 'product';
     if (custom.contents || b.contents) custom_data.contents = custom.contents || b.contents;
-    custom_data.num_items = custom.num_items || b.num_items || 1;
-    if (orderId) custom_data.order_id = orderId;
-    if (b.order_type || custom.order_type) custom_data.order_type = b.order_type || custom.order_type;
+    if (orderId) custom_data.order_id = String(orderId).slice(0, 128);
 
     const event = {
-      event_name,
+      event_name: eventName,
       event_time: Math.floor(Date.now() / 1000),
       action_source: 'website',
-      event_id,
-      event_source_url: b.eventSourceUrl || b.event_source_url || undefined,
+      ...(eventId ? { event_id: String(eventId).slice(0, 128) } : {}),
+      event_source_url: String(b.eventSourceUrl || b.event_source_url || '').slice(0, 512) || undefined,
       user_data,
       custom_data,
     };
 
-    // Idempotent log for high-value events; funnel events send fire-and-forget.
-    if (LOGGED.has(event_name) && event_id) {
+    if (LOGGED.has(eventName)) {
       const row = await logInsertIfNew({
-        event_id, event_name, order_id: null, order_code: orderId || null,
-        source: 'browser', status: 'sending', request: event,
+        event_id: String(eventId), event_name: eventName, order_id: null,
+        order_code: orderId || null, source: 'browser', status: 'sending', request: event,
       });
-      if (!row) return res.status(204).end(); // already logged elsewhere → skip
-      const r = await sendEvent(event);
+      if (!row) return res.status(204).end();
+      const result = await sendEvent(event);
       await logUpdate(row.id, {
-        status: r.ok ? 'sent' : (r.skipped ? 'skipped' : 'failed'),
-        http_status: r.status || null, response: { body: r.body },
-        attempts: 1, sent_at: new Date().toISOString(),
+        status: result.ok ? 'sent' : (result.skipped ? 'skipped' : 'failed'),
+        http_status: result.status || null,
+        response: { body: result.body },
+        attempts: 1,
+        sent_at: result.ok ? new Date().toISOString() : null,
       });
     } else {
       await sendEvent(event);
@@ -103,7 +87,7 @@ export default async function handler(req, res) {
 
     return res.status(204).end();
   } catch (e) {
-    console.error('meta-capi error', e && e.message);
+    console.error('meta-capi error', e?.message || e);
     return res.status(204).end();
   }
 }
