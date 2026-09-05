@@ -478,7 +478,7 @@ function ensureShareScript(html) {
 }
 
 function ensureSkipTarget(html, override) {
-  html = html.replace(/\s*id="sf-main" tabindex="-1"/g, '');
+  html = html.replace(/\s*id="sf-main"/g, '').replace(/\s*tabindex="-1"/g, '');
 
   const from = html.indexOf('<!-- /SF-CHROME:HEADER -->');
   const to = html.indexOf('<!-- SF-CHROME:FOOTER');
@@ -493,8 +493,10 @@ function ensureSkipTarget(html, override) {
     const m = body.match(re);
     if (!m) continue;
     return head + body.replace(re, (full, tag, attrs = '') => {
-      const cleaned = String(attrs || '').replace(/\s*id="[^"]*"/, '');
-      return `<${tag} id="sf-main" tabindex="-1"${cleaned}>`;
+      const cleaned = String(attrs || '')
+        .replace(/\s*id="[^"]*"/g, '')
+        .replace(/\s*tabindex="[^"]*"/g, '');
+      return `<${tag} id="sf-main"${cleaned} tabindex="-1">`;
     }) + tail;
   }
   return html;
