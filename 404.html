@@ -36,45 +36,6 @@
   ::selection { background: var(--acid); color: var(--black); }
   body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-  /* NAV */
-  .blog-nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background:color-mix(in srgb, var(--bg) 92%, transparent);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--line);
-    padding: 0 32px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .blog-nav .logo {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
-    font-size: 22px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--off-white);
-    text-decoration: none;
-    position: relative;
-    padding-right: 12px;
-  }
-  .blog-nav .logo::after{content:none} /* dot baked into logo image */
-  .blog-nav .buy-pill {
-    background: var(--acid);
-    color: var(--black);
-    font-family: 'JetBrains Mono',monospace;
-    font-weight: 500;
-    font-size: 12px;
-    letter-spacing: .12em;
-    padding: 8px 18px;
-    border-radius: 100px;
-    text-decoration: none;
-  }
-
   /* 404 BODY */
   .nf-wrap {
     flex: 1;
@@ -201,7 +162,6 @@
   a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 
   @media (max-width: 640px) {
-    .blog-nav { padding: 0 20px; }
     .nf-wrap { padding: 56px 20px 80px; }
     .blog-footer { padding: 32px 20px; }
   }

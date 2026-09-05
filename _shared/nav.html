@@ -1,19 +1,43 @@
-<!-- CANONICAL NAV — stamped by scripts/apply-chrome.mjs.
-     Stage 1: brand + Buy + menu on mobile. Sentence-case primary links. -->
-<nav class="blog-nav">
-  <a href="/" class="logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" decoding="async"></a>
-  <div class="blog-nav-right">
-    <a href="/#buy" class="buy-pill">Buy ₹229</a>
-    <button class="blog-nav-toggle" aria-expanded="false" aria-controls="blogNavMenu" aria-label="Open menu"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
+<!-- CANONICAL GLOBAL HEADER — stamped by scripts/apply-chrome.mjs.
+     Source of truth: scripts/apply-chrome.mjs -->
+<a class="sf-skip" href="#sf-main">Skip to content</a>
+<header class="sf-hdr">
+  <div class="sf-wrap">
+    <div class="sf-hdr__row">
+      <a href="/" class="sf-hdr__logo" aria-label="Smelloff home">
+        <img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" decoding="async">
+      </a>
+      <div class="sf-hdr__right">
+        <button class="sf-cart" type="button" id="cartBtn" onclick="openCartDrawer()" aria-label="Open cart">
+          <svg viewBox="0 0 576 512" fill="currentColor" aria-hidden="true"><path d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 368c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
+          <span class="sf-cart__count" id="sfCartCount" hidden>0</span>
+        </button>
+        <nav class="sf-nav-wrap" aria-label="Primary">
+          <ul class="sf-nav">
+            <li><a href="/#buy">ODORSTRIKE</a></li>
+            <li><a href="/#how-it-works">How it works</a></li>
+            <li><a href="/reviews">Proof</a></li>
+            <li><a href="/blog">Guides</a></li>
+            <li><a href="/track-order">Track</a></li>
+          </ul>
+        </nav>
+        <a href="/#buy" class="sf-hdr__cta so-btn so-btn--p1" data-smelloff-buy="header">Buy ₹229</a>
+        <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <nav class="sf-hdr__menu" id="sfMenu" aria-label="Menu">
+      <ul>
+        <li><a href="/#buy">ODORSTRIKE</a></li>
+        <li><a href="/#how-it-works">How it works</a></li>
+        <li><a href="/reviews">Proof</a></li>
+        <li><a href="/blog">Guides</a></li>
+        <li><a href="/track-order">Track</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </nav>
   </div>
-  <ul id="blogNavMenu" class="blog-nav-menu">
-    <li><a href="/#buy">ODORSTRIKE</a></li>
-    <li><a href="/#how-it-works">How it works</a></li>
-    <li><a href="/reviews">Proof</a></li>
-    <li><a href="/blog">Guides</a></li>
-    <li><a href="/track-order">Track</a></li>
-    <li><a href="/faq">FAQ</a></li>
-    <li><a href="/contact">Contact</a></li>
-  </ul>
-</nav>
-<script>(function(){var b=document.querySelector(".blog-nav-toggle"),m=document.getElementById("blogNavMenu");if(!b||!m)return;b.addEventListener("click",function(){var o=m.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");b.setAttribute("aria-label",o?"Close menu":"Open menu");});m.addEventListener("click",function(e){if(e.target.tagName==="A"){m.classList.remove("open");b.setAttribute("aria-expanded","false");}});document.addEventListener("keydown",function(e){if(e.key==="Escape"&&m.classList.contains("open")){m.classList.remove("open");b.setAttribute("aria-expanded","false");b.focus();}});})();</script>
+</header>
+<div class="sf-hdr__scrim" aria-hidden="true"></div>

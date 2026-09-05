@@ -1,34 +1,19 @@
 /* =====================================================================
-   Smelloff — shared site chrome  (v1, 2026-07-28)
+   Smelloff — Canonical Shared Site Chrome
    =====================================================================
-   Before this file, the site had FOUR different headers and THREE
-   different footers:
-
-     index.html        logo + cart + nav links + acid CTA, sticky
-     odorstrike.html   logo + cart + SCIENCE/PRICING/FAQ/REVIEWS jump links
-     blog/*.html       logo + "BUY ₹229" pill + a hamburger, no nav links
-     the other 13      `.p-nav`: logo + "← Back to home", and a `.p-footer`
-                       that dumped every link on the site into one flat row
-
-   A visitor moving from the homepage to a policy page or a guide landed
-   on what looked like a different website. This file defines ONE header
-   and ONE footer — modelled on the homepage's, which is the design the
-   whole site is being brought in line with — plus the page shell
-   (section rhythm, eyebrow, display headings, long-form prose) that the
-   self-contained pages already had and the secondary pages did not.
+   Canonical source of truth for ALL shared site chrome:
+     - Global sticky header (.sf-hdr) & skip link (.sf-skip)
+     - Desktop navigation (.sf-nav-wrap, .sf-nav)
+     - Mobile navigation drawer (.sf-hdr__menu, .sf-burger, .sf-hdr__scrim)
+     - Cart control (.sf-cart, .sf-cart__count)
+     - Header CTA (.sf-hdr__cta)
+     - Global multi-column footer (.sf-ftr)
+     - Shared page container (.sf-wrap) & section rhythm
+     - Responsive mobile (52px), tablet, and desktop viewports
 
    HOW THIS LOADS
-   Same rule as soft.css: linked AFTER each page's inline <style> so it
-   wins at equal specificity, and after soft.css so the chrome's own
-   shapes are final. Order in every <head>:
-
-       <style> …page-specific… </style>
-       <link rel="stylesheet" href="/assets/css/soft.css">     shapes
-       <link rel="stylesheet" href="/assets/css/chrome.css">   chrome
-
-   Colour and type come entirely from tokens.css — this file declares no
-   hex values of its own. The `.sf-` prefix keeps it from colliding with
-   the page-local class names already in use.
+   Linked after page-specific styles so chrome rules win on source order.
+   Colour and type tokens come from /assets/css/tokens.css.
    ===================================================================== */
 
 /* ---------------------------------------------------------------------
@@ -84,9 +69,12 @@
    --------------------------------------------------------------------- */
 .sf-hdr{
   position:sticky;top:0;z-index:70;
-  background:var(--so-chrome, #080808);
+  background:rgba(8,8,8,0.95);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
   color:var(--so-chrome-ink, #F4F4F4);
   border-bottom:1px solid var(--so-chrome-line, rgba(255,255,255,.08));
+  width:100%;
 }
 .sf-hdr__row{
   display:flex;align-items:center;justify-content:space-between;
@@ -230,12 +218,17 @@ html.so-nav-open body{
 
 @media(max-width:640px){
   .sf-hdr{min-height:52px}
-  .sf-hdr__row{min-height:52px;gap:8px}
+  .sf-hdr__row{min-height:52px;height:52px;gap:8px}
   .sf-hdr__logo{min-height:40px}
-  .sf-hdr__logo img{height:18px;max-width:96px}
+  .sf-hdr__logo img{height:18px;max-width:100px;object-fit:contain;display:block}
   .sf-hdr__cta{height:32px;min-height:32px;padding:0 11px;font-size:0.8125rem;border-radius:999px}
   .sf-cart{height:38px;padding:0 4px}
   .sf-burger{width:38px;height:38px}
+}
+
+@media(min-width:641px) and (max-width:959px){
+  .sf-hdr__row{min-height:58px;gap:10px}
+  .sf-hdr__logo img{height:20px;max-width:115px}
 }
 
 @media(max-width:359px){
@@ -243,11 +236,12 @@ html.so-nav-open body{
 }
 
 @media(min-width:960px){
-  .sf-nav-wrap{display:block}
-  .sf-burger{display:none}
+  .sf-hdr__row{min-height:64px;gap:12px}
+  .sf-nav-wrap{display:flex;align-items:center}
+  .sf-burger{display:none !important}
   .sf-hdr__menu{display:none !important}
   .sf-hdr__scrim{display:none !important}
-  .sf-hdr__logo img{height:24px}
+  .sf-hdr__logo img{height:22px;max-width:120px}
   html.so-nav-open,
   html.so-nav-open body{overflow:unset}
 }
@@ -271,6 +265,7 @@ html.so-nav-open body{
   background:var(--so-chrome, #080808);
   color:var(--so-chrome-ink, #F4F4F4);
   text-align:left;
+  margin-top:auto;
 }
 
 .sf-ftr__grid{
@@ -297,8 +292,8 @@ html.so-nav-open body{
   font-size:11px;letter-spacing:.12em;text-transform:uppercase;
   color:var(--so-chrome-faint, #7E786E);margin:0 0 10px;
 }
-.sf-ftr ul{list-style:none;margin:0;padding:0}
-.sf-ftr li{margin:0}
+.sf-ftr ul,
+.sf-ftr li{list-style:none !important;margin:0 !important;padding:0 !important}
 .sf-ftr ul a{
   display:block;padding:5px 0;min-height:34px;
   color:var(--so-chrome-ink, #F4F4F4);text-decoration:none;
