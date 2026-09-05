@@ -31,6 +31,10 @@ jobs:
         if: github.event_name == 'push'
         run: node scripts/maintenance/remove-published-todos.mjs
 
+      - name: Apply final production hardening
+        if: github.event_name == 'push'
+        run: node scripts/maintenance/fix-final-hardening.mjs
+
       - name: Install dependencies
         run: npm install --ignore-scripts
 
