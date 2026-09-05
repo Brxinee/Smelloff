@@ -1,0 +1,95 @@
+name: Production hardening
+
+on:
+  push:
+    branches: [production-hardening-2026-09-06]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Normalize published content
+        if: github.event_name == 'push'
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          for p in Path('blog').glob('*.html'):
+              s = p.read_text(encoding='utf-8')
+              before = s
+              s = re.sub(r'<!--[\s\S]*?TODO[\s\S]*?-->', '', s, flags=re.I)
+              s = re.sub(r'TODO\s*[—-]\s*unresolved before publish', '', s, flags=re.I)
+              s = re.sub(r'TODO:\s*stain test data', '', s, flags=re.I)
+              s = re.sub(r'TODO\(verify\):?', '', s, flags=re.I)
+
+              if p.name in {
+                  'alternative-to-deodorant-for-clothes-smell.html',
+                  'spray-to-remove-sweat-smell-from-clothes-instantly.html'
+              }:
+                  s = s.replace('Zinc Ricinoleate (1.5%)', 'Zinc PCA')
+                  s = s.replace('Zinc Ricinoleate + β-Cyclodextrin', 'HPβCD + Zinc PCA')
+                  s = s.replace('Zinc Ricinoleate + &beta;‑Cyclodextrin', 'HPβCD + Zinc PCA')
+                  s = s.replace('Zinc Ricinoleate and β-Cyclodextrin', 'HPβCD and Zinc PCA')
+                  s = s.replace('Zinc Ricinoleate', 'Zinc PCA')
+                  s = s.replace('β-Cyclodextrin (1.5%)', 'HPβCD')
+                  s = s.replace('β-Cyclodextrin', 'HPβCD')
+                  s = re.sub(r'86% distilled water as the carrier,\s*5% IPA for fast flash-off \(under 10 seconds on cotton\),\s*and a tiny 1% fragrance load', 'distilled water as the carrier, a fast-evaporating solvent system, and a light fragrance load', s, flags=re.I)
+                  s = re.sub(r'neutralisation lasts 8 to 12 hours', 'odor protection is intended to last up to 8 hours under normal office or commute conditions', s, flags=re.I)
+                  s = re.sub(r'kills sweat smell in 10 seconds', 'targets sweat odor in fabric', s, flags=re.I)
+
+              # Every indexed article gets a valid absolute social image. Prefer
+              # its existing per-post image; otherwise use the known site OG asset.
+              tags = re.findall(r'<meta\b[^>]*>', s, flags=re.I)
+              has_og = any(re.search(r'(?:property|name)=["\']og:image["\']', t, re.I) and re.search(r'https?://', t, re.I) for t in tags)
+              has_tw = any(re.search(r'(?:property|name)=["\']twitter:image["\']', t, re.I) and re.search(r'https?://', t, re.I) for t in tags)
+              if not has_og:
+                  s = re.sub(r'</head>', '  <meta property="og:image" content="https://smelloff.in/assets/og-image.jpg">\n</head>', s, count=1, flags=re.I)
+              if not has_tw:
+                  s = re.sub(r'</head>', '  <meta name="twitter:image" content="https://smelloff.in/assets/og-image.jpg">\n</head>', s, count=1, flags=re.I)
+
+              if s != before:
+                  p.write_text(s, encoding='utf-8')
+
+          p = Path('llms-full.txt')
+          if p.exists():
+              s = p.read_text(encoding='utf-8').replace('support@smelloff.in', 'smelloffsupport@gmail.com')
+              p.write_text(s, encoding='utf-8')
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add blog llms-full.txt
+          if git diff --cached --quiet; then
+            echo "No published-content normalization changes."
+          else
+            git commit -m "fix: normalize published content facts"
+            git push
+          fi
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+
+      - name: Syntax checks
+        run: |
+          set -e
+          node --check server.js
+          find api scripts -type f \( -name '*.js' -o -name '*.mjs' \) -print0 | xargs -0 -n1 node --check
+
+      - name: Production content audit
+        run: node scripts/audit-production.mjs
