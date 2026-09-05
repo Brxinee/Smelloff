@@ -4,10 +4,10 @@ import { calculateOrderTotal } from '../../shared/products-config.js';
 const rows = [
   [1, 'prepaid', 229, 0, 229],
   [1, 'cod', 229, 60, 289],
-  [2, 'prepaid', 429, 0, 429],
-  [2, 'cod', 429, 60, 489],
-  [3, 'prepaid', 599, 0, 599],
-  [3, 'cod', 599, 60, 659],
+  [2, 'prepaid', 458, 0, 458],
+  [2, 'cod', 458, 60, 518],
+  [3, 'prepaid', 687, 0, 687],
+  [3, 'cod', 687, 60, 747],
   [4, 'prepaid', 916, 0, 916],
   [5, 'cod', 1145, 60, 1205]
 ];
@@ -22,8 +22,8 @@ for (const [qty, method, subtotal, fee, total] of rows) {
   passed++;
 }
 
-assert.notStrictEqual(calculateOrderTotal(2, 'prepaid').total, 458);
-assert.notStrictEqual(calculateOrderTotal(3, 'prepaid').total, 687);
+assert.strictEqual(calculateOrderTotal(2, 'prepaid').total, 458);
+assert.strictEqual(calculateOrderTotal(3, 'prepaid').total, 687);
 assert.strictEqual(calculateOrderTotal(2, 'cod').codFee, 60);
 assert.strictEqual(calculateOrderTotal(1, 'upi').total, 229);
 

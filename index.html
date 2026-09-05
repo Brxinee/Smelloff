@@ -58,47 +58,32 @@
       {"@type":"PropertyValue","name":"Size","value":"50ml"}
     ],
     "image":["https://smelloff.in/assets/campaign/bottle.webp?v=real1","https://smelloff.in/assets/campaign/handled.webp?v=real1","https://smelloff.in/assets/odorstrike-bottle-cutout.webp"],
-    "offers":[
-      {"@type":"Offer","name":"ODORSTRIKE 50ml × 1","url":"https://smelloff.in/?buy=1","priceCurrency":"INR","price":"229","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition","shippingDetails":{
-              "@type":"OfferShippingDetails",
-              "shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},
-              "shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},
-              "deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":2,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}}
-            },"hasMerchantReturnPolicy":{
-              "@type":"MerchantReturnPolicy",
-              "applicableCountry":"IN",
-              "returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow",
-              "merchantReturnDays":7,
-              "returnMethod":"https://schema.org/ReturnByMail",
-              "returnFees":"https://schema.org/FreeReturn"
-            }},
-      {"@type":"Offer","name":"ODORSTRIKE 50ml × 2","url":"https://smelloff.in/?buy=2","priceCurrency":"INR","price":"429","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition","shippingDetails":{
-              "@type":"OfferShippingDetails",
-              "shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},
-              "shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},
-              "deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":2,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}}
-            },"hasMerchantReturnPolicy":{
-              "@type":"MerchantReturnPolicy",
-              "applicableCountry":"IN",
-              "returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow",
-              "merchantReturnDays":7,
-              "returnMethod":"https://schema.org/ReturnByMail",
-              "returnFees":"https://schema.org/FreeReturn"
-            }},
-      {"@type":"Offer","name":"ODORSTRIKE 50ml × 3","url":"https://smelloff.in/?buy=3","priceCurrency":"INR","price":"599","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition","shippingDetails":{
-              "@type":"OfferShippingDetails",
-              "shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},
-              "shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},
-              "deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":2,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}}
-            },"hasMerchantReturnPolicy":{
-              "@type":"MerchantReturnPolicy",
-              "applicableCountry":"IN",
-              "returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow",
-              "merchantReturnDays":7,
-              "returnMethod":"https://schema.org/ReturnByMail",
-              "returnFees":"https://schema.org/FreeReturn"
-            }}
-    ]
+    "offers":{
+      "@type":"Offer",
+      "name":"ODORSTRIKE 50ml",
+      "sku":"OS-001-50ML",
+      "mpn":"SMLF-ODST-50",
+      "url":"https://smelloff.in/?buy=1",
+      "priceCurrency":"INR",
+      "price":"229",
+      "priceValidUntil":"2027-12-31",
+      "availability":"https://schema.org/InStock",
+      "itemCondition":"https://schema.org/NewCondition",
+      "shippingDetails":{
+        "@type":"OfferShippingDetails",
+        "shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},
+        "shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},
+        "deliveryTime":{"@type":"ShippingDeliveryTime","handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":2,"unitCode":"DAY"},"transitTime":{"@type":"QuantitativeValue","minValue":2,"maxValue":7,"unitCode":"DAY"}}
+      },
+      "hasMerchantReturnPolicy":{
+        "@type":"MerchantReturnPolicy",
+        "applicableCountry":"IN",
+        "returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays":7,
+        "returnMethod":"https://schema.org/ReturnByMail",
+        "returnFees":"https://schema.org/FreeReturn"
+      }
+    }
   }
   </script>
   <script type="application/ld+json">
@@ -727,9 +712,8 @@ html body .so-gallery__slide--office img{object-position:center 70%!important}
 </section>
 <script>
 window.selectPackAndBuy = function(qty) {
-  var packBtn = document.querySelector('[data-so-pack="' + qty + '"]');
-  if (packBtn) packBtn.click();
-  if (typeof window.setPurchaseQuantity === 'function') window.setPurchaseQuantity(qty);
+  var q = parseInt(qty, 10) || 1;
+  if (typeof window.setPurchaseQuantity === 'function') window.setPurchaseQuantity(q);
   if (typeof window.buyNow === 'function') {
     window.buyNow();
   } else {

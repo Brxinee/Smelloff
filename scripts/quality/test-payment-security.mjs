@@ -156,48 +156,48 @@ await runAttackTest(4, 'Tamper with unit price or amount -> Server strictly reca
   assert.strictEqual(q1Cod.amountPaise, 28900);
   assert.strictEqual(q1Cod.isCod, true);
 
-  // Quantity 2 - Prepaid (Duo ₹429)
+  // Quantity 2 - Prepaid (2 × ₹229 = ₹458)
   const q2Prepaid = calculateOrderTotal(2, 'upi');
   assert.strictEqual(q2Prepaid.qty, 2);
-  assert.strictEqual(q2Prepaid.subtotal, 429);
+  assert.strictEqual(q2Prepaid.subtotal, 458);
   assert.strictEqual(q2Prepaid.mrpTotal, 998);
   assert.strictEqual(q2Prepaid.codFee, 0);
-  assert.strictEqual(q2Prepaid.total, 429);
-  assert.strictEqual(q2Prepaid.amountPaise, 42900);
+  assert.strictEqual(q2Prepaid.total, 458);
+  assert.strictEqual(q2Prepaid.amountPaise, 45800);
 
-  // Quantity 2 - COD (Duo ₹429 + ₹60 = ₹489)
+  // Quantity 2 - COD (2 × ₹229 + ₹60 = ₹518)
   const q2Cod = calculateOrderTotal(2, 'cod');
   assert.strictEqual(q2Cod.qty, 2);
-  assert.strictEqual(q2Cod.subtotal, 429);
+  assert.strictEqual(q2Cod.subtotal, 458);
   assert.strictEqual(q2Cod.mrpTotal, 998);
   assert.strictEqual(q2Cod.codFee, 60);
-  assert.strictEqual(q2Cod.total, 489);
-  assert.strictEqual(q2Cod.amountPaise, 48900);
+  assert.strictEqual(q2Cod.total, 518);
+  assert.strictEqual(q2Cod.amountPaise, 51800);
 
-  // Quantity 3 - Prepaid (Trio ₹599)
+  // Quantity 3 - Prepaid (3 × ₹229 = ₹687)
   const q3Prepaid = calculateOrderTotal(3, 'upi');
   assert.strictEqual(q3Prepaid.qty, 3);
-  assert.strictEqual(q3Prepaid.subtotal, 599);
+  assert.strictEqual(q3Prepaid.subtotal, 687);
   assert.strictEqual(q3Prepaid.mrpTotal, 1497);
   assert.strictEqual(q3Prepaid.codFee, 0);
-  assert.strictEqual(q3Prepaid.total, 599);
-  assert.strictEqual(q3Prepaid.amountPaise, 59900);
+  assert.strictEqual(q3Prepaid.total, 687);
+  assert.strictEqual(q3Prepaid.amountPaise, 68700);
 
-  // Quantity 3 - COD (Trio ₹599 + ₹60 = ₹659)
+  // Quantity 3 - COD (3 × ₹229 + ₹60 = ₹747)
   const q3Cod = calculateOrderTotal(3, 'cod');
   assert.strictEqual(q3Cod.qty, 3);
-  assert.strictEqual(q3Cod.subtotal, 599);
+  assert.strictEqual(q3Cod.subtotal, 687);
   assert.strictEqual(q3Cod.mrpTotal, 1497);
   assert.strictEqual(q3Cod.codFee, 60);
-  assert.strictEqual(q3Cod.total, 659);
-  assert.strictEqual(q3Cod.amountPaise, 65900);
+  assert.strictEqual(q3Cod.total, 747);
+  assert.strictEqual(q3Cod.amountPaise, 74700);
 
   // Malicious price overrides from client (e.g., client passes price = 1, subtotal = 1, total = 1, price = 9999)
   // Server ignores client parameters and recomputes purely from quantity (2) + method (upi)
   const maliciousClientPayload = { quantity: 2, price: 1, subtotal: 1, total: 1, amountPaise: 100 };
   const recalculated = calculateOrderTotal(maliciousClientPayload.quantity, 'upi');
-  assert.strictEqual(recalculated.total, 429);
-  assert.strictEqual(recalculated.amountPaise, 42900);
+  assert.strictEqual(recalculated.total, 458);
+  assert.strictEqual(recalculated.amountPaise, 45800);
   assert.notStrictEqual(recalculated.total, maliciousClientPayload.total);
 });
 

@@ -42,8 +42,8 @@ function check() {
   if (!html.includes('id="gallery"')) errors.push('#gallery missing.');
   if (!html.includes('id="buy"')) errors.push('#buy missing.');
   if (!html.includes('id="checkoutOverlay"')) errors.push('#checkoutOverlay missing.');
-  if (!html.includes('data-so-pack="1"') || !html.includes('data-so-pack="2"') || !html.includes('data-so-pack="3"')) {
-    errors.push('1 product + 2 combo pack controls missing.');
+  if (!html.includes('ODORSTRIKE') || !html.includes('229')) {
+    errors.push('Single SKU product price or name missing.');
   }
   if (!js.includes('window.buyNow')) errors.push('window.buyNow missing from checkout.js.');
   if (!js.includes('window.selectPay') && !js.includes('function selectPay')) {

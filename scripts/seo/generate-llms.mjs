@@ -161,10 +161,9 @@ ${approved.map((c) => `- ${c}`).join('\n')}
 - Fabric only
 
 ## Packs
-- 1 × 50ml ₹229 prepaid
-- 2 × 50ml ₹429 prepaid
-- 3 × 50ml ₹599 prepaid
-- COD adds ₹60 handling per order
+- 1 × 50ml (Single SKU) ₹229 prepaid (Free pan-India shipping)
+- COD adds ₹60 handling per order (₹289 total at door)
+- Additional quantities are direct unit multiples (qty × ₹229)
 
 ## Shipping and returns
 - ${facts.policies.shipping.details}

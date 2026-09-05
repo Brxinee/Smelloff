@@ -1633,10 +1633,7 @@
       }
       var cta = document.querySelector('[data-so-buy] [data-so-cta], #buy [data-so-cta]');
       if (cta) {
-        var totals = (function(){
-          var sub = pdpQty === 2 ? 429 : pdpQty === 3 ? 599 : 229 * pdpQty;
-          return sub;
-        })();
+        var totals = 229 * pdpQty;
         var prepaid = document.querySelector('[data-so-buy] [data-so-pay="prepaid"][aria-pressed="true"], #buy [data-so-pay="prepaid"][aria-pressed="true"]');
         var payIsCod = !prepaid && document.querySelector('[data-so-buy] [data-so-pay="cod"][aria-pressed="true"], #buy [data-so-pay="cod"][aria-pressed="true"]');
         var amount = payIsCod ? (totals + 60) : totals;
