@@ -65,10 +65,7 @@ async function patchOrder(orderCode, patch) {
   await supabaseFetch(`orders?order_code=eq.${encodeURIComponent(orderCode)}`, {
     method: 'PATCH',
     headers: { Prefer: 'return=minimal' },
-    body: JSON.stringify({
-      ...patch,
-      shiprocket_synced_at: new Date().toISOString()
-    })
+    body: JSON.stringify({ ...patch, shiprocket_synced_at: new Date().toISOString() })
   });
 }
 
@@ -87,19 +84,14 @@ async function createMissingShiprocketOrder(order) {
       shiprocket_status: 'ORDER_CREATED',
       shiprocket_error: null
     };
-    if (!patch.shiprocket_order_id) {
-      throw new Error('Shiprocket accepted the request but did not return an order ID.');
-    }
+    if (!patch.shiprocket_order_id) throw new Error('Shiprocket accepted the request but did not return an order ID.');
     await patchOrder(order.order_code, patch);
     return { status: 'created', ...patch };
   } catch (err) {
     await supabaseFetch(`orders?order_code=eq.${encodeURIComponent(order.order_code)}`, {
       method: 'PATCH',
       headers: { Prefer: 'return=minimal' },
-      body: JSON.stringify({
-        shiprocket_error: String(err.message || 'Shiprocket create failed').slice(0, 1000),
-        shiprocket_synced_at: new Date().toISOString()
-      })
+      body: JSON.stringify({ shiprocket_error: String(err.message || 'Shiprocket create failed').slice(0, 1000), shiprocket_synced_at: new Date().toISOString() })
     }).catch(() => {});
     return { status: 'create_failed', error: String(err.message || 'Shiprocket create failed').slice(0, 500) };
   }
@@ -111,9 +103,10 @@ async function syncSingleOrder(order) {
   let createResult = null;
   if (!order.shiprocket_order_id) {
     createResult = await createMissingShiprocketOrder(order);
-    if (!order.shiprocket_order_id) {
+    if (!createResult?.shiprocket_order_id) {
       return { orderCode: order.order_code, status: createResult?.status || 'skipped', error: createResult?.error || null };
     }
+    // Critical: use the newly-created carrier IDs for this same sync pass.
     order = { ...order, ...createResult };
   }
 
@@ -148,7 +141,7 @@ async function syncSingleOrder(order) {
 
     const patch = {
       ...statusPatch,
-      ...(awb ? { shiprocket_awb: String(awb), tracking_id: String(awb), tracking_url: 'https://www.shiprocket.co/tracking/' } : {}),
+      ...(awb ? { shiprocket_awb: String(awb), tracking_id: String(awb), tracking_url: `https://www.shiprocket.co/tracking/${encodeURIComponent(awb)}` } : {}),
       ...(courier ? { shiprocket_courier: String(courier), courier: String(courier) } : {}),
       ...(shiprocketStatus ? { shiprocket_status: String(shiprocketStatus) } : {}),
       shiprocket_error: null
@@ -168,10 +161,7 @@ async function syncSingleOrder(order) {
     await supabaseFetch(`orders?order_code=eq.${encodeURIComponent(order.order_code)}`, {
       method: 'PATCH',
       headers: { Prefer: 'return=minimal' },
-      body: JSON.stringify({
-        shiprocket_error: String(err.message || 'Shiprocket sync failed').slice(0, 1000),
-        shiprocket_synced_at: new Date().toISOString()
-      })
+      body: JSON.stringify({ shiprocket_error: String(err.message || 'Shiprocket sync failed').slice(0, 1000), shiprocket_synced_at: new Date().toISOString() })
     }).catch(() => {});
     return { orderCode: order.order_code, status: 'failed', error: String(err.message || 'Shiprocket sync failed').slice(0, 500) };
   }
@@ -180,8 +170,7 @@ async function syncSingleOrder(order) {
 function isCronAuthorized(req) {
   const secret = process.env.CRON_SECRET;
   if (!secret) return false;
-  const auth = String(req.headers.authorization || '');
-  return auth === `Bearer ${secret}`;
+  return String(req.headers.authorization || '') === `Bearer ${secret}`;
 }
 
 export default async function handler(req, res) {
@@ -201,26 +190,17 @@ export default async function handler(req, res) {
   if (req.method !== 'GET' && req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const cronRequest = req.method === 'GET' && isCronAuthorized(req);
-  if (!cronRequest && !isAdminAuthorized(req)) {
-    return res.status(401).json({ error: 'Unauthorized.' });
-  }
-
-  if (!isShiprocketConfigured()) {
-    return res.status(503).json({ error: 'Shiprocket is not configured.' });
-  }
+  if (!cronRequest && !isAdminAuthorized(req)) return res.status(401).json({ error: 'Unauthorized.' });
+  if (!isShiprocketConfigured()) return res.status(503).json({ error: 'Shiprocket is not configured.' });
 
   const ip = clientIp(req);
-  if (!checkRateLimit(`shiprocket-sync:${ip}`, 60, 10 * 60 * 1000)) {
-    return res.status(429).json({ error: 'Rate limit exceeded.' });
-  }
+  if (!checkRateLimit(`shiprocket-sync:${ip}`, 60, 10 * 60 * 1000)) return res.status(429).json({ error: 'Rate limit exceeded.' });
 
   try {
     if (req.method === 'POST') {
       const body = req.body && typeof req.body === 'object' ? req.body : {};
       const orderCode = String(body.orderCode || body.order_code || '').trim().toUpperCase();
-      if (!/^SMF-\d{8}-\d{4}$/.test(orderCode)) {
-        return res.status(400).json({ error: 'Valid Smelloff order code required.' });
-      }
+      if (!/^SMF-\d{8}-\d{4}$/.test(orderCode)) return res.status(400).json({ error: 'Valid Smelloff order code required.' });
       const order = await getOrder(orderCode);
       if (!order) return res.status(404).json({ error: 'Order not found.' });
       return res.status(200).json(await syncSingleOrder(order));
@@ -228,15 +208,8 @@ export default async function handler(req, res) {
 
     const orders = await listSyncCandidates(50);
     const results = [];
-    for (const order of orders) {
-      results.push(await syncSingleOrder(order));
-    }
-
-    return res.status(200).json({
-      ok: true,
-      scanned: orders.length,
-      results
-    });
+    for (const order of orders) results.push(await syncSingleOrder(order));
+    return res.status(200).json({ ok: true, scanned: orders.length, results });
   } catch (err) {
     console.error('[shiprocket-sync] Error:', err);
     return res.status(500).json({ error: 'Shiprocket sync failed.' });
