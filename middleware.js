@@ -1,5 +1,4 @@
-// Vercel Routing (Edge) Middleware — AI & human traffic capture for smelloff.in
-// ---------------------------------------------------------------------------
+// Vercel Routing Middleware — AI & human traffic capture for smelloff.in
 
 export const config = {
   matcher: [
@@ -12,10 +11,9 @@ export const config = {
 const INGEST = 'https://admin.smelloff.in/api/traffic';
 const BLOG_IMAGE_FALLBACK = '/blog/assets/why-shirt-zones-smell-after-washing.jpg';
 
-// These eight legacy card image families were published with missing files.
-// Redirect every requested format/size variant to a real, versioned JPG that
-// is present in the repository and therefore guaranteed to be renderable.
-const BROKEN_BLOG_ASSET = /^\\/blog\\/assets\\/(?:alternative-to-deodorant-for-clothes-smell|best-body-odor-remover-spray-for-men-india|mumbai-humidity-sweat-smell-survival-guide|office-ac-trap-why-rewear-shirts-smell-worse|perfume-plus-sweat-chemical-reaction|spray-to-remove-sweat-smell-from-clothes-instantly|where-to-buy-odorstrike-in-india|why-deodorant-stops-working-after-3-hours)(?:@1200)?\\.(?:avif|webp|jpg)$/;
+// Eight legacy blog card image families were published with missing files.
+// Catch every AVIF/WebP/JPG and @1200 variant and send it to a real JPG asset.
+const BROKEN_BLOG_ASSET = /^\/blog\/assets\/(?:alternative-to-deodorant-for-clothes-smell|best-body-odor-remover-spray-for-men-india|mumbai-humidity-sweat-smell-survival-guide|office-ac-trap-why-rewear-shirts-smell-worse|perfume-plus-sweat-chemical-reaction|spray-to-remove-sweat-smell-from-clothes-instantly|where-to-buy-odorstrike-in-india|why-deodorant-stops-working-after-3-hours)(?:@1200)?\.(?:avif|webp|jpg)$/;
 
 const GSC_FILE = '/google163974d1a8d940cf89b0ec712246c779.html';
 const GSC_BODY = 'google-site-verification: google163974d1a8d940cf89b0ec712246c779.html';
