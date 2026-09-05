@@ -18,7 +18,5 @@ jobs:
           node-version: '22'
       - name: Install dependencies
         run: npm install --no-package-lock --no-audit --no-fund
-      - name: Sync generated blog assets before validation
-        run: npm run thumbnails && npm run share
       - name: Run production SEO audit
         run: npm run build
