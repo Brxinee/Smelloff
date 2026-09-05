@@ -11,14 +11,16 @@
 //   `traffic_log` table shown on the admin "AI traffic" panel.
 //
 // SAFETY (this is a live storefront)
-//   • It never rewrites or redirects, and returns a Response for exactly one
-//     path — the static Google verification file (see GSC_FILE below). Every
-//     other request only has its headers read and continues untouched;
-//     Vercel's redirects/rewrites in vercel.json and normal page serving are
-//     unaffected.
+//   • It never rewrites or redirects HTML pages. Every normal request only has
+//     its headers read and continues untouched; Vercel's redirects/rewrites in
+//     vercel.json and normal page serving are unaffected.
+//   • The one exception below repairs the currently broken legacy blog-card
+//     image URLs by redirecting only those exact missing image variants to the
+//     existing Smelloff OG image. This is deliberately limited to the 8 cards
+//     affected on /blog so valid blog assets continue to work normally.
 //   • The forward runs inside context.waitUntil and every error is swallowed,
 //     so it is non-blocking and fail-silent. If the ingest or Supabase is down,
-//     pages still load. Deleting this file would not change how the site serves.
+//     pages still load.
 //   • It touches no protected integration (checkout, Razorpay, COD/OTP, GA4,
 //     Meta Pixel, Supabase, Sheets, Resend, WhatsApp) and blocks no crawler —
 //     AI bots keep full access to read/cite pages.
@@ -41,11 +43,19 @@ export const config = {
   // below, before the redirect can fire.
   matcher: [
     '/((?!api/|_vercel/|.*\\.).*)',
+    '/blog/assets/:path*',
     '/google163974d1a8d940cf89b0ec712246c779.html',
   ],
 };
 
 const INGEST = 'https://admin.smelloff.in/api/traffic';
+const BLOG_IMAGE_FALLBACK = '/assets/og-image.jpg';
+
+// These are the legacy blog-card image families currently referenced by the
+// index page but missing from production. The <picture> markup asks for AVIF,
+// WebP, and JPG plus @1200 variants, so catch every one and send the browser
+// to a real image instead of rendering a broken-image icon + alt text.
+const BROKEN_BLOG_ASSET = /^\/blog\/assets\/(?:alternative-to-deodorant-for-clothes-smell|best-body-odor-remover-spray-for-men-india|mumbai-humidity-sweat-smell-survival-guide|office-ac-trap-why-rewear-shirts-smell-worse|perfume-plus-sweat-chemical-reaction|spray-to-remove-sweat-smell-from-clothes-instantly|where-to-buy-odorstrike-in-india|why-deodorant-stops-working-after-3-hours)(?:@1200)?\.(?:avif|webp|jpg)$/;
 
 // GSC HTML-file verification demands the exact token content at the exact
 // .html path with no redirect. Keep this string in sync with the file of the
@@ -55,12 +65,23 @@ const GSC_BODY = 'google-site-verification: google163974d1a8d940cf89b0ec712246c7
 
 export default function middleware(request, context) {
   const { pathname: reqPath } = new URL(request.url);
+
   if (reqPath === GSC_FILE) {
     return new Response(GSC_BODY, {
       status: 200,
       headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' },
     });
   }
+
+  // Repair the broken /blog card images at the edge. This gives the browser a
+  // normal HTTP image response path and prevents the broken icon/alt-text UI.
+  if (BROKEN_BLOG_ASSET.test(reqPath)) {
+    return Response.redirect(new URL(BLOG_IMAGE_FALLBACK, request.url), 307);
+  }
+
+  // Asset requests are intentionally invisible to traffic analytics. If this
+  // matcher fires for a valid asset, simply let Vercel serve it normally.
+  if (reqPath.startsWith('/blog/assets/')) return;
 
   try {
     const ua = request.headers.get('user-agent') || '';
