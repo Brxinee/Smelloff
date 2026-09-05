@@ -339,48 +339,33 @@
     });
   }, true);
 
-  /* --- shop gallery (dots, thumbs, snap) -------------------------- */
+  /* --- shop gallery (thumbs / dots; one slide visible at a time) -- */
   (function () {
     var root = document.getElementById('gallery');
     if (!root) return;
-    var viewport = root.querySelector('.so-gallery__viewport');
     var slides = root.querySelectorAll('.so-gallery__slide');
     var dots = root.querySelectorAll('.so-gallery__dots button');
     var thumbs = root.querySelectorAll('.so-gallery__thumbs button');
-    if (!viewport || !slides.length) return;
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!slides.length) return;
 
-    function setIndex(i, scroll) {
+    function setIndex(i) {
       i = Math.max(0, Math.min(slides.length - 1, i));
       for (var s = 0; s < slides.length; s++) slides[s].classList.toggle('is-on', s === i);
       for (var d = 0; d < dots.length; d++) dots[d].setAttribute('aria-selected', d === i ? 'true' : 'false');
       for (var t = 0; t < thumbs.length; t++) thumbs[t].setAttribute('aria-selected', t === i ? 'true' : 'false');
       var counter = root.querySelector('.so-gallery__counter');
       if (counter) counter.textContent = (i + 1) + ' / ' + slides.length;
-      if (scroll && slides[i]) {
-        slides[i].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', inline: 'start', block: 'nearest' });
-      }
     }
     function bind(nodes) {
       for (var i = 0; i < nodes.length; i++) {
         (function (n) {
-          nodes[n].addEventListener('click', function () { setIndex(n, true); });
+          nodes[n].addEventListener('click', function () { setIndex(n); });
         })(i);
       }
     }
     bind(dots);
     bind(thumbs);
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (!en.isIntersecting) return;
-          var i = Array.prototype.indexOf.call(slides, en.target);
-          if (i >= 0) setIndex(i, false);
-        });
-      }, { root: viewport, threshold: 0.6 });
-      for (var s = 0; s < slides.length; s++) io.observe(slides[s]);
-    }
-    setIndex(0, false);
+    setIndex(0);
   })();
 
 })();

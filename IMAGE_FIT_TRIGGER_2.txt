@@ -1,1 +1,2 @@
-canonical photography system: contain, no crop
+canonical photography: intrinsic ratio, max-width/max-height fit, no crop frames
+
