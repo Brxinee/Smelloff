@@ -50,7 +50,7 @@ function displayTotal(root, method) {
     } catch (e) {}
   }
   var qty = packQty(root);
-  var sub = qty === 2 ? 429 : qty === 3 ? 599 : T.pricePrepaid * qty;
+  var sub = T.pricePrepaid * qty;
   return sub + (method === 'cod' ? (T.codFee || 60) : 0);
 }
 

@@ -7,8 +7,8 @@
       WHATSAPP: "919392974031",
       UPI_ID: "mr.brainy@ibl",
       UPI_NAME: "Smelloff",
-      PRICES: { solo: 229, duo: 429, trio: 599 },
-      MRP:    { solo: 499, duo: 998, trio: 1497 },
+      PRICES: { solo: 229 },
+      MRP:    { solo: 499 },
       COD_FEE: 60,
       VERIFIED_REVIEWS: [],
       BOTTLES_SOLD: 0,
@@ -18,34 +18,28 @@
   } else {
     var C = window.SMELLOFF_CONFIG;
     C.PRICES = C.PRICES || {};
-    if (C.PRICES.duo == null) C.PRICES.duo = 429;
-    if (C.PRICES.trio == null) C.PRICES.trio = 599;
+    C.PRICES.solo = 229;
     C.MRP = C.MRP || {};
-    if (C.MRP.duo == null) C.MRP.duo = 998;
-    if (C.MRP.trio == null) C.MRP.trio = 1497;
+    C.MRP.solo = 499;
   }
   const CFG = window.SMELLOFF_CONFIG;
-  // Active Commercial Bundles: Solo ₹229, Duo ₹429 (Save ₹29), Trio ₹599 (Save ₹88)
+  // Single SKU: ODORSTRIKE 50ml (₹229 prepaid, ₹289 COD)
   const VARIANTS = {
-    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: CFG.PRICES.solo, mrp: CFG.MRP.solo },
-    duo:  { title: 'ODORSTRIKE 50ml Duo', units: '2 × 50ml', amount: CFG.PRICES.duo, mrp: CFG.MRP.duo },
-    trio: { title: 'ODORSTRIKE 50ml Trio', units: '3 × 50ml', amount: CFG.PRICES.trio, mrp: CFG.MRP.trio }
+    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml Bottle', amount: 229, mrp: 499 }
   };
   // Surcharge for choosing Cash on Delivery. Read once here so the whole page has
   // one number; the static markup that quotes it is listed at CFG.COD_FEE.
-  const COD_FEE = Number(CFG.COD_FEE) || 0;
+  const COD_FEE = Number(CFG.COD_FEE) || 60;
 
   let currentVariant = 'solo';
-  // Canonical purchase state shared by pack, quantity, payment method and totals.
+  // Canonical purchase state shared by quantity, payment method and totals.
   const purchaseState = { variant: 'solo', quantity: 1, paymentMethod: 'prepaid' };
   function syncPurchaseState() {
     const q = Math.max(1, Math.min(5, Number(purchaseState.quantity) || 1));
     purchaseState.quantity = q;
     if (purchaseState.paymentMethod !== 'cod') purchaseState.paymentMethod = 'prepaid';
-    if (!['solo', 'duo', 'trio'].includes(purchaseState.variant)) {
-      purchaseState.variant = q === 3 ? 'trio' : q === 2 ? 'duo' : 'solo';
-    }
-    currentVariant = purchaseState.variant;
+    purchaseState.variant = 'solo';
+    currentVariant = 'solo';
     cartQty = q;
     payMethod = purchaseState.paymentMethod;
   }
@@ -54,7 +48,7 @@
   // Quantity being checked out — sourced from the cart. Unit price stays ₹229
   // (single SKU); the order pipeline multiplies by this.
   let cartQty = 1;
-  function unitPrice() { return Number(VARIANTS[currentVariant].amount) || 0; }
+  function unitPrice() { return 229; }
 
   // ============================================================
   // CART — ODORSTRIKE 50ml (Solo, Duo, Trio supported), quantity persists in localStorage.
@@ -111,26 +105,9 @@
     if (line) line.style.display = hasItems ? 'flex' : 'none';
     if (foot) foot.style.display = hasItems ? 'block' : 'none';
     if (hasItems) {
-      var sub = 229;
-      var unitText = '1 × 50ml Bottle · ₹229';
+      var sub = 229 * qty;
+      var unitText = qty === 1 ? '1 × 50ml Bottle · ₹229' : qty + ' × 50ml Bottles · ₹' + sub;
       var nameText = 'ODORSTRIKE 50ml';
-      if (qty === 1) {
-        sub = 229;
-        unitText = '1 × 50ml Bottle · ₹229';
-        nameText = 'ODORSTRIKE 50ml';
-      } else if (qty === 2) {
-        sub = 429;
-        unitText = '2 × 50ml Bottles (Duo Pack · Save ₹29) · ₹429';
-        nameText = 'ODORSTRIKE 50ml (Duo)';
-      } else if (qty === 3) {
-        sub = 599;
-        unitText = '3 × 50ml Bottles (Trio Pack · Save ₹88) · ₹599';
-        nameText = 'ODORSTRIKE 50ml (Trio)';
-      } else {
-        sub = 229 * qty;
-        unitText = qty + ' × 50ml Bottles · ₹' + sub;
-        nameText = 'ODORSTRIKE 50ml (' + qty + ' Pack)';
-      }
       var qv = document.getElementById('cartQtyVal'); if (qv) qv.textContent = String(qty);
       var st = document.getElementById('cartSubtotal'); if (st) st.textContent = '₹' + sub;
       var ca = document.getElementById('cartCheckoutAmt'); if (ca) ca.textContent = '₹' + sub;
@@ -245,11 +222,8 @@
     var v = document.getElementById('pdpQtyVal');
     if (v) v.textContent = String(pdpQty);
     var t = document.getElementById('pdpBuyText');
-    var bundleTotal = 229;
-    if (pdpQty === 2) bundleTotal = 429;
-    else if (pdpQty === 3) bundleTotal = 599;
-    else bundleTotal = 229 * pdpQty;
-    if (t) t.textContent = 'Buy now · ₹' + bundleTotal;
+    var total = 229 * pdpQty;
+    if (t) t.textContent = 'Buy now · ₹' + total;
     var dec = document.getElementById('pdpQtyDec');
     if (dec) dec.disabled = pdpQty <= 1;
   }
@@ -260,13 +234,13 @@
   function buyNow() {
     const qty = Math.max(1, Math.min(5, Number(pdpQty) || 1));
     purchaseState.quantity = qty;
-    purchaseState.variant = qty === 3 ? 'trio' : qty === 2 ? 'duo' : 'solo';
+    purchaseState.variant = 'solo';
     syncPurchaseState();
     setCartQty(qty);
     trackAddToCart();
     smfCartBeacon('add_to_cart');
     closeCartDrawer();
-    openCheckout(purchaseState.variant);
+    openCheckout('solo');
   }
   // "Add to cart" is the browse path: add a unit and show the drawer, so the
   // qty controls and the subtotal are visible and the page stays behind it.
@@ -283,8 +257,8 @@
     pdpQty = q > 0 ? Math.min(5, q) : 1;
     renderPdpQty();
   }
-  function cartInc() { var next = Math.min(5, getCartQty() + 1); setCartQty(next); syncPdpQtyFromCart(); purchaseState.quantity = next; purchaseState.variant = next === 3 ? 'trio' : next === 2 ? 'duo' : 'solo'; syncPurchaseState(); smfCartBeacon('cart_update'); }
-  function cartDec() { var q = getCartQty(); var next = q <= 1 ? 0 : q - 1; if (q <= 1) setCartQty(0); else setCartQty(next); syncPdpQtyFromCart(); if (next > 0) { purchaseState.quantity = next; purchaseState.variant = next === 3 ? 'trio' : next === 2 ? 'duo' : 'solo'; } syncPurchaseState(); smfCartBeacon('cart_update'); }
+  function cartInc() { var next = Math.min(5, getCartQty() + 1); setCartQty(next); syncPdpQtyFromCart(); purchaseState.quantity = next; purchaseState.variant = 'solo'; syncPurchaseState(); smfCartBeacon('cart_update'); }
+  function cartDec() { var q = getCartQty(); var next = q <= 1 ? 0 : q - 1; if (q <= 1) setCartQty(0); else setCartQty(next); syncPdpQtyFromCart(); if (next > 0) { purchaseState.quantity = next; purchaseState.variant = 'solo'; } syncPurchaseState(); smfCartBeacon('cart_update'); }
   function cartRemove() { setCartQty(0); syncPdpQtyFromCart(); purchaseState.quantity = 1; purchaseState.variant = 'solo'; syncPurchaseState(); smfCartBeacon('remove_from_cart'); }
   function checkoutFromCart() {
     var q = getCartQty();
@@ -303,23 +277,23 @@
     const q = Math.max(1, Math.min(5, parseInt(n, 10) || 1));
     pdpQty = q;
     purchaseState.quantity = q;
-    purchaseState.variant = q === 3 ? 'trio' : q === 2 ? 'duo' : 'solo';
-    currentVariant = purchaseState.variant;
+    purchaseState.variant = 'solo';
+    currentVariant = 'solo';
     syncPurchaseState();
     setCartQty(q);
     renderPdpQty();
     return {
       quantity: q,
-      variant: purchaseState.variant,
-      subtotal: q === 3 ? 599 : q === 2 ? 429 : 229 * q
+      variant: 'solo',
+      subtotal: 229 * q
     };
   }
   function getPurchaseState() {
     return {
       quantity: purchaseState.quantity,
-      variant: purchaseState.variant,
+      variant: 'solo',
       paymentMethod: purchaseState.paymentMethod,
-      subtotal: purchaseState.quantity === 3 ? 599 : purchaseState.quantity === 2 ? 429 : 229 * purchaseState.quantity
+      subtotal: 229 * purchaseState.quantity
     };
   }
   window.openCartDrawer = openCartDrawer;
@@ -369,16 +343,11 @@
   function orderTotals() {
     syncPurchaseState();
     const qty = purchaseState.quantity > 0 ? purchaseState.quantity : 1;
-    let subtotal = 229;
-    let savings = 0;
-    if (qty === 1) { subtotal = 229; savings = 0; }
-    else if (qty === 2) { subtotal = 429; savings = 29; }
-    else if (qty === 3) { subtotal = 599; savings = 88; }
-    else { subtotal = 229 * qty; savings = 0; }
-    const unit = Math.round((subtotal / qty) * 100) / 100;
+    const subtotal = 229 * qty;
+    const unit = 229;
     const shipping = Number(calcShipping(subtotal)) || 0;
     const codFee = payMethod === 'cod' ? COD_FEE : 0;
-    return { qty: qty, unit: unit, subtotal: subtotal, savings: savings, shipping: shipping,
+    return { qty: qty, unit: unit, subtotal: subtotal, savings: 0, shipping: shipping,
              codFee: codFee, total: subtotal + shipping + codFee };
   }
 
@@ -389,11 +358,8 @@
       var el = document.getElementById(id);
       if (el) el.textContent = text;
     };
-    var bundleTitle = '1 × 50ml Bottle';
-    if (t.qty === 2) bundleTitle = '2 × 50ml Bottles (Duo Pack · Save ₹29)';
-    else if (t.qty === 3) bundleTitle = '3 × 50ml Bottles (Trio Pack · Save ₹88)';
-    else if (t.qty > 3) bundleTitle = t.qty + ' × 50ml Bottles';
-    set('checkoutVariant', bundleTitle);
+    var titleText = t.qty === 1 ? '1 × 50ml Bottle' : t.qty + ' × 50ml Bottles';
+    set('checkoutVariant', titleText);
     set('checkoutAmount', '₹' + t.subtotal);
     set('checkoutShipping', 'Free ✓');
     set('checkoutCodFee', isCod ? '+₹' + COD_FEE : 'Not applied ✓');
@@ -411,9 +377,9 @@
 
   function openCheckout(variant) {
     _checkoutTrigger = document.activeElement;
-    currentVariant = variant;
-    purchaseState.variant = ['solo', 'duo', 'trio'].includes(variant) ? variant : (cartQty === 3 ? 'trio' : cartQty === 2 ? 'duo' : 'solo');
-    purchaseState.quantity = purchaseState.variant === 'trio' ? 3 : purchaseState.variant === 'duo' ? 2 : Math.max(1, Math.min(5, cartQty || 1));
+    currentVariant = 'solo';
+    purchaseState.variant = 'solo';
+    purchaseState.quantity = Math.max(1, Math.min(5, cartQty || 1));
     purchaseState.paymentMethod = payMethod === 'cod' ? 'cod' : 'prepaid';
     syncPurchaseState();
     // Sync quantity from the cart (default to 1 for any direct/legacy call).
@@ -421,8 +387,7 @@
     if (!(cartQty > 0)) cartQty = 1;
     var titleEl = document.getElementById('checkoutTitle');
     if (titleEl) {
-      var packKey = cartQty === 2 ? 'duo' : cartQty === 3 ? 'trio' : variant;
-      titleEl.textContent = (VARIANTS[packKey] && VARIANTS[packKey].title) || VARIANTS[variant].title;
+      titleEl.textContent = 'ODORSTRIKE 50ml';
     }
     renderCheckoutPrices();
     document.getElementById('checkoutForm').style.display = 'block';
