@@ -172,14 +172,15 @@ h1 em {
   margin: 18px 0 24px;
 }
 
-/* Featured Hero Image */
+/* Featured Hero Image — sources are 1920×1080 (16:9). Keep the full frame. */
 .blog-hero,
 .blog-hero-wrap img,
 .article-header picture img {
   width: 100%;
   height: auto;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center center;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   display: block;
@@ -195,6 +196,8 @@ h1 em {
 .blog-figure svg {
   width: 100%;
   height: auto;
+  object-fit: contain;
+  object-position: center center;
   border-radius: 6px;
   display: block;
   background: #111111;

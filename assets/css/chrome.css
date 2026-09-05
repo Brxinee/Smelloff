@@ -1147,29 +1147,26 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   min-width:0;
   width:100%;
   height:auto;
-  max-height:min(86svh, 720px);
-  aspect-ratio:4/5;
   padding:0;
   background:#080808;
-  display:block;
-  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   position:relative;
 }
 .so-hero__visual picture{
   display:block;
-  position:absolute;
-  inset:0;
-  height:100%;
   width:100%;
+  margin:0;
+  padding:0;
 }
 .so-hero__visual img{
   display:block;
   width:100%;
-  height:100%;
-  max-width:none;
-  max-height:none;
-  object-fit:cover;
-  object-position:center 42%;
+  height:auto;
+  max-width:100%;
+  object-fit:contain;
+  object-position:center center;
 }
 @media (prefers-reduced-motion: no-preference){
   .so-hero__visual img{
@@ -1178,8 +1175,8 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   }
 }
 @keyframes soHeroIn{
-  from{opacity:0;transform:scale(1.04)}
-  to{opacity:1;transform:none}
+  from{opacity:0}
+  to{opacity:1}
 }
 .so-hero__copy{
   min-width:0;
@@ -1288,10 +1285,6 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   color:#A0A0A0;
 }
 
-@media (max-height:720px) and (max-width:767px){
-  .so-hero__visual{max-height:min(82svh, 640px)}
-}
-
 @media(min-width:360px){
   .so-hero__copy{padding:18px max(20px, env(safe-area-inset-right, 0px)) 26px max(20px, env(safe-area-inset-left, 0px))}
   .so-hero h1{margin-top:10px}
@@ -1305,11 +1298,9 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 @media(min-width:768px){
   .so-hero::after{display:none}
   .so-hero__stage{
-    grid-template-columns:minmax(300px, 0.88fr) minmax(0, 1.22fr);
-    height:min(calc(100svh - var(--so-hdr, 64px)), 820px);
-    max-height:min(calc(100svh - var(--so-hdr, 64px)), 820px);
+    grid-template-columns:minmax(300px, 1.1fr) minmax(280px, 0.9fr);
+    align-items:center;
     max-width:none;
-    align-items:stretch;
   }
   .so-hero__copy{
     order:1;
@@ -1323,33 +1314,30 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
   .so-hero__visual{
     order:2;
     position:relative;
-    height:100%;
+    height:auto;
     max-height:none;
     min-height:0;
     min-width:0;
-    aspect-ratio:auto;
     padding:0;
     background:#080808;
-    display:block;
-    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
   .so-hero__visual picture{
     display:block;
-    position:absolute;
-    inset:0;
-    height:100%;
+    position:static;
     width:100%;
+    height:auto;
   }
   .so-hero__visual img{
-    position:absolute;
-    inset:0;
+    position:static;
     display:block;
-    height:100%;
     width:100%;
-    max-height:none;
-    max-width:none;
-    object-fit:cover;
-    object-position:center 40%;
+    height:auto;
+    max-width:100%;
+    object-fit:contain;
+    object-position:center center;
   }
   .so-hero h1{font-size:clamp(2.3rem, 3.6vw, 3.4rem);max-width:14ch;line-height:1.08}
   .so-hero__hook{font-size:1.125rem;line-height:1.6;margin-top:16px}
@@ -1366,10 +1354,7 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 
 @media(min-width:1024px){
   .so-hero__stage{
-    --so-hero-h: min(calc(100svh - var(--so-hdr, 64px)), 900px);
-    height:var(--so-hero-h);
-    max-height:var(--so-hero-h);
-    grid-template-columns:minmax(420px, 1fr) minmax(420px, 1.15fr);
+    grid-template-columns:minmax(420px, 1.05fr) minmax(380px, 0.95fr);
   }
   .so-hero__copy{
     padding:clamp(48px, 8vh, 96px) 48px clamp(48px, 8vh, 96px) max(48px, env(safe-area-inset-left, 0px));
@@ -1462,33 +1447,30 @@ body{overflow-x:clip}
 .so-media{
   margin:0;
   width:100%;
-  aspect-ratio:4/5;
-  overflow:hidden;
   border-radius:14px;
   border:1px solid var(--so-chrome-line, rgba(255,255,255,.08));
   background:#080808;
   position:relative;
+  overflow:hidden;
 }
 .so-media picture{
   display:block;
-  position:absolute;
-  inset:0;
   width:100%;
-  height:100%;
+  margin:0;
 }
 .so-media img{
   width:100%;
-  height:100%;
-  max-height:none;
+  height:auto;
   display:block;
-  object-fit:cover;
-  object-position:center 40%;
+  object-fit:contain;
+  object-position:center center;
   border-radius:0;
+  background:#080808;
 }
 @media(min-width:768px){
   .so-media img{
     max-height:none;
-    height:100%;
+    height:auto;
     min-height:0;
   }
 }
@@ -1548,7 +1530,7 @@ body{overflow-x:clip}
   align-items:center;
 }
 .so-prob__stage .so-media img{
-  object-position:center 38%;
+  object-position:center center;
 }
 @media(min-width:768px){
   .so-prob__stage{
@@ -1570,7 +1552,7 @@ body{overflow-x:clip}
   align-items:start;
 }
 .so-ritual__stage .so-media img{
-  object-position:center 22%;
+  object-position:center center;
 }
 @media(min-width:768px){
   .so-ritual__stage{
@@ -1778,10 +1760,11 @@ body{overflow-x:clip}
 .so-use figure{margin:0}
 .so-use img{
   width:100%;
-  height:220px;
-  object-fit:cover;
-  object-position:center 40%;
+  height:auto;
+  object-fit:contain;
+  object-position:center center;
   display:block;
+  background:#080808;
 }
 .so-use h3{
   margin:0;
@@ -2032,7 +2015,7 @@ body{overflow-x:clip}
   .so-commerce .so-gallery__thumbs button[aria-selected="true"]{
     border-color:var(--so-cotton-ink, #F4F4F4);
   }
-  .so-commerce .so-gallery__thumbs img{width:100%;height:64px;object-fit:cover;display:block}
+  .so-commerce .so-gallery__thumbs img{width:100%;height:100%;object-fit:contain;display:block;background:#080808}
 }
 
 /* --- Objections ---------------------------------------------------- */
@@ -2147,12 +2130,10 @@ body{overflow-x:clip}
   }
   .so-close .so-btn--p1{width:auto;min-width:240px}
   .so-cat__card{padding:26px 22px 24px}
-  .so-use img{height:240px}
   .so-layers{grid-template-columns:repeat(4, minmax(0,1fr));gap:16px}
 }
 @media(min-width:1024px){
   .so-block h2{font-size:clamp(2rem, 3.2vw, 2.75rem)}
-  .so-use img{height:260px}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -2188,7 +2169,8 @@ body{overflow-x:clip}
   border-radius:var(--so-radius-md, 6px);
   background:#080808;
   border:1px solid var(--so-chrome-line, rgba(255,255,255,.08));
-  aspect-ratio:4/5;
+  aspect-ratio:768 / 1364;
+  position:relative;
 }
 .so-gallery__viewport::-webkit-scrollbar{display:none}
 .so-gallery__track{
@@ -2201,7 +2183,8 @@ body{overflow-x:clip}
   scroll-snap-align:start;
   min-width:0;
   height:100%;
-  overflow:hidden;
+  position:relative;
+  background:#080808;
 }
 .so-gallery .gal-zoom-btn,
 .so-gallery picture{
@@ -2210,23 +2193,16 @@ body{overflow-x:clip}
   height:100%;
   padding:0;border:0;background:none;
   cursor:zoom-in;color:inherit;font:inherit;
+  position:absolute;
+  inset:0;
 }
 .so-gallery__slide img{
   width:100%;
   height:100%;
-  object-fit:cover;
-  object-position:center 40%;
+  object-fit:contain;
+  object-position:center center;
   display:block;
   background:#080808;
-}
-.so-gallery__slide--wide img{
-  object-position:center 45%;
-}
-.so-gallery__slide--edc img{
-  object-position:center 55%;
-}
-.so-gallery__slide--office img{
-  object-position:center 38%;
 }
 .so-gallery .gal-zoom-btn:focus-visible{
   outline:2px solid var(--so-lime, #B8FF57);
@@ -2305,8 +2281,10 @@ body{overflow-x:clip}
 .so-gallery__thumbs img{
   width:100%;
   height:100%;
-  object-fit:cover;
+  object-fit:contain;
+  object-position:center center;
   display:block;
+  background:#080808;
 }
 @media(min-width:960px){
   .so-gallery__thumbs button{
@@ -2465,7 +2443,7 @@ body{overflow-x:clip}
   .so-gallery__thumbs button[aria-selected="true"]{
     border-color:var(--so-chrome-ink, #F4F4F4);
   }
-  .so-gallery__thumbs img{width:100%;height:64px;object-fit:cover;display:block}
+  .so-gallery__thumbs img{width:100%;height:100%;object-fit:contain;object-position:center center;display:block;background:#080808}
   .so-gallery__thumbs button:focus-visible{
     outline:2px solid var(--so-lime, #B8FF57);
     outline-offset:2px;
@@ -2969,9 +2947,11 @@ html.sf-modal-open .so-sticky{
 }
 .so-scale-visuals img{
   width:100%;
-  height:100%;
-  object-fit:cover;
-  aspect-ratio:4/5;
+  height:auto;
+  object-fit:contain;
+  object-position:center center;
+  display:block;
+  background:#080808;
 }
 .so-scale-facts{
   display:flex;
@@ -3432,8 +3412,8 @@ html.sf-modal-open .so-sticky{
   margin-top:28px;
 }
 .so-scenarios-3 .so-media img{
-  object-fit:cover;
-  object-position:center 52%;
+  object-fit:contain;
+  object-position:center center;
 }
 @media(min-width:860px){
   .so-scenarios-3{
@@ -3567,174 +3547,24 @@ html.sf-modal-open .so-sticky{
   color:var(--so-chrome-muted, #C8C8C8);
 }
 
-
-
-
-
 /* =====================================================================
-   PHOTOGRAPHY — FILL THE FRAME (last word in the cascade).
-   Campaign stills are 768×1364 (9:16). A later contain + height:auto
-   rule letterboxed them in black boxes and inset them from the screen.
-   These images COVER a full-width stage: edge-to-edge on mobile, 4/5
-   product cards on desktop. Never contain. Never height:auto on img.
-   Never pair aspect-ratio with max-height (that shrinks width).
+   PHOTOGRAPHY — preserve the full frame (canonical, no overrides).
+
+   Campaign stills are 768×1364 (9:16). PDP stills are 1196×1315 (~0.91).
+   Blog stills are 1920×1080 (16:9).
+
+   Two rendering modes, chosen by purpose:
+
+   1. Natural (hero, .so-media, editorial):
+      wrapper sizes to the image. img is width:100%; height:auto.
+      The photograph keeps its intrinsic ratio. Nothing is cropped.
+
+   2. Framed contain (gallery viewport, thumbs, lightbox):
+      the wrapper owns a frame (gallery uses 768/1364 to match campaign
+      stills). img is width:100%; height:100%; object-fit:contain.
+      Mixed-ratio slides letterbox. The bottle is never cut.
+
+   Do not reintroduce object-fit:cover on product photography.
+   Do not absolutely fill + cover a 4/5 or svh box.
+   Empty space around a contained photo is correct.
    ===================================================================== */
-
-html body .so-hero__visual,
-html body .so-media,
-html body .so-gallery__viewport,
-html body .so-gallery__slide{
-  overflow:hidden !important;
-  background:#080808 !important;
-}
-
-html body .so-hero__visual picture,
-html body .so-media picture,
-html body .so-gallery__slide picture,
-html body .so-gallery .gal-zoom-btn{
-  display:block !important;
-  position:absolute !important;
-  inset:0 !important;
-  width:100% !important;
-  height:100% !important;
-  margin:0 !important;
-  padding:0 !important;
-  border:0 !important;
-  background:transparent !important;
-}
-
-html body .so-hero__visual img,
-html body .so-media img,
-html body .so-gallery__slide img{
-  display:block !important;
-  position:absolute !important;
-  inset:0 !important;
-  width:100% !important;
-  height:100% !important;
-  max-width:none !important;
-  max-height:none !important;
-  object-fit:cover !important;
-  margin:0 !important;
-  padding:0 !important;
-  border:0 !important;
-  border-radius:0 !important;
-}
-
-html body .so-media{
-  position:relative !important;
-  width:100% !important;
-  aspect-ratio:4 / 5 !important;
-  height:auto !important;
-  min-height:0 !important;
-  padding:0 !important;
-  margin-inline:0 !important;
-}
-
-html body .so-hero__visual{
-  position:relative !important;
-  width:100% !important;
-  padding:0 !important;
-  margin:0 !important;
-  border-radius:0 !important;
-}
-
-/* Subject-aware crops so the bottle / face / spray stay in frame */
-html body .so-hero__visual img{
-  object-position:center 40% !important;
-}
-html body .so-prob__stage .so-media img{
-  object-position:center 70% !important;
-}
-html body .so-ritual__stage .so-media img{
-  object-position:30% 16% !important;
-}
-html body .so-scenarios-3 .so-media img{
-  object-position:center 58% !important;
-}
-html body .so-gallery__slide img{
-  object-position:center 40% !important;
-}
-html body .so-gallery__slide--wide img{
-  object-position:center 42% !important;
-}
-html body .so-gallery__slide--edc img{
-  object-position:center 58% !important;
-}
-html body .so-gallery__slide--office img{
-  object-position:center 70% !important;
-}
-
-html body .so-gallery__viewport{
-  aspect-ratio:4 / 5 !important;
-  position:relative !important;
-}
-html body .so-gallery__slide,
-html body .so-gallery .gal-zoom-btn{
-  width:100% !important;
-  height:100% !important;
-}
-
-/* Mobile: photos leave the 20px text gutter and fill the screen */
-@media (max-width:767px){
-  html body .so-hero{
-    padding:0 !important;
-  }
-  html body .so-hero__visual{
-    width:100% !important;
-    max-width:none !important;
-    aspect-ratio:auto !important;
-    height:48svh !important;
-    max-height:none !important;
-    min-height:0 !important;
-    border-radius:0 !important;
-  }
-  html body .so-prob__stage,
-  html body .so-ritual__stage,
-  html body .so-scenarios-3{
-    gap:18px !important;
-    margin-top:12px !important;
-  }
-  html body .so-prob__stage .so-media,
-  html body .so-ritual__stage .so-media,
-  html body .so-scenarios-3 .so-media{
-    width:100vw !important;
-    max-width:100vw !important;
-    margin-left:calc(50% - 50vw) !important;
-    margin-right:calc(50% - 50vw) !important;
-    border-radius:0 !important;
-    border:0 !important;
-    aspect-ratio:auto !important;
-    height:64svh !important;
-    min-height:0 !important;
-  }
-  html body .so-shop .so-gallery{
-    width:100vw;
-    max-width:100vw;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-  }
-  html body .so-gallery__viewport{
-    border-radius:0 !important;
-    border-left:0 !important;
-    border-right:0 !important;
-    aspect-ratio:auto !important;
-    height:64svh !important;
-  }
-}
-
-@media (min-width:768px){
-  html body .so-hero__visual{
-    aspect-ratio:auto !important;
-    height:100% !important;
-    max-height:none !important;
-    min-height:0 !important;
-    border-radius:0 !important;
-  }
-  html body .so-media{
-    border-radius:14px !important;
-    border:1px solid rgba(255,255,255,.08) !important;
-    aspect-ratio:4 / 5 !important;
-    height:auto !important;
-    min-height:0 !important;
-  }
-}
