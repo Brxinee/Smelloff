@@ -119,7 +119,7 @@
 /* Ghost/secondary: hairline outline instead of the old 3px slab. */
 .btn-ghost,.nb-btn--ghost{
   background:transparent !important;
-  border:var(--hair-strong) solid var(--rule-strong) !important;
+  border:var(--hair-strong) solid var(--color-border-strong) !important;
   color:var(--text) !important;
 }
 /* Stage 1 chrome buttons must not inherit bounce / uppercase / pill radius. */
@@ -149,7 +149,7 @@
 .b-card,.guide-card,.card,.rv-card,.review,.price-card,
 .end-cta,.read-next,.b-buy-card,.nf-card,.contact-card,.track-card{
   border-radius:var(--sq-lg) !important;
-  border:var(--hair) solid var(--rule) !important;
+  border:var(--hair) solid var(--color-border) !important;
   box-shadow:none !important;
   background:var(--surface);
   overflow:hidden;
@@ -164,7 +164,7 @@
   .zone:hover,.voice:hover,.faq-item:hover,.b-card:hover,.guide-card:hover,
   .card:hover,.rv-card:hover,.product-visual:hover{
     transform:translateY(-3px) !important;
-    border-color:var(--rule-strong) !important;
+    border-color:var(--color-border-strong) !important;
     box-shadow:none !important;
     background:var(--surface-2);
   }
@@ -179,7 +179,7 @@
    radius on the band rather than each cell. */
 .benefits-strip{
   border-radius:var(--sq-xl);
-  border:var(--hair) solid var(--rule) !important;
+  border:var(--hair) solid var(--color-border) !important;
   overflow:hidden;
   margin-inline:auto;
   max-width:var(--maxw);
@@ -188,7 +188,7 @@
 .benefits-strip .trust-row li{
   border-radius:0 !important;
   border:0 !important;
-  border-right:var(--hair) solid var(--rule) !important;
+  border-right:var(--hair) solid var(--color-border) !important;
   background:transparent;
 }
 .benefits-strip .trust-row li:last-child{border-right:0 !important}
@@ -227,7 +227,7 @@
    --------------------------------------------------------------------- */
 .faq details,details.faq-item,details.faq-q,.faq-list details{
   border-radius:var(--sq-lg) !important;
-  border:var(--hair) solid var(--rule) !important;
+  border:var(--hair) solid var(--color-border) !important;
   background:var(--surface);
   padding:0 !important;
   overflow:hidden;
@@ -235,7 +235,7 @@
 }
 details.faq-item[open],.faq details[open],.faq-list details[open]{
   background:var(--surface-2);
-  border-color:var(--rule-strong) !important;
+  border-color:var(--color-border-strong) !important;
 }
 details.faq-item > summary,.faq details > summary,.faq-list details > summary{
   cursor:pointer;
@@ -247,7 +247,7 @@ details.faq-item > summary,.faq details > summary,.faq-list details > summary{
      site reads at one size in one face. The homepage set Fraunces on its
      nested <h3> instead, which is why its questions came out in the display
      face at 25px while everyone else's were 19px. */
-  font-family:var(--display);
+  font-family:var(--font-display);
   font-weight:900;
   font-size:clamp(16px,2.2vw,19px);
   line-height:1.35;
@@ -343,7 +343,7 @@ details[open] .faq-answer-wrap{grid-template-rows:1fr}
    4 · NAV + CART DRAWER
    --------------------------------------------------------------------- */
 header.site,nav.site-nav,.b-nav{
-  border-bottom:var(--hair) solid var(--rule) !important;
+  border-bottom:var(--hair) solid var(--color-border) !important;
 }
 .nav-links a,.b-nav a{border-radius:var(--sq-sm)}
 .cart-btn,.nav-toggle,.b-nav-btn{border-radius:var(--sq-pill)}
@@ -353,24 +353,24 @@ header.site,nav.site-nav,.b-nav{
 .cart-drawer,.overlay-panel,.minicart,#cartDrawer,.drawer,
 .b-drawer,.checkout-panel{
   border-radius:var(--sq-xl) 0 0 var(--sq-xl);
-  border-left:var(--hair) solid var(--rule);
+  border-left:var(--hair) solid var(--color-border);
 }
 @media(max-width:640px){
   .cart-drawer,.overlay-panel,.minicart,#cartDrawer,.drawer,
   .b-drawer,.checkout-panel{
     border-radius:var(--sq-xl) var(--sq-xl) 0 0;
     border-left:0;
-    border-top:var(--hair) solid var(--rule);
+    border-top:var(--hair) solid var(--color-border);
   }
 }
 .cart-item,.cart-line,.mc-item{border-radius:var(--sq-md);overflow:hidden}
 .cart-line-img,.mc-item img{border-radius:var(--sq-xs);overflow:hidden}
 .cart-checkout,.cart-empty .btn{border-radius:var(--sq-sm) !important;box-shadow:none !important}
 .cart-close,.b-drawer-close,.overlay-close{border-radius:var(--sq-pill)}
-.cart-stepper,.cart-qty{border-radius:var(--sq-pill);overflow:hidden;border:var(--hair) solid var(--rule)}
+.cart-stepper,.cart-qty{border-radius:var(--sq-pill);overflow:hidden;border:var(--hair) solid var(--color-border)}
 .b-drawer-cat,.filter-chip,.b-jump-pill{
   border-radius:var(--sq-pill) !important;
-  border:var(--hair) solid var(--rule) !important;
+  border:var(--hair) solid var(--color-border) !important;
 }
 .b-drawer-cat.active,.filter-chip.active{
   background:var(--acid) !important;color:var(--on-acid) !important;border-color:var(--acid) !important;
@@ -382,7 +382,7 @@ header.site,nav.site-nav,.b-nav{
 input[type="text"],input[type="email"],input[type="tel"],input[type="search"],
 input[type="number"],textarea,select,.b-search,.field input,.form-input{
   border-radius:var(--sq-sm) !important;
-  border:var(--hair) solid var(--rule) !important;
+  border:var(--hair) solid var(--color-border) !important;
   background:var(--surface) !important;
   color:var(--text);
   transition:border-color .2s var(--ease);
