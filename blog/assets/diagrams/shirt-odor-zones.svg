@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="720" viewBox="0 0 1600 720" role="img" aria-labelledby="t d">
+  <title id="t">Three shirt zones that hold odor: collar, underarms, upper back</title>
+  <desc id="d">A simple map of an office shirt. Almost all retained odor lives in the inner collar band, both underarm panels, and the upper back between the shoulder blades.</desc>
+  <rect width="1600" height="720" fill="#080808"/>
+  <text x="80" y="64" fill="#B8FF57" font-family="ui-monospace, Menlo, monospace" font-size="18" letter-spacing="4">THREE ZONES · ONE SHIRT</text>
+  <g fill="none" stroke="#F4F1EA" stroke-width="3">
+    <path d="M700 150 L800 120 L900 150 L940 230 L940 560 L800 620 L660 560 L660 230 Z"/>
+    <path d="M700 150 Q800 190 900 150"/>
+    <path d="M660 260 L600 340 L660 390"/>
+    <path d="M940 260 L1000 340 L940 390"/>
+  </g>
+  <circle cx="800" cy="175" r="10" fill="#B8FF57"/>
+  <circle cx="640" cy="330" r="10" fill="#B8FF57"/>
+  <circle cx="960" cy="330" r="10" fill="#B8FF57"/>
+  <circle cx="800" cy="280" r="10" fill="#B8FF57"/>
+  <g fill="#F4F1EA" font-family="Georgia, serif" font-size="28">
+    <text x="80" y="200">1  Inner collar</text>
+    <text x="80" y="250" fill="#9A958D" font-size="20">Sebum ring in a fused band.</text>
+    <text x="80" y="360">2  Underarm panels</text>
+    <text x="80" y="410" fill="#9A958D" font-size="20">Heat, lipid, a multi-layer seam.</text>
+    <text x="80" y="520">3  Upper back</text>
+    <text x="80" y="570" fill="#9A958D" font-size="20">Chair, bag, no airflow.</text>
+  </g>
+  <text x="1100" y="520" fill="#9A958D" font-family="Georgia, serif" font-size="20">Chest, sleeves and the outer</text>
+  <text x="1100" y="552" fill="#9A958D" font-family="Georgia, serif" font-size="20">front take almost none of it.</text>
+</svg>
