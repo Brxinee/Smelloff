@@ -1,32 +1,34 @@
 // /api/track — first-party, cookieless analytics + cart beacon (full funnel).
-//
-// The client (assets/js/track.js) posts here same-origin. What it records:
-//   • pageview        -> a row in `page_views`   (path, device, country, ref, visitor)
-//   • any other event -> a row in `events`       (click, product_view, add_to_cart, …)
-//   • cart snapshots  -> an upsert into `carts`  (who has what in their basket)
-//   • purchase        -> marks the matching cart `converted`
-//
-// Everything identifying is derived server-side: device from the User-Agent,
-// country from Vercel's geo header, and an anonymous `visitor` id that is a
-// DAILY-ROTATING one-way hash of (date + ip + ua + secret salt). The raw IP is
-// never stored — no cookie, no client storage, no PII at rest. This is the
-// privacy-first model (à la Plausible), which is why it needs no consent
-// banner. The legacy { p, r } pageview payload is still accepted so cached
-// pages keep counting during rollout.
-//
-// Env: SUPABASE_SERVICE_ROLE_KEY (required), SUPABASE_URL (optional),
-//      ANALYTICS_SALT (optional — else derived from the service-role key).
-
+// Privacy-first: daily rotating server-side visitor hash, no raw IP/PII at rest.
 import crypto from 'node:crypto';
+import { isAllowedOrigin } from './_security.js';
 
 const SUPABASE_URL =
   process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 
-const BOT_RE = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quora|pinterest|vkshare|whatsapp|telegram|preview|monitor|lighthouse|headless|pingdom|uptime|curl|wget|python-requests|axios|node-fetch|go-http/i;
+const ALLOWED_ORIGINS = new Set([
+  'https://smelloff.in',
+  'https://www.smelloff.in',
+]);
 
-// Funnel event types that imply the session has a live cart even when no
-// snapshot rides along.
-const CART_EVENTS = new Set(['add_to_cart', 'remove_from_cart', 'cart', 'cart_update']);
+// Public event contract. Unknown event names are dropped instead of becoming
+// arbitrary Supabase writes.
+const ALLOWED_EVENTS = new Set([
+  'pageview', 'click', 'product_view', 'view_content', 'select_content',
+  'buy_cta_click', 'add_to_cart', 'remove_from_cart', 'cart', 'cart_update',
+  'begin_checkout', 'checkout_start', 'payment_method_select', 'checkout_field_fill',
+  'checkout_error', 'add_payment_info', 'purchase', 'purchase_confirmed',
+  'refund', 'contact_submit', 'review_submit', 'search', 'error',
+  'countdown_view', 'form_start', 'name_completed', 'phone_completed',
+  'email_completed', 'form_submit', 'form_success', 'share_click',
+  'whatsapp_share', 'copy_link', 'page_scroll_50', 'page_scroll_90'
+]);
+
+const CART_EVENTS = new Set(['add_to_cart', 'remove_from_cart', 'cart', 'cart_update', 'checkout_start']);
+const BOT_RE = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quora|pinterest|vkshare|whatsapp|telegram|preview|monitor|lighthouse|headless|pingdom|uptime|curl|wget|python-requests|axios|node-fetch|go-http/i;
+const MAX_BODY_BYTES = 24 * 1024;
+const MAX_META_KEYS = 24;
+const MAX_META_DEPTH = 2;
 
 function deviceFrom(ua) {
   if (!ua) return 'other';
@@ -40,15 +42,13 @@ function refHost(referrer, selfHost) {
   if (!referrer || typeof referrer !== 'string') return null;
   try {
     const h = new URL(referrer).hostname.replace(/^www\./, '').toLowerCase();
-    if (!h || h === selfHost || h.endsWith('smelloff.in')) return null; // internal nav
+    if (!h || h === selfHost || h.endsWith('smelloff.in')) return null;
     return h.slice(0, 255);
   } catch {
     return null;
   }
 }
 
-// Same derivation the original pageview-only beacon used, so visitor hashes
-// stay continuous across the upgrade and identical between page_views/events.
 function salt() {
   if (process.env.ANALYTICS_SALT) return process.env.ANALYTICS_SALT;
   return crypto
@@ -57,24 +57,14 @@ function salt() {
     .digest('hex');
 }
 
-// smelloff.in is proxied through Cloudflare, so the IP that connects to
-// Vercel — and what Vercel writes into x-forwarded-for and
-// x-vercel-ip-country — is a Cloudflare POP, not the visitor. Cloudflare
-// passes the real client in cf-connecting-ip (true-client-ip on Enterprise),
-// so those win; without them every visitor behind one POP with the same UA
-// collapses into a single visitor hash.
 function clientIp(req) {
   const pick = (v) => String(Array.isArray(v) ? v[0] : v || '').split(',')[0].trim();
-  const cf = pick(req.headers['cf-connecting-ip']) || pick(req.headers['true-client-ip']);
-  if (cf) return cf;
-  return pick(req.headers['x-forwarded-for']) || 'unknown';
+  return pick(req.headers['cf-connecting-ip'])
+    || pick(req.headers['true-client-ip'])
+    || pick(req.headers['x-forwarded-for'])
+    || 'unknown';
 }
 
-// Visitor country, same Cloudflare caveat: x-vercel-ip-country geolocates
-// whoever connected to Vercel — behind Cloudflare that's the POP (US/SG/…),
-// which is why India never appeared in the admin's countries panel.
-// Cloudflare's cf-ipcountry carries the real visitor country and takes
-// priority. 'XX' (unknown) and 'T1' (Tor) mean "no data".
 function countryFrom(req) {
   const pick = (v) => String(Array.isArray(v) ? v[0] : v || '').trim().toUpperCase();
   const c = pick(req.headers['cf-ipcountry']) || pick(req.headers['x-vercel-ip-country']);
@@ -83,8 +73,7 @@ function countryFrom(req) {
 
 function visitorHash(req, ua) {
   const day = new Date().toISOString().slice(0, 10);
-  return crypto
-    .createHash('sha256')
+  return crypto.createHash('sha256')
     .update(`${day}|${clientIp(req)}|${ua}|${salt()}`)
     .digest('base64url')
     .slice(0, 32);
@@ -99,8 +88,27 @@ function cleanPath(raw) {
   return path.split('#')[0].split('?')[0].slice(0, 512);
 }
 
-// Best-effort per-warm-instance rate limit (spam guard on a public route).
-const RL_LIMIT = 240; // events per IP per minute
+function safeMeta(value, depth = 0) {
+  if (depth > MAX_META_DEPTH) return null;
+  if (value == null) return null;
+  if (typeof value === 'string') return value.slice(0, 240);
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (typeof value === 'boolean') return value;
+  if (Array.isArray(value)) return value.slice(0, 20).map(v => safeMeta(v, depth + 1));
+  if (typeof value === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(value).slice(0, MAX_META_KEYS)) {
+      const key = String(k).slice(0, 80);
+      if (/token|secret|password|authorization|cookie|raw_ip|ip_address|email|phone|address/i.test(key)) continue;
+      out[key] = safeMeta(v, depth + 1);
+    }
+    return out;
+  }
+  return null;
+}
+
+// Best-effort per-warm-instance rate limit.
+const RL_LIMIT = 180;
 const RL_WINDOW_MS = 60 * 1000;
 const buckets = new Map();
 function rateLimited(ip) {
@@ -135,30 +143,37 @@ async function sbWrite(path, body, { method = 'POST', headers = {} } = {}) {
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   const origin = req.headers.origin;
-  if (origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Vary', 'Origin');
-  }
-  if (req.method === 'OPTIONS') return res.status(204).end();
-  // The beacon is same-origin; keep the surface tiny.
-  if (req.method !== 'POST') return res.status(405).end();
 
-  // Fail silently on any problem — analytics must never surface an error to a
-  // shopper or slow a page down. Always answer 204.
+  if (req.method === 'OPTIONS') {
+    if (origin && !isAllowedOrigin(origin)) return res.status(403).end();
+    if (origin) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      res.setHeader('Vary', 'Origin');
+    }
+    return res.status(204).end();
+  }
+
+  if (req.method !== 'POST') return res.status(405).end();
+  if (origin && !isAllowedOrigin(origin)) return res.status(204).end();
+
+  // Fail silently: analytics must never surface an error to shoppers.
   try {
     if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return res.status(204).end();
 
     const ua = String(req.headers['user-agent'] || '');
-    if (!ua || BOT_RE.test(ua)) return res.status(204).end(); // drop bots/monitors
+    if (!ua || BOT_RE.test(ua)) return res.status(204).end();
     if (rateLimited(clientIp(req))) return res.status(204).end();
 
     const body = req.body && typeof req.body === 'object' ? req.body : {};
-    // Legacy shape { p, r } == a pageview; new shape carries type/path/ref.
+    // Keep the public write surface bounded even if the platform already parsed JSON.
+    if (JSON.stringify(body).length > MAX_BODY_BYTES) return res.status(204).end();
+
     const type = str(body.type, 48) || 'pageview';
+    if (!ALLOWED_EVENTS.has(type)) return res.status(204).end();
+
     const path = cleanPath(body.path != null ? body.path : body.p);
-    // Never record admin/api traffic.
     if (/^\/(admin|api)(\/|$)/.test(path)) return res.status(204).end();
 
     const visitor = visitorHash(req, ua);
@@ -172,27 +187,24 @@ export default async function handler(req, res) {
         path, referrer_host: referrer, device, country, visitor,
       });
     } else {
-      // Every non-pageview lands in the generic event stream.
+      const numericValue = body.value == null ? null : Number(body.value);
       await sbWrite('events', {
         type,
         path,
         label: str(body.label, 200),
-        value: body.value == null ? null : Number(body.value),
+        value: Number.isFinite(numericValue) ? numericValue : null,
         visitor,
         session_id: sessionId,
         device,
         country,
         referrer_host: referrer,
-        meta: (body.meta && typeof body.meta === 'object') ? body.meta : {},
+        meta: safeMeta(body.meta) || {},
       });
     }
 
-    // Cart state: upsert on any cart change so the admin sees live baskets.
-    // Only the fields actually supplied are written — a contact-only update
-    // never blanks previously captured items, and vice versa.
     const cart = body.cart && typeof body.cart === 'object' ? body.cart : null;
     if (sessionId && (cart || CART_EVENTS.has(type))) {
-      const contact = (cart && cart.contact) || body.contact || {};
+      const contact = (cart && cart.contact) || {};
       const row = {
         session_id: sessionId,
         updated_at: new Date().toISOString(),
@@ -203,22 +215,21 @@ export default async function handler(req, res) {
       };
       if (cart) {
         if (Array.isArray(cart.items)) {
-          row.items = cart.items.slice(0, 50);
+          row.items = cart.items.slice(0, 20).map(item => safeMeta(item));
           row.item_count = intOf(cart.item_count != null ? cart.item_count : row.items.length);
         }
-        if (cart.total != null) row.total = intOf(cart.total);
+        if (cart.total != null) row.total = Math.max(0, intOf(cart.total));
         if (cart.currency) row.currency = str(cart.currency, 8);
       }
-      if (contact.name) row.contact_name = str(contact.name, 120);
-      if (contact.email) row.contact_email = str(String(contact.email).toLowerCase(), 200);
-      if (contact.phone) row.contact_phone = str(contact.phone, 32);
+      // Deliberately do not store contact details in the analytics cart table.
+      // Checkout/order tables own customer identity.
+      if (contact && typeof contact === 'object') row.contact_captured = Boolean(contact.name || contact.email || contact.phone);
 
       await sbWrite('carts?on_conflict=session_id', row, {
         headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
       });
     }
 
-    // Purchase: close out the session's cart as converted.
     if (type === 'purchase' && sessionId) {
       await sbWrite(`carts?session_id=eq.${encodeURIComponent(sessionId)}`, {
         status: 'converted',
