@@ -113,7 +113,7 @@ ${SKIP}
 ${navLis(NAV_ITEMS)}
           </ul>
         </nav>
-        <a href="/#buy" class="sf-hdr__cta so-btn so-btn--p1" data-smelloff-buy="header">Buy ₹${PRICE}</a>
+        <a href="/#buy" class="sf-hdr__cta so-btn so-btn--p1" data-smelloff-buy="header">Buy ODORSTRIKE — ₹${PRICE}</a>
         <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
           <span></span><span></span><span></span>
         </button>
