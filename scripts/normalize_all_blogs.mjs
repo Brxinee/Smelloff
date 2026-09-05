@@ -102,6 +102,10 @@ for (const file of files) {
                     inner.match(/<img[^>]*class="[^"]*blog-hero[^"]*"[^>]*>/i);
   if (heroMatch) {
     heroHtml = heroMatch[0].trim();
+  } else {
+    // Generate canonical fallback hero picture for the article
+    const h1Text = h1Html.replace(/<[^>]+>/g, '').trim() || 'ODORSTRIKE Fabric Odor Mist';
+    heroHtml = `<picture><source type="image/webp" srcset="/blog/assets/${slug}@1200.webp 1200w, /blog/assets/${slug}.webp 1920w" sizes="(min-width: 900px) 820px, 100vw"><img class="blog-hero" src="/blog/assets/${slug}.jpg" alt="${h1Text.replace(/"/g, '&quot;')} — Smelloff ODORSTRIKE" width="1200" height="630" loading="eager" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='/assets/og-image.jpg';"></picture>`;
   }
 
   // Extract dek / summary

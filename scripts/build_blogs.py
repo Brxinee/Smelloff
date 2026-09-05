@@ -176,7 +176,7 @@ def build_post(cfg):
     <h4>ODORSTRIKE — 50ml. Pocket. Pan-India.</h4>
     <p style="color:var(--grey);font-size:16px;margin-bottom:20px;">Zinc PCA + β-Cyclodextrin. Neutralises odor in approximately 10 seconds. Made in Hyderabad. COD pan-India.</p>
     <div class="price-row">
-      <span class="strike-price">₹579</span>
+      <span class="strike-price">₹499</span>
       <span class="current-price">₹229</span>
     </div>
     <a href="/#buy" class="buy-btn">BUY NOW →</a>

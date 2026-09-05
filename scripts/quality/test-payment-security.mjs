@@ -134,7 +134,7 @@ await runAttackTest(3, 'Order ownership forgery with mismatched phone/token -> B
 
 // ATTACK 4: Attempt client-side price tampering in calculateOrderTotal
 await runAttackTest(4, 'Tamper with unit price or amount -> Server strictly recalculates authoritative total', () => {
-  // Quantity 1 - Prepaid (Solo ₹229)
+  // Quantity 1 - Prepaid (₹229)
   const q1Prepaid = calculateOrderTotal(1, 'upi');
   assert.strictEqual(q1Prepaid.qty, 1);
   assert.strictEqual(q1Prepaid.subtotal, 229);
@@ -146,7 +146,7 @@ await runAttackTest(4, 'Tamper with unit price or amount -> Server strictly reca
   assert.strictEqual(q1Prepaid.sku, 'OS-001-50ML');
   assert.strictEqual(q1Prepaid.isCod, false);
 
-  // Quantity 1 - COD (Solo ₹229 + ₹60 = ₹289)
+  // Quantity 1 - COD (₹229 + ₹60 = ₹289)
   const q1Cod = calculateOrderTotal(1, 'cod');
   assert.strictEqual(q1Cod.qty, 1);
   assert.strictEqual(q1Cod.subtotal, 229);

@@ -51,7 +51,7 @@
   function unitPrice() { return 229; }
 
   // ============================================================
-  // CART — ODORSTRIKE 50ml (Solo, Duo, Trio supported), quantity persists in localStorage.
+  // CART — ODORSTRIKE 50ml (Single-SKU ₹229), quantity persists in localStorage.
   // Buy CTAs add to the cart and open the drawer; checkout reads cart qty.
   // ============================================================
   var CART_KEY = 'smelloff_cart_v1';

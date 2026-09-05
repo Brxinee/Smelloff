@@ -222,7 +222,7 @@ POSTS.append({
 
   <h2>The Verdict</h2>
 
-  <p>If you searched "spray to remove sweat smell from clothes instantly," the answer is a fabric odor mist with Zinc PCA. ODORSTRIKE is India's pocket-sized version — 50 ml, ₹229 launch (₹579 MRP), made in Hyderabad, ships pan-India with COD. It dries in 10 seconds, neutralises rather than masks, and fits in any pocket.</p>
+  <p>If you searched "spray to remove sweat smell from clothes instantly," the answer is a fabric odor mist with Zinc PCA. ODORSTRIKE is India's pocket-sized version — 50 ml, ₹229 launch (₹499 MRP), made in Hyderabad, ships pan-India with COD. It dries in 10 seconds, neutralises rather than masks, and fits in any pocket.</p>
 
   <p>That's it. The category is small. The chemistry is settled. The tool exists. Use it before the next meeting.</p>
 """,
@@ -302,7 +302,7 @@ POSTS.append({
     <li><strong>Carrier: 86% distilled water + 5% IPA.</strong> Flash-off in under 10 seconds on cotton. Penetrates fibre structure where odor compounds actually live.</li>
     <li><strong>Fragrance load: 1%.</strong> Light enough that the shirt smells neutral, not perfumed. Fades in 60 seconds.</li>
     <li><strong>Bottle: 50 ml. ~400–500 sprays. Pocket fit.</strong></li>
-    <li><strong>Price: ₹229 launch (₹579 MRP). Pan-India COD. Free shipping across India.</strong></li>
+    <li><strong>Price: ₹229 launch (₹499 MRP). Pan-India COD. Free shipping across India.</strong></li>
     <li><strong>Tested on:</strong> Cotton, polyester, denim, wool. Spot-test recommended on silk; not for leather or suede.</li>
   </ul>
 
@@ -525,7 +525,7 @@ POSTS.append({
 
   <h2>The Price Math</h2>
 
-  <p>Launch price: ₹229. Estimated sprays per 50 ml bottle: 400. That's ₹0.57 per spray. For one shirt-fresh use (4 sprays), that's ₹2.29. Cheaper than a single coffee. Cheaper than a bus ticket. The Duo at ₹399 brings per-bottle cost down to ₹199.50, and the Trio at ₹549 to ₹183. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">where to buy ODORSTRIKE in India</a> has the full pack and shipping breakdown.</p>
+  <p>Price: ₹229 prepaid UPI with free shipping pan-India (or ₹289 COD). Estimated sprays per 50 ml bottle: ~250. For targeted collar/underarm refresh (2–3 sprays), that gives ~100 uses — roughly ₹2.29 per refresh. Cheaper than a single cup of tea. Available direct at <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>.</p>
 
   <h2>The Verdict</h2>
 
@@ -542,7 +542,7 @@ POSTS.append({
         },
         {
             "q": "Is ODORSTRIKE worth ₹229 for daily office use?",
-            "a": "At approximately 400 sprays per 50 ml bottle and 4 sprays per shirt, a single bottle gives 100 shirt-fresh uses — roughly ₹2.29 per fresh shirt. For daily Indian office wear, especially with bike commutes or AC re-wear cycles, the per-use cost is lower than a cup of tea. The Duo and Trio packs reduce the per-bottle price further to ₹199.50 and ₹183 respectively."
+            "a": "At approximately 250 sprays per 50 ml bottle and 2–3 sprays per shirt, a single bottle gives ~100 refreshes — roughly ₹2.29 per fresh shirt. For daily Indian office wear, especially with bike commutes or AC re-wear cycles, the per-use cost is lower than a cup of tea."
         },
         {
             "q": "Does ODORSTRIKE leave stains on white shirts?",
@@ -563,12 +563,12 @@ POSTS.append({
     "title_tag": "Where to Buy ODORSTRIKE in India 2026 | Smelloff",
     "headline": "Where to Buy ODORSTRIKE in India",
     "h1": "Where to Buy ODORSTRIKE in India <em>(Direct, COD, Free Shipping)</em>",
-    "dek": "Direct from smelloff.in. Pan-India COD. Free shipping across India. Dispatch within 48 hours. Solo ₹229. Duo ₹399. Trio ₹549. Here's everything in one page.",
-    "description": "Buy ODORSTRIKE direct at smelloff.in — pan-India COD, free shipping across India, dispatch within 48 hours. Solo ₹229, Duo ₹399, Trio ₹549.",
+    "dek": "Direct from smelloff.in. Pan-India COD (₹289). Free shipping pan-India on prepaid UPI (₹229). Dispatch within 48 hours. Here's everything in one page.",
+    "description": "Buy ODORSTRIKE direct at smelloff.in — pan-India COD (₹289), free shipping pan-India on prepaid UPI (₹229), dispatch within 48 hours.",
     "keywords": "where to buy odorstrike, buy odorstrike india, odorstrike price india, odorstrike cod, smelloff odorstrike buy, odorstrike 50ml price, fabric odor spray buy india",
     "section": "Buying Guide",
     "read_time": "6 min read",
-    "word_count": 1550,
+    "word_count": 1400,
     "next_read_url": "/blog/odorstrike-review-30-day-india-test",
     "next_read_title": "ODORSTRIKE Review: 30 Days, 4 Shirts, Real Results",
     "extra_jsonld": [
@@ -586,11 +586,11 @@ POSTS.append({
             "offers": [
                 {
                     "@type": "Offer",
-                    "name": "Solo (50ml × 1)",
+                    "name": "ODORSTRIKE 50ml",
                     "sku": "OS-001-50ML",
                     "price": "229.00",
                     "priceCurrency": "INR",
-                    "url": "https://smelloff.in/odorstrike#buy",
+                    "url": "https://smelloff.in/?buy=1",
                     "availability": "https://schema.org/InStock",
                     "itemCondition": "https://schema.org/NewCondition",
                     "priceValidUntil": "2027-12-31",
@@ -600,8 +600,8 @@ POSTS.append({
                         "shippingDestination": {"@type": "DefinedRegion", "addressCountry": "IN"},
                         "deliveryTime": {
                             "@type": "ShippingDeliveryTime",
-                            "handlingTime": {"@type": "QuantitativeValue", "minValue": 0, "maxValue": 1, "unitCode": "DAY"},
-                            "transitTime": {"@type": "QuantitativeValue", "minValue": 2, "maxValue": 7, "unitCode": "DAY"}
+                            "handlingTime": {"@type": "QuantitativeValue", "minValue": 0, "maxValue": 2, "unitCode": "DAY"},
+                            "transitTime": {"@type": "QuantitativeValue", "minValue": 3, "maxValue": 7, "unitCode": "DAY"}
                         }
                     },
                     "hasMerchantReturnPolicy": {
@@ -617,46 +617,34 @@ POSTS.append({
         }
     ],
     "body_html": """
-  <p class="drop-cap">If you searched "where to buy ODORSTRIKE in India," the answer is short: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. That's it. Direct from the brand, pan-India COD, free shipping across India, dispatched within 48 hours. The rest of this page is the detail — pack sizes, payment options, shipping windows, returns, and the founder's note on why I'm direct-to-consumer for now.</p>
+  <p class="drop-cap">If you searched "where to buy ODORSTRIKE in India," the answer is short: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. That's it. Direct from the brand, pan-India COD, free shipping on prepaid UPI across India, dispatched within 48 hours. The rest of this page is the detail — payment options, shipping windows, returns, and the founder's note on why I'm direct-to-consumer for now.</p>
 
   <h2>Where to Buy Right Now</h2>
 
-  <p>One canonical buy URL: <a href="/#buy" class="inline-cta">https://smelloff.in/#buy</a>. The same checkout sells the Solo, Duo, and Trio packs. UPI, cards, and COD all available. Pan-India delivery. WhatsApp + email tracking.</p>
+  <p>One canonical buy URL: <a href="/#buy" class="inline-cta">https://smelloff.in/#buy</a>. Single SKU: ODORSTRIKE 50ml (OS-001-50ML). UPI and COD available. Pan-India delivery. WhatsApp + email tracking.</p>
 
   <div class="callout">
-    <div class="callout-label">Pricing — Solo, Duo, Trio</div>
+    <div class="callout-label">Pricing</div>
     <table>
       <thead>
-        <tr><th>Pack</th><th>Price</th><th>Per Bottle</th></tr>
+        <tr><th>Product</th><th>Prepaid UPI</th><th>Cash on Delivery</th></tr>
       </thead>
       <tbody>
-        <tr><td>Solo (50 ml × 1)</td><td>₹229</td><td>₹229</td></tr>
-        <tr><td>Duo (50 ml × 2)</td><td>₹399</td><td>₹199.50</td></tr>
-        <tr><td>Trio (50 ml × 3)</td><td>₹549</td><td>₹183</td></tr>
+        <tr><td>ODORSTRIKE 50ml (~250 sprays)</td><td>₹229 (Free shipping)</td><td>₹289 (₹229 + ₹60 handling)</td></tr>
       </tbody>
     </table>
   </div>
 
-  <p>Standard MRP per bottle is ₹579. Launch pricing is ₹229 for Solo and bundle discounts on Duo/Trio. The Trio is the best per-bottle value at ₹183/bottle — useful if you ride to office daily or share with a partner.</p>
+  <p>MRP per bottle is ₹499. Price is ₹229 prepaid UPI with free shipping pan-India, or ₹289 COD.</p>
 
-  <h2>The Three Pack Sizes — Which One to Pick</h2>
+  <h2>ODORSTRIKE 50ml — Single SKU</h2>
+  <p>One 50ml bottle of ODORSTRIKE delivers approximately 250 sprays — enough for ~100 targeted refreshes at 2–3 sprays per shirt. Fits in an everyday pocket or sling bag.</p>
 
-  <h3>Solo (50 ml × 1) — ₹229</h3>
-  <p>For first-time buyers. One bottle of ODORSTRIKE delivers approximately 400 sprays — enough for 6 to 8 weeks of daily office use at 4 sprays per shirt. If you're testing the product or carry only one bag, this is the right entry point.</p>
-
-  <h3>Duo (50 ml × 2) — ₹399</h3>
-  <p>The honest sweet spot. ₹199.50 per bottle. Keep one in your office drawer and one in your gym bag. Or share with a partner. Or carry one and have a backup at home. The Duo is the pack most repeat customers move to.</p>
-
-  <h3>Trio (50 ml × 3) — ₹549</h3>
-  <p>Best per-bottle value at ₹183. Recommended for: heavy bike commuters, gym-to-office daily users, summer-onset stockup, or sharing across a household. One bottle each in office, gym bag, and travel kit is a clean setup.</p>
-
-  <h2>Payment Options — UPI, Cards, COD</h2>
+  <h2>Payment Options — UPI and COD</h2>
 
   <ul>
-    <li><strong>UPI</strong> — direct UPI ID at checkout, or via Razorpay UPI flow. Instant.</li>
-    <li><strong>Cards</strong> — credit and debit cards via Razorpay. Visa, Mastercard, RuPay, Amex.</li>
-    <li><strong>Cash on Delivery (COD)</strong> — available pan-India at no extra charge. Choose COD at checkout. Pay the delivery agent in cash on receipt.</li>
-    <li><strong>Net banking and wallets</strong> — also routed via Razorpay (PhonePe, Paytm, Amazon Pay, etc.).</li>
+    <li><strong>Prepaid UPI (₹229)</strong> — direct UPI flow. Free shipping pan-India. Dispatched within 48 hours of confirmation.</li>
+    <li><strong>Cash on Delivery (₹289)</strong> — ₹229 + ₹60 handling fee. Dispatched after phone confirmation. Pay cash at delivery.</li>
   </ul>
 
   <p>If a payment fails or shows pending after debit, see <a href="/payment-failed" class="inline-cta">our payment-failed policy</a> — we verify against UPI records within 24 hours and either confirm the order or refund within 5–7 business days.</p>
@@ -664,11 +652,10 @@ POSTS.append({
   <h2>Shipping Across India</h2>
 
   <ul>
-    <li><strong>Free shipping across India.</strong> Both Duo and Trio qualify automatically. Solo at ₹229 has a flat ₹79 shipping fee.</li>
-    <li><strong>Dispatch within 48 hours.</strong> Most orders dispatch the next business day from Hyderabad.</li>
-    <li><strong>Delivery: 3–5 business days metro,</strong> 5–7 business days tier-2/tier-3 cities. Tracking link sent via WhatsApp and email at dispatch.</li>
-    <li><strong>Carriers:</strong> Delhivery, Shadowfax, India Post (where private logistics don't reach). For tier-3 pin codes, India Post is often the fastest path.</li>
-    <li><strong>Pin code coverage:</strong> Pan-India. If your pin code shows "not deliverable" at checkout, email <a href="mailto:smelloffsupport@gmail.com" class="inline-cta">smelloffsupport@gmail.com</a> — most "blocked" codes can be served via India Post manually.</li>
+    <li><strong>Free shipping pan-India on prepaid UPI.</strong></li>
+    <li><strong>Dispatch within 48 hours of confirmation.</strong> Dispatches from Hyderabad.</li>
+    <li><strong>Delivery: 3–5 business days metro,</strong> 5–7 business days pan-India. Tracking link sent via WhatsApp and email at dispatch.</li>
+    <li><strong>Pin code coverage:</strong> Pan-India. If your pin code shows "not deliverable" at checkout, email <a href="mailto:smelloffsupport@gmail.com" class="inline-cta">smelloffsupport@gmail.com</a>.</li>
   </ul>
 
   <p>Full shipping policy on <a href="/shipping" class="inline-cta">/shipping</a>.</p>
@@ -677,9 +664,9 @@ POSTS.append({
 
   <p>This is a question I get a lot, so I'll answer honestly. Amazon takes roughly 26% of every D2C sale in India — referral fees, FBA, returns, advertising — by the time you're done, the marketplace has more of your margin than you do.</p>
 
-  <p>For a single-founder brand at launch, that margin matters. I'm reinvesting it in two places: better formulation (the v2 will move from 1.5% to 1.7% Zinc PCA after testing), and better unboxing (the duo and trio ship with a free fabric microfibre cloth that costs me ₹14/piece — Amazon would eat that line item).</p>
+  <p>For a single-founder brand at launch, that margin matters. I'm reinvesting it into high-grade formula ingredients (HPβCD and Zinc PCA) and customer support.</p>
 
-  <p>Amazon listing is planned for Q3 2026 once unit economics stabilise. Until then, smelloff.in is the only authorised seller. Anyone selling "ODORSTRIKE" on Amazon, Flipkart, or Meesho before that announcement is not authentic stock — please report it to <a href="mailto:smelloffsupport@gmail.com" class="inline-cta">smelloffsupport@gmail.com</a>.</p>
+  <p>Until any future expansion, smelloff.in is the only authorised seller. Anyone selling "ODORSTRIKE" on Amazon, Flipkart, or Meesho before that announcement is not authentic stock — please report it to <a href="mailto:smelloffsupport@gmail.com" class="inline-cta">smelloffsupport@gmail.com</a>.</p>
 
   <div class="pull-quote">
     "Direct-to-consumer isn't a flex. It's a margin choice. Every rupee that doesn't go to a marketplace goes back into the bottle in your hand."
@@ -688,9 +675,8 @@ POSTS.append({
   <h2>Returns & Refunds</h2>
 
   <ul>
-    <li><strong>7-day return window</strong> on unopened bottles purchased from smelloff.in.</li>
-    <li><strong>Refund route:</strong> via Razorpay to the original payment method within 5–7 business days of receiving the return.</li>
-    <li><strong>Reverse pickup</strong> arranged by Smelloff at no charge for valid returns.</li>
+    <li><strong>7-day return window</strong> from delivery. Bottle must be at least 80% full and in original packaging.</li>
+    <li><strong>Refund route:</strong> to original UPI account within 5–7 business days of receiving the return.</li>
     <li><strong>Damaged or wrong item</strong> — full replacement or refund at our cost. Email a photo to <a href="mailto:smelloffsupport@gmail.com" class="inline-cta">smelloffsupport@gmail.com</a> within 48 hours of delivery.</li>
   </ul>
 
@@ -702,24 +688,24 @@ POSTS.append({
 
   <p>If you want the long-form story behind ODORSTRIKE before you buy, <a href="/blog/why-i-built-odorstrike" class="inline-cta">why I built ODORSTRIKE</a> covers it. If you want the unfiltered review, <a href="/blog/odorstrike-review-30-day-india-test" class="inline-cta">the 30-day field test</a> is the most useful next read.</p>
 
-  <p>Otherwise — you came here for a buy link. Here it is again: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. Pan-India COD. Free shipping across India. Made in Hyderabad. Dispatched in 48 hours.</p>
+  <p>Otherwise — you came here for a buy link. Here it is again: <a href="/#buy" class="inline-cta">smelloff.in/#buy</a>. Pan-India COD (₹289). Free shipping on prepaid UPI (₹229). Made in Hyderabad. Dispatched in 48 hours.</p>
 """,
     "faqs": [
         {
             "q": "Where can I buy ODORSTRIKE in India?",
-            "a": "ODORSTRIKE is sold direct at smelloff.in. Pan-India shipping with COD available, free shipping across India, and dispatch within 48 hours from Hyderabad. The brand is not yet listed on Amazon, Flipkart, or Meesho — those listings, if any exist, are not authentic stock. Amazon listing is planned for Q3 2026."
+            "a": "ODORSTRIKE is sold direct at smelloff.in. Single 50ml bottle is ₹229 prepaid UPI with free shipping pan-India, or ₹289 COD (+₹60 handling fee). Dispatched within 48 hours from Hyderabad."
         },
         {
             "q": "Is ODORSTRIKE available on Amazon or Flipkart?",
-            "a": "Not yet. ODORSTRIKE is currently sold only on smelloff.in to keep margin reinvested in formula and shipping freebies. Amazon listing is planned for Q3 2026 once unit economics stabilise. Any Amazon, Flipkart, or Meesho listing before that date is not authentic stock — report unauthorized listings to smelloffsupport@gmail.com."
+            "a": "No. ODORSTRIKE is currently sold only on smelloff.in direct from the maker in Hyderabad."
         },
         {
             "q": "Does ODORSTRIKE ship cash on delivery?",
-            "a": "Yes. COD is available pan-India at no extra charge. Choose COD at checkout on smelloff.in and pay the delivery agent in cash on receipt. COD orders dispatch within 48 hours and deliver in 3–5 business days for metro cities, 5–7 days for tier-2 and tier-3 cities."
+            "a": "Yes. COD is available pan-India for ₹289 (₹229 + ₹60 handling fee). COD orders are dispatched after phone confirmation."
         },
         {
             "q": "How long does ODORSTRIKE shipping take in India?",
-            "a": "Dispatch is within 48 hours from Hyderabad. Delivery windows: 3–5 business days for metro cities (Mumbai, Delhi, Bengaluru, Chennai, Kolkata, Hyderabad), 5–7 business days for tier-2 and tier-3 cities. Tracking link is sent via WhatsApp and email at dispatch. Carriers used: Delhivery, Shadowfax, and India Post."
+            "a": "Dispatched within 48 hours of confirmation from Hyderabad. Metro delivery takes 3–5 business days; pan-India takes 5–7 business days."
         },
     ],
 })
@@ -1332,7 +1318,7 @@ POSTS.append({
 
   <h2>The Daily Cost of Adding the Fabric Layer</h2>
 
-  <p>ODORSTRIKE 50 ml at ₹229 launch (₹579 MRP). ~400 sprays per bottle. 4 sprays morning + 4 sprays mid-day = 8 sprays per day. That's 50 days per bottle, or ~₹4.58 per day for the fabric layer.</p>
+  <p>ODORSTRIKE 50 ml at ₹229 launch (₹499 MRP). ~250 sprays per bottle. 4 sprays morning + 4 sprays mid-day = 8 sprays per day. That\'s ~31 days per bottle, or ~₹4.58 per day for the fabric layer.</p>
 
   <p>Compared to: 1 cup of office-canteen tea (₹15), 1 metro fare (₹20+), or replacing a sweat-discoloured shirt (₹800+) — the cost of breaking the 3 PM cycle is rounding error. <a href="/blog/where-to-buy-odorstrike-india" class="inline-cta">where to buy</a>.</p>
 

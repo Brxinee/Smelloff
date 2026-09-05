@@ -1,12 +1,7 @@
 const CFG = window.SMELLOFF_CONFIG;
-  // NOTE: no page currently loads this file — odorstrike.html carries its own
-  // inline checkout. The duo/trio entries below are stale (₹229 solo is the only
-  // SKU) and CFG.PRICES.duo/.trio no longer exist. Kept only so the file still
-  // parses; no `mrp` field, because there is no real price above ₹229 to strike.
+  // Single SKU: ODORSTRIKE 50ml (₹229 prepaid, ₹289 COD)
   const VARIANTS = {
-    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: (CFG && CFG.PRICES && CFG.PRICES.solo) || 229, mrp: (CFG && CFG.MRP && CFG.MRP.solo) || 499, label: 'solo', qty: 1 },
-    duo:  { title: 'ODORSTRIKE 50ml × 2',  units: '2 × 50ml', amount: (CFG && CFG.PRICES && CFG.PRICES.duo) || 429, mrp: (CFG && CFG.MRP && CFG.MRP.duo) || 998, label: 'duo', qty: 2 },
-    trio: { title: 'ODORSTRIKE 50ml × 3',  units: '3 × 50ml', amount: (CFG && CFG.PRICES && CFG.PRICES.trio) || 599, mrp: (CFG && CFG.MRP && CFG.MRP.trio) || 1497, label: 'trio', qty: 3 }
+    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: (CFG && CFG.PRICES && CFG.PRICES.solo) || 229, mrp: (CFG && CFG.MRP && CFG.MRP.solo) || 499, label: 'solo', qty: 1 }
   };
 
   let currentVariant = 'solo';
