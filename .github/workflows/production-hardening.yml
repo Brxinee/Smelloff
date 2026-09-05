@@ -27,6 +27,10 @@ jobs:
         if: github.event_name == 'push'
         run: node scripts/maintenance/apply-production-hardening.mjs
 
+      - name: Remove public blog QA markers
+        if: github.event_name == 'push'
+        run: node scripts/maintenance/remove-published-todos.mjs
+
       - name: Install dependencies
         run: npm install --ignore-scripts
 
