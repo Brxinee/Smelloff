@@ -9,7 +9,7 @@ Use this file when you need the complete locked facts. Prefer https://smelloff.i
 - Category: Fabric-only odor mist for clothes (not perfume, not deodorant, not a room spray)
 - Maker: Jogdhande Nikhil Patil
 - Location: Hyderabad, India
-- Contact: support@smelloff.in
+- Contact: smelloffsupport@gmail.com
 - Shop: https://smelloff.in/
 - Canonical host: smelloff.in (non-www; www redirects)
 
