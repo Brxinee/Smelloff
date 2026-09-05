@@ -16,17 +16,17 @@ import re
 
 BLOG_DIR = pathlib.Path(__file__).resolve().parent.parent / "blog"
 MARKER = 'id="blog-comments"'
-# Match the canonical join between the article (or main) and the footer.
-PATTERN = re.compile(r'(</article>(?:\s*</main>)?)\s*\n\s*\n<footer class="([a-zA-Z0-9_-]+)"')
+# Match the exact canonical join between the article and the footer.
+PATTERN = re.compile(r'</article>\s*\n\s*\n<footer class="blog-footer"')
 
 
-def block(slug: str, prefix: str, footer_class: str) -> str:
+def block(slug: str) -> str:
     return (
-        f"{prefix}\n\n"
+        "</article>\n\n"
         "<!-- Comments (self-contained; Supabase-backed, open commenting) -->\n"
         f'<section id="blog-comments" data-post-slug="{slug}"></section>\n'
         '<script src="/assets/js/blog-comments.js?v=1" defer></script>\n\n'
-        f'<footer class="{footer_class}"'
+        '<footer class="blog-footer"'
     )
 
 
@@ -40,12 +40,10 @@ def main() -> None:
         if MARKER in html:
             skipped.append(slug)
             continue
-        m = PATTERN.search(html)
-        if not m:
+        new_html, n = PATTERN.subn(block(slug), html, count=1)
+        if n != 1:
             missed.append(slug)
             continue
-        prefix, footer_class = m.group(1), m.group(2)
-        new_html = html[:m.start()] + block(slug, prefix, footer_class) + html[m.end():]
         path.write_text(new_html, encoding="utf-8")
         stamped.append(slug)
 

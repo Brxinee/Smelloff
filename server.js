@@ -7,25 +7,16 @@ import sendEmailHandler from './api/send-email.js';
 import trackHandler from './api/track.js';
 import metaCapiHandler from './api/meta-capi.js';
 import metaCapiDrainHandler from './api/meta-capi-drain.js';
-import createOrderHandler from './api/create-order.js';
-import verifyPaymentHandler from './api/verify-payment.js';
-import paymentStatusHandler from './api/payment-status.js';
-import adminVerifyPaymentHandler from './api/admin/verify-payment.js';
-import webhookHandler from './api/webhook.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
 
 // Vercel redirects, read from vercel.json so the dev server matches production.
 // The 40 pruned blog slugs alone are why this is worth loading rather than
@@ -71,10 +62,6 @@ app.get('/index', (req, res) => {
   res.redirect(301, '/');
 });
 
-app.get('/solutions/index', (req, res) => {
-  res.redirect(301, '/solutions');
-});
-
 app.get('/blog/index', (req, res) => {
   res.redirect(301, '/blog');
 });
@@ -98,15 +85,6 @@ app.all('/api/send-email', (req, res) => sendEmailHandler(req, res));
 app.all('/api/track', (req, res) => trackHandler(req, res));
 app.all('/api/meta-capi', (req, res) => metaCapiHandler(req, res));
 app.all('/api/meta-capi-drain', (req, res) => metaCapiDrainHandler(req, res));
-app.all('/api/create-order', (req, res) => createOrderHandler(req, res));
-app.all('/api/verify-payment', (req, res) => verifyPaymentHandler(req, res));
-app.all('/api/payment-status', (req, res) => paymentStatusHandler(req, res));
-app.all('/api/admin/verify-payment', (req, res) => adminVerifyPaymentHandler(req, res));
-app.all('/api/webhook', (req, res) => webhookHandler(req, res));
-app.all('/api/payment/create-order', (req, res) => createOrderHandler(req, res));
-app.all('/api/payment/verify', (req, res) => verifyPaymentHandler(req, res));
-app.all('/api/payment/status', (req, res) => paymentStatusHandler(req, res));
-app.all('/api/payment/webhook', (req, res) => webhookHandler(req, res));
 
 // Clean URL & static file handling middleware
 app.use((req, res, next) => {

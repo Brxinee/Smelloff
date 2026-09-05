@@ -1,32 +1,155 @@
 /* =====================================================================
    Smelloff — canonical design tokens. SINGLE SOURCE OF TRUTH.
    =====================================================================
-   Stage 0 locked commercial facts. Stage 1 adds --so-* chrome tokens.
-   Existing --ink / --acid / --color-* aliases stay so homepage + PDP
-   content sections do not flip until later stages restyle them.
-   RAW, TACTILE, DARK, EDITORIAL, INDUSTRIAL, CONFIDENT, PHYSICAL.
+   Before this file existed there were three drifted copies of the system:
+   index.html (--text #F2F2F2), odorstrike.html (--text #f4f1ea) and
+   neo.css (--nb-ink #FFFFFF). Three different whites, three type scales.
+
+   Now: these values are canonical. index.html and odorstrike.html inline a
+   byte-identical copy of the :root block below (they are deliberately
+   self-contained single-file pages — see CLAUDE.md — so they cannot link
+   this file without adding a render-blocking request on the LCP path).
+   Every other page links this file.
+
+   If you change a value here, change it in those two inline blocks too.
+   Search for "TOKENS v1" to find them.
    ===================================================================== */
 
 :root{
-  color-scheme: dark;
-  --color-bg:#080808;--color-surface-1:#111111;--color-surface-2:#121212;--color-surface-3:#181818;
-  --color-text-primary:#FFFFFF;--color-text-secondary:#CCCCCC;--color-text-muted:#8E8E8E;
-  --color-accent:#B8FF57;--color-accent-hover:#D1FF8A;--color-accent-dim:rgba(184,255,87,.12);--color-accent-rgb:184,255,87;--color-on-accent:#080808;
-  --color-border:rgba(255,255,255,.08);--color-border-strong:rgba(255,255,255,.16);--color-overlay:rgba(0,0,0,.75);
-  --font-display:'Fraunces','Fraunces Fallback',Georgia,'Times New Roman',serif;
-  --font-body:'DM Sans','DM Sans Fallback',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  --font-mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
-  --type-display-xl:clamp(40px,6vw,76px);--type-display-lg:clamp(28px,4.2vw,52px);--type-display-md:clamp(22px,2.8vw,34px);--type-body-lg:clamp(17.5px,1.6vw,20px);--type-body-md:clamp(16px,1.2vw,17.5px);--type-body-sm:15px;--type-label:13px;--type-mono:12.5px;
-  --fs-h1:var(--type-display-xl);--fs-h2:var(--type-display-lg);--fs-h3:var(--type-display-md);--fs-h4:clamp(20px,2.2vw,26px);--fs-lead:var(--type-body-lg);--fs-body:var(--type-body-md);--fs-sm:var(--type-body-sm);--fs-eyebrow:var(--type-mono);
-  --lh-display-xl:.98;--lh-display-lg:1.06;--lh-display-md:1.14;--lh-body-lg:1.62;--lh-body-md:1.62;--lh-body-sm:1.55;--lh-btn:1.2;--lh-mono:1.45;--lh-display:var(--lh-display-xl);--lh-body:var(--lh-body-md);
-  --ls-display:-.025em;--ls-body:0;--ls-btn:.04em;--ls-label:.08em;--ls-mono:.1em;--ls-eyebrow:var(--ls-mono);
-  --max-width:1200px;--maxw:var(--max-width);--page-gutter-mobile:20px;--page-gutter-desktop:24px;--gutter:var(--page-gutter-desktop);--section-spacing:clamp(48px,6vw,84px);--section-y:var(--section-spacing);--grid-gap:clamp(16px,2.5vw,24px);--card-padding:clamp(20px,3vw,32px);
-  --radius-sm:4px;--radius-md:6px;--radius-lg:8px;--radius-pill:999px;--radius-card:4px;--radius-btn:4px;--radius-input:4px;--r:var(--radius-card);--r-pill:var(--radius-pill);--bw:1px;--bw-thin:1px;--border-weight:1px;--shadow-offset:0px;--sq-md:var(--radius-md);--sq-pill:var(--radius-pill);
-  --btn-height:48px;--btn-font-size:15px;--btn-font-weight:650;--btn-letter-spacing:var(--ls-btn);--btn-radius:var(--radius-btn);--btn-primary-bg:var(--color-accent);--btn-primary-text:var(--color-on-accent);--btn-secondary-bg:transparent;--btn-secondary-border:var(--color-border);--btn-secondary-text:var(--color-text-primary);
-  --input-bg:#080808;--input-border:var(--color-border);--input-border-focus:var(--color-accent);--input-text:var(--color-text-primary);--input-placeholder:var(--color-text-muted);--input-radius:var(--radius-input);--input-height:48px;
-  --ease:cubic-bezier(.19,1,.22,1);--ease-snap:cubic-bezier(.2,.6,.2,1);--dur:.2s;
-  --ink:var(--color-bg);--surface:var(--color-surface-1);--surface-2:var(--color-surface-2);--surface-3:var(--color-surface-3);--surface-light:#111111;--bg-light:#0C0C0C;--text-dark:#0A0A0A;--text-dark-muted:#666666;--text:var(--color-text-primary);--muted:var(--color-text-secondary);--text-2:var(--color-text-secondary);--acid:var(--color-accent);--acid-hi:var(--color-accent-hover);--acid-dim:var(--color-accent-dim);--acid-rgb:var(--color-accent-rgb);--on-acid:var(--color-on-accent);--border-light:#262626;--border-dark:var(--color-border);--rule:var(--color-border);--rule-soft:rgba(255,255,255,.06);--rule-strong:var(--color-border-strong);--overlay:var(--color-overlay);
-  --paper:var(--text);--bg:var(--ink);--accent:var(--acid);--text-secondary:var(--text-2);--black:var(--ink);--white:var(--text);--card:var(--surface);--card-hover:var(--surface-2);--bg-surface:var(--surface);--bg-subtle:var(--surface-2);--border:var(--rule);--border-subtle:var(--rule-soft);--line:var(--rule);--gray:var(--muted);--grey:var(--text-2);--silver:var(--text-2);--off-white:var(--text);--green:var(--acid);--green-light:var(--acid-hi);--green-dim:var(--acid-dim);--accent-hover:var(--acid-hi);--accent-light:var(--acid-dim);--accent-rgb:var(--acid-rgb);--shadow:rgba(0,0,0,.40);
-  --display:var(--font-display);--body:var(--font-body);--mono:var(--font-mono);
-  --so-chrome:#080808;--so-chrome-2:#111111;--so-chrome-ink:#F4F4F4;--so-chrome-muted:#CCCCCC;--so-chrome-faint:#8E8E8E;--so-chrome-line:var(--color-border);--so-chrome-line-strong:var(--color-border-strong);--so-chrome-overlay:rgba(0,0,0,.72);--so-cotton:#0C0C0C;--so-cotton-1:var(--so-cotton);--so-cotton-2:#141414;--so-cotton-ink:#F4F4F4;--so-cotton-muted:#CCCCCC;--so-cotton-faint:#8E8E8E;--so-cotton-line:var(--color-border);--so-cotton-line-strong:var(--color-border-strong);--so-lime:var(--color-accent);--so-lime-hover:var(--color-accent-hover);--so-lime-ink:var(--color-on-accent);--so-success:#2C6A46;--so-error:#B42318;--so-font-body:var(--font-body);--so-font-display:var(--font-display);--so-font-mono:var(--font-mono);--so-size-xs:.8125rem;--so-size-sm:.875rem;--so-size-md:1rem;--so-size-lg:1.125rem;--so-size-price:clamp(1.85rem, 3.5vw, 2.25rem);--so-size-nav:.9375rem;--so-lh-tight:1.2;--so-lh-body:1.62;--so-ls-tight:-.025em;--so-ls-none:0;--so-space-1:4px;--so-space-2:8px;--so-space-4:16px;--so-space-5:24px;--so-space-6:32px;--so-space-7:48px;--so-space-8:64px;--so-max:1200px;--so-gutter:20px;--so-section:clamp(48px,6vw,84px);--so-radius-sm:4px;--so-radius-md:6px;--so-radius-lg:8px;--so-radius-btn:6px;--so-control:48px;--so-tap:44px;--so-hdr:64px;--so-shadow-buy:0 14px 36px rgba(0,0,0,.55);--so-ease:cubic-bezier(.22,1,.36,1);--so-dur-quick:150ms;--so-dur:180ms;--so-dur-menu:250ms;
+  /* ---- Color -------------------------------------------------------- */
+  --ink:#080808;              /* page background */
+  --surface:#0F0F0F;          /* card / slab fill */
+  --surface-2:#141414;        /* raised slab, chips */
+  --text:#F4F1EA;             /* warm paper white — the one true text color */
+  --muted:#9A958D;            /* secondary copy */
+  --text-2:#C9C5BD;           /* secondary copy — brighter than --muted */
+  --acid:#B8FF57;             /* the single accent */
+  --acid-hi:#D1FF8A;          /* accent hover */
+  --acid-dim:rgba(184,255,87,.12);
+  --acid-rgb:184,255,87;
+  --on-acid:#080808;          /* text ON acid is always ink, never white */
+  --rule:rgba(244,241,234,.14);
+  --rule-soft:rgba(244,241,234,.08);
+  --rule-strong:rgba(244,241,234,.28);
+  --overlay:rgba(0,0,0,.75);
+
+  /* ---- Type families ------------------------------------------------ */
+  --display:'Fraunces','Fraunces Fallback',serif;
+  --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
+  --body:'Inter Tight','Inter Tight Fallback',sans-serif;
+
+  /* ---- Type scale ---------------------------------------------------
+     Display line-height is deliberately sub-1 so multi-line headlines
+     stack tight and read as a single mass. Tracking tightens as size
+     grows, which is what keeps large Fraunces from looking loose. */
+  --lh-display:.86;
+  --lh-body:1.55;
+  --ls-display:-.028em;
+
+  /* --fs-h1 is consumed by exactly one rule: `.hero h1` on index.html. It was
+     clamp(58px,14vw,164px), tuned for the 20-character "Smell Proof. Always.".
+     The headline is now "Don't let them notice your sweat." — 33 characters —
+     and at 164px that wrapped to five lines, making the H1 705px tall instead
+     of 423px and pushing the price and Buy Now button 285px BELOW the fold on
+     a 1280×900 desktop. The old headline had them at the fold (+3px).
+     At 120px it wraps to three lines, 310px tall, and the CTA sits 111px ABOVE
+     the fold — better than before the copy change. The 58px floor is unchanged,
+     so phones render identically to the approved design (3 lines, 150px).
+     Re-measure the fold if this headline changes length again; don't eyeball it. */
+  --fs-h1:clamp(58px,11vw,120px);
+  --fs-h2:clamp(40px,7.6vw,84px);
+  --fs-h3:clamp(27px,3.6vw,42px);
+  --fs-h4:clamp(21px,2.2vw,27px);
+  --fs-lead:clamp(18px,1.5vw,22px);
+  --fs-body:17px;
+  --fs-sm:15px;
+  --fs-eyebrow:13px;
+  --ls-eyebrow:.2em;
+
+  /* ---- Rhythm ------------------------------------------------------- */
+  --maxw:1160px;
+  --gutter:20px;
+  --section-y:clamp(56px,8vw,112px);
+
+  /* ---- Form --------------------------------------------------------- */
+  --bw:3px;                   /* hard border weight — the brutalist edge */
+  --bw-thin:2px;
+  --r:0px;                    /* square by default; the brand is sharp */
+  --r-pill:100px;
+  --shadow-offset:6px;        /* hard offset shadow, never a blur */
+
+  /* ---- Motion ------------------------------------------------------- */
+  --ease:cubic-bezier(.19,1,.22,1);
+  --ease-snap:cubic-bezier(.2,.6,.2,1);
+  --dur:.2s;
+}
+
+/* =====================================================================
+   Legacy alias layer.
+
+   Three naming families grew up independently across this codebase:
+     A  --ink / --paper / --acid / --text / --muted / --rule
+        (index.html, odorstrike.html, faq.html)
+     B  --black / --card / --border / --white / --gray / --silver /
+        --green / --bg / --accent
+        (reviews, about, contact, track-order, 404, blog/index, blog.css)
+     C  --nb-*
+        (neo.css)
+
+   They also disagreed on values — three whites (#F4F1EA, #F5F5F5,
+   #FFFFFF), two card fills (#111111, #0F0F0F), two borders (#262626,
+   rgba(255,255,255,.12)) and four greys. Rewriting every rule in every
+   file would be a large, risky diff, so instead all three families now
+   resolve to the canonical tokens above. One value to change, everywhere.
+
+   New CSS should use the canonical names. These aliases are frozen —
+   don't add to them.
+   ===================================================================== */
+:root{
+  /* Family A */
+  --paper:var(--text);
+  --bg:var(--ink);
+  --accent:var(--acid);
+  --text-secondary:var(--text-2);
+
+  /* Family B */
+  --black:var(--ink);
+  --white:var(--text);
+  --card:var(--surface);
+  --card-hover:var(--surface-2);
+  --bg-surface:var(--surface);
+  --bg-subtle:var(--surface-2);
+  --border:var(--rule);
+  --border-subtle:var(--rule-soft);
+  --line:var(--rule);
+  --gray:var(--muted);
+  --grey:var(--text-2);
+  --silver:var(--text-2);
+  --off-white:var(--text);
+  --green:var(--acid);
+  --green-light:var(--acid-hi);
+  --green-dim:var(--acid-dim);
+  --accent-hover:var(--acid-hi);
+  --accent-light:var(--acid-dim);
+  --accent-rgb:var(--acid-rgb);
+  --shadow:rgba(0,0,0,.40);
+
+  /* Family C */
+  --nb-paper:var(--ink);
+  --nb-ink:var(--text);
+  --nb-white:var(--text);
+  --nb-surface:var(--surface);
+  --nb-surface-2:var(--surface-2);
+  --nb-chip:var(--surface-2);
+  --nb-line:var(--rule);
+  --nb-line-strong:var(--rule-strong);
+  --nb-black:var(--ink);
+  --nb-acid:var(--acid);
+  --nb-yellow:var(--acid);
+  --nb-muted:var(--muted);
+  --nb-shadow:none;
+  --nb-shadow-sm:none;
+  --nb-bw:1px;
+  --nb-r:2px;
+  --nb-r-sm:2px;
 }

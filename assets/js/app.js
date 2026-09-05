@@ -1,7 +1,12 @@
 const CFG = window.SMELLOFF_CONFIG;
-  // Single SKU: ODORSTRIKE 50ml (₹229 prepaid, ₹289 COD)
+  // NOTE: no page currently loads this file — odorstrike.html carries its own
+  // inline checkout. The duo/trio entries below are stale (₹229 solo is the only
+  // SKU) and CFG.PRICES.duo/.trio no longer exist. Kept only so the file still
+  // parses; no `mrp` field, because there is no real price above ₹229 to strike.
   const VARIANTS = {
-    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: (CFG && CFG.PRICES && CFG.PRICES.solo) || 229, mrp: (CFG && CFG.MRP && CFG.MRP.solo) || 499, label: 'solo', qty: 1 }
+    solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: CFG.PRICES.solo, label: 'solo' },
+    duo:  { title: 'ODORSTRIKE 50ml × 2',  units: '2 × 50ml', amount: CFG.PRICES.duo,  label: 'duo'  },
+    trio: { title: 'ODORSTRIKE 50ml × 3',  units: '3 × 50ml', amount: CFG.PRICES.trio, label: 'trio' }
   };
 
   let currentVariant = 'solo';
@@ -153,76 +158,21 @@ const CFG = window.SMELLOFF_CONFIG;
   function validateForm() {
     // Clear previous red borders
     document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(i){i.style.borderColor='';});
-    
-    var phoneEl = document.getElementById('f_phone');
-    var nameEl = document.getElementById('f_name');
-    var addrEl = document.getElementById('f_addr');
-    var pinEl = document.getElementById('f_pin');
-    var cityEl = document.getElementById('f_city');
-    var stateEl = document.getElementById('f_state');
-    var emailEl = document.getElementById('f_email');
-
-    // Phone validation (required, 10-digit Indian mobile starting 6-9)
-    var phoneVal = phoneEl ? phoneEl.value.trim() : '';
-    if (!phoneVal) {
-      if (phoneEl) { phoneEl.style.borderColor='#ff6b6b'; phoneEl.focus(); }
-      showError('Enter your 10-digit mobile number for delivery updates.');
-      return false;
+    // Email is OPTIONAL — not in required list
+    const fields = ['f_phone','f_name','f_addr','f_pin','f_city','f_state'];
+    for (const id of fields) {
+      const el = document.getElementById(id);
+      if (!el) { showError('Please fill all required fields.'); return false; }
+      if (!el.value.trim()) { el.style.borderColor='#ff6b6b'; el.focus(); showError('Please fill all required fields.'); return false; }
     }
-    if (!/^[6-9]\d{9}$/.test(phoneVal)) {
-      if (phoneEl) { phoneEl.style.borderColor='#ff6b6b'; phoneEl.focus(); }
-      showError('Enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.');
-      return false;
-    }
-
-    // Full name validation
-    var nameVal = nameEl ? nameEl.value.trim() : '';
-    if (!nameVal || nameVal.length < 2) {
-      if (nameEl) { nameEl.style.borderColor='#ff6b6b'; nameEl.focus(); }
-      showError('Enter your full name for the package label.');
-      return false;
-    }
-
-    // Pincode validation
-    var pinVal = pinEl ? pinEl.value.trim() : '';
-    if (!pinVal || !/^\d{6}$/.test(pinVal)) {
-      if (pinEl) { pinEl.style.borderColor='#ff6b6b'; pinEl.focus(); }
-      showError('Enter a valid 6-digit Indian postal PIN code.');
-      return false;
-    }
-
-    // City validation
-    var cityVal = cityEl ? cityEl.value.trim() : '';
-    if (!cityVal) {
-      if (cityEl) { cityEl.style.borderColor='#ff6b6b'; cityEl.focus(); }
-      showError('Enter your city name.');
-      return false;
-    }
-
-    // State validation
-    var stateVal = stateEl ? stateEl.value.trim() : '';
-    if (!stateVal) {
-      if (stateEl) { stateEl.style.borderColor='#ff6b6b'; stateEl.focus(); }
-      showError('Enter your state name.');
-      return false;
-    }
-
-    // Address validation
-    var addrVal = addrEl ? addrEl.value.trim() : '';
-    if (!addrVal || addrVal.length < 5) {
-      if (addrEl) { addrEl.style.borderColor='#ff6b6b'; addrEl.focus(); }
-      showError('Enter your complete address (house/flat no., street, landmark).');
-      return false;
-    }
-
-    // Email validation (optional - only validate format if provided)
-    var emailVal = emailEl ? emailEl.value.trim() : '';
-    if (emailVal && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(emailVal)) {
-      if (emailEl) { emailEl.style.borderColor='#ff6b6b'; emailEl.focus(); }
-      showError('Enter a valid email address (e.g. name@domain.com) or leave it blank.');
-      return false;
-    }
-
+    const phone = document.getElementById('f_phone').value.trim();
+    if (!/^[6-9]\d{9}$/.test(phone)) { document.getElementById('f_phone').style.borderColor='#ff6b6b'; showError('Enter a valid 10-digit mobile number.'); return false; }
+    const pin = document.getElementById('f_pin').value.trim();
+    if (!/^\d{6}$/.test(pin)) { document.getElementById('f_pin').style.borderColor='#ff6b6b'; showError('Enter a valid 6-digit pincode.'); return false; }
+    // Email is OPTIONAL — only validate if non-empty
+    const emailEl = document.getElementById('f_email');
+    const email = emailEl ? emailEl.value.trim() : '';
+    if (email && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) { if (emailEl) emailEl.style.borderColor='#ff6b6b'; showError('Enter a valid email or leave it blank.'); return false; }
     return true;
   }
 
@@ -479,13 +429,16 @@ const CFG = window.SMELLOFF_CONFIG;
       }).catch(function(e){ console.error('Order email failed:', e); });
     }
 
-    const upiLink = buildUpiPaymentUri(total);
+    const upiLink = buildUpiLink(total, orderId);
     showLoadingScreen('Confirming payment…', 'Securing your UPI session');
     setTimeout(function() {
       btn.disabled = false;
       showUpiSuccess(orderId, total, upiLink);
-      // Never auto-launch upi:// from the browser — PhonePe declines
-      // website-opened intents to a personal VPA. QR + UPI ID remain.
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile) {
+        // Defer one tick so the success screen renders before the UPI redirect.
+        setTimeout(function(){ window.location.href = upiLink; }, 150);
+      }
     }, 2400);
   }
 
@@ -548,12 +501,37 @@ const CFG = window.SMELLOFF_CONFIG;
     if (wrap) { wrap.style.display = 'none'; wrap.classList.remove('expired'); }
   };
 
-  function buildUpiPaymentUri(amount) {
+  function getAppUpiLink(app, amount, orderId) {
     const pa = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || 'mr.brainy@ibl';
     const pn = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_NAME) || 'Smelloff';
     const am = String(amount || 229);
-    const params = new URLSearchParams({ pa, pn, am, cu: 'INR' });
-    return `upi://pay?${params.toString()}`;
+    const tn = 'ODORSTRIKE-' + (orderId || '');
+    const params = new URLSearchParams({ pa, pn, am, cu: 'INR', tn }).toString();
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    if (app === 'gpay') {
+      if (isAndroid) {
+        return `intent://pay?${params}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end;`;
+      }
+      return `tez://upi/pay?${params}`;
+    }
+    if (app === 'phonepe') {
+      if (isAndroid) {
+        return `intent://pay?${params}#Intent;scheme=upi;package=com.phonepe.app;scheme=upi;end;`;
+      }
+      return `phonepe://pay?${params}`;
+    }
+    if (app === 'paytm') {
+      if (isAndroid) {
+        return `intent://pay?${params}#Intent;scheme=upi;package=net.one97.paytm;scheme=upi;end;`;
+      }
+      return `paytmmp://pay?${params}`;
+    }
+    return `upi://pay?${params}`;
+  }
+
+  function buildUpiLink(amount, orderId, app) {
+    return getAppUpiLink(app || 'any', amount, orderId);
   }
 
   function showUpiSuccess(orderId, total, upiLink) {
@@ -563,24 +541,20 @@ const CFG = window.SMELLOFF_CONFIG;
     s.style.display = 'block';
     document.getElementById('successTag').textContent = 'Order received';
     document.getElementById('successHeading').textContent = 'Pay ₹' + total + ' via UPI';
-    document.getElementById('successMsg').textContent = 'Order received. Open your UPI app or scan the QR code to pay.';
+    document.getElementById('successMsg').textContent = 'Order received. Send your UTR to WhatsApp to confirm. We\'ll ship within 48 hours of confirmation.';
     document.getElementById('orderIdDisplay').textContent = orderId;
     var upiTrk = document.getElementById('successTrackLink');
     if (upiTrk) { upiTrk.href = '/track-order?code=' + encodeURIComponent(orderId); upiTrk.style.display = 'inline-block'; }
     try { localStorage.setItem('smelloff_last_order', JSON.stringify({ code: orderId, ts: Date.now() })); } catch (e) {}
 
-    const activeUpiUri = upiLink || buildUpiPaymentUri(total);
-
     // Populate UPI block
-    if (document.getElementById('upiBlock')) document.getElementById('upiBlock').style.display = 'block';
-    if (document.getElementById('upiIdShow')) document.getElementById('upiIdShow').textContent = CFG.UPI_ID;
-    if (document.getElementById('upiAmountShow')) document.getElementById('upiAmountShow').textContent = '₹' + total;
-    if (document.getElementById('upiNoteShow')) document.getElementById('upiNoteShow').textContent = orderId;
+    document.getElementById('upiBlock').style.display = 'block';
+    document.getElementById('upiIdShow').textContent = CFG.UPI_ID;
+    document.getElementById('upiAmountShow').textContent = '₹' + total;
+    document.getElementById('upiNoteShow').textContent = 'ODORSTRIKE-' + orderId;
     const openBtn = document.getElementById('upiOpenBtn');
-    if (openBtn) {
-      openBtn.href = activeUpiUri;
-      openBtn.textContent = 'Open UPI app · ₹' + total;
-    }
+    openBtn.href = upiLink;
+    openBtn.textContent = 'Open UPI app · ₹' + total;
 
     // Prefill WhatsApp UTR link with order context so merchant can match UTR to order
     const name = (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
@@ -782,7 +756,7 @@ const CFG = window.SMELLOFF_CONFIG;
       b.setAttribute('aria-checked', active ? 'true' : 'false');
     });
     var variant = qty === 3 ? 'trio' : qty === 2 ? 'duo' : 'solo';
-    var price = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES[variant]) || (qty === 3 ? 599 : qty === 2 ? 429 : 229);
+    var price = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES[variant]) || (qty === 3 ? 549 : qty === 2 ? 399 : 229);
     var sprays = qty === 3 ? 750 : qty === 2 ? 500 : 250;
     var perSpray = (price / sprays).toFixed(2);
 
@@ -871,7 +845,7 @@ const CFG = window.SMELLOFF_CONFIG;
       if (fired) return;
       if (entries[0].isIntersecting) {
         fired = true;
-        var vcPrice = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES[_buyBoxQty === 3 ? 'trio' : _buyBoxQty === 2 ? 'duo' : 'solo']) || (_buyBoxQty === 3 ? 599 : _buyBoxQty === 2 ? 429 : 229);
+        var vcPrice = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES[_buyBoxQty === 3 ? 'trio' : _buyBoxQty === 2 ? 'duo' : 'solo']) || (_buyBoxQty === 3 ? 549 : _buyBoxQty === 2 ? 399 : 229);
         if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', { content_name: 'ODORSTRIKE', value: vcPrice, currency: 'INR' });
         if (typeof gtag !== 'undefined') gtag('event', 'view_item', { currency: 'INR', value: vcPrice, items: [{ item_id: 'OS-001-50ML', item_name: 'ODORSTRIKE Fabric Odor Mist' }] });
         obs.disconnect();
@@ -1259,7 +1233,7 @@ const CFG = window.SMELLOFF_CONFIG;
       var orderUuid = '';
       try { orderUuid = localStorage.getItem('smelloff_order_uuid') || ''; } catch (e) {}
       if (!orderUuid) {
-        errEl.textContent = 'Reviews are for early testers — we couldn’t find your purchase on this device.';
+        errEl.textContent = 'Reviews are for verified buyers — we couldn’t find your purchase on this device.';
         errEl.style.display = 'block';
         return;
       }
@@ -1400,8 +1374,8 @@ const CFG = window.SMELLOFF_CONFIG;
     const STORAGE_KEY = 'smelloff_cart';
     const PRODUCTS = {
       solo: { id: 'solo', name: 'ODORSTRIKE 50ml × 1', price: 229, variant: 'solo' },
-      duo:  { id: 'duo',  name: 'ODORSTRIKE 50ml × 2',  price: 429, variant: 'duo'  },
-      trio: { id: 'trio', name: 'ODORSTRIKE 50ml × 3',  price: 599, variant: 'trio' }
+      duo:  { id: 'duo',  name: 'ODORSTRIKE 50ml × 2',  price: 399, variant: 'duo'  },
+      trio: { id: 'trio', name: 'ODORSTRIKE 50ml × 3',  price: 549, variant: 'trio' }
     };
 
     let cart = load();

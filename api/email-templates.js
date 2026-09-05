@@ -176,7 +176,7 @@ export function orderConfirmation({
     ${divider}
 
     <p style="font-family:${HEADING_FONT};font-weight:900;font-size:18px;letter-spacing:1px;color:${GREEN};text-transform:uppercase;margin:0 0 8px 0;">What happens next</p>
-    ${mutedPara('Dispatch within 48 hours of confirmation. Tracking link lands in your inbox the moment it ships.')}
+    ${mutedPara('Dispatch in 24&ndash;48 hours. Tracking link lands in your inbox the moment it ships.')}
     ${mutedPara('Need help? Just reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
   `;
   return {

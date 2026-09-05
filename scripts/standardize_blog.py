@@ -24,41 +24,10 @@ BLOG = REPO / "blog"
 BLOGCSS = '<link rel="stylesheet" href="/assets/css/blog.css?v=6">'
 
 NAV = (
-    '<header class="sf-hdr">\n'
-    '  <div class="sf-wrap">\n'
-    '    <div class="sf-hdr__row">\n'
-    '      <a href="/" class="sf-hdr__logo" aria-label="Smelloff home">\n'
-    '        <img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" decoding="async">\n'
-    '      </a>\n'
-    '      <div class="sf-hdr__right">\n'
-    '        <nav class="sf-nav-wrap" aria-label="Primary">\n'
-    '          <ul class="sf-nav">\n'
-    '            <li><a href="/#buy">ODORSTRIKE</a></li>\n'
-    '            <li><a href="/#how-it-works">How it works</a></li>\n'
-    '            <li><a href="/reviews">Proof</a></li>\n'
-    '            <li><a href="/blog">Guides</a></li>\n'
-    '            <li><a href="/track-order">Track</a></li>\n'
-    '          </ul>\n'
-    '        </nav>\n'
-    '        <a href="/#buy" class="sf-hdr__cta so-btn so-btn--p1" data-smelloff-buy="header">Buy ₹229</a>\n'
-    '        <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">\n'
-    '          <span></span><span></span><span></span>\n'
-    '        </button>\n'
-    '      </div>\n'
-    '    </div>\n'
-    '    <nav class="sf-hdr__menu" id="sfMenu" aria-label="Menu">\n'
-    '      <ul>\n'
-    '        <li><a href="/#buy">ODORSTRIKE</a></li>\n'
-    '        <li><a href="/#how-it-works">How it works</a></li>\n'
-    '        <li><a href="/reviews">Proof</a></li>\n'
-    '        <li><a href="/blog">Guides</a></li>\n'
-    '        <li><a href="/track-order">Track</a></li>\n'
-    '        <li><a href="/faq">FAQ</a></li>\n'
-    '        <li><a href="/contact">Contact</a></li>\n'
-    '      </ul>\n'
-    '    </nav>\n'
-    '  </div>\n'
-    '</header>'
+    '<nav class="blog-nav">\n'
+    '  <a href="/" class="logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=1" alt="SMELLOFF" width="1200" height="261" decoding="async"></a>\n'
+    '  <a href="/odorstrike/" class="buy-pill">BUY ₹229</a>\n'
+    '</nav>'
 )
 
 DEFAULT_SPEC = ("Treats the fabric, not your skin. 50ml pocket spray. "
@@ -95,64 +64,41 @@ post-popular post-popular-label post-popular-viewport post-popular-track
 post-pc post-pc-thumb post-pc-cat post-pc-title
 """.split())
 
-FOOTER = '''<footer class="sf-ftr">
-  <div class="sf-wrap">
-    <div class="sf-ftr__grid">
-      <div class="sf-ftr__brand">
-        <img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" loading="lazy">
-        <p>Fabric-only odor mist. Made in Hyderabad, India.</p>
-      </div>
-      <div>
-        <h3>Shop</h3>
-        <ul>
-          <li><a href="/#buy">ODORSTRIKE</a></li>
-          <li><a href="/solutions">Solutions</a></li>
-          <li><a href="/blog/how-to-use-odorstrike">How to use</a></li>
-          <li><a href="/reviews">Reviews</a></li>
-          <li><a href="/blog">Guides</a></li>
-          <li><a href="/track-order">Track order</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Support</h3>
-        <ul>
-          <li><a href="/shipping">Shipping</a></li>
-          <li><a href="/returns">Returns</a></li>
-          <li><a href="/faq">FAQ</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Company</h3>
-        <ul>
-          <li><a href="/about">About</a></li>
-          <li><a href="https://partners.smelloff.in">Partners</a></li>
-          <li><a href="/llms.txt">llms.txt</a></li>
-          <li><a href="/feed.xml">RSS</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Legal</h3>
-        <ul>
-          <li><a href="/privacy">Privacy</a></li>
-          <li><a href="/terms">Terms</a></li>
-          <li><a href="/refund">Refunds</a></li>
-          <li><a href="/cancellation">Cancellation</a></li>
-        </ul>
-      </div>
-      <div class="sf-ftr__socials">
-        <a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram"><img src="/assets/icon-instagram-white.png" alt="" width="20" height="20" loading="lazy"></a>
-        <a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)"><img src="/assets/icon-x.png" alt="" width="20" height="20" loading="lazy"></a>
-        <a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram"><img src="/assets/icon-telegram-white.png" alt="" width="20" height="20" loading="lazy"></a>
-        <a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="/assets/icon-linkedin-white.png" alt="" width="20" height="20" loading="lazy"></a>
-        <a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook"><img src="/assets/icon-facebook-white.png" alt="" width="20" height="20" loading="lazy"></a>
-        <a href="https://wa.me/919392974031" target="_blank" rel="noopener" aria-label="WhatsApp"><img src="/assets/icon-whatsapp-white.png" alt="" width="20" height="20" loading="lazy"></a>
-      </div>
+FOOTER = '''<footer class="blog-footer" aria-labelledby="footer-brand">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="bf-brand" id="footer-brand"><span class="bf-brand-inner">SMELLOFF<span class="bf-brand-dot"></span></span></a>
+      <p class="bf-desc">Fabric-only odor elimination mist. Made in Hyderabad.</p>
+      <p class="bf-tag">Smell Proof. Always.</p>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px"><a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-instagram-white.png" alt="Instagram" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-x.png" alt="X (Twitter)" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-telegram-white.png" alt="Telegram" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-linkedin-white.png" alt="LinkedIn" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-facebook-white.png" alt="Facebook" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://wa.me/919392974031" target="_blank" rel="noopener" aria-label="WhatsApp" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-whatsapp-white.png" alt="WhatsApp" width="20" height="20" style="opacity:.85" loading="lazy"></a></div>
     </div>
-    <div class="sf-ftr__bottom">
-      <span>© 2026 Smelloff. Hyderabad, India</span>
-      <span>Made in India · Fabric only</span>
-    </div>
+    <nav class="footer-col" aria-label="Shop">
+      <p class="footer-col-label">Shop</p>
+      <a href="/">Home</a>
+      <a href="/odorstrike/">Buy ODORSTRIKE</a>
+      <a href="/odorstrike/">Bundles</a>
+    </nav>
+    <nav class="footer-col" aria-label="Guides">
+      <p class="footer-col-label">Guides</p>
+      <a href="/blog/">All Guides</a>
+      <a href="/blog/best-fabric-odor-spray-india-2026-body-odor/">Best fabric odor spray</a>
+      <a href="/blog/fix-shirt-odor-before-meeting/">Fix shirt odor fast</a>
+      <a href="/blog/deodorant-vs-fabric-mist/">Deodorant vs fabric mist</a>
+      <a href="/blog/odorstrike-review-30-day-india-test/">30-day review</a>
+    </nav>
+    <nav class="footer-col" aria-label="Company">
+      <p class="footer-col-label">Company</p>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+      <a href="/shipping/">Shipping</a>
+      <a href="/returns/">Returns</a>
+      <a href="/refund/">Refund</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; <span id="year">2026</span> SMELLOFF &middot; All rights reserved &middot; Made in Hyderabad</span>
+    <button class="footer-top" type="button" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&uarr;</button>
   </div>
 </footer>'''
 

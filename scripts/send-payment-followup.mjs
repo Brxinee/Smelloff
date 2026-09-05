@@ -21,11 +21,11 @@ const TEMPLATE_PATH = resolve(__dirname, '..', 'emails', 'payment-followup-email
 
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
 const REPLY_TO = 'smelloffsupport@gmail.com';
-const SUBJECT = 'Complete your ODORSTRIKE UPI payment';
+const SUBJECT = 'Action needed: confirm your ODORSTRIKE order';
 
 /**
  * Render the payment-followup email template with the given variables.
- * @param {object} vars - { customer_name, order_id, order_amount, order_date, payment_status_link }
+ * @param {object} vars - { customer_name, order_id, order_amount, order_date, utr_field_link }
  * @returns {Promise<string>} fully-rendered HTML
  */
 export async function renderPaymentFollowup(vars) {
@@ -44,13 +44,13 @@ export async function renderPaymentFollowup(vars) {
 /**
  * Send the payment follow-up email.
  * @param {object} opts
- * @param {string} opts.to                  - customer email
- * @param {string} opts.customer_name       - first name or fallback
- * @param {string} opts.order_id            - e.g. "SMF-20260820-1234"
- * @param {number|string} opts.order_amount - e.g. 229
- * @param {string} opts.order_date          - e.g. "20 Aug 2026"
- * @param {string} opts.payment_status_link - URL of the payment status checker
- * @param {string} [opts.apiKey]            - falls back to env RESEND_API_KEY
+ * @param {string} opts.to            - customer email
+ * @param {string} opts.customer_name - first name or fallback
+ * @param {string} opts.order_id      - e.g. "OS260424-ABCD"
+ * @param {number|string} opts.order_amount - e.g. 258
+ * @param {string} opts.order_date    - e.g. "25 Apr 2026"
+ * @param {string} opts.utr_field_link - URL of the UTR submission form
+ * @param {string} [opts.apiKey]      - falls back to env RESEND_API_KEY
  */
 export async function sendPaymentFollowup(opts) {
   const apiKey = opts.apiKey || process.env.RESEND_API_KEY;
@@ -62,7 +62,7 @@ export async function sendPaymentFollowup(opts) {
     order_id:      opts.order_id,
     order_amount:  opts.order_amount,
     order_date:    opts.order_date,
-    payment_status_link: opts.payment_status_link || `https://smelloff.in/track-order?order=${encodeURIComponent(opts.order_id)}`,
+    utr_field_link: opts.utr_field_link,
   });
 
   const result = await resend.emails.send({
@@ -85,10 +85,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const result = await sendPaymentFollowup({
     to: 'customer@example.com',
     customer_name: 'Aniket',
-    order_id: 'SMF-20260820-1234',
-    order_amount: 229,
-    order_date: '20 Aug 2026',
-    payment_status_link: 'https://smelloff.in/track-order?order=SMF-20260820-1234',
+    order_id: 'OS260425-Q9TZ',
+    order_amount: 258,
+    order_date: '25 Apr 2026',
+    utr_field_link: 'https://smelloff.in/submit-utr?order=OS260425-Q9TZ',
   });
   console.log('Sent:', result);
 }

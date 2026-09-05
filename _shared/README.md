@@ -1,22 +1,29 @@
-# Smelloff blog — shared chrome & editorial architecture
+# Smelloff blog — shared chrome (single source of truth)
 
-Every blog post (`/blog/*.html`) and the blog index (`/blog/index.html`) share the site's unified chrome (`.sf-hdr`, `.sf-ftr`) and canonical article presentation (`.article-wrap`).
+Every blog post (`/blog/*.html`) and the blog index (`/blog/index.html`) share **one**
+nav, **one** end-of-post stack, and **one** footer. This folder is the canonical
+reference; the live styling is centralized in **`/assets/css/blog.css`**.
 
-## Architectural Separation of Concerns
-- **`/assets/css/chrome.css`**: Canonical source of truth for all shared site chrome (global sticky header `.sf-hdr`, navigation, cart, hamburger drawer, skip link, and multi-column footer `.sf-ftr`).
-- **`/assets/css/blog.css`**: Canonical source of truth for blog and article editorial typography, reading progress bar, hero, prose rhythms, tables, callouts, quick-answer blocks, FAQ accordions, and related guides grids.
-
-No shared header/footer chrome is duplicated inside `blog.css`.
+No build step runs on Vercel — the shared markup is stamped into each static `.html`
+file so the footer/related links exist as real `<a>` tags in the initial HTML response
+(critical for SEO/crawlability). JS only enhances (progress bar, year, service worker).
 
 ## Files here
-- `nav.html` — canonical header reference markup (`.sf-hdr`).
+- `nav.html` — canonical sticky nav (wordmark + `BUY ₹229` pill).
 - `end-of-post.html` — canonical end-of-post stack: Product CTA → optional Read Next → 3-card Related Guides grid.
-- `footer.html` — canonical multi-column footer reference markup (`.sf-ftr`).
+- `footer.html` — canonical multi-column footer (Brand / Shop / Guides / Company + bottom bar).
 
-## Stylesheets
-Shared chrome styling is defined once in `/assets/css/chrome.css`.
-Article layout and prose styling are defined in `/assets/css/blog.css`.
-Design tokens: matte black `#080808`, acid green `#B8FF57`, body `DM Sans`, headings `Fraunces`, monospace/eyebrows `JetBrains Mono`.
+## The single stylesheet
+`/assets/css/blog.css` owns all tokens + component styles (nav, article typography,
+callouts, CTA card, Read Next, `.guide-card` grid, footer, FAQ, focus states).
+**Edit component styling there — never per-file.** Each post links it with
+`<link rel="stylesheet" href="/assets/css/blog.css?v=1">`. Bump the `?v=` when you change it.
+
+Design tokens: matte black `#080808`, acid green `#B8FF57`, body `Inter Tight`,
+headings `Fraunces` (editorial serif), wordmark/eyebrows `Barlow Condensed 900`.
+**Acid rule:** on dark backgrounds acid may be text; on light backgrounds (e.g. the
+white `.guide-card`) acid may only be a background/border/underline — never body text.
+The footer is always dark (`#080808`) on every page, even the light-themed index.
 
 ## Add a new post
 1. Copy an existing post (e.g. `deodorant-vs-fabric-mist.html`) as your template.

@@ -8,666 +8,11 @@
       "schedule": "0 3 * * *"
     }
   ],
-  "rewrites": [
-    {
-      "source": "/.well-known/llms.txt",
-      "destination": "/llms.txt"
-    },
-    {
-      "source": "/.well-known/llms-full.txt",
-      "destination": "/llms-full.txt"
-    },
-    {
-      "source": "/.well-known/ai.txt",
-      "destination": "/llms.txt"
-    },
-    {
-      "source": "/ai.txt",
-      "destination": "/llms.txt"
-    }
-  ],
+  "rewrites": [],
   "redirects": [
     {
       "source": "/r/:code",
       "destination": "/?ref=:code"
-    },
-    {
-      "source": "/(.*)\\.html",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/$1",
-      "statusCode": 301
-    },
-    {
-      "source": "/odorstrike",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/",
-      "statusCode": 301
-    },
-    {
-      "source": "/index",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/",
-      "statusCode": 301
-    },
-    {
-      "source": "/solutions/index",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/solutions",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/zinc-ricinoleate-fabric-odor-ingredient",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/zinc-pca-fabric-odor-ingredient-guide",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/is-zinc-ricinoleate-safe-for-clothes",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/zinc-pca-fabric-odor-ingredient-guide",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/spray-for-clothes-not-skin",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/best-deodorant-spray-for-clothes-not-skin",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/index",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/best-fabric-odor-spray-india-2026",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/best-fabric-odor-spray-india-2026-body-odor",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/shirt-odor-spray",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/pocket-odor-spray-for-clothes",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/clothes-smell-after-washing",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/gym-clothes-smell-after-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/school-uniform-smell-india-guide",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-clothes-fresh-without-washing-machine",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/shirt-smell-after-ironing",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/bangalore-office-sweat-smell-guide",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/bike-rider-sweat-smell-india",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/can-fabric-spray-replace-dry-cleaning",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/confidence-spray-pre-meeting-date",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/cotton-vs-polyester-which-smells-worse",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/why-polyester-holds-odor-longer-than-cotton",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/cricket-jersey-smell-how-to-fix",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/gym-clothes-smell-after-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/does-febreze-work-on-sweat-smell-clothes",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/odorstrike-vs-febreze-india",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/dri-fit-shirts-smell",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/gym-clothes-smell-after-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/fix-shirt-odor-before-meeting",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/gym-to-office-without-showering",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/hostel-clothes-smell-college-guide",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-clothes-fresh-without-washing-machine",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-long-does-fabric-spray-last-on-clothes",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/how-to-use-odorstrike",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-to-keep-cotton-kurtas-fresh",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-to-not-smell-sweaty-at-work",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-to-remove-cooking-smell-from-clothes",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/remove-cooking-smell-from-clothes",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-to-remove-musty-smell-from-clothes-monsoon",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/damp-clothes-musty-smell-monsoon-fix",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-to-remove-smell-from-formal-trousers",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-to-remove-smell-from-hoodies-sweatshirts",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-to-remove-smell-from-jeans-without-washing",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/how-often-to-wash-jeans-india",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-to-remove-smell-from-winter-jackets-sweaters",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/solutions/denim-outerwear-dry-care",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/indian-summer-sweat-smell-guide",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/keep-gym-clothes-fresh-in-bag",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/gym-clothes-smell-after-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/monsoon-damp-clothes-smell",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/damp-clothes-musty-smell-monsoon-fix",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/remove-sweat-smell-shirts-without-washing",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/rewear-clothes-without-smelling",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/why-clothes-smell-bad-again-after-sweating",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/sherwani-bandhgala-smell-before-wedding",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/wedding-festive-wear-odor-guide",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/shoes-sports-gear-odor",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/what-is-fabric-odor-eliminator",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/smoke-smell-clothes",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/remove-cigarette-smoke-smell-from-clothes",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/travel-clothes-smell-india-guide",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-clothes-fresh-while-travelling",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/why-indian-men-sweat-smell-more",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/why-body-odor-comes-back-on-clothes-so-quickly",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/beta-cyclodextrin-odor-removal-science",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/hpbcd-cyclodextrin-fabric-odor",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/remove-smell-from-blazer-without-dry-cleaning",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/remove-smell-from-hoodie-without-washing",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-to-remove-cooking-smell-from-clothes/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/remove-cooking-smell-from-clothes",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/beta-cyclodextrin-odor-removal-science/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/hpbcd-cyclodextrin-fabric-odor",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/dri-fit-shirts-smell/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/gym-clothes-smell-after-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/why-indian-men-sweat-smell-more/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/why-body-odor-comes-back-on-clothes-so-quickly",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/best-fabric-odor-spray-india-2026/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/best-fabric-odor-spray-india-2026-body-odor",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/is-zinc-ricinoleate-safe-for-clothes/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/zinc-pca-fabric-odor-ingredient-guide",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/zinc-ricinoleate-fabric-odor-ingredient/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/zinc-pca-fabric-odor-ingredient-guide",
-      "statusCode": 301
-    },
-    {
-      "source": "/about/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/about",
-      "statusCode": 301
-    },
-    {
-      "source": "/faq/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/faq",
-      "statusCode": 301
-    },
-    {
-      "source": "/odorstrike/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/",
-      "statusCode": 301
-    },
-    {
-      "source": "/reviews/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/reviews",
-      "statusCode": 301
     },
     {
       "source": "/(.*)",
@@ -678,292 +23,252 @@
         }
       ],
       "destination": "https://smelloff.in/$1",
-      "statusCode": 301
-    },
-    {
-      "source": "/odorstrike",
-      "destination": "/",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/policies/:slug(privacy|terms|returns|refund|shipping|cancellation|payment-failed)",
       "destination": "/:slug",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/index",
       "destination": "/",
-      "statusCode": 301
-    },
-    {
-      "source": "/solutions/index",
-      "destination": "/solutions",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/blog/zinc-ricinoleate-fabric-odor-ingredient",
       "destination": "/blog/zinc-pca-fabric-odor-ingredient-guide",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/blog/is-zinc-ricinoleate-safe-for-clothes",
       "destination": "/blog/zinc-pca-fabric-odor-ingredient-guide",
-      "statusCode": 301
+      "permanent": true
+    },
+    {
+      "source": "/blog/best-body-odor-remover-spray-for-men-india",
+      "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor",
+      "permanent": true
     },
     {
       "source": "/blog/spray-for-clothes-not-skin",
       "destination": "/blog/best-deodorant-spray-for-clothes-not-skin",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/blog/index",
       "destination": "/blog",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/blog/best-fabric-odor-spray-india-2026",
-      "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/shirt-odor-spray",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/pocket-odor-spray-for-clothes",
-      "destination": "/",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
+    },
+    {
+      "source": "/blog/where-to-buy-odorstrike-india",
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/clothes-smell-after-washing",
       "destination": "/blog/gym-clothes-smell-after-washing",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/blog/school-uniform-smell-india-guide",
-      "destination": "/blog/keep-clothes-fresh-without-washing-machine",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/shirt-smell-after-ironing",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
+    },
+    {
+      "source": "/blog/alternative-to-deodorant-for-clothes-smell",
+      "destination": "/blog/deodorant-vs-fabric-mist",
+      "permanent": true
     },
     {
       "source": "/blog/bangalore-office-sweat-smell-guide",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/bike-rider-sweat-smell-india",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/can-fabric-spray-replace-dry-cleaning",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/confidence-spray-pre-meeting-date",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/cotton-vs-polyester-which-smells-worse",
-      "destination": "/blog/why-polyester-holds-odor-longer-than-cotton",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/cricket-jersey-smell-how-to-fix",
-      "destination": "/blog/gym-clothes-smell-after-washing",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/does-febreze-work-on-sweat-smell-clothes",
       "destination": "/blog/odorstrike-vs-febreze-india",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/blog/dri-fit-shirts-smell",
       "destination": "/blog/gym-clothes-smell-after-washing",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/blog/fix-shirt-odor-before-meeting",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/gym-to-office-without-showering",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/hostel-clothes-smell-college-guide",
-      "destination": "/blog/keep-clothes-fresh-without-washing-machine",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/how-long-does-fabric-spray-last-on-clothes",
-      "destination": "/blog/how-to-use-odorstrike",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/how-to-keep-cotton-kurtas-fresh",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/how-to-not-smell-sweaty-at-work",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/how-to-remove-cooking-smell-from-clothes",
-      "destination": "/blog/remove-cooking-smell-from-clothes",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/how-to-remove-musty-smell-from-clothes-monsoon",
-      "destination": "/blog/damp-clothes-musty-smell-monsoon-fix",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/how-to-remove-smell-from-formal-trousers",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/how-to-remove-smell-from-hoodies-sweatshirts",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/how-to-remove-smell-from-jeans-without-washing",
-      "destination": "/blog/how-often-to-wash-jeans-india",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/how-to-remove-smell-from-winter-jackets-sweaters",
-      "destination": "/solutions/denim-outerwear-dry-care",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/indian-summer-sweat-smell-guide",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/keep-gym-clothes-fresh-in-bag",
       "destination": "/blog/gym-clothes-smell-after-washing",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/blog/monsoon-damp-clothes-smell",
-      "destination": "/blog/damp-clothes-musty-smell-monsoon-fix",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
+    },
+    {
+      "source": "/blog/mumbai-humidity-sweat-smell-survival-guide",
+      "destination": "/odorstrike",
+      "permanent": true
+    },
+    {
+      "source": "/blog/office-ac-trap-why-rewear-shirts-smell-worse",
+      "destination": "/odorstrike",
+      "permanent": true
+    },
+    {
+      "source": "/blog/perfume-plus-sweat-chemical-reaction",
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/remove-sweat-smell-shirts-without-washing",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
-      "statusCode": 301
+      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-instantly",
+      "permanent": true
     },
     {
       "source": "/blog/rewear-clothes-without-smelling",
-      "destination": "/blog/why-clothes-smell-bad-again-after-sweating",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/sherwani-bandhgala-smell-before-wedding",
       "destination": "/blog/wedding-festive-wear-odor-guide",
-      "statusCode": 301
+      "permanent": true
     },
     {
       "source": "/blog/shoes-sports-gear-odor",
-      "destination": "/blog/what-is-fabric-odor-eliminator",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/smoke-smell-clothes",
-      "destination": "/blog/remove-cigarette-smoke-smell-from-clothes",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/travel-clothes-smell-india-guide",
-      "destination": "/blog/keep-clothes-fresh-while-travelling",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
+    },
+    {
+      "source": "/blog/why-deodorant-stops-working-after-3-hours",
+      "destination": "/odorstrike",
+      "permanent": true
     },
     {
       "source": "/blog/why-indian-men-sweat-smell-more",
-      "destination": "/blog/why-body-odor-comes-back-on-clothes-so-quickly",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/beta-cyclodextrin-odor-removal-science",
-      "destination": "/blog/hpbcd-cyclodextrin-fabric-odor",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/remove-smell-from-blazer-without-dry-cleaning",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/remove-smell-from-hoodie-without-washing",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/how-to-remove-cooking-smell-from-clothes/",
-      "destination": "/blog/remove-cooking-smell-from-clothes",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/beta-cyclodextrin-odor-removal-science/",
-      "destination": "/blog/hpbcd-cyclodextrin-fabric-odor",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/dri-fit-shirts-smell/",
-      "destination": "/blog/gym-clothes-smell-after-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/why-indian-men-sweat-smell-more/",
-      "destination": "/blog/why-body-odor-comes-back-on-clothes-so-quickly",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/best-fabric-odor-spray-india-2026/",
-      "destination": "/blog/best-fabric-odor-spray-india-2026-body-odor",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/is-zinc-ricinoleate-safe-for-clothes/",
-      "destination": "/blog/zinc-pca-fabric-odor-ingredient-guide",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/zinc-ricinoleate-fabric-odor-ingredient/",
-      "destination": "/blog/zinc-pca-fabric-odor-ingredient-guide",
-      "statusCode": 301
-    },
-    {
-      "source": "/odorstrike/",
-      "destination": "/",
-      "statusCode": 301
-    },
-    {
-      "source": "/(.*)\\.html",
-      "destination": "/$1",
-      "statusCode": 301
-    },
-    {
-      "source": "/:path+/",
-      "destination": "/:path+",
-      "statusCode": 301
+      "destination": "/odorstrike",
+      "permanent": true
     }
   ],
   "headers": [
@@ -1001,25 +306,7 @@
       ]
     },
     {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
-    },
-    {
       "source": "/payment-failed",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, follow"
-        }
-      ]
-    },
-    {
-      "source": "/shop",
       "headers": [
         {
           "key": "X-Robots-Tag",
@@ -1085,57 +372,6 @@
     },
     {
       "source": "/llms-full.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow"
-        }
-      ]
-    },
-    {
-      "source": "/feed.xml",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/rss+xml; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow"
-        }
-      ]
-    },
-    {
-      "source": "/.well-known/llms.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow"
-        }
-      ]
-    },
-    {
-      "source": "/.well-known/llms-full.txt",
       "headers": [
         {
           "key": "Content-Type",
@@ -1228,6 +464,15 @@
         {
           "key": "Service-Worker-Allowed",
           "value": "/"
+        }
+      ]
+    },
+    {
+      "source": "/blog/cricket-jersey-smell-how-to-fix",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
         }
       ]
     }

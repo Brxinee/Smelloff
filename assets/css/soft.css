@@ -24,12 +24,13 @@
    ===================================================================== */
 
 :root{
-  /* Physical campaign scale: 4px-8px max for cards and panels. Precision machined. */
-  --sq-xs:4px;
-  --sq-sm:6px;    /* buttons & inputs */
-  --sq-md:6px;
-  --sq-lg:8px;    /* cards */
-  --sq-xl:8px;    /* panels, gallery tiles */
+  /* Squircle scale. 32px on cards is wimpdecaf's number; the rest are
+     proportional steps so nested shapes stay visually concentric. */
+  --sq-xs:8px;
+  --sq-sm:11px;    /* buttons — .6875rem */
+  --sq-md:18px;
+  --sq-lg:28px;    /* cards */
+  --sq-xl:36px;    /* large panels, gallery tiles */
   --sq-pill:999px;
 
   /* Hairline outline replaces the old 3px hard border. */
@@ -49,8 +50,8 @@
   60%{transform:translateY(-1px)}
 }
 
-.btn,.nb-btn,.buy-btn,.cta,a.cta,button.cta,
-.product-form__submit,
+.btn,.nb-btn,.buy-btn,.buy-pill,.cta,a.cta,button.cta,
+.product-form__submit,.nav-cta,.nav-links a.nav-cta,
 .b-buy-btn,.end-cta .btn,.write-review-btn,
 /* The /odorstrike CTAs. They were the only square-cornered buttons left on
    the site — the page names them .hero-cta / .fix-cta / .mb-btn rather than
@@ -119,18 +120,12 @@
 /* Ghost/secondary: hairline outline instead of the old 3px slab. */
 .btn-ghost,.nb-btn--ghost{
   background:transparent !important;
-  border:var(--hair-strong) solid var(--color-border-strong) !important;
+  border:var(--hair-strong) solid var(--rule-strong) !important;
   color:var(--text) !important;
 }
-/* Stage 1 chrome buttons must not inherit bounce / uppercase / pill radius. */
-.so-btn,.so-btn:hover,.so-btn:active,
-.sf-hdr__cta,.sf-hdr__cta:hover,.sf-hdr__cta:active,
-.so-pay__opt,.so-sticky .so-btn,
-.mobile-bar#mobileBar .mb-btn{
-  animation:none !important;
-  text-transform:none !important;
-  letter-spacing:0 !important;
-  border-radius:var(--so-radius-btn, 8px) !important;
+.btn-ghost:hover,.nb-btn--ghost:hover{
+  border-color:var(--acid) !important;
+  color:var(--acid) !important;
 }
 
 /* ---------------------------------------------------------------------
@@ -149,7 +144,7 @@
 .b-card,.guide-card,.card,.rv-card,.review,.price-card,
 .end-cta,.read-next,.b-buy-card,.nf-card,.contact-card,.track-card{
   border-radius:var(--sq-lg) !important;
-  border:var(--hair) solid var(--color-border) !important;
+  border:var(--hair) solid var(--rule) !important;
   box-shadow:none !important;
   background:var(--surface);
   overflow:hidden;
@@ -164,7 +159,7 @@
   .zone:hover,.voice:hover,.faq-item:hover,.b-card:hover,.guide-card:hover,
   .card:hover,.rv-card:hover,.product-visual:hover{
     transform:translateY(-3px) !important;
-    border-color:var(--color-border-strong) !important;
+    border-color:var(--rule-strong) !important;
     box-shadow:none !important;
     background:var(--surface-2);
   }
@@ -179,7 +174,7 @@
    radius on the band rather than each cell. */
 .benefits-strip{
   border-radius:var(--sq-xl);
-  border:var(--hair) solid var(--color-border) !important;
+  border:var(--hair) solid var(--rule) !important;
   overflow:hidden;
   margin-inline:auto;
   max-width:var(--maxw);
@@ -188,7 +183,7 @@
 .benefits-strip .trust-row li{
   border-radius:0 !important;
   border:0 !important;
-  border-right:var(--hair) solid var(--color-border) !important;
+  border-right:var(--hair) solid var(--rule) !important;
   background:transparent;
 }
 .benefits-strip .trust-row li:last-child{border-right:0 !important}
@@ -227,7 +222,7 @@
    --------------------------------------------------------------------- */
 .faq details,details.faq-item,details.faq-q,.faq-list details{
   border-radius:var(--sq-lg) !important;
-  border:var(--hair) solid var(--color-border) !important;
+  border:var(--hair) solid var(--rule) !important;
   background:var(--surface);
   padding:0 !important;
   overflow:hidden;
@@ -235,7 +230,7 @@
 }
 details.faq-item[open],.faq details[open],.faq-list details[open]{
   background:var(--surface-2);
-  border-color:var(--color-border-strong) !important;
+  border-color:var(--rule-strong) !important;
 }
 details.faq-item > summary,.faq details > summary,.faq-list details > summary{
   cursor:pointer;
@@ -247,7 +242,7 @@ details.faq-item > summary,.faq details > summary,.faq-list details > summary{
      site reads at one size in one face. The homepage set Fraunces on its
      nested <h3> instead, which is why its questions came out in the display
      face at 25px while everyone else's were 19px. */
-  font-family:var(--font-display);
+  font-family:var(--display);
   font-weight:900;
   font-size:clamp(16px,2.2vw,19px);
   line-height:1.35;
@@ -343,7 +338,7 @@ details[open] .faq-answer-wrap{grid-template-rows:1fr}
    4 · NAV + CART DRAWER
    --------------------------------------------------------------------- */
 header.site,nav.site-nav,.b-nav{
-  border-bottom:var(--hair) solid var(--color-border) !important;
+  border-bottom:var(--hair) solid var(--rule) !important;
 }
 .nav-links a,.b-nav a{border-radius:var(--sq-sm)}
 .cart-btn,.nav-toggle,.b-nav-btn{border-radius:var(--sq-pill)}
@@ -353,24 +348,24 @@ header.site,nav.site-nav,.b-nav{
 .cart-drawer,.overlay-panel,.minicart,#cartDrawer,.drawer,
 .b-drawer,.checkout-panel{
   border-radius:var(--sq-xl) 0 0 var(--sq-xl);
-  border-left:var(--hair) solid var(--color-border);
+  border-left:var(--hair) solid var(--rule);
 }
 @media(max-width:640px){
   .cart-drawer,.overlay-panel,.minicart,#cartDrawer,.drawer,
   .b-drawer,.checkout-panel{
     border-radius:var(--sq-xl) var(--sq-xl) 0 0;
     border-left:0;
-    border-top:var(--hair) solid var(--color-border);
+    border-top:var(--hair) solid var(--rule);
   }
 }
 .cart-item,.cart-line,.mc-item{border-radius:var(--sq-md);overflow:hidden}
 .cart-line-img,.mc-item img{border-radius:var(--sq-xs);overflow:hidden}
 .cart-checkout,.cart-empty .btn{border-radius:var(--sq-sm) !important;box-shadow:none !important}
 .cart-close,.b-drawer-close,.overlay-close{border-radius:var(--sq-pill)}
-.cart-stepper,.cart-qty{border-radius:var(--sq-pill);overflow:hidden;border:var(--hair) solid var(--color-border)}
+.cart-stepper,.cart-qty{border-radius:var(--sq-pill);overflow:hidden;border:var(--hair) solid var(--rule)}
 .b-drawer-cat,.filter-chip,.b-jump-pill{
   border-radius:var(--sq-pill) !important;
-  border:var(--hair) solid var(--color-border) !important;
+  border:var(--hair) solid var(--rule) !important;
 }
 .b-drawer-cat.active,.filter-chip.active{
   background:var(--acid) !important;color:var(--on-acid) !important;border-color:var(--acid) !important;
@@ -382,7 +377,7 @@ header.site,nav.site-nav,.b-nav{
 input[type="text"],input[type="email"],input[type="tel"],input[type="search"],
 input[type="number"],textarea,select,.b-search,.field input,.form-input{
   border-radius:var(--sq-sm) !important;
-  border:var(--hair) solid var(--color-border) !important;
+  border:var(--hair) solid var(--rule) !important;
   background:var(--surface) !important;
   color:var(--text);
   transition:border-color .2s var(--ease);
@@ -427,19 +422,19 @@ footer:has(> a) > a{
    (WCAG 2.5.8 exempts links in a sentence, and padding them would break
    the line rhythm). */
 .nav-links a,#navMenu a,footer ul a,.footer-col > a,.b-drawer-nav a,
-.nf-links a,
-.footer-links > a,.footer-guides > a,.footer-policy > a{
+.p-nav a,.p-footer-links > a,.p-footer-guides > a,.p-footer-policy > a,.nf-links a,.b-nav a,
+.blog-nav a,.footer-links > a,.footer-guides > a,.footer-policy > a{
   min-height:44px;
   display:inline-flex;align-items:center;
 }
 /* The policy-page footers are inline runs, so the flex boxes above need to
    wrap and keep a readable gap once each link is 44px tall. */
-.nf-links,
+.p-footer-links,.p-footer-guides,.p-footer-policy,.nf-links,
 .footer-links,.footer-guides,.footer-policy{
   display:flex;flex-wrap:wrap;align-items:center;
   gap:0 14px;
 }
-.socials a{min-width:44px;min-height:44px}
+.socials a,.blog-footer .socials a{min-width:44px;min-height:44px}
 
 .hero-hook,.chip,.tag,.badge,.b-thumb-cat,.b-card-cat,.v-tag,.pill{
   border-radius:var(--sq-pill);

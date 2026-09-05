@@ -10,7 +10,6 @@ import {
   orderCancelled,
   refundProcessed,
 } from './email-templates.js';
-import { isAdminAuthorized } from './_security.js';
 
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
 const REPLY_TO = 'smelloffsupport@gmail.com';
@@ -27,21 +26,15 @@ const TEMPLATES = {
   refundProcessed,
 };
 
-const RESTRICTED_TEMPLATES = new Set([
-  'orderConfirmation',
-  'orderShipped',
-  'outForDelivery',
-  'orderDelivered',
-  'orderCancelled',
-  'refundProcessed'
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const ALLOWED_ORIGINS = new Set([
+  'https://smelloff.in',
+  'https://www.smelloff.in',
 ]);
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ALLOWED_ORIGINS = new Set(['https://smelloff.in', 'https://www.smelloff.in']);
-const MAX_BODY_BYTES = 40 * 1024;
-const MAX_DATA_KEYS = 80;
-
-// Best-effort in-memory rate limiter (per warm lambda instance).
+// Best-effort in-memory rate limiter (per warm lambda instance). Keeps this
+// transactional-email endpoint from being abused as an open relay/spam vector.
 const RATE_LIMIT = 12;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const rlBuckets = new Map();
@@ -62,91 +55,71 @@ function rateLimited(key) {
 }
 
 function isAllowedOrigin(origin) {
-  if (!origin) return true; // same-origin/server-to-server requests may omit Origin
+  if (!origin) return false;
   if (ALLOWED_ORIGINS.has(origin)) return true;
-  // Vercel previews are only allowed outside production. Production must stay
-  // locked to the two canonical storefront origins.
-  if (process.env.VERCEL_ENV !== 'production') {
-    if (origin.endsWith('.vercel.app') || origin.endsWith('.run.app') || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) return true;
-  }
+  if (origin.endsWith('.run.app') || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) return true;
   return false;
-}
-
-function sanitizeData(value, depth = 0) {
-  if (depth > 3 || value == null) return value == null ? null : undefined;
-  if (typeof value === 'string') return value.slice(0, 8000);
-  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
-  if (typeof value === 'boolean') return value;
-  if (Array.isArray(value)) return value.slice(0, 40).map(v => sanitizeData(v, depth + 1));
-  if (typeof value === 'object') {
-    const out = {};
-    for (const [key, raw] of Object.entries(value).slice(0, MAX_DATA_KEYS)) {
-      // Never accept secrets or arbitrary headers as template data.
-      if (/password|secret|token|authorization|cookie|service.?role|api.?key/i.test(key)) continue;
-      out[String(key).slice(0, 100)] = sanitizeData(raw, depth + 1);
-    }
-    return out;
-  }
-  return undefined;
 }
 
 export default async function handler(req, res) {
   res.setHeader('X-Powered-By', 'Smelloff');
   const origin = req.headers.origin;
-  if (!isAllowedOrigin(origin)) return res.status(403).json({ error: 'Origin not allowed' });
-
-  if (origin) {
+  if (isAllowedOrigin(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
   }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') return res.status(204).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
+  // Behind Cloudflare, x-forwarded-for is a Cloudflare POP shared by many
+  // visitors — rate-limiting on it would throttle everyone routed through the
+  // same POP together. cf-connecting-ip is the real client.
   const pickIp = (v) => String(Array.isArray(v) ? v[0] : v || '').split(',')[0].trim();
   const ip = pickIp(req.headers['cf-connecting-ip'])
     || pickIp(req.headers['true-client-ip'])
     || pickIp(req.headers['x-forwarded-for'])
     || 'unknown';
-  if (rateLimited(ip)) return res.status(429).json({ error: 'Too many requests. Please slow down.' });
+  if (rateLimited(ip)) {
+    return res.status(429).json({ error: 'Too many requests. Please slow down.' });
+  }
+
+  if (!process.env.RESEND_API_KEY) {
+    console.error('RESEND_API_KEY missing');
+    return res.status(500).json({ error: 'Email service not configured' });
+  }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
-    const rawBody = req.body && typeof req.body === 'object' ? req.body : {};
-    if (JSON.stringify(rawBody).length > MAX_BODY_BYTES) {
-      return res.status(413).json({ error: 'Request too large' });
+    const body = req.body || {};
+    const { to, type, data = {} } = body;
+
+    if (!to) {
+      return res.status(400).json({ error: 'Missing "to"' });
+    }
+    if (!EMAIL_RE.test(to)) {
+      return res.status(400).json({ error: 'Invalid email address' });
     }
 
-    const to = String(rawBody.to || '').trim().toLowerCase();
-    const type = String(rawBody.type || '').trim();
-    if (!EMAIL_RE.test(to)) return res.status(400).json({ error: 'Invalid email address' });
-
+    if (!type) {
+      return res.status(400).json({ error: 'Missing "type" (template)' });
+    }
     const builder = TEMPLATES[type];
-    if (!builder) return res.status(400).json({ error: 'Unknown email template' });
-
-    // Protect sensitive order lifecycle emails from unauthenticated public invocation
-    if (RESTRICTED_TEMPLATES.has(type) && !isAdminAuthorized(req)) {
-      return res.status(401).json({ error: 'Unauthorized. Transactional template requires admin authorization.' });
+    if (!builder) {
+      return res.status(400).json({ error: `Unknown template: ${type}` });
     }
+    const { subject, html } = builder(data);
 
-    if (!process.env.RESEND_API_KEY) {
-      console.error('RESEND_API_KEY missing');
-      return res.status(500).json({ error: 'Email service not configured' });
-    }
-
-    const data = sanitizeData(rawBody.data || {});
-    const { subject, html } = builder(data || {});
-    if (!subject || !html || typeof subject !== 'string' || typeof html !== 'string') {
-      return res.status(500).json({ error: 'Invalid email template output' });
-    }
-
-    const resend = new Resend(process.env.RESEND_API_KEY);
     const result = await resend.emails.send({
       from: FROM,
       to,
       replyTo: REPLY_TO,
-      subject: subject.slice(0, 200),
+      subject,
       html,
     });
 
