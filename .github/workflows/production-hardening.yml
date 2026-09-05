@@ -1,0 +1,53 @@
+name: Production hardening
+
+on:
+  push:
+    branches: [production-hardening-2026-09-06]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Apply hardening transformations
+        if: github.event_name == 'push'
+        run: node scripts/maintenance/apply-production-hardening.mjs
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+
+      - name: Syntax checks
+        run: |
+          set -e
+          node --check server.js
+          find api scripts -type f \( -name '*.js' -o -name '*.mjs' \) -print0 | xargs -0 -n1 node --check
+
+      - name: Production content audit
+        run: node scripts/audit-production.mjs
+
+      - name: Commit generated hardening changes
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+          else
+            git commit -m "chore: apply production hardening fixes"
+            git push
+          fi
