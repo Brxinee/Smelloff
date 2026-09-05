@@ -5,17 +5,15 @@ const ALLOWED_ORIGINS = new Set(['https://smelloff.in', 'https://www.smelloff.in
 export function isAllowedOrigin(origin) {
   if (!origin) return true; // server-to-server or same-origin requests may omit Origin
   if (ALLOWED_ORIGINS.has(origin)) return true;
-  if (process.env.VERCEL_ENV !== 'production') {
-    if (
-      origin.endsWith('.vercel.app') ||
-      origin.endsWith('.run.app') ||
-      origin.endsWith('.googleusercontent.com') ||
-      origin.endsWith('.aistudio.google.com') ||
-      origin.startsWith('http://localhost') ||
-      origin.startsWith('http://127.0.0.1')
-    ) {
-      return true;
-    }
+  if (
+    origin.endsWith('.vercel.app') ||
+    origin.endsWith('.run.app') ||
+    origin.endsWith('.googleusercontent.com') ||
+    origin.endsWith('.aistudio.google.com') ||
+    origin.startsWith('http://localhost') ||
+    origin.startsWith('http://127.0.0.1')
+  ) {
+    return true;
   }
   return false;
 }

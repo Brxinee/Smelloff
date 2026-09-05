@@ -1,6 +1,7 @@
 // /api/track — first-party, cookieless analytics + cart beacon (full funnel).
 // Privacy-first: daily rotating server-side visitor hash, no raw IP/PII at rest.
 import crypto from 'node:crypto';
+import { isAllowedOrigin } from './_security.js';
 
 const SUPABASE_URL =
   process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
@@ -144,7 +145,7 @@ export default async function handler(req, res) {
   const origin = req.headers.origin;
 
   if (req.method === 'OPTIONS') {
-    if (origin && !ALLOWED_ORIGINS.has(origin)) return res.status(403).end();
+    if (origin && !isAllowedOrigin(origin)) return res.status(403).end();
     if (origin) {
       res.setHeader('Access-Control-Allow-Origin', origin);
       res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -155,7 +156,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== 'POST') return res.status(405).end();
-  if (origin && !ALLOWED_ORIGINS.has(origin)) return res.status(204).end();
+  if (origin && !isAllowedOrigin(origin)) return res.status(204).end();
 
   // Fail silently: analytics must never surface an error to shoppers.
   try {

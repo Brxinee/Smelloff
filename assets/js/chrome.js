@@ -309,6 +309,7 @@
       onScroll();
     }
 
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) {
       bar.style.transition = 'none';
     }
