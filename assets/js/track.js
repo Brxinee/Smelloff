@@ -10,6 +10,37 @@
   'use strict';
   if (window.smfTrack) return; // double-include guard
 
+  /* --- Search Console query-variant guard ---------------------------
+     The static site serves one document for clean and parameterized URLs.
+     Tracking/referral/cart/search/order-code parameters are state, not unique
+     content. Mark the parameterized document noindex while leaving the query
+     string intact so real visitor functionality continues to work.
+
+     This directly addresses URLs such as:
+       /?q=...
+       /?cart=open
+       /odorstrike?ref=...
+       /track-order?code=...
+     without sacrificing the canonical clean URL.
+  ---------------------------------------------------------------------- */
+  if (window.location.search) {
+    var robots = document.querySelector('meta[name="robots"]');
+    if (!robots) {
+      robots = document.createElement('meta');
+      robots.name = 'robots';
+      document.head.appendChild(robots);
+    }
+    robots.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
+
+    var googlebot = document.querySelector('meta[name="googlebot"]');
+    if (!googlebot) {
+      googlebot = document.createElement('meta');
+      googlebot.name = 'googlebot';
+      document.head.appendChild(googlebot);
+    }
+    googlebot.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
+  }
+
   var ENDPOINT = '/api/track';
   var noop = function () {};
 
@@ -60,9 +91,26 @@
   function send(payload) {
     try {
       payload = payload || {};
-      payload.path = payload.path || (location.pathname + location.search);
+      /*
+       * Never send query strings to analytics. Besides preventing duplicate
+       * analytics buckets for every UTM/cart/ref/order-code variant, this
+       * avoids leaking referral tokens or order tracking codes into the
+       * first-party analytics table.
+       */
+      payload.path = payload.path || location.pathname;
       payload.ref = payload.ref || document.referrer || '';
       if (sid) payload.session = sid;
+      try {
+        var utmS = localStorage.getItem('smelloff_utm_source');
+        var utmM = localStorage.getItem('smelloff_utm_medium');
+        var utmC = localStorage.getItem('smelloff_utm_campaign');
+        if (utmS || utmM || utmC) {
+          payload.meta = payload.meta || {};
+          if (utmS && !payload.meta.utm_source) payload.meta.utm_source = utmS;
+          if (utmM && !payload.meta.utm_medium) payload.meta.utm_medium = utmM;
+          if (utmC && !payload.meta.utm_campaign) payload.meta.utm_campaign = utmC;
+        }
+      } catch (e) {}
       var body = JSON.stringify(payload);
       // sendBeacon survives page unloads; fetch keepalive is the fallback.
       if (navigator.sendBeacon) {
@@ -89,8 +137,8 @@
   history.pushState = function () { _ps.apply(this, arguments); send({ type: 'pageview' }); };
   addEventListener('popstate', function () { send({ type: 'pageview' }); });
 
-  // The PDP is the top of the shopping funnel.
-  if (/^\/odorstrike\/?$/.test(location.pathname)) {
+  // Homepage is the product page. /odorstrike still 301s here.
+  if (location.pathname === '/' || location.pathname === '' || /^\/odorstrike\/?$/.test(location.pathname)) {
     send({ type: 'product_view', label: 'ODORSTRIKE Fabric Mist' });
   }
 
