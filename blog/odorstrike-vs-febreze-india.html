@@ -61,150 +61,7 @@
 <link rel="stylesheet" href="/assets/css/tokens.css?v=98347b93">
 <meta name="theme-color" content="#080808">
 
-<style>
-  
 
-* { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body {
-  font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
-  background:var(--bg); color:var(--text); line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-}
-.blog-nav { position:sticky; top:0; background:color-mix(in srgb, var(--bg) 95%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:max(16px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) 16px max(24px, env(safe-area-inset-left, 0px)); display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--rule); z-index:100; }
-.blog-nav .logo { font-family:"Barlow Condensed",sans-serif; font-weight:900; font-size:22px; letter-spacing:3px; text-transform:uppercase; color:var(--text); text-decoration:none; position:relative; padding-right:12px; }
-.blog-nav .logo::after { content:""; position:absolute; top:-2px; right:0; width:6px; height:6px; background:var(--accent); border-radius:50%; }
-.blog-nav .buy-pill { background:var(--accent); color:var(--bg); font-family:"Inter Tight",sans-serif; font-weight:700; font-size:14px; padding:8px 18px; border-radius:100px; text-decoration:none; }
-.container { max-width:720px; margin:0 auto; padding:40px 24px 80px; }
-.meta { color:var(--muted); font-size:13px; margin-bottom:16px; text-transform:uppercase; letter-spacing:1px; }
-h1 { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:48px; line-height:1.05; letter-spacing:-0.5px; margin-bottom:12px; }
-.subtitle { font-size:18px; color:var(--accent); font-weight:500; margin-bottom:32px; }
-.intro { font-size:17px; color:var(--text-secondary); margin-bottom:40px; }
-.intro strong { color:var(--accent); }
-h2 { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:32px; line-height:1.1; margin:48px 0 20px; letter-spacing:-0.3px; }
-h3 { font-size:20px; font-weight:700; margin:24px 0 12px; }
-p { margin-bottom:18px; color:var(--text-secondary); }
-p strong { color:var(--text); }
-.callout { background:var(--bg-surface); border-left:3px solid var(--accent); padding:20px 24px; margin:28px 0; border-radius:4px; }
-.callout p:last-child { margin-bottom:0; }
-.verdict-table { width:100%; border-collapse:collapse; margin:28px 0; font-size:14px; background:var(--bg); border-radius:8px; overflow:hidden; }
-.verdict-table th, .verdict-table td { padding:14px 12px; text-align:left; border-bottom:1px solid var(--rule); }
-.verdict-table th { background:var(--bg-surface); color:var(--accent); font-weight:700; text-transform:uppercase; font-size:12px; letter-spacing:1px; }
-.verdict-table td { color:var(--text-secondary); }
-.win { color:var(--accent); font-weight:700; }
-.cta-card { background:linear-gradient(135deg,var(--bg),var(--bg-surface)); border:1px solid var(--accent); padding:28px; border-radius:10px; margin:40px 0; }
-.cta-card h3 { color:var(--accent); margin-top:0; }
-.cta-card a { display:inline-block; background:var(--accent); color:var(--bg); padding:12px 24px; border-radius:6px; font-weight:700; text-decoration:none; margin-top:12px; }
-.cta-card .price-strike { color:var(--muted); text-decoration:line-through; margin-right:8px; }
-.cta-card .price-live { color:var(--accent); font-weight:700; }
-.quiz { background:var(--bg); padding:24px; border-radius:10px; margin:32px 0; border:1px solid var(--rule); }
-.quiz h3 { margin-top:0; color:var(--accent); }
-.quiz-q { margin:16px 0 8px; font-weight:600; color:var(--text); }
-.quiz-opts button { display:block; width:100%; text-align:left; background:var(--bg-surface); color:var(--text-secondary); border:1px solid var(--rule); padding:10px 14px; margin:6px 0; border-radius:6px; cursor:pointer; font-size:14px; font-family:inherit; transition:all 0.15s; }
-.quiz-opts button:hover { border-color:var(--accent); color:var(--text); }
-.quiz-opts button.picked { background:var(--accent); color:var(--bg); border-color:var(--accent); }
-.quiz-verdict { display:none; margin-top:20px; padding:16px; background:var(--bg); border-left:3px solid var(--accent); border-radius:4px; font-weight:600; }
-.quiz-verdict.show { display:block; }
-.related { margin-top:48px; padding-top:32px; border-top:1px solid var(--rule); }
-.related a { color:var(--accent); text-decoration:none; display:block; padding:8px 0; }
-.related a:hover { text-decoration:underline; }
-.blog-footer { border-top:1px solid var(--rule); padding:40px 32px; max-width:1120px; margin:60px auto 0; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:14px 24px; }
-.blog-footer .footer-bottom { width:100%; padding-top:16px; border-top:1px solid rgba(var(--accent-rgb),.15); font-family:"Inter Tight",sans-serif; font-size:11px; color:var(--muted); text-align:center; letter-spacing:.02em; margin-top:4px; }
-.footer-links { display:flex; flex-wrap:wrap; gap:8px 18px; font-family:"Inter Tight",sans-serif; font-size:13px; }
-.footer-links a { color:var(--muted); text-decoration:none; transition:color .15s ease; }
-.footer-links a:hover { color:var(--text); }
- .blog-footer{flex-direction:column;align-items:flex-start} .blog-footer{flex-direction:column;align-items:center;justify-content:center;text-align:center}.bf-brand{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);text-decoration:none;margin-bottom:4px}.bf-brand-inner{position:relative;padding-right:.2em}.bf-brand-dot{position:absolute;top:-.06em;right:0;width:.16em;height:.16em;background:var(--accent);border-radius:50%}.footer-related{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;align-items:center;font-family:'Inter Tight',sans-serif;font-size:12px;max-width:680px;margin:0 auto}.footer-related-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-right:4px}.footer-related a{color:var(--text-secondary);text-decoration:none;border-bottom:1px solid rgba(var(--accent-rgb),.18);padding-bottom:1px;transition:color .15s ease,border-color .15s ease}.footer-related a:hover{color:var(--text);border-bottom-color:var(--accent)}.footer-policy{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-family:'Inter Tight',sans-serif;font-size:11px}.footer-policy a{color:var(--muted);text-decoration:none;letter-spacing:.02em;transition:color .15s ease}.footer-policy a:hover{color:var(--muted)}.blog-footer .footer-bottom{text-align:left} 
-@media (max-width:640px){ h1{font-size:36px;} h2{font-size:26px;} .container{padding:32px 20px 60px;} }
-
-  /* end CTA + next read (unified) */
-  .end-cta{background:linear-gradient(135deg,var(--bg-surface) 0%,var(--bg-surface) 100%);border:1px solid var(--rule);border-radius:8px;padding:40px 36px;margin:60px 0 0;text-align:center}
-  .end-cta .cta-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
-  .end-cta h4{font-family:'Fraunces',serif;font-weight:600;font-size:28px;color:var(--text);margin-bottom:12px;line-height:1.2}
-  .end-cta p{color:var(--muted);font-size:16px;margin-bottom:20px}
-  .end-cta .price-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px}
-  .end-cta .strike-price{font-size:16px;color:var(--muted);text-decoration:line-through}
-  .end-cta .current-price{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;color:var(--accent)}
-  .end-cta .buy-btn{display:inline-block;background:var(--accent);color:var(--bg);font-family:'Inter Tight',sans-serif;font-weight:700;font-size:16px;padding:14px 32px;border-radius:100px;text-decoration:none;letter-spacing:.02em}
-  .next-read{border-top:1px solid var(--rule);padding-top:40px;margin-top:60px}
-  .next-read-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
-  .next-read a{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3vw,28px);color:var(--text);text-decoration:none;line-height:1.2;display:flex;align-items:flex-start;gap:14px;justify-content:space-between;transition:color .2s}
-  .next-read a:hover{color:var(--accent)}
-  .next-arrow{color:var(--accent);flex-shrink:0}
-
-  /* Keep-reading carousel (auto-scrolling, swipeable) */
-  .post-popular{
-    margin:48px -16px 8px;padding:24px 0;
-    background:var(--bg);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
-    overflow:hidden;user-select:none;
-  }
-  .post-popular-label{
-    padding:0 20px 14px;
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;
-    letter-spacing:.22em;text-transform:uppercase;color:var(--accent);
-    display:flex;align-items:center;gap:10px;
-  }
-  .post-popular-label::before{
-    content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);
-    box-shadow:0 0 10px var(--accent);
-  }
-  .post-popular-viewport{overflow:hidden;cursor:grab;touch-action:pan-y}
-  .post-popular-viewport.dragging{cursor:grabbing}
-  .post-popular-track{
-    display:flex;gap:14px;width:max-content;padding:0 20px;
-    transform:translate3d(0,0,0);will-change:transform;
-  }
-  .post-pc{
-    flex-shrink:0;width:240px;
-    background:var(--bg);border:1px solid var(--rule);border-radius:10px;
-    text-decoration:none;color:var(--text);overflow:hidden;
-    transition:border-color .2s ease,transform .2s ease;
-  }
-  .post-pc:hover{border-color:var(--accent);transform:translateY(-2px)}
-  .post-pc-thumb{
-    position:relative;aspect-ratio:5/3;padding:14px 16px;
-    display:flex;flex-direction:column;justify-content:center;align-items:center;
-    text-align:center;gap:10px;background:var(--bg);
-  }
-  .post-pc-thumb::before{
-    content:'';position:absolute;top:12px;left:12px;
-    width:8px;height:8px;background:var(--accent);border-radius:50%;
-  }
-  .post-pc-cat{
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:9px;
-    letter-spacing:.22em;text-transform:uppercase;color:var(--bg);
-    background:var(--accent);padding:4px 9px;border-radius:2px;
-  }
-  .post-pc-title{
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;
-    line-height:1;letter-spacing:.005em;text-transform:uppercase;color:var(--text);
-    max-width:90%;
-  }
-  @media(min-width:720px){
-    .post-popular{margin:56px -32px 8px}
-    .post-pc{width:280px}
-  }
-
-  /* Back-to-top floating button */
-  .to-top{
-    position:fixed;
-    right:20px;bottom:var(--toTopBottom,24px);
-    width:48px;height:48px;
-    background:var(--bg);color:var(--accent);
-    border:1px solid var(--accent);border-radius:50%;
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;
-    line-height:1;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    opacity:0;pointer-events:none;transform:translateY(8px);
-    transition:opacity .25s ease,transform .25s ease,background .15s ease,color .15s ease;
-    z-index:60;
-    box-shadow:0 4px 16px rgba(0,0,0,.45);
-  }
-  .to-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
-  .to-top:hover{background:var(--accent);color:var(--bg)}
-
-  /* Accessibility: visible keyboard focus (WCAG 2.4.7) */
-  a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
-</style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
   {"@type":"ListItem","position":1,"name":"Home","item":"https://smelloff.in/"},
@@ -212,7 +69,7 @@ p strong { color:var(--text); }
   {"@type":"ListItem","position":3,"name":"ODORSTRIKE vs Febreze — Which Works Better on Indian Clothes","item":"https://smelloff.in/blog/odorstrike-vs-febreze-india"}
 ]}
 </script>
-  <link rel="stylesheet" href="/assets/css/blog.css?v=367a415b">
+  <link rel="stylesheet" href="/assets/css/blog.css?v=61c28049">
 <!-- JSON-LD FAQPage -->
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Which is better for body odor on clothes, ODORSTRIKE or Febreze?","acceptedAnswer":{"@type":"Answer","text":"For body odor on clothes you wear in public, ODORSTRIKE is the better fit, because it provides a light, fast-fading fresh scent on spray while active odor neutralizers (Zinc PCA and HPβCD) bind and trap sweat compounds in the weave. Febreze also traps odor with cyclodextrin but is a home-size bottle with a heavy home fragrance and a 2 to 4 minute dry time. A pocket 50ml mist suits shirts far better."}},{"@type":"Question","name":"Is Febreze available in India?","acceptedAnswer":{"@type":"Answer","text":"Febreze is available in India only intermittently, usually through imports and quick-commerce apps rather than steady retail, and it typically costs more per bottle than in its home market. It works as a home fabric refresher, but stock and pricing are inconsistent. A locally made fabric mist like ODORSTRIKE is easier to buy, ships pan-India with cash-on-delivery, and is priced at ₹229."}},{"@type":"Question","name":"What's the difference between ODORSTRIKE and Febreze?","acceptedAnswer":{"@type":"Answer","text":"The difference is format and purpose: ODORSTRIKE is a 50ml pocket fabric mist built to neutralise body odor on clothes you wear out, while Febreze is a large home bottle built to refresh sofas, curtains and rooms. ODORSTRIKE provides a subtle, fast-fading fresh scent on spray and dries in about 10 seconds; Febreze carries a heavy room fragrance and takes longer to dry on a shirt."}},{"@type":"Question","name":"Can I use ODORSTRIKE on my couch like Febreze?","acceptedAnswer":{"@type":"Answer","text":"No. ODORSTRIKE is built for clothes, not home fabrics, and a 50ml pocket bottle would empty on a single couch. For sofas, curtains and car seats, a big home bottle like Febreze is the right tool. ODORSTRIKE is for the shirts, hoodies, jackets and kurtas you actually wear out."}},{"@type":"Question","name":"Which is better value in India, ODORSTRIKE or Febreze?","acceptedAnswer":{"@type":"Answer","text":"For clothing odor in India, ODORSTRIKE is the better value, at ₹229 for a pocket 50ml that neutralises sweat smell and ships nationwide with cash-on-delivery. Febreze often costs more and stocks inconsistently as an import, and its size suits home fabrics rather than daily shirt resets. The two solve different jobs, so value depends on whether you are treating clothes or furniture."}},{"@type":"Question","name":"Is there a Febreze alternative in India for clothes?","acceptedAnswer":{"@type":"Answer","text":"For clothes, ODORSTRIKE is the Indian alternative: 50ml pocket mist, ₹229 prepaid, HPβCD + Zinc PCA, clothes only. Febreze-style products are home-size bottles for rooms, sofas and curtains."}}]}
@@ -222,9 +79,9 @@ p strong { color:var(--text); }
 <link rel="alternate" type="text/plain" title="LLM content" href="https://smelloff.in/llms.txt">
 <link rel="alternate" type="application/rss+xml" title="Smelloff guides" href="https://smelloff.in/feed.xml">
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=8c6c6460">
+<link rel="stylesheet" href="/assets/css/soft.css?v=5cf00192">
 <link rel="stylesheet" href="/assets/css/checkout.css?v=8769926d">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=cc528ab2">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=fea652e2">
 <script src="/assets/js/chrome.js?v=40afd85a" defer></script>
 <script src="/assets/js/qr-creator.min.js?v=bfc60e4e" defer></script>
 <script src="/assets/js/checkout.js?v=350bf8de" defer></script>

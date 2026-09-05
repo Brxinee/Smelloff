@@ -49,8 +49,8 @@
   60%{transform:translateY(-1px)}
 }
 
-.btn,.nb-btn,.buy-btn,.buy-pill,.cta,a.cta,button.cta,
-.product-form__submit,.nav-cta,.nav-links a.nav-cta,
+.btn,.nb-btn,.buy-btn,.cta,a.cta,button.cta,
+.product-form__submit,
 .b-buy-btn,.end-cta .btn,.write-review-btn,
 /* The /odorstrike CTAs. They were the only square-cornered buttons left on
    the site — the page names them .hero-cta / .fix-cta / .mb-btn rather than
@@ -427,19 +427,19 @@ footer:has(> a) > a{
    (WCAG 2.5.8 exempts links in a sentence, and padding them would break
    the line rhythm). */
 .nav-links a,#navMenu a,footer ul a,.footer-col > a,.b-drawer-nav a,
-.p-nav a,.p-footer-links > a,.p-footer-guides > a,.p-footer-policy > a,.nf-links a,.b-nav a,
-.blog-nav a,.footer-links > a,.footer-guides > a,.footer-policy > a{
+.nf-links a,
+.footer-links > a,.footer-guides > a,.footer-policy > a{
   min-height:44px;
   display:inline-flex;align-items:center;
 }
 /* The policy-page footers are inline runs, so the flex boxes above need to
    wrap and keep a readable gap once each link is 44px tall. */
-.p-footer-links,.p-footer-guides,.p-footer-policy,.nf-links,
+.nf-links,
 .footer-links,.footer-guides,.footer-policy{
   display:flex;flex-wrap:wrap;align-items:center;
   gap:0 14px;
 }
-.socials a,.blog-footer .socials a{min-width:44px;min-height:44px}
+.socials a{min-width:44px;min-height:44px}
 
 .hero-hook,.chip,.tag,.badge,.b-thumb-cat,.b-card-cat,.v-tag,.pill{
   border-radius:var(--sq-pill);

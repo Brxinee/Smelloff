@@ -72,152 +72,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
-<style>
-  :root{--black:#080808;--card:#111111;--card-hover:#161616;--border:#262626;--border-subtle:#1A1A1A;--white:#F5F5F5;--gray:#8C8C8C;--silver:#BFC3C8;--green:#B8FF57;--green-light:#D2FF8A;--green-dim:rgba(184,255,87,.12);--overlay:rgba(0,0,0,.75);--bg:var(--black);--bg-surface:var(--card);--bg-subtle:var(--border-subtle);--text:var(--white);--text-secondary:var(--silver);--muted:var(--gray);--accent:var(--green);--accent-rgb:184,255,87;--accent-hover:var(--green-light);--accent-light:var(--green-dim);--rule:var(--border);--ink:var(--black);--paper:var(--white);--shadow:rgba(0,0,0,.40);--acid:var(--green)}
 
-  :root { --off-white:var(--text); --acid:var(--accent); --grey:var(--text-secondary); --line:var(--bg-subtle); }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-  body{background:var(--black);color:var(--off-white);font-family:'Inter Tight',sans-serif;font-size:18px;line-height:1.75;-webkit-font-smoothing:antialiased;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;touch-action:pan-x pan-y}
-  ::selection{background:var(--acid);color:var(--black)}
-  #progress-bar{position:fixed;top:0;left:0;height:2px;width:0%;background:var(--acid);z-index:200;transition:width .1s linear}
-  .blog-nav{position:sticky;top:0;z-index:100;background:color-mix(in srgb, var(--bg) 92%, transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:env(safe-area-inset-top,0px) max(32px, env(safe-area-inset-right, 0px)) 0 max(32px, env(safe-area-inset-left, 0px));height:calc(60px + env(safe-area-inset-top,0px));display:flex;align-items:center;justify-content:space-between}
-  .blog-nav .logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:3px;text-transform:uppercase;color:var(--off-white);text-decoration:none;position:relative;padding-right:12px}
-  .blog-nav .logo::after{content:'';position:absolute;top:-2px;right:0;width:6px;height:6px;background:var(--acid);border-radius:50%}
-  .blog-nav .buy-pill{background:var(--acid);color:var(--black);font-family:'Inter Tight',sans-serif;font-weight:700;font-size:14px;padding:8px 18px;border-radius:100px;text-decoration:none}
-  .article-wrap{max-width:680px;margin:0 auto;padding:60px 32px 100px}
-  .article-header{margin-bottom:48px}
-  .article-meta{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
-  .article-category{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--acid)}
-  .article-read-time,.article-date{font-size:13px;color:var(--grey)}
-  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(36px,6vw,58px);letter-spacing:-.02em;line-height:1.1;color:var(--off-white);margin-bottom:20px}
-  h1 em{font-style:italic;color:var(--grey)}
-  .article-dek{font-family:'Fraunces',serif;font-style:italic;color:var(--grey);font-size:20px;line-height:1.5;border-top:1px solid var(--line);padding-top:24px;margin-top:24px}
-  h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,3.5vw,34px);letter-spacing:-.01em;line-height:1.2;color:var(--off-white);margin:52px 0 20px}
-  h3{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:20px;color:var(--off-white);margin:36px 0 14px}
-  p{margin-bottom:24px;color:var(--off-white)}
-  p:last-child{margin-bottom:0}
-  .drop-cap::first-letter{font-family:'Fraunces',serif;font-weight:600;font-size:68px;line-height:.85;float:left;margin-right:8px;margin-top:6px;color:var(--acid)}
-  .pull-quote{font-family:'Fraunces',serif;font-style:italic;font-size:22px;line-height:1.5;color:var(--off-white);border-left:3px solid var(--acid);padding:8px 0 8px 24px;margin:40px 0}
-  .callout{background:var(--bg-surface);border:1px solid var(--line);padding:24px 28px;margin:40px 0;border-radius:4px}
-  .callout-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--acid);margin-bottom:10px}
-  .callout p{font-size:16px;color:var(--off-white);margin:0 0 14px;line-height:1.65}
-  .callout p:last-child{margin-bottom:0}
-  .callout table{width:100%;border-collapse:collapse;font-size:15px;margin:8px 0 4px}
-  .callout th,.callout td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line);color:var(--off-white)}
-  .callout th{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid)}
-  ul,ol{margin:0 0 24px 22px;color:var(--off-white)}
-  li{margin-bottom:10px}
-  .inline-cta{color:var(--acid);text-decoration:underline;text-decoration-color:var(--acid);text-underline-offset:3px}
-  a{color:var(--acid)}
-  .end-cta{background:linear-gradient(135deg,var(--bg-surface) 0%,var(--bg-surface) 100%);border:1px solid var(--line);border-radius:8px;padding:40px 36px;margin:60px 0;text-align:center}
-  .end-cta .cta-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--acid);margin-bottom:16px}
-  .end-cta h4{font-family:'Fraunces',serif;font-weight:600;font-size:28px;color:var(--off-white);margin-bottom:12px;line-height:1.2}
-  .end-cta .price-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px}
-  .end-cta .strike-price{font-size:16px;color:var(--grey);text-decoration:line-through}
-  .end-cta .current-price{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;color:var(--acid)}
-  .end-cta .buy-btn{display:inline-block;background:var(--acid);color:var(--black);font-family:'Inter Tight',sans-serif;font-weight:700;font-size:16px;padding:14px 32px;border-radius:100px;text-decoration:none;letter-spacing:.02em}
-  .next-read{border-top:1px solid var(--line);padding-top:40px;margin-top:60px}
-  .next-read-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:16px}
-  .next-read a{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3vw,28px);color:var(--off-white);text-decoration:none;line-height:1.2;transition:color .2s}
-  .next-read a:hover{color:var(--acid)}
-  .next-read .next-arrow{color:var(--acid);margin-left:8px}
-  .faq-wrap{margin:48px 0}
-  .faq-item{border-top:1px solid var(--line);padding:24px 0}
-  .faq-item:last-of-type{border-bottom:1px solid var(--line)}
-  .faq-q{font-family:'Fraunces',serif;font-weight:600;font-size:20px;color:var(--off-white);margin-bottom:12px;line-height:1.3}
-  .faq-a{font-size:16px;color:var(--off-white);line-height:1.7;margin:0}
-  .blog-footer{border-top:1px solid var(--line);padding:40px 32px;max-width:680px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px 24px}
-  .blog-footer a{font-size:14px;color:var(--grey);text-decoration:none;transition:color .2s}
-  .blog-footer a:hover{color:var(--acid)}
-  .blog-footer{flex-direction:column;align-items:center;justify-content:center;text-align:center}.bf-brand{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);text-decoration:none;margin-bottom:4px}.bf-brand-inner{position:relative;padding-right:.2em}.bf-brand-dot{position:absolute;top:-.06em;right:0;width:.16em;height:.16em;background:var(--accent);border-radius:50%}.footer-related{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;align-items:center;font-family:'Inter Tight',sans-serif;font-size:12px;max-width:680px;margin:0 auto}.footer-related-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-right:4px}.footer-related a{color:var(--text-secondary);text-decoration:none;border-bottom:1px solid rgba(var(--accent-rgb),.18);padding-bottom:1px;transition:color .15s ease,border-color .15s ease}.footer-related a:hover{color:var(--text);border-bottom-color:var(--accent)}.footer-policy{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-family:'Inter Tight',sans-serif;font-size:11px}.footer-policy a{color:var(--muted);text-decoration:none;letter-spacing:.02em;transition:color .15s ease}.footer-policy a:hover{color:var(--muted)}.blog-footer .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(var(--accent-rgb),.15);font-family:Inter Tight,sans-serif;font-size:11px;color:var(--muted);text-align:center;letter-spacing:.02em;margin-top:4px}
-  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:Inter Tight,sans-serif;font-size:13px}
-  .footer-links a{color:var(--muted);text-decoration:none;transition:color .15s ease}
-  .footer-links a:hover{color:var(--text)}
-  strong{color:var(--off-white);font-weight:700}
-  @media(max-width:720px){.blog-footer{flex-direction:column;align-items:flex-start}.blog-footer .footer-bottom{text-align:left}}
-  @media(max-width:640px){.blog-nav{padding:env(safe-area-inset-top,0px) max(20px, env(safe-area-inset-right, 0px)) 0 max(20px, env(safe-area-inset-left, 0px))}.article-wrap{padding:40px 20px 80px}.end-cta{padding:32px 24px}.blog-footer{padding:32px 20px;flex-direction:column;align-items:flex-start}}
-
-  /* Keep-reading carousel (auto-scrolling, swipeable) */
-  .post-popular{
-    margin:48px -16px 8px;padding:24px 0;
-    background:var(--bg);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
-    overflow:hidden;user-select:none;
-  }
-  .post-popular-label{
-    padding:0 20px 14px;
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;
-    letter-spacing:.22em;text-transform:uppercase;color:var(--accent);
-    display:flex;align-items:center;gap:10px;
-  }
-  .post-popular-label::before{
-    content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);
-    box-shadow:0 0 10px var(--accent);
-  }
-  .post-popular-viewport{overflow:hidden;cursor:grab;touch-action:pan-y}
-  .post-popular-viewport.dragging{cursor:grabbing}
-  .post-popular-track{
-    display:flex;gap:14px;width:max-content;padding:0 20px;
-    transform:translate3d(0,0,0);will-change:transform;
-  }
-  .post-pc{
-    flex-shrink:0;width:240px;
-    background:var(--bg);border:1px solid var(--rule);border-radius:10px;
-    text-decoration:none;color:var(--text);overflow:hidden;
-    transition:border-color .2s ease,transform .2s ease;
-  }
-  .post-pc:hover{border-color:var(--accent);transform:translateY(-2px)}
-  .post-pc-thumb{
-    position:relative;aspect-ratio:5/3;padding:14px 16px;
-    display:flex;flex-direction:column;justify-content:center;align-items:center;
-    text-align:center;gap:10px;background:var(--bg);
-  }
-  .post-pc-thumb::before{
-    content:'';position:absolute;top:12px;left:12px;
-    width:8px;height:8px;background:var(--accent);border-radius:50%;
-  }
-  .post-pc-cat{
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:9px;
-    letter-spacing:.22em;text-transform:uppercase;color:var(--bg);
-    background:var(--accent);padding:4px 9px;border-radius:2px;
-  }
-  .post-pc-title{
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;
-    line-height:1;letter-spacing:.005em;text-transform:uppercase;color:var(--text);
-    max-width:90%;
-  }
-  @media(min-width:720px){
-    .post-popular{margin:56px -32px 8px}
-    .post-pc{width:280px}
-  }
-
-  /* Back-to-top floating button */
-  .to-top{
-    position:fixed;
-    right:20px;bottom:var(--toTopBottom,24px);
-    width:48px;height:48px;
-    background:var(--bg);color:var(--accent);
-    border:1px solid var(--accent);border-radius:50%;
-    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;
-    line-height:1;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    opacity:0;pointer-events:none;transform:translateY(8px);
-    transition:opacity .25s ease,transform .25s ease,background .15s ease,color .15s ease;
-    z-index:60;
-    box-shadow:0 4px 16px rgba(0,0,0,.45);
-  }
-  .to-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
-  .to-top:hover{background:var(--accent);color:var(--bg)}
-
-  /* Accessibility: visible keyboard focus (WCAG 2.4.7) */
-  a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
-
-  .verdict-table{width:100%;border-collapse:collapse;margin:28px 0;font-size:14px;background:var(--bg);border-radius:8px;overflow:hidden}
-  .verdict-table th,.verdict-table td{padding:14px 12px;text-align:left;border-bottom:1px solid var(--rule)}
-  .verdict-table th{background:var(--bg-surface);color:var(--text);font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:1px}
-  .verdict-table td{color:var(--text-secondary)}
-  .verdict-table .win{color:var(--ink);font-weight:700;background:var(--acid);padding:1px 4px}
-</style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
   {"@type":"ListItem","position":1,"name":"Home","item":"https://smelloff.in/"},
@@ -225,7 +80,7 @@
   {"@type":"ListItem","position":3,"name":"Best Deodorant Spray for Clothes (Not Skin) in India","item":"https://smelloff.in/blog/best-deodorant-spray-for-clothes-not-skin"}
 ]}
 </script>
-  <link rel="stylesheet" href="/assets/css/blog.css?v=367a415b">
+  <link rel="stylesheet" href="/assets/css/blog.css?v=61c28049">
 <!-- JSON-LD FAQPage -->
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why use a clothes spray instead of spraying deodorant on my shirt?","acceptedAnswer":{"@type":"Answer","text":"A dedicated clothes spray beats spraying skin deodorant on a shirt because deodorant is built for skin chemistry and fragrance, not for neutralising odor locked in fabric. A fabric spray like ODORSTRIKE traps and breaks down the sweat compounds in the fibres and dries clear without the stiff residue or white marks a skin deodorant can leave on cloth."}},{"@type":"Question","name":"Is there a deodorant made only for clothes?","acceptedAnswer":{"@type":"Answer","text":"A deodorant made only for clothes does exist in the form of fabric odor sprays, which are formulated for fibres instead of skin. ODORSTRIKE is one such fabric-only mist: it neutralises the odor sitting in a shirt with Zinc PCA and HPβCD, goes on the fabric rather than the body, and is not a perfume or a skin deodorant."}},{"@type":"Question","name":"Can I just use my regular deodorant on clothes?","acceptedAnswer":{"@type":"Answer","text":"Using regular deodorant on clothes is not a good substitute, because skin deodorants are built to slow sweat and add fragrance, not to neutralise odor already trapped in fabric. Sprayed on cloth they can leave residue or white marks and the smell returns as the scent fades. A fabric-specific spray treats the shirt itself and dries clear with no marks."}},{"@type":"Question","name":"How long does a clothes deodorant spray last?","acceptedAnswer":{"@type":"Answer","text":"A clothes deodorant spray like ODORSTRIKE lasts up to 8 hours on a shirt per application, because it neutralises the trapped odor rather than masking it. One spray across the collar, underarms and back before wearing typically covers a full day out. You reapply the next time you wear the garment, not every couple of hours through the day."}},{"@type":"Question","name":"Will a fabric spray stain dark or coloured shirts?","acceptedAnswer":{"@type":"Answer","text":"A well-made fabric spray will not stain dark or coloured shirts when used as directed, because it is water-based, dries clear and leaves zero residue. ODORSTRIKE is safe on dark fabric and mists on evenly without white marks. As with any spray, apply a light even mist rather than soaking one spot, and let it dry for about 10 seconds."}},{"@type":"Question","name":"What is a cloth deodorant?","acceptedAnswer":{"@type":"Answer","text":"A cloth deodorant is a spray made for fabric, not skin. Regular deodorant is for underarms. ODORSTRIKE is a fabric-only odor mist: clothes, not skin, not a perfume. ₹229 prepaid at smelloff.in."}},{"@type":"Question","name":"Is there a spray for clothes not skin?","acceptedAnswer":{"@type":"Answer","text":"Yes. ODORSTRIKE is a 50ml fabric-only odor mist. Do not use skin deodorant on a shirt — it can stain and still miss odor in the weave. Spray the garment from 15–20 cm, let it dry about 10 seconds."}}]}
@@ -236,9 +91,9 @@
 <link rel="alternate" type="text/plain" title="LLM content" href="https://smelloff.in/llms.txt">
 <link rel="alternate" type="application/rss+xml" title="Smelloff guides" href="https://smelloff.in/feed.xml">
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=8c6c6460">
+<link rel="stylesheet" href="/assets/css/soft.css?v=5cf00192">
 <link rel="stylesheet" href="/assets/css/checkout.css?v=8769926d">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=cc528ab2">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=fea652e2">
 <script src="/assets/js/chrome.js?v=40afd85a" defer></script>
 <script src="/assets/js/qr-creator.min.js?v=bfc60e4e" defer></script>
 <script src="/assets/js/checkout.js?v=350bf8de" defer></script>

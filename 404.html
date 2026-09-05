@@ -134,36 +134,10 @@
   .nf-popular a:hover { color: var(--acid); }
   .nf-popular a .arrow { color: var(--acid); margin-left: 6px; }
 
-  /* FOOTER */
-  .blog-footer {
-    border-top: 1px solid var(--line);
-    padding: 40px 32px;
-    max-width: 680px;
-    margin: 0 auto;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 14px 24px;
-  }
-  .bf-brand{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);text-decoration:none;margin-bottom:4px}
-  .bf-brand-inner{position:relative;padding-right:.2em}
-  .bf-brand-dot{position:absolute;top:-.06em;right:0;width:.16em;height:.16em;background:var(--accent);border-radius:50%}
-  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
-  .footer-links a{color:var(--muted);text-decoration:none;transition:color .15s ease}
-  .footer-links a:hover{color:var(--text)}
-  .footer-policy{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-family:'Inter Tight',sans-serif;font-size:11px}
-  .footer-policy a{color:var(--muted);text-decoration:none;letter-spacing:.02em;transition:color .15s ease}
-  .footer-policy a:hover{color:var(--text)}
-  .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(var(--accent-rgb),.15);font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--muted);text-align:center;letter-spacing:.02em;margin-top:4px}
-
   a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 
   @media (max-width: 640px) {
     .nf-wrap { padding: 56px 20px 80px; }
-    .blog-footer { padding: 32px 20px; }
   }
 </style>
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
@@ -171,9 +145,9 @@
 <link rel="alternate" type="text/plain" title="LLM content" href="https://smelloff.in/llms.txt">
 <link rel="alternate" type="application/rss+xml" title="Smelloff guides" href="https://smelloff.in/feed.xml">
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=8c6c6460">
+<link rel="stylesheet" href="/assets/css/soft.css?v=5cf00192">
 <link rel="stylesheet" href="/assets/css/checkout.css?v=8769926d">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=cc528ab2">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=fea652e2">
 <script src="/assets/js/chrome.js?v=40afd85a" defer></script>
 <script src="/assets/js/qr-creator.min.js?v=bfc60e4e" defer></script>
 <script src="/assets/js/checkout.js?v=350bf8de" defer></script>
