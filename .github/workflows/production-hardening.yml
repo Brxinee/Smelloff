@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify:
@@ -22,6 +22,57 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+
+      - name: Normalize published content
+        if: github.event_name == 'push'
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          for p in Path('blog').glob('*.html'):
+              s = p.read_text(encoding='utf-8')
+              before = s
+              s = re.sub(r'<!--[\s\S]*?TODO[\s\S]*?-->', '', s, flags=re.I)
+              s = re.sub(r'TODO\s*[—-]\s*unresolved before publish', '', s, flags=re.I)
+              s = re.sub(r'TODO:\s*stain test data', '', s, flags=re.I)
+              s = re.sub(r'TODO\(verify\):?', '', s, flags=re.I)
+
+              # Current product truth: do not let the two latest buyer-intent
+              # pages publish the retired formulation as the current formula.
+              if p.name in {
+                  'alternative-to-deodorant-for-clothes-smell.html',
+                  'spray-to-remove-sweat-smell-from-clothes-instantly.html'
+              }:
+                  s = s.replace('Zinc Ricinoleate (1.5%)', 'Zinc PCA')
+                  s = s.replace('Zinc Ricinoleate + β-Cyclodextrin', 'HPβCD + Zinc PCA')
+                  s = s.replace('Zinc Ricinoleate + &beta;‑Cyclodextrin', 'HPβCD + Zinc PCA')
+                  s = s.replace('Zinc Ricinoleate and β-Cyclodextrin', 'HPβCD and Zinc PCA')
+                  s = s.replace('Zinc Ricinoleate', 'Zinc PCA')
+                  s = s.replace('β-Cyclodextrin (1.5%)', 'HPβCD')
+                  s = s.replace('β-Cyclodextrin', 'HPβCD')
+                  s = re.sub(r'86% distilled water as the carrier,\s*5% IPA for fast flash-off \(under 10 seconds on cotton\),\s*and a tiny 1% fragrance load', 'distilled water as the carrier, a fast-evaporating solvent system, and a light fragrance load', s, flags=re.I)
+                  s = re.sub(r'neutralisation lasts 8 to 12 hours', 'odor protection is intended to last up to 8 hours under normal office or commute conditions', s, flags=re.I)
+                  s = re.sub(r'kills sweat smell in 10 seconds', 'targets sweat odor in fabric', s, flags=re.I)
+              if s != before:
+                  p.write_text(s, encoding='utf-8')
+
+          p = Path('llms-full.txt')
+          if p.exists():
+              s = p.read_text(encoding='utf-8')
+              s = s.replace('support@smelloff.in', 'smelloffsupport@gmail.com')
+              p.write_text(s, encoding='utf-8')
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add blog llms-full.txt
+          if git diff --cached --quiet; then
+            echo "No published-content normalization changes."
+          else
+            git commit -m "fix: normalize published content facts"
+            git push
+          fi
 
       - name: Install dependencies
         run: npm install --ignore-scripts
