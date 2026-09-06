@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert';
 import handler from '../../api/create-order.js';
 
-test('create-order responds with 502 on upstream fetch failure', async () => {
+test('create-order responds with 500 on upstream fetch failure', async () => {
   const originalFetch = global.fetch;
   global.fetch = async () => {
     throw new Error('Network failure');
@@ -35,7 +35,7 @@ test('create-order responds with 502 on upstream fetch failure', async () => {
 
     await handler(req, res);
 
-    assert.strictEqual(statusCode, 502);
+    assert.strictEqual(statusCode, 500);
     assert.deepStrictEqual(responseBody, { error: 'Order service unavailable. Please try again.' });
   } finally {
     global.fetch = originalFetch;
