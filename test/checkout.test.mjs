@@ -135,3 +135,21 @@ test('verify-payment: rejects missing payment id, order id or signature', async 
   await verifyPaymentHandler(req, res);
   assert.ok(res.statusCode === 400 || res.statusCode === 404);
 });
+
+test('frontend submit architecture: chrome.js has no capture click interceptors or stopImmediatePropagation', () => {
+  const chromeJs = fs.readFileSync('assets/js/chrome.js', 'utf8');
+  assert.ok(!chromeJs.includes('event.stopImmediatePropagation()'), 'chrome.js must not stop click propagation');
+  assert.ok(!chromeJs.includes("activePaymentMethod"), 'duplicate activePaymentMethod must be removed');
+  assert.ok(!chromeJs.includes("addEventListener('click', function (event)"), 'chrome.js must not attach global click interceptors for submit');
+  assert.ok(chromeJs.includes('var razorpayInFlight = false;'), 'chrome.js must define in-flight double-click guard');
+  assert.ok(chromeJs.includes('if (razorpayInFlight) return;'), 'startRazorpay must check in-flight guard');
+});
+
+test('frontend submit architecture: odorstrike.html submitOrder is sole router and button copy is clear', () => {
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+  assert.ok(html.includes("submitText', (isCod ? 'Place COD order · ₹' : 'Pay securely · ₹')"), 'Button copy must say Pay securely for prepaid');
+  assert.ok(html.includes("if (payMethod === 'prepaid')"), 'submitOrder must route prepaid');
+  assert.ok(html.includes("return window.startRazorpay();"), 'submitOrder must invoke startRazorpay for prepaid');
+  assert.ok(html.includes("onclick=\"submitOrder()\""), 'submit button must have onclick submitOrder');
+});
+

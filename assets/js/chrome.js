@@ -97,10 +97,7 @@
     document.head.appendChild(script);
   }
 
-  function activePaymentMethod() {
-    var active = document.querySelector('.pay-opt.active');
-    return active ? String(active.getAttribute('data-method') || '').toLowerCase() : '';
-  }
+  var razorpayInFlight = false;
 
   function textValue(id) {
     var el = document.getElementById(id);
@@ -236,12 +233,16 @@
   }
 
   async function startRazorpay() {
+    if (razorpayInFlight) return;
     hidePaymentError();
     if (typeof window.validateForm === 'function' && !window.validateForm()) return;
+
+    razorpayInFlight = true;
     setButtonState(true);
 
     var payload = orderPayload();
     if (!Number.isSafeInteger(payload.amount) || payload.amount < 100) {
+      razorpayInFlight = false;
       setButtonState(false);
       showPaymentError('Invalid payment amount. Please refresh and try again.');
       return;
@@ -249,6 +250,7 @@
 
     loadRazorpay(function (loadError) {
       if (loadError) {
+        razorpayInFlight = false;
         setButtonState(false);
         showPaymentError(loadError.message || 'Razorpay Checkout could not be loaded.');
         return;
@@ -286,6 +288,7 @@
             theme: { color: '#B8FF57' },
             modal: {
               ondismiss: function () {
+                razorpayInFlight = false;
                 setButtonState(false);
                 if (typeof window.hideLoadingScreen === 'function') window.hideLoadingScreen();
               }
@@ -308,9 +311,11 @@
                 if (!verifyResponse.ok || !verified.verified) {
                   throw new Error(verified.error || 'Payment verification failed. Do not place the order again yet.');
                 }
+                razorpayInFlight = false;
                 setButtonState(false);
                 markSuccess(created.order_code, Number(payload.amount) / 100, payload.items[0].quantity, response.razorpay_payment_id, payload.email, payload.address.name);
               } catch (error) {
+                razorpayInFlight = false;
                 setButtonState(false);
                 showPaymentError(error.message || 'Payment verification failed. Please contact support with your payment ID.');
               }
@@ -319,12 +324,14 @@
 
           var rzp = new window.Razorpay(options);
           rzp.on('payment.failed', function (failure) {
+            razorpayInFlight = false;
             setButtonState(false);
             var description = failure && failure.error && failure.error.description;
             showPaymentError(description || 'Payment failed. You can try again.');
           });
           rzp.open();
         } catch (error) {
+          razorpayInFlight = false;
           setButtonState(false);
           showPaymentError(error.message || 'Unable to start payment. Please try again.');
         }
@@ -333,31 +340,6 @@
   }
 
   window.startRazorpay = startRazorpay;
-
-  // Intercept only prepaid/UPI if direct onclick handler was not used. COD remains on the existing submitOrder().
-  document.addEventListener('click', function (event) {
-    var target = event.target && event.target.closest ? event.target.closest('#submitBtn') : null;
-    if (!target || activePaymentMethod() !== 'prepaid') return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    startRazorpay();
-  }, true);
-
-  // Replace the old manual-UTR panel copy whenever the customer selects prepaid.
-  function refreshPrepaidPanel() {
-    if (activePaymentMethod() !== 'prepaid') return;
-    var panel = document.getElementById('upiPayPanel');
-    if (!panel || panel.getAttribute('data-rzp-modernized') === '1') return;
-    panel.setAttribute('data-rzp-modernized', '1');
-    panel.innerHTML = '<div class="upi-panel-title">SECURE PREPAID CHECKOUT</div>' +
-      '<p class="pay-help" style="margin-top:12px">You\'ll complete payment securely inside Razorpay using UPI, cards, net banking or supported payment methods.</p>' +
-      '<p class="pay-help" style="margin-top:8px;color:var(--acid)">No UPI ID, screenshot or UTR entry is required.</p>';
-  }
-  document.addEventListener('click', function (event) {
-    if (event.target && event.target.closest && event.target.closest('.pay-opt')) {
-      setTimeout(refreshPrepaidPanel, 0);
-    }
-  });
 
   // Preload the hosted Checkout script while the customer is reading checkout.
   loadRazorpay(function () {});

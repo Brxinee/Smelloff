@@ -3861,6 +3861,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   // ₹0 advance and one tap. Flip this back to 'prepaid' (and the markup below)
   // if the RTO cost of COD ever outweighs the completed orders it wins.
   let payMethod = 'cod'; // matches the default-active .pay-opt[data-method="cod"]
+  window.payMethod = payMethod;
   // Quantity being checked out — sourced from the cart. Unit price stays ₹229
   // (single SKU); the order pipeline multiplies by this.
   let cartQty = 1;
@@ -4105,7 +4106,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     set('checkoutTotal', '₹' + t.total);
     // The UPI panel only ever shows the prepaid figure — no COD fee applies there.
     set('upiAmountInline', '₹' + (t.subtotal + t.shipping));
-    set('submitText', (isCod ? 'Place COD order · ₹' : 'Open UPI app · ₹') + t.total);
+    set('submitText', (isCod ? 'Place COD order · ₹' : 'Pay securely · ₹') + t.total);
     // Only rewrite the COD panel while COD is actually selected. Rewriting it
     // unconditionally left it reading "pay ₹229 on delivery (includes the ₹60
     // COD handling charge)" whenever UPI was chosen — hidden, but wrong, and it
@@ -4230,6 +4231,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
 
   function selectPay(method) {
     payMethod = method;
+    window.payMethod = method;
     document.querySelectorAll('.pay-opt').forEach(el => {
       var active = el.dataset.method === method;
       el.classList.toggle('active', active);
