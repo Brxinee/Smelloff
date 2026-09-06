@@ -36,7 +36,15 @@
   try {
     sid = sessionStorage.getItem('smf_sid') || '';
     if (!sid) {
-      sid = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+      if (window.crypto && window.crypto.randomUUID) {
+        sid = window.crypto.randomUUID();
+      } else if (window.crypto && window.crypto.getRandomValues) {
+        var arr = new Uint32Array(4);
+        window.crypto.getRandomValues(arr);
+        sid = arr[0].toString(36) + arr[1].toString(36) + arr[2].toString(36) + arr[3].toString(36);
+      } else {
+        sid = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+      }
       sessionStorage.setItem('smf_sid', sid);
     }
   } catch (e) {}
