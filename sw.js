@@ -2,7 +2,7 @@
    Safe-by-design: only same-origin GET requests are handled.
    Cross-origin (Supabase, analytics, Meta, Google Apps Script) and /api/
    are never intercepted, so the checkout/payment flow is untouched. */
-const VERSION = 'smelloff-v28';
+const VERSION = 'smelloff-v29';
 const STATIC_CACHE = 'static-' + VERSION;
 const PAGE_CACHE = 'pages-' + VERSION;
 
@@ -15,7 +15,7 @@ const PAGE_CACHE = 'pages-' + VERSION;
    so stale immutable browser/service-worker copies cannot block checkout fixes. */
 const PRECACHE = [
   '/',
-  '/assets/js/track.js?v=64e65429',
+  '/assets/js/track.js?v=801e292b',
   '/assets/fonts/fraunces-normal-latin-400.woff2',
   '/assets/fonts/inter-tight-normal-latin-400.woff2',
   '/manifest.json'

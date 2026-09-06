@@ -3907,41 +3907,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 // landing fbclid when the Pixel never set the cookie (consent delayed).
 function _metaCk(n){ var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]+)')); return m ? decodeURIComponent(m[1]) : ''; }
 function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new URLSearchParams(location.search).get('fbclid'); return f ? ('fb.1.' + Date.now() + '.' + f) : ''; } catch (e) { return ''; } }
-window.createSupabaseOrder = function (opts) {
-  var SUPA_URL = (window.SMELLOFF_CONFIG || {}).SUPABASE_URL || '';
-  // Phone (not email) gates the mirror — email is optional at checkout, so
-  // every order lands in Supabase and is trackable on /track-order.
-  if (!opts.phone || !SUPA_URL) return;
-  fetch(SUPA_URL + '/functions/v1/create-order/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email:          opts.email || null,
-      phone:          opts.phone,
-      items:          opts.items,
-      amount:         Math.round(opts.amountRupees * 100),
-      payment_method: opts.paymentMethod,
-      address:        opts.address,
-      upi_ref:        opts.upiRef || null,
-      order_code:     opts.orderCode || null,
-      // Meta CAPI attribution — stored server-side so the confirmed-order
-      // Purchase (fired later from the lifecycle) has strong Advanced Matching
-      // even after this browser is gone. IP + UA are read from headers server-
-      // side; here we forward only the Meta cookies + the click id + this URL.
-      fbp:              _metaCk('_fbp'),
-      fbc:              _metaFbc(),
-      event_source_url: location.href
-    }),
-    keepalive: true
-  }).then(function (r) {
-    return r.ok ? r.json() : null;
-  }).then(function (d) {
-    // The order uuid unlocks verified-buyer reviews via the submit-review function.
-    if (d && d.id) { try { localStorage.setItem('smelloff_order_uuid', d.id); } catch (e) {} }
-  }).catch(function (e) {
-    console.warn('[Smelloff] Supabase order mirror failed:', e);
-  });
-};
+// Deprecated: createSupabaseOrder is now done inline in submitOrder
 </script>
 
 <!-- ============================= -->
@@ -4590,6 +4556,9 @@ window.createSupabaseOrder = function (opts) {
     hideError();
     if (!validateForm()) return;
 
+    const btn = document.getElementById('submitBtn');
+    if (btn && btn.disabled) return;
+
     // Enrich the Pixel with Advanced Matching now that the form is filled — Meta
     // hashes these raw values client-side. Lifts Event Match Quality for the
     // Lead here and every subsequent event this session.
@@ -4605,86 +4574,100 @@ window.createSupabaseOrder = function (opts) {
       } catch (e) { /* AM is best-effort */ }
     }
 
-    const btn = document.getElementById('submitBtn');
     const btnText = document.getElementById('submitText');
+    const originalBtnText = btnText.innerHTML;
     btn.disabled = true;
     btnText.innerHTML = '<span class="loader"></span>Processing...';
 
     const orderId = genOrderId();
-    // UPI is prepaid, so no COD surcharge applies to the amount encoded in the
-    // UPI intent link. orderTotals() already returns 0 for codFee unless COD is
-    // the selected method, so this stays correct without a second calculation.
-    const total = orderTotals().subtotal + orderTotals().shipping;
+    const isCod = payMethod === 'cod';
+    const order = collectOrder(orderId, isCod ? 'COD' : 'UPI_PENDING');
 
-    if (payMethod === 'cod') {
-      const order = collectOrder(orderId, 'COD');
+    // Attach the buyer's contact to their live cart so an unpaid/abandoned
+    // checkout stays reachable from the admin's cart-recovery tools.
+    smfCartBeacon('cart_update', { name: order.name, email: order.email, phone: order.phone });
+
+    const payload = {
+      email: order.email || null,
+      phone: order.phone || '',
+      items: [{
+        name: 'ODORSTRIKE Fabric Mist',
+        variant: order.variant,
+        label: order.variantLabel,
+        quantity: order.quantity,
+        price: unitPrice() // strict expectation from Supabase
+      }],
+      amount: Math.round(Number(order.total) * 100),
+      payment_method: isCod ? 'cod' : 'upi',
+      address: {
+        name: order.name || '',
+        line: order.address || '',
+        city: order.city || '',
+        state: order.state || '',
+        pincode: order.pincode || ''
+      },
+      upi_ref: null,
+      order_code: order.orderId
+    };
+
+    showLoadingScreen(
+      isCod ? 'Placing your order…' : 'Saving your order…',
+      isCod ? 'Confirming with our team' : 'Securing your order'
+    );
+
+    try {
+      const res = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || ('Order service returned HTTP ' + res.status));
+      if (!data.id) throw new Error('Order was not persisted. Please try again.');
+
+      // Order persisted successfully.
+      const persistedOrderId = data.order_code || orderId;
+
+      // Update the order details for Sheets/email to reflect the confirmed ID
+      order.orderId = persistedOrderId;
       logOrderToSheets(order);
-      // Attach the buyer's contact to their live cart so an unpaid/abandoned
-      // checkout stays reachable from the admin's cart-recovery tools.
-      smfCartBeacon('cart_update', { name: order.name, email: order.email, phone: order.phone });
-      if (typeof window.createSupabaseOrder === 'function') {
-        window.createSupabaseOrder({
-          email: order.email, phone: order.phone,
-          items: [{ name: 'ODORSTRIKE Fabric Mist', variant: order.variant, label: order.variantLabel, quantity: order.quantity, price: unitPrice() }],
-          amountRupees: order.total, paymentMethod: 'cod',
-          address: { name: order.name, line: order.address, city: order.city, state: order.state, pincode: order.pincode },
-          upiRef: null,
-          orderCode: order.orderId
-        });
-      }
+
       if (order.email) {
         SmelloffEmail.send('orderConfirmation', order.email, {
-          orderId: order.orderId,
+          orderId: persistedOrderId,
           customerName: order.name || 'there',
           amount: String(order.total),
-          codFee: order.codFee,
+          codFee: isCod ? order.codFee : 0,
           address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '),
-          paymentMethod: 'Cash on Delivery'
-        }).catch(console.error);
+          paymentMethod: isCod ? 'Cash on Delivery' : 'UPI (' + CFG.UPI_ID + ')'
+        }).catch(e => console.error('Order email failed:', e));
       }
-      showLoadingScreen('Placing your order…', 'Confirming with our team');
-      setTimeout(() => {
-        btn.disabled = false;
-        showSuccess(orderId, 'cod');
-      }, 2400);
-      return;
-    }
 
-    // UPI — no timer; order persists. User pays whenever.
-    const order = collectOrder(orderId, 'UPI_PENDING');
-    logOrderToSheets(order);
-    smfCartBeacon('cart_update', { name: order.name, email: order.email, phone: order.phone });
-    if (typeof window.createSupabaseOrder === 'function') {
-      window.createSupabaseOrder({
-        email: order.email, phone: order.phone,
-        items: [{ name: 'ODORSTRIKE Fabric Mist', variant: order.variant, label: order.variantLabel, quantity: order.quantity, price: unitPrice() }],
-        amountRupees: order.total, paymentMethod: 'upi',
-        address: { name: order.name, line: order.address, city: order.city, state: order.state, pincode: order.pincode },
-        upiRef: null, // UTR is shared by customer via WhatsApp; matched manually
-        orderCode: order.orderId
-      });
-    }
-    if (order.email) {
-      SmelloffEmail.send('orderConfirmation', order.email, {
-        orderId: order.orderId,
-        customerName: order.name || 'there',
-        amount: String(order.total),
-        address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '),
-        paymentMethod: 'UPI (' + CFG.UPI_ID + ')'
-      }).catch(function(e){ console.error('Order email failed:', e); });
-    }
-
-    const upiLink = buildUpiLink(total, orderId, selectedUpiApp);
-    showLoadingScreen('Confirming payment…', 'Securing your UPI session');
-    setTimeout(function() {
+      setCartQty(0);
       btn.disabled = false;
-      showUpiSuccess(orderId, total, upiLink);
+      btnText.innerHTML = originalBtnText;
+      hideLoadingScreen();
+
+      if (isCod) {
+        showSuccess(persistedOrderId, 'cod');
+        return;
+      }
+
+      // UPI flow
+      const upiLink = buildUpiLink(orderTotals().subtotal + orderTotals().shipping, persistedOrderId, selectedUpiApp);
+      showUpiSuccess(persistedOrderId, orderTotals().subtotal + orderTotals().shipping, upiLink);
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       if (isMobile) {
-        // Defer one tick so the success screen renders before the UPI redirect.
         setTimeout(function(){ window.location.href = upiLink; }, 200);
       }
-    }, 2400);
+    } catch (error) {
+      console.error('[Smelloff] PDP checkout failed:', error);
+      hideLoadingScreen();
+      btn.disabled = false;
+      btnText.innerHTML = originalBtnText;
+      showError(error.message || 'We could not place your order. Please try again.');
+    }
   }
 
   let selectedUpiApp = 'any';
@@ -5472,7 +5455,7 @@ window.createSupabaseOrder = function (opts) {
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
 <script src="/assets/js/reviews-system.js?v=2" defer></script>
-<script src="/assets/js/track.js?v=64e65429" defer></script>
+<script src="/assets/js/track.js?v=801e292b" defer></script>
 <!-- Google Customer Reviews. Loaded on the PDP only, because that is the page
      that carries the checkout and therefore the order-confirmation moment.
      `defer` so it costs nothing on the LCP path — it does no work at all until
