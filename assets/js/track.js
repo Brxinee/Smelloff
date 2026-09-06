@@ -44,10 +44,6 @@
   var ENDPOINT = '/api/track';
   var noop = function () {};
 
-  // Automated-browser detection. Headless Chrome / Selenium / Puppeteer /
-  // Playwright render JS and auto-dismiss the cookie banner, which was
-  // inflating pageviews and "Accept all" clicks. Exposed so the consent/pixel
-  // loaders can gate on it too. Conservative signals — low false-positive.
   function smfIsBot() {
     try {
       var n = navigator;
@@ -60,11 +56,6 @@
   }
   window.smfIsBot = smfIsBot;
 
-  // Owner opt-out. localStorage is per-origin, so the admin (admin.smelloff.in)
-  // cannot set the flag here directly — its Settings toggle opens
-  // smelloff.in/?smf_owner=1 (or 0) and this handles the param BEFORE the
-  // owner check and before any pageview fires, so the opt-in visit itself is
-  // never counted.
   try {
     var op = new URLSearchParams(location.search).get('smf_owner');
     if (op === '1') localStorage.setItem('smelloff_owner', '1');
@@ -77,8 +68,6 @@
     return;
   }
 
-  // Per-tab session id — ties cart/checkout events together. sessionStorage
-  // only (dies with the tab); not a tracking cookie.
   var sid = '';
   try {
     sid = sessionStorage.getItem('smf_sid') || '';
@@ -91,12 +80,6 @@
   function send(payload) {
     try {
       payload = payload || {};
-      /*
-       * Never send query strings to analytics. Besides preventing duplicate
-       * analytics buckets for every UTM/cart/ref/order-code variant, this
-       * avoids leaking referral tokens or order tracking codes into the
-       * first-party analytics table.
-       */
       payload.path = payload.path || location.pathname;
       payload.ref = payload.ref || document.referrer || '';
       if (sid) payload.session = sid;
@@ -112,7 +95,6 @@
         }
       } catch (e) {}
       var body = JSON.stringify(payload);
-      // sendBeacon survives page unloads; fetch keepalive is the fallback.
       if (navigator.sendBeacon) {
         navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }));
       } else {
@@ -127,8 +109,6 @@
   }
   window.smfTrack = send;
 
-  // Page view now + on SPA-style navigation. __smelloffPV keeps cached pages
-  // that still carry the old inline snippet from double-counting.
   if (!window.__smelloffPV) {
     window.__smelloffPV = true;
     send({ type: 'pageview' });
@@ -137,22 +117,14 @@
   history.pushState = function () { _ps.apply(this, arguments); send({ type: 'pageview' }); };
   addEventListener('popstate', function () { send({ type: 'pageview' }); });
 
-  // Homepage is the product page. /odorstrike still 301s here.
   if (location.pathname === '/' || location.pathname === '' || /^\/odorstrike\/?$/.test(location.pathname)) {
     send({ type: 'product_view', label: 'ODORSTRIKE Fabric Mist' });
   }
 
-  // "Track everything": clicks on links, buttons and [data-track] elements.
   addEventListener('click', function (e) {
-    // Only real, user-initiated clicks. Programmatic clicks — button.click(),
-    // dispatchEvent, headless-browser auto-dismiss of the cookie banner — carry
-    // isTrusted === false and are never counted. (Older browsers leave it
-    // undefined, which we allow through.)
     if (e.isTrusted === false) return;
     var el = e.target && e.target.closest ? e.target.closest('a,button,[data-track]') : null;
     if (!el) return;
-    // The cookie consent buttons ("Accept all" / "Reject") are banner noise,
-    // not a shopping interaction — never log them as click events.
     if (el.closest && el.closest('#smelloff-consent-bar')) return;
     var label = (el.getAttribute('data-track') || el.innerText || el.getAttribute('aria-label') || '')
       .trim().replace(/\s+/g, ' ').slice(0, 120);
@@ -160,4 +132,111 @@
     var href = el.getAttribute('href');
     send({ type: 'click', label: label, meta: href ? { href: href } : {} });
   }, true);
+
+  /*
+   * PDP checkout regression guard.
+   *
+   * odorstrike.html contains the checkout UI inline and historically fired
+   * createSupabaseOrder() without awaiting it. That made the UI announce an
+   * order even when the persistence request failed, and it tied the browser
+   * directly to the Supabase function instead of the site's same-origin API.
+   *
+   * track.js is already loaded on the PDP after that inline code, so this is a
+   * surgical compatibility layer: only /odorstrike is affected, the visual
+   * PDP stays byte-for-byte untouched, and existing inline checkout functions
+   * remain the source of truth for totals, validation, and rendering.
+   */
+  if (/^\/odorstrike\/?$/.test(location.pathname)) {
+    var originalCreateSupabaseOrder = window.createSupabaseOrder;
+    if (typeof originalCreateSupabaseOrder === 'function') {
+      window.createSupabaseOrder = function (opts) {
+        opts = opts || {};
+        var payload = {
+          email: opts.email || null,
+          phone: opts.phone || '',
+          items: Array.isArray(opts.items) ? opts.items : [],
+          amountRupees: Number(opts.amountRupees) || 0,
+          paymentMethod: opts.paymentMethod || 'cod',
+          address: opts.address || {},
+          upiRef: opts.upiRef || null,
+          orderCode: opts.orderCode || null
+        };
+
+        if (!payload.phone) {
+          var missingPhone = Promise.reject(new Error('Phone number is required.'));
+          window.__smelloffPdpOrderPromise = missingPhone;
+          return missingPhone;
+        }
+
+        var request = fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          credentials: 'same-origin'
+        }).then(function (response) {
+          return response.text().then(function (text) {
+            var data = {};
+            try { data = text ? JSON.parse(text) : {}; } catch (e) {}
+            if (!response.ok) {
+              throw new Error(data.error || ('Order service returned HTTP ' + response.status));
+            }
+            if (!data.id) {
+              throw new Error('Order was not persisted. Please try again.');
+            }
+            try { localStorage.setItem('smelloff_order_uuid', data.id); } catch (e) {}
+            if (data.order_code) payload.orderCode = data.order_code;
+            return data;
+          });
+        }).catch(function (error) {
+          console.error('[Smelloff] PDP order creation failed:', error);
+          throw error;
+        });
+
+        window.__smelloffPdpOrderPromise = request;
+        return request;
+      };
+    }
+
+    if (typeof window.showSuccess === 'function') {
+      var originalShowSuccess = window.showSuccess;
+      window.showSuccess = function (orderId, method) {
+        var pending = window.__smelloffPdpOrderPromise;
+        if (!pending || typeof pending.then !== 'function') {
+          return originalShowSuccess(orderId, method);
+        }
+        pending.then(function (result) {
+          originalShowSuccess(result && result.order_code ? result.order_code : orderId, method);
+        }).catch(function (error) {
+          if (typeof window.hideLoadingScreen === 'function') window.hideLoadingScreen();
+          var btn = document.getElementById('submitBtn');
+          if (btn) btn.disabled = false;
+          var btnText = document.getElementById('submitText');
+          if (btnText) btnText.textContent = method === 'cod' ? 'Place COD order · ₹289' : 'Open UPI app';
+          if (typeof window.showError === 'function') {
+            window.showError(error && error.message ? error.message : 'We could not save your order. Please try again.');
+          }
+        });
+      };
+    }
+
+    if (typeof window.showUpiSuccess === 'function') {
+      var originalShowUpiSuccess = window.showUpiSuccess;
+      window.showUpiSuccess = function (orderId, total, upiLink) {
+        var pending = window.__smelloffPdpOrderPromise;
+        if (!pending || typeof pending.then !== 'function') {
+          return originalShowUpiSuccess(orderId, total, upiLink);
+        }
+        pending.then(function (result) {
+          originalShowUpiSuccess(result && result.order_code ? result.order_code : orderId, total, upiLink);
+        }).catch(function (error) {
+          if (typeof window.hideLoadingScreen === 'function') window.hideLoadingScreen();
+          var btn = document.getElementById('submitBtn');
+          if (btn) btn.disabled = false;
+          if (typeof window.showError === 'function') {
+            window.showError(error && error.message ? error.message : 'We could not save your order. Please try again.');
+          }
+        });
+      };
+    }
+  }
 })();
