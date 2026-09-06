@@ -1,57 +1,13 @@
-/* Smelloff — first-party, cookieless event beacon (page views, clicks, funnel).
- * Include on every page with: <script src="/assets/js/track.js?v=2" defer></script>
- *
- * Posts same-origin to /api/track, which derives an anonymous daily-rotating
- * visitor hash server-side — no cookie, no PII, runs independently of the
- * marketing-consent choice. Exposes window.smfTrack(payload) for the cart /
- * checkout hooks in app.js. Fire-and-forget: it never blocks or errors a page.
- */
+/* Smelloff — first-party, cookieless event beacon. */
 (function () {
   'use strict';
-  if (window.smfTrack) return; // double-include guard
-
-  /* --- Search Console query-variant guard ---------------------------
-     The static site serves one document for clean and parameterized URLs.
-     Tracking/referral/cart/search/order-code parameters are state, not unique
-     content. Mark the parameterized document noindex while leaving the query
-     string intact so real visitor functionality continues to work.
-
-     This directly addresses URLs such as:
-       /?q=...
-       /?cart=open
-       /odorstrike?ref=...
-       /track-order?code=...
-     without sacrificing the canonical clean URL.
-  ---------------------------------------------------------------------- */
-  if (window.location.search) {
-    var robots = document.querySelector('meta[name="robots"]');
-    if (!robots) {
-      robots = document.createElement('meta');
-      robots.name = 'robots';
-      document.head.appendChild(robots);
-    }
-    robots.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
-
-    var googlebot = document.querySelector('meta[name="googlebot"]');
-    if (!googlebot) {
-      googlebot = document.createElement('meta');
-      googlebot.name = 'googlebot';
-      document.head.appendChild(googlebot);
-    }
-    googlebot.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
-  }
-
   var ENDPOINT = '/api/track';
   var noop = function () {};
 
   function smfIsBot() {
     try {
       var n = navigator;
-      if (n.webdriver === true) return true;
-      if (/Headless|PhantomJS|Puppeteer|Playwright|Electron\//i.test(n.userAgent || '')) return true;
-      if (window._phantom || window.callPhantom || window.__nightmare) return true;
-      if (n.languages && n.languages.length === 0) return true;
-      return false;
+      return n.webdriver === true || /Headless|PhantomJS|Puppeteer|Playwright|Electron\//i.test(n.userAgent || '') || !!window._phantom || !!window.callPhantom || !!window.__nightmare || !!(n.languages && n.languages.length === 0);
     } catch (e) { return false; }
   }
   window.smfIsBot = smfIsBot;
@@ -61,12 +17,20 @@
     if (op === '1') localStorage.setItem('smelloff_owner', '1');
     else if (op === '0') localStorage.removeItem('smelloff_owner');
   } catch (e) {}
+
+  if (window.location.search) {
+    var robots = document.querySelector('meta[name="robots"]') || document.createElement('meta');
+    robots.name = 'robots';
+    robots.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
+    if (!robots.parentNode) document.head.appendChild(robots);
+    var googlebot = document.querySelector('meta[name="googlebot"]') || document.createElement('meta');
+    googlebot.name = 'googlebot';
+    googlebot.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
+    if (!googlebot.parentNode) document.head.appendChild(googlebot);
+  }
+
   var owner = false;
   try { owner = localStorage.getItem('smelloff_owner') === '1'; } catch (e) {}
-  if (owner || smfIsBot() || /^\/(admin|api)(\/|$)/.test(location.pathname || '/')) {
-    window.smfTrack = noop;
-    return;
-  }
 
   var sid = '';
   try {
@@ -95,148 +59,97 @@
         }
       } catch (e) {}
       var body = JSON.stringify(payload);
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }));
-      } else {
-        fetch(ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: body,
-          keepalive: true
-        }).catch(noop);
-      }
+      if (navigator.sendBeacon) navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }));
+      else fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(noop);
     } catch (e) {}
   }
-  window.smfTrack = send;
 
-  if (!window.__smelloffPV) {
-    window.__smelloffPV = true;
-    send({ type: 'pageview' });
+  if (owner || smfIsBot() || /^\/(admin|api)(\/|$)/.test(location.pathname || '/')) {
+    window.smfTrack = noop;
+  } else {
+    window.smfTrack = send;
+    if (!window.__smelloffPV) { window.__smelloffPV = true; send({ type: 'pageview' }); }
+    var _ps = history.pushState;
+    history.pushState = function () { _ps.apply(this, arguments); send({ type: 'pageview' }); };
+    addEventListener('popstate', function () { send({ type: 'pageview' }); });
+    if (location.pathname === '/' || location.pathname === '' || /^\/odorstrike\/?$/.test(location.pathname)) send({ type: 'product_view', label: 'ODORSTRIKE Fabric Mist' });
+    addEventListener('click', function (e) {
+      if (e.isTrusted === false) return;
+      var el = e.target && e.target.closest ? e.target.closest('a,button,[data-track]') : null;
+      if (!el || (el.closest && el.closest('#smelloff-consent-bar'))) return;
+      var label = (el.getAttribute('data-track') || el.innerText || el.getAttribute('aria-label') || '').trim().replace(/\s+/g, ' ').slice(0, 120);
+      if (!label) return;
+      send({ type: 'click', label: label, meta: el.getAttribute('href') ? { href: el.getAttribute('href') } : {} });
+    }, true);
   }
-  var _ps = history.pushState;
-  history.pushState = function () { _ps.apply(this, arguments); send({ type: 'pageview' }); };
-  addEventListener('popstate', function () { send({ type: 'pageview' }); });
 
-  if (location.pathname === '/' || location.pathname === '' || /^\/odorstrike\/?$/.test(location.pathname)) {
-    send({ type: 'product_view', label: 'ODORSTRIKE Fabric Mist' });
-  }
-
-  addEventListener('click', function (e) {
-    if (e.isTrusted === false) return;
-    var el = e.target && e.target.closest ? e.target.closest('a,button,[data-track]') : null;
-    if (!el) return;
-    if (el.closest && el.closest('#smelloff-consent-bar')) return;
-    var label = (el.getAttribute('data-track') || el.innerText || el.getAttribute('aria-label') || '')
-      .trim().replace(/\s+/g, ' ').slice(0, 120);
-    if (!label) return;
-    var href = el.getAttribute('href');
-    send({ type: 'click', label: label, meta: href ? { href: href } : {} });
-  }, true);
-
-  /*
-   * PDP checkout regression guard.
-   *
-   * odorstrike.html contains the checkout UI inline and historically fired
-   * createSupabaseOrder() without awaiting it. That made the UI announce an
-   * order even when the persistence request failed, and it tied the browser
-   * directly to the Supabase function instead of the site's same-origin API.
-   *
-   * track.js is already loaded on the PDP after that inline code, so this is a
-   * surgical compatibility layer: only /odorstrike is affected, the visual
-   * PDP stays byte-for-byte untouched, and existing inline checkout functions
-   * remain the source of truth for totals, validation, and rendering.
-   */
+  /* PDP checkout: replace the broken fire-and-forget mirror with one awaited,
+     server-authoritative order request. This keeps the existing PDP UI intact. */
   if (/^\/odorstrike\/?$/.test(location.pathname)) {
-    var originalCreateSupabaseOrder = window.createSupabaseOrder;
-    if (typeof originalCreateSupabaseOrder === 'function') {
-      window.createSupabaseOrder = function (opts) {
-        opts = opts || {};
-        var payload = {
-          email: opts.email || null,
-          phone: opts.phone || '',
-          items: Array.isArray(opts.items) ? opts.items : [],
-          amountRupees: Number(opts.amountRupees) || 0,
-          paymentMethod: opts.paymentMethod || 'cod',
-          address: opts.address || {},
-          upiRef: opts.upiRef || null,
-          orderCode: opts.orderCode || null
-        };
+    function pdpSubmitOrder() {
+      if (typeof hideError === 'function') hideError();
+      if (typeof validateForm !== 'function' || !validateForm()) return;
+      var btn = document.getElementById('submitBtn');
+      var btnText = document.getElementById('submitText');
+      if (btn) btn.disabled = true;
+      if (btnText) btnText.textContent = 'Processing…';
 
-        if (!payload.phone) {
-          var missingPhone = Promise.reject(new Error('Phone number is required.'));
-          window.__smelloffPdpOrderPromise = missingPhone;
-          return missingPhone;
-        }
+      var orderId = typeof genOrderId === 'function' ? genOrderId() : ('SMF-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + String(Math.floor(Math.random()*9000)+1000));
+      var order = typeof collectOrder === 'function' ? collectOrder(orderId, '') : null;
+      if (!order) {
+        if (btn) btn.disabled = false;
+        if (typeof showError === 'function') showError('Checkout could not start. Please refresh and try again.');
+        return;
+      }
 
-        var request = fetch('/api/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          credentials: 'same-origin'
-        }).then(function (response) {
-          return response.text().then(function (text) {
-            var data = {};
-            try { data = text ? JSON.parse(text) : {}; } catch (e) {}
-            if (!response.ok) {
-              throw new Error(data.error || ('Order service returned HTTP ' + response.status));
-            }
-            if (!data.id) {
-              throw new Error('Order was not persisted. Please try again.');
-            }
-            try { localStorage.setItem('smelloff_order_uuid', data.id); } catch (e) {}
-            if (data.order_code) payload.orderCode = data.order_code;
-            return data;
-          });
-        }).catch(function (error) {
-          console.error('[Smelloff] PDP order creation failed:', error);
-          throw error;
-        });
-
-        window.__smelloffPdpOrderPromise = request;
-        return request;
+      var items = [{ name: 'ODORSTRIKE Fabric Odor Mist', variant: '50ml', label: order.variantLabel || 'ODORSTRIKE 50ml', quantity: order.quantity || 1, price: 229 }];
+      var payload = {
+        email: order.email || null,
+        phone: order.phone || '',
+        items: items,
+        amount: Math.round(Number(order.total) * 100),
+        payment_method: order.paymentMethod === 'cod' ? 'cod' : 'upi',
+        address: { name: order.name || '', line: order.address || '', city: order.city || '', state: order.state || '', pincode: order.pincode || '' },
+        upi_ref: null,
+        order_code: order.orderId || orderId
       };
-    }
 
-    if (typeof window.showSuccess === 'function') {
-      var originalShowSuccess = window.showSuccess;
-      window.showSuccess = function (orderId, method) {
-        var pending = window.__smelloffPdpOrderPromise;
-        if (!pending || typeof pending.then !== 'function') {
-          return originalShowSuccess(orderId, method);
-        }
-        pending.then(function (result) {
-          originalShowSuccess(result && result.order_code ? result.order_code : orderId, method);
-        }).catch(function (error) {
-          if (typeof window.hideLoadingScreen === 'function') window.hideLoadingScreen();
-          var btn = document.getElementById('submitBtn');
-          if (btn) btn.disabled = false;
-          var btnText = document.getElementById('submitText');
-          if (btnText) btnText.textContent = method === 'cod' ? 'Place COD order · ₹289' : 'Open UPI app';
-          if (typeof window.showError === 'function') {
-            window.showError(error && error.message ? error.message : 'We could not save your order. Please try again.');
-          }
-        });
-      };
-    }
+      if (typeof showLoadingScreen === 'function') showLoadingScreen(order.paymentMethod === 'cod' ? 'Placing your order…' : 'Saving your order…', 'Securing your order');
 
-    if (typeof window.showUpiSuccess === 'function') {
-      var originalShowUpiSuccess = window.showUpiSuccess;
-      window.showUpiSuccess = function (orderId, total, upiLink) {
-        var pending = window.__smelloffPdpOrderPromise;
-        if (!pending || typeof pending.then !== 'function') {
-          return originalShowUpiSuccess(orderId, total, upiLink);
-        }
-        pending.then(function (result) {
-          originalShowUpiSuccess(result && result.order_code ? result.order_code : orderId, total, upiLink);
-        }).catch(function (error) {
-          if (typeof window.hideLoadingScreen === 'function') window.hideLoadingScreen();
-          var btn = document.getElementById('submitBtn');
-          if (btn) btn.disabled = false;
-          if (typeof window.showError === 'function') {
-            window.showError(error && error.message ? error.message : 'We could not save your order. Please try again.');
-          }
+      fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload)
+      }).then(function (response) {
+        return response.text().then(function (text) {
+          var data = {};
+          try { data = text ? JSON.parse(text) : {}; } catch (e) {}
+          if (!response.ok) throw new Error(data.error || ('Order service returned HTTP ' + response.status));
+          if (!data.id) throw new Error('Order was not persisted. Please try again.');
+          return data;
         });
-      };
+      }).then(function (data) {
+        if (typeof logOrderToSheets === 'function') logOrderToSheets(order);
+        if (order.email && typeof SmelloffEmail !== 'undefined' && SmelloffEmail && typeof SmelloffEmail.send === 'function') {
+          SmelloffEmail.send('orderConfirmation', order.email, { orderId: data.order_code || orderId, customerName: order.name || 'there', amount: String(order.total), codFee: order.codFee || 0, address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '), paymentMethod: order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'UPI (' + ((window.SMELLOFF_CONFIG || {}).UPI_ID || 'mr.brainy@ibl') + ')' }).catch(noop);
+        }
+        if (order.paymentMethod === 'cod') {
+          if (typeof showSuccess === 'function') showSuccess(data.order_code || orderId, 'cod');
+          return;
+        }
+        var total = Number(order.total) || 0;
+        var link = typeof buildUpiLink === 'function' ? buildUpiLink(total, data.order_code || orderId, 'any') : ('upi://pay?pa=' + encodeURIComponent(((window.SMELLOFF_CONFIG || {}).UPI_ID || 'mr.brainy@ibl')) + '&pn=Smelloff&am=' + total + '&cu=INR');
+        if (typeof showUpiSuccess === 'function') showUpiSuccess(data.order_code || orderId, total, link);
+        setTimeout(function () { try { location.href = link; } catch (e) {} }, 400);
+      }).catch(function (error) {
+        console.error('[Smelloff] PDP checkout failed:', error);
+        if (typeof hideLoadingScreen === 'function') hideLoadingScreen();
+        if (btn) btn.disabled = false;
+        if (btnText) btnText.textContent = order.paymentMethod === 'cod' ? 'Place COD order · ₹289' : 'Open UPI app';
+        if (typeof showError === 'function') showError(error && error.message ? error.message : 'We could not place your order. Please try again.');
+      });
     }
+    window.submitOrder = pdpSubmitOrder;
   }
 })();
