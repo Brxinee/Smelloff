@@ -4,8 +4,8 @@
 (function(){
   'use strict';
 
-  var SUPA_URL = 'https://tnuqjydmoxczdjnsgpci.supabase.co';
-  var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudXFqeWRtb3hjemRqbnNncGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzI2NDgsImV4cCI6MjA5MzEwODY0OH0.6qyyo-1lpntK7FC3H9j_oqWp0W_R1XydVG_IxVUd6F4';
+  var SUPA_URL = (window.SMELLOFF_CONFIG || {}).SUPABASE_URL;
+  var SUPA_KEY = (window.SMELLOFF_CONFIG || {}).SUPABASE_KEY;
 
   var selectedStars = 0;
 
