@@ -17,7 +17,8 @@
     "indexnow": "node scripts/indexnow-ping.mjs",
     "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs --check && node -c server.js",
     "lint": "node -c server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test"
   },
   "dependencies": {
     "express": "^5.2.1",
