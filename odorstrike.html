@@ -3006,7 +3006,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
          order changes, move that preload with it. -->
     <div class="gallery-stack" id="gallery" role="group" aria-label="ODORSTRIKE product images">
       <figure class="gal-tile gal-tile--main">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Zoom product image">
           <img src="/assets/pdp-01-hero.webp"
                srcset="/assets/pdp-01-hero@640.webp 640w, /assets/pdp-01-hero.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
@@ -3014,7 +3014,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Zoom product image">
           <img src="/assets/pdp-02-problem.webp"
                srcset="/assets/pdp-02-problem@640.webp 640w, /assets/pdp-02-problem.webp 1195w"
                sizes="(min-width:960px) 46vw, 84vw"
@@ -3022,7 +3022,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Zoom product image">
           <img src="/assets/pdp-03-how-to-use.webp"
                srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
@@ -3038,7 +3038,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
            accurate to what the image shows until then; do not describe panels
            that are not there. -->
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Zoom product image">
           <img src="/assets/pdp-04-pocket-size.webp"
                srcset="/assets/pdp-04-pocket-size@640.webp 640w, /assets/pdp-04-pocket-size.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
@@ -3046,7 +3046,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Zoom product image">
           <img src="/assets/pdp-05-proof.webp"
                srcset="/assets/pdp-05-proof@640.webp 640w, /assets/pdp-05-proof.webp 1195w"
                sizes="(min-width:960px) 46vw, 84vw"
@@ -3054,7 +3054,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Zoom product image">
           <img src="/assets/pdp-06-science.webp"
                srcset="/assets/pdp-06-science@640.webp 640w, /assets/pdp-06-science.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
@@ -3062,7 +3062,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Zoom product image">
           <img src="/assets/pdp-07-fabric-only.webp"
                srcset="/assets/pdp-07-fabric-only@640.webp 640w, /assets/pdp-07-fabric-only.webp 1190w"
                sizes="(min-width:960px) 46vw, 84vw"
@@ -3070,7 +3070,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Zoom product image">
           <img src="/assets/pdp-08-comparison.webp"
                srcset="/assets/pdp-08-comparison@640.webp 640w, /assets/pdp-08-comparison.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
@@ -3306,10 +3306,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
   <!-- FULL FORMULA v3.1 -->
   <div class="inci-full">
-    <button class="inci-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+    <button class="inci-toggle" aria-expanded="false" aria-controls="inciList" onclick="var exp=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',!exp);this.classList.toggle('open');document.getElementById('inciList').classList.toggle('open')">
       Formula v3.1 — full ingredient list <span class="arrow">▼</span>
     </button>
-    <div class="inci-list">
+    <div class="inci-list" id="inciList">
       <div class="inci-row"><span class="i-pct">01</span><span class="i-name">Water</span><span class="i-role">Base</span></div>
       <div class="inci-row"><span class="i-pct">02</span><span class="i-name">Isopropyl Alcohol</span><span class="i-role">Solvent</span></div>
       <div class="inci-row"><span class="i-pct">03</span><span class="i-name">Triethyl Citrate</span><span class="i-role">Prevent</span></div>
