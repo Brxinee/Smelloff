@@ -4214,7 +4214,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   }
 
   function closeCheckout() {
-    document.getElementById('checkoutOverlay').classList.remove('active');
+    var co = document.getElementById('checkoutOverlay');
+    if (co) co.classList.remove('active');
     syncModalState();
     var lsEl = document.getElementById('loadingScreen');
     if (lsEl) { lsEl.classList.remove('active'); lsEl.style.display = 'none'; }
@@ -5095,13 +5096,12 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if(e.key==='Escape'){
       var gv=document.getElementById('galViewer');
       if(gv&&gv.classList.contains('active')){window.closeGalleryViewer();return;}
-      if (document.getElementById('paymentFailedOverlay').classList.contains('active')) {
-        window.closePaymentFailedOverlay();
-        return;
-      }
+      var pf=document.getElementById('paymentFailedOverlay');
+      if(pf&&pf.classList.contains('active')){window.closePaymentFailedOverlay();return;}
       var cartOv=document.getElementById('cartOverlay');
       if(cartOv&&cartOv.classList.contains('active')){closeCartDrawer();return;}
-      closeCheckout();
+      var ck=document.getElementById('checkoutOverlay');
+      if(ck&&ck.classList.contains('active')){closeCheckout();return;}
       var menu=document.getElementById('navMenu');
       if(menu&&menu.classList.contains('open')){
         menu.classList.remove('open');
