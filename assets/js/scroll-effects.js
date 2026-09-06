@@ -157,9 +157,13 @@
   function initReviewDots(){
     var scroll = document.getElementById('rvScroll'), dotsWrap = document.getElementById('rvDots');
     if (!scroll || !dotsWrap) return;
+
+    // Performance optimization: Prevent multiple rAF callbacks per frame on fast scroll
+    var ticking = false;
+
     function build(){
       var cards = scroll.querySelectorAll('.rv-card');
-      if (!cards.length){ dotsWrap.innerHTML=''; return; }
+      if (!cards.length){ dotsWrap.innerHTML=''; ticking = false; return; }
       if (dotsWrap.childElementCount !== cards.length){
         dotsWrap.innerHTML = '';
         cards.forEach(function(c,i){
@@ -171,8 +175,18 @@
       var center = scroll.scrollLeft + scroll.clientWidth/2, best=0, bestD=1e9;
       cards.forEach(function(c,i){ var cc=c.offsetLeft+c.offsetWidth/2, dd=Math.abs(cc-center); if(dd<bestD){bestD=dd;best=i;} });
       Array.prototype.forEach.call(dotsWrap.children, function(d,i){ d.classList.toggle('active', i===best); });
+
+      // Reset flag after layout calculation is complete
+      ticking = false;
     }
-    scroll.addEventListener('scroll', function(){ requestAnimationFrame(build); }, {passive:true});
+
+    scroll.addEventListener('scroll', function(){
+      if(!ticking){
+        ticking = true;
+        requestAnimationFrame(build);
+      }
+    }, {passive:true});
+
     try { new MutationObserver(build).observe(scroll, {childList:true}); } catch(e){}
     build();
   }
