@@ -15,14 +15,15 @@
     "sitemap": "node scripts/seo/build-sitemap.mjs",
     "sitemap:check": "node scripts/seo/build-sitemap.mjs --check",
     "indexnow": "node scripts/indexnow-ping.mjs",
-    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs --check && node -c server.js",
-    "lint": "node -c server.js",
+    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs --check && node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js",
+    "lint": "node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js",
     "start": "node server.js",
     "test": "node --test"
   },
   "dependencies": {
     "express": "^5.2.1",
     "resend": "^4.0.0",
+    "razorpay": "^2.9.8",
     "sharp": "^0.35.3"
   }
 }
