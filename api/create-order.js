@@ -60,7 +60,6 @@ export default async function handler(req, res) {
 
     const paymentMethod = String(body.payment_method || '').toLowerCase();
     if (paymentMethod !== 'upi') {
-      // COD continues through the existing Supabase order flow unchanged.
       const target = `${SUPABASE_URL.replace(/\/$/, '')}/functions/v1/create-order`;
       const upstream = await fetch(target, {
         method: 'POST',
@@ -100,9 +99,7 @@ export default async function handler(req, res) {
     }
 
     const orderCode = String(upstreamData.order_code || '').trim().toUpperCase();
-    if (!orderCode) {
-      return res.status(502).json({ error: 'Order service returned no order code.' });
-    }
+    if (!orderCode) return res.status(502).json({ error: 'Order service returned no order code.' });
 
     const razorpay = razorpayClient();
     let razorpayOrder;
@@ -136,6 +133,7 @@ export default async function handler(req, res) {
       order_id: razorpayOrder.id,
       amount: razorpayOrder.amount,
       currency: razorpayOrder.currency,
+      key_id: RAZORPAY_KEY_ID,
     });
   } catch (error) {
     console.error('[api/create-order] error:', error?.message || error);
