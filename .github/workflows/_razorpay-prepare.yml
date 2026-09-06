@@ -68,27 +68,19 @@ jobs:
                   return '; '.join(parts)
               return value
 
-          patched = patch(data)
-          path.write_text(json.dumps(patched, indent=2) + '\n')
+          path.write_text(json.dumps(patch(data), indent=2) + '\n')
           PY
 
-      - name: Commit generated integration files
+      - name: Commit generated integration files and remove helper
         run: |
           set -e
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add package-lock.json vercel.json
-          git add . ':!_razorpay-prepare.yml'
+          git add .
+          git rm .github/workflows/_razorpay-prepare.yml
           if git diff --cached --quiet; then
             echo 'No generated changes to commit.'
             exit 0
           fi
           git commit -m 'chore: sync Razorpay integration generated files'
-          git push
-
-      - name: Remove one-time preparation workflow
-        run: |
-          set -e
-          git rm .github/workflows/_razorpay-prepare.yml
-          git commit -m 'chore: remove one-time Razorpay preparation workflow'
           git push
