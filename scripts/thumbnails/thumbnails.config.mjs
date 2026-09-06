@@ -50,15 +50,6 @@ export const POSTS = [
     alt: 'A shopper works along a rail of hanging garments, comparing one against the next before choosing',
   },
   {
-    slug: 'remove-smell-from-blazer-without-dry-cleaning',
-    kicker: 'Formalwear',
-    top: 'Smoke smell?',
-    hi: 'Check the lining.',
-    photo: 235296378,
-    focal: '50% 30%',
-    alt: 'A man in a blue blazer over a dark polo neck stands outdoors, looking away from the camera',
-  },
-  {
     slug: 'which-fabrics-hold-odor-most',
     kicker: 'Fabric science',
     top: 'Which fabric',
@@ -132,16 +123,6 @@ export const POSTS = [
     focal: '52% 38%',
     tone: 'brightness(1.30) contrast(1.06) saturate(1.14)',
     alt: 'A researcher examines samples in a laboratory, standing in for the ingredient-by-ingredient breakdown of the formula',
-  },
-  {
-    slug: 'beta-cyclodextrin-odor-removal-science',
-    kicker: 'The science',
-    top: 'The molecule that',
-    hi: 'traps odor',
-    photo: 181601820,
-    focal: '54% 30%',
-    tone: 'brightness(1.30) contrast(1.06) saturate(1.14)',
-    alt: 'A scientist works at a microscope, illustrating the beta-cyclodextrin research behind fabric odor capture',
   },
   {
     slug: 'hpbcd-cyclodextrin-fabric-odor',
@@ -272,17 +253,6 @@ export const POSTS = [
     photo: 359756867,
     focal: '50% 50%',
     alt: 'A woman in an apron cooks at a hob, adding vegetables to a hot pan on a wooden kitchen counter',
-  },
-  {
-    slug: 'remove-smell-from-hoodie-without-washing',
-    kicker: 'Fabric care',
-    top: 'Why does',
-    hi: 'your hoodie smell?',
-    photo: 327219686,
-    // The photographer crops the top of the head, so pulling the focal point up
-    // gains nothing and loses the garment — which is the subject here.
-    focal: '50% 45%',
-    alt: 'A woman in a plain black sweatshirt stands against a white wall beside a houseplant',
   },
   {
     slug: 'keep-clothes-fresh-without-washing-machine',
