@@ -22,7 +22,8 @@ const machine = ['llms.txt', 'llms-full.txt', 'products.json']
   .map(p => path.join(ROOT, p)).filter(fs.existsSync);
 for (const p of machine) {
   const s = read(p);
-  if (/Zinc Ricinoleate/i.test(s)) fail(`${rel(p)} contains retired Zinc Ricinoleate product truth`);
+  const checkStr = s.replace(/must not be described as Zinc Ricinoleate/gi, '').replace(/Do not describe the current formula as Zinc Ricinoleate/gi, '');
+  if (/Zinc Ricinoleate/i.test(checkStr)) fail(`${rel(p)} contains retired Zinc Ricinoleate product truth`);
   if (/Duo\s*₹399|Trio\s*₹549|Solo\s*₹179/i.test(s)) fail(`${rel(p)} contains retired bundle pricing`);
   if (s.includes('support@smelloff.in')) fail(`${rel(p)} contains stale support email`);
 }
