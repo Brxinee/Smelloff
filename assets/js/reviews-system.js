@@ -255,6 +255,12 @@
       errEl.style.display = 'block';
       return;
     }
+    // BUG: JS allowed 600 chars while the textarea maxlength is 400 — limits now match
+    if (text.length > 400) {
+      errEl.textContent = 'Keep it under 400 characters.';
+      errEl.style.display = 'block';
+      return;
+    }
 
     var orderUuid = '';
     try { orderUuid = localStorage.getItem('smelloff_order_uuid') || ''; } catch(e){}

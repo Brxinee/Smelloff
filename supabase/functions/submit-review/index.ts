@@ -40,8 +40,8 @@ Deno.serve(async (req: Request) => {
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
       return jsonResponse(req, { error: "Pick a star rating." }, 400);
     }
-    if (body.length < 8 || body.length > 600) {
-      return jsonResponse(req, { error: "Write at least a sentence (max 600 characters)." }, 400);
+    if (body.length < 8 || body.length > 400) {
+      return jsonResponse(req, { error: "Write at least a sentence (max 400 characters)." }, 400);
     }
 
     const supabase = createClient(
