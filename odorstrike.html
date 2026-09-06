@@ -4403,7 +4403,9 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (ls) { ls.classList.remove('active'); ls.style.display = 'none'; }
   }
 
-  function showSuccess(orderId, method) {
+  var _processedOrders = new Set();
+
+  function showSuccess(orderId, method, details) {
     hideLoadingScreen();
     var cff = document.getElementById('checkoutForm');
     if (cff) cff.style.display = 'none';
@@ -4417,10 +4419,12 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (trk) { trk.href = '/track-order?code=' + encodeURIComponent(orderId); trk.style.display = 'inline-block'; }
     try { localStorage.setItem('smelloff_last_order', JSON.stringify({ code: orderId, ts: Date.now() })); } catch (e) {}
 
-    // The collectable figure, COD charge included — this is what the courier asks for.
-    var amount = orderTotals().total;
-    var name = (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
+    var t = orderTotals();
+    var amount = (details && typeof details.amount === 'number') ? details.amount : (method === 'cod' ? t.total : (t.subtotal + t.shipping));
+    var qty = (details && typeof details.qty === 'number') ? details.qty : (cartQty > 0 ? cartQty : 1);
+    var name = (details && details.name) || (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
     var phone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || '';
+    var buyerEmail = (details && details.email) || (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
 
     if (method === 'cod') {
       document.getElementById('successTag').textContent = 'Order received';
@@ -4429,13 +4433,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
 
       // Google Customer Reviews opt-in. COD only, deliberately: this is a real
       // placed order the moment it exists (₹0 advance, confirmed by phone), so
-      // it is a genuine order-confirmation event. The UPI path is not — see
-      // the note in showUpiSuccess(). COD is the default and the majority
-      // path, so this covers most orders.
-      //
-      // Consent-gated and no-ops without an email address; all of that lives
-      // in assets/js/google-customer-reviews.js. Wrapped because nothing on
-      // the screen that confirms someone's order may ever throw.
+      // it is a genuine order-confirmation event.
       try {
         var gcrEmail = document.getElementById('f_email');
         if (typeof window.smfGoogleReviewOptIn === 'function') {
@@ -4446,12 +4444,12 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         }
       } catch (e) {}
     } else {
-      document.getElementById('successTag').textContent = 'Order confirmed';
-      document.getElementById('successHeading').textContent = "You're done.";
-      document.getElementById('successMsg').textContent = 'Our team ships your ODORSTRIKE within 48 hours.';
+      document.getElementById('successTag').textContent = 'Payment confirmed';
+      document.getElementById('successHeading').textContent = "Payment confirmed.";
+      document.getElementById('successMsg').textContent = 'Your ODORSTRIKE order is confirmed. We’ll ship within 48 hours.';
     }
 
-    // Inject order ID, name, phone into WhatsApp links so the merchant can match UTR to order.
+    // Inject order ID, name, phone into WhatsApp links
     var utrLink = document.getElementById('waSuccessUtrLink');
     if (utrLink) {
       utrLink.href = 'https://wa.me/919392974031?text=' + encodeURIComponent(
@@ -4469,20 +4467,43 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       );
     }
 
-    trackPurchase(amount, orderId);
-    soAttachOrder(orderId, amount, cartQty > 0 ? cartQty : 1, method === 'cod' ? 'cod' : 'razorpay');
-    setCartQty(0);
-    // Unlock review submission (client-side gate — not tamper-proof).
-    try {
-      var buyerEmail = (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
-      var buyerPhone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value : '').trim();
-      localStorage.setItem('smelloff_purchased', 'true');
-      if (buyerEmail) localStorage.setItem('smelloff_purchased_email', buyerEmail);
-      if (buyerPhone) localStorage.setItem('smelloff_last_phone', buyerPhone);
-      // Show/hide email confirmation note based on whether user gave an email
-      var emailNote = document.getElementById('successEmailNote');
-      if (emailNote) emailNote.style.display = buyerEmail ? 'block' : 'none';
-    } catch (e) { /* localStorage may be blocked in private mode */ }
+    // Side effects executed exactly once per orderId (idempotent)
+    if (!_processedOrders.has(orderId)) {
+      _processedOrders.add(orderId);
+      trackPurchase(amount, orderId);
+      soAttachOrder(orderId, amount, qty, method === 'cod' ? 'cod' : 'razorpay');
+
+      if (method === 'razorpay' && buyerEmail && typeof window.SmelloffEmail !== 'undefined' && window.SmelloffEmail && typeof window.SmelloffEmail.send === 'function') {
+        try {
+          var addr = [
+            document.getElementById('f_addr') ? document.getElementById('f_addr').value.trim() : '',
+            document.getElementById('f_city') ? document.getElementById('f_city').value.trim() : '',
+            document.getElementById('f_state') ? document.getElementById('f_state').value.trim() : '',
+            document.getElementById('f_pin') ? document.getElementById('f_pin').value.trim() : ''
+          ].filter(Boolean).join(', ');
+
+          window.SmelloffEmail.send('orderConfirmation', buyerEmail, {
+            orderId: orderId,
+            customerName: name || 'there',
+            amount: String(amount),
+            codFee: 0,
+            address: addr,
+            paymentMethod: 'Prepaid (Razorpay)'
+          }).catch(function (e) { console.error('Prepaid order email failed:', e); });
+        } catch (e) { /* confirmation email is best-effort */ }
+      }
+
+      setCartQty(0);
+      try {
+        var buyerPhone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value : '').trim();
+        localStorage.setItem('smelloff_purchased', 'true');
+        if (buyerEmail) localStorage.setItem('smelloff_purchased_email', buyerEmail);
+        if (buyerPhone) localStorage.setItem('smelloff_last_phone', buyerPhone);
+      } catch (e) { /* localStorage may be blocked in private mode */ }
+    }
+
+    var emailNote = document.getElementById('successEmailNote');
+    if (emailNote) emailNote.style.display = buyerEmail ? 'block' : 'none';
   }
 
   async function submitOrder() {

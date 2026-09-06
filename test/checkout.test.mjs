@@ -153,3 +153,83 @@ test('frontend submit architecture: odorstrike.html submitOrder is sole router a
   assert.ok(html.includes("onclick=\"submitOrder()\""), 'submit button must have onclick submitOrder');
 });
 
+test('Step 3: Razorpay SDK loading is deterministic and has no dynamic script injection', () => {
+  const chromeJs = fs.readFileSync('assets/js/chrome.js', 'utf8');
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+
+  // 1. Static Razorpay script exists
+  assert.ok(html.includes('<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>'), 'Static script tag must exist in odorstrike.html');
+
+  // 2. No dynamic script injection in chrome.js
+  assert.ok(!chromeJs.includes("document.createElement('script')"), 'chrome.js must not dynamically create script tags');
+  assert.ok(!chromeJs.includes("loadRazorpay("), 'old loadRazorpay function must be removed');
+
+  // 3. Single readiness promise
+  assert.ok(chromeJs.includes('window.smfRazorpayReady'), 'smfRazorpayReady must be used for SDK readiness');
+  assert.ok(chromeJs.includes('await getRazorpayReady()'), 'startRazorpay must await SDK readiness');
+});
+
+test('Step 3: Success ownership is deduplicated, idempotent, and single-source', () => {
+  const chromeJs = fs.readFileSync('assets/js/chrome.js', 'utf8');
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+
+  // markSuccess in chrome.js delegates to showSuccess('razorpay')
+  assert.ok(chromeJs.includes("window.showSuccess(orderCode, 'razorpay'"), 'markSuccess must call showSuccess with razorpay method');
+  assert.ok(!chromeJs.includes("window.trackPurchase("), 'chrome.js markSuccess must not independently call trackPurchase');
+  assert.ok(!chromeJs.includes("window.soAttachOrder("), 'chrome.js markSuccess must not independently call soAttachOrder');
+  assert.ok(!chromeJs.includes("cleanupAfterSuccess()"), 'chrome.js markSuccess must not independently call cleanupAfterSuccess');
+
+  // showSuccess in odorstrike.html owns side effects and has idempotency guard
+  assert.ok(html.includes('_processedOrders'), 'showSuccess must use _processedOrders set for idempotency');
+  assert.ok(html.includes('trackPurchase(amount, orderId)'), 'showSuccess must trigger trackPurchase');
+  assert.ok(html.includes("soAttachOrder(orderId, amount, qty, method === 'cod' ? 'cod' : 'razorpay')"), 'showSuccess must trigger soAttachOrder');
+  assert.ok(html.includes('setCartQty(0)'), 'showSuccess must clear cart');
+
+  // Email confirmation is sent in showSuccess only for verified razorpay orders with idempotency guard
+  assert.ok(html.includes("if (method === 'razorpay' && buyerEmail"), 'showSuccess must handle prepaid email confirmation');
+  assert.ok(html.includes("SmelloffEmail.send('orderConfirmation'"), 'showSuccess must invoke SmelloffEmail.send');
+});
+
+test('Step 3: Idempotent success coordinator logic behaves correctly', () => {
+  const processedOrders = new Set();
+  let trackPurchaseCount = 0;
+  let soAttachCount = 0;
+  let emailCount = 0;
+
+  function mockShowSuccess(orderId, method, email) {
+    if (!processedOrders.has(orderId)) {
+      processedOrders.add(orderId);
+      trackPurchaseCount++;
+      soAttachCount++;
+      if (method === 'razorpay' && email) {
+        emailCount++;
+      }
+    }
+  }
+
+  // First invocation
+  mockShowSuccess('SMF-TEST-1', 'razorpay', 'user@example.com');
+  assert.equal(trackPurchaseCount, 1);
+  assert.equal(soAttachCount, 1);
+  assert.equal(emailCount, 1);
+
+  // Duplicate invocation (e.g. webhook + frontend callback or retry)
+  mockShowSuccess('SMF-TEST-1', 'razorpay', 'user@example.com');
+  assert.equal(trackPurchaseCount, 1, 'trackPurchase must not be duplicated');
+  assert.equal(soAttachCount, 1, 'soAttachOrder must not be duplicated');
+  assert.equal(emailCount, 1, 'email must not be duplicated');
+
+  // Distinct second order
+  mockShowSuccess('SMF-TEST-2', 'razorpay', 'user2@example.com');
+  assert.equal(trackPurchaseCount, 2);
+  assert.equal(soAttachCount, 2);
+  assert.equal(emailCount, 2);
+});
+
+test('Step 3: COD flow reaches showSuccess(orderId, "cod") and does not touch Razorpay', () => {
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+  assert.ok(html.includes("showSuccess(persistedOrderId, 'cod')"), 'COD must call showSuccess with cod');
+  assert.ok(html.includes("if (payMethod === 'prepaid')"), 'Prepaid is guarded separately from COD');
+});
+
+

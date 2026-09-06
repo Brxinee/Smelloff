@@ -58,44 +58,41 @@
   var checkoutButton = document.getElementById('submitBtn');
   if (!checkoutButton) return;
 
-  var RAZORPAY_SCRIPT = 'https://checkout.razorpay.com/v1/checkout.js';
-  var razorpayReady = false;
-  var razorpayLoading = false;
-
-  function loadRazorpay(callback) {
+  function getRazorpayReady() {
     if (window.Razorpay) {
-      razorpayReady = true;
-      callback();
-      return;
+      window.smfRazorpayReady = Promise.resolve(window.Razorpay);
+      return window.smfRazorpayReady;
     }
-    if (razorpayLoading) {
-      var waitStart = Date.now();
-      (function waitForIt() {
+    if (window.smfRazorpayReady) return window.smfRazorpayReady;
+    window.smfRazorpayReady = new Promise(function (resolve, reject) {
+      if (window.Razorpay) {
+        resolve(window.Razorpay);
+        return;
+      }
+      var script = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+      if (!script) {
+        window.smfRazorpayReady = null;
+        reject(new Error('Razorpay Checkout script is missing.'));
+        return;
+      }
+      script.addEventListener('load', function () {
         if (window.Razorpay) {
-          razorpayReady = true;
-          callback();
-        } else if (Date.now() - waitStart > 10000) {
-          callback(new Error('Razorpay Checkout could not be loaded.'));
+          resolve(window.Razorpay);
         } else {
-          setTimeout(waitForIt, 50);
+          window.smfRazorpayReady = null;
+          reject(new Error('Razorpay loaded without window.Razorpay.'));
         }
-      })();
-      return;
-    }
-    razorpayLoading = true;
-    var script = document.createElement('script');
-    script.src = RAZORPAY_SCRIPT;
-    script.async = true;
-    script.id = 'razorpay-checkout-script';
-    script.onload = function () {
-      razorpayReady = true;
-      callback();
-    };
-    script.onerror = function () {
-      callback(new Error('Unable to load Razorpay Checkout. Check your connection and try again.'));
-    };
-    document.head.appendChild(script);
+      }, { once: true });
+      script.addEventListener('error', function () {
+        window.smfRazorpayReady = null;
+        reject(new Error('Unable to load Razorpay Checkout. Check your connection and try again.'));
+      }, { once: true });
+    });
+    return window.smfRazorpayReady;
   }
+
+  // Eagerly initialize readiness check
+  getRazorpayReady();
 
   var razorpayInFlight = false;
 
@@ -183,52 +180,18 @@
     if (error) error.style.display = 'none';
   }
 
-  function cleanupAfterSuccess() {
-    try { localStorage.removeItem('smelloff_cart_v1'); } catch (e) { /* storage blocked */ }
-    var badgeEl = document.getElementById('cartCount');
-    if (badgeEl) {
-      badgeEl.textContent = '0';
-      badgeEl.setAttribute('data-empty', '1');
-    }
-  }
-
   function markSuccess(orderCode, amountRupees, qty, paymentId, email, name) {
-    cleanupAfterSuccess();
-    if (typeof window.trackPurchase === 'function') {
-      try { window.trackPurchase(amountRupees, orderCode); } catch (e) { /* analytics must not block fulfilment */ }
-    }
-    if (typeof window.soAttachOrder === 'function') {
-      try { window.soAttachOrder(orderCode, amountRupees, qty, 'razorpay'); } catch (e) { /* partner tracking must not block fulfilment */ }
-    }
     if (typeof window.logOrderToSheets === 'function' && typeof window.collectOrder === 'function') {
       try { window.logOrderToSheets(window.collectOrder(orderCode, 'RZP_PAID')); } catch (e) { /* legacy logging is best-effort */ }
     }
-    if (email && typeof window.SmelloffEmail !== 'undefined' && window.SmelloffEmail && typeof window.SmelloffEmail.send === 'function') {
-      try {
-        window.SmelloffEmail.send('orderConfirmation', email, {
-          orderId: orderCode,
-          customerName: name || 'there',
-          amount: String(amountRupees),
-          codFee: 0,
-          address: [textValue('f_addr'), textValue('f_city'), textValue('f_state'), textValue('f_pin')].filter(Boolean).join(', '),
-          paymentMethod: 'UPI (Razorpay)'
-        });
-      } catch (e) { /* confirmation email is best-effort */ }
-    }
     if (typeof window.showSuccess === 'function') {
-      window.showSuccess(orderCode, 'upi');
-      var heading = document.getElementById('successHeading');
-      var msg = document.getElementById('successMsg');
-      var upiBlock = document.getElementById('upiBlock');
-      var track = document.getElementById('successTrackLink');
-      var note = document.getElementById('successEmailNote');
-      if (heading) heading.textContent = 'Payment confirmed.';
-      if (msg) msg.textContent = 'Your ODORSTRIKE order is confirmed. We’ll ship within 48 hours.';
-      if (upiBlock) upiBlock.style.display = 'none';
-      if (track) track.style.display = 'inline-block';
-      if (note && email) note.style.display = 'block';
-      var id = document.getElementById('orderIdDisplay');
-      if (id) id.textContent = orderCode;
+      window.showSuccess(orderCode, 'razorpay', {
+        amount: amountRupees,
+        qty: qty,
+        email: email,
+        name: name,
+        paymentId: paymentId
+      });
     }
   }
 
@@ -248,99 +211,90 @@
       return;
     }
 
-    loadRazorpay(function (loadError) {
-      if (loadError) {
-        razorpayInFlight = false;
-        setButtonState(false);
-        showPaymentError(loadError.message || 'Razorpay Checkout could not be loaded.');
-        return;
+    try {
+      var RazorpayClass = await getRazorpayReady();
+      if (!RazorpayClass) {
+        throw new Error('Razorpay Checkout could not be loaded.');
       }
 
-      (async function () {
-        try {
-          var createResponse = await fetch('/api/create-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'same-origin',
-            body: JSON.stringify(payload)
-          });
-          var created = await createResponse.json().catch(function () { return {}; });
-          if (!createResponse.ok || !created.order_id) {
-            throw new Error(created.error || 'Unable to create the payment order. Please try again.');
-          }
+      var createResponse = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload)
+      });
+      var created = await createResponse.json().catch(function () { return {}; });
+      if (!createResponse.ok || !created.order_id) {
+        throw new Error(created.error || 'Unable to create the payment order. Please try again.');
+      }
 
-          var options = {
-            key: created.key_id,
-            amount: created.amount,
-            currency: created.currency || 'INR',
-            name: 'Smelloff',
-            description: 'ODORSTRIKE 50ml — Fabric Odor Mist',
-            order_id: created.order_id,
-            image: 'https://smelloff.in/apple-touch-icon.png',
-            prefill: {
-              name: payload.address.name,
-              email: payload.email || undefined,
-              contact: payload.phone
-            },
-            notes: {
-              smelloff_order_code: created.order_code
-            },
-            theme: { color: '#B8FF57' },
-            modal: {
-              ondismiss: function () {
-                razorpayInFlight = false;
-                setButtonState(false);
-                if (typeof window.hideLoadingScreen === 'function') window.hideLoadingScreen();
-              }
-            },
-            handler: async function (response) {
-              try {
-                var verifyResponse = await fetch('/api/verify-payment', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  credentials: 'same-origin',
-                  body: JSON.stringify({
-                    orderCode: created.order_code,
-                    phone: payload.phone,
-                    razorpay_payment_id: response.razorpay_payment_id,
-                    razorpay_order_id: response.razorpay_order_id,
-                    razorpay_signature: response.razorpay_signature
-                  })
-                });
-                var verified = await verifyResponse.json().catch(function () { return {}; });
-                if (!verifyResponse.ok || !verified.verified) {
-                  throw new Error(verified.error || 'Payment verification failed. Do not place the order again yet.');
-                }
-                razorpayInFlight = false;
-                setButtonState(false);
-                markSuccess(created.order_code, Number(payload.amount) / 100, payload.items[0].quantity, response.razorpay_payment_id, payload.email, payload.address.name);
-              } catch (error) {
-                razorpayInFlight = false;
-                setButtonState(false);
-                showPaymentError(error.message || 'Payment verification failed. Please contact support with your payment ID.');
-              }
-            }
-          };
-
-          var rzp = new window.Razorpay(options);
-          rzp.on('payment.failed', function (failure) {
+      var options = {
+        key: created.key_id,
+        amount: created.amount,
+        currency: created.currency || 'INR',
+        name: 'Smelloff',
+        description: 'ODORSTRIKE 50ml — Fabric Odor Mist',
+        order_id: created.order_id,
+        image: 'https://smelloff.in/apple-touch-icon.png',
+        prefill: {
+          name: payload.address.name,
+          email: payload.email || undefined,
+          contact: payload.phone
+        },
+        notes: {
+          smelloff_order_code: created.order_code
+        },
+        theme: { color: '#B8FF57' },
+        modal: {
+          ondismiss: function () {
             razorpayInFlight = false;
             setButtonState(false);
-            var description = failure && failure.error && failure.error.description;
-            showPaymentError(description || 'Payment failed. You can try again.');
-          });
-          rzp.open();
-        } catch (error) {
-          razorpayInFlight = false;
-          setButtonState(false);
-          showPaymentError(error.message || 'Unable to start payment. Please try again.');
+            if (typeof window.hideLoadingScreen === 'function') window.hideLoadingScreen();
+          }
+        },
+        handler: async function (response) {
+          try {
+            var verifyResponse = await fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'same-origin',
+              body: JSON.stringify({
+                orderCode: created.order_code,
+                phone: payload.phone,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+            var verified = await verifyResponse.json().catch(function () { return {}; });
+            if (!verifyResponse.ok || !verified.verified) {
+              throw new Error(verified.error || 'Payment verification failed. Do not place the order again yet.');
+            }
+            razorpayInFlight = false;
+            setButtonState(false);
+            markSuccess(created.order_code, Number(payload.amount) / 100, payload.items[0].quantity, response.razorpay_payment_id, payload.email, payload.address.name);
+          } catch (error) {
+            razorpayInFlight = false;
+            setButtonState(false);
+            showPaymentError(error.message || 'Payment verification failed. Please contact support with your payment ID.');
+          }
         }
-      })();
-    });
+      };
+
+      var rzp = new RazorpayClass(options);
+      rzp.on('payment.failed', function (failure) {
+        razorpayInFlight = false;
+        setButtonState(false);
+        var description = failure && failure.error && failure.error.description;
+        showPaymentError(description || 'Payment failed. You can try again.');
+      });
+      rzp.open();
+    } catch (error) {
+      razorpayInFlight = false;
+      setButtonState(false);
+      showPaymentError(error.message || 'Unable to start payment. Please try again.');
+    }
   }
 
   window.startRazorpay = startRazorpay;
-
-  // Preload the hosted Checkout script while the customer is reading checkout.
-  loadRazorpay(function () {});
 })();
