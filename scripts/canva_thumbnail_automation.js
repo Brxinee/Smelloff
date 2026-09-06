@@ -49,13 +49,13 @@
  *  - Polling is bounded and backs off, so a stuck job fails instead of spinning.
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const API_BASE_URL = 'https://api.canva.com/rest/v1';
+const API_BASE_URL = "https://api.canva.com/rest/v1";
 const POLL_INTERVAL_MS = 2000;
 const POLL_TIMEOUT_MS = 120000;
 
@@ -70,11 +70,14 @@ function parseArgs(argv) {
   const args = { _: [] };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
-    if (a.startsWith('--')) {
+    if (a.startsWith("--")) {
       const key = a.slice(2);
       const next = argv[i + 1];
-      if (next === undefined || next.startsWith('--')) args[key] = true;
-      else { args[key] = next; i++; }
+      if (next === undefined || next.startsWith("--")) args[key] = true;
+      else {
+        args[key] = next;
+        i++;
+      }
     } else args._.push(a);
   }
   return args;
@@ -89,23 +92,29 @@ async function canvaFetch(url, options = {}) {
   const res = await fetch(url, options);
   if (res.ok) return res.json();
 
-  let detail = '';
-  try { detail = JSON.stringify(await res.json()); } catch { detail = await res.text().catch(() => ''); }
+  let detail = "";
+  try {
+    detail = JSON.stringify(await res.json());
+  } catch {
+    detail = await res.text().catch(() => "");
+  }
 
   const hint =
     res.status === 401
-      ? 'CANVA_ACCESS_TOKEN is missing, expired or malformed — mint a fresh OAuth token.'
+      ? "CANVA_ACCESS_TOKEN is missing, expired or malformed — mint a fresh OAuth token."
       : res.status === 403
-        ? 'Forbidden. Either the token lacks a required scope (brandtemplate:content:read, ' +
-          'design:content:write, asset:write) or the account is not on a paid plan — ' +
-          'Brand Templates and Autofill are Pro/Teams/Enterprise only.'
+        ? "Forbidden. Either the token lacks a required scope (brandtemplate:content:read, " +
+          "design:content:write, asset:write) or the account is not on a paid plan — " +
+          "Brand Templates and Autofill are Pro/Teams/Enterprise only."
         : res.status === 404
-          ? 'Not found. Check CANVA_TEMPLATE_ID belongs to this account.'
+          ? "Not found. Check CANVA_TEMPLATE_ID belongs to this account."
           : res.status === 429
-            ? `Rate limited. Retry after ${res.headers.get('retry-after') || 'a short'} seconds.`
-            : '';
+            ? `Rate limited. Retry after ${res.headers.get("retry-after") || "a short"} seconds.`
+            : "";
 
-  throw new Error(`${options.method || 'GET'} ${url} -> ${res.status} ${res.statusText}\n  ${detail}${hint ? `\n  ${hint}` : ''}`);
+  throw new Error(
+    `${options.method || "GET"} ${url} -> ${res.status} ${res.statusText}\n  ${detail}${hint ? `\n  ${hint}` : ""}`,
+  );
 }
 
 async function pollJob(url, label) {
@@ -118,8 +127,8 @@ async function pollJob(url, label) {
     const job = body.job || body;
     const status = job.status;
 
-    if (status === 'success') return job;
-    if (status === 'failed') {
+    if (status === "success") return job;
+    if (status === "failed") {
       throw new Error(`${label} failed: ${JSON.stringify(job.error || job)}`);
     }
     wait = Math.min(Math.round(wait * 1.25), 8000);
@@ -131,11 +140,11 @@ async function pollJob(url, label) {
 
 function validateTextOverlay(text) {
   const words = String(text).trim().split(/\s+/).filter(Boolean);
-  if (!words.length) throw new Error('text overlay is empty');
+  if (!words.length) throw new Error("text overlay is empty");
   if (words.length > 6) {
     throw new Error(
       `text overlay is ${words.length} words ("${text}"). CTR guidance caps overlays at 6; ` +
-        `past 10 the measured drop is ~16%. Shorten it in thumbnails.config.mjs.`
+        `past 10 the measured drop is ~16%. Shorten it in thumbnails.config.mjs.`,
     );
   }
   return text;
@@ -146,32 +155,36 @@ function validateTextOverlay(text) {
 /** POST /v1/asset-uploads, then poll until the asset id is available. */
 async function uploadAsset(filePath) {
   const absolutePath = path.resolve(filePath);
-  if (!fs.existsSync(absolutePath)) throw new Error(`file not found: ${absolutePath}`);
+  if (!fs.existsSync(absolutePath))
+    throw new Error(`file not found: ${absolutePath}`);
 
   const name = path.basename(absolutePath);
   console.log(`  [1/3] uploading ${name} …`);
 
   const body = fs.readFileSync(absolutePath);
   const started = await canvaFetch(`${API_BASE_URL}/asset-uploads`, {
-    method: 'POST',
+    method: "POST",
     headers: authHeaders({
-      'Content-Type': 'application/octet-stream',
+      "Content-Type": "application/octet-stream",
       // The live endpoint takes the filename base64-encoded in a header and the
       // file itself as the raw body — not a JSON {file_base64} payload.
-      'Asset-Upload-Metadata': JSON.stringify({
-        name_base64: Buffer.from(name, 'utf8').toString('base64'),
+      "Asset-Upload-Metadata": JSON.stringify({
+        name_base64: Buffer.from(name, "utf8").toString("base64"),
       }),
     }),
     body,
   });
 
   const job = started.job || started;
-  if (job.status === 'success' && job.asset) {
+  if (job.status === "success" && job.asset) {
     console.log(`        asset id ${job.asset.id}`);
     return job.asset.id;
   }
 
-  const done = await pollJob(`${API_BASE_URL}/asset-uploads/${job.id}`, 'asset upload');
+  const done = await pollJob(
+    `${API_BASE_URL}/asset-uploads/${job.id}`,
+    "asset upload",
+  );
   console.log(`        asset id ${done.asset.id}`);
   return done.asset.id;
 }
@@ -182,14 +195,14 @@ async function triggerAutofill(templateId, textOverlay, assetId, title) {
   console.log(`  [2/3] autofilling template ${templateId} …`);
 
   const started = await canvaFetch(`${API_BASE_URL}/autofills`, {
-    method: 'POST',
-    headers: authHeaders({ 'Content-Type': 'application/json' }),
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({
       brand_template_id: templateId,
       title: title || `Blog_Thumbnail_${Date.now()}`,
       data: {
-        headline_text: { type: 'text', text: textOverlay },
-        main_visual: { type: 'image', asset_id: assetId },
+        headline_text: { type: "text", text: textOverlay },
+        main_visual: { type: "image", asset_id: assetId },
       },
     }),
   });
@@ -202,7 +215,7 @@ async function triggerAutofill(templateId, textOverlay, assetId, title) {
 /** GET /v1/autofills/{jobId} until it resolves. */
 async function pollAutofillJob(jobId) {
   console.log(`  [3/3] waiting on job ${jobId} …`);
-  const job = await pollJob(`${API_BASE_URL}/autofills/${jobId}`, 'autofill');
+  const job = await pollJob(`${API_BASE_URL}/autofills/${jobId}`, "autofill");
   const design = job.result?.design || job.design;
   console.log(`        design ${design.id} — ${design.url}`);
   return design;
@@ -221,8 +234,8 @@ async function main() {
 
   if (!CANVA_ACCESS_TOKEN || !CANVA_TEMPLATE_ID) {
     console.error(
-      'CANVA_ACCESS_TOKEN and CANVA_TEMPLATE_ID must both be set.\n' +
-        'See the setup notes at the top of this file.'
+      "CANVA_ACCESS_TOKEN and CANVA_TEMPLATE_ID must both be set.\n" +
+        "See the setup notes at the top of this file.",
     );
     process.exit(1);
   }
@@ -230,51 +243,60 @@ async function main() {
   // Ad-hoc single render, matching the invocation in the research PDF.
   if (args.text || args.image) {
     if (!args.text || !args.image) {
-      console.error('--text and --image must be given together.');
+      console.error("--text and --image must be given together.");
       process.exit(1);
     }
-    await generateOne({ text: args.text, image: args.image, title: `Blog_Thumbnail_${Date.now()}` });
+    await generateOne({
+      text: args.text,
+      image: args.image,
+      title: `Blog_Thumbnail_${Date.now()}`,
+    });
     return;
   }
 
   // Config-driven batch — the normal path.
   const { POSTS, validateConfig } = await import(
-    pathToFileURL(path.join(__dirname, 'thumbnails', 'thumbnails.config.mjs')).href
+    pathToFileURL(path.join(__dirname, "thumbnails", "thumbnails.config.mjs"))
+      .href
   );
   validateConfig();
 
-  const sources = process.env.THUMBNAIL_SOURCES || path.join(__dirname, '..', '.thumbnail-sources');
-  const slug = typeof args.slug === 'string' ? args.slug : null;
+  const sources =
+    process.env.THUMBNAIL_SOURCES ||
+    path.join(__dirname, "..", ".thumbnail-sources");
+  const slug = typeof args.slug === "string" ? args.slug : null;
   const posts = slug ? POSTS.filter((p) => p.slug === slug) : POSTS;
 
   if (!posts.length) {
-    console.error(slug ? `unknown slug: ${slug}` : 'nothing to do');
+    console.error(slug ? `unknown slug: ${slug}` : "nothing to do");
     process.exit(1);
   }
   if (!slug && !args.all) {
-    console.error('Refusing to render all posts without --all (each run creates new Canva designs).');
+    console.error(
+      "Refusing to render all posts without --all (each run creates new Canva designs).",
+    );
     process.exit(1);
   }
 
   console.log(`Generating ${posts.length} thumbnail(s) via Canva Autofill\n`);
-  const results = [];
 
-  for (const post of posts) {
-    const text = `${post.top} ${post.hi}`.trim();
-    console.log(`${post.slug} — "${text}"`);
-    try {
-      const design = await generateOne({
-        text,
-        image: path.join(sources, `${post.photo}.jpg`),
-        title: `Blog_${post.slug}`,
-      });
-      results.push({ slug: post.slug, url: design.url });
-    } catch (err) {
-      console.error(`  ! ${err.message}\n`);
-      results.push({ slug: post.slug, error: err.message });
-    }
-    console.log('');
-  }
+  const results = await Promise.all(
+    posts.map(async (post) => {
+      const text = `${post.top} ${post.hi}`.trim();
+      console.log(`${post.slug} — "${text}"`);
+      try {
+        const design = await generateOne({
+          text,
+          image: path.join(sources, `${post.photo}.jpg`),
+          title: `Blog_${post.slug}`,
+        });
+        return { slug: post.slug, url: design.url };
+      } catch (err) {
+        console.error(`  ! ${post.slug}: ${err.message}\n`);
+        return { slug: post.slug, error: err.message };
+      }
+    }),
+  );
 
   const ok = results.filter((r) => r.url);
   console.log(`--- ${ok.length}/${results.length} generated ---`);
