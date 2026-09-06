@@ -102,6 +102,7 @@ async function verifyRazorpayPayment(body, order) {
         body: {
           ok: true,
           verified: true,
+          idempotent: true,
           status: order.status,
           orderId: order.order_code,
           razorpayPaymentId: paymentId,
@@ -130,15 +131,22 @@ async function verifyRazorpayPayment(body, order) {
     return { status: 400, body: { error: 'Payment signature verification failed.' } };
   }
 
-  // The signature proves the checkout response came from Razorpay. Also confirm
-  // the payment belongs to the same server-created Razorpay order before marking
-  // the Smelloff order paid.
+  // Server-authoritative validation directly against Razorpay API
   try {
     const razorpay = razorpayClient();
     const payment = await razorpay.payments.fetch(paymentId);
     if (!payment || payment.order_id !== storedRazorpayOrderId) {
       return { status: 400, body: { error: 'Payment order mismatch.' } };
     }
+
+    if (String(payment.currency || '').toUpperCase() !== 'INR') {
+      return { status: 400, body: { error: 'Invalid payment currency.' } };
+    }
+
+    if (Number(payment.amount) !== Number(order.amount)) {
+      return { status: 400, body: { error: 'Payment amount mismatch.' } };
+    }
+
     if (!['captured', 'authorized'].includes(String(payment.status || '').toLowerCase())) {
       return { status: 400, body: { error: 'Payment has not been successfully authorized.' } };
     }

@@ -2,7 +2,24 @@ import crypto from 'node:crypto';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET || '';
+function getWebhookSecret() {
+  return process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET || '';
+}
+
+// In-memory LRU cache of recently processed webhook event IDs
+const processedEventIds = new Set();
+const MAX_EVENT_CACHE = 5000;
+
+function isDuplicateEvent(eventId) {
+  if (!eventId) return false;
+  if (processedEventIds.has(eventId)) return true;
+  processedEventIds.add(eventId);
+  if (processedEventIds.size > MAX_EVENT_CACHE) {
+    const first = processedEventIds.values().next().value;
+    if (first) processedEventIds.delete(first);
+  }
+  return false;
+}
 
 async function findOrderByRazorpayOrderId(razorpayOrderId) {
   if (!SERVICE_KEY || !razorpayOrderId) return null;
@@ -60,8 +77,15 @@ export default async function handler(req, res) {
   }
 
   const signature = req.headers['x-razorpay-signature'] || '';
-  if (!signature || !WEBHOOK_SECRET) {
+  const webhookSecret = getWebhookSecret();
+  if (!signature || !webhookSecret) {
     return res.status(400).json({ error: 'Missing webhook signature or secret.' });
+  }
+
+  // Deduplicate by event ID if supplied by Razorpay
+  const eventId = String(req.headers['x-razorpay-event-id'] || '').trim();
+  if (eventId && isDuplicateEvent(eventId)) {
+    return res.status(200).json({ received: true, duplicate: true, eventId });
   }
 
   // Get raw body for HMAC verification
@@ -70,12 +94,14 @@ export default async function handler(req, res) {
     rawBody = req.body;
   } else if (Buffer.isBuffer(req.body)) {
     rawBody = req.body.toString('utf8');
+  } else if (req.rawBody && typeof req.rawBody === 'string') {
+    rawBody = req.rawBody;
   } else if (req.body && typeof req.body === 'object') {
     rawBody = JSON.stringify(req.body);
   }
 
   const expectedSignature = crypto
-    .createHmac('sha256', WEBHOOK_SECRET)
+    .createHmac('sha256', webhookSecret)
     .update(rawBody)
     .digest('hex');
 
@@ -109,6 +135,17 @@ export default async function handler(req, res) {
         return res.status(200).json({ received: true, note: 'Smelloff order not found for attempt id.' });
       }
 
+      // Validate currency and amount
+      if (paymentEntity.currency && String(paymentEntity.currency).toUpperCase() !== 'INR') {
+        console.error('[webhook] Currency mismatch for order', order.order_code, paymentEntity.currency);
+        return res.status(200).json({ received: true, error: 'Currency mismatch' });
+      }
+
+      if (paymentEntity.amount !== undefined && Number(paymentEntity.amount) !== Number(order.amount)) {
+        console.error('[webhook] Amount mismatch for order', order.order_code, paymentEntity.amount, order.amount);
+        return res.status(200).json({ received: true, error: 'Amount mismatch' });
+      }
+
       const terminalConfirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
       if (terminalConfirmedStates.includes(order.status)) {
         return res.status(200).json({ received: true, idempotent: true, status: order.status });
@@ -127,7 +164,9 @@ export default async function handler(req, res) {
     if (eventType === 'payment.failed') {
       if (razorpayOrderId) {
         const order = await findOrderByRazorpayOrderId(razorpayOrderId);
-        if (order && order.status === 'pending') {
+        // Out-of-order protection: NEVER downgrade a confirmed or higher order on late failure event
+        const terminalConfirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
+        if (order && !terminalConfirmedStates.includes(order.status) && (order.status === 'pending' || order.status === 'upi_pending')) {
           await updateOrderStatus(order.order_code, {
             status: 'failed',
             upi_response_code: 'RZP_FAILED',

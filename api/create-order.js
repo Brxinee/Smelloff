@@ -8,6 +8,7 @@ const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
 
 const UNIT_PRICE_RUPEES = 229;
 const COD_FEE_RUPEES = 60;
+const MAX_QUANTITY = 10;
 
 function razorpayClient() {
   if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
@@ -16,6 +17,29 @@ function razorpayClient() {
     throw error;
   }
   return new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET });
+}
+
+async function fetchOrderByCode(orderCode) {
+  if (!SERVICE_KEY || !orderCode) return null;
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&select=*`,
+      {
+        headers: {
+          apikey: SERVICE_KEY,
+          Authorization: `Bearer ${SERVICE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        signal: AbortSignal.timeout(10000),
+      },
+    );
+    if (!response.ok) return null;
+    const data = await response.json().catch(() => []);
+    return Array.isArray(data) && data.length ? data[0] : null;
+  } catch (err) {
+    console.error('[api/create-order] Supabase fetch error:', err.message);
+    return null;
+  }
 }
 
 async function persistRazorpayOrderId(orderCode, razorpayOrderId) {
@@ -62,36 +86,66 @@ export default async function handler(req, res) {
   try {
     const body = req.body && typeof req.body === 'object' ? req.body : {};
     
-    // Validate SKU & Quantity (Server-Authoritative)
+    // 1. Validate SKU & Quantity (Strict Server-Authoritative)
     const items = Array.isArray(body.items) ? body.items : [];
     const firstItem = items[0] || {};
     const rawQty = firstItem.quantity !== undefined ? firstItem.quantity : (body.quantity !== undefined ? body.quantity : 1);
-    const quantity = Number(rawQty);
+    const quantity = typeof rawQty === 'number' && Number.isInteger(rawQty) ? rawQty : parseInt(String(rawQty), 10);
 
-    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+    if (isNaN(quantity) || !Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY || String(rawQty).includes('.')) {
       return res.status(400).json({ error: 'Quantity must be an integer between 1 and 10.' });
     }
 
-    const paymentMethod = String(body.payment_method || '').toLowerCase() === 'cod' ? 'cod' : 'upi';
+    const requestedPaymentMethod = String(body.payment_method || '').toLowerCase();
+    const paymentMethod = requestedPaymentMethod === 'cod' ? 'cod' : 'upi';
 
-    // Server-Authoritative Total Calculation
+    // 2. Authoritative Server Total Calculation
     const subtotalRupees = UNIT_PRICE_RUPEES * quantity;
     const codFeeRupees = paymentMethod === 'cod' ? COD_FEE_RUPEES : 0;
     const totalRupees = subtotalRupees + codFeeRupees;
     const expectedAmountPaise = totalRupees * 100;
 
-    // Reject amount tampering if client provided an explicit amount
-    const clientAmount = body.amount !== undefined ? Number(body.amount) : expectedAmountPaise;
-    if (!Number.isSafeInteger(clientAmount) || clientAmount < 100) {
-      return res.status(400).json({ error: 'Amount must be an integer of at least 100 paise.' });
-    }
-    
-    // Accept client amount if it matches expected total, or base subtotal for COD
-    const isValidAmount = clientAmount === expectedAmountPaise ||
-      (paymentMethod === 'cod' && clientAmount === subtotalRupees * 100);
-
-    if (!isValidAmount) {
+    // 3. Reject Amount & Price Tampering if Client Explicitly Sent Divergent Values
+    if (firstItem.price !== undefined && Number(firstItem.price) !== UNIT_PRICE_RUPEES) {
       return res.status(400).json({ error: 'Order amount mismatch. Please refresh and try again.' });
+    }
+
+    if (body.amount !== undefined) {
+      const clientAmount = Number(body.amount);
+      if (!Number.isSafeInteger(clientAmount) || clientAmount < 100) {
+        return res.status(400).json({ error: 'Amount must be an integer of at least 100 paise.' });
+      }
+      
+      const isValidAmount = clientAmount === expectedAmountPaise ||
+        (paymentMethod === 'cod' && clientAmount === subtotalRupees * 100);
+
+      if (!isValidAmount) {
+        return res.status(400).json({ error: 'Order amount mismatch. Please refresh and try again.' });
+      }
+    }
+
+    // 4. Check for Idempotent Request with existing order_code
+    const requestedOrderCode = String(body.order_code || body.orderCode || '').trim().toUpperCase();
+    if (requestedOrderCode && /^SMF-\d{8}-\d{4}$/.test(requestedOrderCode)) {
+      const existingOrder = await fetchOrderByCode(requestedOrderCode);
+      if (existingOrder) {
+        const terminalStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
+        if (terminalStates.includes(existingOrder.status)) {
+          return res.status(400).json({ error: 'This order has already been confirmed.' });
+        }
+
+        // If existing order is pending with a matching amount and payment_attempt_id, reuse it safely
+        if (existingOrder.status === 'upi_pending' && existingOrder.payment_attempt_id && Number(existingOrder.amount) === expectedAmountPaise) {
+          return res.status(200).json({
+            id: existingOrder.id,
+            order_code: existingOrder.order_code,
+            order_id: existingOrder.payment_attempt_id,
+            amount: existingOrder.amount,
+            currency: 'INR',
+            key_id: RAZORPAY_KEY_ID,
+          });
+        }
+      }
     }
 
     // Standardized payload with authoritative calculations
@@ -124,7 +178,7 @@ export default async function handler(req, res) {
       return res.end(text);
     }
 
-    // Prepaid / UPI Flow
+    // Prepaid Flow
     const target = `${SUPABASE_URL.replace(/\/$/, '')}/functions/v1/create-order`;
     const upstream = await fetch(target, {
       method: 'POST',
