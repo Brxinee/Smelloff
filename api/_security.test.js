@@ -3,18 +3,22 @@ import assert from 'node:assert';
 import { generateOrderToken } from './_security.js';
 
 describe('generateOrderToken', () => {
-  let originalEnv;
+  let originalEnvSecret;
 
   beforeEach(() => {
-    // Save original environment
-    originalEnv = process.env;
-    // Mock the environment for tests
-    process.env = { ...originalEnv, ORDER_SECURITY_SECRET: 'test-secret-key-12345' };
+    // Save original environment variable
+    originalEnvSecret = process.env.ORDER_SECURITY_SECRET;
+    // Mock the environment variable for tests
+    process.env.ORDER_SECURITY_SECRET = 'test-secret-key-12345';
   });
 
   afterEach(() => {
-    // Restore original environment
-    process.env = originalEnv;
+    // Restore original environment variable
+    if (originalEnvSecret === undefined) {
+      delete process.env.ORDER_SECURITY_SECRET;
+    } else {
+      process.env.ORDER_SECURITY_SECRET = originalEnvSecret;
+    }
   });
 
   it('generates a 32-character hex token for valid inputs', () => {
@@ -50,6 +54,10 @@ describe('generateOrderToken', () => {
 
   it('returns null if security secret is not configured', () => {
     // Remove all possible secrets
+    const oldSecret = process.env.ORDER_SECURITY_SECRET;
+    const oldSupabase = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const oldAdmin = process.env.ADMIN_SECRET;
+
     delete process.env.ORDER_SECURITY_SECRET;
     delete process.env.SUPABASE_SERVICE_ROLE_KEY;
     delete process.env.ADMIN_SECRET;
@@ -63,6 +71,11 @@ describe('generateOrderToken', () => {
     console.error = originalError;
 
     assert.strictEqual(token, null);
+
+    // restore for safety
+    if (oldSecret !== undefined) process.env.ORDER_SECURITY_SECRET = oldSecret;
+    if (oldSupabase !== undefined) process.env.SUPABASE_SERVICE_ROLE_KEY = oldSupabase;
+    if (oldAdmin !== undefined) process.env.ADMIN_SECRET = oldAdmin;
   });
 
   it('returns null for invalid phone numbers', () => {
