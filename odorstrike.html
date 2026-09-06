@@ -4487,8 +4487,12 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     hideError();
     if (!validateForm()) return;
 
-    if (payMethod === 'prepaid' && typeof window.startRazorpay === 'function') {
-      return window.startRazorpay();
+    if (payMethod === 'prepaid') {
+      if (typeof window.startRazorpay === 'function') {
+        return window.startRazorpay();
+      }
+      showError('Secure checkout is initializing. Please try again in a moment.');
+      return;
     }
 
     const btn = document.getElementById('submitBtn');

@@ -65,7 +65,8 @@ export default async function handler(req, res) {
     // Validate SKU & Quantity (Server-Authoritative)
     const items = Array.isArray(body.items) ? body.items : [];
     const firstItem = items[0] || {};
-    const quantity = Number(firstItem.quantity || body.quantity || 1);
+    const rawQty = firstItem.quantity !== undefined ? firstItem.quantity : (body.quantity !== undefined ? body.quantity : 1);
+    const quantity = Number(rawQty);
 
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
       return res.status(400).json({ error: 'Quantity must be an integer between 1 and 10.' });

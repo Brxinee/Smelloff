@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import createOrderHandler from '../api/create-order.js';
+import verifyPaymentHandler from '../api/verify-payment.js';
+import webhookHandler from '../api/webhook.js';
 
 test('vercel.json routing integrity', () => {
   const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
@@ -28,7 +31,7 @@ test('odorstrike.html includes Razorpay Checkout script and clean UI', () => {
   assert.ok(html.includes('SECURE PREPAID PAYMENT'), 'Modern prepaid panel should be present');
 });
 
-test('api/verify-payment.js signature calculation', () => {
+test('api/verify-payment.js signature calculation & constant-time comparison', () => {
   const secret = 'test_secret_12345';
   const orderId = 'order_ABC123';
   const paymentId = 'pay_XYZ789';
@@ -46,7 +49,7 @@ test('api/verify-payment.js signature calculation', () => {
   assert.equal(crypto.timingSafeEqual(expected, tampered), false);
 });
 
-test('api/webhook.js signature calculation', () => {
+test('api/webhook.js signature calculation & validation', () => {
   const secret = 'webhook_secret_67890';
   const payload = JSON.stringify({ event: 'payment.captured', payload: { payment: { entity: { id: 'pay_123', order_id: 'order_123' } } } });
 
@@ -63,4 +66,72 @@ test('api/webhook.js signature calculation', () => {
 test('service worker version bumped', () => {
   const sw = fs.readFileSync('sw.js', 'utf8');
   assert.ok(sw.includes('smelloff-v31'), 'Service worker must use v31 cache');
+});
+
+function createMockRes() {
+  const res = {
+    statusCode: 200,
+    body: null,
+    setHeader: () => {},
+    status(code) {
+      this.statusCode = code;
+      return this;
+    },
+    json(data) {
+      this.body = data;
+      return this;
+    },
+    end(data) {
+      this.body = data;
+      return this;
+    }
+  };
+  return res;
+}
+
+test('create-order: rejects invalid quantity (<1 or >10)', async () => {
+  const req = {
+    method: 'POST',
+    headers: {},
+    body: { quantity: 0, payment_method: 'upi' }
+  };
+  const res = createMockRes();
+  await createOrderHandler(req, res);
+  assert.equal(res.statusCode, 400);
+  assert.ok(res.body.error.includes('Quantity must be an integer'));
+});
+
+test('create-order: rejects manipulated price/amount', async () => {
+  const req = {
+    method: 'POST',
+    headers: {},
+    body: { quantity: 1, amount: 1000, payment_method: 'upi' } // ₹10 instead of ₹229 (22900 paise)
+  };
+  const res = createMockRes();
+  await createOrderHandler(req, res);
+  assert.equal(res.statusCode, 400);
+  assert.ok(res.body.error.includes('Order amount mismatch'));
+});
+
+test('webhook: rejects missing signature', async () => {
+  const req = {
+    method: 'POST',
+    headers: {},
+    body: { event: 'payment.captured' }
+  };
+  const res = createMockRes();
+  await webhookHandler(req, res);
+  assert.equal(res.statusCode, 400);
+  assert.ok(res.body.error.includes('signature'));
+});
+
+test('verify-payment: rejects missing payment id, order id or signature', async () => {
+  const req = {
+    method: 'POST',
+    headers: {},
+    body: { orderCode: 'SMF-20260906-1234', customerPhone: '9876543210', razorpay_payment_id: '' }
+  };
+  const res = createMockRes();
+  await verifyPaymentHandler(req, res);
+  assert.ok(res.statusCode === 400 || res.statusCode === 404);
 });
