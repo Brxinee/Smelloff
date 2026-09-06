@@ -174,7 +174,8 @@
     if (!modal) return;
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    var coOpen = document.getElementById('checkoutOverlay');
+    if (!(coOpen && coOpen.classList.contains('active'))) document.body.style.overflow = '';
     selectedStars = 0;
     document.querySelectorAll('#rvStarPicker button').forEach(function(b){ b.classList.remove('filled'); });
     var ta = document.getElementById('rvText'); if (ta) ta.value = '';
