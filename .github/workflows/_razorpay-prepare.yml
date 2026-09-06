@@ -1,0 +1,94 @@
+name: Prepare Razorpay checkout branch
+
+on:
+  push:
+    branches: [razorpay-standard-checkout]
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies and refresh lockfile
+        run: npm install --ignore-scripts
+
+      - name: Validate JavaScript
+        run: |
+          set -e
+          node --check server.js
+          node --check api/create-order.js
+          node --check api/verify-payment.js
+          npm test
+
+      - name: Refresh generated chrome cache hashes
+        run: node scripts/apply-chrome.mjs
+
+      - name: Allow Razorpay in the site CSP
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('vercel.json')
+          data = json.loads(path.read_text())
+
+          def patch(value):
+              if isinstance(value, dict):
+                  for key, child in list(value.items()):
+                      value[key] = patch(child)
+              elif isinstance(value, list):
+                  return [patch(child) for child in value]
+              elif isinstance(value, str) and value.startswith("default-src 'self'; script-src"):
+                  parts = value.split('; ')
+                  for i, part in enumerate(parts):
+                      if part.startswith('script-src '):
+                          if 'https://checkout.razorpay.com' not in part:
+                              parts[i] += ' https://checkout.razorpay.com'
+                      elif part.startswith('connect-src '):
+                          if 'https://api.razorpay.com' not in part:
+                              parts[i] += ' https://api.razorpay.com https://checkout.razorpay.com'
+                      elif part.startswith('frame-src '):
+                          if 'https://checkout.razorpay.com' not in part:
+                              parts[i] += ' https://checkout.razorpay.com'
+                  if not any(part.startswith('frame-src ') for part in parts):
+                      parts.append('frame-src https://checkout.razorpay.com')
+                  return '; '.join(parts)
+              return value
+
+          patched = patch(data)
+          path.write_text(json.dumps(patched, indent=2) + '\n')
+          PY
+
+      - name: Commit generated integration files
+        run: |
+          set -e
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package-lock.json vercel.json
+          git add . ':!_razorpay-prepare.yml'
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 0
+          fi
+          git commit -m 'chore: sync Razorpay integration generated files'
+          git push
+
+      - name: Remove one-time preparation workflow
+        run: |
+          set -e
+          git rm .github/workflows/_razorpay-prepare.yml
+          git commit -m 'chore: remove one-time Razorpay preparation workflow'
+          git push
