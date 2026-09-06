@@ -117,7 +117,12 @@ app.use((req, res, next) => {
     urlPath = urlPath.slice(0, -1);
   }
 
-  let filePath = path.join(__dirname, urlPath);
+  let filePath = path.normalize(path.join(__dirname, urlPath));
+
+  // Security: Prevent directory traversal
+  if (!filePath.startsWith(path.join(__dirname, path.sep))) {
+    return next();
+  }
 
   // Check if target is a directory and has index.html
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
