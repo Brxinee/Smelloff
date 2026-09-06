@@ -207,8 +207,7 @@ export default async function handler(req, res) {
     }
 
     const orders = await listSyncCandidates(50);
-    const results = [];
-    for (const order of orders) results.push(await syncSingleOrder(order));
+    const results = await Promise.all(orders.map(order => syncSingleOrder(order)));
     return res.status(200).json({ ok: true, scanned: orders.length, results });
   } catch (err) {
     console.error('[shiprocket-sync] Error:', err);
