@@ -247,87 +247,89 @@
       return;
     }
 
-    try {
-      loadRazorpay(async function (loadError) {
-        if (loadError) {
-          setButtonState(false);
-          showPaymentError(loadError.message || 'Razorpay Checkout could not be loaded.');
-          return;
-        }
+    loadRazorpay(function (loadError) {
+      if (loadError) {
+        setButtonState(false);
+        showPaymentError(loadError.message || 'Razorpay Checkout could not be loaded.');
+        return;
+      }
 
-        var createResponse = await fetch('/api/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'same-origin',
-          body: JSON.stringify(payload)
-        });
-        var created = await createResponse.json().catch(function () { return {}; });
-        if (!createResponse.ok || !created.order_id) {
-          throw new Error(created.error || 'Unable to create the payment order. Please try again.');
-        }
-
-        var options = {
-          key: created.key_id,
-          amount: created.amount,
-          currency: created.currency || 'INR',
-          name: 'Smelloff',
-          description: 'ODORSTRIKE 50ml — Fabric Odor Mist',
-          order_id: created.order_id,
-          image: 'https://smelloff.in/apple-touch-icon.png',
-          prefill: {
-            name: payload.address.name,
-            email: payload.email || undefined,
-            contact: payload.phone
-          },
-          notes: {
-            smelloff_order_code: created.order_code
-          },
-          theme: { color: '#B8FF57' },
-          modal: {
-            ondismiss: function () {
-              setButtonState(false);
-              if (typeof window.hideLoadingScreen === 'function') window.hideLoadingScreen();
-            }
-          },
-          handler: async function (response) {
-            try {
-              var verifyResponse = await fetch('/api/verify-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                  orderCode: created.order_code,
-                  phone: payload.phone,
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_signature: response.razorpay_signature
-                })
-              });
-              var verified = await verifyResponse.json().catch(function () { return {}; });
-              if (!verifyResponse.ok || !verified.verified) {
-                throw new Error(verified.error || 'Payment verification failed. Do not place the order again yet.');
-              }
-              setButtonState(false);
-              markSuccess(created.order_code, Number(payload.amount) / 100, payload.items[0].quantity, response.razorpay_payment_id, payload.email, payload.address.name);
-            } catch (error) {
-              setButtonState(false);
-              showPaymentError(error.message || 'Payment verification failed. Please contact support with your payment ID.');
-            }
+      (async function () {
+        try {
+          var createResponse = await fetch('/api/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify(payload)
+          });
+          var created = await createResponse.json().catch(function () { return {}; });
+          if (!createResponse.ok || !created.order_id) {
+            throw new Error(created.error || 'Unable to create the payment order. Please try again.');
           }
-        };
 
-        var rzp = new window.Razorpay(options);
-        rzp.on('payment.failed', function (failure) {
+          var options = {
+            key: created.key_id,
+            amount: created.amount,
+            currency: created.currency || 'INR',
+            name: 'Smelloff',
+            description: 'ODORSTRIKE 50ml — Fabric Odor Mist',
+            order_id: created.order_id,
+            image: 'https://smelloff.in/apple-touch-icon.png',
+            prefill: {
+              name: payload.address.name,
+              email: payload.email || undefined,
+              contact: payload.phone
+            },
+            notes: {
+              smelloff_order_code: created.order_code
+            },
+            theme: { color: '#B8FF57' },
+            modal: {
+              ondismiss: function () {
+                setButtonState(false);
+                if (typeof window.hideLoadingScreen === 'function') window.hideLoadingScreen();
+              }
+            },
+            handler: async function (response) {
+              try {
+                var verifyResponse = await fetch('/api/verify-payment', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'same-origin',
+                  body: JSON.stringify({
+                    orderCode: created.order_code,
+                    phone: payload.phone,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                  })
+                });
+                var verified = await verifyResponse.json().catch(function () { return {}; });
+                if (!verifyResponse.ok || !verified.verified) {
+                  throw new Error(verified.error || 'Payment verification failed. Do not place the order again yet.');
+                }
+                setButtonState(false);
+                markSuccess(created.order_code, Number(payload.amount) / 100, payload.items[0].quantity, response.razorpay_payment_id, payload.email, payload.address.name);
+              } catch (error) {
+                setButtonState(false);
+                showPaymentError(error.message || 'Payment verification failed. Please contact support with your payment ID.');
+              }
+            }
+          };
+
+          var rzp = new window.Razorpay(options);
+          rzp.on('payment.failed', function (failure) {
+            setButtonState(false);
+            var description = failure && failure.error && failure.error.description;
+            showPaymentError(description || 'Payment failed. You can try again.');
+          });
+          rzp.open();
+        } catch (error) {
           setButtonState(false);
-          var description = failure && failure.error && failure.error.description;
-          showPaymentError(description || 'Payment failed. You can try again.');
-        });
-        rzp.open();
-      });
-    } catch (error) {
-      setButtonState(false);
-      showPaymentError(error.message || 'Unable to start payment. Please try again.');
-    }
+          showPaymentError(error.message || 'Unable to start payment. Please try again.');
+        }
+      })();
+    });
   }
 
   // Intercept only prepaid/UPI. COD remains on the existing submitOrder().
