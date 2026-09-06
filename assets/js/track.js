@@ -83,8 +83,7 @@
     }, true);
   }
 
-  /* PDP checkout: replace the broken fire-and-forget mirror with one awaited,
-     server-authoritative order request. This keeps the existing PDP UI intact. */
+  /* PDP checkout: use one awaited, server-authoritative order request. */
   if (/^\/odorstrike\/?$/.test(location.pathname)) {
     function pdpSubmitOrder() {
       if (typeof hideError === 'function') hideError();
@@ -136,11 +135,14 @@
         }
         if (order.paymentMethod === 'cod') {
           if (typeof showSuccess === 'function') showSuccess(data.order_code || orderId, 'cod');
+          if (typeof setCartQty === 'function') setCartQty(0);
           return;
         }
         var total = Number(order.total) || 0;
-        var link = typeof buildUpiLink === 'function' ? buildUpiLink(total, data.order_code || orderId, 'any') : ('upi://pay?pa=' + encodeURIComponent(((window.SMELLOFF_CONFIG || {}).UPI_ID || 'mr.brainy@ibl')) + '&pn=Smelloff&am=' + total + '&cu=INR');
+        var app = (typeof selectedUpiApp !== 'undefined' && selectedUpiApp) ? selectedUpiApp : 'any';
+        var link = typeof buildUpiLink === 'function' ? buildUpiLink(total, data.order_code || orderId, app) : ('upi://pay?pa=' + encodeURIComponent(((window.SMELLOFF_CONFIG || {}).UPI_ID || 'mr.brainy@ibl')) + '&pn=Smelloff&am=' + total + '&cu=INR');
         if (typeof showUpiSuccess === 'function') showUpiSuccess(data.order_code || orderId, total, link);
+        if (typeof setCartQty === 'function') setCartQty(0);
         setTimeout(function () { try { location.href = link; } catch (e) {} }, 400);
       }).catch(function (error) {
         console.error('[Smelloff] PDP checkout failed:', error);
