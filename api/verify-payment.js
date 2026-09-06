@@ -93,6 +93,25 @@ async function verifyRazorpayPayment(body, order) {
     return { status: 400, body: { error: 'Razorpay order mismatch.' } };
   }
 
+  // Idempotency: If this exact order is already confirmed with this payment ID or order ID
+  const terminalConfirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
+  if (terminalConfirmedStates.includes(order.status)) {
+    if (order.upi_txn_id === paymentId || storedRazorpayOrderId === razorpayOrderId) {
+      return {
+        status: 200,
+        body: {
+          ok: true,
+          verified: true,
+          status: order.status,
+          orderId: order.order_code,
+          razorpayPaymentId: paymentId,
+          razorpayOrderId: storedRazorpayOrderId,
+          message: 'Payment already verified and confirmed.'
+        }
+      };
+    }
+  }
+
   const generatedSignature = crypto
     .createHmac('sha256', RAZORPAY_KEY_SECRET)
     .update(`${storedRazorpayOrderId}|${paymentId}`)
@@ -158,7 +177,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
 
   const origin = req.headers.origin;
-  if (!isAllowedOrigin(origin)) return res.status(403).json({ error: 'Origin not allowed' });
+  if (origin && !isAllowedOrigin(origin)) return res.status(403).json({ error: 'Origin not allowed' });
   if (origin) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
@@ -202,7 +221,7 @@ export default async function handler(req, res) {
       return res.status(result.status).json(result.body);
     }
 
-    // Legacy/manual UTR verification is retained for old orders and compatibility.
+    // Legacy/manual UTR verification is retained only for old manual orders.
     const rawUtr = String(body.upiRef || body.utr || body.upi_ref || body.transactionRef || '').trim();
     const normalizedUtr = validateAndNormalizeUtr(rawUtr);
     if (!normalizedUtr) {

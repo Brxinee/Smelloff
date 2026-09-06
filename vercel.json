@@ -43,17 +43,6 @@
       "statusCode": 301
     },
     {
-      "source": "/odorstrike",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/",
-      "statusCode": 301
-    },
-    {
       "source": "/index",
       "has": [
         {
@@ -648,17 +637,6 @@
       "statusCode": 301
     },
     {
-      "source": "/odorstrike/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/",
-      "statusCode": 301
-    },
-    {
       "source": "/reviews/",
       "has": [
         {
@@ -678,11 +656,6 @@
         }
       ],
       "destination": "https://smelloff.in/$1",
-      "statusCode": 301
-    },
-    {
-      "source": "/odorstrike",
-      "destination": "/",
       "statusCode": 301
     },
     {
@@ -951,11 +924,6 @@
       "statusCode": 301
     },
     {
-      "source": "/odorstrike/",
-      "destination": "/",
-      "statusCode": 301
-    },
-    {
       "source": "/(.*)\\.html",
       "destination": "/$1",
       "statusCode": 301
@@ -996,7 +964,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://apis.google.com https://www.gstatic.com https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://api.qrserver.com https://script.google.com https://www.google.com https://www.facebook.com https://www.google-analytics.com; connect-src 'self' https://apis.google.com https://www.google.com https://script.google.com https://api.postalpincode.in https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://www.facebook.com https://connect.facebook.net https://www.googletagmanager.com https://tnuqjydmoxczdjnsgpci.supabase.co https://api.razorpay.com https://checkout.razorpay.com; frame-src https://www.google.com https://apis.google.com https://checkout.razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://apis.google.com https://www.gstatic.com https://checkout.razorpay.com https://*.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://api.qrserver.com https://script.google.com https://www.google.com https://www.facebook.com https://www.google-analytics.com https://*.razorpay.com https://badges.razorpay.com https://*.rzp.io; connect-src 'self' https://apis.google.com https://www.google.com https://script.google.com https://api.postalpincode.in https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://www.facebook.com https://connect.facebook.net https://www.googletagmanager.com https://tnuqjydmoxczdjnsgpci.supabase.co https://api.razorpay.com https://checkout.razorpay.com https://lumberjack.razorpay.com https://*.razorpay.com; frame-src 'self' https://www.google.com https://apis.google.com https://checkout.razorpay.com https://api.razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me"
         }
       ]
     },

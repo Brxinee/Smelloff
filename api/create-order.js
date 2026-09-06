@@ -6,6 +6,9 @@ const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
 
+const UNIT_PRICE_RUPEES = 229;
+const COD_FEE_RUPEES = 60;
+
 function razorpayClient() {
   if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
     const error = new Error('Razorpay credentials are not configured.');
@@ -17,24 +20,29 @@ function razorpayClient() {
 
 async function persistRazorpayOrderId(orderCode, razorpayOrderId) {
   if (!SERVICE_KEY || !orderCode || !razorpayOrderId) return false;
-  const response = await fetch(
-    `${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`,
-    {
-      method: 'PATCH',
-      headers: {
-        apikey: SERVICE_KEY,
-        Authorization: `Bearer ${SERVICE_KEY}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal',
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`,
+      {
+        method: 'PATCH',
+        headers: {
+          apikey: SERVICE_KEY,
+          Authorization: `Bearer ${SERVICE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({
+          payment_attempt_id: razorpayOrderId,
+          updated_at: new Date().toISOString(),
+        }),
+        signal: AbortSignal.timeout(10000),
       },
-      body: JSON.stringify({
-        payment_attempt_id: razorpayOrderId,
-        updated_at: new Date().toISOString(),
-      }),
-      signal: AbortSignal.timeout(10000),
-    },
-  );
-  return response.ok;
+    );
+    return response.ok;
+  } catch (err) {
+    console.error('[api/create-order] Error persisting Razorpay order mapping:', err.message);
+    return false;
+  }
 }
 
 export default async function handler(req, res) {
@@ -53,13 +61,52 @@ export default async function handler(req, res) {
 
   try {
     const body = req.body && typeof req.body === 'object' ? req.body : {};
-    const amount = Number(body.amount);
-    if (!Number.isSafeInteger(amount) || amount < 100) {
-      return res.status(400).json({ error: 'Amount must be an integer of at least 100 paise.' });
+    
+    // Validate SKU & Quantity (Server-Authoritative)
+    const items = Array.isArray(body.items) ? body.items : [];
+    const firstItem = items[0] || {};
+    const quantity = Number(firstItem.quantity || body.quantity || 1);
+
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+      return res.status(400).json({ error: 'Quantity must be an integer between 1 and 10.' });
     }
 
-    const paymentMethod = String(body.payment_method || '').toLowerCase();
-    if (paymentMethod !== 'upi') {
+    const paymentMethod = String(body.payment_method || '').toLowerCase() === 'cod' ? 'cod' : 'upi';
+
+    // Server-Authoritative Total Calculation
+    const subtotalRupees = UNIT_PRICE_RUPEES * quantity;
+    const codFeeRupees = paymentMethod === 'cod' ? COD_FEE_RUPEES : 0;
+    const totalRupees = subtotalRupees + codFeeRupees;
+    const expectedAmountPaise = totalRupees * 100;
+
+    // Reject amount tampering if client provided an explicit amount
+    const clientAmount = body.amount !== undefined ? Number(body.amount) : expectedAmountPaise;
+    if (!Number.isSafeInteger(clientAmount) || clientAmount < 100) {
+      return res.status(400).json({ error: 'Amount must be an integer of at least 100 paise.' });
+    }
+    
+    // Accept client amount if it matches expected total, or base subtotal for COD
+    const isValidAmount = clientAmount === expectedAmountPaise ||
+      (paymentMethod === 'cod' && clientAmount === subtotalRupees * 100);
+
+    if (!isValidAmount) {
+      return res.status(400).json({ error: 'Order amount mismatch. Please refresh and try again.' });
+    }
+
+    // Standardized payload with authoritative calculations
+    const sanitizedPayload = {
+      ...body,
+      items: [{
+        name: 'ODORSTRIKE Fabric Mist',
+        variant: firstItem.variant || '50ml',
+        quantity,
+        price: UNIT_PRICE_RUPEES
+      }],
+      amount: expectedAmountPaise,
+      payment_method: paymentMethod
+    };
+
+    if (paymentMethod === 'cod') {
       const target = `${SUPABASE_URL.replace(/\/$/, '')}/functions/v1/create-order`;
       const upstream = await fetch(target, {
         method: 'POST',
@@ -67,7 +114,7 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
           ...(process.env.SUPABASE_ANON_KEY ? { apikey: process.env.SUPABASE_ANON_KEY } : {}),
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(sanitizedPayload),
         signal: AbortSignal.timeout(15000),
       });
       const text = await upstream.text();
@@ -76,8 +123,7 @@ export default async function handler(req, res) {
       return res.end(text);
     }
 
-    // First persist the validated Smelloff order. The Supabase function remains
-    // the source of truth for price, quantity, address and allowed SKU.
+    // Prepaid / UPI Flow
     const target = `${SUPABASE_URL.replace(/\/$/, '')}/functions/v1/create-order`;
     const upstream = await fetch(target, {
       method: 'POST',
@@ -85,7 +131,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
         ...(process.env.SUPABASE_ANON_KEY ? { apikey: process.env.SUPABASE_ANON_KEY } : {}),
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(sanitizedPayload),
       signal: AbortSignal.timeout(15000),
     });
     const upstreamText = await upstream.text();
@@ -105,7 +151,7 @@ export default async function handler(req, res) {
     let razorpayOrder;
     try {
       razorpayOrder = await razorpay.orders.create({
-        amount,
+        amount: expectedAmountPaise,
         currency: 'INR',
         receipt: orderCode,
       });
@@ -118,7 +164,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Unable to create the Razorpay payment order. Please try again.' });
     }
 
-    if (!razorpayOrder?.id || Number(razorpayOrder.amount) !== amount || razorpayOrder.currency !== 'INR') {
+    if (!razorpayOrder?.id || Number(razorpayOrder.amount) !== expectedAmountPaise || razorpayOrder.currency !== 'INR') {
       return res.status(502).json({ error: 'Razorpay returned an invalid order response.' });
     }
 

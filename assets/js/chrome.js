@@ -332,7 +332,9 @@
     });
   }
 
-  // Intercept only prepaid/UPI. COD remains on the existing submitOrder().
+  window.startRazorpay = startRazorpay;
+
+  // Intercept only prepaid/UPI if direct onclick handler was not used. COD remains on the existing submitOrder().
   document.addEventListener('click', function (event) {
     var target = event.target && event.target.closest ? event.target.closest('#submitBtn') : null;
     if (!target || activePaymentMethod() !== 'prepaid') return;

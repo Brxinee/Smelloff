@@ -232,6 +232,10 @@
 </script>
 
 <!-- Resource Hints for Slow Mobile Networks in India -->
+<link rel="dns-prefetch" href="https://checkout.razorpay.com">
+<link rel="preconnect" href="https://checkout.razorpay.com" crossorigin>
+<link rel="dns-prefetch" href="https://api.razorpay.com">
+<link rel="preconnect" href="https://api.razorpay.com" crossorigin>
 <link rel="dns-prefetch" href="https://tnuqjydmoxczdjnsgpci.supabase.co">
 <link rel="preconnect" href="https://tnuqjydmoxczdjnsgpci.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="https://connect.facebook.net">
@@ -239,6 +243,7 @@
 <link rel="prefetch" href="/track-order" as="document">
 <link rel="prefetch" href="/reviews" as="document">
 <link rel="prefetch" href="/blog" as="document">
+<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
 
 <!-- Config -->
 <script>
@@ -3705,42 +3710,19 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <div class="pay-opt" data-method="prepaid" onclick="selectPay('prepaid')" tabindex="0" role="radio" aria-checked="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPay('prepaid')}">Pay via UPI</div>
       </div>
 
-      <!-- UPI panel (shown when prepaid selected) -->
+      <!-- Prepaid panel (shown when prepaid selected) -->
       <div id="upiPayPanel" class="pay-panel" style="display:none">
-        <span class="upi-panel-title">Select 1-Click UPI App</span>
-        <div class="upi-apps-grid" role="radiogroup" aria-label="Select UPI App">
-          <button type="button" class="upi-app-btn active" data-app="any" onclick="setUpiApp('any')">
-            <img loading="lazy" decoding="async" src="/assets/pay-upi.png" width="18" height="18" alt="">
-            <span>Any App</span>
-          </button>
-          <button type="button" class="upi-app-btn" data-app="gpay" onclick="setUpiApp('gpay')">
-            <img loading="lazy" decoding="async" src="/assets/pay-gpay.png" width="18" height="18" alt="">
-            <span>Google Pay</span>
-          </button>
-          <button type="button" class="upi-app-btn" data-app="phonepe" onclick="setUpiApp('phonepe')">
-            <img loading="lazy" decoding="async" src="/assets/pay-phonepe.png" width="18" height="18" alt="">
-            <span>PhonePe</span>
-          </button>
-          <button type="button" class="upi-app-btn" data-app="paytm" onclick="setUpiApp('paytm')">
-            <img loading="lazy" decoding="async" src="/assets/pay-paytm.png" width="18" height="18" alt="">
-            <span>Paytm</span>
-          </button>
-        </div>
+        <span class="upi-panel-title">SECURE PREPAID PAYMENT</span>
         <div class="upi-inline-row">
-          <span class="upi-inline-lbl">UPI ID</span>
-          <span class="upi-inline-val" id="upiInlineId">mr.brainy@ibl</span>
-          <button type="button" class="upi-copy" id="upiCopyBtn" onclick="copyUpiId()">Tap to copy</button>
-        </div>
-        <div class="upi-inline-row">
-          <span class="upi-inline-lbl">Payee</span>
-          <span class="upi-inline-val">Smelloff</span>
+          <span class="upi-inline-lbl">Methods</span>
+          <span class="upi-inline-val">UPI (GPay, PhonePe, Paytm), Cards, Net Banking</span>
         </div>
         <div class="upi-inline-row">
           <span class="upi-inline-lbl">Amount</span>
           <span class="upi-inline-val acid" id="upiAmountInline">₹229</span>
         </div>
-        <p class="pay-help">
-          After paying, send screenshot + UTR to WhatsApp for instant confirmation.
+        <p class="pay-help" style="margin-top:10px;">
+          Fast, secure payment via Razorpay. Order confirmed instantly with ₹0 extra handling fees.
         </p>
       </div>
 
@@ -3777,51 +3759,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
       <p class="success-reassure" id="successEmailNote" style="display:none">Check your email — we just sent your order confirmation.</p>
 
-      <!-- Optional UPI block (shown only when UPI was the chosen method) -->
+      <!-- Optional UPI block (hidden in standard Razorpay flow) -->
       <div id="upiBlock" class="upi-block" style="display:none;text-align:left">
-        <div class="upi-app-launch-head">Tap to launch your UPI app directly:</div>
-        <div class="upi-launch-grid" id="upiLaunchGrid">
-          <a class="upi-launch-btn gpay" id="upiGpayBtn" href="#" onclick="launchSpecificUpi('gpay', event)">
-            <img loading="lazy" decoding="async" src="/assets/pay-gpay.png" width="18" height="18" alt="">
-            <span>Google Pay</span>
-          </a>
-          <a class="upi-launch-btn phonepe" id="upiPhonepeBtn" href="#" onclick="launchSpecificUpi('phonepe', event)">
-            <img loading="lazy" decoding="async" src="/assets/pay-phonepe.png" width="18" height="18" alt="">
-            <span>PhonePe</span>
-          </a>
-          <a class="upi-launch-btn paytm" id="upiPaytmBtn" href="#" onclick="launchSpecificUpi('paytm', event)">
-            <img loading="lazy" decoding="async" src="/assets/pay-paytm.png" width="18" height="18" alt="">
-            <span>Paytm</span>
-          </a>
-          <a class="upi-launch-btn generic" id="upiOpenBtn" href="#" onclick="launchSpecificUpi('any', event)">
-            <img loading="lazy" decoding="async" src="/assets/pay-upi.png" width="18" height="18" alt="">
-            <span>Any UPI App</span>
-          </a>
-        </div>
-
-        <div class="qr-wrap" style="margin-top:14px;text-align:center;">
-          <img id="upiQR" class="upi-qr" alt="UPI payment QR code for Smelloff" width="180" height="180" loading="lazy" decoding="async" style="display:none;margin:0 auto;border-radius:8px;">
-        </div>
-        <div class="upi-row" style="margin-top:12px;">
-          <span class="lbl">UPI ID</span>
-          <span class="val" id="upiIdShow">mr.brainy@ibl</span>
-          <button type="button" class="upi-copy" style="margin-left:auto;" onclick="copyUpiId()">Copy</button>
-        </div>
-        <div class="upi-row">
-          <span class="lbl">Amount</span>
-          <span class="val acid" id="upiAmountShow">₹229</span>
-        </div>
-        <div class="upi-row">
-          <span class="lbl">Note</span>
-          <span class="val" id="upiNoteShow">Smelloff</span>
-        </div>
-
-        <div class="upi-help" style="margin-top:14px;">
-          <strong>After paying:</strong> send screenshot + UTR to WhatsApp for instant confirmation.
-          <br>
-          <a id="waSuccessUtrLink" href="https://wa.me/919392974031" target="_blank" rel="noopener" class="wa-utr-btn">Share UTR on WhatsApp →</a>
-        </div>
-
         <div class="upi-policy-link" style="margin-top:12px;font-size:11px;">
           Payment issue? <a href="/payment-failed" onclick="openPaymentFailedOverlay();return false;">See our Payment Failed Policy</a>
         </div>
@@ -3846,43 +3785,34 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <div class="po-eyebrow">Policy · Payment Failed</div>
     <h2 id="pfTitle">Payment Failed / Failed Transaction Policy</h2>
 
-    <p>At Smelloff, we currently accept payments via UPI (direct transfer to our UPI ID and QR code). Since payments are processed manually, here's what happens if something goes wrong:</p>
+    <p>At Smelloff, online payments are processed securely in real time through our payment partner, Razorpay (supporting UPI, debit/credit cards, and net banking). If an issue occurs during checkout, here is how transactions are resolved:</p>
 
     <h2>1. Money debited but order not confirmed</h2>
-    <p>If your UPI app shows the payment as successful but you didn't receive an order confirmation from us within 30 minutes:</p>
+    <p>If your bank account or payment app was debited but you did not see an order confirmation screen:</p>
     <ul>
-      <li>Email us at <a href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a> with your UPI transaction ID (UTR), screenshot of the payment, and the phone number/email used to place the order.</li>
-      <li>We'll verify the payment against our records within 24 hours.</li>
-      <li>If confirmed, we'll process your order immediately. If the payment didn't reach us, we'll issue a full refund to your original UPI ID within 5–7 business days.</li>
+      <li>In most cases, your bank will automatically reverse the transaction within 24–48 hours.</li>
+      <li>If the debited amount is captured by our payment gateway, our system automatically verifies the payment and confirms your order.</li>
+      <li>If your order is still unconfirmed after 2 hours, email us at <a href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a> or message us on WhatsApp with your payment ID / bank reference number and phone number.</li>
     </ul>
 
-    <h2>2. Payment failed at your end</h2>
-    <p>If your UPI app shows "Failed" or "Pending" and no money was debited, simply retry. No action needed from us.</p>
+    <h2>2. Payment failed at checkout</h2>
+    <p>If checkout displays a "Payment Failed" notification and no amount was deducted from your account, you may simply retry with UPI, cards, or select Cash on Delivery (COD).</p>
 
-    <h2>3. Payment stuck in "Pending"</h2>
-    <p>UPI pending transactions usually auto-resolve within 24–48 hours. If money is debited and stays pending beyond that, it auto-reverses to your account. If it doesn't, contact your bank — we cannot release a refund for a payment we never received.</p>
-
-    <h2>4. Duplicate payment</h2>
-    <p>If you accidentally paid twice for the same order, email us with both UTRs. We'll refund the duplicate amount within 5–7 business days.</p>
-
-    <h2>5. Wrong amount paid</h2>
-    <ul>
-      <li><strong>Paid less:</strong> We'll email you a request for the balance before dispatching.</li>
-      <li><strong>Paid more:</strong> We'll refund the excess within 5–7 business days.</li>
-    </ul>
+    <h2>3. Duplicate deduction</h2>
+    <p>If multiple debits occurred for a single order attempt, any duplicate unlinked charge is automatically refunded to your original payment method within 5–7 business days by the banking system.</p>
 
     <h2>Refund Timeline</h2>
-    <p>All verified refunds are processed within 5–7 business days to your original UPI ID. Bank processing may take an additional 2–3 days.</p>
+    <p>All automated gateway refunds are credited back to the original source account within 5–7 business days, subject to your bank's processing timelines.</p>
 
-    <h2>Contact for Payment Issues</h2>
+    <h2>Contact for Payment Inquiries</h2>
     <div class="po-callout">
       <p><strong>Email:</strong> <a href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a></p>
-      <p>Always include your UTR/transaction ID — we cannot trace payments without it.</p>
+      <p><strong>WhatsApp Support:</strong> +91 93929 74031</p>
     </div>
 
     <div class="po-meta">
       Smelloff · Hyderabad, Telangana, India<br>
-      Last updated: April 2026
+      Last updated: September 2026
     </div>
   </main>
 </div>
@@ -4556,6 +4486,10 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   async function submitOrder() {
     hideError();
     if (!validateForm()) return;
+
+    if (payMethod === 'prepaid' && typeof window.startRazorpay === 'function') {
+      return window.startRazorpay();
+    }
 
     const btn = document.getElementById('submitBtn');
     if (btn && btn.disabled) return;
