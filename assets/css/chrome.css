@@ -55,7 +55,6 @@
   color:var(--acid);
   margin-bottom:18px;
 }
-/* The short acid rule that precedes every eyebrow on the homepage. */
 .sf-eyebrow::before{
   content:'';
   width:34px;height:1px;flex:0 0 34px;
@@ -95,8 +94,6 @@
 .sf-hdr__logo img{height:24px;width:auto;display:block}
 .sf-hdr__right{display:flex;align-items:center;gap:10px}
 
-/* Cart — borderless icon with an acid count badge. Lifted verbatim from
-   the homepage so the control is pixel-identical everywhere. */
 .sf-cart{
   display:inline-flex;align-items:center;gap:5px;
   height:44px;padding:0 4px;
@@ -120,9 +117,6 @@
   font-family:var(--body);
   font-size:11px;font-weight:700;letter-spacing:0;
 }
-/* Two empty-states to honour: `hidden` (set by chrome.js from localStorage)
-   and `data-empty="1"` (set by the /odorstrike checkout's own cart code).
-   Without the second one the product page showed a permanent acid "0". */
 .sf-cart__count[hidden],
 .sf-cart__count[data-empty="1"]{display:none}
 
@@ -136,7 +130,6 @@
   transition:color .2s var(--ease);
 }
 .sf-nav a:hover{color:var(--acid)}
-/* Current page reads as current — none of the old headers did this. */
 .sf-nav a[aria-current="page"]{color:var(--acid)}
 
 .sf-hdr__cta{
@@ -157,7 +150,7 @@
 }
 .sf-burger span{
   display:block;width:26px;height:3px;border-radius:100px;background:currentColor;
-  transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease;
+  transition:transform .3s cubic-bezier(.65,.0,.35,1),opacity .2s ease;
 }
 .sf-burger:hover{color:var(--acid)}
 .sf-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(9px) rotate(45deg)}
@@ -217,9 +210,7 @@
   color:var(--acid);
   padding-left:10px;
 }
-.sf-hdr__menu a[aria-current="page"]{
-  color:var(--acid);
-}
+.sf-hdr__menu a[aria-current="page"]{color:var(--acid)}
 
 @media(min-width:900px){
   .sf-nav{display:flex}
@@ -235,37 +226,22 @@
 
 /* ---------------------------------------------------------------------
    2 · FOOTER
-   Four columns on desktop, stacked on mobile, acid rule on top. The old
-   `.p-footer` was a single flat run of 12 links with no grouping — this
-   restores the homepage's Shop / Support / Legal structure everywhere.
+   Four columns on desktop, stacked on mobile, acid rule on top.
    --------------------------------------------------------------------- */
 .sf-ftr{
   border-top:2px solid var(--acid);
   padding:40px 0 28px;
   background:var(--ink);
-  /* Three pages (contact, reviews, track-order) centre-align their page
-     wrapper, and that inherited straight into the footer — so the same
-     footer read centred there and left-aligned everywhere else. Pin it. */
   text-align:left;
 }
-
-/* Mobile puts the three link groups SIDE BY SIDE, not stacked.
-   Stacked one per row, the footer ran ~1200px — taller than the phone
-   viewport itself, so it alone was a screen and a half of scrolling. Three
-   short columns plus tighter rows brings it under 500px, and it still reads
-   as three labelled groups rather than one undifferentiated list. */
 .sf-ftr__grid{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:22px 12px;
   align-items:start;
 }
-/* Brand and socials are full-width bands above and below the columns —
-   at every width, so the footer reads the same on a phone and a desktop. */
 .sf-ftr__brand,.sf-ftr__socials{grid-column:1 / -1}
 @media(min-width:768px){
-  /* Brand takes the wide first column and the three link groups sit beside
-     it; the socials keep their own full-width row underneath. */
   .sf-ftr__grid{grid-template-columns:2fr 1fr 1fr 1fr;gap:28px 36px}
   .sf-ftr__brand{grid-column:1}
 }
@@ -281,24 +257,15 @@
 }
 .sf-ftr ul{list-style:none;margin:0;padding:0}
 .sf-ftr li{margin:0}
-/* Rows were 40px tall with 8px of padding each — that alone accounted for
-   most of the footer's height. 34px still clears the 24px WCAG 2.2 target
-   minimum with the gap between rows counted in. */
 .sf-ftr ul a{
   display:block;padding:5px 0;min-height:34px;
   color:var(--text);text-decoration:none;
   font-size:13.5px;line-height:1.55;
   transition:color .2s var(--ease);
 }
-@media(min-width:768px){
-  .sf-ftr ul a{font-size:var(--fs-sm)}
-}
+@media(min-width:768px){.sf-ftr ul a{font-size:var(--fs-sm)}}
 .sf-ftr ul a:hover{color:var(--acid)}
-.sf-ftr__socials{
-  display:flex;flex-wrap:wrap;gap:2px;margin-top:4px;
-}
-/* Six icons have to sit on one row down to 320px, so they shrink rather
-   than wrap into a ragged second line. */
+.sf-ftr__socials{display:flex;flex-wrap:wrap;gap:2px;margin-top:4px}
 .sf-ftr__socials a{
   display:inline-flex;align-items:center;justify-content:center;
   flex:0 0 auto;
@@ -316,43 +283,17 @@
   letter-spacing:.05em;text-transform:uppercase;
 }
 @media(min-width:768px){
-  .sf-ftr__bottom{
-    flex-direction:row;justify-content:space-between;gap:24px;
-    font-size:11.5px;
-  }
+  .sf-ftr__bottom{flex-direction:row;justify-content:space-between;gap:24px;font-size:11.5px}
 }
-/* Trademark / affiliation notice — see the note in apply-chrome.mjs.
-   Sentence case and not uppercase, unlike the line above it: this is a legal
-   disclaimer meant to be read if anyone looks for it, and 10.5px of
-   wide-tracked uppercase across three lines is not readable prose. Kept
-   quiet (muted, small, last) because it is a notice, not a message. */
-.sf-ftr__disclaimer{
-  margin-top:14px;
-  font-size:11px;line-height:1.6;
-  color:var(--muted);
-  max-width:78ch;
-}
+.sf-ftr__disclaimer{margin-top:14px;font-size:11px;line-height:1.6;color:var(--muted);max-width:78ch}
 
 /* ---------------------------------------------------------------------
-   3 · LONG-FORM PROSE  (policies, guides, about)
-   The policy pages were the worst offenders: bare <h2>/<p> inheriting
-   whatever the page happened to declare, so "Privacy" and "Terms" didn't
-   even match each other. One measure, one scale, one link colour.
+   3 · LONG-FORM PROSE
    --------------------------------------------------------------------- */
 .sf-prose{max-width:68ch;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--text-2)}
 .sf-prose > * + *{margin-top:1.1em}
-.sf-prose h2{
-  font-family:var(--display);font-weight:900;
-  font-size:var(--fs-h3);line-height:1.06;letter-spacing:var(--ls-display);
-  color:var(--text);
-  margin-top:2.2em;margin-bottom:.5em;
-}
-.sf-prose h3{
-  font-family:var(--display);font-weight:900;
-  font-size:var(--fs-h4);line-height:1.15;letter-spacing:-.015em;
-  color:var(--text);
-  margin-top:1.8em;margin-bottom:.4em;
-}
+.sf-prose h2{font-family:var(--display);font-weight:900;font-size:var(--fs-h3);line-height:1.06;letter-spacing:var(--ls-display);color:var(--text);margin-top:2.2em;margin-bottom:.5em}
+.sf-prose h3{font-family:var(--display);font-weight:900;font-size:var(--fs-h4);line-height:1.15;letter-spacing:-.015em;color:var(--text);margin-top:1.8em;margin-bottom:.4em}
 .sf-prose h2:first-child,.sf-prose h3:first-child{margin-top:0}
 .sf-prose strong{color:var(--text);font-weight:600}
 .sf-prose a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
@@ -360,497 +301,104 @@
 .sf-prose ul,.sf-prose ol{padding-left:0;list-style:none}
 .sf-prose ol{counter-reset:sf-ol}
 .sf-prose li{position:relative;padding-left:26px;margin-top:.55em}
-.sf-prose ul > li::before{
-  content:'';position:absolute;left:6px;top:.62em;
-  width:6px;height:6px;border-radius:50%;background:var(--acid);
-}
+.sf-prose ul > li::before{content:'';position:absolute;left:6px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--acid)}
 .sf-prose ol > li{counter-increment:sf-ol}
-.sf-prose ol > li::before{
-  content:counter(sf-ol);position:absolute;left:0;top:0;
-  font-family:var(--mono);font-size:12px;color:var(--acid);line-height:1.9;
-}
-.sf-prose blockquote{
-  margin-left:0;padding:18px 22px;
-  border-left:3px solid var(--acid);
-  border-radius:var(--sq-md,18px);
-  background:var(--surface);
-  color:var(--text);
-}
+.sf-prose ol > li::before{content:counter(sf-ol);position:absolute;left:0;top:0;font-family:var(--mono);font-size:12px;color:var(--acid);line-height:1.9}
+.sf-prose blockquote{margin-left:0;padding:18px 22px;border-left:3px solid var(--acid);border-radius:var(--sq-md,18px);background:var(--surface);color:var(--text)}
 .sf-prose table{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
-.sf-prose th,.sf-prose td{
-  text-align:left;padding:12px 14px;
-  border-bottom:1px solid var(--rule);
-}
-.sf-prose th{
-  font-family:var(--mono);font-weight:400;font-size:12px;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--acid);
-}
-/* Tables are the one thing that can force a horizontal scrollbar on the
-   page itself; give them their own scroller instead. */
+.sf-prose th,.sf-prose td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--rule)}
+.sf-prose th{font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid)}
 .sf-prose .sf-table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-
-/* Page masthead used by every secondary page: eyebrow, big title, lead. */
 .sf-masthead{padding-block:clamp(44px,7vw,88px) clamp(28px,4vw,44px)}
-.sf-masthead h1{
-  font-family:var(--display);font-weight:900;
-  font-size:var(--fs-h2);line-height:var(--lh-display);
-  letter-spacing:var(--ls-display);
-  margin:0;
-}
+.sf-masthead h1{font-family:var(--display);font-weight:900;font-size:var(--fs-h2);line-height:var(--lh-display);letter-spacing:var(--ls-display);margin:0}
 .sf-masthead h1 .dot{color:var(--acid)}
 .sf-masthead .sf-lead{margin-top:20px}
 
 /* ---------------------------------------------------------------------
    4 · SKIP LINK + FOCUS
-   Several secondary pages had neither.
-
-   This rule predated the markup: nothing on the site emitted .sf-skip, so
-   for 22 of 24 pages there was no way to bypass six nav links at all
-   (WCAG 2.4.1). index.html and odorstrike.html each had their own
-   hand-rolled .skip-link with different targets instead. The link is now
-   generated into the header block by scripts/apply-chrome.mjs, which also
-   stamps id="sf-main" tabindex="-1" onto each page's <main>, <article> or
-   first <section> — so edit it there, not in the page markup.
-
-   Parked off-canvas rather than display:none, which would drop it out of
-   the tab order and defeat the point. z-index clears the sticky header.
    --------------------------------------------------------------------- */
-.sf-skip{
-  position:absolute;left:-9999px;top:0;z-index:200;
-  background:var(--acid);color:var(--on-acid);padding:12px 20px;
-  font-weight:700;text-decoration:none;
-}
+.sf-skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--acid);color:var(--on-acid);padding:12px 20px;font-weight:700;text-decoration:none}
 .sf-skip:focus{left:0}
-/* The target needs tabindex="-1" for focus to actually move to it — without
-   it the page scrolls but focus stays on the link, so the next Tab goes
-   straight back into the nav and the skip link has achieved nothing. That
-   in turn draws a focus ring around the entire page body, which is noise. */
 #sf-main:focus{outline:none}
-.sf-hdr a:focus-visible,.sf-hdr button:focus-visible,
-.sf-ftr a:focus-visible{
-  outline:3px solid var(--acid);
-  outline-offset:3px;
-  border-radius:var(--sq-xs,8px);
-}
+.sf-hdr a:focus-visible,.sf-hdr button:focus-visible,.sf-ftr a:focus-visible{outline:3px solid var(--acid);outline-offset:3px;border-radius:var(--sq-xs,8px)}
 
 /* =====================================================================
-   5 · RESPONSIVE HARDENING                             (added 2026-07-30)
-   =====================================================================
-   Measured, not guessed: every page was rendered in headless Chromium at
-   320 / 360 / 375 / 393 / 430 / 600 / 768 / 820 / 900 / 1024 / 1280 /
-   1440 / 1920 with `body{overflow-x:hidden}` neutralised, because that
-   declaration (index.html, odorstrike.html) clamps
-   documentElement.scrollWidth and hides real overflow from any check that
-   trusts it. The defects below are what that revealed.
-
-   THE CANONICAL BREAKPOINT SCALE
-   Eighteen distinct breakpoint values had grown across the codebase —
-   440, 460, 520, 560, 640, 680, 720, 721, 760, 767, 768, 800, 820, 880,
-   900, 960, 980, 1000, 1040, 1200. Neighbouring values that differ by one
-   or two pixels are not design decisions, they are drift, and they leave
-   dead bands where one component has switched layout and its neighbour
-   has not. New CSS should use these four and nothing else:
-
-       520px   phone → large phone    (consent bar stacks its buttons)
-       768px   large phone → tablet   (footer columns; the PDP's whole hero
-                                       — two columns, gallery stack, sticky
-                                       buy panel, mobile-bar handoff)
-       960px   tablet → desktop       (the PDP hero refines its proportions
-                                       to 1.05fr/.95fr and a wider gap)
-       1160px  --maxw; content stops growing
-
-   Media queries can't read custom properties, so this is a convention
-   rather than something CSS can enforce. It is written down here because
-   that is the only place it can be.
-   --------------------------------------------------------------------- */
-
-/* --- 5.1 · Safe-area insets -------------------------------------------
-   Every page sets `viewport-fit=cover`, which extends the canvas under
-   the notch and the home indicator. Only blog.css and two of the three
-   consent bars ever honoured the insets, so on a notched phone in
-   landscape the header logo and nav sat under the sensor housing.
-
-   Pad the shell rather than the elements, so it applies once: the header
-   row is always inside .sf-wrap (see the generated markup in
-   scripts/apply-chrome.mjs), so padding the wrap covers the header, the
-   footer and every page body in one rule. max() keeps the normal gutter
-   on every device that has no inset to honour. */
-.sf-wrap{
-  padding-left:max(var(--gutter),env(safe-area-inset-left,0px));
-  padding-right:max(var(--gutter),env(safe-area-inset-right,0px));
-}
-
-/* --- 5.2 · Consent bar -------------------------------------------------
-   The most-seen component on the site — it is the first thing every new
-   visitor gets, on all 24 pages — and it existed in THREE independently
-   drifted copies: inline in index.html, inline in odorstrike.html, and
-   built from a CSS string in assets/js/consent-analytics.js. All three
-   declared `.cb-actions{display:flex;gap:10px;flex-shrink:0}` with no
-   wrap, so at 320px the action row measured 315px inside a 300px content
-   box and "Reject non-essential" hung 15px off the right edge of the
-   screen — on every page, at the one width where it is least affordable.
-
-   The ID selector is deliberate: it matches the specificity of the three
-   inline copies (0,1,1,0), and this file loads after all of them, so it
-   wins on source order without needing !important. */
-#smelloff-consent-bar .cb-actions{
-  display:flex;
-  flex-wrap:wrap;              /* was the bug: no wrap at any width */
-  gap:10px;
-  flex-shrink:1;               /* was 0 — it refused to give up space */
-  min-width:0;
-}
-/* Below the phone breakpoint the two buttons take a row each and fill it.
-   Two 44px-tall full-width buttons are also a far easier target than two
-   34px pills crammed onto one line. */
+   5 · RESPONSIVE HARDENING
+   ===================================================================== */
+.sf-wrap{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));padding-right:max(var(--gutter),env(safe-area-inset-right,0px))}
+#smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}
 @media(max-width:520px){
   #smelloff-consent-bar .cb-inner{gap:12px}
   #smelloff-consent-bar .cb-actions{width:100%}
   #smelloff-consent-bar .cb-actions button{flex:1 1 100%}
 }
-/* odorstrike.html's copy sets `padding:9px 18px` and no min-height, so its
-   buttons came out 34px tall while index.html's were 44px. Same control,
-   same size, everywhere. */
 #smelloff-consent-bar button{min-height:44px}
-/* index.html's copy is the one that never honoured the home indicator. */
-#smelloff-consent-bar{
-  padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
-}
-
-/* 5.3 · THE CONSENT BAR STANDS DOWN FOR MODALS
-   ---------------------------------------------------------------------
-   The bar is z-index:9999 and pinned to the bottom — the highest thing on
-   the page, because it must clear the sticky header and the sticky buy bar.
-   On /odorstrike that put it directly over the checkout panel's submit
-   button: elementFromPoint at the centre of "Place COD order · ₹229"
-   returned `.cb-accept` at 320×568, 360×640, 390×844 and 414×896. A
-   first-time visitor has not answered the bar yet — so every new mobile
-   buyer was tapping "Accept all" instead of ordering.
-
-   Two independent guards, because this one is expensive to get wrong:
-   the PDP's .overlay / .gal-viewer now outrank 9999 (see odorstrike.html),
-   and any page that opens a modal sets .sf-modal-open on <html>, which
-   removes the bar from the screen entirely rather than burying it under a
-   scrim where it is visible-but-dead. The bar returns on close; consent is
-   never skipped, only deferred past the transaction. */
+#smelloff-consent-bar{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 html.sf-modal-open #smelloff-consent-bar{display:none !important}
-
-/* A note for the next person auditing this, because it cost a pass here:
-   the marquee strips (.ticker / .band-marquee on the homepage, .marquee on
-   the PDP) contain tracks measuring 2095–6546px, and getBoundingClientRect
-   reports that full un-clipped width. They are NOT overflow bugs — all
-   three wrappers already carry `overflow:hidden`, and a rect wider than
-   the viewport inside a clipping parent is exactly what an infinite
-   marquee looks like. Any overflow check that only treats `auto|scroll`
-   as clipping will report all three as defects. Treat `hidden` and `clip`
-   as clipping too. */
 
 /* =====================================================================
    6 · VERIFIED BUYER REVIEW MODAL & GOOGLE REVIEW AGGREGATOR
    ===================================================================== */
-.rv-modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
-}
-.rv-modal-overlay.open {
-  opacity: 1;
-  visibility: visible;
-}
-.rv-modal-card {
-  position: relative;
-  width: 100%;
-  max-width: 520px;
-  max-height: 90vh;
-  overflow-y: auto;
-  background: #111111;
-  border: 1px solid rgba(184, 255, 87, 0.3);
-  border-radius: 16px;
-  padding: 32px 24px;
-  color: #ffffff;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-  transform: translateY(12px) scale(0.98);
-  transition: transform 0.25s var(--ease, ease);
-}
-.rv-modal-overlay.open .rv-modal-card {
-  transform: translateY(0) scale(1);
-}
-.rv-modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-.rv-modal-close:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: var(--acid, #b8ff57);
-}
+.rv-modal-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease}
+.rv-modal-overlay.open{opacity:1;visibility:visible}
+.rv-modal-card{position:relative;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:#111;border:1px solid rgba(184,255,87,.3);border-radius:16px;padding:32px 24px;color:#fff;box-shadow:0 20px 50px rgba(0,0,0,.8);transform:translateY(12px) scale(.98);transition:transform .25s var(--ease,ease)}
+.rv-modal-overlay.open .rv-modal-card{transform:translateY(0) scale(1)}
+.rv-modal-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;line-height:1;transition:background .15s ease,border-color .15s ease}
+.rv-modal-close:hover{background:rgba(255,255,255,.2);border-color:var(--acid,#b8ff57)}
+.rv-modal-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono,monospace);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid,#b8ff57);background:rgba(184,255,87,.12);border:1px solid rgba(184,255,87,.3);padding:4px 12px;border-radius:100px;margin-bottom:14px}
+.rv-modal-card h2{font-family:var(--display,serif);font-weight:900;font-size:26px;line-height:1.15;letter-spacing:-.02em;margin:0 0 8px;color:#fff}
+.rv-modal-card p.rv-desc{font-size:14px;color:rgba(255,255,255,.7);line-height:1.5;margin-bottom:22px}
+.rv-field{margin-bottom:18px}
+.rv-field label{display:block;font-family:var(--mono,monospace);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:6px}
+.rv-field input,.rv-field textarea{width:100%;background:#080808 !important;border:1px solid rgba(255,255,255,.2) !important;border-radius:8px !important;padding:12px 14px !important;color:#fff !important;font-family:var(--body,sans-serif) !important;font-size:15px !important}
+.rv-field input:focus,.rv-field textarea:focus{border-color:var(--acid,#b8ff57) !important;outline:none}
+.rv-field textarea{min-height:100px;resize:vertical}
+.rv-stars-picker{display:flex;gap:8px;margin:8px 0 18px}
+.rv-stars-picker button{background:none;border:none;font-size:32px;color:rgba(255,255,255,.25);cursor:pointer;padding:0;transition:color .15s ease,transform .15s ease;line-height:1}
+.rv-stars-picker button:hover,.rv-stars-picker button.filled{color:#FFD700;transform:scale(1.15)}
+.rv-primary-btn{width:100%;background:var(--acid,#b8ff57);color:#080808;border:none;border-radius:8px;font-family:var(--mono,monospace);font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;padding:14px;cursor:pointer;transition:background .15s ease,transform .15s ease;min-height:48px}
+.rv-primary-btn:hover{background:#c7ff73;transform:translateY(-1px)}
+.rv-primary-btn[disabled]{opacity:.5;cursor:wait}
+.rv-error-msg{display:none;background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.4);color:#ff6b6b;border-radius:8px;font-size:13px;padding:10px 14px;margin-top:14px;line-height:1.4}
+.google-review-aggregator{background:var(--bg-surface,#111);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:20px 22px;margin:24px 0;display:flex;flex-direction:column;gap:16px;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+@media(min-width:640px){.google-review-aggregator{flex-direction:row;align-items:center;justify-content:space-between}}
+.gra-header{display:flex;align-items:center;gap:14px}
+.gra-g-badge{flex:0 0 42px;width:42px;height:42px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.gra-meta{display:flex;flex-direction:column;gap:3px}
+.gra-title{font-family:var(--display,serif);font-weight:700;font-size:15px;color:#fff;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.gra-verified-pill{font-family:var(--mono,monospace);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#34A853;background:rgba(52,168,83,.12);border:1px solid rgba(52,168,83,.3);padding:2px 7px;border-radius:100px;display:inline-flex;align-items:center;gap:4px}
+.gra-score-line{display:flex;align-items:baseline;gap:6px;font-size:13px}
+.gra-score-val{font-family:var(--mono,monospace);font-weight:700;font-size:18px;color:#FFD700}
+.gra-stars-val{color:#FFD700;letter-spacing:2px;font-size:14px}
+.gra-count-val{color:rgba(255,255,255,.65);font-size:12px}
+.gra-actions{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+@media(min-width:640px){.gra-actions{align-items:flex-end}}
+.gra-sub{font-family:var(--mono,monospace);font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.05em;text-transform:uppercase}
+.gra-btn{display:inline-flex;align-items:center;gap:6px;background:var(--acid,#b8ff57);color:#080808;border:none;border-radius:8px;font-family:var(--mono,monospace);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;cursor:pointer;transition:transform .15s ease,background .15s ease;white-space:nowrap}
+.gra-btn:hover{background:#c7ff73;transform:translateY(-1px)}
 
-.rv-modal-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--mono, monospace);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--acid, #b8ff57);
-  background: rgba(184, 255, 87, 0.12);
-  border: 1px solid rgba(184, 255, 87, 0.3);
-  padding: 4px 12px;
-  border-radius: 100px;
-  margin-bottom: 14px;
-}
-.rv-modal-card h2 {
-  font-family: var(--display, serif);
-  font-weight: 900;
-  font-size: 26px;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin: 0 0 8px;
-  color: #ffffff;
-}
-.rv-modal-card p.rv-desc {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.5;
-  margin-bottom: 22px;
-}
-
-.rv-field {
-  margin-bottom: 18px;
-}
-.rv-field label {
-  display: block;
-  font-family: var(--mono, monospace);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
-  margin-bottom: 6px;
-}
-.rv-field input, .rv-field textarea {
-  width: 100%;
-  background: #080808 !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  border-radius: 8px !important;
-  padding: 12px 14px !important;
-  color: #ffffff !important;
-  font-family: var(--body, sans-serif) !important;
-  font-size: 15px !important;
-}
-.rv-field input:focus, .rv-field textarea:focus {
-  border-color: var(--acid, #b8ff57) !important;
-  outline: none;
-}
-.rv-field textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.rv-stars-picker {
-  display: flex;
-  gap: 8px;
-  margin: 8px 0 18px;
-}
-.rv-stars-picker button {
-  background: none;
-  border: none;
-  font-size: 32px;
-  color: rgba(255, 255, 255, 0.25);
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.15s ease, transform 0.15s ease;
-  line-height: 1;
-}
-.rv-stars-picker button:hover,
-.rv-stars-picker button.filled {
-  color: #FFD700;
-  transform: scale(1.15);
-}
-
-.rv-primary-btn {
-  width: 100%;
-  background: var(--acid, #b8ff57);
-  color: #080808;
-  border: none;
-  border-radius: 8px;
-  font-family: var(--mono, monospace);
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 14px;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
-  min-height: 48px;
-}
-.rv-primary-btn:hover {
-  background: #c7ff73;
-  transform: translateY(-1px);
-}
-.rv-primary-btn[disabled] {
-  opacity: 0.5;
-  cursor: wait;
-}
-
-.rv-error-msg {
-  display: none;
-  background: rgba(255, 107, 107, 0.12);
-  border: 1px solid rgba(255, 107, 107, 0.4);
-  color: #ff6b6b;
-  border-radius: 8px;
-  font-size: 13px;
-  padding: 10px 14px;
-  margin-top: 14px;
-  line-height: 1.4;
-}
-
-/* --- Google Customer Reviews / Aggregator Widget --- */
-.google-review-aggregator {
-  background: var(--bg-surface, #111111);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 12px;
-  padding: 20px 22px;
-  margin: 24px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-@media (min-width: 640px) {
-  .google-review-aggregator {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+/* =====================================================================
+   7 · MOBILE HOMEPAGE HERO VISIBILITY FIX
+   ---------------------------------------------------------------------
+   The homepage hero uses a tall 241×915 transparent bottle cutout. The
+   previous mobile hero allowed the sticky 64px chrome to sit over the first
+   part of the hero when returning to the top of the page, making the bottle
+   look chopped off at the nav. Keep the hero's image area below the chrome
+   and never clip the transparent cutout at its section boundary.
+   --------------------------------------------------------------------- */
+@media(max-width:767px){
+  .hero{
+    overflow:visible;
+    padding-top:84px;
+  }
+  .hero-visual{
+    min-height:clamp(300px,78vw,360px);
+    overflow:visible;
+  }
+  .hero-visual img{
+    height:clamp(300px,72vw,340px);
+    width:auto;
+    max-width:none;
+    object-fit:contain;
   }
 }
-.gra-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.gra-g-badge {
-  flex: 0 0 42px;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-.gra-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.gra-title {
-  font-family: var(--display, serif);
-  font-weight: 700;
-  font-size: 15px;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.gra-verified-pill {
-  font-family: var(--mono, monospace);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #34A853;
-  background: rgba(52, 168, 83, 0.12);
-  border: 1px solid rgba(52, 168, 83, 0.3);
-  padding: 2px 7px;
-  border-radius: 100px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-.gra-score-line {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-size: 13px;
-}
-.gra-score-val {
-  font-family: var(--mono, monospace);
-  font-weight: 700;
-  font-size: 18px;
-  color: #FFD700;
-}
-.gra-stars-val {
-  color: #FFD700;
-  letter-spacing: 2px;
-  font-size: 14px;
-}
-.gra-count-val {
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 12px;
-}
-.gra-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-@media (min-width: 640px) {
-  .gra-actions {
-    align-items: flex-end;
-  }
-}
-.gra-sub {
-  font-family: var(--mono, monospace);
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-.gra-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--acid, #b8ff57);
-  color: #080808;
-  border: none;
-  border-radius: 8px;
-  font-family: var(--mono, monospace);
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: transform 0.15s ease, background 0.15s ease;
-  white-space: nowrap;
-}
-.gra-btn:hover {
-  background: #c7ff73;
-  transform: translateY(-1px);
-}
-
