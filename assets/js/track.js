@@ -93,7 +93,7 @@
       if (btn) btn.disabled = true;
       if (btnText) btnText.textContent = 'Processing…';
 
-      var orderId = typeof genOrderId === 'function' ? genOrderId() : ('SMF-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + String(Math.floor(Math.random()*9000)+1000));
+      var orderId = typeof genOrderId === 'function' ? genOrderId() : ('SMF-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + String((window.crypto.getRandomValues(new Uint32Array(1))[0] % 9000) + 1000));
       var order = typeof collectOrder === 'function' ? collectOrder(orderId, '') : null;
       if (!order) {
         if (btn) btn.disabled = false;

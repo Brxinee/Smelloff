@@ -4399,7 +4399,7 @@ window.createSupabaseOrder = function (opts) {
     var date = d.getFullYear().toString() +
       String(d.getMonth() + 1).padStart(2, '0') +
       String(d.getDate()).padStart(2, '0');
-    var suffix = String(Math.floor(Math.random() * 9000) + 1000);
+    var suffix = String((window.crypto.getRandomValues(new Uint32Array(1))[0] % 9000) + 1000);
     return 'SMF-' + date + '-' + suffix;
   }
 
@@ -5472,7 +5472,7 @@ window.createSupabaseOrder = function (opts) {
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
 <script src="/assets/js/reviews-system.js?v=2" defer></script>
-<script src="/assets/js/track.js?v=64e65429" defer></script>
+<script src="/assets/js/track.js?v=688b3709" defer></script>
 <!-- Google Customer Reviews. Loaded on the PDP only, because that is the page
      that carries the checkout and therefore the order-confirmation moment.
      `defer` so it costs nothing on the LCP path — it does no work at all until

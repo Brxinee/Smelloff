@@ -181,7 +181,7 @@ const CFG = window.SMELLOFF_CONFIG;
     var date = d.getFullYear().toString() +
       String(d.getMonth() + 1).padStart(2, '0') +
       String(d.getDate()).padStart(2, '0');
-    var suffix = String(Math.floor(Math.random() * 9000) + 1000);
+    var suffix = String((window.crypto.getRandomValues(new Uint32Array(1))[0] % 9000) + 1000);
     return 'SMF-' + date + '-' + suffix;
   }
 
