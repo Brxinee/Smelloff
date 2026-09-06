@@ -2,8 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert';
 import handler from '../../api/create-order.js';
 
-test('create-order responds with 502 on upstream fetch failure', async (t) => {
-  // Mock global fetch
+test('create-order responds with 502 on upstream fetch failure', async () => {
   const originalFetch = global.fetch;
   global.fetch = async () => {
     throw new Error('Network failure');
@@ -16,7 +15,7 @@ test('create-order responds with 502 on upstream fetch failure', async (t) => {
     const req = {
       method: 'POST',
       headers: { origin: 'https://smelloff.in' },
-      body: { some: 'data' }
+      body: { amount: 22900, payment_method: 'cod' }
     };
 
     const res = {
