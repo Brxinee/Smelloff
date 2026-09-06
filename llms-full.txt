@@ -32,7 +32,7 @@
 - Triethyl Citrate: odor-control support
 - Zinc Gluconate: odor-control / anti-regrowth support
 - Glycerine-free
-- Current formulation must not be described as Zinc Ricinoleate.
+- Current formulation uses Zinc PCA, not older zinc complexes.
 
 ## Approved product claims
 - Pocket-sized fabric odor mist
@@ -47,7 +47,7 @@
 - Do not claim universal stain-proofing across every fabric.
 - Do not claim it kills bacteria unless a current test/certification supports that exact claim.
 - Do not claim an instant or guaranteed 10-second cure.
-- Do not describe the current formula as Zinc Ricinoleate.
+- Do not describe the current formula with retired active ingredients.
 - Do not invent review counts, ratings, certifications, clinical efficacy or test results.
 
 ## Order rules
