@@ -1,0 +1,3 @@
+## 2024-09-07 - Missing ticking guard on scroll event listeners
+**Learning:** Found an anti-pattern in `assets/js/scroll-effects.js` where `requestAnimationFrame` was being queued repeatedly on every scroll event in the same frame for the review dots (`initReviewDots`), leading to unnecessary redundant executions and potential layout thrashing/CPU overhead. The `initProgress` function correctly implemented the `ticking` boolean pattern to prevent this, but it wasn't uniformly applied.
+**Action:** Always implement a boolean `ticking` flag to debounce `requestAnimationFrame` calls from high-frequency event listeners like `scroll` and `resize`.
