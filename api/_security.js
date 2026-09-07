@@ -58,9 +58,10 @@ export function verifyOrderToken(orderCode, phone, token) {
   const expected = generateOrderToken(orderCode, phone);
   if (!expected) return false;
   try {
-    const a = Buffer.from(expected, 'utf8');
-    const b = Buffer.from(token, 'utf8');
-    return a.length === b.length && crypto.timingSafeEqual(a, b);
+    // Hash both to ensure equal length before timingSafeEqual to prevent length-based timing attacks
+    const a = crypto.createHash('sha256').update(expected).digest();
+    const b = crypto.createHash('sha256').update(token).digest();
+    return crypto.timingSafeEqual(a, b);
   } catch { return false; }
 }
 
@@ -72,9 +73,10 @@ export function isAdminAuthorized(req) {
   const token = auth.startsWith('Bearer ') ? auth.slice(7).trim() : custom;
   if (!token) return false;
   try {
-    const a = Buffer.from(adminSecret.trim(), 'utf8');
-    const b = Buffer.from(token, 'utf8');
-    return a.length === b.length && crypto.timingSafeEqual(a, b);
+    // Hash both to ensure equal length before timingSafeEqual to prevent length-based timing attacks
+    const a = crypto.createHash('sha256').update(adminSecret.trim()).digest();
+    const b = crypto.createHash('sha256').update(token).digest();
+    return crypto.timingSafeEqual(a, b);
   } catch { return false; }
 }
 

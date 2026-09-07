@@ -107,9 +107,10 @@ export default async function handler(req, res) {
 
   let signatureValid = false;
   try {
-    const expected = Buffer.from(expectedSignature, 'hex');
-    const received = Buffer.from(String(signature), 'hex');
-    signatureValid = expected.length === received.length && crypto.timingSafeEqual(expected, received);
+    // Hash both to ensure equal length before timingSafeEqual to prevent length-based timing attacks
+    const expected = crypto.createHash('sha256').update(expectedSignature).digest();
+    const received = crypto.createHash('sha256').update(String(signature)).digest();
+    signatureValid = crypto.timingSafeEqual(expected, received);
   } catch {
     signatureValid = false;
   }
