@@ -34,7 +34,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
 
       # Vercel builds from the same push. Wait for the deploy to actually serve
       # this commit's sitemap before telling anyone to come and read it.
