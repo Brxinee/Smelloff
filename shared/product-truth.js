@@ -1,84 +1,71 @@
 // SMELLOFF_PRODUCT_TRUTH
 // Single customer-facing source of truth for Smelloff / ODORSTRIKE.
-// Commercial checkout math still lives in products-config.js and must stay in sync.
+// Derived directly from the canonical /config/product.json single source of truth.
 // Do not encode month-based bottle life. Do not invent reviews, counts, or ratings.
 
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const CONFIG_PATH = join(__dirname, '..', 'config', 'product.json');
+
+const rawConfig = JSON.parse(readFileSync(CONFIG_PATH, 'utf8'));
+const { brand: B, product: P, shipping: S, returns: R, usage: U, formula: F } = rawConfig;
+
 export const SMELLOFF_PRODUCT_TRUTH = {
-  productName: 'ODORSTRIKE',
-  brand: 'Smelloff',
-  sku: 'OS-001-50ML',
-  mpn: 'SMLF-ODST-50',
-  size: '50ml',
+  productName: P.shortName,
+  brand: B.name,
+  sku: P.sku,
+  mpn: P.mpn,
+  size: P.size,
   category: 'Fabric-only odor mist',
-  pricePrepaid: 229,
-  mrp: 499,
-  codFee: 60,
-  priceCod: 289,
-  freeShippingPrepaid: true,
-  currency: 'INR',
-  spraysApprox: 250,
-  refreshesApprox: 100,
-  targetedDose: '2–3 sprays',
-  fullShirtDose: '4–5 sprays',
-  jacketDose: '5–6 sprays',
-  lightDose: '2–3 sprays',
-  sprayDistance: '15–20 cm',
-  dryTime: 'approximately 10 seconds',
-  dryTimeConservativeNote:
-    'In high humidity, wait until the fabric is fully dry before wearing. A conservative wait can take up to 30–60 seconds.',
-  performanceWindow: 'Up to 8 hours under normal office/commute conditions',
-  formulaVersion: 'v3.1',
-  heroActives: ['HPβCD', 'Zinc PCA'],
-  fourLayerSystem: [
-    { id: 'trap', ingredient: 'HPβCD', role: 'Trap' },
-    { id: 'neutralize', ingredient: 'Zinc PCA', role: 'Neutralize' },
-    { id: 'prevent', ingredient: 'triethyl citrate', role: 'Prevent' },
-    { id: 'antiregrowth', ingredient: 'zinc gluconate', role: 'Anti-regrowth' },
-  ],
-  inci: [
-    { name: 'Water', role: 'Base' },
-    { name: 'Isopropyl Alcohol', role: 'Solvent' },
-    { name: 'Triethyl Citrate', role: 'Prevent' },
-    { name: 'HPβCD (hydroxypropyl-β-cyclodextrin)', role: 'Trap' },
-    { name: 'Polysorbate 20', role: 'Emulsifier' },
-    { name: 'Zinc PCA', role: 'Neutralize' },
-    { name: 'PE9010', role: 'Preservative' },
-    { name: 'Fragrance', role: 'Light scent' },
-    { name: 'Zinc Gluconate', role: 'Anti-regrowth' },
-    { name: 'Ethylhexylglycerin', role: 'Preservative booster' },
-    { name: 'Citric Acid', role: 'pH balancer' },
-  ],
-  compatibleFabrics: ['cotton', 'polyester', 'blends', 'denim', 'wool'],
-  restrictedFabrics: {
-    skin: 'Never. Fabric only. Not for skin, face, hair, or eyes.',
-    leatherSuede: 'Do not use on leather or suede.',
-    dryCleanOnly: 'Do not use on dry-clean-only garments.',
-    silk: 'Patch-test silk, zari, and heavy embroidery on a hidden seam first.',
-  },
-  dispatchWindow: 'Within 48 hours of confirmation',
-  dispatchCodNote: 'COD orders are dispatched after phone confirmation.',
+  pricePrepaid: P.price,
+  mrp: P.mrp,
+  codFee: P.codFee,
+  priceCod: P.priceCod,
+  freeShippingPrepaid: S.prepaid.free,
+  currency: P.currency,
+  spraysApprox: P.spraysApprox,
+  refreshesApprox: P.refreshesApprox,
+  targetedDose: U.doses.targeted,
+  fullShirtDose: U.doses.fullShirt,
+  jacketDose: U.doses.jacket,
+  lightDose: U.doses.light,
+  sprayDistance: U.sprayDistance,
+  dryTime: U.dryTime,
+  dryTimeConservativeNote: U.dryTimeConservativeNote,
+  performanceWindow: U.performanceWindow,
+  formulaVersion: F.version,
+  heroActives: F.heroActives,
+  fourLayerSystem: F.fourLayerSystem,
+  inci: F.inci,
+  compatibleFabrics: F.compatibleFabrics,
+  restrictedFabrics: F.restrictedFabrics,
+  dispatchWindow: S.dispatchWindow,
+  dispatchCodNote: S.dispatchCodNote,
   transit: {
-    metros: '3–5 business days',
-    tier23: '5–7 business days',
-    remoteNortheast: '7–10 business days',
+    metros: S.transitMetros,
+    tier23: S.transitTier23,
+    remoteNortheast: S.transitRemote,
   },
   returnsPolicy: {
     source: '/returns',
-    windowDays: 7,
-    minimumFull: '80% full',
-    reversePickup: true,
-    summary:
-      '7-day return window from delivery. Bottle must be at least 80% full and in original packaging. Reverse pickup where serviceable.',
+    windowDays: R.windowDays,
+    minimumFull: R.condition.split(' ')[4] ? `${R.condition.split(' ')[4]} full` : '80% full',
+    reversePickup: R.reversePickup,
+    summary: R.summary,
   },
-  madeIn: 'Hyderabad, India',
+  madeIn: `${B.city}, ${B.country}`,
   manufacturer: {
-    name: 'Jogdhande Nikhil Patil',
-    operator: 'Smelloff (Sole Proprietorship)',
-    address: 'Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India',
-    email: 'smelloffsupport@gmail.com',
+    name: B.founder,
+    operator: B.operator,
+    address: B.address,
+    email: B.supportEmail,
   },
-  whatsappNumber: '+919392974031',
-  whatsappDisplay: '+91 93929 74031',
+  whatsappNumber: B.whatsappNumber,
+  whatsappDisplay: B.whatsappDisplay,
   testerProfiles: [
     {
       id: 'karthik-r-hyderabad',

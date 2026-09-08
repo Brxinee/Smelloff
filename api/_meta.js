@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { BASE_PRODUCT } from '../shared/products-config.js';
 
 export const PIXEL_ID = process.env.META_PIXEL_ID || '1455100092891684';
 export const API_VERSION = process.env.META_API_VERSION || 'v21.0';
@@ -149,8 +150,8 @@ export async function getOrder(orderId) {
     return Array.isArray(rows) && rows.length ? rows[0] : null;
   } catch { return null; }
 }
-export const SKU = 'OS-001-50ML';
-export const SKU_NAME = 'ODORSTRIKE Fabric Odor Mist';
+export const SKU = BASE_PRODUCT.sku;
+export const SKU_NAME = BASE_PRODUCT.shortTitle || 'ODORSTRIKE Fabric Odor Mist';
 export function contentsFromItems(items, valueRupees) {
   const qty = Array.isArray(items) ? items.reduce((n, it) => n + (Number(it?.quantity) || 0), 0) || 1 : 1;
   const value = Number(valueRupees) || 0;

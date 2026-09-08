@@ -1,3 +1,5 @@
+import { BASE_PRODUCT } from '../shared/products-config.js';
+
 const API_BASE = 'https://apiv2.shiprocket.in/v1/external';
 
 let tokenCache = null;
@@ -163,8 +165,8 @@ export async function createShiprocketOrder(order) {
     shipping_isd_code: '91',
     shipping_phone: String(order.customer_phone || '').replace(/\D/g, '').slice(-10),
     order_items: [{
-      name: String(item.name || 'Smelloff ODORSTRIKE 50ml'),
-      sku: String(item.sku || 'OS-001-50ML'),
+      name: String(item.name || BASE_PRODUCT.shortTitle || 'Smelloff ODORSTRIKE 50ml'),
+      sku: String(item.sku || BASE_PRODUCT.sku || 'OS-001-50ML'),
       units: quantity,
       selling_price: unitPrice,
       discount: 0,

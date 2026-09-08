@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "brand": {
+    "name": "Smelloff",
+    "alternateNames": ["Smelloff Grooming", "Smelloff India"],
+    "legalName": "Smelloff",
+    "operator": "Smelloff (Sole Proprietorship)",
+    "founder": "Jogdhande Nikhil Patil",
+    "jobTitle": "Founder",
+    "location": "Hyderabad, Telangana, India",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "postalCode": "500018",
+    "country": "India",
+    "countryCode": "IN",
+    "address": "Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India",
+    "addressLocality": "Hyderabad",
+    "addressRegion": "Telangana",
+    "website": "https://smelloff.in",
+    "supportEmail": "smelloffsupport@gmail.com",
+    "supportPhone": "+91 93929 74031",
+    "supportPhoneRaw": "+919392974031",
+    "whatsappNumber": "+919392974031",
+    "whatsappDisplay": "+91 93929 74031",
+    "slogan": "Smell Proof. Always.",
+    "description": "Indian odor-control brand for men. Goes after the smell trapped in your clothes instead of covering it with fragrance. Maker of ODORSTRIKE, a pocket-sized fabric odor neutralizer mist for clothes.",
+    "logo": "https://smelloff.in/apple-touch-icon.png",
+    "image": "https://smelloff.in/assets/og-brand.jpg",
+    "sameAs": [
+      "https://instagram.com/smelloffindia",
+      "https://x.com/smelloffindia",
+      "https://t.me/smelloffindia",
+      "https://www.linkedin.com/company/smelloff",
+      "https://www.facebook.com/share/1BU1dCAttY/",
+      "https://wa.me/919392974031"
+    ]
+  },
+  "product": {
+    "id": "OS-001-50ML",
+    "sku": "OS-001-50ML",
+    "mpn": "SMLF-ODST-50",
+    "name": "ODORSTRIKE Fabric Odor Remover Spray",
+    "title": "Smelloff ODORSTRIKE Fabric Odor Eliminator Spray (50ml)",
+    "shortName": "ODORSTRIKE",
+    "shortTitle": "ODORSTRIKE 50ml",
+    "category": "Personal Care > Fabric Care > Odor Eliminator",
+    "categoryDisplay": "Fabric Odor Eliminator Spray for Clothes",
+    "alternateNames": [
+      "ODORSTRIKE",
+      "Smelloff ODORSTRIKE",
+      "Fabric Odor Spray India",
+      "Fabric Refresher Spray for Clothes",
+      "Pocket Fabric Freshener"
+    ],
+    "description": "A pocket-sized fabric odor remover spray. 50ml mist that kills sweat smell, gym odor, and shirt stink in seconds — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them, Triethyl Citrate prevents new odor, and Zinc Gluconate stops regrowth. Up to 8 hours odor protection on fabric. Glycerine-free, zero residue, dries fast. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
+    "size": "50ml",
+    "netQuantity": "50ml / 1.69 fl oz",
+    "format": "Liquid spray",
+    "price": 229,
+    "pricePaise": 22900,
+    "mrp": 499,
+    "mrpPaise": 49900,
+    "discountPercent": 54,
+    "currency": "INR",
+    "currencySymbol": "₹",
+    "codFee": 60,
+    "codFeePaise": 6000,
+    "priceCod": 289,
+    "priceCodPaise": 28900,
+    "spraysApprox": 250,
+    "refreshesApprox": 100,
+    "minQuantity": 1,
+    "maxQuantity": 10,
+    "allowedQuantities": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "availability": "https://schema.org/InStock",
+    "availabilityStatus": "in_stock",
+    "itemCondition": "https://schema.org/NewCondition",
+    "validFrom": "2026-04-18",
+    "priceValidUntil": "2027-12-31",
+    "url": "https://smelloff.in/odorstrike",
+    "shopUrl": "https://smelloff.in/",
+    "buyUrl": "https://smelloff.in/odorstrike#buy",
+    "images": [
+      "https://smelloff.in/assets/pdp-01-hero.webp",
+      "https://smelloff.in/assets/odorstrike-bottle.webp",
+      "https://smelloff.in/assets/og-image.jpg"
+    ]
+  },
+  "shipping": {
+    "prepaid": {
+      "rate": 0,
+      "currency": "INR",
+      "free": true,
+      "description": "Free shipping pan-India on prepaid UPI / card / netbanking orders"
+    },
+    "cod": {
+      "fee": 60,
+      "currency": "INR",
+      "description": "₹60 handling charge on Cash on Delivery orders (collectable total ₹289)"
+    },
+    "destinationCountry": "IN",
+    "dispatchWindow": "Within 48 hours of confirmation",
+    "dispatchCodNote": "COD orders are confirmed via phone call before dispatch.",
+    "transitMetros": "3–5 business days",
+    "transitTier23": "5–7 business days",
+    "transitRemote": "7–10 business days",
+    "handlingTimeDays": {
+      "min": 0,
+      "max": 1
+    },
+    "transitTimeDays": {
+      "min": 2,
+      "max": 7
+    },
+    "origin": "Hyderabad, Telangana, India"
+  },
+  "returns": {
+    "windowDays": 7,
+    "applicableCountry": "IN",
+    "policyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "returnMethod": "https://schema.org/ReturnByMail",
+    "returnFees": "https://schema.org/FreeReturn",
+    "condition": "Bottle must be at least 80% full and in original packaging",
+    "reversePickup": true,
+    "refundProcessingDays": "5–7 business days",
+    "summary": "7-day return window from delivery. Bottle must be at least 80% full and in original packaging. Reverse pickup where serviceable."
+  },
+  "usage": {
+    "sprayDistance": "15–20 cm",
+    "dryTime": "approximately 10 seconds",
+    "dryTimeConservativeNote": "In high humidity, wait until the fabric is fully dry before wearing. A conservative wait can take up to 30–60 seconds.",
+    "performanceWindow": "Up to 8 hours under normal office/commute conditions",
+    "doses": {
+      "targeted": "2–3 sprays",
+      "fullShirt": "4–5 sprays",
+      "jacket": "5–6 sprays",
+      "light": "2–3 sprays"
+    }
+  },
+  "formula": {
+    "version": "v3.1",
+    "heroActives": ["HPβCD", "Zinc PCA"],
+    "fourLayerSystem": [
+      { "id": "trap", "ingredient": "HPβCD", "role": "Trap" },
+      { "id": "neutralize", "ingredient": "Zinc PCA", "role": "Neutralize" },
+      { "id": "prevent", "ingredient": "Triethyl Citrate", "role": "Prevent" },
+      { "id": "antiregrowth", "ingredient": "Zinc Gluconate", "role": "Anti-regrowth" }
+    ],
+    "inci": [
+      { "name": "Water", "role": "Base" },
+      { "name": "Isopropyl Alcohol", "role": "Solvent" },
+      { "name": "Triethyl Citrate", "role": "Prevent" },
+      { "name": "HPβCD (hydroxypropyl-β-cyclodextrin)", "role": "Trap" },
+      { "name": "Polysorbate 20", "role": "Emulsifier" },
+      { "name": "Zinc PCA", "role": "Neutralize" },
+      { "name": "PE9010", "role": "Preservative" },
+      { "name": "Fragrance", "role": "Light scent" },
+      { "name": "Zinc Gluconate", "role": "Anti-regrowth" },
+      { "name": "Ethylhexylglycerin", "role": "Preservative booster" },
+      { "name": "Citric Acid", "role": "pH balancer" }
+    ],
+    "compatibleFabrics": ["cotton", "polyester", "blends", "denim", "wool"],
+    "restrictedFabrics": {
+      "skin": "Never. Fabric only. Not for skin, face, hair, or eyes.",
+      "leatherSuede": "Do not use on leather or suede.",
+      "dryCleanOnly": "Do not use on dry-clean-only garments.",
+      "silk": "Patch-test silk, zari, and heavy embroidery on a hidden seam first."
+    },
+    "prohibitedSurfaces": [
+      "skin",
+      "face",
+      "hair",
+      "eyes",
+      "pets",
+      "leather",
+      "suede",
+      "dry-clean-only garments"
+    ],
+    "patchTestFabrics": ["silk", "zari", "heavy embroidery"]
+  },
+  "claims": {
+    "approved": [
+      "Pocket fabric odor spray for clothing — not a perfume, not a deodorant.",
+      "Light scent. Serious odor control. ODORSTRIKE is a fabric odor-control mist with a light, short-lasting fragrance. It gives clothes a subtle fresh scent immediately after spraying while targeting unwanted odor in the fabric.",
+      "Targets and traps sweat and environmental odor molecules at the clothing fabric weave.",
+      "Up to 8 hours of odor protection on fabric under normal office/commute conditions.",
+      "Safe for regular use on everyday washable clothing fabrics (cotton, polyester, denim, blends, wool). Patch-test silk.",
+      "Dries clear with zero residue when sprayed from recommended 15–20 cm distance."
+    ],
+    "prohibited": [
+      "instant / instantly kills smell",
+      "kills bacteria / antimicrobial drug claim",
+      "10-second miracle cure",
+      "works on 100% of all fabrics including raw dry-clean-only silks",
+      "guaranteed odor cure",
+      "fragrance-free / fragrance free / zero fragrance / no fragrance / unscented / zero scent / scentless / no scent / contains no fragrance / unfragranced"
+    ]
+  }
+}

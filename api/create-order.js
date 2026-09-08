@@ -1,14 +1,15 @@
 import Razorpay from 'razorpay';
 import { isAllowedOrigin } from './_security.js';
+import { BASE_PRODUCT } from '../shared/products-config.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
 
-const UNIT_PRICE_RUPEES = 229;
-const COD_FEE_RUPEES = 60;
-const MAX_QUANTITY = 10;
+const UNIT_PRICE_RUPEES = BASE_PRODUCT.price;
+const COD_FEE_RUPEES = BASE_PRODUCT.codFee;
+const MAX_QUANTITY = BASE_PRODUCT.maxQuantity;
 
 function razorpayClient() {
   if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {

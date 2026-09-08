@@ -213,7 +213,7 @@ def build_stack(spec, read_next, related):
         '    <h4>ODORSTRIKE — Fabric Odor Mist</h4>\n'
         f'    <p class="cta-spec">{spec}</p>\n'
         '    <div class="price-row">\n'
-        '      <span class="strike-price">₹579</span>\n'
+        '      <span class="strike-price">₹499</span>\n'
         '      <span class="current-price">₹229</span>\n'
         '    </div>\n'
         '    <a href="/odorstrike/" class="buy-btn">BUY NOW →</a>\n'

@@ -31,6 +31,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PRODUCT_CONFIG } from './product-config.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
@@ -105,7 +106,7 @@ ${SKIP}
           <li><a href="/faq">FAQ</a></li>
           <li><a href="/track-order">Track order</a></li>
         </ul>
-        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹229</a>
+        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹${PRODUCT_CONFIG.product.price}</a>
         <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
           <span></span><span></span><span></span>
         </button>
@@ -185,7 +186,7 @@ ${SOCIALS}
       </div>
     </div>
     <div class="sf-ftr__bottom">
-      <span>© 2026 SMELLOFF. HYDERABAD. MFG: Jogdhande Nikhil Patil, Sanathnagar, Erragadda, Hyderabad.</span>
+      <span>© 2026 ${PRODUCT_CONFIG.brand.name.toUpperCase()}. ${PRODUCT_CONFIG.brand.city.toUpperCase()}. MFG: ${PRODUCT_CONFIG.brand.founder}, Sanathnagar, Erragadda, ${PRODUCT_CONFIG.brand.city}.</span>
       <span>MADE IN INDIA / FABRIC ONLY</span>
     </div>
     <!-- Trademark / affiliation notice.

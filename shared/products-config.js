@@ -1,48 +1,57 @@
 import { SMELLOFF_PRODUCT_TRUTH as T } from './product-truth.js';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
 export { SMELLOFF_PRODUCT_TRUTH } from './product-truth.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const CONFIG_PATH = join(__dirname, '..', 'config', 'product.json');
+
+const rawConfig = JSON.parse(readFileSync(CONFIG_PATH, 'utf8'));
+const { product: P, brand: B, shipping: S, formula: F } = rawConfig;
 
 // Centralized commercial single source of truth for Smelloff / ODORSTRIKE.
 // Authoritative definitions for SKU, pricing, MRP, COD fee, quantity limits,
 // approved claims, order states, and server calculation logic.
-// Customer-facing facts (dose, distance, dry time, formula, testers) live in
-// shared/product-truth.js — keep this file's copy in lockstep.
+// Customer-facing facts live in /config/product.json (and shared/product-truth.js).
 
 export const BASE_PRODUCT = {
   id: 'odorstrike-50ml',
-  sku: T.sku,
-  mpn: T.mpn,
-  title: 'Smelloff ODORSTRIKE Fabric Odor Eliminator Spray (50ml)',
-  shortTitle: 'ODORSTRIKE 50ml',
-  brand: T.brand,
-  category: 'Fabric Odor Eliminator Spray for Clothes',
-  size: T.size,
-  netQuantity: '50ml / 1.69 fl oz',
-  price: T.pricePrepaid,
-  mrp: T.mrp,
-  currency: T.currency,
-  shippingCost: 0,
-  codFee: T.codFee,
-  allowedQuantities: [1, 2, 3, 4, 5],
-  minQuantity: 1,
-  maxQuantity: 5,
-  availability: 'in_stock',
-  countryOfOrigin: 'India',
-  sprayCapacity: `~${T.spraysApprox} fine mist sprays per 50ml bottle`,
-  ingredientsSummary: 'Formula v3.1 — HPβCD and Zinc PCA as hero actives in an 11-ingredient INCI, not the only ingredients',
+  sku: P.sku,
+  mpn: P.mpn,
+  title: P.title,
+  shortTitle: P.shortTitle,
+  brand: B.name,
+  category: P.categoryDisplay || 'Fabric Odor Eliminator Spray for Clothes',
+  size: P.size,
+  netQuantity: P.netQuantity,
+  price: P.price,
+  mrp: P.mrp,
+  currency: P.currency,
+  shippingCost: S.prepaid.rate,
+  codFee: P.codFee,
+  allowedQuantities: P.allowedQuantities,
+  minQuantity: P.minQuantity,
+  maxQuantity: P.maxQuantity,
+  availability: P.availabilityStatus,
+  countryOfOrigin: B.country,
+  sprayCapacity: `~${P.spraysApprox} fine mist sprays per ${P.size} bottle`,
+  ingredientsSummary: `Formula ${F.version} — ${F.heroActives.join(' and ')} as hero actives in an 11-ingredient INCI, not the only ingredients`,
   usageInstructions: `Hold bottle ${T.sprayDistance} from clothing. ${T.targetedDose} for a targeted/midday reset; ${T.fullShirtDose} for a full shirt; ${T.jacketDose} for a jacket. Allow ${T.dryTime} to air-dry.`,
   manufacturer: {
-    name: T.manufacturer.name,
-    address: T.manufacturer.address,
-    email: T.manufacturer.email,
-    phone: T.whatsappNumber
+    name: B.founder,
+    address: B.address,
+    email: B.supportEmail,
+    phone: B.whatsappNumber
   }
 };
 
 export const BUNDLES_CONFIG = {
   enabled: false, // Pure single-SKU configuration (₹229 per 50ml unit)
   variants: {
-    solo: { id: 'solo', qty: 1, title: '1 × 50ml Bottle', sku: 'OS-001-50ML', price: 229, mrp: 499, badge: 'Standard' }
+    solo: { id: 'solo', qty: 1, title: '1 × 50ml Bottle', sku: P.sku, price: P.price, mrp: P.mrp, badge: 'Standard' }
   }
 };
 

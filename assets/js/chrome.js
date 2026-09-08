@@ -128,7 +128,10 @@
   function orderPayload() {
     var qty = quantityFromCheckout();
     var subtotal = numberFromText('checkoutAmount');
-    var amountRupees = subtotal > 0 ? subtotal : (229 * qty);
+    var unitPrice = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES && window.SMELLOFF_CONFIG.PRICES.solo) ||
+                    (window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.pricePrepaid) ||
+                    (window.SMELLOFF_TRUTH && window.SMELLOFF_TRUTH.pricePrepaid) || 229;
+    var amountRupees = subtotal > 0 ? subtotal : (unitPrice * qty);
     var amountPaise = Math.round(amountRupees * 100);
     return {
       email: textValue('f_email') || null,
@@ -137,7 +140,7 @@
         name: 'ODORSTRIKE Fabric Mist',
         variant: '50ml',
         quantity: qty,
-        price: 229
+        price: unitPrice
       }],
       amount: amountPaise,
       payment_method: 'upi',
