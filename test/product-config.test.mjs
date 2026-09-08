@@ -161,6 +161,9 @@ test('index.html homepage hero UX hierarchy and claim integrity', () => {
   // Visual & Demo Slot
   assert.ok(html.includes('id="heroDemoSlot"'), 'Isolated demo slot must exist');
   assert.ok(html.includes('/assets/odorstrike-bottle-cutout.webp'), 'Preloaded bottle cutout must be present');
+  assert.ok(html.includes('WAIT ~10 SEC'), 'Demo slot must clearly state WAIT ~10 SEC');
+  assert.ok(html.includes('WEAR FRESH'), 'Demo slot must clearly state WEAR FRESH end state');
+  assert.ok(html.includes('class="hero-demo-steps"'), 'Demo slot must contain structured steps');
 
   // Negative Guardrails
   assert.equal(/579|60%\s*OFF/i.test(html), false, 'Hero must not contain obsolete pricing or discount hype');
