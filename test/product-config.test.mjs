@@ -130,3 +130,41 @@ test('production backend endpoints derive from canonical BASE_PRODUCT without fa
   assert.equal(paymentStatusCode.includes("'229.00'"), false);
 });
 
+test('index.html homepage hero UX hierarchy and claim integrity', () => {
+  const html = readFileSync('index.html', 'utf8');
+  
+  // Single semantic H1
+  const h1Matches = [...html.matchAll(/<h1\b[^>]*>(.*?)<\/h1>/gis)];
+  assert.equal(h1Matches.length, 1, 'Homepage must contain exactly one <h1>');
+  assert.ok(h1Matches[0][1].includes('Your shirt smells'), 'H1 must lead with "Your shirt smells"');
+  assert.ok(h1Matches[0][1].includes('Fix it.'), 'H1 must include "Fix it."');
+
+  // Eyebrow and core positioning
+  assert.ok(html.includes('FABRIC ODOR CONTROL · FOR CLOTHES'), 'Eyebrow must communicate fabric odor control for clothes');
+  assert.ok(html.includes('ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin.'), 'Explanation must communicate fabric vs skin');
+
+  // Category clarification
+  assert.ok(html.includes('NOT PERFUME'), 'Hero must clarify NOT PERFUME');
+  assert.ok(html.includes('NOT BODY DEODORANT'), 'Hero must clarify NOT BODY DEODORANT');
+  assert.ok(html.includes('FABRIC ONLY'), 'Hero must clarify FABRIC ONLY');
+
+  // CTAs and Canonical Pricing
+  assert.ok(html.includes('FIX MY SHIRT — ₹229'), 'Primary CTA must be FIX MY SHIRT — ₹229');
+  assert.ok(html.includes('href="/odorstrike?buy=1"'), 'Primary CTA must link to /odorstrike?buy=1');
+  assert.ok(html.includes('See how it works'), 'Secondary action must be present');
+
+  // Usage microcopy
+  assert.ok(html.includes('2–3 sprays'), 'Usage microcopy must state 2–3 sprays');
+  assert.ok(html.includes('wait ~10 sec'), 'Usage microcopy must state ~10 sec wait');
+  assert.ok(html.includes('wear'), 'Usage microcopy must state wear');
+
+  // Visual & Demo Slot
+  assert.ok(html.includes('id="heroDemoSlot"'), 'Isolated demo slot must exist');
+  assert.ok(html.includes('/assets/odorstrike-bottle-cutout.webp'), 'Preloaded bottle cutout must be present');
+
+  // Negative Guardrails
+  assert.equal(/579|60%\s*OFF/i.test(html), false, 'Hero must not contain obsolete pricing or discount hype');
+  assert.equal(/instantly kills smell|miracle cure|guaranteed odor cure/i.test(html), false, 'Hero must not contain prohibited claims');
+});
+
+

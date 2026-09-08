@@ -323,129 +323,230 @@
      See scripts/apply-chrome.mjs for the markup. */
 
   /* ============ Hero ============
-     Asymmetric two-column composition: the copy holds the left, the bottle
-     sits right and deliberately bleeds past the container edge so the
-     product is present above the fold instead of three sections down.
-     Mobile collapses to a single stack with the bottle between the
-     headline and the price. */
+     Asymmetric two-column composition on desktop: copy and buy actions hold the left,
+     the bottle visual and 3-step demonstration sequence sit on the right.
+     Mobile collapses to a conversion-ordered single stack:
+     Eyebrow -> H1 -> Subtext -> Visual/Demo -> Price -> Primary CTA -> Clarification -> Usage microcopy -> Secondary action. */
   .hero{padding:clamp(36px,5vw,64px) 0 clamp(48px,6vw,72px);overflow:hidden}
   .hero-grid{display:grid;grid-template-columns:1fr;gap:clamp(20px,4vw,36px)}
-  .hero-offer{margin-top:0}
-  .hero h1{
-    font-family:var(--display);
-    font-weight:900;
-    font-size:var(--fs-h1);
-    line-height:var(--lh-display);
-    letter-spacing:var(--ls-display);
-  }
-  .hero h1 .acid{color:var(--acid)}
-  .hero-sub{
-    max-width:34ch;
-    margin-top:24px;
-    font-size:var(--fs-lead);
-    line-height:1.5;
+  
+  .hero-eyebrow{margin:0 0 16px}
+  .hero-eyebrow-pill{
+    display:inline-flex;align-items:center;
+    font-family:var(--mono);font-size:12px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;
+    color:var(--acid);background:rgba(184,255,87,.08);
+    border:1.5px solid rgba(184,255,87,.35);
+    padding:6px 14px;border-radius:2px;
   }
 
-  /* Bottle: an acid disc behind it, the product scaled past its own box.
-     aspect-ratio + explicit width/height on the img keep CLS at 0 even
-     though the image is transformed. */
+  .hero-title{
+    font-family:var(--display);
+    font-weight:900;
+    font-size:clamp(38px,6.8vw,84px);
+    line-height:.94;
+    letter-spacing:-.03em;
+    color:var(--text);
+    margin:0 0 18px;
+    max-width:14ch;
+  }
+  .hero-title .acid{color:var(--acid)}
+
+  .hero-sub{
+    max-width:38ch;
+    margin:0 0 20px;
+    font-size:clamp(17px,1.6vw,20px);
+    line-height:1.48;
+    color:var(--text);
+  }
+
+  /* Critical category clarification */
+  .hero-clarify{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--text);background:var(--surface);
+    border:1.5px solid var(--rule-strong);
+    padding:10px 14px;border-radius:2px;
+    width:fit-content;max-width:100%;
+  }
+  .hero-clarify-tag{color:var(--muted);white-space:nowrap}
+  .hero-clarify-dot{color:var(--rule-strong);font-weight:700}
+  .hero-clarify-highlight{
+    color:var(--acid);font-weight:700;
+    background:rgba(184,255,87,.12);
+    padding:2px 6px;border:1px solid rgba(184,255,87,.4);
+    border-radius:2px;
+  }
+  .hero-clarify--desktop{display:flex;margin-bottom:24px}
+  .hero-clarify--mobile{display:none}
+
+  /* Bottle visual & Demonstration sequence */
+  .hero-visual-wrap{
+    display:flex;flex-direction:column;align-items:center;gap:18px;
+    position:relative;
+  }
   .hero-visual{
     position:relative;
     display:flex;align-items:center;justify-content:center;
-    min-height:clamp(340px,70vw,480px);
+    min-height:clamp(300px,64vw,440px);
+    width:100%;
   }
   .hero-visual::before{
     content:'';
     position:absolute;top:50%;left:50%;
-    width:clamp(210px,52vw,340px);aspect-ratio:1;
+    width:clamp(200px,46vw,320px);aspect-ratio:1;
     transform:translate(-50%,-50%);
     background:var(--acid);
     border-radius:50%;
     z-index:0;
   }
-  /* The bottle is a tall 241×915 cutout, so it's sized by height against the
-     disc rather than width — that keeps the overlap consistent as the disc
-     scales. It deliberately overshoots the disc top and bottom. */
   .hero-visual img{
     position:relative;z-index:1;
-    height:clamp(300px,62vw,430px);width:auto;
+    height:clamp(280px,58vw,420px);width:auto;
     display:block;
-    filter:drop-shadow(0 22px 44px rgba(0,0,0,.7));
+    filter:drop-shadow(0 20px 38px rgba(0,0,0,.75));
   }
-  /* Rotated mono caption riding the disc edge — the "technical product"
-     signal, borrowed from the PDP's breadcrumb treatment. */
   .hero-visual figcaption{
     position:absolute;z-index:2;
-    right:-4px;top:50%;
+    right:0;top:50%;
     transform:translateY(-50%) rotate(90deg);
     transform-origin:right center;
     font-family:var(--mono);font-size:11px;
-    letter-spacing:.24em;text-transform:uppercase;
+    letter-spacing:.22em;text-transform:uppercase;
     color:var(--muted);
     white-space:nowrap;
+    background:rgba(8,8,8,.85);
+    padding:3px 8px;
+    border:1px solid var(--rule);
   }
-  @media(min-width:960px){
-    .hero-grid{
-      grid-template-columns:1.1fr .9fr;
-      grid-template-areas:
-        "copy visual"
-        "buy  visual";
-      align-content:center;
-      gap:clamp(28px,3vw,44px) clamp(32px,4vw,56px);
-    }
-    .hero-copy{grid-area:copy;align-self:end}
-    .hero-buy{grid-area:buy;align-self:start}
-    /* Bleed the visual past the wrap so the bottle runs off the page edge. */
-    .hero-visual{grid-area:visual;align-self:center;margin-right:calc(var(--gutter) * -3);min-height:560px}
-    .hero-visual img{height:clamp(420px,42vw,540px)}
-    .hero-visual figcaption{right:-18px}
+
+  /* Isolated config-gated demo slot (SPRAY -> WAIT -> WEAR) */
+  .hero-demo-slot{
+    width:100%;
+    max-width:380px;
+    z-index:2;
   }
-  .hero-hook{
-    display:inline-block;
-    margin-top:20px;
-    background:var(--acid);color:var(--ink);
-    font-weight:600;font-size:16px;
-    padding:8px 14px;
-    box-shadow:5px 5px 0 var(--text);
+  .hero-demo-steps{
+    display:flex;align-items:center;justify-content:space-between;gap:6px;
+    background:var(--surface);
+    border:1.5px solid var(--rule-strong);
+    padding:12px 14px;
+    box-shadow:4px 4px 0 var(--rule);
   }
+  .hero-demo-step{display:flex;flex-direction:column;gap:2px}
+  .hds-num{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--acid);letter-spacing:.14em}
+  .hds-action{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text);letter-spacing:.1em}
+  .hds-desc{font-family:var(--body);font-size:11px;line-height:1.2;color:var(--muted);white-space:nowrap}
+  .hds-arrow{color:var(--acid);font-family:var(--mono);font-size:14px;font-weight:700;flex-shrink:0}
+  .hero-demo-step.hds-result .hds-action{color:var(--acid)}
+
+  /* Offer & Pricing */
   .hero-offer{
-    margin-top:34px;
-    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
-    padding-top:22px;
+    display:flex;flex-direction:column;gap:6px;
+    padding:18px 0;
     border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    margin-bottom:20px;
   }
+  .hero-offer-top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
   .hero-price{
     font-family:var(--display);font-weight:900;
-    font-size:clamp(40px,7vw,58px);line-height:1;letter-spacing:-.03em;
+    font-size:clamp(42px,6.5vw,60px);line-height:1;letter-spacing:-.03em;
     color:var(--acid);
   }
   .hero-mrp{
-    font-family:var(--mono);font-size:13px;letter-spacing:.06em;
+    font-family:var(--mono);font-size:14px;letter-spacing:.08em;
     color:var(--muted);text-decoration:line-through;
   }
   .hero-price-meta{
-    font-family:var(--mono);font-size:12px;line-height:1.7;
-    letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--text);opacity:.9;
   }
-  .hero-cta-row{margin-top:26px;display:flex;gap:16px;flex-wrap:wrap}
+  .hero-meta-dot{color:var(--acid);opacity:.7}
+
+  /* CTAs */
+  .hero-cta-group{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:10px;
     background:var(--acid);color:var(--ink);text-decoration:none;
-    font-family:var(--mono);font-weight:400;
+    font-family:var(--mono);font-weight:700;
     font-size:16px;letter-spacing:.1em;text-transform:uppercase;
-    padding:16px 30px;min-height:52px;
+    padding:16px 28px;min-height:52px;
     border:3px solid var(--ink);
     box-shadow:6px 6px 0 var(--text);
+    cursor:pointer;
+    transition:background .15s ease,transform .15s ease,box-shadow .15s ease;
   }
   .btn:hover{background:#d1ff8a;box-shadow:3px 3px 0 var(--text);transform:translate(3px,3px)}
   .btn:active{box-shadow:0 0 0 var(--text);transform:translate(6px,6px)}
-  /* Secondary action: outlined, so the acid fill stays reserved for one CTA.
-     Declared after .btn so it wins on source order (same specificity). */
+  .btn:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+
   .btn-ghost{
     background:transparent;color:var(--text);
-    border-color:var(--text);box-shadow:6px 6px 0 var(--rule);
+    border:2px solid var(--text);box-shadow:6px 6px 0 var(--rule);
+    font-weight:400;font-size:14px;padding:16px 22px;
   }
   .btn-ghost:hover{background:transparent;color:var(--acid);border-color:var(--acid);box-shadow:3px 3px 0 var(--rule)}
+  .btn-ghost:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+
+  /* Usage Microcopy & Trust mini */
+  .hero-usage{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+    color:var(--muted);margin-bottom:14px;
+  }
+  .hero-usage-label{color:var(--text);font-weight:700;margin-right:2px}
+  .hero-usage-pill{
+    background:var(--surface-2);border:1px solid var(--rule);
+    padding:4px 8px;border-radius:2px;color:var(--text);white-space:nowrap;
+  }
+  .hero-usage-arrow{color:var(--acid);font-weight:700}
+  .hero-trust-mini{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .hero-trust-mini .htm-dot{color:var(--rule-strong)}
+
+  /* Desktop Grid (>= 960px) */
+  @media(min-width:960px){
+    .hero{padding:clamp(44px,6vw,76px) 0 clamp(48px,6vw,80px)}
+    .hero-grid{
+      grid-template-columns:1.15fr .85fr;
+      grid-template-areas:
+        "header visual"
+        "buy    visual";
+      gap:0 clamp(36px,4.5vw,64px);
+      align-items:center;
+    }
+    .hero-header{grid-area:header;align-self:end}
+    .hero-visual-wrap{grid-area:visual;align-self:center;margin-right:calc(var(--gutter) * -2)}
+    .hero-buy{grid-area:buy;align-self:start}
+    .hero-visual{min-height:480px}
+    .hero-visual img{height:clamp(380px,38vw,500px)}
+    .hero-demo-slot{max-width:400px}
+  }
+
+  /* Mobile Conversion Stack (< 960px) */
+  @media(max-width:959px){
+    .hero-grid{display:flex;flex-direction:column;gap:20px}
+    .hero-header{order:1}
+    .hero-visual-wrap{order:2;margin:6px 0}
+    .hero-buy{display:flex;flex-direction:column;gap:14px;order:3}
+    .hero-offer{order:1;margin-bottom:0;padding:12px 0}
+    .hero-cta-group{order:2;margin-bottom:0;flex-direction:column;width:100%}
+    .hero-btn-primary{order:1;width:100%;text-align:center}
+    .hero-clarify--desktop{display:none}
+    .hero-clarify--mobile{order:3;display:flex;width:100%;justify-content:center;text-align:center;margin:2px 0}
+    .hero-usage{order:4;margin-bottom:0;justify-content:center;text-align:center}
+    .hero-btn-secondary{order:5;width:100%;text-align:center}
+    .hero-trust-mini{order:6;justify-content:center;text-align:center;margin-top:2px}
+    .hero-visual{min-height:clamp(280px,72vw,360px)}
+    .hero-visual img{height:clamp(270px,68vw,340px)}
+    .hero-demo-steps{padding:10px 12px}
+    .hds-desc{font-size:10px}
+  }
 
   /* Hero zones — where smell hides: collar, hoodie, blazer (all clothing) */
   .zones{
@@ -939,45 +1040,98 @@
   <!-- ============ 1 · HERO ============ -->
   <section class="hero" aria-labelledby="heroTitle">
     <div class="wrap">
-      <!-- Three children, not two, so the stacking order can differ per breakpoint:
-           mobile reads headline → bottle → price (DOM order), while desktop puts
-           copy and price in the left column with the bottle spanning both rows. -->
+      <!-- Asymmetric two-column composition on desktop, conversion-ordered stack on mobile.
+           Communicates in 3 seconds: product, fabric location, problem solved, not perfume/deo, price, and CTA. -->
       <div class="hero-grid">
-        <div class="hero-copy">
-          <!-- The H1 leads with the problem, not the slogan. "Smell Proof.
-               Always." is the brand line — it is the schema `slogan`, the
-               <title>, the OG/Twitter titles, the ticker and the footer, so it
-               is not going anywhere; it just stops being the headline and moves
-               into the hook badge below, which is where it sits in the approved
-               design. This also puts a keyword in the H1 for the first time:
-               "sweat" is what people actually search, "Smell Proof" is not. -->
-          <h1 id="heroTitle">Don't let them notice your <span class="acid">sweat.</span></h1>
-          <p class="hero-sub">Deodorant works on your skin. The smell people notice is in your shirt. ODORSTRIKE neutralizes it in the fabric.</p>
-          <p><span class="hero-hook">Smell Proof. Always.</span></p>
+        <div class="hero-header">
+          <p class="hero-eyebrow"><span class="hero-eyebrow-pill">FABRIC ODOR CONTROL · FOR CLOTHES</span></p>
+          <h1 id="heroTitle" class="hero-title">Your shirt smells. <span class="acid">Fix it.</span></h1>
+          <p class="hero-sub">ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin.</p>
+          <div class="hero-clarify hero-clarify--desktop" aria-label="Product classification">
+            <span class="hero-clarify-tag">NOT PERFUME</span>
+            <span class="hero-clarify-dot">/</span>
+            <span class="hero-clarify-tag">NOT BODY DEODORANT</span>
+            <span class="hero-clarify-dot">/</span>
+            <span class="hero-clarify-tag hero-clarify-highlight">FABRIC ONLY</span>
+          </div>
         </div>
 
-        <!-- The product, above the fold. Eager + high priority because this is
-             now a likely LCP candidate alongside the H1 (preloaded in <head>). -->
-        <figure class="hero-visual">
-          <picture>
-            <source srcset="/assets/odorstrike-bottle-cutout.webp" type="image/webp">
-            <img src="/assets/odorstrike-bottle-cutout.png" alt="ODORSTRIKE 50ml pocket fabric odor eliminator mist bottle" width="241" height="915" fetchpriority="high" decoding="async">
-          </picture>
-          <figcaption>50ml · ~250 sprays</figcaption>
-        </figure>
+        <!-- The product visual + isolated config-gated demo slot -->
+        <div class="hero-visual-wrap">
+          <figure class="hero-visual" id="heroVisual">
+            <picture>
+              <source srcset="/assets/odorstrike-bottle-cutout.webp" type="image/webp">
+              <img src="/assets/odorstrike-bottle-cutout.png" alt="ODORSTRIKE 50ml pocket fabric odor eliminator spray bottle for clothes" width="241" height="915" fetchpriority="high" decoding="async">
+            </picture>
+            <figcaption>50ml · ~250 sprays</figcaption>
+          </figure>
 
-        <!-- Price + primary buy CTA live above the fold so the homepage can sell on
-             its own instead of costing a click to /odorstrike first. ₹229 is the
-             only price — no struck anchor, no "% OFF". -->
+          <!-- Isolated demonstration slot (graceful image fallback, ready for video config) -->
+          <div class="hero-demo-slot" id="heroDemoSlot" data-demo-state="fallback">
+            <div class="hero-demo-steps" aria-label="3-step odor neutralization workflow">
+              <div class="hero-demo-step">
+                <span class="hds-num">01</span>
+                <span class="hds-action">SPRAY</span>
+                <span class="hds-desc">2–3 sprays on fabric</span>
+              </div>
+              <span class="hds-arrow" aria-hidden="true">→</span>
+              <div class="hero-demo-step">
+                <span class="hds-num">02</span>
+                <span class="hds-action">WAIT</span>
+                <span class="hds-desc">~10 sec dry time</span>
+              </div>
+              <span class="hds-arrow" aria-hidden="true">→</span>
+              <div class="hero-demo-step hds-result">
+                <span class="hds-num">03</span>
+                <span class="hds-action">WEAR</span>
+                <span class="hds-desc">Smell neutralized</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price, CTAs, clarification tag on mobile, usage microcopy, and trust badges -->
         <div class="hero-buy">
           <div class="hero-offer">
-            <span class="hero-price">₹229</span>
-            <span class="hero-mrp">M.R.P. ₹499</span>
-            <span class="hero-price-meta">ODORSTRIKE 50ml · ~250 sprays<br>Free shipping pan-India · ₹289 on COD (+₹60)</span>
+            <div class="hero-offer-top">
+              <span class="hero-price">₹229</span>
+              <span class="hero-mrp">M.R.P. ₹499</span>
+            </div>
+            <div class="hero-price-meta">
+              <span>50ml · ~250 sprays</span>
+              <span class="hero-meta-dot">·</span>
+              <span>Free shipping pan-India</span>
+            </div>
           </div>
-          <div class="hero-cta-row">
-            <a class="btn" href="/odorstrike?buy=1">Buy Now — ₹229</a>
-            <a class="btn btn-ghost" href="/odorstrike">See ODORSTRIKE</a>
+
+          <div class="hero-cta-group">
+            <a class="btn hero-btn-primary" href="/odorstrike?buy=1" id="heroBuyBtn">FIX MY SHIRT — ₹229</a>
+            <a class="btn btn-ghost hero-btn-secondary" href="#remembers" id="heroHowBtn">See how it works</a>
+          </div>
+
+          <div class="hero-clarify hero-clarify--mobile" aria-label="Product classification">
+            <span class="hero-clarify-tag">NOT PERFUME</span>
+            <span class="hero-clarify-dot">/</span>
+            <span class="hero-clarify-tag">NOT BODY DEODORANT</span>
+            <span class="hero-clarify-dot">/</span>
+            <span class="hero-clarify-tag hero-clarify-highlight">FABRIC ONLY</span>
+          </div>
+
+          <div class="hero-usage" aria-label="Usage guide">
+            <span class="hero-usage-label">HOW TO USE:</span>
+            <span class="hero-usage-pill">2–3 sprays</span>
+            <span class="hero-usage-arrow" aria-hidden="true">→</span>
+            <span class="hero-usage-pill">wait ~10 sec</span>
+            <span class="hero-usage-arrow" aria-hidden="true">→</span>
+            <span class="hero-usage-pill">wear</span>
+          </div>
+
+          <div class="hero-trust-mini">
+            <span>Made in India</span>
+            <span class="htm-dot">/</span>
+            <span>Free Shipping</span>
+            <span class="htm-dot">/</span>
+            <span>COD Available</span>
           </div>
         </div>
       </div>
@@ -1416,6 +1570,26 @@
   if(!existing){
     var bar=document.getElementById('smelloff-consent-bar');
     if(bar)bar.style.display='block';
+  }
+})();
+</script>
+
+<!-- Isolated config-gated hero demo slot initialization -->
+<script>
+(function initHeroDemoSlot(){
+  var slot = document.getElementById('heroDemoSlot');
+  if (!slot) return;
+  if (window.SMELLOFF_HERO_VIDEO && typeof window.SMELLOFF_HERO_VIDEO === 'string') {
+    slot.setAttribute('data-demo-state', 'video');
+    var video = document.createElement('video');
+    video.src = window.SMELLOFF_HERO_VIDEO;
+    video.autoplay = true;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute('aria-label', 'ODORSTRIKE 3-step spray demonstration');
+    slot.innerHTML = '';
+    slot.appendChild(video);
   }
 })();
 </script>
