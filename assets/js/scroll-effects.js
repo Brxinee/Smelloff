@@ -68,6 +68,8 @@
   /* EN2 — savings calculator (honest estimate) */
   var SV = { count:3, COST_PER_FIX:40, SPRAYS_PER_FIX:2, BOTTLE_SPRAYS:250, WEEKS:4.3 };
   function svBottlePrice(){
+    var t = window.SMELLOFF_PRODUCT_TRUTH || window.SMELLOFF_TRUTH;
+    if (t && t.pricePrepaid) return t.pricePrepaid;
     var c = window.SMELLOFF_CONFIG;
     return (c && c.PRICES && c.PRICES.solo) ? c.PRICES.solo : 229;
   }

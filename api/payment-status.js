@@ -1,12 +1,12 @@
 import { isAllowedOrigin, clientIp, checkRateLimit, verifyOrderToken } from './_security.js';
 import { Resend } from 'resend';
 import { orderConfirmation } from './email-templates.js';
-import { isValidTransition } from '../shared/products-config.js';
+import { isValidTransition, BASE_PRODUCT } from '../shared/products-config.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
-const REPLY_TO = 'smelloffsupport@gmail.com';
+const REPLY_TO = BASE_PRODUCT.manufacturer?.email || 'smelloffsupport@gmail.com';
 
 async function fetchOrderByCode(orderCode) {
   if (!SERVICE_KEY || !orderCode) return null;
@@ -64,7 +64,7 @@ export async function checkBankUpiStatus(order) {
 
   try {
     const txnRef = order.upi_transaction_ref || order.order_code;
-    const amount = order.amount ? (order.amount / 100).toFixed(2) : '229.00';
+    const amount = order.amount ? (order.amount / 100).toFixed(2) : BASE_PRODUCT.price.toFixed(2);
     const res = await fetch(`${statusApiUrl}?txnRef=${encodeURIComponent(txnRef)}&amount=${encodeURIComponent(amount)}&orderId=${encodeURIComponent(order.order_code)}`, {
       method: 'GET',
       headers: {
@@ -156,7 +156,7 @@ export default async function handler(req, res) {
         orderStatus: order.status,
         verified: true,
         paymentMethod: order.payment_method,
-        amount: order.amount ? order.amount / 100 : 229,
+        amount: order.amount ? order.amount / 100 : BASE_PRODUCT.price,
         verifiedAt: order.payment_verified_at || order.updated_at
       });
     }
@@ -168,7 +168,7 @@ export default async function handler(req, res) {
         status: 'verification_pending',
         verified: false,
         paymentMethod: order.payment_method,
-        amount: order.amount ? order.amount / 100 : 229,
+        amount: order.amount ? order.amount / 100 : BASE_PRODUCT.price,
         upiRef: order.upi_ref || null,
         message: 'UTR submitted — awaiting payment verification by our team'
       });
@@ -181,7 +181,7 @@ export default async function handler(req, res) {
         status: 'payment_not_verified',
         verified: false,
         paymentMethod: order.payment_method,
-        amount: order.amount ? order.amount / 100 : 229,
+        amount: order.amount ? order.amount / 100 : BASE_PRODUCT.price,
         message: 'Payment could not be verified. Please check UTR or submit again.'
       });
     }
@@ -207,7 +207,7 @@ export default async function handler(req, res) {
             const { subject, html } = orderConfirmation({
               orderId: orderCode,
               customerName: (typeof addr === 'object' && addr.name) || 'Customer',
-              amount: String(order.amount ? order.amount / 100 : 229),
+              amount: String(order.amount ? order.amount / 100 : BASE_PRODUCT.price),
               codFee: 0,
               address: addrFormatted,
               paymentMethod: 'UPI (Prepaid)'
@@ -225,7 +225,7 @@ export default async function handler(req, res) {
           status: 'confirmed',
           verified: true,
           paymentMethod: 'upi',
-          amount: order.amount ? order.amount / 100 : 229,
+          amount: order.amount ? order.amount / 100 : BASE_PRODUCT.price,
           verifiedAt: new Date().toISOString()
         });
       }
@@ -237,7 +237,7 @@ export default async function handler(req, res) {
       status: order.status,
       verified: false,
       paymentMethod: order.payment_method,
-      amount: order.amount ? order.amount / 100 : 229,
+      amount: order.amount ? order.amount / 100 : BASE_PRODUCT.price,
       message: order.status === 'upi_pending' ? 'Awaiting UPI payment confirmation' : `Order is in status '${order.status}'`
     });
   } catch (err) {

@@ -107,3 +107,26 @@ test('claims guardrails: forbidden claims are flagged and not in approved list',
   assert.ok(claims.forbidden.some(c => c.toLowerCase().includes('skin')));
   assert.ok(claims.forbidden.some(c => c.toLowerCase().includes('bacteria')));
 });
+
+test('supabase/functions/create-order/index.ts derives from product.json without independent hardcodes', () => {
+  const code = readFileSync('supabase/functions/create-order/index.ts', 'utf8');
+  assert.ok(code.includes('config/product.json'));
+  assert.ok(code.includes('UNIT_PRICE_RUPEES = productConfig.product.price'));
+  assert.ok(code.includes('COD_FEE_RUPEES = productConfig.product.codFee'));
+  assert.ok(code.includes('MAX_QTY = productConfig.product.maxQuantity'));
+  assert.equal(code.includes('UNIT_PRICE_RUPEES = 229'), false);
+  assert.equal(code.includes('COD_FEE_RUPEES = 60'), false);
+  assert.equal(code.includes('MAX_QTY = 5'), false);
+});
+
+test('production backend endpoints derive from canonical BASE_PRODUCT without fallback 229 literals', () => {
+  const shiprocketCode = readFileSync('api/_shiprocket.js', 'utf8');
+  assert.ok(shiprocketCode.includes('BASE_PRODUCT.price'));
+  assert.equal(shiprocketCode.includes('?? 229'), false);
+
+  const paymentStatusCode = readFileSync('api/payment-status.js', 'utf8');
+  assert.ok(paymentStatusCode.includes('BASE_PRODUCT.price'));
+  assert.equal(paymentStatusCode.includes(': 229'), false);
+  assert.equal(paymentStatusCode.includes("'229.00'"), false);
+});
+

@@ -42,7 +42,8 @@ if (fs.existsSync(security) && /\.endsWith\(['"]\.vercel\.app/i.test(read(securi
 const createOrder = path.join(ROOT, 'supabase/functions/create-order/index.ts');
 if (fs.existsSync(createOrder)) {
   const s = read(createOrder);
-  if (!s.includes('UNIT_PRICE_RUPEES = 229')) fail('Supabase order function lost the single-SKU price guard');
+  if (!s.includes('product.json')) fail('Supabase order function must derive from config/product.json');
+  if (s.includes('UNIT_PRICE_RUPEES = 229')) fail('Supabase order function has hardcoded price; must derive from product.json');
   if (s.includes('PACK_PRICES')) fail('Supabase order function still contains bundle/pack pricing');
   if (!s.includes('generateOrderCode')) fail('Supabase order function does not generate missing order codes server-side');
 }

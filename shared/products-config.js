@@ -166,7 +166,7 @@ export function isValidTransition(currentStatus, targetStatus, paymentMethod = '
 
 /**
  * Authoritative Server-side Price & Total Calculator
- * Enforces strict quantity bounds [1..5], recomputes all sums and taxes server-side.
+ * Enforces strict quantity bounds [1..BASE_PRODUCT.maxQuantity], recomputes all sums and taxes server-side.
  */
 export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {
   let qty = parseInt(quantity, 10);

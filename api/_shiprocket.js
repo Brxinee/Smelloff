@@ -123,7 +123,7 @@ export async function createShiprocketOrder(order) {
   const address = order.address || {};
   const item = Array.isArray(order.items) && order.items.length ? order.items[0] : {};
   const quantity = Math.max(1, Number(item.quantity || 1));
-  const unitPrice = Number(item.unit_price ?? item.price ?? 229);
+  const unitPrice = Number(item.unit_price ?? item.price ?? BASE_PRODUCT.price);
   const subtotal = Number(order.amount || 0) / 100 - Number(order.cod_fee || 0) / 100;
   const pickup = await resolvePickupLocation();
   const channelId = configuredChannelId();
@@ -165,8 +165,8 @@ export async function createShiprocketOrder(order) {
     shipping_isd_code: '91',
     shipping_phone: String(order.customer_phone || '').replace(/\D/g, '').slice(-10),
     order_items: [{
-      name: String(item.name || BASE_PRODUCT.shortTitle || 'Smelloff ODORSTRIKE 50ml'),
-      sku: String(item.sku || BASE_PRODUCT.sku || 'OS-001-50ML'),
+      name: String(item.name || BASE_PRODUCT.shortTitle || BASE_PRODUCT.title),
+      sku: String(item.sku || BASE_PRODUCT.sku),
       units: quantity,
       selling_price: unitPrice,
       discount: 0,

@@ -91,9 +91,6 @@
     return window.smfRazorpayReady;
   }
 
-  // Eagerly initialize readiness check
-  getRazorpayReady();
-
   var razorpayInFlight = false;
 
   function textValue(id) {
@@ -108,12 +105,14 @@
   }
 
   function quantityFromCheckout() {
+    var maxQty = (window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.maxQuantity) ||
+                 (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.MAX_QTY) || 10;
     var variant = textValue('checkoutVariant');
     var match = variant.match(/(\d+)\s*[×x]/i);
-    if (match) return Math.max(1, Math.min(5, Number(match[1])));
+    if (match) return Math.max(1, Math.min(maxQty, Number(match[1])));
     try {
       var stored = parseInt(localStorage.getItem('smelloff_cart_v1'), 10);
-      if (Number.isInteger(stored) && stored > 0) return Math.min(5, stored);
+      if (Number.isInteger(stored) && stored > 0) return Math.min(maxQty, stored);
     } catch (e) { /* storage blocked */ }
     return 1;
   }
@@ -137,8 +136,8 @@
       email: textValue('f_email') || null,
       phone: textValue('f_phone'),
       items: [{
-        name: 'ODORSTRIKE Fabric Mist',
-        variant: '50ml',
+        name: (window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.productName) || 'ODORSTRIKE Fabric Mist',
+        variant: (window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.size) || '50ml',
         quantity: qty,
         price: unitPrice
       }],

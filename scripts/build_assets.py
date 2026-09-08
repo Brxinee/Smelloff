@@ -5,12 +5,23 @@
 These are placeholders intended to keep social previews and Product
 schema working until real product photography is uploaded.
 """
+import json
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 REPO = Path(__file__).resolve().parent.parent
 ASSETS = REPO / "assets"
 ASSETS.mkdir(parents=True, exist_ok=True)
+
+try:
+    with open(REPO / "config" / "product.json", "r", encoding="utf-8") as f:
+        PRODUCT_CONFIG = json.load(f)
+    P = PRODUCT_CONFIG.get("product", {})
+    SIZE_STR = P.get("size", "50ml")
+    PRICE_INT = P.get("price", 229)
+except Exception:
+    SIZE_STR = "50ml"
+    PRICE_INT = 229
 
 BLACK = (8, 8, 8)
 ACID = (184, 255, 87)
@@ -66,7 +77,7 @@ def make_og_image():
 
     # Spec line
     spec_font = find_font(size=24)
-    draw.text((60, 470), "50ml · ₹229 · COD pan-India · smelloff.in",
+    draw.text((60, 470), f"{SIZE_STR} · ₹{PRICE_INT} · COD pan-India · smelloff.in",
               font=spec_font, fill=GREY)
 
     # Acid-green divider

@@ -1,10 +1,14 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { clientKey, jsonResponse, preflight, rateLimit } from "../_shared/security.ts";
+import productConfig from "../../../config/product.json" with { type: "json" };
 
-const UNIT_PRICE_RUPEES = 229;
-const COD_FEE_RUPEES = 60;
-const MAX_QTY = 5;
+const UNIT_PRICE_RUPEES = productConfig.product.price;
+const COD_FEE_RUPEES = productConfig.product.codFee;
+const MAX_QTY = productConfig.product.maxQuantity;
+const PRODUCT_NAME = productConfig.product.title;
+const VARIANT_NAME = productConfig.product.size;
+const PRODUCT_LABEL = `${productConfig.product.shortName} ${productConfig.product.size}`;
 const ORDER_CODE_RE = /^SMF-\d{8}-\d{4}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -83,9 +87,9 @@ Deno.serve(async (req: Request) => {
     let orderCode = ORDER_CODE_RE.test(requestedCode) ? requestedCode : generateOrderCode();
 
     const items = [{
-      name: "ODORSTRIKE Fabric Odor Mist",
-      variant: "50ml",
-      label: "ODORSTRIKE 50ml",
+      name: PRODUCT_NAME,
+      variant: VARIANT_NAME,
+      label: PRODUCT_LABEL,
       quantity,
       price: UNIT_PRICE_RUPEES,
     }];

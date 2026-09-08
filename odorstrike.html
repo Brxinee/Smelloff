@@ -2877,7 +2877,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=e279586e">
 <link rel="stylesheet" href="/assets/css/chrome.css?v=09e45570">
-<script src="/assets/js/chrome.js?v=85c89f60" defer></script>
+<script src="/assets/js/chrome.js?v=9dad2d76" defer></script>
 </head>
 <body>
 
@@ -4880,12 +4880,13 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   // Single-SKU catalogue identity — shared across every GA4 + Meta Pixel event
   // so price/product data is always structured (fixes Meta "same price
   // information" diagnostics and enables value optimisation + dynamic ads).
-  var OS_SKU  = 'OS-001-50ML';
-  var OS_NAME = 'ODORSTRIKE Fabric Odor Mist';
+  var OS_SKU  = (window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.sku) || 'OS-001-50ML';
+  var OS_NAME = (window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.productName) || 'ODORSTRIKE Fabric Odor Mist';
   function osValue() {
     var v = VARIANTS[currentVariant] && VARIANTS[currentVariant].amount;
     if (typeof v !== 'number' || !(v > 0)) {
-      v = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES && window.SMELLOFF_CONFIG.PRICES.solo) || 229;
+      v = (window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.pricePrepaid) ||
+          (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES && window.SMELLOFF_CONFIG.PRICES.solo) || 229;
     }
     return Number(v);
   }

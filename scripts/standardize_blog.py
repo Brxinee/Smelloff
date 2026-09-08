@@ -15,18 +15,28 @@ and its own curated related/next links (just re-rendered as cards).
 Idempotent-ish: safe to re-run. Reference partials live in /_shared/.
 Run:  python3 scripts/standardize_blog.py
 """
-import re, sys
+import json, re, sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 BLOG = REPO / "blog"
+
+try:
+    with open(REPO / "config" / "product.json", "r", encoding="utf-8") as f:
+        PRODUCT_CONFIG = json.load(f)
+    P = PRODUCT_CONFIG.get("product", {})
+    PRICE_VAL = P.get("price", 229)
+    MRP_VAL = P.get("mrp", 499)
+except Exception:
+    PRICE_VAL = 229
+    MRP_VAL = 499
 
 BLOGCSS = '<link rel="stylesheet" href="/assets/css/blog.css?v=6">'
 
 NAV = (
     '<nav class="blog-nav">\n'
     '  <a href="/" class="logo" aria-label="Smelloff home"><img src="/assets/brand/logo-smelloff-white.png?v=1" alt="SMELLOFF" width="1200" height="261" decoding="async"></a>\n'
-    '  <a href="/odorstrike/" class="buy-pill">BUY ₹229</a>\n'
+    f'  <a href="/odorstrike/" class="buy-pill">BUY ₹{PRICE_VAL}</a>\n'
     '</nav>'
 )
 
@@ -213,8 +223,8 @@ def build_stack(spec, read_next, related):
         '    <h4>ODORSTRIKE — Fabric Odor Mist</h4>\n'
         f'    <p class="cta-spec">{spec}</p>\n'
         '    <div class="price-row">\n'
-        '      <span class="strike-price">₹499</span>\n'
-        '      <span class="current-price">₹229</span>\n'
+        f'      <span class="strike-price">₹{MRP_VAL}</span>\n'
+        f'      <span class="current-price">₹{PRICE_VAL}</span>\n'
         '    </div>\n'
         '    <a href="/odorstrike/" class="buy-btn">BUY NOW →</a>\n'
         '  </div>'

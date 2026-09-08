@@ -368,6 +368,13 @@
       existingScript.remove();
     }
 
+    var truth = window.SMELLOFF_PRODUCT_TRUTH || window.SMELLOFF_TRUTH || {};
+    var skuVal = truth.sku || "OS-001-50ML";
+    var mpnVal = truth.mpn || "SMLF-ODST-50";
+    var prodTitle = truth.productName ? (truth.productName + " Fabric Odor Remover Spray") : "ODORSTRIKE Fabric Odor Remover Spray";
+    var offerTitle = truth.shortTitle ? (truth.shortTitle + " — Single Bottle") : "ODORSTRIKE 50ml — Single Bottle";
+    var priceVal = (truth.pricePrepaid ? truth.pricePrepaid.toFixed(2) : "229.00");
+
     var script = document.createElement('script');
     script.id = 'google-review-aggregate-ld';
     script.type = 'application/ld+json';
@@ -375,7 +382,7 @@
       "@context": "https://schema.org",
       "@type": "Product",
       "@id": "https://smelloff.in/#odorstrike",
-      "name": "ODORSTRIKE Fabric Odor Remover Spray",
+      "name": prodTitle,
       "image": [
         "https://smelloff.in/assets/pdp-01-hero.webp",
         "https://smelloff.in/assets/odorstrike-bottle.webp",
@@ -386,18 +393,18 @@
       "description": "Lab-verified fabric odor remover spray engineered for sweat, dampness and body odors on shirts, hoodies and jackets without washing.",
       "brand": {
         "@type": "Brand",
-        "name": "Smelloff",
+        "name": truth.brand || "Smelloff",
         "logo": "https://smelloff.in/apple-touch-icon.png"
       },
-      "sku": "OS-001-50ML",
-      "mpn": "SMLF-ODST-50",
+      "sku": skuVal,
+      "mpn": mpnVal,
       "offers": {
         "@type": "Offer",
-        "name": "ODORSTRIKE 50ml — Single Bottle",
-        "sku": "OS-001-50ML",
+        "name": offerTitle,
+        "sku": skuVal,
         "url": "https://smelloff.in/odorstrike#buy",
         "priceCurrency": "INR",
-        "price": "229.00",
+        "price": priceVal,
         "priceValidUntil": "2027-12-31",
         "availability": "https://schema.org/InStock",
         "itemCondition": "https://schema.org/NewCondition",

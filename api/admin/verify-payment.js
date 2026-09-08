@@ -1,5 +1,5 @@
 import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized, validateAndNormalizeUtr } from '../_security.js';
-import { isValidTransition } from '../../shared/products-config.js';
+import { isValidTransition, BASE_PRODUCT } from '../../shared/products-config.js';
 import { orderConfirmation } from '../email-templates.js';
 import { Resend } from 'resend';
 import { createShiprocketOrder, extractShiprocketIds, isShiprocketConfigured } from '../_shiprocket.js';
@@ -7,7 +7,7 @@ import { createShiprocketOrder, extractShiprocketIds, isShiprocketConfigured } f
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
-const REPLY_TO = 'smelloffsupport@gmail.com';
+const REPLY_TO = BASE_PRODUCT.manufacturer?.email || 'smelloffsupport@gmail.com';
 
 async function fetchOrderByCode(orderCode) {
   if (!SERVICE_KEY || !orderCode) return null;
@@ -207,7 +207,7 @@ export default async function handler(req, res) {
           const { subject, html } = orderConfirmation({
             orderId: orderCode,
             customerName: (typeof addr === 'object' && addr.name) || 'there',
-            amount: String(order.amount ? order.amount / 100 : 229),
+            amount: String(order.amount ? order.amount / 100 : BASE_PRODUCT.price),
             codFee: 0,
             address: addrFormatted,
             paymentMethod: 'UPI'
