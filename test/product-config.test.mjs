@@ -211,5 +211,34 @@ test('index.html homepage .zones garment cards structure and fabric positioning'
   assert.equal(/kills bacteria in shirts|odor-proof guarantee/i.test(html), false, 'Cards must not contain prohibited claims');
 });
 
+test('index.html homepage featured product section UX hierarchy, pricing and claims', () => {
+  const html = readFileSync('index.html', 'utf8');
+
+  // Section exists and has proper ARIA linkage
+  assert.ok(html.includes('id="odorstrike-featured"'), 'Featured product section id must exist');
+  assert.ok(html.includes('id="productTitle"'), 'Product title id must exist');
+
+  // Category & Skin differentiation
+  assert.ok(html.includes('FABRIC ODOR CONTROL · 50ML'), 'Eyebrow must state fabric category and size');
+  assert.ok(html.includes('FABRIC ONLY'), 'Must include FABRIC ONLY badge');
+  assert.ok(html.includes('NOT FOR SKIN'), 'Must include NOT FOR SKIN badge');
+
+  // Core benefits & specs
+  assert.ok(html.includes('50ml Pocket Mist (~250 sprays)'), 'Must state 50ml and sprays');
+  assert.ok(html.includes('HPβCD &amp; Zinc PCA active formula'), 'Must state active formula');
+  assert.ok(html.includes('Dries clear in ~10s · Zero residue'), 'Must state dry time and zero residue');
+
+  // Canonical pricing, terms & CTAs
+  assert.ok(html.includes('₹229'), 'Must state canonical price ₹229');
+  assert.ok(html.includes('MRP ₹499'), 'Must state MRP ₹499');
+  assert.ok(html.includes('FREE SHIPPING — PREPAID'), 'Must state free shipping prepaid');
+  assert.ok(html.includes('COD AVAILABLE · ₹60 HANDLING'), 'Must state COD handling fee');
+  assert.ok(html.includes('7-DAY RETURNS'), 'Must state 7-day returns');
+  assert.ok(html.includes('GET ODORSTRIKE — ₹229'), 'Must include prominent primary buy CTA');
+
+  // Prohibited claims
+  assert.equal(/instant miracle|kills bacteria on contact|100% odor-proof/i.test(html), false, 'Must not contain prohibited claims');
+});
+
 
 

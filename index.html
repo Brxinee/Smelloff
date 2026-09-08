@@ -776,17 +776,111 @@
   }
 
   /* ============ Featured product ============ */
-  .product{border-top:2px solid var(--rule)}
+  .product{border-top:2px solid var(--rule);padding:clamp(56px,7vw,80px) 0 0}
   .product-grid{display:grid;grid-template-columns:1fr;gap:36px;align-items:center}
   .product-visual{
     border:3px solid var(--text);
     box-shadow:8px 8px 0 var(--acid);
     background:#0e0e0e;
-    padding:24px;
+    padding:clamp(16px,4vw,28px);
+    max-width:480px;
+    margin:0 auto;
+    width:100%;
   }
   .product-visual img{display:block;width:100%;height:auto}
+  .product-info{display:flex;flex-direction:column}
+  .prod-badge-row{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+  .prod-badge{
+    font-family:var(--mono);font-size:10px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink);background:var(--acid);
+    padding:3px 7px;border-radius:2px;
+  }
+  .prod-badge-dim{
+    font-family:var(--mono);font-size:9.5px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;
+    color:var(--text);background:var(--surface-2);
+    border:1px solid var(--rule-strong);
+    padding:2px 6px;border-radius:2px;
+  }
+  .product-info #productTitle{
+    font-family:var(--display);font-weight:900;
+    font-size:clamp(32px,5vw,46px);line-height:1.06;
+    letter-spacing:-.02em;color:var(--text);
+    margin:0 0 12px;
+  }
+  .prod-lead{
+    font-size:clamp(15px,1.6vw,16.5px);line-height:1.55;
+    color:var(--text);opacity:.9;
+    max-width:56ch;margin:0 0 20px;
+  }
+  .prod-specs{
+    list-style:none;margin:0 0 22px;padding:0;
+    display:grid;grid-template-columns:1fr;gap:10px;
+  }
+  .prod-spec{
+    display:flex;align-items:baseline;gap:12px;
+    padding:10px 14px;background:var(--surface);
+    border:1px solid var(--rule-strong);
+  }
+  .ps-label{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;
+    color:var(--acid);flex:0 0 64px;
+  }
+  .ps-val{
+    font-family:var(--body);font-size:13.5px;
+    color:var(--text);line-height:1.35;
+  }
+  .prod-offer{
+    display:flex;flex-direction:column;gap:8px;
+    padding:16px 0;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    margin-bottom:20px;
+  }
+  .prod-price-top{display:flex;align-items:baseline;gap:10px 14px;flex-wrap:wrap}
+  .prod-price{
+    font-family:var(--display);font-weight:900;
+    font-size:clamp(38px,5.5vw,50px);line-height:1;letter-spacing:-.03em;
+    color:var(--acid);
+  }
+  .prod-unit{
+    font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em;
+  }
+  .prod-mrp{
+    font-family:var(--mono);font-size:13.5px;letter-spacing:.06em;
+    color:var(--muted);text-decoration:line-through;opacity:.85;
+  }
+  .prod-discount{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;
+    color:var(--acid);background:rgba(184,255,87,.08);
+    border:1px solid rgba(184,255,87,.3);padding:2px 6px;border-radius:2px;
+  }
+  .prod-price-meta{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--text);opacity:.9;
+  }
+  .prod-dot{color:var(--acid);opacity:.7}
+  .prod-cta-group{
+    display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+    margin-bottom:12px;
+  }
+  .prod-trust-sub{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+    color:var(--muted);
+  }
+  .pts-dot{color:var(--rule-strong)}
   @media(min-width:768px){
-    .product-grid{grid-template-columns:5fr 6fr;gap:48px}
+    .product-grid{grid-template-columns:5fr 6fr;gap:44px;align-items:start}
+    .product-visual{max-width:none;margin:0}
+    .prod-specs{grid-template-columns:repeat(2,1fr);gap:10px}
   }
 
   /* Hinglish band */
@@ -1328,7 +1422,7 @@
     </div>
   </section>
 
-  <!-- ============ 3 · FEATURED PRODUCT (featured, not sold) ============ -->
+  <!-- ============ 3 · FEATURED PRODUCT ============ -->
   <section class="product" id="odorstrike-featured" aria-labelledby="productTitle">
     <div class="wrap">
       <div class="product-grid">
@@ -1339,14 +1433,61 @@
             <img src="/assets/odorstrike-bottle.jpg" alt="ODORSTRIKE 50ml pocket fabric odor eliminator mist bottle" width="1080" height="1080" loading="lazy" decoding="async">
           </picture>
         </div>
-        <div class="reveal">
-          <p class="eyebrow">The first product</p>
-          <h2 id="productTitle">ODORSTRIKE — the third spray</h2>
-          <div class="section-body">
-            <p>Not a perfume. Not a deodorant. A pocket-sized fabric odor eliminator mist for the clothes you're already wearing. Up to 8 hours of odor protection on fabric. Zero residue. Glycerine-free. Fabric only, never on skin.</p>
+        <div class="product-info reveal">
+          <div class="prod-badge-row">
+            <span class="prod-badge">FABRIC ONLY</span>
+            <span class="prod-badge-dim">NOT FOR SKIN</span>
+            <span class="prod-badge-dim">NOT PERFUME</span>
           </div>
-          <div class="hero-cta-row">
-            <a class="btn" href="/odorstrike">See ODORSTRIKE</a>
+          <p class="eyebrow">FABRIC ODOR CONTROL · 50ML</p>
+          <h2 id="productTitle">ODORSTRIKE</h2>
+          <p class="prod-lead">A pocket-sized fabric odor eliminator mist for the clothes you're already wearing. Neutralizes sweat and trapped ambient odor in the weave — giving you up to 8 hours of fabric odor protection.</p>
+          
+          <ul class="prod-specs" aria-label="Product features and specifications">
+            <li class="prod-spec">
+              <span class="ps-label">SIZE</span>
+              <span class="ps-val">50ml Pocket Mist (~250 sprays)</span>
+            </li>
+            <li class="prod-spec">
+              <span class="ps-label">ACTIVES</span>
+              <span class="ps-val">HPβCD &amp; Zinc PCA active formula</span>
+            </li>
+            <li class="prod-spec">
+              <span class="ps-label">FINISH</span>
+              <span class="ps-val">Dries clear in ~10s · Zero residue</span>
+            </li>
+            <li class="prod-spec">
+              <span class="ps-label">SCENT</span>
+              <span class="ps-val">Subtle fresh scent · Non-perfumed</span>
+            </li>
+          </ul>
+
+          <div class="prod-offer">
+            <div class="prod-price-top">
+              <span class="prod-price">₹229</span>
+              <span class="prod-unit">for 1 × 50ml bottle</span>
+              <span class="prod-mrp">MRP ₹499</span>
+              <span class="prod-discount">54% OFF</span>
+            </div>
+            <div class="prod-price-meta">
+              <span>FREE SHIPPING — PREPAID</span>
+              <span class="prod-dot" aria-hidden="true">·</span>
+              <span>COD AVAILABLE · ₹60 HANDLING</span>
+              <span class="prod-dot" aria-hidden="true">·</span>
+              <span>7-DAY RETURNS</span>
+            </div>
+          </div>
+
+          <div class="prod-cta-group">
+            <a class="btn" href="/odorstrike?buy=1">GET ODORSTRIKE — ₹229</a>
+            <a class="btn-ghost" href="/odorstrike">View Full Specs →</a>
+          </div>
+          <div class="prod-trust-sub">
+            <span>Made in Hyderabad</span>
+            <span class="pts-dot" aria-hidden="true">·</span>
+            <span>Zero Residue</span>
+            <span class="pts-dot" aria-hidden="true">·</span>
+            <span>Non-Aerosol Mist</span>
           </div>
         </div>
       </div>
