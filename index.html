@@ -582,21 +582,18 @@
 
   /* Hero zones — where smell hides: collar, hoodie, blazer (all clothing) */
   .zones{
-    margin-top:56px;
+    margin-top:clamp(40px,5vw,56px);
     display:grid;grid-template-columns:1fr;gap:16px;
   }
   .zone{
     border:3px solid var(--text);
     box-shadow:6px 6px 0 var(--acid);
-    padding:20px;
-    display:flex;align-items:center;gap:18px;
+    padding:18px 16px;
+    display:flex;align-items:flex-start;gap:16px;
     background:var(--ink);
   }
-  /* flex:none, not flex:0 0 64px — the zone is a row on phones and a COLUMN at
-     ≥768, where a flex-basis resolves against the cross axis and pinned these
-     to 64px tall while width went to 72px. Explicit width/height only. */
-  .zone svg{flex:none;width:64px;height:64px}
-  /* Mask-based brand icons (recolored to acid green) */
+  /* Sizing lives on `.zone svg`; stroke styling on .z-ico */
+  .zone svg{flex:none;width:56px;height:56px}
   .mask-ico{
     display:inline-block;flex:0 0 auto;
     background-color:var(--acid);
@@ -604,9 +601,7 @@
     -webkit-mask-position:center;mask-position:center;
     -webkit-mask-size:contain;mask-size:contain;
   }
-  /* Zone garment icons: line art, so they read at 64px and stay crisp on
-     retina without shipping a bitmap per garment. Sizing lives on `.zone svg`
-     above; this rule is stroke styling only. */
+  /* Zone garment icons: line art, so they read crisp on retina without shipping bitmaps */
   .z-ico{
     fill:none;stroke:var(--acid);
     stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;
@@ -615,25 +610,40 @@
   .ico-truck{-webkit-mask-image:url(/assets/icons/truck.png);mask-image:url(/assets/icons/truck.png)}
   .ico-cod{-webkit-mask-image:url(/assets/icons/cod.png);mask-image:url(/assets/icons/cod.png)}
   .ico-hyderabad{-webkit-mask-image:url(/assets/icons/hyderabad.png);mask-image:url(/assets/icons/hyderabad.png)}
+  .zone .z-content{flex:1;min-width:0}
+  .zone .z-head{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    margin-bottom:4px;
+  }
   .zone .z-num{
-    display:block;
-    font-family:var(--mono);font-weight:400;
-    font-size:13px;color:var(--acid);letter-spacing:.18em;
-    margin-bottom:2px;
+    display:inline-block;
+    font-family:var(--mono);font-weight:700;
+    font-size:12px;color:var(--acid);letter-spacing:.16em;
+  }
+  .zone .z-tag{
+    font-family:var(--mono);font-size:9.5px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;
+    color:var(--text);background:var(--surface-2);
+    border:1px solid var(--rule-strong);padding:2px 6px;border-radius:2px;
+    white-space:nowrap;
   }
   .zone .z-title{
     font-family:var(--display);font-weight:900;
-    font-size:27px;letter-spacing:-.01em;
-    line-height:1.02;
-    /* .z-title is a <p>, so the `.zone p` rule below was rendering these card
-       headings in --muted. Set the colour explicitly. */
+    font-size:22px;letter-spacing:-.01em;
+    line-height:1.1;
     color:var(--text);
+    margin:0 0 6px;
   }
-  .zone p{font-size:15px;color:var(--muted);margin-top:6px}
+  .zone p.z-desc{
+    font-size:13.5px;line-height:1.45;color:var(--muted);margin:0;
+  }
   @media(min-width:768px){
-    .zones{grid-template-columns:repeat(3,1fr);gap:24px}
-    .zone{flex-direction:column;align-items:flex-start;padding:26px}
-    .zone svg{width:72px;height:72px}
+    .zones{grid-template-columns:repeat(3,1fr);gap:20px}
+    .zone{flex-direction:column;align-items:flex-start;padding:24px 22px}
+    .zone svg{width:64px;height:64px;margin-bottom:14px}
+    .zone .z-head{margin-bottom:6px}
+    .zone .z-title{font-size:24px;margin-bottom:8px}
+    .zone p.z-desc{font-size:14px}
   }
 
   /* ============ Sections ============ */
@@ -1180,18 +1190,19 @@
         </div>
       </div>
 
-      <!-- Where smell hides — all three are clothing. Inline SVG rather than
-           masked PNGs: crisper on retina, recolours with the acid token, and
-           it drops two image requests out of the above-the-fold viewport. -->
+      <!-- Where smell hides — all three are clothing situations. -->
       <div class="zones">
         <div class="zone">
           <svg class="z-ico" viewBox="0 0 24 24" role="img" aria-hidden="true">
             <path d="M8 3 4.5 5 3 9.5l3 1.4V21h12V10.9l3-1.4L19.5 5 16 3l-1.5 2.2a3.2 3.2 0 0 1-5 0Z"/>
           </svg>
-          <div>
-            <span class="z-num">01</span>
-            <p class="z-title">Shirt collar</p>
-            <p>Nine hours against your neck. Sweat stays trapped in the weave.</p>
+          <div class="z-content">
+            <div class="z-head">
+              <span class="z-num">01</span>
+              <span class="z-tag">HEAT &amp; SWEAT</span>
+            </div>
+            <h3 class="z-title">Shirt collar</h3>
+            <p class="z-desc">Sits tight against your neck all day. Sweat and body heat soak directly into the cotton weave where skin deodorant cannot reach.</p>
           </div>
         </div>
         <div class="zone">
@@ -1201,10 +1212,13 @@
             <path d="M9.8 6.6c.4 1.6 1.2 2.4 2.2 2.4s1.8-.8 2.2-2.4"/>
             <path d="M11 9.2 10.6 13M13 9.2l.4 3.8"/>
           </svg>
-          <div>
-            <span class="z-num">02</span>
-            <p class="z-title">Hoodie &amp; tees</p>
-            <p>Worn through the day. Absorbs sweat and ambient odors.</p>
+          <div class="z-content">
+            <div class="z-head">
+              <span class="z-num">02</span>
+              <span class="z-tag">REPEAT WEAR</span>
+            </div>
+            <h3 class="z-title">Hoodie &amp; tees</h3>
+            <p class="z-desc">Worn through long hours and crowded commutes. Heavier fabric absorbs daily sweat and ambient odor, holding it between washes.</p>
           </div>
         </div>
         <div class="zone">
@@ -1213,10 +1227,13 @@
             <path d="m8.4 3.4 3.7 6.2 3.7-6.2M12.1 9.6V21"/>
             <path d="M7.6 15.2h2.2M14.6 15.2h2.2"/>
           </svg>
-          <div>
-            <span class="z-num">03</span>
-            <p class="z-title">Blazer &amp; jacket</p>
-            <p>Can't wash after every wear. Holds onto odor until neutralized.</p>
+          <div class="z-content">
+            <div class="z-head">
+              <span class="z-num">03</span>
+              <span class="z-tag">BETWEEN WASHES</span>
+            </div>
+            <h3 class="z-title">Blazer &amp; jacket</h3>
+            <p class="z-desc">Can't be washed after every wear. Sits over your shirt all day and carries accumulated odor right into evening meetings.</p>
           </div>
         </div>
       </div>

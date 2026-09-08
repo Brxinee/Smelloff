@@ -190,5 +190,26 @@ test('index.html homepage problem story section UX hierarchy and claims', () => 
   assert.ok(html.includes('Fix your shirt — ₹229'), 'CTA must provide clear action');
 });
 
+test('index.html homepage .zones garment cards structure and fabric positioning', () => {
+  const html = readFileSync('index.html', 'utf8');
+
+  // Exactly 3 garment zone cards
+  const zoneMatches = html.match(/class="zone"/g) || [];
+  assert.equal(zoneMatches.length, 3, 'Must contain exactly 3 garment zone cards');
+
+  // Garment titles & semantic H3 headings
+  assert.ok(html.includes('<h3 class="z-title">Shirt collar</h3>'), 'Card 1 must be Shirt collar');
+  assert.ok(html.includes('<h3 class="z-title">Hoodie &amp; tees</h3>'), 'Card 2 must be Hoodie & tees');
+  assert.ok(html.includes('<h3 class="z-title">Blazer &amp; jacket</h3>'), 'Card 3 must be Blazer & jacket');
+
+  // Problem situation tags
+  assert.ok(html.includes('HEAT &amp; SWEAT'), 'Card 1 must include HEAT & SWEAT tag');
+  assert.ok(html.includes('REPEAT WEAR'), 'Card 2 must include REPEAT WEAR tag');
+  assert.ok(html.includes('BETWEEN WASHES'), 'Card 3 must include BETWEEN WASHES tag');
+
+  // Guardrails
+  assert.equal(/kills bacteria in shirts|odor-proof guarantee/i.test(html), false, 'Cards must not contain prohibited claims');
+});
+
 
 
