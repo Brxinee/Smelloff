@@ -1191,7 +1191,7 @@
           <div>
             <span class="z-num">01</span>
             <p class="z-title">Shirt collar</p>
-            <p>Nine hours against your neck.</p>
+            <p>Nine hours against your neck. Sweat stays trapped in the weave.</p>
           </div>
         </div>
         <div class="zone">
@@ -1203,8 +1203,8 @@
           </svg>
           <div>
             <span class="z-num">02</span>
-            <p class="z-title">Hoodie</p>
-            <p>Worn all week. Washed once.</p>
+            <p class="z-title">Hoodie &amp; tees</p>
+            <p>Worn through the day. Absorbs sweat and ambient odors.</p>
           </div>
         </div>
         <div class="zone">
@@ -1216,7 +1216,7 @@
           <div>
             <span class="z-num">03</span>
             <p class="z-title">Blazer &amp; jacket</p>
-            <p>Too good to wash. Still remembers.</p>
+            <p>Can't wash after every wear. Holds onto odor until neutralized.</p>
           </div>
         </div>
       </div>
@@ -1258,26 +1258,14 @@
   </div>
 
   <!-- ============ 2 · YOUR SHIRT REMEMBERS ============
-       The signature section. It replaced two prose blocks — "Smell is bigger
-       than skin" and "Why your deodorant doesn't fix this" — that argued the
-       same point twice and ended in a four-column competitor grid every DTC
-       site has. Instead of telling someone their shirt holds the smell, this
-       walks them through their own day until they recognise it.
-
-       Built on a native <input type="range">. That is the whole interaction
-       model: keyboard arrows, touch drag and screen-reader support come free
-       and correct, there is no drag library, and the JS is one event listener
-       that writes data-step onto the section. Every visual state is CSS keyed
-       off that attribute, so scrubbing costs a class recalc and no layout.
-
-       IMPORTANT: no numbers, no percentages, no meter readings. Nothing here
-       is a measurement and it must never start implying one — it is a story
-       about a day. The only claim is the locked one, in the final panel. -->
+       Walks the visitor through their own day so they recognize that odor lives
+       in fabric, not just on skin.
+       Sequence: PROBLEM -> WHY IT HAPPENS -> REAL-LIFE MOMENT -> ODORSTRIKE MAKES SENSE. -->
   <section class="remembers" id="remembers" aria-labelledby="remembersTitle" data-step="0">
     <div class="wrap">
-      <p class="eyebrow reveal">One shirt · One day</p>
+      <p class="eyebrow reveal">THE CLOTHING ODOR PROBLEM</p>
       <h2 id="remembersTitle" class="reveal">Your shirt remembers<br>everything you did today.</h2>
-      <p class="rm-intro reveal">Your deodorant quit around noon. What it left behind is still in the cotton — and it is what the person next to you actually smells. Drag through the day.</p>
+      <p class="rm-intro reveal">Deodorant works on your skin. But sweat and daily odors get trapped inside the weave of your clothes — where body sprays can't fix them. Drag through the day to see why odor builds up in fabric.</p>
 
       <div class="rm-stage reveal">
         <!-- The garment. Three zones (collar, both underarms) gain a soft
@@ -1304,9 +1292,9 @@
         <!-- aria-live so the story is announced as the slider moves; the
              slider itself carries the accessible name and value text. -->
         <div class="rm-readout" aria-live="polite">
-          <p class="rm-time" id="rmTime">07:00</p>
-          <p class="rm-event" id="rmEvent">Fresh shirt. Deodorant on. You feel fine.</p>
-          <p class="rm-state" id="rmState">Clean</p>
+          <p class="rm-time" id="rmTime">07:30</p>
+          <p class="rm-event" id="rmEvent">Fresh shirt on. Morning deodorant applied to skin.</p>
+          <p class="rm-state" id="rmState">Clean start</p>
         </div>
       </div>
 
@@ -1314,12 +1302,12 @@
         <input class="rm-scrub" id="rmScrub" type="range" min="0" max="6" step="1" value="0"
                aria-labelledby="remembersTitle" aria-describedby="rmEvent">
         <div class="rm-axis" aria-hidden="true">
-          <span>07:00</span><span>Reset</span>
+          <span>07:30 Morning</span><span>19:45 Evening</span><span>Reset with ODORSTRIKE</span>
         </div>
       </div>
 
-      <p class="rm-foot reveal">Nothing above is a measurement — it's a Tuesday. The fix is real: two sprays, ten seconds, up to 8 hours of odor protection on fabric.</p>
-      <a class="rm-cta reveal" href="/odorstrike?buy=1">Reset your shirt — ₹229</a>
+      <p class="rm-foot reveal">These are everyday moments, not lab tests. Deodorant takes care of your skin — ODORSTRIKE neutralizes odor trapped in your clothes without replacing regular laundry.</p>
+      <a class="rm-cta reveal" href="/odorstrike?buy=1">Fix your shirt — ₹229</a>
     </div>
   </section>
 
@@ -1570,13 +1558,13 @@
   var sec   = document.getElementById('remembers');
   if (!scrub || !sec) return;
   var DAY = [
-    ['07:00', 'Fresh shirt. Deodorant on. You feel fine.',                'Clean'],
-    ['09:20', 'Packed metro. A stranger’s arm across your back.',    'Picking up'],
-    ['12:00', 'Your deodorant is done. The shirt is just getting started.', 'Settling in'],
-    ['14:30', 'Lunch. The good biryani place. It follows you out.',       'Holding'],
-    ['16:00', 'The lift. Someone steps in behind you.',                   'This is the one'],
-    ['18:40', 'Still in it. Drinks at eight. No time to go home.',        'All of it, still there'],
-    ['RESET', 'Two sprays. Ten seconds. Walk in like it’s 07:00.',   'Gone']
+    ['07:30', 'Fresh shirt on. Morning deodorant applied to skin.',               'Clean start'],
+    ['09:30', 'Commute heat. Sweat and humidity soak into fabric fibers.',        'Absorbing in weave'],
+    ['13:00', 'Deodorant is on skin. Odor stays trapped in the cotton.',          'Holding odor'],
+    ['15:30', 'Lunch steam & afternoon activity settle into the collar.',         'Building up'],
+    ['18:30', 'Full workday in. Stepping into a crowded lift on the way out.',    'Noticeable'],
+    ['19:45', 'Evening meeting or dinner. No time to wash or change shirts.',     'Trapped in fabric'],
+    ['RESET', '2–3 sprays of ODORSTRIKE. 10 sec dry time. Odor neutralized.',    'Fresh fabric']
   ];
   var elTime  = document.getElementById('rmTime');
   var elEvent = document.getElementById('rmEvent');

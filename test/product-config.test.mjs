@@ -170,4 +170,25 @@ test('index.html homepage hero UX hierarchy and claim integrity', () => {
   assert.equal(/instantly kills smell|miracle cure|guaranteed odor cure/i.test(html), false, 'Hero must not contain prohibited claims');
 });
 
+test('index.html homepage problem story section UX hierarchy and claims', () => {
+  const html = readFileSync('index.html', 'utf8');
+
+  // Eyebrow and Section H2
+  assert.ok(html.includes('THE CLOTHING ODOR PROBLEM'), 'Eyebrow must state clothing odor problem');
+  assert.ok(html.includes('id="remembersTitle"'), 'Remembers section H2 id must exist');
+  assert.ok(html.includes('Your shirt remembers'), 'H2 must state "Your shirt remembers"');
+
+  // Clear Problem Differentiation (Skin vs Fabric)
+  assert.ok(html.includes('Deodorant works on your skin'), 'Intro must explain deodorant on skin');
+  assert.ok(html.includes('trapped inside the weave of your clothes'), 'Intro must clarify trapped in fabric weave');
+
+  // Narrative Timeline Moments (no fabricated lab testing claims)
+  assert.ok(html.includes('07:30'), 'Timeline must start with morning moment');
+  assert.ok(html.includes('19:45'), 'Timeline must transition to evening moment');
+  assert.ok(html.includes('Reset with ODORSTRIKE'), 'Timeline axis must point to ODORSTRIKE reset');
+  assert.ok(html.includes('These are everyday moments, not lab tests.'), 'Footnote must ground timeline as everyday moments');
+  assert.ok(html.includes('Fix your shirt — ₹229'), 'CTA must provide clear action');
+});
+
+
 
