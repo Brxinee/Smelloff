@@ -119,6 +119,11 @@ app.use((req, res, next) => {
 
   let filePath = path.join(__dirname, urlPath);
 
+  // Security: Prevent Path Traversal
+  if (!filePath.startsWith(__dirname + path.sep) && filePath !== __dirname) {
+    return res.status(403).send('Forbidden');
+  }
+
   // Check if target is a directory and has index.html
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
     const indexPath = path.join(filePath, 'index.html');
