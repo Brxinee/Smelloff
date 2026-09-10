@@ -181,7 +181,7 @@ test('Step 3: Success ownership is deduplicated, idempotent, and single-source',
 
   // showSuccess in odorstrike.html owns side effects and has idempotency guard
   assert.ok(html.includes('_processedOrders'), 'showSuccess must use _processedOrders set for idempotency');
-  assert.ok(html.includes('trackPurchase(amount, orderId)'), 'showSuccess must trigger trackPurchase');
+  assert.ok(html.includes('trackPurchase(amount, orderId, qty)'), 'showSuccess must trigger trackPurchase with qty');
   assert.ok(html.includes("soAttachOrder(orderId, amount, qty, method === 'cod' ? 'cod' : 'razorpay')"), 'showSuccess must trigger soAttachOrder');
   assert.ok(html.includes('setCartQty(0)'), 'showSuccess must clear cart');
 

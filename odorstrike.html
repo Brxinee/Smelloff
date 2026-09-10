@@ -4824,7 +4824,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     // Side effects executed exactly once per orderId (idempotent)
     if (!_processedOrders.has(orderId)) {
       _processedOrders.add(orderId);
-      trackPurchase(amount, orderId);
+      trackPurchase(amount, orderId, qty);
       soAttachOrder(orderId, amount, qty, method === 'cod' ? 'cod' : 'razorpay');
 
       if (method === 'razorpay' && buyerEmail && typeof window.SmelloffEmail !== 'undefined' && window.SmelloffEmail && typeof window.SmelloffEmail.send === 'function') {
