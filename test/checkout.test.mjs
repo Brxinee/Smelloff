@@ -228,7 +228,7 @@ test('Step 3: Idempotent success coordinator logic behaves correctly', () => {
 
 test('Step 3: COD flow reaches showSuccess(orderId, "cod") and does not touch Razorpay', () => {
   const html = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.ok(html.includes("showSuccess(persistedOrderId, 'cod')"), 'COD must call showSuccess with cod');
+  assert.ok(html.includes("showSuccess(persistedOrderId, 'cod'"), 'COD must call showSuccess with cod');
   assert.ok(html.includes("if (payMethod === 'prepaid')"), 'Prepaid is guarded separately from COD');
 });
 
@@ -540,6 +540,34 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
   assert.ok(html.includes('adjustIfSunday('), 'odorstrike.html must define adjustIfSunday');
   assert.ok(html.includes('window.calculateDeliveryEstimate = calculateDeliveryEstimate;'), 'odorstrike.html must export calculateDeliveryEstimate');
 });
+
+test('Step 5 Post-Purchase: Multi-quantity explicit quantity propagation across COD, UPI, and Razorpay', () => {
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+  const chromeJs = fs.readFileSync('assets/js/chrome.js', 'utf8');
+
+  // 1. COD path passes explicit details with quantity & total
+  assert.ok(html.includes("showSuccess(persistedOrderId, 'cod', {"), 'COD must pass details object to showSuccess');
+  assert.ok(html.includes("amount: Number(order.total)"), 'COD details must include exact total');
+  assert.ok(html.includes("qty: Number(order.quantity)"), 'COD details must include exact quantity');
+
+  // 2. UPI path passes explicit details with quantity
+  assert.ok(html.includes("showUpiSuccess(persistedOrderId, upiTotal, upiLink, {"), 'UPI must pass details object to showUpiSuccess');
+  assert.ok(html.includes("function showUpiSuccess(orderId, total, upiLink, details)"), 'showUpiSuccess must accept details parameter');
+
+  // 3. Razorpay path in chrome.js passes explicit quantity
+  assert.ok(chromeJs.includes("window.showSuccess(orderCode, 'razorpay', {"), 'Razorpay markSuccess must pass details object to showSuccess');
+  assert.ok(chromeJs.includes("qty: qty"), 'Razorpay details must include exact quantity');
+
+  // 4. Cart is NOT cleared before showSuccess/showUpiSuccess coordinates order
+  const submitOrderBody = html.substring(html.indexOf('async function submitOrder()'), html.indexOf('let selectedUpiApp'));
+  const setCartIndex = submitOrderBody.indexOf('setCartQty(0)');
+  assert.equal(setCartIndex, -1, 'submitOrder must not prematurely clear cart before showSuccess/showUpiSuccess');
+
+  // 5. GA4 trackPurchase receives explicit quantity
+  assert.ok(html.includes("trackPurchase(amount, orderId, qty)"), 'showSuccess must pass explicit quantity to trackPurchase');
+  assert.ok(html.includes("trackPurchase(total, orderId, qty)"), 'showUpiSuccess must pass explicit quantity to trackPurchase');
+});
+
 
 
 

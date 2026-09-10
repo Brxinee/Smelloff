@@ -4960,19 +4960,30 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         }).catch(e => console.error('Order email failed:', e));
       }
 
-      setCartQty(0);
       btn.disabled = false;
       btnText.innerHTML = originalBtnText;
       hideLoadingScreen();
 
       if (isCod) {
-        showSuccess(persistedOrderId, 'cod');
+        showSuccess(persistedOrderId, 'cod', {
+          amount: Number(order.total),
+          qty: Number(order.quantity),
+          name: order.name,
+          email: order.email,
+          phone: order.phone
+        });
         return;
       }
 
       // UPI flow
-      const upiLink = buildUpiLink(orderTotals().subtotal + orderTotals().shipping, persistedOrderId, selectedUpiApp);
-      showUpiSuccess(persistedOrderId, orderTotals().subtotal + orderTotals().shipping, upiLink);
+      const upiTotal = Number(order.amount) + Number(order.shipping);
+      const upiLink = buildUpiLink(upiTotal, persistedOrderId, selectedUpiApp);
+      showUpiSuccess(persistedOrderId, upiTotal, upiLink, {
+        qty: Number(order.quantity),
+        name: order.name,
+        email: order.email,
+        phone: order.phone
+      });
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       if (isMobile) {
         setTimeout(function(){ window.location.href = upiLink; }, 200);
@@ -5067,7 +5078,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   // that never happened. The right trigger for UPI is payment confirmation,
   // which happens by hand in /admin, not on this screen. If that ever gets
   // wired up, call window.smfGoogleReviewOptIn() from there — not from here.
-  function showUpiSuccess(orderId, total, upiLink) {
+  function showUpiSuccess(orderId, total, upiLink, details) {
     hideLoadingScreen();
     document.getElementById('checkoutForm').style.display = 'none';
     const s = document.getElementById('successScreen');
@@ -5097,8 +5108,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (openBtn) openBtn.href = getAppUpiLink('any', total, orderId);
 
     // Prefill WhatsApp UTR link with order context so merchant can match UTR to order
-    const name = (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
-    const phone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || '';
+    const name = (details && details.name) || (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
+    const phone = (details && details.phone) || (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || '';
     const utrLink = document.getElementById('waSuccessUtrLink');
     if (utrLink) {
       utrLink.href = 'https://wa.me/919392974031?text=' + encodeURIComponent(
@@ -5125,11 +5136,12 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       qrImg.onerror = function(){ qrImg.style.display = 'none'; };
     }
 
-    trackPurchase(total, orderId, cartQty > 0 ? cartQty : 1);
+    var qty = (details && typeof details.qty === 'number') ? details.qty : (cartQty > 0 ? cartQty : 1);
+    trackPurchase(total, orderId, qty);
     setCartQty(0);
     try {
-      const buyerEmail = (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
-      const buyerPhone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value : '').trim();
+      const buyerEmail = (details && details.email) || (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
+      const buyerPhone = (details && details.phone) || (document.getElementById('f_phone') ? document.getElementById('f_phone').value : '').trim();
       localStorage.setItem('smelloff_purchased', 'true');
       if (buyerEmail) localStorage.setItem('smelloff_purchased_email', buyerEmail);
       if (buyerPhone) localStorage.setItem('smelloff_last_phone', buyerPhone);
