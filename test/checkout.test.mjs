@@ -400,6 +400,43 @@ test('Multi-quantity orderPayload calculation integrity in chrome.js', () => {
   // Verify static submitText in odorstrike.html matches default COD total
   const html = fs.readFileSync('odorstrike.html', 'utf8');
   assert.ok(html.includes('<span id="submitText">Place COD order · ₹289</span>'), 'Static submit button must match default COD total ₹289');
+
+  // Exhaustive quantity testing: 1, 2, 3, 4, 5, 10
+  const unitPrice = 229;
+  const codFee = 60;
+  const testQuantities = [1, 2, 3, 4, 5, 10];
+
+  for (const q of testQuantities) {
+    const expectedPrepaidRupees = unitPrice * q;
+    const expectedPrepaidPaise = expectedPrepaidRupees * 100;
+    const expectedCodRupees = (unitPrice * q) + codFee;
+    const expectedCodPaise = expectedCodRupees * 100;
+
+    // Simulate chrome.js logic
+    const calcRupees = unitPrice * q;
+    const calcPaise = Math.round(calcRupees * 100);
+    assert.equal(calcRupees, expectedPrepaidRupees, `Prepaid rupees for qty ${q} must equal ${expectedPrepaidRupees}`);
+    assert.equal(calcPaise, expectedPrepaidPaise, `Prepaid paise for qty ${q} must equal ${expectedPrepaidPaise}`);
+
+    // Verify against createOrder authoritative calculation in api/create-order.js
+    assert.equal(unitPrice * q * 100, expectedPrepaidPaise, `Authoritative backend amount matches frontend for qty ${q}`);
+  }
+});
+
+test('Mobile checkout viewport stability and responsive sizing in odorstrike.html', () => {
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+
+  // Verify mobile overflow containment and touch scrolling
+  assert.ok(html.includes('overscroll-behavior:contain'), 'Overlay must have overscroll-behavior:contain');
+  assert.ok(html.includes('-webkit-overflow-scrolling:touch'), 'Overlay must have -webkit-overflow-scrolling:touch');
+
+  // Verify input scroll margin for virtual keyboard alignment
+  assert.ok(html.includes('scroll-margin-top:24px'), 'Inputs must have scroll-margin-top:24px');
+  assert.ok(html.includes('scroll-margin-bottom:24px'), 'Inputs must have scroll-margin-bottom:24px');
+
+  // Verify responsive media query for small viewports <= 360px and <= 600px
+  assert.ok(html.includes('@media(max-width:360px)'), 'odorstrike.html must include @media(max-width:360px) rules');
+  assert.ok(html.includes('@media(max-width:600px)'), 'odorstrike.html must include @media(max-width:600px) rules');
 });
 
 

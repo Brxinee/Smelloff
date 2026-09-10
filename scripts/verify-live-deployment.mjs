@@ -47,6 +47,7 @@ async function run() {
   try {
     await verifyRoute('/', 'index.html', true, false);
     await verifyRoute('/odorstrike', 'odorstrike.html', true, false);
+    await verifyRoute('/assets/js/chrome.js', 'assets/js/chrome.js', false, false);
     await verifyRoute('/sitemap.xml', 'sitemap.xml', false, false);
     await verifyRoute('/robots.txt', 'robots.txt', false, true);
 
