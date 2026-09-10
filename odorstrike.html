@@ -5176,15 +5176,49 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     }
 
     // Estimated delivery window (3–5 days from today), shown as weekday names.
+    // Sundays are non-delivery days; any estimate landing on Sunday advances to Monday.
     var estEl = document.getElementById('deliveryEstimate');
     var estText = document.getElementById('deliveryEstimateText');
     var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    function adjustIfSunday(d) {
+      var res = new Date(d.getTime());
+      if (res.getDay() === 0) {
+        res.setDate(res.getDate() + 1);
+      }
+      return res;
+    }
+
+    function calculateDeliveryEstimate(baseDate) {
+      var now = baseDate ? new Date(baseDate) : new Date();
+      var lo = new Date(now.getTime());
+      lo.setDate(lo.getDate() + 3);
+      lo = adjustIfSunday(lo);
+
+      var hi = new Date(now.getTime());
+      hi.setDate(hi.getDate() + 5);
+      hi = adjustIfSunday(hi);
+
+      if (hi.getTime() <= lo.getTime()) {
+        hi = new Date(lo.getTime());
+        hi.setDate(hi.getDate() + 1);
+        hi = adjustIfSunday(hi);
+      }
+
+      return {
+        loDate: lo,
+        hiDate: hi,
+        loDay: DAYS[lo.getDay()],
+        hiDay: DAYS[hi.getDay()],
+        text: 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()]
+      };
+    }
+    window.calculateDeliveryEstimate = calculateDeliveryEstimate;
+
     function showDeliveryEstimate(){
       if (!estEl || !estText) return;
-      var now = new Date();
-      var lo = new Date(now.getTime() + 3 * 86400000);
-      var hi = new Date(now.getTime() + 5 * 86400000);
-      estText.textContent = 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()];
+      var est = calculateDeliveryEstimate();
+      estText.textContent = est.text;
       estEl.classList.add('show');
     }
     function hideDeliveryEstimate(){ if (estEl) estEl.classList.remove('show'); }

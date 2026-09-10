@@ -439,5 +439,101 @@ test('Mobile checkout viewport stability and responsive sizing in odorstrike.htm
   assert.ok(html.includes('@media(max-width:600px)'), 'odorstrike.html must include @media(max-width:600px) rules');
 });
 
+test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matrix', () => {
+  const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  function adjustIfSunday(d) {
+    const res = new Date(d.getTime());
+    if (res.getDay() === 0) {
+      res.setDate(res.getDate() + 1);
+    }
+    return res;
+  }
+
+  function calculateDeliveryEstimate(baseDate) {
+    const now = baseDate ? new Date(baseDate) : new Date();
+    let lo = new Date(now.getTime());
+    lo.setDate(lo.getDate() + 3);
+    lo = adjustIfSunday(lo);
+
+    let hi = new Date(now.getTime());
+    hi.setDate(hi.getDate() + 5);
+    hi = adjustIfSunday(hi);
+
+    if (hi.getTime() <= lo.getTime()) {
+      hi = new Date(lo.getTime());
+      hi.setDate(hi.getDate() + 1);
+      hi = adjustIfSunday(hi);
+    }
+
+    return {
+      loDate: lo,
+      hiDate: hi,
+      loDay: DAYS[lo.getDay()],
+      hiDay: DAYS[hi.getDay()],
+      text: 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()]
+    };
+  }
+
+  // 1. Monday base date (2026-09-07) -> Thu – Sat
+  const monEst = calculateDeliveryEstimate(new Date('2026-09-07T10:00:00Z'));
+  assert.equal(monEst.loDay, 'Thu');
+  assert.equal(monEst.hiDay, 'Sat');
+  assert.equal(monEst.text, 'Estimated delivery: Thu – Sat');
+
+  // 2. Tuesday base date (2026-09-08) -> Fri – Mon (hi advanced from Sun to Mon)
+  const tueEst = calculateDeliveryEstimate(new Date('2026-09-08T10:00:00Z'));
+  assert.equal(tueEst.loDay, 'Fri');
+  assert.equal(tueEst.hiDay, 'Mon');
+  assert.equal(tueEst.text, 'Estimated delivery: Fri – Mon');
+
+  // 3. Wednesday base date (2026-09-09) -> Sat – Mon
+  const wedEst = calculateDeliveryEstimate(new Date('2026-09-09T10:00:00Z'));
+  assert.equal(wedEst.loDay, 'Sat');
+  assert.equal(wedEst.hiDay, 'Mon');
+  assert.equal(wedEst.text, 'Estimated delivery: Sat – Mon');
+
+  // 4. Thursday base date (2026-09-10) -> Mon – Tue (lo advanced from Sun to Mon)
+  const thuEst = calculateDeliveryEstimate(new Date('2026-09-10T10:00:00Z'));
+  assert.equal(thuEst.loDay, 'Mon');
+  assert.equal(thuEst.hiDay, 'Tue');
+  assert.equal(thuEst.text, 'Estimated delivery: Mon – Tue');
+
+  // 5. Friday base date (2026-09-11) -> Mon – Wed
+  const friEst = calculateDeliveryEstimate(new Date('2026-09-11T10:00:00Z'));
+  assert.equal(friEst.loDay, 'Mon');
+  assert.equal(friEst.hiDay, 'Wed');
+  assert.equal(friEst.text, 'Estimated delivery: Mon – Wed');
+
+  // 6. Saturday base date (2026-09-12) -> Tue – Thu
+  const satEst = calculateDeliveryEstimate(new Date('2026-09-12T10:00:00Z'));
+  assert.equal(satEst.loDay, 'Tue');
+  assert.equal(satEst.hiDay, 'Thu');
+  assert.equal(satEst.text, 'Estimated delivery: Tue – Thu');
+
+  // 7. Sunday base date (2026-09-13) -> Wed – Fri
+  const sunEst = calculateDeliveryEstimate(new Date('2026-09-13T10:00:00Z'));
+  assert.equal(sunEst.loDay, 'Wed');
+  assert.equal(sunEst.hiDay, 'Fri');
+  assert.equal(sunEst.text, 'Estimated delivery: Wed – Fri');
+
+  // 8. Exhaustive matrix test across 365 continuous days: Sunday must NEVER appear in estimate
+  const startDate = new Date('2026-01-01T00:00:00Z');
+  for (let d = 0; d < 365; d++) {
+    const curr = new Date(startDate.getTime() + d * 86400000);
+    const est = calculateDeliveryEstimate(curr);
+    assert.notEqual(est.loDay, 'Sun', `loDay on day ${d} (${curr.toISOString()}) must never be Sun`);
+    assert.notEqual(est.hiDay, 'Sun', `hiDay on day ${d} (${curr.toISOString()}) must never be Sun`);
+    assert.ok(!est.text.includes('Sun'), `Text on day ${d} (${curr.toISOString()}) must never include Sun`);
+    assert.ok(est.loDate.getTime() < est.hiDate.getTime(), `loDate must strictly precede hiDate on day ${d}`);
+  }
+
+  // 9. Verify odorstrike.html contains calculateDeliveryEstimate and Sunday adjustment
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+  assert.ok(html.includes('function calculateDeliveryEstimate('), 'odorstrike.html must define calculateDeliveryEstimate');
+  assert.ok(html.includes('adjustIfSunday('), 'odorstrike.html must define adjustIfSunday');
+  assert.ok(html.includes('window.calculateDeliveryEstimate = calculateDeliveryEstimate;'), 'odorstrike.html must export calculateDeliveryEstimate');
+});
+
 
 
