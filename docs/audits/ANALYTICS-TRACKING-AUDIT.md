@@ -65,7 +65,24 @@ Every `Purchase` (and `InitiateCheckout`, `AddPaymentInfo`) sent only value + cu
 
 ---
 
-## 4. Verify after deploy
+## 4. GA4 Custom Definitions Setup
+
+The custom event parameter `cta_location` is emitted on `add_to_cart` and `begin_checkout` to attribute conversion initiation by surface (e.g. `pdp_hero`, `pdp_showcase`, `pdp_pricing`, `pdp_final`, `mobile_sticky`, `cart`).
+
+To report on this parameter in GA4 standard reports and Explorations, the account administrator must register it in the GA4 Admin console:
+
+1. Navigate to **Admin** → **Data display** → **Custom definitions** → **Custom dimensions**.
+2. Click **Create custom dimension**.
+3. Configure:
+   - **Dimension name**: `CTA Location`
+   - **Scope**: `Event`
+   - **Description**: `CTA origin surface (e.g. pdp_hero, mobile_sticky, cart)`
+   - **Event parameter**: `cta_location`
+4. Click **Save**.
+
+---
+
+## 5. Verify after deploy
 
 1. Meta **Events Manager → Test Events** — place a test order; confirm `Purchase` shows `value`, `currency`, `contents`, `num_items` and no "same price" warning after 24–72h.
 2. GA4 **DebugView** — confirm `purchase` carries `items[]` and `transaction_id`.

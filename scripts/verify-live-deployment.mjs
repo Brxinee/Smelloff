@@ -29,6 +29,15 @@ async function verifyRoute(routePath, localFilePath, isHtml = false, isRobots = 
   if (isHtml) liveClean = normalizeCloudflareHtml(liveRaw);
   if (isRobots) liveClean = normalizeRobots(liveRaw);
 
+  if (routePath === '/odorstrike') {
+    const hasCorrectPaymentValue = liveClean.includes("gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: t.subtotal, items: gaItems(v.amount, t.qty) })");
+    const hasOldPaymentValue = /gtag\('event',\s*'add_payment_info',\s*\{[^}]*value:\s*t\.total/.test(liveClean);
+    if (!hasCorrectPaymentValue || hasOldPaymentValue) {
+      throw new Error(`GA4 add_payment_info contract mismatch on ${url}: must contain value: t.subtotal and not value: t.total`);
+    }
+    console.log('  GA4 add_payment_info contract (value: t.subtotal, payment_type: method): PASS ✓');
+  }
+
   const matched = liveClean === localRaw;
   console.log(`  Status: ${res.status}`);
   console.log(`  cf-cache-status: ${res.headers.get('cf-cache-status') || 'N/A'}`);
