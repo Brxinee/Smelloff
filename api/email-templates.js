@@ -82,7 +82,7 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
         </tr>
       </table>
       <p style="font-family:${BODY_FONT};font-size:10px;color:${GREY};margin:16px 0 0 0;letter-spacing:1px;text-transform:uppercase;">
-        Pocket-sized odor killer for your clothes
+        Pocket-sized fabric odor neutralizer for clothes
       </p>
     </td>
   </tr>
@@ -237,7 +237,7 @@ export function welcomeEmail({ customerName = 'there' } = {}) {
       <span style="color:${GREEN};">They fear others noticing.</span>
     </p>
 
-    ${mutedPara('ODORSTRIKE is a 50ml fabric-only odor killer. Not perfume. Not deodorant. One pocket-sized spray that neutralizes smell on clothes &mdash; sweat, smoke, food, gym, day-two shirts.')}
+    ${mutedPara('ODORSTRIKE is a 50ml fabric-only odor neutralizer. Not perfume. Not deodorant. One pocket-sized spray that neutralizes smell on clothes &mdash; sweat, smoke, food, gym, day-two shirts.')}
 
     ${priceBlock()}
 
@@ -248,7 +248,7 @@ export function welcomeEmail({ customerName = 'there' } = {}) {
   `;
   return {
     subject: 'Welcome to Smelloff',
-    html: shell(inner, 'Pocket-sized odor killer for your clothes.'),
+    html: shell(inner, 'Pocket-sized fabric odor neutralizer for clothes.'),
   };
 }
 
@@ -261,11 +261,11 @@ export function abandonedCart({
     ${heading('You left<br>something.')}
     ${para(`${escape(customerName)}, your ODORSTRIKE is still in the cart.`)}
 
-    ${mutedPara('50ml. Fabric-only. Kills odor on contact. No perfume cover-up. One spray and you&rsquo;re out the door.')}
+    ${mutedPara('50ml. Fabric-only. Neutralizes odor on fabric. No perfume cover-up. A few light sprays and you&rsquo;re out the door.')}
 
     <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
       <p style="font-family:${HEADING_FONT};font-weight:900;font-size:20px;color:${WHITE};text-transform:uppercase;letter-spacing:1px;margin:0 0 4px 0;">ODORSTRIKE 50ml</p>
-      <p style="font-family:${BODY_FONT};font-size:13px;color:${GREY};margin:0 0 12px 0;">Pocket-sized odor killer for your clothes</p>
+      <p style="font-family:${BODY_FONT};font-size:13px;color:${GREY};margin:0 0 12px 0;">Pocket-sized fabric odor neutralizer for clothes</p>
       <p style="margin:0;line-height:1;">
         <span style="font-family:${HEADING_FONT};font-weight:900;font-size:28px;color:${GREEN};letter-spacing:-0.5px;vertical-align:middle;">&#8377;${PRICE}</span>
         <span style="font-family:${BODY_FONT};font-size:14px;color:${GREY};text-decoration:line-through;margin-left:8px;vertical-align:middle;">&#8377;${MRP}</span>

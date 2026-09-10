@@ -106,6 +106,33 @@ test('claims guardrails: forbidden claims are flagged and not in approved list',
   assert.ok(claims.forbidden.some(c => c.toLowerCase().includes('zinc-ricinoleate')));
   assert.ok(claims.forbidden.some(c => c.toLowerCase().includes('skin')));
   assert.ok(claims.forbidden.some(c => c.toLowerCase().includes('bacteria')));
+
+  // Canonical product description checks
+  const desc = PRODUCT_CONFIG.product.description.toLowerCase();
+  assert.equal(desc.includes('kills'), false, 'Canonical description must not contain "kills"');
+  assert.equal(desc.includes('in seconds'), false, 'Canonical description must not promise "in seconds"');
+  assert.equal(desc.includes('stink in seconds'), false, 'Canonical description must not contain "stink in seconds"');
+  assert.equal(desc.includes('permanent'), false, 'Canonical description must not promise "permanent"');
+  assert.equal(desc.includes('miracle'), false, 'Canonical description must not claim "miracle"');
+  assert.equal(desc.includes('100%'), false, 'Canonical description must not claim "100%"');
+  assert.equal(desc.includes('antibacterial'), false, 'Canonical description must not claim "antibacterial"');
+
+  // Surface consistency checks
+  const emailTemplatesCode = readFileSync('api/email-templates.js', 'utf8');
+  assert.equal(/odor killer/i.test(emailTemplatesCode), false, 'email-templates.js must not contain "odor killer"');
+  assert.equal(/kills odor/i.test(emailTemplatesCode), false, 'email-templates.js must not contain "kills odor"');
+
+  const odorstrikeHtml = readFileSync('odorstrike.html', 'utf8');
+  assert.equal(odorstrikeHtml.includes('10% off'), false, 'odorstrike.html must not contain fake 10% off discount');
+  assert.equal(odorstrikeHtml.includes('Spray, shake'), false, 'odorstrike.html must not instruct users to shake');
+  assert.equal(odorstrikeHtml.includes('towels, bedsheets'), false, 'odorstrike.html must not recommend household linens');
+
+  const solutionFiles = ['office-commute-fabric-refresher.html', 'monsoon-damp-fabric-care.html', 'denim-outerwear-dry-care.html', 'post-gym-workout-sweat-spray.html'];
+  for (const sf of solutionFiles) {
+    const sHtml = readFileSync(`solutions/${sf}`, 'utf8');
+    assert.equal(sHtml.includes('kills sweat smell'), false, `${sf} must not contain "kills sweat smell"`);
+    assert.equal(sHtml.includes('stink in seconds'), false, `${sf} must not contain "stink in seconds"`);
+  }
 });
 
 test('supabase/functions/create-order/index.ts derives from product.json without independent hardcodes', () => {
