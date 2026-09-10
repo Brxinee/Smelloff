@@ -241,5 +241,68 @@ test('index.html homepage featured product section UX hierarchy, pricing and cla
   assert.equal(/instant miracle|kills bacteria on contact|100% odor-proof/i.test(html), false, 'Must not contain prohibited claims');
 });
 
+test('index.html homepage how-it-works science and formula UX hierarchy and claims', () => {
+  const html = readFileSync('index.html', 'utf8');
+
+  // Section exists and has proper anchor / ARIA linkage
+  assert.ok(html.includes('id="how-it-works"'), 'How it works anchor id must exist');
+  assert.ok(html.includes('id="proofTitle"'), 'Proof title id must exist');
+
+  // Category & Positioning: Fabric odor control vs Perfume
+  assert.ok(html.includes('FABRIC ODOR CONTROL · THE SCIENCE'), 'Eyebrow must state fabric odor control and science');
+  assert.ok(html.includes('Not perfume. Not deodorant.'), 'Title must establish odor control vs perfume');
+  assert.ok(html.includes('Sweat and daily odors get trapped inside the weave of your clothes'), 'Must explain trapped odor in fabric weave');
+  assert.ok(html.includes('neutralizing it at the source instead of masking'), 'Must explain neutralization at source vs masking');
+
+  // 4-layer functional actives with accurate canonical roles
+  assert.ok(html.includes('01 — TRAP'), 'Layer 1 must be TRAP');
+  assert.ok(html.includes('HPβCD'), 'Must feature HPβCD active');
+  assert.ok(html.includes('02 — NEUTRALIZE'), 'Layer 2 must be NEUTRALIZE');
+  assert.ok(html.includes('Zinc PCA'), 'Must feature Zinc PCA active');
+  assert.ok(html.includes('03 — PREVENT'), 'Layer 3 must be PREVENT');
+  assert.ok(html.includes('Triethyl Citrate'), 'Must feature Triethyl Citrate active');
+  assert.ok(html.includes('04 — ANTI-REGROWTH'), 'Layer 4 must be ANTI-REGROWTH');
+  assert.ok(html.includes('Zinc Gluconate'), 'Must feature Zinc Gluconate active');
+
+  // Progressive disclosure: INCI details
+  assert.ok(html.includes('Formula v3.1 — full 11-ingredient INCI list'), 'Must provide progressive disclosure for full INCI list');
+  assert.ok(html.includes('hydroxypropyl-β-cyclodextrin'), 'INCI list must include chemical name');
+
+  // Prohibited claims
+  assert.equal(/kills bacteria|antimicrobial drug|instant miracle|100% odor-proof|guaranteed odor cure/i.test(html), false, 'Must not contain prohibited claims');
+});
+
+test('index.html homepage founder trust section UX hierarchy, identity and claim discipline', () => {
+  const html = readFileSync('index.html', 'utf8');
+
+  // Section exists and has proper ARIA linkage
+  assert.ok(html.includes('class="founder"'), 'Founder section class must exist');
+  assert.ok(html.includes('aria-labelledby="founderTitle"'), 'Founder section must be labeled by founderTitle');
+  assert.ok(html.includes('id="founderTitle"'), 'Founder title id must exist');
+
+  // Hierarchy 1: Founder Identity
+  assert.ok(html.includes('FOUNDER · HYDERABAD'), 'Eyebrow must state founder and location');
+  assert.ok(html.includes('Jogdhande Nikhil Patil'), 'Must state authoritative founder name');
+  assert.ok(html.includes('Founder, Smelloff · Hyderabad'), 'Must state canonical founder role and city');
+
+  // Hierarchy 2: Why Smelloff exists
+  assert.ok(html.includes('41°C Hyderabad heat'), 'Must ground story in documented 41C Hyderabad commute');
+  assert.ok(html.includes('morning deodorant had worked on skin, but the shirt had trapped the sweat'), 'Must state core insight: skin vs fabric gap');
+  assert.ok(html.includes('layering perfume over it only makes it worse'), 'Must reject fragrance masking');
+
+  // Hierarchy 3: What was built
+  assert.ok(html.includes('ODORSTRIKE'), 'Must name product built');
+  assert.ok(html.includes('neutralize trapped odor compounds inside clothing fibres rather than masking'), 'Must state neutralizer mechanism over perfume');
+
+  // Hierarchy 4: Real-world credibility & Link
+  assert.ok(html.includes('Built and tested in Hyderabad'), 'Must carry documented built & tested in Hyderabad copy');
+  assert.ok(html.includes('Made in India'), 'Must carry Made in India truth');
+  assert.ok(html.includes('href="/about"'), 'Must link to /about page');
+  assert.ok(html.includes('class="founder-link"'), 'Must have accessible thumb-friendly founder link class');
+
+  // Prohibited founder claims and false authority guardrails
+  assert.equal(/chemist|scientist|expert|dermatologist tested|clinically tested|lab certified|India's #1|India's first|award-winning|venture backed|patented breakthrough/i.test(html.slice(html.indexOf('class="founder"'), html.indexOf('class="proof"'))), false, 'Founder section must not contain prohibited false authority claims');
+});
+
 
 

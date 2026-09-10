@@ -901,8 +901,143 @@
     letter-spacing:-.01em;
   }
 
-  /* ============ Brand proof ============ */
-  .proof{border-top:2px solid var(--rule)}
+  /* ============ Brand proof / How it works ============ */
+  .proof{
+    border-top:2px solid var(--rule);
+    scroll-margin-top:calc(70px + env(safe-area-inset-top,0px));
+  }
+  .science-grid{
+    margin-top:40px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:16px;
+    list-style:none;
+    padding:0;
+  }
+  .science-card{
+    border:1px solid var(--rule);
+    background:rgba(244,241,234,.02);
+    padding:24px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    transition:border-color .2s ease;
+  }
+  .science-card:hover{
+    border-color:rgba(184,255,87,.4);
+  }
+  .sc-role{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.12em;
+    color:var(--acid);
+    text-transform:uppercase;
+  }
+  .sc-name{
+    font-family:var(--display);
+    font-weight:900;
+    font-size:22px;
+    letter-spacing:-.02em;
+    line-height:1.15;
+    color:var(--text);
+  }
+  .sc-desc{
+    font-size:14px;
+    line-height:1.5;
+    color:var(--muted);
+    margin:0;
+  }
+  @media(min-width:640px){
+    .science-grid{
+      grid-template-columns:repeat(2,1fr);
+      gap:16px;
+    }
+  }
+  @media(min-width:1024px){
+    .science-grid{
+      grid-template-columns:repeat(4,1fr);
+      gap:18px;
+    }
+    .science-card{
+      padding:28px 22px;
+    }
+  }
+
+  /* Deeper Detail: Accessible INCI Disclosure */
+  .science-inci{
+    margin-top:32px;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+  }
+  .science-inci-summary{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 0;
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+    cursor:pointer;
+    list-style:none;
+    min-height:48px;
+    transition:color .2s ease;
+  }
+  .science-inci-summary::-webkit-details-marker{display:none}
+  .science-inci-summary:hover,
+  .science-inci-summary:focus-visible{
+    color:var(--acid);
+    outline:none;
+  }
+  .science-inci-summary:focus-visible{
+    outline:2px solid var(--acid);
+    outline-offset:2px;
+  }
+  .science-inci-arrow{
+    font-size:14px;
+    transition:transform .2s ease;
+    display:inline-block;
+  }
+  .science-inci[open] .science-inci-arrow{
+    transform:rotate(180deg);
+  }
+  .science-inci-table{
+    padding:0 0 20px;
+    display:grid;
+    gap:0;
+  }
+  .inci-row{
+    display:grid;
+    grid-template-columns:40px 1fr auto;
+    gap:12px;
+    align-items:baseline;
+    padding:10px 0;
+    border-bottom:1px solid var(--rule);
+    font-size:13px;
+  }
+  .inci-row:last-child{border-bottom:none}
+  .inci-row .i-pct{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:.05em;
+  }
+  .inci-row .i-name{
+    font-family:var(--body);
+    font-weight:600;
+    font-size:13.5px;
+    color:var(--text);
+  }
+  .inci-row .i-role{
+    font-family:var(--mono);
+    font-size:10.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+    text-align:right;
+  }
   .trust-row{
     margin-top:40px;
     display:grid;grid-template-columns:repeat(2,1fr);gap:14px;
@@ -988,10 +1123,46 @@
 
   /* ============ Founder ============ */
   .founder{border-top:var(--bw-thin) solid var(--rule)}
-  .founder-grid{display:grid;grid-template-columns:1fr;gap:32px;align-items:start}
+  .founder-grid{display:grid;grid-template-columns:1fr;gap:28px;align-items:start}
+  .founder-meta{display:flex;flex-direction:column}
+  .founder-identity{
+    margin-top:18px;
+    padding-top:14px;
+    border-top:1px solid var(--rule);
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .founder-identity .f-name{
+    font-family:var(--body);
+    font-weight:700;
+    font-size:15px;
+    color:var(--text);
+    letter-spacing:-.01em;
+  }
+  .founder-identity .f-role{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .founder-body{max-width:62ch;font-size:var(--fs-lead);line-height:1.55}
   .founder-body p+p{margin-top:16px}
-  .founder-body{max-width:62ch;font-size:var(--fs-lead);line-height:1.5}
-  .founder-body a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
+  .founder-link{
+    display:inline-flex;
+    align-items:center;
+    min-height:44px;
+    color:var(--acid);
+    text-decoration:underline;
+    text-underline-offset:3px;
+    font-size:var(--fs-sm);
+    font-family:var(--mono);
+    letter-spacing:.04em;
+    transition:color .18s ease;
+  }
+  .founder-link:hover{color:var(--text)}
+  .founder-link:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
   .founder-sig{
     margin-top:26px;padding-top:18px;
     border-top:1px solid var(--rule);
@@ -1000,7 +1171,8 @@
   }
   .founder-sig strong{color:var(--text);font-weight:400}
   @media(min-width:900px){
-    .founder-grid{grid-template-columns:auto 1fr;gap:56px}
+    .founder-grid{grid-template-columns:minmax(280px,360px) 1fr;gap:56px}
+    .founder-identity{margin-top:22px}
   }
 
   /* ============ FAQ ============ */
@@ -1535,31 +1707,92 @@
   </section>
 
   <!-- ============ 3c · FOUNDER ============
-       Copy condensed from /about — same story, same facts, no new claims. -->
+       Refined founder trust hierarchy:
+       1. Founder identity (Jogdhande Nikhil Patil, Founder, Smelloff · Hyderabad)
+       2. Why Smelloff exists (The gap between skin deodorant and fabric weave in Indian heat)
+       3. What was built (ODORSTRIKE: pocket fabric mist to neutralize trapped clothing odor)
+       4. Real-world credibility (Formulated and tested in Hyderabad for everyday commutes)
+       5. Link to /about -->
   <section class="founder" aria-labelledby="founderTitle">
     <div class="wrap">
       <div class="founder-grid">
-        <div>
-          <p class="eyebrow reveal">Why this exists</p>
-          <h2 id="founderTitle" class="reveal">Built after a bad<br>client meeting</h2>
+        <div class="founder-meta reveal">
+          <p class="eyebrow">FOUNDER · HYDERABAD</p>
+          <h2 id="founderTitle">Built for the gap<br>deodorant leaves behind</h2>
+          <div class="founder-identity">
+            <span class="f-name">Jogdhande Nikhil Patil</span>
+            <span class="f-role">Founder, Smelloff · Hyderabad</span>
+          </div>
         </div>
         <div class="founder-body reveal">
-          <p>Smelloff started with an hour-long ride through 41°C Hyderabad heat, a client meeting at the other end, and the moment a colleague's expression shifted.</p>
-          <p>Deodorant had done its job. The shirt hadn't. That gap — a fabric-specific fix built for Indian heat, humidity and commutes, at a price that isn't precious — didn't exist, so we spent six months and a pile of failed prototypes building it.</p>
-          <p>What we believe hasn't changed since: neutralize, don't mask. Fragrance over sweat smells worse than either. <a href="/about">Read the full story →</a></p>
-          <p class="founder-sig"><strong>Jogdhande Nikhil Patil</strong> · Founder, Smelloff · Hyderabad</p>
+          <p>Smelloff started from an everyday problem in 41°C Hyderabad heat: morning deodorant had worked on skin, but the shirt had trapped the sweat. Deodorant takes care of skin, but the odor people notice mid-day lives in the fabric weave — and layering perfume over it only makes it worse.</p>
+          <p>That gap is why Smelloff was built. Instead of launching another fragrance brand, we spent six months testing prototypes to create ODORSTRIKE — a pocket-sized mist formulated specifically to neutralize trapped odor compounds inside clothing fibres rather than masking them.</p>
+          <p>Built and tested in Hyderabad around the actual heat, humidity, and daily commutes Indian clothes go through every day. Made in India, focused entirely on fabric odor control.</p>
+          <p><a class="founder-link" href="/about">Read the full founder story →</a></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ 4 · BRAND PROOF ============ -->
-  <section class="proof" aria-labelledby="proofTitle">
+  <!-- ============ 4 · BRAND PROOF / THE SCIENCE ============ -->
+  <section class="proof" id="how-it-works" aria-labelledby="proofTitle">
     <div class="wrap">
-      <h2 id="proofTitle" class="reveal">Not perfume. Not deodorant. Odor control.</h2>
+      <p class="eyebrow reveal">FABRIC ODOR CONTROL · THE SCIENCE</p>
+      <h2 id="proofTitle" class="reveal">Not perfume. Not deodorant.<br>Odor control for clothes.</h2>
       <div class="section-body reveal">
-        <p>Smelloff doesn't mask smell with more fragrance. It goes after the odor itself, on the surfaces where it hides.</p>
+        <p>Sweat and daily odors get trapped inside the weave of your clothes. Perfumes and body sprays only sit on top of the fabric and layer heavy scent over the smell. ODORSTRIKE targets trapped odor directly in the fibres — neutralizing it at the source instead of masking.</p>
       </div>
+
+      <ol class="science-grid reveal" aria-label="4-layer fabric odor control mechanism">
+        <li class="science-card">
+          <div class="sc-head">
+            <span class="sc-role">01 — TRAP</span>
+          </div>
+          <h3 class="sc-name">HPβCD</h3>
+          <p class="sc-desc">Hollow ring-shaped molecule physically cages trapped odor compounds inside fabric fibres so smell cannot escape.</p>
+        </li>
+        <li class="science-card">
+          <div class="sc-head">
+            <span class="sc-role">02 — NEUTRALIZE</span>
+          </div>
+          <h3 class="sc-name">Zinc PCA</h3>
+          <p class="sc-desc">Zinc salt binds to captured odor compounds and neutralizes them directly at the fabric source instead of masking.</p>
+        </li>
+        <li class="science-card">
+          <div class="sc-head">
+            <span class="sc-role">03 — PREVENT</span>
+          </div>
+          <h3 class="sc-name">Triethyl Citrate</h3>
+          <p class="sc-desc">Slows the breakdown of fresh sweat in fibres before new odor can form, maintaining up to 8 hours of fabric protection.</p>
+        </li>
+        <li class="science-card">
+          <div class="sc-head">
+            <span class="sc-role">04 — ANTI-REGROWTH</span>
+          </div>
+          <h3 class="sc-name">Zinc Gluconate</h3>
+          <p class="sc-desc">Helps prevent odor from re-developing in garment fibres between wears so the reset holds throughout your day.</p>
+        </li>
+      </ol>
+
+      <details class="science-inci reveal">
+        <summary class="science-inci-summary">
+          <span>Formula v3.1 — full 11-ingredient INCI list</span>
+          <span class="science-inci-arrow" aria-hidden="true">▾</span>
+        </summary>
+        <div class="science-inci-table">
+          <div class="inci-row"><span class="i-pct">01</span><span class="i-name">Water</span><span class="i-role">Base</span></div>
+          <div class="inci-row"><span class="i-pct">02</span><span class="i-name">Isopropyl Alcohol</span><span class="i-role">Fast-evaporating solvent</span></div>
+          <div class="inci-row"><span class="i-pct">03</span><span class="i-name">Triethyl Citrate</span><span class="i-role">Prevent</span></div>
+          <div class="inci-row"><span class="i-pct">04</span><span class="i-name">HPβCD (hydroxypropyl-β-cyclodextrin)</span><span class="i-role">Trap</span></div>
+          <div class="inci-row"><span class="i-pct">05</span><span class="i-name">Polysorbate 20</span><span class="i-role">Emulsifier</span></div>
+          <div class="inci-row"><span class="i-pct">06</span><span class="i-name">Zinc PCA</span><span class="i-role">Neutralize</span></div>
+          <div class="inci-row"><span class="i-pct">07</span><span class="i-name">PE9010</span><span class="i-role">Preservative</span></div>
+          <div class="inci-row"><span class="i-pct">08</span><span class="i-name">Fragrance</span><span class="i-role">Light scent</span></div>
+          <div class="inci-row"><span class="i-pct">09</span><span class="i-name">Zinc Gluconate</span><span class="i-role">Anti-regrowth</span></div>
+          <div class="inci-row"><span class="i-pct">10</span><span class="i-name">Ethylhexylglycerin</span><span class="i-role">Preservative booster</span></div>
+          <div class="inci-row"><span class="i-pct">11</span><span class="i-name">Citric Acid</span><span class="i-role">pH balancer</span></div>
+        </div>
+      </details>
     </div>
   </section>
 
