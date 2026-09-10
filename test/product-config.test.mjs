@@ -340,5 +340,158 @@ test('index.html homepage testimonial and beta tester voices section UX hierarch
   assert.equal(/verified buyer|verified purchase|4\.9\/5|5\.0\/5|1,000\+ customers|10,000\+ happy|★★★★★|ratingValue/i.test(voicesBlock), false, 'Voices section must not contain fabricated social proof or fake ratings');
 });
 
+test('index.html homepage FAQ objection-first hierarchy, schema parity and claims discipline', () => {
+  const html = readFileSync('index.html', 'utf8');
+
+  // Exactly one FAQPage JSON-LD block
+  const faqPageMatches = html.match(/"@type"\s*:\s*"FAQPage"/g) || [];
+  assert.equal(faqPageMatches.length, 1, 'index.html must have exactly one FAQPage schema block');
+
+  // Extract FAQPage JSON-LD
+  const scriptMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g);
+  let faqSchema = null;
+  for (const block of scriptMatch) {
+    if (block.includes('"FAQPage"')) {
+      const jsonText = block.replace(/<script type="application\/ld\+json">|<\/script>/g, '').trim();
+      faqSchema = JSON.parse(jsonText);
+      break;
+    }
+  }
+  assert.ok(faqSchema, 'Must parse FAQPage schema');
+  assert.equal(faqSchema.mainEntity.length, 10, 'FAQPage schema must contain exactly 10 questions');
+
+  // Extract visible FAQ items from <section class="faq"
+  const faqSectionStart = html.indexOf('<section class="faq"');
+  assert.ok(faqSectionStart !== -1, 'Must have <section class="faq"');
+  const faqSectionEnd = html.indexOf('</section>', faqSectionStart);
+  const faqSection = html.slice(faqSectionStart, faqSectionEnd);
+
+  // Extract visible questions and answers
+  const qMatches = [...faqSection.matchAll(/<summary><h3>([\s\S]*?)<\/h3><\/summary>/g)].map(m => m[1].trim());
+  const aMatches = [...faqSection.matchAll(/<div class="faq-answer-wrap"><div><p>([\s\S]*?)<\/p><\/div><\/div>/g)].map(m => m[1].trim());
+
+  assert.equal(qMatches.length, 10, 'Must have exactly 10 visible FAQ questions');
+  assert.equal(aMatches.length, 10, 'Must have exactly 10 visible FAQ answers');
+
+  // Expected 10 objection questions in order
+  const expectedQuestions = [
+    'Is ODORSTRIKE safe on skin?',
+    'Will it stain my clothes?',
+    'How do I use it?',
+    'How long does the effect last?',
+    'What fabrics can I use it on?',
+    'Does it replace washing?',
+    'Is the fragrance strong?',
+    'Is COD available?',
+    'How long does shipping take?',
+    'What is the return policy?'
+  ];
+
+  for (let i = 0; i < expectedQuestions.length; i++) {
+    assert.equal(qMatches[i], expectedQuestions[i], `Question ${i + 1} must match expected objection: ${expectedQuestions[i]}`);
+    assert.equal(faqSchema.mainEntity[i].name, expectedQuestions[i], `Schema question ${i + 1} name must match expected question`);
+    assert.equal(aMatches[i], faqSchema.mainEntity[i].acceptedAnswer.text, `Answer ${i + 1} in HTML must match schema text 1:1`);
+  }
+
+  // Claim discipline guardrails in FAQ section
+  assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(faqSection), false, 'FAQ must not contain prohibited claims');
+  assert.equal(/fragrance-free|unscented|scentless/i.test(faqSection), false, 'FAQ must not claim fragrance-free');
+
+  // Commercial values match canonical configuration
+  assert.ok(faqSection.includes('₹229'), 'FAQ must state ₹229 prepaid price');
+  assert.ok(faqSection.includes('₹60'), 'FAQ must state ₹60 COD fee');
+  assert.ok(faqSection.includes('₹289'), 'FAQ must state ₹289 COD total');
+  assert.ok(faqSection.includes('7-day return window'), 'FAQ must state 7-day return window');
+  assert.ok(faqSection.includes('80% full'), 'FAQ must state 80% full condition');
+  assert.ok(faqSection.includes('48 hours'), 'FAQ must state 48-hour dispatch');
+  assert.ok(faqSection.includes('3–5 business days'), 'FAQ must state 3–5 days metro delivery');
+
+  // Fabric-only safety guardrail
+  assert.ok(faqSection.includes('never skin, face, hair, or body'), 'FAQ must strictly prohibit skin, face, hair, or body application');
+  assert.ok(faqSection.includes('zero residue'), 'FAQ must state zero residue');
+  assert.ok(faqSection.includes('15–20 cm'), 'FAQ must state 15–20 cm spray distance');
+  assert.ok(faqSection.includes('approximately 10 seconds'), 'FAQ must state approximately 10 seconds dry time');
+  assert.ok(faqSection.includes('Up to 8 hours'), 'FAQ must state Up to 8 hours duration');
+});
+
+test('odorstrike.html PDP hero and primary buy area UX hierarchy, canonical pricing, and claims discipline', () => {
+  const html = readFileSync('odorstrike.html', 'utf8');
+
+  // Extract .product-info block
+  const pInfoStart = html.indexOf('<div class="product-info">');
+  assert.ok(pInfoStart !== -1, 'Must have <div class="product-info">');
+  const pInfoEnd = html.indexOf('<div id="heroProofMount">', pInfoStart);
+  const pInfo = html.slice(pInfoStart, pInfoEnd);
+
+  // 1. Positioning & Product identity in eyebrow and H1
+  assert.ok(pInfo.includes('FABRIC ODOR CONTROL · 50ML'), 'Eyebrow must prominently declare fabric odor control positioning');
+  assert.ok(pInfo.includes('<h1>ODORSTRIKE</h1>'), 'Headline must be clear brand name ODORSTRIKE');
+
+  // 2. Tagline what it is and core benefit
+  assert.ok(pInfo.includes('A pocket-sized fabric odor mist for clothes'), 'Tagline must define product category');
+  assert.ok(pInfo.includes('neutralizes them directly in fabric fibres'), 'Tagline must state neutralizes in fabric fibres');
+  assert.ok(pInfo.includes('up to 8 hours of clean odor protection'), 'Tagline must state up to 8 hours');
+  assert.ok(pInfo.includes('zero residue'), 'Tagline must state zero residue');
+
+  // 3. Clear differentiator badges
+  assert.ok(pInfo.includes('NOT PERFUME'), 'Must display NOT PERFUME badge');
+  assert.ok(pInfo.includes('NOT BODY DEODORANT'), 'Must display NOT BODY DEODORANT badge');
+  assert.ok(pInfo.includes('FABRIC ONLY'), 'Must display FABRIC ONLY badge');
+
+  // 4. Authoritative commercial pricing hierarchy
+  assert.ok(pInfo.includes('class="price">₹229</span>'), 'Price must display ₹229');
+  assert.ok(pInfo.includes('1 × 50ml bottle'), 'Pack size must display 1 × 50ml bottle');
+  assert.ok(pInfo.includes('MRP ₹499'), 'Struck price must be MRP ₹499');
+  assert.ok(pInfo.includes('54% OFF'), 'Discount must be 54% OFF');
+  assert.ok(pInfo.includes('FREE SHIPPING</strong> — PREPAID'), 'Prepaid shipping must be free');
+  assert.ok(pInfo.includes('COD AVAILABLE</strong> (₹60 HANDLING · ₹289 TOTAL)'), 'COD fee must be ₹60 with ₹289 total');
+
+  // 5. Purchase actions & controls
+  assert.ok(pInfo.includes('id="pdpQtyDec"'), 'Qty decrement button must exist');
+  assert.ok(pInfo.includes('id="pdpQtyVal"'), 'Qty output display must exist');
+  assert.ok(pInfo.includes('id="pdpQtyInc"'), 'Qty increment button must exist');
+  assert.ok(pInfo.includes('id="pdpBuyBtn"'), 'Primary buy button id must exist');
+  assert.ok(pInfo.includes('GET ODORSTRIKE — ₹229'), 'Initial buy button text must match canonical price');
+  assert.ok(pInfo.includes('id="pdpCartBtn"'), 'Secondary cart button id must exist');
+
+  // 6. Buying reassurance strip
+  assert.ok(pInfo.includes('Free Shipping Pan-India'), 'Reassurance: Free shipping pan-India');
+  assert.ok(pInfo.includes('COD Available · ₹60 Handling'), 'Reassurance: COD with ₹60 handling');
+  assert.ok(pInfo.includes('Delivers in 3–7 Days'), 'Reassurance: Delivers in 3–7 days');
+  assert.ok(pInfo.includes('7-Day Returns'), 'Reassurance: 7-day returns');
+
+  // 7. Strict visual reading order in DOM
+  const idxEyebrow = pInfo.indexOf('class="ph-eyebrow"');
+  const idxH1 = pInfo.indexOf('<h1>ODORSTRIKE</h1>');
+  const idxTagline = pInfo.indexOf('class="ph-tagline"');
+  const idxBadges = pInfo.indexOf('class="ph-badges"');
+  const idxPrice = pInfo.indexOf('class="ph-price"');
+  const idxBuyActions = pInfo.indexOf('class="buy-actions"');
+  const idxTrust = pInfo.indexOf('class="hero-trust"');
+  const idxScale = pInfo.indexOf('class="spec-scale"');
+
+  assert.ok(idxEyebrow < idxH1, 'Eyebrow must precede H1');
+  assert.ok(idxH1 < idxTagline, 'H1 must precede Tagline');
+  assert.ok(idxTagline < idxBadges, 'Tagline must precede Badges');
+  assert.ok(idxBadges < idxPrice, 'Badges must precede Price');
+  assert.ok(idxPrice < idxBuyActions, 'Price must precede Buy Actions');
+  assert.ok(idxBuyActions < idxTrust, 'Buy Actions must precede Trust');
+  assert.ok(idxTrust < idxScale, 'Trust must precede Spec Scale');
+
+  // 8. Mobile navigation & sticky bar
+  assert.ok(html.includes('class="gal-mobile-indicator"'), 'Must have mobile gallery indicator');
+  assert.ok(html.includes('id="galDots"'), 'Must have gallery dots navigation');
+  assert.ok(html.includes('id="galCur"'), 'Must have gallery counter');
+  assert.ok(html.includes('class="mobile-bar" id="mobileBar"'), 'Must have sticky mobile bar');
+  assert.ok(html.includes('id="mobileBarBuyBtn"'), 'Sticky mobile bar must have buy button');
+
+  // 9. Claim discipline guardrails in product-hero area
+  const heroSectionStart = html.indexOf('<div class="product-hero"');
+  const heroSectionEnd = html.indexOf('</section>', heroSectionStart);
+  const heroSection = html.slice(heroSectionStart, heroSectionEnd);
+  assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(heroSection), false, 'Hero section must not contain prohibited claims');
+});
+
+
 
 

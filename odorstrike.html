@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ODORSTRIKE Fabric Odor Spray for Clothes ₹229 | Smelloff</title>
-<meta name="description" content="Pocket fabric odor spray for clothes — not a perfume, not a deo. Kills sweat smell in seconds, up to 8 hours protection. 50ml · ₹229 · COD across India.">
+<meta name="description" content="Pocket fabric odor mist for clothes — not a perfume, not a deo. Neutralizes trapped sweat and daily odor in fabric, up to 8 hours protection. 50ml · ₹229 · COD across India.">
 <meta name="theme-color" content="#080808">
 
 <!-- Crawler directives: allow everyone, everywhere -->
@@ -26,7 +26,7 @@
 <!-- Open Graph -->
 <meta property="og:type" content="product">
 <meta property="og:title" content="ODORSTRIKE Fabric Odor Spray for Clothes ₹229 | Smelloff">
-<meta property="og:description" content="Pocket fabric odor spray for clothes. Not perfume. Not deodorant. Not body spray. Kills sweat smell in seconds — up to 8 hours odor protection on fabric.">
+<meta property="og:description" content="Pocket fabric odor spray for clothes. Not perfume. Not deodorant. Not body spray. Neutralizes sweat and trapped odor in fabric — up to 8 hours odor protection.">
 <meta property="og:url" content="https://smelloff.in/odorstrike">
 <meta property="og:site_name" content="Smelloff">
 <meta property="og:image" content="https://smelloff.in/assets/og-image.jpg?v=2">
@@ -76,7 +76,7 @@
 </script>
 <!-- JSON-LD WebPage -->
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://smelloff.in/odorstrike#webpage","name":"Smelloff ODORSTRIKE — Fabric Odor Remover Spray","url":"https://smelloff.in/odorstrike","description":"A pocket-sized fabric odor eliminator mist. Kills smell on contact. Not a perfume, not a deodorant.","inLanguage":"en-IN","isPartOf":{"@type":"WebSite","name":"Smelloff","url":"https://smelloff.in"},"about":{"@type":"Thing","name":"Fabric Odor Elimination"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://smelloff.in/assets/odorstrike-bottle.webp"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".hero h1",".ph-tagline",".problem h2"]}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://smelloff.in/odorstrike#webpage","name":"Smelloff ODORSTRIKE — Fabric Odor Remover Spray","url":"https://smelloff.in/odorstrike","description":"A pocket-sized fabric odor mist for clothes. Neutralizes trapped sweat and fabric odor. Not a perfume, not a deodorant.","inLanguage":"en-IN","isPartOf":{"@type":"WebSite","name":"Smelloff","url":"https://smelloff.in"},"about":{"@type":"Thing","name":"Fabric Odor Elimination"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://smelloff.in/assets/odorstrike-bottle.webp"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".hero h1",".ph-tagline",".problem h2"]}}
 </script>
 <!-- JSON-LD Product (single SKU — ₹229, no bundles) -->
 <!-- RATING IS GATED — no "aggregateRating" is emitted right now.
@@ -100,7 +100,7 @@
   "@id":"https://smelloff.in/#odorstrike",
   "name":"ODORSTRIKE Fabric Odor Remover Spray",
   "alternateName":["ODORSTRIKE","Smelloff ODORSTRIKE","Fabric Odor Spray India","Fabric Refresher Spray for Clothes","Pocket Fabric Freshener"],
-  "description":"A pocket-sized fabric odor remover spray. 50ml mist that kills sweat smell, gym odor, and shirt stink in seconds — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them, Triethyl Citrate prevents new odor, and Zinc Gluconate stops regrowth. Up to 8 hours odor protection on fabric. Glycerine-free, zero residue, dries fast. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
+  "description":"A pocket-sized fabric odor remover spray. 50ml mist that neutralizes sweat odor, gym smell, and shirt odor in fabric — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them, Triethyl Citrate prevents new odor, and Zinc Gluconate stops regrowth. Up to 8 hours odor protection on fabric. Glycerine-free, zero residue, dries fast. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
   "image":["https://smelloff.in/assets/pdp-01-hero.webp","https://smelloff.in/assets/odorstrike-bottle.webp","https://smelloff.in/assets/og-image.jpg"],
   "brand":{"@type":"Brand","name":"Smelloff","logo":"https://smelloff.in/apple-touch-icon.png"},
   "manufacturer":{"@type":"Organization","name":"Smelloff","address":{"@type":"PostalAddress","addressLocality":"Hyderabad","addressRegion":"Telangana","addressCountry":"IN"}},
@@ -269,6 +269,7 @@
     // CCPA's 2023 dark-pattern guidelines name explicitly. Changing this number
     // means changing every one of those surfaces with it; grep COD_FEE and ₹60.
     COD_FEE: 60,
+    MAX_QTY: 10,
     // ==== SOCIAL PROOF — ALL GATED. Components render NOTHING until real data ====
     // Verified-purchase reviews ONLY. The site computes the visible count, average
     // and star distribution from this array — never hardcode a rating anywhere.
@@ -839,6 +840,43 @@
       margin:0;padding:0;
     }
   }
+  /* Mobile Gallery Indicator */
+  .gal-mobile-indicator{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 4px 0;
+    margin-bottom:12px;
+  }
+  .gal-dots{
+    display:flex;
+    gap:6px;
+    align-items:center;
+  }
+  .gal-dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--rule-strong);
+    border:none;
+    padding:0;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .gal-dot.active{
+    background:var(--acid);
+    width:16px;
+    border-radius:3px;
+  }
+  .gal-counter{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.08em;
+    color:var(--muted);
+  }
+  @media(min-width:768px){
+    .gal-mobile-indicator{display:none !important}
+  }
   /* Sticky buy panel — the gallery scrolls, the price and CTA stay put.
      top:92px clears the 64px sticky header plus breathing room. */
   @media(min-width:768px){
@@ -894,63 +932,135 @@
   .product-info h1{
     font-family:var(--display);
     font-weight:900;
-    font-size:clamp(48px,5.5vw,88px);
-    line-height:.9;
+    font-size:clamp(44px,5.2vw,78px);
+    line-height:.95;
     letter-spacing:-.03em;
     margin:0;
   }
-  /* Product line, above the title. Sized so it cannot wrap at any width
-     the info column takes — the old in-headline version orphaned "50ML". */
+  /* Product line, above the title */
   .ph-eyebrow{
     font-family:var(--mono);
     font-size:12px;
     letter-spacing:.2em;
     text-transform:uppercase;
     color:var(--acid);
-    margin:0 0 16px;
+    margin:0 0 14px;
   }
   .ph-tagline{
     font-family:var(--body);
-    font-size:clamp(16px,1.3vw,18px);
+    font-size:clamp(15px,1.25vw,17px);
     line-height:1.55;
     color:var(--text-2,#c7c4bd);
-    margin:20px 0 0;
-    max-width:44ch;
+    margin:18px 0 0;
+    max-width:48ch;
   }
-  /* Price row: the figure leads, the struck MRP and the note sit under it
-     on their own line. Baseline-aligning a 14px mono strike against a 72px
-     display numeral (which is what the old single-row flex did) left the
-     MRP floating in the middle of the ₹229 with nothing to align to. */
+  /* Explicit usage distinction badges */
+  .ph-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:16px;
+  }
+  .ph-badge{
+    display:inline-flex;
+    align-items:center;
+    padding:6px 12px;
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    white-space:nowrap;
+    border-radius:4px;
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--rule-strong);
+    color:var(--text);
+  }
+  .ph-badge--highlight{
+    background:rgba(184,255,87,.1);
+    border-color:var(--acid);
+    color:var(--acid);
+    font-weight:700;
+  }
+  /* Canonical Price hierarchy:
+     ₹229 -> 1 x 50ml -> MRP ₹499 / 54% OFF -> Free Shipping / COD details */
   .ph-price{
-    display:flex;align-items:baseline;gap:8px 14px;
-    margin-top:26px;flex-wrap:wrap;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:22px;
+    padding:16px 18px;
+    background:var(--surface,#0F0F0F);
+    border:1px solid var(--rule);
+    border-radius:var(--sq-md,16px);
+  }
+  .ph-price-row{
+    display:flex;
+    align-items:baseline;
+    gap:10px 14px;
+    flex-wrap:wrap;
+  }
+  .ph-price .price{
+    font-family:var(--display);
+    font-weight:900;
+    font-size:clamp(38px,4.5vw,56px);
+    line-height:1;
+    letter-spacing:-.03em;
+    color:var(--text);
+  }
+  .ph-price .ph-pack{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--paper);
   }
   .ph-price .strike-price{
     text-decoration:line-through;
     color:var(--muted);
     font-family:var(--mono);
-    font-size:14px;
+    font-size:13px;
   }
-  .ph-price .price-note{
-    flex:1 0 100%;
-    color:var(--muted);
+  .ph-price .ph-discount{
     font-family:var(--mono);
-    font-size:12px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--acid);
+    background:rgba(184,255,87,.1);
+    padding:3px 8px;
+    border-radius:3px;
+  }
+  .ph-price-details{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    padding-top:10px;
+    border-top:1px solid var(--rule);
+    color:var(--text-2,#c7c4bd);
+    font-family:var(--mono);
+    font-size:11px;
     letter-spacing:.06em;
     text-transform:uppercase;
   }
-  .ph-price .price{
-    font-family:var(--display);
-    font-weight:900;
-    font-size:clamp(44px,5vw,72px);
-    line-height:1;
-    letter-spacing:-.03em;
+  .ph-price-details strong{
+    color:var(--acid);
+    font-weight:700;
+  }
+  .ph-detail-sep{
+    color:var(--rule-strong);
   }
   .hero-cta{
-    display:block;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
     width:100%;
-    margin-top:22px;
-    padding:18px 28px;
+    min-height:48px;
+    margin-top:20px;
+    padding:16px 28px;
     background:var(--acid);
     color:var(--ink);
     border:none;
@@ -960,9 +1070,11 @@
     letter-spacing:.15em;
     text-transform:uppercase;
     cursor:pointer;
-    transition:transform .15s;
+    transition:transform .15s, box-shadow .15s;
+    border-radius:2px;
   }
   .hero-cta:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(184,255,87,.35)}
+  .hero-cta:focus-visible{outline:2px solid var(--paper);outline-offset:3px}
   /* Qty + primary CTA share one row so the stepper never pushes the buy
      button below the fold on a phone. The stepper is fixed-width; the CTA
      takes the rest. */
@@ -2237,10 +2349,14 @@
     background:var(--acid);
     color:var(--ink);
     border:none;
+    min-height:44px;
     padding:12px 24px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
     font-family:var(--mono);
     font-size:12px;
-    font-weight:500;
+    font-weight:700;
     letter-spacing:.15em;
     text-transform:uppercase;
     cursor:pointer;
@@ -2923,7 +3039,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- STICKY MOBILE BAR -->
 <div class="mobile-bar" id="mobileBar">
   <span class="mb-label">ODORSTRIKE 50ml · ₹229</span>
-  <button class="mb-btn" onclick="buyNow()">Buy now</button>
+  <button class="mb-btn" id="mobileBarBuyBtn" onclick="buyNow()">GET ODORSTRIKE</button>
 </div>
 
 <!-- CART DRAWER -->
@@ -3010,7 +3126,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <img src="/assets/pdp-01-hero.webp"
                srcset="/assets/pdp-01-hero@640.webp 640w, /assets/pdp-01-hero.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="ODORSTRIKE 50ml fabric odor eliminator mist — matte black pocket spray bottle on a white background" width="1196" height="1315" fetchpriority="high" decoding="async">
+               alt="ODORSTRIKE 50ml fabric odor control mist — matte black pocket spray bottle for clothes" width="1196" height="1315" fetchpriority="high" decoding="async">
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
@@ -3018,7 +3134,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <img src="/assets/pdp-02-problem.webp"
                srcset="/assets/pdp-02-problem@640.webp 640w, /assets/pdp-02-problem.webp 1195w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="You don't smell. Your shirt does. Sweat, pollution and long hours leave odor on your clothes — after a workout, a bike commute, before a meeting or in close contact. ODORSTRIKE kills odor at the source and keeps clothes fresh for up to 8 hours." width="1195" height="1316" loading="lazy" decoding="async">
+               alt="You don't smell. Your shirt does. Sweat, pollution and long hours leave odor on your clothes — after a workout, a bike commute, before a meeting or in close contact. ODORSTRIKE neutralizes odor at the source and keeps clothes fresh for up to 8 hours." width="1195" height="1316" loading="lazy" decoding="async">
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
@@ -3026,7 +3142,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <img src="/assets/pdp-03-how-to-use.webp"
                srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="Three steps: spray the fabric from 15 cm away, wait 10 seconds, then wear it and stay fresh for up to 8 hours." width="1196" height="1315" loading="lazy" decoding="async">
+               alt="Three steps: spray the fabric from 15–20 cm away, wait approximately 10 seconds to dry, then wear with up to 8 hours of fabric odor protection." width="1196" height="1315" loading="lazy" decoding="async">
         </button>
       </figure>
       <!-- ASSET RECUT NEEDED: this creative's two lower panels are "GYM BAG" and
@@ -3050,7 +3166,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <img src="/assets/pdp-05-proof.webp"
                srcset="/assets/pdp-05-proof@640.webp 640w, /assets/pdp-05-proof.webp 1195w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="No white marks, no residue — a black t-shirt sprayed with ODORSTRIKE beside one sprayed with an ordinary spray. Dries in seconds, leaves no stains on black and dark colours, and won't damage or fade fabric." width="1195" height="1316" loading="lazy" decoding="async">
+               alt="No white marks, no residue — a black t-shirt sprayed with ODORSTRIKE beside one sprayed with an ordinary spray. Dries in approximately 10 seconds, leaves no stains on black and dark fabrics, and safe for everyday washable clothes." width="1195" height="1316" loading="lazy" decoding="async">
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
@@ -3058,7 +3174,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <img src="/assets/pdp-06-science.webp"
                srcset="/assets/pdp-06-science@640.webp 640w, /assets/pdp-06-science.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="How it works: sweat, bacteria and pollutants create odor molecules in fabric; HPβCD traps them like a microscopic cage; Zinc PCA neutralises the odor at the source; the fabric stays fresh for up to 8 hours. Fragrance-free — it eliminates odor rather than masking it." width="1196" height="1315" loading="lazy" decoding="async">
+               alt="How it works: sweat, bacteria and daily activities create odor molecules trapped in fabric; HPβCD traps them like a microscopic cage; Zinc PCA neutralizes the odor at the source; the fabric stays fresh for up to 8 hours. Subtle freshness signal that fades — it neutralizes odor rather than masking it." width="1196" height="1315" loading="lazy" decoding="async">
         </button>
       </figure>
       <figure class="gal-tile gal-tile--info">
@@ -3074,59 +3190,73 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <img src="/assets/pdp-08-comparison.webp"
                srcset="/assets/pdp-08-comparison@640.webp 640w, /assets/pdp-08-comparison.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="ODORSTRIKE compared with deodorant and perfume: it removes fabric odor, is made for clothes, is pocket sized, dries quickly, leaves no residue and eliminates rather than masks odor. Deodorant and perfume are made for skin and only cover the smell." width="1196" height="1315" loading="lazy" decoding="async">
+               alt="ODORSTRIKE compared with deodorant and perfume: it neutralizes fabric odor, is made for clothes, is pocket sized, dries quickly, leaves no residue and neutralizes rather than masks odor. Deodorant and perfume are made for skin and only cover the smell." width="1196" height="1315" loading="lazy" decoding="async">
         </button>
       </figure>
     </div>
 
+    <!-- Mobile Gallery Slide Indicator -->
+    <div class="gal-mobile-indicator" aria-label="Gallery slide navigation">
+      <div class="gal-dots" id="galDots" role="tablist">
+        <button type="button" class="gal-dot active" role="tab" aria-selected="true" aria-label="Slide 1 of 8" onclick="galGoTo(0)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 2 of 8" onclick="galGoTo(1)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 3 of 8" onclick="galGoTo(2)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 4 of 8" onclick="galGoTo(3)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 5 of 8" onclick="galGoTo(4)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 6 of 8" onclick="galGoTo(5)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 7 of 8" onclick="galGoTo(6)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 8 of 8" onclick="galGoTo(7)"></button>
+      </div>
+      <span class="gal-counter"><span id="galCur">1</span> / 8</span>
+    </div>
+
     <!-- PRODUCT INFO -->
     <div class="product-info">
-      <!-- The product line used to be a <span> inside the <h1>, set in mono
-           at 18px with .18em tracking. At every desktop width it wrapped
-           and left "50ML" alone on its own line under the title. It is a
-           label, not part of the headline — so it is an eyebrow above it
-           now, which is also how wimpdecaf's PDP reads (title, then a
-           short description). -->
-      <p class="ph-eyebrow">ODORSTRIKE · 50ml</p>
-      <h1>No One Will Know.</h1>
-      <p class="ph-tagline">A pocket-sized fabric odor remover that erases smell from fabric on contact. Not a perfume. Not a deodorant. A fix.</p>
-      <!-- The COD total is stated here, in the hero, and not held back for the
-           checkout summary. Showing ₹229 all the way down the page and revealing
-           ₹289 in the final modal is drip pricing — named as a dark pattern in
-           the CCPA's 2023 guidelines. Keep the ₹60 in step with CFG.COD_FEE. -->
-      <div class="ph-price">
-        <span class="price">₹229</span>
-        <span class="strike-price">M.R.P. ₹499</span>
-        <span class="price-note">free shipping · ₹289 on delivery (COD +₹60)</span>
+      <p class="ph-eyebrow">FABRIC ODOR CONTROL · 50ML</p>
+      <h1>ODORSTRIKE</h1>
+      <p class="ph-tagline">A pocket-sized fabric odor mist for clothes. Sweat and daily odor molecules get trapped deep in the weave of your shirts and jackets. ODORSTRIKE neutralizes them directly in fabric fibres — giving you up to 8 hours of clean odor protection with zero residue.</p>
+      
+      <div class="ph-badges" aria-label="Usage distinction">
+        <span class="ph-badge">NOT PERFUME</span>
+        <span class="ph-badge">NOT BODY DEODORANT</span>
+        <span class="ph-badge ph-badge--highlight">FABRIC ONLY</span>
       </div>
-      <!-- Two intents, two buttons. "Buy now" is the express path straight to
-           the checkout form; "Add to cart" opens the drawer for anyone still
-           browsing. Before this the panel had a single CTA that did neither
-           cleanly — it opened the drawer while being labelled Buy Now — and
-           there was no quantity control anywhere on the page, so the only way
-           to order two was to open the cart and press +. -->
+
+      <!-- Price Hierarchy: figure leads, pack size, struck MRP & discount badge, then transparent delivery/handling notes -->
+      <div class="ph-price" aria-label="Pricing and commercial details">
+        <div class="ph-price-row">
+          <span class="price">₹229</span>
+          <span class="ph-pack">1 × 50ml bottle</span>
+          <span class="strike-price">MRP ₹499</span>
+          <span class="ph-discount">54% OFF</span>
+        </div>
+        <div class="ph-price-details">
+          <span><strong>FREE SHIPPING</strong> — PREPAID</span>
+          <span class="ph-detail-sep">·</span>
+          <span><strong>COD AVAILABLE</strong> (₹60 HANDLING · ₹289 TOTAL)</span>
+        </div>
+      </div>
+
+      <!-- Primary & Secondary Purchase Actions -->
       <div class="buy-actions">
         <div class="qty-picker" role="group" aria-label="Quantity">
           <button type="button" id="pdpQtyDec" onclick="pdpQtyStep(-1)" aria-label="Decrease quantity">−</button>
           <output id="pdpQtyVal" for="pdpQtyDec pdpQtyInc" aria-live="polite">1</output>
           <button type="button" id="pdpQtyInc" onclick="pdpQtyStep(1)" aria-label="Increase quantity">+</button>
         </div>
-        <button class="hero-cta" onclick="buyNow()"><span id="pdpBuyText">Buy now · ₹229</span></button>
+        <button class="hero-cta" id="pdpBuyBtn" onclick="buyNow()"><span id="pdpBuyText">GET ODORSTRIKE — ₹229</span></button>
       </div>
-      <button class="hero-cta hero-cta--ghost" onclick="addToCart()">Add to cart</button>
-      <!-- Every claim below is verified against live policy pages: /shipping (free,
-           3–5d metro / 5–7d tier-2/3), /returns (7-day), FAQ (COD ₹0 advance). -->
+      <button class="hero-cta hero-cta--ghost" id="pdpCartBtn" onclick="addToCart()">Add to cart</button>
+
+      <!-- Key Reassurances -->
       <div class="hero-trust" aria-label="Buying reassurance">
-        <span>COD available</span>
-        <span>Free shipping pan-India</span>
-        <span>Delivers in 3–7 days</span>
-        <span>7-day returns</span>
+        <span>Free Shipping Pan-India</span>
+        <span>COD Available · ₹60 Handling</span>
+        <span>Delivers in 3–7 Days</span>
+        <span>7-Day Returns</span>
       </div>
 
-      <!-- Protection scale. wimpdecaf uses a dot-on-a-track to show roast
-           strength at a glance; the equivalent spec for this product is how
-           long the fabric stays protected. "Up to 8 hours" is the locked
-           claim — the dot sits at the top of the scale, not beyond it. -->
+      <!-- Protection & Fragrance Scales -->
       <div class="spec-scale">
         <div class="spec-row">
           <span class="spec-label">Protection</span>
@@ -3142,7 +3272,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
             <span class="scale-track"></span>
             <span class="scale-dot"></span>
           </div>
-          <span class="spec-val">barely there</span>
+          <span class="spec-val">subtle (fades in min)</span>
         </div>
         <p class="spec-note">Fabric only — never on skin. Glycerine-free, zero residue.</p>
       </div>
@@ -3997,15 +4127,19 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   // one-product store should not silently mean four bottles.
   var pdpQty = 1;
   function renderPdpQty() {
+    var maxQ = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.MAX_QTY) || 10;
     var v = document.getElementById('pdpQtyVal');
     if (v) v.textContent = String(pdpQty);
     var t = document.getElementById('pdpBuyText');
-    if (t) t.textContent = 'Buy now · ₹' + (unitPrice() * pdpQty);
+    if (t) t.textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty);
     var dec = document.getElementById('pdpQtyDec');
     if (dec) dec.disabled = pdpQty <= 1;
+    var inc = document.getElementById('pdpQtyInc');
+    if (inc) inc.disabled = pdpQty >= maxQ;
   }
   function pdpQtyStep(d) {
-    pdpQty = Math.max(1, Math.min(99, pdpQty + d));
+    var maxQ = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.MAX_QTY) || 10;
+    pdpQty = Math.max(1, Math.min(maxQ, pdpQty + d));
     renderPdpQty();
   }
   function buyNow() {
@@ -5051,6 +5185,38 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     // cursor:zoom-out, so anywhere the pointer lands should close it.
     viewer.addEventListener('click',close);
     window.closeGalleryViewer=close;
+  })();
+
+  // Mobile Gallery Scroll Indicator synchronization
+  (function(){
+    var gal = document.getElementById('gallery');
+    var counter = document.getElementById('galCur');
+    var dots = document.querySelectorAll('.gal-dot');
+    if (!gal) return;
+    function updateIndicator() {
+      var tiles = gal.querySelectorAll('.gal-tile');
+      if (!tiles.length) return;
+      var scrollLeft = gal.scrollLeft;
+      var tileWidth = tiles[0].offsetWidth || 1;
+      var idx = Math.min(tiles.length - 1, Math.max(0, Math.round(scrollLeft / tileWidth)));
+      if (counter) counter.textContent = String(idx + 1);
+      if (dots.length) {
+        dots.forEach(function(dot, i){
+          var isAct = i === idx;
+          dot.classList.toggle('active', isAct);
+          dot.setAttribute('aria-selected', isAct ? 'true' : 'false');
+        });
+      }
+    }
+    gal.addEventListener('scroll', function(){
+      window.requestAnimationFrame(updateIndicator);
+    }, {passive:true});
+    window.galGoTo = function(idx) {
+      var tiles = gal.querySelectorAll('.gal-tile');
+      if (tiles[idx]) {
+        tiles[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    };
   })();
 
   // Escape key — close overlays + mobile menu
