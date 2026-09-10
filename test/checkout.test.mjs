@@ -232,6 +232,12 @@ test('Step 3: COD flow reaches showSuccess(orderId, "cod") and does not touch Ra
   assert.ok(html.includes("if (payMethod === 'prepaid')"), 'Prepaid is guarded separately from COD');
 });
 
+test('Step 3: trackPurchase correctly maps unitPrice and item quantity to GA4 purchase event', () => {
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+  assert.ok(html.includes('function trackPurchase(amount, orderId, qty)'), 'trackPurchase must accept qty parameter');
+  assert.ok(html.includes('items: gaItems(unitPrice, qty)'), 'GA4 purchase event must use unit price and item quantity');
+});
+
 // ============================================================
 // PHASE 18 — BACKEND PAYMENT INTEGRITY TESTS
 // ============================================================

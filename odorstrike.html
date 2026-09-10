@@ -5125,7 +5125,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       qrImg.onerror = function(){ qrImg.style.display = 'none'; };
     }
 
-    trackPurchase(total, orderId);
+    trackPurchase(total, orderId, cartQty > 0 ? cartQty : 1);
     setCartQty(0);
     try {
       const buyerEmail = (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
@@ -5351,8 +5351,10 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   // unpaid/COD order as a sale and train Meta to find people who don't pay.
   // (Kept the name `trackPurchase` so existing call sites are untouched.)
   var _placedOrders = {};
-  function trackPurchase(amount, orderId) {
+  function trackPurchase(amount, orderId, qty) {
     amount = Number(amount) || osValue();
+    var unitPrice = osValue();
+    qty = (typeof qty === 'number' && qty > 0) ? qty : (Math.max(1, Math.round(amount / unitPrice)) || 1);
     if (orderId && _placedOrders[orderId]) return;
     if (orderId) _placedOrders[orderId] = true;
     // First-party funnel (unchanged): marks this session's cart converted.
@@ -5361,14 +5363,14 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     }
     // GA4 (unchanged — out of Meta scope): preserves the merchant's report.
     if (typeof gtag !== 'undefined') gtag('event', 'purchase', {
-      transaction_id: orderId, value: amount, currency: 'INR', items: gaItems(amount)
+      transaction_id: orderId, value: amount, currency: 'INR', items: gaItems(unitPrice, qty)
     });
     // Meta: intent signal only, with Advanced Matching from the checkout form so
     // the Lead — and the later server Purchase, which reuses these identifiers —
     // gets a high Event Match Quality score.
     if (typeof fbq !== 'undefined' && orderId) {
       var eid = 'lead_' + orderId; var pii = _formPII();
-      fbq('track', 'Lead', { content_ids: [OS_SKU], content_type: 'product' }, { eventID: eid });
+      fbq('track', 'Lead', { content_ids: [OS_SKU], content_type: 'product', value: amount, currency: 'INR', num_items: qty }, { eventID: eid });
       metaCapi('Lead', eid, { orderId: orderId,
         email: pii.email, phone: pii.phone, firstName: pii.firstName, lastName: pii.lastName,
         city: pii.city, state: pii.state, pincode: pii.pincode, country: 'in' });
