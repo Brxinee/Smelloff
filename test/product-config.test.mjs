@@ -304,5 +304,41 @@ test('index.html homepage founder trust section UX hierarchy, identity and claim
   assert.equal(/chemist|scientist|expert|dermatologist tested|clinically tested|lab certified|India's #1|India's first|award-winning|venture backed|patented breakthrough/i.test(html.slice(html.indexOf('class="founder"'), html.indexOf('class="proof"'))), false, 'Founder section must not contain prohibited false authority claims');
 });
 
+test('index.html homepage testimonial and beta tester voices section UX hierarchy and claims discipline', () => {
+  const html = readFileSync('index.html', 'utf8');
+
+  // Section exists and has proper ARIA linkage
+  assert.ok(html.includes('class="voices"'), 'Voices section class must exist');
+  assert.ok(html.includes('aria-labelledby="voicesTitle"'), 'Voices section must be labeled by voicesTitle');
+  assert.ok(html.includes('id="voicesTitle"'), 'Voices title id must exist');
+
+  // Honest labelling: Early testers / Beta tester, never fake "verified buyer"
+  assert.ok(html.includes('Early testers'), 'Eyebrow must state Early testers');
+  assert.ok(html.includes('What it\'s like to carry one'), 'Title must be What it\'s like to carry one');
+  assert.equal((html.match(/class="v-tag">Beta tester<\/span>/g) || []).length, 3, 'Must have 3 Beta tester tags');
+
+  // Card 1: Rohit (Bengaluru)
+  assert.ok(html.includes('Rohit, 26 · Bengaluru'), 'Card 1 must identify Rohit, 26 · Bengaluru');
+  assert.ok(html.includes('2-hour bike ride → client meeting'), 'Card 1 must describe 2-hour bike ride context');
+  assert.ok(html.includes('Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.'), 'Card 1 quote must match authentic text');
+
+  // Card 2: Aakash (Pune)
+  assert.ok(html.includes('Aakash, 24 · Pune'), 'Card 2 must identify Aakash, 24 · Pune');
+  assert.ok(html.includes('Gym bag · Post-workout to office'), 'Card 2 must describe gym bag context');
+  assert.ok(html.includes('Lives in my gym bag now. Post-workout, pre-Uber, no more ‘should I shower at office’ anxiety.'), 'Card 2 quote must match authentic text');
+
+  // Card 3: Karan (Delhi)
+  assert.ok(html.includes('Karan, 29 · Delhi'), 'Card 3 must identify Karan, 29 · Delhi');
+  assert.ok(html.includes('Dinner jacket · Biryani odor reset'), 'Card 3 must describe dinner jacket context');
+  assert.ok(html.includes('Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger.'), 'Card 3 quote must match authentic text');
+
+  // Link to long version review
+  assert.ok(html.includes('href="/blog/odorstrike-review-30-day-india-test"'), 'Must link to 30-day India test review');
+
+  // Prohibited social proof fabrications
+  const voicesBlock = html.slice(html.indexOf('class="voices"'), html.indexOf('class="founder"'));
+  assert.equal(/verified buyer|verified purchase|4\.9\/5|5\.0\/5|1,000\+ customers|10,000\+ happy|★★★★★|ratingValue/i.test(voicesBlock), false, 'Voices section must not contain fabricated social proof or fake ratings');
+});
+
 
 

@@ -1096,27 +1096,54 @@
     box-shadow:5px 5px 0 var(--acid);
     background:var(--surface);
     padding:24px;
-    display:flex;flex-direction:column;gap:14px;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .voice-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    padding-bottom:12px;
+    border-bottom:1px solid var(--rule);
+  }
+  .voice .v-person{
+    font-family:var(--mono);font-size:12.5px;font-style:normal;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--text);
+    font-weight:700;
   }
   .voice .v-tag{
+    font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.14em;text-transform:uppercase;
+    color:var(--acid);font-weight:600;
+    border:1px solid rgba(184,255,87,.35);
+    padding:2px 7px;
+  }
+  .voice .v-situation{
     font-family:var(--mono);font-size:11px;
-    letter-spacing:.18em;text-transform:uppercase;
-    color:var(--acid);
+    letter-spacing:.09em;text-transform:uppercase;
+    color:var(--muted);
+    margin:0;line-height:1.4;
   }
   .voice blockquote{
     font-family:var(--display);font-weight:400;
-    font-size:19px;line-height:1.32;letter-spacing:-.01em;
+    font-size:18px;line-height:1.38;letter-spacing:-.01em;
     color:var(--text);
-  }
-  .voice cite{
-    font-family:var(--mono);font-size:12px;font-style:normal;
-    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-    margin-top:auto;
+    margin:0;flex-grow:1;
   }
   .voices-note{
     margin-top:26px;font-size:var(--fs-sm);color:var(--muted);max-width:60ch;
+    line-height:1.5;
   }
-  .voices-note a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
+  .voices-note a{
+    color:var(--acid);text-decoration:underline;text-underline-offset:3px;
+    transition:color .18s ease;
+  }
+  .voices-note a:hover{color:var(--text)}
+  .voices-note a:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+  @media(max-width:480px){
+    .voice{padding:20px 18px}
+  }
   @media(min-width:768px){
     .voice-grid{grid-template-columns:repeat(3,1fr);gap:24px}
   }
@@ -1687,19 +1714,28 @@
       <div id="googleReviewWidgetMount"></div>
       <ul class="voice-grid">
         <li class="voice reveal">
-          <p class="v-tag">Beta tester</p>
+          <div class="voice-head">
+            <cite class="v-person">Rohit, 26 · Bengaluru</cite>
+            <span class="v-tag">Beta tester</span>
+          </div>
+          <p class="v-situation">2-hour bike ride → client meeting</p>
           <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
-          <cite>Rohit, 26 / Bengaluru</cite>
         </li>
         <li class="voice reveal">
-          <p class="v-tag">Beta tester</p>
+          <div class="voice-head">
+            <cite class="v-person">Aakash, 24 · Pune</cite>
+            <span class="v-tag">Beta tester</span>
+          </div>
+          <p class="v-situation">Gym bag · Post-workout to office</p>
           <blockquote>“Lives in my gym bag now. Post-workout, pre-Uber, no more ‘should I shower at office’ anxiety.”</blockquote>
-          <cite>Aakash, 24 / Pune</cite>
         </li>
         <li class="voice reveal">
-          <p class="v-tag">Beta tester</p>
+          <div class="voice-head">
+            <cite class="v-person">Karan, 29 · Delhi</cite>
+            <span class="v-tag">Beta tester</span>
+          </div>
+          <p class="v-situation">Dinner jacket · Biryani odor reset</p>
           <blockquote>“Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger.”</blockquote>
-          <cite>Karan, 29 / Delhi</cite>
         </li>
       </ul>
       <p class="voices-note reveal">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review</a> — worn, sweated and stain-tested across India.</p>
