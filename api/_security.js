@@ -72,9 +72,9 @@ export function isAdminAuthorized(req) {
   const token = auth.startsWith('Bearer ') ? auth.slice(7).trim() : custom;
   if (!token) return false;
   try {
-    const a = Buffer.from(adminSecret.trim(), 'utf8');
-    const b = Buffer.from(token, 'utf8');
-    return a.length === b.length && crypto.timingSafeEqual(a, b);
+    const expectedHash = crypto.createHash('sha256').update(adminSecret.trim()).digest();
+    const providedHash = crypto.createHash('sha256').update(token).digest();
+    return crypto.timingSafeEqual(expectedHash, providedHash);
   } catch { return false; }
 }
 
