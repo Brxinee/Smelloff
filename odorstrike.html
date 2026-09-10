@@ -4625,7 +4625,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       fbq('track', 'AddPaymentInfo', _api, { eventID: _eidP });
       metaCapi('AddPaymentInfo', _eidP, { custom: _api, order_type: method === 'cod' ? 'cod' : 'prepaid' });
     }
-    if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: t.total, items: gaItems(v.amount, t.qty) });
+    if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: t.subtotal, items: gaItems(v.amount, t.qty) });
   }
 
   function showError(msg) {

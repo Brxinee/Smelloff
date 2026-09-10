@@ -239,6 +239,14 @@ test('Step 3: trackPurchase correctly maps unitPrice, item quantity, and payment
   assert.ok(html.includes('if (paymentMethod) gaData.payment_type = paymentMethod;'), 'GA4 purchase event must record payment_type');
 });
 
+test('GA4 add_payment_info contract: uses standard payment_type and item subtotal value', () => {
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+  assert.ok(
+    html.includes("gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: t.subtotal, items: gaItems(v.amount, t.qty) })"),
+    'add_payment_info must use payment_type parameter and item subtotal value'
+  );
+});
+
 // ============================================================
 // PHASE 18 — BACKEND PAYMENT INTEGRITY TESTS
 // ============================================================
