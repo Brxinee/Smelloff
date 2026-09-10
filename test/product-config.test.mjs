@@ -720,6 +720,58 @@ test('odorstrike.html PDP FAQ objection-first hierarchy, schema parity, and clai
   assert.ok(faqSection.includes('Up to 8 hours'), 'FAQ must state Up to 8 hours duration');
 });
 
+test('odorstrike.html PDP showcase section UX hierarchy, non-sticky layout, buyNow integration, and claims discipline', () => {
+  const html = readFileSync('odorstrike.html', 'utf8');
+
+  // Extract .showcase block
+  const scStart = html.indexOf('<section class="showcase">');
+  assert.ok(scStart !== -1, 'Must have <section class="showcase">');
+  const scEnd = html.indexOf('</section>', scStart) + 10;
+  const showcase = html.slice(scStart, scEnd);
+
+  // 1. CTA button architecture & buyNow() pathway
+  assert.equal(/<a[^>]+class="[^"]*fix-cta[^"]*"[^>]*href="#buy"/i.test(showcase), false, '.fix-cta must not use href="#buy"');
+  assert.ok(/<button[^>]+class="[^"]*fix-cta[^"]*"[^>]*onclick="buyNow\(\)"/i.test(showcase), '.fix-cta must be a button calling buyNow()');
+  assert.ok(showcase.includes('id="showcaseBuyBtn"'), '.fix-cta must have id="showcaseBuyBtn"');
+  assert.ok(showcase.includes('GET ODORSTRIKE — ₹229'), '.fix-cta must have accessible text GET ODORSTRIKE — ₹229 matching canonical price');
+
+  // 2. renderPdpQty updates showcaseBuyBtn
+  assert.ok(html.includes("document.getElementById('showcaseBuyBtn')"), 'renderPdpQty must synchronize showcaseBuyBtn');
+
+  // 3. Non-sticky layout: .fix-buy must be in normal document flow
+  assert.equal(/\.fix-buy\s*\{[^}]*position:\s*sticky/i.test(html), false, '.fix-buy must not have position: sticky');
+  assert.equal(/\.fix-buy\s*\{[^}]*top:\s*96px/i.test(html), false, '.fix-buy must not have top: 96px');
+
+  // 4. Claims discipline & prohibited claims removal
+  assert.equal(/kills odor/i.test(showcase), false, '"Kills odor" must be absent from showcase');
+  assert.ok(showcase.includes("Neutralizes odor — doesn't hide it"), 'Must use approved "Neutralizes odor — doesn\'t hide it"');
+
+  const forbiddenTerms = [
+    'kills', 'killing', 'destroy', 'destroys', 'instant', 'instantly',
+    'permanent', 'guaranteed', 'miracle', '4 months', 'months of daily use',
+    'odor-proof', 'bacteria', 'antibacterial', 'antimicrobial', '100%'
+  ];
+  for (const term of forbiddenTerms) {
+    assert.equal(new RegExp(term, 'i').test(showcase), false, `Showcase must not contain forbidden term: ${term}`);
+  }
+
+  // 5. Month-based bottle-life wording removed, canonical spray count used
+  assert.equal(/month|months|weeks/i.test(showcase), false, 'Month/week-based bottle life must be absent from showcase');
+  assert.ok(showcase.includes('~250 sprays'), 'Showcase must cite canonical ~250 sprays');
+  assert.ok(showcase.includes('~80–125 refreshes'), 'Showcase must cite canonical refreshes');
+
+  // 6. Redundant product positioning removed
+  assert.equal(/Not a perfume/i.test(showcase), false, 'Showcase must not repeat "Not a perfume"');
+  assert.equal(/Not a deodorant/i.test(showcase), false, 'Showcase must not repeat "Not a deodorant"');
+
+  // 7. Compact secondary purchase card (.fix-buy) specs & pricing
+  assert.ok(showcase.includes('ODORSTRIKE 50ml'), '.fix-buy must show product name');
+  assert.ok(showcase.includes('₹229'), '.fix-buy must show canonical prepaid price ₹229');
+  assert.ok(showcase.includes('₹499'), '.fix-buy must show canonical MRP ₹499');
+  assert.ok(showcase.includes('₹289 on COD'), '.fix-buy must show canonical COD total ₹289');
+  assert.ok(showcase.includes('Free shipping'), '.fix-buy must confirm free shipping');
+});
+
 
 
 

@@ -1323,13 +1323,13 @@
   .showcase{
     background:var(--surface);
     color:var(--text);
-    padding:clamp(72px,9vw,120px) 32px;
+    padding:clamp(56px,7vw,96px) 32px;
   }
   .showcase .section-tag{color:var(--muted)}
   .showcase .section-tag::before{background:var(--muted)}
   .showcase-grid{
     display:grid;grid-template-columns:1fr;
-    gap:clamp(36px,5vw,64px);
+    gap:clamp(32px,4vw,56px);
     align-items:start;
     max-width:var(--maxw);margin:0 auto;
   }
@@ -1337,9 +1337,9 @@
     .showcase-grid{grid-template-columns:1.15fr .85fr}
   }
   .showcase-text{max-width:none}
-  .showcase-text .fix-lede{font-size:19px;color:var(--text);opacity:.95;max-width:none}
-  .fix-features{list-style:none;margin:28px 0 4px;padding:0;display:grid;gap:14px;max-width:none}
-  .fix-features li{position:relative;padding-left:32px;font-size:16px;line-height:1.5;color:#c7c4bd}
+  .showcase-text .fix-lede{font-size:18px;color:var(--text);opacity:.95;max-width:none;margin-bottom:16px}
+  .fix-features{list-style:none;margin:24px 0 0;padding:0;display:grid;gap:12px;max-width:none}
+  .fix-features li{position:relative;padding-left:32px;font-size:15px;line-height:1.5;color:#c7c4bd}
   .fix-features li::before{
     content:'\2713';position:absolute;left:0;top:2px;
     width:20px;height:20px;border-radius:50%;
@@ -1348,66 +1348,66 @@
   }
   .fix-features li strong{color:var(--paper);font-weight:700}
   .fix-features li a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
-  /* Buy block — now a card in the right column rather than a centred slab
-     floating under the copy. Sticks alongside the argument on desktop. */
+  /* Buy block — compact secondary purchase card in normal document flow (non-sticky) */
   .fix-buy{
     margin:0;
-    padding:clamp(24px,3vw,32px);
+    padding:clamp(20px,2.5vw,28px);
     background:var(--ink);
     border:1px solid var(--rule);
     border-radius:var(--sq-lg,28px);
   }
-  @media(min-width:960px){
-    .fix-buy{position:sticky;top:96px}
-  }
   .fix-buy .specs{margin-top:0;padding-top:0;border-top:0}
   .fix-cta{
-    display:block;width:100%;margin-top:28px;
+    display:block;width:100%;margin-top:22px;
     background:var(--acid);color:var(--ink);
-    padding:20px 28px;border:none;cursor:pointer;
+    padding:18px 24px;border:none;cursor:pointer;
     font-family:var(--mono);font-size:15px;font-weight:700;
-    letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
+    letter-spacing:.14em;text-transform:uppercase;text-align:center;
     transition:transform .15s,box-shadow .15s;
+    min-height:48px;
+    outline:none;
+    -webkit-appearance:none;
   }
   .fix-cta:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(184,255,87,.35)}
-  .fix-cta-note{display:block;margin-top:14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;text-align:center}
+  .fix-cta:focus-visible{outline:2px solid var(--paper);outline-offset:2px}
+  .fix-cta:active{transform:translate(0,0);box-shadow:none}
+  .fix-cta-note{display:block;margin-top:12px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;text-align:center}
   .fix-cta-note s{opacity:.65}
   .fix-buy-title{
     font-family:var(--mono);font-size:12px;
     letter-spacing:.2em;text-transform:uppercase;
-    color:var(--acid);margin:0 0 18px;
+    color:var(--acid);margin:0 0 16px;
   }
-  /* Scale / carry facts — text versions of what the ad creatives used to
-     say in burnt-in pixels. */
+  /* Scale / carry facts */
   .fix-carry{
-    list-style:none;margin:34px 0 0;padding:22px 0 0;
+    list-style:none;margin:28px 0 0;padding:20px 0 0;
     border-top:1px solid var(--rule);
     display:grid;gap:16px;
   }
   @media(min-width:640px){
-    .fix-carry{grid-template-columns:repeat(3,1fr);gap:24px}
+    .fix-carry{grid-template-columns:repeat(3,1fr);gap:20px}
   }
   .fix-carry li{font-size:14px;line-height:1.5;color:var(--muted)}
   .fix-carry span{
     display:block;
     font-family:var(--display);font-weight:900;
-    font-size:22px;line-height:1.1;letter-spacing:-.02em;
+    font-size:20px;line-height:1.1;letter-spacing:-.02em;
     color:var(--acid);
-    margin-bottom:6px;
+    margin-bottom:4px;
   }
   .showcase-text h2{
     font-family:var(--display);
     font-weight:900;
-    font-size:clamp(36px,4.5vw,64px);
-    line-height:1;
+    font-size:clamp(32px,4vw,56px);
+    line-height:1.04;
     letter-spacing:-.03em;
-    margin-bottom:32px;
+    margin-bottom:24px;
   }
   .showcase-text p{
-    font-size:18px;
+    font-size:16px;
     line-height:1.6;
     color:var(--text-2,#c7c4bd);
-    margin-bottom:24px;
+    margin-bottom:18px;
     max-width:62ch;
   }
   /* Inline links: acid green (#B8FF57 passes AA on #080808) + underline */
@@ -1418,6 +1418,10 @@
     text-decoration-thickness:1px;
   }
   .showcase-text p a:hover{text-decoration-thickness:2px}
+  @media(max-width:640px){
+    .showcase{padding:44px 20px}
+    .fix-buy{padding:20px 16px}
+  }
   /* Showcase spec table — a plain label/value list, left-aligned. */
   .specs{
     margin-top:0;
@@ -3395,38 +3399,33 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <div class="showcase-text">
     <div class="section-tag">The fix</div>
     <h2>Meet ODORSTRIKE.<br>One mist. Zero evidence.</h2>
-    <p class="fix-lede"><strong>ODORSTRIKE</strong> is a pocket-sized fabric odor remover — a 50ml spray that erases sweat, gym and smoke smell straight out of the clothes you're wearing. Not a perfume. Not a deodorant. A fix you keep in your pocket.</p>
-    <p>It doesn't mask smell — it captures and neutralizes the odor molecules trapped in your shirt collar, jacket sleeves and hoodie cuffs. <a href="/blog/hpbcd-cyclodextrin-fabric-odor">HPβCD, a ring-shaped cyclodextrin that cages odor molecules</a> traps them at the source while Zinc PCA shuts them down.</p>
+    <p class="fix-lede"><strong>ODORSTRIKE</strong> is formulated for trapped garment odor between washes — neutralizing sweat, commute, and ambient odor directly in the fabric weave without heavy fragrance.</p>
+    <p>Body sprays sit on skin and fade. ODORSTRIKE penetrates shirt collars, underarms, and jacket cuffs where odor bonds to fibres. <a href="/blog/hpbcd-cyclodextrin-fabric-odor">HPβCD cyclodextrin cages</a> trap odor compounds at the source while Zinc PCA neutralizes them.</p>
     <ul class="fix-features">
-      <li><strong>Kills odor — doesn't hide it.</strong> A 4-layer system traps, neutralizes and blocks smell instead of perfuming over it. <a href="#science">See the chemistry ↓</a></li>
-      <li><strong>Up to 8 hours of protection</strong> on fabric — enough for a full office day or a gym-to-commute stretch.</li>
-      <li><strong>Zero residue, glycerine-free.</strong> Dries fast with no wet patch, no stiffness and no stain, even on dark fabric.</li>
-      <li><strong>Fabric-only, works on everything</strong> — cotton, polyester, denim and wool. Never on skin.</li>
-      <li><strong>Pocket-sized 50ml</strong> — about 250 sprays per bottle, shipped pan-India with COD.</li>
+      <li><strong>Neutralizes odor — doesn't hide it.</strong> Traps and binds odor molecules rather than masking them with heavy perfume. <a href="#science">See the chemistry ↓</a></li>
+      <li><strong>Up to 8 hours of fabric protection</strong> under normal commute and workday conditions.</li>
+      <li><strong>Zero residue, glycerine-free.</strong> Dries clear in ~10 seconds with no stiffness, white marks, or oily film.</li>
+      <li><strong>Everyday washable fabrics.</strong> Safe on cotton, polyester, denim, wool, and blends. (Fabric only — never on skin).</li>
     </ul>
 
-    <!-- The scale, carry and use-case claims that used to be baked into the
-         gallery creatives as pixels. Real text: selectable, indexable,
-         translatable, and it inherits the page's own type. -->
+    <!-- Physical format and carry specifications -->
     <ul class="fix-carry">
-      <li><span>10.5 cm</span>Fits a jeans pocket, a laptop sleeve or a gym-bag side pouch.</li>
-      <li><span>Cabin-safe</span>Under the 100ml liquids limit, so it flies in hand baggage.</li>
-      <li><span>~250 sprays</span>Two sprays per refresh — roughly four months of daily use.</li>
+      <li><span>10.5 cm</span>Pocket-sized format fits jeans, laptop sleeves, or gym kits.</li>
+      <li><span>Cabin-safe</span>Under the 100ml travel liquid limit for hassle-free carry.</li>
+      <li><span>~250 sprays</span>~80–125 refreshes at 2–3 targeted sprays per use.</li>
     </ul>
   </div>
 
   <div class="fix-buy">
     <p class="fix-buy-title">ODORSTRIKE 50ml</p>
     <div class="specs">
-      <div class="spec-row"><span>Volume</span>50ML</div>
-      <div class="spec-row"><span>Use on</span>FABRIC ONLY</div>
-      <div class="spec-row"><span>Protection</span>UP TO 8HR</div>
-      <div class="spec-row"><span>Sprays</span>~250</div>
-      <div class="spec-row"><span>Dries</span>FAST · NO WET PATCH</div>
-      <div class="spec-row"><span>Glycerine</span>ZERO</div>
+      <div class="spec-row"><span>Format</span>50ML POCKET MIST</div>
+      <div class="spec-row"><span>Capacity</span>~250 SPRAYS</div>
+      <div class="spec-row"><span>Protection</span>UP TO 8 HOURS</div>
+      <div class="spec-row"><span>Application</span>FABRIC ONLY</div>
     </div>
-    <a href="#buy" class="fix-cta">Buy Now — ₹229 · COD</a>
-    <span class="fix-cta-note">50ml · <s>₹499</s> ₹229 · free shipping · ₹289 on COD</span>
+    <button type="button" class="fix-cta" id="showcaseBuyBtn" onclick="buyNow()">GET ODORSTRIKE — ₹229</button>
+    <span class="fix-cta-note"><s>₹499</s> ₹229 · Free shipping · ₹289 on COD</span>
   </div>
   </div>
 </section>
@@ -4215,6 +4214,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (v) v.textContent = String(pdpQty);
     var t = document.getElementById('pdpBuyText');
     if (t) t.textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty);
+    var sc = document.getElementById('showcaseBuyBtn');
+    if (sc) sc.textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty);
     var dec = document.getElementById('pdpQtyDec');
     if (dec) dec.disabled = pdpQty <= 1;
     var inc = document.getElementById('pdpQtyInc');
