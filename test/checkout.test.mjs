@@ -392,4 +392,15 @@ test('Step 4 Backend: amount validation logic strictly enforces paise integrity'
   assert.equal(cod2, 51800);
 });
 
+test('Multi-quantity orderPayload calculation integrity in chrome.js', () => {
+  const chromeJs = fs.readFileSync('assets/js/chrome.js', 'utf8');
+  assert.ok(chromeJs.includes('var amountRupees = unitPrice * qty;'), 'chrome.js must calculate amountRupees as unitPrice * qty');
+  assert.ok(!chromeJs.includes("numberFromText('checkoutAmount')"), 'chrome.js must not parse formatted string checkoutAmount which breaks on multi-quantity');
+
+  // Verify static submitText in odorstrike.html matches default COD total
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+  assert.ok(html.includes('<span id="submitText">Place COD order · ₹289</span>'), 'Static submit button must match default COD total ₹289');
+});
+
+
 
