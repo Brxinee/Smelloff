@@ -2379,9 +2379,12 @@
   .mobile-bar .mb-label{
     font-family:var(--mono);
     font-size:11px;
+    line-height:1.3;
     letter-spacing:.1em;
     color:var(--paper);
     opacity:.8;
+    margin-right:12px;
+    flex:1 1 auto;
   }
   .mobile-bar .mb-btn{
     background:var(--acid);
@@ -2399,7 +2402,10 @@
     text-transform:uppercase;
     cursor:pointer;
     border-radius:2px;
+    flex-shrink:0;
+    white-space:nowrap;
   }
+  .mobile-bar .mb-btn:focus-visible{outline:2px solid var(--paper);outline-offset:2px}
   /* Hides exactly where .product-info becomes a sticky buy panel (768px),
      so there is always one persistent route to checkout at every width. */
   @media(min-width:768px){.mobile-bar{display:none !important}}
@@ -3116,8 +3122,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
 <!-- STICKY MOBILE BAR -->
 <div class="mobile-bar" id="mobileBar">
-  <span class="mb-label">ODORSTRIKE 50ml · ₹229</span>
-  <button class="mb-btn" id="mobileBarBuyBtn" onclick="buyNow()">GET ODORSTRIKE</button>
+  <span class="mb-label" id="mobileBarLabel" aria-live="polite" aria-atomic="true">ODORSTRIKE 50ml · ₹229</span>
+  <button class="mb-btn" id="mobileBarBuyBtn" onclick="buyNow()" aria-describedby="mobileBarLabel">GET ODORSTRIKE</button>
 </div>
 
 <!-- CART DRAWER -->
@@ -4216,6 +4222,11 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (t) t.textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty);
     var sc = document.getElementById('showcaseBuyBtn');
     if (sc) sc.textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty);
+    var mbLabel = document.getElementById('mobileBarLabel');
+    if (mbLabel) {
+      var subtotal = unitPrice() * pdpQty;
+      mbLabel.textContent = (pdpQty > 1 ? (pdpQty + ' × ') : '') + 'ODORSTRIKE 50ml · ₹' + subtotal;
+    }
     var dec = document.getElementById('pdpQtyDec');
     if (dec) dec.disabled = pdpQty <= 1;
     var inc = document.getElementById('pdpQtyInc');
@@ -4263,6 +4274,9 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   window.buyNow = buyNow;
   window.addToCart = addToCart;
   window.pdpQtyStep = pdpQtyStep;
+  window.renderPdpQty = renderPdpQty;
+  window.getPdpQty = function() { return pdpQty; };
+  window.setPdpQty = function(q) { pdpQty = q; renderPdpQty(); };
   window.cartInc = cartInc;
   window.cartDec = cartDec;
   window.cartRemove = cartRemove;
@@ -5460,54 +5474,57 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   })();
 
   // Mobile sticky bar — visible whenever no other buy control is on screen
-  // (hero buttons, #buy section), and hidden while the checkout overlay is up.
+  // (hero buttons, showcase button, #buy section, final CTA), and hidden while
+  // the checkout overlay is up.
   (function(){
     var bar = document.getElementById('mobileBar');
     if (!bar) return;
-    var buy = document.getElementById('buy');
     var scrolledEnough = false;
-    var buyInView = false;
-    var heroCtaInView = true; // assume visible until the observer says otherwise
+    var visibleCtas = new Set();
 
     function update(){
       var overlay = document.getElementById('checkoutOverlay');
       var overlayOpen = overlay && overlay.classList.contains('active');
-      var show = scrolledEnough && !buyInView && !heroCtaInView && !overlayOpen;
+      var anyCtaInView = visibleCtas.size > 0;
+      var show = scrolledEnough && !anyCtaInView && !overlayOpen;
       bar.classList.toggle('visible', show);
       bar.setAttribute('aria-hidden', show ? 'false' : 'true');
     }
     window._updateMobileBar = update;
 
-    // Hide whenever the main #buy section is on screen.
-    if (buy && 'IntersectionObserver' in window) {
-      new IntersectionObserver(function(entries){
-        buyInView = entries[0].isIntersecting;
+    var purchaseTargets = [
+      document.querySelector('.buy-actions'),
+      document.getElementById('showcaseBuyBtn'),
+      document.getElementById('buy'),
+      document.querySelector('.final button') || document.querySelector('.final')
+    ].filter(Boolean);
+
+    if ('IntersectionObserver' in window && purchaseTargets.length > 0) {
+      var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting) {
+            visibleCtas.add(entry.target);
+          } else {
+            visibleCtas.delete(entry.target);
+          }
+        });
+        scrolledEnough = true;
         update();
-      }, { threshold: 0.01 }).observe(buy);
+      }, { threshold: 0.1 });
+
+      purchaseTargets.forEach(function(target){
+        observer.observe(target);
+      });
+      window._mobileBarObserver = observer;
     }
 
-    // The bar used to wait for 400px of scroll. On a 390x844 phone the hero's
-    // own buy buttons start at ~830px, so between scroll 0 and 400 there was
-    // no purchase control on screen at all — the worst possible gap, right at
-    // the top of the page. It now tracks the real CTA instead: the bar is
-    // shown whenever neither the hero buttons nor the #buy section is visible,
-    // so there is always exactly one route to checkout and never two at once.
-    // The scroll handler stays as the fallback for browsers without IO.
-    var heroCta = document.querySelector('.buy-actions');
-    if (heroCta && 'IntersectionObserver' in window) {
-      new IntersectionObserver(function(entries){
-        heroCtaInView = entries[0].isIntersecting;
-        scrolledEnough = true; // IO drives visibility; don't gate on scroll too
-        update();
-      }, { threshold: 0.01 }).observe(heroCta);
-    }
     var ticking = false;
     function onScroll(){
-      if (!(heroCta && 'IntersectionObserver' in window)) {
+      if (!('IntersectionObserver' in window)) {
         scrolledEnough = window.scrollY > 400;
+        update();
       }
       ticking = false;
-      update();
     }
     window.addEventListener('scroll', function(){
       if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }

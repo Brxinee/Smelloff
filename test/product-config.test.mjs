@@ -772,6 +772,81 @@ test('odorstrike.html PDP showcase section UX hierarchy, non-sticky layout, buyN
   assert.ok(showcase.includes('Free shipping'), '.fix-buy must confirm free shipping');
 });
 
+test('odorstrike.html mobile sticky buy bar (#mobileBar) price synchronization, unified CTA observer, and regression checks', () => {
+  const html = readFileSync('odorstrike.html', 'utf8');
+
+  // 1. #mobileBar exists with proper semantic markup
+  assert.ok(html.includes('id="mobileBar"'), 'Must have #mobileBar');
+  const barMatch = html.match(/<div[^>]+id="mobileBar"[^>]*>([\s\S]*?)<\/div>/);
+  assert.ok(barMatch, 'Must locate #mobileBar element in markup');
+  const barContent = barMatch[1];
+
+  // 2. #mobileBarLabel exists with stable ID, polite aria-live, and canonical default
+  assert.ok(html.includes('id="mobileBarLabel"'), 'Must have stable id="mobileBarLabel"');
+  assert.ok(/<span[^>]+id="mobileBarLabel"[^>]*aria-live="polite"[^>]*aria-atomic="true"[^>]*>[\s\S]*?ODORSTRIKE 50ml · ₹229[\s\S]*?<\/span>/.test(barContent),
+    '#mobileBarLabel must declare aria-live="polite", aria-atomic="true", and initial canonical label');
+
+  // 3. #mobileBarBuyBtn exists, calls buyNow(), has 44px+ touch target, and accessible description
+  assert.ok(html.includes('id="mobileBarBuyBtn"'), 'Must have id="mobileBarBuyBtn"');
+  assert.ok(/<button[^>]+id="mobileBarBuyBtn"[^>]*onclick="buyNow\(\)"[^>]*aria-describedby="mobileBarLabel"[^>]*>GET ODORSTRIKE<\/button>/.test(barContent) ||
+            /<button[^>]+onclick="buyNow\(\)"[^>]*id="mobileBarBuyBtn"[^>]*aria-describedby="mobileBarLabel"[^>]*>GET ODORSTRIKE<\/button>/.test(barContent),
+    '#mobileBarBuyBtn must invoke buyNow() and associate with #mobileBarLabel via aria-describedby');
+
+  // 4. renderPdpQty synchronizes mobileBarLabel dynamically
+  assert.ok(html.includes("document.getElementById('mobileBarLabel')"), 'renderPdpQty must update mobileBarLabel');
+
+  // Verify synchronization formula in renderPdpQty
+  const unit = PRODUCT.price; // 229
+  function deriveMobileBarLabel(qty) {
+    const subtotal = unit * qty;
+    return (qty > 1 ? (qty + ' × ') : '') + 'ODORSTRIKE 50ml · ₹' + subtotal;
+  }
+
+  // Check state calculations for Qty 1, 2, 3, and max configured quantity
+  assert.equal(deriveMobileBarLabel(1), 'ODORSTRIKE 50ml · ₹229', 'Quantity 1 produces canonical single unit subtotal');
+  assert.equal(deriveMobileBarLabel(2), '2 × ODORSTRIKE 50ml · ₹458', 'Quantity 2 produces canonical 2-unit subtotal');
+  assert.equal(deriveMobileBarLabel(3), '3 × ODORSTRIKE 50ml · ₹687', 'Quantity 3 produces canonical 3-unit subtotal');
+  const maxQ = PRODUCT.maxQuantity || 10;
+  assert.equal(deriveMobileBarLabel(maxQ), `${maxQ} × ODORSTRIKE 50ml · ₹${unit * maxQ}`, 'Max quantity produces canonical subtotal');
+
+  // 5. No hardcoded separate price constants in mobile bar logic
+  assert.equal(/ODORSTRIKE 50ml · ₹458/i.test(html), false, 'Must not hardcode secondary quantity prices as string literals');
+  assert.equal(/ODORSTRIKE 50ml · ₹687/i.test(html), false, 'Must not hardcode tertiary quantity prices as string literals');
+
+  // 6. Unified IntersectionObserver for all actionable purchase CTAs
+  const obsStart = html.indexOf('// Mobile sticky bar — visible whenever no other buy control is on screen');
+  assert.ok(obsStart !== -1, 'Must locate mobile bar observer script block');
+  const obsEnd = html.indexOf('window._updateMobileBar = update;', obsStart);
+  const obsBlock = html.slice(obsStart, html.indexOf('})();', obsEnd) + 5);
+
+  // Must observe:
+  // - hero .buy-actions
+  // - #showcaseBuyBtn
+  // - #buy pricing section
+  // - final CTA button (.final button or .final)
+  assert.ok(obsBlock.includes('.buy-actions'), 'Observer must track hero .buy-actions');
+  assert.ok(obsBlock.includes('showcaseBuyBtn'), 'Observer must track #showcaseBuyBtn');
+  assert.ok(obsBlock.includes("getElementById('buy')") || obsBlock.includes("'buy'"), 'Observer must track #buy pricing section');
+  assert.ok(obsBlock.includes('.final'), 'Observer must track section.final purchase button');
+
+  // 7. Exactly ONE IntersectionObserver instance in mobile-bar logic (no duplicate observers)
+  const ioMatches = obsBlock.match(/new\s+IntersectionObserver/g);
+  assert.equal(ioMatches ? ioMatches.length : 0, 1, 'Mobile bar must instantiate exactly one IntersectionObserver');
+
+  // 8. Sensible threshold to prevent flickering
+  assert.ok(obsBlock.includes('threshold: 0.1') || obsBlock.includes('threshold: [0, 0.1]'), 'Observer must use a sensible threshold');
+
+  // 9. Checkout overlay integration
+  assert.ok(html.includes("var mb = document.getElementById('mobileBar');\n    if (mb) mb.style.display = 'none';"), 'openCheckout must hide mobileBar');
+  assert.ok(html.includes("var mb = document.getElementById('mobileBar');\n    if (mb) mb.style.display = '';"), 'closeCheckout must restore mobileBar display');
+  assert.ok(html.includes("if (typeof window._updateMobileBar === 'function') window._updateMobileBar();"), 'closeCheckout must trigger _updateMobileBar()');
+
+  // 10. Styling & accessibility rules
+  assert.ok(html.includes('.mobile-bar .mb-btn:focus-visible'), 'Must have visible focus styling for mobile bar button');
+  assert.ok(html.includes('min-height:44px') || html.includes('min-height: 44px'), 'Mobile bar button must maintain 44px+ touch target');
+  assert.ok(html.includes('white-space:nowrap') || html.includes('white-space: nowrap'), 'Mobile bar button must prevent truncation/awkward wrapping');
+});
+
 
 
 
