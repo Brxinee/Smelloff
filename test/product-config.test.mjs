@@ -575,6 +575,152 @@ test('odorstrike.html PDP gallery information hierarchy, asset order, accessibil
   assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(galHtml), false, 'Gallery markup must not contain prohibited claims');
 });
 
+test('odorstrike.html PDP How to Use section UX hierarchy, canonical values, timer hookup, and HowTo schema parity', () => {
+  const html = readFileSync('odorstrike.html', 'utf8');
+
+  // 1. Container and section header
+  const reset30Start = html.indexOf('id="reset30"');
+  assert.ok(reset30Start > -1, 'Must contain #reset30 section');
+  const reset30End = html.indexOf('</ol>', reset30Start) + 5;
+  const reset30Html = html.slice(reset30Start, reset30End);
+
+  assert.ok(reset30Html.includes('class="section-tag">How to use · Fabric only</div>'), 'Must have fabric-only section tag');
+  assert.ok(reset30Html.includes('Hold. Spray. Wait. Wear.'), 'Must state concise 4-step heading');
+  assert.ok(reset30Html.includes('class="htu-sub"'), 'Must have subtitle with fabric-only clarity');
+
+  // 2. 4-step sequence inside ordered list <ol class="r30-steps">
+  assert.ok(reset30Html.includes('<ol class="r30-steps">'), 'Must use semantic <ol class="r30-steps">');
+  const stepMatches = [...reset30Html.matchAll(/<li class="r30-step/g)];
+  assert.equal(stepMatches.length, 4, 'Must have exactly 4 sequential steps');
+
+  // 3. Step 1: HOLD with 15–20 cm
+  assert.ok(reset30Html.includes('01 · HOLD'), 'Step 1 must have action label HOLD');
+  assert.ok(reset30Html.includes('15–20 cm away'), 'Step 1 must specify canonical 15–20 cm distance');
+  assert.ok(reset30Html.includes('Keep the bottle about 15–20 cm from the fabric'), 'Step 1 body must instruct holding 15–20 cm from fabric');
+
+  // 4. Step 2: SPRAY with 2–3 light sprays, fabric zones, and not for skin
+  assert.ok(reset30Html.includes('02 · SPRAY'), 'Step 2 must have action label SPRAY');
+  assert.ok(reset30Html.includes('2–3 light sprays'), 'Step 2 must specify canonical 2–3 light sprays');
+  assert.ok(reset30Html.includes('collar, underarm fabric, or chest'), 'Step 2 must identify key garment zones');
+  assert.ok(reset30Html.includes('Not for skin') || reset30Html.includes('never on skin'), 'Step 2 must reinforce fabric only / not for skin');
+
+  // 5. Step 3: WAIT with ~10 seconds and timer ring
+  assert.ok(reset30Html.includes('03 · WAIT'), 'Step 3 must have action label WAIT');
+  assert.ok(reset30Html.includes('class="r30-step r30-step--timer"'), 'Step 3 must carry .r30-step--timer class for JS observer');
+  assert.ok(reset30Html.includes('class="r30-ring"'), 'Step 3 must contain .r30-ring element');
+  assert.ok(reset30Html.includes('class="r30-ring-num">10</span>'), 'Step 3 must contain .r30-ring-num displaying 10');
+  assert.ok(reset30Html.includes('Wait ~10 seconds'), 'Step 3 heading must indicate ~10 seconds wait');
+  assert.ok(reset30Html.includes('zero residue and no white marks'), 'Step 3 must note clean evaporation with no marks');
+
+  // 6. Step 4: WEAR with up to 8 hours odor protection
+  assert.ok(reset30Html.includes('04 · WEAR'), 'Step 4 must have action label WEAR');
+  assert.ok(reset30Html.includes('Wear normally'), 'Step 4 heading must indicate wearing normally');
+  assert.ok(reset30Html.includes('up to 8 hours of fabric odor protection'), 'Step 4 must cite canonical up to 8 hours protection');
+
+  // 7. Timer JS hookup
+  assert.ok(html.includes("var block = document.getElementById('reset30');"), 'JS must find #reset30');
+  assert.ok(html.includes("block.querySelector('.r30-step--timer')"), 'JS must target .r30-step--timer');
+  assert.ok(html.includes("block.querySelector('.r30-ring')"), 'JS must target .r30-ring');
+  assert.ok(html.includes("block.querySelector('.r30-ring-num')"), 'JS must target .r30-ring-num');
+
+  // 8. JSON-LD HowTo Schema parity
+  const howToStart = html.indexOf('"@type": "HowTo"');
+  assert.ok(howToStart > -1, 'Must contain JSON-LD HowTo schema');
+  const scriptStart = html.lastIndexOf('<script', howToStart);
+  const jsonStart = html.indexOf('{', scriptStart);
+  const howToEnd = html.indexOf('</script>', howToStart);
+  const howToScript = html.slice(jsonStart, howToEnd).trim();
+  const howToObj = JSON.parse(howToScript);
+  assert.equal(howToObj['@type'], 'HowTo');
+  assert.equal(howToObj.step.length, 4, 'HowTo schema must define exactly 4 steps');
+  assert.equal(howToObj.step[0].name, 'Hold 15–20 cm away');
+  assert.equal(howToObj.step[1].name, 'Apply 2–3 light sprays');
+  assert.equal(howToObj.step[2].name, 'Wait approximately 10 seconds');
+  assert.equal(howToObj.step[3].name, 'Wear normally');
+
+  // 9. Strict claim discipline in How-to section and schema
+  assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(reset30Html), false, 'How to use HTML must not contain prohibited claims');
+  assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(howToScript), false, 'How to use schema must not contain prohibited claims');
+});
+
+test('odorstrike.html PDP FAQ objection-first hierarchy, schema parity, and claims discipline', () => {
+  const html = readFileSync('odorstrike.html', 'utf8');
+
+  // 1. Exactly one FAQPage JSON-LD block
+  const faqPageMatches = html.match(/"@type"\s*:\s*"FAQPage"/g) || [];
+  assert.equal(faqPageMatches.length, 1, 'odorstrike.html must have exactly one FAQPage schema block');
+
+  // 2. Extract FAQPage JSON-LD
+  const scriptMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g);
+  let faqSchema = null;
+  for (const block of scriptMatch) {
+    if (block.includes('"FAQPage"')) {
+      const jsonText = block.replace(/<script type="application\/ld\+json">|<\/script>/g, '').trim();
+      faqSchema = JSON.parse(jsonText);
+      break;
+    }
+  }
+  assert.ok(faqSchema, 'Must parse FAQPage schema');
+  assert.equal(faqSchema.mainEntity.length, 10, 'FAQPage schema must contain exactly 10 questions');
+
+  // 3. Extract visible FAQ items from <section class="faq"
+  const faqSectionStart = html.indexOf('<section class="faq"');
+  assert.ok(faqSectionStart !== -1, 'Must have <section class="faq"');
+  const faqSectionEnd = html.indexOf('</section>', faqSectionStart);
+  const faqSection = html.slice(faqSectionStart, faqSectionEnd);
+
+  // 4. Extract visible questions and answers
+  const qMatches = [...faqSection.matchAll(/<summary><h3>([\s\S]*?)<\/h3><\/summary>/g)].map(m => m[1].trim());
+  const aMatches = [...faqSection.matchAll(/<p class="faq-answer">([\s\S]*?)<\/p>/g)].map(m => m[1].trim());
+
+  assert.equal(qMatches.length, 10, 'Must have exactly 10 visible FAQ questions');
+  assert.equal(aMatches.length, 10, 'Must have exactly 10 visible FAQ answers');
+
+  // 5. Expected 10 objection questions in order
+  const expectedQuestions = [
+    'Is ODORSTRIKE safe on skin?',
+    'Will it stain my clothes?',
+    'How do I use it?',
+    'What fabrics can I use it on?',
+    'How long does the effect last?',
+    'Does it replace washing?',
+    'Is the fragrance strong?',
+    'Is COD available?',
+    'How long does shipping take?',
+    'What is the return policy?'
+  ];
+
+  for (let i = 0; i < expectedQuestions.length; i++) {
+    assert.equal(qMatches[i], expectedQuestions[i], `Question ${i + 1} must match expected objection: ${expectedQuestions[i]}`);
+    assert.equal(faqSchema.mainEntity[i].name, expectedQuestions[i], `Schema question ${i + 1} name must match expected question`);
+    assert.equal(aMatches[i], faqSchema.mainEntity[i].acceptedAnswer.text, `Answer ${i + 1} in HTML must match schema text 1:1`);
+  }
+
+  // 6. Claim discipline guardrails in FAQ section and schema
+  const prohibitedPattern = /kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof|kills the smell/i;
+  assert.equal(prohibitedPattern.test(faqSection), false, 'FAQ HTML must not contain prohibited claims');
+  assert.equal(prohibitedPattern.test(JSON.stringify(faqSchema)), false, 'FAQ schema must not contain prohibited claims');
+  assert.equal(/fragrance-free|unscented|scentless/i.test(faqSection), false, 'FAQ must not claim fragrance-free');
+  assert.equal(/2–3 months|month-based/i.test(faqSection), false, 'FAQ must not encode month-based bottle life');
+
+  // 7. Commercial values match canonical configuration
+  assert.ok(faqSection.includes('₹229'), 'FAQ must state ₹229 prepaid price');
+  assert.ok(faqSection.includes('₹60'), 'FAQ must state ₹60 COD fee');
+  assert.ok(faqSection.includes('₹289'), 'FAQ must state ₹289 COD total');
+  assert.ok(faqSection.includes('7-day return window'), 'FAQ must state 7-day return window');
+  assert.ok(faqSection.includes('80% full'), 'FAQ must state 80% full condition');
+  assert.ok(faqSection.includes('48 hours'), 'FAQ must state 48-hour dispatch');
+  assert.ok(faqSection.includes('3–5 business days'), 'FAQ must state 3–5 days metro delivery');
+
+  // 8. Safety and usage guardrails
+  assert.ok(faqSection.includes('never skin, face, hair, or body'), 'FAQ must strictly prohibit skin, face, hair, or body application');
+  assert.ok(faqSection.includes('zero residue'), 'FAQ must state zero residue');
+  assert.ok(faqSection.includes('15–20 cm'), 'FAQ must state 15–20 cm spray distance');
+  assert.ok(faqSection.includes('approximately 10 seconds'), 'FAQ must state approximately 10 seconds dry time');
+  assert.ok(faqSection.includes('Up to 8 hours'), 'FAQ must state Up to 8 hours duration');
+});
+
+
 
 
 
