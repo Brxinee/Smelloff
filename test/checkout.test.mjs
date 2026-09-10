@@ -181,7 +181,7 @@ test('Step 3: Success ownership is deduplicated, idempotent, and single-source',
 
   // showSuccess in odorstrike.html owns side effects and has idempotency guard
   assert.ok(html.includes('_processedOrders'), 'showSuccess must use _processedOrders set for idempotency');
-  assert.ok(html.includes('trackPurchase(amount, orderId, qty)'), 'showSuccess must trigger trackPurchase with qty');
+  assert.ok(html.includes("trackPurchase(amount, orderId, qty, method === 'cod' ? 'cod' : 'razorpay')"), 'showSuccess must trigger trackPurchase with qty and method');
   assert.ok(html.includes("soAttachOrder(orderId, amount, qty, method === 'cod' ? 'cod' : 'razorpay')"), 'showSuccess must trigger soAttachOrder');
   assert.ok(html.includes('setCartQty(0)'), 'showSuccess must clear cart');
 
@@ -232,10 +232,11 @@ test('Step 3: COD flow reaches showSuccess(orderId, "cod") and does not touch Ra
   assert.ok(html.includes("if (payMethod === 'prepaid')"), 'Prepaid is guarded separately from COD');
 });
 
-test('Step 3: trackPurchase correctly maps unitPrice and item quantity to GA4 purchase event', () => {
+test('Step 3: trackPurchase correctly maps unitPrice, item quantity, and payment method to GA4 purchase event', () => {
   const html = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.ok(html.includes('function trackPurchase(amount, orderId, qty)'), 'trackPurchase must accept qty parameter');
+  assert.ok(html.includes('function trackPurchase(amount, orderId, qty, paymentMethod)'), 'trackPurchase must accept qty and paymentMethod parameters');
   assert.ok(html.includes('items: gaItems(unitPrice, qty)'), 'GA4 purchase event must use unit price and item quantity');
+  assert.ok(html.includes('if (paymentMethod) gaData.payment_type = paymentMethod;'), 'GA4 purchase event must record payment_type');
 });
 
 // ============================================================
@@ -563,9 +564,9 @@ test('Step 5 Post-Purchase: Multi-quantity explicit quantity propagation across 
   const setCartIndex = submitOrderBody.indexOf('setCartQty(0)');
   assert.equal(setCartIndex, -1, 'submitOrder must not prematurely clear cart before showSuccess/showUpiSuccess');
 
-  // 5. GA4 trackPurchase receives explicit quantity
-  assert.ok(html.includes("trackPurchase(amount, orderId, qty)"), 'showSuccess must pass explicit quantity to trackPurchase');
-  assert.ok(html.includes("trackPurchase(total, orderId, qty)"), 'showUpiSuccess must pass explicit quantity to trackPurchase');
+  // 5. GA4 trackPurchase receives explicit quantity and payment method
+  assert.ok(html.includes("trackPurchase(amount, orderId, qty, method === 'cod' ? 'cod' : 'razorpay')"), 'showSuccess must pass explicit quantity and payment method to trackPurchase');
+  assert.ok(html.includes("trackPurchase(total, orderId, qty, 'upi')"), 'showUpiSuccess must pass explicit quantity and upi method to trackPurchase');
 });
 
 

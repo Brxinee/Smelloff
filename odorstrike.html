@@ -4357,18 +4357,28 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     pdpQty = Math.max(1, Math.min(maxQ, pdpQty + d));
     renderPdpQty();
   }
-  function buyNow() {
+  function buyNow(ctaLocation) {
+    if (!ctaLocation && document.activeElement) {
+      if (document.activeElement.id === 'pdpBuyBtn') ctaLocation = 'pdp_hero';
+      else if (document.activeElement.id === 'showcaseBuyBtn') ctaLocation = 'pdp_showcase';
+      else if (document.activeElement.id === 'mobileBarBuyBtn') ctaLocation = 'mobile_sticky';
+      else if (document.activeElement.id === 'finalBuyBtn') ctaLocation = 'pdp_final';
+      else if (document.activeElement.closest && document.activeElement.closest('.pricing')) ctaLocation = 'pdp_pricing';
+    }
     setCartQty(Math.max(1, pdpQty));
-    trackAddToCart();
+    trackAddToCart(ctaLocation);
     smfCartBeacon('add_to_cart');
     closeCartDrawer();
-    openCheckout('solo');
+    openCheckout('solo', ctaLocation);
   }
   // "Add to cart" is the browse path: add a unit and show the drawer, so the
   // qty controls and the subtotal are visible and the page stays behind it.
-  function addToCart() {
+  function addToCart(ctaLocation) {
+    if (!ctaLocation && document.activeElement && document.activeElement.id === 'pdpCartBtn') {
+      ctaLocation = 'pdp_hero';
+    }
     setCartQty(Math.max(1, pdpQty));
-    trackAddToCart();
+    trackAddToCart(ctaLocation);
     smfCartBeacon('add_to_cart');
     openCartDrawer();
   }
@@ -4387,7 +4397,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (q < 1) return;
     cartQty = q;
     closeCartDrawer();
-    openCheckout('solo');
+    openCheckout('solo', 'cart');
   }
   window.openCartDrawer = openCartDrawer;
   window.closeCartDrawer = closeCartDrawer;
@@ -4470,9 +4480,17 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (feeRow) feeRow.style.display = isCod ? '' : 'none';
   }
 
-  function openCheckout(variant) {
+  function openCheckout(variant, ctaLocation) {
     _checkoutTrigger = document.activeElement;
     currentVariant = variant;
+    if (!ctaLocation && _checkoutTrigger) {
+      if (_checkoutTrigger.id === 'pdpBuyBtn' || _checkoutTrigger.id === 'pdpCartBtn') ctaLocation = 'pdp_hero';
+      else if (_checkoutTrigger.id === 'showcaseBuyBtn') ctaLocation = 'pdp_showcase';
+      else if (_checkoutTrigger.id === 'mobileBarBuyBtn') ctaLocation = 'mobile_sticky';
+      else if (_checkoutTrigger.id === 'finalBuyBtn') ctaLocation = 'pdp_final';
+      else if (_checkoutTrigger.id === 'cartCheckoutBtn') ctaLocation = 'cart';
+      else if (_checkoutTrigger.closest && _checkoutTrigger.closest('.pricing')) ctaLocation = 'pdp_pricing';
+    }
     // Sync quantity from the cart (default to 1 for any direct/legacy call).
     if (getCartQty() > 0) cartQty = getCartQty();
     if (!(cartQty > 0)) cartQty = 1;
@@ -4495,7 +4513,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         first.focus();
       }
     }, 100);
-    trackInitCheckout();
+    trackInitCheckout(ctaLocation);
   }
 
   function closeCheckout() {
@@ -4824,7 +4842,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     // Side effects executed exactly once per orderId (idempotent)
     if (!_processedOrders.has(orderId)) {
       _processedOrders.add(orderId);
-      trackPurchase(amount, orderId, qty);
+      trackPurchase(amount, orderId, qty, method === 'cod' ? 'cod' : 'razorpay');
       soAttachOrder(orderId, amount, qty, method === 'cod' ? 'cod' : 'razorpay');
 
       if (method === 'razorpay' && buyerEmail && typeof window.SmelloffEmail !== 'undefined' && window.SmelloffEmail && typeof window.SmelloffEmail.send === 'function') {
@@ -5137,7 +5155,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     }
 
     var qty = (details && typeof details.qty === 'number') ? details.qty : (cartQty > 0 ? cartQty : 1);
-    trackPurchase(total, orderId, qty);
+    trackPurchase(total, orderId, qty, 'upi');
     setCartQty(0);
     try {
       const buyerEmail = (details && details.email) || (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
@@ -5336,20 +5354,26 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     } catch (e) { /* tracking must never break the page */ }
   }
 
-  function trackAddToCart() {
+  function trackAddToCart(ctaLocation) {
     var qty = getCartQty() > 0 ? getCartQty() : 1; var v = osValue() * qty; var eid = _eid();
     var c = fbContents(v, qty);
+    if (ctaLocation) c.cta_location = ctaLocation;
     if (typeof fbq !== 'undefined') fbq('track', 'AddToCart', c, { eventID: eid });
-    if (typeof gtag !== 'undefined') gtag('event', 'add_to_cart', { currency: 'INR', value: v, items: gaItems(osValue(), qty) });
+    var gaData = { currency: 'INR', value: v, items: gaItems(osValue(), qty) };
+    if (ctaLocation) gaData.cta_location = ctaLocation;
+    if (typeof gtag !== 'undefined') gtag('event', 'add_to_cart', gaData);
     metaCapi('AddToCart', eid, { custom: c });
   }
   window.trackAddToCart = trackAddToCart;
 
-  function trackInitCheckout() {
+  function trackInitCheckout(ctaLocation) {
     var qty = getCartQty() > 0 ? getCartQty() : 1; var v = osValue() * qty; var eid = _eid();
     var c = fbContents(v, qty);
+    if (ctaLocation) c.cta_location = ctaLocation;
     if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', c, { eventID: eid });
-    if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', { currency: 'INR', value: v, items: gaItems(osValue(), qty) });
+    var gaData = { currency: 'INR', value: v, items: gaItems(osValue(), qty) };
+    if (ctaLocation) gaData.cta_location = ctaLocation;
+    if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', gaData);
     metaCapi('InitiateCheckout', eid, { custom: c });
     // First-party funnel: checkout_start (snapshot keeps the live cart current).
     smfCartBeacon('checkout_start');
@@ -5363,27 +5387,32 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   // unpaid/COD order as a sale and train Meta to find people who don't pay.
   // (Kept the name `trackPurchase` so existing call sites are untouched.)
   var _placedOrders = {};
-  function trackPurchase(amount, orderId, qty) {
+  function trackPurchase(amount, orderId, qty, paymentMethod) {
     amount = Number(amount) || osValue();
     var unitPrice = osValue();
     qty = (typeof qty === 'number' && qty > 0) ? qty : (Math.max(1, Math.round(amount / unitPrice)) || 1);
+    paymentMethod = paymentMethod || (typeof window.payMethod === 'string' ? window.payMethod : 'prepaid');
     if (orderId && _placedOrders[orderId]) return;
     if (orderId) _placedOrders[orderId] = true;
     // First-party funnel (unchanged): marks this session's cart converted.
     if (typeof window.smfTrack === 'function') {
-      try { window.smfTrack({ type: 'purchase', value: amount * 100, order_code: orderId }); } catch (e) {}
+      try { window.smfTrack({ type: 'purchase', value: amount * 100, order_code: orderId, qty: qty, payment_method: paymentMethod }); } catch (e) {}
     }
-    // GA4 (unchanged — out of Meta scope): preserves the merchant's report.
-    if (typeof gtag !== 'undefined') gtag('event', 'purchase', {
-      transaction_id: orderId, value: amount, currency: 'INR', items: gaItems(unitPrice, qty)
-    });
+    // GA4: preserves the merchant's report with payment_type.
+    if (typeof gtag !== 'undefined') {
+      var gaData = {
+        transaction_id: orderId, value: amount, currency: 'INR', items: gaItems(unitPrice, qty)
+      };
+      if (paymentMethod) gaData.payment_type = paymentMethod;
+      gtag('event', 'purchase', gaData);
+    }
     // Meta: intent signal only, with Advanced Matching from the checkout form so
     // the Lead — and the later server Purchase, which reuses these identifiers —
     // gets a high Event Match Quality score.
     if (typeof fbq !== 'undefined' && orderId) {
       var eid = 'lead_' + orderId; var pii = _formPII();
-      fbq('track', 'Lead', { content_ids: [OS_SKU], content_type: 'product', value: amount, currency: 'INR', num_items: qty }, { eventID: eid });
-      metaCapi('Lead', eid, { orderId: orderId,
+      fbq('track', 'Lead', { content_ids: [OS_SKU], content_type: 'product', value: amount, currency: 'INR', num_items: qty, payment_type: paymentMethod }, { eventID: eid });
+      metaCapi('Lead', eid, { orderId: orderId, payment_method: paymentMethod,
         email: pii.email, phone: pii.phone, firstName: pii.firstName, lastName: pii.lastName,
         city: pii.city, state: pii.state, pincode: pii.pincode, country: 'in' });
     }
