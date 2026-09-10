@@ -777,6 +777,10 @@
     border-radius:var(--sq-xl,36px);
     overflow:hidden;
     background:#0b0b0b;
+    transition:border-color .2s ease,box-shadow .2s ease;
+  }
+  .gal-tile:hover{
+    border-color:rgba(184,255,87,.25);
   }
   .gal-tile img{width:100%;height:auto;display:block}
   /* Tile 1 is the product shot on a white sweep — the tile fill is white too
@@ -850,29 +854,53 @@
   }
   .gal-dots{
     display:flex;
-    gap:6px;
+    gap:8px;
     align-items:center;
   }
   .gal-dot{
-    width:6px;
-    height:6px;
+    position:relative;
+    width:7px;
+    height:7px;
     border-radius:50%;
-    background:var(--rule-strong);
+    background:rgba(244,241,234,.25);
     border:none;
     padding:0;
     cursor:pointer;
     transition:all .2s ease;
+    touch-action:manipulation;
+  }
+  /* Expand tap target to ≥44px for touch accessibility */
+  .gal-dot::before{
+    content:"";
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    width:44px;height:44px;
+  }
+  .gal-dot:focus-visible{
+    outline:2px solid var(--acid);
+    outline-offset:3px;
   }
   .gal-dot.active{
     background:var(--acid);
-    width:16px;
-    border-radius:3px;
+    width:22px;
+    border-radius:4px;
   }
   .gal-counter{
     font-family:var(--mono);
     font-size:11px;
+    font-weight:600;
     letter-spacing:.08em;
-    color:var(--muted);
+    color:var(--paper);
+    opacity:.85;
+    padding:2px 8px;
+    border-radius:4px;
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--rule);
+    line-height:1.6;
+  }
+  @media(prefers-reduced-motion:reduce){
+    .gal-dot{transition:none}
   }
   @media(min-width:768px){
     .gal-mobile-indicator{display:none !important}
@@ -3122,75 +3150,74 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
          order changes, move that preload with it. -->
     <div class="gallery-stack" id="gallery" role="group" aria-label="ODORSTRIKE product images">
       <figure class="gal-tile gal-tile--main">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Enlarge image 1 of 8: ODORSTRIKE 50ml bottle">
           <img src="/assets/pdp-01-hero.webp"
                srcset="/assets/pdp-01-hero@640.webp 640w, /assets/pdp-01-hero.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="ODORSTRIKE 50ml fabric odor control mist — matte black pocket spray bottle for clothes" width="1196" height="1315" fetchpriority="high" decoding="async">
+               alt="ODORSTRIKE 50ml fabric odor control mist — matte black pocket spray bottle with fine-mist nozzle for clothes" width="1196" height="1315" fetchpriority="high" decoding="async">
         </button>
       </figure>
+      <!-- Tile 2: Pocket size / carry context — answers 'How big is it / can I carry it?' immediately after the hero bottle -->
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
-          <img src="/assets/pdp-02-problem.webp"
-               srcset="/assets/pdp-02-problem@640.webp 640w, /assets/pdp-02-problem.webp 1195w"
-               sizes="(min-width:960px) 46vw, 84vw"
-               alt="You don't smell. Your shirt does. Sweat, pollution and long hours leave odor on your clothes — after a workout, a bike commute, before a meeting or in close contact. ODORSTRIKE neutralizes odor at the source and keeps clothes fresh for up to 8 hours." width="1195" height="1316" loading="lazy" decoding="async">
-        </button>
-      </figure>
-      <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
-          <img src="/assets/pdp-03-how-to-use.webp"
-               srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w"
-               sizes="(min-width:960px) 46vw, 84vw"
-               alt="Three steps: spray the fabric from 15–20 cm away, wait approximately 10 seconds to dry, then wear with up to 8 hours of fabric odor protection." width="1196" height="1315" loading="lazy" decoding="async">
-        </button>
-      </figure>
-      <!-- ASSET RECUT NEEDED: this creative's two lower panels are "GYM BAG" and
-           "LAPTOP BAG". They are carry locations, not spray targets, so they do
-           not claim a non-clothing use case — but bags are off-brand for a
-           clothing-only positioning and the words are burnt into the pixels.
-           Recut those two cells to clothing-carry contexts (jacket inner pocket,
-           blazer pocket) and update the alt below to match. The alt stays
-           accurate to what the image shows until then; do not describe panels
-           that are not there. -->
-      <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Enlarge image 2 of 8: Pocket size and portability">
           <img src="/assets/pdp-04-pocket-size.webp"
                srcset="/assets/pdp-04-pocket-size@640.webp 640w, /assets/pdp-04-pocket-size.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="Pocket size, always ready — the 50ml bottle shown in a jeans pocket, a shirt pocket, a gym bag and a laptop bag. About 250 sprays per bottle, travel friendly and lightweight." width="1196" height="1315" loading="lazy" decoding="async">
+               alt="Pocket-sized 50ml bottle shown carried in jeans pocket, shirt pocket, gym bag and laptop bag — lightweight portable format providing approximately 250 sprays per bottle" width="1196" height="1315" loading="lazy" decoding="async">
         </button>
       </figure>
+      <!-- Tile 3: Application to fabric — answers 'How do I use it on clothes?' -->
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Enlarge image 3 of 8: Three-step application on fabric">
+          <img src="/assets/pdp-03-how-to-use.webp"
+               srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="Three-step fabric application guide: spray directly onto clothing fabric from 15–20 cm away, wait approximately 10 seconds to dry, then wear with up to 8 hours of odor protection" width="1196" height="1315" loading="lazy" decoding="async">
+        </button>
+      </figure>
+      <!-- Tile 4: Stain & wetness objection — answers 'Will it stain or leave residue?' -->
+      <figure class="gal-tile gal-tile--info">
+        <button class="gal-zoom-btn" type="button" aria-label="Enlarge image 4 of 8: Fabric test showing zero residue and no white marks">
           <img src="/assets/pdp-05-proof.webp"
                srcset="/assets/pdp-05-proof@640.webp 640w, /assets/pdp-05-proof.webp 1195w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="No white marks, no residue — a black t-shirt sprayed with ODORSTRIKE beside one sprayed with an ordinary spray. Dries in approximately 10 seconds, leaves no stains on black and dark fabrics, and safe for everyday washable clothes." width="1195" height="1316" loading="lazy" decoding="async">
+               alt="Fabric test demonstration showing no white marks or residue: black shirt treated with ODORSTRIKE beside ordinary spray, drying in approximately 10 seconds with zero stains" width="1195" height="1316" loading="lazy" decoding="async">
         </button>
       </figure>
+      <!-- Tile 5: Fabric-only distinction — answers 'Is it really for clothes only?' -->
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
-          <img src="/assets/pdp-06-science.webp"
-               srcset="/assets/pdp-06-science@640.webp 640w, /assets/pdp-06-science.webp 1196w"
-               sizes="(min-width:960px) 46vw, 84vw"
-               alt="How it works: sweat, bacteria and daily activities create odor molecules trapped in fabric; HPβCD traps them like a microscopic cage; Zinc PCA neutralizes the odor at the source; the fabric stays fresh for up to 8 hours. Subtle freshness signal that fades — it neutralizes odor rather than masking it." width="1196" height="1315" loading="lazy" decoding="async">
-        </button>
-      </figure>
-      <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Enlarge image 5 of 8: Fabric only usage guidance">
           <img src="/assets/pdp-07-fabric-only.webp"
                srcset="/assets/pdp-07-fabric-only@640.webp 640w, /assets/pdp-07-fabric-only.webp 1190w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="Fabric only, not for skin. Use on shirts, jackets, hoodies and uniforms. Do not use on skin, body, hair or scalp — ODORSTRIKE is not a perfume, deodorant or body spray." width="1190" height="1322" loading="lazy" decoding="async">
+               alt="Fabric-only usage guideline: formulated for shirts, jackets, hoodies, and uniforms — not for skin, body, or hair" width="1190" height="1322" loading="lazy" decoding="async">
         </button>
       </figure>
+      <!-- Tile 6: Garment odor problem context — answers 'Why do my clothes trap odor?' -->
       <figure class="gal-tile gal-tile--info">
-        <button class="gal-zoom-btn" type="button">
+        <button class="gal-zoom-btn" type="button" aria-label="Enlarge image 6 of 8: Why clothes trap odor">
+          <img src="/assets/pdp-02-problem.webp"
+               srcset="/assets/pdp-02-problem@640.webp 640w, /assets/pdp-02-problem.webp 1195w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="Explanation of trapped garment odor: sweat and pollution molecules embed deep in clothing fibres during workouts, commutes, and long hours" width="1195" height="1316" loading="lazy" decoding="async">
+        </button>
+      </figure>
+      <!-- Tile 7: Science & active formula — answers 'How does it actually work?' -->
+      <figure class="gal-tile gal-tile--info">
+        <button class="gal-zoom-btn" type="button" aria-label="Enlarge image 7 of 8: Molecular odor trap and neutralization science">
+          <img src="/assets/pdp-06-science.webp"
+               srcset="/assets/pdp-06-science@640.webp 640w, /assets/pdp-06-science.webp 1196w"
+               sizes="(min-width:960px) 46vw, 84vw"
+               alt="Active mechanism diagram: cyclodextrin molecules trap odor compounds in a microscopic cage while Zinc PCA neutralizes them at the source for up to 8 hours of fabric protection" width="1196" height="1315" loading="lazy" decoding="async">
+        </button>
+      </figure>
+      <!-- Tile 8: Product comparison vs deo & perfume -->
+      <figure class="gal-tile gal-tile--info">
+        <button class="gal-zoom-btn" type="button" aria-label="Enlarge image 8 of 8: ODORSTRIKE compared with deodorant and perfume">
           <img src="/assets/pdp-08-comparison.webp"
                srcset="/assets/pdp-08-comparison@640.webp 640w, /assets/pdp-08-comparison.webp 1196w"
                sizes="(min-width:960px) 46vw, 84vw"
-               alt="ODORSTRIKE compared with deodorant and perfume: it neutralizes fabric odor, is made for clothes, is pocket sized, dries quickly, leaves no residue and neutralizes rather than masks odor. Deodorant and perfume are made for skin and only cover the smell." width="1196" height="1315" loading="lazy" decoding="async">
+               alt="Product comparison chart: ODORSTRIKE fabric mist neutralizes trapped garment odors without residue, contrasting with perfumes and deodorants designed for skin that only mask smell" width="1196" height="1315" loading="lazy" decoding="async">
         </button>
       </figure>
     </div>
@@ -3198,14 +3225,14 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <!-- Mobile Gallery Slide Indicator -->
     <div class="gal-mobile-indicator" aria-label="Gallery slide navigation">
       <div class="gal-dots" id="galDots" role="tablist">
-        <button type="button" class="gal-dot active" role="tab" aria-selected="true" aria-label="Slide 1 of 8" onclick="galGoTo(0)"></button>
-        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 2 of 8" onclick="galGoTo(1)"></button>
-        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 3 of 8" onclick="galGoTo(2)"></button>
-        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 4 of 8" onclick="galGoTo(3)"></button>
-        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 5 of 8" onclick="galGoTo(4)"></button>
-        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 6 of 8" onclick="galGoTo(5)"></button>
-        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 7 of 8" onclick="galGoTo(6)"></button>
-        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 8 of 8" onclick="galGoTo(7)"></button>
+        <button type="button" class="gal-dot active" role="tab" aria-selected="true" aria-current="true" aria-label="Slide 1 of 8: Product bottle" onclick="galGoTo(0)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 2 of 8: Pocket size" onclick="galGoTo(1)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 3 of 8: How to use on clothes" onclick="galGoTo(2)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 4 of 8: Zero residue proof" onclick="galGoTo(3)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 5 of 8: Fabric only, not for skin" onclick="galGoTo(4)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 6 of 8: Why clothes trap odor" onclick="galGoTo(5)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 7 of 8: Active formula science" onclick="galGoTo(6)"></button>
+        <button type="button" class="gal-dot" role="tab" aria-selected="false" aria-label="Slide 8 of 8: Product comparison" onclick="galGoTo(7)"></button>
       </div>
       <span class="gal-counter"><span id="galCur">1</span> / 8</span>
     </div>
@@ -5196,15 +5223,28 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     function updateIndicator() {
       var tiles = gal.querySelectorAll('.gal-tile');
       if (!tiles.length) return;
-      var scrollLeft = gal.scrollLeft;
-      var tileWidth = tiles[0].offsetWidth || 1;
-      var idx = Math.min(tiles.length - 1, Math.max(0, Math.round(scrollLeft / tileWidth)));
-      if (counter) counter.textContent = String(idx + 1);
+      var center = gal.scrollLeft + (gal.clientWidth / 2);
+      var closestIdx = 0;
+      var minDiff = Infinity;
+      for (var i = 0; i < tiles.length; i++) {
+        var tileCenter = tiles[i].offsetLeft + (tiles[i].offsetWidth / 2);
+        var diff = Math.abs(tileCenter - center);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIdx = i;
+        }
+      }
+      if (counter) counter.textContent = String(closestIdx + 1);
       if (dots.length) {
         dots.forEach(function(dot, i){
-          var isAct = i === idx;
+          var isAct = i === closestIdx;
           dot.classList.toggle('active', isAct);
           dot.setAttribute('aria-selected', isAct ? 'true' : 'false');
+          if (isAct) {
+            dot.setAttribute('aria-current', 'true');
+          } else {
+            dot.removeAttribute('aria-current');
+          }
         });
       }
     }
@@ -5214,7 +5254,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     window.galGoTo = function(idx) {
       var tiles = gal.querySelectorAll('.gal-tile');
       if (tiles[idx]) {
-        tiles[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        var isReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        tiles[idx].scrollIntoView({ behavior: isReduced ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
       }
     };
   })();

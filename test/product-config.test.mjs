@@ -492,6 +492,90 @@ test('odorstrike.html PDP hero and primary buy area UX hierarchy, canonical pric
   assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(heroSection), false, 'Hero section must not contain prohibited claims');
 });
 
+test('odorstrike.html PDP gallery information hierarchy, asset order, accessibility, and performance', () => {
+  const html = readFileSync('odorstrike.html', 'utf8');
+
+  // 1. Gallery stack container
+  const galStart = html.indexOf('<div class="gallery-stack" id="gallery"');
+  assert.ok(galStart !== -1, 'Must have <div class="gallery-stack" id="gallery">');
+  const galEnd = html.indexOf('<!-- Mobile Gallery Slide Indicator -->', galStart);
+  const galHtml = html.slice(galStart, galEnd);
+
+  // 2. Exact 8-tile information hierarchy:
+  // Tile 1: Product hero / bottle
+  // Tile 2: Pocket size / portability & scale
+  // Tile 3: 3-step fabric application
+  // Tile 4: Zero residue / dark fabric proof
+  // Tile 5: Fabric-only guideline (not skin)
+  // Tile 6: Trapped garment odor problem
+  // Tile 7: Science & molecular neutralizer
+  // Tile 8: Product comparison vs deo & perfume
+  const expectedOrder = [
+    'pdp-01-hero.webp',
+    'pdp-04-pocket-size.webp',
+    'pdp-03-how-to-use.webp',
+    'pdp-05-proof.webp',
+    'pdp-07-fabric-only.webp',
+    'pdp-02-problem.webp',
+    'pdp-06-science.webp',
+    'pdp-08-comparison.webp'
+  ];
+
+  let lastIndex = -1;
+  expectedOrder.forEach((asset, idx) => {
+    const pos = galHtml.indexOf(asset);
+    assert.ok(pos !== -1, `Gallery must include ${asset}`);
+    assert.ok(pos > lastIndex, `Asset ${asset} (position ${idx + 1}) must appear after previous asset in sequence`);
+    lastIndex = pos;
+  });
+
+  // 3. Performance & LCP discipline:
+  // Tile 1 must be preloaded in <head>, fetchpriority="high", decoding="async", no loading="lazy"
+  assert.ok(html.includes('href="/assets/pdp-01-hero.webp"'), 'Tile 1 must be referenced in head preload');
+  assert.ok(html.includes('<link rel="preload" as="image" type="image/webp"\n      href="/assets/pdp-01-hero.webp"'), 'Tile 1 must be preloaded in head');
+  const heroImgTag = galHtml.slice(galHtml.indexOf('<img src="/assets/pdp-01-hero.webp"'), galHtml.indexOf('</button>', galHtml.indexOf('pdp-01-hero.webp')));
+  assert.ok(heroImgTag.includes('fetchpriority="high"'), 'Tile 1 must have fetchpriority="high"');
+  assert.ok(!heroImgTag.includes('loading="lazy"'), 'Tile 1 LCP image must not be lazy loaded');
+
+  // Tiles 2-8 must have loading="lazy" and decoding="async"
+  for (let i = 1; i < expectedOrder.length; i++) {
+    const asset = expectedOrder[i];
+    const imgStart = galHtml.indexOf(`<img src="/assets/${asset}"`);
+    const imgTag = galHtml.slice(imgStart, galHtml.indexOf('>', imgStart));
+    assert.ok(imgTag.includes('loading="lazy"'), `Asset ${asset} must have loading="lazy"`);
+    assert.ok(imgTag.includes('decoding="async"'), `Asset ${asset} must have decoding="async"`);
+  }
+
+  // 4. Accessibility: zoom buttons with descriptive aria-label
+  assert.ok(galHtml.includes('aria-label="Enlarge image 1 of 8: ODORSTRIKE 50ml bottle"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 2 of 8: Pocket size and portability"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 3 of 8: Three-step application on fabric"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 4 of 8: Fabric test showing zero residue and no white marks"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 5 of 8: Fabric only usage guidance"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 6 of 8: Why clothes trap odor"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 7 of 8: Molecular odor trap and neutralization science"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 8 of 8: ODORSTRIKE compared with deodorant and perfume"'));
+
+  // 5. Alt text non-repetitive & descriptive
+  const altMatches = [...galHtml.matchAll(/alt="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(altMatches.length, 8, 'Must have exactly 8 alt text entries');
+  const uniqueAlts = new Set(altMatches);
+  assert.equal(uniqueAlts.size, 8, 'All 8 alt texts must be uniquely descriptive');
+
+  // 6. Mobile indicator dots and counter
+  assert.ok(html.includes('id="galDots" role="tablist"'), 'Mobile indicator must have tablist role');
+  assert.ok(html.includes('class="gal-dot active" role="tab" aria-selected="true" aria-current="true"'), 'First dot must be active and selected');
+  assert.ok(html.includes('<span id="galCur">1</span> / 8'), 'Counter must display 1 / 8');
+
+  // 7. Full-screen zoom viewer modal exists and is accessible
+  assert.ok(html.includes('id="galViewer" role="dialog" aria-modal="true"'), 'Must have accessible gallery modal dialog');
+  assert.ok(html.includes('class="gal-viewer-close" type="button" aria-label="Close image"'), 'Modal must have accessible close button');
+
+  // 8. Strict claim discipline across gallery markup
+  assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(galHtml), false, 'Gallery markup must not contain prohibited claims');
+});
+
+
 
 
 
