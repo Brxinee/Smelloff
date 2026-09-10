@@ -15,10 +15,11 @@
     "sitemap": "node scripts/seo/build-sitemap.mjs",
     "sitemap:check": "node scripts/seo/build-sitemap.mjs --check",
     "indexnow": "node scripts/indexnow-ping.mjs",
-    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs --check && node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js",
+    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs --check && node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js && node scripts/audit-production.mjs",
     "lint": "node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js",
     "start": "node server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "verify:live": "node scripts/verify-live-deployment.mjs"
   },
   "dependencies": {
     "express": "^5.2.1",

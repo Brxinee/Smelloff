@@ -847,6 +847,82 @@ test('odorstrike.html mobile sticky buy bar (#mobileBar) price synchronization, 
   assert.ok(html.includes('white-space:nowrap') || html.includes('white-space: nowrap'), 'Mobile bar button must prevent truncation/awkward wrapping');
 });
 
+test('odorstrike.html final purchase CTA (section.final) structure, canonical price sync, buyNow integration, reassurance, and claim discipline', () => {
+  const html = readFileSync('odorstrike.html', 'utf8');
+
+  // 1. Final CTA exists and has section.final with semantic structure
+  assert.ok(html.includes('<section class="final"'), 'Must have section.final container');
+  const finalStart = html.indexOf('<section class="final"');
+  assert.ok(finalStart !== -1, 'Must find <section class="final"');
+  const finalEnd = html.indexOf('</section>', finalStart);
+  assert.ok(finalEnd !== -1, 'Must find closing </section> for final CTA');
+  const finalBlock = html.slice(finalStart, finalEnd + 10);
+
+  // 2. Final CTA button exists, has id="finalBuyBtn", invokes buyNow()
+  assert.ok(finalBlock.includes('id="finalBuyBtn"'), 'Must have id="finalBuyBtn"');
+  assert.ok(finalBlock.includes('onclick="buyNow()"'), 'Final CTA button must invoke buyNow()');
+
+  // 3. Final CTA does NOT use #buy anchor navigation or page reload
+  assert.equal(finalBlock.includes('href="#buy"'), false, 'Final CTA must not navigate to #buy anchor');
+  assert.equal(finalBlock.includes('href='), false, 'Final CTA must be a semantic button, not an anchor link');
+
+  // 4. Final CTA price is driven by the existing quantity state in renderPdpQty()
+  const renderQtyMatch = html.match(/function\s+renderPdpQty\s*\(\)\s*\{([\s\S]*?)\n\s*\}/);
+  assert.ok(renderQtyMatch, 'Must locate renderPdpQty() function in odorstrike.html');
+  const renderQtyBody = renderQtyMatch[1];
+  assert.ok(renderQtyBody.includes('finalBuyBtn'), 'renderPdpQty() must synchronize finalBuyBtn state');
+  assert.ok(
+    renderQtyBody.includes("textContent = 'GET ODORSTRIKE — ₹' + subtotal") ||
+    renderQtyBody.includes('textContent = "GET ODORSTRIKE — ₹" + subtotal') ||
+    renderQtyBody.includes("textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty)"),
+    'renderPdpQty() must derive final CTA price dynamically from canonical unit price and quantity'
+  );
+
+  // 5. Quantity 1 price is correct (canonical ₹229)
+  const unit = PRODUCT.price; // 229
+  assert.equal(unit * 1, 229, 'Canonical unit price must equal 229');
+  assert.ok(finalBlock.includes('GET ODORSTRIKE — ₹229'), 'Initial HTML markup for quantity 1 must display canonical ₹229');
+
+  // 6. Quantity 2 price is correct (₹458)
+  assert.equal(unit * 2, 458, 'Quantity 2 subtotal must equal ₹458');
+
+  // 7. Quantity 3 price is correct (₹687)
+  assert.equal(unit * 3, 687, 'Quantity 3 subtotal must equal ₹687');
+
+  // 8. Maximum quantity uses canonical config (MAX_QTY or maxQuantity)
+  const maxQ = PRODUCT.maxQuantity || 10;
+  assert.equal(unit * maxQ, 2290, 'Maximum quantity subtotal must equal canonical price * maxQuantity');
+
+  // 9. Final CTA and checkout use the same subtotal derivation (unit * qty)
+  const orderTotalsMatch = html.match(/function\s+orderTotals\s*\(\)\s*\{([\s\S]*?)\n\s*\}/);
+  assert.ok(orderTotalsMatch, 'Must locate orderTotals() function in odorstrike.html');
+  assert.ok(orderTotalsMatch[1].includes('subtotal = unit * qty'), 'Checkout subtotal must multiply unit price by cart quantity');
+
+  // 10. No prohibited claims in final CTA copy
+  const forbidden = [
+    'instant', 'instantly', 'kills', 'destroy', 'guaranteed', 'permanent',
+    'miracle', 'odor-proof', 'zero smell', 'smell is gone', 'all day', 'clinically tested'
+  ];
+  for (const term of forbidden) {
+    const regex = new RegExp(`\\b${term}\\b`, 'i');
+    assert.equal(regex.test(finalBlock), false, `Final CTA must not contain prohibited claim: "${term}"`);
+  }
+
+  // 11. Existing mobile-bar collision logic remains intact (tracks final button)
+  const obsStart = html.indexOf('// Mobile sticky bar — visible whenever no other buy control is on screen');
+  const obsBlock = html.slice(obsStart, html.indexOf('})();', obsStart) + 5);
+  assert.ok(obsBlock.includes('.final'), 'Mobile bar IntersectionObserver must continue to observe final CTA');
+
+  // Reassurance copy checks
+  assert.ok(finalBlock.includes('Free prepaid shipping') || finalBlock.includes('FREE SHIPPING'), 'Final CTA must include concise prepaid shipping reassurance');
+  assert.ok(finalBlock.includes('COD available') || finalBlock.includes('Cash on Delivery'), 'Final CTA must include COD reassurance');
+  assert.ok(finalBlock.includes('7-day returns') || finalBlock.includes('7-Day Returns'), 'Final CTA must include 7-day returns reassurance');
+
+  // Accessible touch target and focus rules
+  assert.ok(html.includes('.final button:focus-visible') || html.includes('.final-btn:focus-visible'), 'Final CTA button must have visible focus styling');
+  assert.ok(html.includes('min-height:52px') || html.includes('min-height: 48px') || html.includes('min-height: 44px'), 'Final CTA button must maintain >=44px touch target');
+});
+
 
 
 

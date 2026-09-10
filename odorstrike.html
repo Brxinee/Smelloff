@@ -1715,34 +1715,104 @@
 
   /* Final CTA */
   .final{
-    padding:160px 32px;
+    padding:clamp(56px,8vw,96px) 24px;
     text-align:center;
     background:var(--acid);
+  }
+  .final-inner{
+    max-width:640px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
   }
   .final h2{
     font-family:var(--display);
     font-weight:900;
     font-style:italic;
-    font-size:clamp(56px,10vw,160px);
-    line-height:.85;
-    letter-spacing:-.04em;
-    margin-bottom:48px;
+    font-size:clamp(38px,6vw,72px);
+    line-height:1;
+    letter-spacing:-.03em;
+    margin:0 0 16px;
     color:var(--ink);
   }
-  .final button{
-    padding:24px 48px;
+  .final-reassurance{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink);
+    opacity:.85;
+    margin:0 0 28px;
+    line-height:1.5;
+  }
+  .final button,
+  .final-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:52px;
+    padding:16px 36px;
     background:var(--ink);
     color:var(--acid);
     border:none;
     font-family:var(--mono);
     font-size:14px;
-    letter-spacing:.2em;
+    letter-spacing:.18em;
     text-transform:uppercase;
     cursor:pointer;
-    transition:transform .2s;
-    font-weight:500;
+    transition:transform .2s ease, opacity .2s ease;
+    font-weight:600;
+    text-align:center;
+    text-decoration:none;
+    box-sizing:border-box;
+    white-space:nowrap;
+    max-width:100%;
   }
-  .final button:hover{transform:scale(1.05)}
+  .final button:hover,
+  .final-btn:hover{
+    transform:translateY(-1px);
+    opacity:.95;
+  }
+  .final button:focus-visible,
+  .final-btn:focus-visible{
+    outline:3px solid var(--ink);
+    outline-offset:4px;
+  }
+  .final button:active,
+  .final-btn:active{
+    transform:scale(0.98);
+  }
+  @media(max-width:480px){
+    .final{
+      padding:48px 16px;
+    }
+    .final-reassurance{
+      font-size:11px;
+      letter-spacing:.08em;
+      margin-bottom:22px;
+    }
+    .final button,
+    .final-btn{
+      width:100%;
+      max-width:340px;
+      padding:15px 18px;
+      font-size:13px;
+      letter-spacing:.14em;
+    }
+  }
+  @media(prefers-reduced-motion:reduce){
+    .final button,
+    .final-btn{
+      transition:none;
+    }
+    .final button:hover,
+    .final-btn:hover,
+    .final button:active,
+    .final-btn:active{
+      transform:none;
+    }
+  }
 
   /* Footer */
   footer{
@@ -3751,9 +3821,12 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 </section>
 
 <!-- FINAL CTA -->
-<section class="final">
-  <h2>Stop being<br>noticed.</h2>
-  <button onclick="buyNow()">Get ODORSTRIKE — ₹229</button>
+<section class="final" id="final" aria-labelledby="finalCtaTitle">
+  <div class="final-inner">
+    <h2 id="finalCtaTitle">Ready to buy?</h2>
+    <p class="final-reassurance">Free prepaid shipping · COD available · 7-day returns</p>
+    <button type="button" class="final-btn" id="finalBuyBtn" onclick="buyNow()" aria-label="Get ODORSTRIKE for ₹229">GET ODORSTRIKE — ₹229</button>
+  </div>
 </section>
 
 <!-- EMAIL CAPTURE -->
@@ -4222,6 +4295,12 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (t) t.textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty);
     var sc = document.getElementById('showcaseBuyBtn');
     if (sc) sc.textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty);
+    var finalBtn = document.getElementById('finalBuyBtn');
+    if (finalBtn) {
+      var subtotal = unitPrice() * pdpQty;
+      finalBtn.textContent = 'GET ODORSTRIKE — ₹' + subtotal;
+      finalBtn.setAttribute('aria-label', 'Get ' + (pdpQty > 1 ? (pdpQty + ' bottles of ') : '') + 'ODORSTRIKE for ₹' + subtotal);
+    }
     var mbLabel = document.getElementById('mobileBarLabel');
     if (mbLabel) {
       var subtotal = unitPrice() * pdpQty;

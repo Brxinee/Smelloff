@@ -61,6 +61,41 @@ for (const p of blogFiles) {
 const webhook = path.join(ROOT, 'api/webhook.js');
 if (fs.existsSync(webhook) && /payu-webhook/i.test(read(webhook))) fail('Legacy webhook still points customers to a nonexistent payu-webhook route');
 
+// Production artifact determinism checks (Homepage & PDP critical markers)
+const indexPath = path.join(ROOT, 'index.html');
+if (fs.existsSync(indexPath)) {
+  const indexHtml = read(indexPath);
+  if (!indexHtml.includes('Your shirt smells.')) fail('index.html missing critical marker: "Your shirt smells."');
+  if (!indexHtml.includes('FABRIC ODOR CONTROL · FOR CLOTHES')) fail('index.html missing critical marker: "FABRIC ODOR CONTROL · FOR CLOTHES"');
+  if (!indexHtml.includes('Built for the gap') && !indexHtml.includes('Jogdhande Nikhil Patil')) {
+    fail('index.html missing current founder heading');
+  }
+  if (/₹\s*579/.test(indexHtml)) fail('index.html contains obsolete ₹579 pricing');
+  if (indexHtml.includes("Kills odor — doesn't hide it")) fail('index.html contains obsolete claim: "Kills odor — doesn\'t hide it"');
+  if (indexHtml.includes('roughly four months')) fail('index.html contains obsolete claim: "roughly four months"');
+  if (indexHtml.includes('Three seconds. No technique.')) fail('index.html contains obsolete claim: "Three seconds. No technique."');
+}
+
+const odorPath = path.join(ROOT, 'odorstrike.html');
+if (fs.existsSync(odorPath)) {
+  const odorHtml = read(odorPath);
+  if (!odorHtml.includes('₹229')) fail('odorstrike.html missing canonical price ₹229');
+  if (!odorHtml.includes('MRP ₹499')) fail('odorstrike.html missing canonical MRP ₹499');
+  if (!odorHtml.includes('GET ODORSTRIKE')) fail('odorstrike.html missing canonical CTA: "GET ODORSTRIKE"');
+  if (!odorHtml.includes('id="mobileBarLabel"')) fail('odorstrike.html missing critical marker: id="mobileBarLabel"');
+  if (!odorHtml.includes('id="showcaseBuyBtn"') || !odorHtml.includes('buyNow()')) {
+    fail('odorstrike.html missing canonical showcase CTA calling buyNow()');
+  }
+  if (!odorHtml.includes('id="finalBuyBtn"') || !odorHtml.includes('final-reassurance')) {
+    fail('odorstrike.html missing canonical final CTA markers: id="finalBuyBtn" and final-reassurance');
+  }
+  if (/₹\s*579/.test(odorHtml)) fail('odorstrike.html contains obsolete ₹579 pricing');
+  if (odorHtml.includes("Kills odor — doesn't hide it")) fail('odorstrike.html contains obsolete claim: "Kills odor — doesn\'t hide it"');
+  if (odorHtml.includes('roughly four months')) fail('odorstrike.html contains obsolete claim: "roughly four months"');
+  if (odorHtml.includes('Three seconds. No technique.')) fail('odorstrike.html contains obsolete claim: "Three seconds. No technique."');
+  if (/id=["']upiInlineId["']/.test(odorHtml)) fail('odorstrike.html contains obsolete manual upiInlineId element');
+}
+
 if (failures.length) {
   console.error(`Production audit failed (${failures.length}):`);
   failures.forEach(x => console.error(`- ${x}`));
