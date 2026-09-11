@@ -458,7 +458,7 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
   const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
   function adjustIfSunday(d) {
-    const res = new Date(d.getTime());
+    const res = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
     if (res.getDay() === 0) {
       res.setDate(res.getDate() + 1);
     }
@@ -478,13 +478,29 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
     return d;
   }
 
-  function calculateDeliveryEstimate(baseDate) {
+  function calculateDeliveryEstimate(baseDate, options) {
     const now = baseDate ? new Date(baseDate) : new Date();
-    const lo = addBusinessDays(now, 3);
-    let hi = addBusinessDays(now, 5);
+    const opt = options || {};
+    const isAuthoritative = !!(opt.tier && (opt.tier === 'metro' || opt.tier === 'tier23'));
+    const tier = isAuthoritative ? opt.tier : 'unknown';
+
+    const loCount = (tier === 'tier23') ? 5 : 3;
+    const hiCount = (tier === 'tier23') ? 7 : 5;
+
+    const lo = addBusinessDays(now, loCount);
+    let hi = addBusinessDays(now, hiCount);
 
     if (hi.getTime() <= lo.getTime()) {
       hi = addBusinessDays(lo, 1);
+    }
+
+    let text;
+    if (tier === 'metro') {
+      text = 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()] + ' (metro)';
+    } else if (tier === 'tier23') {
+      text = 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()] + ' (tier 2/3)';
+    } else {
+      text = 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()] + ' (metro) · 5–7 days outside metros';
     }
 
     return {
@@ -492,7 +508,9 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
       hiDate: hi,
       loDay: DAYS[lo.getDay()],
       hiDay: DAYS[hi.getDay()],
-      text: 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()]
+      text: text,
+      tier: tier,
+      isAuthoritativeTier: isAuthoritative
     };
   }
 
@@ -502,6 +520,8 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
   // Tuesday + 5 business days = Tuesday
   assert.equal(DAYS[addBusinessDays(new Date('2026-09-08T12:00:00Z'), 5).getDay()], 'Tue');
   // Thursday + 3 business days = Tuesday
+  assert.equal(DAYS[addBusinessDays(new Date('2026-10-12T12:00:00Z'), 3).getDay()], 'Thu');
+  // Thursday (2026-09-10) + 3 business days = Tuesday
   assert.equal(DAYS[addBusinessDays(new Date('2026-09-10T12:00:00Z'), 3).getDay()], 'Tue');
   // Friday + 5 business days = Friday
   assert.equal(DAYS[addBusinessDays(new Date('2026-09-11T12:00:00Z'), 5).getDay()], 'Fri');
@@ -510,62 +530,114 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
   // Sunday + 3 business days = Thursday (advances past Sunday, Mon+3=Thu)
   assert.equal(DAYS[addBusinessDays(new Date('2026-09-13T12:00:00Z'), 3).getDay()], 'Thu');
 
-  // Full weekday window calculations (3–5 business days):
-  // 1. Monday base date (2026-09-07) -> Thu – Mon
+  // Full weekday window calculations for unknown destination (safe qualified baseline fallback):
+  // 1. Monday confirmation (2026-09-07) -> Thu – Mon
   const monEst = calculateDeliveryEstimate(new Date('2026-09-07T12:00:00Z'));
   assert.equal(monEst.loDay, 'Thu');
   assert.equal(monEst.hiDay, 'Mon');
-  assert.equal(monEst.text, 'Estimated delivery: Thu – Mon');
+  assert.equal(monEst.text, 'Estimated delivery: Thu – Mon (metro) · 5–7 days outside metros');
 
-  // 2. Tuesday base date (2026-09-08) -> Fri – Tue
+  // 2. Tuesday confirmation (2026-09-08) -> Fri – Tue
   const tueEst = calculateDeliveryEstimate(new Date('2026-09-08T12:00:00Z'));
   assert.equal(tueEst.loDay, 'Fri');
   assert.equal(tueEst.hiDay, 'Tue');
-  assert.equal(tueEst.text, 'Estimated delivery: Fri – Tue');
+  assert.equal(tueEst.text, 'Estimated delivery: Fri – Tue (metro) · 5–7 days outside metros');
 
-  // 3. Wednesday base date (2026-09-09) -> Mon – Wed
+  // 3. Wednesday confirmation (2026-09-09) -> Mon – Wed
   const wedEst = calculateDeliveryEstimate(new Date('2026-09-09T12:00:00Z'));
   assert.equal(wedEst.loDay, 'Mon');
   assert.equal(wedEst.hiDay, 'Wed');
-  assert.equal(wedEst.text, 'Estimated delivery: Mon – Wed');
+  assert.equal(wedEst.text, 'Estimated delivery: Mon – Wed (metro) · 5–7 days outside metros');
 
-  // 4. Thursday base date (2026-09-10) -> Tue – Thu
+  // 4. Thursday confirmation (2026-09-10) -> Tue – Thu
   const thuEst = calculateDeliveryEstimate(new Date('2026-09-10T12:00:00Z'));
   assert.equal(thuEst.loDay, 'Tue');
   assert.equal(thuEst.hiDay, 'Thu');
-  assert.equal(thuEst.text, 'Estimated delivery: Tue – Thu');
+  assert.equal(thuEst.text, 'Estimated delivery: Tue – Thu (metro) · 5–7 days outside metros');
 
-  // 5. Friday base date (2026-09-11) -> Wed – Fri
+  // 5. Friday confirmation (2026-09-11) -> Wed – Fri
   const friEst = calculateDeliveryEstimate(new Date('2026-09-11T12:00:00Z'));
   assert.equal(friEst.loDay, 'Wed');
   assert.equal(friEst.hiDay, 'Fri');
-  assert.equal(friEst.text, 'Estimated delivery: Wed – Fri');
+  assert.equal(friEst.text, 'Estimated delivery: Wed – Fri (metro) · 5–7 days outside metros');
 
-  // 6. Saturday base date (2026-09-12) -> Wed – Fri
+  // 6. Saturday confirmation (2026-09-12) -> Wed – Fri
   const satEst = calculateDeliveryEstimate(new Date('2026-09-12T12:00:00Z'));
   assert.equal(satEst.loDay, 'Wed');
   assert.equal(satEst.hiDay, 'Fri');
-  assert.equal(satEst.text, 'Estimated delivery: Wed – Fri');
+  assert.equal(satEst.text, 'Estimated delivery: Wed – Fri (metro) · 5–7 days outside metros');
 
-  // 7. Sunday base date (2026-09-13) -> Thu – Mon
+  // 7. Sunday confirmation (2026-09-13) -> Thu – Mon
   const sunEst = calculateDeliveryEstimate(new Date('2026-09-13T12:00:00Z'));
   assert.equal(sunEst.loDay, 'Thu');
   assert.equal(sunEst.hiDay, 'Mon');
-  assert.equal(sunEst.text, 'Estimated delivery: Thu – Mon');
+  assert.equal(sunEst.text, 'Estimated delivery: Thu – Mon (metro) · 5–7 days outside metros');
 
-  // 8. Exhaustive matrix test across 365 continuous days: Sunday must NEVER appear in estimate
+  // 8. Month rollover test: February 26 (Thursday) -> March
+  const monthRollEst = calculateDeliveryEstimate(new Date('2026-02-26T12:00:00Z'));
+  assert.equal(monthRollEst.loDay, 'Tue');
+  assert.equal(monthRollEst.hiDay, 'Thu');
+  assert.ok(monthRollEst.loDate.getMonth() === 2, 'loDate should cross into March (index 2)');
+
+  // 9. Year rollover test: December 31 (Thursday) -> January
+  const yearRollEst = calculateDeliveryEstimate(new Date('2026-12-31T12:00:00Z'));
+  assert.equal(yearRollEst.loDay, 'Tue');
+  assert.equal(yearRollEst.hiDay, 'Thu');
+  assert.equal(yearRollEst.loDate.getFullYear(), 2027, 'loDate should cross into 2027');
+
+  // 10. Leap year test: February 28, 2028 (Monday) in leap year
+  const leapEst = calculateDeliveryEstimate(new Date('2028-02-28T12:00:00Z'));
+  assert.equal(leapEst.loDay, 'Thu');
+  assert.equal(leapEst.hiDay, 'Mon');
+  assert.equal(leapEst.loDate.getDate(), 2, 'loDate should be March 2 (Feb 29 is included as leap day)');
+
+  // 11. Exhaustive matrix test across 365 continuous days (2026): Sunday must NEVER appear in estimate
   const startDate = new Date('2026-01-01T00:00:00Z');
   for (let d = 0; d < 365; d++) {
     const curr = new Date(startDate.getTime() + d * 86400000);
     const est = calculateDeliveryEstimate(curr);
     assert.notEqual(est.loDay, 'Sun', `loDay on day ${d} (${curr.toISOString()}) must never be Sun`);
     assert.notEqual(est.hiDay, 'Sun', `hiDay on day ${d} (${curr.toISOString()}) must never be Sun`);
-    assert.ok(!est.text.includes('Sun'), `Text on day ${d} (${curr.toISOString()}) must never include Sun`);
+    assert.notEqual(est.loDate.getDay(), 0, `loDate on day ${d} must never have day 0`);
+    assert.notEqual(est.hiDate.getDay(), 0, `hiDate on day ${d} must never have day 0`);
+    assert.ok(!Number.isNaN(est.loDate.getTime()), `loDate on day ${d} must be valid date`);
+    assert.ok(!Number.isNaN(est.hiDate.getTime()), `hiDate on day ${d} must be valid date`);
     assert.ok(est.loDate.getTime() < est.hiDate.getTime(), `loDate must strictly precede hiDate on day ${d}`);
     assert.notEqual(est.loDay, est.hiDay, `loDay and hiDay must not be identical on day ${d}`);
   }
 
-  // 9. Verify odorstrike.html contains calculateDeliveryEstimate, addBusinessDays, and Sunday adjustment
+  // 12. Exhaustive 366-day leap-year sweep (2028):
+  const leapStart = new Date('2028-01-01T00:00:00Z');
+  for (let d = 0; d < 366; d++) {
+    const curr = new Date(leapStart.getTime() + d * 86400000);
+    const est = calculateDeliveryEstimate(curr);
+    assert.notEqual(est.loDay, 'Sun', `Leap year day ${d} loDay must not be Sun`);
+    assert.notEqual(est.hiDay, 'Sun', `Leap year day ${d} hiDay must not be Sun`);
+    assert.ok(est.loDate.getTime() < est.hiDate.getTime(), `Leap year day ${d} loDate < hiDate`);
+  }
+
+  // 13. Regression protection: UI estimate CANNOT silently claim metro 3–5 day window without qualification
+  const unknownEst = calculateDeliveryEstimate(new Date('2026-09-07T12:00:00Z'));
+  assert.equal(unknownEst.isAuthoritativeTier, false, 'Without authoritative destination tiering, isAuthoritativeTier must be false');
+  assert.equal(unknownEst.tier, 'unknown', 'Without authoritative tiering, tier must be unknown');
+  assert.notEqual(unknownEst.text, 'Estimated delivery: Thu – Mon', 'UI estimate must NOT silently output unqualified metro 3–5 day window');
+  assert.ok(unknownEst.text.includes('(metro)'), 'Estimate must explicitly qualify metro baseline');
+  assert.ok(unknownEst.text.includes('5–7 days outside metros'), 'Estimate must disclose 5–7 day SLA for other destinations');
+
+  // Explicit tier testing when tier is authoritatively known:
+  const metroEst = calculateDeliveryEstimate(new Date('2026-09-07T12:00:00Z'), { tier: 'metro' });
+  assert.equal(metroEst.isAuthoritativeTier, true);
+  assert.equal(metroEst.tier, 'metro');
+  assert.equal(metroEst.text, 'Estimated delivery: Thu – Mon (metro)');
+
+  const tier23Est = calculateDeliveryEstimate(new Date('2026-09-07T12:00:00Z'), { tier: 'tier23' });
+  assert.equal(tier23Est.isAuthoritativeTier, true);
+  assert.equal(tier23Est.tier, 'tier23');
+  assert.equal(tier23Est.loDay, 'Mon'); // +5 business days = Monday next week
+  assert.equal(tier23Est.hiDay, 'Wed'); // +7 business days = Wednesday next week
+  assert.equal(tier23Est.text, 'Estimated delivery: Mon – Wed (tier 2/3)');
+
+  // 14. Verify odorstrike.html contains calculateDeliveryEstimate, addBusinessDays, and Sunday adjustment
   const html = fs.readFileSync('odorstrike.html', 'utf8');
   assert.ok(html.includes('function calculateDeliveryEstimate('), 'odorstrike.html must define calculateDeliveryEstimate');
   assert.ok(html.includes('function addBusinessDays('), 'odorstrike.html must define addBusinessDays');

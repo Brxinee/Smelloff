@@ -2044,6 +2044,7 @@
     letter-spacing:.08em;
     color:var(--acid);
     margin-top:10px;
+    line-height:1.4;
   }
   .delivery-estimate.show{display:flex}
   .delivery-estimate svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;flex-shrink:0}
@@ -5212,7 +5213,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
     function adjustIfSunday(d) {
-      var res = new Date(d.getTime());
+      var res = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
       if (res.getDay() === 0) {
         res.setDate(res.getDate() + 1);
       }
@@ -5232,13 +5233,33 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       return d;
     }
 
-    function calculateDeliveryEstimate(baseDate) {
+    function calculateDeliveryEstimate(baseDate, options) {
       var now = baseDate ? new Date(baseDate) : new Date();
-      var lo = addBusinessDays(now, 3);
-      var hi = addBusinessDays(now, 5);
+      var opt = options || {};
+      // Determine tier if authoritative mapping exists, otherwise fallback to safe contract-aligned estimate
+      // Note: The repository does NOT have an authoritative pincode-to-tier database.
+      // Postal pincode API returns district/state, but no carrier tier.
+      var isAuthoritative = !!(opt.tier && (opt.tier === 'metro' || opt.tier === 'tier23'));
+      var tier = isAuthoritative ? opt.tier : 'unknown';
+
+      var loCount = (tier === 'tier23') ? 5 : 3;
+      var hiCount = (tier === 'tier23') ? 7 : 5;
+
+      var lo = addBusinessDays(now, loCount);
+      var hi = addBusinessDays(now, hiCount);
 
       if (hi.getTime() <= lo.getTime()) {
         hi = addBusinessDays(lo, 1);
+      }
+
+      var text;
+      if (tier === 'metro') {
+        text = 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()] + ' (metro)';
+      } else if (tier === 'tier23') {
+        text = 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()] + ' (tier 2/3)';
+      } else {
+        // Safe qualified baseline fallback: Clearly qualifies metro baseline while informing customers of 5–7 days outside metros
+        text = 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()] + ' (metro) · 5–7 days outside metros';
       }
 
       return {
@@ -5246,7 +5267,9 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         hiDate: hi,
         loDay: DAYS[lo.getDay()],
         hiDay: DAYS[hi.getDay()],
-        text: 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()]
+        text: text,
+        tier: tier,
+        isAuthoritativeTier: isAuthoritative
       };
     }
     window.adjustIfSunday = adjustIfSunday;
