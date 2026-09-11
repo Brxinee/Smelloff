@@ -46,7 +46,7 @@ DEFAULT_SPEC = ("Treats the fabric, not your skin. 50ml pocket spray. "
 # Generic high-value pool to top up posts that have <3 curated related links.
 POOL = [
     ("/blog/best-fabric-odor-spray-india-2026-body-odor/", "Best Fabric Odor Spray in India (2026)"),
-    ("/blog/deodorant-vs-fabric-mist/", "Deodorant vs Fabric Mist: What Actually Kills Odor"),
+    ("/blog/deodorant-vs-fabric-mist/", "Deodorant vs Fabric Mist: What Actually Neutralizes Odor"),
     ("/blog/fix-shirt-odor-before-meeting/", "Fix Shirt Odor Before a Meeting"),
     ("/blog/odorstrike-review-30-day-india-test/", "ODORSTRIKE: 30-Day India Test"),
     ("/blog/spray-to-remove-sweat-smell-from-clothes-instantly/", "Remove Sweat Smell From Shirts Without Washing"),
@@ -79,14 +79,12 @@ FOOTER = '''<footer class="blog-footer" aria-labelledby="footer-brand">
     <div class="footer-brand">
       <a href="/" class="bf-brand" id="footer-brand"><span class="bf-brand-inner">SMELLOFF<span class="bf-brand-dot"></span></span></a>
       <p class="bf-desc">Fabric-only odor elimination mist. Made in Hyderabad.</p>
-      <p class="bf-tag">Smell Proof. Always.</p>
       <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px"><a href="https://instagram.com/smelloffindia" target="_blank" rel="noopener" aria-label="Instagram" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-instagram-white.png" alt="Instagram" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://x.com/smelloffindia" target="_blank" rel="noopener" aria-label="X (Twitter)" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-x.png" alt="X (Twitter)" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://t.me/smelloffindia" target="_blank" rel="noopener" aria-label="Telegram" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-telegram-white.png" alt="Telegram" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://www.linkedin.com/company/smelloff" target="_blank" rel="noopener" aria-label="LinkedIn" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-linkedin-white.png" alt="LinkedIn" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://www.facebook.com/share/1BU1dCAttY/" target="_blank" rel="noopener" aria-label="Facebook" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-facebook-white.png" alt="Facebook" width="20" height="20" style="opacity:.85" loading="lazy"></a><a href="https://wa.me/919392974031" target="_blank" rel="noopener" aria-label="WhatsApp" style="display:inline-block;padding:6px;line-height:0"><img src="/assets/icon-whatsapp-white.png" alt="WhatsApp" width="20" height="20" style="opacity:.85" loading="lazy"></a></div>
     </div>
     <nav class="footer-col" aria-label="Shop">
       <p class="footer-col-label">Shop</p>
       <a href="/">Home</a>
       <a href="/odorstrike/">Buy ODORSTRIKE</a>
-      <a href="/odorstrike/">Bundles</a>
     </nav>
     <nav class="footer-col" aria-label="Guides">
       <p class="footer-col-label">Guides</p>

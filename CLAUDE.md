@@ -1,7 +1,7 @@
 # Smelloff — Claude Code Context
 
 ## What this project is
-Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — India's first pocket-sized fabric odor remover spray (50ml, ₹229). Built as a static/SSR site deployed on Vercel. Single product, direct-to-consumer, COD-enabled, ships pan-India from Hyderabad.
+Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — pocket-sized fabric odor remover spray for clothes (50ml, ₹229). Built as a static/SSR site deployed on Vercel. Single product, direct-to-consumer, COD-enabled, ships pan-India from Hyderabad.
 
 ## Stack
 - Static HTML + vanilla JS (no framework)

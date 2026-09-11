@@ -138,7 +138,7 @@ export const POSTS = [
     slug: 'zinc-pca-fabric-odor-ingredient-guide',
     kicker: 'Ingredient guide',
     top: 'The zinc that',
-    hi: 'kills odor',
+    hi: 'neutralizes odor',
     photo: 345985748,
     focal: '54% 30%',
     tone: 'brightness(1.30) contrast(1.06) saturate(1.14)',

@@ -1,0 +1,317 @@
+[
+  {
+    "file": "api/email-templates.js",
+    "line": 388,
+    "pattern": "UTR requirement",
+    "match": "share the UTR",
+    "snippet": " </div>      ${mutedPara('After paying, share the UTR / reference number so we can match it and ship"
+  },
+  {
+    "file": "api/verify-payment.js",
+    "line": 236,
+    "pattern": "UTR requirement",
+    "match": "UTR number",
+    "snippet": " 'Valid 10–24 character UPI reference / UTR number required.' });     }      const terminalConfirmed"
+  },
+  {
+    "file": "blog/how-odor-neutralizer-works-on-fabric.html",
+    "line": 8,
+    "pattern": "kill/kills bacteria",
+    "match": "kill bacteria",
+    "snippet": "stion\",\"name\":\"Does a fabric odor spray kill bacteria?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"D"
+  },
+  {
+    "file": "blog/how-odor-neutralizer-works-on-fabric.html",
+    "line": 118,
+    "pattern": "kill/kills bacteria",
+    "match": "kill bacteria",
+    "snippet": "tails><summary>Does a fabric odor spray kill bacteria?</summary><div class=\"faq-a\"><p>Do not buy tha"
+  },
+  {
+    "file": "blog/how-odor-neutralizer-works-on-fabric.html",
+    "line": 8,
+    "pattern": "biocide/biocidal",
+    "match": "biocide",
+    "snippet": "\"Do not buy that verb unless a specific biocide is named and regulated as such. Most clothing mists "
+  },
+  {
+    "file": "blog/how-odor-neutralizer-works-on-fabric.html",
+    "line": 118,
+    "pattern": "biocide/biocidal",
+    "match": "biocide",
+    "snippet": ">Do not buy that verb unless a specific biocide is named and regulated as such. Most clothing mists "
+  },
+  {
+    "file": "config/product.json",
+    "line": 192,
+    "pattern": "kill/kills bacteria",
+    "match": "kills bacteria",
+    "snippet": "nstant / instantly kills smell\",       \"kills bacteria / antimicrobial drug claim\",       \"10-second"
+  },
+  {
+    "file": "config/product.json",
+    "line": 191,
+    "pattern": "kill/kills smell",
+    "match": "kills smell",
+    "snippet": "ohibited\": [       \"instant / instantly kills smell\",       \"kills bacteria / antimicrobial drug cla"
+  },
+  {
+    "file": "config/product.json",
+    "line": 192,
+    "pattern": "antimicrobial",
+    "match": "antimicrobial",
+    "snippet": "y kills smell\",       \"kills bacteria / antimicrobial drug claim\",       \"10-second miracle cure\",  "
+  },
+  {
+    "file": "config/product.json",
+    "line": 193,
+    "pattern": "miracle",
+    "match": "miracle",
+    "snippet": "microbial drug claim\",       \"10-second miracle cure\",       \"works on 100% of all fabrics including"
+  },
+  {
+    "file": "llms-full.txt",
+    "line": 48,
+    "pattern": "kill/kills bacteria",
+    "match": "kills bacteria",
+    "snippet": " across every fabric. - Do not claim it kills bacteria or make antimicrobial drug claims. - Do not c"
+  },
+  {
+    "file": "llms-full.txt",
+    "line": 48,
+    "pattern": "antimicrobial",
+    "match": "antimicrobial",
+    "snippet": " Do not claim it kills bacteria or make antimicrobial drug claims. - Do not claim an instant or guar"
+  },
+  {
+    "file": "payment-failed.html",
+    "line": 221,
+    "pattern": "payment screenshot",
+    "match": "payment screenshot",
+    "snippet": "rpay payment ID or UPI reference (UTR), payment screenshot, and phone number.</li>     <li>We will v"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 70,
+    "pattern": "579 (price)",
+    "match": "₹579",
+    "snippet": "y[- ]pioneer\\b/i },   { name: 'Obsolete ₹579 pricing', regex: /₹\\s*579\\b|\\b579\\s*(?:rs|rupees|\\/-)/i"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 106,
+    "pattern": "579 (price)",
+    "match": "₹579",
+    "snippet": "ml)) fail('index.html contains obsolete ₹579 pricing');   if (indexHtml.includes(\"Kills odor — doesn"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 125,
+    "pattern": "579 (price)",
+    "match": "₹579",
+    "snippet": "fail('odorstrike.html contains obsolete ₹579 pricing');   if (odorHtml.includes(\"Kills odor — doesn'"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 69,
+    "pattern": "India's first",
+    "match": "India's first",
+    "snippet": "es = [   { name: \"Ordinal superiority ('India's first' / '#1' / 'pioneer')\", regex: /India['’]s\\s*#?"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 73,
+    "pattern": "kill/kills odor",
+    "match": "Kills odor",
+    "snippet": ", regex: /\\b10%\\s*off\\b/i },   { name: 'Kills odor claim', regex: /\\bkills?\\s+(?:the\\s+)?(?:sweat\\s+"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 107,
+    "pattern": "kill/kills odor",
+    "match": "Kills odor",
+    "snippet": "79 pricing');   if (indexHtml.includes(\"Kills odor — doesn't hide it\")) fail('index.html contains ob"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 107,
+    "pattern": "kill/kills odor",
+    "match": "Kills odor",
+    "snippet": "l('index.html contains obsolete claim: \"Kills odor — doesn\\'t hide it\"');   if (indexHtml.includes('"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 126,
+    "pattern": "kill/kills odor",
+    "match": "Kills odor",
+    "snippet": "579 pricing');   if (odorHtml.includes(\"Kills odor — doesn't hide it\")) fail('odorstrike.html contai"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 126,
+    "pattern": "kill/kills odor",
+    "match": "Kills odor",
+    "snippet": "orstrike.html contains obsolete claim: \"Kills odor — doesn\\'t hide it\"');   if (odorHtml.includes('r"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 74,
+    "pattern": "kill/kills bacteria",
+    "match": "Kills bacteria",
+    "snippet": "s+)?(?:sweat\\s+)?odor\\b/i },   { name: 'Kills bacteria product claim', regex: /\\bkills?\\s+(?:the\\s+)"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 75,
+    "pattern": "odor-proof",
+    "match": "Odor-proof",
+    "snippet": "+bacteria/i },   { name: 'Smell-proof / Odor-proof claim', regex: /\\b(?:smell|odor)[-\\s]proof\\b/i },"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 76,
+    "pattern": "zero smell",
+    "match": "Zero smell",
+    "snippet": "smell|odor)[-\\s]proof\\b/i },   { name: 'Zero smell claim', regex: /\\bzero\\s+smell\\b/i },   { name: '"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 77,
+    "pattern": "never stains",
+    "match": "Never stains",
+    "snippet": "egex: /\\bzero\\s+smell\\b/i },   { name: 'Never stains claim', regex: /\\bnever\\s+stains\\b/i },   { nam"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 79,
+    "pattern": "four months",
+    "match": "four months",
+    "snippet": "ically\\s+proven\\b/i },   { name: 'Stale four months longevity claim', regex: /\\b(?:roughly\\s+four|la"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 108,
+    "pattern": "four months",
+    "match": "four months",
+    "snippet": "t\"');   if (indexHtml.includes('roughly four months')) fail('index.html contains obsolete claim: \"ro"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 108,
+    "pattern": "four months",
+    "match": "four months",
+    "snippet": ".html contains obsolete claim: \"roughly four months\"');   if (indexHtml.includes('Three seconds. No "
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 127,
+    "pattern": "four months",
+    "match": "four months",
+    "snippet": "it\"');   if (odorHtml.includes('roughly four months')) fail('odorstrike.html contains obsolete claim"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 127,
+    "pattern": "four months",
+    "match": "four months",
+    "snippet": ".html contains obsolete claim: \"roughly four months\"');   if (odorHtml.includes('Three seconds. No t"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 80,
+    "pattern": "manual upi",
+    "match": "manual UPI",
+    "snippet": "+4)\\s+months\\b/i },   { name: 'Obsolete manual UPI element', regex: /\\bupiInlineId\\b/i },   { name: "
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 81,
+    "pattern": "manual upi",
+    "match": "manual UPI",
+    "snippet": "bupiInlineId\\b/i },   { name: 'Obsolete manual UPI transfer instructions', regex: /\\bmanual\\s+upi\\s+"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 129,
+    "pattern": "upiInlineId",
+    "match": "upiInlineId",
+    "snippet": "econds. No technique.\"');   if (/id=[\"']upiInlineId[\"']/.test(odorHtml)) fail('odorstrike.html conta"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 129,
+    "pattern": "upiInlineId",
+    "match": "upiInlineId",
+    "snippet": "dorstrike.html contains obsolete manual upiInlineId element'); }  if (failures.length) {   console.e"
+  },
+  {
+    "file": "scripts/product-config.mjs",
+    "line": 41,
+    "pattern": "kill/kills bacteria",
+    "match": "kills bacteria",
+    "snippet": "skin deodorant or antiperspirant',     'kills bacteria / antimicrobial drug claim'   ] }; PRODUCT_CO"
+  },
+  {
+    "file": "scripts/product-config.mjs",
+    "line": 41,
+    "pattern": "antimicrobial",
+    "match": "antimicrobial",
+    "snippet": " antiperspirant',     'kills bacteria / antimicrobial drug claim'   ] }; PRODUCT_CONFIG.claims.forbi"
+  },
+  {
+    "file": "scripts/share/share-templates.config.mjs",
+    "line": 46,
+    "pattern": "kill/kills bacteria",
+    "match": "kills bacteria",
+    "snippet": "en by more people than the article. No \"kills bacteria\", no  *     \"permanently\", no percentages, no"
+  },
+  {
+    "file": "scripts/share/share-templates.config.mjs",
+    "line": 186,
+    "pattern": "kill/kills bacteria",
+    "match": "kills bacteria",
+    "snippet": "ses|100% safe|zero risk|completely safe|kills bacteria|antibacterial|antimicrobial|saniti[sz]|disinf"
+  },
+  {
+    "file": "scripts/share/share-templates.config.mjs",
+    "line": 186,
+    "pattern": "antibacterial",
+    "match": "antibacterial",
+    "snippet": "ero risk|completely safe|kills bacteria|antibacterial|antimicrobial|saniti[sz]|disinfect|sterili[sz]"
+  },
+  {
+    "file": "scripts/share/share-templates.config.mjs",
+    "line": 186,
+    "pattern": "antimicrobial",
+    "match": "antimicrobial",
+    "snippet": "etely safe|kills bacteria|antibacterial|antimicrobial|saniti[sz]|disinfect|sterili[sz]|inhibits micr"
+  },
+  {
+    "file": "shared/products-config.js",
+    "line": 94,
+    "pattern": "kill/kills bacteria",
+    "match": "kills bacteria",
+    "snippet": "'instant / instantly kills smell',     'kills bacteria / antimicrobial drug claim',     '10-second m"
+  },
+  {
+    "file": "shared/products-config.js",
+    "line": 93,
+    "pattern": "kill/kills smell",
+    "match": "kills smell",
+    "snippet": "ITED_CLAIMS: [     'instant / instantly kills smell',     'kills bacteria / antimicrobial drug claim"
+  },
+  {
+    "file": "shared/products-config.js",
+    "line": 94,
+    "pattern": "antimicrobial",
+    "match": "antimicrobial",
+    "snippet": "tly kills smell',     'kills bacteria / antimicrobial drug claim',     '10-second miracle cure',    "
+  },
+  {
+    "file": "shared/products-config.js",
+    "line": 95,
+    "pattern": "miracle",
+    "match": "miracle",
+    "snippet": "timicrobial drug claim',     '10-second miracle cure',     'works on 100% of all fabrics including r"
+  }
+]

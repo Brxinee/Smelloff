@@ -1,6 +1,6 @@
 # Smelloff
 
-D2C e-commerce site for **ODORSTRIKE** — India's first pocket-sized fabric odor remover spray. Static site deployed on Vercel at [smelloff.in](https://smelloff.in).
+D2C e-commerce site for **ODORSTRIKE** — pocket-sized fabric odor remover spray for clothes. Static site deployed on Vercel at [smelloff.in](https://smelloff.in).
 
 ## Layout
 

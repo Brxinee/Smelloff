@@ -58,6 +58,39 @@ for (const p of blogFiles) {
   if (s.includes('"@type": "Article"') && !/"author"\s*:\s*\{[\s\S]*?"@type"\s*:\s*"Person"/s.test(s)) fail(`${rel(p)} Article schema lacks Person author`);
 }
 
+// Site-wide customer-facing claim & commercial audit
+const customerFacingFiles = files.filter(p => {
+  const relPath = rel(p);
+  if (relPath.startsWith('docs/') || relPath.startsWith('test/') || relPath.startsWith('scripts/') || relPath.startsWith('coverage/') || relPath.startsWith('api/') || relPath.startsWith('supabase/')) return false;
+  return (relPath.endsWith('.html') || relPath.endsWith('.xml')) && !relPath.startsWith('_shared/');
+});
+
+const prohibitedClaimRules = [
+  { name: "Ordinal superiority ('India's first' / '#1' / 'pioneer')", regex: /India['’]s\s*#?1\b|India['’]s\s*first\b|\bcategory[- ]pioneer\b/i },
+  { name: 'Obsolete ₹579 pricing', regex: /₹\s*579\b|\b579\s*(?:rs|rupees|\/-)/i },
+  { name: 'Retired bundle pricing', regex: /Duo\s*₹\s*399|Trio\s*₹\s*549|Solo\s*₹\s*179/i },
+  { name: 'Fake 10% discount claim', regex: /\b10%\s*off\b/i },
+  { name: 'Kills odor claim', regex: /\bkills?\s+(?:the\s+)?(?:sweat\s+)?odor\b/i },
+  { name: 'Kills bacteria product claim', regex: /\bkills?\s+(?:the\s+)?bacteria\s+that\b|\bkills?\s+(?:clothing|fabric|sweat)\s+bacteria\b|ODORSTRIKE[^\.\n]*kills?\s+bacteria/i },
+  { name: 'Smell-proof / Odor-proof claim', regex: /\b(?:smell|odor)[-\s]proof\b/i },
+  { name: 'Zero smell claim', regex: /\bzero\s+smell\b/i },
+  { name: 'Never stains claim', regex: /\bnever\s+stains\b/i },
+  { name: 'Unsupported medical / testing claims', regex: /\b(?:clinically|dermatologist)\s+tested\b|\blab\s+(?:tested|certified)\b|\bscientifically\s+proven\b/i },
+  { name: 'Stale four months longevity claim', regex: /\b(?:roughly\s+four|lasts\s+4)\s+months\b/i },
+  { name: 'Obsolete manual UPI element', regex: /\bupiInlineId\b/i },
+  { name: 'Obsolete manual UPI transfer instructions', regex: /\bmanual\s+upi\s+transfer\b|\b12-digit\s+UTR\b/i },
+  { name: 'Stale free COD claim', regex: /\bfree\s+cod\b|\bfree\s+cash\s+on\s+delivery\b/i }
+];
+
+for (const p of customerFacingFiles) {
+  const s = read(p);
+  for (const r of prohibitedClaimRules) {
+    if (r.regex.test(s)) {
+      fail(`${rel(p)} contains prohibited pattern: ${r.name}`);
+    }
+  }
+}
+
 const webhook = path.join(ROOT, 'api/webhook.js');
 if (fs.existsSync(webhook) && /payu-webhook/i.test(read(webhook))) fail('Legacy webhook still points customers to a nonexistent payu-webhook route');
 
