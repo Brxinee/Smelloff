@@ -465,20 +465,26 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
     return res;
   }
 
+  function addBusinessDays(date, count) {
+    const d = adjustIfSunday(date);
+    let added = 0;
+    while (added < count) {
+      d.setDate(d.getDate() + 1);
+      const day = d.getDay();
+      if (day !== 0 && day !== 6) {
+        added++;
+      }
+    }
+    return d;
+  }
+
   function calculateDeliveryEstimate(baseDate) {
     const now = baseDate ? new Date(baseDate) : new Date();
-    let lo = new Date(now.getTime());
-    lo.setDate(lo.getDate() + 3);
-    lo = adjustIfSunday(lo);
-
-    let hi = new Date(now.getTime());
-    hi.setDate(hi.getDate() + 5);
-    hi = adjustIfSunday(hi);
+    const lo = addBusinessDays(now, 3);
+    let hi = addBusinessDays(now, 5);
 
     if (hi.getTime() <= lo.getTime()) {
-      hi = new Date(lo.getTime());
-      hi.setDate(hi.getDate() + 1);
-      hi = adjustIfSunday(hi);
+      hi = addBusinessDays(lo, 1);
     }
 
     return {
@@ -490,47 +496,62 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
     };
   }
 
-  // 1. Monday base date (2026-09-07) -> Thu – Sat
-  const monEst = calculateDeliveryEstimate(new Date('2026-09-07T10:00:00Z'));
+  // Exact prompt-stipulated business-day offset tests:
+  // Monday + 3 business days = Thursday
+  assert.equal(DAYS[addBusinessDays(new Date('2026-09-07T12:00:00Z'), 3).getDay()], 'Thu');
+  // Tuesday + 5 business days = Tuesday
+  assert.equal(DAYS[addBusinessDays(new Date('2026-09-08T12:00:00Z'), 5).getDay()], 'Tue');
+  // Thursday + 3 business days = Tuesday
+  assert.equal(DAYS[addBusinessDays(new Date('2026-09-10T12:00:00Z'), 3).getDay()], 'Tue');
+  // Friday + 5 business days = Friday
+  assert.equal(DAYS[addBusinessDays(new Date('2026-09-11T12:00:00Z'), 5).getDay()], 'Fri');
+  // Saturday + 3 business days = Wednesday
+  assert.equal(DAYS[addBusinessDays(new Date('2026-09-12T12:00:00Z'), 3).getDay()], 'Wed');
+  // Sunday + 3 business days = Thursday (advances past Sunday, Mon+3=Thu)
+  assert.equal(DAYS[addBusinessDays(new Date('2026-09-13T12:00:00Z'), 3).getDay()], 'Thu');
+
+  // Full weekday window calculations (3–5 business days):
+  // 1. Monday base date (2026-09-07) -> Thu – Mon
+  const monEst = calculateDeliveryEstimate(new Date('2026-09-07T12:00:00Z'));
   assert.equal(monEst.loDay, 'Thu');
-  assert.equal(monEst.hiDay, 'Sat');
-  assert.equal(monEst.text, 'Estimated delivery: Thu – Sat');
+  assert.equal(monEst.hiDay, 'Mon');
+  assert.equal(monEst.text, 'Estimated delivery: Thu – Mon');
 
-  // 2. Tuesday base date (2026-09-08) -> Fri – Mon (hi advanced from Sun to Mon)
-  const tueEst = calculateDeliveryEstimate(new Date('2026-09-08T10:00:00Z'));
+  // 2. Tuesday base date (2026-09-08) -> Fri – Tue
+  const tueEst = calculateDeliveryEstimate(new Date('2026-09-08T12:00:00Z'));
   assert.equal(tueEst.loDay, 'Fri');
-  assert.equal(tueEst.hiDay, 'Mon');
-  assert.equal(tueEst.text, 'Estimated delivery: Fri – Mon');
+  assert.equal(tueEst.hiDay, 'Tue');
+  assert.equal(tueEst.text, 'Estimated delivery: Fri – Tue');
 
-  // 3. Wednesday base date (2026-09-09) -> Sat – Mon
-  const wedEst = calculateDeliveryEstimate(new Date('2026-09-09T10:00:00Z'));
-  assert.equal(wedEst.loDay, 'Sat');
-  assert.equal(wedEst.hiDay, 'Mon');
-  assert.equal(wedEst.text, 'Estimated delivery: Sat – Mon');
+  // 3. Wednesday base date (2026-09-09) -> Mon – Wed
+  const wedEst = calculateDeliveryEstimate(new Date('2026-09-09T12:00:00Z'));
+  assert.equal(wedEst.loDay, 'Mon');
+  assert.equal(wedEst.hiDay, 'Wed');
+  assert.equal(wedEst.text, 'Estimated delivery: Mon – Wed');
 
-  // 4. Thursday base date (2026-09-10) -> Mon – Tue (lo advanced from Sun to Mon)
-  const thuEst = calculateDeliveryEstimate(new Date('2026-09-10T10:00:00Z'));
-  assert.equal(thuEst.loDay, 'Mon');
-  assert.equal(thuEst.hiDay, 'Tue');
-  assert.equal(thuEst.text, 'Estimated delivery: Mon – Tue');
+  // 4. Thursday base date (2026-09-10) -> Tue – Thu
+  const thuEst = calculateDeliveryEstimate(new Date('2026-09-10T12:00:00Z'));
+  assert.equal(thuEst.loDay, 'Tue');
+  assert.equal(thuEst.hiDay, 'Thu');
+  assert.equal(thuEst.text, 'Estimated delivery: Tue – Thu');
 
-  // 5. Friday base date (2026-09-11) -> Mon – Wed
-  const friEst = calculateDeliveryEstimate(new Date('2026-09-11T10:00:00Z'));
-  assert.equal(friEst.loDay, 'Mon');
-  assert.equal(friEst.hiDay, 'Wed');
-  assert.equal(friEst.text, 'Estimated delivery: Mon – Wed');
+  // 5. Friday base date (2026-09-11) -> Wed – Fri
+  const friEst = calculateDeliveryEstimate(new Date('2026-09-11T12:00:00Z'));
+  assert.equal(friEst.loDay, 'Wed');
+  assert.equal(friEst.hiDay, 'Fri');
+  assert.equal(friEst.text, 'Estimated delivery: Wed – Fri');
 
-  // 6. Saturday base date (2026-09-12) -> Tue – Thu
-  const satEst = calculateDeliveryEstimate(new Date('2026-09-12T10:00:00Z'));
-  assert.equal(satEst.loDay, 'Tue');
-  assert.equal(satEst.hiDay, 'Thu');
-  assert.equal(satEst.text, 'Estimated delivery: Tue – Thu');
+  // 6. Saturday base date (2026-09-12) -> Wed – Fri
+  const satEst = calculateDeliveryEstimate(new Date('2026-09-12T12:00:00Z'));
+  assert.equal(satEst.loDay, 'Wed');
+  assert.equal(satEst.hiDay, 'Fri');
+  assert.equal(satEst.text, 'Estimated delivery: Wed – Fri');
 
-  // 7. Sunday base date (2026-09-13) -> Wed – Fri
-  const sunEst = calculateDeliveryEstimate(new Date('2026-09-13T10:00:00Z'));
-  assert.equal(sunEst.loDay, 'Wed');
-  assert.equal(sunEst.hiDay, 'Fri');
-  assert.equal(sunEst.text, 'Estimated delivery: Wed – Fri');
+  // 7. Sunday base date (2026-09-13) -> Thu – Mon
+  const sunEst = calculateDeliveryEstimate(new Date('2026-09-13T12:00:00Z'));
+  assert.equal(sunEst.loDay, 'Thu');
+  assert.equal(sunEst.hiDay, 'Mon');
+  assert.equal(sunEst.text, 'Estimated delivery: Thu – Mon');
 
   // 8. Exhaustive matrix test across 365 continuous days: Sunday must NEVER appear in estimate
   const startDate = new Date('2026-01-01T00:00:00Z');
@@ -541,11 +562,13 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
     assert.notEqual(est.hiDay, 'Sun', `hiDay on day ${d} (${curr.toISOString()}) must never be Sun`);
     assert.ok(!est.text.includes('Sun'), `Text on day ${d} (${curr.toISOString()}) must never include Sun`);
     assert.ok(est.loDate.getTime() < est.hiDate.getTime(), `loDate must strictly precede hiDate on day ${d}`);
+    assert.notEqual(est.loDay, est.hiDay, `loDay and hiDay must not be identical on day ${d}`);
   }
 
-  // 9. Verify odorstrike.html contains calculateDeliveryEstimate and Sunday adjustment
+  // 9. Verify odorstrike.html contains calculateDeliveryEstimate, addBusinessDays, and Sunday adjustment
   const html = fs.readFileSync('odorstrike.html', 'utf8');
   assert.ok(html.includes('function calculateDeliveryEstimate('), 'odorstrike.html must define calculateDeliveryEstimate');
+  assert.ok(html.includes('function addBusinessDays('), 'odorstrike.html must define addBusinessDays');
   assert.ok(html.includes('adjustIfSunday('), 'odorstrike.html must define adjustIfSunday');
   assert.ok(html.includes('window.calculateDeliveryEstimate = calculateDeliveryEstimate;'), 'odorstrike.html must export calculateDeliveryEstimate');
 });

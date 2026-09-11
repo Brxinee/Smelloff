@@ -5205,8 +5205,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       setTimeout(function(){ el.classList.remove('flash-acid'); }, 800);
     }
 
-    // Estimated delivery window (3–5 days from today), shown as weekday names.
-    // Sundays are non-delivery days; any estimate landing on Sunday advances to Monday.
+    // Estimated delivery window (3–5 business days from today), shown as weekday names.
+    // Sundays are non-delivery days; any order/estimate landing on Sunday advances to Monday.
     var estEl = document.getElementById('deliveryEstimate');
     var estText = document.getElementById('deliveryEstimateText');
     var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -5219,20 +5219,26 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       return res;
     }
 
+    function addBusinessDays(date, count) {
+      var d = adjustIfSunday(date);
+      var added = 0;
+      while (added < count) {
+        d.setDate(d.getDate() + 1);
+        var day = d.getDay();
+        if (day !== 0 && day !== 6) {
+          added++;
+        }
+      }
+      return d;
+    }
+
     function calculateDeliveryEstimate(baseDate) {
       var now = baseDate ? new Date(baseDate) : new Date();
-      var lo = new Date(now.getTime());
-      lo.setDate(lo.getDate() + 3);
-      lo = adjustIfSunday(lo);
-
-      var hi = new Date(now.getTime());
-      hi.setDate(hi.getDate() + 5);
-      hi = adjustIfSunday(hi);
+      var lo = addBusinessDays(now, 3);
+      var hi = addBusinessDays(now, 5);
 
       if (hi.getTime() <= lo.getTime()) {
-        hi = new Date(lo.getTime());
-        hi.setDate(hi.getDate() + 1);
-        hi = adjustIfSunday(hi);
+        hi = addBusinessDays(lo, 1);
       }
 
       return {
@@ -5243,6 +5249,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         text: 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()]
       };
     }
+    window.adjustIfSunday = adjustIfSunday;
+    window.addBusinessDays = addBusinessDays;
     window.calculateDeliveryEstimate = calculateDeliveryEstimate;
 
     function showDeliveryEstimate(){
