@@ -11,3 +11,13 @@ node_modules/
 # Only the 1920x1080 composites in blog/assets/ are versioned.
 # Re-fetch by asset id — see docs/BLOG-THUMBNAILS.md.
 .thumbnail-sources/
+
+# Analytics data exports (CSV, TSV, XLSX)
+data/*.csv
+data/*.tsv
+data/*.xlsx
+data/**/*.csv
+data/**/*.tsv
+data/**/*.xlsx
+!data/.gitkeep
+
