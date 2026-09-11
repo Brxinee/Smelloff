@@ -60,7 +60,11 @@ export function verifyOrderToken(orderCode, phone, token) {
   try {
     const a = Buffer.from(expected, 'utf8');
     const b = Buffer.from(token, 'utf8');
-    return a.length === b.length && crypto.timingSafeEqual(a, b);
+    if (a.length !== b.length) {
+      crypto.timingSafeEqual(a, a);
+      return false;
+    }
+    return crypto.timingSafeEqual(a, b);
   } catch { return false; }
 }
 
@@ -74,7 +78,11 @@ export function isAdminAuthorized(req) {
   try {
     const a = Buffer.from(adminSecret.trim(), 'utf8');
     const b = Buffer.from(token, 'utf8');
-    return a.length === b.length && crypto.timingSafeEqual(a, b);
+    if (a.length !== b.length) {
+      crypto.timingSafeEqual(a, a);
+      return false;
+    }
+    return crypto.timingSafeEqual(a, b);
   } catch { return false; }
 }
 
