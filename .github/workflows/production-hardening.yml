@@ -4,7 +4,8 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [production-hardening-final-2026-09-06]
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
