@@ -117,7 +117,13 @@ app.use((req, res, next) => {
     urlPath = urlPath.slice(0, -1);
   }
 
-  let filePath = path.join(__dirname, urlPath);
+  const filePath = path.join(__dirname, urlPath);
+
+  // Security: the URL is user-controlled, so never allow the resolved path
+  // to escape the application's root directory.
+  if (!filePath.startsWith(__dirname + path.sep) && filePath !== __dirname) {
+    return res.status(403).send('Forbidden');
+  }
 
   // Check if target is a directory and has index.html
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
