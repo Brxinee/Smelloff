@@ -1,12 +1,5 @@
 [
   {
-    "file": "api/email-templates.js",
-    "line": 388,
-    "pattern": "UTR requirement",
-    "match": "share the UTR",
-    "snippet": " </div>      ${mutedPara('After paying, share the UTR / reference number so we can match it and ship"
-  },
-  {
     "file": "api/verify-payment.js",
     "line": 236,
     "pattern": "UTR requirement",
@@ -82,13 +75,6 @@
     "pattern": "antimicrobial",
     "match": "antimicrobial",
     "snippet": " Do not claim it kills bacteria or make antimicrobial drug claims. - Do not claim an instant or guar"
-  },
-  {
-    "file": "payment-failed.html",
-    "line": 221,
-    "pattern": "payment screenshot",
-    "match": "payment screenshot",
-    "snippet": "rpay payment ID or UPI reference (UTR), payment screenshot, and phone number.</li>     <li>We will v"
   },
   {
     "file": "scripts/audit-production.mjs",

@@ -366,7 +366,7 @@ export function paymentReminder({
   const inner = `
     ${accentBar}
     ${heading('One step<br>left.')}
-    ${para(`${escape(customerName)}, your ODORSTRIKE order #${escape(orderId)} is reserved &mdash; we just haven&rsquo;t received the UPI payment yet.`)}
+    ${para(`${escape(customerName)}, your ODORSTRIKE order #${escape(orderId)} is reserved &mdash; we just haven&rsquo;t received payment yet.`)}
 
     <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -378,23 +378,19 @@ export function paymentReminder({
           <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Amount due</td>
           <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">&#8377;${escape(amount)}</td>
         </tr>
-        ${upiId ? `<tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Pay to (UPI)</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${GREEN};padding:4px 0;">${escape(upiId)}</td>
-        </tr>` : ''}
       </table>
     </div>
 
-    ${mutedPara('After paying, share the UTR / reference number so we can match it and ship. Prefer Cash on Delivery instead? Just reply and we&rsquo;ll switch it.')}
+    ${mutedPara('Complete your payment securely online, or prefer Cash on Delivery instead? Reply to this email and we&rsquo;ll switch it.')}
 
     ${button(trackUrl(orderId), 'Complete Order')}
 
     ${divider}
-    ${mutedPara('Already paid? Ignore this &mdash; or reply with your UTR and we&rsquo;ll confirm. Help: <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>')}
+    ${mutedPara('Need help with your order? Contact us at <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
   `;
   return {
     subject: `Payment pending — complete your order #${orderId}`,
-    html: shell(inner, `Finish your UPI payment for order #${orderId}.`),
+    html: shell(inner, `Finish your payment for order #${orderId}.`),
   };
 }
 

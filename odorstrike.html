@@ -258,8 +258,6 @@
     META_PIXEL_ID: "1455100092891684",
     SHEETS_ENDPOINT: "https://script.google.com/macros/s/AKfycbwvZamMivX4MF_jM83VjO3f8GDYmitlOxKkkXS2mSnivZ1wzps9ZolIQG2tvKMATIoh2Q/exec",
     WHATSAPP: "919392974031",
-    UPI_ID: "mr.brainy@ibl",
-    UPI_NAME: "Smelloff",
     PRICES: { solo: 229 },
     // MRP = the maximum retail price declared on the physical pack. It is only
     // legitimate to strike it through if ₹499 is the figure actually printed on
@@ -4525,9 +4523,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (lsEl) { lsEl.classList.remove('active'); lsEl.style.display = 'none'; }
     const upiBlock = document.getElementById('upiBlock');
     if (upiBlock) upiBlock.style.display = 'none';
-    // Reset the "Copied ✓" button state so a re-opened checkout starts clean
-    var _cb = document.getElementById('upiCopyBtn');
-    if (_cb) { _cb.classList.remove('copied'); _cb.textContent = 'Tap to copy'; }
     // Re-enable sticky buy bar on mobile
     var mb = document.getElementById('mobileBar');
     if (mb) mb.style.display = '';
@@ -4822,17 +4817,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       document.getElementById('successMsg').textContent = 'Your ODORSTRIKE order is confirmed. We’ll ship within 48 hours.';
     }
 
-    // Inject order ID, name, phone into WhatsApp links
-    var utrLink = document.getElementById('waSuccessUtrLink');
-    if (utrLink) {
-      utrLink.href = 'https://wa.me/919392974031?text=' + encodeURIComponent(
-        'Order ' + orderId + '\n' +
-        'Name: ' + name + '\n' +
-        'Phone: ' + phone + '\n' +
-        'Amount: ₹' + amount + '\n' +
-        'UTR: [paste here]'
-      );
-    }
+    // Inject order ID into WhatsApp questions link
     var qLink = document.getElementById('waSuccessQuestionsLink');
     if (qLink) {
       qLink.href = 'https://wa.me/919392974031?text=' + encodeURIComponent(
