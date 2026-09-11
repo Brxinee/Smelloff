@@ -1,0 +1,3 @@
+## 2024-09-11 - Layout Thrashing with requestAnimationFrame in scroll events
+**Learning:** Queuing `requestAnimationFrame` directly inside a passive `scroll` listener (e.g. `scroll.addEventListener('scroll', function(){ requestAnimationFrame(fn); })`) without a locking flag queues multiple callbacks per frame when scrolling fast. This causes redundant DOM measurements (`offsetLeft`, `offsetWidth`) in the same frame, causing layout thrashing and high CPU usage on low-end devices.
+**Action:** Always use a boolean `ticking` flag to throttle `requestAnimationFrame` to one execution per frame within frequent events like `scroll` or `resize`.
