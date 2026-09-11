@@ -101,7 +101,7 @@ Deno.serve(async (req: Request) => {
     const clientUa = (req.headers.get("user-agent") || "").slice(0, 512) || null;
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-    const payload = {
+    const payload: Record<string, unknown> = {
       customer_email: email,
       customer_phone: phone,
       items,
@@ -111,6 +111,12 @@ Deno.serve(async (req: Request) => {
       upi_ref: str(body.upi_ref, 40) || null,
       address,
       order_code: orderCode,
+      cod_fee: codFeeRupees > 0 ? codFeeRupees * 100 : 0,
+      fbp: fbp,
+      fbc: fbc,
+      client_ip: clientIp,
+      client_ua: clientUa,
+      event_source_url: eventSourceUrl
     };
 
     let data: { id: string; order_code?: string } | null = null;
@@ -125,11 +131,6 @@ Deno.serve(async (req: Request) => {
       payload.order_code = orderCode;
     }
     if (error || !data?.id) throw new Error(error?.message || "Order persistence failed");
-
-    if (codFeeRupees > 0) await supabase.from("orders").update({ cod_fee: codFeeRupees * 100 }).eq("id", data.id);
-    if (fbp || fbc || clientIp || clientUa || eventSourceUrl) {
-      await supabase.from("orders").update({ fbp, fbc, client_ip: clientIp, client_ua: clientUa, event_source_url: eventSourceUrl }).eq("id", data.id);
-    }
 
     return jsonResponse(req, { id: data.id, order_code: data.order_code || orderCode }, 200);
   } catch (error) {
