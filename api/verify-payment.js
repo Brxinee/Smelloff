@@ -122,7 +122,12 @@ async function verifyRazorpayPayment(body, order) {
   try {
     const expected = Buffer.from(generatedSignature, 'hex');
     const provided = Buffer.from(signature, 'hex');
-    signatureMatches = expected.length === provided.length && crypto.timingSafeEqual(expected, provided);
+    if (expected.length !== provided.length) {
+      crypto.timingSafeEqual(expected, expected);
+      signatureMatches = false;
+    } else {
+      signatureMatches = crypto.timingSafeEqual(expected, provided);
+    }
   } catch {
     signatureMatches = false;
   }
