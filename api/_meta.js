@@ -143,7 +143,7 @@ export async function fetchPending(limit = 25) {
 export async function getOrder(orderId) {
   if (!SERVICE_KEY || !orderId) return null;
   try {
-    const cols = 'id,order_code,customer_email,customer_phone,items,amount,payment_method,address,fbp,fbc,client_ip,client_ua,event_source_url';
+    const cols = 'id,order_code,status,customer_email,customer_phone,items,amount,payment_method,payment_verified_at,upi_txn_id,address,fbp,fbc,client_ip,client_ua,event_source_url';
     const r = await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${encodeURIComponent(orderId)}&select=${cols}`, { headers: supaHeaders(), signal: AbortSignal.timeout(5000) });
     if (!r.ok) return null;
     const rows = await r.json().catch(() => []);

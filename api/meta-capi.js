@@ -1,9 +1,9 @@
 import { isAllowedOrigin, checkRateLimit } from './_security.js';
 import { buildUserData, fbcFromFbclid, sendEvent, logInsertIfNew, logUpdate, clientIp, SKU } from './_meta.js';
 
-const LOGGED = new Set(['Lead', 'Purchase', 'Refund']);
-const ALLOWED_EVENTS = new Set(['ViewContent', 'AddToCart', 'InitiateCheckout', 'AddPaymentInfo', 'Lead', 'Purchase', 'Refund']);
-const ID_PREFIX = { Purchase: 'purchase_', Refund: 'refund_', Lead: 'lead_' };
+const LOGGED = new Set(['Lead']);
+const ALLOWED_EVENTS = new Set(['ViewContent', 'AddToCart', 'InitiateCheckout', 'AddPaymentInfo', 'Lead']);
+const ID_PREFIX = { Lead: 'lead_' };
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');

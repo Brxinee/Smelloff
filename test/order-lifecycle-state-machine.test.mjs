@@ -179,5 +179,28 @@ test('Financial Integrity: Unpaid order cancellation must NOT enqueue or emit Re
   const returnedOrder = simulateOrdersMetaEnqueue('delivered', 'returned', 'SMF-20260913-1004', 'id-4');
   assert.equal(returnedOrder.length, 1);
   assert.equal(returnedOrder[0].event_name, 'Refund');
+
+  // 5. Subsequent cancelled -> returned must NOT emit a second Refund event
+  const alreadyCancelledReturned = simulateOrdersMetaEnqueue('cancelled', 'returned', 'SMF-20260913-1003', 'id-3');
+  assert.equal(alreadyCancelledReturned.length, 0, 'Cancelled -> Returned must not double-enqueue Refund');
+});
+
+test('Financial Integrity: Meta CAPI multi-quantity amount calculation and currency discipline', async () => {
+  const { contentsFromItems } = await import('../api/_meta.js');
+  
+  // Test matrix for canonical quantity amounts:
+  const quantities = [1, 2, 5, 10];
+  for (const qty of quantities) {
+    const dbAmountPaise = 22900 * qty;
+    const valueRupees = Number(dbAmountPaise) / 100;
+    const items = [{ sku: 'ODOR-100ML', quantity: qty, price: 229 }];
+    
+    assert.equal(valueRupees, 229 * qty, `Rupee value for qty ${qty} must equal ${229 * qty}`);
+    
+    const contents = contentsFromItems(items, valueRupees);
+    assert.equal(contents.num_items, qty);
+    assert.equal(contents.contents[0].quantity, qty);
+    assert.equal(contents.contents[0].item_price, 229);
+  }
 });
 
