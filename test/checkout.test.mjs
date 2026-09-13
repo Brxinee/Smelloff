@@ -7,9 +7,12 @@ import verifyPaymentHandler from '../api/verify-payment.js';
 import webhookHandler from '../api/webhook.js';
 import sendEmailHandler, { getOrderConfirmationIdempotencyKey } from '../api/send-email.js';
 import { Resend } from 'resend';
-import { generateOrderToken, generateOrderConfirmationToken } from '../api/_security.js';
+import { generateOrderToken, generateOrderConfirmationToken, isAdminAuthorized, isCronAuthorized } from '../api/_security.js';
 import { isValidTransition } from '../shared/products-config.js';
 import { claimShiprocketFulfillment } from '../api/_shiprocket.js';
+import adminVerifyPaymentHandler from '../api/admin/verify-payment.js';
+import shiprocketSyncHandler from '../api/shiprocket-sync.js';
+import metaCapiDrainHandler from '../api/meta-capi-drain.js';
 
 test('vercel.json routing integrity', () => {
   const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
@@ -1880,6 +1883,143 @@ test('Post-Capture Financial Lifecycle Matrix: 16 verification scenarios', async
   // Cleanup
   delete globalThis.__MOCK_ORDER_DB__;
 });
+
+test('Admin / Cron Authorization & Privilege-Escalation Security Suite', async (t) => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    let headers = {};
+    return {
+      statusCode: 200,
+      body: null,
+      setHeader: (k, v) => { headers[k.toLowerCase()] = v; },
+      status(code) {
+        this.statusCode = code;
+        statusCode = code;
+        return this;
+      },
+      json(d) {
+        this.body = d;
+        data = d;
+        return this;
+      },
+      end() {
+        return this;
+      },
+      _get: () => ({ statusCode, data, headers })
+    };
+  }
+
+  const prevAdminSecret = process.env.ADMIN_SECRET;
+  const prevAdminKey = process.env.ADMIN_KEY;
+  const prevCronSecret = process.env.CRON_SECRET;
+  const prevServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  const TEST_ADMIN_SECRET = 'admin_secret_super_secure_999';
+  const TEST_CRON_SECRET = 'cron_secret_worker_auth_888';
+  const TEST_SERVICE_ROLE = 'supabase_srv_role_internal_777';
+
+  process.env.ADMIN_SECRET = TEST_ADMIN_SECRET;
+  delete process.env.ADMIN_KEY;
+  process.env.CRON_SECRET = TEST_CRON_SECRET;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = TEST_SERVICE_ROLE;
+
+  try {
+    // 1. Missing admin credential -> Fail 401
+    assert.equal(isAdminAuthorized({ headers: {} }), false);
+    const resNoAuth = createMockRes();
+    await adminVerifyPaymentHandler({ method: 'POST', headers: {}, body: { orderCode: 'SMF-20260913-0001' } }, resNoAuth);
+    assert.equal(resNoAuth.statusCode, 401);
+
+    // 2. Invalid admin credential -> Fail 401
+    assert.equal(isAdminAuthorized({ headers: { authorization: 'Bearer wrong_token_123' } }), false);
+    assert.equal(isAdminAuthorized({ headers: { 'x-admin-key': 'wrong_admin_key' } }), false);
+    const resBadAuth = createMockRes();
+    await adminVerifyPaymentHandler({ method: 'POST', headers: { authorization: 'Bearer wrong' }, body: { orderCode: 'SMF-20260913-0001' } }, resBadAuth);
+    assert.equal(resBadAuth.statusCode, 401);
+
+    // 3. Valid admin credential -> Pass authorization
+    assert.equal(isAdminAuthorized({ headers: { authorization: `Bearer ${TEST_ADMIN_SECRET}` } }), true);
+    assert.equal(isAdminAuthorized({ headers: { 'x-admin-secret': TEST_ADMIN_SECRET } }), true);
+    assert.equal(isAdminAuthorized({ headers: { 'x-admin-key': TEST_ADMIN_SECRET } }), true);
+
+    // 4. CRON vs Admin Scope: CRON_SECRET MUST NOT authenticate as Admin
+    assert.equal(isAdminAuthorized({ headers: { authorization: `Bearer ${TEST_CRON_SECRET}` } }), false);
+    assert.equal(isAdminAuthorized({ headers: { 'x-admin-key': TEST_CRON_SECRET } }), false);
+
+    // 5. Customer tokens (orderToken/confirmationToken) MUST NOT authenticate as Admin
+    const customerOrderToken = generateOrderToken('SMF-20260913-0001', '9876543210');
+    assert.equal(isAdminAuthorized({ headers: { authorization: `Bearer ${customerOrderToken}` } }), false);
+    assert.equal(isAdminAuthorized({ headers: { 'x-admin-key': customerOrderToken } }), false);
+
+    // 6. Service-Role Key external request MUST NOT authenticate as Admin via HTTP
+    assert.equal(isAdminAuthorized({ headers: { authorization: `Bearer ${TEST_SERVICE_ROLE}` } }), false);
+    assert.equal(isAdminAuthorized({ headers: { 'x-admin-key': TEST_SERVICE_ROLE } }), false);
+
+    // 7. Case-insensitive Bearer & whitespace tolerance in isAdminAuthorized & isCronAuthorized
+    assert.equal(isAdminAuthorized({ headers: { authorization: `bearer   ${TEST_ADMIN_SECRET}` } }), true);
+    assert.equal(isCronAuthorized({ headers: { authorization: `bearer  ${TEST_CRON_SECRET}` } }), true);
+
+    // 8. Cron authorization timing-safe verification
+    assert.equal(isCronAuthorized({ headers: {} }), false);
+    assert.equal(isCronAuthorized({ headers: { authorization: `Bearer ${TEST_ADMIN_SECRET}` } }), false);
+    assert.equal(isCronAuthorized({ headers: { authorization: `Bearer ${TEST_CRON_SECRET}` } }), true);
+    assert.equal(isCronAuthorized({ headers: { 'x-cron-secret': TEST_CRON_SECRET } }), true);
+
+    // 9. HTTP Method controls on admin/verify-payment (GET/PUT/DELETE return 405)
+    const resGet = createMockRes();
+    await adminVerifyPaymentHandler({ method: 'GET', headers: { authorization: `Bearer ${TEST_ADMIN_SECRET}` } }, resGet);
+    assert.equal(resGet.statusCode, 405);
+
+    // 10. CORS: Disallowed origin returns 403 on privileged admin endpoints
+    const resOrigin = createMockRes();
+    await adminVerifyPaymentHandler({
+      method: 'POST',
+      headers: {
+        origin: 'https://evil-attacker-site.com',
+        authorization: `Bearer ${TEST_ADMIN_SECRET}`
+      },
+      body: {}
+    }, resOrigin);
+    assert.equal(resOrigin.statusCode, 403);
+
+    // 11. No development / localhost bypass: localhost request without secret fails 401
+    const resLocalhost = createMockRes();
+    await adminVerifyPaymentHandler({
+      method: 'POST',
+      headers: {
+        host: 'localhost:3000',
+        'x-forwarded-for': '127.0.0.1'
+      },
+      body: { orderCode: 'SMF-20260913-0001' }
+    }, resLocalhost);
+    assert.equal(resLocalhost.statusCode, 401);
+
+    // 12. Restricted email templates require admin authorization
+    const resWelcome = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in' },
+      body: { type: 'orderShipped', to: 'customer@example.com', data: {} }
+    }, resWelcome);
+    assert.equal(resWelcome.statusCode, 401);
+
+    // 13. State machine enforcement: Admin CANNOT transition cancelled -> confirmed
+    assert.equal(isValidTransition('cancelled', 'confirmed', 'prepaid'), false);
+    assert.equal(isValidTransition('delivered', 'cancelled', 'prepaid'), false);
+
+  } finally {
+    if (prevAdminSecret === undefined) delete process.env.ADMIN_SECRET;
+    else process.env.ADMIN_SECRET = prevAdminSecret;
+    if (prevAdminKey === undefined) delete process.env.ADMIN_KEY;
+    else process.env.ADMIN_KEY = prevAdminKey;
+    if (prevCronSecret === undefined) delete process.env.CRON_SECRET;
+    else process.env.CRON_SECRET = prevCronSecret;
+    if (prevServiceRole === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+    else process.env.SUPABASE_SERVICE_ROLE_KEY = prevServiceRole;
+  }
+});
+
 
 
 

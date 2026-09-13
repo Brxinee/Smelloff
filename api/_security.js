@@ -104,14 +104,42 @@ export function verifyOrderConfirmationToken(orderCode, email, token) {
 }
 
 export function isAdminAuthorized(req) {
-  const adminSecret = process.env.ADMIN_SECRET || process.env.ADMIN_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const adminSecret = process.env.ADMIN_SECRET || process.env.ADMIN_KEY;
   if (!adminSecret || typeof adminSecret !== 'string' || !adminSecret.trim()) return false;
   const auth = String(req.headers.authorization || '').trim();
   const custom = String(req.headers['x-admin-key'] || req.headers['x-admin-secret'] || '').trim();
-  const token = auth.startsWith('Bearer ') ? auth.slice(7).trim() : custom;
+  let token = '';
+  if (/^Bearer\s+/i.test(auth)) {
+    token = auth.replace(/^Bearer\s+/i, '').trim();
+  } else if (custom) {
+    token = custom;
+  }
   if (!token) return false;
   try {
     const a = Buffer.from(adminSecret.trim(), 'utf8');
+    const b = Buffer.from(token, 'utf8');
+    if (a.length !== b.length) {
+      crypto.timingSafeEqual(a, a);
+      return false;
+    }
+    return crypto.timingSafeEqual(a, b);
+  } catch { return false; }
+}
+
+export function isCronAuthorized(req) {
+  const cronSecret = process.env.CRON_SECRET || process.env.META_CAPI_DRAIN_SECRET;
+  if (!cronSecret || typeof cronSecret !== 'string' || !cronSecret.trim()) return false;
+  const auth = String(req.headers.authorization || '').trim();
+  const custom = String(req.headers['x-cron-secret'] || '').trim();
+  let token = '';
+  if (/^Bearer\s+/i.test(auth)) {
+    token = auth.replace(/^Bearer\s+/i, '').trim();
+  } else if (custom) {
+    token = custom;
+  }
+  if (!token) return false;
+  try {
+    const a = Buffer.from(cronSecret.trim(), 'utf8');
     const b = Buffer.from(token, 'utf8');
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);

@@ -1,4 +1,4 @@
-import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized } from './_security.js';
+import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized, isCronAuthorized } from './_security.js';
 import {
   createShiprocketOrder,
   getShiprocketShipment,
@@ -222,12 +222,6 @@ async function syncSingleOrder(order) {
     }).catch(() => {});
     return { orderCode: order.order_code, status: 'failed', error: String(err.message || 'Shiprocket sync failed').slice(0, 500) };
   }
-}
-
-function isCronAuthorized(req) {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return false;
-  return String(req.headers.authorization || '') === `Bearer ${secret}`;
 }
 
 export default async function handler(req, res) {

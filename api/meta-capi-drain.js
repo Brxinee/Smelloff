@@ -29,13 +29,13 @@ import {
   buildUserData, sendEvent, contentsFromItems,
   fetchPending, claimPending, logUpdate, getOrder,
 } from './_meta.js';
+import { isCronAuthorized } from './_security.js';
 
 function authorized(req) {
   const secret = process.env.CRON_SECRET || process.env.META_CAPI_DRAIN_SECRET;
   const armed = !!(process.env.META_CAPI_TOKEN && process.env.SUPABASE_SERVICE_ROLE_KEY);
   if (!secret) return !armed; // unarmed → inert response is harmless; armed without a secret → fail closed
-  const auth = String(req.headers['authorization'] || '');
-  return auth === `Bearer ${secret}`;
+  return isCronAuthorized(req);
 }
 
 export default async function handler(req, res) {
