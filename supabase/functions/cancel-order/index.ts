@@ -73,13 +73,25 @@ Deno.serve(async (req: Request) => {
       return jsonResponse(req, { error: "Order cannot be cancelled — it has already been dispatched or delivered." }, 422);
     }
 
-    // Mark as cancelled. UPI refunds are handled manually offline by the merchant.
-    const { error: updateError } = await supabase
+    // Atomically mark as cancelled ONLY if the order is still in a cancellable state at update time.
+    // This enforces state integrity at the database boundary, preventing TOCTOU races where
+    // fulfillment (packed/dispatched/delivered) begins concurrently between fetch and update.
+    const { data: updatedRows, error: updateError } = await supabase
       .from("orders")
       .update({ status: "cancelled" })
-      .eq("id", orderId);
+      .eq("id", orderId)
+      .in("status", cancellable)
+      .select("id");
 
     if (updateError) throw updateError;
+
+    if (!updatedRows || updatedRows.length === 0) {
+      return jsonResponse(
+        req,
+        { error: "Order cannot be cancelled — it has already been dispatched or fulfillment has commenced." },
+        422
+      );
+    }
 
     return jsonResponse(req, { success: true }, 200);
   } catch (_e) {
