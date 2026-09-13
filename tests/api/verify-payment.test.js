@@ -1,8 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import crypto from 'node:crypto';
+import { createRequire } from 'node:module';
 import createOrderHandler from '../../api/create-order.js';
 import verifyPaymentHandler from '../../api/verify-payment.js';
+
+const require = createRequire(import.meta.url);
+const axios = require('axios');
 
 function createMockRes() {
   let statusCode = 200;
@@ -215,64 +219,222 @@ test('verify-payment: rejects manual UTR submission on COD orders', async () => 
   }
 });
 
-test('verify-payment: allows legacy historical order without payment_attempt_id to submit UTR for admin review', async () => {
+test('verify-payment: Razorpay order binding test matrix', async () => {
   const originalFetch = global.fetch;
   const originalKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test_service_key';
-  const orderCode = 'SMF-20260601-0001';
-  const phone = '9876543210';
+  const originalRzpId = process.env.RAZORPAY_KEY_ID;
+  const originalRzpSecret = process.env.RAZORPAY_KEY_SECRET;
 
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test_service_key';
+  process.env.RAZORPAY_KEY_ID = 'rzp_test_key_123';
+  const rzpSecret = 'rzp_test_secret_xyz';
+  process.env.RAZORPAY_KEY_SECRET = rzpSecret;
+
+  const orderA = {
+    order_code: 'SMF-20260906-1111',
+    customer_phone: '9876543210',
+    customer_email: 'customer.a@example.com',
+    status: 'upi_pending',
+    payment_method: 'upi',
+    payment_attempt_id: 'order_rzp_A',
+    amount: 22900
+  };
+
+  const orderB = {
+    order_code: 'SMF-20260906-2222',
+    customer_phone: '9876543210',
+    customer_email: 'customer.b@example.com',
+    status: 'upi_pending',
+    payment_method: 'upi',
+    payment_attempt_id: 'order_rzp_B',
+    amount: 45800
+  };
+
+  // Mock fetch router
+  let mockPaymentFetchResult = null;
   global.fetch = async (url, options) => {
     if (url.includes('/rest/v1/orders?order_code=')) {
       if (options && options.method === 'PATCH') {
+        const patchData = JSON.parse(options.body);
         return {
           ok: true,
           status: 200,
-          json: async () => [{
-            order_code: orderCode,
-            status: 'verification_pending',
-            upi_ref: '123456789012'
-          }]
+          json: async () => [{ ...orderA, ...patchData }]
+        };
+      }
+      if (url.includes(orderA.order_code)) {
+        return { ok: true, status: 200, json: async () => [orderA] };
+      }
+      if (url.includes(orderB.order_code)) {
+        return { ok: true, status: 200, json: async () => [orderB] };
+      }
+      return { ok: true, status: 200, json: async () => [] };
+    }
+    if (url.includes('api.razorpay.com/v1/payments/')) {
+      if (mockPaymentFetchResult) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => mockPaymentFetchResult
         };
       }
       return {
-        ok: true,
-        status: 200,
-        json: async () => [{
-          order_code: orderCode,
-          customer_phone: phone,
-          status: 'upi_pending',
-          payment_method: 'upi',
-          payment_attempt_id: null,
-          amount: 22900
-        }]
+        ok: false,
+        status: 404,
+        json: async () => ({ error: { description: 'Not found' } })
       };
-    }
-    if (url.includes('upi_ref=eq.')) {
-      return { ok: true, status: 200, json: async () => [] };
     }
     return { ok: false, status: 404, json: async () => [] };
   };
 
+  const origAxiosCreate = axios.create;
+  axios.create = function(cfg) {
+    const instance = origAxiosCreate.call(axios, cfg);
+    instance.interceptors.request.use((config) => {
+      config.adapter = async (c) => {
+        if (mockPaymentFetchResult) {
+          return {
+            data: mockPaymentFetchResult,
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config: c
+          };
+        }
+        const err = new Error('Request failed with status code 404');
+        err.response = { status: 404, data: { error: { description: 'Not found' } } };
+        throw err;
+      };
+      return config;
+    });
+    return instance;
+  };
+
   try {
-    const req = {
+    // 1. ORDER A + RZP A + PAY A (Valid) -> PASS 200
+    const paymentIdA = 'pay_rzp_A_1';
+    const validSignatureA = crypto
+      .createHmac('sha256', rzpSecret)
+      .update(`order_rzp_A|${paymentIdA}`)
+      .digest('hex');
+
+    mockPaymentFetchResult = {
+      id: paymentIdA,
+      order_id: 'order_rzp_A',
+      amount: 22900,
+      currency: 'INR',
+      status: 'captured'
+    };
+
+    const reqA = {
       method: 'POST',
       headers: { origin: 'https://smelloff.in' },
       body: {
-        orderCode,
-        phone,
-        utr: '123456789012'
+        orderCode: orderA.order_code,
+        phone: orderA.customer_phone,
+        razorpay_order_id: 'order_rzp_A',
+        razorpay_payment_id: paymentIdA,
+        razorpay_signature: validSignatureA
       }
     };
-    const res = createMockRes();
-    await verifyPaymentHandler(req, res);
-    const result = res._get();
-    assert.strictEqual(result.statusCode, 200);
-    assert.strictEqual(result.responseData.status, 'verification_pending');
-    assert.strictEqual(result.responseData.upiRef, '123456789012');
+    const resA = createMockRes();
+    await verifyPaymentHandler(reqA, resA);
+    const resultA = resA._get();
+    assert.strictEqual(resultA.statusCode, 200);
+    assert.strictEqual(resultA.responseData.verified, true);
+    assert.strictEqual(resultA.responseData.status, 'confirmed');
+
+    // 2. ORDER A + RZP B + PAY B (Cross-Order Attempt) -> FAIL 400
+    const paymentIdB = 'pay_rzp_B_1';
+    const validSignatureB = crypto
+      .createHmac('sha256', rzpSecret)
+      .update(`order_rzp_B|${paymentIdB}`)
+      .digest('hex');
+
+    const reqCross = {
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in' },
+      body: {
+        orderCode: orderA.order_code,
+        phone: orderA.customer_phone,
+        razorpay_order_id: 'order_rzp_B',
+        razorpay_payment_id: paymentIdB,
+        razorpay_signature: validSignatureB
+      }
+    };
+    const resCross = createMockRes();
+    await verifyPaymentHandler(reqCross, resCross);
+    const resultCross = resCross._get();
+    assert.strictEqual(resultCross.statusCode, 400);
+    assert.strictEqual(resultCross.responseData.error, 'Razorpay order mismatch.');
+
+    // 3. ORDER A + RZP A + Fake Signature -> FAIL 400
+    const reqFakeSig = {
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in' },
+      body: {
+        orderCode: orderA.order_code,
+        phone: orderA.customer_phone,
+        razorpay_order_id: 'order_rzp_A',
+        razorpay_payment_id: paymentIdA,
+        razorpay_signature: '0000000000000000000000000000000000000000000000000000000000000000'
+      }
+    };
+    const resFakeSig = createMockRes();
+    await verifyPaymentHandler(reqFakeSig, resFakeSig);
+    const resultFakeSig = resFakeSig._get();
+    assert.strictEqual(resultFakeSig.statusCode, 400);
+    assert.strictEqual(resultFakeSig.responseData.error, 'Payment signature verification failed.');
+
+    // 4. ORDER A + RZP A + Valid Signature + Tampered Payment Amount -> FAIL 400
+    mockPaymentFetchResult = {
+      id: paymentIdA,
+      order_id: 'order_rzp_A',
+      amount: 45800, // 45800 instead of 22900
+      currency: 'INR',
+      status: 'captured'
+    };
+    const resBadAmt = createMockRes();
+    await verifyPaymentHandler(reqA, resBadAmt);
+    const resultBadAmt = resBadAmt._get();
+    assert.strictEqual(resultBadAmt.statusCode, 400);
+    assert.strictEqual(resultBadAmt.responseData.error, 'Payment amount mismatch.');
+
+    // 5. ORDER A + RZP A + Valid Signature + Wrong Currency (USD) -> FAIL 400
+    mockPaymentFetchResult = {
+      id: paymentIdA,
+      order_id: 'order_rzp_A',
+      amount: 22900,
+      currency: 'USD',
+      status: 'captured'
+    };
+    const resBadCurr = createMockRes();
+    await verifyPaymentHandler(reqA, resBadCurr);
+    const resultBadCurr = resBadCurr._get();
+    assert.strictEqual(resultBadCurr.statusCode, 400);
+    assert.strictEqual(resultBadCurr.responseData.error, 'Invalid payment currency.');
+
+    // 6. ORDER A + RZP A + Valid Signature + Failed/Refunded Payment Status -> FAIL 400
+    mockPaymentFetchResult = {
+      id: paymentIdA,
+      order_id: 'order_rzp_A',
+      amount: 22900,
+      currency: 'INR',
+      status: 'failed'
+    };
+    const resBadStatus = createMockRes();
+    await verifyPaymentHandler(reqA, resBadStatus);
+    const resultBadStatus = resBadStatus._get();
+    assert.strictEqual(resultBadStatus.statusCode, 400);
+    assert.strictEqual(resultBadStatus.responseData.error, 'Payment has not been successfully authorized.');
+
   } finally {
+    axios.create = origAxiosCreate;
     global.fetch = originalFetch;
     process.env.SUPABASE_SERVICE_ROLE_KEY = originalKey;
+    process.env.RAZORPAY_KEY_ID = originalRzpId;
+    process.env.RAZORPAY_KEY_SECRET = originalRzpSecret;
   }
 });
+
 
