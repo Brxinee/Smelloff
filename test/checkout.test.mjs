@@ -1572,6 +1572,232 @@ test('api/send-email: missing production Supabase credential fails closed (no si
   }
 });
 
+test('P1 Capture Authority: verify-payment rejects authorized-only payment and accepts captured payment', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      statusCode: 200,
+      body: null,
+      setHeader: () => {},
+      status(code) {
+        this.statusCode = code;
+        statusCode = code;
+        return this;
+      },
+      json(d) {
+        this.body = d;
+        data = d;
+        return this;
+      },
+      _get: () => ({ statusCode, data })
+    };
+  }
+
+  const prevKeySecret = process.env.RAZORPAY_KEY_SECRET;
+  const prevKeyId = process.env.RAZORPAY_KEY_ID;
+  const testKeySecret = 'test_rzp_secret_999';
+  const testKeyId = 'rzp_test_123';
+  process.env.RAZORPAY_KEY_SECRET = testKeySecret;
+  process.env.RAZORPAY_KEY_ID = testKeyId;
+
+  const mockOrder = {
+    order_code: 'SMF-20260913-1111',
+    amount: 22900,
+    status: 'upi_pending',
+    payment_method: 'upi',
+    payment_attempt_id: 'order_test_capture_123',
+    customer_phone: '9876543210',
+    customer_email: 'customer@example.com'
+  };
+
+  globalThis.__MOCK_ORDER_FETCHER__ = async (code) => {
+    if (code === mockOrder.order_code) return mockOrder;
+    return null;
+  };
+
+  const paymentId = 'pay_test_auth_123';
+  const orderId = 'order_test_capture_123';
+  const validSignature = crypto
+    .createHmac('sha256', testKeySecret)
+    .update(`${orderId}|${paymentId}`)
+    .digest('hex');
+
+  // Test 1: status = 'authorized' -> Rejected
+  globalThis.__MOCK_RAZORPAY_PAYMENT_FETCH__ = async (id) => ({
+    id,
+    order_id: orderId,
+    status: 'authorized',
+    amount: 22900,
+    currency: 'INR'
+  });
+
+  const resAuth = createMockRes();
+  await verifyPaymentHandler({
+    method: 'POST',
+    headers: {},
+    body: {
+      orderCode: mockOrder.order_code,
+      customerPhone: '9876543210',
+      razorpay_payment_id: paymentId,
+      razorpay_order_id: orderId,
+      razorpay_signature: validSignature
+    }
+  }, resAuth);
+
+  assert.equal(resAuth.statusCode, 400);
+  assert.ok(resAuth.body.error.includes('Payment has not been captured yet'));
+
+  // Test 2: status = 'captured' -> Accepted and confirmed
+  globalThis.__MOCK_RAZORPAY_PAYMENT_FETCH__ = async (id) => ({
+    id,
+    order_id: orderId,
+    status: 'captured',
+    amount: 22900,
+    currency: 'INR'
+  });
+
+  let patchedData = null;
+  globalThis.__MOCK_ORDER_UPDATER__ = async (code, patch) => {
+    if (code === mockOrder.order_code) {
+      patchedData = patch;
+      return true;
+    }
+    return false;
+  };
+
+  const resCap = createMockRes();
+  await verifyPaymentHandler({
+    method: 'POST',
+    headers: {},
+    body: {
+      orderCode: mockOrder.order_code,
+      customerPhone: '9876543210',
+      razorpay_payment_id: paymentId,
+      razorpay_order_id: orderId,
+      razorpay_signature: validSignature
+    }
+  }, resCap);
+
+  assert.equal(resCap.statusCode, 200);
+  assert.equal(resCap.body.verified, true);
+  assert.equal(resCap.body.status, 'confirmed');
+  assert.equal(patchedData?.status, 'confirmed');
+
+  // Clean up
+  delete globalThis.__MOCK_ORDER_FETCHER__;
+  delete globalThis.__MOCK_ORDER_UPDATER__;
+  delete globalThis.__MOCK_RAZORPAY_PAYMENT_FETCH__;
+  if (prevKeySecret !== undefined) process.env.RAZORPAY_KEY_SECRET = prevKeySecret;
+  if (prevKeyId !== undefined) process.env.RAZORPAY_KEY_ID = prevKeyId;
+});
+
+test('P1 Capture Authority: webhook handles payment.authorized without confirming order, confirms on payment.captured', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      statusCode: 200,
+      body: null,
+      setHeader: () => {},
+      status(code) {
+        this.statusCode = code;
+        statusCode = code;
+        return this;
+      },
+      json(d) {
+        this.body = d;
+        data = d;
+        return this;
+      }
+    };
+  }
+
+  const webhookSecret = 'test_webhook_sec_abc';
+  const prevWebhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
+  process.env.RAZORPAY_WEBHOOK_SECRET = webhookSecret;
+
+  const mockOrder = {
+    order_code: 'SMF-20260913-2222',
+    amount: 22900,
+    status: 'upi_pending',
+    payment_method: 'upi',
+    payment_attempt_id: 'order_webhook_capture_456',
+    customer_phone: '9876543210',
+    customer_email: 'buyer@example.com'
+  };
+
+  globalThis.__MOCK_ORDER_DB__ = [mockOrder];
+
+  // 1. payment.authorized event
+  const authPayload = {
+    event: 'payment.authorized',
+    payload: {
+      payment: {
+        entity: {
+          id: 'pay_wh_auth_456',
+          order_id: 'order_webhook_capture_456',
+          amount: 22900,
+          currency: 'INR',
+          status: 'authorized'
+        }
+      }
+    }
+  };
+  const rawAuth = JSON.stringify(authPayload);
+  const authSig = crypto.createHmac('sha256', webhookSecret).update(rawAuth).digest('hex');
+
+  const resAuth = createMockRes();
+  await webhookHandler({
+    method: 'POST',
+    headers: {
+      'x-razorpay-signature': authSig,
+      'x-razorpay-event-id': 'evt_auth_456'
+    },
+    body: rawAuth
+  }, resAuth);
+
+  assert.equal(resAuth.statusCode, 200);
+  assert.equal(resAuth.body.status, 'authorized');
+  assert.equal(mockOrder.status, 'upi_pending'); // Status MUST NOT have changed to confirmed
+
+  // 2. payment.captured event
+  const capPayload = {
+    event: 'payment.captured',
+    payload: {
+      payment: {
+        entity: {
+          id: 'pay_wh_auth_456',
+          order_id: 'order_webhook_capture_456',
+          amount: 22900,
+          currency: 'INR',
+          status: 'captured'
+        }
+      }
+    }
+  };
+  const rawCap = JSON.stringify(capPayload);
+  const capSig = crypto.createHmac('sha256', webhookSecret).update(rawCap).digest('hex');
+
+  const resCap = createMockRes();
+  await webhookHandler({
+    method: 'POST',
+    headers: {
+      'x-razorpay-signature': capSig,
+      'x-razorpay-event-id': 'evt_cap_456'
+    },
+    body: rawCap
+  }, resCap);
+
+  assert.equal(resCap.statusCode, 200);
+  assert.equal(resCap.body.status, 'confirmed');
+  assert.equal(mockOrder.status, 'confirmed'); // Now confirmed
+
+  // Cleanup
+  delete globalThis.__MOCK_ORDER_DB__;
+  if (prevWebhookSecret !== undefined) process.env.RAZORPAY_WEBHOOK_SECRET = prevWebhookSecret;
+});
+
 
 
 

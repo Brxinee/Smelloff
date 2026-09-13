@@ -426,7 +426,7 @@ test('verify-payment: Razorpay order binding test matrix', async () => {
     await verifyPaymentHandler(reqA, resBadStatus);
     const resultBadStatus = resBadStatus._get();
     assert.strictEqual(resultBadStatus.statusCode, 400);
-    assert.strictEqual(resultBadStatus.responseData.error, 'Payment has not been successfully authorized.');
+    assert.strictEqual(resultBadStatus.responseData.error, 'Payment has not been captured yet. Status: failed');
 
   } finally {
     axios.create = origAxiosCreate;

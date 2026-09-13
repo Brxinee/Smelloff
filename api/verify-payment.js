@@ -25,6 +25,13 @@ function getRazorpayKeySecret() {
 }
 
 function razorpayClient() {
+  if (typeof globalThis.__MOCK_RAZORPAY_PAYMENT_FETCH__ === 'function') {
+    return {
+      payments: {
+        fetch: globalThis.__MOCK_RAZORPAY_PAYMENT_FETCH__
+      }
+    };
+  }
   const keyId = getRazorpayKeyId();
   const keySecret = getRazorpayKeySecret();
   if (!keyId || !keySecret) throw new Error('Razorpay credentials are not configured.');
@@ -32,6 +39,9 @@ function razorpayClient() {
 }
 
 async function fetchOrderByCode(orderCode) {
+  if (typeof globalThis.__MOCK_ORDER_FETCHER__ === 'function') {
+    return globalThis.__MOCK_ORDER_FETCHER__(orderCode);
+  }
   const serviceKey = getServiceKey();
   if (!serviceKey || !orderCode) return null;
   try {
@@ -53,6 +63,9 @@ async function fetchOrderByCode(orderCode) {
 }
 
 async function patchOrder(orderCode, patchBody) {
+  if (typeof globalThis.__MOCK_ORDER_UPDATER__ === 'function') {
+    return globalThis.__MOCK_ORDER_UPDATER__(orderCode, patchBody);
+  }
   const serviceKey = getServiceKey();
   if (!serviceKey || !orderCode) return null;
   try {
@@ -178,8 +191,8 @@ async function verifyRazorpayPayment(body, order) {
       return { status: 400, body: { error: 'Payment amount mismatch.' } };
     }
 
-    if (!['captured', 'authorized'].includes(String(payment.status || '').toLowerCase())) {
-      return { status: 400, body: { error: 'Payment has not been successfully authorized.' } };
+    if (String(payment.status || '').toLowerCase() !== 'captured') {
+      return { status: 400, body: { error: 'Payment has not been captured yet. Status: ' + String(payment.status || '') } };
     }
   } catch (error) {
     console.error('[verify-payment] Razorpay payment fetch failed:', error?.message || error);

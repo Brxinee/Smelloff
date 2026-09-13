@@ -22,6 +22,9 @@ function isDuplicateEvent(eventId) {
 }
 
 async function findOrderByRazorpayOrderId(razorpayOrderId) {
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined' && Array.isArray(globalThis.__MOCK_ORDER_DB__)) {
+    return globalThis.__MOCK_ORDER_DB__.find(o => o.payment_attempt_id === razorpayOrderId) || null;
+  }
   if (!SERVICE_KEY || !razorpayOrderId) return null;
   try {
     const res = await fetch(
@@ -45,6 +48,14 @@ async function findOrderByRazorpayOrderId(razorpayOrderId) {
 }
 
 async function updateOrderStatus(orderCode, patch) {
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined' && Array.isArray(globalThis.__MOCK_ORDER_DB__)) {
+    const o = globalThis.__MOCK_ORDER_DB__.find(ord => ord.order_code === orderCode);
+    if (o) {
+      Object.assign(o, patch);
+      return true;
+    }
+    return false;
+  }
   if (!SERVICE_KEY || !orderCode) return false;
   try {
     const res = await fetch(
@@ -130,7 +141,12 @@ export default async function handler(req, res) {
     const razorpayOrderId = paymentEntity.order_id || event.payload?.order?.entity?.id || '';
     const paymentId = paymentEntity.id || '';
 
-    if (['payment.captured', 'payment.authorized', 'order.paid'].includes(eventType)) {
+    if (eventType === 'payment.authorized') {
+      // payment.authorized is not captured/settled. Do NOT confirm order yet.
+      return res.status(200).json({ received: true, status: 'authorized', note: 'Awaiting payment capture before confirmation.' });
+    }
+
+    if (['payment.captured', 'order.paid'].includes(eventType)) {
       if (!razorpayOrderId) {
         return res.status(200).json({ received: true, note: 'No linked order id.' });
       }
