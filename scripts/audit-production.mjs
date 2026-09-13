@@ -77,8 +77,10 @@ const prohibitedClaimRules = [
   { name: 'Never stains claim', regex: /\bnever\s+stains\b/i },
   { name: 'Unsupported medical / testing claims', regex: /\b(?:clinically|dermatologist)\s+tested\b|\blab\s+(?:tested|certified)\b|\bscientifically\s+proven\b/i },
   { name: 'Stale four months longevity claim', regex: /\b(?:roughly\s+four|lasts\s+4)\s+months\b/i },
-  { name: 'Obsolete manual UPI element', regex: /\bupiInlineId\b/i },
-  { name: 'Obsolete manual UPI transfer instructions', regex: /\bmanual\s+upi\s+transfer\b|\b12-digit\s+UTR\b/i },
+  { name: 'Obsolete 8 seconds speed claim', regex: /\b(?:works|neutralizes[a-z\s]*|in)\s+8\s+seconds\b/i },
+  { name: 'Obsolete manual UPI element', regex: /\b(?:upiInlineId|upiBlock|wa-utr-btn)\b/i },
+  { name: 'Obsolete manual UPI transfer instructions', regex: /\bmanual\s+upi\s+transfer\b|\b12-digit\s+UTR\b|\bsubmit\s+utr\b|\bupload\s+screenshot\b|\bpay\s+manually\b/i },
+  { name: 'Obsolete direct UPI ID', regex: /\b(?:mr\.brainy@ibl|smelloff@ybl)\b/i },
   { name: 'Stale free COD claim', regex: /\bfree\s+cod\b|\bfree\s+cash\s+on\s+delivery\b/i }
 ];
 

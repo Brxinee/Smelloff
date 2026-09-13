@@ -2194,23 +2194,6 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,.3);
   }
-  .wa-utr-btn {
-    display: inline-block;
-    background: #25d366;
-    color: #000;
-    font-weight: 700;
-    padding: 10px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-top: 8px;
-  }
-  .wa-utr-btn:hover {
-    background: #1fbe58;
-  }
   .pay-help{
     font-size:13px;
     color:var(--muted);
@@ -4090,11 +4073,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
       <p class="success-reassure" id="successEmailNote" style="display:none">Check your email — we just sent your order confirmation.</p>
 
-      <!-- Optional UPI block (hidden in standard Razorpay flow) -->
-      <div id="upiBlock" class="upi-block" style="display:none;text-align:left">
-        <div class="upi-policy-link" style="margin-top:12px;font-size:11px;">
-          Payment issue? <a href="/payment-failed" onclick="openPaymentFailedOverlay();return false;">See our Payment Failed Policy</a>
-        </div>
+      <div class="payment-policy-link" style="margin-top:12px;font-size:11px;">
+        Payment issue? <a href="/payment-failed" onclick="openPaymentFailedOverlay();return false;">See our Payment Failed Policy</a>
       </div>
 
       <p style="font-size:12px;margin-top:14px">Questions? WhatsApp <a id="waSuccessQuestionsLink" href="https://wa.me/919392974031" style="color:var(--acid);font-weight:500">+91 93929 74031</a></p>
@@ -4521,8 +4501,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     syncModalState();
     var lsEl = document.getElementById('loadingScreen');
     if (lsEl) { lsEl.classList.remove('active'); lsEl.style.display = 'none'; }
-    const upiBlock = document.getElementById('upiBlock');
-    if (upiBlock) upiBlock.style.display = 'none';
     // Re-enable sticky buy bar on mobile
     var mb = document.getElementById('mobileBar');
     if (mb) mb.style.display = '';
@@ -4779,8 +4757,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (cff) cff.style.display = 'none';
     var ssc = document.getElementById('successScreen');
     if (ssc) ssc.style.display = 'block';
-    var ub = document.getElementById('upiBlock');
-    if (ub) ub.style.display = 'none';
     var oid = document.getElementById('orderIdDisplay');
     if (oid) oid.textContent = orderId;
     var trk = document.getElementById('successTrackLink');
@@ -4960,7 +4936,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
           amount: String(order.total),
           codFee: isCod ? order.codFee : 0,
           address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '),
-          paymentMethod: isCod ? 'Cash on Delivery' : 'UPI (' + CFG.UPI_ID + ')'
+          paymentMethod: isCod ? 'Cash on Delivery' : 'Prepaid (Razorpay)'
         }).catch(e => console.error('Order email failed:', e));
       }
 
@@ -4978,20 +4954,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         });
         return;
       }
-
-      // UPI flow
-      const upiTotal = Number(order.amount) + Number(order.shipping);
-      const upiLink = buildUpiLink(upiTotal, persistedOrderId, selectedUpiApp);
-      showUpiSuccess(persistedOrderId, upiTotal, upiLink, {
-        qty: Number(order.quantity),
-        name: order.name,
-        email: order.email,
-        phone: order.phone
-      });
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (isMobile) {
-        setTimeout(function(){ window.location.href = upiLink; }, 200);
-      }
     } catch (error) {
       console.error('[Smelloff] PDP checkout failed:', error);
       hideLoadingScreen();
@@ -4999,159 +4961,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       btnText.innerHTML = originalBtnText;
       showError(error.message || 'We could not place your order. Please try again.');
     }
-  }
-
-  let selectedUpiApp = 'any';
-  window.setUpiApp = function(appName) {
-    selectedUpiApp = appName;
-    document.querySelectorAll('.upi-app-btn').forEach(function(btn) {
-      var active = btn.dataset.app === appName;
-      btn.classList.toggle('active', active);
-    });
-  };
-
-  function getAppUpiLink(app, amount, orderId) {
-    const pa = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || 'mr.brainy@ibl';
-    const pn = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_NAME) || 'Smelloff';
-    const am = String(amount || 229);
-    const tn = 'ODORSTRIKE-' + (orderId || '');
-    const params = new URLSearchParams({ pa, pn, am, cu: 'INR', tn }).toString();
-    const isAndroid = /Android/i.test(navigator.userAgent);
-
-    if (app === 'gpay') {
-      if (isAndroid) {
-        return `intent://pay?${params}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end;`;
-      }
-      return `tez://upi/pay?${params}`;
-    }
-    if (app === 'phonepe') {
-      if (isAndroid) {
-        return `intent://pay?${params}#Intent;scheme=upi;package=com.phonepe.app;scheme=upi;end;`;
-      }
-      return `phonepe://pay?${params}`;
-    }
-    if (app === 'paytm') {
-      if (isAndroid) {
-        return `intent://pay?${params}#Intent;scheme=upi;package=net.one97.paytm;scheme=upi;end;`;
-      }
-      return `paytmmp://pay?${params}`;
-    }
-    return `upi://pay?${params}`;
-  }
-
-  window.getAppUpiLink = getAppUpiLink;
-
-  window.launchSpecificUpi = function(app, event) {
-    if (event) event.preventDefault();
-    const orderId = document.getElementById('orderIdDisplay') ? document.getElementById('orderIdDisplay').textContent.trim() : '';
-    const t = orderTotals();
-    const link = getAppUpiLink(app, t.subtotal + t.shipping, orderId);
-    window.location.href = link;
-  };
-
-  // Copy UPI ID to clipboard with brief "Copied ✓" confirmation
-  window.copyUpiId = async function() {
-    const id = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.UPI_ID) || 'mr.brainy@ibl';
-    const btn = document.getElementById('upiCopyBtn');
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(id);
-      } else {
-        // Fallback for older browsers
-        const ta = document.createElement('textarea');
-        ta.value = id; document.body.appendChild(ta); ta.select();
-        document.execCommand('copy'); ta.remove();
-      }
-      if (btn) {
-        btn.classList.add('copied');
-        const orig = btn.textContent;
-        btn.textContent = 'Copied ✓';
-        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
-      }
-    } catch (e) { console.warn('[Smelloff] UPI copy failed:', e); }
-  };
-
-  function buildUpiLink(amount, orderId, app) {
-    return getAppUpiLink(app || selectedUpiApp, amount, orderId);
-  }
-
-  // No Google Customer Reviews opt-in here, on purpose. A UPI order at this
-  // point is `upi_pending`: the customer still has to copy the VPA, pay,
-  // screenshot it and WhatsApp us the UTR, and some never do. Asking Google to
-  // survey an order that was never paid for produces surveys about deliveries
-  // that never happened. The right trigger for UPI is payment confirmation,
-  // which happens by hand in /admin, not on this screen. If that ever gets
-  // wired up, call window.smfGoogleReviewOptIn() from there — not from here.
-  function showUpiSuccess(orderId, total, upiLink, details) {
-    hideLoadingScreen();
-    document.getElementById('checkoutForm').style.display = 'none';
-    const s = document.getElementById('successScreen');
-    s.style.display = 'block';
-    document.getElementById('successTag').textContent = 'Order received';
-    document.getElementById('successHeading').textContent = 'Pay ₹' + total + ' via UPI';
-    document.getElementById('successMsg').textContent = 'Order received. Send your UTR to WhatsApp to confirm. We\'ll ship within 48 hours of confirmation.';
-    document.getElementById('orderIdDisplay').textContent = orderId;
-    var upiTrk = document.getElementById('successTrackLink');
-    if (upiTrk) { upiTrk.href = '/track-order?code=' + encodeURIComponent(orderId); upiTrk.style.display = 'inline-block'; }
-    try { localStorage.setItem('smelloff_last_order', JSON.stringify({ code: orderId, ts: Date.now() })); } catch (e) {}
-
-    // Populate UPI block
-    document.getElementById('upiBlock').style.display = 'block';
-    document.getElementById('upiIdShow').textContent = CFG.UPI_ID;
-    document.getElementById('upiAmountShow').textContent = '₹' + total;
-    document.getElementById('upiNoteShow').textContent = 'ODORSTRIKE-' + orderId;
-
-    // Update 1-click deep links in success screen
-    var gpayBtn = document.getElementById('upiGpayBtn');
-    if (gpayBtn) gpayBtn.href = getAppUpiLink('gpay', total, orderId);
-    var phonepeBtn = document.getElementById('upiPhonepeBtn');
-    if (phonepeBtn) phonepeBtn.href = getAppUpiLink('phonepe', total, orderId);
-    var paytmBtn = document.getElementById('upiPaytmBtn');
-    if (paytmBtn) paytmBtn.href = getAppUpiLink('paytm', total, orderId);
-    var openBtn = document.getElementById('upiOpenBtn');
-    if (openBtn) openBtn.href = getAppUpiLink('any', total, orderId);
-
-    // Prefill WhatsApp UTR link with order context so merchant can match UTR to order
-    const name = (details && details.name) || (document.getElementById('f_name') ? document.getElementById('f_name').value.trim() : '') || '';
-    const phone = (details && details.phone) || (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || '';
-    const utrLink = document.getElementById('waSuccessUtrLink');
-    if (utrLink) {
-      utrLink.href = 'https://wa.me/919392974031?text=' + encodeURIComponent(
-        'Order ' + orderId + '\n' +
-        'Name: ' + name + '\n' +
-        'Phone: ' + phone + '\n' +
-        'Amount: ₹' + total + '\n' +
-        'UTR: [paste here]'
-      );
-    }
-    const qLink = document.getElementById('waSuccessQuestionsLink');
-    if (qLink) {
-      qLink.href = 'https://wa.me/919392974031?text=' + encodeURIComponent(
-        'Hi Smelloff, I have a question about my order.\nOrder ID: ' + orderId
-      );
-    }
-
-    // QR for the UPI deep link (any UPI app reads this)
-    const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=8&data=' + encodeURIComponent(upiLink);
-    const qrImg = document.getElementById('upiQR');
-    if (qrImg) {
-      qrImg.style.display = '';
-      qrImg.src = qrSrc;
-      qrImg.onerror = function(){ qrImg.style.display = 'none'; };
-    }
-
-    var qty = (details && typeof details.qty === 'number') ? details.qty : (cartQty > 0 ? cartQty : 1);
-    trackPurchase(total, orderId, qty, 'upi');
-    setCartQty(0);
-    try {
-      const buyerEmail = (details && details.email) || (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
-      const buyerPhone = (details && details.phone) || (document.getElementById('f_phone') ? document.getElementById('f_phone').value : '').trim();
-      localStorage.setItem('smelloff_purchased', 'true');
-      if (buyerEmail) localStorage.setItem('smelloff_purchased_email', buyerEmail);
-      if (buyerPhone) localStorage.setItem('smelloff_last_phone', buyerPhone);
-      var emailNote = document.getElementById('successEmailNote');
-      if (emailNote) emailNote.style.display = buyerEmail ? 'block' : 'none';
-    } catch (e) {}
   }
 
   // ==============================

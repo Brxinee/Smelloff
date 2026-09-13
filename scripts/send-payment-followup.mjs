@@ -1,6 +1,6 @@
 // scripts/send-payment-followup.mjs
 //
-// Send the UPI payment follow-up email to a customer using Resend.
+// Send the payment follow-up / abandoned checkout email to a customer using Resend.
 // Reads the HTML template from /emails/payment-followup-email.html, replaces
 // {{variables}} with values from the order, and sends via Resend's API.
 //
@@ -8,8 +8,8 @@
 //   RESEND_API_KEY=re_xxx node scripts/send-payment-followup.mjs
 //
 // You can also call sendPaymentFollowup({...}) from your serverless
-// functions (e.g. /api/send-email.js) when an order has been logged
-// but no UTR has been received within N minutes.
+// functions (e.g. /api/send-email.js) when an order checkout was initiated
+// but not completed within N minutes.
 
 import { Resend } from 'resend';
 import { readFile } from 'node:fs/promises';
@@ -21,11 +21,11 @@ const TEMPLATE_PATH = resolve(__dirname, '..', 'emails', 'payment-followup-email
 
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
 const REPLY_TO = 'smelloffsupport@gmail.com';
-const SUBJECT = 'Action needed: confirm your ODORSTRIKE order';
+const SUBJECT = 'Action needed: complete your ODORSTRIKE order';
 
 /**
  * Render the payment-followup email template with the given variables.
- * @param {object} vars - { customer_name, order_id, order_amount, order_date, utr_field_link }
+ * @param {object} vars - { customer_name, order_id, order_amount, order_date, checkout_link }
  * @returns {Promise<string>} fully-rendered HTML
  */
 export async function renderPaymentFollowup(vars) {
@@ -34,7 +34,12 @@ export async function renderPaymentFollowup(vars) {
   html = html.replace(/^<!--\s*SUBJECT:.*?-->\s*/i, '');
   html = html.replace(/^<!--\s*PREVIEW:.*?-->\s*/i, '');
 
-  for (const [key, value] of Object.entries(vars)) {
+  const enriched = {
+    checkout_link: 'https://smelloff.in/odorstrike',
+    ...vars,
+  };
+
+  for (const [key, value] of Object.entries(enriched)) {
     const safe = value == null ? '' : String(value);
     html = html.split(`{{${key}}}`).join(safe);
   }
@@ -47,9 +52,9 @@ export async function renderPaymentFollowup(vars) {
  * @param {string} opts.to            - customer email
  * @param {string} opts.customer_name - first name or fallback
  * @param {string} opts.order_id      - e.g. "OS260424-ABCD"
- * @param {number|string} opts.order_amount - e.g. 258
+ * @param {number|string} opts.order_amount - e.g. 229
  * @param {string} opts.order_date    - e.g. "25 Apr 2026"
- * @param {string} opts.utr_field_link - URL of the UTR submission form
+ * @param {string} [opts.checkout_link] - URL of the checkout retry page
  * @param {string} [opts.apiKey]      - falls back to env RESEND_API_KEY
  */
 export async function sendPaymentFollowup(opts) {
@@ -62,7 +67,7 @@ export async function sendPaymentFollowup(opts) {
     order_id:      opts.order_id,
     order_amount:  opts.order_amount,
     order_date:    opts.order_date,
-    utr_field_link: opts.utr_field_link,
+    checkout_link: opts.checkout_link || 'https://smelloff.in/odorstrike',
   });
 
   const result = await resend.emails.send({
@@ -86,9 +91,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     to: 'customer@example.com',
     customer_name: 'Aniket',
     order_id: 'OS260425-Q9TZ',
-    order_amount: 258,
+    order_amount: 229,
     order_date: '25 Apr 2026',
-    utr_field_link: 'https://smelloff.in/submit-utr?order=OS260425-Q9TZ',
+    checkout_link: 'https://smelloff.in/odorstrike',
   });
   console.log('Sent:', result);
 }

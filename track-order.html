@@ -248,7 +248,7 @@
     <div class="t-code" id="rCode"></div>
     <p class="t-meta" id="rMeta"></p>
     <p class="t-updated" id="rUpdated"></p>
-    <div class="t-cancel-banner" id="rCancelled">This order was cancelled. If you paid by UPI, the refund is processed manually within 5–7 business days — WhatsApp us with your UTR if it hasn't arrived.</div>
+    <div class="t-cancel-banner" id="rCancelled">This order was cancelled. If you paid online (UPI / card / net banking), your refund is credited back to your original payment method within 5–7 business days.</div>
     <div class="t-eta" id="rEta"><span class="lbl">Estimated delivery</span><span class="val" id="rEtaVal"></span></div>
     <ol class="t-steps" id="rSteps">
       <li class="t-step" data-step="placed"><span class="t-dot" aria-hidden="true"></span><div><div class="t-step-name">Order placed</div><div class="t-step-desc" id="dPlaced">We've received your order.</div></div></li>
@@ -442,7 +442,7 @@
     var effective = o.status === 'upi_pending' ? 'placed' : o.status;
     var idx = STEPS.indexOf(effective);
     document.getElementById('dPlaced').textContent = o.status === 'upi_pending'
-      ? 'Order received — awaiting UPI payment confirmation. Sent your UTR on WhatsApp yet?'
+      ? 'Order received — awaiting payment confirmation.'
       : 'We’ve received your order.';
     var lis = document.querySelectorAll('#rSteps .t-step');
     lis.forEach(function(li, i){
