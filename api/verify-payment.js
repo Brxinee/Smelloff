@@ -1,6 +1,14 @@
 import crypto from 'node:crypto';
 import Razorpay from 'razorpay';
-import { isAllowedOrigin, clientIp, checkRateLimit, verifyOrderToken, validateAndNormalizeUtr } from './_security.js';
+import {
+  isAllowedOrigin,
+  clientIp,
+  checkRateLimit,
+  verifyOrderToken,
+  generateOrderToken,
+  generateOrderConfirmationToken,
+  validateAndNormalizeUtr
+} from './_security.js';
 import paymentStatusHandler from './payment-status.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
@@ -97,6 +105,8 @@ async function verifyRazorpayPayment(body, order) {
   const terminalConfirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
   if (terminalConfirmedStates.includes(order.status)) {
     if (order.upi_txn_id === paymentId || storedRazorpayOrderId === razorpayOrderId) {
+      const dbPhone = String(order.customer_phone || '').replace(/\D/g, '').slice(-10);
+      const dbEmail = String(order.customer_email || '').trim().toLowerCase();
       return {
         status: 200,
         body: {
@@ -105,6 +115,8 @@ async function verifyRazorpayPayment(body, order) {
           idempotent: true,
           status: order.status,
           orderId: order.order_code,
+          orderToken: generateOrderToken(order.order_code, dbPhone),
+          confirmationToken: generateOrderConfirmationToken(order.order_code, dbEmail),
           razorpayPaymentId: paymentId,
           razorpayOrderId: storedRazorpayOrderId,
           message: 'Payment already verified and confirmed.'
@@ -171,6 +183,8 @@ async function verifyRazorpayPayment(body, order) {
     return { status: 500, body: { error: 'Payment was verified but the order could not be updated. Please contact support.' } };
   }
 
+  const dbPhone = String(order.customer_phone || '').replace(/\D/g, '').slice(-10);
+  const dbEmail = String(order.customer_email || '').trim().toLowerCase();
   return {
     status: 200,
     body: {
@@ -178,6 +192,8 @@ async function verifyRazorpayPayment(body, order) {
       verified: true,
       status: 'confirmed',
       orderId: order.order_code,
+      orderToken: generateOrderToken(order.order_code, dbPhone),
+      confirmationToken: generateOrderConfirmationToken(order.order_code, dbEmail),
       razorpayPaymentId: paymentId,
       razorpayOrderId: storedRazorpayOrderId,
       message: 'Payment verified successfully.'

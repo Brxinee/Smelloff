@@ -68,6 +68,41 @@ export function verifyOrderToken(orderCode, phone, token) {
   } catch { return false; }
 }
 
+export function generateOrderConfirmationToken(orderCode, email, expiresInMs = 24 * 60 * 60 * 1000) {
+  const secret = getSecuritySecret();
+  if (!secret) return null;
+  const cleanOrderCode = String(orderCode || '').trim().toUpperCase();
+  const cleanEmail = String(email || '').trim().toLowerCase();
+  if (!cleanEmail.includes('@') || !/^SMF-\d{8}-\d{4}$/.test(cleanOrderCode)) return null;
+  const expiry = Date.now() + expiresInMs;
+  const payload = `${cleanOrderCode}:${cleanEmail}:${expiry}`;
+  const sig = crypto.createHmac('sha256', secret).update(payload).digest('hex').slice(0, 32);
+  return `${expiry}.${sig}`;
+}
+
+export function verifyOrderConfirmationToken(orderCode, email, token) {
+  if (!token || typeof token !== 'string') return false;
+  const secret = getSecuritySecret();
+  if (!secret) return false;
+  const parts = token.split('.');
+  if (parts.length !== 2) return false;
+  const [expiryStr, sig] = parts;
+  const expiry = Number(expiryStr);
+  if (!Number.isFinite(expiry) || Date.now() > expiry) return false;
+  const cleanOrderCode = String(orderCode || '').trim().toUpperCase();
+  const cleanEmail = String(email || '').trim().toLowerCase();
+  const payload = `${cleanOrderCode}:${cleanEmail}:${expiry}`;
+  const expectedSig = crypto.createHmac('sha256', secret).update(payload).digest('hex').slice(0, 32);
+  try {
+    const a = Buffer.from(expectedSig, 'utf8');
+    const b = Buffer.from(sig, 'utf8');
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(a, b);
+  } catch {
+    return false;
+  }
+}
+
 export function isAdminAuthorized(req) {
   const adminSecret = process.env.ADMIN_SECRET || process.env.ADMIN_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!adminSecret || typeof adminSecret !== 'string' || !adminSecret.trim()) return false;

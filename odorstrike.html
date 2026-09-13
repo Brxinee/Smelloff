@@ -4822,7 +4822,10 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
             amount: String(amount),
             codFee: 0,
             address: addr,
-            paymentMethod: 'Prepaid (Razorpay)'
+            paymentMethod: 'Prepaid (Razorpay)',
+            phone: phone || (details && details.phone),
+            orderToken: details && details.orderToken,
+            confirmationToken: details && details.confirmationToken
           }).catch(function (e) { console.error('Prepaid order email failed:', e); });
         } catch (e) { /* confirmation email is best-effort */ }
       }
@@ -4936,7 +4939,10 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
           amount: String(order.total),
           codFee: isCod ? order.codFee : 0,
           address: [order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '),
-          paymentMethod: isCod ? 'Cash on Delivery' : 'Prepaid (Razorpay)'
+          paymentMethod: isCod ? 'Cash on Delivery' : 'Prepaid (Razorpay)',
+          phone: order.phone,
+          orderToken: data.order_token,
+          confirmationToken: data.confirmation_token
         }).catch(e => console.error('Order email failed:', e));
       }
 

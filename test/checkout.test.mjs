@@ -6,6 +6,7 @@ import createOrderHandler from '../api/create-order.js';
 import verifyPaymentHandler from '../api/verify-payment.js';
 import webhookHandler from '../api/webhook.js';
 import sendEmailHandler from '../api/send-email.js';
+import { generateOrderToken, generateOrderConfirmationToken } from '../api/_security.js';
 
 test('vercel.json routing integrity', () => {
   const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
@@ -738,7 +739,7 @@ test('api/send-email: orderConfirmation allows customer checkout dispatch while 
   const resWelcome = createMockRes();
   await sendEmailHandler({
     method: 'POST',
-    headers: { origin: 'https://smelloff.in' },
+    headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.5.5.1' },
     body: {
       type: 'welcomeEmail',
       to: 'subscriber@example.com',
@@ -746,6 +747,16 @@ test('api/send-email: orderConfirmation allows customer checkout dispatch while 
     }
   }, resWelcome);
   assert.notEqual(resWelcome._get().statusCode, 401, 'welcomeEmail from newsletter/waitlist must not be rejected with 401');
+
+  // 3b. welcomeEmail enforces recipient rate limiting
+  const resWelcomeSpam1 = createMockRes();
+  const resWelcomeSpam2 = createMockRes();
+  const resWelcomeSpam3 = createMockRes();
+  const welcomePayload = { type: 'welcomeEmail', to: 'victim-spam@example.com', data: { customerName: 'SpamTarget' } };
+  await sendEmailHandler({ method: 'POST', headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.5.5.2' }, body: welcomePayload }, resWelcomeSpam1);
+  await sendEmailHandler({ method: 'POST', headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.5.5.3' }, body: welcomePayload }, resWelcomeSpam2);
+  await sendEmailHandler({ method: 'POST', headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.5.5.4' }, body: welcomePayload }, resWelcomeSpam3);
+  assert.equal(resWelcomeSpam3._get().statusCode, 429, 'Excessive welcome emails to same recipient must be rejected with 429');
 
   // 4. Authenticated request with abandonedCart MUST pass authorization
   const prevAdminSecret = process.env.ADMIN_SECRET;
@@ -768,6 +779,181 @@ test('api/send-email: orderConfirmation allows customer checkout dispatch while 
   } finally {
     if (prevAdminSecret === undefined) delete process.env.ADMIN_SECRET;
     else process.env.ADMIN_SECRET = prevAdminSecret;
+  }
+});
+
+test('api/send-email: orderConfirmation security boundaries, token verification, and DB authoritative data enforcement', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      setHeader: () => {},
+      status: (code) => {
+        statusCode = code;
+        return {
+          json: (d) => { data = d; return { statusCode, data }; },
+          end: () => ({ statusCode })
+        };
+      },
+      json: (d) => { data = d; return { statusCode, data }; },
+      _get: () => ({ statusCode, data })
+    };
+  }
+
+  const prevSecret = process.env.ORDER_SECURITY_SECRET;
+  const prevResend = process.env.RESEND_API_KEY;
+  process.env.ORDER_SECURITY_SECRET = 'test-order-secret-hardening-999';
+
+  const mockDbOrder = {
+    order_code: 'SMF-20260913-7777',
+    customer_email: 'realbuyer@example.com',
+    customer_phone: '9876543210',
+    status: 'confirmed',
+    payment_method: 'prepaid',
+    amount: 22900,
+    address: {
+      name: 'Authoritative Buyer',
+      line: '123 Verified Street',
+      city: 'Hyderabad',
+      state: 'Telangana',
+      pincode: '500001'
+    }
+  };
+
+  globalThis.__MOCK_ORDER_FETCHER__ = async (code) => {
+    if (code === 'SMF-20260913-7777') return { ...mockDbOrder };
+    if (code === 'SMF-20260913-8888') return { ...mockDbOrder, order_code: 'SMF-20260913-8888', status: 'cancelled' };
+    if (code === 'SMF-20260913-9999') return { ...mockDbOrder, order_code: 'SMF-20260913-9999', status: 'placed', payment_method: 'prepaid' };
+    return null;
+  };
+
+  globalThis.__MOCK_SENT_CONFIRMATIONS__ = new Set();
+
+  try {
+    let ipCounter = 1;
+    const nextHeaders = () => ({
+      origin: 'https://smelloff.in',
+      'x-forwarded-for': `192.168.1.${ipCounter++}`
+    });
+
+    // 1. Invalid order code format
+    const resBadCode = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: nextHeaders(),
+      body: { type: 'orderConfirmation', orderCode: 'INVALID-CODE', to: 'realbuyer@example.com' }
+    }, resBadCode);
+    assert.equal(resBadCode._get().statusCode, 400, 'Invalid order code format must return 400');
+
+    // 2. Order not found in database
+    const resNotFound = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: nextHeaders(),
+      body: { type: 'orderConfirmation', orderCode: 'SMF-20260913-0000', to: 'realbuyer@example.com' }
+    }, resNotFound);
+    assert.equal(resNotFound._get().statusCode, 404, 'Non-existent order must return 404');
+
+    // 3. Unauthorized caller without tokens, phone, or admin secret
+    const resUnauthorized = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: nextHeaders(),
+      body: { type: 'orderConfirmation', orderCode: 'SMF-20260913-7777', to: 'realbuyer@example.com' }
+    }, resUnauthorized);
+    assert.equal(resUnauthorized._get().statusCode, 403, 'Unauthenticated orderConfirmation must return 403');
+
+    // 4. Attacker attempts to redirect confirmation to arbitrary email address
+    const confirmationToken = generateOrderConfirmationToken('SMF-20260913-7777', 'realbuyer@example.com');
+    const resSpoofedRecipient = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: nextHeaders(),
+      body: {
+        type: 'orderConfirmation',
+        orderCode: 'SMF-20260913-7777',
+        to: 'attacker@evil.com',
+        confirmationToken: confirmationToken
+      }
+    }, resSpoofedRecipient);
+    assert.equal(resSpoofedRecipient._get().statusCode, 400, 'Recipient email mismatch must return 400');
+
+    // 5. Cancelled order cannot trigger orderConfirmation
+    const resCancelled = createMockRes();
+    const tokenCancelled = generateOrderConfirmationToken('SMF-20260913-8888', 'realbuyer@example.com');
+    await sendEmailHandler({
+      method: 'POST',
+      headers: nextHeaders(),
+      body: {
+        type: 'orderConfirmation',
+        orderCode: 'SMF-20260913-8888',
+        confirmationToken: tokenCancelled
+      }
+    }, resCancelled);
+    assert.equal(resCancelled._get().statusCode, 400, 'Cancelled order must return 400');
+
+    // 6. Unpaid prepaid order cannot trigger orderConfirmation
+    const resUnpaid = createMockRes();
+    const tokenUnpaid = generateOrderConfirmationToken('SMF-20260913-9999', 'realbuyer@example.com');
+    await sendEmailHandler({
+      method: 'POST',
+      headers: nextHeaders(),
+      body: {
+        type: 'orderConfirmation',
+        orderCode: 'SMF-20260913-9999',
+        confirmationToken: tokenUnpaid
+      }
+    }, resUnpaid);
+    assert.equal(resUnpaid._get().statusCode, 400, 'Unpaid prepaid order must return 400');
+
+    // 7. Idempotency guard: once sent, subsequent calls return 200 with idempotent: true without duplicate sending
+    globalThis.__MOCK_SENT_CONFIRMATIONS__.add('SMF-20260913-7777');
+    const resIdempotent = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: nextHeaders(),
+      body: {
+        type: 'orderConfirmation',
+        orderCode: 'SMF-20260913-7777',
+        confirmationToken: confirmationToken
+      }
+    }, resIdempotent);
+    assert.equal(resIdempotent._get().statusCode, 200);
+    assert.equal(resIdempotent._get().data.idempotent, true, 'Already sent order confirmation must return idempotent: true');
+
+    // 8. OrderToken authorization succeeds
+    globalThis.__MOCK_SENT_CONFIRMATIONS__.clear();
+    const orderToken = generateOrderToken('SMF-20260913-7777', '9876543210');
+    assert.ok(orderToken, 'Valid orderToken generated');
+
+    // 9. Customer phone matching DB record authorizes request
+    const resPhoneAuth = createMockRes();
+    // Temporarily without RESEND_API_KEY, should pass auth and validation to reach email service check (500) or dispatch
+    delete process.env.RESEND_API_KEY;
+    await sendEmailHandler({
+      method: 'POST',
+      headers: nextHeaders(),
+      body: {
+        type: 'orderConfirmation',
+        orderCode: 'SMF-20260913-7777',
+        phone: '9876543210',
+        data: {
+          amount: '1', // Spoofed client amount
+          customerName: 'Attacker Name'
+        }
+      }
+    }, resPhoneAuth);
+    // Verified: authorization passed (neither 401 nor 403)
+    assert.notEqual(resPhoneAuth._get().statusCode, 401);
+    assert.notEqual(resPhoneAuth._get().statusCode, 403);
+    assert.equal(resPhoneAuth._get().statusCode, 500, 'Passes all auth/ownership checks to email service invocation');
+  } finally {
+    if (prevSecret === undefined) delete process.env.ORDER_SECURITY_SECRET;
+    else process.env.ORDER_SECURITY_SECRET = prevSecret;
+    if (prevResend === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = prevResend;
+    delete globalThis.__MOCK_ORDER_FETCHER__;
+    delete globalThis.__MOCK_SENT_CONFIRMATIONS__;
   }
 });
 

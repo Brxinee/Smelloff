@@ -181,7 +181,7 @@
     if (error) error.style.display = 'none';
   }
 
-  function markSuccess(orderCode, amountRupees, qty, paymentId, email, name) {
+  function markSuccess(orderCode, amountRupees, qty, paymentId, email, name, orderToken, confirmationToken) {
     if (typeof window.logOrderToSheets === 'function' && typeof window.collectOrder === 'function') {
       try { window.logOrderToSheets(window.collectOrder(orderCode, 'RZP_PAID')); } catch (e) { /* legacy logging is best-effort */ }
     }
@@ -191,7 +191,9 @@
         qty: qty,
         email: email,
         name: name,
-        paymentId: paymentId
+        paymentId: paymentId,
+        orderToken: orderToken,
+        confirmationToken: confirmationToken
       });
     }
   }
@@ -273,7 +275,16 @@
             }
             razorpayInFlight = false;
             setButtonState(false);
-            markSuccess(created.order_code, Number(payload.amount) / 100, payload.items[0].quantity, response.razorpay_payment_id, payload.email, payload.address.name);
+            markSuccess(
+              created.order_code,
+              Number(payload.amount) / 100,
+              payload.items[0].quantity,
+              response.razorpay_payment_id,
+              payload.email,
+              payload.address.name,
+              verified.orderToken || created.order_token,
+              verified.confirmationToken || created.confirmation_token
+            );
           } catch (error) {
             razorpayInFlight = false;
             setButtonState(false);

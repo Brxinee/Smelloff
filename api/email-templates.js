@@ -24,7 +24,7 @@ const SHIPPING_LINE = 'Free shipping pan-India &middot; COD available';
 
 // Customer order-tracking deep link (mirrors the /track-order page).
 const trackUrl = (orderId = '') =>
-  `${SITE_URL}/track-order?code=${encodeURIComponent(orderId)}`;
+  `${SITE_URL}/track-order?code=${encodeURIComponent(String(orderId).replace(/[\r\n]+/g, '').trim())}`;
 
 const escape = (s = '') =>
   String(s)
@@ -93,6 +93,20 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
 const heading = (text) =>
   `<h1 style="font-family:${HEADING_FONT};font-weight:900;font-size:42px;line-height:1;letter-spacing:-0.5px;color:${WHITE};text-transform:uppercase;margin:0 0 20px 0;">${text}</h1>`;
 
+const cleanHeader = (s = '') =>
+  String(s)
+    .replace(/[\r\n]+/g, ' ')
+    .trim();
+
+const safeUrl = (url = '', fallback = SITE_URL) => {
+  if (!url || typeof url !== 'string') return fallback;
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) {
+    return escape(trimmed);
+  }
+  return fallback;
+};
+
 const para = (text) =>
   `<p style="font-family:${BODY_FONT};font-size:15px;line-height:1.6;color:${WHITE};margin:0 0 16px 0;">${text}</p>`;
 
@@ -103,8 +117,8 @@ const button = (href, label) => `
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;">
   <tr>
     <td style="background-color:${GREEN};">
-      <a href="${href}" style="display:inline-block;padding:16px 32px;font-family:${HEADING_FONT};font-weight:900;font-size:16px;letter-spacing:2px;color:${BLACK};text-decoration:none;text-transform:uppercase;">
-        ${label} &rarr;
+      <a href="${safeUrl(href)}" style="display:inline-block;padding:16px 32px;font-family:${HEADING_FONT};font-weight:900;font-size:16px;letter-spacing:2px;color:${BLACK};text-decoration:none;text-transform:uppercase;">
+        ${escape(label)} &rarr;
       </a>
     </td>
   </tr>
@@ -179,9 +193,10 @@ export function orderConfirmation({
     ${mutedPara('Dispatch within 48 hours of confirmation. Tracking link lands in your inbox the moment it ships.')}
     ${mutedPara('Need help? Just reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
   `;
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   return {
-    subject: `Order confirmed — #${orderId}`,
-    html: shell(inner, `Your ODORSTRIKE order #${orderId} is confirmed.`),
+    subject: cleanHeader(`Order confirmed — #${cleanOrderId}`),
+    html: shell(inner, `Your ODORSTRIKE order #${cleanOrderId} is confirmed.`),
   };
 }
 

@@ -1,5 +1,9 @@
 import Razorpay from 'razorpay';
-import { isAllowedOrigin } from './_security.js';
+import {
+  isAllowedOrigin,
+  generateOrderToken,
+  generateOrderConfirmationToken,
+} from './_security.js';
 import { BASE_PRODUCT } from '../shared/products-config.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
@@ -174,9 +178,24 @@ export default async function handler(req, res) {
         signal: AbortSignal.timeout(15000),
       });
       const text = await upstream.text();
-      res.status(upstream.status);
-      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json');
-      return res.end(text);
+      if (!upstream.ok) {
+        res.status(upstream.status);
+        res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json');
+        return res.end(text);
+      }
+      let upstreamData = {};
+      try { upstreamData = JSON.parse(text); } catch { /* best effort */ }
+      const orderCode = String(upstreamData.order_code || sanitizedPayload.order_code || '').trim().toUpperCase();
+      const phone = String(sanitizedPayload.phone || '').replace(/\D/g, '').slice(-10);
+      const email = String(sanitizedPayload.email || '').trim().toLowerCase();
+      const orderToken = generateOrderToken(orderCode, phone);
+      const confirmationToken = generateOrderConfirmationToken(orderCode, email);
+
+      return res.status(200).json({
+        ...upstreamData,
+        order_token: orderToken,
+        confirmation_token: confirmationToken,
+      });
     }
 
     // Prepaid Flow
@@ -202,6 +221,11 @@ export default async function handler(req, res) {
 
     const orderCode = String(upstreamData.order_code || '').trim().toUpperCase();
     if (!orderCode) return res.status(502).json({ error: 'Order service returned no order code.' });
+
+    const phone = String(sanitizedPayload.phone || '').replace(/\D/g, '').slice(-10);
+    const email = String(sanitizedPayload.email || '').trim().toLowerCase();
+    const orderToken = generateOrderToken(orderCode, phone);
+    const confirmationToken = generateOrderConfirmationToken(orderCode, email);
 
     const razorpay = razorpayClient();
     let razorpayOrder;
@@ -233,6 +257,8 @@ export default async function handler(req, res) {
       id: upstreamData.id,
       order_code: orderCode,
       order_id: razorpayOrder.id,
+      order_token: orderToken,
+      confirmation_token: confirmationToken,
       amount: razorpayOrder.amount,
       currency: razorpayOrder.currency,
       key_id: RAZORPAY_KEY_ID,
