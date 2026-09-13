@@ -6,6 +6,7 @@ import createOrderHandler from '../api/create-order.js';
 import verifyPaymentHandler from '../api/verify-payment.js';
 import webhookHandler from '../api/webhook.js';
 import sendEmailHandler from '../api/send-email.js';
+import { Resend } from 'resend';
 import { generateOrderToken, generateOrderConfirmationToken } from '../api/_security.js';
 
 test('vercel.json routing integrity', () => {
@@ -954,6 +955,371 @@ test('api/send-email: orderConfirmation security boundaries, token verification,
     else process.env.RESEND_API_KEY = prevResend;
     delete globalThis.__MOCK_ORDER_FETCHER__;
     delete globalThis.__MOCK_SENT_CONFIRMATIONS__;
+  }
+});
+
+test('api/send-email: distributed idempotency across 10 concurrent requests (at most ONE send, 9 idempotent success)', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      setHeader: () => {},
+      status: (code) => {
+        statusCode = code;
+        return {
+          json: (d) => { data = d; return { statusCode, data }; },
+          end: () => ({ statusCode })
+        };
+      },
+      json: (d) => { data = d; return { statusCode, data }; },
+      _get: () => ({ statusCode, data })
+    };
+  }
+
+  const prevSecret = process.env.ORDER_SECURITY_SECRET;
+  const prevResend = process.env.RESEND_API_KEY;
+  process.env.ORDER_SECURITY_SECRET = 'test-order-secret-concurrency-111';
+  process.env.RESEND_API_KEY = 're_test_dummy_key_111';
+
+  const orderCode = 'SMF-20260913-1111';
+  const customerEmail = 'buyer.concurrency@example.com';
+  const token = generateOrderConfirmationToken(orderCode, customerEmail);
+
+  const mockDbOrder = {
+    order_code: orderCode,
+    customer_email: customerEmail,
+    customer_phone: '9876543210',
+    status: 'confirmed',
+    payment_method: 'prepaid',
+    amount: 22900,
+    address: {
+      name: 'Concurrent Buyer',
+      line: '123 Multi-Thread Way',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '560001'
+    },
+    confirmation_email_sent_at: null,
+    confirmation_email_claimed_at: null,
+    confirmation_email_claim_id: null
+  };
+
+  globalThis.__MOCK_ORDER_DB__ = new Map([[orderCode, mockDbOrder]]);
+
+  let externalSendCount = 0;
+  const originalPost = Resend.prototype.post;
+  Resend.prototype.post = async (path, payload) => {
+    externalSendCount++;
+    // Simulate real network flight time to force concurrent requests to race
+    await new Promise(resolve => setTimeout(resolve, 30));
+    return { data: { id: `email_resend_concurrent_${externalSendCount}` }, error: null };
+  };
+
+  try {
+    // Fire 10 simultaneous requests for the exact same confirmed order
+    const requests = Array.from({ length: 10 }, (_, i) => {
+      const res = createMockRes();
+      const req = {
+        method: 'POST',
+        headers: {
+          origin: 'https://smelloff.in',
+          'x-forwarded-for': `10.0.1.${i + 1}`
+        },
+        body: {
+          type: 'orderConfirmation',
+          orderCode,
+          confirmationToken: token
+        }
+      };
+      return sendEmailHandler(req, res).then(() => res._get());
+    });
+
+    const results = await Promise.all(requests);
+
+    // 1. External Resend API MUST be called EXACTLY ONCE
+    assert.equal(externalSendCount, 1, 'Exactly ONE external send must be dispatched to Resend across 10 concurrent requests');
+
+    // 2. Exactly one response is the primary sender, all other 9 must return safe idempotent success
+    const primarySends = results.filter(r => r.statusCode === 200 && r.data?.id?.startsWith('email_resend_'));
+    const idempotentResponses = results.filter(r => r.statusCode === 200 && r.data?.idempotent === true);
+
+    assert.equal(primarySends.length, 1, 'Exactly one response must report primary send success');
+    assert.equal(idempotentResponses.length, 9, 'All other 9 responses must return idempotent success');
+
+    // 3. Database state must be finalized
+    assert.ok(mockDbOrder.confirmation_email_sent_at, 'Database record must have confirmation_email_sent_at set');
+    assert.equal(mockDbOrder.confirmation_email_claim_id, null, 'Claim ID must be cleared upon finalization');
+
+    // 4. Any subsequent retry (11th call) must instantly return idempotent true without dispatching to Resend
+    const resFollowup = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.0.1.11' },
+      body: { type: 'orderConfirmation', orderCode, confirmationToken: token }
+    }, resFollowup);
+
+    assert.equal(resFollowup._get().statusCode, 200);
+    assert.equal(resFollowup._get().data.idempotent, true);
+    assert.equal(externalSendCount, 1, 'Subsequent requests must not trigger additional Resend dispatches');
+  } finally {
+    Resend.prototype.post = originalPost;
+    if (prevSecret === undefined) delete process.env.ORDER_SECURITY_SECRET;
+    else process.env.ORDER_SECURITY_SECRET = prevSecret;
+    if (prevResend === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = prevResend;
+    delete globalThis.__MOCK_ORDER_DB__;
+  }
+});
+
+test('api/send-email: multi-instance simulation (Instance A and Instance B both receive requests for order X)', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      setHeader: () => {},
+      status: (code) => {
+        statusCode = code;
+        return {
+          json: (d) => { data = d; return { statusCode, data }; },
+          end: () => ({ statusCode })
+        };
+      },
+      json: (d) => { data = d; return { statusCode, data }; },
+      _get: () => ({ statusCode, data })
+    };
+  }
+
+  const prevSecret = process.env.ORDER_SECURITY_SECRET;
+  const prevResend = process.env.RESEND_API_KEY;
+  process.env.ORDER_SECURITY_SECRET = 'test-order-secret-multi-instance-222';
+  process.env.RESEND_API_KEY = 're_test_dummy_key_222';
+
+  const orderCode = 'SMF-20260913-2222';
+  const customerEmail = 'buyer.instances@example.com';
+  const token = generateOrderConfirmationToken(orderCode, customerEmail);
+
+  // Shared durable database row (both serverless instances connect to this)
+  const sharedDbOrder = {
+    order_code: orderCode,
+    customer_email: customerEmail,
+    customer_phone: '9876543210',
+    status: 'confirmed',
+    payment_method: 'cod',
+    amount: 28900,
+    cod_fee: 6000,
+    address: { name: 'Shared DB Buyer', line: '789 Distributed St', city: 'Delhi', state: 'Delhi', pincode: '110001' },
+    confirmation_email_sent_at: null,
+    confirmation_email_claimed_at: null,
+    confirmation_email_claim_id: null
+  };
+
+  globalThis.__MOCK_ORDER_DB__ = new Map([[orderCode, sharedDbOrder]]);
+
+  let externalSendCount = 0;
+  const originalPost = Resend.prototype.post;
+  Resend.prototype.post = async (path, payload) => {
+    externalSendCount++;
+    return { data: { id: `email_resend_instance_${externalSendCount}` }, error: null };
+  };
+
+  try {
+    // Instance A receives order confirmation request and sends
+    const resA = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.1.0.1' },
+      body: { type: 'orderConfirmation', orderCode, confirmationToken: token }
+    }, resA);
+
+    assert.equal(resA._get().statusCode, 200);
+    assert.equal(resA._get().data.ok, true);
+    assert.equal(externalSendCount, 1, 'Instance A must have sent the email');
+
+    // Instance B (in a separate memory context/process) receives request for same order
+    // It queries the shared DB, sees confirmation_email_sent_at is set, and returns idempotent: true
+    const resB = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.2.0.2' },
+      body: { type: 'orderConfirmation', orderCode, confirmationToken: token }
+    }, resB);
+
+    assert.equal(resB._get().statusCode, 200);
+    assert.equal(resB._get().data.idempotent, true, 'Instance B must return idempotent: true');
+    assert.equal(externalSendCount, 1, 'Instance B must NOT make any external send call to Resend');
+  } finally {
+    Resend.prototype.post = originalPost;
+    if (prevSecret === undefined) delete process.env.ORDER_SECURITY_SECRET;
+    else process.env.ORDER_SECURITY_SECRET = prevSecret;
+    if (prevResend === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = prevResend;
+    delete globalThis.__MOCK_ORDER_DB__;
+  }
+});
+
+test('api/send-email: provider error handling & retryability (Resend failure releases claim and allows retry)', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      setHeader: () => {},
+      status: (code) => {
+        statusCode = code;
+        return {
+          json: (d) => { data = d; return { statusCode, data }; },
+          end: () => ({ statusCode })
+        };
+      },
+      json: (d) => { data = d; return { statusCode, data }; },
+      _get: () => ({ statusCode, data })
+    };
+  }
+
+  const prevSecret = process.env.ORDER_SECURITY_SECRET;
+  const prevResend = process.env.RESEND_API_KEY;
+  process.env.ORDER_SECURITY_SECRET = 'test-order-secret-failure-333';
+  process.env.RESEND_API_KEY = 're_test_dummy_key_333';
+
+  const orderCode = 'SMF-20260913-3333';
+  const customerEmail = 'buyer.failure@example.com';
+  const token = generateOrderConfirmationToken(orderCode, customerEmail);
+
+  const mockDbOrder = {
+    order_code: orderCode,
+    customer_email: customerEmail,
+    customer_phone: '9876543210',
+    status: 'confirmed',
+    payment_method: 'prepaid',
+    amount: 22900,
+    address: { name: 'Retryable Buyer', line: '321 Fault Tol Ave', city: 'Pune', state: 'MH', pincode: '411001' },
+    confirmation_email_sent_at: null,
+    confirmation_email_claimed_at: null,
+    confirmation_email_claim_id: null
+  };
+
+  globalThis.__MOCK_ORDER_DB__ = new Map([[orderCode, mockDbOrder]]);
+
+  let shouldFail = true;
+  let attemptCount = 0;
+  const originalPost = Resend.prototype.post;
+  Resend.prototype.post = async (path, payload) => {
+    attemptCount++;
+    if (shouldFail) {
+      return { data: null, error: { message: 'Provider 502 Bad Gateway / upstream timeout' } };
+    }
+    return { data: { id: `email_resend_retry_${attemptCount}` }, error: null };
+  };
+
+  try {
+    // 1. Initial attempt fails at Resend provider level
+    const resFail = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.3.0.1' },
+      body: { type: 'orderConfirmation', orderCode, confirmationToken: token }
+    }, resFail);
+
+    assert.equal(resFail._get().statusCode, 502, 'Provider error must return 502 Bad Gateway');
+    assert.equal(attemptCount, 1);
+
+    // 2. State must NOT be permanently marked as sent
+    assert.equal(mockDbOrder.confirmation_email_sent_at, null, 'Failed send must not set confirmation_email_sent_at');
+    assert.equal(mockDbOrder.confirmation_email_claimed_at, null, 'Failed send must immediately release claim');
+    assert.equal(mockDbOrder.confirmation_email_claim_id, null, 'Failed send must clear claim_id');
+
+    // 3. Provider recovers; retry is initiated
+    shouldFail = false;
+    const resRetry = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.3.0.2' },
+      body: { type: 'orderConfirmation', orderCode, confirmationToken: token }
+    }, resRetry);
+
+    assert.equal(resRetry._get().statusCode, 200);
+    assert.equal(resRetry._get().data.ok, true);
+    assert.equal(attemptCount, 2, 'Retry must successfully invoke Resend');
+    assert.ok(mockDbOrder.confirmation_email_sent_at, 'Successful retry must record confirmation_email_sent_at');
+  } finally {
+    Resend.prototype.post = originalPost;
+    if (prevSecret === undefined) delete process.env.ORDER_SECURITY_SECRET;
+    else process.env.ORDER_SECURITY_SECRET = prevSecret;
+    if (prevResend === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = prevResend;
+    delete globalThis.__MOCK_ORDER_DB__;
+  }
+});
+
+test('api/send-email: stale claim recovery (crashed instance claim > 90s is safely reclaimed and dispatched)', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      setHeader: () => {},
+      status: (code) => {
+        statusCode = code;
+        return {
+          json: (d) => { data = d; return { statusCode, data }; },
+          end: () => ({ statusCode })
+        };
+      },
+      json: (d) => { data = d; return { statusCode, data }; },
+      _get: () => ({ statusCode, data })
+    };
+  }
+
+  const prevSecret = process.env.ORDER_SECURITY_SECRET;
+  const prevResend = process.env.RESEND_API_KEY;
+  process.env.ORDER_SECURITY_SECRET = 'test-order-secret-stale-444';
+  process.env.RESEND_API_KEY = 're_test_dummy_key_444';
+
+  const orderCode = 'SMF-20260913-4444';
+  const customerEmail = 'buyer.stale@example.com';
+  const token = generateOrderConfirmationToken(orderCode, customerEmail);
+
+  // Simulate an order that was claimed 120 seconds ago by a worker that died/crashed without releasing
+  const mockDbOrder = {
+    order_code: orderCode,
+    customer_email: customerEmail,
+    customer_phone: '9876543210',
+    status: 'confirmed',
+    payment_method: 'prepaid',
+    amount: 22900,
+    address: { name: 'Stale Claim Buyer', line: '999 Recovery Rd', city: 'Chennai', state: 'Tamil Nadu', pincode: '600001' },
+    confirmation_email_sent_at: null,
+    confirmation_email_claimed_at: new Date(Date.now() - 120 * 1000).toISOString(),
+    confirmation_email_claim_id: 'crashed-worker-uuid-died'
+  };
+
+  globalThis.__MOCK_ORDER_DB__ = new Map([[orderCode, mockDbOrder]]);
+
+  let externalSendCount = 0;
+  const originalPost = Resend.prototype.post;
+  Resend.prototype.post = async (path, payload) => {
+    externalSendCount++;
+    return { data: { id: `email_resend_stale_${externalSendCount}` }, error: null };
+  };
+
+  try {
+    const resRecovery = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.4.0.1' },
+      body: { type: 'orderConfirmation', orderCode, confirmationToken: token }
+    }, resRecovery);
+
+    assert.equal(resRecovery._get().statusCode, 200);
+    assert.equal(resRecovery._get().data.ok, true);
+    assert.equal(externalSendCount, 1, 'Stale claim must be recovered and sent to Resend');
+    assert.ok(mockDbOrder.confirmation_email_sent_at, 'Recovered send must set confirmation_email_sent_at');
+    assert.equal(mockDbOrder.confirmation_email_claim_id, null, 'Claim id must be cleared after finalize');
+  } finally {
+    Resend.prototype.post = originalPost;
+    if (prevSecret === undefined) delete process.env.ORDER_SECURITY_SECRET;
+    else process.env.ORDER_SECURITY_SECRET = prevSecret;
+    if (prevResend === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = prevResend;
+    delete globalThis.__MOCK_ORDER_DB__;
   }
 });
 

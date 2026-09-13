@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Resend } from 'resend';
 import {
   orderConfirmation,
@@ -72,7 +73,7 @@ function bucketCount(b) {
   b.count++;
 }
 
-// In-memory idempotency cache for order confirmation emails
+// In-memory idempotency cache for order confirmation emails (fast instance-local short-circuit)
 const sentConfirmationOrders = new Map();
 const MAX_IDEMPOTENCY_CACHE = 10000;
 
@@ -94,8 +95,227 @@ export function markConfirmationAsSent(orderCode) {
   sentConfirmationOrders.set(orderCode, Date.now());
 }
 
+function supaHeaders(extra = {}) {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  return {
+    apikey: key,
+    Authorization: `Bearer ${key}`,
+    'Content-Type': 'application/json',
+    ...extra,
+  };
+}
+
+/**
+ * Distributed atomic claim: ensures AT MOST ONE worker/instance across the entire
+ * serverless deployment can claim the right to dispatch an order confirmation email.
+ *
+ * Implements a durable Postgres row-level atomic lock with stale claim recovery:
+ * 1. Checks in-memory fast-path (instant reject if already completed locally).
+ * 2. Checks mock DB if in test mode (for concurrency & multi-instance tests).
+ * 3. Calls Supabase RPC `claim_order_confirmation_email` (atomic FOR UPDATE lock).
+ * 4. Falls back to direct PostgREST atomic conditional PATCH if RPC is unavailable.
+ */
+export async function claimOrderConfirmationEmail(orderCode, claimId, staleSeconds = 90) {
+  if (!orderCode) return { claimed: false, alreadySent: false };
+
+  // 1. Fast in-memory check
+  if (hasConfirmationBeenSent(orderCode)) {
+    return { claimed: false, alreadySent: true };
+  }
+
+  // 2. Mock DB check (for deterministic testing & isolated simulation)
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
+    const db = globalThis.__MOCK_ORDER_DB__;
+    const order = typeof db.get === 'function' ? db.get(orderCode) : db[orderCode];
+    if (!order) return { claimed: false, alreadySent: false };
+    if (order.confirmation_email_sent_at) {
+      return { claimed: false, alreadySent: true };
+    }
+    const now = Date.now();
+    const claimedAt = order.confirmation_email_claimed_at ? new Date(order.confirmation_email_claimed_at).getTime() : null;
+    const isStale = claimedAt ? (now - claimedAt > staleSeconds * 1000) : true;
+    if (claimedAt && !isStale) {
+      return { claimed: false, alreadySent: false, inProgress: true };
+    }
+    order.confirmation_email_claimed_at = new Date(now).toISOString();
+    order.confirmation_email_claim_id = claimId;
+    return { claimed: true, alreadySent: false };
+  }
+
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  if (!key) {
+    // If Supabase service role key is not configured, fall back to in-memory idempotency
+    if (hasConfirmationBeenSent(orderCode)) {
+      return { claimed: false, alreadySent: true };
+    }
+    return { claimed: true, alreadySent: false };
+  }
+
+  const supabaseUrl = (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
+
+  // 3. Try atomic RPC in Postgres
+  try {
+    const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/claim_order_confirmation_email`, {
+      method: 'POST',
+      headers: supaHeaders(),
+      body: JSON.stringify({
+        p_order_code: orderCode,
+        p_claim_id: claimId,
+        p_stale_seconds: staleSeconds,
+      }),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (rpcRes.ok) {
+      const rows = await rpcRes.json().catch(() => []);
+      const res = Array.isArray(rows) && rows.length ? rows[0] : rows;
+      if (res && typeof res === 'object') {
+        return {
+          claimed: Boolean(res.claimed),
+          alreadySent: Boolean(res.already_sent),
+          inProgress: !res.claimed && !res.already_sent,
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('[send-email] RPC claim failed, attempting direct table update:', err.message);
+  }
+
+  // 4. Fallback to direct PostgREST atomic conditional PATCH
+  try {
+    const staleIso = new Date(Date.now() - staleSeconds * 1000).toISOString();
+    const patchUrl = `${supabaseUrl}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&confirmation_email_sent_at=is.null&or=(confirmation_email_claimed_at.is.null,confirmation_email_claimed_at.lt.${encodeURIComponent(staleIso)})`;
+    const patchRes = await fetch(patchUrl, {
+      method: 'PATCH',
+      headers: supaHeaders({ Prefer: 'return=representation' }),
+      body: JSON.stringify({
+        confirmation_email_claimed_at: new Date().toISOString(),
+        confirmation_email_claim_id: claimId,
+      }),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (patchRes.ok) {
+      const rows = await patchRes.json().catch(() => []);
+      if (Array.isArray(rows) && rows.length === 1) {
+        return { claimed: true, alreadySent: false };
+      }
+    }
+
+    // If 0 rows were updated, check whether it was already sent
+    const checkRes = await fetch(`${supabaseUrl}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&select=confirmation_email_sent_at,confirmation_email_claimed_at`, {
+      headers: supaHeaders(),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (checkRes.ok) {
+      const rows = await checkRes.json().catch(() => []);
+      if (Array.isArray(rows) && rows.length && rows[0].confirmation_email_sent_at) {
+        return { claimed: false, alreadySent: true };
+      }
+    }
+    return { claimed: false, alreadySent: false, inProgress: true };
+  } catch (err) {
+    console.error('[send-email] PostgREST claim error:', err.message);
+    return { claimed: false, alreadySent: false };
+  }
+}
+
+/**
+ * Permanently finalizes order confirmation email send upon Resend success.
+ */
+export async function finalizeOrderConfirmationEmail(orderCode, claimId) {
+  // Always update in-memory cache
+  markConfirmationAsSent(orderCode);
+
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
+    const db = globalThis.__MOCK_ORDER_DB__;
+    const order = typeof db.get === 'function' ? db.get(orderCode) : db[orderCode];
+    if (order && order.confirmation_email_claim_id === claimId) {
+      order.confirmation_email_sent_at = new Date().toISOString();
+      order.confirmation_email_claim_id = null;
+    }
+    return;
+  }
+
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  if (!key) return;
+
+  const supabaseUrl = (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
+
+  try {
+    const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/finalize_order_confirmation_email`, {
+      method: 'POST',
+      headers: supaHeaders(),
+      body: JSON.stringify({ p_order_code: orderCode, p_claim_id: claimId }),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (rpcRes.ok) return;
+  } catch {}
+
+  try {
+    await fetch(`${supabaseUrl}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&confirmation_email_claim_id=eq.${encodeURIComponent(claimId)}`, {
+      method: 'PATCH',
+      headers: supaHeaders({ Prefer: 'return=minimal' }),
+      body: JSON.stringify({
+        confirmation_email_sent_at: new Date().toISOString(),
+        confirmation_email_claim_id: null,
+      }),
+      signal: AbortSignal.timeout(5000),
+    });
+  } catch (err) {
+    console.error('[send-email] Finalize claim error:', err.message);
+  }
+}
+
+/**
+ * Releases claim on provider failure so customer or background retries can proceed immediately.
+ */
+export async function releaseOrderConfirmationClaim(orderCode, claimId) {
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
+    const db = globalThis.__MOCK_ORDER_DB__;
+    const order = typeof db.get === 'function' ? db.get(orderCode) : db[orderCode];
+    if (order && order.confirmation_email_claim_id === claimId && !order.confirmation_email_sent_at) {
+      order.confirmation_email_claimed_at = null;
+      order.confirmation_email_claim_id = null;
+    }
+    return;
+  }
+
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  if (!key) return;
+
+  const supabaseUrl = (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
+
+  try {
+    const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/release_order_confirmation_claim`, {
+      method: 'POST',
+      headers: supaHeaders(),
+      body: JSON.stringify({ p_order_code: orderCode, p_claim_id: claimId }),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (rpcRes.ok) return;
+  } catch {}
+
+  try {
+    await fetch(`${supabaseUrl}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&confirmation_email_claim_id=eq.${encodeURIComponent(claimId)}&confirmation_email_sent_at=is.null`, {
+      method: 'PATCH',
+      headers: supaHeaders({ Prefer: 'return=minimal' }),
+      body: JSON.stringify({
+        confirmation_email_claimed_at: null,
+        confirmation_email_claim_id: null,
+      }),
+      signal: AbortSignal.timeout(5000),
+    });
+  } catch (err) {
+    console.error('[send-email] Release claim error:', err.message);
+  }
+}
+
 export async function fetchOrderByCode(orderCode) {
   if (!orderCode) return null;
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
+    const db = globalThis.__MOCK_ORDER_DB__;
+    const order = typeof db.get === 'function' ? db.get(orderCode) : db[orderCode];
+    return order ? { ...order } : null;
+  }
   if (typeof globalThis.__MOCK_ORDER_FETCHER__ === 'function') {
     return globalThis.__MOCK_ORDER_FETCHER__(orderCode);
   }
@@ -266,13 +486,36 @@ export default async function handler(req, res) {
         }
       }
 
-      // Idempotency: avoid sending duplicate confirmation emails
-      if (hasConfirmationBeenSent(orderCode)) {
+      // 1. Initial check: if already recorded as sent on fetched order or in local cache
+      if (order.confirmation_email_sent_at || hasConfirmationBeenSent(orderCode)) {
         return res.status(200).json({
           ok: true,
+          success: true,
           idempotent: true,
           orderId: orderCode,
           message: 'Order confirmation email already sent.'
+        });
+      }
+
+      // 2. Atomic distributed claim: guarantees at most one worker claims the right to send
+      const claimId = randomUUID();
+      const claim = await claimOrderConfirmationEmail(orderCode, claimId);
+      if (claim.alreadySent) {
+        return res.status(200).json({
+          ok: true,
+          success: true,
+          idempotent: true,
+          orderId: orderCode,
+          message: 'Order confirmation email already sent.'
+        });
+      }
+      if (!claim.claimed) {
+        return res.status(200).json({
+          ok: true,
+          success: true,
+          idempotent: true,
+          orderId: orderCode,
+          message: 'Order confirmation email send in progress.'
         });
       }
 
@@ -306,27 +549,35 @@ export default async function handler(req, res) {
 
       if (!process.env.RESEND_API_KEY) {
         console.error('RESEND_API_KEY missing');
+        await releaseOrderConfirmationClaim(orderCode, claimId);
         return res.status(500).json({ error: 'Email service not configured' });
       }
 
-      const { subject, html } = orderConfirmation(authoritativeData);
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      const result = await resend.emails.send({
-        from: FROM,
-        to: dbEmail,
-        replyTo: REPLY_TO,
-        subject: subject.replace(/[\r\n]+/g, ' ').trim().slice(0, 200),
-        html,
-      });
+      try {
+        const { subject, html } = orderConfirmation(authoritativeData);
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const result = await resend.emails.send({
+          from: FROM,
+          to: dbEmail,
+          replyTo: REPLY_TO,
+          subject: subject.replace(/[\r\n]+/g, ' ').trim().slice(0, 200),
+          html,
+        });
 
-      if (result.error) {
-        console.error('Resend error:', result.error);
-        return res.status(502).json({ error: 'Email could not be sent.' });
+        if (result.error) {
+          console.error('Resend error:', result.error);
+          await releaseOrderConfirmationClaim(orderCode, claimId);
+          return res.status(502).json({ error: 'Email could not be sent.' });
+        }
+
+        // Successfully sent: finalize claim and record confirmation_email_sent_at
+        await finalizeOrderConfirmationEmail(orderCode, claimId);
+        return res.status(200).json({ id: result.data?.id, ok: true, success: true, orderId: orderCode });
+      } catch (sendErr) {
+        console.error('Resend send exception:', sendErr.message);
+        await releaseOrderConfirmationClaim(orderCode, claimId);
+        return res.status(502).json({ error: 'Email delivery failed' });
       }
-
-      // Only mark idempotent on successful dispatch
-      markConfirmationAsSent(orderCode);
-      return res.status(200).json({ id: result.data?.id, ok: true, orderId: orderCode });
     }
 
     // -------------------------------------------------------------
