@@ -1884,6 +1884,82 @@ test('Post-Capture Financial Lifecycle Matrix: 16 verification scenarios', async
   delete globalThis.__MOCK_ORDER_DB__;
 });
 
+test('Privileged Secret Environment Isolation & Preview-to-Production Authorization Security Suite', async (t) => {
+  // 1. Client assets and bundles contain NO privileged environment variables or secrets
+  const htmlContent = fs.readFileSync('index.html', 'utf8') + fs.readFileSync('odorstrike.html', 'utf8');
+  assert.equal(/SUPABASE_SERVICE_ROLE_KEY|RAZORPAY_KEY_SECRET|RESEND_API_KEY|SHIPROCKET_PASSWORD|META_CAPI_TOKEN|ADMIN_SECRET|CRON_SECRET/.test(htmlContent), false);
+
+  // 2. Client JS in assets/js contains NO process.env or privileged secrets
+  const chromeJs = fs.readFileSync('assets/js/chrome.js', 'utf8');
+  assert.equal(/SUPABASE_SERVICE_ROLE_KEY|RAZORPAY_KEY_SECRET|RESEND_API_KEY|SHIPROCKET_PASSWORD|ADMIN_SECRET|CRON_SECRET/.test(chromeJs), false);
+
+  // 3. Preview cannot authenticate as admin without ADMIN_SECRET
+  assert.equal(isAdminAuthorized({ headers: { host: 'smelloff-preview-branch.vercel.app' } }), false);
+
+  // 4. Preview cannot invoke cron-only worker without CRON_SECRET
+  assert.equal(isCronAuthorized({ headers: { host: 'smelloff-preview-branch.vercel.app' } }), false);
+
+  // 5. Service-role key rejected as external HTTP admin credential
+  const prevAdmin = process.env.ADMIN_SECRET;
+  const prevSrv = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  process.env.ADMIN_SECRET = 'actual_admin_secret_999';
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'supabase_service_role_internal_888';
+  try {
+    assert.equal(isAdminAuthorized({ headers: { authorization: 'Bearer supabase_service_role_internal_888' } }), false);
+    assert.equal(isAdminAuthorized({ headers: { 'x-admin-key': 'supabase_service_role_internal_888' } }), false);
+  } finally {
+    if (prevAdmin === undefined) delete process.env.ADMIN_SECRET; else process.env.ADMIN_SECRET = prevAdmin;
+    if (prevSrv === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY; else process.env.SUPABASE_SERVICE_ROLE_KEY = prevSrv;
+  }
+
+  // 6-9. Privileged secrets never enter client-side bundles
+  const clientFiles = fs.readdirSync('assets/js').map(f => fs.readFileSync('assets/js/' + f, 'utf8')).join('\n');
+  assert.equal(/RAZORPAY_KEY_SECRET/.test(clientFiles), false);
+  assert.equal(/RESEND_API_KEY/.test(clientFiles), false);
+  assert.equal(/SHIPROCKET_PASSWORD/.test(clientFiles), false);
+  assert.equal(/META_CAPI_TOKEN/.test(clientFiles), false);
+
+  // 10-11. Localhost and development headers do not bypass authentication
+  assert.equal(isAdminAuthorized({ headers: { host: 'localhost:3000', 'x-forwarded-for': '127.0.0.1' } }), false);
+  assert.equal(isCronAuthorized({ headers: { host: 'localhost:3000', 'x-forwarded-for': '127.0.0.1' } }), false);
+
+  // 12-13. Missing and malformed secrets fail closed safely
+  assert.equal(isAdminAuthorized({ headers: { authorization: 'Bearer ' } }), false);
+  assert.equal(isAdminAuthorized({ headers: { authorization: 'Bearer      ' } }), false);
+  assert.equal(isCronAuthorized({ headers: { authorization: 'Bearer ' } }), false);
+
+  // 14. Privileged error responses contain no secret material
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    let headers = {};
+    return {
+      statusCode: 200,
+      body: null,
+      setHeader: (k, v) => { headers[k.toLowerCase()] = v; },
+      status(code) { this.statusCode = code; statusCode = code; return this; },
+      json(d) { this.body = d; data = d; return this; },
+      end() { return this; },
+      _get: () => ({ statusCode, data, headers })
+    };
+  }
+
+  const res = createMockRes();
+  await adminVerifyPaymentHandler({ method: 'POST', headers: {}, body: { orderCode: 'SMF-20260913-0001' } }, res);
+  assert.equal(res.statusCode, 401);
+  const serialized = JSON.stringify(res.body || {});
+  assert.equal(/ADMIN_SECRET|SUPABASE_SERVICE_ROLE_KEY|RAZORPAY_KEY_SECRET/.test(serialized), false);
+
+  // 15. CORS origin is not relied upon for authorization (valid origin + missing secret = 401)
+  const resAllowedOriginNoAuth = createMockRes();
+  await adminVerifyPaymentHandler({
+    method: 'POST',
+    headers: { origin: 'https://smelloff.in' },
+    body: { orderCode: 'SMF-20260913-0001' }
+  }, resAllowedOriginNoAuth);
+  assert.equal(resAllowedOriginNoAuth.statusCode, 401);
+});
+
 test('Admin / Cron Authorization & Privilege-Escalation Security Suite', async (t) => {
   function createMockRes() {
     let statusCode = 200;
