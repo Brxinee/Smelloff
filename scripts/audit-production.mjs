@@ -62,7 +62,7 @@ for (const p of blogFiles) {
 const customerFacingFiles = files.filter(p => {
   const relPath = rel(p);
   if (relPath.startsWith('docs/') || relPath.startsWith('test/') || relPath.startsWith('scripts/') || relPath.startsWith('coverage/') || relPath.startsWith('api/') || relPath.startsWith('supabase/')) return false;
-  return (relPath.endsWith('.html') || relPath.endsWith('.xml')) && !relPath.startsWith('_shared/');
+  return (relPath.endsWith('.html') || relPath.endsWith('.xml') || relPath.endsWith('.txt')) && !relPath.startsWith('_shared/');
 });
 
 const prohibitedClaimRules = [
@@ -136,4 +136,4 @@ if (failures.length) {
   failures.forEach(x => console.error(`- ${x}`));
   process.exit(1);
 }
-console.log(`Production audit passed: ${blogFiles.length} blog pages checked.`);
+console.log(`Production audit passed: ${customerFacingFiles.length} customer-facing files checked (${blogFiles.length} blog pages).`);
