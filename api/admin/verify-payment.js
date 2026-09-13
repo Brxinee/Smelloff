@@ -2,7 +2,14 @@ import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized, validateA
 import { isValidTransition, BASE_PRODUCT } from '../../shared/products-config.js';
 import { orderConfirmation } from '../email-templates.js';
 import { Resend } from 'resend';
-import { createShiprocketOrder, extractShiprocketIds, isShiprocketConfigured } from '../_shiprocket.js';
+import {
+  createShiprocketOrder,
+  extractShiprocketIds,
+  isShiprocketConfigured,
+  claimShiprocketFulfillment,
+  finalizeShiprocketFulfillment,
+  releaseShiprocketFulfillmentClaim
+} from '../_shiprocket.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -76,24 +83,31 @@ async function syncConfirmedOrderToShiprocket(order) {
   if (order.shiprocket_order_id) {
     return {
       status: 'already_synced',
-      shiprocketOrderId: order.shiprocket_order_id,
-      shipmentId: order.shiprocket_shipment_id,
-      awb: order.shiprocket_awb
+      shiprocketOrderId: Number(order.shiprocket_order_id),
+      shipmentId: order.shiprocket_shipment_id ? Number(order.shiprocket_shipment_id) : null,
+      awb: order.shiprocket_awb ? String(order.shiprocket_awb) : null
     };
+  }
+
+  const claimId = `claim_sr_admin_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+  const claimResult = await claimShiprocketFulfillment(order.order_code, claimId);
+
+  if (!claimResult.claimed) {
+    if (claimResult.alreadyCreated) {
+      return {
+        status: 'already_synced',
+        shiprocketOrderId: claimResult.shiprocketOrderId ? Number(claimResult.shiprocketOrderId) : null,
+        shipmentId: claimResult.shiprocketShipmentId ? Number(claimResult.shiprocketShipmentId) : null,
+        awb: claimResult.shiprocketAwb ? String(claimResult.shiprocketAwb) : null
+      };
+    }
+    return { status: 'skipped', inProgress: true };
   }
 
   try {
     const response = await createShiprocketOrder(order);
     const ids = extractShiprocketIds(response);
-    const saved = await persistShiprocketState(order.order_code, {
-      shiprocket_order_id: ids.orderId ? Number(ids.orderId) : null,
-      shiprocket_shipment_id: ids.shipmentId ? Number(ids.shipmentId) : null,
-      shiprocket_awb: ids.awb ? String(ids.awb) : null,
-      shiprocket_courier: ids.courier ? String(ids.courier) : null,
-      shiprocket_status: 'ORDER_CREATED',
-      shiprocket_synced_at: new Date().toISOString(),
-      shiprocket_error: null
-    });
+    const saved = await finalizeShiprocketFulfillment(order.order_code, claimId, ids);
 
     if (!saved) return { status: 'failed', error: 'Shiprocket order created but local sync state was not saved.' };
 
@@ -105,10 +119,7 @@ async function syncConfirmedOrderToShiprocket(order) {
       courier: ids.courier
     };
   } catch (err) {
-    await persistShiprocketState(order.order_code, {
-      shiprocket_error: String(err.message || 'Shiprocket sync failed').slice(0, 1000),
-      shiprocket_synced_at: new Date().toISOString()
-    });
+    await releaseShiprocketFulfillmentClaim(order.order_code, claimId, err?.message || 'Shiprocket sync failed');
     console.error('[admin-verify] Shiprocket sync failed:', err.message);
     return { status: 'failed', error: String(err.message || 'Shiprocket sync failed').slice(0, 500) };
   }

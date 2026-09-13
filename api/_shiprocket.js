@@ -206,3 +206,248 @@ export function extractShiprocketIds(data) {
     courier: root.courier_name ?? root.courier ?? null
   };
 }
+
+function supaHeaders(extra = {}) {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  return {
+    apikey: key,
+    Authorization: `Bearer ${key}`,
+    'Content-Type': 'application/json',
+    ...extra,
+  };
+}
+
+/**
+ * Distributed atomic claim for Shiprocket fulfillment creation.
+ * Guarantees at most ONE worker across the serverless fleet can execute
+ * createShiprocketOrder for a given order, preventing duplicate carrier shipments.
+ */
+export async function claimShiprocketFulfillment(orderCode, claimId, staleSeconds = 120) {
+  if (!orderCode) return { claimed: false, alreadyCreated: false };
+
+  // 1. Mock DB check for deterministic concurrency testing & simulation
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
+    const db = globalThis.__MOCK_ORDER_DB__;
+    const order = typeof db.get === 'function' ? db.get(orderCode) : db[orderCode];
+    if (!order) return { claimed: false, alreadyCreated: false };
+    if (order.shiprocket_order_id) {
+      return {
+        claimed: false,
+        alreadyCreated: true,
+        shiprocketOrderId: order.shiprocket_order_id,
+        shiprocketShipmentId: order.shiprocket_shipment_id,
+        shiprocketAwb: order.shiprocket_awb,
+        shiprocketCourier: order.shiprocket_courier
+      };
+    }
+    const eligible = ['placed', 'confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
+    if (!eligible.includes(String(order.status || '').toLowerCase())) {
+      return { claimed: false, alreadyCreated: false, ineligible: true };
+    }
+    const now = Date.now();
+    const claimedAt = order.shiprocket_claimed_at ? new Date(order.shiprocket_claimed_at).getTime() : null;
+    const isStale = claimedAt ? (now - claimedAt > staleSeconds * 1000) : true;
+    if (claimedAt && !isStale && order.shiprocket_claim_id !== claimId) {
+      return { claimed: false, alreadyCreated: false, inProgress: true };
+    }
+    order.shiprocket_claimed_at = new Date(now).toISOString();
+    order.shiprocket_claim_id = claimId;
+    return { claimed: true, alreadyCreated: false };
+  }
+
+  // 2. Production Supabase RPC execution
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  if (!key) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for Shiprocket fulfillment claiming.');
+  }
+
+  const supabaseUrl = (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
+
+  try {
+    const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/claim_shiprocket_fulfillment`, {
+      method: 'POST',
+      headers: supaHeaders(),
+      body: JSON.stringify({
+        p_order_code: orderCode,
+        p_claim_id: claimId,
+        p_stale_seconds: staleSeconds
+      }),
+      signal: AbortSignal.timeout(10000)
+    });
+
+    if (rpcRes.ok) {
+      const rows = await rpcRes.json();
+      const row = Array.isArray(rows) && rows.length ? rows[0] : rows;
+      if (row && typeof row === 'object') {
+        return {
+          claimed: Boolean(row.claimed),
+          alreadyCreated: Boolean(row.already_created),
+          inProgress: !row.claimed && !row.already_created,
+          shiprocketOrderId: row.existing_shiprocket_order_id || null
+        };
+      }
+    }
+  } catch (err) {
+    console.error('[shiprocket] RPC claim error:', err.message);
+  }
+
+  // Fallback: PostgREST atomic conditional update
+  try {
+    const patchRes = await fetch(`${supabaseUrl}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&shiprocket_order_id=is.null`, {
+      method: 'PATCH',
+      headers: supaHeaders({ Prefer: 'return=representation' }),
+      body: JSON.stringify({
+        shiprocket_claimed_at: new Date().toISOString(),
+        shiprocket_claim_id: claimId
+      }),
+      signal: AbortSignal.timeout(10000)
+    });
+    if (patchRes.ok) {
+      const data = await patchRes.json();
+      if (Array.isArray(data) && data.length > 0) {
+        return { claimed: true, alreadyCreated: false };
+      }
+    }
+  } catch (err) {
+    console.error('[shiprocket] Fallback claim error:', err.message);
+  }
+
+  return { claimed: false, alreadyCreated: false, inProgress: true };
+}
+
+/**
+ * Permanently finalizes Shiprocket fulfillment identifiers and clears the atomic claim.
+ */
+export async function finalizeShiprocketFulfillment(orderCode, claimId, ids = {}) {
+  if (!orderCode) return false;
+
+  const orderId = ids.orderId ? Number(ids.orderId) : null;
+  const shipmentId = ids.shipmentId ? Number(ids.shipmentId) : null;
+  const awb = ids.awb ? String(ids.awb) : null;
+  const courier = ids.courier ? String(ids.courier) : null;
+
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
+    const db = globalThis.__MOCK_ORDER_DB__;
+    const order = typeof db.get === 'function' ? db.get(orderCode) : db[orderCode];
+    if (order) {
+      order.shiprocket_order_id = orderId;
+      order.shiprocket_shipment_id = shipmentId;
+      order.shiprocket_awb = awb;
+      order.shiprocket_courier = courier;
+      order.shiprocket_status = 'ORDER_CREATED';
+      order.shiprocket_synced_at = new Date().toISOString();
+      order.shiprocket_claimed_at = null;
+      order.shiprocket_claim_id = null;
+      order.shiprocket_error = null;
+      return true;
+    }
+    return false;
+  }
+
+  const supabaseUrl = (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
+
+  try {
+    const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/finalize_shiprocket_fulfillment`, {
+      method: 'POST',
+      headers: supaHeaders(),
+      body: JSON.stringify({
+        p_order_code: orderCode,
+        p_claim_id: claimId,
+        p_shiprocket_order_id: orderId,
+        p_shiprocket_shipment_id: shipmentId,
+        p_shiprocket_awb: awb,
+        p_shiprocket_courier: courier
+      }),
+      signal: AbortSignal.timeout(10000)
+    });
+    if (rpcRes.ok) {
+      const res = await rpcRes.json();
+      if (res === true || (Array.isArray(res) && res[0] === true)) return true;
+    }
+  } catch (err) {
+    console.error('[shiprocket] RPC finalize error:', err.message);
+  }
+
+  // Fallback direct patch
+  try {
+    const patchRes = await fetch(`${supabaseUrl}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`, {
+      method: 'PATCH',
+      headers: supaHeaders({ Prefer: 'return=minimal' }),
+      body: JSON.stringify({
+        shiprocket_order_id: orderId,
+        shiprocket_shipment_id: shipmentId,
+        shiprocket_awb: awb,
+        shiprocket_courier: courier,
+        shiprocket_status: 'ORDER_CREATED',
+        shiprocket_synced_at: new Date().toISOString(),
+        shiprocket_claimed_at: null,
+        shiprocket_claim_id: null,
+        shiprocket_error: null
+      }),
+      signal: AbortSignal.timeout(10000)
+    });
+    return patchRes.ok;
+  } catch (err) {
+    console.error('[shiprocket] Fallback finalize error:', err.message);
+    return false;
+  }
+}
+
+/**
+ * Releases the atomic claim upon Shiprocket creation error so future syncs/retries can proceed.
+ */
+export async function releaseShiprocketFulfillmentClaim(orderCode, claimId, errorMessage = null) {
+  if (!orderCode) return false;
+
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
+    const db = globalThis.__MOCK_ORDER_DB__;
+    const order = typeof db.get === 'function' ? db.get(orderCode) : db[orderCode];
+    if (order) {
+      order.shiprocket_claimed_at = null;
+      order.shiprocket_claim_id = null;
+      if (errorMessage) {
+        order.shiprocket_error = String(errorMessage).slice(0, 1000);
+      }
+      order.shiprocket_synced_at = new Date().toISOString();
+      return true;
+    }
+    return false;
+  }
+
+  const supabaseUrl = (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
+
+  try {
+    const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/release_shiprocket_fulfillment_claim`, {
+      method: 'POST',
+      headers: supaHeaders(),
+      body: JSON.stringify({
+        p_order_code: orderCode,
+        p_claim_id: claimId,
+        p_error_message: errorMessage ? String(errorMessage).slice(0, 1000) : null
+      }),
+      signal: AbortSignal.timeout(10000)
+    });
+    if (rpcRes.ok) return true;
+  } catch (err) {
+    console.error('[shiprocket] RPC release error:', err.message);
+  }
+
+  try {
+    const patchRes = await fetch(`${supabaseUrl}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`, {
+      method: 'PATCH',
+      headers: supaHeaders({ Prefer: 'return=minimal' }),
+      body: JSON.stringify({
+        shiprocket_claimed_at: null,
+        shiprocket_claim_id: null,
+        shiprocket_error: errorMessage ? String(errorMessage).slice(0, 1000) : null,
+        shiprocket_synced_at: new Date().toISOString()
+      }),
+      signal: AbortSignal.timeout(10000)
+    });
+    return patchRes.ok;
+  } catch (err) {
+    console.error('[shiprocket] Fallback release error:', err.message);
+    return false;
+  }
+}
+

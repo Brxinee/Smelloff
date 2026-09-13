@@ -1,5 +1,14 @@
 import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized } from './_security.js';
-import { createShiprocketOrder, getShiprocketShipment, trackShiprocketAwb, extractShiprocketIds, isShiprocketConfigured } from './_shiprocket.js';
+import {
+  createShiprocketOrder,
+  getShiprocketShipment,
+  trackShiprocketAwb,
+  extractShiprocketIds,
+  isShiprocketConfigured,
+  claimShiprocketFulfillment,
+  finalizeShiprocketFulfillment,
+  releaseShiprocketFulfillmentClaim
+} from './_shiprocket.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -70,8 +79,35 @@ async function patchOrder(orderCode, patch) {
 }
 
 async function createMissingShiprocketOrder(order) {
-  if (!order || order.shiprocket_order_id) return null;
-  if (!['placed', 'confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'].includes(String(order.status || '').toLowerCase())) return null;
+  if (!order) return null;
+  if (order.shiprocket_order_id) {
+    return {
+      status: 'already_synced',
+      shiprocket_order_id: Number(order.shiprocket_order_id),
+      shiprocket_shipment_id: order.shiprocket_shipment_id ? Number(order.shiprocket_shipment_id) : null,
+      shiprocket_awb: order.shiprocket_awb ? String(order.shiprocket_awb) : null,
+      shiprocket_courier: order.shiprocket_courier ? String(order.shiprocket_courier) : null
+    };
+  }
+  if (!['placed', 'confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'].includes(String(order.status || '').toLowerCase())) {
+    return null;
+  }
+
+  const claimId = `claim_sr_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+  const claimResult = await claimShiprocketFulfillment(order.order_code, claimId);
+
+  if (!claimResult.claimed) {
+    if (claimResult.alreadyCreated) {
+      return {
+        status: 'already_synced',
+        shiprocket_order_id: claimResult.shiprocketOrderId ? Number(claimResult.shiprocketOrderId) : null,
+        shiprocket_shipment_id: claimResult.shiprocketShipmentId ? Number(claimResult.shiprocketShipmentId) : null,
+        shiprocket_awb: claimResult.shiprocketAwb ? String(claimResult.shiprocketAwb) : null,
+        shiprocket_courier: claimResult.shiprocketCourier ? String(claimResult.shiprocketCourier) : null
+      };
+    }
+    return { status: 'skipped', inProgress: true };
+  }
 
   try {
     const response = await createShiprocketOrder(order);
@@ -85,15 +121,11 @@ async function createMissingShiprocketOrder(order) {
       shiprocket_error: null
     };
     if (!patch.shiprocket_order_id) throw new Error('Shiprocket accepted the request but did not return an order ID.');
-    await patchOrder(order.order_code, patch);
+    await finalizeShiprocketFulfillment(order.order_code, claimId, ids);
     return { status: 'created', ...patch };
   } catch (err) {
-    await supabaseFetch(`orders?order_code=eq.${encodeURIComponent(order.order_code)}`, {
-      method: 'PATCH',
-      headers: { Prefer: 'return=minimal' },
-      body: JSON.stringify({ shiprocket_error: String(err.message || 'Shiprocket create failed').slice(0, 1000), shiprocket_synced_at: new Date().toISOString() })
-    }).catch(() => {});
-    return { status: 'create_failed', error: String(err.message || 'Shiprocket create failed').slice(0, 500) };
+    await releaseShiprocketFulfillmentClaim(order.order_code, claimId, err?.message || 'Shiprocket create failed');
+    return { status: 'create_failed', error: String(err?.message || 'Shiprocket create failed').slice(0, 500) };
   }
 }
 
