@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import createOrderHandler from '../api/create-order.js';
 import verifyPaymentHandler from '../api/verify-payment.js';
 import webhookHandler from '../api/webhook.js';
-import sendEmailHandler from '../api/send-email.js';
+import sendEmailHandler, { getOrderConfirmationIdempotencyKey } from '../api/send-email.js';
 import { Resend } from 'resend';
 import { generateOrderToken, generateOrderConfirmationToken } from '../api/_security.js';
 
@@ -1320,6 +1320,255 @@ test('api/send-email: stale claim recovery (crashed instance claim > 90s is safe
     if (prevResend === undefined) delete process.env.RESEND_API_KEY;
     else process.env.RESEND_API_KEY = prevResend;
     delete globalThis.__MOCK_ORDER_DB__;
+  }
+});
+
+test('api/send-email: getOrderConfirmationIdempotencyKey helper validation and determinism', () => {
+  const key1 = getOrderConfirmationIdempotencyKey('SMF-20260913-1111');
+  const key2 = getOrderConfirmationIdempotencyKey('SMF-20260913-1111');
+  const keyLowercase = getOrderConfirmationIdempotencyKey('smf-20260913-1111');
+  const keyWithSpaces = getOrderConfirmationIdempotencyKey('  SMF-20260913-1111  ');
+
+  assert.equal(key1, 'order-confirmation/SMF-20260913-1111');
+  assert.equal(key2, key1, 'Same order code must produce identical idempotency key');
+  assert.equal(keyLowercase, key1, 'Lowercase order code must normalize to identical idempotency key');
+  assert.equal(keyWithSpaces, key1, 'Order code with whitespace must normalize to identical idempotency key');
+
+  const differentKey = getOrderConfirmationIdempotencyKey('SMF-20260913-2222');
+  assert.notEqual(differentKey, key1, 'Different order codes must produce different idempotency keys');
+
+  assert.throws(() => getOrderConfirmationIdempotencyKey(''), /Invalid order code/);
+  assert.throws(() => getOrderConfirmationIdempotencyKey('INVALID'), /Invalid order code/);
+  assert.throws(() => getOrderConfirmationIdempotencyKey('SMF-INVALID-1234'), /Invalid order code/);
+  assert.throws(() => getOrderConfirmationIdempotencyKey('SMF-20260913-12345'), /Invalid order code/);
+});
+
+test('api/send-email: Resend SDK receives deterministic idempotencyKey option, client cannot inject arbitrary key, and key is not exposed', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      setHeader: () => {},
+      status: (code) => {
+        statusCode = code;
+        return {
+          json: (d) => { data = d; return { statusCode, data }; },
+          end: () => ({ statusCode })
+        };
+      },
+      json: (d) => { data = d; return { statusCode, data }; },
+      _get: () => ({ statusCode, data })
+    };
+  }
+
+  const prevSecret = process.env.ORDER_SECURITY_SECRET;
+  const prevResend = process.env.RESEND_API_KEY;
+  process.env.ORDER_SECURITY_SECRET = 'test-order-secret-resend-key';
+  process.env.RESEND_API_KEY = 're_test_key_resend_options';
+
+  const orderCode = 'SMF-20260913-5555';
+  const customerEmail = 'keytest@example.com';
+  const token = generateOrderConfirmationToken(orderCode, customerEmail);
+
+  const mockDbOrder = {
+    order_code: orderCode,
+    customer_email: customerEmail,
+    customer_phone: '9876543210',
+    status: 'confirmed',
+    payment_method: 'prepaid',
+    amount: 22900,
+    address: { name: 'Key Test Buyer', line: '555 Key St', city: 'Mumbai', state: 'Maharashtra', pincode: '400001' },
+    confirmation_email_sent_at: null,
+    confirmation_email_claimed_at: null,
+    confirmation_email_claim_id: null
+  };
+
+  globalThis.__MOCK_ORDER_DB__ = new Map([[orderCode, mockDbOrder]]);
+
+  let capturedOptions = null;
+  const originalPost = Resend.prototype.post;
+  Resend.prototype.post = async function(path, entity, options = {}) {
+    capturedOptions = { path, entity, options };
+    return { data: { id: 'email_resend_with_idempotency_key' }, error: null };
+  };
+
+  try {
+    const res = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.5.0.1' },
+      body: {
+        type: 'orderConfirmation',
+        orderCode,
+        confirmationToken: token,
+        // Attempting to inject a custom client-controlled idempotency key:
+        idempotencyKey: 'attacker-injected-idempotency-key-bypass',
+        data: {
+          idempotencyKey: 'attacker-nested-key'
+        }
+      }
+    }, res);
+
+    assert.equal(res._get().statusCode, 200);
+    assert.equal(res._get().data.ok, true);
+
+    // Verify Resend options passed
+    assert.ok(capturedOptions, 'Resend.post must have been called');
+    assert.equal(capturedOptions.options.idempotencyKey, 'order-confirmation/SMF-20260913-5555', 'Resend SDK must receive the authoritative order-derived idempotencyKey');
+    assert.notEqual(capturedOptions.options.idempotencyKey, 'attacker-injected-idempotency-key-bypass', 'Client must not be able to override idempotencyKey');
+
+    // Verify key is NOT leaked in client response
+    assert.equal(res._get().data.idempotencyKey, undefined, 'idempotencyKey must not be exposed to client/browser');
+  } finally {
+    Resend.prototype.post = originalPost;
+    if (prevSecret === undefined) delete process.env.ORDER_SECURITY_SECRET;
+    else process.env.ORDER_SECURITY_SECRET = prevSecret;
+    if (prevResend === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = prevResend;
+    delete globalThis.__MOCK_ORDER_DB__;
+  }
+});
+
+test('api/send-email: crash after provider acceptance before DB finalize is deduplicated on retry via Resend idempotency key', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      setHeader: () => {},
+      status: (code) => {
+        statusCode = code;
+        return {
+          json: (d) => { data = d; return { statusCode, data }; },
+          end: () => ({ statusCode })
+        };
+      },
+      json: (d) => { data = d; return { statusCode, data }; },
+      _get: () => ({ statusCode, data })
+    };
+  }
+
+  const prevSecret = process.env.ORDER_SECURITY_SECRET;
+  const prevResend = process.env.RESEND_API_KEY;
+  process.env.ORDER_SECURITY_SECRET = 'test-order-secret-crash-dedup';
+  process.env.RESEND_API_KEY = 're_test_key_crash_dedup';
+
+  const orderCode = 'SMF-20260913-6666';
+  const customerEmail = 'crash.dedup@example.com';
+  const token = generateOrderConfirmationToken(orderCode, customerEmail);
+
+  // Simulated provider store that deduplicates incoming requests by Idempotency-Key
+  const providerProcessedKeys = new Map();
+  let physicalSends = 0;
+
+  const originalPost = Resend.prototype.post;
+  Resend.prototype.post = async function(path, entity, options = {}) {
+    const key = options.idempotencyKey;
+    if (key && providerProcessedKeys.has(key)) {
+      // Replay of existing request: provider returns cached response without second physical send
+      return providerProcessedKeys.get(key);
+    }
+    physicalSends++;
+    const response = { data: { id: `email_msg_${physicalSends}` }, error: null };
+    if (key) {
+      providerProcessedKeys.set(key, response);
+    }
+    return response;
+  };
+
+  // 1. Initial State: Worker A claims the order
+  const mockDbOrder = {
+    order_code: orderCode,
+    customer_email: customerEmail,
+    customer_phone: '9876543210',
+    status: 'confirmed',
+    payment_method: 'prepaid',
+    amount: 22900,
+    address: { name: 'Crash Test Buyer', line: '777 Crash Ave', city: 'Delhi', state: 'Delhi', pincode: '110001' },
+    confirmation_email_sent_at: null,
+    // Claimed 100 seconds ago by Worker A which crashed right after Resend accepted the email
+    confirmation_email_claimed_at: new Date(Date.now() - 100 * 1000).toISOString(),
+    confirmation_email_claim_id: 'worker-a-crashed-uuid'
+  };
+
+  // Simulate Worker A had invoked Resend with the order's idempotency key before crashing
+  const expectedKey = getOrderConfirmationIdempotencyKey(orderCode);
+  const workerAResponse = { data: { id: 'email_msg_from_worker_a' }, error: null };
+  providerProcessedKeys.set(expectedKey, workerAResponse);
+  physicalSends = 1; // Worker A performed the 1 physical dispatch
+
+  globalThis.__MOCK_ORDER_DB__ = new Map([[orderCode, mockDbOrder]]);
+
+  try {
+    // 2. Retry / Worker B executes request after Worker A's claim has become stale
+    const resB = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.6.0.1' },
+      body: { type: 'orderConfirmation', orderCode, confirmationToken: token }
+    }, resB);
+
+    assert.equal(resB._get().statusCode, 200);
+    assert.equal(resB._get().data.ok, true);
+    assert.equal(resB._get().data.id, 'email_msg_from_worker_a', 'Retry must receive cached message ID from provider replay');
+
+    // CRITICAL GUARANTEE: Physical sends at Resend must REMAIN 1 (no duplicate external email dispatched!)
+    assert.equal(physicalSends, 1, 'No duplicate external email must be dispatched for the same order across crash recovery');
+    assert.ok(mockDbOrder.confirmation_email_sent_at, 'Worker B must successfully finalize confirmation_email_sent_at in DB');
+    assert.equal(mockDbOrder.confirmation_email_claim_id, null, 'Claim ID must be cleared after finalize');
+  } finally {
+    Resend.prototype.post = originalPost;
+    if (prevSecret === undefined) delete process.env.ORDER_SECURITY_SECRET;
+    else process.env.ORDER_SECURITY_SECRET = prevSecret;
+    if (prevResend === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = prevResend;
+    delete globalThis.__MOCK_ORDER_DB__;
+  }
+});
+
+test('api/send-email: missing production Supabase credential fails closed (no silent in-memory fallback)', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      setHeader: () => {},
+      status: (code) => {
+        statusCode = code;
+        return {
+          json: (d) => { data = d; return { statusCode, data }; },
+          end: () => ({ statusCode })
+        };
+      },
+      json: (d) => { data = d; return { statusCode, data }; },
+      _get: () => ({ statusCode, data })
+    };
+  }
+
+  const prevKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const prevSecret = process.env.ORDER_SECURITY_SECRET;
+  delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+  process.env.ORDER_SECURITY_SECRET = 'test-secret';
+
+  // Ensure NO mocks are active so production path is evaluated
+  delete globalThis.__MOCK_ORDER_DB__;
+  delete globalThis.__MOCK_ORDER_FETCHER__;
+
+  try {
+    const res = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.7.0.1' },
+      body: {
+        type: 'orderConfirmation',
+        orderCode: 'SMF-20260913-9999',
+        confirmationToken: 'some-token'
+      }
+    }, res);
+
+    assert.equal(res._get().statusCode, 500, 'Must fail closed with HTTP 500 when Supabase service credentials missing');
+    assert.equal(res._get().data.error, 'Database service not configured');
+  } finally {
+    if (prevKey !== undefined) process.env.SUPABASE_SERVICE_ROLE_KEY = prevKey;
+    if (prevSecret !== undefined) process.env.ORDER_SECURITY_SECRET = prevSecret;
   }
 });
 

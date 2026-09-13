@@ -77,6 +77,29 @@ function bucketCount(b) {
 const sentConfirmationOrders = new Map();
 const MAX_IDEMPOTENCY_CACHE = 10000;
 
+const ORDER_CODE_RE = /^SMF-\d{8}-\d{4}$/i;
+
+/**
+ * Deterministic Resend Idempotency Key for order confirmation emails.
+ *
+ * Guarantees that across retries, crashes, and multi-instance reclaims,
+ * Resend receives the exact same idempotency key for any given order.
+ * Strictly derives from the validated order code without user-controlled strings,
+ * PII, timestamps, or random UUIDs.
+ *
+ * "Concurrent duplicate sends are prevented by the database claim, and crash/retry duplicate sends
+ * are mitigated by the stable Resend idempotency key."
+ *
+ * Example: 'order-confirmation/SMF-20260913-1111'
+ */
+export function getOrderConfirmationIdempotencyKey(orderCode) {
+  const normalized = String(orderCode || '').trim().toUpperCase();
+  if (!ORDER_CODE_RE.test(normalized)) {
+    throw new Error(`Invalid order code for idempotency key: ${orderCode}`);
+  }
+  return `order-confirmation/${normalized}`;
+}
+
 export function hasConfirmationBeenSent(orderCode) {
   if (typeof globalThis.__MOCK_SENT_CONFIRMATIONS__ !== 'undefined') {
     return globalThis.__MOCK_SENT_CONFIRMATIONS__.has(orderCode);
@@ -112,8 +135,14 @@ function supaHeaders(extra = {}) {
  * Implements a durable Postgres row-level atomic lock with stale claim recovery:
  * 1. Checks in-memory fast-path (instant reject if already completed locally).
  * 2. Checks mock DB if in test mode (for concurrency & multi-instance tests).
- * 3. Calls Supabase RPC `claim_order_confirmation_email` (atomic FOR UPDATE lock).
- * 4. Falls back to direct PostgREST atomic conditional PATCH if RPC is unavailable.
+ * 3. Checks mock order fetcher if in unit test mode without DB.
+ * 4. Fails closed (HTTP 500) if required production Supabase credentials are missing.
+ * 5. Calls Supabase RPC `claim_order_confirmation_email` (atomic FOR UPDATE lock).
+ * 6. Falls back to direct PostgREST atomic conditional PATCH if RPC is unavailable.
+ *
+ * Note on Distributed Boundaries:
+ * Concurrent duplicate sends are prevented by the database claim, and crash/retry duplicate sends
+ * are mitigated by the stable Resend idempotency key.
  */
 export async function claimOrderConfirmationEmail(orderCode, claimId, staleSeconds = 90) {
   if (!orderCode) return { claimed: false, alreadySent: false };
@@ -142,13 +171,21 @@ export async function claimOrderConfirmationEmail(orderCode, claimId, staleSecon
     return { claimed: true, alreadySent: false };
   }
 
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-  if (!key) {
-    // If Supabase service role key is not configured, fall back to in-memory idempotency
+  // 3. Mock order fetcher check (for unit test mock environments without real Supabase)
+  if (typeof globalThis.__MOCK_ORDER_FETCHER__ !== 'undefined') {
     if (hasConfirmationBeenSent(orderCode)) {
       return { claimed: false, alreadySent: true };
     }
     return { claimed: true, alreadySent: false };
+  }
+
+  // 4. In production without mocks, verify credentials and FAIL CLOSED if missing
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  if (!key) {
+    console.error('[send-email] SUPABASE_SERVICE_ROLE_KEY missing - failing closed');
+    const err = new Error('Database service credentials missing');
+    err.code = 'SUPABASE_CONFIG_MISSING';
+    throw err;
   }
 
   const supabaseUrl = (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
@@ -319,8 +356,15 @@ export async function fetchOrderByCode(orderCode) {
   if (typeof globalThis.__MOCK_ORDER_FETCHER__ === 'function') {
     return globalThis.__MOCK_ORDER_FETCHER__(orderCode);
   }
+
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-  if (!key) return null;
+  if (!key) {
+    console.error('[send-email] SUPABASE_SERVICE_ROLE_KEY missing - failing closed');
+    const err = new Error('Database service credentials missing');
+    err.code = 'SUPABASE_CONFIG_MISSING';
+    throw err;
+  }
+
   try {
     const supabaseUrl = (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
     const url = `${supabaseUrl}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&select=*`;
@@ -417,7 +461,15 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Valid order code required (e.g. SMF-YYYYMMDD-XXXX)' });
       }
 
-      const order = await fetchOrderByCode(orderCode);
+      let order;
+      try {
+        order = await fetchOrderByCode(orderCode);
+      } catch (fetchErr) {
+        if (fetchErr.code === 'SUPABASE_CONFIG_MISSING') {
+          return res.status(500).json({ error: 'Database service not configured' });
+        }
+        throw fetchErr;
+      }
       if (!order) {
         return res.status(404).json({ error: 'Order not found' });
       }
@@ -499,7 +551,16 @@ export default async function handler(req, res) {
 
       // 2. Atomic distributed claim: guarantees at most one worker claims the right to send
       const claimId = randomUUID();
-      const claim = await claimOrderConfirmationEmail(orderCode, claimId);
+      let claim;
+      try {
+        claim = await claimOrderConfirmationEmail(orderCode, claimId);
+      } catch (claimErr) {
+        if (claimErr.code === 'SUPABASE_CONFIG_MISSING') {
+          return res.status(500).json({ error: 'Database service not configured' });
+        }
+        throw claimErr;
+      }
+
       if (claim.alreadySent) {
         return res.status(200).json({
           ok: true,
@@ -553,28 +614,43 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Email service not configured' });
       }
 
+      // Deterministic provider idempotency key derived strictly from validated order code
+      // Prevents duplicate sends if worker crashes between provider send and database finalize
+      const idempotencyKey = getOrderConfirmationIdempotencyKey(orderCode);
+
       try {
         const { subject, html } = orderConfirmation(authoritativeData);
         const resend = new Resend(process.env.RESEND_API_KEY);
-        const result = await resend.emails.send({
-          from: FROM,
-          to: dbEmail,
-          replyTo: REPLY_TO,
-          subject: subject.replace(/[\r\n]+/g, ' ').trim().slice(0, 200),
-          html,
-        });
+        const result = await resend.emails.send(
+          {
+            from: FROM,
+            to: dbEmail,
+            replyTo: REPLY_TO,
+            subject: subject.replace(/[\r\n]+/g, ' ').trim().slice(0, 200),
+            html,
+          },
+          {
+            idempotencyKey,
+          }
+        );
 
         if (result.error) {
-          console.error('Resend error:', result.error);
+          console.error('[send-email] Resend error:', result.error);
           await releaseOrderConfirmationClaim(orderCode, claimId);
-          return res.status(502).json({ error: 'Email could not be sent.' });
+          const errName = result.error.name || '';
+          const statusCode = result.error.statusCode || (errName === 'rate_limit_exceeded' ? 429 : 502);
+          const message = result.error.message || 'Email could not be sent.';
+          return res.status(statusCode >= 400 && statusCode < 600 ? statusCode : 502).json({
+            error: message,
+            code: errName || 'RESEND_ERROR',
+          });
         }
 
-        // Successfully sent: finalize claim and record confirmation_email_sent_at
+        // Successfully sent (or deduplicated by Resend idempotency key): finalize claim and record confirmation_email_sent_at
         await finalizeOrderConfirmationEmail(orderCode, claimId);
         return res.status(200).json({ id: result.data?.id, ok: true, success: true, orderId: orderCode });
       } catch (sendErr) {
-        console.error('Resend send exception:', sendErr.message);
+        console.error('[send-email] Resend send exception:', sendErr.message);
         await releaseOrderConfirmationClaim(orderCode, claimId);
         return res.status(502).json({ error: 'Email delivery failed' });
       }
