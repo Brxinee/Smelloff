@@ -28,7 +28,6 @@ const TEMPLATES = {
 };
 
 const RESTRICTED_TEMPLATES = new Set([
-  'orderConfirmation',
   'orderShipped',
   'outForDelivery',
   'orderDelivered',

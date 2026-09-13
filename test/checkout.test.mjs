@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import createOrderHandler from '../api/create-order.js';
 import verifyPaymentHandler from '../api/verify-payment.js';
 import webhookHandler from '../api/webhook.js';
+import sendEmailHandler from '../api/send-email.js';
 
 test('vercel.json routing integrity', () => {
   const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
@@ -672,6 +673,48 @@ test('Step 5 Post-Purchase: Multi-quantity explicit quantity propagation across 
   assert.ok(!html.includes('waSuccessUtrLink'), 'odorstrike.html must not contain waSuccessUtrLink');
   assert.ok(!html.includes('wa-utr-btn'), 'odorstrike.html must not contain wa-utr-btn class');
   assert.ok(!html.includes('id="upiBlock"'), 'odorstrike.html must not contain id="upiBlock"');
+});
+
+test('api/send-email: orderConfirmation allows customer checkout dispatch while admin templates remain protected', async () => {
+  function createMockRes() {
+    let statusCode = 200;
+    let data = null;
+    return {
+      setHeader: () => {},
+      status: (code) => {
+        statusCode = code;
+        return {
+          json: (d) => { data = d; return { statusCode, data }; },
+          end: () => ({ statusCode })
+        };
+      },
+      json: (d) => { data = d; return { statusCode, data }; },
+      _get: () => ({ statusCode, data })
+    };
+  }
+
+  // 1. Unauthenticated request with orderShipped MUST be rejected with 401
+  const resShipped = createMockRes();
+  await sendEmailHandler({
+    method: 'POST',
+    headers: { origin: 'https://smelloff.in' },
+    body: { type: 'orderShipped', to: 'customer@example.com', data: { orderId: 'SMF-20260913-1234' } }
+  }, resShipped);
+  assert.equal(resShipped._get().statusCode, 401, 'orderShipped without admin auth must be 401');
+
+  // 2. Unauthenticated request with orderConfirmation MUST NOT be rejected with 401
+  const resConfirm = createMockRes();
+  await sendEmailHandler({
+    method: 'POST',
+    headers: { origin: 'https://smelloff.in' },
+    body: {
+      type: 'orderConfirmation',
+      to: 'customer@example.com',
+      data: { orderId: 'SMF-20260913-1234', customerName: 'Test Buyer', amount: '229' }
+    }
+  }, resConfirm);
+  const status = resConfirm._get().statusCode;
+  assert.notEqual(status, 401, 'orderConfirmation from checkout must not be rejected with 401');
 });
 
 
