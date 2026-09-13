@@ -702,6 +702,24 @@ test('api/send-email: orderConfirmation allows customer checkout dispatch while 
   }, resShipped);
   assert.equal(resShipped._get().statusCode, 401, 'orderShipped without admin auth must be 401');
 
+  // 1b. Unauthenticated request with abandonedCart MUST be rejected with 401 (prevent arbitrary phishing / URL injection)
+  const resAbandoned = createMockRes();
+  await sendEmailHandler({
+    method: 'POST',
+    headers: { origin: 'https://smelloff.in' },
+    body: { type: 'abandonedCart', to: 'victim@example.com', data: { customerName: 'Victim', productUrl: 'https://malicious.com' } }
+  }, resAbandoned);
+  assert.equal(resAbandoned._get().statusCode, 401, 'abandonedCart without admin auth must be 401');
+
+  // 1c. Unauthenticated request with paymentReminder MUST be rejected with 401 (prevent fraudulent payment demands)
+  const resReminder = createMockRes();
+  await sendEmailHandler({
+    method: 'POST',
+    headers: { origin: 'https://smelloff.in' },
+    body: { type: 'paymentReminder', to: 'victim@example.com', data: { orderId: 'SMF-20260913-9999', amount: '9999' } }
+  }, resReminder);
+  assert.equal(resReminder._get().statusCode, 401, 'paymentReminder without admin auth must be 401');
+
   // 2. Unauthenticated request with orderConfirmation MUST NOT be rejected with 401
   const resConfirm = createMockRes();
   await sendEmailHandler({
@@ -715,6 +733,42 @@ test('api/send-email: orderConfirmation allows customer checkout dispatch while 
   }, resConfirm);
   const status = resConfirm._get().statusCode;
   assert.notEqual(status, 401, 'orderConfirmation from checkout must not be rejected with 401');
+
+  // 3. Unauthenticated request with welcomeEmail MUST NOT be rejected with 401
+  const resWelcome = createMockRes();
+  await sendEmailHandler({
+    method: 'POST',
+    headers: { origin: 'https://smelloff.in' },
+    body: {
+      type: 'welcomeEmail',
+      to: 'subscriber@example.com',
+      data: { customerName: 'Subscriber' }
+    }
+  }, resWelcome);
+  assert.notEqual(resWelcome._get().statusCode, 401, 'welcomeEmail from newsletter/waitlist must not be rejected with 401');
+
+  // 4. Authenticated request with abandonedCart MUST pass authorization
+  const prevAdminSecret = process.env.ADMIN_SECRET;
+  process.env.ADMIN_SECRET = 'test-admin-secret-xyz-123';
+  try {
+    const resAuthAbandoned = createMockRes();
+    await sendEmailHandler({
+      method: 'POST',
+      headers: {
+        origin: 'https://smelloff.in',
+        authorization: 'Bearer test-admin-secret-xyz-123'
+      },
+      body: {
+        type: 'abandonedCart',
+        to: 'customer@example.com',
+        data: { customerName: 'Shopper' }
+      }
+    }, resAuthAbandoned);
+    assert.notEqual(resAuthAbandoned._get().statusCode, 401, 'abandonedCart with valid admin auth must pass authorization');
+  } finally {
+    if (prevAdminSecret === undefined) delete process.env.ADMIN_SECRET;
+    else process.env.ADMIN_SECRET = prevAdminSecret;
+  }
 });
 
 

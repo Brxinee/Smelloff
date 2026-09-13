@@ -32,7 +32,9 @@ const RESTRICTED_TEMPLATES = new Set([
   'outForDelivery',
   'orderDelivered',
   'orderCancelled',
-  'refundProcessed'
+  'refundProcessed',
+  'abandonedCart',
+  'paymentReminder'
 ]);
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
