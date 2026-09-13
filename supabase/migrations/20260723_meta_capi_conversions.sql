@@ -81,9 +81,13 @@ begin
       values ('purchase_' || code, 'Purchase', new.id, new.order_code, 'server', 'pending')
       on conflict (event_id, event_name) do nothing;
     elsif (new.status in ('cancelled', 'returned')) then
-      insert into public.meta_capi_log (event_id, event_name, order_id, order_code, source, status)
-      values ('refund_' || code, 'Refund', new.id, new.order_code, 'server', 'pending')
-      on conflict (event_id, event_name) do nothing;
+      -- Only enqueue Refund if the order was previously in a confirmed/paid pipeline state
+      -- (never for unconfirmed placed or unpaid upi_pending/failed cancellations)
+      if (old.status in ('confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered')) then
+        insert into public.meta_capi_log (event_id, event_name, order_id, order_code, source, status)
+        values ('refund_' || code, 'Refund', new.id, new.order_code, 'server', 'pending')
+        on conflict (event_id, event_name) do nothing;
+      end if;
     end if;
   end if;
   return new;

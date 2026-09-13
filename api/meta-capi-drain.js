@@ -63,6 +63,22 @@ export default async function handler(req, res) {
       failed++; continue;
     }
 
+    // Financial integrity check: never send a Refund event for an order that was cancelled without confirmation/payment
+    if (row.event_name === 'Refund') {
+      const isPaidPrepaid = Boolean(order.payment_verified_at || order.upi_txn_id);
+      const isPostFulfillmentState = ['packed', 'dispatched', 'out_for_delivery', 'delivered', 'returned'].includes(order.status);
+      const isEligibleRefund = isPaidPrepaid || isPostFulfillmentState;
+      if (!isEligibleRefund && (order.status === 'cancelled' || order.status === 'upi_pending' || order.status === 'placed')) {
+        await logUpdate(row.id, {
+          status: 'skipped',
+          response: { body: 'skipped:unpaid_or_unconfirmed_order_no_prior_purchase' },
+          attempts: (row.attempts || 0) + 1,
+        });
+        skipped++;
+        continue;
+      }
+    }
+
     const valueRupees = Number(order.amount || 0) / 100;
     const addr = order.address || {};
     const user_data = buildUserData({

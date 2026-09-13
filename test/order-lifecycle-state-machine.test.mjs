@@ -142,3 +142,42 @@ test('Cancellation Race Simulation: Uncontested cancellation succeeds atomically
   assert.equal(result.success, true);
   assert.equal(mockDb.order.status, 'cancelled');
 });
+
+test('Financial Integrity: Unpaid order cancellation must NOT enqueue or emit Refund conversion event', () => {
+  // Simulate Postgres orders_meta_enqueue trigger logic
+  function simulateOrdersMetaEnqueue(oldStatus, newStatus, orderCode, orderId) {
+    const events = [];
+    if (newStatus !== oldStatus) {
+      const code = orderCode || orderId;
+      if (newStatus === 'confirmed') {
+        events.push({ event_id: `purchase_${code}`, event_name: 'Purchase' });
+      } else if (newStatus === 'cancelled' || newStatus === 'returned') {
+        const confirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
+        if (confirmedStates.includes(oldStatus)) {
+          events.push({ event_id: `refund_${code}`, event_name: 'Refund' });
+        }
+      }
+    }
+    return events;
+  }
+
+  // 1. Unpaid UPI order cancelled directly from upi_pending
+  const unpaidUpiCancelled = simulateOrdersMetaEnqueue('upi_pending', 'cancelled', 'SMF-20260913-1001', 'id-1');
+  assert.equal(unpaidUpiCancelled.length, 0, 'Unpaid upi_pending cancelled must emit 0 events (no false Refund)');
+
+  // 2. Unconfirmed COD order cancelled directly from placed
+  const unconfirmedCodCancelled = simulateOrdersMetaEnqueue('placed', 'cancelled', 'SMF-20260913-1002', 'id-2');
+  assert.equal(unconfirmedCodCancelled.length, 0, 'Unconfirmed placed COD cancelled must emit 0 events');
+
+  // 3. Confirmed prepaid order cancelled -> MUST emit Refund event to net out prior Purchase
+  const confirmedPrepaidCancelled = simulateOrdersMetaEnqueue('confirmed', 'cancelled', 'SMF-20260913-1003', 'id-3');
+  assert.equal(confirmedPrepaidCancelled.length, 1);
+  assert.equal(confirmedPrepaidCancelled[0].event_name, 'Refund');
+  assert.equal(confirmedPrepaidCancelled[0].event_id, 'refund_SMF-20260913-1003');
+
+  // 4. Delivered order returned (RTO / 7-day return) -> MUST emit Refund event
+  const returnedOrder = simulateOrdersMetaEnqueue('delivered', 'returned', 'SMF-20260913-1004', 'id-4');
+  assert.equal(returnedOrder.length, 1);
+  assert.equal(returnedOrder[0].event_name, 'Refund');
+});
+
