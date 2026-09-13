@@ -8,7 +8,9 @@ import {
   isShiprocketConfigured,
   claimShiprocketFulfillment,
   finalizeShiprocketFulfillment,
-  releaseShiprocketFulfillmentClaim
+  releaseShiprocketFulfillmentClaim,
+  findShiprocketOrderByOrderCode,
+  isDuplicateOrderError
 } from '../_shiprocket.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
@@ -119,9 +121,30 @@ async function syncConfirmedOrderToShiprocket(order) {
       courier: ids.courier
     };
   } catch (err) {
+    const isDup = isDuplicateOrderError(err);
+    const isAmbiguous = isDup || err?.name === 'TimeoutError' || err?.name === 'AbortError' || (err?.status && err.status >= 500) || !err?.status;
+
+    if (isAmbiguous) {
+      try {
+        const existing = await findShiprocketOrderByOrderCode(order.order_code);
+        if (existing?.orderId) {
+          await finalizeShiprocketFulfillment(order.order_code, claimId, existing);
+          return {
+            status: 'synced',
+            shiprocketOrderId: existing.orderId,
+            shipmentId: existing.shipmentId,
+            awb: existing.awb,
+            courier: existing.courier
+          };
+        }
+      } catch (reconErr) {
+        console.error('[admin-verify] Reconciliation lookup failed:', reconErr?.message);
+      }
+    }
+
     await releaseShiprocketFulfillmentClaim(order.order_code, claimId, err?.message || 'Shiprocket sync failed');
-    console.error('[admin-verify] Shiprocket sync failed:', err.message);
-    return { status: 'failed', error: String(err.message || 'Shiprocket sync failed').slice(0, 500) };
+    console.error('[admin-verify] Shiprocket sync failed:', err?.message);
+    return { status: 'failed', error: String(err?.message || 'Shiprocket sync failed').slice(0, 500) };
   }
 }
 

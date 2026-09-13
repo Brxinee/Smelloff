@@ -198,13 +198,57 @@ export async function trackShiprocketAwb(awb) {
   return shiprocketRequest(`/courier/track/awb/${encodeURIComponent(String(awb))}`, { method: 'GET' });
 }
 export function extractShiprocketIds(data) {
+  if (!data) return { orderId: null, shipmentId: null, awb: null, courier: null };
   const root = data?.data && typeof data.data === 'object' ? data.data : data || {};
+  const item = Array.isArray(root) ? root[0] : root;
+  const shipment = Array.isArray(item?.shipments) && item.shipments.length
+    ? item.shipments[0]
+    : (item?.shipments && typeof item.shipments === 'object' ? item.shipments : {});
   return {
-    orderId: root.order_id ?? root.orderId ?? root.shiprocket_order_id ?? null,
-    shipmentId: root.shipment_id ?? root.shipmentId ?? null,
-    awb: root.awb_code ?? root.awb ?? null,
-    courier: root.courier_name ?? root.courier ?? null
+    orderId: item?.order_id ?? item?.orderId ?? item?.shiprocket_order_id ?? item?.id ?? null,
+    shipmentId: item?.shipment_id ?? item?.shipmentId ?? shipment?.id ?? shipment?.shipment_id ?? null,
+    awb: item?.awb_code ?? item?.awb ?? shipment?.awb ?? shipment?.awb_code ?? null,
+    courier: item?.courier_name ?? item?.courier ?? shipment?.courier ?? shipment?.courier_name ?? null
   };
+}
+
+export function isDuplicateOrderError(err) {
+  if (!err) return false;
+  const status = err.status || err.statusCode || err.response?.status;
+  const msg = String(err.message || err.data?.message || err.data?.error || '').toLowerCase();
+  if (status === 422 || status === 409) return true;
+  if (msg.includes('already been taken') || msg.includes('already exists') || msg.includes('duplicate order') || msg.includes('order id has already')) {
+    return true;
+  }
+  return false;
+}
+
+export async function findShiprocketOrderByOrderCode(orderCode) {
+  if (!orderCode) return null;
+
+  if (typeof globalThis.__MOCK_SHIPROCKET_SERVICE__ !== 'undefined') {
+    const mockService = globalThis.__MOCK_SHIPROCKET_SERVICE__;
+    if (typeof mockService.findByOrderCode === 'function') {
+      const match = await mockService.findByOrderCode(orderCode);
+      return match ? extractShiprocketIds(match) : null;
+    }
+  }
+
+  if (!isShiprocketConfigured()) return null;
+
+  try {
+    const data = await shiprocketRequest(`/orders?channel_order_id=${encodeURIComponent(String(orderCode))}`, { method: 'GET' });
+    const ordersList = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
+    const match = ordersList.find(o =>
+      String(o.channel_order_id || o.order_id || '').trim().toLowerCase() === String(orderCode).trim().toLowerCase()
+    );
+    if (match) {
+      return extractShiprocketIds(match);
+    }
+  } catch (err) {
+    console.error('[shiprocket] Reconciliation lookup error:', err.message);
+  }
+  return null;
 }
 
 function supaHeaders(extra = {}) {

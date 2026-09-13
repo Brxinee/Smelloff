@@ -7,7 +7,9 @@ import {
   isShiprocketConfigured,
   claimShiprocketFulfillment,
   finalizeShiprocketFulfillment,
-  releaseShiprocketFulfillmentClaim
+  releaseShiprocketFulfillmentClaim,
+  findShiprocketOrderByOrderCode,
+  isDuplicateOrderError
 } from './_shiprocket.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
@@ -124,6 +126,29 @@ async function createMissingShiprocketOrder(order) {
     await finalizeShiprocketFulfillment(order.order_code, claimId, ids);
     return { status: 'created', ...patch };
   } catch (err) {
+    const isDup = isDuplicateOrderError(err);
+    const isAmbiguous = isDup || err?.name === 'TimeoutError' || err?.name === 'AbortError' || (err?.status && err.status >= 500) || !err?.status;
+
+    if (isAmbiguous) {
+      try {
+        const existing = await findShiprocketOrderByOrderCode(order.order_code);
+        if (existing?.orderId) {
+          const patch = {
+            shiprocket_order_id: Number(existing.orderId),
+            shiprocket_shipment_id: existing.shipmentId ? Number(existing.shipmentId) : null,
+            shiprocket_awb: existing.awb ? String(existing.awb) : null,
+            shiprocket_courier: existing.courier ? String(existing.courier) : null,
+            shiprocket_status: 'ORDER_CREATED',
+            shiprocket_error: null
+          };
+          await finalizeShiprocketFulfillment(order.order_code, claimId, existing);
+          return { status: 'already_synced', ...patch };
+        }
+      } catch (reconErr) {
+        console.error('[shiprocket-sync] Reconciliation lookup error:', reconErr?.message);
+      }
+    }
+
     await releaseShiprocketFulfillmentClaim(order.order_code, claimId, err?.message || 'Shiprocket create failed');
     return { status: 'create_failed', error: String(err?.message || 'Shiprocket create failed').slice(0, 500) };
   }

@@ -242,3 +242,66 @@ test('Shiprocket Provider Failure: Claim is released so subsequent retry succeed
     delete globalThis.__MOCK_ORDER_DB__;
   }
 });
+
+test('Shiprocket Crash Window & Reconciliation: Crash post-creation recovered via reconciliation on 422 duplicate', async () => {
+  const orderCode = 'SMF-20260913-9999';
+  const mockDb = {
+    [orderCode]: {
+      order_code: orderCode,
+      status: 'confirmed',
+      shiprocket_order_id: null,
+      shiprocket_claimed_at: new Date(Date.now() - 150 * 1000).toISOString(), // Stale claim
+      shiprocket_claim_id: 'crashed_worker_claim'
+    }
+  };
+
+  // Mock Shiprocket External Store
+  const mockExternalOrders = {
+    [orderCode]: {
+      order_id: 999888,
+      channel_order_id: orderCode,
+      shipment_id: 777666,
+      awb_code: 'AWB_RECONCILED_9999',
+      courier_name: 'Delhivery Surface'
+    }
+  };
+
+  globalThis.__MOCK_ORDER_DB__ = mockDb;
+  globalThis.__MOCK_SHIPROCKET_SERVICE__ = {
+    findByOrderCode: async (code) => mockExternalOrders[code] || null
+  };
+
+  try {
+    // Worker B arrives after Worker A crashed
+    const claimId = 'worker_b_claim';
+    const claimResult = await claimShiprocketFulfillment(orderCode, claimId, 120);
+    assert.equal(claimResult.claimed, true, 'Worker B must claim stale order');
+
+    // Worker B attempts creation, but external Shiprocket rejects with 422 duplicate
+    const mockCreateError = new Error('Shiprocket API error: The order id has already been taken.');
+    mockCreateError.status = 422;
+
+    // Reconciliation logic
+    const { isDuplicateOrderError, findShiprocketOrderByOrderCode } = await import('../api/_shiprocket.js');
+    assert.equal(isDuplicateOrderError(mockCreateError), true);
+
+    const reconciled = await findShiprocketOrderByOrderCode(orderCode);
+    assert.ok(reconciled, 'Must locate existing order in Shiprocket');
+    assert.equal(reconciled.orderId, 999888);
+    assert.equal(reconciled.shipmentId, 777666);
+    assert.equal(reconciled.awb, 'AWB_RECONCILED_9999');
+
+    await finalizeShiprocketFulfillment(orderCode, claimId, reconciled);
+
+    // Verify DB state
+    assert.equal(mockDb[orderCode].shiprocket_order_id, 999888);
+    assert.equal(mockDb[orderCode].shiprocket_shipment_id, 777666);
+    assert.equal(mockDb[orderCode].shiprocket_awb, 'AWB_RECONCILED_9999');
+    assert.equal(mockDb[orderCode].shiprocket_courier, 'Delhivery Surface');
+    assert.equal(mockDb[orderCode].shiprocket_claim_id, null);
+  } finally {
+    delete globalThis.__MOCK_ORDER_DB__;
+    delete globalThis.__MOCK_SHIPROCKET_SERVICE__;
+  }
+});
+
