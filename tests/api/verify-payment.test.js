@@ -122,3 +122,157 @@ test('verify-payment: validates Razorpay signature match logic', async () => {
   // Without SERVICE_KEY configured in test env, returns 404 Order not found, or 400 signature mismatch when db configured
   assert.ok(result.statusCode === 404 || result.statusCode === 400);
 });
+
+test('verify-payment: rejects manual UTR submission on modern Razorpay prepaid orders', async () => {
+  const originalFetch = global.fetch;
+  const originalKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test_service_key';
+  const orderCode = 'SMF-20260906-7777';
+  const phone = '9876543210';
+
+  global.fetch = async (url) => {
+    if (url.includes('/rest/v1/orders?order_code=')) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => [{
+          order_code: orderCode,
+          customer_phone: phone,
+          status: 'upi_pending',
+          payment_method: 'upi',
+          payment_attempt_id: 'order_rzp_mock_12345',
+          amount: 22900
+        }]
+      };
+    }
+    return { ok: false, status: 404, json: async () => [] };
+  };
+
+  try {
+    const req = {
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in' },
+      body: {
+        orderCode,
+        phone,
+        utr: '123456789012'
+      }
+    };
+    const res = createMockRes();
+    await verifyPaymentHandler(req, res);
+    const result = res._get();
+    assert.strictEqual(result.statusCode, 400);
+    assert.ok(result.responseData.error.includes('Manual UTR submission is not supported for modern checkout orders'));
+  } finally {
+    global.fetch = originalFetch;
+    process.env.SUPABASE_SERVICE_ROLE_KEY = originalKey;
+  }
+});
+
+test('verify-payment: rejects manual UTR submission on COD orders', async () => {
+  const originalFetch = global.fetch;
+  const originalKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test_service_key';
+  const orderCode = 'SMF-20260906-6666';
+  const phone = '9876543210';
+
+  global.fetch = async (url) => {
+    if (url.includes('/rest/v1/orders?order_code=')) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => [{
+          order_code: orderCode,
+          customer_phone: phone,
+          status: 'placed',
+          payment_method: 'cod',
+          payment_attempt_id: null,
+          amount: 27900
+        }]
+      };
+    }
+    return { ok: false, status: 404, json: async () => [] };
+  };
+
+  try {
+    const req = {
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in' },
+      body: {
+        orderCode,
+        phone,
+        utr: '123456789012'
+      }
+    };
+    const res = createMockRes();
+    await verifyPaymentHandler(req, res);
+    const result = res._get();
+    assert.strictEqual(result.statusCode, 400);
+    assert.ok(result.responseData.error.includes('Manual UTR submission is not supported for modern checkout orders'));
+  } finally {
+    global.fetch = originalFetch;
+    process.env.SUPABASE_SERVICE_ROLE_KEY = originalKey;
+  }
+});
+
+test('verify-payment: allows legacy historical order without payment_attempt_id to submit UTR for admin review', async () => {
+  const originalFetch = global.fetch;
+  const originalKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test_service_key';
+  const orderCode = 'SMF-20260601-0001';
+  const phone = '9876543210';
+
+  global.fetch = async (url, options) => {
+    if (url.includes('/rest/v1/orders?order_code=')) {
+      if (options && options.method === 'PATCH') {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => [{
+            order_code: orderCode,
+            status: 'verification_pending',
+            upi_ref: '123456789012'
+          }]
+        };
+      }
+      return {
+        ok: true,
+        status: 200,
+        json: async () => [{
+          order_code: orderCode,
+          customer_phone: phone,
+          status: 'upi_pending',
+          payment_method: 'upi',
+          payment_attempt_id: null,
+          amount: 22900
+        }]
+      };
+    }
+    if (url.includes('upi_ref=eq.')) {
+      return { ok: true, status: 200, json: async () => [] };
+    }
+    return { ok: false, status: 404, json: async () => [] };
+  };
+
+  try {
+    const req = {
+      method: 'POST',
+      headers: { origin: 'https://smelloff.in' },
+      body: {
+        orderCode,
+        phone,
+        utr: '123456789012'
+      }
+    };
+    const res = createMockRes();
+    await verifyPaymentHandler(req, res);
+    const result = res._get();
+    assert.strictEqual(result.statusCode, 200);
+    assert.strictEqual(result.responseData.status, 'verification_pending');
+    assert.strictEqual(result.responseData.upiRef, '123456789012');
+  } finally {
+    global.fetch = originalFetch;
+    process.env.SUPABASE_SERVICE_ROLE_KEY = originalKey;
+  }
+});
+

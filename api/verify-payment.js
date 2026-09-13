@@ -12,22 +12,33 @@ import {
 import paymentStatusHandler from './payment-status.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
-const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
+function getServiceKey() {
+  return process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+}
+
+function getRazorpayKeyId() {
+  return process.env.RAZORPAY_KEY_ID || '';
+}
+
+function getRazorpayKeySecret() {
+  return process.env.RAZORPAY_KEY_SECRET || '';
+}
 
 function razorpayClient() {
-  if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) throw new Error('Razorpay credentials are not configured.');
-  return new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET });
+  const keyId = getRazorpayKeyId();
+  const keySecret = getRazorpayKeySecret();
+  if (!keyId || !keySecret) throw new Error('Razorpay credentials are not configured.');
+  return new Razorpay({ key_id: keyId, key_secret: keySecret });
 }
 
 async function fetchOrderByCode(orderCode) {
-  if (!SERVICE_KEY || !orderCode) return null;
+  const serviceKey = getServiceKey();
+  if (!serviceKey || !orderCode) return null;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`, {
       headers: {
-        apikey: SERVICE_KEY,
-        Authorization: `Bearer ${SERVICE_KEY}`,
+        apikey: serviceKey,
+        Authorization: `Bearer ${serviceKey}`,
         'Content-Type': 'application/json'
       },
       signal: AbortSignal.timeout(10000),
@@ -42,13 +53,14 @@ async function fetchOrderByCode(orderCode) {
 }
 
 async function patchOrder(orderCode, patchBody) {
-  if (!SERVICE_KEY || !orderCode) return null;
+  const serviceKey = getServiceKey();
+  if (!serviceKey || !orderCode) return null;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`, {
       method: 'PATCH',
       headers: {
-        apikey: SERVICE_KEY,
-        Authorization: `Bearer ${SERVICE_KEY}`,
+        apikey: serviceKey,
+        Authorization: `Bearer ${serviceKey}`,
         'Content-Type': 'application/json',
         Prefer: 'return=representation'
       },
@@ -65,14 +77,15 @@ async function patchOrder(orderCode, patchBody) {
 }
 
 async function findActiveOrderWithUtr(normalizedUtr, currentOrderCode) {
-  if (!SERVICE_KEY || !normalizedUtr) return null;
+  const serviceKey = getServiceKey();
+  if (!serviceKey || !normalizedUtr) return null;
   try {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/orders?upi_ref=eq.${encodeURIComponent(normalizedUtr)}&order_code=neq.${encodeURIComponent(currentOrderCode)}&status=in.(confirmed,verification_pending,packed,dispatched,out_for_delivery,delivered)&select=order_code,status`,
       {
         headers: {
-          apikey: SERVICE_KEY,
-          Authorization: `Bearer ${SERVICE_KEY}`,
+          apikey: serviceKey,
+          Authorization: `Bearer ${serviceKey}`,
           'Content-Type': 'application/json'
         },
         signal: AbortSignal.timeout(10000),
@@ -125,8 +138,9 @@ async function verifyRazorpayPayment(body, order) {
     }
   }
 
+  const keySecret = getRazorpayKeySecret();
   const generatedSignature = crypto
-    .createHmac('sha256', RAZORPAY_KEY_SECRET)
+    .createHmac('sha256', keySecret)
     .update(`${storedRazorpayOrderId}|${paymentId}`)
     .digest('hex');
 
@@ -245,12 +259,19 @@ export default async function handler(req, res) {
 
     // Razorpay Standard Checkout verification path.
     if (body.razorpay_payment_id || body.razorpay_order_id || body.razorpay_signature) {
-      if (!RAZORPAY_KEY_SECRET) return res.status(500).json({ error: 'Razorpay verification is not configured on the server.' });
+      if (!getRazorpayKeySecret()) return res.status(500).json({ error: 'Razorpay verification is not configured on the server.' });
       const result = await verifyRazorpayPayment(body, order);
       return res.status(result.status).json(result.body);
     }
 
-    // Legacy/manual UTR verification is retained only for old manual orders.
+    // Modern Razorpay prepaid orders (identified by payment_attempt_id) and COD orders cannot enter the legacy manual UTR path.
+    if (order.payment_attempt_id || order.payment_method === 'cod') {
+      return res.status(400).json({
+        error: 'Manual UTR submission is not supported for modern checkout orders. Please complete payment via Razorpay.'
+      });
+    }
+
+    // Legacy/manual UTR verification is retained only for historical manual orders.
     const rawUtr = String(body.upiRef || body.utr || body.upi_ref || body.transactionRef || '').trim();
     const normalizedUtr = validateAndNormalizeUtr(rawUtr);
     if (!normalizedUtr) {
