@@ -23,6 +23,8 @@ test('product.json schema and authoritative values', () => {
   assert.equal(PRODUCT.spraysApprox, 250);
   assert.equal(PRODUCT.sku, 'OS-001-50ML');
   assert.equal(BRAND.name, 'Smelloff');
+  assert.equal(BRAND.slogan, 'Traps and neutralizes clothing odor molecules on fabric');
+  assert.equal(/smell[-\s]proof|odor[-\s]proof|zero\s+smell|always\b/i.test(BRAND.slogan), false, 'Brand slogan must not contain absolute claims');
   assert.equal(BRAND.city, 'Hyderabad');
   assert.equal(BRAND.country, 'India');
   assert.equal(FORMULA.version, 'v3.1');
