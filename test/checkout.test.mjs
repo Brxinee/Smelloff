@@ -2096,6 +2096,49 @@ test('Admin / Cron Authorization & Privilege-Escalation Security Suite', async (
   }
 });
 
+test('Supabase Production admin_alerts RLS and Grant Hardening Security Suite', async (t) => {
+  const migrationPath = 'supabase/migrations/20260914_admin_alerts_rls_and_grant_hardening.sql';
+  assert.equal(fs.existsSync(migrationPath), true, 'Hardening migration file must exist');
+
+  const migrationContent = fs.readFileSync(migrationPath, 'utf8');
+
+  // 1. Must enable Row Level Security on public.admin_alerts
+  assert.equal(
+    /alter\s+table\s+(if\s+exists\s+)?public\.admin_alerts\s+enable\s+row\s+level\s+security/i.test(migrationContent),
+    true,
+    'Migration must explicitly enable RLS on public.admin_alerts'
+  );
+
+  // 2. Must revoke all privileges from anon, authenticated, and public
+  assert.equal(
+    /revoke\s+all\s+on\s+(table\s+)?public\.admin_alerts\s+from\s+anon/i.test(migrationContent),
+    true,
+    'Migration must revoke privileges from anon'
+  );
+  assert.equal(
+    /revoke\s+all\s+on\s+(table\s+)?public\.admin_alerts\s+from\s+authenticated/i.test(migrationContent),
+    true,
+    'Migration must revoke privileges from authenticated'
+  );
+  assert.equal(
+    /revoke\s+all\s+on\s+(table\s+)?public\.admin_alerts\s+from\s+public/i.test(migrationContent),
+    true,
+    'Migration must revoke privileges from public'
+  );
+
+  // 3. Must restrict privileges strictly to service_role
+  assert.equal(
+    /grant\s+select,\s*insert,\s*update,\s*delete\s+on\s+(table\s+)?public\.admin_alerts\s+to\s+service_role/i.test(migrationContent),
+    true,
+    'Migration must grant privileges strictly to service_role'
+  );
+
+  // 4. Trigger functions cannot be called via PostgREST RPC
+  const metaMigration = fs.readFileSync('supabase/migrations/20260723_meta_capi_conversions.sql', 'utf8');
+  assert.equal(/returns\s+trigger/i.test(metaMigration), true, 'orders_meta_enqueue returns trigger and is not RPC-callable');
+});
+
+
 
 
 
