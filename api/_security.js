@@ -96,7 +96,10 @@ export function verifyOrderConfirmationToken(orderCode, email, token) {
   try {
     const a = Buffer.from(expectedSig, 'utf8');
     const b = Buffer.from(sig, 'utf8');
-    if (a.length !== b.length) return false;
+    if (a.length !== b.length) {
+      crypto.timingSafeEqual(a, a);
+      return false;
+    }
     return crypto.timingSafeEqual(a, b);
   } catch {
     return false;
