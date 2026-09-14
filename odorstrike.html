@@ -3170,7 +3170,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=e279586e">
 <link rel="stylesheet" href="/assets/css/chrome.css?v=09e45570">
-<script src="/assets/js/chrome.js?v=fe51cb5b" defer></script>
+<script src="/assets/js/chrome.js?v=ea379a73" defer></script>
 </head>
 <body>
 
@@ -5548,19 +5548,20 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       window._mobileBarObserver = observer;
     }
 
-    var ticking = false;
-    function onScroll(){
-      if (!('IntersectionObserver' in window)) {
+    /* ⚡ Bolt: Prevent main thread wakeups from empty scroll listeners when IntersectionObserver is supported */
+    if (!('IntersectionObserver' in window)) {
+      var ticking = false;
+      function onScroll(){
         scrolledEnough = window.scrollY > 400;
         update();
+        ticking = false;
       }
-      ticking = false;
+      window.addEventListener('scroll', function(){
+        if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
+      }, {passive:true});
+      window.addEventListener('resize', onScroll, {passive:true});
+      onScroll();
     }
-    window.addEventListener('scroll', function(){
-      if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
-    }, {passive:true});
-    window.addEventListener('resize', onScroll, {passive:true});
-    onScroll();
   })();
 </script>
 
