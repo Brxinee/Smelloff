@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { dispatchPrepaidPaymentEmails } from './_email-dispatch.js';
+import { dispatchPrepaidPaymentEmails, sendPaymentFailedEmail, sendRefundProcessedEmail } from './_email-dispatch.js';
 import resendWebhookHandler, { readRawBody } from './_resend-webhook.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
@@ -223,16 +223,40 @@ export default async function handler(req, res) {
     if (eventType === 'payment.failed') {
       if (razorpayOrderId) {
         const order = await findOrderByRazorpayOrderId(razorpayOrderId);
-        // Out-of-order protection: NEVER downgrade a confirmed or higher order on late failure event
         const terminalConfirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
         if (order && !terminalConfirmedStates.includes(order.status) && (order.status === 'pending' || order.status === 'upi_pending')) {
           await updateOrderStatus(order.order_code, {
             status: 'failed',
             upi_response_code: 'RZP_FAILED',
           });
+          try {
+            await sendPaymentFailedEmail({ ...order, status: 'failed' }, { route: '/api/webhook' });
+          } catch (emailErr) {
+            console.error('[webhook] Failed-payment email exception:', emailErr?.message || emailErr);
+          }
         }
       }
       return res.status(200).json({ received: true, event: 'payment.failed' });
+    }
+
+    if (eventType === 'refund.processed' || eventType === 'payment.refunded') {
+      const refundEntity = event.payload?.refund?.entity || {};
+      const refundAmountPaise = Number(refundEntity.amount || paymentEntity.amount || 0);
+      if (razorpayOrderId) {
+        const order = await findOrderByRazorpayOrderId(razorpayOrderId);
+        if (order) {
+          try {
+            await sendRefundProcessedEmail(order, {
+              route: '/api/webhook',
+              amount: refundAmountPaise ? String(Math.round(refundAmountPaise / 100)) : undefined,
+              method: 'original payment method',
+            });
+          } catch (emailErr) {
+            console.error('[webhook] Refund email exception:', emailErr?.message || emailErr);
+          }
+        }
+      }
+      return res.status(200).json({ received: true, event: eventType });
     }
 
     return res.status(200).json({ received: true, unhandledEvent: eventType });

@@ -1,6 +1,6 @@
 import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized, validateAndNormalizeUtr } from '../_security.js';
 import { isValidTransition } from '../../shared/products-config.js';
-import { dispatchPrepaidPaymentEmails } from '../_email-dispatch.js';
+import { dispatchPrepaidPaymentEmails, sendOrderCancelledEmail } from '../_email-dispatch.js';
 import {
   createShiprocketOrder,
   extractShiprocketIds,
@@ -289,6 +289,12 @@ export default async function handler(req, res) {
         updated_at: new Date().toISOString()
       };
       await updateOrderStatus(orderCode, patchBody);
+
+      try {
+        await sendOrderCancelledEmail({ ...order, status: 'cancelled' }, { route: '/api/admin/verify-payment' });
+      } catch (emailErr) {
+        console.error('[admin-verify] Cancel email exception (order remains cancelled):', emailErr?.message || emailErr);
+      }
 
       return res.status(200).json({
         ok: true,

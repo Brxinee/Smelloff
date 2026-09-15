@@ -5,7 +5,9 @@ import {
   generateOrderConfirmationToken,
 } from './_security.js';
 import { BASE_PRODUCT } from '../shared/products-config.js';
+import { isValidEmail } from './_email.js';
 import { dispatchCodPlacementEmails } from './_email-dispatch.js';
+
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -130,6 +132,11 @@ export default async function handler(req, res) {
       }
     }
 
+    const email = String(body.email || '').trim().toLowerCase();
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ error: 'A valid email is required for your receipt and delivery updates.' });
+    }
+
     // 4. Check for Idempotent Request with existing order_code
     const requestedOrderCode = String(body.order_code || body.orderCode || '').trim().toUpperCase();
     if (requestedOrderCode && /^SMF-\d{8}-\d{4}$/.test(requestedOrderCode)) {
@@ -164,7 +171,8 @@ export default async function handler(req, res) {
         price: UNIT_PRICE_RUPEES
       }],
       amount: expectedAmountPaise,
-      payment_method: paymentMethod
+      payment_method: paymentMethod,
+      email,
     };
 
     if (paymentMethod === 'cod') {
@@ -188,7 +196,6 @@ export default async function handler(req, res) {
       try { upstreamData = JSON.parse(text); } catch { /* best effort */ }
       const orderCode = String(upstreamData.order_code || sanitizedPayload.order_code || '').trim().toUpperCase();
       const phone = String(sanitizedPayload.phone || '').replace(/\D/g, '').slice(-10);
-      const email = String(sanitizedPayload.email || '').trim().toLowerCase();
       const orderToken = generateOrderToken(orderCode, phone);
       const confirmationToken = generateOrderConfirmationToken(orderCode, email);
 
@@ -241,7 +248,6 @@ export default async function handler(req, res) {
     if (!orderCode) return res.status(502).json({ error: 'Order service returned no order code.' });
 
     const phone = String(sanitizedPayload.phone || '').replace(/\D/g, '').slice(-10);
-    const email = String(sanitizedPayload.email || '').trim().toLowerCase();
     const orderToken = generateOrderToken(orderCode, phone);
     const confirmationToken = generateOrderConfirmationToken(orderCode, email);
 

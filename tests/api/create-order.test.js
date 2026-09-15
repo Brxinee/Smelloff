@@ -15,7 +15,7 @@ test('create-order responds with 500 on upstream fetch failure', async () => {
     const req = {
       method: 'POST',
       headers: { origin: 'https://smelloff.in' },
-      body: { amount: 22900, payment_method: 'cod' }
+      body: { amount: 22900, payment_method: 'cod', email: 'buyer@smelloff.test' }
     };
 
     const res = {

@@ -21,10 +21,17 @@ import {
   dispatchPrepaidPaymentEmails,
   dispatchCodPlacementEmails,
   sendFulfillmentEmail,
+  sendPaymentFailedEmail,
+  sendReviewRequestEmail,
+  sendOrderCancelledEmail,
+  sendRefundProcessedEmail,
+  isReviewRequestDue,
+  dispatchDueReviewRequests,
   orderEmailContext,
 } from '../api/_email-dispatch.js';
 import sendEmailHandler from '../api/send-email.js';
 import webhookHandler from '../api/webhook.js';
+import shiprocketSyncHandler from '../api/shiprocket-sync.js';
 import { verifySvixSignature, mapResendWebhookStatus } from '../api/_resend-webhook.js';
 import { generateOrderConfirmationToken } from '../api/_security.js';
 
@@ -287,7 +294,268 @@ test('template rendering: HTML + plaintext, missing fields, malformed address, X
     paymentMethod: 'Cash on Delivery',
   });
   assert.match(cod.text, /Cash on Delivery/);
-  assert.match(cod.text, /nothing has been charged yet|collected on delivery/i);
+  assert.match(cod.text, /nothing has been charged|pay ₹/i);
+  assert.match(rendered.subject, /Order confirmed/);
+});
+
+test('transactional templates stay transactional: no List-Unsubscribe, no marketing unsubscribe', () => {
+  const rendered = orderConfirmation({
+    orderId: 'SMF-20260915-1001',
+    customerName: 'Arjun',
+    amount: '229',
+    paymentMethod: 'Prepaid (Razorpay)',
+  });
+  assert.equal(/list-unsubscribe/i.test(rendered.html), false);
+  assert.equal(/unsubscribe/i.test(rendered.html), false);
+  const review = renderTemplate('reviewRequest', { orderId: 'SMF-20260915-1001', customerName: 'Arjun' });
+  assert.equal(/list-unsubscribe/i.test(review.html), false);
+});
+
+test('cancelled and refund templates render with refund timing', () => {
+  const cancelled = renderTemplate('orderCancelled', {
+    orderId: 'SMF-20260915-1001',
+    customerName: 'Arjun',
+    reason: 'Requested by customer',
+  });
+  assert.match(cancelled.subject, /Order cancelled — #SMF-20260915-1001/);
+  const refund = renderTemplate('refundProcessed', {
+    orderId: 'SMF-20260915-1001',
+    customerName: 'Arjun',
+    amount: '229',
+    method: 'original payment method',
+  });
+  assert.match(refund.subject, /Refund processed/);
+  assert.match(refund.text, /5–7 business days/);
+});
+
+test('prepaid confirmation is a single receipt, not a second payment email', () => {
+  const rendered = orderConfirmation({
+    orderId: 'SMF-20260915-1001',
+    customerName: 'Arjun',
+    amount: '229',
+    paymentMethod: 'Prepaid (Razorpay)',
+    transactionRef: 'pay_abc',
+    timestamp: '2026-09-15T10:00:00.000Z',
+  });
+  assert.match(rendered.subject, /Order confirmed — #SMF-20260915-1001/);
+  assert.match(rendered.text, /Total paid: ₹229/);
+  assert.match(rendered.text, /Reference: pay_abc/);
+  assert.match(rendered.html, /odorstrike-bottle/);
+});
+
+test('review request and failed-payment templates render', () => {
+  const review = renderTemplate('reviewRequest', {
+    orderId: 'SMF-20260915-1001',
+    customerName: 'Arjun',
+  });
+  assert.match(review.subject, /ODORSTRIKE/);
+  assert.match(review.text, /Leave a review/);
+  const failed = renderTemplate('paymentFailed', {
+    orderId: 'SMF-20260915-1001',
+    customerName: 'Arjun',
+    amount: '229',
+  });
+  assert.match(failed.subject, /didn't go through/i);
+  assert.match(failed.text, /Not charged/);
+});
+
+test('review request is due 5–14 days after delivery', () => {
+  const now = Date.parse('2026-09-15T12:00:00.000Z');
+  assert.equal(isReviewRequestDue({
+    status: 'delivered',
+    customer_email: 'buyer@smelloff.test',
+    updated_at: '2026-09-14T12:00:00.000Z',
+  }, now), false);
+  assert.equal(isReviewRequestDue({
+    status: 'delivered',
+    customer_email: 'buyer@smelloff.test',
+    updated_at: '2026-09-08T12:00:00.000Z',
+  }, now), true);
+  assert.equal(isReviewRequestDue({
+    status: 'confirmed',
+    customer_email: 'buyer@smelloff.test',
+    updated_at: '2026-09-08T12:00:00.000Z',
+  }, now), false);
+});
+
+test('failed payment email sends once for pending prepaid orders', async () => {
+  const prev = process.env.RESEND_API_KEY;
+  process.env.RESEND_API_KEY = 're_test_key';
+  const original = Resend.prototype.post;
+  let sent = 0;
+  Resend.prototype.post = async () => {
+    sent += 1;
+    return { data: { id: `email_fail_${sent}` }, error: null };
+  };
+  try {
+    const result = await sendPaymentFailedEmail(sampleOrder({ status: 'upi_pending' }), { route: 'test' });
+    assert.equal(result.ok, true);
+    assert.equal(sent, 1);
+    const skipped = await sendPaymentFailedEmail(sampleOrder({ payment_method: 'cod' }), { route: 'test' });
+    assert.equal(skipped.skipped, true);
+  } finally {
+    Resend.prototype.post = original;
+    if (prev !== undefined) process.env.RESEND_API_KEY = prev; else delete process.env.RESEND_API_KEY;
+  }
+});
+
+test('payment.failed webhook emails pending prepaid orders and never downgrades confirmed', async () => {
+  const secret = 'whsec_test_failed_pay';
+  const prevSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
+  const prevKey = process.env.RESEND_API_KEY;
+  process.env.RAZORPAY_WEBHOOK_SECRET = secret;
+  process.env.RESEND_API_KEY = 're_test_key';
+  const keys = [];
+  const original = Resend.prototype.post;
+  Resend.prototype.post = async (path, entity, options = {}) => {
+    keys.push(options.idempotencyKey);
+    return { data: { id: `fail_${keys.length}` }, error: null };
+  };
+  const pending = sampleOrder({
+    status: 'upi_pending',
+    payment_attempt_id: 'order_fail_1',
+  });
+  const confirmed = sampleOrder({
+    order_code: 'SMF-20260915-1002',
+    status: 'confirmed',
+    payment_attempt_id: 'order_fail_2',
+  });
+  globalThis.__MOCK_ORDER_DB__ = [pending, confirmed];
+  try {
+    const payload = {
+      event: 'payment.failed',
+      payload: {
+        payment: {
+          entity: {
+            id: 'pay_fail_1',
+            order_id: 'order_fail_1',
+            amount: 22900,
+            currency: 'INR',
+            status: 'failed',
+          },
+        },
+      },
+    };
+    const raw = JSON.stringify(payload);
+    const sig = crypto.createHmac('sha256', secret).update(raw).digest('hex');
+    const res = mockRes();
+    await webhookHandler({
+      method: 'POST',
+      headers: { 'x-razorpay-signature': sig, 'x-razorpay-event-id': 'evt_fail_1' },
+      body: raw,
+    }, res);
+    assert.equal(res.statusCode, 200);
+    assert.equal(pending.status, 'failed');
+    assert.equal(keys[0], 'payment-failed/SMF-20260915-1001');
+
+    const confirmedPayload = {
+      event: 'payment.failed',
+      payload: {
+        payment: {
+          entity: {
+            id: 'pay_fail_2',
+            order_id: 'order_fail_2',
+            amount: 22900,
+            currency: 'INR',
+            status: 'failed',
+          },
+        },
+      },
+    };
+    const raw2 = JSON.stringify(confirmedPayload);
+    const sig2 = crypto.createHmac('sha256', secret).update(raw2).digest('hex');
+    const res2 = mockRes();
+    await webhookHandler({
+      method: 'POST',
+      headers: { 'x-razorpay-signature': sig2, 'x-razorpay-event-id': 'evt_fail_2' },
+      body: raw2,
+    }, res2);
+    assert.equal(res2.statusCode, 200);
+    assert.equal(confirmed.status, 'confirmed');
+    assert.equal(keys.length, 1);
+  } finally {
+    Resend.prototype.post = original;
+    delete globalThis.__MOCK_ORDER_DB__;
+    if (prevSecret !== undefined) process.env.RAZORPAY_WEBHOOK_SECRET = prevSecret; else delete process.env.RAZORPAY_WEBHOOK_SECRET;
+    if (prevKey !== undefined) process.env.RESEND_API_KEY = prevKey; else delete process.env.RESEND_API_KEY;
+  }
+});
+
+test('refund.processed webhook and cancelled dispatch use slash keys', async () => {
+  const prev = process.env.RESEND_API_KEY;
+  process.env.RESEND_API_KEY = 're_test_key';
+  const keys = [];
+  const original = Resend.prototype.post;
+  Resend.prototype.post = async (path, entity, options = {}) => {
+    keys.push(options.idempotencyKey);
+    return { data: { id: `rf_${keys.length}` }, error: null };
+  };
+  try {
+    const cancelled = await sendOrderCancelledEmail(sampleOrder(), { route: 'test' });
+    assert.equal(cancelled.ok, true);
+    assert.equal(keys[0], 'order-cancelled/SMF-20260915-1001');
+    const refunded = await sendRefundProcessedEmail(sampleOrder(), { route: 'test', amount: '229' });
+    assert.equal(refunded.ok, true);
+    assert.equal(keys[1], 'refund-processed/SMF-20260915-1001');
+  } finally {
+    Resend.prototype.post = original;
+    if (prev !== undefined) process.env.RESEND_API_KEY = prev; else delete process.env.RESEND_API_KEY;
+  }
+});
+
+test('shiprocket GET still 200 when Shiprocket is unconfigured and POST still 503', async () => {
+  const prevAdmin = process.env.ADMIN_SECRET;
+  process.env.ADMIN_SECRET = 'admin-test-secret';
+  try {
+    const getRes = mockRes();
+    await shiprocketSyncHandler({
+      method: 'GET',
+      headers: { authorization: 'Bearer admin-test-secret' },
+    }, getRes);
+    assert.equal(getRes.statusCode, 200);
+    assert.equal(getRes.body.ok, true);
+    assert.equal(getRes.body.shiprocketConfigured, false);
+    assert.ok(getRes.body.reviews);
+
+    const postRes = mockRes();
+    await shiprocketSyncHandler({
+      method: 'POST',
+      headers: { authorization: 'Bearer admin-test-secret' },
+      body: { orderCode: 'SMF-20260915-1001' },
+    }, postRes);
+    assert.equal(postRes.statusCode, 503);
+  } finally {
+    if (prevAdmin !== undefined) process.env.ADMIN_SECRET = prevAdmin; else delete process.env.ADMIN_SECRET;
+  }
+});
+
+test('review request dispatch uses slash idempotency keys', async () => {
+  const prev = process.env.RESEND_API_KEY;
+  process.env.RESEND_API_KEY = 're_test_key';
+  const keys = [];
+  const original = Resend.prototype.post;
+  Resend.prototype.post = async (path, entity, options = {}) => {
+    keys.push(options.idempotencyKey);
+    return { data: { id: 'email_review_1' }, error: null };
+  };
+  const order = sampleOrder({
+    status: 'delivered',
+    updated_at: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+  });
+  globalThis.__MOCK_ORDER_DB__ = [order];
+  try {
+    const result = await dispatchDueReviewRequests({ route: 'test' });
+    assert.equal(result.due, 1);
+    assert.equal(result.sent, 1);
+    assert.equal(keys[0], 'review-request/SMF-20260915-1001');
+    const again = await sendReviewRequestEmail(order, { route: 'test' });
+    assert.equal(again.ok, true);
+    assert.equal(keys[1], keys[0]);
+  } finally {
+    Resend.prototype.post = original;
+    delete globalThis.__MOCK_ORDER_DB__;
+    if (prev !== undefined) process.env.RESEND_API_KEY = prev; else delete process.env.RESEND_API_KEY;
+  }
 });
 
 test('COD vs prepaid dispatch skip rules', async () => {
@@ -306,6 +574,9 @@ test('COD vs prepaid dispatch skip rules', async () => {
     globalThis.__MOCK_ORDER_DB__.set(prepaid.order_code, { ...prepaid });
     const prepaidResult = await dispatchPrepaidPaymentEmails(prepaid, { route: 'test' });
     assert.equal(prepaidResult.payment.ok, true);
+    assert.equal(prepaidResult.payment.skipped, true);
+    assert.equal(prepaidResult.payment.reason, 'COMBINED_INTO_ORDER_CONFIRMATION');
+    assert.equal(prepaidResult.confirmation.ok, true);
     assert.equal(prepaidResult.adminPaid.ok, true);
 
     const cod = sampleOrder({
@@ -431,16 +702,19 @@ test('duplicate admin confirmation is idempotent and still 200', async () => {
     keys.push(options.idempotencyKey);
     return { data: { id: `email_admin_${keys.length}` }, error: null };
   };
-  const order = sampleOrder({ status: 'confirmed' });
+  const order = sampleOrder({ order_code: 'SMF-20260915-8001', status: 'confirmed' });
   globalThis.__MOCK_ORDER_DB__ = new Map([[order.order_code, { ...order }]]);
   try {
     const first = await dispatchPrepaidPaymentEmails(order, { route: '/api/admin/verify-payment' });
     const second = await dispatchPrepaidPaymentEmails(order, { route: '/api/admin/verify-payment' });
     assert.equal(first.payment.ok, true);
+    assert.equal(first.payment.skipped, true);
     assert.equal(second.payment.ok, true);
+    const confirmKeys = keys.filter((k) => String(k).startsWith('order-confirmation/'));
+    assert.ok(confirmKeys.length >= 1);
+    assert.equal(confirmKeys[0], confirmKeys[confirmKeys.length - 1] || confirmKeys[0]);
     const paymentKeys = keys.filter((k) => String(k).startsWith('payment-confirmation/'));
-    assert.ok(paymentKeys.length >= 2);
-    assert.equal(paymentKeys[0], paymentKeys[1]);
+    assert.equal(paymentKeys.length, 0);
     assert.equal(first.confirmation.ok, true);
     assert.equal(second.confirmation.ok, true);
     assert.equal(second.confirmation.idempotent || second.confirmation.ok, true);

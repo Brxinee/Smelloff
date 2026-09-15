@@ -103,9 +103,8 @@
    * that confirms someone's order, and a survey widget failing must never be
    * visible to them, let alone throw.
    *
-   * `email` is optional here on purpose — the checkout marks it optional
-   * (phone is the required contact), and Google needs an address to send a
-   * survey to. No email, no opt-in, no error.
+   * Email is required at checkout for receipts. Google still needs an address
+   * to send a survey; if one is missing, skip silently.
    * --------------------------------------------------------------------- */
   window.smfGoogleReviewOptIn = function (order) {
     try {

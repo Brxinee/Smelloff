@@ -6,6 +6,10 @@
     {
       "path": "/api/meta-capi-drain",
       "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/shiprocket-sync",
+      "schedule": "0 10 * * *"
     }
   ],
   "rewrites": [

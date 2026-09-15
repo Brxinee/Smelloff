@@ -2013,6 +2013,14 @@
     letter-spacing:.05em;
     opacity:.7;
   }
+  .overlay .field-hint{
+    margin:6px 0 0 0;
+    font-family:var(--body);
+    font-size:12px;
+    line-height:1.45;
+    color:var(--muted);
+    letter-spacing:.02em;
+  }
   .overlay input,.overlay select,.overlay textarea{
     width:100%;
     padding:12px 14px;
@@ -3985,12 +3993,16 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </div>
       </div>
 
-      <!-- Details — phone first, email last/optional -->
+      <!-- Details — phone, name, then email (required for receipt & tracking) -->
       <label for="f_phone">Phone</label>
       <input type="tel" id="f_phone" required maxlength="10" pattern="[0-9]{10}" autocomplete="tel" placeholder="10-digit mobile" inputmode="numeric" enterkeyhint="next">
 
       <label for="f_name">Full name</label>
       <input type="text" id="f_name" required autocomplete="name" autocapitalize="words" spellcheck="false" enterkeyhint="next">
+
+      <label for="f_email">Email</label>
+      <input type="email" id="f_email" required maxlength="120" autocomplete="email" inputmode="email" enterkeyhint="next" placeholder="you@example.com" spellcheck="false" autocapitalize="none" aria-describedby="emailHint">
+      <p class="field-hint" id="emailHint">Required for your receipt and delivery updates. We never share it.</p>
 
       <div class="row-3">
         <div>
@@ -4014,9 +4026,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
       <label for="f_addr">Address</label>
       <textarea id="f_addr" required autocomplete="street-address" rows="2" placeholder="House/flat no, street, area, landmark" autocapitalize="sentences" spellcheck="false" enterkeyhint="next"></textarea>
-
-      <label for="f_email">Email <span class="lbl-optional">(optional — for receipt)</span></label>
-      <input type="email" id="f_email" autocomplete="email" inputmode="email" enterkeyhint="done">
 
       <label id="paymentMethodLabel">Payment</label>
       <div class="pay-toggle" role="radiogroup" aria-labelledby="paymentMethodLabel">
@@ -4621,8 +4630,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   function validateForm() {
     // Clear previous red borders
     document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(i){i.style.borderColor='';});
-    // Email is OPTIONAL — not in required list
-    const fields = ['f_phone','f_name','f_addr','f_pin','f_city','f_state'];
+    const fields = ['f_phone','f_name','f_email','f_addr','f_pin','f_city','f_state'];
     for (const id of fields) {
       const el = document.getElementById(id);
       if (!el) { showError('Please fill all required fields.'); return false; }
@@ -4632,10 +4640,14 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (!/^[6-9]\d{9}$/.test(phone)) { document.getElementById('f_phone').style.borderColor='#ff6b6b'; showError('Enter a valid 10-digit mobile number.'); return false; }
     const pin = document.getElementById('f_pin').value.trim();
     if (!/^\d{6}$/.test(pin)) { document.getElementById('f_pin').style.borderColor='#ff6b6b'; showError('Enter a valid 6-digit pincode.'); return false; }
-    // Email is OPTIONAL — only validate if non-empty
     const emailEl = document.getElementById('f_email');
-    const email = emailEl ? emailEl.value.trim() : '';
-    if (email && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) { if (emailEl) emailEl.style.borderColor='#ff6b6b'; showError('Enter a valid email or leave it blank.'); return false; }
+    const email = emailEl ? emailEl.value.trim().toLowerCase() : '';
+    if (emailEl) emailEl.value = email;
+    if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) {
+      if (emailEl) { emailEl.style.borderColor='#ff6b6b'; emailEl.focus(); }
+      showError('Enter a valid email so we can send your receipt and delivery updates.');
+      return false;
+    }
     return true;
   }
 
@@ -4668,7 +4680,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       orderId,
       name: document.getElementById('f_name').value.trim(),
       phone: document.getElementById('f_phone').value.trim(),
-      email: document.getElementById('f_email').value.trim(),
+      email: (document.getElementById('f_email').value || '').trim().toLowerCase(),
       product: 'ODORSTRIKE Fabric Mist',
       variant: sv.variant,
       variantLabel: qty > 1 ? ('ODORSTRIKE — ' + qty + ' × 50ml') : sv.label,

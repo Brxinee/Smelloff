@@ -25,6 +25,8 @@ const IDEMPOTENCY_PREFIX = {
   welcomeEmail: 'welcome',
   abandonedCart: 'abandoned-cart',
   paymentReminder: 'payment-reminder',
+  paymentFailed: 'payment-failed',
+  reviewRequest: 'review-request',
   orderCancelled: 'order-cancelled',
   refundProcessed: 'refund-processed',
 };

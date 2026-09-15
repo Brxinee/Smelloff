@@ -98,6 +98,14 @@
     return el ? String(el.value || el.textContent || '').trim() : '';
   }
 
+  function normalizeEmail(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function isValidCheckoutEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(value));
+  }
+
   function numberFromText(id) {
     var raw = textValue(id).replace(/,/g, '');
     var match = raw.match(/\d+(?:\.\d+)?/);
@@ -132,7 +140,7 @@
     var amountRupees = unitPrice * qty;
     var amountPaise = Math.round(amountRupees * 100);
     return {
-      email: textValue('f_email') || null,
+      email: normalizeEmail(textValue('f_email')),
       phone: textValue('f_phone'),
       items: [{
         name: (window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.productName) || 'ODORSTRIKE Fabric Mist',
@@ -207,6 +215,12 @@
     setButtonState(true);
 
     var payload = orderPayload();
+    if (!isValidCheckoutEmail(payload.email)) {
+      razorpayInFlight = false;
+      setButtonState(false);
+      showPaymentError('Enter a valid email so we can send your receipt and delivery updates.');
+      return;
+    }
     if (!Number.isSafeInteger(payload.amount) || payload.amount < 100) {
       razorpayInFlight = false;
       setButtonState(false);
@@ -241,7 +255,7 @@
         image: 'https://smelloff.in/apple-touch-icon.png',
         prefill: {
           name: payload.address.name,
-          email: payload.email || undefined,
+          email: payload.email,
           contact: payload.phone
         },
         notes: {

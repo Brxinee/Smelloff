@@ -11,7 +11,7 @@ import {
   findShiprocketOrderByOrderCode,
   isDuplicateOrderError
 } from './_shiprocket.js';
-import { sendFulfillmentEmail } from './_email-dispatch.js';
+import { sendFulfillmentEmail, dispatchDueReviewRequests } from './_email-dispatch.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -253,13 +253,13 @@ export default async function handler(req, res) {
 
   const cronRequest = req.method === 'GET' && isCronAuthorized(req);
   if (!cronRequest && !isAdminAuthorized(req)) return res.status(401).json({ error: 'Unauthorized.' });
-  if (!isShiprocketConfigured()) return res.status(503).json({ error: 'Shiprocket is not configured.' });
 
   const ip = clientIp(req);
   if (!checkRateLimit(`shiprocket-sync:${ip}`, 60, 10 * 60 * 1000)) return res.status(429).json({ error: 'Rate limit exceeded.' });
 
   try {
     if (req.method === 'POST') {
+      if (!isShiprocketConfigured()) return res.status(503).json({ error: 'Shiprocket is not configured.' });
       const body = req.body && typeof req.body === 'object' ? req.body : {};
       const orderCode = String(body.orderCode || body.order_code || '').trim().toUpperCase();
       if (!/^SMF-\d{8}-\d{4}$/.test(orderCode)) return res.status(400).json({ error: 'Valid Smelloff order code required.' });
@@ -268,10 +268,28 @@ export default async function handler(req, res) {
       return res.status(200).json(await syncSingleOrder(order));
     }
 
-    const orders = await listSyncCandidates(50);
-    const results = [];
-    for (const order of orders) results.push(await syncSingleOrder(order));
-    return res.status(200).json({ ok: true, scanned: orders.length, results });
+    let scanned = 0;
+    let results = [];
+    if (isShiprocketConfigured()) {
+      const orders = await listSyncCandidates(50);
+      scanned = orders.length;
+      for (const order of orders) results.push(await syncSingleOrder(order));
+    }
+
+    let reviews = { scanned: 0, sent: 0, results: [] };
+    try {
+      reviews = await dispatchDueReviewRequests({ route: '/api/shiprocket-sync' });
+    } catch (reviewErr) {
+      console.error('[shiprocket-sync] Review request dispatch exception:', reviewErr?.message || reviewErr);
+    }
+
+    return res.status(200).json({
+      ok: true,
+      scanned,
+      results,
+      reviews,
+      shiprocketConfigured: isShiprocketConfigured(),
+    });
   } catch (err) {
     console.error('[shiprocket-sync] Error:', err);
     return res.status(500).json({ error: 'Shiprocket sync failed.' });

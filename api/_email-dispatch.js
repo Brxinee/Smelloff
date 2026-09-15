@@ -106,20 +106,10 @@ async function sendRendered(type, to, data, { route, orderId, extraKey } = {}) {
 }
 
 export async function sendCustomerPaymentConfirmation(order, { route } = {}) {
-  const ctx = orderEmailContext(order);
-  if (!isValidEmail(ctx.email)) {
-    return { ok: false, errorCode: 'INVALID_RECIPIENT', errorMessage: 'Order has no valid customer email' };
-  }
   if (isCod(order)) {
     return { ok: true, skipped: true, reason: 'COD_NO_PAYMENT_EMAIL' };
   }
-  return sendRendered('paymentConfirmation', ctx.email, {
-    orderId: ctx.orderId,
-    customerName: ctx.customerName,
-    amount: ctx.amount,
-    paymentMethod: ctx.paymentMethod,
-    transactionRef: ctx.transactionRef,
-  }, { route, orderId: ctx.orderId });
+  return { ok: true, skipped: true, reason: 'COMBINED_INTO_ORDER_CONFIRMATION' };
 }
 
 export async function sendAdminNewOrderEmail(order, { route } = {}) {
@@ -185,6 +175,111 @@ export async function sendFulfillmentEmail(order, status, { route } = {}) {
     trackingUrl: ctx.trackingUrl,
   };
   return sendRendered(mapped, ctx.email, data, { route, orderId: ctx.orderId });
+}
+
+export async function sendPaymentFailedEmail(order, { route } = {}) {
+  if (isCod(order)) return { ok: true, skipped: true, reason: 'COD_NO_PAYMENT_EMAIL' };
+  const ctx = orderEmailContext(order);
+  if (!isValidEmail(ctx.email)) {
+    return { ok: false, errorCode: 'INVALID_RECIPIENT', errorMessage: 'Order has no valid customer email' };
+  }
+  return sendRendered('paymentFailed', ctx.email, {
+    orderId: ctx.orderId,
+    customerName: ctx.customerName,
+    amount: ctx.amount,
+    retryUrl: 'https://smelloff.in/odorstrike',
+  }, { route, orderId: ctx.orderId });
+}
+
+export function isReviewRequestDue(order, now = Date.now()) {
+  if (String(order?.status || '').toLowerCase() !== 'delivered') return false;
+  if (!isValidEmail(String(order?.customer_email || '').trim().toLowerCase())) return false;
+  const deliveredAt = new Date(order.delivered_at || order.updated_at || order.created_at || 0);
+  if (Number.isNaN(deliveredAt.getTime())) return false;
+  const ageMs = now - deliveredAt.getTime();
+  const FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
+  const FOURTEEN_DAYS = 14 * 24 * 60 * 60 * 1000;
+  return ageMs >= FIVE_DAYS && ageMs <= FOURTEEN_DAYS;
+}
+
+export async function sendReviewRequestEmail(order, { route } = {}) {
+  const ctx = orderEmailContext(order);
+  if (!isValidEmail(ctx.email)) {
+    return { ok: false, errorCode: 'INVALID_RECIPIENT', errorMessage: 'Order has no valid customer email' };
+  }
+  return sendRendered('reviewRequest', ctx.email, {
+    orderId: ctx.orderId,
+    customerName: ctx.customerName,
+    reviewUrl: 'https://smelloff.in/reviews',
+  }, { route, orderId: ctx.orderId });
+}
+
+export async function sendOrderCancelledEmail(order, { route, reason } = {}) {
+  const ctx = orderEmailContext(order);
+  if (!isValidEmail(ctx.email)) {
+    return { ok: false, errorCode: 'INVALID_RECIPIENT', errorMessage: 'Order has no valid customer email' };
+  }
+  return sendRendered('orderCancelled', ctx.email, {
+    orderId: ctx.orderId,
+    customerName: ctx.customerName,
+    reason: reason || '',
+  }, { route, orderId: ctx.orderId });
+}
+
+export async function sendRefundProcessedEmail(order, { route, amount, method } = {}) {
+  const ctx = orderEmailContext(order);
+  if (!isValidEmail(ctx.email)) {
+    return { ok: false, errorCode: 'INVALID_RECIPIENT', errorMessage: 'Order has no valid customer email' };
+  }
+  return sendRendered('refundProcessed', ctx.email, {
+    orderId: ctx.orderId,
+    customerName: ctx.customerName,
+    amount: amount || ctx.amount,
+    method: method || 'original payment method',
+  }, { route, orderId: ctx.orderId });
+}
+
+export async function dispatchDueReviewRequests({ route } = {}, now = Date.now()) {
+  let orders = [];
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
+    const db = globalThis.__MOCK_ORDER_DB__;
+    orders = Array.isArray(db) ? db : [...(db.values?.() || [])];
+  } else {
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+    if (!serviceKey || process.env.EMAIL_SIDE_EFFECTS === '0') return { scanned: 0, sent: 0, results: [] };
+    const since = new Date(now - 14 * 24 * 60 * 60 * 1000).toISOString();
+    try {
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/orders?status=eq.delivered&updated_at=gte.${encodeURIComponent(since)}&select=*`,
+        {
+          headers: {
+            apikey: serviceKey,
+            Authorization: `Bearer ${serviceKey}`,
+            'Content-Type': 'application/json',
+          },
+          signal: AbortSignal.timeout(15000),
+        }
+      );
+      const data = await res.json().catch(() => []);
+      orders = Array.isArray(data) ? data : [];
+    } catch (err) {
+      console.error('[email] review-request query failed', { message: err?.message || String(err) });
+      return { scanned: 0, sent: 0, results: [], error: 'QUERY_FAILED' };
+    }
+  }
+
+  const due = orders.filter((order) => isReviewRequestDue(order, now));
+  const results = [];
+  for (const order of due) {
+    results.push(await sendReviewRequestEmail(order, { route }));
+  }
+  return {
+    scanned: orders.length,
+    due: due.length,
+    sent: results.filter((r) => r.ok && !r.skipped).length,
+    results,
+  };
 }
 
 async function sendClaimedOrderConfirmation(order, { route } = {}) {

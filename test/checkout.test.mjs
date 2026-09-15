@@ -30,6 +30,12 @@ test('vercel.json routing integrity', () => {
   assert.ok(csp, 'CSP header should exist');
   assert.ok(csp.value.includes('https://checkout.razorpay.com'), 'CSP must include checkout.razorpay.com');
   assert.ok(csp.value.includes('https://api.razorpay.com'), 'CSP must include api.razorpay.com');
+
+  const crons = vercel.crons || [];
+  assert.ok(crons.some((c) => c.path === '/api/shiprocket-sync'), 'daily shiprocket/review cron must exist');
+  const rewrites = vercel.rewrites || [];
+  assert.ok(rewrites.some((r) => r.source === '/api/admin/test-email'), 'test-email rewrite must exist');
+  assert.ok(rewrites.some((r) => r.source === '/api/resend-webhook'), 'resend-webhook rewrite must exist');
 });
 
 test('odorstrike.html includes Razorpay Checkout script and clean UI', () => {
@@ -96,6 +102,37 @@ function createMockRes() {
   };
   return res;
 }
+
+test('checkout requires a valid email for receipt and tracking', () => {
+  const html = fs.readFileSync('odorstrike.html', 'utf8');
+  assert.equal(html.includes('optional — for receipt'), false);
+  assert.ok(html.includes('id="f_email"'));
+  assert.ok(html.includes('Required for your receipt and delivery updates'));
+  assert.ok(html.includes("fields = ['f_phone','f_name','f_email','f_addr','f_pin','f_city','f_state']"));
+  const chrome = fs.readFileSync('assets/js/chrome.js', 'utf8');
+  assert.ok(chrome.includes('isValidCheckoutEmail'));
+  assert.equal(chrome.includes("email: textValue('f_email') || null"), false);
+});
+
+test('create-order: rejects missing or invalid email', async () => {
+  const missing = createMockRes();
+  await createOrderHandler({
+    method: 'POST',
+    headers: {},
+    body: { quantity: 1, payment_method: 'upi' },
+  }, missing);
+  assert.equal(missing.statusCode, 400);
+  assert.ok(String(missing.body.error).toLowerCase().includes('email'));
+
+  const invalid = createMockRes();
+  await createOrderHandler({
+    method: 'POST',
+    headers: {},
+    body: { quantity: 1, payment_method: 'cod', email: 'not-an-email' },
+  }, invalid);
+  assert.equal(invalid.statusCode, 400);
+  assert.ok(String(invalid.body.error).toLowerCase().includes('email'));
+});
 
 test('create-order: rejects invalid quantity (<1 or >10)', async () => {
   const req = {

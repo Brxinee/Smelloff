@@ -14,6 +14,8 @@ import {
   adminPaymentConfirmed,
   emailFailure,
   diagnosticTest,
+  paymentFailed,
+  reviewRequest,
 } from './_email-templates.js';
 import {
   isAdminAuthorized,
@@ -38,6 +40,8 @@ const TEMPLATES = {
   paymentReminder,
   orderCancelled,
   refundProcessed,
+  paymentFailed,
+  reviewRequest,
   adminNewOrder,
   adminPaymentConfirmed,
   emailFailure,
@@ -53,6 +57,8 @@ const RESTRICTED_TEMPLATES = new Set([
   'abandonedCart',
   'paymentReminder',
   'paymentConfirmation',
+  'paymentFailed',
+  'reviewRequest',
   'adminNewOrder',
   'adminPaymentConfirmed',
   'emailFailure',
@@ -416,6 +422,9 @@ export async function sendOrderConfirmationForOrder(order, { route = 'internal' 
       address: addressFormatted,
       paymentMethod: paymentMethodLabel,
       quantity,
+      timestamp: order.created_at || order.payment_verified_at || '',
+      transactionRef: String(order.upi_txn_id || order.payment_attempt_id || '').trim(),
+      paymentStatus: paymentMethod === 'cod' ? 'Confirmed · pay on delivery' : 'Paid',
     });
   } catch (err) {
     await releaseOrderConfirmationClaim(orderCode, claimId);

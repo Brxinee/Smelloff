@@ -16,6 +16,9 @@ const ADMIN_URL = 'https://admin.smelloff.in';
 const PRICE = BASE_PRODUCT.price;
 const MRP = BASE_PRODUCT.mrp;
 const PRODUCT_NAME = 'ODORSTRIKE 50ml';
+const PRODUCT_IMAGE = `${SITE_URL}/assets/odorstrike-bottle.jpg`;
+const SHIPPING_LABEL = 'Free';
+const ETA_COPY = 'Typically 3–7 days across India';
 
 export const trackUrl = (orderId = '') =>
   `${SITE_URL}/track-order?code=${encodeURIComponent(String(orderId).replace(/[\r\n]+/g, '').trim())}`;
@@ -42,6 +45,44 @@ const rupee = (value) => {
   const n = String(value ?? '').replace(/[^\d.]/g, '');
   return n || '0';
 };
+
+function formatOrderDate(value) {
+  if (!value) return '';
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value).slice(0, 10);
+  return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function productRow({ quantity = 1, product = PRODUCT_NAME, amount = '' } = {}) {
+  const qty = Number(quantity) || 1;
+  return `
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 18px 0;">
+  <tr>
+    <td width="72" valign="top" style="width:72px;padding:0 14px 0 0;">
+      <img src="${PRODUCT_IMAGE}" alt="${escape(product)}" width="72" height="72" style="display:block;width:72px;height:72px;object-fit:contain;border:1px solid ${BORDER};background-color:${PANEL};">
+    </td>
+    <td valign="middle" style="font-family:${FONT};color:${OFFWHITE};">
+      <p style="margin:0 0 4px 0;font-size:15px;font-weight:700;letter-spacing:0.4px;">${escape(product)}</p>
+      <p style="margin:0;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:${MUTED};">Fabric-only odor mist · 50ml · Qty ${escape(String(qty))}</p>
+    </td>
+    <td valign="middle" align="right" style="font-family:${FONT};font-size:16px;font-weight:700;color:${GREEN};white-space:nowrap;">&#8377;${escape(rupee(amount))}</td>
+  </tr>
+</table>`;
+}
+
+function priceBreakdown({ quantity = 1, amount = '', codFee = 0 } = {}) {
+  const qty = Number(quantity) || 1;
+  const total = Number(String(amount).replace(/[^\d.]/g, '')) || 0;
+  const fee = Number(codFee) || 0;
+  const subtotal = Math.max(0, total - fee);
+  const unit = qty > 0 ? Math.round(subtotal / qty) : subtotal;
+  return summaryTable(`
+    ${kvRow(`${PRODUCT_NAME} × ${qty}`, `&#8377;${escape(String(unit * qty || subtotal))}`)}
+    ${kvRow('Shipping', escape(SHIPPING_LABEL))}
+    ${fee > 0 ? kvRow('COD handling', `&#8377;${escape(String(fee))}`) : ''}
+    ${kvRow(fee > 0 ? 'Amount due' : 'Total paid', `&#8377;${escape(String(total || subtotal))}`, true)}
+  `);
+}
 
 export function formatAddress(address) {
   if (!address) return '';
@@ -175,6 +216,10 @@ export function orderConfirmation({
   paymentMethod = '',
   codFee = 0,
   quantity = 1,
+  timestamp = '',
+  transactionRef = '',
+  paymentStatus = '',
+  estimatedDelivery = '',
 } = {}) {
   const fee = Number(codFee) || 0;
   const cod = isCodMethod(paymentMethod) || fee > 0;
@@ -182,32 +227,37 @@ export function orderConfirmation({
   const methodLabel = paymentMethod || (cod ? 'Cash on Delivery' : 'Prepaid (Razorpay)');
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
-
-  const feeRow = fee > 0
-    ? kvRow('COD handling', `&#8377;${escape(String(fee))}`)
-    : '';
+  const dateLabel = formatOrderDate(timestamp) || formatOrderDate(new Date());
+  const statusLabel = cod ? 'Confirmed · pay on delivery' : (paymentStatus && /paid|confirmed/i.test(paymentStatus) ? 'Paid' : 'Paid');
+  const eta = estimatedDelivery || ETA_COPY;
 
   const inner = `
     ${hero('Order confirmed')}
     ${para(`Hey ${escape(name)},`)}
     ${para(cod
-      ? 'Your ODORSTRIKE order is confirmed. Payment will be collected on delivery — nothing has been charged yet.'
-      : 'Your ODORSTRIKE order is confirmed.')}
+      ? `Your ODORSTRIKE is locked in. Nothing has been charged — pay &#8377;${escape(rupee(amount))} in cash or UPI when it arrives.`
+      : `Payment received. Your ODORSTRIKE is locked in.`)}
+
+    ${productRow({ quantity: qty, amount: String(Number(rupee(amount)) - fee || amount) })}
 
     ${panel(`
-      <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:0 0 6px 0;">Order summary</p>
+      <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:0 0 10px 0;">Order ${escape(cleanOrderId || '—')}</p>
+      ${priceBreakdown({ quantity: qty, amount, codFee: fee })}
       ${summaryTable(`
-        ${kvRow('Order ID', escape(cleanOrderId || '—'))}
-        ${kvRow('Product', PRODUCT_NAME)}
-        ${kvRow('Quantity', escape(String(qty)))}
-        ${feeRow}
-        ${kvRow(fee > 0 ? 'Amount due' : 'Amount', `&#8377;${escape(rupee(amount))}`, true)}
-        ${kvRow('Payment method', escape(methodLabel))}
+        ${kvRow('Payment', escape(methodLabel))}
+        ${kvRow('Status', escape(statusLabel))}
+        ${!cod && transactionRef ? kvRow('Reference', escape(transactionRef)) : ''}
+        ${kvRow('Order date', escape(dateLabel))}
+        ${kvRow('Delivery', escape(eta))}
       `)}
     `)}
 
-    <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:24px 0 6px 0;">Shipping address</p>
+    <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:24px 0 6px 0;">Ships to</p>
     ${muted(escape(address || '—').replace(/\n/g, '<br>'))}
+
+    ${muted(cod
+      ? 'We pack within 48 hours. Keep this email — it is your receipt and your tracking key.'
+      : 'We pack within 48 hours. Tracking lands here the moment the courier scans it.')}
 
     ${button(trackUrl(cleanOrderId), 'Track order')}
     ${footerHelp()}
@@ -215,8 +265,8 @@ export function orderConfirmation({
 
   const subject = cleanHeader(
     cod
-      ? `Your ODORSTRIKE COD order is locked in — #${cleanOrderId}`
-      : `Your ODORSTRIKE order is locked in. #${cleanOrderId}`
+      ? `COD order confirmed — #${cleanOrderId}`
+      : `Order confirmed — #${cleanOrderId}`
   );
 
   const text = textBlock([
@@ -225,18 +275,23 @@ export function orderConfirmation({
     `Hey ${name},`,
     '',
     cod
-      ? 'Your ODORSTRIKE order is confirmed. Payment will be collected on delivery — nothing has been charged yet.'
-      : 'Your ODORSTRIKE order is confirmed.',
+      ? `Your ODORSTRIKE is locked in. Nothing has been charged — pay ₹${rupee(amount)} in cash or UPI when it arrives.`
+      : 'Payment received. Your ODORSTRIKE is locked in.',
     '',
     'ORDER SUMMARY',
     `Order ID: ${cleanOrderId}`,
     `Product: ${PRODUCT_NAME}`,
     `Quantity: ${qty}`,
+    `Shipping: ${SHIPPING_LABEL}`,
     fee > 0 ? `COD handling: ₹${fee}` : null,
-    `${fee > 0 ? 'Amount due' : 'Amount'}: ₹${rupee(amount)}`,
+    `${fee > 0 ? 'Amount due' : 'Total paid'}: ₹${rupee(amount)}`,
     `Payment method: ${methodLabel}`,
+    `Status: ${statusLabel}`,
+    !cod && transactionRef ? `Reference: ${transactionRef}` : null,
+    `Order date: ${dateLabel}`,
+    `Delivery: ${eta}`,
     '',
-    'SHIPPING ADDRESS',
+    'SHIPS TO',
     address || '—',
     '',
     `Track order: ${trackUrl(cleanOrderId)}`,
@@ -246,7 +301,12 @@ export function orderConfirmation({
 
   return {
     subject,
-    html: shell(inner, `Your ODORSTRIKE order #${cleanOrderId} is confirmed.`),
+    html: shell(
+      inner,
+      cod
+        ? `Pay ₹${rupee(amount)} on delivery. Nothing charged yet. Order #${cleanOrderId}.`
+        : `₹${rupee(amount)} paid. Your ODORSTRIKE order #${cleanOrderId} is confirmed.`
+    ),
     text,
   };
 }
@@ -307,20 +367,25 @@ export function orderShipped({
   const name = customerName || 'there';
   const href = trackingUrl || trackUrl(cleanOrderId);
   const inner = `
-    ${hero('Your order is on the move')}
+    ${hero('On the move')}
     ${para(`${escape(name)}, your ODORSTRIKE has left the warehouse.`)}
     ${panel(summaryTable(`
       ${kvRow('Order', `#${escape(cleanOrderId)}`)}
       ${kvRow('Courier', escape(courier || 'Assigned'))}
-      ${kvRow('AWB', `<span style="color:${GREEN};letter-spacing:1px;">${escape(trackingId || 'Updating')}</span>`)}
+      ${kvRow('Tracking', `<span style="color:${GREEN};letter-spacing:1px;">${escape(trackingId || 'Updating shortly')}</span>`)}
       ${kvRow('Status', 'Shipped')}
     `))}
+    ${muted('Delivery is typically 3–7 days from this scan, depending on your city.')}
     ${button(href, 'Track shipment')}
     ${footerHelp()}
   `;
   return {
-    subject: cleanHeader(`Your ODORSTRIKE is on the way — #${cleanOrderId}`),
-    html: shell(inner, `Tracking ${trackingId || 'is live'} via ${courier || 'courier'}.`),
+    subject: cleanHeader(
+      trackingId
+        ? `Shipped — #${cleanOrderId} · ${trackingId}`
+        : `Shipped — #${cleanOrderId}`
+    ),
+    html: shell(inner, `${courier || 'Courier'} has your ODORSTRIKE. Tracking is live.`),
     text: textBlock([
       'SMELLOFF — YOUR ORDER IS ON THE MOVE',
       '',
@@ -350,20 +415,20 @@ export function outForDelivery({
   const href = trackingUrl || trackUrl(cleanOrderId);
   const inner = `
     ${hero('Out for delivery')}
-    ${para(`${escape(name)}, your ODORSTRIKE is on the last stretch. Keep your phone close.`)}
+    ${para(`${escape(name)}, your ODORSTRIKE is on the last stretch today. Keep your phone close.`)}
     ${panel(summaryTable(`
       ${kvRow('Order', `#${escape(cleanOrderId)}`)}
       ${kvRow('Courier', escape(courier || 'Courier'))}
-      ${trackingId ? kvRow('AWB', escape(trackingId)) : ''}
+      ${trackingId ? kvRow('Tracking', escape(trackingId)) : ''}
       ${kvRow('Status', '<span style="color:#B8FF57;">Out for delivery</span>')}
     `))}
-    ${muted('If you chose Cash on Delivery, keep the exact amount ready.')}
+    ${muted('If this is Cash on Delivery, keep the exact amount ready — cash or UPI.')}
     ${button(href, 'Track shipment')}
     ${footerHelp()}
   `;
   return {
-    subject: cleanHeader(`Out for delivery — #${cleanOrderId}`),
-    html: shell(inner, `Your ODORSTRIKE order #${cleanOrderId} is out for delivery.`),
+    subject: cleanHeader(`Out for delivery today — #${cleanOrderId}`),
+    html: shell(inner, `Your ODORSTRIKE is out for delivery. Keep your phone close.`),
     text: textBlock([
       'SMELLOFF — OUT FOR DELIVERY',
       '',
@@ -388,27 +453,26 @@ export function orderDelivered({
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
   const inner = `
-    ${hero('Delivered.')}
-    ${para(`${escape(name)}, your ODORSTRIKE has arrived.`)}
-    ${muted('Hold 15–20cm from the fabric. Two or three spritzes on collar, underarms, cuffs. Let it air for 30 seconds.')}
-    ${button(`${SITE_URL}/blog/how-to-use-odorstrike`, 'Get the most from ODORSTRIKE')}
-    ${muted(`<a href="${safeUrl(reviewUrl)}" style="color:${GREEN};text-decoration:none;">Leave a review</a> if it earned one.`)}
+    ${hero('Delivered')}
+    ${para(`${escape(name)}, your ODORSTRIKE is in.`)}
+    ${muted('Hold 15–20cm from the fabric. Two or three sprays on collar, underarms, cuffs. Let it air for 30 seconds. Not for skin.')}
+    ${button(`${SITE_URL}/blog/how-to-use-odorstrike`, 'How to use ODORSTRIKE')}
     ${footerHelp()}
   `;
   return {
-    subject: cleanHeader(`Delivered — your ODORSTRIKE is here`),
-    html: shell(inner, 'Your ODORSTRIKE has arrived.'),
+    subject: cleanHeader(`Delivered — #${cleanOrderId}`),
+    html: shell(inner, 'Your ODORSTRIKE has arrived. Two sprays. Thirty seconds.'),
     text: textBlock([
-      'SMELLOFF — DELIVERED.',
+      'SMELLOFF — DELIVERED',
       '',
-      `${name}, your ODORSTRIKE has arrived.`,
+      `${name}, your ODORSTRIKE is in.`,
       '',
       `Order: #${cleanOrderId}`,
       '',
-      'Get the most from ODORSTRIKE:',
-      `${SITE_URL}/blog/how-to-use-odorstrike`,
+      'Hold 15–20cm from the fabric. Two or three sprays on collar, underarms, cuffs. Let it air for 30 seconds. Not for skin.',
       '',
-      `Leave a review: ${reviewUrl}`,
+      'How to use ODORSTRIKE:',
+      `${SITE_URL}/blog/how-to-use-odorstrike`,
       '',
       `Need help? ${SUPPORT_EMAIL}`,
     ]),
@@ -684,7 +748,7 @@ export function orderCancelled({
     ${hero('Order cancelled.')}
     ${para(`${escape(name)}, ODORSTRIKE order #${escape(cleanOrderId)} has been cancelled.`)}
     ${reason ? panel(`<p style="margin:0;color:${OFFWHITE};font-size:14px;">${escape(reason)}</p>`) : ''}
-    ${muted('If you already paid, the refund is in motion and usually lands in 5–7 business days. Cash on Delivery orders have nothing to pay.')}
+    ${muted('If you already paid, the refund is in motion and usually lands in 5–7 business days. Cash on Delivery orders have nothing to reverse.')}
     ${button(SITE_URL, 'Shop again')}
     ${footerHelp()}
   `;
@@ -696,6 +760,8 @@ export function orderCancelled({
       '',
       `${name}, order #${cleanOrderId} has been cancelled.`,
       reason ? `Reason: ${reason}` : null,
+      '',
+      'If you already paid, the refund is in motion and usually lands in 5–7 business days. Cash on Delivery orders have nothing to reverse.',
       '',
       SITE_URL,
       '',
@@ -713,14 +779,14 @@ export function refundProcessed({
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
   const inner = `
-    ${hero('Refund on its way.')}
+    ${hero('Refund on its way')}
     ${para(`${escape(name)}, we processed the refund for order #${escape(cleanOrderId)}.`)}
     ${panel(summaryTable(`
       ${kvRow('Order', `#${escape(cleanOrderId)}`)}
       ${kvRow('Refund', `&#8377;${escape(rupee(amount))}`, true)}
       ${kvRow('Back to', escape(method))}
     `))}
-    ${muted('It usually lands in 5–7 business days, depending on your bank.')}
+    ${muted('It usually lands in 5–7 business days, depending on your bank. Same source as the original payment.')}
     ${footerHelp()}
   `;
   return {
@@ -732,6 +798,78 @@ export function refundProcessed({
       `${name}, we processed the refund for order #${cleanOrderId}.`,
       `Refund amount: ₹${rupee(amount)}`,
       `Back to: ${method}`,
+      '',
+      'It usually lands in 5–7 business days, depending on your bank. Same source as the original payment.',
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
+  };
+}
+
+export function paymentFailed({
+  orderId = '',
+  customerName = 'there',
+  amount = '',
+  retryUrl = SITE_URL,
+} = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const name = customerName || 'there';
+  const inner = `
+    ${hero("Payment didn't land")}
+    ${para(`${escape(name)}, the prepaid attempt for order #${escape(cleanOrderId)} did not complete.`)}
+    ${panel(summaryTable(`
+      ${kvRow('Order', `#${escape(cleanOrderId)}`)}
+      ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`, true)}
+      ${kvRow('Status', 'Not charged')}
+    `))}
+    ${muted('Nothing was taken from your account. You can try UPI again, or switch to Cash on Delivery at checkout.')}
+    ${button(retryUrl, 'Try again')}
+    ${footerHelp()}
+  `;
+  return {
+    subject: cleanHeader(`Payment didn't go through — #${cleanOrderId}`),
+    html: shell(inner, `Nothing was charged for order #${cleanOrderId}. You can try again.`),
+    text: textBlock([
+      "SMELLOFF — PAYMENT DIDN'T LAND",
+      '',
+      `${name}, the prepaid attempt for order #${cleanOrderId} did not complete.`,
+      `Amount: ₹${rupee(amount)}`,
+      'Status: Not charged',
+      '',
+      `Try again: ${retryUrl}`,
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
+  };
+}
+
+export function reviewRequest({
+  orderId = '',
+  customerName = 'there',
+  reviewUrl = `${SITE_URL}/reviews`,
+} = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const name = customerName || 'there';
+  const inner = `
+    ${hero("How's it working?")}
+    ${para(`${escape(name)}, you've had ODORSTRIKE for a few days.`)}
+    ${para('If it earned a place in your bag — gym, office, travel — a short review helps the next person decide. No pressure if it did not.')}
+    ${button(reviewUrl, 'Leave a review')}
+    ${muted(`Order #${escape(cleanOrderId)} · this is a one-time ask.`)}
+    ${footerHelp()}
+  `;
+  return {
+    subject: cleanHeader("How's ODORSTRIKE treating your clothes?"),
+    html: shell(inner, 'Thirty seconds if it earned a review. One-time ask.'),
+    text: textBlock([
+      "SMELLOFF — HOW'S IT WORKING?",
+      '',
+      `${name}, you've had ODORSTRIKE for a few days.`,
+      '',
+      'If it earned a place in your bag, a short review helps the next person decide.',
+      '',
+      `Leave a review: ${reviewUrl}`,
+      `Order: #${cleanOrderId}`,
       '',
       `Need help? ${SUPPORT_EMAIL}`,
     ]),
@@ -752,6 +890,8 @@ export const TEMPLATES = {
   welcomeEmail,
   abandonedCart,
   paymentReminder,
+  paymentFailed,
+  reviewRequest,
   orderCancelled,
   refundProcessed,
 };

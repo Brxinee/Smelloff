@@ -41,8 +41,8 @@ Deno.serve(async (req: Request) => {
     if (phone.length !== 10) return jsonResponse(req, { error: "A valid 10-digit phone is required." }, 400);
 
     const emailRaw = str(body.email, 120).toLowerCase();
-    const email = emailRaw && EMAIL_RE.test(emailRaw) ? emailRaw : null;
-    if (emailRaw && !email) return jsonResponse(req, { error: "Invalid email address." }, 400);
+    const email = emailRaw && EMAIL_RE.test(emailRaw) ? emailRaw : "";
+    if (!email) return jsonResponse(req, { error: "A valid email is required for your receipt and delivery updates." }, 400);
 
     const paymentMethod = str(body.payment_method, 10).toLowerCase();
     if (paymentMethod !== "upi" && paymentMethod !== "cod") {

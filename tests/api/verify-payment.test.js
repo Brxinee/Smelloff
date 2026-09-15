@@ -75,6 +75,7 @@ test('create-order: handles missing Razorpay credentials gracefully', async () =
         amount: 22900,
         payment_method: 'upi',
         phone: '9876543210',
+        email: 'buyer@smelloff.test',
         items: [{ name: 'ODORSTRIKE Fabric Mist', variant: '50ml', quantity: 1, price: 229 }]
       }
     };
