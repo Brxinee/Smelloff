@@ -1,0 +1,3 @@
+## 2025-01-28 - Service Worker Cache-First Early Return
+**Learning:** Returning `cached || network` in a service worker `caches.match()` promise chain where `network` is defined as a `fetch()` call earlier in the block *always* executes the network request, defeating the cache-first purpose for immutable static assets. It results in unintended background network spam.
+**Action:** Always implement a true early return (`if (cached) return cached;`) before initiating the `fetch()` network fallback in cache-first strategies.
