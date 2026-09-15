@@ -14,7 +14,7 @@ import {
   adminPaymentConfirmed,
   emailFailure,
   diagnosticTest,
-} from './email-templates.js';
+} from './_email-templates.js';
 import {
   isAdminAuthorized,
   verifyOrderToken,
@@ -22,7 +22,7 @@ import {
   checkRateLimit,
 } from './_security.js';
 import { BASE_PRODUCT } from '../shared/products-config.js';
-import { sendTransactionalEmail, getIdempotencyKey } from './_email.js';
+import { sendTransactionalEmail, getIdempotencyKey, getSenderConfig, getEmailDiagnostics } from './_email.js';
 
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
 const REPLY_TO = 'smelloffsupport@gmail.com';
@@ -511,6 +511,71 @@ function sanitizeData(value, depth = 0) {
   return undefined;
 }
 
+function isDiagnosticRequest(req, body) {
+  const query = req.query || {};
+  if (String(query.diagnostic || '') === '1') return true;
+  const url = String(req.url || req.originalUrl || '');
+  if (url.includes('test-email')) return true;
+  const action = String(body?.action || '').trim();
+  if (action === 'test-email') return true;
+  return String(body?.type || '').trim() === 'diagnosticTest';
+}
+
+async function handleDiagnosticTest(req, res, body) {
+  if (!isAdminAuthorized(req)) {
+    return res.status(401).json({ error: 'Unauthorized. Valid admin credentials required.' });
+  }
+  if (body.resendApiKey || body.apiKey || body.RESEND_API_KEY || body.secret) {
+    return res.status(400).json({ error: 'Do not send API keys or secrets to this endpoint.' });
+  }
+
+  const email = String(body.email || body.to || '').trim().toLowerCase();
+  if (!EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: 'A valid test recipient email is required.' });
+  }
+
+  const sender = getSenderConfig();
+  const diagnostics = getEmailDiagnostics();
+  const timestamp = new Date().toISOString();
+  const rendered = diagnosticTest({
+    emailId: 'pending',
+    environment: sender.vercelEnv,
+    timestamp,
+  });
+
+  const result = await sendTransactionalEmail({
+    type: 'diagnosticTest',
+    orderId: '',
+    to: email,
+    subject: rendered.subject,
+    html: rendered.html,
+    text: rendered.text,
+    idempotencyKey: getIdempotencyKey(
+      'diagnosticTest',
+      '',
+      `${email}:${timestamp.slice(0, 16)}`
+    ),
+    originatingRoute: '/api/admin/test-email',
+    notifyFailure: false,
+  });
+
+  if (!result.ok) {
+    return res.status(result.httpStatus && result.httpStatus >= 400 ? result.httpStatus : 502).json({
+      ok: false,
+      errorCode: result.errorCode,
+      errorMessage: result.errorMessage,
+      diagnostics,
+    });
+  }
+
+  return res.status(200).json({
+    ok: true,
+    emailId: result.emailId,
+    provider: result.provider,
+    diagnostics,
+  });
+}
+
 export default async function handler(req, res) {
   res.setHeader('X-Powered-By', 'Smelloff');
   const origin = req.headers.origin;
@@ -537,6 +602,10 @@ export default async function handler(req, res) {
     const rawBody = req.body && typeof req.body === 'object' ? req.body : {};
     if (JSON.stringify(rawBody).length > MAX_BODY_BYTES) {
       return res.status(413).json({ error: 'Request too large' });
+    }
+
+    if (isDiagnosticRequest(req, rawBody)) {
+      return handleDiagnosticTest(req, res, rawBody);
     }
 
     const type = String(rawBody.type || '').trim();

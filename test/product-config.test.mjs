@@ -120,9 +120,9 @@ test('claims guardrails: forbidden claims are flagged and not in approved list',
   assert.equal(desc.includes('antibacterial'), false, 'Canonical description must not claim "antibacterial"');
 
   // Surface consistency checks
-  const emailTemplatesCode = readFileSync('api/email-templates.js', 'utf8');
-  assert.equal(/odor killer/i.test(emailTemplatesCode), false, 'email-templates.js must not contain "odor killer"');
-  assert.equal(/kills odor/i.test(emailTemplatesCode), false, 'email-templates.js must not contain "kills odor"');
+  const emailTemplatesCode = readFileSync('api/_email-templates.js', 'utf8');
+  assert.equal(/odor killer/i.test(emailTemplatesCode), false, '_email-templates.js must not contain "odor killer"');
+  assert.equal(/kills odor/i.test(emailTemplatesCode), false, '_email-templates.js must not contain "kills odor"');
 
   const odorstrikeHtml = readFileSync('odorstrike.html', 'utf8');
   assert.equal(odorstrikeHtml.includes('10% off'), false, 'odorstrike.html must not contain fake 10% off discount');

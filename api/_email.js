@@ -282,7 +282,7 @@ async function maybeAlertFailure(failed, sender) {
   const adminTo = sender.adminNotify;
   if (!isValidEmail(adminTo)) return;
   try {
-    const { emailFailure } = await import('./email-templates.js');
+    const { emailFailure } = await import('./_email-templates.js');
     const rendered = emailFailure({
       emailType: failed.type,
       orderId: failed.orderId || '',

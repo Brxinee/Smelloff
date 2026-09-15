@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { dispatchPrepaidPaymentEmails } from './_email-dispatch.js';
+import resendWebhookHandler, { readRawBody } from './_resend-webhook.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -80,12 +81,31 @@ async function updateOrderStatus(orderCode, patch) {
   }
 }
 
+export const config = { api: { bodyParser: false } };
+
+function isResendWebhookRequest(req) {
+  const headers = req.headers || {};
+  if (headers['x-razorpay-signature']) return false;
+  const query = req.query || {};
+  if (String(query.provider || '').toLowerCase() === 'resend') return true;
+  const url = String(req.url || req.originalUrl || '');
+  if (url.includes('resend-webhook')) return true;
+  return Boolean(
+    (headers['svix-id'] || headers['webhook-id']) &&
+    (headers['svix-signature'] || headers['webhook-signature'])
+  );
+}
+
 export default async function handler(req, res) {
   res.setHeader('X-Powered-By', 'Smelloff');
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  if (isResendWebhookRequest(req)) {
+    return resendWebhookHandler(req, res);
   }
 
   const signature = req.headers['x-razorpay-signature'] || '';
@@ -100,16 +120,12 @@ export default async function handler(req, res) {
     return res.status(200).json({ received: true, duplicate: true, eventId });
   }
 
-  // Get raw body for HMAC verification
   let rawBody = '';
-  if (typeof req.body === 'string') {
-    rawBody = req.body;
-  } else if (Buffer.isBuffer(req.body)) {
-    rawBody = req.body.toString('utf8');
-  } else if (req.rawBody && typeof req.rawBody === 'string') {
-    rawBody = req.rawBody;
-  } else if (req.body && typeof req.body === 'object') {
-    rawBody = JSON.stringify(req.body);
+  try {
+    rawBody = await readRawBody(req);
+  } catch (err) {
+    console.error('[webhook] Failed to read body', { message: err?.message || String(err) });
+    return res.status(400).json({ error: 'Invalid webhook body.' });
   }
 
   const expectedSignature = crypto
@@ -136,7 +152,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const event = typeof req.body === 'object' && req.body !== null ? req.body : JSON.parse(rawBody);
+    const event = (req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body) && typeof req.body.pipe !== 'function')
+      ? req.body
+      : JSON.parse(rawBody);
     const eventType = String(event.event || '');
     const paymentEntity = event.payload?.payment?.entity || {};
     const razorpayOrderId = paymentEntity.order_id || event.payload?.order?.entity?.id || '';

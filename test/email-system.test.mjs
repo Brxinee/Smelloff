@@ -16,7 +16,7 @@ import {
   renderTemplate,
   orderConfirmation,
   formatAddress,
-} from '../api/email-templates.js';
+} from '../api/_email-templates.js';
 import {
   dispatchPrepaidPaymentEmails,
   dispatchCodPlacementEmails,
@@ -25,8 +25,7 @@ import {
 } from '../api/_email-dispatch.js';
 import sendEmailHandler from '../api/send-email.js';
 import webhookHandler from '../api/webhook.js';
-import adminTestEmailHandler from '../api/admin/test-email.js';
-import resendWebhookHandler, { verifySvixSignature, mapResendWebhookStatus } from '../api/resend-webhook.js';
+import { verifySvixSignature, mapResendWebhookStatus } from '../api/_resend-webhook.js';
 import { generateOrderConfirmationToken } from '../api/_security.js';
 
 process.env.EMAIL_SIDE_EFFECTS = '0';
@@ -458,16 +457,20 @@ test('admin test-email requires admin auth and never accepts a client API key', 
   process.env.ADMIN_SECRET = 'admin-test-secret';
   try {
     const unauth = mockRes();
-    await adminTestEmailHandler({
+    await sendEmailHandler({
       method: 'POST',
+      url: '/api/admin/test-email',
+      query: { diagnostic: '1' },
       headers: { origin: 'https://smelloff.in' },
       body: { email: 'founder@smelloff.in' },
     }, unauth);
     assert.equal(unauth.statusCode, 401);
 
     const leaked = mockRes();
-    await adminTestEmailHandler({
+    await sendEmailHandler({
       method: 'POST',
+      url: '/api/admin/test-email',
+      query: { diagnostic: '1' },
       headers: {
         origin: 'https://smelloff.in',
         authorization: 'Bearer admin-test-secret',
@@ -508,8 +511,10 @@ test('Resend webhook signature verification and duplicate event handling', async
   assert.equal(mapResendWebhookStatus('email.delivered'), 'DELIVERED');
 
   const res = mockRes();
-  await resendWebhookHandler({
+  await webhookHandler({
     method: 'POST',
+    url: '/api/resend-webhook',
+    query: { provider: 'resend' },
     headers: {
       'svix-id': id,
       'svix-timestamp': timestamp,
@@ -521,8 +526,10 @@ test('Resend webhook signature verification and duplicate event handling', async
   assert.equal(res.body.received, true);
 
   const bad = mockRes();
-  await resendWebhookHandler({
+  await webhookHandler({
     method: 'POST',
+    url: '/api/resend-webhook',
+    query: { provider: 'resend' },
     headers: {
       'svix-id': id,
       'svix-timestamp': timestamp,

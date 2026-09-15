@@ -1,5 +1,5 @@
 import { sendTransactionalEmail, getIdempotencyKey, getSenderConfig, isValidEmail, maskEmail } from './_email.js';
-import { renderTemplate, formatAddress } from './email-templates.js';
+import { renderTemplate, formatAddress } from './_email-templates.js';
 import { BASE_PRODUCT } from '../shared/products-config.js';
 
 const TERMINAL_CONFIRMED = new Set(['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered']);

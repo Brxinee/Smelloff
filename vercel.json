@@ -10,6 +10,14 @@
   ],
   "rewrites": [
     {
+      "source": "/api/admin/test-email",
+      "destination": "/api/send-email?diagnostic=1"
+    },
+    {
+      "source": "/api/resend-webhook",
+      "destination": "/api/webhook?provider=resend"
+    },
+    {
       "source": "/.well-known/llms.txt",
       "destination": "/llms.txt"
     },

@@ -1,7 +1,7 @@
 # Smelloff transactional email system
 
 Single server-side sender: `api/_email.js` (Resend).
-Templates: `api/email-templates.js`.
+Templates: `api/_email-templates.js`.
 Order/payment/fulfillment dispatch: `api/_email-dispatch.js`.
 
 Production sender must stay `ODORSTRIKE <orders@smelloff.in>`.
@@ -55,7 +55,7 @@ Header: `Authorization: Bearer <ADMIN_SECRET>` or `X-Admin-Secret`.
 
 Returns Resend email id plus `RESEND_CONFIGURED` / sender / `domainStatus`. Never accepts an API key from the client.
 
-`POST /api/resend-webhook` — Resend delivery events (`email.sent`, `email.delivered`, `email.failed`, `email.bounced`, `email.complained`, `email.delivery_delayed`).
+`POST /api/resend-webhook` — Resend delivery events (`email.sent`, `email.delivered`, `email.failed`, `email.bounced`, `email.complained`, `email.delivery_delayed`). Rewritten onto `/api/webhook` (Svix vs Razorpay is detected from headers/query) so it does not consume a Hobby serverless slot.
 
 Apply `supabase/migrations/20260915_email_events.sql` so send ledger and webhook events persist.
 
