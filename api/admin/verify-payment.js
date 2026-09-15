@@ -1,7 +1,6 @@
 import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized, validateAndNormalizeUtr } from '../_security.js';
-import { isValidTransition, BASE_PRODUCT } from '../../shared/products-config.js';
-import { orderConfirmation } from '../email-templates.js';
-import { Resend } from 'resend';
+import { isValidTransition } from '../../shared/products-config.js';
+import { dispatchPrepaidPaymentEmails } from '../_email-dispatch.js';
 import {
   createShiprocketOrder,
   extractShiprocketIds,
@@ -15,8 +14,6 @@ import {
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const FROM = 'ODORSTRIKE <orders@smelloff.in>';
-const REPLY_TO = BASE_PRODUCT.manufacturer?.email || 'smelloffsupport@gmail.com';
 
 async function fetchOrderByCode(orderCode) {
   if (!SERVICE_KEY || !orderCode) return null;
@@ -195,6 +192,11 @@ export default async function handler(req, res) {
       const alreadyConfirmed = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'].includes(order.status);
       if (alreadyConfirmed) {
         const shippingSync = await syncConfirmedOrderToShiprocket(order);
+        try {
+          await dispatchPrepaidPaymentEmails(order, { route: '/api/admin/verify-payment' });
+        } catch (emailErr) {
+          console.error('[admin-verify] Email dispatch exception (order remains confirmed):', emailErr?.message || emailErr);
+        }
         return res.status(200).json({
           ok: true,
           orderId: orderCode,
@@ -233,37 +235,14 @@ export default async function handler(req, res) {
         status: 'confirmed'
       });
 
-      // Send confirmation email if email present
-      if (order.customer_email && process.env.RESEND_API_KEY) {
-        try {
-          const addr = order.address || {};
-          const addrFormatted = typeof addr === 'string' ? addr : [addr.line, addr.city, addr.state, addr.pincode].filter(Boolean).join(', ');
-          const { subject, html } = orderConfirmation({
-            orderId: orderCode,
-            customerName: (typeof addr === 'object' && addr.name) || 'there',
-            amount: String(order.amount ? order.amount / 100 : BASE_PRODUCT.price),
-            codFee: 0,
-            address: addrFormatted,
-            paymentMethod: 'UPI'
-          });
-          const resend = new Resend(process.env.RESEND_API_KEY);
-          const { data, error } = await resend.emails.send({
-            from: FROM,
-            to: [order.customer_email],
-            replyTo: REPLY_TO,
-            subject,
-            html
-          });
-          if (error) {
-            console.error('[admin-verify] Resend error:', error);
-          } else {
-            console.log('[admin-verify] Confirmation email sent:', data?.id || 'accepted');
-          }
-        } catch (emailErr) {
-          console.error('[admin-verify] Confirmation email exception:', emailErr);
-        }
-      } else {
-        console.warn('[admin-verify] Confirmation email skipped: missing order/customer email or RESEND_API_KEY');
+      try {
+        await dispatchPrepaidPaymentEmails({
+          ...order,
+          ...updated,
+          status: 'confirmed'
+        }, { route: '/api/admin/verify-payment' });
+      } catch (emailErr) {
+        console.error('[admin-verify] Confirmation email exception (payment remains confirmed):', emailErr?.message || emailErr);
       }
 
       return res.status(200).json({

@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { dispatchPrepaidPaymentEmails } from './_email-dispatch.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -168,18 +169,37 @@ export default async function handler(req, res) {
       }
 
       const terminalConfirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
-      if (terminalConfirmedStates.includes(order.status)) {
-        return res.status(200).json({ received: true, idempotent: true, status: order.status });
+      const confirmedOrder = terminalConfirmedStates.includes(order.status)
+        ? order
+        : null;
+
+      if (!confirmedOrder) {
+        await updateOrderStatus(order.order_code, {
+          status: 'confirmed',
+          upi_txn_id: paymentId || order.upi_txn_id,
+          upi_response_code: 'RZP_WEBHOOK',
+          payment_verified_at: new Date().toISOString(),
+        });
       }
 
-      await updateOrderStatus(order.order_code, {
+      const orderForEmail = {
+        ...order,
         status: 'confirmed',
         upi_txn_id: paymentId || order.upi_txn_id,
-        upi_response_code: 'RZP_WEBHOOK',
-        payment_verified_at: new Date().toISOString(),
-      });
+        payment_verified_at: order.payment_verified_at || new Date().toISOString(),
+      };
+      try {
+        await dispatchPrepaidPaymentEmails(orderForEmail, { route: '/api/webhook' });
+      } catch (emailErr) {
+        console.error('[webhook] Email dispatch exception (payment remains confirmed):', emailErr?.message || emailErr);
+      }
 
-      return res.status(200).json({ received: true, status: 'confirmed', orderCode: order.order_code });
+      return res.status(200).json({
+        received: true,
+        idempotent: Boolean(confirmedOrder),
+        status: confirmedOrder ? order.status : 'confirmed',
+        orderCode: order.order_code,
+      });
     }
 
     if (eventType === 'payment.failed') {

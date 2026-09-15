@@ -1,5 +1,4 @@
 import { randomUUID } from 'crypto';
-import { Resend } from 'resend';
 import {
   orderConfirmation,
   orderShipped,
@@ -10,6 +9,11 @@ import {
   paymentReminder,
   orderCancelled,
   refundProcessed,
+  paymentConfirmation,
+  adminNewOrder,
+  adminPaymentConfirmed,
+  emailFailure,
+  diagnosticTest,
 } from './email-templates.js';
 import {
   isAdminAuthorized,
@@ -18,12 +22,14 @@ import {
   checkRateLimit,
 } from './_security.js';
 import { BASE_PRODUCT } from '../shared/products-config.js';
+import { sendTransactionalEmail, getIdempotencyKey } from './_email.js';
 
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
 const REPLY_TO = 'smelloffsupport@gmail.com';
 
 const TEMPLATES = {
   orderConfirmation,
+  paymentConfirmation,
   orderShipped,
   outForDelivery,
   orderDelivered,
@@ -32,6 +38,10 @@ const TEMPLATES = {
   paymentReminder,
   orderCancelled,
   refundProcessed,
+  adminNewOrder,
+  adminPaymentConfirmed,
+  emailFailure,
+  diagnosticTest,
 };
 
 const RESTRICTED_TEMPLATES = new Set([
@@ -41,7 +51,12 @@ const RESTRICTED_TEMPLATES = new Set([
   'orderCancelled',
   'refundProcessed',
   'abandonedCart',
-  'paymentReminder'
+  'paymentReminder',
+  'paymentConfirmation',
+  'adminNewOrder',
+  'adminPaymentConfirmed',
+  'emailFailure',
+  'diagnosticTest',
 ]);
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -346,6 +361,91 @@ export async function releaseOrderConfirmationClaim(orderCode, claimId) {
   }
 }
 
+export async function sendOrderConfirmationForOrder(order, { route = 'internal' } = {}) {
+  const orderCode = String(order?.order_code || order?.orderId || '').trim().toUpperCase();
+  if (!orderCode || !ORDER_CODE_RE.test(orderCode)) {
+    return { ok: false, errorCode: 'INVALID_RECIPIENT', errorMessage: 'Valid order code required' };
+  }
+
+  const dbEmail = String(order.customer_email || '').trim().toLowerCase();
+  if (!dbEmail || !EMAIL_RE.test(dbEmail)) {
+    return { ok: false, errorCode: 'INVALID_RECIPIENT', errorMessage: 'Order does not have a valid customer email address.' };
+  }
+
+  if (order.confirmation_email_sent_at || hasConfirmationBeenSent(orderCode)) {
+    return { ok: true, idempotent: true, orderId: orderCode };
+  }
+
+  const claimId = randomUUID();
+  let claim;
+  try {
+    claim = await claimOrderConfirmationEmail(orderCode, claimId);
+  } catch (claimErr) {
+    if (claimErr.code === 'SUPABASE_CONFIG_MISSING') {
+      return { ok: false, errorCode: 'DATABASE_FAILURE', errorMessage: 'Database service not configured', httpStatus: 500 };
+    }
+    throw claimErr;
+  }
+  if (claim.alreadySent) return { ok: true, idempotent: true, orderId: orderCode };
+  if (!claim.claimed) return { ok: true, idempotent: true, inProgress: true, orderId: orderCode };
+
+  const addr = order.address || {};
+  const customerName = (typeof addr === 'object' && addr.name) || (typeof order.name === 'string' && order.name) || 'there';
+  const addressFormatted = typeof addr === 'string'
+    ? addr
+    : [addr.line, addr.city, addr.state, addr.pincode].filter(Boolean).join(', ');
+  const paymentMethod = String(order.payment_method || '').toLowerCase();
+  const amountRupees = order.amount
+    ? String(Math.round(order.amount / 100))
+    : String(BASE_PRODUCT.price);
+  const codFeeRupees = paymentMethod === 'cod'
+    ? (order.cod_fee ? Math.round(order.cod_fee / 100) : BASE_PRODUCT.codFee)
+    : 0;
+  const paymentMethodLabel = paymentMethod === 'cod' ? 'Cash on Delivery' : 'Prepaid (Razorpay)';
+  const quantity = Array.isArray(order.items) && order.items[0]?.quantity
+    ? Number(order.items[0].quantity) || 1
+    : 1;
+
+  let rendered;
+  try {
+    rendered = orderConfirmation({
+      orderId: orderCode,
+      customerName,
+      amount: amountRupees,
+      codFee: codFeeRupees,
+      address: addressFormatted,
+      paymentMethod: paymentMethodLabel,
+      quantity,
+    });
+  } catch (err) {
+    await releaseOrderConfirmationClaim(orderCode, claimId);
+    return {
+      ok: false,
+      errorCode: 'TEMPLATE_RENDER_ERROR',
+      errorMessage: err?.message || 'Template rendering failed',
+    };
+  }
+
+  const result = await sendTransactionalEmail({
+    type: 'orderConfirmation',
+    orderId: orderCode,
+    to: dbEmail,
+    subject: rendered.subject,
+    html: rendered.html,
+    text: rendered.text,
+    idempotencyKey: getOrderConfirmationIdempotencyKey(orderCode),
+    originatingRoute: route,
+  });
+
+  if (!result.ok) {
+    await releaseOrderConfirmationClaim(orderCode, claimId);
+    return result;
+  }
+
+  await finalizeOrderConfirmationEmail(orderCode, claimId);
+  return { ...result, orderId: orderCode };
+}
+
 export async function fetchOrderByCode(orderCode) {
   if (!orderCode) return null;
   if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
@@ -538,122 +638,38 @@ export default async function handler(req, res) {
         }
       }
 
-      // 1. Initial check: if already recorded as sent on fetched order or in local cache
-      if (order.confirmation_email_sent_at || hasConfirmationBeenSent(orderCode)) {
+      // 1. Claim + send via the shared confirmation path (DB lock + Resend idempotency)
+      const result = await sendOrderConfirmationForOrder(order, { route: '/api/send-email' });
+      if (result.errorCode === 'DATABASE_FAILURE') {
+        return res.status(500).json({ error: 'Database service not configured' });
+      }
+      if (result.idempotent) {
         return res.status(200).json({
           ok: true,
           success: true,
           idempotent: true,
           orderId: orderCode,
-          message: 'Order confirmation email already sent.'
+          message: result.inProgress
+            ? 'Order confirmation email send in progress.'
+            : 'Order confirmation email already sent.',
         });
       }
-
-      // 2. Atomic distributed claim: guarantees at most one worker claims the right to send
-      const claimId = randomUUID();
-      let claim;
-      try {
-        claim = await claimOrderConfirmationEmail(orderCode, claimId);
-      } catch (claimErr) {
-        if (claimErr.code === 'SUPABASE_CONFIG_MISSING') {
-          return res.status(500).json({ error: 'Database service not configured' });
+      if (!result.ok) {
+        if (result.errorCode === 'MISSING_API_KEY') {
+          return res.status(500).json({ error: 'Email service not configured' });
         }
-        throw claimErr;
-      }
-
-      if (claim.alreadySent) {
-        return res.status(200).json({
-          ok: true,
-          success: true,
-          idempotent: true,
-          orderId: orderCode,
-          message: 'Order confirmation email already sent.'
-        });
-      }
-      if (!claim.claimed) {
-        return res.status(200).json({
-          ok: true,
-          success: true,
-          idempotent: true,
-          orderId: orderCode,
-          message: 'Order confirmation email send in progress.'
-        });
-      }
-
-      // Authoritative template data strictly derived from database record
-      const addr = order.address || {};
-      const customerName = (typeof addr === 'object' && addr.name) || (typeof order.name === 'string' && order.name) || 'there';
-      const addressFormatted = typeof addr === 'string'
-        ? addr
-        : [addr.line, addr.city, addr.state, addr.pincode].filter(Boolean).join(', ');
-
-      const amountRupees = order.amount
-        ? String(Math.round(order.amount / 100))
-        : String(BASE_PRODUCT.price);
-
-      const codFeeRupees = paymentMethod === 'cod'
-        ? (order.cod_fee ? Math.round(order.cod_fee / 100) : BASE_PRODUCT.codFee)
-        : 0;
-
-      const paymentMethodLabel = paymentMethod === 'cod'
-        ? 'Cash on Delivery'
-        : 'Prepaid (Razorpay)';
-
-      const authoritativeData = {
-        orderId: orderCode,
-        customerName,
-        amount: amountRupees,
-        codFee: codFeeRupees,
-        address: addressFormatted,
-        paymentMethod: paymentMethodLabel,
-      };
-
-      if (!process.env.RESEND_API_KEY) {
-        console.error('RESEND_API_KEY missing');
-        await releaseOrderConfirmationClaim(orderCode, claimId);
-        return res.status(500).json({ error: 'Email service not configured' });
-      }
-
-      // Deterministic provider idempotency key derived strictly from validated order code
-      // Prevents duplicate sends if worker crashes between provider send and database finalize
-      const idempotencyKey = getOrderConfirmationIdempotencyKey(orderCode);
-
-      try {
-        const { subject, html } = orderConfirmation(authoritativeData);
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        const result = await resend.emails.send(
-          {
-            from: FROM,
-            to: dbEmail,
-            replyTo: REPLY_TO,
-            subject: subject.replace(/[\r\n]+/g, ' ').trim().slice(0, 200),
-            html,
-          },
-          {
-            idempotencyKey,
-          }
-        );
-
-        if (result.error) {
-          console.error('[send-email] Resend error:', result.error);
-          await releaseOrderConfirmationClaim(orderCode, claimId);
-          const errName = result.error.name || '';
-          const statusCode = result.error.statusCode || (errName === 'rate_limit_exceeded' ? 429 : 502);
-          const message = result.error.message || 'Email could not be sent.';
-          return res.status(statusCode >= 400 && statusCode < 600 ? statusCode : 502).json({
-            error: message,
-            code: errName || 'RESEND_ERROR',
-          });
+        if (result.errorCode === 'TEMPLATE_RENDER_ERROR') {
+          return res.status(500).json({ error: 'Invalid email template output' });
         }
-
-        // Successfully sent (or deduplicated by Resend idempotency key): finalize claim and record confirmation_email_sent_at
-        await finalizeOrderConfirmationEmail(orderCode, claimId);
-        return res.status(200).json({ id: result.data?.id, ok: true, success: true, orderId: orderCode });
-      } catch (sendErr) {
-        console.error('[send-email] Resend send exception:', sendErr.message);
-        await releaseOrderConfirmationClaim(orderCode, claimId);
-        return res.status(502).json({ error: 'Email delivery failed' });
+        const statusCode = result.httpStatus && result.httpStatus >= 400 && result.httpStatus < 600
+          ? result.httpStatus
+          : 502;
+        return res.status(statusCode).json({
+          error: result.errorMessage || 'Email could not be sent.',
+          code: result.errorCode || result.errorName || 'RESEND_ERROR',
+        });
       }
+      return res.status(200).json({ id: result.emailId, ok: true, success: true, orderId: orderCode });
     }
 
     // -------------------------------------------------------------
@@ -674,26 +690,45 @@ export default async function handler(req, res) {
     }
 
     const data = sanitizeData(rawBody.data || {});
-    const { subject, html } = builder(data || {});
+    let rendered;
+    try {
+      rendered = builder(data || {});
+    } catch (err) {
+      console.error('[send-email] template render error:', err?.message || err);
+      return res.status(500).json({ error: 'Invalid email template output' });
+    }
+    const { subject, html, text } = rendered || {};
     if (!subject || !html || typeof subject !== 'string' || typeof html !== 'string') {
       return res.status(500).json({ error: 'Invalid email template output' });
     }
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const result = await resend.emails.send({
-      from: FROM,
+    const orderCode = String(data.orderId || data.orderCode || rawBody.orderId || rawBody.orderCode || '').trim();
+    let idempotencyKey;
+    try {
+      idempotencyKey = getIdempotencyKey(type, orderCode, to);
+    } catch {
+      idempotencyKey = `${type}/${to}`;
+    }
+
+    const result = await sendTransactionalEmail({
+      type,
+      orderId: orderCode,
       to,
-      replyTo: REPLY_TO,
       subject: subject.replace(/[\r\n]+/g, ' ').trim().slice(0, 200),
       html,
+      text,
+      idempotencyKey,
+      originatingRoute: '/api/send-email',
     });
 
-    if (result.error) {
-      console.error('Resend error:', result.error);
+    if (!result.ok) {
+      if (result.errorCode === 'MISSING_API_KEY') {
+        return res.status(500).json({ error: 'Email service not configured' });
+      }
       return res.status(502).json({ error: 'Email could not be sent.' });
     }
 
-    return res.status(200).json({ id: result.data?.id, ok: true });
+    return res.status(200).json({ id: result.emailId, ok: true });
   } catch (err) {
     console.error('send-email error:', err);
     return res.status(500).json({ error: 'Email could not be sent.' });

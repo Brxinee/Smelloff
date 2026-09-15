@@ -1,29 +1,23 @@
 import { BASE_PRODUCT } from '../shared/products-config.js';
 
-// Email templates for ODORSTRIKE / Smelloff
-// All CSS inlined for email client compatibility
-// Brand: matte black #080808, acid green #B8FF57
-
 const BLACK = '#080808';
 const GREEN = '#B8FF57';
-const WHITE = '#FFFFFF';
-const GREY = '#9A9A9A';
+const OFFWHITE = '#F5F5F0';
+const MUTED = '#A8A8A0';
 const BORDER = '#1F1F1F';
+const PANEL = '#111111';
 
-const HEADING_FONT = `'Barlow Condensed', 'Arial Black', Impact, sans-serif`;
-const BODY_FONT = `'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
+const FONT = "Arial, Helvetica, sans-serif";
+const HEADING_FONT = "Arial, Helvetica, sans-serif";
 
 const SUPPORT_EMAIL = BASE_PRODUCT.manufacturer.email || 'smelloffsupport@gmail.com';
 const SITE_URL = 'https://smelloff.in';
-
-// Authoritative pricing from BASE_PRODUCT (config/product.json)
-// ODORSTRIKE 50ml is the ONLY SKU. No bundles.
+const ADMIN_URL = 'https://admin.smelloff.in';
 const PRICE = BASE_PRODUCT.price;
 const MRP = BASE_PRODUCT.mrp;
-const SHIPPING_LINE = 'Free shipping pan-India &middot; COD available';
+const PRODUCT_NAME = 'ODORSTRIKE 50ml';
 
-// Customer order-tracking deep link (mirrors the /track-order page).
-const trackUrl = (orderId = '') =>
+export const trackUrl = (orderId = '') =>
   `${SITE_URL}/track-order?code=${encodeURIComponent(String(orderId).replace(/[\r\n]+/g, '').trim())}`;
 
 const escape = (s = '') =>
@@ -34,6 +28,44 @@ const escape = (s = '') =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+
+const cleanHeader = (s = '') => String(s).replace(/[\r\n]+/g, ' ').trim();
+
+const safeUrl = (url = '', fallback = SITE_URL) => {
+  if (!url || typeof url !== 'string') return fallback;
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return escape(trimmed);
+  return fallback;
+};
+
+const rupee = (value) => {
+  const n = String(value ?? '').replace(/[^\d.]/g, '');
+  return n || '0';
+};
+
+export function formatAddress(address) {
+  if (!address) return '';
+  if (typeof address === 'string') return address.replace(/\s+/g, ' ').trim();
+  return [address.line, address.city, address.state, address.pincode].filter(Boolean).join(', ');
+}
+
+const button = (href, label) => `
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0 8px 0;">
+  <tr>
+    <td style="background-color:${GREEN};border-radius:2px;">
+      <a href="${safeUrl(href)}" style="display:inline-block;padding:14px 28px;font-family:${HEADING_FONT};font-weight:700;font-size:13px;letter-spacing:1.6px;color:${BLACK};text-decoration:none;text-transform:uppercase;">
+        ${escape(label)}
+      </a>
+    </td>
+  </tr>
+</table>`;
+
+const kvRow = (label, value, emphasize = false) => `
+<tr>
+  <td style="font-family:${FONT};font-size:12px;letter-spacing:1px;text-transform:uppercase;color:${MUTED};padding:8px 0;border-bottom:1px solid ${BORDER};width:42%;">${escape(label)}</td>
+  <td style="font-family:${FONT};font-size:${emphasize ? '18px' : '14px'};font-weight:${emphasize ? '700' : '400'};color:${emphasize ? GREEN : OFFWHITE};padding:8px 0;border-bottom:1px solid ${BORDER};text-align:right;">${value}</td>
+</tr>`;
+
 const shell = (inner, preheader = '') => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,23 +73,32 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
 <meta name="supported-color-schemes" content="dark">
-<title>ODORSTRIKE</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<title>SMELLOFF</title>
+<!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
+<style type="text/css">
+  @media only screen and (max-width: 620px) {
+    .smf-wrap { width: 100% !important; }
+    .smf-pad { padding: 28px 20px !important; }
+    .smf-hero { font-size: 28px !important; line-height: 1.05 !important; }
+  }
+</style>
 </head>
-<body style="margin:0;padding:0;background-color:${BLACK};font-family:${BODY_FONT};color:${WHITE};-webkit-font-smoothing:antialiased;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escape(preheader)}</div>
+<body style="margin:0;padding:0;background-color:${BLACK};font-family:${FONT};color:${OFFWHITE};-webkit-font-smoothing:antialiased;">
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;opacity:0;color:transparent;">${escape(preheader)}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${BLACK};">
   <tr>
-    <td align="center" style="padding:24px 16px;">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:${BLACK};border:1px solid ${BORDER};">
+    <td align="center" style="padding:24px 12px;">
+      <table role="presentation" class="smf-wrap" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:${BLACK};border:1px solid ${BORDER};">
         <tr>
-          <td style="padding:24px 32px;border-bottom:1px solid ${BORDER};">
+          <td class="smf-pad" style="padding:22px 32px;border-bottom:1px solid ${BORDER};">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
-                <td style="vertical-align:middle;font-family:${HEADING_FONT};font-weight:900;font-size:28px;letter-spacing:3px;color:${WHITE};text-transform:uppercase;line-height:1;">
-                  <a href="${SITE_URL}" style="text-decoration:none;"><img src="${SITE_URL}/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" height="24" style="height:24px;width:auto;display:block;border:0"></a>
+                <td style="vertical-align:middle;">
+                  <a href="${SITE_URL}" style="text-decoration:none;">
+                    <img src="${SITE_URL}/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" height="22" style="height:22px;width:auto;display:block;border:0;">
+                  </a>
                 </td>
-                <td align="right" style="vertical-align:middle;font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;">
+                <td align="right" style="vertical-align:middle;font-family:${FONT};font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${MUTED};">
                   ODORSTRIKE
                 </td>
               </tr>
@@ -65,24 +106,24 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
           </td>
         </tr>
         <tr>
-          <td style="padding:40px 32px;">
+          <td class="smf-pad" style="padding:40px 32px 32px 32px;">
             ${inner}
           </td>
         </tr>
         <tr>
-          <td style="padding:28px 32px;border-top:1px solid ${BORDER};font-family:${BODY_FONT};font-size:12px;color:${GREY};line-height:1.6;">
-            <p style="margin:0 0 8px 0;">Smelloff &middot; Hyderabad, India</p>
-            <p style="margin:0 0 8px 0;">Questions? <a href="mailto:${SUPPORT_EMAIL}" style="color:${GREEN};text-decoration:none;">${SUPPORT_EMAIL}</a></p>
+          <td class="smf-pad" style="padding:24px 32px 28px 32px;border-top:1px solid ${BORDER};font-family:${FONT};font-size:12px;color:${MUTED};line-height:1.6;">
+            <p style="margin:0 0 8px 0;color:${OFFWHITE};letter-spacing:1px;text-transform:uppercase;font-size:11px;">Smelloff · Hyderabad, India</p>
+            <p style="margin:0 0 8px 0;">Need help? <a href="mailto:${SUPPORT_EMAIL}" style="color:${GREEN};text-decoration:none;">${SUPPORT_EMAIL}</a></p>
             <p style="margin:0;">
-              <a href="${SITE_URL}" style="color:${GREY};text-decoration:none;">smelloff.in</a>
-              &nbsp;&middot;&nbsp;
-              <a href="https://instagram.com/smelloffindia" style="color:${GREY};text-decoration:none;">@smelloffindia</a>
+              <a href="${SITE_URL}" style="color:${MUTED};text-decoration:none;">smelloff.in</a>
+              &nbsp;·&nbsp;
+              <a href="https://instagram.com/smelloffindia" style="color:${MUTED};text-decoration:none;">@smelloffindia</a>
             </p>
           </td>
         </tr>
       </table>
-      <p style="font-family:${BODY_FONT};font-size:10px;color:${GREY};margin:16px 0 0 0;letter-spacing:1px;text-transform:uppercase;">
-        Pocket-sized fabric odor neutralizer for clothes
+      <p style="font-family:${FONT};font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:${MUTED};margin:16px 0 0 0;">
+        Pocket-sized fabric odor reset spray
       </p>
     </td>
   </tr>
@@ -90,60 +131,42 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
 </body>
 </html>`;
 
-const heading = (text) =>
-  `<h1 style="font-family:${HEADING_FONT};font-weight:900;font-size:42px;line-height:1;letter-spacing:-0.5px;color:${WHITE};text-transform:uppercase;margin:0 0 20px 0;">${text}</h1>`;
-
-const cleanHeader = (s = '') =>
-  String(s)
-    .replace(/[\r\n]+/g, ' ')
-    .trim();
-
-const safeUrl = (url = '', fallback = SITE_URL) => {
-  if (!url || typeof url !== 'string') return fallback;
-  const trimmed = url.trim();
-  if (/^https?:\/\//i.test(trimmed)) {
-    return escape(trimmed);
-  }
-  return fallback;
-};
+const hero = (text) =>
+  `<div style="width:36px;height:3px;background-color:${GREEN};margin:0 0 18px 0;"></div>
+<h1 class="smf-hero" style="font-family:${HEADING_FONT};font-weight:700;font-size:34px;line-height:1.05;letter-spacing:0.5px;color:${OFFWHITE};text-transform:uppercase;margin:0 0 18px 0;">${text}</h1>`;
 
 const para = (text) =>
-  `<p style="font-family:${BODY_FONT};font-size:15px;line-height:1.6;color:${WHITE};margin:0 0 16px 0;">${text}</p>`;
+  `<p style="font-family:${FONT};font-size:15px;line-height:1.6;color:${OFFWHITE};margin:0 0 16px 0;">${text}</p>`;
 
-const mutedPara = (text) =>
-  `<p style="font-family:${BODY_FONT};font-size:14px;line-height:1.6;color:${GREY};margin:0 0 16px 0;">${text}</p>`;
+const muted = (text) =>
+  `<p style="font-family:${FONT};font-size:13px;line-height:1.6;color:${MUTED};margin:0 0 14px 0;">${text}</p>`;
 
-const button = (href, label) => `
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;">
-  <tr>
-    <td style="background-color:${GREEN};">
-      <a href="${safeUrl(href)}" style="display:inline-block;padding:16px 32px;font-family:${HEADING_FONT};font-weight:900;font-size:16px;letter-spacing:2px;color:${BLACK};text-decoration:none;text-transform:uppercase;">
-        ${escape(label)} &rarr;
-      </a>
-    </td>
-  </tr>
-</table>`;
+const panel = (content) =>
+  `<div style="background-color:${PANEL};border:1px solid ${BORDER};border-left:3px solid ${GREEN};padding:20px 22px;margin:22px 0;">${content}</div>`;
 
-const divider = `<div style="height:1px;background-color:${BORDER};margin:24px 0;"></div>`;
+function summaryTable(rows) {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${rows}</table>`;
+}
 
-const accentBar = `<div style="width:48px;height:3px;background-color:${GREEN};margin:0 0 20px 0;"></div>`;
+function footerHelp() {
+  return muted(`Need help? Contact Smelloff Support at <a href="mailto:${SUPPORT_EMAIL}" style="color:${GREEN};text-decoration:none;">${SUPPORT_EMAIL}</a>.`);
+}
 
-// Boxed price block — big acid-green price with MRP strikethrough + shipping line.
-const priceBlock = () => `
-    <div style="background-color:#0F0F0F;border:1px solid ${BORDER};padding:24px;margin:24px 0;text-align:center;">
-      <p style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:2px;text-transform:uppercase;margin:0 0 8px 0;">ODORSTRIKE 50ml</p>
-      <p style="margin:0 0 4px 0;line-height:1;">
-        <span style="font-family:${HEADING_FONT};font-weight:900;font-size:48px;color:${GREEN};letter-spacing:-1px;vertical-align:middle;">&#8377;${PRICE}</span>
-        <span style="font-family:${BODY_FONT};font-size:15px;color:${GREY};text-decoration:line-through;margin-left:10px;vertical-align:middle;">&#8377;${MRP}</span>
-      </p>
-      <p style="font-family:${BODY_FONT};font-size:12px;color:${GREY};margin:8px 0 0 0;">${SHIPPING_LINE}</p>
-    </div>`;
+function textBlock(lines) {
+  return lines.filter((line) => line !== null && line !== undefined).join('\n');
+}
 
-// ---------- TEMPLATES ----------
+function isCodMethod(paymentMethod = '') {
+  return /cod|cash on delivery/i.test(String(paymentMethod));
+}
 
-// `amount` is the collectable total. On COD that includes the handling charge,
-// so `codFee` breaks it out on its own row — a customer who was quoted ₹289 and
-// sees only "Amount ₹289" against a ₹229 product has no way to reconcile it.
+export function codConfirmation(data = {}) {
+  return orderConfirmation({
+    ...data,
+    paymentMethod: data.paymentMethod || 'Cash on Delivery',
+  });
+}
+
 export function orderConfirmation({
   orderId = '',
   customerName = 'there',
@@ -151,52 +174,125 @@ export function orderConfirmation({
   address = '',
   paymentMethod = '',
   codFee = 0,
+  quantity = 1,
 } = {}) {
   const fee = Number(codFee) || 0;
-  const codFeeRow = fee > 0 ? `
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">COD handling charge</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">&#8377;${escape(String(fee))}</td>
-        </tr>` : '';
-  const inner = `
-    ${accentBar}
-    ${heading('Order<br>Confirmed.')}
-    ${para(`Hey ${escape(customerName)}, your ODORSTRIKE is locked in. We&rsquo;re packing it now.`)}
-
-    <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
-      <p style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;margin:0 0 6px 0;">Order ID</p>
-      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:22px;color:${WHITE};letter-spacing:1px;margin:0 0 16px 0;">#${escape(orderId)}</p>
-
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Product</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">ODORSTRIKE 50ml</td>
-        </tr>
-        ${codFeeRow}
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">${fee > 0 ? 'Total payable' : 'Amount'}</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">&#8377;${escape(amount)}</td>
-        </tr>
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Payment</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">${escape(paymentMethod)}</td>
-        </tr>
-      </table>
-    </div>
-
-    <p style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;margin:24px 0 6px 0;">Shipping To</p>
-    ${mutedPara(escape(address).replace(/\n/g, '<br>'))}
-
-    ${divider}
-
-    <p style="font-family:${HEADING_FONT};font-weight:900;font-size:18px;letter-spacing:1px;color:${GREEN};text-transform:uppercase;margin:0 0 8px 0;">What happens next</p>
-    ${mutedPara('Dispatch within 48 hours of confirmation. Tracking link lands in your inbox the moment it ships.')}
-    ${mutedPara('Need help? Just reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
-  `;
+  const cod = isCodMethod(paymentMethod) || fee > 0;
+  const qty = Number(quantity) || 1;
+  const methodLabel = paymentMethod || (cod ? 'Cash on Delivery' : 'Prepaid (Razorpay)');
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const name = customerName || 'there';
+
+  const feeRow = fee > 0
+    ? kvRow('COD handling', `&#8377;${escape(String(fee))}`)
+    : '';
+
+  const inner = `
+    ${hero('Order confirmed')}
+    ${para(`Hey ${escape(name)},`)}
+    ${para(cod
+      ? 'Your ODORSTRIKE order is confirmed. Payment will be collected on delivery — nothing has been charged yet.'
+      : 'Your ODORSTRIKE order is confirmed.')}
+
+    ${panel(`
+      <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:0 0 6px 0;">Order summary</p>
+      ${summaryTable(`
+        ${kvRow('Order ID', escape(cleanOrderId || '—'))}
+        ${kvRow('Product', PRODUCT_NAME)}
+        ${kvRow('Quantity', escape(String(qty)))}
+        ${feeRow}
+        ${kvRow(fee > 0 ? 'Amount due' : 'Amount', `&#8377;${escape(rupee(amount))}`, true)}
+        ${kvRow('Payment method', escape(methodLabel))}
+      `)}
+    `)}
+
+    <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:24px 0 6px 0;">Shipping address</p>
+    ${muted(escape(address || '—').replace(/\n/g, '<br>'))}
+
+    ${button(trackUrl(cleanOrderId), 'Track order')}
+    ${footerHelp()}
+  `;
+
+  const subject = cleanHeader(
+    cod
+      ? `Your ODORSTRIKE COD order is locked in — #${cleanOrderId}`
+      : `Your ODORSTRIKE order is locked in. #${cleanOrderId}`
+  );
+
+  const text = textBlock([
+    'SMELLOFF — ORDER CONFIRMED',
+    '',
+    `Hey ${name},`,
+    '',
+    cod
+      ? 'Your ODORSTRIKE order is confirmed. Payment will be collected on delivery — nothing has been charged yet.'
+      : 'Your ODORSTRIKE order is confirmed.',
+    '',
+    'ORDER SUMMARY',
+    `Order ID: ${cleanOrderId}`,
+    `Product: ${PRODUCT_NAME}`,
+    `Quantity: ${qty}`,
+    fee > 0 ? `COD handling: ₹${fee}` : null,
+    `${fee > 0 ? 'Amount due' : 'Amount'}: ₹${rupee(amount)}`,
+    `Payment method: ${methodLabel}`,
+    '',
+    'SHIPPING ADDRESS',
+    address || '—',
+    '',
+    `Track order: ${trackUrl(cleanOrderId)}`,
+    '',
+    `Need help? Contact Smelloff Support: ${SUPPORT_EMAIL}`,
+  ]);
+
   return {
-    subject: cleanHeader(`Order confirmed — #${cleanOrderId}`),
+    subject,
     html: shell(inner, `Your ODORSTRIKE order #${cleanOrderId} is confirmed.`),
+    text,
+  };
+}
+
+export function paymentConfirmation({
+  orderId = '',
+  customerName = 'there',
+  amount = '',
+  paymentMethod = 'Prepaid (Razorpay)',
+  transactionRef = '',
+} = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const name = customerName || 'there';
+  const inner = `
+    ${hero('Payment received')}
+    ${para(`Hey ${escape(name)},`)}
+    ${para('Payment for your ODORSTRIKE order came through.')}
+    ${panel(`
+      <p style="font-family:${HEADING_FONT};font-size:36px;font-weight:700;color:${GREEN};margin:0 0 8px 0;letter-spacing:-0.5px;">&#8377;${escape(rupee(amount))}</p>
+      <p style="font-family:${FONT};font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:0 0 16px 0;">Paid successfully</p>
+      ${summaryTable(`
+        ${kvRow('Order', `#${escape(cleanOrderId)}`)}
+        ${kvRow('Payment method', escape(paymentMethod || 'Prepaid (Razorpay)'))}
+        ${transactionRef ? kvRow('Reference', escape(transactionRef)) : ''}
+      `)}
+    `)}
+    ${button(trackUrl(cleanOrderId), 'View order')}
+    ${footerHelp()}
+  `;
+  return {
+    subject: cleanHeader(`Payment received — #${cleanOrderId}`),
+    html: shell(inner, `₹${rupee(amount)} paid successfully for order #${cleanOrderId}.`),
+    text: textBlock([
+      'SMELLOFF — PAYMENT RECEIVED',
+      '',
+      `Hey ${name},`,
+      '',
+      `₹${rupee(amount)} paid successfully.`,
+      `Order #${cleanOrderId}`,
+      `Payment method: ${paymentMethod || 'Prepaid (Razorpay)'}`,
+      transactionRef ? `Reference: ${transactionRef}` : null,
+      '',
+      `View order: ${trackUrl(cleanOrderId)}`,
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
   };
 }
 
@@ -205,65 +301,311 @@ export function orderShipped({
   customerName = 'there',
   trackingId = '',
   courier = '',
-  trackingUrl = '#',
+  trackingUrl = '',
 } = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const name = customerName || 'there';
+  const href = trackingUrl || trackUrl(cleanOrderId);
   const inner = `
-    ${accentBar}
-    ${heading('It&rsquo;s on<br>the way.')}
-    ${para(`${escape(customerName)}, your ODORSTRIKE just left the warehouse.`)}
-
-    <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;padding:4px 0;">Order</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">#${escape(orderId)}</td>
-        </tr>
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;padding:4px 0;">Courier</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">${escape(courier)}</td>
-        </tr>
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;padding:4px 0;">Tracking</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${GREEN};padding:4px 0;letter-spacing:1px;">${escape(trackingId)}</td>
-        </tr>
-      </table>
-    </div>
-
-    ${button(trackingUrl, 'Track Package')}
-
-    ${divider}
-    ${mutedPara('Heads up: on delivery, one spritz on your shirt collar before stepping out. That&rsquo;s the move.')}
-    ${mutedPara('Questions? <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>')}
+    ${hero('Your order is on the move')}
+    ${para(`${escape(name)}, your ODORSTRIKE has left the warehouse.`)}
+    ${panel(summaryTable(`
+      ${kvRow('Order', `#${escape(cleanOrderId)}`)}
+      ${kvRow('Courier', escape(courier || 'Assigned'))}
+      ${kvRow('AWB', `<span style="color:${GREEN};letter-spacing:1px;">${escape(trackingId || 'Updating')}</span>`)}
+      ${kvRow('Status', 'Shipped')}
+    `))}
+    ${button(href, 'Track shipment')}
+    ${footerHelp()}
   `;
   return {
-    subject: `Your ODORSTRIKE is on the way — #${orderId}`,
-    html: shell(inner, `Tracking: ${trackingId} via ${courier}`),
+    subject: cleanHeader(`Your ODORSTRIKE is on the way — #${cleanOrderId}`),
+    html: shell(inner, `Tracking ${trackingId || 'is live'} via ${courier || 'courier'}.`),
+    text: textBlock([
+      'SMELLOFF — YOUR ORDER IS ON THE MOVE',
+      '',
+      `${name}, your ODORSTRIKE has left the warehouse.`,
+      '',
+      `Order: #${cleanOrderId}`,
+      `Courier: ${courier || 'Assigned'}`,
+      `AWB: ${trackingId || 'Updating'}`,
+      'Tracking status: Shipped',
+      '',
+      `Track shipment: ${href}`,
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
+  };
+}
+
+export function outForDelivery({
+  orderId = '',
+  customerName = 'there',
+  courier = '',
+  trackingId = '',
+  trackingUrl = '',
+} = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const name = customerName || 'there';
+  const href = trackingUrl || trackUrl(cleanOrderId);
+  const inner = `
+    ${hero('Out for delivery')}
+    ${para(`${escape(name)}, your ODORSTRIKE is on the last stretch. Keep your phone close.`)}
+    ${panel(summaryTable(`
+      ${kvRow('Order', `#${escape(cleanOrderId)}`)}
+      ${kvRow('Courier', escape(courier || 'Courier'))}
+      ${trackingId ? kvRow('AWB', escape(trackingId)) : ''}
+      ${kvRow('Status', '<span style="color:#B8FF57;">Out for delivery</span>')}
+    `))}
+    ${muted('If you chose Cash on Delivery, keep the exact amount ready.')}
+    ${button(href, 'Track shipment')}
+    ${footerHelp()}
+  `;
+  return {
+    subject: cleanHeader(`Out for delivery — #${cleanOrderId}`),
+    html: shell(inner, `Your ODORSTRIKE order #${cleanOrderId} is out for delivery.`),
+    text: textBlock([
+      'SMELLOFF — OUT FOR DELIVERY',
+      '',
+      `${name}, your ODORSTRIKE is out for delivery today.`,
+      '',
+      `Order: #${cleanOrderId}`,
+      `Courier: ${courier || 'Courier'}`,
+      trackingId ? `AWB: ${trackingId}` : null,
+      '',
+      `Track shipment: ${href}`,
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
+  };
+}
+
+export function orderDelivered({
+  orderId = '',
+  customerName = 'there',
+  reviewUrl = `${SITE_URL}/reviews`,
+} = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const name = customerName || 'there';
+  const inner = `
+    ${hero('Delivered.')}
+    ${para(`${escape(name)}, your ODORSTRIKE has arrived.`)}
+    ${muted('Hold 15–20cm from the fabric. Two or three spritzes on collar, underarms, cuffs. Let it air for 30 seconds.')}
+    ${button(`${SITE_URL}/blog/how-to-use-odorstrike`, 'Get the most from ODORSTRIKE')}
+    ${muted(`<a href="${safeUrl(reviewUrl)}" style="color:${GREEN};text-decoration:none;">Leave a review</a> if it earned one.`)}
+    ${footerHelp()}
+  `;
+  return {
+    subject: cleanHeader(`Delivered — your ODORSTRIKE is here`),
+    html: shell(inner, 'Your ODORSTRIKE has arrived.'),
+    text: textBlock([
+      'SMELLOFF — DELIVERED.',
+      '',
+      `${name}, your ODORSTRIKE has arrived.`,
+      '',
+      `Order: #${cleanOrderId}`,
+      '',
+      'Get the most from ODORSTRIKE:',
+      `${SITE_URL}/blog/how-to-use-odorstrike`,
+      '',
+      `Leave a review: ${reviewUrl}`,
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
+  };
+}
+
+export function adminNewOrder({
+  orderId = '',
+  customerName = '',
+  phone = '',
+  email = '',
+  paymentMethod = '',
+  amount = '',
+  product = PRODUCT_NAME,
+  quantity = 1,
+  address = '',
+  timestamp = '',
+  paymentStatus = '',
+  fulfillmentStatus = '',
+} = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const inner = `
+    ${hero('New ODORSTRIKE order')}
+    ${panel(summaryTable(`
+      ${kvRow('Order ID', escape(cleanOrderId))}
+      ${kvRow('Customer', escape(customerName || '—'))}
+      ${kvRow('Phone', escape(phone || '—'))}
+      ${kvRow('Email', escape(email || '—'))}
+      ${kvRow('Payment', escape(paymentMethod || '—'))}
+      ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`, true)}
+      ${kvRow('Product', escape(product || PRODUCT_NAME))}
+      ${kvRow('Quantity', escape(String(quantity || 1)))}
+      ${kvRow('Payment status', escape(paymentStatus || '—'))}
+      ${kvRow('Fulfillment', escape(fulfillmentStatus || '—'))}
+      ${kvRow('Timestamp', escape(timestamp || new Date().toISOString()))}
+    `))}
+    <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:24px 0 6px 0;">Address</p>
+    ${muted(escape(address || '—'))}
+    ${button(`${ADMIN_URL}/#orders`, 'Open order')}
+  `;
+  return {
+    subject: cleanHeader(`NEW ODORSTRIKE ORDER — ${cleanOrderId}`),
+    html: shell(inner, `New order ${cleanOrderId} · ₹${rupee(amount)} · ${paymentMethod || ''}`),
+    text: textBlock([
+      'SMELLOFF OPS — NEW ORDER',
+      '',
+      `Order ID: ${cleanOrderId}`,
+      `Customer: ${customerName || '—'}`,
+      `Phone: ${phone || '—'}`,
+      `Email: ${email || '—'}`,
+      `Payment: ${paymentMethod || '—'}`,
+      `Amount: ₹${rupee(amount)}`,
+      `Product: ${product || PRODUCT_NAME}`,
+      `Quantity: ${quantity || 1}`,
+      `Payment status: ${paymentStatus || '—'}`,
+      `Fulfillment: ${fulfillmentStatus || '—'}`,
+      `Timestamp: ${timestamp || new Date().toISOString()}`,
+      '',
+      'ADDRESS',
+      address || '—',
+      '',
+      `Open order: ${ADMIN_URL}/#orders`,
+    ]),
+  };
+}
+
+export function adminPaymentConfirmed({
+  orderId = '',
+  amount = '',
+  customerName = '',
+  paymentMethod = '',
+  transactionRef = '',
+  timestamp = '',
+} = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const inner = `
+    ${hero('Payment verified')}
+    ${panel(summaryTable(`
+      ${kvRow('Order ID', escape(cleanOrderId))}
+      ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`, true)}
+      ${kvRow('Customer', escape(customerName || '—'))}
+      ${kvRow('Payment method', escape(paymentMethod || 'Prepaid'))}
+      ${transactionRef ? kvRow('Transaction', escape(transactionRef)) : ''}
+      ${kvRow('Timestamp', escape(timestamp || new Date().toISOString()))}
+    `))}
+    ${button(`${ADMIN_URL}/#orders`, 'Open order')}
+  `;
+  return {
+    subject: cleanHeader(`PAYMENT VERIFIED — ${cleanOrderId}`),
+    html: shell(inner, `Payment verified for ${cleanOrderId} · ₹${rupee(amount)}`),
+    text: textBlock([
+      'SMELLOFF OPS — PAYMENT VERIFIED',
+      '',
+      `Order ID: ${cleanOrderId}`,
+      `Amount: ₹${rupee(amount)}`,
+      `Customer: ${customerName || '—'}`,
+      `Payment method: ${paymentMethod || 'Prepaid'}`,
+      transactionRef ? `Transaction: ${transactionRef}` : null,
+      `Timestamp: ${timestamp || new Date().toISOString()}`,
+      '',
+      `Open order: ${ADMIN_URL}/#orders`,
+    ]),
+  };
+}
+
+export function emailFailure({
+  emailType = '',
+  orderId = '',
+  recipientMasked = '',
+  provider = 'resend',
+  errorCode = '',
+  errorMessage = '',
+  timestamp = '',
+} = {}) {
+  const inner = `
+    ${hero('Email delivery failure')}
+    ${panel(summaryTable(`
+      ${kvRow('Email type', escape(emailType || '—'))}
+      ${kvRow('Order ID', escape(orderId || '—'))}
+      ${kvRow('Recipient', escape(recipientMasked || '—'))}
+      ${kvRow('Provider', escape(provider || 'resend'))}
+      ${kvRow('Error code', escape(errorCode || '—'))}
+      ${kvRow('Error', escape(String(errorMessage || '—').slice(0, 280)))}
+      ${kvRow('Timestamp', escape(timestamp || new Date().toISOString()))}
+    `))}
+  `;
+  return {
+    subject: cleanHeader(`EMAIL DELIVERY FAILURE — ${emailType || 'unknown'} ${orderId || ''}`.trim()),
+    html: shell(inner, `Email failure: ${emailType} ${orderId}`),
+    text: textBlock([
+      'SMELLOFF OPS — EMAIL DELIVERY FAILURE',
+      '',
+      `Email type: ${emailType || '—'}`,
+      `Order ID: ${orderId || '—'}`,
+      `Recipient: ${recipientMasked || '—'}`,
+      `Provider: ${provider || 'resend'}`,
+      `Error code: ${errorCode || '—'}`,
+      `Error message: ${errorMessage || '—'}`,
+      `Timestamp: ${timestamp || new Date().toISOString()}`,
+    ]),
+  };
+}
+
+export function diagnosticTest({
+  emailId = '',
+  environment = 'production',
+  timestamp = '',
+} = {}) {
+  const inner = `
+    ${hero('Smelloff email system test')}
+    ${panel(summaryTable(`
+      ${kvRow('Status', '<span style="color:#B8FF57;">RESEND API → ACCEPTED</span>')}
+      ${kvRow('Email ID', escape(emailId || 'pending'))}
+      ${kvRow('Environment', escape(environment || 'production'))}
+      ${kvRow('Timestamp', escape(timestamp || new Date().toISOString()))}
+    `))}
+  `;
+  return {
+    subject: cleanHeader('SMELLOFF EMAIL SYSTEM TEST'),
+    html: shell(inner, 'Smelloff email system test — Resend API accepted.'),
+    text: textBlock([
+      'SMELLOFF EMAIL SYSTEM TEST',
+      '',
+      'Status: RESEND API → ACCEPTED',
+      `Email ID: ${emailId || 'pending'}`,
+      `Environment: ${environment || 'production'}`,
+      `Timestamp: ${timestamp || new Date().toISOString()}`,
+    ]),
   };
 }
 
 export function welcomeEmail({ customerName = 'there' } = {}) {
+  const name = customerName || 'there';
   const inner = `
-    ${accentBar}
-    ${heading('You&rsquo;re in.')}
-    ${para(`Hey ${escape(customerName)}. Welcome to Smelloff.`)}
-
-    <p style="font-family:${HEADING_FONT};font-weight:900;font-size:26px;line-height:1.15;color:${WHITE};margin:32px 0 16px 0;letter-spacing:-0.3px;">
-      People don&rsquo;t fear smelling bad.<br>
-      <span style="color:${GREEN};">They fear others noticing.</span>
-    </p>
-
-    ${mutedPara('ODORSTRIKE is a 50ml fabric-only odor neutralizer. Not perfume. Not deodorant. One pocket-sized spray that neutralizes smell on clothes &mdash; sweat, smoke, food, gym, day-two shirts.')}
-
-    ${priceBlock()}
-
-    ${button(SITE_URL, 'Shop Now')}
-
-    ${divider}
-    ${mutedPara('Built in Hyderabad. Shipped pan-India. Questions? Just reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
+    ${hero("You're in.")}
+    ${para(`Hey ${escape(name)}. Welcome to Smelloff.`)}
+    ${muted('ODORSTRIKE is a 50ml fabric-only odor reset spray. Not perfume. Not deodorant. One pocket-sized bottle for clothes — sweat, smoke, food, gym, day-two shirts.')}
+    ${panel(`
+      <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:0 0 8px 0;">ODORSTRIKE 50ml</p>
+      <p style="margin:0;font-family:${HEADING_FONT};font-size:32px;font-weight:700;color:${GREEN};">&#8377;${PRICE} <span style="font-size:14px;color:${MUTED};text-decoration:line-through;font-weight:400;">&#8377;${MRP}</span></p>
+    `)}
+    ${button(SITE_URL, 'Shop now')}
+    ${footerHelp()}
   `;
   return {
     subject: 'Welcome to Smelloff',
-    html: shell(inner, 'Pocket-sized fabric odor neutralizer for clothes.'),
+    html: shell(inner, 'Pocket-sized fabric odor reset spray for clothes.'),
+    text: textBlock([
+      'SMELLOFF — YOU ARE IN.',
+      '',
+      `Hey ${name}. Welcome to Smelloff.`,
+      '',
+      `ODORSTRIKE 50ml — ₹${PRICE} (MRP ₹${MRP})`,
+      SITE_URL,
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
   };
 }
 
@@ -271,210 +613,155 @@ export function abandonedCart({
   customerName = 'there',
   productUrl = SITE_URL,
 } = {}) {
+  const name = customerName || 'there';
   const inner = `
-    ${accentBar}
-    ${heading('You left<br>something.')}
-    ${para(`${escape(customerName)}, your ODORSTRIKE is still in the cart.`)}
-
-    ${mutedPara('50ml. Fabric-only. Neutralizes odor on fabric. No perfume cover-up. A few light sprays and you&rsquo;re out the door.')}
-
-    <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
-      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:20px;color:${WHITE};text-transform:uppercase;letter-spacing:1px;margin:0 0 4px 0;">ODORSTRIKE 50ml</p>
-      <p style="font-family:${BODY_FONT};font-size:13px;color:${GREY};margin:0 0 12px 0;">Pocket-sized fabric odor neutralizer for clothes</p>
-      <p style="margin:0;line-height:1;">
-        <span style="font-family:${HEADING_FONT};font-weight:900;font-size:28px;color:${GREEN};letter-spacing:-0.5px;vertical-align:middle;">&#8377;${PRICE}</span>
-        <span style="font-family:${BODY_FONT};font-size:14px;color:${GREY};text-decoration:line-through;margin-left:8px;vertical-align:middle;">&#8377;${MRP}</span>
-      </p>
-      <p style="font-family:${BODY_FONT};font-size:12px;color:${GREY};margin:10px 0 0 0;">${SHIPPING_LINE}</p>
-    </div>
-
-    ${button(productUrl, 'Finish Order')}
-
-    ${divider}
-    ${mutedPara('Need a hand? Reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
+    ${hero('You left something.')}
+    ${para(`${escape(name)}, your ODORSTRIKE is still in the cart.`)}
+    ${panel(`
+      <p style="font-family:${HEADING_FONT};font-size:18px;font-weight:700;color:${OFFWHITE};margin:0 0 6px 0;">${PRODUCT_NAME}</p>
+      <p style="margin:0;color:${GREEN};font-size:24px;font-weight:700;">&#8377;${PRICE}</p>
+    `)}
+    ${button(productUrl, 'Finish order')}
+    ${footerHelp()}
   `;
   return {
     subject: 'You left something behind.',
     html: shell(inner, 'Your ODORSTRIKE is still in the cart.'),
+    text: textBlock([
+      'SMELLOFF — YOU LEFT SOMETHING.',
+      '',
+      `${name}, your ODORSTRIKE is still in the cart.`,
+      '',
+      `${PRODUCT_NAME} — ₹${PRICE}`,
+      `Finish order: ${productUrl}`,
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
   };
 }
 
-// Pipeline: out_for_delivery — courier is delivering today.
-export function outForDelivery({
-  orderId = '',
-  customerName = 'there',
-  courier = '',
-} = {}) {
-  const inner = `
-    ${accentBar}
-    ${heading('Out for<br>delivery.')}
-    ${para(`${escape(customerName)}, your ODORSTRIKE is on the last leg &mdash; it&rsquo;s out for delivery today.`)}
-
-    <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;padding:4px 0;">Order</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">#${escape(orderId)}</td>
-        </tr>
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;padding:4px 0;">Courier</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">${escape(courier)}</td>
-        </tr>
-      </table>
-    </div>
-
-    ${mutedPara('Keep your phone handy &mdash; the delivery agent may call. If you chose Cash on Delivery, please keep the exact amount ready.')}
-
-    ${button(trackUrl(orderId), 'Track Package')}
-
-    ${divider}
-    ${mutedPara('Questions? <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>')}
-  `;
-  return {
-    subject: `Out for delivery today — #${orderId}`,
-    html: shell(inner, `Your ODORSTRIKE order #${orderId} is out for delivery.`),
-  };
-}
-
-// Pipeline: delivered — confirm delivery, teach the move, ask for a review.
-export function orderDelivered({
-  orderId = '',
-  customerName = 'there',
-  reviewUrl = `${SITE_URL}/reviews`,
-} = {}) {
-  const inner = `
-    ${accentBar}
-    ${heading('Delivered.<br>Now strike.')}
-    ${para(`${escape(customerName)}, your ODORSTRIKE (order #${escape(orderId)}) has been delivered. Time to put it to work.`)}
-
-    <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
-      <p style="font-family:${HEADING_FONT};font-weight:900;font-size:16px;letter-spacing:1px;color:${GREEN};text-transform:uppercase;margin:0 0 12px 0;">The move</p>
-      <p style="font-family:${BODY_FONT};font-size:14px;line-height:1.6;color:${WHITE};margin:0 0 8px 0;">1. Hold 15&ndash;20cm from the fabric.</p>
-      <p style="font-family:${BODY_FONT};font-size:14px;line-height:1.6;color:${WHITE};margin:0 0 8px 0;">2. 2&ndash;3 spritzes on collar, underarms, cuffs.</p>
-      <p style="font-family:${BODY_FONT};font-size:14px;line-height:1.6;color:${WHITE};margin:0;">3. Let it air 30 seconds. Step out. Up to 8 hours of odor protection.</p>
-    </div>
-
-    ${mutedPara('Fabric-only, zero residue. Works on sweat, smoke, food, gym and day-two shirts.')}
-
-    ${divider}
-
-    <p style="font-family:${HEADING_FONT};font-weight:900;font-size:18px;letter-spacing:1px;color:${WHITE};text-transform:uppercase;margin:0 0 8px 0;">How did we do?</p>
-    ${mutedPara('30 seconds of your time helps another Indian stop worrying about how they smell. Drop us a review.')}
-
-    ${button(reviewUrl, 'Leave a Review')}
-
-    ${mutedPara('Something off with your order? Just reply or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
-  `;
-  return {
-    subject: `Delivered — your ODORSTRIKE is here 🎯`,
-    html: shell(inner, 'Your ODORSTRIKE was delivered. Here&rsquo;s how to use it.'),
-  };
-}
-
-// UPI orders sitting in upi_pending — nudge the customer to complete payment.
 export function paymentReminder({
   orderId = '',
   customerName = 'there',
   amount = String(PRICE),
-  upiId = '',
 } = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const name = customerName || 'there';
   const inner = `
-    ${accentBar}
-    ${heading('One step<br>left.')}
-    ${para(`${escape(customerName)}, your ODORSTRIKE order #${escape(orderId)} is reserved &mdash; we just haven&rsquo;t received payment yet.`)}
-
-    <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Order</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">#${escape(orderId)}</td>
-        </tr>
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Amount due</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">&#8377;${escape(amount)}</td>
-        </tr>
-      </table>
-    </div>
-
-    ${mutedPara('Complete your payment securely online, or prefer Cash on Delivery instead? Reply to this email and we&rsquo;ll switch it.')}
-
-    ${button(trackUrl(orderId), 'Complete Order')}
-
-    ${divider}
-    ${mutedPara('Need help with your order? Contact us at <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a>.')}
+    ${hero('One step left.')}
+    ${para(`${escape(name)}, order #${escape(cleanOrderId)} is reserved. Payment has not landed yet.`)}
+    ${panel(summaryTable(`
+      ${kvRow('Order', `#${escape(cleanOrderId)}`)}
+      ${kvRow('Amount due', `&#8377;${escape(rupee(amount))}`, true)}
+    `))}
+    ${button(trackUrl(cleanOrderId), 'Complete order')}
+    ${footerHelp()}
   `;
   return {
-    subject: `Payment pending — complete your order #${orderId}`,
-    html: shell(inner, `Finish your payment for order #${orderId}.`),
+    subject: cleanHeader(`Payment pending — complete your order #${cleanOrderId}`),
+    html: shell(inner, `Finish payment for order #${cleanOrderId}.`),
+    text: textBlock([
+      'SMELLOFF — ONE STEP LEFT',
+      '',
+      `${name}, payment for order #${cleanOrderId} is still pending.`,
+      `Amount due: ₹${rupee(amount)}`,
+      '',
+      `Complete order: ${trackUrl(cleanOrderId)}`,
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
   };
 }
 
-// Pipeline: cancelled — order was cancelled.
 export function orderCancelled({
   orderId = '',
   customerName = 'there',
   reason = '',
 } = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const name = customerName || 'there';
   const inner = `
-    ${accentBar}
-    ${heading('Order<br>cancelled.')}
-    ${para(`${escape(customerName)}, your ODORSTRIKE order #${escape(orderId)} has been cancelled.`)}
-
-    ${reason ? `<div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
-      <p style="font-family:${BODY_FONT};font-size:11px;color:${GREY};letter-spacing:1.5px;text-transform:uppercase;margin:0 0 6px 0;">Reason</p>
-      <p style="font-family:${BODY_FONT};font-size:14px;color:${WHITE};margin:0;line-height:1.6;">${escape(reason)}</p>
-    </div>` : ''}
-
-    ${mutedPara('If you already paid, your refund is being processed and will reach you within 5&ndash;7 business days. Cash on Delivery orders have nothing to pay.')}
-
-    ${mutedPara('Changed your mind? You can reorder anytime.')}
-    ${button(SITE_URL, 'Shop Again')}
-
-    ${divider}
-    ${mutedPara('Think this was a mistake? Reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a> and we&rsquo;ll sort it out.')}
+    ${hero('Order cancelled.')}
+    ${para(`${escape(name)}, ODORSTRIKE order #${escape(cleanOrderId)} has been cancelled.`)}
+    ${reason ? panel(`<p style="margin:0;color:${OFFWHITE};font-size:14px;">${escape(reason)}</p>`) : ''}
+    ${muted('If you already paid, the refund is in motion and usually lands in 5–7 business days. Cash on Delivery orders have nothing to pay.')}
+    ${button(SITE_URL, 'Shop again')}
+    ${footerHelp()}
   `;
   return {
-    subject: `Order cancelled — #${orderId}`,
-    html: shell(inner, `Your ODORSTRIKE order #${orderId} was cancelled.`),
+    subject: cleanHeader(`Order cancelled — #${cleanOrderId}`),
+    html: shell(inner, `Your ODORSTRIKE order #${cleanOrderId} was cancelled.`),
+    text: textBlock([
+      'SMELLOFF — ORDER CANCELLED',
+      '',
+      `${name}, order #${cleanOrderId} has been cancelled.`,
+      reason ? `Reason: ${reason}` : null,
+      '',
+      SITE_URL,
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
   };
 }
 
-// Refund flow — payment refunded back to the customer.
 export function refundProcessed({
   orderId = '',
   customerName = 'there',
   amount = '',
   method = 'original payment method',
 } = {}) {
+  const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const name = customerName || 'there';
   const inner = `
-    ${accentBar}
-    ${heading('Refund<br>on its way.')}
-    ${para(`${escape(customerName)}, we&rsquo;ve processed the refund for your ODORSTRIKE order #${escape(orderId)}.`)}
-
-    <div style="background-color:#0F0F0F;border-left:3px solid ${GREEN};padding:20px 24px;margin:24px 0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Order</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">#${escape(orderId)}</td>
-        </tr>
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Refund amount</td>
-          <td align="right" style="font-family:${HEADING_FONT};font-weight:900;font-size:18px;color:${GREEN};padding:4px 0;">&#8377;${escape(amount)}</td>
-        </tr>
-        <tr>
-          <td style="font-family:${BODY_FONT};font-size:13px;color:${GREY};padding:4px 0;">Back to</td>
-          <td align="right" style="font-family:${BODY_FONT};font-size:13px;color:${WHITE};padding:4px 0;">${escape(method)}</td>
-        </tr>
-      </table>
-    </div>
-
-    ${mutedPara('It usually lands in 5&ndash;7 business days, depending on your bank. You&rsquo;ll see it as a credit from Smelloff / ODORSTRIKE.')}
-
-    ${divider}
-    ${mutedPara('Haven&rsquo;t received it after 7 days? Reply to this email or write to <a href="mailto:' + SUPPORT_EMAIL + '" style="color:' + GREEN + ';text-decoration:none;">' + SUPPORT_EMAIL + '</a> with your order ID.')}
+    ${hero('Refund on its way.')}
+    ${para(`${escape(name)}, we processed the refund for order #${escape(cleanOrderId)}.`)}
+    ${panel(summaryTable(`
+      ${kvRow('Order', `#${escape(cleanOrderId)}`)}
+      ${kvRow('Refund', `&#8377;${escape(rupee(amount))}`, true)}
+      ${kvRow('Back to', escape(method))}
+    `))}
+    ${muted('It usually lands in 5–7 business days, depending on your bank.')}
+    ${footerHelp()}
   `;
   return {
-    subject: `Refund processed — #${orderId}`,
-    html: shell(inner, `Your refund of &#8377;${amount} for order #${orderId} is on its way.`),
+    subject: cleanHeader(`Refund processed — #${cleanOrderId}`),
+    html: shell(inner, `Your refund of ₹${rupee(amount)} for order #${cleanOrderId} is on its way.`),
+    text: textBlock([
+      'SMELLOFF — REFUND ON ITS WAY',
+      '',
+      `${name}, we processed the refund for order #${cleanOrderId}.`,
+      `Refund amount: ₹${rupee(amount)}`,
+      `Back to: ${method}`,
+      '',
+      `Need help? ${SUPPORT_EMAIL}`,
+    ]),
   };
+}
+
+export const TEMPLATES = {
+  orderConfirmation,
+  codConfirmation,
+  paymentConfirmation,
+  orderShipped,
+  outForDelivery,
+  orderDelivered,
+  adminNewOrder,
+  adminPaymentConfirmed,
+  emailFailure,
+  diagnosticTest,
+  welcomeEmail,
+  abandonedCart,
+  paymentReminder,
+  orderCancelled,
+  refundProcessed,
+};
+
+export function renderTemplate(type, data = {}) {
+  const builder = TEMPLATES[type];
+  if (!builder) throw new Error(`Unknown email template: ${type}`);
+  const rendered = builder(data || {});
+  if (!rendered?.subject || !rendered?.html) {
+    throw new Error(`Template ${type} produced invalid output`);
+  }
+  return rendered;
 }

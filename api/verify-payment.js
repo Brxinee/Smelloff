@@ -10,6 +10,7 @@ import {
   validateAndNormalizeUtr
 } from './_security.js';
 import paymentStatusHandler from './payment-status.js';
+import { dispatchPrepaidPaymentEmails } from './_email-dispatch.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 function getServiceKey() {
@@ -131,6 +132,11 @@ async function verifyRazorpayPayment(body, order) {
   const terminalConfirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
   if (terminalConfirmedStates.includes(order.status)) {
     if (order.upi_txn_id === paymentId || storedRazorpayOrderId === razorpayOrderId) {
+      try {
+        await dispatchPrepaidPaymentEmails({ ...order, status: order.status }, { route: '/api/verify-payment' });
+      } catch (emailErr) {
+        console.error('[verify-payment] Email dispatch exception (payment remains confirmed):', emailErr?.message || emailErr);
+      }
       const dbPhone = String(order.customer_phone || '').replace(/\D/g, '').slice(-10);
       const dbEmail = String(order.customer_email || '').trim().toLowerCase();
       return {
@@ -208,6 +214,17 @@ async function verifyRazorpayPayment(body, order) {
 
   if (!updated) {
     return { status: 500, body: { error: 'Payment was verified but the order could not be updated. Please contact support.' } };
+  }
+
+  try {
+    await dispatchPrepaidPaymentEmails({
+      ...order,
+      ...updated,
+      status: 'confirmed',
+      upi_txn_id: paymentId,
+    }, { route: '/api/verify-payment' });
+  } catch (emailErr) {
+    console.error('[verify-payment] Email dispatch exception (payment remains confirmed):', emailErr?.message || emailErr);
   }
 
   const dbPhone = String(order.customer_phone || '').replace(/\D/g, '').slice(-10);

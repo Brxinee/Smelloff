@@ -11,6 +11,7 @@ import {
   findShiprocketOrderByOrderCode,
   isDuplicateOrderError
 } from './_shiprocket.js';
+import { sendFulfillmentEmail } from './_email-dispatch.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -205,6 +206,16 @@ async function syncSingleOrder(order) {
     };
 
     if (Object.keys(patch).length) await patchOrder(order.order_code, patch);
+
+    const merged = { ...order, ...patch };
+    const fulfillmentStatus = statusPatch.status || order.status;
+    if (['dispatched', 'out_for_delivery', 'delivered'].includes(String(fulfillmentStatus || '').toLowerCase())) {
+      try {
+        await sendFulfillmentEmail(merged, fulfillmentStatus, { route: '/api/shiprocket-sync' });
+      } catch (emailErr) {
+        console.error('[shiprocket-sync] Fulfillment email exception:', emailErr?.message || emailErr);
+      }
+    }
 
     return {
       orderCode: order.order_code,

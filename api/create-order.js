@@ -5,6 +5,7 @@ import {
   generateOrderConfirmationToken,
 } from './_security.js';
 import { BASE_PRODUCT } from '../shared/products-config.js';
+import { dispatchCodPlacementEmails } from './_email-dispatch.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -190,6 +191,23 @@ export default async function handler(req, res) {
       const email = String(sanitizedPayload.email || '').trim().toLowerCase();
       const orderToken = generateOrderToken(orderCode, phone);
       const confirmationToken = generateOrderConfirmationToken(orderCode, email);
+
+      try {
+        await dispatchCodPlacementEmails({
+          order_code: orderCode,
+          customer_email: email,
+          customer_phone: phone,
+          payment_method: 'cod',
+          amount: expectedAmountPaise,
+          cod_fee: COD_FEE_RUPEES * 100,
+          items: sanitizedPayload.items,
+          address: sanitizedPayload.address,
+          status: 'placed',
+          created_at: new Date().toISOString(),
+        }, { route: '/api/create-order' });
+      } catch (emailErr) {
+        console.error('[api/create-order] COD email dispatch exception (order remains placed):', emailErr?.message || emailErr);
+      }
 
       return res.status(200).json({
         ...upstreamData,
