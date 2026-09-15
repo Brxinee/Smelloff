@@ -1,11 +1,17 @@
 import { BASE_PRODUCT } from '../shared/products-config.js';
 
+// Light receipt canvas. Forced-dark shells invert in Gmail iOS/Android
+// (white logos vanish, acid-green CTAs go magenta). Apple Mail ~62% of
+// opens, Gmail ~27% (Litmus July 2026). Brand lives in the green accent
+// + CTA, not a black page. Keep #080808 / #B8FF57 tokens for contrast.
 const BLACK = '#080808';
 const GREEN = '#B8FF57';
-const OFFWHITE = '#F5F5F0';
-const MUTED = '#A8A8A0';
-const BORDER = '#1F1F1F';
-const PANEL = '#111111';
+const PAGE = '#EDEDE8';
+const CARD = '#FFFFFE';
+const TEXT = BLACK;
+const MUTED = '#6B6B66';
+const BORDER = '#E2E2DC';
+const PANEL = '#F7F7F2';
 
 const FONT = "Arial, Helvetica, sans-serif";
 const HEADING_FONT = "Arial, Helvetica, sans-serif";
@@ -16,7 +22,9 @@ const ADMIN_URL = 'https://admin.smelloff.in';
 const PRICE = BASE_PRODUCT.price;
 const MRP = BASE_PRODUCT.mrp;
 const PRODUCT_NAME = 'ODORSTRIKE 50ml';
-const PRODUCT_IMAGE = `${SITE_URL}/assets/odorstrike-bottle.jpg`;
+const PRODUCT_IMAGE = `${SITE_URL}/assets/odorstrike-bottle-cutout.png`;
+const LOGO_BLACK = `${SITE_URL}/assets/brand/logo-smelloff-black.png`;
+const LOGO_WHITE = `${SITE_URL}/assets/brand/logo-smelloff-white.png?v=2`;
 const SHIPPING_LABEL = 'Free';
 const ETA_COPY = 'Typically 3–7 days across India';
 
@@ -25,11 +33,11 @@ export const trackUrl = (orderId = '') =>
 
 const escape = (s = '') =>
   String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replace(/&/g, '\u0026amp;')
+    .replace(/</g, '\u0026lt;')
+    .replace(/>/g, '\u0026gt;')
+    .replace(/"/g, '\u0026quot;')
+    .replace(/'/g, '\u0026#39;');
 
 
 const cleanHeader = (s = '') => String(s).replace(/[\r\n]+/g, ' ').trim();
@@ -53,19 +61,29 @@ function formatOrderDate(value) {
   return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-function productRow({ quantity = 1, product = PRODUCT_NAME, amount = '' } = {}) {
+function isCodMethod(paymentMethod = '') {
+  return /cod|cash on delivery/i.test(String(paymentMethod));
+}
+
+function customerPaymentLabel(paymentMethod = '') {
+  if (isCodMethod(paymentMethod)) return 'Cash on Delivery';
+  const raw = String(paymentMethod || '').trim();
+  if (!raw || /prepaid|razorpay/i.test(raw)) return 'UPI / card';
+  return raw;
+}
+
+function productRow({ quantity = 1, product = PRODUCT_NAME } = {}) {
   const qty = Number(quantity) || 1;
   return `
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 18px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 20px 0;">
   <tr>
-    <td width="72" valign="top" style="width:72px;padding:0 14px 0 0;">
-      <img src="${PRODUCT_IMAGE}" alt="${escape(product)}" width="72" height="72" style="display:block;width:72px;height:72px;object-fit:contain;border:1px solid ${BORDER};background-color:${PANEL};">
+    <td width="88" valign="middle" style="width:88px;padding:12px;background-color:${PANEL};border:1px solid ${BORDER};">
+      <img src="${PRODUCT_IMAGE}" alt="${escape(product)}" width="64" height="64" style="display:block;width:64px;height:64px;object-fit:contain;border:0;">
     </td>
-    <td valign="middle" style="font-family:${FONT};color:${OFFWHITE};">
-      <p style="margin:0 0 4px 0;font-size:15px;font-weight:700;letter-spacing:0.4px;">${escape(product)}</p>
-      <p style="margin:0;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:${MUTED};">Fabric-only odor mist · 50ml · Qty ${escape(String(qty))}</p>
+    <td valign="middle" style="font-family:${FONT};color:${TEXT};padding:12px 0 12px 16px;background-color:${CARD};">
+      <p style="margin:0 0 4px 0;font-size:16px;font-weight:700;line-height:1.3;color:${TEXT};">${escape(product)}</p>
+      <p style="margin:0;font-size:13px;line-height:1.4;color:${MUTED};">Fabric-only odor mist · 50ml · Qty ${escape(String(qty))}</p>
     </td>
-    <td valign="middle" align="right" style="font-family:${FONT};font-size:16px;font-weight:700;color:${GREEN};white-space:nowrap;">&#8377;${escape(rupee(amount))}</td>
   </tr>
 </table>`;
 }
@@ -93,8 +111,8 @@ export function formatAddress(address) {
 const button = (href, label) => `
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0 8px 0;">
   <tr>
-    <td style="background-color:${GREEN};border-radius:2px;">
-      <a href="${safeUrl(href)}" style="display:inline-block;padding:14px 28px;font-family:${HEADING_FONT};font-weight:700;font-size:13px;letter-spacing:1.6px;color:${BLACK};text-decoration:none;text-transform:uppercase;">
+    <td class="smf-btn" style="background-color:${GREEN};border:2px solid ${BLACK};border-radius:2px;">
+      <a href="${safeUrl(href)}" style="display:inline-block;padding:14px 28px;font-family:${HEADING_FONT};font-weight:700;font-size:15px;line-height:1;letter-spacing:0.2px;color:${BLACK};text-decoration:none;">
         ${escape(label)}
       </a>
     </td>
@@ -103,43 +121,63 @@ const button = (href, label) => `
 
 const kvRow = (label, value, emphasize = false) => `
 <tr>
-  <td style="font-family:${FONT};font-size:12px;letter-spacing:1px;text-transform:uppercase;color:${MUTED};padding:8px 0;border-bottom:1px solid ${BORDER};width:42%;">${escape(label)}</td>
-  <td style="font-family:${FONT};font-size:${emphasize ? '18px' : '14px'};font-weight:${emphasize ? '700' : '400'};color:${emphasize ? GREEN : OFFWHITE};padding:8px 0;border-bottom:1px solid ${BORDER};text-align:right;">${value}</td>
+  <td style="font-family:${FONT};font-size:13px;color:${MUTED};padding:10px 0;border-bottom:1px solid ${BORDER};width:42%;background-color:${PANEL};">${escape(label)}</td>
+  <td style="font-family:${FONT};font-size:${emphasize ? '18px' : '14px'};font-weight:${emphasize ? '700' : '400'};color:${TEXT};padding:10px 0 10px 12px;border-bottom:1px solid ${BORDER};text-align:right;background-color:${PANEL};">${value}</td>
 </tr>`;
+
+const statusPill = (label) =>
+  `<span style="display:inline-block;background-color:${GREEN};color:${BLACK};padding:3px 8px;font-family:${FONT};font-size:11px;font-weight:700;">${label}</span>`;
 
 const shell = (inner, preheader = '') => `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="dark">
-<meta name="supported-color-schemes" content="dark">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<meta name="x-apple-disable-message-reformatting">
 <title>SMELLOFF</title>
 <!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
 <style type="text/css">
+  :root { color-scheme: light dark; }
   @media only screen and (max-width: 620px) {
     .smf-wrap { width: 100% !important; }
-    .smf-pad { padding: 28px 20px !important; }
-    .smf-hero { font-size: 28px !important; line-height: 1.05 !important; }
+    .smf-pad { padding: 24px 18px !important; }
+    .smf-hero { font-size: 22px !important; line-height: 1.2 !important; }
+  }
+  @media (prefers-color-scheme: dark) {
+    .smf-page { background-color: #16181d !important; }
+    .smf-wrap { background-color: #21242b !important; border-color: #4a4a4a !important; }
+    .smf-pad, .smf-panel { background-color: #21242b !important; }
+    .smf-panel { background-color: #2a2d34 !important; border-color: #4a4a4a !important; }
+    .smf-hero, .smf-text { color: #e8eaed !important; }
+    .smf-muted, .smf-kicker { color: #9aa0a6 !important; }
+    .smf-btn { background-color: #B8FF57 !important; border-color: #080808 !important; }
+    .logo-light { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+    .logo-dark { display: block !important; width: auto !important; max-height: none !important; height: 22px !important; overflow: visible !important; }
   }
 </style>
 </head>
-<body style="margin:0;padding:0;background-color:${BLACK};font-family:${FONT};color:${OFFWHITE};-webkit-font-smoothing:antialiased;">
+<body class="smf-page" style="margin:0;padding:0;background-color:${PAGE};font-family:${FONT};color:${TEXT};-webkit-font-smoothing:antialiased;">
 <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;opacity:0;color:transparent;">${escape(preheader)}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${BLACK};">
+<table class="smf-page" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${PAGE};">
   <tr>
-    <td align="center" style="padding:24px 12px;">
-      <table role="presentation" class="smf-wrap" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:${BLACK};border:1px solid ${BORDER};">
+    <td align="center" style="padding:28px 12px;background-color:${PAGE};">
+      <table role="presentation" class="smf-wrap" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:${CARD};border:1px solid ${BORDER};">
         <tr>
-          <td class="smf-pad" style="padding:22px 32px;border-bottom:1px solid ${BORDER};">
+          <td style="height:4px;line-height:4px;font-size:0;background-color:${GREEN};">&nbsp;</td>
+        </tr>
+        <tr>
+          <td class="smf-pad" style="padding:22px 36px;border-bottom:1px solid ${BORDER};background-color:${CARD};">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
-                <td style="vertical-align:middle;">
+                <td style="vertical-align:middle;background-color:${CARD};">
                   <a href="${SITE_URL}" style="text-decoration:none;">
-                    <img src="${SITE_URL}/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" height="22" style="height:22px;width:auto;display:block;border:0;">
+                    <img class="logo-light" src="${LOGO_BLACK}" alt="SMELLOFF" height="22" style="height:22px;width:auto;display:block;border:0;">
+                    <img class="logo-dark" src="${LOGO_WHITE}" alt="" height="22" width="0" style="display:none;width:0;max-height:0;overflow:hidden;height:0;border:0;" aria-hidden="true">
                   </a>
                 </td>
-                <td align="right" style="vertical-align:middle;font-family:${FONT};font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${MUTED};">
+                <td align="right" class="smf-kicker" style="vertical-align:middle;font-family:${FONT};font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:${MUTED};background-color:${CARD};">
                   ODORSTRIKE
                 </td>
               </tr>
@@ -147,14 +185,14 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
           </td>
         </tr>
         <tr>
-          <td class="smf-pad" style="padding:40px 32px 32px 32px;">
+          <td class="smf-pad" style="padding:36px 36px 32px 36px;background-color:${CARD};">
             ${inner}
           </td>
         </tr>
         <tr>
-          <td class="smf-pad" style="padding:24px 32px 28px 32px;border-top:1px solid ${BORDER};font-family:${FONT};font-size:12px;color:${MUTED};line-height:1.6;">
-            <p style="margin:0 0 8px 0;color:${OFFWHITE};letter-spacing:1px;text-transform:uppercase;font-size:11px;">Smelloff · Hyderabad, India</p>
-            <p style="margin:0 0 8px 0;">Need help? <a href="mailto:${SUPPORT_EMAIL}" style="color:${GREEN};text-decoration:none;">${SUPPORT_EMAIL}</a></p>
+          <td class="smf-pad smf-muted" style="padding:22px 36px 28px 36px;border-top:1px solid ${BORDER};font-family:${FONT};font-size:12px;color:${MUTED};line-height:1.6;background-color:${CARD};">
+            <p class="smf-text" style="margin:0 0 8px 0;color:${TEXT};letter-spacing:0.4px;font-size:12px;font-weight:700;">Smelloff · Hyderabad, India</p>
+            <p style="margin:0 0 8px 0;">Need help? <a href="mailto:${SUPPORT_EMAIL}" style="color:${TEXT};text-decoration:underline;">${SUPPORT_EMAIL}</a></p>
             <p style="margin:0;">
               <a href="${SITE_URL}" style="color:${MUTED};text-decoration:none;">smelloff.in</a>
               &nbsp;·&nbsp;
@@ -163,7 +201,7 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
           </td>
         </tr>
       </table>
-      <p style="font-family:${FONT};font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:${MUTED};margin:16px 0 0 0;">
+      <p class="smf-muted" style="font-family:${FONT};font-size:11px;letter-spacing:0.4px;color:${MUTED};margin:16px 0 0 0;">
         Pocket-sized fabric odor reset spray
       </p>
     </td>
@@ -173,32 +211,27 @@ const shell = (inner, preheader = '') => `<!DOCTYPE html>
 </html>`;
 
 const hero = (text) =>
-  `<div style="width:36px;height:3px;background-color:${GREEN};margin:0 0 18px 0;"></div>
-<h1 class="smf-hero" style="font-family:${HEADING_FONT};font-weight:700;font-size:34px;line-height:1.05;letter-spacing:0.5px;color:${OFFWHITE};text-transform:uppercase;margin:0 0 18px 0;">${text}</h1>`;
+  `<h1 class="smf-hero" style="font-family:${HEADING_FONT};font-weight:700;font-size:26px;line-height:1.2;letter-spacing:-0.3px;color:${TEXT};margin:0 0 16px 0;">${text}</h1>`;
 
 const para = (text) =>
-  `<p style="font-family:${FONT};font-size:15px;line-height:1.6;color:${OFFWHITE};margin:0 0 16px 0;">${text}</p>`;
+  `<p class="smf-text" style="font-family:${FONT};font-size:16px;line-height:1.55;color:${TEXT};margin:0 0 16px 0;">${text}</p>`;
 
 const muted = (text) =>
-  `<p style="font-family:${FONT};font-size:13px;line-height:1.6;color:${MUTED};margin:0 0 14px 0;">${text}</p>`;
+  `<p class="smf-muted" style="font-family:${FONT};font-size:14px;line-height:1.55;color:${MUTED};margin:0 0 14px 0;">${text}</p>`;
 
 const panel = (content) =>
-  `<div style="background-color:${PANEL};border:1px solid ${BORDER};border-left:3px solid ${GREEN};padding:20px 22px;margin:22px 0;">${content}</div>`;
+  `<div class="smf-panel" style="background-color:${PANEL};border:1px solid ${BORDER};border-left:3px solid ${GREEN};padding:18px 20px;margin:20px 0;">${content}</div>`;
 
 function summaryTable(rows) {
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${rows}</table>`;
 }
 
 function footerHelp() {
-  return muted(`Need help? Contact Smelloff Support at <a href="mailto:${SUPPORT_EMAIL}" style="color:${GREEN};text-decoration:none;">${SUPPORT_EMAIL}</a>.`);
+  return muted(`Need help? Contact Smelloff Support at <a href="mailto:${SUPPORT_EMAIL}" style="color:${TEXT};text-decoration:underline;">${SUPPORT_EMAIL}</a>.`);
 }
 
 function textBlock(lines) {
   return lines.filter((line) => line !== null && line !== undefined).join('\n');
-}
-
-function isCodMethod(paymentMethod = '') {
-  return /cod|cash on delivery/i.test(String(paymentMethod));
 }
 
 export function codConfirmation(data = {}) {
@@ -224,7 +257,7 @@ export function orderConfirmation({
   const fee = Number(codFee) || 0;
   const cod = isCodMethod(paymentMethod) || fee > 0;
   const qty = Number(quantity) || 1;
-  const methodLabel = paymentMethod || (cod ? 'Cash on Delivery' : 'Prepaid (Razorpay)');
+  const methodLabel = customerPaymentLabel(paymentMethod || (cod ? 'Cash on Delivery' : ''));
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
   const dateLabel = formatOrderDate(timestamp) || formatOrderDate(new Date());
@@ -238,10 +271,10 @@ export function orderConfirmation({
       ? `Your ODORSTRIKE is locked in. Nothing has been charged — pay &#8377;${escape(rupee(amount))} in cash or UPI when it arrives.`
       : `Payment received. Your ODORSTRIKE is locked in.`)}
 
-    ${productRow({ quantity: qty, amount: String(Number(rupee(amount)) - fee || amount) })}
+    ${productRow({ quantity: qty })}
 
     ${panel(`
-      <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:0 0 10px 0;">Order ${escape(cleanOrderId || '—')}</p>
+      <p class="smf-kicker" style="font-family:${FONT};font-size:12px;letter-spacing:0.4px;color:${MUTED};margin:0 0 10px 0;">Order ${escape(cleanOrderId || '—')}</p>
       ${priceBreakdown({ quantity: qty, amount, codFee: fee })}
       ${summaryTable(`
         ${kvRow('Payment', escape(methodLabel))}
@@ -252,7 +285,7 @@ export function orderConfirmation({
       `)}
     `)}
 
-    <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:24px 0 6px 0;">Ships to</p>
+    <p class="smf-kicker" style="font-family:${FONT};font-size:12px;letter-spacing:0.4px;color:${MUTED};margin:24px 0 6px 0;">Ships to</p>
     ${muted(escape(address || '—').replace(/\n/g, '<br>'))}
 
     ${muted(cod
@@ -315,21 +348,22 @@ export function paymentConfirmation({
   orderId = '',
   customerName = 'there',
   amount = '',
-  paymentMethod = 'Prepaid (Razorpay)',
+  paymentMethod = 'UPI / card',
   transactionRef = '',
 } = {}) {
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
+  const methodLabel = customerPaymentLabel(paymentMethod);
   const inner = `
     ${hero('Payment received')}
     ${para(`Hey ${escape(name)},`)}
     ${para('Payment for your ODORSTRIKE order came through.')}
     ${panel(`
-      <p style="font-family:${HEADING_FONT};font-size:36px;font-weight:700;color:${GREEN};margin:0 0 8px 0;letter-spacing:-0.5px;">&#8377;${escape(rupee(amount))}</p>
-      <p style="font-family:${FONT};font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:0 0 16px 0;">Paid successfully</p>
+      <p class="smf-hero" style="font-family:${HEADING_FONT};font-size:32px;font-weight:700;color:${TEXT};margin:0 0 8px 0;letter-spacing:-0.5px;">&#8377;${escape(rupee(amount))}</p>
+      <p class="smf-kicker" style="font-family:${FONT};font-size:12px;color:${MUTED};margin:0 0 16px 0;">${statusPill('Paid successfully')}</p>
       ${summaryTable(`
         ${kvRow('Order', `#${escape(cleanOrderId)}`)}
-        ${kvRow('Payment method', escape(paymentMethod || 'Prepaid (Razorpay)'))}
+        ${kvRow('Payment method', escape(methodLabel))}
         ${transactionRef ? kvRow('Reference', escape(transactionRef)) : ''}
       `)}
     `)}
@@ -346,7 +380,7 @@ export function paymentConfirmation({
       '',
       `₹${rupee(amount)} paid successfully.`,
       `Order #${cleanOrderId}`,
-      `Payment method: ${paymentMethod || 'Prepaid (Razorpay)'}`,
+      `Payment method: ${methodLabel}`,
       transactionRef ? `Reference: ${transactionRef}` : null,
       '',
       `View order: ${trackUrl(cleanOrderId)}`,
@@ -372,8 +406,8 @@ export function orderShipped({
     ${panel(summaryTable(`
       ${kvRow('Order', `#${escape(cleanOrderId)}`)}
       ${kvRow('Courier', escape(courier || 'Assigned'))}
-      ${kvRow('Tracking', `<span style="color:${GREEN};letter-spacing:1px;">${escape(trackingId || 'Updating shortly')}</span>`)}
-      ${kvRow('Status', 'Shipped')}
+      ${kvRow('Tracking', `<span style="font-weight:700;letter-spacing:0.4px;">${escape(trackingId || 'Updating shortly')}</span>`)}
+      ${kvRow('Status', statusPill('Shipped'))}
     `))}
     ${muted('Delivery is typically 3–7 days from this scan, depending on your city.')}
     ${button(href, 'Track shipment')}
@@ -420,7 +454,7 @@ export function outForDelivery({
       ${kvRow('Order', `#${escape(cleanOrderId)}`)}
       ${kvRow('Courier', escape(courier || 'Courier'))}
       ${trackingId ? kvRow('Tracking', escape(trackingId)) : ''}
-      ${kvRow('Status', '<span style="color:#B8FF57;">Out for delivery</span>')}
+      ${kvRow('Status', statusPill('Out for delivery'))}
     `))}
     ${muted('If this is Cash on Delivery, keep the exact amount ready — cash or UPI.')}
     ${button(href, 'Track shipment')}
@@ -509,7 +543,7 @@ export function adminNewOrder({
       ${kvRow('Fulfillment', escape(fulfillmentStatus || '—'))}
       ${kvRow('Timestamp', escape(timestamp || new Date().toISOString()))}
     `))}
-    <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:24px 0 6px 0;">Address</p>
+    <p class="smf-kicker" style="font-family:${FONT};font-size:12px;letter-spacing:0.4px;color:${MUTED};margin:24px 0 6px 0;">Address</p>
     ${muted(escape(address || '—'))}
     ${button(`${ADMIN_URL}/#orders`, 'Open order')}
   `;
@@ -624,7 +658,7 @@ export function diagnosticTest({
   const inner = `
     ${hero('Smelloff email system test')}
     ${panel(summaryTable(`
-      ${kvRow('Status', '<span style="color:#B8FF57;">RESEND API → ACCEPTED</span>')}
+      ${kvRow('Status', statusPill('RESEND API → ACCEPTED'))}
       ${kvRow('Email ID', escape(emailId || 'pending'))}
       ${kvRow('Environment', escape(environment || 'production'))}
       ${kvRow('Timestamp', escape(timestamp || new Date().toISOString()))}
@@ -651,8 +685,8 @@ export function welcomeEmail({ customerName = 'there' } = {}) {
     ${para(`Hey ${escape(name)}. Welcome to Smelloff.`)}
     ${muted('ODORSTRIKE is a 50ml fabric-only odor reset spray. Not perfume. Not deodorant. One pocket-sized bottle for clothes — sweat, smoke, food, gym, day-two shirts.')}
     ${panel(`
-      <p style="font-family:${FONT};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:${MUTED};margin:0 0 8px 0;">ODORSTRIKE 50ml</p>
-      <p style="margin:0;font-family:${HEADING_FONT};font-size:32px;font-weight:700;color:${GREEN};">&#8377;${PRICE} <span style="font-size:14px;color:${MUTED};text-decoration:line-through;font-weight:400;">&#8377;${MRP}</span></p>
+      <p class="smf-kicker" style="font-family:${FONT};font-size:12px;color:${MUTED};margin:0 0 8px 0;">ODORSTRIKE 50ml</p>
+      <p class="smf-text" style="margin:0;font-family:${HEADING_FONT};font-size:28px;font-weight:700;color:${TEXT};">&#8377;${PRICE} <span style="font-size:14px;color:${MUTED};text-decoration:line-through;font-weight:400;">&#8377;${MRP}</span></p>
     `)}
     ${button(SITE_URL, 'Shop now')}
     ${footerHelp()}
@@ -682,8 +716,8 @@ export function abandonedCart({
     ${hero('You left something.')}
     ${para(`${escape(name)}, your ODORSTRIKE is still in the cart.`)}
     ${panel(`
-      <p style="font-family:${HEADING_FONT};font-size:18px;font-weight:700;color:${OFFWHITE};margin:0 0 6px 0;">${PRODUCT_NAME}</p>
-      <p style="margin:0;color:${GREEN};font-size:24px;font-weight:700;">&#8377;${PRICE}</p>
+      <p class="smf-text" style="font-family:${HEADING_FONT};font-size:18px;font-weight:700;color:${TEXT};margin:0 0 6px 0;">${PRODUCT_NAME}</p>
+      <p class="smf-text" style="margin:0;color:${TEXT};font-size:24px;font-weight:700;">&#8377;${PRICE}</p>
     `)}
     ${button(productUrl, 'Finish order')}
     ${footerHelp()}
@@ -745,9 +779,9 @@ export function orderCancelled({
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
   const inner = `
-    ${hero('Order cancelled.')}
+    ${hero('Order cancelled')}
     ${para(`${escape(name)}, ODORSTRIKE order #${escape(cleanOrderId)} has been cancelled.`)}
-    ${reason ? panel(`<p style="margin:0;color:${OFFWHITE};font-size:14px;">${escape(reason)}</p>`) : ''}
+    ${reason ? panel(`<p class="smf-text" style="margin:0;color:${TEXT};font-size:14px;">${escape(reason)}</p>`) : ''}
     ${muted('If you already paid, the refund is in motion and usually lands in 5–7 business days. Cash on Delivery orders have nothing to reverse.')}
     ${button(SITE_URL, 'Shop again')}
     ${footerHelp()}
@@ -820,7 +854,7 @@ export function paymentFailed({
     ${panel(summaryTable(`
       ${kvRow('Order', `#${escape(cleanOrderId)}`)}
       ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`, true)}
-      ${kvRow('Status', 'Not charged')}
+      ${kvRow('Status', statusPill('Not charged'))}
     `))}
     ${muted('Nothing was taken from your account. You can try UPI again, or switch to Cash on Delivery at checkout.')}
     ${button(retryUrl, 'Try again')}

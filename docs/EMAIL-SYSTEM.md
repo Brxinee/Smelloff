@@ -115,23 +115,29 @@ Duplicate emails across customers are allowed. Identity is `order_code` + phone,
 
 ## D. Design system
 
-Email-safe HTML tables. No JS. No webfonts. Arial / Helvetica. Dark body so Gmail / Outlook / Apple Mail all render the matte-black brand.
+Email-safe HTML tables. No JS. No webfonts. Arial / Helvetica. **Light receipt, not a dark brand deck.**
 
-| Token | Value |
-|---|---|
-| Background | `#080808` |
-| Panel | `#111111` |
-| Border | `#1F1F1F` |
-| Acid green | `#B8FF57` |
-| Off-white | `#F5F5F0` |
-| Muted | `#A8A8A0` |
-| Body | 15px / 1.6 |
-| Hero | 34px uppercase, 28px on ≤620px |
-| CTA | 44px-tall green pill, black type, uppercase tracking |
-| Product row | 72px bottle JPG + name + “Fabric-only odor mist · 50ml · Qty n” |
-| Preheader | hidden first line, unique per template |
-| Logo | `https://smelloff.in/assets/brand/logo-smelloff-white.png` |
-| Product image | `https://smelloff.in/assets/odorstrike-bottle.jpg` |
+Forced-black emails fail in 2026 clients: Gmail iOS fully inverts (white logos vanish, `#B8FF57` CTAs go magenta), Gmail Android partially inverts, Gmail ignores `prefers-color-scheme`. Litmus July 2026: Apple Mail ~62% of opens, Gmail ~27%. Winning receipts (Apple, Nike, Allbirds, Shopify, Stripe) are an off-white canvas, charcoal type, one brand-color CTA, product image, order id in the subject, one action.
+
+| Token | Value | Role |
+|---|---|---|
+| Page | `#EDEDE8` | Outer canvas (not `#FFFFFF` — inversion-safe) |
+| Card | `#FFFFFE` | Receipt surface (not `#FFFFFF` — Apple Mail bug) |
+| Text | `#080808` | Body, totals, CTA type |
+| Muted | `#6B6B66` | Labels, footer |
+| Border | `#E2E2DC` | Hairlines |
+| Panel | `#F7F7F2` | Order summary well |
+| Acid green | `#B8FF57` | 4px top bar, CTA fill, status pills — never body text on light |
+| Body | 16px / 1.55 | |
+| Hero | 26px sentence case, 22px on ≤620px | |
+| CTA | green fill, `#080808` type, 2px black border (survives invert) | |
+| Product row | 64px bottle cutout on panel, no duplicate rupee | |
+| Preheader | hidden first line, unique per template | |
+| Logo | black PNG default; white PNG swapped only in `@media (prefers-color-scheme: dark)` for Apple | |
+| Product image | `https://smelloff.in/assets/odorstrike-bottle-cutout.png` | |
+| `color-scheme` | `light dark` | |
+
+Customer payment label is **UPI / card** or **Cash on Delivery** — never “Prepaid (Razorpay)”. Admin mail keeps the raw method.
 
 Readable with images off: subject, preheader, plaintext alternative, and HTML text all carry order id, total, and the track URL.
 
