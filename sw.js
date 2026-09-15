@@ -67,6 +67,9 @@ self.addEventListener('fetch', (event) => {
   if (isStaticAsset(url)) {
     event.respondWith(
       caches.match(req).then((cached) => {
+        // Bolt ⚡: True cache-first early return. Prevents the fetch()
+        // below from firing redundantly when assets are already cached.
+        if (cached) return cached;
         const network = fetch(req).then((res) => {
           if (res && res.ok) {
             const copy = res.clone();
@@ -74,7 +77,7 @@ self.addEventListener('fetch', (event) => {
           }
           return res;
         }).catch(() => cached);
-        return cached || network;
+        return network;
       })
     );
     return;
