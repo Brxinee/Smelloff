@@ -213,11 +213,23 @@ export default async function handler(req, res) {
               paymentMethod: 'UPI (Prepaid)'
             });
             const resend = new Resend(process.env.RESEND_API_KEY);
-            resend.emails.send({ from: FROM, to: order.customer_email, replyTo: REPLY_TO, subject, html })
-              .catch(e => console.error('[payment-status] Confirmation email error:', e.message));
+            const { data, error } = await resend.emails.send({
+              from: FROM,
+              to: [order.customer_email],
+              replyTo: REPLY_TO,
+              subject,
+              html
+            });
+            if (error) {
+              console.error('[payment-status] Resend error:', error);
+            } else {
+              console.log('[payment-status] Confirmation email sent:', data?.id || 'accepted');
+            }
           } catch (emailErr) {
-            console.error('[payment-status] Email formatting error:', emailErr.message);
+            console.error('[payment-status] Confirmation email exception:', emailErr);
           }
+        } else {
+          console.warn('[payment-status] Confirmation email skipped: missing order/customer email or RESEND_API_KEY');
         }
         return res.status(200).json({
           ok: true,
