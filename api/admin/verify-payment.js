@@ -247,16 +247,23 @@ export default async function handler(req, res) {
             paymentMethod: 'UPI'
           });
           const resend = new Resend(process.env.RESEND_API_KEY);
-          resend.emails.send({
+          const { data, error } = await resend.emails.send({
             from: FROM,
-            to: order.customer_email,
+            to: [order.customer_email],
             replyTo: REPLY_TO,
             subject,
             html
-          }).catch(e => console.error('[admin-verify] Confirmation email failed:', e.message));
+          });
+          if (error) {
+            console.error('[admin-verify] Resend error:', error);
+          } else {
+            console.log('[admin-verify] Confirmation email sent:', data?.id || 'accepted');
+          }
         } catch (emailErr) {
-          console.error('[admin-verify] Email template exception:', emailErr.message);
+          console.error('[admin-verify] Confirmation email exception:', emailErr);
         }
+      } else {
+        console.warn('[admin-verify] Confirmation email skipped: missing order/customer email or RESEND_API_KEY');
       }
 
       return res.status(200).json({
