@@ -71,6 +71,13 @@ function readQuantity(order) {
   return Number.isInteger(quantity) && quantity > 0 ? quantity : 1;
 }
 
+function readLineItemsTotal(order) {
+  const localUnitPriceRupees = Number(order?.items?.[0]?.price);
+  const qty = readQuantity(order);
+  if (!Number.isSafeInteger(localUnitPriceRupees) || localUnitPriceRupees <= 0) return null;
+  return localUnitPriceRupees * qty * 100;
+}
+
 function verifySignature(orderId, paymentId, signature) {
   if (!orderId || !paymentId || !signature || !RAZORPAY_KEY_SECRET) return false;
   const expected = crypto.createHmac('sha256', RAZORPAY_KEY_SECRET).update(`${orderId}|${paymentId}`).digest('hex');
@@ -118,8 +125,6 @@ async function sendFinalizationEmail(order) {
     }
     return await dispatchPrepaidPaymentEmails(order, { route: '/api/magic-checkout-finalize' });
   } catch (error) {
-    // The order is already finalized; email retry infrastructure can handle a
-    // later delivery attempt. Never roll back a confirmed payment/order here.
     console.error('[magic-checkout-finalize] email dispatch failed:', error?.message || error);
     return null;
   }
@@ -139,8 +144,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const ip = clientIp(req);
-  if (!checkRateLimit(`magic-finalize:${ip}`, 30, 10 * 60 * 1000)) {
+  if (!checkRateLimit(`magic-finalize:${clientIp(req)}`, 30, 10 * 60 * 1000)) {
     return res.status(429).json({ error: 'Too many checkout verification attempts. Please slow down.' });
   }
 
@@ -160,12 +164,12 @@ export default async function handler(req, res) {
     }
 
     if (TERMINAL_STATUSES.has(String(local.status || '').toLowerCase())) {
-      const method = String(local.payment_method || '').toLowerCase() === 'cod' ? 'cod' : 'razorpay';
+      const method = String(local.payment_method || '').toLowerCase() === 'cod' ? 'cod' : String(local.payment_method || 'razorpay').toLowerCase();
       return res.status(200).json(responseForFinal(local, method, String(local.upi_txn_id || '')));
     }
 
     const razorpayOrderId = String(body.razorpay_order_id || local.payment_attempt_id || '').trim();
-    if (!razorpayOrderId) return res.status(409).json({ error: 'Checkout is still being initialized. Please try again.' });
+    if (!razorpayOrderId) return res.status(409).json({ error: 'Checkout is still being initialized. Please try again.', pending: true });
     if (local.payment_attempt_id && String(local.payment_attempt_id) !== razorpayOrderId) {
       return res.status(400).json({ error: 'Razorpay order mismatch.' });
     }
@@ -179,43 +183,43 @@ export default async function handler(req, res) {
     const lineItemsTotal = Number(rzpOrder.line_items_total);
     const shippingFee = Number(rzpOrder.shipping_fee || 0);
     const codFee = Number(rzpOrder.cod_fee || 0);
-    if (!Number.isSafeInteger(Number(rzpOrder.amount)) || Number(rzpOrder.amount) < 100) {
+    const localLineItemsTotal = readLineItemsTotal(local);
+    const razorpayAmount = Number(rzpOrder.amount);
+
+    if (!Number.isSafeInteger(razorpayAmount) || razorpayAmount < 100) {
       return res.status(502).json({ error: 'Razorpay returned an invalid order amount.' });
     }
-    if (Number.isSafeInteger(lineItemsTotal) && lineItemsTotal !== lineItemsTotal) {
+    if (!Number.isSafeInteger(lineItemsTotal) || lineItemsTotal < 100) {
       return res.status(502).json({ error: 'Razorpay returned an invalid line-item total.' });
     }
-    if (Number.isSafeInteger(lineItemsTotal) && lineItemsTotal > 0 && lineItemsTotal !== Number(local.items?.[0]?.price || 0) * readQuantity(local) * 100) {
+    if (localLineItemsTotal === null || lineItemsTotal !== localLineItemsTotal) {
       return res.status(400).json({ error: 'Razorpay line-item total does not match the Smelloff order.' });
     }
-    if (Number(rzpOrder.amount) !== (Number.isFinite(lineItemsTotal) && lineItemsTotal > 0 ? lineItemsTotal : Number(rzpOrder.amount) - shippingFee - codFee + shippingFee + codFee)) {
-      // No-op arithmetic guard retained for explicit numeric validation.
+    if (!Number.isSafeInteger(shippingFee) || shippingFee < 0 || !Number.isSafeInteger(codFee) || codFee < 0) {
+      return res.status(502).json({ error: 'Razorpay returned invalid shipping or COD fees.' });
     }
 
     const status = String(rzpOrder.status || '').toLowerCase();
 
     if (status === 'placed') {
-      // Magic Checkout COD orders are placed, not captured. Fetch the associated
-      // payment record to prove the method is actually COD and to guard against
-      // treating an unfinished checkout as an order.
       const payments = await fetchRazorpayPayments(razorpayOrderId);
       const codPayment = payments.find((payment) =>
         String(payment?.method || '').toLowerCase() === 'cod' &&
         String(payment?.status || '').toLowerCase() === 'pending' &&
-        Number(payment?.amount) === Number(rzpOrder.amount) &&
+        Number(payment?.amount) === razorpayAmount &&
         String(payment?.order_id || '') === razorpayOrderId
       );
       if (!codPayment) return res.status(409).json({ error: 'COD order is not yet confirmed by Razorpay. Please wait a moment and try again.', pending: true });
 
-      const expectedAmount = Number(local.items?.[0]?.price || 0) * readQuantity(local) * 100 + shippingFee + codFee;
-      if (Number(rzpOrder.amount) !== expectedAmount || codFee <= 0) {
+      const expectedAmount = localLineItemsTotal + shippingFee + codFee;
+      if (codFee <= 0 || razorpayAmount !== expectedAmount) {
         return res.status(400).json({ error: 'COD amount verification failed.' });
       }
 
       const updated = await patchLocalOrder(orderCode, {
         status: 'placed',
         payment_method: 'cod',
-        amount: Number(rzpOrder.amount),
+        amount: razorpayAmount,
         cod_fee: codFee,
         payment_verified_at: null,
       });
@@ -234,13 +238,15 @@ export default async function handler(req, res) {
       if (!payment || String(payment.order_id || '') !== razorpayOrderId) return res.status(400).json({ error: 'Payment/order mismatch.' });
       if (String(payment.method || '').toLowerCase() === 'cod') return res.status(400).json({ error: 'COD must be finalized through the COD checkout state.' });
       if (String(payment.status || '').toLowerCase() !== 'captured') return res.status(409).json({ error: 'Payment is not captured yet. Please wait a moment and try again.', pending: true });
-      if (Number(payment.amount) !== Number(rzpOrder.amount)) return res.status(400).json({ error: 'Payment amount mismatch.' });
-      if (Number(rzpOrder.amount) !== Number(local.items?.[0]?.price || 0) * readQuantity(local) * 100) return res.status(400).json({ error: 'Prepaid amount verification failed.' });
+      if (Number(payment.amount) !== razorpayAmount || payment.currency !== 'INR') return res.status(400).json({ error: 'Payment amount/currency mismatch.' });
+      if (razorpayAmount !== localLineItemsTotal) return res.status(400).json({ error: 'Prepaid amount verification failed.' });
+      if (codFee !== 0 || shippingFee !== 0) return res.status(400).json({ error: 'Unexpected prepaid fees returned by Razorpay.' });
 
+      const method = String(payment.method || 'razorpay').toLowerCase();
       const updated = await patchLocalOrder(orderCode, {
         status: 'confirmed',
-        payment_method: String(payment.method || 'razorpay').toLowerCase(),
-        amount: Number(payment.amount),
+        payment_method: method,
+        amount: razorpayAmount,
         cod_fee: 0,
         upi_txn_id: paymentId,
         upi_response_code: 'RZP',
@@ -248,7 +254,7 @@ export default async function handler(req, res) {
       });
       if (!updated) return res.status(500).json({ error: 'Payment was verified but the order could not be finalized.' });
       await sendFinalizationEmail(updated);
-      return res.status(200).json(responseForFinal(updated, String(payment.method || 'razorpay').toLowerCase(), paymentId));
+      return res.status(200).json(responseForFinal(updated, method, paymentId));
     }
 
     return res.status(409).json({
