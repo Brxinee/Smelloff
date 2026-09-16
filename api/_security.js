@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 
 const PRODUCTION_ORIGINS = new Set(['https://smelloff.in', 'https://www.smelloff.in']);
+const PREVIEW_ORIGINS = new Set(['https://aistudio.google.com']);
 
 function allowedOrigins() {
   const origins = new Set(PRODUCTION_ORIGINS);
@@ -8,6 +9,9 @@ function allowedOrigins() {
     .split(',').map(v => v.trim().replace(/\/$/, '')).filter(Boolean);
   for (const origin of extra) origins.add(origin);
   if (process.env.VERCEL_URL) origins.add(`https://${process.env.VERCEL_URL}`);
+  if (process.env.SMELLOFF_ALLOW_AISTUDIO_PREVIEW !== '0') {
+    for (const origin of PREVIEW_ORIGINS) origins.add(origin);
+  }
   return origins;
 }
 
@@ -96,7 +100,10 @@ export function verifyOrderConfirmationToken(orderCode, email, token) {
   try {
     const a = Buffer.from(expectedSig, 'utf8');
     const b = Buffer.from(sig, 'utf8');
-    if (a.length !== b.length) return false;
+    if (a.length !== b.length) {
+      crypto.timingSafeEqual(a, a);
+      return false;
+    }
     return crypto.timingSafeEqual(a, b);
   } catch {
     return false;
@@ -109,11 +116,8 @@ export function isAdminAuthorized(req) {
   const auth = String(req.headers.authorization || '').trim();
   const custom = String(req.headers['x-admin-key'] || req.headers['x-admin-secret'] || '').trim();
   let token = '';
-  if (/^Bearer\s+/i.test(auth)) {
-    token = auth.replace(/^Bearer\s+/i, '').trim();
-  } else if (custom) {
-    token = custom;
-  }
+  if (/^Bearer\s+/i.test(auth)) token = auth.replace(/^Bearer\s+/i, '').trim();
+  else if (custom) token = custom;
   if (!token) return false;
   try {
     const a = Buffer.from(adminSecret.trim(), 'utf8');
@@ -132,11 +136,8 @@ export function isCronAuthorized(req) {
   const auth = String(req.headers.authorization || '').trim();
   const custom = String(req.headers['x-cron-secret'] || '').trim();
   let token = '';
-  if (/^Bearer\s+/i.test(auth)) {
-    token = auth.replace(/^Bearer\s+/i, '').trim();
-  } else if (custom) {
-    token = custom;
-  }
+  if (/^Bearer\s+/i.test(auth)) token = auth.replace(/^Bearer\s+/i, '').trim();
+  else if (custom) token = custom;
   if (!token) return false;
   try {
     const a = Buffer.from(cronSecret.trim(), 'utf8');

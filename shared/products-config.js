@@ -103,6 +103,31 @@ export const APPROVED_CLAIMS = {
  * Authoritative Order Lifecycle States
  */
 export const ORDER_LIFECYCLE = {
+  MAGIC_CHECKOUT: {
+    initialStatus: 'checkout_pending',
+    validTransitions: [
+      'checkout_pending',
+      'confirmed',
+      'placed',
+      'failed',
+      'cancelled',
+      'packed',
+      'dispatched',
+      'out_for_delivery',
+      'delivered'
+    ],
+    transitionMap: {
+      checkout_pending: ['confirmed', 'placed', 'failed', 'cancelled'],
+      confirmed: ['packed', 'dispatched', 'cancelled'],
+      placed: ['confirmed', 'packed', 'dispatched', 'cancelled'],
+      failed: ['checkout_pending', 'cancelled'],
+      cancelled: [],
+      packed: ['dispatched', 'cancelled'],
+      dispatched: ['out_for_delivery', 'delivered', 'cancelled'],
+      out_for_delivery: ['delivered', 'cancelled'],
+      delivered: []
+    }
+  },
   PREPAID_UPI: {
     initialStatus: 'upi_pending',
     validTransitions: [
@@ -156,8 +181,10 @@ export function isValidTransition(currentStatus, targetStatus, paymentMethod = '
   if (!currentStatus || !targetStatus) return false;
   if (currentStatus === targetStatus) return true; // Idempotent no-op
 
-  const isCod = String(paymentMethod || '').toLowerCase() === 'cod';
-  const lifecycle = isCod ? ORDER_LIFECYCLE.COD : ORDER_LIFECYCLE.PREPAID_UPI;
+  const method = String(paymentMethod || '').toLowerCase();
+  let lifecycle = ORDER_LIFECYCLE.PREPAID_UPI;
+  if (method === 'cod') lifecycle = ORDER_LIFECYCLE.COD;
+  else if (method === 'pending' || currentStatus === 'checkout_pending') lifecycle = ORDER_LIFECYCLE.MAGIC_CHECKOUT;
 
   const allowedNext = lifecycle.transitionMap[currentStatus];
   if (!allowedNext || !Array.isArray(allowedNext)) return false;
