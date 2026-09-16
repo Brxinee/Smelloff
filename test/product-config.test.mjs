@@ -486,7 +486,7 @@ test('odorstrike.html PDP hero and primary buy area UX hierarchy, canonical pric
   // 6. Buying reassurance strip
   assert.ok(pInfo.includes('Free Shipping Pan-India'), 'Reassurance: Free shipping pan-India');
   assert.ok(pInfo.includes('COD Available · ₹60 Handling'), 'Reassurance: COD with ₹60 handling');
-  assert.ok(pInfo.includes('Delivers in 3–7 Days'), 'Reassurance: Delivers in 3–7 days');
+  assert.ok(pInfo.includes('Typically 3–5 business days to metros · 5–7 outside'), 'Reassurance: calendar-style metro/outside windows');
   assert.ok(pInfo.includes('7-Day Returns'), 'Reassurance: 7-day returns');
 
   // 7. Strict visual reading order in DOM

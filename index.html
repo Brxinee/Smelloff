@@ -1327,11 +1327,64 @@
        a translate would break the shared hairlines between them. */
     .benefits-strip .trust-row li:hover{background:var(--surface-2);color:var(--acid)}
   }
+
+  /* Sticky mobile buy bar — homepage only. Hidden until the hero CTA
+     leaves the viewport; hidden again at ≥768px where the header CTA is enough. */
+  .mobile-bar{
+    position:fixed;bottom:0;left:0;right:0;
+    z-index:60;
+    background:var(--ink);
+    padding:12px max(20px,env(safe-area-inset-left,0px))
+            calc(12px + env(safe-area-inset-bottom,0px))
+            max(20px,env(safe-area-inset-right,0px));
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    transform:translateY(100%);
+    transition:transform .3s ease;
+    border-top:1px solid rgba(244,241,234,.1);
+  }
+  .mobile-bar.visible{transform:translateY(0)}
+  @media(max-width:767px){
+    body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  }
+  .mobile-bar .mb-label{
+    font-family:var(--mono);
+    font-size:11px;
+    line-height:1.3;
+    letter-spacing:.08em;
+    color:var(--paper, var(--text));
+    opacity:.8;
+    margin-right:12px;
+    flex:1 1 auto;
+  }
+  .mobile-bar .mb-btn{
+    background:var(--acid);
+    color:var(--ink);
+    border:none;
+    min-height:44px;
+    padding:12px 24px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    text-decoration:none;
+    cursor:pointer;
+    border-radius:2px;
+    flex-shrink:0;
+    white-space:nowrap;
+  }
+  .mobile-bar .mb-btn:focus-visible{outline:2px solid var(--paper, var(--text));outline-offset:2px}
+  @media(min-width:768px){.mobile-bar{display:none !important}}
 </style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=e279586e">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=09e45570">
-<script src="/assets/js/chrome.js?v=fe51cb5b" defer></script>
+<link rel="stylesheet" href="/assets/css/chrome.css?v=25635ee6">
+<script src="/assets/js/chrome.js?v=af5ba068" defer></script>
 </head>
 <body>
 
@@ -1356,7 +1409,7 @@
           <li><a href="/faq">FAQ</a></li>
           <li><a href="/track-order">Track order</a></li>
         </ul>
-        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹229</a>
+        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹229<span class="sf-hdr__cta-sub">prepaid · COD ₹289</span></a>
         <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
           <span></span><span></span><span></span>
         </button>
@@ -1373,6 +1426,11 @@
   </div>
 </header>
 <!-- /SF-CHROME:HEADER -->
+
+<div class="mobile-bar" id="homeMobileBar" aria-hidden="true">
+  <span class="mb-label">ODORSTRIKE 50ml · ₹229 prepaid · COD ₹289</span>
+  <a class="mb-btn" href="/odorstrike?buy=1">GET ODORSTRIKE</a>
+</div>
 
 <main id="sf-main" tabindex="-1">
 
@@ -1451,7 +1509,7 @@
             <div class="hero-price-meta">
               <span>50ml · ~250 sprays</span>
               <span class="hero-meta-dot">·</span>
-              <span>Free shipping pan-India</span>
+              <span>Free shipping prepaid · COD ₹289 (+₹60)</span>
             </div>
           </div>
 
@@ -1480,9 +1538,9 @@
           <div class="hero-trust-mini">
             <span>Made in India</span>
             <span class="htm-dot">/</span>
-            <span>Free Shipping</span>
+            <span>Free prepaid shipping</span>
             <span class="htm-dot">/</span>
-            <span>COD Available</span>
+            <span>COD ₹289 (+₹60 handling)</span>
           </div>
         </div>
       </div>
@@ -1554,7 +1612,7 @@
         </li>
         <li>
           <span class="mask-ico ico-cod" role="img" aria-hidden="true"></span>
-          Cash on Delivery
+          COD ₹289 (+₹60)
         </li>
         <li>
           <span class="mask-ico ico-hyderabad" role="img" aria-hidden="true"></span>
@@ -1644,7 +1702,7 @@
           </div>
           <p class="eyebrow">FABRIC ODOR CONTROL · 50ML</p>
           <h2 id="productTitle">ODORSTRIKE</h2>
-          <p class="prod-lead">A pocket-sized fabric odor eliminator mist for the clothes you're already wearing. Neutralizes sweat and trapped ambient odor in the weave — giving you up to 8 hours of fabric odor protection.</p>
+          <p class="prod-lead">A pocket-sized fabric odor eliminator mist for the clothes you're already wearing. Neutralizes sweat and trapped ambient odor in the weave — giving you up to 8 hours of fabric odor protection under normal office/commute conditions.</p>
           
           <ul class="prod-specs" aria-label="Product features and specifications">
             <li class="prod-spec">
@@ -1661,7 +1719,7 @@
             </li>
             <li class="prod-spec">
               <span class="ps-label">SCENT</span>
-              <span class="ps-val">Subtle fresh scent · Non-perfumed</span>
+              <span class="ps-val">Subtle fresh scent · Not a perfume</span>
             </li>
           </ul>
 
@@ -1991,6 +2049,32 @@
   // Safety net: content must never stay hidden, even if an observer callback
   // is missed (fast scroll, tab restore, odd viewport).
   setTimeout(revealAll, 2500);
+})();
+</script>
+
+<script>
+(function(){
+  var bar = document.getElementById('homeMobileBar');
+  var heroCta = document.querySelector('.hero-cta-group');
+  if (!bar || !heroCta) return;
+  function show(on){
+    bar.classList.toggle('visible', !!on);
+    bar.setAttribute('aria-hidden', on ? 'false' : 'true');
+  }
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries){
+      var inView = entries.some(function(e){ return e.isIntersecting; });
+      show(!inView);
+    }, { threshold: 0 });
+    observer.observe(heroCta);
+  } else {
+    function onScroll(){
+      var rect = heroCta.getBoundingClientRect();
+      show(rect.bottom < 0 || rect.top > window.innerHeight);
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  }
 })();
 </script>
 

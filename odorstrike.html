@@ -3177,8 +3177,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 </script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=e279586e">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=09e45570">
-<script src="/assets/js/chrome.js?v=fe51cb5b" defer></script>
+<link rel="stylesheet" href="/assets/css/chrome.css?v=25635ee6">
+<script src="/assets/js/chrome.js?v=af5ba068" defer></script>
 </head>
 <body>
 
@@ -3203,7 +3203,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <li><a href="/faq">FAQ</a></li>
           <li><a href="/track-order">Track order</a></li>
         </ul>
-        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹229</a>
+        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹229<span class="sf-hdr__cta-sub">prepaid · COD ₹289</span></a>
         <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
           <span></span><span></span><span></span>
         </button>
@@ -3223,7 +3223,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
 <!-- STICKY MOBILE BAR -->
 <div class="mobile-bar" id="mobileBar">
-  <span class="mb-label" id="mobileBarLabel" aria-live="polite" aria-atomic="true">ODORSTRIKE 50ml · ₹229</span>
+  <span class="mb-label" id="mobileBarLabel" aria-live="polite" aria-atomic="true">ODORSTRIKE 50ml · ₹229 prepaid · COD ₹289</span>
   <button class="mb-btn" id="mobileBarBuyBtn" onclick="buyNow()" aria-describedby="mobileBarLabel">GET ODORSTRIKE</button>
 </div>
 
@@ -3272,7 +3272,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <span class="cart-sub-amt" id="cartSubtotal">₹229</span>
       </div>
       <div class="cart-ship-note">Free shipping across India · COD adds ₹60 at checkout</div>
-      <button class="cart-checkout" id="cartCheckoutBtn" onclick="checkoutFromCart()">Checkout · <span id="cartCheckoutAmt">₹229</span></button>
+      <button class="cart-checkout" id="cartCheckoutBtn" onclick="checkoutFromCart()">Checkout · <span id="cartCheckoutAmt">₹289</span></button>
     </div>
   </aside>
 </div>
@@ -3398,7 +3398,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <div class="product-info">
       <p class="ph-eyebrow">FABRIC ODOR CONTROL · 50ML</p>
       <h1>ODORSTRIKE</h1>
-      <p class="ph-tagline">A pocket-sized fabric odor mist for clothes. Sweat and daily odor molecules get trapped deep in the weave of your shirts and jackets. ODORSTRIKE neutralizes them directly in fabric fibres — giving you up to 8 hours of clean odor protection with zero residue.</p>
+      <p class="ph-tagline">A pocket-sized fabric odor mist for clothes. Sweat and daily odor molecules get trapped deep in the weave of your shirts and jackets. ODORSTRIKE neutralizes them directly in fabric fibres — giving you up to 8 hours of clean odor protection on fabric under normal office/commute conditions with zero residue.</p>
       
       <div class="ph-badges" aria-label="Usage distinction">
         <span class="ph-badge">NOT PERFUME</span>
@@ -3436,7 +3436,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <div class="hero-trust" aria-label="Buying reassurance">
         <span>Free Shipping Pan-India</span>
         <span>COD Available · ₹60 Handling</span>
-        <span>Delivers in 3–7 Days</span>
+        <span>Typically 3–5 business days to metros · 5–7 outside</span>
         <span>7-Day Returns</span>
       </div>
 
@@ -3758,7 +3758,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <div class="pack-size">ODORSTRIKE — 50ML POCKET</div>
       <div class="mrp-strike">M.R.P. ₹499</div>
       <h3>₹229</h3>
-      <div class="per-unit">1 bottle · ~250 sprays · up to 8hr protection</div>
+      <div class="per-unit">1 bottle · ~250 sprays · up to 8 hours on fabric (office/commute)</div>
       <!-- 54% = (499 − 229) / 499, rounded. Keep this in step with CFG.MRP.solo
            and CFG.PRICES.solo — a discount % that doesn't match the two prices
            shown on the same card is a misleading-price claim. -->
@@ -4197,7 +4197,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     catch (e) { return 0; }
   }
   function setCartQty(n) {
-    n = Math.max(0, Math.min(99, parseInt(n, 10) || 0));
+    var maxQ = (CFG && CFG.MAX_QTY) || 10;
+    n = Math.max(0, Math.min(maxQ, parseInt(n, 10) || 0));
     try { localStorage.setItem(CART_KEY, String(n)); } catch (e) {}
     renderCart();
   }
@@ -4246,7 +4247,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       var sub = price * qty;
       var qv = document.getElementById('cartQtyVal'); if (qv) qv.textContent = String(qty);
       var st = document.getElementById('cartSubtotal'); if (st) st.textContent = '₹' + sub;
-      var ca = document.getElementById('cartCheckoutAmt'); if (ca) ca.textContent = '₹' + sub;
+      var payable = sub + (Number(CFG.COD_FEE) || 0);
+      var ca = document.getElementById('cartCheckoutAmt'); if (ca) ca.textContent = '₹' + payable;
       var unit = document.querySelector('#cartLine .cart-line-unit');
       if (unit) unit.textContent = '₹' + price + ' · ' + qty + ' × 50ml';
     }
@@ -4333,7 +4335,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     var mbLabel = document.getElementById('mobileBarLabel');
     if (mbLabel) {
       var subtotal = unitPrice() * pdpQty;
-      mbLabel.textContent = (pdpQty > 1 ? (pdpQty + ' × ') : '') + 'ODORSTRIKE 50ml · ₹' + subtotal;
+      var payable = subtotal + COD_FEE;
+      mbLabel.textContent = (pdpQty > 1 ? (pdpQty + ' × ') : '') + 'ODORSTRIKE 50ml · ₹' + subtotal + ' prepaid · COD ₹' + payable;
     }
     var dec = document.getElementById('pdpQtyDec');
     if (dec) dec.disabled = pdpQty <= 1;
@@ -4501,6 +4504,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         first.focus();
       }
     }, 100);
+    if (typeof window.showDeliveryEstimate === 'function') window.showDeliveryEstimate();
     trackInitCheckout(ctaLocation);
   }
 
@@ -5018,11 +5022,15 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       setTimeout(function(){ el.classList.remove('flash-acid'); }, 800);
     }
 
-    // Estimated delivery window (3–5 business days from today), shown as weekday names.
+    // Estimated delivery window (3–5 metro / 5–7 outside), shown as calendar dates.
     // Sundays are non-delivery days; any order/estimate landing on Sunday advances to Monday.
     var estEl = document.getElementById('deliveryEstimate');
     var estText = document.getElementById('deliveryEstimateText');
     var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    function fmt(d) {
+      return DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
+    }
 
     function adjustIfSunday(d) {
       var res = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
@@ -5066,12 +5074,11 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
 
       var text;
       if (tier === 'metro') {
-        text = 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()] + ' (metro)';
+        text = 'Estimated arrival: ' + fmt(lo) + ' – ' + fmt(hi) + ' (metro, 3–5 business days)';
       } else if (tier === 'tier23') {
-        text = 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()] + ' (tier 2/3)';
+        text = 'Estimated arrival: ' + fmt(lo) + ' – ' + fmt(hi) + ' (5–7 business days outside metros)';
       } else {
-        // Safe qualified baseline fallback: Clearly qualifies metro baseline while informing customers of 5–7 days outside metros
-        text = 'Estimated delivery: ' + DAYS[lo.getDay()] + ' – ' + DAYS[hi.getDay()] + ' (metro) · 5–7 days outside metros';
+        text = 'Estimated arrival: ' + fmt(lo) + ' – ' + fmt(hi) + ' (metro, 3–5 business days) · 5–7 outside metros';
       }
 
       return {
@@ -5095,6 +5102,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       estEl.classList.add('show');
     }
     function hideDeliveryEstimate(){ if (estEl) estEl.classList.remove('show'); }
+    window.showDeliveryEstimate = showDeliveryEstimate;
+    window.hideDeliveryEstimate = hideDeliveryEstimate;
 
     pin.addEventListener('input', function(){
       var v = (pin.value || '').trim();
@@ -5103,9 +5112,9 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         if (inflight) { pendingPin = v; return; }
         inflight = true;
         lookup(v);
-      } else {
-        hideDeliveryEstimate();
       }
+      // Keep the metro/outside-metros calendar window visible before PIN
+      // is complete — there is no authoritative tier map to refine it with.
     });
   })();
 
@@ -5747,6 +5756,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
      showSuccess() calls it. If the seller-rating badge is ever switched on
      (BADGE_ENABLED in that file), move this into scripts/apply-chrome.mjs so
      the badge can render site-wide. -->
-<script src="/assets/js/google-customer-reviews.js?v=b050d627" defer></script>
+<script src="/assets/js/google-customer-reviews.js?v=4273c93e" defer></script>
 </body>
 </html>

@@ -134,12 +134,17 @@
 
 .sf-hdr__cta{
   display:inline-flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:2px;line-height:1.15;
   background:var(--acid);color:var(--on-acid);text-decoration:none;
   border:0;border-radius:var(--sq-sm,11px);
   font-family:var(--mono);
-  font-size:13px;letter-spacing:.12em;text-transform:uppercase;
-  padding:12px 18px;min-height:44px;
+  font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  padding:8px 14px;min-height:44px;
   transition:background-color .2s var(--ease);
+}
+.sf-hdr__cta-sub{
+  font-size:9px;letter-spacing:.06em;opacity:.85;font-weight:400;
+  white-space:nowrap;
 }
 .sf-hdr__cta:hover{background:var(--acid-hi)}
 

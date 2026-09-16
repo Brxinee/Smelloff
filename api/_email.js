@@ -195,7 +195,7 @@ function supabaseHeaders(extra = {}) {
   };
 }
 
-function classifyEmailPersistFailure(status, body) {
+export function classifyEmailPersistFailure(status, body) {
   const haystack = `${status} ${String(body || '')}`.toLowerCase();
   if (
     Number(status) === 404 ||

@@ -7,6 +7,7 @@ import {
   getIdempotencyKey,
   getOrderConfirmationIdempotencyKey,
   classifyResendError,
+  classifyEmailPersistFailure,
   getSenderConfig,
   getEmailDiagnostics,
   maskEmail,
@@ -86,6 +87,15 @@ test('maskEmail never logs a full recipient', () => {
   assert.equal(maskEmail('arjun.rao@example.com'), 'ar***@example.com');
   assert.equal(isValidEmail('not-an-email'), false);
   assert.equal(isValidEmail('buyer@smelloff.in'), true);
+});
+
+test('classifyEmailPersistFailure maps schema-cache misses separately from database failures', () => {
+  assert.equal(classifyEmailPersistFailure(404, ''), 'SCHEMA_MISMATCH');
+  assert.equal(classifyEmailPersistFailure(500, 'PGRST205'), 'SCHEMA_MISMATCH');
+  assert.equal(classifyEmailPersistFailure(400, 'Could not find the table public.email_events'), 'SCHEMA_MISMATCH');
+  assert.equal(classifyEmailPersistFailure(500, 'Could not find the table in the schema cache'), 'SCHEMA_MISMATCH');
+  assert.equal(classifyEmailPersistFailure(503, 'connection refused'), 'DATABASE_FAILURE');
+  assert.equal(classifyEmailPersistFailure(500, 'timeout'), 'DATABASE_FAILURE');
 });
 
 test('missing RESEND_API_KEY fails closed with MISSING_API_KEY', async () => {

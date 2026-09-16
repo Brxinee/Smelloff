@@ -106,7 +106,7 @@ ${SKIP}
           <li><a href="/faq">FAQ</a></li>
           <li><a href="/track-order">Track order</a></li>
         </ul>
-        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹${PRODUCT_CONFIG.product.price}</a>
+        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹${PRODUCT_CONFIG.product.price}<span class="sf-hdr__cta-sub">prepaid · COD ₹${PRODUCT_CONFIG.product.priceCod}</span></a>
         <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
           <span></span><span></span><span></span>
         </button>
