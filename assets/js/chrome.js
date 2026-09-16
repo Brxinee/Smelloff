@@ -1,12 +1,11 @@
 /* =====================================================================
    Smelloff — shared site chrome behaviour  (v3, 2026-09-17)
    =====================================================================
-   Shared header/menu/cart behaviour plus Razorpay Magic Checkout for the
+   Shared header/menu/cart behaviour plus Razorpay Checkout for the
    existing checkout overlay.
 
    Payment-method selection belongs inside Razorpay. The Smelloff page shows
-   one purchase action and a ₹229 base total; Magic Checkout adds the ₹60 COD
-   fee only when the customer selects COD.
+   one purchase action and a ₹229 base total.
    ===================================================================== */
 (function () {
   'use strict';
@@ -54,40 +53,24 @@
   var checkoutButton = document.getElementById('submitBtn');
   if (!checkoutButton) return;
 
-  function getMagicCheckoutReady() {
-    if (window.smfMagicRazorpayReady) return window.smfMagicRazorpayReady;
-    window.smfMagicRazorpayReady = new Promise(function (resolve, reject) {
-      var script = document.querySelector('script[src="https://checkout.razorpay.com/v1/magic-checkout.js"]');
-      if (!script) {
-        script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/magic-checkout.js';
-        script.async = true;
-        script.crossOrigin = 'anonymous';
+  function getRazorpayReady() {
+    if (window.smfRazorpayReady) return window.smfRazorpayReady;
+    window.smfRazorpayReady = new Promise(function (resolve, reject) {
+      if (window.Razorpay) return resolve(window.Razorpay);
+      var script = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+      if (script) {
+        script.addEventListener('load', function () {
+          if (window.Razorpay) resolve(window.Razorpay);
+          else reject(new Error('Razorpay SDK loaded without window.Razorpay.'));
+        }, { once: true });
+        script.addEventListener('error', function () {
+          reject(new Error('Unable to load Razorpay Checkout. Please try again.'));
+        }, { once: true });
+        return;
       }
-      var finished = false;
-      var finish = function () {
-        if (finished) return;
-        finished = true;
-        if (window.Razorpay) {
-          script.dataset.smfLoaded = 'true';
-          resolve(window.Razorpay);
-        } else {
-          window.smfMagicRazorpayReady = null;
-          reject(new Error('Razorpay Magic Checkout loaded without window.Razorpay.'));
-        }
-      };
-      var fail = function () {
-        if (finished) return;
-        finished = true;
-        window.smfMagicRazorpayReady = null;
-        reject(new Error('Unable to load Razorpay Magic Checkout. Please try again.'));
-      };
-      script.addEventListener('load', finish, { once: true });
-      script.addEventListener('error', fail, { once: true });
-      if (window.Razorpay && script.dataset.smfLoaded === 'true') finish();
-      else if (!script.parentNode) document.head.appendChild(script);
+      reject(new Error('Razorpay Checkout script not found.'));
     });
-    return window.smfMagicRazorpayReady;
+    return window.smfRazorpayReady;
   }
 
   var razorpayInFlight = false;
@@ -132,6 +115,7 @@
   function orderPayload() {
     var qty = quantityFromCheckout();
     var unitPrice = unitPriceRupees();
+    var amountRupees = unitPrice * qty;
     return {
       email: normalizeEmail(textValue('f_email')),
       phone: textValue('f_phone'),
@@ -141,7 +125,7 @@
         quantity: qty,
         price: unitPrice
       }],
-      amount: Math.round(unitPrice * qty * 100),
+      amount: Math.round(amountRupees * 100),
       payment_method: 'pending',
       address: {
         name: textValue('f_name'),
@@ -207,8 +191,6 @@
     if (totalEl) totalEl.textContent = '₹' + baseTotal;
     if (submitText && !checkoutButton.disabled) submitText.textContent = 'BUY ODORSTRIKE · ₹' + baseTotal;
 
-    /* Legacy checkout must never expose the COD surcharge before Razorpay.
-       COD is optional inside Razorpay Magic Checkout only. */
     var codFeeRow = document.getElementById('codFeeRow');
     if (codFeeRow) codFeeRow.style.display = 'none';
   }
@@ -216,13 +198,7 @@
   function installCheckoutOverrides() {
     normalizeCheckoutUi();
 
-    /* Hard-route the actual button to Razorpay. Setting onclick replaces any
-       legacy inline onclick handler instead of relying on handler ordering. */
-    checkoutButton.onclick = function (event) {
-      if (event) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      }
+    checkoutButton.onclick = function () {
       return window.startRazorpay();
     };
     checkoutButton.setAttribute('type', 'button');
@@ -255,6 +231,20 @@
     }
   }
 
+  function markSuccess(orderCode, qty, payload, finalized) {
+    if (typeof window.showSuccess === 'function') {
+      window.showSuccess(orderCode, 'razorpay', {
+        amount: Number((finalized && finalized.amount) || (payload && payload.amount) || 0),
+        qty: qty,
+        email: payload && payload.email,
+        name: payload && payload.address && payload.address.name,
+        paymentId: (finalized && finalized.payment_id) || '',
+        orderToken: (finalized && finalized.order_token) || '',
+        confirmationToken: (finalized && finalized.confirmation_token) || ''
+      });
+    }
+  }
+
   function handleFinalized(finalized, payload) {
     if (!finalized || finalized.finalized !== true) return false;
     var method = String(finalized.payment_method || '').toLowerCase();
@@ -264,20 +254,8 @@
     razorpayInFlight = false;
     setButtonState(false);
 
-    if (typeof window.logOrderToSheets === 'function' && typeof window.collectOrder === 'function') {
-      try { window.logOrderToSheets(window.collectOrder(finalized.order_code || payload.order_code, method === 'cod' ? 'COD' : 'RZP_PAID')); } catch (e) { /* best effort */ }
-    }
-    if (typeof window.showSuccess === 'function') {
-      window.showSuccess(finalized.order_code || payload.order_code, method === 'cod' ? 'cod' : 'razorpay', {
-        amount: Number(finalized.amount || payload.amount),
-        qty: Number(finalized.quantity || payload.items[0].quantity),
-        email: payload.email,
-        name: payload.address.name,
-        paymentId: finalized.payment_id || '',
-        orderToken: finalized.order_token || '',
-        confirmationToken: finalized.confirmation_token || ''
-      });
-    }
+    var qty = Number(finalized.quantity || (payload.items && payload.items[0] && payload.items[0].quantity) || 1);
+    markSuccess(finalized.order_code || payload.order_code, qty, payload, finalized);
     return true;
   }
 
@@ -338,8 +316,8 @@
     }
 
     try {
-      var RazorpayClass = await getMagicCheckoutReady();
-      if (!RazorpayClass) throw new Error('Razorpay Magic Checkout could not be loaded.');
+      var RazorpayClass = await getRazorpayReady();
+      if (!RazorpayClass) throw new Error('Razorpay Checkout could not be loaded.');
 
       var createResponse = await fetch('/api/create-order', {
         method: 'POST',
