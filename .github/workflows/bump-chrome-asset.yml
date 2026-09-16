@@ -1,0 +1,52 @@
+name: Bump chrome.js asset URL
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Stamp chrome.js content hash into HTML pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          HASH=$(sha256sum assets/js/chrome.js | cut -c1-8)
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          import { execSync } from 'node:child_process';
+          const hash = execSync('sha256sum assets/js/chrome.js | cut -c1-8').toString().trim();
+          const files = execSync("git ls-files '*.html'").toString().trim().split(/\\n/).filter(Boolean);
+          let changed = 0;
+          for (const file of files) {
+            const before = readFileSync(file, 'utf8');
+            const after = before.replace(/(assets\\/js\\/chrome\\.js\\?v=)[^\"'&]+/g, `$1${hash}`);
+            if (after !== before) {
+              writeFileSync(file, after);
+              changed++;
+            }
+          }
+          console.log(`Stamped chrome.js hash ${hash} into ${changed} HTML files.`);
+          NODE
+
+      - name: Commit generated cache-buster updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'No HTML cache-buster changes needed.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add '*.html'
+          git commit -m "chore: refresh chrome.js cache-buster"
+          git push
