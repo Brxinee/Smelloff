@@ -45,7 +45,7 @@ Deno.serve(async (req: Request) => {
     if (!email) return jsonResponse(req, { error: "A valid email is required for your receipt and delivery updates." }, 400);
 
     const paymentMethod = str(body.payment_method, 10).toLowerCase();
-    if (paymentMethod !== "upi" && paymentMethod !== "cod") {
+    if (paymentMethod !== "pending" && paymentMethod !== "upi" && paymentMethod !== "cod") {
       return jsonResponse(req, { error: "Invalid payment method." }, 400);
     }
 
@@ -62,9 +62,11 @@ Deno.serve(async (req: Request) => {
     }
 
     const subtotalRupees = UNIT_PRICE_RUPEES * quantity;
-    const codFeeRupees = paymentMethod === "cod" ? COD_FEE_RUPEES : 0;
+    const isLegacyCod = paymentMethod === "cod";
+    const codFeeRupees = isLegacyCod ? COD_FEE_RUPEES : 0;
     const amountPaise = (subtotalRupees + codFeeRupees) * 100;
     const clientAmount = Number(body.amount);
+
     if (!Number.isInteger(clientAmount) || clientAmount !== amountPaise) {
       return jsonResponse(req, { error: "Order total mismatch." }, 400);
     }
@@ -106,17 +108,19 @@ Deno.serve(async (req: Request) => {
       customer_phone: phone,
       items,
       amount: amountPaise,
+      // pending is the new Magic Checkout state. Legacy direct UPI/COD callers
+      // continue to work without changing their historical records/behavior.
       payment_method: paymentMethod,
-      status: paymentMethod === "upi" ? "upi_pending" : "placed",
+      status: paymentMethod === "pending" ? "checkout_pending" : (paymentMethod === "upi" ? "upi_pending" : "placed"),
       upi_ref: str(body.upi_ref, 40) || null,
       address,
       order_code: orderCode,
       cod_fee: codFeeRupees > 0 ? codFeeRupees * 100 : 0,
-      fbp: fbp,
-      fbc: fbc,
+      fbp,
+      fbc,
       client_ip: clientIp,
       client_ua: clientUa,
-      event_source_url: eventSourceUrl
+      event_source_url: eventSourceUrl,
     };
 
     let data: { id: string; order_code?: string } | null = null;
