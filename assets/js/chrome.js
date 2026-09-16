@@ -166,7 +166,15 @@
     var label = document.getElementById('submitText');
     if (!btn) return;
     btn.disabled = !!loading;
-    if (label) label.textContent = loading ? 'Opening secure checkout…' : 'Pay securely';
+    if (label) {
+      if (loading) {
+        label.textContent = 'Opening secure checkout…';
+      } else {
+        var totalEl = document.getElementById('checkoutTotal');
+        var totalText = totalEl ? totalEl.textContent.trim() : '₹229';
+        label.textContent = 'BUY ODORSTRIKE · ' + totalText;
+      }
+    }
   }
 
   function showPaymentError(message) {

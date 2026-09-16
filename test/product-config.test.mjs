@@ -261,8 +261,7 @@ test('index.html homepage featured product section UX hierarchy, pricing and cla
   assert.ok(html.includes('₹229'), 'Must state canonical price ₹229');
   assert.ok(html.includes('for 1 × 50ml ODORSTRIKE'), 'Must state unit volume and product name');
   assert.ok(html.includes('MRP ₹499'), 'Must state MRP ₹499');
-  assert.ok(html.includes('FREE SHIPPING — PREPAID'), 'Must state free shipping prepaid');
-  assert.ok(html.includes('COD AVAILABLE · ₹60 HANDLING'), 'Must state COD handling fee');
+  assert.ok(html.includes('FREE SHIPPING PAN-INDIA') || html.includes('FREE SHIPPING — PREPAID'), 'Must state free shipping');
   assert.ok(html.includes('7-DAY RETURNS'), 'Must state 7-day returns');
   assert.ok(html.includes('GET ODORSTRIKE — ₹229'), 'Must include prominent primary buy CTA');
 

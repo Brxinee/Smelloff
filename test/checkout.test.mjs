@@ -42,7 +42,7 @@ test('odorstrike.html includes Razorpay Checkout script and clean UI', () => {
   const html = fs.readFileSync('odorstrike.html', 'utf8');
   assert.ok(html.includes('https://checkout.razorpay.com/v1/checkout.js'), 'Razorpay checkout script must be in odorstrike.html');
   assert.ok(!html.includes('id="upiInlineId"'), 'Static manual UPI ID element should not appear in checkout UI');
-  assert.ok(html.includes('SECURE PREPAID PAYMENT'), 'Modern prepaid panel should be present');
+  assert.ok(html.includes('BUY ODORSTRIKE'), 'Modern unified buy button should be present');
 });
 
 test('api/verify-payment.js signature calculation & constant-time comparison', () => {
@@ -192,8 +192,7 @@ test('frontend submit architecture: chrome.js has no capture click interceptors 
 
 test('frontend submit architecture: odorstrike.html submitOrder is sole router and button copy is clear', () => {
   const html = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.ok(html.includes("submitText', (isCod ? 'Place COD order · ₹' : 'Pay securely · ₹')"), 'Button copy must say Pay securely for prepaid');
-  assert.ok(html.includes("if (payMethod === 'prepaid')"), 'submitOrder must route prepaid');
+  assert.ok(html.includes("submitText', 'BUY ODORSTRIKE · ₹"), 'Button copy must say BUY ODORSTRIKE · ₹');
   assert.ok(html.includes("return window.startRazorpay();"), 'submitOrder must invoke startRazorpay for prepaid');
   assert.ok(html.includes("onclick=\"submitOrder()\""), 'submit button must have onclick submitOrder');
 });
@@ -457,9 +456,9 @@ test('Multi-quantity orderPayload calculation integrity in chrome.js', () => {
   assert.ok(chromeJs.includes('var amountRupees = unitPrice * qty;'), 'chrome.js must calculate amountRupees as unitPrice * qty');
   assert.ok(!chromeJs.includes("numberFromText('checkoutAmount')"), 'chrome.js must not parse formatted string checkoutAmount which breaks on multi-quantity');
 
-  // Verify static submitText in odorstrike.html matches default COD total
+  // Verify static submitText in odorstrike.html matches default total
   const html = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.ok(html.includes('<span id="submitText">Place COD order · ₹289</span>'), 'Static submit button must match default COD total ₹289');
+  assert.ok(html.includes('<span id="submitText">BUY ODORSTRIKE · ₹229</span>'), 'Static submit button must match default total ₹229');
 
   // Exhaustive quantity testing: 1, 2, 3, 4, 5, 10
   const unitPrice = 229;
