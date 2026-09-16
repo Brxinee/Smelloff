@@ -93,6 +93,7 @@
   var razorpayInFlight = false;
   var finalizeTimers = [];
   var finalizedThisCheckout = false;
+  var checkoutUiTimer = null;
 
   function textValue(id) {
     var el = document.getElementById(id);
@@ -199,16 +200,33 @@
     });
 
     var modes = document.querySelector('.pay-modes');
-    if (modes) modes.textContent = 'Secure Razorpay Checkout';
+    if (modes) modes.textContent = 'Secure Razorpay Checkout · UPI / Cards / Netbanking';
     var totalEl = document.getElementById('checkoutTotal');
     var submitText = document.getElementById('submitText');
     var baseTotal = unitPriceRupees() * quantityFromCheckout();
     if (totalEl) totalEl.textContent = '₹' + baseTotal;
     if (submitText && !checkoutButton.disabled) submitText.textContent = 'BUY ODORSTRIKE · ₹' + baseTotal;
+
+    /* Legacy checkout must never expose the COD surcharge before Razorpay.
+       COD is optional inside Razorpay Magic Checkout only. */
+    var codFeeRow = document.getElementById('codFeeRow');
+    if (codFeeRow) codFeeRow.style.display = 'none';
   }
 
   function installCheckoutOverrides() {
     normalizeCheckoutUi();
+
+    /* Hard-route the actual button to Razorpay. Setting onclick replaces any
+       legacy inline onclick handler instead of relying on handler ordering. */
+    checkoutButton.onclick = function (event) {
+      if (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+      return window.startRazorpay();
+    };
+    checkoutButton.setAttribute('type', 'button');
+
     if (typeof window.submitOrder === 'function' && !window.__smfMagicSubmitInstalled) {
       window.__smfMagicSubmitInstalled = true;
       window.submitOrder = function () { return window.startRazorpay(); };
@@ -218,9 +236,11 @@
       window.__smfMagicOpenInstalled = true;
       window.openCheckout = function () {
         var result = originalOpenCheckout.apply(this, arguments);
+        normalizeCheckoutUi();
         window.requestAnimationFrame(normalizeCheckoutUi);
-        window.setTimeout(normalizeCheckoutUi, 0);
-        window.setTimeout(normalizeCheckoutUi, 50);
+        [0, 50, 150, 300, 750, 1500].forEach(function (delay) {
+          window.setTimeout(normalizeCheckoutUi, delay);
+        });
         return result;
       };
     }
@@ -229,6 +249,10 @@
   function clearFinalizeTimers() {
     for (var i = 0; i < finalizeTimers.length; i++) window.clearTimeout(finalizeTimers[i]);
     finalizeTimers = [];
+    if (checkoutUiTimer) {
+      window.clearInterval(checkoutUiTimer);
+      checkoutUiTimer = null;
+    }
   }
 
   function handleFinalized(finalized, payload) {
