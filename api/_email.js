@@ -195,6 +195,19 @@ function supabaseHeaders(extra = {}) {
   };
 }
 
+function classifyEmailPersistFailure(status, body) {
+  const haystack = `${status} ${String(body || '')}`.toLowerCase();
+  if (
+    Number(status) === 404 ||
+    haystack.includes('pgrst205') ||
+    haystack.includes('could not find the table') ||
+    haystack.includes('schema cache')
+  ) {
+    return 'SCHEMA_MISMATCH';
+  }
+  return 'DATABASE_FAILURE';
+}
+
 export async function persistEmailEvent(event) {
   if (isEmailSideEffectsDisabled()) return { ok: true, skipped: true };
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -226,8 +239,9 @@ export async function persistEmailEvent(event) {
     if (res.ok || res.status === 409) return { ok: true };
     let body = '';
     try { body = typeof res.text === 'function' ? await res.text() : ''; } catch { body = ''; }
-    console.error('[email] persist EMAIL_EVENT failed', { status: res.status, body: String(body).slice(0, 200) });
-    return { ok: false, errorCode: 'DATABASE_FAILURE' };
+    const errorCode = classifyEmailPersistFailure(res.status, body);
+    console.error('[email] persist EMAIL_EVENT failed', { status: res.status, errorCode, body: String(body).slice(0, 200) });
+    return { ok: false, errorCode };
   } catch (err) {
     console.error('[email] persist EMAIL_EVENT exception', { message: err?.message || String(err) });
     return { ok: false, errorCode: 'DATABASE_FAILURE' };
@@ -336,8 +350,9 @@ export async function persistEmailWebhookEvent(event) {
     if (!res.ok) {
       let body = '';
       try { body = typeof res.text === 'function' ? await res.text() : ''; } catch { body = ''; }
-      console.error('[email] persist webhook event failed', { status: res.status, body: String(body).slice(0, 200) });
-      return { ok: false, errorCode: 'DATABASE_FAILURE' };
+      const errorCode = classifyEmailPersistFailure(res.status, body);
+      console.error('[email] persist webhook event failed', { status: res.status, errorCode, body: String(body).slice(0, 200) });
+      return { ok: false, errorCode };
     }
     return { ok: true };
   } catch (err) {
