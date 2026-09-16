@@ -11,7 +11,6 @@
 (function () {
   'use strict';
 
-  /* --- burger ------------------------------------------------------- */
   var burger = document.querySelector('.sf-burger');
   var menu = document.getElementById('sfMenu');
   if (burger && menu) {
@@ -30,7 +29,6 @@
     });
   }
 
-  /* --- cart badge --------------------------------------------------- */
   var badge = document.getElementById('sfCartCount');
   if (badge) {
     var refresh = function () {
@@ -43,7 +41,6 @@
     window.addEventListener('pageshow', refresh);
   }
 
-  /* --- current page ------------------------------------------------- */
   var path = location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
   if (path.length > 1) path = path.replace(/\/$/, '');
   var links = document.querySelectorAll('.sf-nav a[href], .sf-hdr__menu a[href]');
@@ -51,18 +48,14 @@
     var href = links[i].getAttribute('href');
     if (!href || href.charAt(0) !== '/') continue;
     var norm = href.split(/[?#]/)[0].replace(/\/$/, '');
-    if (norm === path || (norm !== '' && path.indexOf(norm + '/') === 0)) {
-      links[i].setAttribute('aria-current', 'page');
-    }
+    if (norm === path || (norm !== '' && path.indexOf(norm + '/') === 0)) links[i].setAttribute('aria-current', 'page');
   }
 
-  /* --- product checkout integration ------------------------------- */
   var checkoutButton = document.getElementById('submitBtn');
   if (!checkoutButton) return;
 
   function getMagicCheckoutReady() {
     if (window.smfMagicRazorpayReady) return window.smfMagicRazorpayReady;
-
     window.smfMagicRazorpayReady = new Promise(function (resolve, reject) {
       var script = document.querySelector('script[src="https://checkout.razorpay.com/v1/magic-checkout.js"]');
       if (!script) {
@@ -71,8 +64,10 @@
         script.async = true;
         script.crossOrigin = 'anonymous';
       }
-
+      var finished = false;
       var finish = function () {
+        if (finished) return;
+        finished = true;
         if (window.Razorpay) {
           script.dataset.smfLoaded = 'true';
           resolve(window.Razorpay);
@@ -82,20 +77,16 @@
         }
       };
       var fail = function () {
+        if (finished) return;
+        finished = true;
         window.smfMagicRazorpayReady = null;
         reject(new Error('Unable to load Razorpay Magic Checkout. Please try again.'));
       };
-
       script.addEventListener('load', finish, { once: true });
       script.addEventListener('error', fail, { once: true });
-
-      if (script.parentNode || script.dataset.smfLoaded === 'true') {
-        if (window.Razorpay) finish();
-      } else {
-        document.head.appendChild(script);
-      }
+      if (window.Razorpay && script.dataset.smfLoaded === 'true') finish();
+      else if (!script.parentNode) document.head.appendChild(script);
     });
-
     return window.smfMagicRazorpayReady;
   }
 
@@ -108,13 +99,8 @@
     return el ? String(el.value || el.textContent || '').trim() : '';
   }
 
-  function normalizeEmail(value) {
-    return String(value || '').trim().toLowerCase();
-  }
-
-  function isValidCheckoutEmail(value) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(value));
-  }
+  function normalizeEmail(value) { return String(value || '').trim().toLowerCase(); }
+  function isValidCheckoutEmail(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(value)); }
 
   function quantityFromCheckout() {
     var maxQty = (window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.maxQuantity) ||
@@ -178,17 +164,10 @@
   }
 
   function showPaymentError(message) {
-    if (typeof window.showError === 'function') {
-      window.showError(message);
-      return;
-    }
+    if (typeof window.showError === 'function') { window.showError(message); return; }
     var error = document.getElementById('checkoutError');
-    if (error) {
-      error.textContent = message;
-      error.style.display = 'block';
-    } else {
-      window.alert(message);
-    }
+    if (error) { error.textContent = message; error.style.display = 'block'; }
+    else window.alert(message);
   }
 
   function hidePaymentError() {
@@ -199,21 +178,20 @@
 
   function normalizeCheckoutUi() {
     var paymentOptions = document.querySelectorAll('.pay-opt');
+    for (var i = 0; i < paymentOptions.length; i++) {
+      paymentOptions[i].hidden = true;
+      paymentOptions[i].setAttribute('aria-hidden', 'true');
+      paymentOptions[i].tabIndex = -1;
+    }
     if (paymentOptions.length) {
-      for (var i = 0; i < paymentOptions.length; i++) {
-        paymentOptions[i].hidden = true;
-        paymentOptions[i].setAttribute('aria-hidden', 'true');
-        paymentOptions[i].tabIndex = -1;
-      }
       var parent = paymentOptions[0].parentElement;
       if (parent && parent.querySelectorAll('.pay-opt').length === paymentOptions.length) parent.hidden = true;
     }
 
-    var upiPanel = document.getElementById('upiPayPanel');
-    var codPanel = document.getElementById('codPayPanel');
-    if (upiPanel) { upiPanel.hidden = true; upiPanel.setAttribute('aria-hidden', 'true'); }
-    if (codPanel) { codPanel.hidden = true; codPanel.setAttribute('aria-hidden', 'true'); }
-
+    ['upiPayPanel', 'codPayPanel'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) { el.hidden = true; el.setAttribute('aria-hidden', 'true'); }
+    });
     document.querySelectorAll('#upiInlineId, #wa-utr-btn, .upi-cta, #openUpiApp').forEach(function (el) {
       el.hidden = true;
       el.setAttribute('aria-hidden', 'true');
@@ -222,25 +200,19 @@
 
     var modes = document.querySelector('.pay-modes');
     if (modes) modes.textContent = 'Secure Razorpay Checkout';
-
-    var qty = quantityFromCheckout();
-    var baseTotal = unitPriceRupees() * qty;
     var totalEl = document.getElementById('checkoutTotal');
-    if (totalEl) totalEl.textContent = '₹' + baseTotal;
     var submitText = document.getElementById('submitText');
+    var baseTotal = unitPriceRupees() * quantityFromCheckout();
+    if (totalEl) totalEl.textContent = '₹' + baseTotal;
     if (submitText && !checkoutButton.disabled) submitText.textContent = 'BUY ODORSTRIKE · ₹' + baseTotal;
   }
 
   function installCheckoutOverrides() {
     normalizeCheckoutUi();
-
     if (typeof window.submitOrder === 'function' && !window.__smfMagicSubmitInstalled) {
       window.__smfMagicSubmitInstalled = true;
-      window.submitOrder = function () {
-        return window.startRazorpay();
-      };
+      window.submitOrder = function () { return window.startRazorpay(); };
     }
-
     if (typeof window.openCheckout === 'function' && !window.__smfMagicOpenInstalled) {
       var originalOpenCheckout = window.openCheckout;
       window.__smfMagicOpenInstalled = true;
@@ -260,30 +232,29 @@
   }
 
   function handleFinalized(finalized, payload) {
-    if (!finalized || finalized.finalized || finalized.ok === true) {
-      var method = String(finalized && finalized.payment_method || '').toLowerCase();
-      if (!method) method = String(finalized && finalized.cod ? 'cod' : 'razorpay');
-      finalizedThisCheckout = true;
-      clearFinalizeTimers();
-      razorpayInFlight = false;
-      setButtonState(false);
-      if (typeof window.logOrderToSheets === 'function' && typeof window.collectOrder === 'function') {
-        try { window.logOrderToSheets(window.collectOrder(finalized.order_code || payload.order_code, method === 'cod' ? 'COD' : 'RZP_PAID')); } catch (e) { /* best effort */ }
-      }
-      if (typeof window.showSuccess === 'function') {
-        window.showSuccess(finalized.order_code || payload.order_code, method === 'cod' ? 'cod' : 'razorpay', {
-          amount: Number(finalized.amount || payload.amount),
-          qty: Number(finalized.quantity || payload.items[0].quantity),
-          email: payload.email,
-          name: payload.address.name,
-          paymentId: finalized.payment_id || '',
-          orderToken: finalized.order_token || '',
-          confirmationToken: finalized.confirmation_token || ''
-        });
-      }
-      return true;
+    if (!finalized || finalized.finalized !== true) return false;
+    var method = String(finalized.payment_method || '').toLowerCase();
+    if (!method) method = 'razorpay';
+    finalizedThisCheckout = true;
+    clearFinalizeTimers();
+    razorpayInFlight = false;
+    setButtonState(false);
+
+    if (typeof window.logOrderToSheets === 'function' && typeof window.collectOrder === 'function') {
+      try { window.logOrderToSheets(window.collectOrder(finalized.order_code || payload.order_code, method === 'cod' ? 'COD' : 'RZP_PAID')); } catch (e) { /* best effort */ }
     }
-    return false;
+    if (typeof window.showSuccess === 'function') {
+      window.showSuccess(finalized.order_code || payload.order_code, method === 'cod' ? 'cod' : 'razorpay', {
+        amount: Number(finalized.amount || payload.amount),
+        qty: Number(finalized.quantity || payload.items[0].quantity),
+        email: payload.email,
+        name: payload.address.name,
+        paymentId: finalized.payment_id || '',
+        orderToken: finalized.order_token || '',
+        confirmationToken: finalized.confirmation_token || ''
+      });
+    }
+    return true;
   }
 
   async function finalizeMagicCheckout(created, payload, response) {
@@ -306,7 +277,7 @@
       if (!finalizeResponse.ok && !finalized.pending) throw new Error(finalized.error || 'Unable to confirm the order.');
       return handleFinalized(finalized, payload);
     } catch (error) {
-      if (!String(error.message || '').toLowerCase().includes('not yet confirmed')) {
+      if (!/not yet confirmed|still being initialized|not complete yet/i.test(String(error.message || ''))) {
         showPaymentError(error.message || 'Unable to confirm checkout. Please contact support with your order number.');
       }
       return false;
@@ -315,8 +286,7 @@
 
   function scheduleCodCompletionPolling(created, payload) {
     clearFinalizeTimers();
-    var delays = [1200, 2500, 5000, 9000, 15000];
-    delays.forEach(function (delay) {
+    [1200, 2500, 5000, 9000, 15000].forEach(function (delay) {
       finalizeTimers.push(window.setTimeout(async function () {
         if (finalizedThisCheckout) return;
         await finalizeMagicCheckout(created, payload, { razorpay_order_id: created.order_id });
@@ -354,9 +324,7 @@
         body: JSON.stringify(payload)
       });
       var created = await createResponse.json().catch(function () { return {}; });
-      if (!createResponse.ok || !created.order_id) {
-        throw new Error(created.error || 'Unable to create the payment order. Please try again.');
-      }
+      if (!createResponse.ok || !created.order_id) throw new Error(created.error || 'Unable to create the payment order. Please try again.');
 
       var options = {
         key: created.key_id,
@@ -369,16 +337,10 @@
           email: payload.email,
           contact: '+91' + String(payload.phone || '').replace(/\D/g, '').slice(-10)
         },
-        notes: {
-          smelloff_order_code: created.order_code
-        },
+        notes: { smelloff_order_code: created.order_code },
         theme: { color: '#B8FF57' },
         modal: {
           ondismiss: function () {
-            /* Magic Checkout COD completes the Razorpay order as `placed`,
-               not `paid`. Poll our server briefly after dismiss so COD orders
-               can be finalized even when the browser handler is not invoked
-               with a prepaid-style payment signature. */
             if (!finalizedThisCheckout) scheduleCodCompletionPolling(created, payload);
           }
         },
@@ -407,9 +369,6 @@
 
   window.startRazorpay = startRazorpay;
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', installCheckoutOverrides, { once: true });
-  } else {
-    installCheckoutOverrides();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installCheckoutOverrides, { once: true });
+  else installCheckoutOverrides();
 })();
