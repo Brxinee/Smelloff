@@ -19,16 +19,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          HASH=$(sha256sum assets/js/chrome.js | cut -c1-8)
           node --input-type=module <<'NODE'
           import { readFileSync, writeFileSync } from 'node:fs';
           import { execSync } from 'node:child_process';
           const hash = execSync('sha256sum assets/js/chrome.js | cut -c1-8').toString().trim();
-          const files = execSync("git ls-files '*.html'").toString().trim().split(/\\n/).filter(Boolean);
+          const files = execSync("git ls-files '*.html'").toString().trim().split('\\n').filter(Boolean);
           let changed = 0;
           for (const file of files) {
             const before = readFileSync(file, 'utf8');
-            const after = before.replace(/(assets\\/js\\/chrome\\.js\\?v=)[^\"'&]+/g, `$1${hash}`);
+            const after = before.replaceAll(/chrome\.js\?v=[^\"'&]+/g, `chrome.js?v=${hash}`);
             if (after !== before) {
               writeFileSync(file, after);
               changed++;
