@@ -12,6 +12,11 @@ const CONFIG_PATH = join(__dirname, '..', 'config', 'product.json');
 const rawConfig = JSON.parse(readFileSync(CONFIG_PATH, 'utf8'));
 const { product: P, brand: B, shipping: S, formula: F } = rawConfig;
 
+// Centralized commercial single source of truth for Smelloff / ODORSTRIKE.
+// Authoritative definitions for SKU, pricing, MRP, COD fee, quantity limits,
+// approved claims, order states, and server calculation logic.
+// Customer-facing facts live in /config/product.json (and shared/product-truth.js).
+
 export const BASE_PRODUCT = {
   id: 'odorstrike-50ml',
   sku: P.sku,
@@ -44,12 +49,15 @@ export const BASE_PRODUCT = {
 };
 
 export const BUNDLES_CONFIG = {
-  enabled: false,
+  enabled: false, // Pure single-SKU configuration (₹229 per 50ml unit)
   variants: {
     solo: { id: 'solo', qty: 1, title: '1 × 50ml Bottle', sku: P.sku, price: P.price, mrp: P.mrp, badge: 'Standard' }
   }
 };
 
+/**
+ * Authoritative Approved Claims Dictionary
+ */
 export const APPROVED_CLAIMS = {
   CATEGORY_CLARITY: {
     claim: 'Pocket fabric odor spray for clothing — not a perfume, not a deodorant.',
@@ -91,6 +99,9 @@ export const APPROVED_CLAIMS = {
   ]
 };
 
+/**
+ * Authoritative Order Lifecycle States
+ */
 export const ORDER_LIFECYCLE = {
   MAGIC_CHECKOUT: {
     initialStatus: 'checkout_pending',
@@ -163,39 +174,61 @@ export const ORDER_LIFECYCLE = {
   }
 };
 
+/**
+ * Validate order state transitions strictly against the lifecycle rules.
+ */
 export function isValidTransition(currentStatus, targetStatus, paymentMethod = 'prepaid') {
   if (!currentStatus || !targetStatus) return false;
-  if (currentStatus === targetStatus) return true;
+  if (currentStatus === targetStatus) return true; // Idempotent no-op
+
   const method = String(paymentMethod || '').toLowerCase();
   let lifecycle = ORDER_LIFECYCLE.PREPAID_UPI;
   if (method === 'cod') lifecycle = ORDER_LIFECYCLE.COD;
   else if (method === 'pending' || currentStatus === 'checkout_pending') lifecycle = ORDER_LIFECYCLE.MAGIC_CHECKOUT;
+
   const allowedNext = lifecycle.transitionMap[currentStatus];
-  if (!Array.isArray(allowedNext)) return false;
+  if (!allowedNext || !Array.isArray(allowedNext)) return false;
   return allowedNext.includes(targetStatus);
 }
 
+/**
+ * Authoritative Server-side Price & Total Calculator
+ * Enforces strict quantity bounds [1..BASE_PRODUCT.maxQuantity], recomputes all sums and taxes server-side.
+ */
 export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {
   let qty = parseInt(quantity, 10);
   if (isNaN(qty) || qty < 1) qty = 1;
   if (qty > BASE_PRODUCT.maxQuantity) qty = BASE_PRODUCT.maxQuantity;
 
   const subtotal = qty * BASE_PRODUCT.price;
+
   const unitPrice = Math.round((subtotal / qty) * 100) / 100;
   const unitMrp = BASE_PRODUCT.mrp;
   const mrpTotal = qty * unitMrp;
-  const codFee = String(paymentMethod || '').toLowerCase() === 'cod' ? BASE_PRODUCT.codFee : 0;
-  const total = subtotal + codFee;
+  const shipping = BASE_PRODUCT.shippingCost;
+  const isCod = String(paymentMethod || '').toLowerCase() === 'cod';
+  const codFee = isCod ? BASE_PRODUCT.codFee : 0;
+  const total = subtotal + shipping + codFee;
+  const amountPaise = total * 100;
 
   return {
-    quantity: qty,
-    subtotal,
-    codFee,
-    shipping: 0,
-    total,
+    sku: BASE_PRODUCT.sku,
+    title: BASE_PRODUCT.title,
+    qty,
     unitPrice,
     unitMrp,
+    subtotal,
     mrpTotal,
-    currency: BASE_PRODUCT.currency
+    shipping,
+    codFee,
+    total,
+    amountPaise,
+    currency: BASE_PRODUCT.currency,
+    isCod,
+    status: isCod ? ORDER_LIFECYCLE.COD.initialStatus : ORDER_LIFECYCLE.PREPAID_UPI.initialStatus
   };
+}
+
+export function getPricingForQuantity(quantity = 1, paymentMethod = 'prepaid') {
+  return calculateOrderTotal(quantity, paymentMethod);
 }
