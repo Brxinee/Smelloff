@@ -128,35 +128,8 @@ async function verifyRazorpayPayment(body, order) {
     return { status: 400, body: { error: 'Razorpay order mismatch.' } };
   }
 
-  // Idempotency: If this exact order is already confirmed with this payment ID or order ID
-  const terminalConfirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
-  if (terminalConfirmedStates.includes(order.status)) {
-    if (order.upi_txn_id === paymentId || storedRazorpayOrderId === razorpayOrderId) {
-      try {
-        await dispatchPrepaidPaymentEmails({ ...order, status: order.status }, { route: '/api/verify-payment' });
-      } catch (emailErr) {
-        console.error('[verify-payment] Email dispatch exception (payment remains confirmed):', emailErr?.message || emailErr);
-      }
-      const dbPhone = String(order.customer_phone || '').replace(/\D/g, '').slice(-10);
-      const dbEmail = String(order.customer_email || '').trim().toLowerCase();
-      return {
-        status: 200,
-        body: {
-          ok: true,
-          verified: true,
-          idempotent: true,
-          status: order.status,
-          orderId: order.order_code,
-          orderToken: generateOrderToken(order.order_code, dbPhone),
-          confirmationToken: generateOrderConfirmationToken(order.order_code, dbEmail),
-          razorpayPaymentId: paymentId,
-          razorpayOrderId: storedRazorpayOrderId,
-          message: 'Payment already verified and confirmed.'
-        }
-      };
-    }
-  }
-
+  // Verify the Razorpay signature BEFORE any idempotent success response.
+  // Never treat a matching order_id alone as proof of payment ownership.
   const keySecret = getRazorpayKeySecret();
   const generatedSignature = crypto
     .createHmac('sha256', keySecret)
@@ -167,10 +140,7 @@ async function verifyRazorpayPayment(body, order) {
   try {
     const expected = Buffer.from(generatedSignature, 'hex');
     const provided = Buffer.from(signature, 'hex');
-    if (expected.length !== provided.length) {
-      crypto.timingSafeEqual(expected, expected);
-      signatureMatches = false;
-    } else {
+    if (expected.length === provided.length) {
       signatureMatches = crypto.timingSafeEqual(expected, provided);
     }
   } catch {
@@ -181,7 +151,34 @@ async function verifyRazorpayPayment(body, order) {
     return { status: 400, body: { error: 'Payment signature verification failed.' } };
   }
 
-  // Server-authoritative validation directly against Razorpay API
+  // Idempotency is valid only for the exact payment transaction already stored
+  // against this order. A different payment_id must still be fetched from
+  // Razorpay and independently verified, even when the order is terminal.
+  const terminalConfirmedStates = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
+  if (terminalConfirmedStates.includes(order.status) && order.upi_txn_id === paymentId) {
+    const dbPhone = String(order.customer_phone || '').replace(/\D/g, '').slice(-10);
+    const dbEmail = String(order.customer_email || '').trim().toLowerCase();
+    return {
+      status: 200,
+      body: {
+        ok: true,
+        verified: true,
+        idempotent: true,
+        status: order.status,
+        orderId: order.order_code,
+        orderToken: generateOrderToken(order.order_code, dbPhone),
+        confirmationToken: generateOrderConfirmationToken(order.order_code, dbEmail),
+        razorpayPaymentId: paymentId,
+        razorpayOrderId: storedRazorpayOrderId,
+        amount: Number(order.amount),
+        message: 'Payment already verified and confirmed.'
+      }
+    };
+  }
+
+  // Server-authoritative validation directly against Razorpay API.
+  // Signature verification alone is not enough; also confirm order, amount,
+  // currency, and captured state from Razorpay's server-side API.
   try {
     const razorpay = razorpayClient();
     const payment = await razorpay.payments.fetch(paymentId);
@@ -240,6 +237,7 @@ async function verifyRazorpayPayment(body, order) {
       confirmationToken: generateOrderConfirmationToken(order.order_code, dbEmail),
       razorpayPaymentId: paymentId,
       razorpayOrderId: storedRazorpayOrderId,
+      amount: Number(order.amount),
       message: 'Payment verified successfully.'
     }
   };
