@@ -142,6 +142,9 @@ async function verifyRazorpayPayment(body, order) {
     const provided = Buffer.from(signature, 'hex');
     if (expected.length === provided.length) {
       signatureMatches = crypto.timingSafeEqual(expected, provided);
+    } else {
+      crypto.timingSafeEqual(expected, expected);
+      signatureMatches = false;
     }
   } catch {
     signatureMatches = false;
