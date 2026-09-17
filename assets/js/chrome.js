@@ -169,33 +169,7 @@
     if (document.getElementById('smf-payment-choice-style')) return;
     var style = document.createElement('style');
     style.id = 'smf-payment-choice-style';
-    style.textContent = `
-      .smf-payment-choice{margin-top:20px;padding-top:18px;border-top:1px solid var(--rule);}
-      .smf-payment-choice__label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
-      .smf-payment-choice__options{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-      .smf-pay-opt{position:relative;min-height:92px;padding:13px 12px;text-align:left;border:1px solid var(--rule);background:rgba(255,255,255,.025);color:var(--text);cursor:pointer;border-radius:4px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;font-family:var(--body);transition:background .18s,border-color .18s,transform .15s;}
-      .smf-pay-opt:hover{border-color:var(--rule-strong);}
-      .smf-pay-opt:active{transform:scale(.985);}
-      .smf-pay-opt[aria-checked="true"]{background:var(--acid);border-color:var(--acid);color:var(--ink);}
-      .smf-pay-opt__title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;line-height:1.2;}
-      .smf-pay-opt__sub{font-size:12px;line-height:1.3;opacity:.78;}
-      .smf-pay-opt__price{margin-top:2px;font-family:var(--display);font-weight:900;font-size:22px;line-height:1;letter-spacing:-.02em;}
-      .smf-pay-opt__meta{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;opacity:.62;}
-      .smf-pay-opt[aria-checked="true"] .smf-pay-opt__sub,.smf-pay-opt[aria-checked="true"] .smf-pay-opt__meta{opacity:.72;}
-      .smf-payment-panel{margin-top:10px;padding:12px 14px;border:1px dashed var(--rule);background:rgba(255,255,255,.018);font-size:12px;line-height:1.5;color:var(--muted);}
-      .smf-payment-panel strong{color:var(--text);font-weight:700;}
-      .smf-payment-panel .smf-panel-acid{color:var(--acid);font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;}
-      #codFeeRow{display:none;}
-      @media(max-width:420px){
-        .smf-payment-choice__options{gap:8px;}
-        .smf-pay-opt{min-height:88px;padding:12px 10px;}
-        .smf-pay-opt__sub{font-size:11px;}
-        .smf-pay-opt__price{font-size:21px;}
-      }
-      @media(max-width:340px){
-        .smf-payment-choice__options{grid-template-columns:1fr;}
-      }
-    `;
+    style.textContent = `\n      .smf-payment-choice{margin-top:16px;padding-top:14px;border-top:1px solid var(--rule);}\n      .smf-payment-choice__label{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}\n      .smf-payment-choice__options{display:grid;grid-template-columns:1fr 1fr;gap:8px;}\n      .smf-pay-opt{\n        min-height:56px;padding:10px 12px;\n        border:1px solid var(--rule);border-radius:6px;\n        background:rgba(255,255,255,.025);color:var(--text);\n        cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;\n        font-family:var(--mono);transition:background .16s,border-color .16s,transform .12s;\n        -webkit-tap-highlight-color:transparent;\n      }\n      .smf-pay-opt:hover{border-color:var(--rule-strong);}\n      .smf-pay-opt:active{transform:scale(.985);}\n      .smf-pay-opt[aria-checked="true"]{background:var(--acid);border-color:var(--acid);color:var(--ink);}\n      .smf-pay-opt__title{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;line-height:1;}\n      .smf-pay-opt__price{font-family:var(--display);font-size:19px;font-weight:900;line-height:1;letter-spacing:-.02em;white-space:nowrap;}\n      @media(max-width:360px){\n        .smf-payment-choice{margin-top:14px;padding-top:12px;}\n        .smf-payment-choice__options{gap:6px;}\n        .smf-pay-opt{min-height:52px;padding:9px 10px;}\n        .smf-pay-opt__title{font-size:11px;}\n        .smf-pay-opt__price{font-size:18px;}\n      }\n    `;
     document.head.appendChild(style);
   }
 
@@ -211,37 +185,9 @@
       var choice = document.createElement('div');
       choice.id = 'smfPaymentChoice';
       choice.className = 'smf-payment-choice';
-      choice.innerHTML = `
-        <div class="smf-payment-choice__label">Payment</div>
-        <div class="smf-payment-choice__options" role="radiogroup" aria-label="Choose payment method">
-          <button type="button" class="pay-opt smf-pay-opt" data-method="prepaid" role="radio" aria-checked="true">
-            <span class="smf-pay-opt__title">Prepaid</span>
-            <span class="smf-pay-opt__sub">UPI · Cards · Netbanking</span>
-            <span class="smf-pay-opt__price">₹229</span>
-            <span class="smf-pay-opt__meta">Free shipping · Secure</span>
-          </button>
-          <button type="button" class="pay-opt smf-pay-opt" data-method="cod" role="radio" aria-checked="false">
-            <span class="smf-pay-opt__title">Cash on Delivery</span>
-            <span class="smf-pay-opt__sub">Pay when it arrives</span>
-            <span class="smf-pay-opt__price">₹289</span>
-            <span class="smf-pay-opt__meta">Includes ₹60 COD handling</span>
-          </button>
-        </div>
-      `;
+      choice.innerHTML = `\n        <div class="smf-payment-choice__label">Payment</div>\n        <div class="smf-payment-choice__options" role="radiogroup" aria-label="Choose payment method">\n          <button type="button" class="pay-opt smf-pay-opt" data-method="prepaid" role="radio" aria-checked="true">\n            <span class="smf-pay-opt__title">Pay</span>\n            <span class="smf-pay-opt__price">₹229</span>\n          </button>\n          <button type="button" class="pay-opt smf-pay-opt" data-method="cod" role="radio" aria-checked="false">\n            <span class="smf-pay-opt__title">COD</span>\n            <span class="smf-pay-opt__price">₹289</span>\n          </button>\n        </div>\n      `;
       error.parentNode.insertBefore(choice, error);
 
-      var upiPanel = document.createElement('div');
-      upiPanel.id = 'upiPayPanel';
-      upiPanel.className = 'pay-panel smf-payment-panel';
-      upiPanel.innerHTML = '<strong>Prepaid payment</strong><br><span>Continue to Razorpay for UPI, cards, netbanking and other available methods.</span>';
-      error.parentNode.insertBefore(upiPanel, error);
-
-      var codPanel = document.createElement('div');
-      codPanel.id = 'codPayPanel';
-      codPanel.className = 'pay-panel smf-payment-panel';
-      codPanel.style.display = 'none';
-      codPanel.innerHTML = '<strong>Cash on Delivery</strong><br><span>Pay <b>₹289</b> when your order arrives. This includes the ₹60 COD handling charge. Our team may call to confirm before dispatch.</span>';
-      error.parentNode.insertBefore(codPanel, error);
 
       choice.querySelectorAll('.smf-pay-opt').forEach(function (button) {
         button.addEventListener('click', function () {
@@ -300,13 +246,13 @@
 
     var modes = document.querySelector('.pay-modes');
     if (modes) modes.textContent = method === 'cod'
-      ? 'Cash on Delivery · Pay on delivery · ₹60 handling'
-      : 'Secure Razorpay Checkout · UPI / Cards / Netbanking';
+      ? 'COD · ₹60 handling'
+      : 'UPI · Cards · Netbanking';
 
     var reassure = document.querySelector('.checkout-reassure');
     if (reassure) reassure.textContent = method === 'cod'
-      ? 'No payment now · COD confirmation by phone · ₹60 handling included'
-      : '🔒 Secure Razorpay checkout · UPI, Cards, Netbanking & More';
+      ? '₹60 handling · Pay on delivery'
+      : 'Secure Razorpay checkout';
 
     var totalEl = document.getElementById('checkoutTotal');
     if (totalEl) totalEl.textContent = '₹' + total;
