@@ -9,6 +9,7 @@ import { isValidEmail } from './_email.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || '';
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
 
@@ -79,6 +80,53 @@ async function persistRazorpayOrderId(orderCode, razorpayOrderId) {
   }
 }
 
+async function createLocalPendingOrderDirect(payload) {
+  if (!SERVICE_KEY) {
+    const error = new Error('Order database credentials are not configured.');
+    error.statusCode = 500;
+    throw error;
+  }
+
+  const target = `${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders`;
+  const response = await fetch(target, {
+    method: 'POST',
+    headers: {
+      apikey: SERVICE_KEY,
+      Authorization: `Bearer ${SERVICE_KEY}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation',
+    },
+    body: JSON.stringify({
+      customer_email: payload.email,
+      customer_phone: payload.phone,
+      items: payload.items,
+      amount: payload.amount,
+      payment_method: 'pending',
+      status: 'checkout_pending',
+      address: payload.address,
+      order_code: payload.order_code,
+      cod_fee: 0,
+      fbp: payload.fbp || null,
+      fbc: payload.fbc || null,
+      event_source_url: payload.event_source_url || null,
+    }),
+    signal: AbortSignal.timeout(10000),
+  });
+
+  const text = await response.text();
+  let data = {};
+  try { data = JSON.parse(text); } catch { /* handled below */ }
+  if (!response.ok) {
+    const error = new Error(data?.message || data?.error || `Order database returned HTTP ${response.status}`);
+    error.statusCode = response.status >= 400 && response.status < 600 ? response.status : 500;
+    throw error;
+  }
+
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row?.id) throw new Error('Order database returned an invalid response.');
+  return row;
+}
+
 async function createLocalPendingOrder(payload) {
   const target = `${SUPABASE_URL.replace(/\/$/, '')}/functions/v1/create-order`;
   try {
@@ -86,7 +134,7 @@ async function createLocalPendingOrder(payload) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(process.env.SUPABASE_ANON_KEY ? { apikey: process.env.SUPABASE_ANON_KEY } : {}),
+        ...(SUPABASE_ANON_KEY ? { apikey: SUPABASE_ANON_KEY } : {}),
       },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(15000),
@@ -99,12 +147,16 @@ async function createLocalPendingOrder(payload) {
       error.statusCode = upstream.status;
       throw error;
     }
+    if (!data?.id || !data?.order_code) throw new Error('Order service returned an invalid response.');
     return data;
   } catch (err) {
+    // The Edge Function is not part of Razorpay itself. If it is temporarily
+    // unavailable, create the pending local order directly with the service
+    // role key so checkout can still reach Razorpay. This keeps the payment
+    // path independent of a flaky Supabase Edge Function deployment.
     if (err && err.statusCode && err.statusCode < 500) throw err;
-    const error = new Error('Order service unavailable. Please try again.');
-    error.statusCode = 500;
-    throw error;
+    console.error('[api/create-order] Edge Function unavailable; using direct DB fallback:', err?.message || err);
+    return createLocalPendingOrderDirect(payload);
   }
 }
 
