@@ -44,10 +44,15 @@ Deno.serve(async (req: Request) => {
     const email = emailRaw && EMAIL_RE.test(emailRaw) ? emailRaw : "";
     if (!email) return jsonResponse(req, { error: "A valid email is required for your receipt and delivery updates." }, 400);
 
-    const paymentMethod = str(body.payment_method, 10).toLowerCase();
-    if (paymentMethod !== "pending" && paymentMethod !== "upi" && paymentMethod !== "cod") {
+    const requestedPaymentMethod = str(body.payment_method, 10).toLowerCase();
+    if (!["pending", "upi", "cod"].includes(requestedPaymentMethod)) {
       return jsonResponse(req, { error: "Invalid payment method." }, 400);
     }
+
+    // The production orders table intentionally permits only `upi` or `cod`.
+    // Legacy clients may still send `pending`, so normalize that value to the
+    // prepaid/UPI bucket rather than attempting an invalid DB insert.
+    const paymentMethod = requestedPaymentMethod === "pending" ? "upi" : requestedPaymentMethod;
 
     const rawItems = Array.isArray(body.items) ? body.items : null;
     if (!rawItems || rawItems.length !== 1) return jsonResponse(req, { error: "Invalid order items." }, 400);
@@ -108,10 +113,8 @@ Deno.serve(async (req: Request) => {
       customer_phone: phone,
       items,
       amount: amountPaise,
-      // pending is the new Magic Checkout state. Legacy direct UPI/COD callers
-      // continue to work without changing their historical records/behavior.
       payment_method: paymentMethod,
-      status: paymentMethod === "pending" ? "checkout_pending" : (paymentMethod === "upi" ? "upi_pending" : "placed"),
+      status: paymentMethod === "cod" ? "placed" : "upi_pending",
       upi_ref: str(body.upi_ref, 40) || null,
       address,
       order_code: orderCode,
@@ -134,6 +137,7 @@ Deno.serve(async (req: Request) => {
       orderCode = generateOrderCode();
       payload.order_code = orderCode;
     }
+
     if (error || !data?.id) throw new Error(error?.message || "Order persistence failed");
 
     return jsonResponse(req, { id: data.id, order_code: data.order_code || orderCode }, 200);

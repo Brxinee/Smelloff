@@ -17,22 +17,15 @@ const MAX_QUANTITY = Number(BASE_PRODUCT.maxQuantity);
 const PRODUCT_NAME = String(BASE_PRODUCT.title || BASE_PRODUCT.name || 'ODORSTRIKE Fabric Mist');
 const PRODUCT_SIZE = String(BASE_PRODUCT.size || '50ml');
 const PRODUCT_SKU = String(BASE_PRODUCT.sku || BASE_PRODUCT.id || 'OS-001-50ML');
-const PRODUCT_URL = 'https://smelloff.in/odorstrike';
-const PRODUCT_IMAGE = 'https://smelloff.in/assets/odorstrike-bottle.webp';
 const ORDER_CODE_RE = /^SMF-\d{8}-\d{4}$/;
 const TERMINAL_STATES = new Set(['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered']);
+const PREPAID_PAYMENT_METHOD = 'upi';
+const PREPAID_INITIAL_STATUS = 'upi_pending';
 
 function fail(message, statusCode = 500) {
   const error = new Error(message);
   error.statusCode = statusCode;
   throw error;
-}
-
-function razorpayClient() {
-  if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
-    fail('Razorpay credentials are not configured.');
-  }
-  return new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET });
 }
 
 function normalizePhone(value) {
@@ -43,26 +36,59 @@ function normalizeOrderCode(value) {
   return String(value || '').trim().toUpperCase();
 }
 
+function razorpayClient() {
+  if (typeof globalThis.__MOCK_RAZORPAY_ORDER_CREATE__ === 'function') {
+    return {
+      orders: {
+        create: globalThis.__MOCK_RAZORPAY_ORDER_CREATE__,
+      },
+    };
+  }
+
+  if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+    fail('Razorpay credentials are not configured.');
+  }
+
+  return new Razorpay({
+    key_id: RAZORPAY_KEY_ID,
+    key_secret: RAZORPAY_KEY_SECRET,
+  });
+}
+
+function supabaseHeaders() {
+  return {
+    apikey: SERVICE_KEY,
+    Authorization: `Bearer ${SERVICE_KEY}`,
+    'Content-Type': 'application/json',
+  };
+}
+
+async function readJsonResponse(response) {
+  const text = await response.text().catch(() => '');
+  if (!text) return {};
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {};
+  }
+}
+
 async function fetchOrderByCode(orderCode) {
   if (!SERVICE_KEY) fail('Order database credentials are not configured.');
   if (!orderCode) return null;
 
   try {
     const response = await fetch(
-      `${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&select=id,order_code,customer_email,customer_phone,amount,status,payment_attempt_id`,
+      `${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&select=id,order_code,customer_email,customer_phone,amount,status,payment_method,payment_attempt_id`,
       {
-        headers: {
-          apikey: SERVICE_KEY,
-          Authorization: `Bearer ${SERVICE_KEY}`,
-          'Content-Type': 'application/json',
-        },
+        headers: supabaseHeaders(),
         signal: AbortSignal.timeout(10000),
       },
     );
 
     if (!response.ok) {
-      const text = await response.text().catch(() => '');
-      console.error('[api/create-order] order lookup failed:', response.status, text.slice(0, 300));
+      const detail = await response.text().catch(() => '');
+      console.error('[api/create-order] order lookup failed:', response.status, detail.slice(0, 300));
       fail('Order database is temporarily unavailable. Please try again.', 503);
     }
 
@@ -75,38 +101,40 @@ async function fetchOrderByCode(orderCode) {
   }
 }
 
+function buildOrderRecord(payload) {
+  return {
+    customer_email: payload.email,
+    customer_phone: payload.phone,
+    items: payload.items,
+    amount: payload.amount,
+    // DB constraint allows only `upi` or `cod`. This Standard Razorpay
+    // checkout is prepaid at order initialization, regardless of whether
+    // the buyer later chooses UPI/card/netbanking inside Razorpay.
+    payment_method: PREPAID_PAYMENT_METHOD,
+    status: PREPAID_INITIAL_STATUS,
+    address: payload.address,
+    order_code: payload.order_code,
+    cod_fee: 0,
+    fbp: payload.fbp || null,
+    fbc: payload.fbc || null,
+    event_source_url: payload.event_source_url || null,
+  };
+}
+
 async function insertPendingOrder(payload) {
   if (!SERVICE_KEY) fail('Order database credentials are not configured.');
 
   const response = await fetch(`${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders`, {
     method: 'POST',
     headers: {
-      apikey: SERVICE_KEY,
-      Authorization: `Bearer ${SERVICE_KEY}`,
-      'Content-Type': 'application/json',
+      ...supabaseHeaders(),
       Prefer: 'return=representation',
     },
-    body: JSON.stringify({
-      customer_email: payload.email,
-      customer_phone: payload.phone,
-      items: payload.items,
-      amount: payload.amount,
-      payment_method: 'pending',
-      status: 'checkout_pending',
-      address: payload.address,
-      order_code: payload.order_code,
-      cod_fee: 0,
-      fbp: payload.fbp || null,
-      fbc: payload.fbc || null,
-      event_source_url: payload.event_source_url || null,
-    }),
+    body: JSON.stringify(buildOrderRecord(payload)),
     signal: AbortSignal.timeout(10000),
   });
 
-  const text = await response.text().catch(() => '');
-  let data = {};
-  try { data = JSON.parse(text); } catch { /* handled below */ }
-
+  const data = await readJsonResponse(response);
   if (!response.ok) {
     const error = new Error(data?.message || data?.error || `Order database returned HTTP ${response.status}`);
     error.statusCode = response.status;
@@ -125,9 +153,7 @@ async function updatePendingOrder(orderCode, payload) {
     {
       method: 'PATCH',
       headers: {
-        apikey: SERVICE_KEY,
-        Authorization: `Bearer ${SERVICE_KEY}`,
-        'Content-Type': 'application/json',
+        ...supabaseHeaders(),
         Prefer: 'return=representation',
       },
       body: JSON.stringify({
@@ -135,8 +161,8 @@ async function updatePendingOrder(orderCode, payload) {
         customer_phone: payload.phone,
         items: payload.items,
         amount: payload.amount,
-        payment_method: 'pending',
-        status: 'checkout_pending',
+        payment_method: PREPAID_PAYMENT_METHOD,
+        status: PREPAID_INITIAL_STATUS,
         address: payload.address,
         cod_fee: 0,
         fbp: payload.fbp || null,
@@ -149,7 +175,8 @@ async function updatePendingOrder(orderCode, payload) {
   );
 
   if (!response.ok) {
-    console.error('[api/create-order] pending order update failed:', response.status);
+    const detail = await response.text().catch(() => '');
+    console.error('[api/create-order] pending order update failed:', response.status, detail.slice(0, 300));
     fail('Order database is temporarily unavailable. Please try again.', 503);
   }
 
@@ -165,9 +192,7 @@ async function persistRazorpayOrderId(orderCode, razorpayOrderId) {
     {
       method: 'PATCH',
       headers: {
-        apikey: SERVICE_KEY,
-        Authorization: `Bearer ${SERVICE_KEY}`,
-        'Content-Type': 'application/json',
+        ...supabaseHeaders(),
         Prefer: 'return=representation',
       },
       body: JSON.stringify({
@@ -179,8 +204,8 @@ async function persistRazorpayOrderId(orderCode, razorpayOrderId) {
   );
 
   if (!response.ok) {
-    const text = await response.text().catch(() => '');
-    console.error('[api/create-order] Razorpay mapping failed:', response.status, text.slice(0, 300));
+    const detail = await response.text().catch(() => '');
+    console.error('[api/create-order] Razorpay mapping failed:', response.status, detail.slice(0, 300));
     fail('Payment order was created but could not be linked to your order. Please try again.', 503);
   }
 
@@ -190,6 +215,44 @@ async function persistRazorpayOrderId(orderCode, razorpayOrderId) {
     fail('Payment order was created but could not be linked to your order. Please try again.', 503);
   }
   return row;
+}
+
+function assertSameCheckout(existing, payload) {
+  const sameCustomer = normalizePhone(existing.customer_phone) === normalizePhone(payload.phone)
+    && String(existing.customer_email || '').trim().toLowerCase() === payload.email;
+  if (!sameCustomer || Number(existing.amount) !== Number(payload.amount)) {
+    fail('This checkout session is no longer valid. Please refresh and try again.', 409);
+  }
+
+  if (String(existing.payment_method || '').toLowerCase() === 'cod') {
+    fail('This checkout session is already associated with a COD order. Please start a new checkout.', 409);
+  }
+
+  if (TERMINAL_STATES.has(String(existing.status || '').toLowerCase())) {
+    fail('This order has already been completed. Please start a new checkout.', 409);
+  }
+}
+
+async function ensurePendingLocalOrder(payload) {
+  let existing = await fetchOrderByCode(payload.order_code);
+
+  if (existing) {
+    assertSameCheckout(existing, payload);
+    if (existing.payment_attempt_id) return existing;
+    return updatePendingOrder(payload.order_code, payload);
+  }
+
+  try {
+    return await insertPendingOrder(payload);
+  } catch (error) {
+    if (!error?.isDuplicate) throw error;
+    existing = await fetchOrderByCode(payload.order_code);
+    if (!existing) throw error;
+
+    assertSameCheckout(existing, payload);
+    if (existing.payment_attempt_id) return existing;
+    return updatePendingOrder(payload.order_code, payload);
+  }
 }
 
 function responseForOrder(localOrder, razorpayOrderId) {
@@ -203,44 +266,6 @@ function responseForOrder(localOrder, razorpayOrderId) {
     order_token: generateOrderToken(localOrder.order_code, localOrder.customer_phone),
     confirmation_token: generateOrderConfirmationToken(localOrder.order_code, localOrder.customer_email),
   };
-}
-
-async function ensurePendingLocalOrder(payload) {
-  let existing = await fetchOrderByCode(payload.order_code);
-
-  if (existing) {
-    const sameCustomer = normalizePhone(existing.customer_phone) === normalizePhone(payload.phone)
-      && String(existing.customer_email || '').trim().toLowerCase() === payload.email;
-    if (!sameCustomer || Number(existing.amount) !== Number(payload.amount)) {
-      fail('This checkout session is no longer valid. Please refresh and try again.', 409);
-    }
-
-    if (TERMINAL_STATES.has(String(existing.status || '').toLowerCase())) {
-      fail('This order has already been completed. Please start a new checkout.', 409);
-    }
-
-    if (existing.payment_attempt_id) return existing;
-    return updatePendingOrder(payload.order_code, payload);
-  }
-
-  try {
-    return await insertPendingOrder(payload);
-  } catch (error) {
-    if (!error?.isDuplicate) throw error;
-    existing = await fetchOrderByCode(payload.order_code);
-    if (!existing) throw error;
-
-    const sameCustomer = normalizePhone(existing.customer_phone) === normalizePhone(payload.phone)
-      && String(existing.customer_email || '').trim().toLowerCase() === payload.email;
-    if (!sameCustomer || Number(existing.amount) !== Number(payload.amount)) {
-      fail('This checkout session is no longer valid. Please refresh and try again.', 409);
-    }
-    if (TERMINAL_STATES.has(String(existing.status || '').toLowerCase())) {
-      fail('This order has already been completed. Please start a new checkout.', 409);
-    }
-    if (existing.payment_attempt_id) return existing;
-    return updatePendingOrder(payload.order_code, payload);
-  }
 }
 
 export default async function handler(req, res) {
@@ -375,7 +400,7 @@ export default async function handler(req, res) {
     const status = Number(error?.statusCode || 500);
     console.error('[api/create-order] error:', error?.message || error);
     return res.status(status >= 400 && status < 600 ? status : 500).json({
-      error: error?.message || 'Unable to start secure checkout. Please try again.',
+      error: error?.message || 'Order service unavailable. Please try again.',
     });
   }
 }

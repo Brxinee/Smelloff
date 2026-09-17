@@ -62,6 +62,16 @@ function restoreEnv() {
   }
 }
 
+function jsonResponse(data, status = 200) {
+  const text = JSON.stringify(data);
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    async json() { return data; },
+    async text() { return text; },
+  };
+}
+
 test('create-order rejects an incomplete delivery address before any upstream work', async () => {
   setTestEnv();
   try {
@@ -109,6 +119,74 @@ test('create-order returns 503 when the order database is unavailable', async ()
     assert.equal(result().responseData.error, 'Order database is temporarily unavailable. Please try again.');
   } finally {
     global.fetch = originalFetch;
+    restoreEnv();
+  }
+});
+
+test('create-order persists a database-valid prepaid method instead of pending', async () => {
+  setTestEnv();
+  const originalFetch = global.fetch;
+  const originalRazorpayMock = globalThis.__MOCK_RAZORPAY_ORDER_CREATE__;
+  let insertedBody = null;
+  let call = 0;
+
+  global.fetch = async (url, options = {}) => {
+    call += 1;
+    const method = options.method || 'GET';
+
+    if (method === 'GET' && String(url).includes('/rest/v1/orders?order_code=')) {
+      return jsonResponse([]);
+    }
+
+    if (method === 'POST' && String(url).endsWith('/rest/v1/orders')) {
+      insertedBody = JSON.parse(options.body);
+      return jsonResponse([{
+        id: 'db-order-1',
+        order_code: 'SMF-20260917-1234',
+        customer_email: insertedBody.customer_email,
+        customer_phone: insertedBody.customer_phone,
+        amount: insertedBody.amount,
+        payment_attempt_id: null,
+      }], 201);
+    }
+
+    if (method === 'PATCH' && String(url).includes('/rest/v1/orders?order_code=')) {
+      const body = JSON.parse(options.body);
+      return jsonResponse([{
+        id: 'db-order-1',
+        order_code: 'SMF-20260917-1234',
+        customer_email: 'buyer@smelloff.test',
+        customer_phone: '9392974031',
+        amount: 22900,
+        payment_attempt_id: body.payment_attempt_id,
+      }]);
+    }
+
+    throw new Error(`Unexpected fetch call ${call}: ${method} ${url}`);
+  };
+
+  globalThis.__MOCK_RAZORPAY_ORDER_CREATE__ = async (params) => ({
+    id: 'order_test_123',
+    amount: params.amount,
+    currency: params.currency,
+  });
+
+  try {
+    const { response, result } = makeResponse();
+    await handler(
+      { method: 'POST', headers: { origin: 'https://smelloff.in' }, body: validBody() },
+      response,
+    );
+
+    assert.equal(result().statusCode, 200);
+    assert.equal(insertedBody.payment_method, 'upi');
+    assert.equal(insertedBody.status, 'upi_pending');
+    assert.notEqual(insertedBody.payment_method, 'pending');
+    assert.equal(result().responseData.order_id, 'order_test_123');
+  } finally {
+    global.fetch = originalFetch;
+    if (originalRazorpayMock === undefined) delete globalThis.__MOCK_RAZORPAY_ORDER_CREATE__;
+    else globalThis.__MOCK_RAZORPAY_ORDER_CREATE__ = originalRazorpayMock;
     restoreEnv();
   }
 });
