@@ -319,8 +319,10 @@ function withMarkers(html, block, kind) {
  *  </head>, after every other stylesheet the page loads.
  */
 function ensureAssets(html) {
-  const softHref = `/assets/css/soft.css?v=${hashOf('assets/css/soft.css')}`;
-  const chromeHref = `/assets/css/chrome.css?v=${hashOf('assets/css/chrome.css')}`;
+  const softRel = fs.existsSync(join(ROOT, 'assets/css/soft.min.css')) ? 'assets/css/soft.min.css' : 'assets/css/soft.css';
+  const chromeRel = fs.existsSync(join(ROOT, 'assets/css/chrome.min.css')) ? 'assets/css/chrome.min.css' : 'assets/css/chrome.css';
+  const softHref = `/${softRel}?v=${hashOf(softRel)}`;
+  const chromeHref = `/${chromeRel}?v=${hashOf(chromeRel)}`;
   const jsTag = `<script src="/assets/js/chrome.js?v=${hashOf('assets/js/chrome.js')}" defer></script>`;
   const softTag = `<link rel="preload" href="${softHref}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${softHref}"></noscript>`;
   const chromeTag = `<link rel="preload" href="${chromeHref}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${chromeHref}"></noscript>`;
@@ -330,7 +332,7 @@ function ensureAssets(html) {
   // banner comment, so a re-run relocates them instead of stacking copies.
   html = html.replace(/[ \t]*<!-- Shared layers load LAST[^>]*-->\n?/g, '');
   html = html.replace(
-    /[ \t]*<link[^>]+href="\/assets\/css\/(?:soft|chrome)\.css[^"]*"[^>]*>\n?/g,
+    /[ \t]*<link[^>]+href="\/assets\/css\/(?:soft|chrome)(?:\.min)?\.css[^"]*"[^>]*>\n?/g,
     ''
   );
   html = html.replace(
@@ -351,6 +353,8 @@ function ensureAssets(html) {
   // need a change to reach everyone at once — and the least likely to.
   for (const [file, pattern] of [
     ['assets/css/tokens.css', /(href="\/assets\/css\/tokens\.css)(\?[^"]*)?"/g],
+    ['assets/css/soft.min.css', /(href="\/assets\/css\/soft\.min\.css)(\?[^"]*)?"/g],
+    ['assets/css/chrome.min.css', /(href="\/assets\/css\/chrome\.min\.css)(\?[^"]*)?"/g],
     ['assets/fonts.css', /(href="\/assets\/fonts\.css)(\?[^"]*)?"/g],
     // blog.css was hand-versioned (`?v=6`) across 29 posts, which is the same
     // trap as the rest of this list: `/assets/*` is immutable for a year, so a
