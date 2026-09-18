@@ -65,9 +65,9 @@ export const APPROVED_CLAIMS = {
     source: 'Product Specification & Formulation Design'
   },
   FRAGRANCE_POSITIONING: {
-    claim: 'Light scent. Serious odor control. ODORSTRIKE is a fabric odor-control mist with a light, short-lasting fragrance. It gives clothes a subtle fresh scent immediately after spraying while targeting unwanted odor in the fabric.',
+    claim: 'Light fresh fabric scent — not a perfume. ODORSTRIKE is a fabric-only odor-control mist with a light, crisp fabric scent that provides sensory confirmation of clean fabric while targeting unwanted odor in the weave.',
     status: 'VERIFIED',
-    source: 'Formulation Architecture (Subtle fresh top note + HPβCD/Zinc PCA actives)'
+    source: 'Formulation Architecture (Light fresh fabric scent + HPβCD/Zinc PCA actives)'
   },
   TARGETED_ELIMINATION: {
     claim: 'Targets and traps sweat and environmental odor molecules at the clothing fabric weave.',

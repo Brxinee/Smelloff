@@ -184,13 +184,13 @@ test('index.html homepage hero UX hierarchy and claim integrity', () => {
 
   // Usage microcopy
   assert.ok(html.includes('2–3 sprays'), 'Usage microcopy must state 2–3 sprays');
-  assert.ok(html.includes('wait ~10 sec'), 'Usage microcopy must state ~10 sec wait');
+  assert.ok(html.includes('wait 15–30 sec'), 'Usage microcopy must state 15–30 sec wait');
   assert.ok(html.includes('wear'), 'Usage microcopy must state wear');
 
   // Visual & Demo Slot
   assert.ok(html.includes('id="heroDemoSlot"'), 'Isolated demo slot must exist');
   assert.ok(html.includes('/assets/odorstrike-bottle-cutout.webp'), 'Preloaded bottle cutout must be present');
-  assert.ok(html.includes('WAIT ~10 SEC'), 'Demo slot must clearly state WAIT ~10 SEC');
+  assert.ok(html.includes('WAIT 15–30 SEC'), 'Demo slot must clearly state WAIT 15–30 SEC');
   assert.ok(html.includes('WEAR FRESH'), 'Demo slot must clearly state WEAR FRESH end state');
   assert.ok(html.includes('class="hero-demo-steps"'), 'Demo slot must contain structured steps');
 
@@ -255,7 +255,7 @@ test('index.html homepage featured product section UX hierarchy, pricing and cla
   // Core benefits & specs
   assert.ok(html.includes('50ml Pocket Mist (~250 sprays)'), 'Must state 50ml and sprays');
   assert.ok(html.includes('HPβCD &amp; Zinc PCA active formula'), 'Must state active formula');
-  assert.ok(html.includes('Dries clear in ~10s · Zero residue'), 'Must state dry time and zero residue');
+  assert.ok(html.includes('Dries clean in 15–30s · Zero residue'), 'Must state dry time and zero residue');
 
   // Canonical pricing, terms & CTAs
   assert.ok(html.includes('₹229'), 'Must state canonical price ₹229');
@@ -438,7 +438,7 @@ test('index.html homepage FAQ objection-first hierarchy, schema parity and claim
   assert.ok(faqSection.includes('never skin, face, hair, or body'), 'FAQ must strictly prohibit skin, face, hair, or body application');
   assert.ok(faqSection.includes('zero residue'), 'FAQ must state zero residue');
   assert.ok(faqSection.includes('15–20 cm'), 'FAQ must state 15–20 cm spray distance');
-  assert.ok(faqSection.includes('approximately 10 seconds'), 'FAQ must state approximately 10 seconds dry time');
+  assert.ok(faqSection.includes('15–30 seconds'), 'FAQ must state 15–30 seconds dry time');
   assert.ok(faqSection.includes('Up to 8 hours'), 'FAQ must state Up to 8 hours duration');
 });
 
@@ -632,12 +632,12 @@ test('odorstrike.html PDP How to Use section UX hierarchy, canonical values, tim
   assert.ok(reset30Html.includes('collar, underarm fabric, or chest'), 'Step 2 must identify key garment zones');
   assert.ok(reset30Html.includes('Not for skin') || reset30Html.includes('never on skin'), 'Step 2 must reinforce fabric only / not for skin');
 
-  // 5. Step 3: WAIT with ~10 seconds and timer ring
+  // 5. Step 3: WAIT with 15–30 seconds and timer ring
   assert.ok(reset30Html.includes('03 · WAIT'), 'Step 3 must have action label WAIT');
   assert.ok(reset30Html.includes('class="r30-step r30-step--timer"'), 'Step 3 must carry .r30-step--timer class for JS observer');
   assert.ok(reset30Html.includes('class="r30-ring"'), 'Step 3 must contain .r30-ring element');
-  assert.ok(reset30Html.includes('class="r30-ring-num">10</span>'), 'Step 3 must contain .r30-ring-num displaying 10');
-  assert.ok(reset30Html.includes('Wait ~10 seconds'), 'Step 3 heading must indicate ~10 seconds wait');
+  assert.ok(reset30Html.includes('class="r30-ring-num">30</span>'), 'Step 3 must contain .r30-ring-num displaying 30');
+  assert.ok(reset30Html.includes('Wait 15–30 seconds'), 'Step 3 heading must indicate 15–30 seconds wait');
   assert.ok(reset30Html.includes('zero residue and no white marks'), 'Step 3 must note clean evaporation with no marks');
 
   // 6. Step 4: WEAR with up to 8 hours odor protection
@@ -663,7 +663,7 @@ test('odorstrike.html PDP How to Use section UX hierarchy, canonical values, tim
   assert.equal(howToObj.step.length, 4, 'HowTo schema must define exactly 4 steps');
   assert.equal(howToObj.step[0].name, 'Hold 15–20 cm away');
   assert.equal(howToObj.step[1].name, 'Apply 2–3 light sprays');
-  assert.equal(howToObj.step[2].name, 'Wait approximately 10 seconds');
+  assert.equal(howToObj.step[2].name, 'Wait 15–30 seconds');
   assert.equal(howToObj.step[3].name, 'Wear normally');
 
   // 9. Strict claim discipline in How-to section and schema
@@ -744,7 +744,7 @@ test('odorstrike.html PDP FAQ objection-first hierarchy, schema parity, and clai
   assert.ok(faqSection.includes('never skin, face, hair, or body'), 'FAQ must strictly prohibit skin, face, hair, or body application');
   assert.ok(faqSection.includes('zero residue'), 'FAQ must state zero residue');
   assert.ok(faqSection.includes('15–20 cm'), 'FAQ must state 15–20 cm spray distance');
-  assert.ok(faqSection.includes('approximately 10 seconds'), 'FAQ must state approximately 10 seconds dry time');
+  assert.ok(faqSection.includes('15–30 seconds'), 'FAQ must state 15–30 seconds dry time');
   assert.ok(faqSection.includes('Up to 8 hours'), 'FAQ must state Up to 8 hours duration');
 });
 

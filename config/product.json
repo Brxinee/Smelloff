@@ -127,8 +127,9 @@
   },
   "usage": {
     "sprayDistance": "15–20 cm",
-    "dryTime": "approximately 10 seconds",
-    "dryTimeConservativeNote": "In high humidity, wait until the fabric is fully dry before wearing. A conservative wait can take up to 30–60 seconds.",
+    "dryTime": "15–30 seconds when sprayed as a fine mist from about 15cm",
+    "dryTimeShort": "15–30 seconds",
+    "dryTimeConservativeNote": "In high humidity or with heavier application, wait until the fabric is fully dry before wearing. Can take up to 30–60 seconds in high humidity.",
     "performanceWindow": "Up to 8 hours under normal office/commute conditions",
     "doses": {
       "targeted": "2–3 sprays",
@@ -181,7 +182,7 @@
   "claims": {
     "approved": [
       "Pocket fabric odor spray for clothing — not a perfume, not a deodorant.",
-      "Light scent. Serious odor control. ODORSTRIKE is a fabric odor-control mist with a light, short-lasting fragrance. It gives clothes a subtle fresh scent immediately after spraying while targeting unwanted odor in the fabric.",
+      "Light fresh fabric scent — not a perfume. ODORSTRIKE is a fabric odor-control mist with a light, crisp fabric scent that provides sensory confirmation of clean fabric while targeting unwanted odor in the weave.",
       "Targets and traps sweat and environmental odor molecules at the clothing fabric weave.",
       "Up to 8 hours of odor protection on fabric under normal office/commute conditions.",
       "Safe for regular use on everyday washable clothing fabrics (cotton, polyester, denim, blends, wool). Patch-test silk.",
