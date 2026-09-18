@@ -15,13 +15,14 @@
     "sitemap": "node scripts/seo/build-sitemap.mjs",
     "sitemap:check": "node scripts/seo/build-sitemap.mjs --check",
     "indexnow": "node scripts/indexnow-ping.mjs",
-    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs --check && node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js && node -c api/magic-checkout-finalize.js && node -c api/magic-checkout-shipping-info.js && node scripts/audit-production.mjs",
     "lint": "node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js && node -c api/magic-checkout-finalize.js && node -c api/magic-checkout-shipping-info.js",
     "start": "node server.js",
     "test": "node --test",
     "verify:live": "node scripts/verify-live-deployment.mjs",
     "optimize:critical": "node scripts/optimize-critical-images.mjs",
-    "apply:chrome": "node scripts/apply-chrome.mjs"
+    "apply:chrome": "node scripts/apply-chrome.mjs",
+    "prepare:public": "node scripts/prepare-public.mjs",
+    "vercel-build": "npm run optimize:critical && npm run apply:chrome && npm run prepare:public"
   },
   "dependencies": {
     "express": "^5.2.1",
