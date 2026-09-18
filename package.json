@@ -22,7 +22,7 @@
     "optimize:critical": "node scripts/optimize-critical-images.mjs",
     "apply:chrome": "node scripts/apply-chrome.mjs",
     "prepare:public": "node scripts/prepare-public.mjs",
-    "vercel-build": "npm run optimize:critical && npm run apply:chrome && npm run prepare:public"
+    "vercel-build": "npm test && npm run optimize:critical && npm run apply:chrome && npm run prepare:public"
   },
   "dependencies": {
     "express": "^5.2.1",
