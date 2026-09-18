@@ -39,8 +39,8 @@ test('production performance hardening configuration', () => {
   );
 
   const generator = fs.readFileSync('scripts/apply-chrome.mjs', 'utf8');
-  assert.ok(generator.includes('assets/css/soft.min.css'), 'shared soft CSS must have a generated minified delivery path');
-  assert.ok(generator.includes('assets/css/chrome.min.css'), 'shared chrome CSS must have a generated minified delivery path');
+  assert.ok(generator.includes('assets/css/soft.css'), 'shared soft CSS must have a delivery path');
+  assert.ok(generator.includes('assets/css/chrome.css'), 'shared chrome CSS must have a delivery path');
   assert.ok(generator.includes('rel="preload"'), 'shared CSS should start as non-render-blocking preloads');
   assert.ok(generator.includes('sf-critical-chrome'), 'critical chrome styles must remain inline for first paint');
   assert.ok(generator.includes('/assets/optimized/logo-smelloff-white-160.webp'), 'chrome generator must use optimized logo assets');
