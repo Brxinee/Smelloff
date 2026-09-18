@@ -19,7 +19,9 @@
     "lint": "node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js && node -c api/magic-checkout-finalize.js && node -c api/magic-checkout-shipping-info.js",
     "start": "node server.js",
     "test": "node --test",
-    "verify:live": "node scripts/verify-live-deployment.mjs"
+    "verify:live": "node scripts/verify-live-deployment.mjs",
+    "optimize:critical": "node scripts/optimize-critical-images.mjs",
+    "apply:chrome": "node scripts/apply-chrome.mjs"
   },
   "dependencies": {
     "express": "^5.2.1",
