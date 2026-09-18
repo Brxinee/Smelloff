@@ -99,6 +99,50 @@
       "statusCode": 301
     },
     {
+      "source": "/blog/best-fabric-freshener-odor-spray-india-2026",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.smelloff.in"
+        }
+      ],
+      "destination": "https://smelloff.in/blog/fabric-deodorizer-spray-india-guide-2026",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/fabric-odor-science-zinc-ricinoleate",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.smelloff.in"
+        }
+      ],
+      "destination": "https://smelloff.in/blog/zinc-pca-fabric-odor-ingredient-guide",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/chemical-breakdown-sweat-odor",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.smelloff.in"
+        }
+      ],
+      "destination": "https://smelloff.in/blog/why-body-odor-comes-back-on-clothes-so-quickly",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/how-to-remove-sweat-smell-from-clothes-instantly",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.smelloff.in"
+        }
+      ],
+      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-instantly",
+      "statusCode": 301
+    },
+    {
       "source": "/blog/spray-for-clothes-not-skin",
       "has": [
         {
@@ -704,6 +748,26 @@
     {
       "source": "/blog/is-zinc-ricinoleate-safe-for-clothes",
       "destination": "/blog/zinc-pca-fabric-odor-ingredient-guide",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/best-fabric-freshener-odor-spray-india-2026",
+      "destination": "/blog/fabric-deodorizer-spray-india-guide-2026",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/fabric-odor-science-zinc-ricinoleate",
+      "destination": "/blog/zinc-pca-fabric-odor-ingredient-guide",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/chemical-breakdown-sweat-odor",
+      "destination": "/blog/why-body-odor-comes-back-on-clothes-so-quickly",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/how-to-remove-sweat-smell-from-clothes-instantly",
+      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-instantly",
       "statusCode": 301
     },
     {

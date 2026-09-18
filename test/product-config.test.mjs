@@ -368,25 +368,12 @@ test('index.html homepage testimonial and beta tester voices section UX hierarch
   assert.equal(/verified buyer|verified purchase|4\.9\/5|5\.0\/5|1,000\+ customers|10,000\+ happy|★★★★★|ratingValue/i.test(voicesBlock), false, 'Voices section must not contain fabricated social proof or fake ratings');
 });
 
-test('index.html homepage FAQ objection-first hierarchy, schema parity and claims discipline', () => {
+test('index.html homepage FAQ objection-first hierarchy, schema deprecation and claims discipline', () => {
   const html = readFileSync('index.html', 'utf8');
 
-  // Exactly one FAQPage JSON-LD block
+  // FAQPage JSON-LD block must be deprecated/removed to prevent search penalty
   const faqPageMatches = html.match(/"@type"\s*:\s*"FAQPage"/g) || [];
-  assert.equal(faqPageMatches.length, 1, 'index.html must have exactly one FAQPage schema block');
-
-  // Extract FAQPage JSON-LD
-  const scriptMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g);
-  let faqSchema = null;
-  for (const block of scriptMatch) {
-    if (block.includes('"FAQPage"')) {
-      const jsonText = block.replace(/<script type="application\/ld\+json">|<\/script>/g, '').trim();
-      faqSchema = JSON.parse(jsonText);
-      break;
-    }
-  }
-  assert.ok(faqSchema, 'Must parse FAQPage schema');
-  assert.equal(faqSchema.mainEntity.length, 10, 'FAQPage schema must contain exactly 10 questions');
+  assert.equal(faqPageMatches.length, 0, 'index.html must have 0 FAQPage schema blocks (deprecated)');
 
   // Extract visible FAQ items from <section class="faq"
   const faqSectionStart = html.indexOf('<section class="faq"');
@@ -417,8 +404,7 @@ test('index.html homepage FAQ objection-first hierarchy, schema parity and claim
 
   for (let i = 0; i < expectedQuestions.length; i++) {
     assert.equal(qMatches[i], expectedQuestions[i], `Question ${i + 1} must match expected objection: ${expectedQuestions[i]}`);
-    assert.equal(faqSchema.mainEntity[i].name, expectedQuestions[i], `Schema question ${i + 1} name must match expected question`);
-    assert.equal(aMatches[i], faqSchema.mainEntity[i].acceptedAnswer.text, `Answer ${i + 1} in HTML must match schema text 1:1`);
+    assert.ok(aMatches[i].length > 20, `Answer ${i + 1} in HTML must have non-empty substantive answer text`);
   }
 
   // Claim discipline guardrails in FAQ section
@@ -671,40 +657,27 @@ test('odorstrike.html PDP How to Use section UX hierarchy, canonical values, tim
   assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(howToScript), false, 'How to use schema must not contain prohibited claims');
 });
 
-test('odorstrike.html PDP FAQ objection-first hierarchy, schema parity, and claims discipline', () => {
+test('odorstrike.html PDP FAQ objection-first hierarchy, schema deprecation, and claims discipline', () => {
   const html = readFileSync('odorstrike.html', 'utf8');
 
-  // 1. Exactly one FAQPage JSON-LD block
+  // 1. FAQPage JSON-LD block must be deprecated/removed to prevent search penalty
   const faqPageMatches = html.match(/"@type"\s*:\s*"FAQPage"/g) || [];
-  assert.equal(faqPageMatches.length, 1, 'odorstrike.html must have exactly one FAQPage schema block');
+  assert.equal(faqPageMatches.length, 0, 'odorstrike.html must have 0 FAQPage schema blocks (deprecated)');
 
-  // 2. Extract FAQPage JSON-LD
-  const scriptMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g);
-  let faqSchema = null;
-  for (const block of scriptMatch) {
-    if (block.includes('"FAQPage"')) {
-      const jsonText = block.replace(/<script type="application\/ld\+json">|<\/script>/g, '').trim();
-      faqSchema = JSON.parse(jsonText);
-      break;
-    }
-  }
-  assert.ok(faqSchema, 'Must parse FAQPage schema');
-  assert.equal(faqSchema.mainEntity.length, 10, 'FAQPage schema must contain exactly 10 questions');
-
-  // 3. Extract visible FAQ items from <section class="faq"
+  // 2. Extract visible FAQ items from <section class="faq"
   const faqSectionStart = html.indexOf('<section class="faq"');
   assert.ok(faqSectionStart !== -1, 'Must have <section class="faq"');
   const faqSectionEnd = html.indexOf('</section>', faqSectionStart);
   const faqSection = html.slice(faqSectionStart, faqSectionEnd);
 
-  // 4. Extract visible questions and answers
+  // 3. Extract visible questions and answers
   const qMatches = [...faqSection.matchAll(/<summary><h3>([\s\S]*?)<\/h3><\/summary>/g)].map(m => m[1].trim());
   const aMatches = [...faqSection.matchAll(/<p class="faq-answer">([\s\S]*?)<\/p>/g)].map(m => m[1].trim());
 
   assert.equal(qMatches.length, 10, 'Must have exactly 10 visible FAQ questions');
   assert.equal(aMatches.length, 10, 'Must have exactly 10 visible FAQ answers');
 
-  // 5. Expected 10 objection questions in order
+  // 4. Expected 10 objection questions in order
   const expectedQuestions = [
     'Is ODORSTRIKE safe on skin?',
     'Will it stain my clothes?',
@@ -720,18 +693,16 @@ test('odorstrike.html PDP FAQ objection-first hierarchy, schema parity, and clai
 
   for (let i = 0; i < expectedQuestions.length; i++) {
     assert.equal(qMatches[i], expectedQuestions[i], `Question ${i + 1} must match expected objection: ${expectedQuestions[i]}`);
-    assert.equal(faqSchema.mainEntity[i].name, expectedQuestions[i], `Schema question ${i + 1} name must match expected question`);
-    assert.equal(aMatches[i], faqSchema.mainEntity[i].acceptedAnswer.text, `Answer ${i + 1} in HTML must match schema text 1:1`);
+    assert.ok(aMatches[i].length > 20, `Answer ${i + 1} in HTML must have non-empty substantive answer text`);
   }
 
-  // 6. Claim discipline guardrails in FAQ section and schema
+  // 5. Claim discipline guardrails in FAQ section
   const prohibitedPattern = /kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof|kills the smell/i;
   assert.equal(prohibitedPattern.test(faqSection), false, 'FAQ HTML must not contain prohibited claims');
-  assert.equal(prohibitedPattern.test(JSON.stringify(faqSchema)), false, 'FAQ schema must not contain prohibited claims');
   assert.equal(/fragrance-free|unscented|scentless/i.test(faqSection), false, 'FAQ must not claim fragrance-free');
   assert.equal(/2–3 months|month-based/i.test(faqSection), false, 'FAQ must not encode month-based bottle life');
 
-  // 7. Commercial values match canonical configuration
+  // 6. Commercial values match canonical configuration
   assert.ok(faqSection.includes('₹229'), 'FAQ must state ₹229 prepaid price');
   assert.ok(faqSection.includes('₹60'), 'FAQ must state ₹60 COD fee');
   assert.ok(faqSection.includes('₹289'), 'FAQ must state ₹289 COD total');

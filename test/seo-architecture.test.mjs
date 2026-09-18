@@ -130,6 +130,30 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
         expectedFinal: 'https://smelloff.in/solutions',
         maxHops: 1,
       },
+      {
+        description: 'legacy best-fabric-freshener-odor-spray redirects to fabric-deodorizer-spray-india-guide-2026',
+        url: 'https://smelloff.in/blog/best-fabric-freshener-odor-spray-india-2026',
+        expectedFinal: 'https://smelloff.in/blog/fabric-deodorizer-spray-india-guide-2026',
+        maxHops: 1,
+      },
+      {
+        description: 'legacy fabric-odor-science-zinc-ricinoleate redirects to zinc-pca-fabric-odor-ingredient-guide',
+        url: 'https://smelloff.in/blog/fabric-odor-science-zinc-ricinoleate',
+        expectedFinal: 'https://smelloff.in/blog/zinc-pca-fabric-odor-ingredient-guide',
+        maxHops: 1,
+      },
+      {
+        description: 'legacy chemical-breakdown-sweat-odor redirects to why-body-odor-comes-back-on-clothes-so-quickly',
+        url: 'https://smelloff.in/blog/chemical-breakdown-sweat-odor',
+        expectedFinal: 'https://smelloff.in/blog/why-body-odor-comes-back-on-clothes-so-quickly',
+        maxHops: 1,
+      },
+      {
+        description: 'legacy how-to-remove-sweat-smell-from-clothes-instantly redirects to spray-to-remove-sweat-smell-from-clothes-instantly',
+        url: 'https://smelloff.in/blog/how-to-remove-sweat-smell-from-clothes-instantly',
+        expectedFinal: 'https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-instantly',
+        maxHops: 1,
+      },
     ];
 
     for (const t of testMatrix) {
@@ -140,5 +164,46 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
         assert.ok(trace.hopCount <= t.maxHops, `Hop count must be <= ${t.maxHops}, got ${trace.hopCount}`);
       });
     }
+  });
+
+  describe('Structured Data Hygiene & Deprecated Schema Prevention', () => {
+    const sitemapXml = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+    const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+
+    it('asserts zero FAQPage schema blocks across all canonical pages (deprecated by Google)', () => {
+      for (const url of sitemapUrls) {
+        let relPath = url.replace('https://smelloff.in', '');
+        if (relPath === '' || relPath === '/') {
+          relPath = 'index.html';
+        } else {
+          relPath = relPath.replace(/^\//, '') + '.html';
+          if (!fs.existsSync(path.join(ROOT, relPath))) {
+            relPath = url.replace('https://smelloff.in/', '') + '/index.html';
+          }
+        }
+        const html = fs.readFileSync(path.join(ROOT, relPath), 'utf8');
+        const hasFaqSchema = /"@type"\s*:\s*"FAQPage"/i.test(html);
+        assert.equal(hasFaqSchema, false, `Page ${relPath} must not contain deprecated FAQPage schema`);
+      }
+    });
+
+    it('asserts all JSON-LD blocks in all canonical pages are strictly valid JSON', () => {
+      for (const url of sitemapUrls) {
+        let relPath = url.replace('https://smelloff.in', '');
+        if (relPath === '' || relPath === '/') {
+          relPath = 'index.html';
+        } else {
+          relPath = relPath.replace(/^\//, '') + '.html';
+          if (!fs.existsSync(path.join(ROOT, relPath))) {
+            relPath = url.replace('https://smelloff.in/', '') + '/index.html';
+          }
+        }
+        const html = fs.readFileSync(path.join(ROOT, relPath), 'utf8');
+        const scripts = [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+        for (const s of scripts) {
+          assert.doesNotThrow(() => JSON.parse(s[1].trim()), `Invalid JSON-LD in ${relPath}`);
+        }
+      }
+    });
   });
 });

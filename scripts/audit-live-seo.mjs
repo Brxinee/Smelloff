@@ -261,6 +261,17 @@ async function runAudit() {
     'https://smelloff.in/blog/clothes-smell-after-washing',
     'https://www.smelloff.in/blog/clothes-smell-after-washing',
     'https://smelloff.in/blog/zinc-ricinoleate-fabric-odor-ingredient',
+    'https://www.smelloff.in/blog/zinc-ricinoleate-fabric-odor-ingredient',
+    'https://smelloff.in/blog/is-zinc-ricinoleate-safe-for-clothes',
+    'https://www.smelloff.in/blog/is-zinc-ricinoleate-safe-for-clothes',
+    'https://smelloff.in/blog/best-fabric-freshener-odor-spray-india-2026',
+    'https://www.smelloff.in/blog/best-fabric-freshener-odor-spray-india-2026',
+    'https://smelloff.in/blog/fabric-odor-science-zinc-ricinoleate',
+    'https://www.smelloff.in/blog/fabric-odor-science-zinc-ricinoleate',
+    'https://smelloff.in/blog/chemical-breakdown-sweat-odor',
+    'https://www.smelloff.in/blog/chemical-breakdown-sweat-odor',
+    'https://smelloff.in/blog/how-to-remove-sweat-smell-from-clothes-instantly',
+    'https://www.smelloff.in/blog/how-to-remove-sweat-smell-from-clothes-instantly',
     'https://smelloff.in/blog/how-to-remove-musty-smell-from-clothes-monsoon',
     'https://smelloff.in/blog/remove-sweat-smell-shirts-without-washing',
     'https://smelloff.in/blog/smoke-smell-clothes',
@@ -287,6 +298,9 @@ async function runAudit() {
       } else if (res.status === 404) {
         stats.status404++;
         console.error(`  [404 NOT FOUND] ${url}`);
+      } else if (res.status >= 500) {
+        stats.status5xx++;
+        console.error(`  [5XX ERROR] ${url} -> ${res.status}`);
       }
     } else {
       const trace = traceSimulatedHops(url);
@@ -332,11 +346,21 @@ async function runAudit() {
   });
   console.log('='.repeat(80));
 
-  if (stats.brokenChains > 0 || stats.loops > 0 || stats.canonicalMismatches > 0 || stats.sitemapMismatches > 0) {
-    console.error('\nAudit encountered critical errors.');
+  const hasCriticalFailures = 
+    stats.brokenChains > 0 || 
+    stats.loops > 0 || 
+    stats.status404 > 0 || 
+    stats.status5xx > 0 || 
+    stats.canonicalMismatches > 0 || 
+    stats.hreflangMismatches > 0 || 
+    stats.sitemapMismatches > 0 ||
+    stats.multiHop > 0;
+
+  if (hasCriticalFailures) {
+    console.error('\n[FAIL] Audit encountered critical errors.');
     process.exit(1);
   }
-  console.log('\nAudit completed successfully with zero critical errors.');
+  console.log('\n[PASS] Audit completed successfully with zero critical errors.');
 }
 
 runAudit().catch(err => {
