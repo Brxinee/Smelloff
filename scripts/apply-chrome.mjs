@@ -27,7 +27,7 @@
    reach anyone who has already visited the site until you do.
    ===================================================================== */
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -319,8 +319,8 @@ function withMarkers(html, block, kind) {
  *  </head>, after every other stylesheet the page loads.
  */
 function ensureAssets(html) {
-  const softRel = fs.existsSync(join(ROOT, 'assets/css/soft.min.css')) ? 'assets/css/soft.min.css' : 'assets/css/soft.css';
-  const chromeRel = fs.existsSync(join(ROOT, 'assets/css/chrome.min.css')) ? 'assets/css/chrome.min.css' : 'assets/css/chrome.css';
+  const softRel = 'assets/css/soft.css';
+  const chromeRel = 'assets/css/chrome.css';
   const softHref = `/${softRel}?v=${hashOf(softRel)}`;
   const chromeHref = `/${chromeRel}?v=${hashOf(chromeRel)}`;
   const jsTag = `<script src="/assets/js/chrome.js?v=${hashOf('assets/js/chrome.js')}" defer></script>`;
