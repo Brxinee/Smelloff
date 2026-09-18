@@ -44,7 +44,7 @@
       "destination": "/?ref=:code"
     },
     {
-      "source": "/(.*)\\.html/?",
+      "source": "/(.*)\\.html",
       "has": [
         {
           "type": "host",
@@ -1011,7 +1011,7 @@
       "statusCode": 301
     },
     {
-      "source": "/(.*)\\.html/?",
+      "source": "/(.*)\\.html",
       "destination": "/$1",
       "statusCode": 301
     },

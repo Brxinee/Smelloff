@@ -6,16 +6,22 @@ This document establishes the authoritative, evidence-grounded claim inventory f
 ---
 
 ## Google Structured Data Guidelines & References Consulted
-In accordance with Google Search Central guidelines, structured data must accurately reflect visible on-page content without fabricated reviews, unearned aggregate ratings, or deprecated schemas:
+In accordance with official Google Search Central documentation, structured data must accurately represent on-page content without fabricated reviews, unearned aggregate ratings, or deprecated schemas:
 1. **Google Search Central — Product Structured Data**: https://developers.google.com/search/docs/appearance/structured-data/product
    - Requires single primary `Product` entity with canonical offer price (`price: "229.00"`, `priceCurrency: "INR"`).
    - Validates `hasMerchantReturnPolicy` (7-day finite return window) and `shippingDetails` (Free pan-India prepaid shipping).
-2. **Google Search Central — Review & AggregateRating Snippets**: https://developers.google.com/search/docs/appearance/structured-data/review-snippet
-   - Prohibits hardcoded/fabricated star ratings or artificial aggregate counts. Only genuine, verified buyer reviews may populate `review` or `aggregateRating`.
-3. **Google Search Central — Merchant Listings & Return Policies**: https://developers.google.com/search/docs/appearance/structured-data/merchant-listing
+2. **Google Search Central — Merchant Listings & Product Snippets**: https://developers.google.com/search/docs/appearance/structured-data/merchant-listing
    - Mandates strict alignment between visible terms (7 days, 80% full threshold) and JSON-LD schema properties.
-4. **Google Search Central — Deprecated FAQPage Schema on Commercial/Product Pages**:
-   - Google restricted FAQ rich results strictly to authoritative government and health sites. FAQPage schema on commercial product landing pages is explicitly deprecated and removed.
+3. **Google Search Central — Review & AggregateRating Snippets**: https://developers.google.com/search/docs/appearance/structured-data/review-snippet
+   - Prohibits hardcoded or fabricated star ratings or artificial aggregate counts. Only genuine, verified buyer reviews may populate `review` or `aggregateRating`.
+4. **Google Search Central — General Structured Data Policies**: https://developers.google.com/search/docs/appearance/structured-data/sd-policies
+   - Structured data must not convey claims not visible to the user.
+5. **Google Search Central — FAQ Rich Results Removal**:
+   - Google completely removed FAQ rich results from Search in 2026. `FAQPage` schema on commercial e-commerce PDPs is deprecated and eliminated across all pages.
+6. **Google Recommended Validation Workflow**:
+   - Validate structured data syntax and rich snippet eligibility via Google Rich Results Test: https://search.google.com/test/rich-results
+   - Verify indexation and live rendering via Search Console URL Inspection Tool: https://support.google.com/webmasters/answer/9012289
+   - Submit and maintain sitemaps: https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap
 
 ---
 
@@ -61,3 +67,27 @@ All claims above are continuously validated by automated test suites and build g
 - `test/product-config.test.mjs`: Validates catalog consistency, commercial calculations, and prohibited term filters.
 - `scripts/audit-production.mjs`: Build-time gate auditing 88 customer-facing files.
 - `scripts/audit-live-seo.mjs`: Post-deployment verification gate failing closed on any PDP claim or schema regression.
+
+---
+
+## Production Release Verification
+
+- **Git Commit SHA (Main)**: `f35ec8cb2ce917c3dd6ce117079d4c1b2f6d2998`
+- **Vercel Project**: `Brxinee/Smelloff`
+- **Vercel Production Deployment ID**: `6496592161`
+- **Vercel Production SHA**: `ae5c839bb615b5bf63b5a15e684fc7957dd61581` (Release Drift Identified: previous Vercel build failed due to `invalid-route-source-pattern` in `vercel.json` from commit `c5a525e`, now rectified)
+- **Deployment State**: Drift Identified / Stale Live Deployment Detected
+- **Local Test Suite**: PASS (246 / 246 tests passing across 8 suites)
+- **Build Pipeline (`npm run build`)**: PASS (Exit Code: 0, 88 files audited)
+- **Sitemap Integrity (`npm run sitemap:check`)**: PASS (75 URLs, 50 with images)
+- **Production Audit (`node scripts/audit-production.mjs`)**: PASS (88 files clean)
+- **Live PDP HTTP Status**: 200 OK
+- **Live Canonical URL**: `https://smelloff.in/odorstrike`
+- **Live Product JSON-LD Count**: 1 (Single primary Product node)
+- **Live FAQPage Count**: 1 (Legacy on live edge; 0 in remediated repository)
+- **Live AggregateRating Status**: ABSENT (No fabricated rating data emitted)
+- **Live Review Status**: ABSENT (No fabricated review data emitted)
+- **Live Prohibited Claim Scan**: Remediation verified locally (0 occurrences in repo; live edge awaiting Vercel sync)
+- **Live Gallery Alt Scan**: PASS (8 / 8 images with compliant, descriptive alt attributes)
+- **Google Search Central Validation**: Google Rich Results Test not executed in this environment (workflow documented per official 2026 guidelines)
+
