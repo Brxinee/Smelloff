@@ -72,9 +72,31 @@ const PRIORITY_OVERRIDES = {
   '/blog/why-i-built-odorstrike': '0.7',
 };
 
-const esc = (s) =>
-  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+function decodeHtmlEntities(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(Number(dec)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+}
+
+export function decodeAndXmlEscape(s) {
+  if (s == null) return '';
+  const decoded = decodeHtmlEntities(s);
+  return String(decoded)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+const esc = decodeAndXmlEscape;
 
 /** Every .html file that isn't in a skipped directory. */
 function walk(dir, out = []) {
@@ -229,6 +251,9 @@ function build() {
    * Console, so they stop the build rather than warn. */
   const errors = [];
   for (const e of entries) {
+    if (!e.loc.startsWith(ORIGIN)) errors.push(`${e.loc}: does not start with origin ${ORIGIN}`);
+    if (e.loc.includes('www.smelloff.in')) errors.push(`${e.loc}: contains www subdomain`);
+    if (e.loc.endsWith('.html')) errors.push(`${e.loc}: contains .html extension`);
     if (e.lastmod > TODAY) errors.push(`${e.loc}: future lastmod ${e.lastmod}`);
     if (e.loc !== ORIGIN + '/' && e.loc.endsWith('/')) {
       errors.push(`${e.loc}: trailing slash will 308 under trailingSlash:false`);
@@ -239,6 +264,16 @@ function build() {
     if (seen.has(e.loc)) errors.push(`${e.loc}: duplicate`);
     seen.add(e.loc);
   }
+
+  // Check for XML escaping defects in generated xml
+  if (/&amp;(?:amp|quot|apos|lt|gt|#\d+|#x[0-9a-f]+);/i.test(xml)) {
+    errors.push('sitemap.xml contains double-escaped XML entities (e.g. &amp;amp;)');
+  }
+  // Check for unescaped ampersands
+  if (/&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9a-f]+;)/i.test(xml)) {
+    errors.push('sitemap.xml contains raw unescaped ampersands');
+  }
+
   if (errors.length) {
     throw new Error(`sitemap validation failed:\n  - ${errors.join('\n  - ')}`);
   }

@@ -191,6 +191,139 @@ if (fs.existsSync(securitySharedPath)) {
   if (!code.includes('constantTimeEqual')) fail('_shared/security.ts must use constant-time equality for token verification');
 }
 
+// ===========================================================================
+// SEO, CANONICAL, SITEMAP & REDIRECT ARCHITECTURE GUARDRAILS
+// ===========================================================================
+
+// 1. Canonical, Hreflang, and OpenGraph URL verification for all indexable pages
+const htmlFiles = files.filter(p => p.endsWith('.html'));
+const indexableHtmlFiles = [];
+
+for (const p of htmlFiles) {
+  const relPath = rel(p).replace(/\\/g, '/');
+  if (relPath.startsWith('node_modules/') || relPath.startsWith('.git/') || relPath.startsWith('_shared/') || relPath.startsWith('api/') || relPath.startsWith('supabase/') || relPath.startsWith('emails/') || relPath.startsWith('admin/') || relPath.startsWith('outreach/')) continue;
+  if (relPath === '404.html' || relPath === 'payment-failed.html' || /^google[0-9a-f]{16,}\.html$/i.test(relPath)) continue;
+
+  const html = read(p);
+  if (/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(html)) continue;
+
+  indexableHtmlFiles.push({ path: relPath, html });
+
+  let urlSlug = relPath.replace(/\.html$/, '');
+  if (urlSlug === 'index') urlSlug = '';
+  urlSlug = urlSlug.replace(/\/index$/, '');
+  const expectedCanonical = 'https://smelloff.in' + (urlSlug ? '/' + urlSlug : '/');
+
+  // Check canonical tag
+  const canonMatch = html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["']/i) ||
+                     html.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["']canonical["']/i);
+  const canonHref = canonMatch ? canonMatch[1] : null;
+
+  if (!canonHref) {
+    fail(`${relPath}: missing rel="canonical" tag`);
+  } else {
+    if (canonHref !== expectedCanonical) {
+      fail(`${relPath}: canonical tag is "${canonHref}", expected "${expectedCanonical}"`);
+    }
+    if (canonHref.includes('www.smelloff.in')) {
+      fail(`${relPath}: canonical tag contains www.smelloff.in`);
+    }
+    if (canonHref.endsWith('.html')) {
+      fail(`${relPath}: canonical tag ends with .html`);
+    }
+    if (canonHref !== 'https://smelloff.in/' && canonHref.endsWith('/')) {
+      fail(`${relPath}: canonical tag contains trailing slash ("${canonHref}")`);
+    }
+  }
+
+  // Check reciprocal hreflang tags
+  const enInMatch = html.match(/<link[^>]+hreflang=["']en-IN["'][^>]+href=["']([^"']+)["']/i);
+  const xDefMatch = html.match(/<link[^>]+hreflang=["']x-default["'][^>]+href=["']([^"']+)["']/i);
+
+  if (!enInMatch || enInMatch[1] !== expectedCanonical) {
+    fail(`${relPath}: missing or mismatched hreflang="en-IN" tag (expected "${expectedCanonical}")`);
+  }
+  if (!xDefMatch || xDefMatch[1] !== expectedCanonical) {
+    fail(`${relPath}: missing or mismatched hreflang="x-default" tag (expected "${expectedCanonical}")`);
+  }
+
+  // Check og:url
+  const ogUrlMatch = html.match(/<meta[^>]+property=["']og:url["'][^>]+content=["']([^"']+)["']/i) ||
+                     html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:url["']/i);
+  if (ogUrlMatch && ogUrlMatch[1] !== expectedCanonical) {
+    fail(`${relPath}: og:url ("${ogUrlMatch[1]}") does not match canonical ("${expectedCanonical}")`);
+  }
+}
+
+// 2. Sitemap integrity and XML entity escaping
+const sitemapPath = path.join(ROOT, 'sitemap.xml');
+if (!fs.existsSync(sitemapPath)) {
+  fail('sitemap.xml does not exist');
+} else {
+  const sitemapXml = read(sitemapPath);
+  const sitemapLocs = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+  const sitemapLastmods = [...sitemapXml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map(m => m[1]);
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Check count parity
+  if (sitemapLocs.length !== indexableHtmlFiles.length) {
+    fail(`sitemap.xml contains ${sitemapLocs.length} URLs, but repository has ${indexableHtmlFiles.length} indexable pages`);
+  }
+
+  // Check no double entity escaping
+  if (/&amp;(?:amp|quot|apos|lt|gt|#\d+|#x[0-9a-f]+);/i.test(sitemapXml)) {
+    fail('sitemap.xml contains double-escaped XML entities (e.g. &amp;amp;)');
+  }
+  // Check no unescaped ampersands
+  if (/&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9a-f]+;)/i.test(sitemapXml)) {
+    fail('sitemap.xml contains raw unescaped ampersands');
+  }
+
+  // Check lastmods
+  for (const lm of sitemapLastmods) {
+    if (lm > today) {
+      fail(`sitemap.xml contains future lastmod: ${lm}`);
+    }
+  }
+
+  // Check every sitemap URL is valid
+  for (const loc of sitemapLocs) {
+    if (!loc.startsWith('https://smelloff.in')) fail(`sitemap URL does not start with https://smelloff.in: ${loc}`);
+    if (loc.includes('www.smelloff.in')) fail(`sitemap URL contains www: ${loc}`);
+    if (loc.endsWith('.html')) fail(`sitemap URL ends with .html: ${loc}`);
+    if (loc !== 'https://smelloff.in/' && loc.endsWith('/')) fail(`sitemap URL has trailing slash: ${loc}`);
+  }
+}
+
+// 3. Vercel redirect rules integrity
+const vercelPath = path.join(ROOT, 'vercel.json');
+if (fs.existsSync(vercelPath)) {
+  const vercelConfig = JSON.parse(read(vercelPath));
+  const redirects = vercelConfig.redirects || [];
+
+  const generalSources = new Set(redirects.filter(r => !r.has).map(r => r.source));
+
+  for (const r of redirects) {
+    let dest = r.destination;
+    if (dest.startsWith('https://smelloff.in')) {
+      dest = dest.replace('https://smelloff.in', '');
+    }
+    if (!dest) dest = '/';
+
+    // Prevent redirect chains within configuration
+    if (!dest.includes(':') && !dest.includes('$') && generalSources.has(dest)) {
+      fail(`vercel.json redirect chain detected: ${r.source} -> ${r.destination} (which is another redirect source)`);
+    }
+
+    // Ensure www rules point to canonical domain
+    if (r.has && r.has.some(h => h.value === 'www.smelloff.in')) {
+      if (!r.destination.startsWith('https://smelloff.in')) {
+        fail(`www redirect rule for "${r.source}" does not target https://smelloff.in (got "${r.destination}")`);
+      }
+    }
+  }
+}
+
 if (failures.length) {
   console.error(`Production audit failed (${failures.length}):`);
   failures.forEach(x => console.error(`- ${x}`));

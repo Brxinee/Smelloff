@@ -44,7 +44,7 @@
       "destination": "/?ref=:code"
     },
     {
-      "source": "/(.*)\\.html",
+      "source": "/(.*)\\.html/?",
       "has": [
         {
           "type": "host",
@@ -660,6 +660,17 @@
       "statusCode": 301
     },
     {
+      "source": "/:path+/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.smelloff.in"
+        }
+      ],
+      "destination": "https://smelloff.in/:path+",
+      "statusCode": 301
+    },
+    {
       "source": "/(.*)",
       "has": [
         {
@@ -936,7 +947,7 @@
       "statusCode": 301
     },
     {
-      "source": "/(.*)\\.html",
+      "source": "/(.*)\\.html/?",
       "destination": "/$1",
       "statusCode": 301
     },
