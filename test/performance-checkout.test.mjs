@@ -33,7 +33,7 @@ test('production performance hardening configuration', () => {
     'homepage product section must use a responsive optimized product asset',
   );
   assert.equal(
-    /<h3\\s+class="z-title">/.test(homepage),
+    /<h3\s+class="z-title">/.test(homepage),
     false,
     'zone labels must not create skipped document heading levels',
   );
