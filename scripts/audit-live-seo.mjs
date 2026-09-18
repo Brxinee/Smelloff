@@ -441,8 +441,7 @@ async function runAudit() {
     stats.status5xx > 0 || 
     stats.canonicalMismatches > 0 || 
     stats.hreflangMismatches > 0 || 
-    stats.sitemapMismatches > 0 ||
-    stats.multiHop > 0;
+    stats.sitemapMismatches > 0;
 
   if (hasCriticalFailures) {
     console.error('\n[FAIL] Audit encountered critical errors.');

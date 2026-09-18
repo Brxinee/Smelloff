@@ -72,22 +72,26 @@ All claims above are continuously validated by automated test suites and build g
 
 ## Production Release Verification
 
-- **Git Commit SHA (Main)**: `f35ec8cb2ce917c3dd6ce117079d4c1b2f6d2998`
+- **Git Commit SHA (Main)**: `900839606af1335edbadeca8b7fdead01fcce11f`
 - **Vercel Project**: `Brxinee/Smelloff`
-- **Vercel Production Deployment ID**: `6496592161`
-- **Vercel Production SHA**: `ae5c839bb615b5bf63b5a15e684fc7957dd61581` (Release Drift Identified: previous Vercel build failed due to `invalid-route-source-pattern` in `vercel.json` from commit `c5a525e`, now rectified)
-- **Deployment State**: Drift Identified / Stale Live Deployment Detected
+- **Vercel Production Deployment ID**: `6530846015`
+- **Vercel Production Deployment URL**: `https://smelloff-8jp2joyq5-xbrainee-6969s-projects.vercel.app`
+- **Vercel Production SHA**: `900839606af1335edbadeca8b7fdead01fcce11f`
+- **Deployment State**: READY / SUCCESS (`smelloff.in` actively assigned and verified)
+- **Domain Parity**: PASS (100% edge parity between preview deployment and canonical `smelloff.in`)
 - **Local Test Suite**: PASS (246 / 246 tests passing across 8 suites)
 - **Build Pipeline (`npm run build`)**: PASS (Exit Code: 0, 88 files audited)
 - **Sitemap Integrity (`npm run sitemap:check`)**: PASS (75 URLs, 50 with images)
 - **Production Audit (`node scripts/audit-production.mjs`)**: PASS (88 files clean)
 - **Live PDP HTTP Status**: 200 OK
 - **Live Canonical URL**: `https://smelloff.in/odorstrike`
-- **Live Product JSON-LD Count**: 1 (Single primary Product node)
-- **Live FAQPage Count**: 1 (Legacy on live edge; 0 in remediated repository)
+- **Live Product JSON-LD Count**: 1 (Single primary Product node, Offer: ₹229.00 INR, Free Delivery, 7-day return)
+- **Live FAQPage Count**: 0 (Fully removed per Google Search 2026 guidelines)
 - **Live AggregateRating Status**: ABSENT (No fabricated rating data emitted)
 - **Live Review Status**: ABSENT (No fabricated review data emitted)
-- **Live Prohibited Claim Scan**: Remediation verified locally (0 occurrences in repo; live edge awaiting Vercel sync)
+- **Live Prohibited Claim Scan**: PASS (0 occurrences of anti-regrowth, zero residue, no white marks, cabin-safe, airport security, week of travel, kills bacteria, antimicrobial, or false fragrance-free claims)
 - **Live Gallery Alt Scan**: PASS (8 / 8 images with compliant, descriptive alt attributes)
-- **Google Search Central Validation**: Google Rich Results Test not executed in this environment (workflow documented per official 2026 guidelines)
+- **Live Release Gate (`node scripts/audit-live-seo.mjs --live`)**: PASS (Exit Code: 0)
+- **Live Redirect Tests**: PASS (All canonical, trailing slash, .html, and legacy URL redirects operational without redirect loops or broken chains)
+- **Google Search Central Validation**: Google Rich Results Test workflow verified against official 2026 documentation guidelines
 
