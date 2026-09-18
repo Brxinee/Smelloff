@@ -2,6 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import {
   clientKey,
+  generateReviewToken,
   jsonResponse,
   preflight,
   rateLimit,
@@ -40,7 +41,7 @@ Deno.serve(async (req: Request) => {
 
     const { data: order, error } = await supabase
       .from("orders")
-      .select("order_code, created_at, updated_at, status, status_history, payment_method, amount, cod_fee, items, tracking_id, courier, tracking_url, customer_phone, address")
+      .select("id, order_code, created_at, updated_at, status, status_history, payment_method, amount, cod_fee, items, tracking_id, courier, tracking_url, customer_phone, address")
       .eq("order_code", code)
       .maybeSingle();
 
@@ -56,7 +57,12 @@ Deno.serve(async (req: Request) => {
     // ([{status, at}]) so the timeline can show WHEN each stage happened.
     const addr = (order.address || {}) as Record<string, string>;
     const history = Array.isArray(order.status_history) ? order.status_history : [];
+    const secret = Deno.env.get("ORDER_SECURITY_SECRET") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const reviewToken = await generateReviewToken(order.id, secret);
+
     return jsonResponse(req, {
+      order_id: order.id,
+      review_token: reviewToken,
       order_code: order.order_code,
       placed_at: order.created_at,
       updated_at: order.updated_at,

@@ -132,6 +132,38 @@ if (fs.existsSync(odorPath)) {
   if (odorHtml.includes('roughly four months')) fail('odorstrike.html contains obsolete claim: "roughly four months"');
   if (odorHtml.includes('Three seconds. No technique.')) fail('odorstrike.html contains obsolete claim: "Three seconds. No technique."');
   if (/id=["']upiInlineId["']/.test(odorHtml)) fail('odorstrike.html contains obsolete manual upiInlineId element');
+
+  // Product JSON-LD check: exactly one Product schema node, matching authoritative specs
+  const jsonLdBlocks = [...odorHtml.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  let productCount = 0;
+  for (const block of jsonLdBlocks) {
+    try {
+      const parsed = JSON.parse(block[1]);
+      if (parsed['@type'] === 'Product' || (Array.isArray(parsed) && parsed.some(x => x['@type'] === 'Product'))) {
+        productCount++;
+      }
+    } catch (_e) {}
+  }
+  if (productCount !== 1) fail(`odorstrike.html must contain exactly 1 Product JSON-LD block, found ${productCount}`);
+  if (odorHtml.includes('googleReviewWidgetMount')) fail('odorstrike.html must not contain googleReviewWidgetMount');
+}
+
+// Review system integrity checks
+const reviewsSystemPath = path.join(ROOT, 'assets/js/reviews-system.js');
+if (fs.existsSync(reviewsSystemPath)) {
+  const code = read(reviewsSystemPath);
+  if (code.includes('renderGoogleReviewWidget')) fail('reviews-system.js must not contain renderGoogleReviewWidget');
+  if (code.includes('injectAggregateSchema')) fail('reviews-system.js must not dynamically inject or mutate Product JSON-LD');
+  if (code.includes('google-review-aggregate-ld')) fail('reviews-system.js must not contain google-review-aggregate-ld');
+  if (/\b(?:4\.9|128)\b/.test(code)) fail('reviews-system.js must not contain hardcoded fake rating fallbacks (4.9 / 128)');
+  if (code.includes('100% Verified Customer Purchases')) fail('reviews-system.js must not claim 100% Verified Customer Purchases');
+}
+
+const reviewsPagePath = path.join(ROOT, 'reviews.html');
+if (fs.existsSync(reviewsPagePath)) {
+  const reviewsHtml = read(reviewsPagePath);
+  if (reviewsHtml.includes('googleReviewWidgetMount')) fail('reviews.html must not contain googleReviewWidgetMount');
+  if (/<span class="agg-num"[^>]*>4\.9<\/span>/.test(reviewsHtml)) fail('reviews.html initial HTML must not hardcode 4.9 rating');
 }
 
 if (failures.length) {

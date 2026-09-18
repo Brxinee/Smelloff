@@ -5,9 +5,11 @@ import {
   jsonResponse,
   preflight,
   rateLimit,
+  verifyReviewToken,
 } from "../_shared/security.ts";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const INELIGIBLE_STATUSES = new Set(["cancelled", "upi_pending"]);
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return preflight(req);
@@ -29,6 +31,8 @@ Deno.serve(async (req: Request) => {
     }
 
     const orderId = String(b.order_id || "").trim();
+    const reviewToken = String(b.review_token || "").trim();
+    const phone = String(b.phone || "").replace(/\D/g, "").slice(-10);
     const rating = Number(b.rating);
     const body = String(b.body || "").trim();
     const anonymous = !!b.anonymous;
@@ -52,12 +56,30 @@ Deno.serve(async (req: Request) => {
     // The order must exist — that's what makes "Verified buyer" real.
     const { data: order } = await supabase
       .from("orders")
-      .select("id, status, address")
+      .select("id, status, address, customer_phone")
       .eq("id", orderId)
       .maybeSingle();
 
-    if (!order || order.status === "cancelled") {
-      return jsonResponse(req, { error: "Reviews are for verified buyers — we couldn't match your purchase." }, 403);
+    if (!order || INELIGIBLE_STATUSES.has(order.status)) {
+      return jsonResponse(req, { error: "Reviews are for verified buyers — we couldn't match an eligible purchase." }, 403);
+    }
+
+    // Verify ownership: either a valid HMAC review_token from track-order / checkout
+    // or the 10-digit customer phone must match the order record.
+    const secret = Deno.env.get("ORDER_SECURITY_SECRET") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    let isAuthorized = false;
+
+    if (reviewToken && await verifyReviewToken(order.id, reviewToken, secret)) {
+      isAuthorized = true;
+    } else if (phone && phone.length === 10) {
+      const orderPhone = String(order.customer_phone || "").replace(/\D/g, "").slice(-10);
+      if (orderPhone === phone) {
+        isAuthorized = true;
+      }
+    }
+
+    if (!isAuthorized) {
+      return jsonResponse(req, { error: "Could not verify purchase credentials. Please verify your Order ID and phone number." }, 403);
     }
 
     const addr = (order.address || {}) as Record<string, string>;

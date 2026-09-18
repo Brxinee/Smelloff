@@ -1,5 +1,5 @@
 /* =====================================================================
-   Smelloff — Verified Buyer Review System & Google Review Aggregator
+   Smelloff — Verified Buyer Review System
    ===================================================================== */
 (function(){
   'use strict';
@@ -9,7 +9,7 @@
 
   var selectedStars = 0;
 
-  var SEED_TESTERS = [
+  var BETA_TESTER_TESTIMONIALS = [
     {n:'Rohit S.', c:'Hyderabad', r:5, u:'Commute', t:"Bike rider in Hyderabad heat — 2 sprays on the collar before leaving and the shirt smells neutral after a 40-min ride. Fits in my back pocket. Game changer.", buyer:false},
     {n:'Aarav M.', c:'Bangalore', r:5, u:'Gym', t:"Used it on a polyester gym tee that already smelled even after washing. Sprayed it, waited 10 seconds — odor gone. Not masked. Actually gone.", buyer:false},
     {n:'Priya K.', c:'Mumbai', r:4, u:'Office formals', t:"Works on cotton kurtas and office shirts. Doesn't replace washing for heavy stains, but for re-wear days it's perfect. Pocket size is the real win.", buyer:false}
@@ -45,7 +45,6 @@
               '<button type="submit" class="rv-primary-btn" id="rvVerifyBtn">Verify Order &amp; Continue →</button>' +
               '<div id="rvAuthError" class="rv-error-msg"></div>' +
             '</form>' +
-
             '<div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);font-size:13px;color:rgba(255,255,255,0.6);text-align:center">' +
               'Haven’t ordered yet? <a href="/odorstrike#buy" style="color:var(--acid,#b8ff57);font-weight:600;text-decoration:none">Buy ODORSTRIKE ₹229 →</a>' +
             '</div>' +
@@ -220,9 +219,11 @@
         err.style.display = 'block';
         return;
       }
-      var orderId = res.j.order_id || res.j.id || code;
+      var orderId = res.j.order_id || res.j.id || '';
+      var reviewToken = res.j.review_token || '';
       try {
-        localStorage.setItem('smelloff_order_uuid', orderId);
+        if (orderId) localStorage.setItem('smelloff_order_uuid', orderId);
+        if (reviewToken) localStorage.setItem('smelloff_review_token', reviewToken);
         localStorage.setItem('smelloff_purchased', 'true');
         localStorage.setItem('smelloff_last_order', JSON.stringify({ code: code, phone: phone }));
       } catch(e){}
@@ -258,8 +259,23 @@
     }
 
     var orderUuid = '';
-    try { orderUuid = localStorage.getItem('smelloff_order_uuid') || ''; } catch(e){}
-    if (!orderUuid) {
+    var reviewToken = '';
+    var lastOrderPhone = '';
+    var lastOrderCode = '';
+    try {
+      orderUuid = localStorage.getItem('smelloff_order_uuid') || '';
+      reviewToken = localStorage.getItem('smelloff_review_token') || '';
+      var lastOrderStr = localStorage.getItem('smelloff_last_order');
+      if (lastOrderStr) {
+        var lo = JSON.parse(lastOrderStr);
+        if (lo) {
+          lastOrderCode = lo.code || '';
+          lastOrderPhone = lo.phone || '';
+        }
+      }
+    } catch(e){}
+
+    if (!orderUuid && !lastOrderCode) {
       showStep('rvStepAuth');
       return;
     }
@@ -272,6 +288,9 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         order_id: orderUuid,
+        review_token: reviewToken,
+        phone: lastOrderPhone,
+        order_code: lastOrderCode,
         name: anon ? 'Anonymous' : (name || 'Verified Buyer'),
         city: city || 'India',
         rating: selectedStars,
@@ -287,7 +306,7 @@
           errEl.style.display = 'block';
         });
       }
-      return r.json().then(function(j){
+      return r.json().then(function(_j){
         showStep('rvStepDone');
         refreshAllReviews();
       });
@@ -299,185 +318,33 @@
     });
   };
 
-  // Google Review Aggregator Widget Renderer
-  window.renderGoogleReviewWidget = function(mountId, avgRating, totalCount){
-    var target = document.getElementById(mountId);
-    if (!target) return;
-
-    var avgStr = (avgRating || 4.9).toFixed(1);
-    var countStr = '(' + (totalCount || 128) + ' Verified Ratings)';
-
-    var html = 
-      '<div class="google-review-aggregator">' +
-        '<div class="gra-header">' +
-          '<div class="gra-g-badge" aria-hidden="true">' +
-            '<svg width="24" height="24" viewBox="0 0 24 24">' +
-              '<path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>' +
-              '<path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.15C3.26 21.3 7.31 24 12 24z"/>' +
-              '<path fill="#FBBC05" d="M5.28 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.61H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.39l3.99-3.15z"/>' +
-              '<path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.61l3.99 3.15c.95-2.85 3.6-4.96 6.72-4.96z"/>' +
-            '</svg>' +
-          '</div>' +
-          '<div class="gra-meta">' +
-            '<div class="gra-title">' +
-              'Google Customer Reviews ' +
-              '<span class="gra-verified-pill">' +
-                '<svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5 9-9"/></svg>' +
-                'Google Verified' +
-              '</span>' +
-            '</div>' +
-            '<div class="gra-score-line">' +
-              '<span class="gra-score-val" id="graWidgetScore">' + avgStr + '</span>' +
-              '<span class="gra-stars-val" id="graWidgetStars">★★★★★</span>' +
-              '<span class="gra-count-val" id="graWidgetCount">' + countStr + '</span>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="gra-actions">' +
-          '<span class="gra-sub">100% Verified Customer Purchases</span>' +
-          '<button type="button" class="gra-btn" onclick="openReviewForm()">★ Write a Verified Review</button>' +
-        '</div>' +
-      '</div>';
-
-    target.innerHTML = html;
-  };
-
-  // Inject or update Google Product AggregateRating JSON-LD schema
-  function injectAggregateSchema(avgVal, countVal) {
-    var productScript = document.getElementById('product-jsonld');
-    if (productScript) {
-      try {
-        var data = JSON.parse(productScript.textContent);
-        data.aggregateRating = {
-          "@type": "AggregateRating",
-          "ratingValue": String(avgVal),
-          "bestRating": "5",
-          "worstRating": "1",
-          "ratingCount": String(countVal),
-          "reviewCount": String(countVal)
-        };
-        productScript.textContent = JSON.stringify(data, null, 2);
-        var oldDup = document.getElementById('google-review-aggregate-ld');
-        if (oldDup) oldDup.remove();
-        return;
-      } catch (e) {}
-    }
-
-    var existingScript = document.getElementById('google-review-aggregate-ld');
-    if (existingScript) {
-      existingScript.remove();
-    }
-
-    var truth = window.SMELLOFF_PRODUCT_TRUTH || window.SMELLOFF_TRUTH || {};
-    var skuVal = truth.sku || "OS-001-50ML";
-    var mpnVal = truth.mpn || "SMLF-ODST-50";
-    var prodTitle = truth.productName ? (truth.productName + " Fabric Odor Remover Spray") : "ODORSTRIKE Fabric Odor Remover Spray";
-    var offerTitle = truth.shortTitle ? (truth.shortTitle + " — Single Bottle") : "ODORSTRIKE 50ml — Single Bottle";
-    var priceVal = (truth.pricePrepaid ? truth.pricePrepaid.toFixed(2) : "229.00");
-
-    var script = document.createElement('script');
-    script.id = 'google-review-aggregate-ld';
-    script.type = 'application/ld+json';
-    script.textContent = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Product",
-      "@id": "https://smelloff.in/#odorstrike",
-      "name": prodTitle,
-      "image": [
-        "https://smelloff.in/assets/pdp-01-hero.webp",
-        "https://smelloff.in/assets/odorstrike-bottle.webp",
-        "https://smelloff.in/assets/og-image.jpg"
-      ],
-      // Clothing only — never name shoes, helmets, bags or gym gear here.
-      // See CLAUDE.md "Positioning: clothing only".
-      "description": "Lab-verified fabric odor remover spray engineered for sweat, dampness and body odors on shirts, hoodies and jackets without washing.",
-      "brand": {
-        "@type": "Brand",
-        "name": truth.brand || "Smelloff",
-        "logo": "https://smelloff.in/apple-touch-icon.png"
-      },
-      "sku": skuVal,
-      "mpn": mpnVal,
-      "offers": {
-        "@type": "Offer",
-        "name": offerTitle,
-        "sku": skuVal,
-        "url": "https://smelloff.in/odorstrike#buy",
-        "priceCurrency": "INR",
-        "price": priceVal,
-        "priceValidUntil": "2027-12-31",
-        "availability": "https://schema.org/InStock",
-        "itemCondition": "https://schema.org/NewCondition",
-        "shippingDetails": {
-          "@type": "OfferShippingDetails",
-          "shippingRate": { "@type": "MonetaryAmount", "value": "0.00", "currency": "INR" },
-          "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "IN" },
-          "deliveryTime": {
-            "@type": "ShippingDeliveryTime",
-            "handlingTime": { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 1, "unitCode": "DAY" },
-            "transitTime": { "@type": "QuantitativeValue", "minValue": 2, "maxValue": 7, "unitCode": "DAY" }
-          }
-        },
-        "hasMerchantReturnPolicy": {
-          "@type": "MerchantReturnPolicy",
-          "applicableCountry": "IN",
-          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-          "merchantReturnDays": 7,
-          "returnMethod": "https://schema.org/ReturnByMail",
-          "returnFees": "https://schema.org/FreeReturn"
-        }
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": String(avgVal),
-        "bestRating": "5",
-        "worstRating": "1",
-        "ratingCount": String(countVal),
-        "reviewCount": String(countVal)
-      }
-    });
-    document.head.appendChild(script);
-  }
-
   function refreshAllReviews(){
     fetch(SUPA_URL + '/rest/v1/reviews?select=name,rating,body,city,anonymous,created_at&order=created_at.desc&limit=200', {
       headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
     })
     .then(function(r){ return r.ok ? r.json() : []; })
     .then(function(rows){
-      var buyerList = (Array.isArray(rows) ? rows : []).map(function(r){
+      var verifiedBuyerReviews = (Array.isArray(rows) ? rows : []).map(function(r){
         return {
           n: (r.anonymous || !r.name) ? 'Anonymous' : r.name,
           c: r.city || '',
           r: Math.max(1, Math.min(5, Number(r.rating) || 5)),
           t: r.body || '',
-          buyer: true
+          buyer: true,
+          created_at: r.created_at || null
         };
       }).filter(function(r){ return r.t; });
 
-      var combined = buyerList.concat(SEED_TESTERS);
-      var totalCount = combined.length;
-      var sum = combined.reduce(function(acc, item){ return acc + item.r; }, 0);
-      var avg = totalCount > 0 ? (sum / totalCount) : 4.9;
-
-      // Update widget
-      if (document.getElementById('googleReviewWidgetMount')) {
-        window.renderGoogleReviewWidget('googleReviewWidgetMount', avg, totalCount);
-      }
-
-      // Inject Schema
-      injectAggregateSchema(avg.toFixed(1), totalCount);
-
       // Callback if page handles rendering
-      if (window.onReviewsRefreshed) {
-        window.onReviewsRefreshed(combined, buyerList.length);
+      if (typeof window.onReviewsRefreshed === 'function') {
+        window.onReviewsRefreshed(verifiedBuyerReviews, BETA_TESTER_TESTIMONIALS, false);
       }
     })
     .catch(function(){
-      if (document.getElementById('googleReviewWidgetMount')) {
-        window.renderGoogleReviewWidget('googleReviewWidgetMount', 4.9, 128);
+      // In case of error, do not fabricate numbers! Pass error flag
+      if (typeof window.onReviewsRefreshed === 'function') {
+        window.onReviewsRefreshed([], BETA_TESTER_TESTIMONIALS, true);
       }
-      injectAggregateSchema('4.9', '128');
     });
   }
 

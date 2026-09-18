@@ -166,22 +166,17 @@
   <h1>Every review. Unedited<span class="h1-dot">.</span></h1>
   <p class="p-sub">Three testers used ODORSTRIKE for 8 weeks before launch. Buyer reviews land here automatically as customers post them — good or bad, nothing is filtered out.</p>
 
-  <!-- The rating figure is ONLY ever computed by render() from the reviews
-       actually shown (testers + any fetched verified buyers) — never hardcode
-       a number or stars here. -->
-  <div class="agg" role="img" aria-label="Aggregate rating" id="agg">
-    <span class="agg-num" id="aggNum">4.9</span>
+  <div class="agg" role="region" aria-label="Buyer ratings" id="agg">
+    <span class="agg-num" id="aggNum" style="display:none"></span>
     <div>
-      <span class="agg-stars" id="aggStars" aria-hidden="true">★★★★★</span>
-      <span class="agg-count" id="aggCount">Verified customer reviews</span>
+      <span class="agg-stars" id="aggStars" aria-hidden="true" style="display:none"></span>
+      <span class="agg-count" id="aggCount">Verified buyer reviews</span>
     </div>
     <button type="button" class="agg-cta" onclick="openReviewForm()">★ Write a Review</button>
   </div>
 
-  <div id="googleReviewWidgetMount"></div>
-
   <div class="grid" id="grid" role="list"></div>
-  <div class="empty" id="empty">Couldn't load buyer reviews right now — tester reviews shown above.</div>
+  <div class="empty" id="empty">Verified buyer reviews are temporarily unavailable — pre-launch tester reviews shown below.</div>
 
   <div class="buy-band">
     <h2>Smell the difference yourself.</h2>
@@ -284,24 +279,59 @@
       '</div></div>';
   }
 
-  window.onReviewsRefreshed = function(allReviews, buyersCount){
-    if (!allReviews || !allReviews.length) return;
-    var total = allReviews.length;
-    var avg = allReviews.reduce(function(a, r){ return a + r.r; }, 0) / total;
-    var rounded = Math.round(avg);
+  window.onReviewsRefreshed = function(buyerReviews, betaTesters, isError){
     var aggNum = document.getElementById('aggNum');
     var aggStars = document.getElementById('aggStars');
     var aggCount = document.getElementById('aggCount');
     var grid = document.getElementById('grid');
+    var empty = document.getElementById('empty');
 
-    if (aggNum) aggNum.textContent = avg.toFixed(1);
-    if (aggStars) aggStars.textContent = '★★★★★'.slice(0, rounded) + '☆☆☆☆☆'.slice(0, 5 - rounded);
-    if (aggCount) {
-      aggCount.textContent = buyersCount > 0
-        ? 'Based on ' + total + ' reviews · ' + buyersCount + ' verified ' + (buyersCount === 1 ? 'buyer' : 'buyers')
-        : 'Based on ' + total + ' beta-tester reviews';
+    var buyers = Array.isArray(buyerReviews) ? buyerReviews : [];
+    var testers = Array.isArray(betaTesters) ? betaTesters : [];
+
+    if (isError) {
+      if (empty) {
+        empty.style.display = 'block';
+        empty.textContent = "Verified buyer reviews are temporarily unavailable — pre-launch tester reviews shown below.";
+      }
+    } else if (empty) {
+      empty.style.display = 'none';
     }
-    if (grid) grid.innerHTML = allReviews.map(card).join('');
+
+    if (buyers.length > 0) {
+      var total = buyers.length;
+      var avg = buyers.reduce(function(a, r){ return a + r.r; }, 0) / total;
+      var rounded = Math.round(avg);
+
+      if (aggNum) {
+        aggNum.textContent = avg.toFixed(1);
+        aggNum.style.display = 'inline-block';
+      }
+      if (aggStars) {
+        aggStars.textContent = '★★★★★'.slice(0, rounded) + '☆☆☆☆☆'.slice(0, 5 - rounded);
+        aggStars.style.display = 'inline-block';
+      }
+      if (aggCount) {
+        aggCount.textContent = 'Based on ' + total + ' verified buyer ' + (total === 1 ? 'review' : 'reviews');
+      }
+    } else {
+      if (aggNum) {
+        aggNum.textContent = '';
+        aggNum.style.display = 'none';
+      }
+      if (aggStars) {
+        aggStars.textContent = '';
+        aggStars.style.display = 'none';
+      }
+      if (aggCount) {
+        aggCount.textContent = 'No verified buyer reviews yet';
+      }
+    }
+
+    var allCards = buyers.concat(testers);
+    if (grid) {
+      grid.innerHTML = allCards.map(card).join('');
+    }
   };
 })();
 </script>

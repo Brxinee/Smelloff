@@ -84,3 +84,56 @@ export function rateLimit(
   bucket.count++;
   return true;
 }
+
+export async function generateReviewToken(
+  orderId: string,
+  secret: string,
+  expiresInMs = 24 * 60 * 60 * 1000,
+): Promise<string> {
+  const expiry = Date.now() + expiresInMs;
+  const payload = `${orderId}:${expiry}`;
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, enc.encode(payload));
+  const sigHex = Array.from(new Uint8Array(signature))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, 32);
+  return `${expiry}.${sigHex}`;
+}
+
+export async function verifyReviewToken(
+  orderId: string,
+  token: string,
+  secret: string,
+): Promise<boolean> {
+  if (!token || typeof token !== "string") return false;
+  const parts = token.split(".");
+  if (parts.length !== 2) return false;
+  const [expiryStr, sigHex] = parts;
+  const expiry = Number(expiryStr);
+  if (!Number.isFinite(expiry) || Date.now() > expiry) return false;
+
+  const payload = `${orderId}:${expiry}`;
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, enc.encode(payload));
+  const expectedSigHex = Array.from(new Uint8Array(signature))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, 32);
+
+  return sigHex === expectedSigHex;
+}
