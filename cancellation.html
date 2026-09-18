@@ -75,7 +75,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=fea94633">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=ea5bd6cb">
 <style>
   
 
@@ -86,14 +86,14 @@
   .p-nav{position:sticky;top:0;z-index:50;height:calc(56px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:var(--bg);border-bottom:1px solid var(--rule)}
   .p-back{justify-self:start;font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;padding:8px 10px}
   .p-back:hover{color:var(--text)}
-  .p-logo{justify-self:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);text-decoration:none;position:relative;padding-right:10px;line-height:1}
+  .p-logo{justify-self:center;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--text);text-decoration:none;position:relative;padding-right:10px;line-height:1}
   .p-logo .p-dot{position:absolute;top:-2px;right:0;width:6px;height:6px;background:var(--accent);border-radius:50%}
-  .p-cta{justify-self:end;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:8px 14px;border-radius:4px;text-decoration:none;transition:background .15s ease}.p-cta:hover{background:var(--accent-hover)}.p-nav-spacer{justify-self:end;width:40px}
+  .p-cta{justify-self:end;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:8px 14px;border-radius:4px;text-decoration:none;transition:background .15s ease}.p-cta:hover{background:var(--accent-hover)}.p-nav-spacer{justify-self:end;width:40px}
   .p-main{flex:1;width:100%;max-width:720px;margin:0 auto;padding:48px 20px 80px}
-  .p-eyebrow{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
+  .p-eyebrow{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
   .p-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--accent)}
-  .p-main h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(40px,8vw,64px);letter-spacing:.005em;line-height:.98;text-transform:uppercase;color:var(--text);margin-bottom:28px}
-  .p-main h2{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:.04em;line-height:1.15;text-transform:uppercase;color:var(--text);margin:36px 0 14px}
+  .p-main h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(36px,6vw,56px);letter-spacing:-.02em;line-height:1.05;text-transform:none;color:var(--text);margin-bottom:28px}
+  .p-main h2{font-family:'Fraunces',serif;font-weight:800;font-size:20px;letter-spacing:-.01em;line-height:1.2;text-transform:none;color:var(--text);margin:36px 0 14px}
   .p-main p{color:var(--text-secondary);margin-bottom:14px;font-size:15px;line-height:1.7}
   .p-main strong{color:var(--text);font-weight:600}
   .p-main ul{padding-left:20px;margin-bottom:14px}
@@ -105,12 +105,12 @@
   .p-main .callout p{margin:0;font-size:14px}
   .p-meta{margin-top:48px;padding-top:20px;border-top:1px solid var(--rule);font-family:'Inter Tight',sans-serif;font-size:12px;color:var(--muted);line-height:1.6}
   .p-footer{border-top:1px solid var(--rule);background:var(--bg);padding:36px 20px calc(20px + env(safe-area-inset-bottom,0px));text-align:center}
-  .p-footer-brand{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);position:relative;display:inline-block;padding-right:.2em;margin-bottom:18px;line-height:1}
+  .p-footer-brand{font-family:'Inter Tight',sans-serif;font-weight:800;font-size:26px;letter-spacing:.02em;text-transform:uppercase;color:var(--text);position:relative;display:inline-block;padding-right:.2em;margin-bottom:18px;line-height:1}
   .p-footer-brand .p-dot{position:absolute;top:-.06em;right:0;width:.16em;height:.16em;background:var(--accent);border-radius:50%}
   .p-footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 20px;margin-bottom:22px}
   .p-footer-links a{font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;transition:color .15s ease}
   .p-footer-links a:hover{color:var(--text)}
-  .p-footer-guides{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 14px;margin:0 auto 16px;max-width:680px;align-items:center;padding:0 16px}.p-footer-guides-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-right:4px}.p-footer-guides a{font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:500;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid rgba(var(--accent-rgb),.18);padding-bottom:1px;transition:color .15s ease,border-color .15s ease}.p-footer-guides a:hover{color:var(--text);border-bottom-color:var(--accent)}.p-footer-policy{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 14px;margin-bottom:18px;padding:0 16px}.p-footer-policy a{font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:400;color:var(--muted);text-decoration:none;letter-spacing:.02em;transition:color .15s ease}.p-footer-policy a:hover{color:var(--muted)}.p-footer-bottom{font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--muted);padding-top:16px;border-top:1px solid rgba(var(--accent-rgb),.15);max-width:720px;margin:0 auto}
+  .p-footer-guides{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 14px;margin:0 auto 16px;max-width:680px;align-items:center;padding:0 16px}.p-footer-guides-label{font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:4px}.p-footer-guides a{font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:500;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid rgba(var(--accent-rgb),.18);padding-bottom:1px;transition:color .15s ease,border-color .15s ease}.p-footer-guides a:hover{color:var(--text);border-bottom-color:var(--accent)}.p-footer-policy{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 14px;margin-bottom:18px;padding:0 16px}.p-footer-policy a{font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:400;color:var(--muted);text-decoration:none;letter-spacing:.02em;transition:color .15s ease}.p-footer-policy a:hover{color:var(--muted)}.p-footer-bottom{font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--muted);padding-top:16px;border-top:1px solid rgba(var(--accent-rgb),.15);max-width:720px;margin:0 auto}
   @media(min-width:720px){
     .p-main{padding:72px 40px 96px}
     .p-main h1{font-size:clamp(48px,6vw,72px)}
@@ -165,8 +165,8 @@
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
 <script src="/assets/js/consent-analytics.js?v=005cb83b" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=e279586e">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=25635ee6">
+<link rel="stylesheet" href="/assets/css/soft.css?v=6bc5918a">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=9c0f9c3e">
 <script src="/assets/js/chrome.js?v=abeaaf85" defer></script>
 </head>
 <body>

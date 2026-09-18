@@ -89,8 +89,6 @@
   --sq-xl:20px;
   --sq-pill:100px;
 
-  --shadow-offset:0px;        /* no hard offset shadows */
-
   /* ---- Motion ------------------------------------------------------- */
   --ease:cubic-bezier(.19,1,.22,1);
   --ease-snap:cubic-bezier(.2,.6,.2,1);

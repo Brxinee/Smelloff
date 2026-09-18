@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://tnuqjydmoxczdjnsgpci.supabase.co" crossorigin>
 <link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=fea94633">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=ea5bd6cb">
 <style>
   
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -42,20 +42,20 @@
   .p-nav{position:sticky;top:0;z-index:50;height:calc(56px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:var(--bg);border-bottom:1px solid var(--rule)}
   .p-back{justify-self:start;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;padding:8px 10px}
   .p-back:hover{color:var(--text)}
-  .p-logo{justify-self:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);text-decoration:none;position:relative;padding-right:10px;line-height:1}
+  .p-logo{justify-self:center;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:20px;letter-spacing:.02em;text-transform:uppercase;color:var(--text);text-decoration:none;position:relative;padding-right:10px;line-height:1}
   .p-logo .p-dot{position:absolute;top:-2px;right:0;width:6px;height:6px;background:var(--accent);border-radius:50%}
-  .p-cta{justify-self:end;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:8px 14px;border-radius:4px;text-decoration:none}
+  .p-cta{justify-self:end;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:8px 14px;border-radius:4px;text-decoration:none}
   .p-cta:hover{background:var(--green-light)}
   .p-main{flex:1;width:100%;max-width:860px;margin:0 auto;padding:48px 20px 80px}
-  .p-eyebrow{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
+  .p-eyebrow{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
   .p-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--accent)}
-  h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(40px,8vw,60px);line-height:.98;text-transform:uppercase;margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(36px,6vw,56px);letter-spacing:-.02em;line-height:1.05;text-transform:none;margin-bottom:12px}
   .p-sub{color:var(--text-secondary);font-size:15px;margin-bottom:24px;max-width:560px}
   .agg{display:flex;align-items:center;gap:16px;background:var(--bg-surface);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;margin-bottom:28px;flex-wrap:wrap}
-  .agg-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:48px;line-height:1;color:var(--accent)}
+  .agg-num{font-family:'Fraunces',serif;font-weight:900;font-size:48px;line-height:1;color:var(--accent)}
   .agg-stars{color:var(--accent);font-size:18px;letter-spacing:2px}
   .agg-count{display:block;font-size:13px;color:var(--muted);margin-top:2px}
-  .agg-cta{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);text-decoration:none;border:1px solid var(--accent);border-radius:6px;padding:10px 16px}
+  .agg-cta{margin-left:auto;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);text-decoration:none;border:1px solid var(--accent);border-radius:6px;padding:10px 16px}
   .agg-cta:hover{background:var(--green-dim)}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
   .rc{background:var(--bg-surface);border:1px solid var(--rule);border-radius:10px;padding:18px 16px;display:flex;flex-direction:column}
@@ -67,9 +67,9 @@
   .rc-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--green-dim);border-radius:4px;padding:2px 6px;margin-left:6px}
   .empty{display:none;text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
   .buy-band{margin-top:40px;text-align:center;background:var(--bg-surface);border:1px solid var(--rule);border-radius:10px;padding:28px 20px}
-  .buy-band h2{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;letter-spacing:.02em;text-transform:uppercase;margin-bottom:6px}
+  .buy-band h2{font-family:'Fraunces',serif;font-weight:800;font-size:24px;letter-spacing:-.01em;text-transform:none;margin-bottom:6px}
   .buy-band p{font-size:14px;color:var(--text-secondary);margin-bottom:16px}
-  .buy-band a{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--accent);border-radius:6px;padding:14px 28px;text-decoration:none}
+  .buy-band a{display:inline-block;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:15px;letter-spacing:.04em;text-transform:uppercase;color:var(--bg);background:var(--accent);border-radius:6px;padding:14px 28px;text-decoration:none}
   .buy-band a:hover{background:var(--green-light)}
   footer{border-top:1px solid var(--rule);padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));text-align:center;font-size:12px;color:var(--muted)}
   footer a{color:var(--muted);text-decoration:none;margin:0 8px}
@@ -118,8 +118,8 @@
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
 <script src="/assets/js/consent-analytics.js?v=005cb83b" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=e279586e">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=25635ee6">
+<link rel="stylesheet" href="/assets/css/soft.css?v=6bc5918a">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=9c0f9c3e">
 <script src="/assets/js/chrome.js?v=abeaaf85" defer></script>
 </head>
 <body>
@@ -143,7 +143,7 @@
           <li><a href="/faq">FAQ</a></li>
           <li><a href="/track-order">Track order</a></li>
         </ul>
-        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹229<span class="sf-hdr__cta-sub">prepaid · COD ₹289</span></a>
+        <a href="/odorstrike#buy" class="sf-hdr__cta">Buy ₹229<span class="sf-hdr__cta-sub">free shipping</span></a>
         <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
           <span></span><span></span><span></span>
         </button>
