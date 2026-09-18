@@ -3,16 +3,17 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const chrome = await readFile(new URL('../assets/js/chrome.js', import.meta.url), 'utf8');
+const checkout = await readFile(new URL('../odorstrike.html', import.meta.url), 'utf8');
 const api = await readFile(new URL('../api/create-order.js', import.meta.url), 'utf8');
 const product = JSON.parse(await readFile(new URL('../config/product.json', import.meta.url), 'utf8'));
 
 test('checkout exposes optional COD without replacing the working Razorpay path', () => {
   assert.match(chrome, /function startRazorpay\(\)/);
   assert.match(chrome, /window\.startRazorpay = startRazorpay;/);
-  assert.match(chrome, /smf-payment-choice/);
+  assert.match(checkout, /checkout-payment/);
   assert.match(chrome, /Prepaid/);
-  assert.match(chrome, /Cash on Delivery/);
-  assert.match(chrome, /window\.selectPay\(button\.dataset\.method\)/);
+  assert.match(checkout, /Cash on Delivery/);
+  assert.match(checkout, /selectPay\('prepaid'\)/);
   assert.match(chrome, /checkoutButton\.onclick = function \(\) \{/);
   assert.match(chrome, /return window\.submitOrder\(\);/);
   assert.doesNotMatch(chrome, /window\.submitOrder = function \(\) \{ return window\.startRazorpay\(\); \};/);
