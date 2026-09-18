@@ -178,7 +178,7 @@
     var fee = method === 'cod' ? codFeeRupees() : 0;
     var total = subtotal + fee;
 
-    document.querySelectorAll('#smfPaymentChoice .smf-pay-opt').forEach(function (button) {
+    document.querySelectorAll('.checkout-payment .pay-opt').forEach(function (button) {
       var active = button.dataset.method === method;
       button.classList.toggle('active', active);
       button.setAttribute('aria-checked', active ? 'true' : 'false');
