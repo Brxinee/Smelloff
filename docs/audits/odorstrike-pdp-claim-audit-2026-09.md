@@ -72,14 +72,14 @@ All claims above are continuously validated by automated test suites and build g
 
 ## Production Release Verification & Provenance
 
-- **Current Git Commit SHA (Main)**: `07b7328f525d64bc4daabdba8e645b70a2dcf53f`
+- **Current Git Commit SHA (Main)**: `0c9c6c622e307e9d78363f3a1ab49ae350a8f7dc`
 - **Vercel Project**: `Brxinee/Smelloff`
-- **Vercel Production Deployment ID**: `6531041078`
-- **Vercel Production Deployment URL**: `https://smelloff-kurtevsy9-xbrainee-6969s-projects.vercel.app`
-- **Vercel Production SHA**: `07b7328f525d64bc4daabdba8e645b70a2dcf53f`
+- **Vercel Production Deployment ID**: `6531148689` (`dpl_EKbjoJfp2kQLPm5qQ7RV8CGqwhR7`)
+- **Vercel Production Deployment URL**: `https://smelloff-mpub80st4-xbrainee-6969s-projects.vercel.app`
+- **Vercel Production SHA**: `0c9c6c622e307e9d78363f3a1ab49ae350a8f7dc`
 - **Production Aliases**: `smelloff.in`, `www.smelloff.in`
 - **Deployment State**: READY / SUCCESS (`smelloff.in` actively assigned and verified)
-- **Verification Timestamp**: `2026-09-18T19:06:10Z`
+- **Verification Timestamp**: `2026-09-18T19:11:00Z`
 - **Local Test Suite**: PASS (252 / 252 tests passing across 8 suites)
 - **Build Pipeline (`npm run build`)**: PASS (Exit Code: 0, 88 files audited)
 - **Sitemap Integrity (`npm run sitemap:check`)**: PASS (75 URLs, 50 with images)
