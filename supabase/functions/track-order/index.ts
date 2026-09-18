@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import {
   clientKey,
   generateReviewToken,
+  isOrderReviewEligible,
   jsonResponse,
   preflight,
   rateLimit,
@@ -57,12 +58,14 @@ Deno.serve(async (req: Request) => {
     // ([{status, at}]) so the timeline can show WHEN each stage happened.
     const addr = (order.address || {}) as Record<string, string>;
     const history = Array.isArray(order.status_history) ? order.status_history : [];
+    const isEligible = isOrderReviewEligible(order);
     const secret = Deno.env.get("ORDER_SECURITY_SECRET") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const reviewToken = await generateReviewToken(order.id, secret);
+    const reviewToken = isEligible ? await generateReviewToken(order.id, secret) : null;
 
     return jsonResponse(req, {
       order_id: order.id,
       review_token: reviewToken,
+      is_review_eligible: isEligible,
       order_code: order.order_code,
       placed_at: order.created_at,
       updated_at: order.updated_at,

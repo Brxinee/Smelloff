@@ -146,6 +146,9 @@ if (fs.existsSync(odorPath)) {
   }
   if (productCount !== 1) fail(`odorstrike.html must contain exactly 1 Product JSON-LD block, found ${productCount}`);
   if (odorHtml.includes('googleReviewWidgetMount')) fail('odorstrike.html must not contain googleReviewWidgetMount');
+  if (odorHtml.includes('pData.aggregateRating') || odorHtml.includes('productScript.textContent = JSON.stringify')) {
+    fail('odorstrike.html must not dynamically mutate Product JSON-LD schema at runtime');
+  }
 }
 
 // Review system integrity checks
@@ -164,6 +167,28 @@ if (fs.existsSync(reviewsPagePath)) {
   const reviewsHtml = read(reviewsPagePath);
   if (reviewsHtml.includes('googleReviewWidgetMount')) fail('reviews.html must not contain googleReviewWidgetMount');
   if (/<span class="agg-num"[^>]*>4\.9<\/span>/.test(reviewsHtml)) fail('reviews.html initial HTML must not hardcode 4.9 rating');
+}
+
+// Supabase edge functions review authorization and eligibility checks
+const submitReviewPath = path.join(ROOT, 'supabase/functions/submit-review/index.ts');
+if (fs.existsSync(submitReviewPath)) {
+  const code = read(submitReviewPath);
+  if (!code.includes('verifyReviewToken')) fail('submit-review must verify review token');
+  if (code.includes('orderPhone === phone')) fail('submit-review must not have a phone-only authorization bypass');
+  if (!code.includes('isOrderReviewEligible')) fail('submit-review must enforce order review eligibility server-side');
+}
+
+const trackOrderPath = path.join(ROOT, 'supabase/functions/track-order/index.ts');
+if (fs.existsSync(trackOrderPath)) {
+  const code = read(trackOrderPath);
+  if (!code.includes('isOrderReviewEligible')) fail('track-order must check order review eligibility before issuing token');
+}
+
+const securitySharedPath = path.join(ROOT, 'supabase/functions/_shared/security.ts');
+if (fs.existsSync(securitySharedPath)) {
+  const code = read(securitySharedPath);
+  if (!code.includes('isOrderReviewEligible')) fail('_shared/security.ts must export isOrderReviewEligible');
+  if (!code.includes('constantTimeEqual')) fail('_shared/security.ts must use constant-time equality for token verification');
 }
 
 if (failures.length) {

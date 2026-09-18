@@ -520,6 +520,11 @@
     rows += '<div class="row total"><span>Total</span><span>₹' + Math.round((o.amount || 0) / 100) + '</span></div>';
     itemsEl.innerHTML = rows;
 
+    var reviewPrompt = document.querySelector('.t-review-prompt');
+    if (reviewPrompt) {
+      reviewPrompt.style.display = o.review_token ? 'block' : 'none';
+    }
+
     show(document.getElementById('trackResult'), true);
     document.getElementById('trackResult').scrollIntoView({ behavior:'smooth', block:'start' });
   }
@@ -548,7 +553,7 @@
   }
 })();
 </script>
-<script src="/assets/js/reviews-system.js?v=2" defer></script>
+<script src="/assets/js/reviews-system.js?v=3" defer></script>
 <script src="/assets/js/track.js?v=801e292b" defer></script>
 </body>
 </html>

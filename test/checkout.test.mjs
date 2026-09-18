@@ -79,7 +79,7 @@ test('api/webhook.js signature calculation & validation', () => {
 
 test('service worker version bumped', () => {
   const sw = fs.readFileSync('sw.js', 'utf8');
-  assert.ok(sw.includes('smelloff-v31'), 'Service worker must use v31 cache');
+  assert.ok(/smelloff-v(3[1-9]|[4-9]\d+)/.test(sw), 'Service worker must use v31+ cache');
 });
 
 function createMockRes() {

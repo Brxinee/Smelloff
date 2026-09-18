@@ -2,6 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import {
   clientKey,
+  isOrderReviewEligible,
   jsonResponse,
   preflight,
   rateLimit,
@@ -9,7 +10,6 @@ import {
 } from "../_shared/security.ts";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const INELIGIBLE_STATUSES = new Set(["cancelled", "upi_pending"]);
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return preflight(req);
@@ -32,7 +32,6 @@ Deno.serve(async (req: Request) => {
 
     const orderId = String(b.order_id || "").trim();
     const reviewToken = String(b.review_token || "").trim();
-    const phone = String(b.phone || "").replace(/\D/g, "").slice(-10);
     const rating = Number(b.rating);
     const body = String(b.body || "").trim();
     const anonymous = !!b.anonymous;
@@ -40,6 +39,9 @@ Deno.serve(async (req: Request) => {
 
     if (!UUID_RE.test(orderId)) {
       return jsonResponse(req, { error: "Reviews are for verified buyers — we couldn't find your purchase on this device." }, 403);
+    }
+    if (!reviewToken) {
+      return jsonResponse(req, { error: "Review authorization token is required." }, 403);
     }
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
       return jsonResponse(req, { error: "Pick a star rating." }, 400);
@@ -53,33 +55,23 @@ Deno.serve(async (req: Request) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // The order must exist — that's what makes "Verified buyer" real.
-    const { data: order } = await supabase
+    // The order must exist and be in a review-eligible state (paid/delivered)
+    const { data: order, error: orderErr } = await supabase
       .from("orders")
-      .select("id, status, address, customer_phone")
+      .select("id, status, payment_method, address")
       .eq("id", orderId)
       .maybeSingle();
 
-    if (!order || INELIGIBLE_STATUSES.has(order.status)) {
-      return jsonResponse(req, { error: "Reviews are for verified buyers — we couldn't match an eligible purchase." }, 403);
+    if (orderErr || !order || !isOrderReviewEligible(order)) {
+      return jsonResponse(req, { error: "Reviews are for verified buyers with completed/eligible orders." }, 403);
     }
 
-    // Verify ownership: either a valid HMAC review_token from track-order / checkout
-    // or the 10-digit customer phone must match the order record.
+    // Verify HMAC review_token strictly against this exact order
     const secret = Deno.env.get("ORDER_SECURITY_SECRET") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    let isAuthorized = false;
-
-    if (reviewToken && await verifyReviewToken(order.id, reviewToken, secret)) {
-      isAuthorized = true;
-    } else if (phone && phone.length === 10) {
-      const orderPhone = String(order.customer_phone || "").replace(/\D/g, "").slice(-10);
-      if (orderPhone === phone) {
-        isAuthorized = true;
-      }
-    }
+    const isAuthorized = await verifyReviewToken(order.id, reviewToken, secret);
 
     if (!isAuthorized) {
-      return jsonResponse(req, { error: "Could not verify purchase credentials. Please verify your Order ID and phone number." }, 403);
+      return jsonResponse(req, { error: "Invalid or expired review authorization token. Please track your order to get a fresh review link." }, 403);
     }
 
     const addr = (order.address || {}) as Record<string, string>;

@@ -84,15 +84,10 @@
      rating not computed from real verified-purchase reviews is a Google
      structured-data violation (penalty risk). So this Product schema carries
      NO rating and NO "review" array.
-     To re-enable once real reviews exist: add an "aggregateRating" object
-     ({"@type":"AggregateRating","ratingValue":<avg to 1 decimal>,"bestRating":"5",
-     "worstRating":"1","ratingCount":<n>,"reviewCount":<n>}) as the last property
-     of this Product, computed from genuine on-page reviews only. Do NOT nest a
-     "review" array here (Google flags self-hosted Review objects), and never
-     fabricate reviews or counts.
-     The id is load-bearing: the on-page review script finds this node and writes
-     aggregateRating INTO it. It used to append a second Product node carrying
-     nothing but a rating, which Google reads as a separate, incomplete product. -->
+     Google's documentation explicitly states structured-data warnings do not need
+     to be manufactured away when the underlying data does not exist.
+     The Product JSON-LD is static and authoritative. Zero JavaScript code
+     modifies Product JSON-LD after page load. -->
 <script type="application/ld+json" id="product-jsonld">
 {
   "@context":"https://schema.org",
@@ -5708,32 +5703,12 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   }
   var buyMount = document.getElementById('buyProofMount');
   if (buyMount) buyMount.innerHTML = summaryHTML();
-
-  // AggregateRating JSON-LD — computed from the same real array, never hardcoded.
-  // Written INTO the page's existing Product node rather than appended as a second
-  // one: a Product carrying only a rating is an incomplete duplicate entity, and
-  // Google resolves the two by @id into one node with conflicting completeness.
-  var productScript = document.getElementById('product-jsonld');
-  if (productScript) {
-    try {
-      var pData = JSON.parse(productScript.textContent);
-      pData.aggregateRating = {
-        "@type":"AggregateRating",
-        "ratingValue":String(avg),
-        "bestRating":"5",
-        "worstRating":"1",
-        "ratingCount":String(n),
-        "reviewCount":String(n)
-      };
-      productScript.textContent = JSON.stringify(pData, null, 2);
-    } catch (e) {}
-  }
 })();
 </script>
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
-<script src="/assets/js/reviews-system.js?v=2" defer></script>
+<script src="/assets/js/reviews-system.js?v=3" defer></script>
 <script src="/assets/js/track.js?v=801e292b" defer></script>
 <!-- Google Customer Reviews. Loaded on the PDP only, because that is the page
      that carries the checkout and therefore the order-confirmation moment.

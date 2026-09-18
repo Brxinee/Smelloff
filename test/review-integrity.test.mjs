@@ -53,6 +53,40 @@ describe('Review System & Product Schema Integrity', () => {
     assert.ok(prod.offers?.hasMerchantReturnPolicy, 'Must include hasMerchantReturnPolicy');
   });
 
+  it('odorstrike.html does not contain runtime Product schema mutations', () => {
+    const html = fs.readFileSync(path.join(ROOT, 'odorstrike.html'), 'utf8');
+    assert.ok(!html.includes('pData.aggregateRating'), 'Must not mutate pData.aggregateRating');
+    assert.ok(!html.includes('productScript.textContent = JSON.stringify'), 'Must not rewrite product-jsonld textContent');
+  });
+
+  it('submit-review strictly enforces review token and excludes phone fallback', () => {
+    const code = fs.readFileSync(path.join(ROOT, 'supabase/functions/submit-review/index.ts'), 'utf8');
+    assert.ok(code.includes('verifyReviewToken'), 'Must call verifyReviewToken');
+    assert.ok(!code.includes('orderPhone === phone'), 'Must not permit phone fallback bypass');
+    assert.ok(code.includes('isOrderReviewEligible'), 'Must enforce isOrderReviewEligible');
+  });
+
+  it('track-order and security module gate review token issuance by order eligibility', () => {
+    const trackCode = fs.readFileSync(path.join(ROOT, 'supabase/functions/track-order/index.ts'), 'utf8');
+    assert.ok(trackCode.includes('isOrderReviewEligible'), 'track-order must check isOrderReviewEligible');
+
+    const secCode = fs.readFileSync(path.join(ROOT, 'supabase/functions/_shared/security.ts'), 'utf8');
+    assert.ok(secCode.includes('isOrderReviewEligible'), 'security.ts must export isOrderReviewEligible');
+    assert.ok(secCode.includes('constantTimeEqual'), 'security.ts must use constant-time equality');
+  });
+
+  it('html files reference the updated cache-busted reviews-system.js?v=3', () => {
+    const odor = fs.readFileSync(path.join(ROOT, 'odorstrike.html'), 'utf8');
+    const rev = fs.readFileSync(path.join(ROOT, 'reviews.html'), 'utf8');
+    const idx = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+    const trk = fs.readFileSync(path.join(ROOT, 'track-order.html'), 'utf8');
+
+    assert.ok(odor.includes('/assets/js/reviews-system.js?v=3'), 'odorstrike.html must use ?v=3');
+    assert.ok(rev.includes('/assets/js/reviews-system.js?v=3'), 'reviews.html must use ?v=3');
+    assert.ok(idx.includes('/assets/js/reviews-system.js?v=3'), 'index.html must use ?v=3');
+    assert.ok(trk.includes('/assets/js/reviews-system.js?v=3'), 'track-order.html must use ?v=3');
+  });
+
   it('index.html does not contain googleReviewWidgetMount', () => {
     const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
     assert.ok(!html.includes('googleReviewWidgetMount'), 'index.html must not contain googleReviewWidgetMount');

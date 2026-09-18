@@ -85,6 +85,49 @@ export function rateLimit(
   return true;
 }
 
+function constantTimeEqual(a: string, b: string): boolean {
+  if (typeof a !== "string" || typeof b !== "string") return false;
+  const enc = new TextEncoder();
+  const aBuf = enc.encode(a);
+  const bBuf = enc.encode(b);
+  if (aBuf.byteLength !== bBuf.byteLength) return false;
+  let diff = 0;
+  for (let i = 0; i < aBuf.byteLength; i++) {
+    diff |= aBuf[i] ^ bBuf[i];
+  }
+  return diff === 0;
+}
+
+export function isOrderReviewEligible(order: {
+  status: string;
+  payment_method?: string | null;
+}): boolean {
+  if (!order || !order.status) return false;
+  const status = String(order.status).toLowerCase().trim();
+  const method = String(order.payment_method || "").toLowerCase().trim();
+
+  // Ineligible states for any order
+  if (status === "cancelled" || status === "failed" || status === "upi_pending") {
+    return false;
+  }
+
+  // COD orders: payment is collected only on delivery
+  if (method === "cod") {
+    return status === "delivered";
+  }
+
+  // Prepaid orders: payment has been captured/verified (confirmed through delivered)
+  const PREPAID_ELIGIBLE_STATUSES = new Set([
+    "confirmed",
+    "packed",
+    "dispatched",
+    "out_for_delivery",
+    "delivered",
+  ]);
+
+  return PREPAID_ELIGIBLE_STATUSES.has(status);
+}
+
 export async function generateReviewToken(
   orderId: string,
   secret: string,
@@ -103,8 +146,7 @@ export async function generateReviewToken(
   const signature = await crypto.subtle.sign("HMAC", key, enc.encode(payload));
   const sigHex = Array.from(new Uint8Array(signature))
     .map((b) => b.toString(16).padStart(2, "0"))
-    .join("")
-    .slice(0, 32);
+    .join("");
   return `${expiry}.${sigHex}`;
 }
 
@@ -119,6 +161,7 @@ export async function verifyReviewToken(
   const [expiryStr, sigHex] = parts;
   const expiry = Number(expiryStr);
   if (!Number.isFinite(expiry) || Date.now() > expiry) return false;
+  if (!sigHex || !/^[0-9a-f]{64}$/i.test(sigHex)) return false;
 
   const payload = `${orderId}:${expiry}`;
   const enc = new TextEncoder();
@@ -132,8 +175,7 @@ export async function verifyReviewToken(
   const signature = await crypto.subtle.sign("HMAC", key, enc.encode(payload));
   const expectedSigHex = Array.from(new Uint8Array(signature))
     .map((b) => b.toString(16).padStart(2, "0"))
-    .join("")
-    .slice(0, 32);
+    .join("");
 
-  return sigHex === expectedSigHex;
+  return constantTimeEqual(sigHex.toLowerCase(), expectedSigHex.toLowerCase());
 }

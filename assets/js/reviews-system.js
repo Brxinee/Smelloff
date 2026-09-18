@@ -151,7 +151,7 @@
 
   function isVerifiedBuyer(){
     try {
-      return localStorage.getItem('smelloff_purchased') === 'true' || !!localStorage.getItem('smelloff_order_uuid');
+      return !!(localStorage.getItem('smelloff_order_uuid') && localStorage.getItem('smelloff_review_token'));
     } catch(e) {
       return false;
     }
@@ -221,9 +221,16 @@
       }
       var orderId = res.j.order_id || res.j.id || '';
       var reviewToken = res.j.review_token || '';
+
+      if (!reviewToken || !orderId) {
+        err.textContent = 'Reviews are unlocked once an order is confirmed or delivered. Thank you!';
+        err.style.display = 'block';
+        return;
+      }
+
       try {
-        if (orderId) localStorage.setItem('smelloff_order_uuid', orderId);
-        if (reviewToken) localStorage.setItem('smelloff_review_token', reviewToken);
+        localStorage.setItem('smelloff_order_uuid', orderId);
+        localStorage.setItem('smelloff_review_token', reviewToken);
         localStorage.setItem('smelloff_purchased', 'true');
         localStorage.setItem('smelloff_last_order', JSON.stringify({ code: code, phone: phone }));
       } catch(e){}
@@ -260,22 +267,12 @@
 
     var orderUuid = '';
     var reviewToken = '';
-    var lastOrderPhone = '';
-    var lastOrderCode = '';
     try {
       orderUuid = localStorage.getItem('smelloff_order_uuid') || '';
       reviewToken = localStorage.getItem('smelloff_review_token') || '';
-      var lastOrderStr = localStorage.getItem('smelloff_last_order');
-      if (lastOrderStr) {
-        var lo = JSON.parse(lastOrderStr);
-        if (lo) {
-          lastOrderCode = lo.code || '';
-          lastOrderPhone = lo.phone || '';
-        }
-      }
     } catch(e){}
 
-    if (!orderUuid && !lastOrderCode) {
+    if (!orderUuid || !reviewToken) {
       showStep('rvStepAuth');
       return;
     }
@@ -289,8 +286,6 @@
       body: JSON.stringify({
         order_id: orderUuid,
         review_token: reviewToken,
-        phone: lastOrderPhone,
-        order_code: lastOrderCode,
         name: anon ? 'Anonymous' : (name || 'Verified Buyer'),
         city: city || 'India',
         rating: selectedStars,
