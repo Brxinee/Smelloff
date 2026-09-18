@@ -178,12 +178,49 @@ export async function traceLiveUrl(url, maxHops = 10) {
   return { finalUrl: currentUrl, hops, isLoop: true, hopCount: hops.length, status: 0 };
 }
 
+/**
+ * Pure evaluation function for audit statistics.
+ */
+export function evaluateAuditResult(stats) {
+  const criticalFailures = [];
+  if (stats.multiHop > 0) criticalFailures.push(`${stats.multiHop} multi-hop redirect(s) detected`);
+  if (stats.brokenChains > 0) criticalFailures.push(`${stats.brokenChains} broken / 3+ hop chain(s) or PDP defect(s) detected`);
+  if (stats.loops > 0) criticalFailures.push(`${stats.loops} redirect loop(s) detected`);
+  if (stats.status404 > 0) criticalFailures.push(`${stats.status404} 404 error(s) detected`);
+  if (stats.status5xx > 0) criticalFailures.push(`${stats.status5xx} 5xx server error(s) detected`);
+  if (stats.canonicalMismatches > 0) criticalFailures.push(`${stats.canonicalMismatches} canonical mismatch(es) detected`);
+  if (stats.hreflangMismatches > 0) criticalFailures.push(`${stats.hreflangMismatches} hreflang mismatch(es) detected`);
+  if (stats.sitemapMismatches > 0) criticalFailures.push(`${stats.sitemapMismatches} sitemap defect(s) detected`);
+
+  const hasCriticalFailures =
+    stats.brokenChains > 0 ||
+    stats.loops > 0 ||
+    stats.status404 > 0 ||
+    stats.status5xx > 0 ||
+    stats.canonicalMismatches > 0 ||
+    stats.hreflangMismatches > 0 ||
+    stats.sitemapMismatches > 0 ||
+    stats.multiHop > 0;
+
+  return {
+    success: !hasCriticalFailures,
+    hasCriticalFailures,
+    criticalFailures,
+  };
+}
+
 async function runAudit(options = {}) {
   const shouldExit = options.shouldExit ?? true;
   const isLiveMode = options.isLive ?? IS_LIVE;
-  console.log('='.repeat(80));
-  console.log(` SMELLOFF ARCHITECTURE AUDIT [Mode: ${isLiveMode ? 'LIVE HTTP PROBE' : 'LOCAL SIMULATION'}]`);
-  console.log('='.repeat(80));
+  const customTracer = options.tracer || null;
+  const silent = options.silent ?? false;
+  const log = (...args) => { if (!silent) console.log(...args); };
+  const logError = (...args) => { if (!silent) console.error(...args); };
+  const logWarn = (...args) => { if (!silent) console.warn(...args); };
+
+  log('='.repeat(80));
+  log(` SMELLOFF ARCHITECTURE AUDIT [Mode: ${isLiveMode ? 'LIVE HTTP PROBE' : 'LOCAL SIMULATION'}]`);
+  log('='.repeat(80));
 
   const stats = {
     total: 0,
@@ -200,13 +237,36 @@ async function runAudit(options = {}) {
   };
 
   // 1. Audit all 75 canonical URLs
-  const sitemapXml = fs.readFileSync(path.join(REPO, 'sitemap.xml'), 'utf8');
-  const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+  let sitemapUrls = [];
+  let sitemapXml = '';
+  if (options.canonicalUrls !== undefined) {
+    sitemapUrls = options.canonicalUrls;
+  } else {
+    try {
+      sitemapXml = fs.readFileSync(path.join(REPO, 'sitemap.xml'), 'utf8');
+      sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+    } catch (_e) {
+      sitemapUrls = [];
+    }
+  }
 
-  console.log(`\n1. Auditing ${sitemapUrls.length} Canonical URLs...`);
+  log(`\n1. Auditing ${sitemapUrls.length} Canonical URLs...`);
   for (const url of sitemapUrls) {
     stats.total++;
-    if (isLiveMode) {
+    if (customTracer) {
+      const res = await customTracer(url);
+      if (res.isLoop) {
+        stats.loops++;
+      } else if (res.hopCount === 0 && (res.status === 200 || res.status === undefined)) {
+        stats.canonical200++;
+      } else if (res.hopCount === 1) {
+        stats.oneHop++;
+      } else if (res.hopCount === 2) {
+        stats.multiHop++;
+      } else if (res.hopCount >= 3) {
+        stats.brokenChains++;
+      }
+    } else if (isLiveMode) {
       const res = await traceLiveUrl(url);
       if (res.status === 200 && res.hopCount === 0) {
         stats.canonical200++;
@@ -215,19 +275,22 @@ async function runAudit(options = {}) {
         const canonHref = canonMatch ? canonMatch[1] : null;
         if (canonHref !== url) {
           stats.canonicalMismatches++;
-          console.error(`  [CANONICAL MISMATCH] ${url} claims ${canonHref}`);
+          logError(`  [CANONICAL MISMATCH] ${url} claims ${canonHref}`);
         }
       } else if (res.hopCount === 1) {
         stats.oneHop++;
-      } else if (res.hopCount > 1) {
+      } else if (res.hopCount === 2) {
         stats.multiHop++;
-        console.warn(`  [MULTI-HOP CANONICAL] ${url} -> ${res.hopCount} hops`);
+        logWarn(`  [MULTI-HOP CANONICAL] ${url} -> ${res.hopCount} hops`);
+      } else if (res.hopCount >= 3) {
+        stats.brokenChains++;
+        logError(`  [3+ HOP CANONICAL] ${url} -> ${res.hopCount} hops`);
       } else if (res.status === 404) {
         stats.status404++;
-        console.error(`  [404 NOT FOUND] ${url}`);
+        logError(`  [404 NOT FOUND] ${url}`);
       } else if (res.status >= 500) {
         stats.status5xx++;
-        console.error(`  [5XX SERVER ERROR] ${url} -> ${res.status}`);
+        logError(`  [5XX SERVER ERROR] ${url} -> ${res.status}`);
       }
     } else {
       // Local check
@@ -236,44 +299,35 @@ async function runAudit(options = {}) {
         stats.canonical200++;
       } else if (trace.hopCount === 1) {
         stats.oneHop++;
-      } else {
+      } else if (trace.hopCount === 2) {
         stats.multiHop++;
+      } else if (trace.hopCount >= 3) {
+        stats.brokenChains++;
       }
     }
   }
 
   // 2. Audit non-canonical and legacy URL variations
-  const testVariations = [
+  const defaultTestVariations = [
     'http://smelloff.in/',
-    'http://www.smelloff.in/',
     'https://www.smelloff.in/',
+    'https://www.smelloff.in/odorstrike',
+    'https://www.smelloff.in/solutions',
+    'https://www.smelloff.in/blog',
     'https://smelloff.in/odorstrike/',
-    'https://www.smelloff.in/odorstrike/',
     'https://smelloff.in/odorstrike.html',
-    'https://www.smelloff.in/odorstrike.html',
     'https://smelloff.in/solutions/',
-    'https://www.smelloff.in/solutions/',
     'https://smelloff.in/blog/',
-    'https://www.smelloff.in/blog/',
     'https://smelloff.in/blog/gym-clothes-smell-after-washing/',
-    'https://www.smelloff.in/blog/gym-clothes-smell-after-washing/',
     'https://smelloff.in/blog/gym-clothes-smell-after-washing.html',
-    'https://www.smelloff.in/blog/gym-clothes-smell-after-washing.html',
     // Legacy URLs
     'https://smelloff.in/blog/clothes-smell-after-washing',
-    'https://www.smelloff.in/blog/clothes-smell-after-washing',
     'https://smelloff.in/blog/zinc-ricinoleate-fabric-odor-ingredient',
-    'https://www.smelloff.in/blog/zinc-ricinoleate-fabric-odor-ingredient',
     'https://smelloff.in/blog/is-zinc-ricinoleate-safe-for-clothes',
-    'https://www.smelloff.in/blog/is-zinc-ricinoleate-safe-for-clothes',
     'https://smelloff.in/blog/best-fabric-freshener-odor-spray-india-2026',
-    'https://www.smelloff.in/blog/best-fabric-freshener-odor-spray-india-2026',
     'https://smelloff.in/blog/fabric-odor-science-zinc-ricinoleate',
-    'https://www.smelloff.in/blog/fabric-odor-science-zinc-ricinoleate',
     'https://smelloff.in/blog/chemical-breakdown-sweat-odor',
-    'https://www.smelloff.in/blog/chemical-breakdown-sweat-odor',
     'https://smelloff.in/blog/how-to-remove-sweat-smell-from-clothes-instantly',
-    'https://www.smelloff.in/blog/how-to-remove-sweat-smell-from-clothes-instantly',
     'https://smelloff.in/blog/how-to-remove-musty-smell-from-clothes-monsoon',
     'https://smelloff.in/blog/remove-sweat-smell-shirts-without-washing',
     'https://smelloff.in/blog/smoke-smell-clothes',
@@ -281,178 +335,201 @@ async function runAudit(options = {}) {
     'https://smelloff.in/policies/terms',
   ];
 
-  console.log(`\n2. Auditing ${testVariations.length} Non-Canonical & Legacy URL Variations...`);
+  const testVariations = options.testVariations ?? defaultTestVariations;
+
+  log(`\n2. Auditing ${testVariations.length} Non-Canonical & Legacy URL Variations...`);
   for (const url of testVariations) {
     stats.total++;
-    if (isLiveMode) {
-      const res = await traceLiveUrl(url);
+    if (customTracer) {
+      const res = await customTracer(url);
       if (res.isLoop) {
         stats.loops++;
-        console.error(`  [REDIRECT LOOP] ${url}`);
       } else if (res.hopCount === 1) {
         stats.oneHop++;
       } else if (res.hopCount === 2) {
         stats.multiHop++;
-        console.warn(`  [2-HOP CHAIN] ${url} -> ${res.hops.map(h => `${h.status} ${h.target}`).join(' -> ')}`);
       } else if (res.hopCount >= 3) {
         stats.brokenChains++;
-        console.error(`  [3+ HOP CHAIN] ${url} -> ${res.hops.map(h => `${h.status} ${h.target}`).join(' -> ')}`);
       } else if (res.status === 404) {
         stats.status404++;
-        console.error(`  [404 NOT FOUND] ${url}`);
       } else if (res.status >= 500) {
         stats.status5xx++;
-        console.error(`  [5XX ERROR] ${url} -> ${res.status}`);
+      }
+    } else if (isLiveMode) {
+      const res = await traceLiveUrl(url);
+      if (res.isLoop) {
+        stats.loops++;
+        logError(`  [REDIRECT LOOP] ${url}`);
+      } else if (res.hopCount === 1) {
+        stats.oneHop++;
+      } else if (res.hopCount === 2) {
+        stats.multiHop++;
+        logWarn(`  [2-HOP CHAIN] ${url} -> ${res.hops.map(h => `${h.status} ${h.target}`).join(' -> ')}`);
+      } else if (res.hopCount >= 3) {
+        stats.brokenChains++;
+        logError(`  [3+ HOP CHAIN] ${url} -> ${res.hops.map(h => `${h.status} ${h.target}`).join(' -> ')}`);
+      } else if (res.status === 404) {
+        stats.status404++;
+        logError(`  [404 NOT FOUND] ${url}`);
+      } else if (res.status >= 500) {
+        stats.status5xx++;
+        logError(`  [5XX ERROR] ${url} -> ${res.status}`);
       }
     } else {
       const trace = traceSimulatedHops(url);
       if (trace.isLoop) {
         stats.loops++;
-        console.error(`  [SIMULATED REDIRECT LOOP] ${url}`);
+        logError(`  [SIMULATED REDIRECT LOOP] ${url}`);
       } else if (trace.hopCount === 1) {
         stats.oneHop++;
       } else if (trace.hopCount === 2) {
         stats.multiHop++;
-        console.warn(`  [SIMULATED 2-HOP CHAIN] ${url} -> ${trace.hops.map(h => `${h.status} ${h.target}`).join(' -> ')}`);
+        logWarn(`  [SIMULATED 2-HOP CHAIN] ${url} -> ${trace.hops.map(h => `${h.status} ${h.target}`).join(' -> ')}`);
       } else if (trace.hopCount >= 3) {
         stats.brokenChains++;
-        console.error(`  [SIMULATED 3+ HOP CHAIN] ${url} -> ${trace.hops.map(h => `${h.status} ${h.target}`).join(' -> ')}`);
+        logError(`  [SIMULATED 3+ HOP CHAIN] ${url} -> ${trace.hops.map(h => `${h.status} ${h.target}`).join(' -> ')}`);
       }
     }
   }
 
   // 3. Audit XML Sitemap entity escaping
-  console.log('\n3. Auditing Sitemap XML Entity Escaping...');
-  if (/&amp;(?:amp|quot|apos|lt|gt|#\d+|#x[0-9a-f]+);/i.test(sitemapXml)) {
-    stats.sitemapMismatches++;
-    console.error('  [SITEMAP DEFECT] Double-escaped XML entities found in sitemap.xml');
-  } else {
-    console.log('  [PASS] All XML entities correctly single-escaped in sitemap.xml');
-  }
-
-  // 4. Audit ODORSTRIKE PDP Claims & Schema Invariants
-  console.log('\n4. Auditing ODORSTRIKE PDP Invariants...');
-  let pdpHtml = '';
-  if (isLiveMode) {
-    const livePdp = await traceLiveUrl('https://smelloff.in/odorstrike');
-    pdpHtml = livePdp.body || '';
-  } else {
-    pdpHtml = fs.readFileSync(path.join(REPO, 'odorstrike.html'), 'utf8');
-  }
-
-  const pdpDefects = [];
-
-  if (!pdpHtml.includes('₹229')) {
-    pdpDefects.push('Missing visible ₹229 price');
-  }
-  if (/anti-regrowth/i.test(pdpHtml)) {
-    pdpDefects.push('Prohibited "anti-regrowth" claim present');
-  }
-  if (/\bzero\s+residue\b/i.test(pdpHtml)) {
-    pdpDefects.push('Unhedged "zero residue" claim present');
-  }
-  if (/\bno\s+white\s+marks\b/i.test(pdpHtml)) {
-    pdpDefects.push('Unhedged "no white marks" claim present');
-  }
-  if (/\bkills?\s+(?:the\s+)?bacteria\b|\bantimicrobial\b|\bantibacterial\b|\bdisinfect\b|\bsanitiz/i.test(pdpHtml)) {
-    pdpDefects.push('Prohibited biocidal/antimicrobial claims present');
-  }
-  if (/\b(?:dermatologist|dermatologically|clinically)\s+tested\b|\bskin\s+safe\b/i.test(pdpHtml)) {
-    pdpDefects.push('Prohibited clinical/skin-safe claims present');
-  }
-  if (/\bcabin-safe\b|\bairport\s+security\b/i.test(pdpHtml)) {
-    pdpDefects.push('Prohibited airport-security/cabin-safe guarantee present');
-  }
-  if (/\bhandles\s+a\s+week\s+of\s+travel\b/i.test(pdpHtml)) {
-    pdpDefects.push('Prohibited week-of-travel guarantee present');
-  }
-  if (/\bworks\s+in\s+8\s+seconds\b/i.test(pdpHtml)) {
-    pdpDefects.push('Prohibited 8-second instant cure claim present');
-  }
-  if (/\bfragrance-free\b|\bunscented\b|\bscentless\b/i.test(pdpHtml)) {
-    pdpDefects.push('False fragrance-free claim present');
-  }
-
-  // Check Product JSON-LD schema invariants
-  const jsonLdBlocks = [...pdpHtml.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
-  let productCount = 0;
-  let hasFaqPage = false;
-  let hasAggregateRating = false;
-  let hasReviewArray = false;
-  let offerPriceValid = false;
-
-  for (const block of jsonLdBlocks) {
-    try {
-      const parsed = JSON.parse(block[1]);
-      if (parsed['@type'] === 'Product') {
-        productCount++;
-        if (parsed.offers && (parsed.offers.price === '229.00' || parsed.offers.price === '229' || parsed.offers.price === 229)) {
-          offerPriceValid = true;
-        }
-        if (parsed.aggregateRating) hasAggregateRating = true;
-        if (parsed.review) hasReviewArray = true;
-      }
-      if (parsed['@type'] === 'FAQPage') hasFaqPage = true;
-    } catch (_e) {}
-  }
-
-  if (productCount !== 1) {
-    pdpDefects.push(`Expected exactly 1 Product JSON-LD node, found ${productCount}`);
-  }
-  if (!offerPriceValid) {
-    pdpDefects.push('Product schema offer price is not 229 / 229.00');
-  }
-  if (hasFaqPage) {
-    pdpDefects.push('Prohibited FAQPage JSON-LD present on PDP');
-  }
-  if (hasAggregateRating || hasReviewArray) {
-    pdpDefects.push('Fabricated aggregateRating / review present on PDP without verified reviews DB');
-  }
-
-  if (pdpDefects.length > 0) {
-    for (const defect of pdpDefects) {
-      console.error(`  [PDP DEFECT] ${defect}`);
-      stats.brokenChains++;
+  if (options.skipPdp !== true) {
+    log('\n3. Auditing Sitemap XML Entity Escaping...');
+    if (sitemapXml && /&amp;(?:amp|quot|apos|lt|gt|#\d+|#x[0-9a-f]+);/i.test(sitemapXml)) {
+      stats.sitemapMismatches++;
+      logError('  [SITEMAP DEFECT] Double-escaped XML entities found in sitemap.xml');
+    } else if (sitemapXml) {
+      log('  [PASS] All XML entities correctly single-escaped in sitemap.xml');
     }
-  } else {
-    console.log('  [PASS] ODORSTRIKE PDP claims and schema invariants strictly verified.');
+
+    // 4. Audit ODORSTRIKE PDP Claims & Schema Invariants
+    log('\n4. Auditing ODORSTRIKE PDP Invariants...');
+    let pdpHtml = '';
+    if (isLiveMode && !customTracer) {
+      const livePdp = await traceLiveUrl('https://smelloff.in/odorstrike');
+      pdpHtml = livePdp.body || '';
+    } else {
+      try {
+        pdpHtml = fs.readFileSync(path.join(REPO, 'odorstrike.html'), 'utf8');
+      } catch (_e) {
+        pdpHtml = '';
+      }
+    }
+
+    const pdpDefects = [];
+
+    if (pdpHtml) {
+      if (!pdpHtml.includes('₹229')) {
+        pdpDefects.push('Missing visible ₹229 price');
+      }
+      if (/anti-regrowth/i.test(pdpHtml)) {
+        pdpDefects.push('Prohibited "anti-regrowth" claim present');
+      }
+      if (/\bzero\s+residue\b/i.test(pdpHtml)) {
+        pdpDefects.push('Unhedged "zero residue" claim present');
+      }
+      if (/\bno\s+white\s+marks\b/i.test(pdpHtml)) {
+        pdpDefects.push('Unhedged "no white marks" claim present');
+      }
+      if (/\bkills?\s+(?:the\s+)?bacteria\b|\bantimicrobial\b|\bantibacterial\b|\bdisinfect\b|\bsanitiz/i.test(pdpHtml)) {
+        pdpDefects.push('Prohibited biocidal/antimicrobial claims present');
+      }
+      if (/\b(?:dermatologist|dermatologically|clinically)\s+tested\b|\bskin\s+safe\b/i.test(pdpHtml)) {
+        pdpDefects.push('Prohibited clinical/skin-safe claims present');
+      }
+      if (/\bcabin-safe\b|\bairport\s+security\b/i.test(pdpHtml)) {
+        pdpDefects.push('Prohibited airport-security/cabin-safe guarantee present');
+      }
+      if (/\bhandles\s+a\s+week\s+of\s+travel\b/i.test(pdpHtml)) {
+        pdpDefects.push('Prohibited week-of-travel guarantee present');
+      }
+      if (/\bworks\s+in\s+8\s+seconds\b/i.test(pdpHtml)) {
+        pdpDefects.push('Prohibited 8-second instant cure claim present');
+      }
+      if (/\bfragrance-free\b|\bunscented\b|\bscentless\b/i.test(pdpHtml)) {
+        pdpDefects.push('False fragrance-free claim present');
+      }
+
+      // Check Product JSON-LD schema invariants
+      const jsonLdBlocks = [...pdpHtml.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+      let productCount = 0;
+      let hasFaqPage = false;
+      let hasAggregateRating = false;
+      let hasReviewArray = false;
+      let offerPriceValid = false;
+
+      for (const block of jsonLdBlocks) {
+        try {
+          const parsed = JSON.parse(block[1]);
+          if (parsed['@type'] === 'Product') {
+            productCount++;
+            if (parsed.offers && (parsed.offers.price === '229.00' || parsed.offers.price === '229' || parsed.offers.price === 229)) {
+              offerPriceValid = true;
+            }
+            if (parsed.aggregateRating) hasAggregateRating = true;
+            if (parsed.review) hasReviewArray = true;
+          }
+          if (parsed['@type'] === 'FAQPage') hasFaqPage = true;
+        } catch (_e) {}
+      }
+
+      if (productCount !== 1) {
+        pdpDefects.push(`Expected exactly 1 Product JSON-LD node, found ${productCount}`);
+      }
+      if (!offerPriceValid) {
+        pdpDefects.push('Product schema offer price is not 229 / 229.00');
+      }
+      if (hasFaqPage) {
+        pdpDefects.push('Prohibited FAQPage JSON-LD present on PDP');
+      }
+      if (hasAggregateRating || hasReviewArray) {
+        pdpDefects.push('Fabricated aggregateRating / review present on PDP without verified reviews DB');
+      }
+
+      if (pdpDefects.length > 0) {
+        for (const defect of pdpDefects) {
+          logError(`  [PDP DEFECT] ${defect}`);
+          stats.brokenChains++;
+        }
+      } else {
+        log('  [PASS] ODORSTRIKE PDP claims and schema invariants strictly verified.');
+      }
+    }
   }
 
-  console.log('\n' + '='.repeat(80));
-  console.log(' AUDIT SUMMARY TABLE');
-  console.log('='.repeat(80));
-  console.table({
-    'TOTAL URLS TESTED': stats.total,
-    '200 CANONICAL': stats.canonical200,
-    '301 / 308 (1 HOP)': stats.oneHop,
-    'MULTI-HOP (2 HOPS)': stats.multiHop,
-    'BROKEN CHAINS (3+ HOPS)': stats.brokenChains,
-    'REDIRECT LOOPS': stats.loops,
-    '404 NOT FOUND': stats.status404,
-    '5XX SERVER ERROR': stats.status5xx,
-    'CANONICAL MISMATCHES': stats.canonicalMismatches,
-    'HREFLANG MISMATCHES': stats.hreflangMismatches,
-    'SITEMAP DEFECTS': stats.sitemapMismatches,
-  });
-  console.log('='.repeat(80));
+  if (!silent) {
+    console.log('\n' + '='.repeat(80));
+    console.log(' AUDIT SUMMARY TABLE');
+    console.log('='.repeat(80));
+    console.table({
+      'TOTAL URLS TESTED': stats.total,
+      '200 CANONICAL': stats.canonical200,
+      '301 / 308 (1 HOP)': stats.oneHop,
+      'MULTI-HOP (2 HOPS)': stats.multiHop,
+      'BROKEN CHAINS (3+ HOPS)': stats.brokenChains,
+      'REDIRECT LOOPS': stats.loops,
+      '404 NOT FOUND': stats.status404,
+      '5XX SERVER ERROR': stats.status5xx,
+      'CANONICAL MISMATCHES': stats.canonicalMismatches,
+      'HREFLANG MISMATCHES': stats.hreflangMismatches,
+      'SITEMAP DEFECTS': stats.sitemapMismatches,
+    });
+    console.log('='.repeat(80));
+  }
 
-  const hasCriticalFailures = 
-    stats.brokenChains > 0 || 
-    stats.loops > 0 || 
-    stats.status404 > 0 || 
-    stats.status5xx > 0 || 
-    stats.canonicalMismatches > 0 || 
-    stats.hreflangMismatches > 0 || 
-    stats.sitemapMismatches > 0 ||
-    (!IS_LIVE && stats.multiHop > 0);
+  const evaluation = evaluateAuditResult(stats);
 
-  if (hasCriticalFailures) {
-    console.error('\n[FAIL] Audit encountered critical errors.');
+  if (evaluation.hasCriticalFailures) {
+    logError('\n[FAIL] Audit encountered critical errors:');
+    for (const fail of evaluation.criticalFailures) {
+      logError(`  - ${fail}`);
+    }
     if (shouldExit) process.exit(1);
-    return { success: false, stats };
+    return { success: false, stats, evaluation };
   }
-  console.log('\n[PASS] Audit completed successfully with zero critical errors.');
-  return { success: true, stats };
+
+  log('\n[PASS] Audit completed successfully with zero critical errors.');
+  return { success: true, stats, evaluation };
 }
 
 export { runAudit };

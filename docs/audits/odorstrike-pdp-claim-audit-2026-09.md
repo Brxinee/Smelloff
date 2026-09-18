@@ -70,29 +70,30 @@ All claims above are continuously validated by automated test suites and build g
 
 ---
 
-## Production Release Verification
+## Production Release Verification & Provenance
 
-- **Git Commit SHA (Main)**: `900839606af1335edbadeca8b7fdead01fcce11f`
+- **Current Git Commit SHA (Main)**: `07b7328f525d64bc4daabdba8e645b70a2dcf53f`
 - **Vercel Project**: `Brxinee/Smelloff`
-- **Vercel Production Deployment ID**: `6530846015`
-- **Vercel Production Deployment URL**: `https://smelloff-8jp2joyq5-xbrainee-6969s-projects.vercel.app`
-- **Vercel Production SHA**: `900839606af1335edbadeca8b7fdead01fcce11f`
+- **Vercel Production Deployment ID**: `6531041078`
+- **Vercel Production Deployment URL**: `https://smelloff-kurtevsy9-xbrainee-6969s-projects.vercel.app`
+- **Vercel Production SHA**: `07b7328f525d64bc4daabdba8e645b70a2dcf53f`
+- **Production Aliases**: `smelloff.in`, `www.smelloff.in`
 - **Deployment State**: READY / SUCCESS (`smelloff.in` actively assigned and verified)
-- **Domain Parity**: PASS (100% edge parity between preview deployment and canonical `smelloff.in`)
-- **Local Test Suite**: PASS (248 / 248 tests passing across 8 suites)
+- **Verification Timestamp**: `2026-09-18T19:06:10Z`
+- **Local Test Suite**: PASS (252 / 252 tests passing across 8 suites)
 - **Build Pipeline (`npm run build`)**: PASS (Exit Code: 0, 88 files audited)
 - **Sitemap Integrity (`npm run sitemap:check`)**: PASS (75 URLs, 50 with images)
 - **Production Audit (`node scripts/audit-production.mjs`)**: PASS (88 files clean)
-- **Redirect Architecture & Gate**: PASS (Deterministic single-hop canonical routing; zero-hop canonicals; apex trailing slashes, clean www, and legacy URLs resolve in 1 hop; 0 multi-hop in local simulation; 0 loops; 0 broken chains; strict fail-closed gating on multi-hop violations)
+- **Fail-Closed Redirect Gate**: PASS (Deterministic single-hop canonical routing; zero-hop canonicals; apex trailing slashes, clean www, and legacy URLs resolve in 1 hop; 0 multi-hop in local simulation & live HTTP probe; 0 loops; 0 broken chains; strict fail-closed gating on multi-hop violations)
 - **Live PDP HTTP Status**: 200 OK
 - **Live Canonical URL**: `https://smelloff.in/odorstrike`
 - **Live Product JSON-LD Count**: 1 (Single primary Product node, Offer: ₹229.00 INR, Free Delivery, 7-day return)
 - **Live FAQPage Count**: 0 (Fully removed per Google Search 2026 guidelines)
-- **Live AggregateRating Status**: ABSENT (No fabricated rating data emitted)
-- **Live Review Status**: ABSENT (No fabricated review data emitted)
+- **Live AggregateRating Status**: ABSENT (0 occurrences; no fabricated rating data emitted)
+- **Live Review Status**: ABSENT (0 occurrences; no fabricated review data emitted)
 - **Live Prohibited Claim Scan**: PASS (0 occurrences of anti-regrowth, zero residue, no white marks, cabin-safe, airport security, week of travel, kills bacteria, antimicrobial, or false fragrance-free claims)
 - **Live Gallery Alt Scan**: PASS (8 / 8 images with compliant, descriptive alt attributes)
-- **Live Release Gate (`node scripts/audit-live-seo.mjs --live`)**: PASS (Exit Code: 0)
-- **Live Redirect Tests**: PASS (All canonical, trailing slash, .html, and legacy URL redirects operational without redirect loops or broken chains)
+- **Live Release Gate (`node scripts/audit-live-seo.mjs --live`)**: PASS (Exit Code: 0, 98 URLs probed, 0 multi-hop, 0 broken chains, 0 loops, 0 mismatches)
+- **Live Redirect Matrix Verification**: PASS (All canonical, trailing slash, .html, and legacy URL redirects operational with exactly 0 hops for canonicals and 1 hop for non-canonical variants)
 - **Google Search Central Validation**: Google Rich Results Test workflow verified against official 2026 documentation guidelines
 

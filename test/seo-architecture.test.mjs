@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { decodeAndXmlEscape } from '../scripts/seo/build-sitemap.mjs';
-import { simulateRedirect, traceSimulatedHops } from '../scripts/audit-live-seo.mjs';
+import { simulateRedirect, traceSimulatedHops, runAudit, evaluateAuditResult } from '../scripts/audit-live-seo.mjs';
 
 const ROOT = process.cwd();
 
@@ -171,25 +171,108 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
       });
     }
 
-    it('audit gate strictly detects and rejects intentionally injected 2-hop chains', async () => {
-      const { runAudit } = await import('../scripts/audit-live-seo.mjs');
-      // In normal configuration, audit succeeds
-      const result = await runAudit({ shouldExit: false, isLive: false });
+    it('pure helper evaluateAuditResult strictly computes success and failure states', () => {
+      const cleanStats = {
+        total: 10,
+        canonical200: 5,
+        oneHop: 5,
+        multiHop: 0,
+        brokenChains: 0,
+        loops: 0,
+        status404: 0,
+        status5xx: 0,
+        canonicalMismatches: 0,
+        hreflangMismatches: 0,
+        sitemapMismatches: 0,
+      };
+      assert.equal(evaluateAuditResult(cleanStats).success, true);
+      assert.equal(evaluateAuditResult(cleanStats).hasCriticalFailures, false);
+
+      assert.equal(evaluateAuditResult({ ...cleanStats, multiHop: 1 }).success, false);
+      assert.equal(evaluateAuditResult({ ...cleanStats, brokenChains: 1 }).success, false);
+      assert.equal(evaluateAuditResult({ ...cleanStats, loops: 1 }).success, false);
+      assert.equal(evaluateAuditResult({ ...cleanStats, status404: 1 }).success, false);
+      assert.equal(evaluateAuditResult({ ...cleanStats, status5xx: 1 }).success, false);
+      assert.equal(evaluateAuditResult({ ...cleanStats, canonicalMismatches: 1 }).success, false);
+      assert.equal(evaluateAuditResult({ ...cleanStats, hreflangMismatches: 1 }).success, false);
+      assert.equal(evaluateAuditResult({ ...cleanStats, sitemapMismatches: 1 }).success, false);
+    });
+
+    it('runAudit cleanly succeeds with zero critical errors in simulated environment', async () => {
+      const result = await runAudit({ shouldExit: false, isLive: false, silent: true });
       assert.equal(result.success, true, 'Clean routing must pass audit');
       assert.equal(result.stats.multiHop, 0, 'Clean routing must have 0 multi-hops');
+      assert.equal(result.stats.brokenChains, 0, 'Clean routing must have 0 broken chains');
+      assert.equal(result.stats.loops, 0, 'Clean routing must have 0 loops');
+      assert.equal(result.evaluation.hasCriticalFailures, false);
+    });
 
-      // Inject a synthetic multi-hop stat and verify critical failure rejection
-      const simulatedStats = { ...result.stats, multiHop: 1 };
-      const hasCriticalFailures = 
-        simulatedStats.brokenChains > 0 || 
-        simulatedStats.loops > 0 || 
-        simulatedStats.status404 > 0 || 
-        simulatedStats.status5xx > 0 || 
-        simulatedStats.canonicalMismatches > 0 || 
-        simulatedStats.hreflangMismatches > 0 || 
-        simulatedStats.sitemapMismatches > 0 ||
-        simulatedStats.multiHop > 0;
-      assert.equal(hasCriticalFailures, true, 'Audit gate must fail when a 2-hop chain is present');
+    it('runAudit strictly fails when encountering a synthetic 2-hop redirect chain', async () => {
+      const result = await runAudit({
+        shouldExit: false,
+        isLive: true,
+        silent: true,
+        canonicalUrls: [],
+        testVariations: ['https://smelloff.in/synthetic-two-hop'],
+        tracer: async () => ({
+          status: 200,
+          hopCount: 2,
+          hops: [
+            { status: 308, target: 'https://smelloff.in/intermediate' },
+            { status: 301, target: 'https://smelloff.in/final' },
+          ],
+          isLoop: false,
+          finalUrl: 'https://smelloff.in/final',
+        }),
+      });
+      assert.equal(result.success, false, 'runAudit must return success === false for 2-hop chains');
+      assert.equal(result.stats.multiHop, 1, 'Stats must count exactly 1 multiHop');
+      assert.equal(result.evaluation.hasCriticalFailures, true);
+      assert.ok(result.evaluation.criticalFailures.some(f => f.includes('multi-hop')));
+    });
+
+    it('runAudit strictly fails when encountering a synthetic 3+ hop redirect chain', async () => {
+      const result = await runAudit({
+        shouldExit: false,
+        isLive: true,
+        silent: true,
+        canonicalUrls: [],
+        testVariations: ['https://smelloff.in/synthetic-three-hop'],
+        tracer: async () => ({
+          status: 200,
+          hopCount: 3,
+          hops: [
+            { status: 308, target: 'https://smelloff.in/hop1' },
+            { status: 308, target: 'https://smelloff.in/hop2' },
+            { status: 301, target: 'https://smelloff.in/final' },
+          ],
+          isLoop: false,
+          finalUrl: 'https://smelloff.in/final',
+        }),
+      });
+      assert.equal(result.success, false, 'runAudit must return success === false for 3+ hop chains');
+      assert.equal(result.stats.brokenChains, 1, 'Stats must count exactly 1 brokenChain');
+      assert.equal(result.evaluation.hasCriticalFailures, true);
+    });
+
+    it('runAudit strictly fails when encountering a synthetic redirect loop', async () => {
+      const result = await runAudit({
+        shouldExit: false,
+        isLive: true,
+        silent: true,
+        canonicalUrls: [],
+        testVariations: ['https://smelloff.in/synthetic-loop'],
+        tracer: async () => ({
+          status: 0,
+          hopCount: 10,
+          hops: [],
+          isLoop: true,
+          finalUrl: 'https://smelloff.in/synthetic-loop',
+        }),
+      });
+      assert.equal(result.success, false, 'runAudit must return success === false for redirect loops');
+      assert.equal(result.stats.loops, 1, 'Stats must count exactly 1 loop');
+      assert.equal(result.evaluation.hasCriticalFailures, true);
     });
   });
 
