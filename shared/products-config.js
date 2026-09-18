@@ -85,13 +85,18 @@ export const APPROVED_CLAIMS = {
     source: 'Fabric compatibility audit'
   },
   NON_STAINING: {
-    claim: 'Dries clear with zero residue when sprayed from recommended 15–20 cm distance.',
+    claim: 'Dries clear with no stiff residue when sprayed from recommended 15–20 cm distance.',
     status: 'VERIFIED',
     source: 'Aqueous mist dispersion testing'
   },
   PROHIBITED_CLAIMS: [
+    'anti-regrowth / anti regrowth',
     'instant / instantly kills smell',
-    'kills bacteria / antimicrobial drug claim',
+    'kills bacteria / antimicrobial / antibacterial / biocidal drug claim',
+    'skin-safe / dermatologically tested / cosmetic skin claim',
+    'zero residue / no white marks absolute claim',
+    'cabin-safe / guaranteed airport-security clearance',
+    'week-of-travel guarantee / 1 bottle for full trip guarantee',
     '10-second miracle cure',
     'works on 100% of all fabrics including raw dry-clean-only silks',
     'guaranteed odor cure',

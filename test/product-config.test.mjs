@@ -422,7 +422,7 @@ test('index.html homepage FAQ objection-first hierarchy, schema deprecation and 
 
   // Fabric-only safety guardrail
   assert.ok(faqSection.includes('never skin, face, hair, or body'), 'FAQ must strictly prohibit skin, face, hair, or body application');
-  assert.ok(faqSection.includes('zero residue'), 'FAQ must state zero residue');
+  assert.ok(/zero residue|without stiff residue|residue-free|dries clear/i.test(faqSection), 'FAQ must state residue-free/without stiff residue');
   assert.ok(faqSection.includes('15–20 cm'), 'FAQ must state 15–20 cm spray distance');
   assert.ok(faqSection.includes('15–30 seconds'), 'FAQ must state 15–30 seconds dry time');
   assert.ok(faqSection.includes('Up to 8 hours'), 'FAQ must state Up to 8 hours duration');

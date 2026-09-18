@@ -52,7 +52,7 @@
       "Fabric Refresher Spray for Clothes",
       "Pocket Fabric Freshener"
     ],
-    "description": "A pocket-sized fabric odor remover spray for clothes. 50ml mist that targets trapped sweat odor, gym smell, and shirt odor in fabric — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA helps neutralize them, Triethyl Citrate helps prevent odor formation, and Zinc Gluconate supports long-lasting fabric freshness. Up to 8 hours odor protection on fabric under normal office/commute conditions. Glycerine-free, zero residue, dries fast. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
+    "description": "A pocket-sized fabric odor remover spray for clothes. 50ml mist that targets trapped sweat odor, gym smell, and shirt odor in fabric — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA helps neutralize them, Triethyl Citrate helps prevent odor formation, and Zinc Gluconate supports long-lasting fabric freshness. Up to 8 hours odor protection on fabric under normal office/commute conditions*. Glycerine-free, fast-drying, residue-free finish. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
     "size": "50ml",
     "netQuantity": "50ml / 1.69 fl oz",
     "format": "Liquid spray",
@@ -145,7 +145,7 @@
       { "id": "trap", "ingredient": "HPβCD", "role": "Trap" },
       { "id": "neutralize", "ingredient": "Zinc PCA", "role": "Neutralize" },
       { "id": "prevent", "ingredient": "Triethyl Citrate", "role": "Prevent" },
-      { "id": "antiregrowth", "ingredient": "Zinc Gluconate", "role": "Anti-regrowth" }
+      { "id": "sustain", "ingredient": "Zinc Gluconate", "role": "Sustained freshness" }
     ],
     "inci": [
       { "name": "Water", "role": "Base" },
@@ -156,7 +156,7 @@
       { "name": "Zinc PCA", "role": "Neutralize" },
       { "name": "PE9010", "role": "Preservative" },
       { "name": "Fragrance", "role": "Light scent" },
-      { "name": "Zinc Gluconate", "role": "Anti-regrowth" },
+      { "name": "Zinc Gluconate", "role": "Sustained freshness" },
       { "name": "Ethylhexylglycerin", "role": "Preservative booster" },
       { "name": "Citric Acid", "role": "pH balancer" }
     ],
@@ -184,13 +184,18 @@
       "Pocket fabric odor spray for clothing — not a perfume, not a deodorant.",
       "Light fresh fabric scent — not a perfume. ODORSTRIKE is a fabric odor-control mist with a light, crisp fabric scent that provides sensory confirmation of clean fabric while targeting unwanted odor in the weave.",
       "Targets and traps sweat and environmental odor molecules at the clothing fabric weave.",
-      "Up to 8 hours of odor protection on fabric under normal office/commute conditions.",
+      "Up to 8 hours of odor protection on fabric under normal office/commute conditions*.",
       "Safe for regular use on everyday washable clothing fabrics (cotton, polyester, denim, blends, wool). Patch-test silk.",
-      "Dries clear with zero residue when sprayed from recommended 15–20 cm distance."
+      "Dries clear with no stiff residue when sprayed from recommended 15–20 cm distance."
     ],
     "prohibited": [
+      "anti-regrowth / anti regrowth",
       "instant / instantly kills smell",
-      "kills bacteria / antimicrobial drug claim",
+      "kills bacteria / antimicrobial / antibacterial / biocidal drug claim",
+      "skin-safe / dermatologically tested / cosmetic skin claim",
+      "zero residue / no white marks absolute claim",
+      "cabin-safe / guaranteed airport-security clearance",
+      "week-of-travel guarantee / 1 bottle for full trip guarantee",
       "10-second miracle cure",
       "works on 100% of all fabrics including raw dry-clean-only silks",
       "guaranteed odor cure",

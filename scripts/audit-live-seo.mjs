@@ -338,23 +338,83 @@ async function runAudit() {
     pdpHtml = fs.readFileSync(path.join(REPO, 'odorstrike.html'), 'utf8');
   }
 
+  const pdpDefects = [];
+
   if (!pdpHtml.includes('₹229')) {
-    console.error('  [PDP DEFECT] Missing ₹229 price');
-    stats.brokenChains++;
+    pdpDefects.push('Missing visible ₹229 price');
   }
   if (/anti-regrowth/i.test(pdpHtml)) {
-    console.error('  [PDP DEFECT] Prohibited "anti-regrowth" claim present');
-    stats.brokenChains++;
+    pdpDefects.push('Prohibited "anti-regrowth" claim present');
   }
   if (/\bzero\s+residue\b/i.test(pdpHtml)) {
-    console.error('  [PDP DEFECT] Unhedged "zero residue" claim present');
-    stats.brokenChains++;
+    pdpDefects.push('Unhedged "zero residue" claim present');
   }
-  if (/<script[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?"@type":\s*"FAQPage"[\s\S]*?<\/script>/i.test(pdpHtml)) {
-    console.error('  [PDP DEFECT] Prohibited FAQPage JSON-LD present on PDP');
-    stats.brokenChains++;
+  if (/\bno\s+white\s+marks\b/i.test(pdpHtml)) {
+    pdpDefects.push('Unhedged "no white marks" claim present');
   }
-  console.log('  [PASS] ODORSTRIKE PDP claims and schema invariants verified.');
+  if (/\bkills?\s+(?:the\s+)?bacteria\b|\bantimicrobial\b|\bantibacterial\b|\bdisinfect\b|\bsanitiz/i.test(pdpHtml)) {
+    pdpDefects.push('Prohibited biocidal/antimicrobial claims present');
+  }
+  if (/\b(?:dermatologist|dermatologically|clinically)\s+tested\b|\bskin\s+safe\b/i.test(pdpHtml)) {
+    pdpDefects.push('Prohibited clinical/skin-safe claims present');
+  }
+  if (/\bcabin-safe\b|\bairport\s+security\b/i.test(pdpHtml)) {
+    pdpDefects.push('Prohibited airport-security/cabin-safe guarantee present');
+  }
+  if (/\bhandles\s+a\s+week\s+of\s+travel\b/i.test(pdpHtml)) {
+    pdpDefects.push('Prohibited week-of-travel guarantee present');
+  }
+  if (/\bworks\s+in\s+8\s+seconds\b/i.test(pdpHtml)) {
+    pdpDefects.push('Prohibited 8-second instant cure claim present');
+  }
+  if (/\bfragrance-free\b|\bunscented\b|\bscentless\b/i.test(pdpHtml)) {
+    pdpDefects.push('False fragrance-free claim present');
+  }
+
+  // Check Product JSON-LD schema invariants
+  const jsonLdBlocks = [...pdpHtml.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  let productCount = 0;
+  let hasFaqPage = false;
+  let hasAggregateRating = false;
+  let hasReviewArray = false;
+  let offerPriceValid = false;
+
+  for (const block of jsonLdBlocks) {
+    try {
+      const parsed = JSON.parse(block[1]);
+      if (parsed['@type'] === 'Product') {
+        productCount++;
+        if (parsed.offers && (parsed.offers.price === '229.00' || parsed.offers.price === '229' || parsed.offers.price === 229)) {
+          offerPriceValid = true;
+        }
+        if (parsed.aggregateRating) hasAggregateRating = true;
+        if (parsed.review) hasReviewArray = true;
+      }
+      if (parsed['@type'] === 'FAQPage') hasFaqPage = true;
+    } catch (_e) {}
+  }
+
+  if (productCount !== 1) {
+    pdpDefects.push(`Expected exactly 1 Product JSON-LD node, found ${productCount}`);
+  }
+  if (!offerPriceValid) {
+    pdpDefects.push('Product schema offer price is not 229 / 229.00');
+  }
+  if (hasFaqPage) {
+    pdpDefects.push('Prohibited FAQPage JSON-LD present on PDP');
+  }
+  if (hasAggregateRating || hasReviewArray) {
+    pdpDefects.push('Fabricated aggregateRating / review present on PDP without verified reviews DB');
+  }
+
+  if (pdpDefects.length > 0) {
+    for (const defect of pdpDefects) {
+      console.error(`  [PDP DEFECT] ${defect}`);
+      stats.brokenChains++;
+    }
+  } else {
+    console.log('  [PASS] ODORSTRIKE PDP claims and schema invariants strictly verified.');
+  }
 
   console.log('\n' + '='.repeat(80));
   console.log(' AUDIT SUMMARY TABLE');
