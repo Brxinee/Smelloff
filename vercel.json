@@ -1,5 +1,4 @@
 {
-  "buildCommand": "npm run optimize:critical && npm run apply:chrome",
   "cleanUrls": true,
   "crons": [
     {
