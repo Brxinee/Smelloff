@@ -167,7 +167,7 @@ h1 em {
   font-size: clamp(16.5px, 2vw, 19.5px);
   line-height: 1.58;
   color: #CCCCCC;
-  border-left: 3px solid var(--color-accent, #B8FF57);
+  border-left: 2px solid var(--color-accent, #B8FF57);
   padding-left: 16px;
   margin: 18px 0 24px;
 }
@@ -340,7 +340,7 @@ blockquote {
   font-size: clamp(19px, 2.5vw, 23px);
   line-height: 1.5;
   color: #F0F0F0;
-  border-left: 3px solid var(--color-accent, #B8FF57);
+  border-left: 2px solid var(--color-accent, #B8FF57);
   padding: 12px 0 12px 20px;
   margin: 36px 0;
   background: rgba(184, 255, 87, 0.03);
@@ -861,7 +861,7 @@ blockquote {
   margin-top: 20px;
   padding: 16px;
   background: var(--bg, #080808);
-  border-left: 3px solid var(--color-accent, #B8FF57);
+  border-left: 2px solid var(--color-accent, #B8FF57);
   border-radius: 4px;
   font-weight: 600;
 }

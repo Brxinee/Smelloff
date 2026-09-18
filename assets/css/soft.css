@@ -24,38 +24,28 @@
    ===================================================================== */
 
 :root{
-  /* Squircle scale. 32px on cards is wimpdecaf's number; the rest are
-     proportional steps so nested shapes stay visually concentric. */
-  --sq-xs:8px;
-  --sq-sm:11px;    /* buttons — .6875rem */
-  --sq-md:18px;
-  --sq-lg:28px;    /* cards */
-  --sq-xl:36px;    /* large panels, gallery tiles */
-  --sq-pill:999px;
+  /* Restrained technical radius hierarchy */
+  --sq-xs:6px;
+  --sq-sm:8px;     /* buttons, controls */
+  --sq-md:14px;    /* inner cards, modules */
+  --sq-lg:16px;    /* standard cards, panels */
+  --sq-xl:20px;    /* large panels, hero containers */
+  --sq-pill:100px;
 
   /* Hairline outline replaces the old 3px hard border. */
   --hair:1px;
-  --hair-strong:2px;
+  --hair-strong:1.5px;
 }
 
 /* ---------------------------------------------------------------------
    1 · BUTTONS
-   One spec everywhere: pill-ish radius, uppercase, wide tracking, acid
-   fill, and a bounce on hover. The old hard offset shadow is removed —
-   it fought the rounded corners.
+   Controlled technical CTA: restrained radius, uppercase, clear hierarchy.
+   Primary purchase CTA has dominance; secondary actions are quiet.
+   No bounce or hard offset shadows.
    --------------------------------------------------------------------- */
-@keyframes sf-bounce{
-  0%,100%{transform:translateY(0)}
-  30%{transform:translateY(-3px)}
-  60%{transform:translateY(-1px)}
-}
-
 .btn,.nb-btn,.buy-btn,.buy-pill,.cta,a.cta,button.cta,
 .product-form__submit,.nav-cta,.nav-links a.nav-cta,
 .b-buy-btn,.end-cta .btn,.write-review-btn,
-/* The /odorstrike CTAs. They were the only square-cornered buttons left on
-   the site — the page names them .hero-cta / .fix-cta / .mb-btn rather than
-   .btn, so the list above never reached them. */
 .hero-cta,.fix-cta,.mb-btn,.final button,.price-card button,
 .cart-checkout,.email-form button,.ec-form button{
   border-radius:var(--sq-sm) !important;
@@ -65,51 +55,32 @@
   font-weight:600;
   letter-spacing:.07em;
   line-height:1.4;
-  transition:background-color .2s var(--ease),color .2s var(--ease),transform .2s var(--ease);
+  transition:background-color .15s var(--ease),color .15s var(--ease),transform .15s var(--ease);
 }
 .btn:hover,.nb-btn:hover,.buy-btn:hover,.buy-pill:hover,.cta:hover,
 .product-form__submit:hover,.nav-cta:hover,.nav-links a.nav-cta:hover,
 .hero-cta:hover,.fix-cta:hover,.mb-btn:hover,.final button:hover,
 .price-card button:hover,.cart-checkout:hover{
   box-shadow:none !important;
-  transform:none;
+  transform:translateY(-1px);
 }
 @media (prefers-reduced-motion: no-preference){
-  .btn:hover,.buy-btn:hover,.buy-pill:hover,.cta:hover,.nav-cta:hover,
-  .hero-cta:hover,.fix-cta:hover,.final button:hover,.price-card button:hover{
-    animation:sf-bounce .6s ease;
-  }
-  /* Press feedback. The bounce above is a hover affordance and hover does
-     not exist on a phone, which is where the buying happens — so until now
-     tapping any button on this site produced no acknowledgement at all
-     between the tap and whatever loaded next. A control that gives under
-     the thumb is the cheapest way to say "that registered".
-
-     Deliberately smaller than the hover bounce (.97, 140ms): this fires on
-     every tap including mis-taps, so it should read as firmness, not as an
-     event. `transform` only — it composites, so it cannot cost a frame on
-     the tap that starts a checkout. */
+  /* Subtle physical feedback on press */
   .btn:active,.nb-btn:active,.buy-btn:active,.buy-pill:active,.cta:active,
   .product-form__submit:active,.nav-cta:active,.b-buy-btn:active,
   .hero-cta:active,.fix-cta:active,.mb-btn:active,.final button:active,
   .price-card button:active,.cart-checkout:active,.write-review-btn:active,
   .cb-accept:active,.cb-reject:active,.faq-cta:active,.bc-cta:active,
   .nf-btn:active,.c-btn:active{
-    transform:scale(.97);
-    transition-duration:.14s;
+    transform:scale(.98);
+    transition-duration:.12s;
   }
-  /* A disabled control must not pretend to respond — the checkout disables
-     its submit button for the whole time the order is in flight. */
   .btn:disabled:active,.nb-btn:disabled:active,.buy-btn:disabled:active,
   .cta:disabled:active,.mb-btn:disabled:active,.cart-checkout:disabled:active,
   .c-btn:disabled:active,.nf-btn:disabled:active{
     transform:none;
   }
 }
-/* Stragglers found by sweeping every page for controls still rendering at
-   radius 0: the consent-bar buttons, the /faq footer CTAs and the blog's
-   in-article buy button. They keep their own colour and size — only the
-   corners join the rest of the site. */
 .cb-accept,.cb-reject,.faq-cta,.wa-strip,.bc-cta,.nf-btn,.c-btn{
   border-radius:var(--sq-sm) !important;
 }
@@ -117,49 +88,39 @@
   border-radius:var(--sq-md) !important;
 }
 
-/* Ghost/secondary: hairline outline instead of the old 3px slab. */
+/* Secondary / Ghost: quiet hairline outline, not a loud competing element */
 .btn-ghost,.nb-btn--ghost{
   background:transparent !important;
-  border:var(--hair-strong) solid var(--rule-strong) !important;
+  border:1px solid var(--border-strong) !important;
   color:var(--text) !important;
 }
 .btn-ghost:hover,.nb-btn--ghost:hover{
-  border-color:var(--acid) !important;
-  color:var(--acid) !important;
+  border-color:var(--border-focus) !important;
+  color:var(--text) !important;
+  background:var(--surface-2) !important;
 }
 
 /* ---------------------------------------------------------------------
    2 · CARDS / PANELS
-   Every slab on the site becomes a squircle with a hairline edge and a
-   slightly raised fill. Hover lifts instead of throwing a hard shadow.
+   Technical containers with hairline edges and subtle surface elevation.
+   Hover brings a slight border highlight and surface shift, zero hard shadows.
    --------------------------------------------------------------------- */
-/* NOTE: `.use-card` does NOT belong in this list. The /odorstrike "when to
-   use it" cells are a rule-separated grid — hairlines between the columns,
-   no box — and boxing them turned four columns of an editorial table into
-   four floating cards. Same reasoning as `.benefits-strip` and
-   `.ingredients`: when cells sit flush and share their dividers, the shape
-   belongs to the band, not the cell. (`.layer` and `.proof-card` were in
-   here too and match nothing on the site.) */
 .zone,.voice,.faq-item,.trust-row li,.product-visual,
 .b-card,.guide-card,.card,.rv-card,.review,.price-card,
 .end-cta,.read-next,.b-buy-card,.nf-card,.contact-card,.track-card{
   border-radius:var(--sq-lg) !important;
-  border:var(--hair) solid var(--rule) !important;
+  border:var(--hair) solid var(--border-default) !important;
   box-shadow:none !important;
   background:var(--surface);
   overflow:hidden;
   transition:border-color .2s var(--ease),background-color .2s var(--ease),transform .2s var(--ease);
 }
-/* …except cards that deliberately hang a badge over their own top edge.
-   `overflow:hidden` above was clipping the "ONE SKU. NO BUNDLES." ribbon on
-   the /odorstrike price card in half. Clipping is only there to keep media
-   inside the curve, and these cards hold no media. */
 .price-card,.b-buy-card{overflow:visible !important}
 @media(hover:hover){
   .zone:hover,.voice:hover,.faq-item:hover,.b-card:hover,.guide-card:hover,
   .card:hover,.rv-card:hover,.product-visual:hover{
-    transform:translateY(-3px) !important;
-    border-color:var(--rule-strong) !important;
+    transform:translateY(-1px) !important;
+    border-color:var(--border-strong) !important;
     box-shadow:none !important;
     background:var(--surface-2);
   }
@@ -442,4 +403,4 @@ footer:has(> a) > a{
 }
 .hero-hook{padding:8px 16px}
 img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-lg)}
-.pull-quote{border-radius:var(--sq-md);padding:20px 24px;border-left:3px solid var(--acid)}
+.pull-quote{border-radius:var(--sq-md);padding:20px 24px;border-left:2px solid var(--acid)}

@@ -243,38 +243,73 @@
     --surface-2:#141414;
     --text:#F4F1EA;
     --muted:#9A958D;
+    --text-2:#C9C5BD;
     --acid:#B8FF57;
     --acid-hi:#D1FF8A;
+    --acid-dim:rgba(184,255,87,.12);
+    --acid-rgb:184,255,87;
     --on-acid:#080808;
-    --rule:rgba(244,241,234,.14);
-    --rule-strong:rgba(244,241,234,.28);
+
+    /* ---- Technical Borders & Dividers ---- */
+    --border-subtle:rgba(244,241,234,.08);
+    --border-default:rgba(244,241,234,.14);
+    --border-strong:rgba(244,241,234,.22);
+    --border-focus:rgba(184,255,87,.45);
+
+    /* Semantic aliases */
+    --rule:var(--border-default);
+    --rule-soft:var(--border-subtle);
+    --rule-strong:var(--border-strong);
+    --overlay:rgba(0,0,0,.75);
+
     /* ---- Type families ---- */
     --display:'Fraunces','Fraunces Fallback',serif;
     --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
     --body:'Inter Tight','Inter Tight Fallback',sans-serif;
-    /* ---- Type scale ---- */
-    --lh-display:.86;
+
+    /* ---- Type scale & rhythm ---- */
+    --lh-display:1.02;
     --lh-body:1.55;
-    --ls-display:-.028em;
-    --fs-h1:clamp(58px,11vw,120px);
-    --fs-h2:clamp(40px,7.6vw,84px);
-    --fs-h3:clamp(27px,3.6vw,42px);
-    --fs-h4:clamp(21px,2.2vw,27px);
-    --fs-lead:clamp(18px,1.5vw,22px);
-    --fs-body:17px;
-    --fs-sm:15px;
-    --fs-eyebrow:13px;
-    --ls-eyebrow:.2em;
+    --ls-display:-.02em;
+
+    --fs-h1:clamp(42px,7vw,84px);
+    --fs-h2:clamp(32px,5.2vw,56px);
+    --fs-h3:clamp(22px,3vw,34px);
+    --fs-h4:clamp(18px,1.8vw,22px);
+    --fs-lead:clamp(16px,1.3vw,19px);
+    --fs-body:16px;
+    --fs-sm:14px;
+    --fs-eyebrow:11.5px;
+    --ls-eyebrow:.1em;
+    --ls-mono:.06em;
+
     /* ---- Rhythm ---- */
     --maxw:1160px;
     --gutter:20px;
-    --section-y:clamp(56px,8vw,112px);
-    /* ---- Form ---- */
-    --bw:3px;
-    --bw-thin:2px;
-    --r:0px;
+    --section-y:clamp(48px,6.5vw,96px);
+
+    /* ---- Restrained Form & Radius System ---- */
+    --bw:1px;
+    --bw-thin:1px;
+    --hair:1px;
+    --hair-strong:1.5px;
+    --r-sm:8px;
+    --r-md:14px;
+    --r-lg:18px;
+    --r-xl:24px;
     --r-pill:100px;
-    --shadow-offset:6px;
+    --r:var(--r-md);
+
+    /* Legacy squircle aliases */
+    --sq-xs:6px;
+    --sq-sm:8px;
+    --sq-md:14px;
+    --sq-lg:16px;
+    --sq-xl:20px;
+    --sq-pill:100px;
+
+    --shadow-offset:0px;
+
     /* ---- Motion ---- */
     --ease:cubic-bezier(.19,1,.22,1);
     --ease-snap:cubic-bezier(.2,.6,.2,1);
@@ -432,8 +467,8 @@
   }
   .hero-demo-card{
     background:var(--surface);
-    border:1.5px solid var(--rule-strong);
-    box-shadow:4px 4px 0 var(--rule);
+    border:1px solid var(--border-default);
+    border-radius:var(--r-sm);
     padding:10px 12px;
   }
   .hero-demo-tagline{
@@ -507,23 +542,25 @@
     display:inline-flex;align-items:center;justify-content:center;gap:10px;
     background:var(--acid);color:var(--ink);text-decoration:none;
     font-family:var(--mono);font-weight:700;
-    font-size:16px;letter-spacing:.1em;text-transform:uppercase;
-    padding:16px 28px;min-height:52px;
-    border:3px solid var(--ink);
-    box-shadow:6px 6px 0 var(--text);
+    font-size:15px;letter-spacing:.06em;text-transform:uppercase;
+    padding:15px 28px;min-height:50px;
+    border:0;
+    border-radius:var(--r-sm);
     cursor:pointer;
-    transition:background .15s ease,transform .15s ease,box-shadow .15s ease;
+    transition:background .15s ease,transform .15s ease;
   }
-  .btn:hover{background:#d1ff8a;box-shadow:3px 3px 0 var(--text);transform:translate(3px,3px)}
-  .btn:active{box-shadow:0 0 0 var(--text);transform:translate(6px,6px)}
+  .btn:hover{background:#d1ff8a;transform:translateY(-1px)}
+  .btn:active{transform:scale(.98)}
   .btn:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
 
   .btn-ghost{
     background:transparent;color:var(--text);
-    border:2px solid var(--text);box-shadow:6px 6px 0 var(--rule);
-    font-weight:400;font-size:14px;padding:16px 22px;
+    border:1px solid var(--border-strong);
+    border-radius:var(--r-sm);
+    font-weight:500;font-size:14px;padding:15px 22px;
+    transition:background .15s ease,border-color .15s ease;
   }
-  .btn-ghost:hover{background:transparent;color:var(--acid);border-color:var(--acid);box-shadow:3px 3px 0 var(--rule)}
+  .btn-ghost:hover{background:var(--surface-2);color:var(--text);border-color:var(--border-focus)}
   .btn-ghost:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
 
   /* Usage Microcopy & Trust mini */
@@ -590,11 +627,12 @@
     display:grid;grid-template-columns:1fr;gap:16px;
   }
   .zone{
-    border:3px solid var(--text);
-    box-shadow:6px 6px 0 var(--acid);
+    border:1px solid var(--border-default);
+    border-radius:var(--r-md);
     padding:18px 16px;
     display:flex;align-items:flex-start;gap:16px;
-    background:var(--ink);
+    background:var(--surface);
+    transition:border-color .18s ease,background-color .18s ease,transform .18s ease;
   }
   /* Sizing lives on `.zone svg`; stroke styling on .z-ico */
   .zone svg{flex:none;width:56px;height:56px}
@@ -738,14 +776,14 @@
   .rm-scrub::-moz-range-track{height:4px;border-radius:2px;background:rgba(244,241,234,.28)}
   .rm-scrub::-webkit-slider-thumb{
     -webkit-appearance:none;appearance:none;
-    width:26px;height:26px;margin-top:-11px;border-radius:50%;
-    background:var(--acid);border:3px solid var(--ink);
+    width:24px;height:24px;margin-top:-10px;border-radius:50%;
+    background:var(--acid);border:2px solid var(--ink);
     box-shadow:0 0 0 1px var(--acid);
     transition:transform .15s ease;
   }
   .rm-scrub::-moz-range-thumb{
-    width:26px;height:26px;border-radius:50%;
-    background:var(--acid);border:3px solid var(--ink);
+    width:24px;height:24px;border-radius:50%;
+    background:var(--acid);border:2px solid var(--ink);
   }
   .rm-scrub:hover::-webkit-slider-thumb{transform:scale(1.14)}
   .rm-scrub:focus-visible{outline:none}
@@ -780,16 +818,17 @@
   }
 
   /* ============ Featured product ============ */
-  .product{border-top:2px solid var(--rule);padding:clamp(56px,7vw,80px) 0 0}
+  .product{border-top:1px solid var(--border-default);padding:clamp(56px,7vw,80px) 0 0}
   .product-grid{display:grid;grid-template-columns:1fr;gap:36px;align-items:center}
   .product-visual{
-    border:3px solid var(--text);
-    box-shadow:8px 8px 0 var(--acid);
-    background:#0e0e0e;
+    border:1px solid var(--border-default);
+    border-radius:var(--r-lg);
+    background:var(--surface);
     padding:clamp(16px,4vw,28px);
     max-width:480px;
     margin:0 auto;
     width:100%;
+    transition:border-color .18s ease,transform .18s ease;
   }
   .product-visual img{display:block;width:100%;height:auto}
   .product-info{display:flex;flex-direction:column}
@@ -887,27 +926,27 @@
     .prod-specs{grid-template-columns:repeat(2,1fr);gap:10px}
   }
 
-  /* Hinglish band */
+  /* Hinglish band — dark technical editorial treatment */
   .band{
     margin-top:64px;
-    background:var(--acid);
-    border-top:3px solid var(--ink);
-    border-bottom:3px solid var(--ink);
+    background:var(--surface);
+    border-top:1px solid var(--border-subtle);
+    border-bottom:1px solid var(--border-subtle);
     padding:26px 0;
     overflow:hidden;
   }
   .band p{
     font-family:var(--display);font-weight:900;
-    font-size:clamp(30px,6.5vw,60px);
-    line-height:1.04;
-    color:var(--ink);
+    font-size:clamp(26px,5.5vw,48px);
+    line-height:1.1;
+    color:var(--text);
     text-align:center;
     letter-spacing:-.01em;
   }
 
   /* ============ Brand proof / How it works ============ */
   .proof{
-    border-top:2px solid var(--rule);
+    border-top:1px solid var(--border-default);
     scroll-margin-top:calc(70px + env(safe-area-inset-top,0px));
   }
   .science-grid{
@@ -919,8 +958,9 @@
     padding:0;
   }
   .science-card{
-    border:1px solid var(--rule);
-    background:rgba(244,241,234,.02);
+    border:1px solid var(--border-default);
+    border-radius:var(--r-md);
+    background:var(--surface);
     padding:24px 20px;
     display:flex;
     flex-direction:column;
@@ -1048,11 +1088,13 @@
     list-style:none;
   }
   .trust-row li{
-    border:2px solid var(--text);
+    border:1px solid var(--border-default);
+    border-radius:var(--r-md);
+    background:var(--surface);
     padding:18px 14px;
     display:flex;align-items:center;gap:12px;
-    font-family:var(--mono);font-weight:400;
-    font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    font-family:var(--mono);font-weight:500;
+    font-size:12px;letter-spacing:.08em;text-transform:uppercase;
   }
   .trust-row svg{flex:0 0 28px;width:28px;height:28px}
   .trust-row .mask-ico{flex:0 0 28px;width:28px;height:28px}
@@ -1067,14 +1109,15 @@
      pan-India, COD, Hyderabad) are the objection-killers, and they were
      doing no work eight screens down. */
   .benefits-strip{
-    border-top:var(--bw-thin) solid var(--rule);
-    border-bottom:var(--bw-thin) solid var(--rule);
+    border-top:1px solid var(--border-default);
+    border-bottom:1px solid var(--border-default);
     background:var(--surface);
     padding:0;
   }
   .benefits-strip .trust-row{margin:0;border:0;gap:0}
   .benefits-strip .trust-row li{
     border:0;
+    border-radius:0;
     border-right:1px solid var(--rule);
     padding:20px 16px;
     justify-content:center;
@@ -1089,18 +1132,19 @@
      Names why the alternatives fail before pitching the fix. Four blunt
      answers in acid, each with the reason underneath. */
   /* ============ Voices (social proof) ============ */
-  .voices{border-top:var(--bw-thin) solid var(--rule)}
+  .voices{border-top:1px solid var(--border-default)}
   .voice-grid{
     margin-top:40px;
     display:grid;grid-template-columns:1fr;gap:20px;
     list-style:none;
   }
   .voice{
-    border:var(--bw-thin) solid var(--text);
-    box-shadow:5px 5px 0 var(--acid);
+    border:1px solid var(--border-default);
+    border-radius:var(--r-md);
     background:var(--surface);
     padding:24px;
     display:flex;flex-direction:column;gap:12px;
+    transition:border-color .18s ease,background-color .18s ease,transform .18s ease;
   }
   .voice-head{
     display:flex;
@@ -1207,13 +1251,14 @@
   }
 
   /* ============ FAQ ============ */
-  .faq{border-top:2px solid var(--rule)}
+  .faq{border-top:1px solid var(--border-default)}
   .faq-list{max-width:760px}
   .faq-item{
-    border:2px solid var(--text);
-    box-shadow:5px 5px 0 var(--acid);
-    padding:22px;
-    margin-bottom:22px;
+    border:1px solid var(--border-default);
+    border-radius:var(--r-md);
+    background:var(--surface);
+    margin-bottom:12px;
+    transition:border-color .18s ease,background-color .18s ease;
   }
   .faq-item h3{
     font-family:var(--display);font-weight:900;
@@ -1236,7 +1281,7 @@
   #smelloff-consent-bar{
     display:none;
     position:fixed;left:0;right:0;bottom:0;z-index:120;
-    background:#111;border-top:2px solid var(--acid);
+    background:#111;border-top:1px solid var(--border-default);
     padding:14px 20px;
   }
   #smelloff-consent-bar .cb-inner{
@@ -1255,30 +1300,31 @@
   #smelloff-consent-bar button{
     font-family:var(--body);font-size:13.5px;font-weight:700;
     padding:11px 16px;min-height:44px;cursor:pointer;
+    border-radius:var(--r-sm);
   }
-  #smelloff-consent-bar .cb-accept{background:var(--acid);color:var(--ink);border:2px solid var(--acid)}
-  #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:2px solid var(--rule)}
+  #smelloff-consent-bar .cb-accept{background:var(--acid);color:var(--ink);border:0}
+  #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
 
   /* ===================================================================== */
-  /* MOTION + BOLDER COLOR PASS                                            */
+  /* MOTION + EDITORIAL PASS                                               */
   /* All motion is opt-in via prefers-reduced-motion: no-preference and    */
   /* uses transform/opacity only, so it never shifts layout (CLS stays 0). */
   /* ===================================================================== */
 
-  /* Acid-green scrolling ticker strip (sits under the hero) */
+  /* Technical editorial ticker strip (sits under the hero) */
   .ticker{
-    background:var(--acid);color:var(--ink);
-    border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);
+    background:var(--surface);color:var(--text);
+    border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);
     overflow:hidden;white-space:nowrap;
   }
   .ticker-track{
     display:inline-block;
-    font-family:var(--display);font-weight:900;
-    font-size:clamp(20px,3vw,30px);letter-spacing:-.01em;
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(16px,2.2vw,22px);letter-spacing:-.01em;
     padding:12px 0;
   }
-  .ticker-track span{padding:0 26px}
-  .ticker-track .dot{color:var(--ink);opacity:.5}
+  .ticker-track span{padding:0 24px}
+  .ticker-track .dot{color:var(--acid);opacity:.8}
 
   /* Hinglish band as a moving marquee (static, centred fallback below) */
   .band-marquee{display:none}
@@ -1300,8 +1346,8 @@
     .bm-track{
       display:inline-block;
       font-family:var(--display);font-weight:900;
-      font-size:clamp(30px,6.5vw,60px);line-height:1.04;letter-spacing:-.01em;
-      color:var(--ink);
+      font-size:clamp(26px,5.5vw,48px);line-height:1.1;letter-spacing:-.01em;
+      color:var(--text);
       animation:ticker 30s linear infinite;will-change:transform;
     }
     .bm-track span{padding:0 32px}
@@ -1315,17 +1361,14 @@
     .js .reveal.in{transform:none}
   }
 
-  /* Punchy hovers (pointer devices only; the reduce-motion block below
-     kills the transitions for users who ask for less motion) */
-  .zone,.faq-item,.trust-row li,.product-visual,.voice{transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease}
+  /* Controlled technical hovers (pointer devices only) */
+  .zone,.faq-item,.trust-row li,.product-visual,.voice{transition:transform .18s ease,border-color .18s ease,background-color .18s ease}
   @media(hover:hover){
-    .zone:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--acid)}
-    .faq-item:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--acid)}
-    .product-visual:hover{transform:translate(-3px,-3px);box-shadow:12px 12px 0 var(--acid)}
-    .voice:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--acid)}
-    /* The strip is a flush band, so its cells tint instead of lifting —
-       a translate would break the shared hairlines between them. */
-    .benefits-strip .trust-row li:hover{background:var(--surface-2);color:var(--acid)}
+    .zone:hover{transform:translateY(-1px);border-color:var(--border-strong);background:var(--surface-2)}
+    .faq-item:hover{border-color:var(--border-strong);background:var(--surface-2)}
+    .product-visual:hover{transform:translateY(-1px);border-color:var(--border-strong)}
+    .voice:hover{transform:translateY(-1px);border-color:var(--border-strong);background:var(--surface-2)}
+    .benefits-strip .trust-row li:hover{background:var(--surface-2);color:var(--text)}
   }
 
   /* Sticky mobile buy bar — homepage only. Hidden until the hero CTA

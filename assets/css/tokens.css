@@ -28,9 +28,17 @@
   --acid-dim:rgba(184,255,87,.12);
   --acid-rgb:184,255,87;
   --on-acid:#080808;          /* text ON acid is always ink, never white */
-  --rule:rgba(244,241,234,.14);
-  --rule-soft:rgba(244,241,234,.08);
-  --rule-strong:rgba(244,241,234,.28);
+
+  /* ---- Technical Borders & Dividers ---------------------------------- */
+  --border-subtle:rgba(244,241,234,.08);
+  --border-default:rgba(244,241,234,.14);
+  --border-strong:rgba(244,241,234,.22);
+  --border-focus:rgba(184,255,87,.45);
+
+  /* Semantic aliases */
+  --rule:var(--border-default);
+  --rule-soft:var(--border-subtle);
+  --rule-strong:var(--border-strong);
   --overlay:rgba(0,0,0,.75);
 
   /* ---- Type families ------------------------------------------------ */
@@ -38,45 +46,50 @@
   --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
   --body:'Inter Tight','Inter Tight Fallback',sans-serif;
 
-  /* ---- Type scale ---------------------------------------------------
-     Display line-height is deliberately sub-1 so multi-line headlines
-     stack tight and read as a single mass. Tracking tightens as size
-     grows, which is what keeps large Fraunces from looking loose. */
-  --lh-display:.86;
+  /* ---- Type scale & rhythm -------------------------------------------
+     Display line-height is tuned so multi-line headlines breathe naturally
+     without excessive vertical sprawling. Tracking is restrained and confident. */
+  --lh-display:1.02;
   --lh-body:1.55;
-  --ls-display:-.028em;
+  --ls-display:-.02em;
 
-  /* --fs-h1 is consumed by exactly one rule: `.hero h1` on index.html. It was
-     clamp(58px,14vw,164px), tuned for the 20-character "Smell Proof. Always.".
-     The headline is now "Don't let them notice your sweat." — 33 characters —
-     and at 164px that wrapped to five lines, making the H1 705px tall instead
-     of 423px and pushing the price and Buy Now button 285px BELOW the fold on
-     a 1280×900 desktop. The old headline had them at the fold (+3px).
-     At 120px it wraps to three lines, 310px tall, and the CTA sits 111px ABOVE
-     the fold — better than before the copy change. The 58px floor is unchanged,
-     so phones render identically to the approved design (3 lines, 150px).
-     Re-measure the fold if this headline changes length again; don't eyeball it. */
-  --fs-h1:clamp(58px,11vw,120px);
-  --fs-h2:clamp(40px,7.6vw,84px);
-  --fs-h3:clamp(27px,3.6vw,42px);
-  --fs-h4:clamp(21px,2.2vw,27px);
-  --fs-lead:clamp(18px,1.5vw,22px);
-  --fs-body:17px;
-  --fs-sm:15px;
-  --fs-eyebrow:13px;
-  --ls-eyebrow:.2em;
+  --fs-h1:clamp(42px,7vw,84px);
+  --fs-h2:clamp(32px,5.2vw,56px);
+  --fs-h3:clamp(22px,3vw,34px);
+  --fs-h4:clamp(18px,1.8vw,22px);
+  --fs-lead:clamp(16px,1.3vw,19px);
+  --fs-body:16px;
+  --fs-sm:14px;
+  --fs-eyebrow:11.5px;
+  --ls-eyebrow:.1em;
+  --ls-mono:.06em;
 
   /* ---- Rhythm ------------------------------------------------------- */
   --maxw:1160px;
   --gutter:20px;
-  --section-y:clamp(56px,8vw,112px);
+  --section-y:clamp(48px,6.5vw,96px);
 
-  /* ---- Form --------------------------------------------------------- */
-  --bw:3px;                   /* hard border weight — the brutalist edge */
-  --bw-thin:2px;
-  --r:0px;                    /* square by default; the brand is sharp */
+  /* ---- Restrained Form & Radius System ------------------------------- */
+  --bw:1px;                   /* technical hairline border */
+  --bw-thin:1px;
+  --hair:1px;
+  --hair-strong:1.5px;
+  --r-sm:8px;                 /* small controls, inputs, tags */
+  --r-md:14px;                /* standard cards, panels */
+  --r-lg:18px;                /* major media, feature panels */
+  --r-xl:24px;
   --r-pill:100px;
-  --shadow-offset:6px;        /* hard offset shadow, never a blur */
+  --r:var(--r-md);            /* default component radius */
+
+  /* Legacy squircle aliases for full backwards compatibility */
+  --sq-xs:6px;
+  --sq-sm:8px;
+  --sq-md:14px;
+  --sq-lg:16px;
+  --sq-xl:20px;
+  --sq-pill:100px;
+
+  --shadow-offset:0px;        /* no hard offset shadows */
 
   /* ---- Motion ------------------------------------------------------- */
   --ease:cubic-bezier(.19,1,.22,1);
