@@ -1,7 +1,6 @@
 {
   "buildCommand": "",
   "cleanUrls": true,
-  "trailingSlash": false,
   "crons": [
     {
       "path": "/api/meta-capi-drain",

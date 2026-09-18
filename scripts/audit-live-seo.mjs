@@ -178,9 +178,11 @@ export async function traceLiveUrl(url, maxHops = 10) {
   return { finalUrl: currentUrl, hops, isLoop: true, hopCount: hops.length, status: 0 };
 }
 
-async function runAudit() {
+async function runAudit(options = {}) {
+  const shouldExit = options.shouldExit ?? true;
+  const isLiveMode = options.isLive ?? IS_LIVE;
   console.log('='.repeat(80));
-  console.log(` SMELLOFF ARCHITECTURE AUDIT [Mode: ${IS_LIVE ? 'LIVE HTTP PROBE' : 'LOCAL SIMULATION'}]`);
+  console.log(` SMELLOFF ARCHITECTURE AUDIT [Mode: ${isLiveMode ? 'LIVE HTTP PROBE' : 'LOCAL SIMULATION'}]`);
   console.log('='.repeat(80));
 
   const stats = {
@@ -204,7 +206,7 @@ async function runAudit() {
   console.log(`\n1. Auditing ${sitemapUrls.length} Canonical URLs...`);
   for (const url of sitemapUrls) {
     stats.total++;
-    if (IS_LIVE) {
+    if (isLiveMode) {
       const res = await traceLiveUrl(url);
       if (res.status === 200 && res.hopCount === 0) {
         stats.canonical200++;
@@ -282,7 +284,7 @@ async function runAudit() {
   console.log(`\n2. Auditing ${testVariations.length} Non-Canonical & Legacy URL Variations...`);
   for (const url of testVariations) {
     stats.total++;
-    if (IS_LIVE) {
+    if (isLiveMode) {
       const res = await traceLiveUrl(url);
       if (res.isLoop) {
         stats.loops++;
@@ -331,7 +333,7 @@ async function runAudit() {
   // 4. Audit ODORSTRIKE PDP Claims & Schema Invariants
   console.log('\n4. Auditing ODORSTRIKE PDP Invariants...');
   let pdpHtml = '';
-  if (IS_LIVE) {
+  if (isLiveMode) {
     const livePdp = await traceLiveUrl('https://smelloff.in/odorstrike');
     pdpHtml = livePdp.body || '';
   } else {
@@ -441,16 +443,23 @@ async function runAudit() {
     stats.status5xx > 0 || 
     stats.canonicalMismatches > 0 || 
     stats.hreflangMismatches > 0 || 
-    stats.sitemapMismatches > 0;
+    stats.sitemapMismatches > 0 ||
+    (!IS_LIVE && stats.multiHop > 0);
 
   if (hasCriticalFailures) {
     console.error('\n[FAIL] Audit encountered critical errors.');
-    process.exit(1);
+    if (shouldExit) process.exit(1);
+    return { success: false, stats };
   }
   console.log('\n[PASS] Audit completed successfully with zero critical errors.');
+  return { success: true, stats };
 }
 
-runAudit().catch(err => {
-  console.error('Fatal audit error:', err);
-  process.exit(1);
-});
+export { runAudit };
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  runAudit().catch(err => {
+    console.error('Fatal audit error:', err);
+    process.exit(1);
+  });
+}

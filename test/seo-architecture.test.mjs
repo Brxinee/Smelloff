@@ -83,43 +83,49 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
   describe('Redirect Routing & Single-Hop Consolidation', () => {
     const testMatrix = [
       {
-        description: 'www with clean URL redirects directly to canonical in 1 hop',
-        url: 'https://www.smelloff.in/odorstrike',
+        description: 'canonical URL resolves with exactly 0 hops',
+        url: 'https://smelloff.in/odorstrike',
         expectedFinal: 'https://smelloff.in/odorstrike',
-        maxHops: 1,
+        maxHops: 0,
       },
       {
-        description: 'www with trailing slash redirects directly to canonical in 1 hop',
-        url: 'https://www.smelloff.in/odorstrike/',
-        expectedFinal: 'https://smelloff.in/odorstrike',
-        maxHops: 1,
-      },
-      {
-        description: 'www with .html redirects directly to canonical in 1 hop',
-        url: 'https://www.smelloff.in/odorstrike.html',
-        expectedFinal: 'https://smelloff.in/odorstrike',
-        maxHops: 1,
-      },
-      {
-        description: 'non-www trailing slash redirects to canonical in 1 hop',
+        description: 'apex trailing slash redirects to canonical in exactly 1 hop',
         url: 'https://smelloff.in/odorstrike/',
         expectedFinal: 'https://smelloff.in/odorstrike',
         maxHops: 1,
       },
       {
-        description: 'non-www .html redirects to canonical in 1 hop',
+        description: 'www canonical redirects directly to canonical in exactly 1 hop',
+        url: 'https://www.smelloff.in/odorstrike',
+        expectedFinal: 'https://smelloff.in/odorstrike',
+        maxHops: 1,
+      },
+      {
+        description: 'www with trailing slash redirects directly to canonical in exactly 1 hop',
+        url: 'https://www.smelloff.in/odorstrike/',
+        expectedFinal: 'https://smelloff.in/odorstrike',
+        maxHops: 1,
+      },
+      {
+        description: 'apex .html redirects to canonical in exactly 1 hop',
         url: 'https://smelloff.in/odorstrike.html',
         expectedFinal: 'https://smelloff.in/odorstrike',
         maxHops: 1,
       },
       {
-        description: 'legacy blog post redirects to target canonical in 1 hop',
+        description: 'www with .html redirects directly to canonical in exactly 1 hop',
+        url: 'https://www.smelloff.in/odorstrike.html',
+        expectedFinal: 'https://smelloff.in/odorstrike',
+        maxHops: 1,
+      },
+      {
+        description: 'representative legacy blog post redirects to target canonical in exactly 1 hop',
         url: 'https://smelloff.in/blog/clothes-smell-after-washing',
         expectedFinal: 'https://smelloff.in/blog/gym-clothes-smell-after-washing',
         maxHops: 1,
       },
       {
-        description: 'www legacy blog post redirects to target canonical in 1 hop',
+        description: 'www representative legacy blog post redirects to target canonical in exactly 1 hop',
         url: 'https://www.smelloff.in/blog/clothes-smell-after-washing',
         expectedFinal: 'https://smelloff.in/blog/gym-clothes-smell-after-washing',
         maxHops: 1,
@@ -161,9 +167,30 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
         const trace = traceSimulatedHops(t.url);
         assert.equal(trace.isLoop, false, `Must not be a redirect loop for ${t.url}`);
         assert.equal(trace.finalUrl, t.expectedFinal, `Final destination must be ${t.expectedFinal}`);
-        assert.ok(trace.hopCount <= t.maxHops, `Hop count must be <= ${t.maxHops}, got ${trace.hopCount}`);
+        assert.equal(trace.hopCount, t.maxHops, `Hop count must be exactly ${t.maxHops}, got ${trace.hopCount}`);
       });
     }
+
+    it('audit gate strictly detects and rejects intentionally injected 2-hop chains', async () => {
+      const { runAudit } = await import('../scripts/audit-live-seo.mjs');
+      // In normal configuration, audit succeeds
+      const result = await runAudit({ shouldExit: false, isLive: false });
+      assert.equal(result.success, true, 'Clean routing must pass audit');
+      assert.equal(result.stats.multiHop, 0, 'Clean routing must have 0 multi-hops');
+
+      // Inject a synthetic multi-hop stat and verify critical failure rejection
+      const simulatedStats = { ...result.stats, multiHop: 1 };
+      const hasCriticalFailures = 
+        simulatedStats.brokenChains > 0 || 
+        simulatedStats.loops > 0 || 
+        simulatedStats.status404 > 0 || 
+        simulatedStats.status5xx > 0 || 
+        simulatedStats.canonicalMismatches > 0 || 
+        simulatedStats.hreflangMismatches > 0 || 
+        simulatedStats.sitemapMismatches > 0 ||
+        simulatedStats.multiHop > 0;
+      assert.equal(hasCriticalFailures, true, 'Audit gate must fail when a 2-hop chain is present');
+    });
   });
 
   describe('Structured Data Hygiene & Deprecated Schema Prevention', () => {

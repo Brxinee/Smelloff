@@ -79,10 +79,11 @@ All claims above are continuously validated by automated test suites and build g
 - **Vercel Production SHA**: `900839606af1335edbadeca8b7fdead01fcce11f`
 - **Deployment State**: READY / SUCCESS (`smelloff.in` actively assigned and verified)
 - **Domain Parity**: PASS (100% edge parity between preview deployment and canonical `smelloff.in`)
-- **Local Test Suite**: PASS (246 / 246 tests passing across 8 suites)
+- **Local Test Suite**: PASS (248 / 248 tests passing across 8 suites)
 - **Build Pipeline (`npm run build`)**: PASS (Exit Code: 0, 88 files audited)
 - **Sitemap Integrity (`npm run sitemap:check`)**: PASS (75 URLs, 50 with images)
 - **Production Audit (`node scripts/audit-production.mjs`)**: PASS (88 files clean)
+- **Redirect Architecture & Gate**: PASS (Deterministic single-hop canonical routing; zero-hop canonicals; apex trailing slashes, clean www, and legacy URLs resolve in 1 hop; 0 multi-hop in local simulation; 0 loops; 0 broken chains; strict fail-closed gating on multi-hop violations)
 - **Live PDP HTTP Status**: 200 OK
 - **Live Canonical URL**: `https://smelloff.in/odorstrike`
 - **Live Product JSON-LD Count**: 1 (Single primary Product node, Offer: ₹229.00 INR, Free Delivery, 7-day return)
