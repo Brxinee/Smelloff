@@ -8,7 +8,7 @@ const OUT = path.join(ROOT, 'assets', 'optimized');
 const jobs = [
   { name:'logo-smelloff-white', src:'assets/brand/logo-smelloff-white.png', variants:[{width:160,format:'webp',quality:82},{width:240,format:'webp',quality:82}] },
   { name:'odorstrike-bottle-cutout', src:'assets/odorstrike-bottle-cutout.webp', variants:[{width:160,format:'webp',quality:82},{width:240,format:'webp',quality:82}] },
-  { name:'odorstrike-bottle', src:'assets/odorstrike-bottle.jpg', variants:[{width:240,format:'webp',quality:82},{width:360,format:'webp',quality:82},{width:240,format:'avif',quality:58},{width:360,format:'avif',quality:58}] },
+  { name:'odorstrike-bottle', src:'assets/odorstrike-bottle.webp', variants:[{width:720,format:'webp',quality:90},{width:1080,format:'webp',quality:90},{width:720,format:'avif',quality:72},{width:1080,format:'avif',quality:72}] },
 ];
 async function run(){
   fs.mkdirSync(OUT,{recursive:true});
