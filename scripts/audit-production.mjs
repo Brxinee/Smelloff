@@ -149,6 +149,16 @@ if (fs.existsSync(odorPath)) {
   if (odorHtml.includes('pData.aggregateRating') || odorHtml.includes('productScript.textContent = JSON.stringify')) {
     fail('odorstrike.html must not dynamically mutate Product JSON-LD schema at runtime');
   }
+
+  // PDP Claim Guardrails
+  if (/anti-regrowth/i.test(odorHtml)) fail('odorstrike.html contains prohibited "anti-regrowth" claim');
+  if (/\bzero\s+residue\b/i.test(odorHtml)) fail('odorstrike.html contains prohibited unhedged "zero residue" claim');
+  if (/\bno\s+white\s+marks\b/i.test(odorHtml)) fail('odorstrike.html contains prohibited unhedged "no white marks" claim');
+  if (/clears\s+airport\s+security\s+and\s+handles\s+a\s+week/i.test(odorHtml)) fail('odorstrike.html contains exaggerated travel security/duration claim');
+  if (/₹\s*2\.29\b/i.test(odorHtml)) fail('odorstrike.html contains unsupported ₹2.29 per refresh claim');
+  if (/<script[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?"@type":\s*"FAQPage"[\s\S]*?<\/script>/i.test(odorHtml)) {
+    fail('odorstrike.html must not contain FAQPage JSON-LD schema');
+  }
 }
 
 // Review system integrity checks

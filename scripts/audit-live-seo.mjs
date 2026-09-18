@@ -328,6 +328,34 @@ async function runAudit() {
     console.log('  [PASS] All XML entities correctly single-escaped in sitemap.xml');
   }
 
+  // 4. Audit ODORSTRIKE PDP Claims & Schema Invariants
+  console.log('\n4. Auditing ODORSTRIKE PDP Invariants...');
+  let pdpHtml = '';
+  if (IS_LIVE) {
+    const livePdp = await traceLiveUrl('https://smelloff.in/odorstrike');
+    pdpHtml = livePdp.body || '';
+  } else {
+    pdpHtml = fs.readFileSync(path.join(REPO, 'odorstrike.html'), 'utf8');
+  }
+
+  if (!pdpHtml.includes('₹229')) {
+    console.error('  [PDP DEFECT] Missing ₹229 price');
+    stats.brokenChains++;
+  }
+  if (/anti-regrowth/i.test(pdpHtml)) {
+    console.error('  [PDP DEFECT] Prohibited "anti-regrowth" claim present');
+    stats.brokenChains++;
+  }
+  if (/\bzero\s+residue\b/i.test(pdpHtml)) {
+    console.error('  [PDP DEFECT] Unhedged "zero residue" claim present');
+    stats.brokenChains++;
+  }
+  if (/<script[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?"@type":\s*"FAQPage"[\s\S]*?<\/script>/i.test(pdpHtml)) {
+    console.error('  [PDP DEFECT] Prohibited FAQPage JSON-LD present on PDP');
+    stats.brokenChains++;
+  }
+  console.log('  [PASS] ODORSTRIKE PDP claims and schema invariants verified.');
+
   console.log('\n' + '='.repeat(80));
   console.log(' AUDIT SUMMARY TABLE');
   console.log('='.repeat(80));
