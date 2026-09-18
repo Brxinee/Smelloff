@@ -291,7 +291,6 @@
      Pincode + QR APIs are on-demand (checkout) → dns-prefetch only.
      Analytics/Meta origins are intentionally NOT hinted — they are
      consent-gated and must not be contacted before the user opts in. -->
-<link rel="preconnect" href="https://tnuqjydmoxczdjnsgpci.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="https://api.postalpincode.in">
 <link rel="dns-prefetch" href="https://api.qrserver.com">
 
@@ -1908,7 +1907,7 @@
     .overlay-panel{
       padding:24px 18px 20px;
     }
-    .overlay h3{
+    .overlay h2{
       font-size:28px;
     }
     .overlay .row-3{
@@ -2063,29 +2062,81 @@
   }
   .delivery-estimate.show{display:flex}
   .delivery-estimate svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;flex-shrink:0}
+  .overlay .checkout-payment{
+    margin:18px 0 20px;
+    padding:0;
+    border:0;
+    min-width:0;
+  }
+  .overlay .checkout-payment legend{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--muted);
+    padding:0;
+    margin-bottom:8px;
+  }
   .overlay .pay-toggle{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
-    margin-top:16px;
-    margin-bottom:8px;
   }
   .overlay .pay-opt{
-    padding:16px 12px;
+    min-height:72px;
+    padding:12px 13px;
     border:1px solid var(--rule);
+    border-radius:var(--sq-md,14px);
     cursor:pointer;
-    text-align:center;
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    transition:all .2s;
+    text-align:left;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    font-family:var(--body);
     color:var(--muted);
+    background:var(--surface);
+    transition:background-color .15s,border-color .15s,transform .12s;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
   }
+  .overlay .pay-opt:hover{border-color:var(--rule-strong)}
+  .overlay .pay-opt:active{transform:scale(.985)}
   .overlay .pay-opt.active{
     border-color:var(--acid);
     background:var(--acid);
     color:var(--ink);
+  }
+  .overlay .pay-opt-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .overlay .pay-opt-copy strong{
+    font-family:var(--mono);
+    font-size:11px;
+    line-height:1.15;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+  }
+  .overlay .pay-opt-copy small{
+    font-family:var(--body);
+    font-size:12px;
+    line-height:1.25;
+    letter-spacing:0;
+    color:inherit;
+    opacity:.72;
+  }
+  .overlay .pay-opt-price{
+    flex:0 0 auto;
+    font-family:var(--display);
+    font-size:25px;
+    font-weight:900;
+    line-height:1;
+    letter-spacing:-.03em;
+    white-space:nowrap;
+    color:inherit;
+  }
+  @media(max-width:480px){
+    .overlay .checkout-payment{margin-top:14px;margin-bottom:18px}
+    .overlay .pay-toggle{grid-template-columns:1fr}
+    .overlay .pay-opt{min-height:64px}
   }
   .pay-panel{
     border:1px dashed var(--rule);
@@ -2244,6 +2295,21 @@
     color:var(--muted);
     margin-top:14px;
   }
+  .checkout-action-bar{
+    position:sticky;
+    bottom:0;
+    z-index:2;
+    margin-top:14px;
+    padding-top:10px;
+    padding-bottom:max(2px, env(safe-area-inset-bottom, 2px));
+    background:linear-gradient(to bottom, rgba(17,17,17,0) 0%, #111 18%);
+  }
+  .checkout-action-bar .checkout-reassure{
+    margin:0 0 10px;
+    font-size:11px;
+    line-height:1.4;
+  }
+  .checkout-action-bar .submit-btn{margin-top:0;min-height:52px}
   .overlay .submit-btn{
     width:100%;
     padding:18px;
@@ -3976,7 +4042,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <button class="overlay-close" onclick="closeCheckout()" aria-label="Close">×</button>
     <div id="checkoutForm">
       <div class="overlay-tag">Checkout · Smelloff</div>
-      <h3 id="checkoutTitle">ODORSTRIKE 50ml</h3>
+      <h2 id="checkoutTitle">ODORSTRIKE 50ml</h2>
       <p class="checkout-trust">🔒 SECURE · ✓ FREE SHIPPING · ✓ 7-DAY RETURNS</p>
       <div class="summary-card">
         <div class="summary">
@@ -3987,11 +4053,27 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <span>Shipping</span>
           <span class="amt" id="checkoutShipping">Free ✓</span>
         </div>
+        <div class="summary" id="codFeeRow" style="display:none">
+          <span>COD handling</span>
+          <span class="amt fee" id="codFeeAmount">₹60</span>
+        </div>
         <div class="summary total">
           <span>Total</span>
           <span class="amt" id="checkoutTotal">₹229</span>
         </div>
       </div>
+
+      <fieldset class="pay-toggle checkout-payment" aria-label="Payment method">
+        <legend>Payment method</legend>
+        <button type="button" class="pay-opt active" data-method="prepaid" role="radio" aria-checked="true" onclick="selectPay('prepaid')">
+          <span class="pay-opt-copy"><strong>Prepaid</strong><small>UPI · Cards · Netbanking</small></span>
+          <span class="pay-opt-price">₹229</span>
+        </button>
+        <button type="button" class="pay-opt" data-method="cod" role="radio" aria-checked="false" onclick="selectPay('cod')">
+          <span class="pay-opt-copy"><strong>Cash on Delivery</strong><small>Pay ₹60 handling · ₹289 total</small></span>
+          <span class="pay-opt-price">₹289</span>
+        </button>
+      </fieldset>
 
       <!-- Details — phone, name, then email (required for receipt & tracking) -->
       <label for="f_phone">Phone</label>
@@ -4030,10 +4112,12 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <div id="checkoutError" style="display:none" class="error-msg" role="alert" aria-live="assertive"></div>
       <a href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20tried%20to%20place%20an%20order%20on%20the%20website%20but%20it%20failed.%20Can%20you%20help%3F" class="wa-fallback" id="waFallback" style="display:none" target="_blank" rel="noopener">WhatsApp us for help →</a>
 
-      <p class="checkout-reassure">🔒 256-bit encrypted checkout · UPI, Cards, Netbanking &amp; More</p>
-      <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
+      <div class="checkout-action-bar">
+        <p class="checkout-reassure">🔒 Secure Razorpay checkout · Receipt &amp; delivery updates by email</p>
+        <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
         <span id="submitText">BUY ODORSTRIKE · ₹229</span>
       </button>
+      </div>
     </div>
 
     <!-- Order processing loader -->
@@ -4046,7 +4130,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <!-- Success state -->
     <div id="successScreen" class="success-screen" style="display:none">
       <div class="overlay-tag" id="successTag">Order confirmed</div>
-      <h3 id="successHeading">You're done.</h3>
+      <h2 id="successHeading">You're done.</h2>
       <p id="successMsg">We'll ship your ODORSTRIKE within 48 hours.</p>
       <div class="order-id" id="orderIdDisplay" role="group" aria-label="Order ID"></div>
       <br>
