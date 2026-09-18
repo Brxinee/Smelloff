@@ -4,10 +4,12 @@ import fs from 'node:fs';
 
 test('production performance hardening configuration', () => {
   const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
+  assert.equal(vercel.buildCommand, undefined, 'vercel.json should not override the vercel-build hook');
+  const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   assert.equal(
-    vercel.buildCommand,
-    'npm run optimize:critical && npm run apply:chrome',
-    'Vercel must generate responsive assets and stamp the optimized chrome at build time',
+    pkg.scripts['vercel-build'],
+    'npm run optimize:critical && npm run apply:chrome && npm run prepare:public',
+    'Vercel must generate responsive assets, stamp chrome, and stage static output',
   );
 
   const globalHeader = (vercel.headers || []).find((h) => h.source === '/(.*)');
