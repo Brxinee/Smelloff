@@ -1,10 +1,17 @@
 [
   {
     "file": "api/verify-payment.js",
-    "line": 236,
+    "line": 306,
     "pattern": "UTR requirement",
     "match": "UTR number",
     "snippet": " 'Valid 10–24 character UPI reference / UTR number required.' });     }      const terminalConfirmed"
+  },
+  {
+    "file": "assets/js/chrome.js",
+    "line": 262,
+    "pattern": "upiInlineId",
+    "match": "upiInlineId",
+    "snippet": "d') {       document.querySelectorAll('#upiInlineId, #wa-utr-btn, .upi-cta, #openUpiApp').forEach(fu"
   },
   {
     "file": "blog/how-odor-neutralizer-works-on-fabric.html",
@@ -36,28 +43,28 @@
   },
   {
     "file": "config/product.json",
-    "line": 192,
+    "line": 193,
     "pattern": "kill/kills bacteria",
     "match": "kills bacteria",
     "snippet": "nstant / instantly kills smell\",       \"kills bacteria / antimicrobial drug claim\",       \"10-second"
   },
   {
     "file": "config/product.json",
-    "line": 191,
+    "line": 192,
     "pattern": "kill/kills smell",
     "match": "kills smell",
     "snippet": "ohibited\": [       \"instant / instantly kills smell\",       \"kills bacteria / antimicrobial drug cla"
   },
   {
     "file": "config/product.json",
-    "line": 192,
+    "line": 193,
     "pattern": "antimicrobial",
     "match": "antimicrobial",
     "snippet": "y kills smell\",       \"kills bacteria / antimicrobial drug claim\",       \"10-second miracle cure\",  "
   },
   {
     "file": "config/product.json",
-    "line": 193,
+    "line": 194,
     "pattern": "miracle",
     "match": "miracle",
     "snippet": "microbial drug claim\",       \"10-second miracle cure\",       \"works on 100% of all fabrics including"
@@ -85,14 +92,14 @@
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 106,
+    "line": 108,
     "pattern": "579 (price)",
     "match": "₹579",
     "snippet": "ml)) fail('index.html contains obsolete ₹579 pricing');   if (indexHtml.includes(\"Kills odor — doesn"
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 125,
+    "line": 127,
     "pattern": "579 (price)",
     "match": "₹579",
     "snippet": "fail('odorstrike.html contains obsolete ₹579 pricing');   if (odorHtml.includes(\"Kills odor — doesn'"
@@ -113,28 +120,28 @@
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 107,
+    "line": 109,
     "pattern": "kill/kills odor",
     "match": "Kills odor",
     "snippet": "79 pricing');   if (indexHtml.includes(\"Kills odor — doesn't hide it\")) fail('index.html contains ob"
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 107,
+    "line": 109,
     "pattern": "kill/kills odor",
     "match": "Kills odor",
     "snippet": "l('index.html contains obsolete claim: \"Kills odor — doesn\\'t hide it\"');   if (indexHtml.includes('"
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 126,
+    "line": 128,
     "pattern": "kill/kills odor",
     "match": "Kills odor",
     "snippet": "579 pricing');   if (odorHtml.includes(\"Kills odor — doesn't hide it\")) fail('odorstrike.html contai"
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 126,
+    "line": 128,
     "pattern": "kill/kills odor",
     "match": "Kills odor",
     "snippet": "orstrike.html contains obsolete claim: \"Kills odor — doesn\\'t hide it\"');   if (odorHtml.includes('r"
@@ -176,56 +183,63 @@
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 108,
+    "line": 110,
     "pattern": "four months",
     "match": "four months",
     "snippet": "t\"');   if (indexHtml.includes('roughly four months')) fail('index.html contains obsolete claim: \"ro"
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 108,
+    "line": 110,
     "pattern": "four months",
     "match": "four months",
     "snippet": ".html contains obsolete claim: \"roughly four months\"');   if (indexHtml.includes('Three seconds. No "
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 127,
+    "line": 129,
     "pattern": "four months",
     "match": "four months",
     "snippet": "it\"');   if (odorHtml.includes('roughly four months')) fail('odorstrike.html contains obsolete claim"
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 127,
+    "line": 129,
     "pattern": "four months",
     "match": "four months",
     "snippet": ".html contains obsolete claim: \"roughly four months\"');   if (odorHtml.includes('Three seconds. No t"
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 80,
+    "line": 81,
     "pattern": "manual upi",
     "match": "manual UPI",
-    "snippet": "+4)\\s+months\\b/i },   { name: 'Obsolete manual UPI element', regex: /\\bupiInlineId\\b/i },   { name: "
+    "snippet": "+8\\s+seconds\\b/i },   { name: 'Obsolete manual UPI element', regex: /\\b(?:upiInlineId|upiBlock|wa-ut"
+  },
+  {
+    "file": "scripts/audit-production.mjs",
+    "line": 82,
+    "pattern": "manual upi",
+    "match": "manual UPI",
+    "snippet": "|wa-utr-btn)\\b/i },   { name: 'Obsolete manual UPI transfer instructions', regex: /\\bmanual\\s+upi\\s+"
   },
   {
     "file": "scripts/audit-production.mjs",
     "line": 81,
-    "pattern": "manual upi",
-    "match": "manual UPI",
-    "snippet": "bupiInlineId\\b/i },   { name: 'Obsolete manual UPI transfer instructions', regex: /\\bmanual\\s+upi\\s+"
+    "pattern": "upiInlineId",
+    "match": "upiInlineId",
+    "snippet": "olete manual UPI element', regex: /\\b(?:upiInlineId|upiBlock|wa-utr-btn)\\b/i },   { name: 'Obsolete "
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 129,
+    "line": 131,
     "pattern": "upiInlineId",
     "match": "upiInlineId",
     "snippet": "econds. No technique.\"');   if (/id=[\"']upiInlineId[\"']/.test(odorHtml)) fail('odorstrike.html conta"
   },
   {
     "file": "scripts/audit-production.mjs",
-    "line": 129,
+    "line": 131,
     "pattern": "upiInlineId",
     "match": "upiInlineId",
     "snippet": "dorstrike.html contains obsolete manual upiInlineId element'); }  if (failures.length) {   console.e"

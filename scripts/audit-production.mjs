@@ -81,7 +81,10 @@ const prohibitedClaimRules = [
   { name: 'Obsolete manual UPI element', regex: /\b(?:upiInlineId|upiBlock|wa-utr-btn)\b/i },
   { name: 'Obsolete manual UPI transfer instructions', regex: /\bmanual\s+upi\s+transfer\b|\b12-digit\s+UTR\b|\bsubmit\s+utr\b|\bupload\s+screenshot\b|\bpay\s+manually\b/i },
   { name: 'Obsolete direct UPI ID', regex: /\b(?:mr\.brainy@ibl|smelloff@ybl)\b/i },
-  { name: 'Stale free COD claim', regex: /\bfree\s+cod\b|\bfree\s+cash\s+on\s+delivery\b/i }
+  { name: 'Stale free COD claim', regex: /\bfree\s+cod\b|\bfree\s+cash\s+on\s+delivery\b/i },
+  { name: 'Fragrance-free false claim', regex: /\b(?:100%\s*fragrance[- ]free|entirely\s+unscented|completely\s+scentless)\b|\bODORSTRIKE\s+is\s+(?:fragrance-free|unscented|scentless)\b/i },
+  { name: 'Formula percentage leak', regex: /\b(?:86%\s*(?:distilled\s+)?water|1\.5%\s*(?:Zinc|β|beta))\b/i },
+  { name: 'Obsolete helmet liner usage claim', regex: /\bODORSTRIKE\s+on\s+the\s+helmet\s+liner\b/i }
 ];
 
 for (const p of customerFacingFiles) {
