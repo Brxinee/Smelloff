@@ -7,10 +7,21 @@ import {
 import { BASE_PRODUCT } from '../shared/products-config.js';
 import { isValidEmail } from './_email.js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
-const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
+function getSupabaseUrl() {
+  return (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
+}
+
+function getServiceKey() {
+  return process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+}
+
+function getRazorpayKeyId() {
+  return process.env.RAZORPAY_KEY_ID || '';
+}
+
+function getRazorpayKeySecret() {
+  return process.env.RAZORPAY_KEY_SECRET || '';
+}
 
 const UNIT_PRICE_RUPEES = Number(BASE_PRODUCT.price);
 const COD_FEE_RUPEES = Number(BASE_PRODUCT.codFee);
@@ -48,20 +59,24 @@ function razorpayClient() {
     };
   }
 
-  if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+  const keyId = getRazorpayKeyId();
+  const keySecret = getRazorpayKeySecret();
+
+  if (!keyId || !keySecret) {
     fail('Razorpay credentials are not configured.');
   }
 
   return new Razorpay({
-    key_id: RAZORPAY_KEY_ID,
-    key_secret: RAZORPAY_KEY_SECRET,
+    key_id: keyId,
+    key_secret: keySecret,
   });
 }
 
 function supabaseHeaders() {
+  const serviceKey = getServiceKey();
   return {
-    apikey: SERVICE_KEY,
-    Authorization: `Bearer ${SERVICE_KEY}`,
+    apikey: serviceKey,
+    Authorization: `Bearer ${serviceKey}`,
     'Content-Type': 'application/json',
   };
 }
@@ -77,12 +92,12 @@ async function readJsonResponse(response) {
 }
 
 async function fetchOrderByCode(orderCode) {
-  if (!SERVICE_KEY) fail('Order database credentials are not configured.');
+  if (!getServiceKey()) fail('Order database credentials are not configured.');
   if (!orderCode) return null;
 
   try {
     const response = await fetch(
-      `${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&select=id,order_code,customer_email,customer_phone,amount,status,payment_method,payment_attempt_id,cod_fee`,
+      `${getSupabaseUrl()}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}&select=id,order_code,customer_email,customer_phone,amount,status,payment_method,payment_attempt_id,cod_fee`,
       {
         headers: supabaseHeaders(),
         signal: AbortSignal.timeout(10000),
@@ -140,9 +155,9 @@ function buildCodOrderRecord(payload) {
 }
 
 async function insertPendingOrder(payload) {
-  if (!SERVICE_KEY) fail('Order database credentials are not configured.');
+  if (!getServiceKey()) fail('Order database credentials are not configured.');
 
-  const response = await fetch(`${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders`, {
+  const response = await fetch(`${getSupabaseUrl()}/rest/v1/orders`, {
     method: 'POST',
     headers: {
       ...supabaseHeaders(),
@@ -166,9 +181,9 @@ async function insertPendingOrder(payload) {
 }
 
 async function insertCodOrder(payload) {
-  if (!SERVICE_KEY) fail('Order database credentials are not configured.');
+  if (!getServiceKey()) fail('Order database credentials are not configured.');
 
-  const response = await fetch(`${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders`, {
+  const response = await fetch(`${getSupabaseUrl()}/rest/v1/orders`, {
     method: 'POST',
     headers: {
       ...supabaseHeaders(),
@@ -193,7 +208,7 @@ async function insertCodOrder(payload) {
 
 async function updatePendingOrder(orderCode, payload) {
   const response = await fetch(
-    `${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`,
+    `${getSupabaseUrl()}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`,
     {
       method: 'PATCH',
       headers: {
@@ -232,7 +247,7 @@ async function updatePendingOrder(orderCode, payload) {
 
 async function persistRazorpayOrderId(orderCode, razorpayOrderId) {
   const response = await fetch(
-    `${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`,
+    `${getSupabaseUrl()}/rest/v1/orders?order_code=eq.${encodeURIComponent(orderCode)}`,
     {
       method: 'PATCH',
       headers: {
@@ -341,7 +356,7 @@ function responseForOrder(localOrder, razorpayOrderId) {
     order_id: razorpayOrderId,
     amount: Number(localOrder.amount),
     currency: 'INR',
-    key_id: RAZORPAY_KEY_ID,
+    key_id: getRazorpayKeyId(),
     order_token: generateOrderToken(localOrder.order_code, localOrder.customer_phone),
     confirmation_token: generateOrderConfirmationToken(localOrder.order_code, localOrder.customer_email),
   };
@@ -375,10 +390,6 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    if (!SERVICE_KEY) {
-      return res.status(500).json({ error: 'Order database is not configured on the server.' });
-    }
-
     const body = req.body && typeof req.body === 'object' ? req.body : {};
     const requestedPaymentMethod = String(body.payment_method || 'pending').trim().toLowerCase();
     if (!['pending', 'upi', 'cod'].includes(requestedPaymentMethod)) {
@@ -387,8 +398,12 @@ export default async function handler(req, res) {
     const isCod = requestedPaymentMethod === COD_PAYMENT_METHOD;
     const paymentMethod = isCod ? COD_PAYMENT_METHOD : PREPAID_PAYMENT_METHOD;
 
-    if (!isCod && (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET)) {
-      return res.status(500).json({ error: 'Razorpay is not configured on the server.' });
+    const RAZORPAY_KEY_ID = getRazorpayKeyId();
+    const RAZORPAY_KEY_SECRET = getRazorpayKeySecret();
+    const SERVICE_KEY = getServiceKey();
+
+    if (!body.items && body.amount !== undefined && (typeof body.amount !== 'number' || !Number.isInteger(body.amount) || body.amount < 100)) {
+      return res.status(400).json({ error: 'Amount must be an integer of at least 100 paise.' });
     }
 
     const rawQty = body.items && body.items[0] && body.items[0].quantity !== undefined
@@ -396,17 +411,19 @@ export default async function handler(req, res) {
       : body.quantity;
     const quantity = typeof rawQty === 'number' && Number.isInteger(rawQty)
       ? rawQty
-      : Number.parseInt(String(rawQty ?? ''), 10);
-    if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY || String(rawQty).includes('.')) {
+      : (rawQty !== undefined && rawQty !== null && String(rawQty).trim() !== '' ? Number(rawQty) : 1);
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY || String(rawQty ?? '').includes('.')) {
       return res.status(400).json({ error: `Quantity must be an integer between 1 and ${MAX_QUANTITY}.` });
     }
 
-    const items = Array.isArray(body.items) && body.items.length === 1 ? body.items : null;
-    if (!items) return res.status(400).json({ error: 'Exactly one ODORSTRIKE line item is required.' });
-
-    const firstItem = items[0] && typeof items[0] === 'object' ? items[0] : {};
-    if (firstItem.price !== undefined && Number(firstItem.price) !== UNIT_PRICE_RUPEES) {
-      return res.status(400).json({ error: 'Order amount mismatch. Please refresh and try again.' });
+    if (body.items !== undefined) {
+      if (!Array.isArray(body.items) || body.items.length !== 1) {
+        return res.status(400).json({ error: 'Exactly one ODORSTRIKE line item is required.' });
+      }
+      const firstItem = body.items[0] && typeof body.items[0] === 'object' ? body.items[0] : {};
+      if (firstItem.price !== undefined && Number(firstItem.price) !== UNIT_PRICE_RUPEES) {
+        return res.status(400).json({ error: 'Order amount mismatch. Please refresh and try again.' });
+      }
     }
 
     const subtotalPaise = Math.round(UNIT_PRICE_RUPEES * quantity * 100);
@@ -416,9 +433,11 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid order amount.' });
     }
 
-    const clientAmount = Number(body.amount);
-    if (!Number.isSafeInteger(clientAmount) || clientAmount !== totalPaise) {
-      return res.status(400).json({ error: 'Order amount mismatch. Please refresh and try again.' });
+    if (body.amount !== undefined) {
+      const clientAmount = Number(body.amount);
+      if (!Number.isSafeInteger(clientAmount) || clientAmount !== totalPaise) {
+        return res.status(400).json({ error: 'Order amount mismatch. Please refresh and try again.' });
+      }
     }
 
     const email = String(body.email || '').trim().toLowerCase();
@@ -429,6 +448,10 @@ export default async function handler(req, res) {
     const phone = normalizePhone(body.phone);
     if (phone.length !== 10) {
       return res.status(400).json({ error: 'A valid 10-digit phone is required.' });
+    }
+
+    if (!isCod && (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET)) {
+      return res.status(500).json({ error: 'Razorpay is not configured on the server.' });
     }
 
     const addressIn = body.address && typeof body.address === 'object' ? body.address : null;
@@ -443,6 +466,10 @@ export default async function handler(req, res) {
     };
     if (!address.name || !address.line || !address.city || !address.state || address.pincode.length !== 6) {
       return res.status(400).json({ error: 'A complete delivery address is required.' });
+    }
+
+    if (!SERVICE_KEY) {
+      return res.status(500).json({ error: 'Order database is not configured on the server.' });
     }
 
     let orderCode = normalizeOrderCode(body.order_code || body.orderCode);

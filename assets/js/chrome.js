@@ -93,18 +93,12 @@
 
       var script = document.querySelector('script[src="' + RAZORPAY_SCRIPT + '"]');
       if (!script) {
-        script = document.createElement('script');
-        script.src = RAZORPAY_SCRIPT;
-        script.async = true;
-        script.setAttribute('data-smelloff-razorpay', 'standard');
-        script.addEventListener('load', succeed, { once: true });
-        script.addEventListener('error', failLoad, { once: true });
-        document.head.appendChild(script);
-      } else {
-        script.addEventListener('load', succeed, { once: true });
-        script.addEventListener('error', failLoad, { once: true });
-        window.setTimeout(succeed, 0);
+        failLoad();
+        return;
       }
+      script.addEventListener('load', succeed, { once: true });
+      script.addEventListener('error', failLoad, { once: true });
+      window.setTimeout(succeed, 0);
     }).catch(function (error) {
       window.smfRazorpayReady = null;
       throw error;
@@ -185,7 +179,7 @@
       var choice = document.createElement('div');
       choice.id = 'smfPaymentChoice';
       choice.className = 'smf-payment-choice';
-      choice.innerHTML = `\n        <div class="smf-payment-choice__label">Payment</div>\n        <div class="smf-payment-choice__options" role="radiogroup" aria-label="Choose payment method">\n          <button type="button" class="pay-opt smf-pay-opt" data-method="prepaid" role="radio" aria-checked="true">\n            <span class="smf-pay-opt__title">Pay</span>\n            <span class="smf-pay-opt__price">₹229</span>\n          </button>\n          <button type="button" class="pay-opt smf-pay-opt" data-method="cod" role="radio" aria-checked="false">\n            <span class="smf-pay-opt__title">COD</span>\n            <span class="smf-pay-opt__price">₹289</span>\n          </button>\n        </div>\n      `;
+      choice.innerHTML = `\n        <div class="smf-payment-choice__label">Payment</div>\n        <div class="smf-payment-choice__options" role="radiogroup" aria-label="Choose payment method">\n          <button type="button" class="pay-opt smf-pay-opt" data-method="prepaid" role="radio" aria-checked="true">\n            <span class="smf-pay-opt__title">Prepaid</span>\n            <span class="smf-pay-opt__price">₹229</span>\n          </button>\n          <button type="button" class="pay-opt smf-pay-opt" data-method="cod" role="radio" aria-checked="false">\n            <span class="smf-pay-opt__title">Cash on Delivery</span>\n            <span class="smf-pay-opt__price">₹289</span>\n          </button>\n        </div>\n      `;
       error.parentNode.insertBefore(choice, error);
 
 
@@ -275,6 +269,7 @@
   function orderPayload() {
     var qty = quantityFromCheckout();
     var unitPrice = Number(unitPriceRupees());
+    var amountRupees = unitPrice * qty;
     return {
       email: normalizeEmail(textValue('f_email')),
       phone: textValue('f_phone'),
@@ -284,7 +279,7 @@
         quantity: qty,
         price: unitPrice
       }],
-      amount: Math.round(unitPrice * qty * 100),
+      amount: Math.round(amountRupees * 100),
       payment_method: 'pending',
       address: {
         name: textValue('f_name'),
