@@ -28,8 +28,7 @@ function customerNameFromOrder(order) {
 function paymentLabel(order) {
   const method = String(order?.payment_method || '').toLowerCase();
   if (method === 'cod') return 'Cash on Delivery';
-  if (method === 'upi') return 'Prepaid (Razorpay)';
-  if (method === 'prepaid' || method === 'razorpay') return 'Prepaid (Razorpay)';
+  if (method === 'upi' || method === 'prepaid' || method === 'razorpay') return 'UPI / card';
   return order?.payment_method ? String(order.payment_method) : 'Prepaid (Razorpay)';
 }
 
