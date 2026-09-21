@@ -46,11 +46,16 @@ export function verifySvixSignature(rawBody, headers, secret) {
 
   try {
     const expectedBuf = Buffer.from(expected, 'utf8');
+    let matched = false;
     for (const candidate of candidates) {
       const receivedBuf = Buffer.from(candidate, 'utf8');
-      if (expectedBuf.length !== receivedBuf.length) continue;
-      if (crypto.timingSafeEqual(expectedBuf, receivedBuf)) return true;
+      if (expectedBuf.length !== receivedBuf.length) {
+        crypto.timingSafeEqual(expectedBuf, expectedBuf);
+      } else if (crypto.timingSafeEqual(expectedBuf, receivedBuf)) {
+        matched = true;
+      }
     }
+    if (matched) return true;
   } catch {
     return false;
   }
