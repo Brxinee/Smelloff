@@ -6,3 +6,8 @@
 **Vulnerability:** The code `a.length === b.length && crypto.timingSafeEqual(a, b)` prevents `timingSafeEqual` from throwing when buffer lengths mismatch. However, the short-circuit evaluation (`&&`) means `timingSafeEqual` is bypassed entirely when lengths differ. This creates an early return, leaking the expected buffer length via timing side-channels, which is especially critical for secret keys or passwords where the length is unknown to an attacker.
 **Learning:** `crypto.timingSafeEqual` throws when buffer lengths are different, but protecting it with a short-circuit length check creates a timing attack vulnerability that leaks the length.
 **Prevention:** When verifying tokens or secrets of variable/unknown length, always execute a dummy constant-time comparison (e.g., `crypto.timingSafeEqual(a, a)`) before returning false on length mismatch to ensure execution time remains constant regardless of input length.
+
+## 2026-09-15 - verifyOrderConfirmationToken timing leak
+**Vulnerability:** In `verifyOrderConfirmationToken` within `api/_security.js`, an early return (`if (a.length !== b.length) return false;`) before calling `crypto.timingSafeEqual` leaked the expected token length via timing side-channels. This is especially dangerous for variable-length inputs where the length is a secret.
+**Learning:** Protecting `crypto.timingSafeEqual` with an early length check avoids throwing errors but creates an early return timing leak that bypasses the constant-time guarantee.
+**Prevention:** When checking variable/unknown length tokens or secrets before `crypto.timingSafeEqual`, always execute a dummy constant-time comparison (e.g., `crypto.timingSafeEqual(a, a)`) prior to returning false on length mismatch to guarantee constant execution time.
