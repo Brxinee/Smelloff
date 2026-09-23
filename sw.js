@@ -67,14 +67,14 @@ self.addEventListener('fetch', (event) => {
   if (isStaticAsset(url)) {
     event.respondWith(
       caches.match(req).then((cached) => {
-        const network = fetch(req).then((res) => {
+        if (cached) return cached;
+        return fetch(req).then((res) => {
           if (res && res.ok) {
             const copy = res.clone();
             caches.open(STATIC_CACHE).then((c) => c.put(req, copy));
           }
           return res;
         }).catch(() => cached);
-        return cached || network;
       })
     );
     return;
