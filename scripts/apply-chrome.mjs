@@ -468,7 +468,7 @@ function normalizeStructuredData(html) {
   // Reference the canonical product entity by @id instead of emitting a
   // partial Product node that validators interpret as malformed Product data.
   html = html.replace(
-    /"about"\s*:\s*\{\s*"@type"\s*:\s*"Product"\s*,\s*"@id"\s*:\s*"https:\\/\\/smelloff\.in\\/#odorstrike"(?:\s*,\s*"name"\s*:\s*"[^"]*")?\s*\}/g,
+    /"about"\s*:\s*\{\s*"@type"\s*:\s*"Product"\s*,\s*"@id"\s*:\s*"https:\/\/smelloff\.in\/#odorstrike"(?:\s*,\s*"name"\s*:\s*"[^"]*")?\s*\}/g,
     '"about":{"@id":"https://smelloff.in/#odorstrike"}'
   );
 
