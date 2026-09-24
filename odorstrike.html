@@ -5377,6 +5377,14 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     // Tapping the backdrop or the image both dismiss — the whole surface is
     // cursor:zoom-out, so anywhere the pointer lands should close it.
     viewer.addEventListener('click',close);
+
+    // Trap focus inside the viewer
+    viewer.addEventListener('keydown',function(e){
+      if(e.key==='Tab'){
+        e.preventDefault();
+      }
+    });
+
     window.closeGalleryViewer=close;
   })();
 
