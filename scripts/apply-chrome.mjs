@@ -429,32 +429,67 @@ function ensureShareScript(html) {
  * but leaves focus on the link, so the next Tab returns to the top of the nav
  * and the skip link has done nothing for the keyboard user it exists for.
  */
-function ensureSkipTarget(html, override) {
-  html = html.replace(/\s*id="sf-main" tabindex="-1"/g, '');   // idempotent re-stamp
 
-  // The search is bounded to the body region between the two generated
-  // blocks. Unbounded, odorstrike.html picked up the <main class="po-main">
-  // that lives inside its payment-failed policy overlay — real markup, wrong
-  // content, and below the footer in source order.
+function ensureSkipTarget(html, override) {
+  // Strip generated target attributes wherever they appear in the chosen
+  // opening tag. The old regex only removed an exact adjacent pair, so an
+  // existing class/attribute between them could create duplicate attributes.
   const from = html.indexOf('<!-- /SF-CHROME:HEADER -->');
   const to = html.indexOf('<!-- SF-CHROME:FOOTER');
   if (from === -1 || to === -1 || to < from) return html;
   const head = html.slice(0, from), body = html.slice(from, to), tail = html.slice(to);
 
-  // An explicit selector wins, for the pages where "first landmark" is not
-  // the thing a keyboard user wants. On the PDP the first <section> in range
-  // is `.showcase`, 3600px down — past the gallery, the price and the buy
-  // panel, i.e. past everything the page exists for.
   const candidates = override
-    ? [new RegExp(`<([a-z]+)(\\s[^>]*class="${override}"[^>]*)>`)]
-    : ['main', 'article', 'section'].map((t) => new RegExp(`<(${t})(\\s[^>]*)?>`));
+    ? [new RegExp('<([a-z]+)(\\s[^>]*class="' + override + '"[^>]*)>')]
+    : ['main', 'article', 'section'].map((t) => new RegExp('<(' + t + ')(\\s[^>]*)?>'));
 
   for (const re of candidates) {
     const m = body.match(re);
     if (!m) continue;
-    return head + body.replace(re, `<${m[1]} id="sf-main" tabindex="-1"${m[2] || ''}>`) + tail;
+
+    const cleaned = m[0]
+      .replace(/\\s+id=["']sf-main["']/gi, '')
+      .replace(/\\s+tabindex=["']-1["']/gi, '');
+    const rebuilt = cleaned.replace(/^<([a-z]+)/i, '<$1 id="sf-main" tabindex="-1"');
+    return head + body.slice(0, m.index) + rebuilt + body.slice(m.index + m[0].length) + tail;
   }
   return html;
+}
+
+const SMELLOFF_LOGO_SCHEMA = {
+  "@type":"ImageObject",
+  "url":"https://smelloff.in/apple-touch-icon.png",
+  "width":180,
+  "height":180,
+};
+
+function normalizeStructuredData(html) {
+  // Reference the canonical product entity by @id instead of emitting a
+  // partial Product node that validators interpret as malformed Product data.
+  html = html.replace(
+    /"about"\\s*:\\s*\\{\\s*"@type"\\s*:\\s*"Product"\\s*,\\s*"@id"\\s*:\\s*"https:\/\\/smelloff\\.in\\/#odorstrike"(?:\\s*,\\s*"name"\\s*:\\s*"[^"]*")?\\s*\\}/g,
+    '"about":{"@id":"https://smelloff.in/#odorstrike"}'
+  );
+
+  // Add the canonical Smelloff logo to nested Organization nodes such as
+  // publisher/seller/manufacturer when it is absent.
+  const logo = JSON.stringify(SMELLOFF_LOGO_SCHEMA);
+  html = html.replace(
+    /("@type"\\s*:\\s*"Organization"\\s*,\\s*"name"\\s*:\\s*"Smelloff")(?!\\s*,\\s*"logo"\\s*:)/g,
+    '$1,"logo":' + logo
+  );
+  return html;
+}
+
+function ensureFavicon(html) {
+  if (/<link[^>]+rel=["'](?:shortcut )?icon["']/i.test(html)) return html;
+  const headEnd = html.lastIndexOf('</head>');
+  if (headEnd === -1) return html;
+  const tags = [
+    '<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">',
+    '<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">',
+  ].join('\n');
+  return html.slice(0, headEnd) + tags + '\n' + html.slice(headEnd);
 }
 
 /* --- run -------------------------------------------------------------- */
@@ -490,6 +525,8 @@ for (const page of PAGES) {
   }
 
   html = ensureSkipTarget(html, page.skip);
+  html = normalizeStructuredData(html);
+  html = ensureFavicon(html);
   html = ensureAssets(html);
   html = ensureShareScript(html);
 
