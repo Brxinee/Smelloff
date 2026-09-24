@@ -430,6 +430,7 @@ function ensureShareScript(html) {
  * and the skip link has done nothing for the keyboard user it exists for.
  */
 
+
 function ensureSkipTarget(html, override) {
   // Strip generated target attributes wherever they appear in the chosen
   // opening tag. The old regex only removed an exact adjacent pair, so an
@@ -448,8 +449,8 @@ function ensureSkipTarget(html, override) {
     if (!m) continue;
 
     const cleaned = m[0]
-      .replace(/\\s+id=["']sf-main["']/gi, '')
-      .replace(/\\s+tabindex=["']-1["']/gi, '');
+      .replace(/\s+id=["']sf-main["']/gi, '')
+      .replace(/\s+tabindex=["']-1["']/gi, '');
     const rebuilt = cleaned.replace(/^<([a-z]+)/i, '<$1 id="sf-main" tabindex="-1"');
     return head + body.slice(0, m.index) + rebuilt + body.slice(m.index + m[0].length) + tail;
   }
@@ -467,7 +468,7 @@ function normalizeStructuredData(html) {
   // Reference the canonical product entity by @id instead of emitting a
   // partial Product node that validators interpret as malformed Product data.
   html = html.replace(
-    /"about"\\s*:\\s*\\{\\s*"@type"\\s*:\\s*"Product"\\s*,\\s*"@id"\\s*:\\s*"https:\/\\/smelloff\\.in\\/#odorstrike"(?:\\s*,\\s*"name"\\s*:\\s*"[^"]*")?\\s*\\}/g,
+    /"about"\s*:\s*\{\s*"@type"\s*:\s*"Product"\s*,\s*"@id"\s*:\s*"https:\\/\\/smelloff\.in\\/#odorstrike"(?:\s*,\s*"name"\s*:\s*"[^"]*")?\s*\}/g,
     '"about":{"@id":"https://smelloff.in/#odorstrike"}'
   );
 
@@ -475,7 +476,7 @@ function normalizeStructuredData(html) {
   // publisher/seller/manufacturer when it is absent.
   const logo = JSON.stringify(SMELLOFF_LOGO_SCHEMA);
   html = html.replace(
-    /("@type"\\s*:\\s*"Organization"\\s*,\\s*"name"\\s*:\\s*"Smelloff")(?!\\s*,\\s*"logo"\\s*:)/g,
+    /("@type"\s*:\s*"Organization"\s*,\s*"name"\s*:\s*"Smelloff")(?!\s*,\s*"logo"\s*:)/g,
     '$1,"logo":' + logo
   );
   return html;
