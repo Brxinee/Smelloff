@@ -27,7 +27,7 @@
    reach anyone who has already visited the site until you do.
    ===================================================================== */
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -493,6 +493,20 @@ function ensureFavicon(html) {
   return html.slice(0, headEnd) + tags + '\n' + html.slice(headEnd);
 }
 
+/* Normalize structured data and basic head invariants on EVERY HTML page,
+ * not only pages carrying the shared chrome. The sitemap contains articles
+ * outside the explicit chrome list, so stale nested Product/Organization
+ * nodes must not survive just because a page is absent from PAGES. */
+function walkHtmlFiles(dir, out = []) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === 'public') continue;
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) walkHtmlFiles(full, out);
+    else if (entry.name.endsWith('.html')) out.push(full);
+  }
+  return out;
+}
+
 /* --- run -------------------------------------------------------------- */
 let changed = 0, skipped = [];
 
@@ -535,6 +549,23 @@ for (const page of PAGES) {
     changed++;
     if (!CHECK) writeFileSync(path, html);
     console.log(`${CHECK ? 'would update' : 'updated'}  ${relative(ROOT, path)}`);
+  }
+}
+
+// Run the SEO normalizers over every HTML file, including pages that are not
+// part of the explicit shared-chrome list.
+const processedPages = new Set(PAGES.map((page) => join(ROOT, page.file)));
+for (const filePath of walkHtmlFiles(ROOT)) {
+  if (processedPages.has(filePath)) continue;
+  let html;
+  try { html = readFileSync(filePath, 'utf8'); } catch { continue; }
+  const before = html;
+  html = normalizeStructuredData(html);
+  html = ensureFavicon(html);
+  if (html !== before) {
+    changed++;
+    if (!CHECK) writeFileSync(filePath, html);
+    console.log(`${CHECK ? 'would update' : 'updated'}  ${relative(ROOT, filePath)} (SEO normalization)`);
   }
 }
 
