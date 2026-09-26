@@ -1,5 +1,5 @@
 import { isAllowedOrigin, clientIp, checkRateLimit, verifyOrderToken } from './_security.js';
-import { isValidTransition, BASE_PRODUCT } from '../shared/products-config.js';
+import { isValidTransition, BASE_PRODUCT } from '../shared/products-config-workers.js';
 import { dispatchPrepaidPaymentEmails } from './_email-dispatch.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
