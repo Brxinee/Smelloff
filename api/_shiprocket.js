@@ -1,4 +1,4 @@
-import { BASE_PRODUCT } from '../shared/products-config.js';
+import { BASE_PRODUCT } from '../shared/products-config-workers.js';
 
 const API_BASE = 'https://apiv2.shiprocket.in/v1/external';
 
