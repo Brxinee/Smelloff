@@ -1,15 +1,7 @@
 import { SMELLOFF_PRODUCT_TRUTH as T } from './product-truth.js';
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
+import { SMELLOFF_PRODUCT_TRUTH } from './product-truth.js';
 export { SMELLOFF_PRODUCT_TRUTH } from './product-truth.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const CONFIG_PATH = join(__dirname, '..', 'config', 'product.json');
-
-const rawConfig = JSON.parse(readFileSync(CONFIG_PATH, 'utf8'));
+import rawConfig from '../config/product.json' with { type: 'json' };
 const { product: P, brand: B, shipping: S, formula: F } = rawConfig;
 
 // Centralized commercial single source of truth for Smelloff / ODORSTRIKE.
