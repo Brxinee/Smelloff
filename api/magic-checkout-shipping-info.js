@@ -1,4 +1,4 @@
-import { BASE_PRODUCT } from '../shared/products-config.js';
+import { BASE_PRODUCT } from '../shared/products-config-workers.js';
 
 const COD_FEE_PAISE = Math.round(Number(BASE_PRODUCT.codFee || 60) * 100);
 const FREE_SHIPPING_PAISE = 0;
