@@ -22,12 +22,16 @@
     "optimize:critical": "node scripts/optimize-critical-images.mjs",
     "apply:chrome": "node scripts/apply-chrome.mjs",
     "prepare:public": "node scripts/prepare-public.mjs",
-    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs && node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js && node -c api/magic-checkout-finalize.js && node -c api/magic-checkout-shipping-info.js && node scripts/audit-production.mjs && npm run prepare:public"
+    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs && node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js && node -c api/magic-checkout-finalize.js && node -c api/magic-checkout-shipping-info.js && node scripts/audit-production.mjs && node scripts/prepare-public.mjs",
+    "deploy": "wrangler deploy --config ./wrangler.jsonc --assets ./public"
   },
   "dependencies": {
     "express": "^5.2.1",
     "resend": "^4.0.0",
     "razorpay": "^2.9.8",
     "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "wrangler": "^4.141.0"
   }
 }
