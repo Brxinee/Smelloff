@@ -23,7 +23,7 @@ import {
   verifyOrderConfirmationToken,
   checkRateLimit,
 } from './_security.js';
-import { BASE_PRODUCT } from '../shared/products-config.js';
+import { BASE_PRODUCT } from '../shared/products-config-workers.js';
 import { sendTransactionalEmail, getIdempotencyKey, getSenderConfig, getEmailDiagnostics } from './_email.js';
 
 const FROM = 'ODORSTRIKE <orders@smelloff.in>';
