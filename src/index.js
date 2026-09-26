@@ -17,6 +17,8 @@ import magicCheckoutShippingInfoHandler from "../api/magic-checkout-shipping-inf
 
 const app = express();
 
+app.listen(3000);
+
 app.disable("x-powered-by");
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
