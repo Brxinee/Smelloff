@@ -4,7 +4,7 @@ import {
   generateOrderToken,
   generateOrderConfirmationToken,
 } from './_security.js';
-import { BASE_PRODUCT } from '../shared/products-config.js';
+import { BASE_PRODUCT } from '../shared/products-config-workers.js';
 import { isValidEmail } from './_email.js';
 
 function getSupabaseUrl() {
