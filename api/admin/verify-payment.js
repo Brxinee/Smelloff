@@ -1,5 +1,5 @@
 import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized, validateAndNormalizeUtr } from '../_security.js';
-import { isValidTransition } from '../../shared/products-config.js';
+import { isValidTransition } from '../../shared/products-config-workers.js';
 import { dispatchPrepaidPaymentEmails, sendOrderCancelledEmail } from '../_email-dispatch.js';
 import {
   createShiprocketOrder,
