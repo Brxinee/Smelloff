@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { BASE_PRODUCT } from '../shared/products-config.js';
+import { BASE_PRODUCT } from '../shared/products-config-workers.js';
 
 export const PIXEL_ID = process.env.META_PIXEL_ID || '1455100092891684';
 export const API_VERSION = process.env.META_API_VERSION || 'v21.0';
