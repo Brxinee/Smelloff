@@ -1,4 +1,4 @@
-import { BASE_PRODUCT } from '../shared/products-config.js';
+import { BASE_PRODUCT } from '../shared/products-config-workers.js';
 
 // Light receipt canvas. Forced-dark shells invert in Gmail iOS/Android
 // (white logos vanish, acid-green CTAs go magenta). Apple Mail ~62% of
