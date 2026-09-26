@@ -1,5 +1,4 @@
 import { SMELLOFF_PRODUCT_TRUTH as T } from './product-truth.js';
-import { SMELLOFF_PRODUCT_TRUTH } from './product-truth.js';
 export { SMELLOFF_PRODUCT_TRUTH } from './product-truth.js';
 import rawConfig from '../config/product.json' with { type: 'json' };
 const { product: P, brand: B, shipping: S, formula: F } = rawConfig;
