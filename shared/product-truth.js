@@ -3,15 +3,7 @@
 // Derived directly from the canonical /config/product.json single source of truth.
 // Do not encode month-based bottle life. Do not invent reviews, counts, or ratings.
 
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const CONFIG_PATH = join(__dirname, '..', 'config', 'product.json');
-
-const rawConfig = JSON.parse(readFileSync(CONFIG_PATH, 'utf8'));
+import rawConfig from '../config/product.json' with { type: 'json' };
 const { brand: B, product: P, shipping: S, returns: R, usage: U, formula: F } = rawConfig;
 
 export const SMELLOFF_PRODUCT_TRUTH = {
