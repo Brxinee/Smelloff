@@ -1285,6 +1285,5 @@
       ]
     }
   ],
-  "outputDirectory": "public",
   "buildCommand": "npm run optimize:critical && npm run apply:chrome && npm run prepare:public"
 }
