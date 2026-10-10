@@ -116,3 +116,84 @@
     });
   });
 })();
+
+/* Reading layer (2026-10-10) — the one progress bar, the table of contents'
+   behaviour, and the comparison quiz. The TOC markup itself is static
+   (scripts/blog/apply-reader.mjs), so all of this is enhancement only. */
+(function () {
+  var bar = document.getElementById('progress-bar');
+  if (bar) {
+    var ticking = false;
+    var paint = function () {
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+      ticking = false;
+    };
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; window.requestAnimationFrame(paint); }
+    }, { passive: true });
+    paint();
+  }
+
+  var toc = document.getElementById('toc');
+  if (toc) {
+    // Wide screens show it as an open rail; phones keep it folded until asked.
+    var wide = window.matchMedia('(min-width: 1160px)');
+    var sync = function () { if (wide.matches) toc.open = true; };
+    sync();
+    if (wide.addEventListener) wide.addEventListener('change', sync);
+
+    var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+    var byId = {};
+    var targets = links.map(function (a) {
+      var el = document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));
+      if (el) byId[el.id] = a;
+      return el;
+    }).filter(Boolean);
+    if (targets.length) {
+      var current = null, queued = false;
+      var setActive = function () {
+        queued = false;
+        // The section you're in: the last heading above the top third.
+        var line = window.innerHeight * 0.33, pick = targets[0].id;
+        targets.forEach(function (t) { if (t.getBoundingClientRect().top <= line) pick = t.id; });
+        if (current === pick) return;
+        current = pick;
+        links.forEach(function (a) {
+          var on = byId[pick] === a;
+          a.classList.toggle('is-active', on);
+          if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+        });
+      };
+      window.addEventListener('scroll', function () {
+        if (!queued) { queued = true; window.requestAnimationFrame(setActive); }
+      }, { passive: true });
+      setActive();
+    }
+  }
+
+  // Comparison quiz: three questions, each answer leans "home" or "move".
+  var quiz = document.querySelector('.quiz');
+  if (quiz) {
+    var answers = {};
+    var verdict = quiz.querySelector('.quiz-verdict');
+    quiz.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('button[data-q]');
+      if (!b) return;
+      quiz.querySelectorAll('button[data-q="' + b.dataset.q + '"]').forEach(function (x) {
+        x.classList.toggle('picked', x === b);
+        x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      });
+      answers[b.dataset.q] = b.dataset.val;
+      var keys = Object.keys(answers);
+      var total = quiz.querySelectorAll('.quiz-opts').length;
+      if (!verdict || keys.length < total) return;
+      var move = keys.filter(function (k) { return answers[k] === 'move'; }).length;
+      verdict.textContent = move * 2 > total
+        ? 'ODORSTRIKE fits how you live: a 50ml pocket mist for the clothes you are wearing, used on the go.'
+        : 'Febreze fits better: a large home fabric spray for furniture and fabrics around the house. ODORSTRIKE is for the clothes on you.';
+      verdict.setAttribute('role', 'status');
+      verdict.classList.add('show');
+    });
+  }
+})();

@@ -86,6 +86,40 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
 
+## Blog redesign — index + all 56 posts (2026-10-10)
+Grounded in NN/g reading research: people scan by headings (layer-cake), want
+the answer first, and use a TOC on long pages.
+- **`/blog` index** — inline CSS rewritten; hero with one search, a lead story
+  beside a "New here? Start with these" rail, a **sticky topic filter with
+  counts**, and a grid that shows **12, then "Show all 56 guides"** (search and
+  topics always cover every post). Page went ~10,900px → ~4,300px on desktop.
+  The product band's copy said "10-second dry", "0% stain" and "free express
+  shipping" — replaced with the locked claims (15–30 s, free on prepaid, COD
+  +₹60) and its second button now goes to `/odorstrike`, not `/#buy`. The
+  search empty-state escapes the query before putting it in innerHTML.
+  Category counts on the chips are computed at build time by the transform —
+  **update them with the post count** (same rule as the hero pill note above).
+- **Posts: `scripts/blog/apply-reader.mjs`** (idempotent, `--check` in
+  `npm run build`) stamps, per post: a TOC from the post's own `<h2>`s between
+  `<!-- TOC:START/END -->` (static — no JS needed, no layout shift), ids on
+  those h2s, an author byline, the bottle + "View product" link in the
+  `.end-cta`, a scroll wrapper around every `<table>` (13 bare tables pushed
+  phones 4–50px wide), and `track.js` + `consent-analytics.js` on every post
+  (**34 posts had no first-party beacon and 9 no consent bar**). It also
+  deleted five copies of an inline progress-bar script. Run it after adding or
+  editing a post.
+- **`blog.css` rewritten**: 18px body, 720px measure, acid upright accent in
+  H1 (was a grey italic), quick-answer card, callouts, unified tables. At
+  ≥1160px the TOC is a **sticky float in the right gutter** — not an absolute
+  rail with a sticky list, because Chrome wraps `<details>` content in its own
+  box and the list can't stick outside it.
+- **`blog-share.js`** now also runs the one progress bar, opens the TOC on
+  wide screens, lights the current section, and wires the
+  `odorstrike-vs-febreze-india` quiz (its buttons had no script at all).
+- Not changed, flagged: several older posts still say "dries in under 10
+  seconds" / "10-second dry" and one quotes "pH 5.5–6.0"; the product pages
+  say 15–30 seconds. Decide which is true and align the posts.
+
 ## Checkout redesign, against Baymard (2026-10-10)
 The `#checkoutOverlay` markup and its CSS block were rewritten; the checkout
 JS (orderTotals, submitOrder, Razorpay in chrome.js, COD path) is unchanged
