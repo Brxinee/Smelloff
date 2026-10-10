@@ -1,12 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import crypto from 'node:crypto';
-import { createRequire } from 'node:module';
 import createOrderHandler from '../../api/create-order.js';
 import verifyPaymentHandler from '../../api/verify-payment.js';
-
-const require = createRequire(import.meta.url);
-const axios = require('axios');
 
 function createMockRes() {
   let statusCode = 200;
@@ -288,29 +284,6 @@ test('verify-payment: Razorpay order binding test matrix', async () => {
     return { ok: false, status: 404, json: async () => [] };
   };
 
-  const origAxiosCreate = axios.create;
-  axios.create = function(cfg) {
-    const instance = origAxiosCreate.call(axios, cfg);
-    instance.interceptors.request.use((config) => {
-      config.adapter = async (c) => {
-        if (mockPaymentFetchResult) {
-          return {
-            data: mockPaymentFetchResult,
-            status: 200,
-            statusText: 'OK',
-            headers: {},
-            config: c
-          };
-        }
-        const err = new Error('Request failed with status code 404');
-        err.response = { status: 404, data: { error: { description: 'Not found' } } };
-        throw err;
-      };
-      return config;
-    });
-    return instance;
-  };
-
   try {
     // 1. ORDER A + RZP A + PAY A (Valid) -> PASS 200
     const paymentIdA = 'pay_rzp_A_1';
@@ -430,7 +403,6 @@ test('verify-payment: Razorpay order binding test matrix', async () => {
     assert.strictEqual(resultBadStatus.responseData.error, 'Payment has not been captured yet. Status: failed');
 
   } finally {
-    axios.create = origAxiosCreate;
     global.fetch = originalFetch;
     process.env.SUPABASE_SERVICE_ROLE_KEY = originalKey;
     process.env.RAZORPAY_KEY_ID = originalRzpId;
