@@ -1342,9 +1342,9 @@
   .showcase-text h2{
     font-family:var(--display);
     font-weight:900;
-    font-size:clamp(32px,4vw,56px);
-    line-height:1.04;
-    letter-spacing:-.03em;
+    font-size:var(--fs-h2);
+    line-height:var(--lh-display);
+    letter-spacing:var(--ls-display);
     margin-bottom:24px;
   }
   .showcase-text p{
@@ -1394,20 +1394,14 @@
   .science h2{
     font-family:var(--display);
     font-weight:900;
-    font-size:clamp(48px,8vw,120px);
-    line-height:.9;
-    letter-spacing:-.04em;
+    font-size:var(--fs-h2);
+    line-height:var(--lh-display);
+    letter-spacing:var(--ls-display);
     max-width:1000px;
   }
-  .science h2 .acid-mark{
-    background:var(--acid);
-    color:var(--ink);
-    padding:0 .15em;
-    display:inline-block;
-    font-style:italic;
-    font-weight:400;
-    transform:rotate(-1deg);
-  }
+  /* Accent words are acid text, as on every other page (was a tilted
+     acid highlight block in a lighter italic — PDP-only). */
+  .science h2 .acid-mark{color:var(--acid)}
   .ingredients{
     margin-top:80px;
     display:grid;
@@ -1462,9 +1456,9 @@
   .pricing h2{
     font-family:var(--display);
     font-weight:900;
-    font-size:clamp(48px,8vw,120px);
-    line-height:.9;
-    letter-spacing:-.04em;
+    font-size:var(--fs-h2);
+    line-height:var(--lh-display);
+    letter-spacing:var(--ls-display);
     margin-bottom:24px;
   }
   .pricing .sub{
@@ -1685,7 +1679,6 @@
   .final h2{
     font-family:var(--display);
     font-weight:900;
-    font-style:italic;
     font-size:clamp(38px,6vw,72px);
     line-height:1;
     letter-spacing:-.03em;
@@ -2716,21 +2709,14 @@
   }
   .use-cases h2{
     font-family:var(--display);
-    font-weight:400;
-    font-style:italic;
-    font-size:clamp(40px,7vw,96px);
-    line-height:1;
+    font-weight:900;
+    font-size:var(--fs-h2);
+    line-height:var(--lh-display);
     letter-spacing:-.03em;
     max-width:1200px;
   }
   .use-cases h2 b{font-style:normal;font-weight:900}
-  .use-cases h2 .acid-mark{
-    background:var(--acid);
-    color:var(--ink);
-    padding:0 .15em;
-    display:inline-block;
-    transform:rotate(-1deg);
-  }
+  .use-cases h2 .acid-mark{color:var(--acid)}
   .use-grid{
     margin-top:80px;
     display:grid;
@@ -2799,9 +2785,8 @@
   }
   .htu-head h3{
     font-family:var(--display);
-    font-weight:400;
-    font-style:italic;
-    font-size:clamp(32px,4vw,52px);
+    font-weight:900;
+    font-size:var(--fs-h3);
     line-height:1.05;
     letter-spacing:-.02em;
     margin-top:16px;

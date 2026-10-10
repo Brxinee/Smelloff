@@ -404,3 +404,58 @@ footer:has(> a) > a{
 .hero-hook{padding:8px 16px}
 img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-lg)}
 .pull-quote{border-radius:var(--sq-md);padding:20px 24px;border-left:2px solid var(--acid)}
+
+/* =====================================================================
+   §9 · CONSISTENCY LAYER (2026-10-10)
+   ---------------------------------------------------------------------
+   A computed-style audit of every page type found five primary-button
+   shapes (6/8/14/100px radius, two families, 36–69px tall), card radii
+   from 6px to 24px, and section labels that were acid on one page and grey
+   on the next. This section is the single definition of each; pages keep
+   their own colours and layout, but shape and type come from here.
+   Add a new page's classes to these lists rather than restyling locally.
+   ===================================================================== */
+
+/* Section label — same as chrome.css .sf-eyebrow: acid, mono, 34px rule. */
+.hm-eyebrow,.section-tag,.p-eyebrow,.b-eyebrow{
+  display:flex !important;align-items:center;gap:12px;
+  font-family:var(--mono) !important;
+  font-size:var(--fs-eyebrow) !important;
+  font-weight:400 !important;
+  letter-spacing:var(--ls-eyebrow) !important;
+  text-transform:uppercase;
+  color:var(--acid) !important;
+}
+.hm-eyebrow::before,.section-tag::before,.p-eyebrow::before,.b-eyebrow::before{
+  content:'' !important;
+  width:34px !important;height:1px !important;flex:0 0 34px;
+  background:currentColor !important;opacity:.75;
+}
+
+/* Primary button — 8px radius, mono, bold, uppercase, ≥52px tall.
+   Colours stay with each page (acid fill, ink fill on acid bands, ghost). */
+.hm-btn,.hero-cta,.fix-cta,.final-btn,.price-card button,.end-cta .buy-btn,
+.b-btn-primary,.faq-cta,.c-btn,.t-btn,.cta-btn,.buy-band a,.mb-btn,.combo-btn,
+.b-news-btn,.bc-cta{
+  border-radius:var(--sq-sm) !important;
+  font-family:var(--mono) !important;
+  font-weight:700 !important;
+  letter-spacing:.1em !important;
+  text-transform:uppercase !important;
+}
+.hm-btn,.hero-cta,.fix-cta,.final-btn,.price-card button,.end-cta .buy-btn,
+.b-btn-primary,.c-btn,.t-btn,.cta-btn,.buy-band a{
+  min-height:52px;
+  font-size:14px !important;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+
+/* Cards 16px, large panels and media 20px (tokens: --sq-lg / --sq-xl). */
+.rc,.c-card,.b-spotlight,.b-featured-card,.quick-answer,.geo-answer-block,
+.solution-card,.read-next,.how-step,.rv,.combo,.ph-img--sq{
+  border-radius:var(--sq-lg) !important;
+}
+.hero-visual,.beat-art,.offer,.ph-img,.cta-box,.gal-tile,.buy-band{
+  border-radius:var(--sq-xl) !important;
+}
+.ph-img--sq{border-radius:var(--sq-lg) !important}
