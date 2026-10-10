@@ -52,322 +52,163 @@
 <link rel="stylesheet" href="/assets/css/tokens.css?v=ea5bd6cb">
 
 <style>
+  /* =====================================================================
+     /blog — redesigned 2026-10-10 (NN/g: people scan, they don't read;
+     findability beats volume). One search, one topic filter, a lead story
+     with a "start here" rail, then a grid that shows 12 and lets you ask for
+     more. Search and filters always search all 56.
+     ===================================================================== */
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--text);font-family:'Inter Tight',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
-  ::selection{background:var(--accent);color:var(--bg)}
-  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:150;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  body{background:var(--ink);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;height:auto;display:block}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .acid{color:var(--acid)}
+  .ic{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+  .b-wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:max(var(--gutter),env(safe-area-inset-left)) max(var(--gutter),env(safe-area-inset-right))}
 
-  /* Layout & Section Containers */
-  .b-hero{
-    padding:48px 20px 36px;
-    max-width:1120px;margin:0 auto;width:100%;
-    border-bottom:1px solid var(--rule);
-  }
-  .b-eyebrow{font-family:'JetBrains Mono',monospace;font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
-  .b-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--accent)}
-  .b-hero h1{
-    font-family:'Fraunces',serif;font-weight:900;
-    font-size:var(--fs-h1);letter-spacing:var(--ls-display);line-height:1.02;
-    text-transform:none;color:var(--text);margin-bottom:18px;max-width:800px;
-  }
-  .b-hero h1 .acid{color:var(--accent)}
-  .b-hero .dek{color:var(--text-secondary);font-size:16px;line-height:1.6;max-width:680px}
+  /* Hero */
+  .b-hero{padding:clamp(28px,5vw,64px) 0 clamp(20px,3vw,32px)}
+  .b-eyebrow{margin-bottom:14px}
+  .b-hero h1{font-family:var(--display);font-weight:900;font-size:var(--fs-h1);line-height:var(--lh-display);letter-spacing:var(--ls-display);max-width:16ch;text-wrap:balance}
+  .b-hero .dek{margin-top:16px;max-width:60ch;font-size:var(--fs-lead);line-height:1.55;color:var(--text-2)}
+  .b-hero-facts{display:flex;flex-wrap:wrap;gap:8px 18px;list-style:none;margin-top:18px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
+  .b-hero-facts li{display:inline-flex;align-items:center;gap:7px}
+  .b-hero-facts .ic{width:16px;height:16px;color:var(--acid)}
+  .b-search-wrap{position:relative;margin-top:24px;max-width:640px}
+  .b-search-wrap>.ic{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+  .b-search{width:100%;min-height:54px;padding:0 48px 0 46px;font:16px var(--body);color:var(--text);
+    background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--sq-sm);outline:none;-webkit-appearance:none}
+  .b-search:focus{border-color:var(--acid);box-shadow:0 0 0 3px var(--acid-dim)}
+  .b-search::placeholder{color:#7d7972}
+  .b-search::-webkit-search-cancel-button{display:none}
+  .b-search-clear{display:none;position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;
+    align-items:center;justify-content:center;border:0;background:none;color:var(--text-2);cursor:pointer}
+  .b-search-clear .ic{width:16px;height:16px}
 
-  /* Stats / Trust Badges Row */
-  .b-hero-pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-  .b-pill{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);background:var(--bg-surface);border:1px solid var(--rule);padding:6px 12px;border-radius:20px;display:inline-flex;align-items:center;gap:6px}
-  .b-pill-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  /* Lead story + start-here rail */
+  .b-lead{display:grid;gap:16px;padding-bottom:clamp(28px,4vw,48px)}
+  @media(min-width:960px){.b-lead{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:stretch}}
+  .b-featured-card{display:grid;overflow:hidden;text-decoration:none;color:inherit;
+    border:1px solid var(--rule);border-radius:var(--sq-xl);background:var(--surface);transition:border-color .2s var(--ease)}
+  .b-featured-card:hover{border-color:rgba(var(--acid-rgb),.5)}
+  @media(min-width:768px){.b-featured-card{grid-template-columns:1.1fr 1fr}}
+  .b-featured-thumb{position:relative;background:#111;aspect-ratio:16/10;overflow:hidden}
+  @media(min-width:768px){.b-featured-thumb{aspect-ratio:auto;min-height:100%}}
+  .b-featured-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
+  .b-featured-card:hover .b-featured-thumb img{transform:scale(1.03)}
+  .b-featured-badge{position:absolute;left:14px;top:14px;z-index:1;padding:5px 10px;border-radius:var(--r-pill);
+    background:var(--acid);color:var(--on-acid);font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em}
+  .b-featured-body{display:flex;flex-direction:column;gap:12px;padding:clamp(20px,3vw,32px)}
+  .b-featured-meta,.b-card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .b-featured-cat,.b-card-cat{color:var(--acid)}
+  .b-featured-body h2{font-family:var(--display);font-weight:900;font-size:clamp(24px,2.8vw,34px);line-height:1.1;letter-spacing:-.015em;text-wrap:balance}
+  .b-featured-body p{color:var(--text-2);font-size:15.5px;line-height:1.55}
+  .b-featured-cta{margin-top:auto;display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acid)}
+  .b-start{border:1px solid var(--rule);border-radius:var(--sq-xl);background:var(--surface);padding:clamp(18px,2.4vw,26px);display:flex;flex-direction:column}
+  .b-start h2{font-family:var(--mono);font-weight:400;font-size:var(--fs-eyebrow);letter-spacing:var(--ls-eyebrow);text-transform:uppercase;color:var(--acid);margin-bottom:6px}
+  .b-start ol{list-style:none;counter-reset:st}
+  .b-start li{counter-increment:st;border-top:1px solid var(--rule-soft)}
+  .b-start li:first-child{border-top:0}
+  .b-start a{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;min-height:64px;padding:12px 0;
+    text-decoration:none;color:var(--text)}
+  .b-start a::before{content:"0" counter(st);font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .b-start a b{font-family:var(--display);font-weight:900;font-size:17px;line-height:1.25}
+  .b-start a small{display:block;margin-top:3px;font-size:13px;color:var(--muted);font-weight:400;font-family:var(--body)}
+  .b-start a .ic{color:var(--acid);transition:transform .2s var(--ease)}
+  .b-start a:hover b{color:var(--acid)}
+  .b-start a:hover .ic{transform:translateX(3px)}
 
-  /* Search bar */
-  .b-hero-search{margin-top:28px;display:flex;flex-direction:column;gap:12px}
-  .b-search-wrap{position:relative;width:100%;max-width:560px}
-  .b-search{
-    width:100%;background:var(--bg-surface);
-    border:1px solid var(--rule);border-radius:8px;
-    color:var(--text);font-family:'Inter Tight',sans-serif;font-size:15px;
-    padding:12px 42px 12px 16px;outline:none;
-    transition:border-color .2s ease, box-shadow .2s ease;
-  }
-  .b-search::placeholder{color:var(--muted)}
-  .b-search:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--accent-rgb),0.2)}
-  .b-search-clear{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px;display:none}
-  .b-search-clear:hover{color:var(--accent)}
+  /* Topic filter — sticks under the header so it's there while you scroll. */
+  .b-cats-sec{position:sticky;top:64px;z-index:20;background:rgba(8,8,8,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border-block:1px solid var(--rule-soft)}
+  .b-cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-block:10px}
+  .b-cats::-webkit-scrollbar{display:none}
+  .b-cat{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 15px;border-radius:var(--r-pill);
+    border:1px solid var(--rule);background:transparent;color:var(--text-2);font:500 14px var(--body);cursor:pointer;white-space:nowrap;
+    transition:border-color .15s,background-color .15s,color .15s}
+  .b-cat:hover{border-color:var(--text-2);color:var(--text)}
+  .b-cat.is-active{background:var(--acid);border-color:var(--acid);color:var(--on-acid);font-weight:600}
+  .b-cat .n{font-family:var(--mono);font-size:11px;opacity:.7}
+  .b-cat:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
 
-  /* Section Headings */
-  .b-section-head{
-    max-width:1120px;margin:0 auto;padding:40px 20px 18px;
-    display:flex;align-items:center;justify-content:space-between;gap:14px;
-  }
-  .b-section-tag{
-    font-family:'Fraunces',serif;font-weight:900;font-size:20px;
-    letter-spacing:-.01em;text-transform:none;color:var(--text);
-    display:inline-flex;align-items:center;gap:10px;margin:0;
-  }
-  .b-section-tag::before{content:'';width:18px;height:2px;background:var(--accent)}
-  .b-section-count{
-    font-family:'JetBrains Mono',monospace;font-weight:400;font-size:12px;
-    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-  }
-
-  /* Featured Spotlight Hero Card */
-  .b-featured-sec{max-width:1120px;margin:0 auto;padding:32px 20px 0}
-  .b-featured-card{
-    background:var(--bg-surface);border:1px solid var(--rule);border-radius:12px;
-    display:grid;grid-template-columns:1fr;gap:0;
-    text-decoration:none;color:var(--text);overflow:hidden;
-    transition:border-color .2s ease, transform .2s ease;
-  }
-  .b-featured-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-  .b-featured-thumb{
-    position:relative;width:100%;aspect-ratio:16/9;
-    background:var(--bg);
-    border-bottom:1px solid var(--rule);
-    display:flex;align-items:center;justify-content:center;
-  }
-  .b-featured-thumb picture, .b-featured-thumb img{
-    width:100%;height:auto;display:block;
-  }
-  .b-featured-badge{
-    position:absolute;top:14px;left:14px;z-index:2;
-    font-family:'JetBrains Mono',monospace;font-weight:400;font-size:10px;
-    letter-spacing:.18em;text-transform:uppercase;color:var(--bg);
-    background:var(--accent);padding:4px 10px;border-radius:2px;
-  }
-  .b-featured-body{padding:24px 20px;display:flex;flex-direction:column;justify-content:center;gap:12px}
-  .b-featured-meta{
-    display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;
-    font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:500;
-    letter-spacing:.04em;color:var(--muted);text-transform:uppercase;
-  }
-  .b-featured-cat{color:var(--accent);font-weight:600}
-  .b-featured-body h2{
-    font-family:'Fraunces',serif;font-weight:900;
-    font-size:clamp(22px,4vw,32px);line-height:1.15;letter-spacing:-.01em;
-    color:var(--text);margin:0;
-  }
-  .b-featured-body p{
-    font-family:'Inter Tight',sans-serif;font-size:15px;line-height:1.6;
-    color:var(--text-secondary);margin:0;
-  }
-  .b-featured-cta{
-    font-family:'JetBrains Mono',monospace;font-weight:400;
-    font-size:12px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--accent);margin-top:6px;
-    display:inline-flex;align-items:center;gap:6px;
-  }
-  .b-featured-cta::after{content:'→';transition:transform .2s ease}
-  .b-featured-card:hover .b-featured-cta::after{transform:translateX(4px)}
-
-  @media(min-width:768px){
-    .b-featured-card{grid-template-columns:1.1fr 1fr}
-    .b-featured-thumb{aspect-ratio:16/9;height:auto;border-bottom:none;border-right:1px solid var(--rule)}
-    .b-featured-body{padding:36px 32px}
-  }
-
-  /* Topic Filter Chips */
-  .b-cats-sec{max-width:1120px;margin:0 auto;padding:24px 20px 0}
-  .b-cats{display:flex;flex-wrap:wrap;gap:8px}
-  .b-cat{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-    padding:8px 16px;min-height:38px;cursor:pointer;
-    background:var(--bg-surface);color:var(--text-secondary);
-    border:1px solid var(--rule);border-radius:999px;
-    transition:color .2s,border-color .2s,background-color .2s;
-  }
-  .b-cat:hover{border-color:var(--accent);color:var(--accent)}
-  .b-cat.is-active{background:var(--accent);border-color:var(--accent);color:#080808;font-weight:600}
-
-  /* Main Posts Grid */
-  .b-posts{
-    flex:1;width:100%;max-width:1120px;margin:0 auto;
-    padding:20px 20px 60px;
-  }
-  .b-grid{
-    display:grid;grid-template-columns:1fr;gap:16px;
-  }
-  @media(min-width:680px){.b-grid{grid-template-columns:1fr 1fr}}
-  @media(min-width:1024px){.b-grid{grid-template-columns:1fr 1fr 1fr}}
-
-  /* Standard Post Card */
-  .b-card{
-    background:var(--bg-surface);border:1px solid var(--rule);border-radius:10px;
-    display:flex;flex-direction:column;
-    text-decoration:none;color:var(--text);
-    transition:border-color .2s ease, transform .2s ease;
-    overflow:hidden;
-  }
-  .b-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-  .b-card-thumb{
-    position:relative;width:100%;aspect-ratio:16/9;
-    background:var(--bg);
-    border-bottom:1px solid var(--rule);
-    display:flex;align-items:center;justify-content:center;
-    overflow:hidden;
-  }
-  .b-card-thumb picture{
-    display:block;width:100%;height:100%;
-  }
-  .b-card-thumb img{
-    width:100%;height:100%;object-fit:cover;display:block;
-  }
-  .b-card-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}
-  .b-card-meta{
-    display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;
-    font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:500;
-    letter-spacing:.04em;color:var(--muted);text-transform:uppercase;
-  }
-  .b-card-cat{color:var(--accent);font-weight:600}
-  .b-card-sep{color:var(--rule)}
-  .b-card h3{
-    font-family:'Fraunces',serif;font-weight:900;
-    font-size:20px;line-height:1.2;letter-spacing:-.01em;
-    color:var(--text);margin:0;
-  }
-  .b-card p{
-    font-family:'Inter Tight',sans-serif;font-size:14px;line-height:1.55;
-    color:var(--text-secondary);margin:0;
-    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;
-    line-clamp:3;overflow:hidden;
-  }
-  .b-card-arrow{
-    font-family:'JetBrains Mono',monospace;font-weight:400;
-    font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--accent);margin-top:auto;padding-top:6px;
-    display:inline-flex;align-items:center;gap:6px;
-  }
-  .b-card-arrow::after{content:'→';transition:transform .2s ease}
-  .b-card:hover .b-card-arrow::after{transform:translateX(3px)}
-  /* Phones: 56 full-width cards ran ~25,000px of scrolling. Below the
-     two-column switch each card is a compact row — square thumb, category,
-     title, read time — so a visitor can scan the whole library. */
-  @media(max-width:679px){
-    .b-grid{gap:10px}
-    .b-card{flex-direction:row;align-items:stretch;border-radius:14px}
-    .b-card-thumb{width:104px;flex:none;aspect-ratio:auto;min-height:104px;border-bottom:0;border-right:1px solid var(--rule)}
-    .b-card-body{padding:12px 14px;gap:6px;justify-content:center}
-    .b-card h3{font-size:16.5px;line-height:1.22}
+  /* Grid */
+  .b-posts{padding-block:clamp(24px,4vw,40px) clamp(40px,6vw,72px)}
+  .b-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .b-section-tag{font-family:var(--display);font-weight:900;font-size:var(--fs-h3);line-height:1.1}
+  .b-section-count{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+  .b-grid{display:grid;gap:12px}
+  @media(min-width:768px){.b-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}}
+  @media(min-width:1160px){.b-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .b-card{display:flex;flex-direction:column;overflow:hidden;text-decoration:none;color:inherit;
+    border:1px solid var(--rule);border-radius:var(--sq-lg);background:var(--surface);transition:border-color .2s var(--ease),transform .2s var(--ease)}
+  .b-card:hover{border-color:rgba(var(--acid-rgb),.5)}
+  @media(prefers-reduced-motion:no-preference){.b-card:hover{transform:translateY(-2px)}}
+  .b-card-thumb{aspect-ratio:16/9;overflow:hidden;background:#111}
+  .b-card-thumb img{width:100%;height:100%;object-fit:cover}
+  .b-card-body{display:flex;flex-direction:column;gap:8px;padding:16px 18px 18px;flex:1}
+  .b-card h3{font-family:var(--display);font-weight:900;font-size:19px;line-height:1.22;letter-spacing:-.01em;text-wrap:balance}
+  .b-card p{font-size:14.5px;line-height:1.5;color:var(--text-2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .b-card-arrow{margin-top:auto;padding-top:6px;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acid)}
+  .b-card-sep{opacity:.5}
+  /* Phones: compact rows — thumb, category, title. ~27k px → a few screens. */
+  @media(max-width:767px){
+    .b-card{flex-direction:row;align-items:stretch}
+    .b-card-thumb{flex:0 0 112px;aspect-ratio:auto}
+    .b-card-body{padding:12px 14px;gap:6px}
+    .b-card h3{font-size:16px}
     .b-card p,.b-card-arrow{display:none}
   }
+  .b-more{display:flex;justify-content:center;margin-top:24px}
+  .b-more button{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 24px;border-radius:var(--sq-sm);
+    border:1px solid var(--border-strong);background:transparent;color:var(--text);font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .b-more button:hover{border-color:var(--acid);color:var(--acid)}
+  .b-more[hidden]{display:none}
+  .b-empty{padding:40px 20px;text-align:center;color:var(--text-2);border:1px dashed var(--rule);border-radius:var(--sq-lg)}
+  .b-empty-btn{margin-top:14px;min-height:44px;padding:0 18px;border-radius:var(--sq-sm);border:1px solid var(--acid);background:transparent;color:var(--acid);font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 
-  /* Product Banner Card (Conversion Nudge) */
-  .b-spotlight-sec{max-width:1120px;margin:20px auto 40px;padding:0 20px}
-  .b-spotlight{
-    background:linear-gradient(135deg, rgba(var(--accent-rgb), 0.08) 0%, rgba(20,20,20,1) 100%);
-    border:1px solid var(--accent);border-radius:12px;
-    padding:28px 24px;display:flex;flex-direction:column;gap:16px;
-    position:relative;overflow:hidden;
-  }
-  .b-spotlight-tag{
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--accent);font-weight:600;
-  }
-  .b-spotlight h3{
-    font-family:'Fraunces',serif;font-weight:900;font-size:24px;line-height:1.15;color:var(--text);margin:0;
-  }
-  .b-spotlight p{
-    font-family:'Inter Tight',sans-serif;font-size:15px;line-height:1.55;color:var(--text-secondary);margin:0;max-width:720px;
-  }
-  .b-spotlight-cta{
-    display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px;
-  }
-  .b-btn-primary{
-    background:var(--accent);color:#080808;font-family:'JetBrains Mono',monospace;
-    font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-    padding:12px 22px;border-radius:6px;text-decoration:none;
-    transition:background .15s ease, transform .15s ease;
-  }
-  .b-btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px)}
-  .b-btn-secondary{
-    background:transparent;color:var(--text);font-family:'JetBrains Mono',monospace;
-    font-weight:400;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-    padding:12px 18px;border:1px solid var(--rule);border-radius:6px;text-decoration:none;
-    transition:border-color .15s ease, color .15s ease;
-  }
-  .b-btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+  /* Product band */
+  .b-spotlight-sec{padding-bottom:clamp(32px,5vw,56px)}
+  .b-spotlight{display:grid;gap:22px;align-items:center;padding:clamp(22px,4vw,40px);border-radius:var(--sq-xl);
+    background:radial-gradient(ellipse at 85% 50%,rgba(var(--acid-rgb),.16),transparent 60%),var(--surface);border:1px solid rgba(var(--acid-rgb),.35)}
+  @media(min-width:960px){.b-spotlight{grid-template-columns:auto 1fr auto;gap:32px}}
+  .b-spotlight-img{display:none}
+  @media(min-width:960px){.b-spotlight-img{display:block;height:180px;width:auto}}
+  .b-spotlight-tag{margin-bottom:10px}
+  .b-spotlight h3{font-family:var(--display);font-weight:900;font-size:clamp(24px,3vw,34px);line-height:1.1;text-wrap:balance}
+  .b-spotlight p{margin-top:10px;color:var(--text-2);max-width:56ch}
+  .b-spotlight-cta{display:flex;flex-wrap:wrap;gap:10px}
+  .b-btn-primary,.b-btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 22px;
+    font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:var(--sq-sm)}
+  .b-btn-primary{background:var(--acid);color:var(--on-acid)}
+  .b-btn-primary:hover{background:var(--acid-hi)}
+  .b-btn-secondary{border:1px solid var(--border-strong);color:var(--text)}
+  .b-btn-secondary:hover{border-color:var(--text)}
 
-  @media(min-width:768px){
-    .b-spotlight{padding:36px 32px;flex-direction:row;align-items:center;justify-content:space-between}
-    .b-spotlight-content{flex:1}
-  }
-
-  /* Author Spotlight Box */
-  .b-author-sec{max-width:1120px;margin:20px auto 40px;padding:0 20px}
-  .b-author-card{
-    background:var(--bg-surface);border:1px solid var(--rule);border-radius:12px;
-    padding:28px 24px;display:flex;flex-direction:column;gap:16px;align-items:flex-start;
-  }
-  .b-author-badge{
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--accent);
-  }
-  .b-author-title{font-family:'Fraunces',serif;font-weight:900;font-size:22px;color:var(--text);margin:0}
-  .b-author-bio{font-family:'Inter Tight',sans-serif;font-size:15px;line-height:1.6;color:var(--text-secondary);margin:0;max-width:780px}
-
-  @media(min-width:680px){
-    .b-author-card{padding:32px 36px}
-  }
-
-  /* Newsletter Box */
-  /* min-width:0 because <body> is a flex container here: a flex item refuses
-     to shrink below its min-content width, and .b-news-input's min-width:220px
-     plus the Subscribe button made that 332px. At 320 the whole section hung
-     12px off the right edge of the page. */
-  .b-news-sec{max-width:1120px;margin:0 auto 60px;padding:0 20px;min-width:0}
-  .b-news-card{
-    background:var(--bg-surface);border:1px solid var(--rule);border-radius:12px;
-    padding:32px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;
-  }
-  .b-news-card h3{font-family:'Fraunces',serif;font-weight:900;font-size:24px;color:var(--text);margin:0}
-  .b-news-card p{font-size:15px;color:var(--text-secondary);max-width:540px;margin:0}
-  .b-news-form{display:flex;flex-wrap:wrap;gap:8px;width:100%;max-width:460px;margin-top:6px}
-  .b-news-input{
-    flex:1;min-width:220px;background:var(--bg);border:1px solid var(--rule);
-    border-radius:6px;padding:12px 16px;color:var(--text);font-family:'Inter Tight',sans-serif;font-size:14px;outline:none;
-  }
-  .b-news-input:focus{border-color:var(--accent)}
-  .b-news-input[aria-invalid="true"]{border-color:#ff6b6b}
-  .b-news-status{margin:10px 0 0;font-size:14px;min-height:1.2em}
-  .b-news-status[data-state="ok"]{color:var(--accent)}
-  .b-news-status[data-state="err"]{color:#ff6b6b}
-  .b-news-btn{
-    background:var(--accent);color:#080808;font-family:'JetBrains Mono',monospace;
-    font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-    padding:12px 20px;border:none;border-radius:6px;cursor:pointer;
-    min-height:44px;
-  }
-  /* Below the phone breakpoint the field and the button take a row each —
-     220px of input plus a Subscribe button does not fit in a 280px content
-     box, and two full-width 44px controls are the easier target anyway.
-     Same treatment as the consent bar's action row (chrome.css §5.2).
-
-     `width:100%` on the input is doing the real work and min-width:0 alone
-     will not replace it: an <input> with no `size` attribute has an intrinsic
-     preferred width of about 20 characters — 242px here — and that is its
-     min-content contribution, which min-width:0 does not reduce. It pushed
-     .b-news-sec to 332px inside a 320px viewport, and because <body> on this
-     page is a flex column, the section's refusal to shrink set the page's
-     scroll width. An explicit width overrides the intrinsic size outright. */
-  @media(max-width:520px){
-    .b-news-input{min-width:0;width:100%;flex:1 1 100%}
-    .b-news-btn{width:100%}
-  }
-
-  /* Empty Filter State */
-  .b-empty{
-    max-width:1120px;margin:30px auto;padding:48px 20px;text-align:center;
-    background:var(--bg-surface);border:1px solid var(--rule);border-radius:10px;
-    color:var(--text-secondary);font-family:'Inter Tight',sans-serif;font-size:15px;
-  }
-  .b-empty-btn{
-    margin-top:14px;background:var(--accent);color:#080808;
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
-    text-transform:uppercase;padding:8px 16px;border:none;border-radius:4px;cursor:pointer;
-  }
-
-  /* Focus visible accessibility */
-  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* Author + newsletter */
+  .b-about{display:grid;gap:14px;padding-bottom:clamp(48px,7vw,88px)}
+  @media(min-width:960px){.b-about{grid-template-columns:1fr 1fr}}
+  .b-author-card,.b-news-card{padding:clamp(20px,3vw,32px);border:1px solid var(--rule);border-radius:var(--sq-xl);background:var(--surface)}
+  .b-author-head{display:flex;align-items:center;gap:14px;margin:12px 0 10px}
+  .b-author-ava{width:52px;height:52px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    background:var(--acid);color:var(--on-acid);font-family:var(--display);font-weight:900;font-size:20px}
+  .b-author-title{font-family:var(--display);font-weight:900;font-size:19px;line-height:1.25}
+  .b-author-role{font-size:13.5px;color:var(--muted)}
+  .b-author-bio{color:var(--text-2);font-size:15px;line-height:1.6}
+  .b-author-link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;color:var(--acid);font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+  .b-author-link:hover{text-decoration:underline;text-underline-offset:3px}
+  .b-news-card h3{font-family:var(--display);font-weight:900;font-size:clamp(22px,2.6vw,28px);line-height:1.15;margin:12px 0 8px}
+  .b-news-card>p{color:var(--text-2);font-size:15px}
+  .b-news-form{display:flex;gap:8px;margin-top:16px}
+  .b-news-input{flex:1;min-width:0;min-height:52px;padding:0 16px;font:16px var(--body);color:var(--text);background:var(--ink);border:1px solid var(--border-strong);border-radius:var(--sq-sm);outline:none}
+  .b-news-input:focus{border-color:var(--acid);box-shadow:0 0 0 3px var(--acid-dim)}
+  .b-news-btn{min-height:52px;padding:0 20px;border:0;background:var(--acid);color:var(--on-acid);cursor:pointer}
+  .b-news-btn:hover{background:var(--acid-hi)}
+  .b-news-status{margin-top:10px;font-size:14px;min-height:1em}
+  .b-news-status[data-state="ok"]{color:var(--acid)}
+  .b-news-status[data-state="err"]{color:#ff9a9a}
+  @media(max-width:420px){.b-news-form{flex-direction:column}}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
 </style>
 <script src="/assets/js/consent-analytics.js?v=26d989b6" defer></script>
 <link rel="alternate" type="text/plain" title="LLM content" href="https://smelloff.in/llms.txt">
@@ -421,30 +262,40 @@
 <!-- /SF-CHROME:HEADER -->
 
 <!-- Hero Section -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M10 2v7.53a2 2 0 0 1-.21.9L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.07-10.13a2 2 0 0 1-.21-.9V2"/><path d="M8.5 2h7M7 16h10"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-5.54 10.19-7.4 11.8a1 1 0 0 1-1.2 0C9.54 20.19 4 15 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></symbol>
+</svg>
 <main>
 <header id="sf-main" tabindex="-1" class="b-hero">
-  <div class="b-eyebrow">SMELLOFF FABRIC SCIENCE & GUIDES</div>
+  <div class="b-wrap">
+  <div class="b-eyebrow">SMELLOFF FABRIC SCIENCE &amp; GUIDES</div>
   <h1>No fluff. Just the <span class="acid">real science</span> of fabric odor.</h1>
-  <p class="dek">Why your clothes reek after washing, what deodorant can't fix, and how contact chemistry actually stops odor. Written by founder &amp; formulator Jogdhande Nikhil Patil.</p>
-  
-  <div class="b-hero-pills">
-    <span class="b-pill"><span class="b-pill-dot"></span> 50+ Fabric Guides</span>
-    <span class="b-pill"><span class="b-pill-dot"></span> India-first</span>
-    <span class="b-pill"><span class="b-pill-dot"></span> Fabric Only</span>
-    <span class="b-pill"><span class="b-pill-dot"></span> Source-led</span>
+  <p class="dek">Why your clothes smell after washing, what deodorant can't fix, and how to get odor out of fabric. Written by founder &amp; formulator Jogdhande Nikhil Patil.</p>
+  <ul class="b-hero-facts">
+    <li><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg>56 guides</li>
+    <li><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>Written for Indian weather</li>
+    <li><svg class="ic" aria-hidden="true"><use href="#i-shirt"/></svg>Clothes only</li>
+    <li><svg class="ic" aria-hidden="true"><use href="#i-flask"/></svg>Sources cited</li>
+  </ul>
+  <div class="b-search-wrap" role="search">
+    <label for="blogSearch" class="sr-only">Search guides</label>
+    <svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>
+    <input type="search" id="blogSearch" class="b-search" placeholder="Search: sweat smell, monsoon, Zinc PCA…" autocomplete="off" spellcheck="false" enterkeyhint="search">
+    <button type="button" id="searchClear" class="b-search-clear" aria-label="Clear search"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
-
-  <div class="b-hero-search">
-    <div class="b-search-wrap">
-      <label for="blogSearch" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Search guides</label>
-      <input type="search" id="blogSearch" class="b-search" placeholder="Search by topic, ingredient (Zinc PCA, HPβCD), or problem..." autocomplete="off" spellcheck="false">
-      <button type="button" id="searchClear" class="b-search-clear" aria-label="Clear search">✕</button>
-    </div>
   </div>
 </header>
 
 <!-- Featured Lead Article -->
-<section class="b-featured-sec" id="featuredSection">
+<section class="b-featured-sec" id="featuredSection" aria-label="Featured and start here">
+<div class="b-wrap b-lead">
   <a href="/blog/gym-clothes-smell-after-washing" class="b-featured-card">
     <div class="b-featured-thumb">
       <span class="b-featured-badge">FEATURED GUIDE</span>
@@ -460,28 +311,37 @@
       </div>
       <h2>Why gym clothes still smell after washing (and how to strip trapped lipids)</h2>
       <p>Polyester grips the body lipids that odor bacteria feed on, and a cold cycle with softener leaves them trapped inside synthetic fibers. How to strip them out, and where a between-wear mist honestly fits.</p>
-      <span class="b-featured-cta">Read Featured Guide</span>
+      <span class="b-featured-cta">Read the guide <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
     </div>
   </a>
+  <nav class="b-start" aria-labelledby="startTitle">
+    <h2 id="startTitle">New here? Start with these</h2>
+    <ol>
+      <li><a href="/blog/what-is-fabric-odor-eliminator"><span><b>What is a fabric odor eliminator?</b><small>The category, in plain words</small></span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+      <li><a href="/blog/odor-on-clothes-vs-odor-in-clothes"><span><b>Odor on clothes vs odor in clothes</b><small>Why washing alone sometimes isn't enough</small></span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+      <li><a href="/blog/how-to-use-odorstrike"><span><b>How to use ODORSTRIKE</b><small>Spray, wait, wear — and what not to do</small></span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+    </ol>
+  </nav>
+</div>
 </section>
 
 <!-- Category Filter Pills -->
-<section class="b-cats-sec">
-  <div class="b-cats" role="group" aria-label="Filter guides by category">
-    <button class="b-cat is-active" data-cat="all" type="button" aria-pressed="true">All Guides (56)</button>
-    <button class="b-cat" data-cat="science" type="button" aria-pressed="false">Science &amp; Ingredients</button>
-    <button class="b-cat" data-cat="how-to" type="button" aria-pressed="false">How-To &amp; Care</button>
-    <button class="b-cat" data-cat="buying" type="button" aria-pressed="false">Buyer's Guides</button>
-    <button class="b-cat" data-cat="comparison" type="button" aria-pressed="false">Comparisons</button>
-    <button class="b-cat" data-cat="founder" type="button" aria-pressed="false">Founder Story</button>
+<section class="b-cats-sec" aria-label="Filter guides by topic">
+  <div class="b-wrap b-cats" role="group" aria-label="Filter guides by topic">
+    <button class="b-cat is-active" data-cat="all" type="button" aria-pressed="true">All <span class="n">56</span></button>
+    <button class="b-cat" data-cat="science" type="button" aria-pressed="false">Science &amp; ingredients <span class="n">18</span></button>
+    <button class="b-cat" data-cat="how-to" type="button" aria-pressed="false">How-to &amp; care <span class="n">27</span></button>
+    <button class="b-cat" data-cat="buying" type="button" aria-pressed="false">Buyer's guides <span class="n">7</span></button>
+    <button class="b-cat" data-cat="comparison" type="button" aria-pressed="false">Comparisons <span class="n">3</span></button>
+    <button class="b-cat" data-cat="founder" type="button" aria-pressed="false">Founder story <span class="n">1</span></button>
   </div>
 </section>
 
 <!-- Main Articles Grid -->
-<section class="b-posts" id="latestSection">
+<section class="b-posts b-wrap" id="latestSection">
   <div class="b-section-head">
     <h2 class="b-section-tag">All Articles</h2>
-    <span class="b-section-count" id="latestCount">56 guides</span>
+    <span class="b-section-count" id="latestCount" aria-live="polite">56 guides</span>
   </div>
 
   <div class="b-grid" id="latestGrid">
@@ -494,7 +354,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Category Education</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>The Alternative to Deodorant for Clothes Smell</h3>
         <p>Deodorant treats skin. Your shirt holds 70% of the smell. Here is the deodorant alternative built for fabric.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -506,7 +366,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Buyer Guide</span><span class="b-card-sep">&middot;</span><span>9 min</span></div>
         <h3>Best Body Odor Remover Spray for Men in India (2026)</h3>
         <p>Fabric-first body odor removal for Indian men: why skin sprays fail on clothing, and what neutralises sweat smell.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -518,7 +378,7 @@
         <div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>Mumbai Humidity & Sweat Smell Survival Guide</h3>
         <p>High humidity keeps sweat wet on fabric for hours. How to prevent monsoon and coastal clothing odor.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -530,7 +390,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Science</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>The Office AC Trap: Why Rewear Shirts Smell Worse</h3>
         <p>Air conditioning cools skin but traps bacterial volatiles inside fabric layers. Why AC rooms make shirt odor louder.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -542,7 +402,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Science</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>Perfume + Sweat: The Chemical Reaction on Clothing</h3>
         <p>Mixing heavy fragrance with stale sweat produces unpleasant secondary odor compounds. What actually works.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -554,7 +414,7 @@
         <div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>Spray to Remove Sweat Smell from Clothes Instantly</h3>
         <p>How zinc PCA and beta-cyclodextrin encapsulate volatile sweat odor in approximately 10 seconds.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -566,7 +426,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Buyer Guide</span><span class="b-card-sep">&middot;</span><span>6 min</span></div>
         <h3>Where to Buy ODORSTRIKE in India (Official Guide)</h3>
         <p>Official Smelloff store guide, pricing, COD availability, shipping timelines and authenticity checks.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -578,7 +438,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Science</span><span class="b-card-sep">&middot;</span><span>7 min</span></div>
         <h3>Why Deodorant Stops Working After 3 Hours on Shirts</h3>
         <p>Skin deodorants degrade under sweat and friction while bacterial odor builds on fabric fibers.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -590,7 +450,7 @@
         <div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>Get cooking and tadka smell out of clothes without washing</h3>
         <p>Kitchen smell lands on you as aerosolised oil rather than as loose air, which is why airing barely touches it. The three zones that take the deposit.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -604,7 +464,7 @@
         <div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>No washing machine? Keeping clothes wearable in a hostel or PG</h3>
         <p>Weekly laundry and a daily wardrobe is an arithmetic problem. Which garments genuinely re-wear, and the ninety-second routine that makes the gap survivable.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -616,7 +476,7 @@
         <div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>Get cigarette and party smoke smell out of clothes</h3>
         <p>Smoke leaves residue that keeps releasing for days, which is why one evening is still on the jacket on Thursday. What clears it and what spreads it.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -628,7 +488,7 @@
         <div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">&middot;</span><span>9 min</span></div>
         <h3>Get mothball and almirah smell out of clothes</h3>
         <p>Naphthalene goes solid straight to vapour, so it reaches every fold — and it is barely water-soluble. Why sunlight and softener are the wrong answers.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -640,7 +500,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>Keep office trousers and formals fresh between washes</h3>
         <p>Four friction zones on the inside of formal wear carry nearly all of it. The end-of-commute routine, and what daily washing costs a tailored trouser.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -652,7 +512,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Buying Guide</span><span class="b-card-sep">&middot;</span><span>9 min</span></div>
         <h3>Fabric deodorizer sprays in India: what to look for (2026)</h3>
         <p>The five criteria that decide whether a fabric spray works, the difference between masking and binding, and an honest note on where we are not the right answer.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -666,7 +526,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">&middot;</span><span>9 min</span></div>
         <h3>Which fabrics hold odor most? Cotton, polyester, denim, wool and silk</h3>
         <p>Polyester is oleophilic and grips skin lipids. Cotton absorbs more sweat but gives odor up in the wash. A fibre-by-fibre comparison, with what to do about each.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -678,7 +538,7 @@
         <div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>How to keep clothes fresh while travelling (without laundry)</h3>
         <p>Packing light only works if clothes survive a second wear. Which garments re-wear, the end-of-day routine that makes it work, and fixing a suitcase that already smells.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -690,7 +550,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>How often should you wash jeans? (And what to do in between)</h3>
         <p>What washing does to indigo and fit, why denim smells before it looks dirty, why the freezer trick does nothing, and the three zones worth treating.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -702,7 +562,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">&middot;</span><span>8 min</span></div>
         <h3>Why clothes smell musty in monsoon (and how to fix it)</h3>
         <p>Slow-drying fabric lets mould and bacteria release 1-octen-3-ol and geosmin. Why a cold re-wash makes it worse, and how to reset a dry garment in ten seconds.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -710,91 +570,91 @@
 <span id="smelloff-new-guides" hidden aria-hidden="true"></span>
 <a href="/blog/why-clothes-smell-bad-again-after-sweating" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-clothes-smell-bad-again-after-sweating@1200.avif?v=5 1200w, /blog/assets/why-clothes-smell-bad-again-after-sweating.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-clothes-smell-bad-again-after-sweating@1200.webp?v=5 1200w, /blog/assets/why-clothes-smell-bad-again-after-sweating.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-clothes-smell-bad-again-after-sweating.jpg?v=5" alt="A cotton shirt clinging at the chest and underarm in a doorway after a humid walk" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Clothes Smell Bad Again After You Start Sweating?</h3><p>Why heat and moisture can bring retained odor back on a shirt.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Clothes Smell Bad Again After You Start Sweating?</h3><p>Why heat and moisture can bring retained odor back on a shirt.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-clothes-smell-bad-after-drying" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-clothes-smell-bad-after-drying@1200.avif?v=5 1200w, /blog/assets/why-clothes-smell-bad-after-drying.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-clothes-smell-bad-after-drying@1200.webp?v=5 1200w, /blog/assets/why-clothes-smell-bad-after-drying.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-clothes-smell-bad-after-drying.jpg?v=5" alt="Washed clothes hanging limp on an indoor rack in a dim hallway with no sun, still faintly sour" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Clothes Smell Bad After Drying?</h3><p>Slow drying, retained odor and the fix before you rewash everything.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Clothes Smell Bad After Drying?</h3><p>Slow drying, retained odor and the fix before you rewash everything.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-clothes-smell-musty-after-being-stored" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-clothes-smell-musty-after-being-stored@1200.avif?v=5 1200w, /blog/assets/why-clothes-smell-musty-after-being-stored.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-clothes-smell-musty-after-being-stored@1200.webp?v=5 1200w, /blog/assets/why-clothes-smell-musty-after-being-stored.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-clothes-smell-musty-after-being-stored.jpg?v=5" alt="Folded clothes stacked on a plastic-covered almirah shelf, grey at the folds from closed storage" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Clothes Smell Musty After Being Stored?</h3><p>How humidity, trapped air and storage conditions change clean clothing.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Clothes Smell Musty After Being Stored?</h3><p>How humidity, trapped air and storage conditions change clean clothing.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-clothes-smell-in-wardrobe-even-when-clean" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-clothes-smell-in-wardrobe-even-when-clean@1200.avif?v=5 1200w, /blog/assets/why-clothes-smell-in-wardrobe-even-when-clean.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-clothes-smell-in-wardrobe-even-when-clean@1200.webp?v=5 1200w, /blog/assets/why-clothes-smell-in-wardrobe-even-when-clean.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-clothes-smell-in-wardrobe-even-when-clean.jpg?v=5" alt="Interior of a packed Indian wooden almirah with hanging formals in covers and folded stacks on the shelf" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Clothes Smell in the Wardrobe Even When They’re Clean?</h3><p>Sometimes the wardrobe is the source of stale clothing odor.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Clothes Smell in the Wardrobe Even When They’re Clean?</h3><p>Sometimes the wardrobe is the source of stale clothing odor.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-polyester-holds-odor-longer-than-cotton" class="b-card" data-cat="science">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-polyester-holds-odor-longer-than-cotton@1200.avif?v=5 1200w, /blog/assets/why-polyester-holds-odor-longer-than-cotton.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-polyester-holds-odor-longer-than-cotton@1200.webp?v=5 1200w, /blog/assets/why-polyester-holds-odor-longer-than-cotton.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-polyester-holds-odor-longer-than-cotton.jpg?v=5" alt="Macro of polyester knit fibres with an oily sheen next to a more matte cotton weave" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does Polyester Hold Odor Longer Than Cotton?</h3><p>What textile research says about polyester, cotton, sweat and odor.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does Polyester Hold Odor Longer Than Cotton?</h3><p>What textile research says about polyester, cotton, sweat and odor.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-clean-shirt-starts-smelling-within-hours" class="b-card" data-cat="science">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-clean-shirt-starts-smelling-within-hours@1200.avif?v=5 1200w, /blog/assets/why-clean-shirt-starts-smelling-within-hours.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-clean-shirt-starts-smelling-within-hours@1200.webp?v=5 1200w, /blog/assets/why-clean-shirt-starts-smelling-within-hours.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-clean-shirt-starts-smelling-within-hours.jpg?v=5" alt="A freshly ironed white shirt on a hanger in humid morning light, already slightly limp before it is worn" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does a Clean Shirt Start Smelling Within a Few Hours?</h3><p>How sweat, skin oils, microbes and fabric history create fast odor return.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does a Clean Shirt Start Smelling Within a Few Hours?</h3><p>How sweat, skin oils, microbes and fabric history create fast odor return.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/how-to-freshen-clothes-stored-for-months" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/how-to-freshen-clothes-stored-for-months@1200.avif?v=5 1200w, /blog/assets/how-to-freshen-clothes-stored-for-months.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/how-to-freshen-clothes-stored-for-months@1200.webp?v=5 1200w, /blog/assets/how-to-freshen-clothes-stored-for-months.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/how-to-freshen-clothes-stored-for-months.jpg?v=5" alt="Hands lifting folded winter clothes from a stored steel trunk in a dim Indian storeroom" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>How to Freshen Clothes After They’ve Been Stored for Months</h3><p>A practical seasonal reset for stored clothing.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>How to Freshen Clothes After They’ve Been Stored for Months</h3><p>A practical seasonal reset for stored clothing.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/how-to-pack-sweaty-clothes-without-bag-smell" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/how-to-pack-sweaty-clothes-without-bag-smell@1200.avif?v=5 1200w, /blog/assets/how-to-pack-sweaty-clothes-without-bag-smell.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/how-to-pack-sweaty-clothes-without-bag-smell@1200.webp?v=5 1200w, /blog/assets/how-to-pack-sweaty-clothes-without-bag-smell.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/how-to-pack-sweaty-clothes-without-bag-smell.jpg?v=5" alt="A damp gym t-shirt being rolled into a separate wet bag on a locker-room bench" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>How to Pack Sweaty Clothes Without Making Your Bag Smell</h3><p>Separate, dry and contain worn clothing before it turns your bag into an odor chamber.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">·</span><span>8 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>How to Pack Sweaty Clothes Without Making Your Bag Smell</h3><p>Separate, dry and contain worn clothing before it turns your bag into an odor chamber.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-body-odor-comes-back-on-clothes-so-quickly" class="b-card" data-cat="science">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-body-odor-comes-back-on-clothes-so-quickly@1200.avif?v=5 1200w, /blog/assets/why-body-odor-comes-back-on-clothes-so-quickly.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-body-odor-comes-back-on-clothes-so-quickly@1200.webp?v=5 1200w, /blog/assets/why-body-odor-comes-back-on-clothes-so-quickly.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-body-odor-comes-back-on-clothes-so-quickly.jpg?v=5" alt="A once-crisp white shirt in a humid Indian office, collar open and the underarm panel darkened after a few hours" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does Body Odor Come Back on Clothes So Quickly?</h3><p>Why a shirt can retain odor even after the skin feels fresh.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does Body Odor Come Back on Clothes So Quickly?</h3><p>Why a shirt can retain odor even after the skin feels fresh.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/odor-on-clothes-vs-odor-in-clothes" class="b-card" data-cat="science">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/odor-on-clothes-vs-odor-in-clothes@1200.avif?v=5 1200w, /blog/assets/odor-on-clothes-vs-odor-in-clothes.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/odor-on-clothes-vs-odor-in-clothes@1200.webp?v=5 1200w, /blog/assets/odor-on-clothes-vs-odor-in-clothes.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/odor-on-clothes-vs-odor-in-clothes.jpg?v=5" alt="A white shirt folded back so the clean outer chest and the soiled inner collar band are both visible" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Odor on Clothes vs Odor in Clothes: What’s Actually Happening?</h3><p>Surface odor, retained odor and why heat or moisture can make smell return.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Odor on Clothes vs Odor in Clothes: What’s Actually Happening?</h3><p>Surface odor, retained odor and why heat or moisture can make smell return.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/deodorant-perfume-on-fabric" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/deodorant-perfume-on-fabric@1200.avif?v=5 1200w, /blog/assets/deodorant-perfume-on-fabric.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/deodorant-perfume-on-fabric@1200.webp?v=5 1200w, /blog/assets/deodorant-perfume-on-fabric.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/deodorant-perfume-on-fabric.jpg?v=5" alt="A deodorant stick and perfume bottle on a bathroom shelf with a sweat-damp office shirt hanging behind them" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Odor</span><span class="b-card-sep">·</span><span>10 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Deodorant and Perfume Fail on a Sweaty Shirt</h3><p>Deodorant belongs on skin. Perfume on a worn shirt can clash with fabric odor; here is what to do instead.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Odor</span><span class="b-card-sep">·</span><span>10 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Deodorant and Perfume Fail on a Sweaty Shirt</h3><p>Deodorant belongs on skin. Perfume on a worn shirt can clash with fabric odor; here is what to do instead.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/dry-air-clothes-indian-home" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/dry-air-clothes-indian-home@1200.avif?v=5 1200w, /blog/assets/dry-air-clothes-indian-home.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/dry-air-clothes-indian-home@1200.webp?v=5 1200w, /blog/assets/dry-air-clothes-indian-home.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/dry-air-clothes-indian-home.jpg?v=5" alt="A ceiling fan above an indoor clothes horse of shirts in a tiled Indian hallway" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>10 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>How to Dry Clothes Indoors in an Indian Home Without Smell</h3><p>Space the load, move the air and check the seams before calling a shirt dry.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>10 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>How to Dry Clothes Indoors in an Indian Home Without Smell</h3><p>Space the load, move the air and check the seams before calling a shirt dry.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/how-odor-neutralizer-works-on-fabric" class="b-card" data-cat="science">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/how-odor-neutralizer-works-on-fabric@1200.avif?v=5 1200w, /blog/assets/how-odor-neutralizer-works-on-fabric.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/how-odor-neutralizer-works-on-fabric@1200.webp?v=5 1200w, /blog/assets/how-odor-neutralizer-works-on-fabric.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/how-odor-neutralizer-works-on-fabric.jpg?v=5" alt="Fine mist droplets settling into the weave of a dark shirt, the contact surface where odor control actually happens" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Product Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>How an Odor Neutralizer Works on Fabric</h3><p>What odor-neutralizing ingredients can and cannot do once odor is in a garment.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Product Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>How an Odor Neutralizer Works on Fabric</h3><p>What odor-neutralizing ingredients can and cannot do once odor is in a garment.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/remove-incense-agarbatti-dhoop-smell" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/remove-incense-agarbatti-dhoop-smell@1200.avif?v=5 1200w, /blog/assets/remove-incense-agarbatti-dhoop-smell.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/remove-incense-agarbatti-dhoop-smell@1200.webp?v=5 1200w, /blog/assets/remove-incense-agarbatti-dhoop-smell.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/remove-incense-agarbatti-dhoop-smell.jpg?v=5" alt="Agarbatti smoke drifting past a hanging cotton kurta in a warm Indian living room" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>How to Remove Incense, Agarbatti and Dhoop Smell From Clothes</h3><p>Why smoke odor clings to clothing and the practical order of operations to reset it.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>How to Remove Incense, Agarbatti and Dhoop Smell From Clothes</h3><p>Why smoke odor clings to clothing and the practical order of operations to reset it.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/vinegar-baking-soda-fabric-softener" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/vinegar-baking-soda-fabric-softener@1200.avif?v=5 1200w, /blog/assets/vinegar-baking-soda-fabric-softener.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/vinegar-baking-soda-fabric-softener@1200.webp?v=5 1200w, /blog/assets/vinegar-baking-soda-fabric-softener.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/vinegar-baking-soda-fabric-softener.jpg?v=5" alt="Vinegar, baking soda and fabric softener on a dark counter beside a crumpled grey t-shirt" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Laundry</span><span class="b-card-sep">·</span><span>12 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Does Vinegar, Baking Soda or Fabric Softener Remove Odor?</h3><p>Three laundry additives, three different jobs, and where each one stops helping.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Laundry</span><span class="b-card-sep">·</span><span>12 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Does Vinegar, Baking Soda or Fabric Softener Remove Odor?</h3><p>Three laundry additives, three different jobs, and where each one stops helping.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/wash-refresh-or-wear" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/wash-refresh-or-wear@1200.avif?v=5 1200w, /blog/assets/wash-refresh-or-wear.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/wash-refresh-or-wear@1200.webp?v=5 1200w, /blog/assets/wash-refresh-or-wear.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/wash-refresh-or-wear.jpg?v=5" alt="Three garments in one bedroom: one in a hamper, one airing on a chair, one being worn toward the door" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">·</span><span>11 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Wash It, Refresh It, or Wear It</h3><p>A simple decision tree for when a shirt needs a wash, a fabric reset or another wear.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">·</span><span>11 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Wash It, Refresh It, or Wear It</h3><p>A simple decision tree for when a shirt needs a wash, a fabric reset or another wear.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-clothes-smell-stale-in-ac-room" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-clothes-smell-stale-in-ac-room@1200.avif?v=5 1200w, /blog/assets/why-clothes-smell-stale-in-ac-room.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-clothes-smell-stale-in-ac-room@1200.webp?v=5 1200w, /blog/assets/why-clothes-smell-stale-in-ac-room.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-clothes-smell-stale-in-ac-room.jpg?v=5" alt="A pale shirt hanging motionless in a closed air-conditioned Indian bedroom" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Clothes Smell Stale in an AC Room?</h3><p>How still indoor air, humidity and slow drying can turn clean clothing stale.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Clothes Smell Stale in an AC Room?</h3><p>How still indoor air, humidity and slow drying can turn clean clothing stale.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-shirt-zones-smell-after-washing" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-shirt-zones-smell-after-washing@1200.avif?v=5 1200w, /blog/assets/why-shirt-zones-smell-after-washing.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-shirt-zones-smell-after-washing@1200.webp?v=5 1200w, /blog/assets/why-shirt-zones-smell-after-washing.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-shirt-zones-smell-after-washing.jpg?v=5" alt="Close-up of a white office shirt on a hanger, inner collar band faintly yellowed and the underarm panel worn" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Clothing Odor</span><span class="b-card-sep">·</span><span>10 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Collar and Armpits Still Smell After Washing</h3><p>Why the collar and underarm seams can hold odor even when the rest of the shirt seems clean.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Clothing Odor</span><span class="b-card-sep">·</span><span>10 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Collar and Armpits Still Smell After Washing</h3><p>Why the collar and underarm seams can hold odor even when the rest of the shirt seems clean.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-sweat-smells-stronger-on-some-shirts" class="b-card" data-cat="science">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-sweat-smells-stronger-on-some-shirts@1200.avif?v=5 1200w, /blog/assets/why-sweat-smells-stronger-on-some-shirts.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-sweat-smells-stronger-on-some-shirts@1200.webp?v=5 1200w, /blog/assets/why-sweat-smells-stronger-on-some-shirts.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-sweat-smells-stronger-on-some-shirts.jpg?v=5" alt="A glossy polyester gym tee hanging beside a matte cotton oxford, showing two very different fibre surfaces" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>10 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does Sweat Smell Stronger on Some Shirts?</h3><p>Why the same sweat can smell different depending on fabric, moisture and retained residue.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>10 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does Sweat Smell Stronger on Some Shirts?</h3><p>Why the same sweat can smell different depending on fabric, moisture and retained residue.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-traffic-fumes-cling-to-clothes" class="b-card" data-cat="science">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-traffic-fumes-cling-to-clothes@1200.avif?v=5 1200w, /blog/assets/why-traffic-fumes-cling-to-clothes.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-traffic-fumes-cling-to-clothes@1200.webp?v=5 1200w, /blog/assets/why-traffic-fumes-cling-to-clothes.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-traffic-fumes-cling-to-clothes.jpg?v=5" alt="A formal shirt catching dust and exhaust haze inside an auto-rickshaw in Indian city traffic" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Traffic Fumes Cling to Clothes?</h3><p>What happens when a commute leaves smoke and roadside odors on the outer face of a shirt.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Do Traffic Fumes Cling to Clothes?</h3><p>What happens when a commute leaves smoke and roadside odors on the outer face of a shirt.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-washing-machine-makes-clothes-smell" class="b-card" data-cat="how-to">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-washing-machine-makes-clothes-smell@1200.avif?v=5 1200w, /blog/assets/why-washing-machine-makes-clothes-smell.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-washing-machine-makes-clothes-smell@1200.webp?v=5 1200w, /blog/assets/why-washing-machine-makes-clothes-smell.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-washing-machine-makes-clothes-smell.jpg?v=5" alt="Open front-loading washing machine in a compact Indian bathroom with a damp shirt hanging from the drum" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Laundry</span><span class="b-card-sep">·</span><span>10 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does My Washing Machine Make Clothes Smell Bad?</h3><p>How machine residue, wet loads and slow drying can become the source of clothing odor.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Laundry</span><span class="b-card-sep">·</span><span>10 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does My Washing Machine Make Clothes Smell Bad?</h3><p>How machine residue, wet loads and slow drying can become the source of clothing odor.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <a href="/blog/why-water-makes-clothing-odor-louder" class="b-card" data-cat="science">
   <div class="b-card-thumb"><picture><source type="image/avif" srcset="/blog/assets/why-water-makes-clothing-odor-louder@1200.avif?v=5 1200w, /blog/assets/why-water-makes-clothing-odor-louder.avif?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><source type="image/webp" srcset="/blog/assets/why-water-makes-clothing-odor-louder@1200.webp?v=5 1200w, /blog/assets/why-water-makes-clothing-odor-louder.webp?v=5 1920w" sizes="(min-width: 900px) 380px, 100vw"><img loading="lazy" src="/blog/assets/why-water-makes-clothing-odor-louder.jpg?v=5" alt="Macro of dark cotton fabric with water droplets soaking into the weave" width="1920" height="1080" decoding="async"></picture></div>
-  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does Water Make Clothing Odor Louder?</h3><p>Why damp fabric can make previously quiet odor compounds noticeable again.</p><span class="b-card-arrow">Read Guide</span></div>
+  <div class="b-card-body"><div class="b-card-meta"><span class="b-card-cat">Fabric Science</span><span class="b-card-sep">·</span><span>9 min</span><span class="b-card-sep">·</span><span>Guide</span></div><h3>Why Does Water Make Clothing Odor Louder?</h3><p>Why damp fabric can make previously quiet odor compounds noticeable again.</p><span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
 </a>
 <!-- SF-REVENUE-STATIC-GUIDES:END -->
 <!-- Card 1 -->
@@ -806,7 +666,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Fabric Care</span><span class="b-card-sep">·</span><span>9 min</span></div>
         <h3>Why gym clothes still smell after washing</h3>
         <p>Polyester grips the body lipids odor bacteria feed on, and a cold cycle with softener leaves them there. How to strip it out, and where a between-wear mist honestly fits.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -819,7 +679,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Fabric Safety</span><span class="b-card-sep">·</span><span>8 min</span></div>
         <h3>Does fabric spray stain clothes? (Tested on 5 fabrics)</h3>
         <p>Oils, dyes and heavy fragrance are what mark fabric. What a water-based mist does on white cotton, black polyester, denim, silk and wool — and how to spray without water rings.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -832,7 +692,7 @@
         <div class="b-card-meta"><span class="b-card-cat">How To</span><span class="b-card-sep">·</span><span>7 min</span></div>
         <h3>How to use ODORSTRIKE: sprays, zones and timing</h3>
         <p>How many sprays per garment, the three zones that actually hold odor, spray distance and dry time, when to reapply — and the three things it is not meant to do.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -845,7 +705,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Ingredient Science</span><span class="b-card-sep">·</span><span>7 min</span></div>
         <h3>ODORSTRIKE ingredients: the full list, explained</h3>
         <p>Every ingredient in Formula v3.1, in order, with what each one does. Plus the three ingredients deliberately left out, and why each one failed.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -858,7 +718,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Occasion Care</span><span class="b-card-sep">·</span><span>8 min</span></div>
         <h3>Wedding and festive wear: odor without washing</h3>
         <p>A sherwani is worn six hours and cannot be washed. The pre-event routine, the 30-second collar reset, and which fabrics need a spot test before you spray anything.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -871,7 +731,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Buyer's Guide</span><span class="b-card-sep">·</span><span>11 min</span></div>
         <h3>Best fabric odor spray in India (2026): 5 tested, 1 winner</h3>
         <p>Five sprays put on sweat-soaked shirts in Hyderabad heat — Febreze, Godrej aer, ODORSTRIKE and more, compared on price, format and whether they actually neutralise.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -884,7 +744,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Buyer's Guide</span><span class="b-card-sep">·</span><span>7 min</span></div>
         <h3>Deodorant spray for clothes, not skin: 5 compared</h3>
         <p>What to buy when you want the spray on the shirt rather than the body. Five options Indians actually buy, compared on price, stain risk and pocket carry.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -897,7 +757,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Sweat Smell</span><span class="b-card-sep">·</span><span>8 min</span></div>
         <h3>The spray that neutralizes sweat smell in 10 seconds (tested)</h3>
         <p>Five sprays on real sweat-soaked shirts, sniffed at 10 seconds, 60 seconds and 10 minutes. Which one neutralises rather than masks, and why contact chemistry matters.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -910,7 +770,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Comparison</span><span class="b-card-sep">·</span><span>6 min</span></div>
         <h3>Deodorant vs fabric mist: what actually neutralizes odor</h3>
         <p>Deodorant treats skin, but the shirt holds most of the smell. Where each one works, where each one fails, and which fixes a shirt you are already wearing.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -923,7 +783,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Comparison</span><span class="b-card-sep">·</span><span>6 min</span></div>
         <h3>Ambi Pur vs ODORSTRIKE: which is better for clothes?</h3>
         <p>A home fabric refresher vs a pocket odor eliminator. An honest breakdown of format, price and formula — and which fits clothes you actually wear.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -936,7 +796,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Ingredient Science</span><span class="b-card-sep">·</span><span>7 min</span></div>
         <h3>Zinc PCA for fabric odor: what it is and why it works</h3>
         <p>Most sprays fight odor after it forms. Zinc PCA works one step earlier — on the bacteria that create the smell. The science of stopping smell before it starts.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -949,7 +809,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Ingredient Science</span><span class="b-card-sep">·</span><span>6 min</span></div>
         <h3>HPβCD: the odor-trap molecule inside ODORSTRIKE</h3>
         <p>Hydroxypropyl beta-cyclodextrin is the exact ring molecule ODORSTRIKE uses to cage odor in fabric. What it is, why the hydroxypropyl form matters, and how it beats plain cyclodextrin.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -965,7 +825,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Product Science</span><span class="b-card-sep">·</span><span>7 min</span></div>
         <h3>What is a fabric odor eliminator? (And how it differs from perfume)</h3>
         <p>Not perfume, not air freshener, not deodorant. What a fabric odor eliminator actually does at a molecular level, and what ingredients to look for.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -978,7 +838,7 @@
         <div class="b-card-meta"><span class="b-card-cat">Comparison</span><span class="b-card-sep">·</span><span>8 min</span></div>
         <h3>ODORSTRIKE vs Febreze: which works better on Indian clothes?</h3>
         <p>Cotton in 40°C. Polyester in monsoon. Pocket mist vs home spray. The head-to-head that actually matters for Indian buyers.</p>
-        <span class="b-card-arrow">Read Guide</span>
+        <span class="b-card-arrow">Read <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span>
       </div>
     </a>
 
@@ -1009,35 +869,40 @@
     </a>
 
   </div>
+  <div class="b-more" id="loadMoreWrap" hidden><button type="button" id="loadMore">Show all guides <svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></button></div>
 </section>
 
-<!-- Product Conversion Spotlight Banner -->
-<section class="b-spotlight-sec">
+<!-- Product band — copy uses the site's locked claims only (15–30 s dry,
+     free shipping on prepaid, COD +₹60). -->
+<section class="b-spotlight-sec b-wrap">
   <div class="b-spotlight">
+    <img class="b-spotlight-img" src="/assets/odorstrike-bottle-cutout.webp" alt="" width="241" height="915" loading="lazy" decoding="async">
     <div class="b-spotlight-content">
-      <div class="b-spotlight-tag">ODORSTRIKE 50ml · POCKET FABRIC SPRAY</div>
-      <h3>Tired of clothes holding body odor during long days?</h3>
-      <p>Erases fabric odor at a molecular level using HPβCD cyclodextrin and Zinc PCA. 0% oil, 0% stain, 10-second dry time. ₹229 with free express shipping across India.</p>
+      <div class="b-eyebrow b-spotlight-tag">ODORSTRIKE · 50ML POCKET FABRIC SPRAY</div>
+      <h3>Read enough? Fix the shirt.</h3>
+      <p>HPβCD traps odor in the fibres and Zinc PCA neutralizes it. Dries clear in 15–30 seconds. ₹229 with free shipping on prepaid orders · COD +₹60.</p>
     </div>
     <div class="b-spotlight-cta">
-      <a href="/odorstrike?buy=1" class="b-btn-primary">Buy ODORSTRIKE ₹229</a>
-      <a href="/#buy" class="b-btn-secondary">View Science &amp; Specs</a>
+      <a href="/odorstrike?buy=1" class="b-btn-primary">Buy ₹229</a>
+      <a href="/odorstrike" class="b-btn-secondary">View product <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
     </div>
   </div>
 </section>
 
-<!-- Author & Editorial Integrity -->
-<section class="b-author-sec">
+<!-- Author & newsletter -->
+<section class="b-about b-wrap" aria-label="About these guides">
   <div class="b-author-card">
-    <div class="b-author-badge">EDITORIAL INTEGRITY &amp; FORMULATION</div>
-    <div class="b-author-title">Written by Jogdhande Nikhil Patil — Founder &amp; Formulator</div>
-    <p class="b-author-bio">Every guide on the Smelloff Blog is based on real formulation chemistry (HPβCD, Zinc PCA, Triethyl Citrate) and field-testing in Indian heat and humidity (Hyderabad 40°C &amp; monsoon). No AI fluff, no sponsored brand placements — just honest science on why clothes smell and what actually neutralises odor.</p>
+    <div class="b-eyebrow">WHO WRITES THESE</div>
+    <div class="b-author-head">
+      <span class="b-author-ava" aria-hidden="true">NP</span>
+      <div><div class="b-author-title">Jogdhande Nikhil Patil</div><div class="b-author-role">Founder &amp; formulator, Smelloff · Hyderabad</div></div>
+    </div>
+    <p class="b-author-bio">Every guide is built on the actual formulation chemistry (HPβCD, Zinc PCA, Triethyl Citrate) and wear-testing in Indian heat and monsoon humidity. Primary sources are cited in each post. No sponsored placements.</p>
+    <a class="b-author-link" href="/blog/why-i-built-odorstrike">Why I built ODORSTRIKE <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
   </div>
-</section>
-
 <!-- Newsletter / Updates Signup -->
-<section class="b-news-sec">
   <div class="b-news-card">
+    <div class="b-eyebrow">NEWSLETTER</div>
     <h3>Get new fabric science breakdowns</h3>
     <p>Sign up to receive honest tests, fabric care breakdowns, and formulation updates directly from the founder. Zero spam.</p>
     <!-- This form used to be a lie: its onsubmit set the button to
@@ -1054,6 +919,7 @@
     <p class="b-news-status" id="newsStatus" role="status" aria-live="polite"></p>
   </div>
 </section>
+
 
 </main>
 
@@ -1141,6 +1007,10 @@
   var curQuery = '';
   var curCat = 'all';
   var emptyEl = null;
+  var PAGE = 12, expanded = false;
+  var moreWrap = document.getElementById('loadMoreWrap');
+  var moreBtn = document.getElementById('loadMore');
+  function esc(t){ return String(t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   var debounceT = null;
 
   function applyFilter(){
@@ -1162,16 +1032,24 @@
         queryMatch = fullText.indexOf(curQuery) !== -1;
       }
       var show = catMatch && queryMatch;
-      c.style.display = show ? '' : 'none';
       if(show) visible++;
+      // Browsing everything shows the first PAGE; a search or a topic
+      // always shows every match.
+      var paged = !searchActive && curCat === 'all' && !expanded && visible > PAGE;
+      c.style.display = (show && !paged) ? '' : 'none';
     });
+    if(moreWrap){
+      var hidden = (!searchActive && curCat === 'all' && !expanded) ? Math.max(0, visible - PAGE) : 0;
+      moreWrap.hidden = hidden === 0;
+      if(moreBtn && hidden) moreBtn.firstChild.nodeValue = 'Show all ' + visible + ' guides ';
+    }
 
     if(countEl){
       countEl.textContent = visible + (visible === 1 ? ' guide' : ' guides');
     }
 
     if(searchClear){
-      searchClear.style.display = searchActive ? 'block' : 'none';
+      searchClear.style.display = searchActive ? 'inline-flex' : 'none';
     }
 
     if(visible === 0){
@@ -1181,7 +1059,7 @@
         grid.parentNode.insertBefore(emptyEl, grid.nextSibling);
       }
       emptyEl.innerHTML = (curQuery
-        ? 'No guides match “<strong>' + curQuery + '</strong>” — try searching for <em>odorstrike, febreze, zinc, or sweat</em>.'
+        ? 'No guides match “<strong>' + esc(curQuery) + '</strong>” — try searching for <em>odorstrike, febreze, zinc, or sweat</em>.'
         : 'No articles found in this category.') +
         '<br><button type="button" class="b-empty-btn" onclick="resetSearch()">Show All Guides</button>';
       grid.style.display = 'none';
@@ -1235,6 +1113,13 @@
       searchInput.focus();
     });
   }
+
+  if(moreBtn) moreBtn.addEventListener('click', function(){
+    expanded = true;
+    var first = allCards[PAGE];
+    applyFilter();
+    if(first){ var a = first; a.focus({preventScroll:true}); }
+  });
 
   applyFilter();
 })();
