@@ -254,6 +254,26 @@ const PAGES = [
     'keep-clothes-fresh-without-washing-machine', 'remove-cigarette-smoke-smell-from-clothes',
     'remove-mothball-almirah-smell-from-clothes', 'keep-office-trousers-fresh-without-washing',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
+  // 2026-10-10: thirty posts that were never in this table. Their header was
+  // an older stamp (a "Buy ODORSTRIKE — ₹229" button to /#buy, extra classes,
+  // an inline SMELLOFF_TRUTH script) and never received chrome updates.
+  ...[
+    'alternative-to-deodorant-for-clothes-smell', 'best-body-odor-remover-spray-for-men-india',
+    'deodorant-perfume-on-fabric', 'dry-air-clothes-indian-home',
+    'how-odor-neutralizer-works-on-fabric', 'how-to-freshen-clothes-stored-for-months',
+    'how-to-pack-sweaty-clothes-without-bag-smell', 'mumbai-humidity-sweat-smell-survival-guide',
+    'odor-on-clothes-vs-odor-in-clothes', 'office-ac-trap-why-rewear-shirts-smell-worse',
+    'perfume-plus-sweat-chemical-reaction', 'remove-incense-agarbatti-dhoop-smell',
+    'spray-to-remove-sweat-smell-from-clothes-quickly', 'vinegar-baking-soda-fabric-softener',
+    'wash-refresh-or-wear', 'where-to-buy-odorstrike-india',
+    'why-body-odor-comes-back-on-clothes-so-quickly', 'why-clean-shirt-starts-smelling-within-hours',
+    'why-clothes-smell-bad-after-drying', 'why-clothes-smell-bad-again-after-sweating',
+    'why-clothes-smell-in-wardrobe-even-when-clean', 'why-clothes-smell-musty-after-being-stored',
+    'why-clothes-smell-stale-in-ac-room', 'why-deodorant-stops-working-after-3-hours',
+    'why-polyester-holds-odor-longer-than-cotton', 'why-shirt-zones-smell-after-washing',
+    'why-sweat-smells-stronger-on-some-shirts', 'why-traffic-fumes-cling-to-clothes',
+    'why-washing-machine-makes-clothes-smell', 'why-water-makes-clothing-odor-louder',
+  ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
   // solutions hub & regional guides
   ...[
     'solutions/index.html',

@@ -86,6 +86,32 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
 
+## Full-site audit: WCAG 2.2 AA clean, structure clean (2026-10-10)
+Audited all 77 HTML pages at 390px with axe-core (WCAG 2.2 AA) plus a style
+and structure pass. Result after fixes: **0 axe violations, 0 tap targets
+under 24px, 0 horizontal overflow, 1 H1 per page, balanced markup on every
+page, one header/footer everywhere.** What it found and what changed:
+- **35 more posts had torn markup** (a second corruption pattern): the
+  product box content orphaned after the FAQ with an empty labelled
+  `end-cta` shell further down, orphaned "Next Read" links, and in 10 posts a
+  doubled `<main>/<article>` with an early `</article></main>` that pushed the
+  share block outside the article. All rebuilt; Next Read now uses the
+  shared `.read-next` card.
+- **30 posts were never in `apply-chrome.mjs` PAGES**, so they carried an old
+  header (cart button calling `openCartDrawer()`, which only exists on the
+  PDP — a dead button — "How it works / Proof / Track" nav, "Buy ODORSTRIKE"
+  to `/#buy`). Added to PAGES; every page now has the same chrome. If you
+  add a post, add it to PAGES.
+- WCAG: pinch-zoom unblocked on 10 posts (`user-scalable=no` removed);
+  scrollable tables and the swipe rows are keyboard-focusable regions;
+  PDP gallery dots are real 24×24 buttons; breadcrumbs ≥24px; contrast fixed
+  on `.end-cta .strike-price`, the PDP `.fix-cta-note s` and `/reviews`
+  "Write a review" (it had a browser-grey background).
+- The PDP still carried its pre-2026-07 `footer{…}` CSS, which faded the
+  shared footer's headings to 2.4:1 on that page only. Removed.
+- Barlow Condensed (left over in restored inline styles) → JetBrains Mono.
+- Blog end-of-post `.buy-btn`s on 11 posts pointed at `/#buy` → `?buy=1`.
+
 ## One design system across pages (2026-10-10)
 A computed-style audit of every page type found five primary-button shapes,
 card radii from 6px to 24px, grey labels on some pages and acid on others,
