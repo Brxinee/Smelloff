@@ -196,8 +196,8 @@
 
     var reassure = document.querySelector('.checkout-reassure');
     if (reassure) reassure.textContent = method === 'cod'
-      ? '₹60 handling · Pay on delivery'
-      : 'Secure Razorpay checkout';
+      ? 'Pay ₹' + total + ' in cash or UPI when it arrives · 7-day returns'
+      : 'Payments secured by Razorpay · 7-day returns';
 
     var totalEl = document.getElementById('checkoutTotal');
     if (totalEl) totalEl.textContent = '₹' + total;
@@ -206,7 +206,7 @@
     if (submitText && !checkoutButton.disabled) {
       submitText.textContent = method === 'cod'
         ? 'PLACE COD ORDER · ₹' + total
-        : 'PAY SECURELY · ₹' + subtotal;
+        : 'PAY ₹' + subtotal + ' SECURELY';
     }
 
     if (method === 'cod') {
@@ -254,7 +254,7 @@
       ? 'Opening secure checkout…'
       : (currentPaymentMethod() === 'cod'
         ? 'PLACE COD ORDER · ₹' + (unitPriceRupees() * quantityFromCheckout() + codFeeRupees())
-        : 'PAY SECURELY · ₹' + (unitPriceRupees() * quantityFromCheckout()));
+        : 'PAY ₹' + (unitPriceRupees() * quantityFromCheckout()) + ' SECURELY');
   }
 
   function showPaymentError(message) {

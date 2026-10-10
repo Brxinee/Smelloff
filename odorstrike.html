@@ -653,563 +653,195 @@
   /* The legacy footer{…} rules lived here. The page uses the shared .sf-ftr
      (chrome.css); those rules faded its headings to 2.4:1 contrast. */
 
-  /* ============================= */
-  /* CHECKOUT OVERLAY              */
-  /* ============================= */
+  /* =============================
+     CHECKOUT (redesigned 2026-10-10 against Baymard's checkout research)
+     - One column, in the order people think: contact → delivery → payment.
+     - 7 fields, and city/state fill themselves from the pincode (Baymard's
+       benchmark average is 11.3; city/state go BELOW the pincode, editable).
+     - Labels above fields, in sentence case at reading size — not tracked
+       mono caps, which read as decoration and slow scanning.
+     - Inline validation after a field is finished, cleared as soon as it's
+       fixed; the submit still validates everything and focuses the first
+       problem.
+     - The total and the pay button live in a solid sticky bar, so the price
+       you're about to pay is always on screen.
+     ============================= */
   /* Z-INDEX LADDER — the consent bar is `position:fixed;bottom:0;z-index:9999`
-     and it is the single highest thing on the page, on purpose, because it has
-     to sit above the sticky header and the sticky buy bar. That made it sit
-     above the checkout too: with `.overlay` at z-index:200, the bar covered the
-     bottom of the panel and `elementFromPoint` at the centre of the "Place COD
-     order · ₹229" button returned `.cb-accept`. Verified at 320×568, 360×640,
-     390×844 and 414×896 — every phone size. A first-time visitor has by
-     definition not answered the consent bar yet, so at launch that is 100% of
-     mobile buyers tapping "Accept all" instead of placing their order.
-     Modals now outrank it (and `.sf-modal-open` on <html> hides it outright
-     while one is open — see chrome.css §5.2). Anything fixed added here must
-     stay below 9999 or explicitly join this ladder. */
+     and is the highest thing on the page so it clears the sticky header and
+     buy bar. Modals outrank it (and `.sf-modal-open` on <html> hides it while
+     one is open — chrome.css §5.3); at z-index:200 the bar covered "Place COD
+     order" on every phone size. Anything fixed added here must stay below
+     9999 or explicitly join this ladder. */
   .overlay{
-    position:fixed;inset:0;
-    background:rgba(8,8,8,.85);
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
-    z-index:10000;
-    display:none;
-    align-items:flex-start;
-    justify-content:center;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior:contain;
-    padding:40px 20px;
-  }
-  @media(max-width:600px){
-    .overlay{
-      padding:max(16px, env(safe-area-inset-top, 16px)) max(12px, env(safe-area-inset-right, 12px)) max(28px, env(safe-area-inset-bottom, 28px)) max(12px, env(safe-area-inset-left, 12px));
-    }
-    .overlay-panel{
-      padding:24px 18px 20px;
-    }
-    .overlay h2{
-      font-size:28px;
-    }
-    .overlay .row-3{
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-    .overlay .row-3 > div:first-child{
-      grid-column:1 / -1;
-    }
-  }
-  @media(max-width:360px){
-    .overlay{
-      padding:max(12px, env(safe-area-inset-top, 12px)) 8px max(20px, env(safe-area-inset-bottom, 20px)) 8px;
-    }
-    .overlay-panel{
-      padding:20px 12px 16px;
-    }
-    .overlay h3{
-      font-size:24px;
-    }
-    .overlay .row{
-      grid-template-columns:1fr;
-      gap:8px;
-    }
-    .overlay .row-3{
-      grid-template-columns:1fr;
-      gap:8px;
-    }
+    position:fixed;inset:0;z-index:10000;
+    display:none;align-items:flex-start;justify-content:center;
+    background:rgba(8,8,8,.86);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+    /* No bottom padding: the sticky pay bar pins to the scrollport's edge,
+       and padding there left 40px of form visible underneath it. */
+    padding:40px 20px 0;
   }
   .overlay.active{display:flex}
   .overlay-panel{
-    background:#111;
-    color:var(--text);
-    width:100%;
-    max-width:520px;
-    padding:40px 32px 32px;
-    position:relative;
-    border-radius:4px;
-    border:1px solid rgba(244,241,234,.08);
-    animation:slideUp .3s ease;
+    position:relative;width:100%;max-width:520px;
+    background:#111;color:var(--text);
+    border:1px solid var(--rule);border-radius:var(--sq-xl);
+    padding:28px 28px 0;
+    margin-bottom:40px;
+    animation:slideUp .3s var(--ease);
   }
-  @keyframes slideUp{
-    from{transform:translateY(20px);opacity:0}
-    to{transform:translateY(0);opacity:1}
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+  @media(max-width:600px){
+    /* Phones: a full-height sheet, not a floating card with a gutter of
+       page showing around it. */
+    .overlay{padding:max(10px, env(safe-area-inset-top, 10px)) 0 0}
+    .overlay-panel{max-width:none;min-height:100%;margin-bottom:0;border-radius:20px 20px 0 0;border-bottom:0;
+      padding:20px max(16px, env(safe-area-inset-right, 16px)) 0 max(16px, env(safe-area-inset-left, 16px))}
+  }
+  @media(max-width:360px){
+    .overlay-panel{padding-left:12px;padding-right:12px}
+    .ck-row{grid-template-columns:1fr}
   }
   .overlay-close{
-    position:absolute;top:16px;right:16px;
-    width:32px;height:32px;
-    background:transparent;
-    border:1px solid var(--rule);
-    color:var(--text);
-    cursor:pointer;
-    font-size:18px;
-    display:flex;align-items:center;justify-content:center;
+    position:absolute;top:16px;right:16px;z-index:3;
+    width:44px;height:44px;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:var(--surface-2);border:1px solid var(--rule);color:var(--text);cursor:pointer;
   }
-  .overlay-tag{
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin-bottom:8px;
-  }
-  .overlay h3{
-    font-family:var(--display);
-    font-weight:900;
-    font-size:36px;
-    letter-spacing:-.02em;
-    line-height:1;
-    margin-bottom:8px;
-    color:var(--text);
-  }
-  .checkout-trust{
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.1em;
-    color:var(--muted);
-    margin-bottom:16px;
-  }
-  .summary-card{
-    border-top:1px solid var(--rule);
-    border-bottom:1px solid var(--rule);
-    margin-bottom:24px;
-  }
-  .overlay .summary{
-    font-family:var(--mono);
-    font-size:12px;
-    letter-spacing:.1em;
-    color:var(--muted);
-    padding:10px 0;
-    display:flex;justify-content:space-between;
-  }
-  .overlay .summary + .summary{border-top:1px dashed rgba(244,241,234,.08)}
-  .overlay .summary.total{color:var(--text)}
-  .overlay .summary .amt{color:var(--acid);font-weight:500}
-  /* The COD surcharge is the one figure in this card that costs the buyer more,
-     so it does not get the acid treatment the free/discount rows get. */
-  .overlay .summary .amt.fee{color:var(--text-2)}
-  .overlay label{
-    display:block;
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin-bottom:6px;
-    margin-top:14px;
-  }
-  .overlay label .lbl-optional{
-    text-transform:none;
-    letter-spacing:.05em;
-    opacity:.7;
-  }
-  .overlay .field-hint{
-    margin:6px 0 0 0;
-    font-family:var(--body);
-    font-size:12px;
-    line-height:1.45;
-    color:var(--muted);
-    letter-spacing:.02em;
-  }
-  .overlay input,.overlay select,.overlay textarea{
-    width:100%;
-    padding:12px 14px;
-    font-family:var(--body);
-    font-size:16px; /* 16px minimum — anything smaller triggers iOS auto-zoom on focus */
-    background:rgba(244,241,234,.05);
-    border:1px solid var(--rule);
-    color:var(--text);
-    outline:none;
-    transition:border-color .15s;
-    resize:vertical;
-    scroll-margin-top:24px;
-    scroll-margin-bottom:24px;
-  }
-  .overlay input:focus,.overlay select:focus,.overlay textarea:focus{
-    border-color:var(--acid);
-  }
-  .overlay input::placeholder,.overlay textarea::placeholder{color:var(--muted)}
-  .overlay input.flash-acid,.overlay textarea.flash-acid{border-color:var(--acid);box-shadow:0 0 0 1px var(--acid)}
-  .overlay .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .overlay .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-  .delivery-estimate{
-    display:none;
-    align-items:center;gap:8px;
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.08em;
-    color:var(--acid);
-    margin-top:10px;
-    line-height:1.4;
-  }
-  .delivery-estimate.show{display:flex}
-  .delivery-estimate svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;flex-shrink:0}
-  .overlay .checkout-payment{
-    margin:18px 0 20px;
-    padding:0;
-    border:0;
-    min-width:0;
-  }
-  .overlay .checkout-payment legend{
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    color:var(--muted);
-    padding:0;
-    margin-bottom:8px;
-  }
-  .overlay .pay-toggle{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-  }
-  .overlay .pay-opt{
-    min-height:72px;
-    padding:12px 13px;
-    border:1px solid var(--rule);
-    border-radius:var(--sq-md,14px);
-    cursor:pointer;
-    text-align:left;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    font-family:var(--body);
-    color:var(--muted);
-    background:var(--surface);
-    transition:background-color .15s,border-color .15s,transform .12s;
-    -webkit-tap-highlight-color:transparent;
-    touch-action:manipulation;
-  }
-  .overlay .pay-opt:hover{border-color:var(--rule-strong)}
-  .overlay .pay-opt:active{transform:scale(.985)}
-  .overlay .pay-opt.active{
-    border-color:var(--acid);
-    background:var(--acid);
-    color:var(--ink);
-  }
-  .overlay .pay-opt-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
-  .overlay .pay-opt-copy strong{
-    font-family:var(--mono);
-    font-size:11px;
-    line-height:1.15;
-    letter-spacing:.09em;
-    text-transform:uppercase;
-  }
-  .overlay .pay-opt-copy small{
-    font-family:var(--body);
-    font-size:12px;
-    line-height:1.25;
-    letter-spacing:0;
-    color:inherit;
-    opacity:.72;
-  }
-  .overlay .pay-opt-price{
-    flex:0 0 auto;
-    font-family:var(--display);
-    font-size:25px;
-    font-weight:900;
-    line-height:1;
-    letter-spacing:-.03em;
-    white-space:nowrap;
-    color:inherit;
-  }
-  @media(max-width:480px){
-    .overlay .checkout-payment{margin-top:14px;margin-bottom:18px}
-    .overlay .pay-toggle{grid-template-columns:1fr}
-    .overlay .pay-opt{min-height:64px}
-  }
-  .pay-panel{
-    border:1px dashed var(--rule);
-    padding:16px;
-    margin-top:10px;
-  }
-  .upi-panel-title{
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    color:var(--muted);
-    display:block;
-    margin-bottom:12px;
-  }
-  .upi-inline-row{
-    display:flex;align-items:baseline;gap:10px;
-    padding:6px 0;
-    font-size:13px;
-  }
-  .upi-inline-lbl{
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    color:var(--muted);
-    width:64px;flex-shrink:0;
-  }
-  .upi-inline-val{
-    font-family:var(--mono);
-    font-size:13px;
-    letter-spacing:.05em;
-  }
-  .upi-inline-val.acid{color:var(--acid);font-weight:500}
-  .upi-copy{
-    margin-left:auto;
-    background:transparent;
-    color:var(--acid);
-    border:1px solid rgba(184,255,87,.35);
-    padding:4px 10px;
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    cursor:pointer;
-    transition:all .2s;
-  }
-  .upi-copy:hover,.upi-copy.copied{background:var(--acid);color:var(--ink)}
-  /* 1-Click UPI Deep Linking */
-  .upi-apps-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  @media (max-width: 480px) {
-    .upi-apps-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  .upi-app-btn {
-    background: rgba(255,255,255,.04);
-    border: 1px solid var(--rule);
-    color: var(--text);
-    padding: 10px 6px;
-    border-radius: 6px;
-    font-family: var(--mono);
-    font-size: 11px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    cursor: pointer;
-    transition: all .15s ease;
-  }
-  .upi-app-btn:hover, .upi-app-btn.active {
-    border-color: var(--acid);
-    background: rgba(184,255,87,.12);
-    color: var(--acid);
-  }
-  .upi-app-launch-head {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--acid);
-    margin-bottom: 10px;
-    font-weight: 600;
-  }
-  .upi-launch-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  @media (max-width: 420px) {
-    .upi-launch-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  .upi-launch-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 14px;
-    border-radius: 6px;
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all .15s ease;
-    border: 1px solid var(--rule);
-    background: #0f172a;
-    color: #fff;
-  }
-  .upi-launch-btn.gpay { border-color: #4285f4; color: #60a5fa; }
-  .upi-launch-btn.phonepe { border-color: #5f259f; color: #c084fc; }
-  .upi-launch-btn.paytm { border-color: #00b9f1; color: #38bdf8; }
-  .upi-launch-btn.generic { border-color: var(--acid); color: var(--acid); background: rgba(184,255,87,.08); }
-  .upi-launch-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,.3);
-  }
-  .pay-help{
-    font-size:13px;
-    color:var(--muted);
-    line-height:1.5;
-    margin-top:12px;
-  }
-  .wa-btn{
-    display:inline-block;
-    margin-top:10px;
-    padding:10px 14px;
-    background:rgba(37,211,102,.1);
-    border:1px solid rgba(37,211,102,.3);
-    color:#25d366;
-    font-family:var(--mono);
-    font-size:11px;letter-spacing:.1em;
-    text-transform:uppercase;text-decoration:none;
-  }
-  .pay-cod{
-    font-family:var(--display);
-    font-weight:900;
-    font-size:18px;
-    color:var(--text);
-  }
-  .pay-note-cod{
-    font-size:12px;
-    color:var(--muted);
-    margin-top:4px;
-  }
-  .checkout-reassure{
-    font-size:12px;
-    color:var(--muted);
-    margin-top:14px;
-  }
-  .checkout-action-bar{
-    position:sticky;
-    bottom:0;
-    z-index:2;
-    margin-top:14px;
-    padding-top:10px;
-    padding-bottom:max(2px, env(safe-area-inset-bottom, 2px));
-    background:linear-gradient(to bottom, rgba(17,17,17,0) 0%, #111 18%);
-  }
-  .checkout-action-bar .checkout-reassure{
-    margin:0 0 10px;
-    font-size:11px;
-    line-height:1.4;
-  }
-  .checkout-action-bar .submit-btn{margin-top:0;min-height:52px}
-  .overlay .submit-btn{
-    width:100%;
-    padding:18px;
-    background:var(--acid);
-    color:var(--ink);
-    border:none;
-    font-family:var(--mono);
-    font-size:13px;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    cursor:pointer;
-    margin-top:16px;
-    transition:background .2s;
-    font-weight:500;
-  }
-  .overlay .submit-btn:hover{background:#a3e84d}
-  .overlay .submit-btn:disabled{opacity:.5;cursor:not-allowed}
-  .overlay .error-msg{
-    background:rgba(200,0,0,.15);
-    color:#ff6b6b;
-    padding:10px 12px;
-    font-size:13px;
-    margin-top:12px;
-    font-family:var(--body);
-    border-left:2px solid #ff6b6b;
-    border-radius:var(--r-xs);
-  }
-  .wa-fallback{
-    display:none;margin-top:10px;text-align:center;
-    padding:12px;background:rgba(37,211,102,.1);
-    border:1px solid rgba(37,211,102,.3);
-    color:#25d366;
-    font-family:var(--mono);
-    font-size:12px;letter-spacing:.1em;
-    text-transform:uppercase;text-decoration:none;
-  }
-  .overlay .success-screen{
-    text-align:center;
-    padding:20px 0;
-  }
-  .overlay .success-screen h3{font-size:40px;margin-bottom:12px;color:var(--text)}
-  .overlay .success-screen p{color:var(--muted);margin-bottom:20px;font-size:15px}
-  .overlay .success-screen .order-id{
-    font-family:var(--mono);
-    background:rgba(184,255,87,.1);
-    color:var(--acid);
-    padding:12px 16px;
-    font-size:13px;
-    letter-spacing:.1em;
-    display:inline-block;
-    margin-bottom:20px;
-    border:1px solid rgba(184,255,87,.2);
-  }
-  .success-track-link{
-    display:none;
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--acid);
-    text-decoration:none;
-    border-bottom:1px solid rgba(184,255,87,.3);
-    margin-bottom:16px;
-  }
-  .success-reassure{font-size:12px !important;color:var(--acid) !important}
-  .upi-block{
-    border:1px dashed rgba(184,255,87,.25);
-    padding:20px 16px;
-    margin-top:8px;
-  }
-  .qr-wrap{text-align:center;margin-bottom:12px}
-  .upi-qr{width:180px;height:180px;background:#fff;padding:8px;border-radius:4px}
-  .upi-row{
-    display:flex;justify-content:space-between;align-items:baseline;
-    padding:8px 0;
-    border-bottom:1px dashed rgba(244,241,234,.08);
-    font-size:13px;
-  }
-  .upi-row .lbl{
-    font-family:var(--mono);
-    font-size:10px;letter-spacing:.15em;text-transform:uppercase;
-    color:var(--muted);
-  }
-  .upi-row .val{font-family:var(--mono);font-size:13px}
-  .upi-row .val.acid{color:var(--acid);font-weight:500}
-  .upi-cta{
-    display:block;
-    text-align:center;
-    margin-top:16px;
-    padding:14px;
-    background:var(--acid);
-    color:var(--ink);
-    font-family:var(--mono);
-    font-size:12px;letter-spacing:.15em;text-transform:uppercase;
-    text-decoration:none;
-    font-weight:500;
-  }
-  .upi-policy-link{
-    font-size:12px;color:var(--muted);
-    margin-top:12px;text-align:center;
-  }
-  .upi-policy-link a{color:var(--acid);text-decoration:none}
-  .upi-help{
-    font-size:13px;color:var(--muted);line-height:1.5;
-    margin-top:14px;
-  }
-  .upi-help a{color:var(--acid);text-decoration:none}
+  .overlay-close:hover{border-color:var(--text)}
+  .overlay-close .ic{width:18px;height:18px;stroke-width:2}
 
-  .loader{
-    display:inline-block;
-    width:14px;height:14px;
-    border:2px solid rgba(8,8,8,.3);
-    border-top-color:var(--ink);
-    border-radius:50%;
-    animation:spin .7s linear infinite;
-    vertical-align:middle;
-    margin-right:8px;
+  /* Head + summary */
+  .ck-head{padding-right:52px;margin-bottom:16px}
+  .ck-eyebrow{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--acid)}
+  .ck-eyebrow .ic{width:14px;height:14px;stroke-width:2}
+  .ck-title{font-family:var(--display);font-weight:900;font-size:30px;line-height:1.05;letter-spacing:-.02em;margin-top:4px}
+  .ck-summary{border:1px solid var(--rule);border-radius:var(--sq-lg);background:var(--ink);padding:14px 16px;margin-bottom:22px}
+  .ck-item{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--rule-soft)}
+  .ck-thumb{width:52px;height:57px;border-radius:10px;overflow:hidden;background:#fff}
+  .ck-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .ck-item-name{font-weight:600;font-size:15px;line-height:1.3;color:var(--text)}
+  .ck-item-meta{font-size:13px;color:var(--muted);margin-top:2px}
+  .ck-item-amt{font-weight:600;font-size:15px;color:var(--text);white-space:nowrap}
+  .overlay .summary{display:flex;justify-content:space-between;gap:12px;padding:8px 0 0;font-size:14px;color:var(--text-2)}
+  .overlay .summary .amt{color:var(--text)}
+  .overlay .summary .amt.free{color:var(--acid)}
+  .overlay .summary .amt.fee{color:var(--text)}
+  .overlay .summary.total{margin-top:8px;padding-top:10px;border-top:1px solid var(--rule-soft);font-size:16px;font-weight:700;color:var(--text)}
+  .overlay .summary.total .amt{font-family:var(--display);font-weight:900;font-size:22px;line-height:1}
+
+  /* Steps */
+  .ck-step{border:0;padding:0;margin:0 0 22px;min-width:0}
+  .ck-step legend{display:flex;align-items:center;gap:10px;padding:0;margin-bottom:12px;
+    font-family:var(--display);font-weight:900;font-size:19px;color:var(--text)}
+  .ck-num{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    background:var(--acid);color:var(--on-acid);font-family:var(--mono);font-size:12px;font-weight:700}
+  .ck-field{margin-top:14px}
+  .ck-step legend+.ck-field{margin-top:0}
+  .ck-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .ck-row .ck-field{margin-top:14px}
+  .overlay label{display:block;margin-bottom:6px;font-family:var(--body);font-size:14px;font-weight:600;color:var(--text)}
+  .overlay label .lbl-auto{font-weight:400;color:var(--muted)}
+  .overlay .field-hint{margin-top:6px;font-size:12.5px;line-height:1.45;color:var(--muted)}
+  .overlay input,.overlay textarea{
+    width:100%;min-height:52px;padding:13px 14px;
+    font-family:var(--body);font-size:16px; /* 16px minimum — anything smaller triggers iOS auto-zoom on focus */
+    color:var(--text);background:var(--ink);
+    border:1px solid var(--border-strong);border-radius:var(--sq-sm);outline:none;
+    transition:border-color .15s,box-shadow .15s;resize:none;
+    scroll-margin-top:24px;scroll-margin-bottom:24px;
   }
+  .overlay textarea{min-height:76px;line-height:1.45}
+  .overlay input:focus,.overlay textarea:focus{border-color:var(--acid);box-shadow:0 0 0 3px var(--acid-dim)}
+  .overlay input::placeholder,.overlay textarea::placeholder{color:#77736c}
+  .overlay input.flash-acid,.overlay textarea.flash-acid{border-color:var(--acid);box-shadow:0 0 0 3px var(--acid-dim)}
+  .ck-prefix{position:relative}
+  .ck-prefix>span{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--text-2);pointer-events:none}
+  .ck-prefix input{padding-left:50px}
+  /* Inline validation states */
+  .ck-field.is-ok input,.ck-field.is-ok textarea{border-color:rgba(var(--acid-rgb),.55)}
+  .ck-field.is-ok>label::after{content:"✓";margin-left:6px;color:var(--acid);font-weight:700}
+  .ck-field.is-err input,.ck-field.is-err textarea{border-color:#ff7a7a}
+  .ck-err{display:none;margin-top:6px;font-size:13px;line-height:1.4;color:#ff9a9a}
+  .ck-field.is-err .ck-err{display:block}
+  .delivery-estimate{display:none;align-items:flex-start;gap:10px;margin-top:12px;padding:12px 14px;
+    border-radius:var(--sq-sm);background:var(--acid-dim);font-size:13.5px;line-height:1.4;color:var(--text-2)}
+  .delivery-estimate.show{display:flex}
+  .delivery-estimate .ic{width:20px;height:20px;color:var(--acid)}
+  .delivery-estimate strong{color:var(--text)}
+
+  /* Payment */
+  .overlay .checkout-payment{margin-bottom:8px}
+  .ck-pay-grid{display:grid;gap:10px}
+  .overlay .pay-opt{
+    width:100%;min-height:68px;padding:14px 16px;
+    display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:12px;text-align:left;
+    font-family:var(--body);color:var(--text);background:var(--ink);
+    border:1px solid var(--border-strong);border-radius:var(--sq-lg);cursor:pointer;
+    transition:border-color .15s,background-color .15s;touch-action:manipulation;
+  }
+  .overlay .pay-opt:hover{border-color:var(--text-2)}
+  .overlay .pay-opt.active{border-color:var(--acid);background:rgba(var(--acid-rgb),.07);box-shadow:inset 0 0 0 1px var(--acid)}
+  .overlay .pay-opt:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
+  .pay-radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-strong);display:inline-flex;align-items:center;justify-content:center}
+  .pay-opt.active .pay-radio{border-color:var(--acid)}
+  .pay-opt.active .pay-radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--acid)}
+  .overlay .pay-opt-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .overlay .pay-opt-copy strong{font-size:15px;font-weight:600}
+  .overlay .pay-opt-copy small{font-size:12.5px;line-height:1.35;color:var(--muted)}
+  .overlay .pay-opt-price{font-family:var(--display);font-weight:900;font-size:22px;line-height:1;white-space:nowrap}
+  .ck-pay-badges{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px;font-size:12px;color:var(--muted)}
+  .ck-pay-badges span{padding:4px 8px;border:1px solid var(--rule);border-radius:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--text-2)}
+
+  /* Sticky action bar — solid, so it never sits on top of a field's text. */
+  .checkout-action-bar{
+    position:sticky;bottom:0;z-index:2;
+    margin:12px -28px 0;padding:12px 28px max(14px, env(safe-area-inset-bottom, 14px));
+    background:#111;border-top:1px solid var(--rule);
+    box-shadow:0 -14px 24px -12px rgba(0,0,0,.7);
+  }
+  @media(max-width:600px){
+    .checkout-action-bar{margin-left:calc(-1 * max(16px, env(safe-area-inset-left, 16px)));margin-right:calc(-1 * max(16px, env(safe-area-inset-right, 16px)));
+      padding-left:max(16px, env(safe-area-inset-left, 16px));padding-right:max(16px, env(safe-area-inset-right, 16px))}
+  }
+  @media(max-width:360px){.checkout-action-bar{margin-left:-12px;margin-right:-12px;padding-left:12px;padding-right:12px}}
+  .overlay .submit-btn{
+    width:100%;min-height:56px;padding:0 18px;
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    background:var(--acid);color:var(--on-acid);border:0;border-radius:var(--sq-sm);
+    font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    cursor:pointer;transition:background-color .2s;
+  }
+  .overlay .submit-btn .ic{width:18px;height:18px;stroke-width:2}
+  .overlay .submit-btn:hover{background:var(--acid-hi)}
+  .overlay .submit-btn:disabled{opacity:.55;cursor:not-allowed}
+  .overlay .submit-btn:focus-visible{outline:2px solid var(--text);outline-offset:3px}
+  .checkout-reassure{margin-top:8px;text-align:center;font-size:12px;line-height:1.4;color:var(--muted)}
+  .overlay .error-msg{margin-top:4px;padding:12px 14px;border-radius:var(--sq-sm);
+    background:rgba(255,90,90,.1);border:1px solid rgba(255,122,122,.4);color:#ffb0b0;font-size:13.5px;line-height:1.45}
+  .wa-fallback{display:none;margin-top:10px;padding:12px;text-align:center;border-radius:var(--sq-sm);
+    background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);color:#25d366;
+    font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+
+  /* Success */
+  .overlay .success-screen{text-align:center;padding:12px 0 28px}
+  .ck-done-ic{width:64px;height:64px;margin:4px auto 14px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:var(--acid);color:var(--on-acid)}
+  .ck-done-ic .ic{width:30px;height:30px;stroke-width:2.5}
+  .overlay-tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);margin-bottom:6px}
+  .overlay .success-screen h2{font-family:var(--display);font-weight:900;font-size:34px;line-height:1.05;margin-bottom:10px}
+  .overlay .success-screen p{color:var(--text-2);margin-bottom:16px;font-size:15px}
+  .overlay .success-screen .order-id{display:inline-block;margin-bottom:16px;padding:12px 16px;border-radius:var(--sq-sm);
+    font-family:var(--mono);font-size:14px;letter-spacing:.08em;color:var(--acid);background:var(--acid-dim);border:1px solid rgba(var(--acid-rgb),.3)}
+  .success-track-link{display:none;margin-bottom:14px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--acid);text-decoration:underline;text-underline-offset:3px}
+  .success-reassure{font-size:13px !important;color:var(--acid) !important}
+  .overlay .success-screen .submit-btn{margin-top:18px}
+
+  .loader{display:inline-block;width:14px;height:14px;margin-right:8px;vertical-align:middle;
+    border:2px solid rgba(8,8,8,.3);border-top-color:var(--ink);border-radius:50%;animation:spin .7s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
 
   /* Order processing loader */
@@ -1966,7 +1598,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=2f881f0b">
 <link rel="stylesheet" href="/assets/css/chrome.css?v=8525b9ce">
-<script src="/assets/js/chrome.js?v=79c578ef" defer></script>
+<script src="/assets/js/chrome.js?v=758713d7" defer></script>
 </head>
 <body>
 
@@ -2668,21 +2300,30 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- ============================= -->
 <!-- CHECKOUT OVERLAY              -->
 <!-- ============================= -->
-<div class="overlay" id="checkoutOverlay" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+<div class="overlay" id="checkoutOverlay" role="dialog" aria-modal="true" aria-labelledby="checkoutHeading">
   <div class="overlay-panel">
-    <button class="overlay-close" onclick="closeCheckout()" aria-label="Close">×</button>
+    <button class="overlay-close" type="button" onclick="closeCheckout()" aria-label="Close checkout"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
     <div id="checkoutForm">
-      <div class="overlay-tag">Checkout · Smelloff</div>
-      <h2 id="checkoutTitle">ODORSTRIKE 50ml</h2>
-      <p class="checkout-trust">🔒 SECURE · ✓ FREE SHIPPING · ✓ 7-DAY RETURNS</p>
-      <div class="summary-card">
-        <div class="summary">
-          <span id="checkoutVariant">1 × 50ml</span>
-          <span class="amt" id="checkoutAmount">₹229</span>
+      <div class="ck-head">
+        <p class="ck-eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>Secure checkout</p>
+        <h2 class="ck-title" id="checkoutHeading">Almost yours.</h2>
+      </div>
+
+      <!-- Order summary: what, how many, every charge, the total. The COD row
+           appears only when COD is chosen; the price on each payment option
+           below already says which total that choice means. -->
+      <section class="ck-summary" aria-label="Order summary">
+        <div class="ck-item">
+          <span class="ck-thumb"><img src="/assets/pdp-01-hero@640.webp" alt="" width="52" height="57" loading="lazy" decoding="async"></span>
+          <div>
+            <p class="ck-item-name" id="checkoutTitle">ODORSTRIKE 50ml</p>
+            <p class="ck-item-meta"><span id="checkoutVariant">1 × 50ml</span> · Fabric odor mist</p>
+          </div>
+          <span class="ck-item-amt" id="checkoutAmount">₹229</span>
         </div>
         <div class="summary">
           <span>Shipping</span>
-          <span class="amt" id="checkoutShipping">Free ✓</span>
+          <span class="amt free" id="checkoutShipping">Free</span>
         </div>
         <div class="summary" id="codFeeRow" style="display:none">
           <span>COD handling</span>
@@ -2692,62 +2333,93 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <span>Total</span>
           <span class="amt" id="checkoutTotal">₹229</span>
         </div>
-      </div>
+      </section>
 
-      <fieldset class="pay-toggle checkout-payment" aria-label="Payment method">
-        <legend>Payment method</legend>
-        <button type="button" class="pay-opt active" data-method="prepaid" role="radio" aria-checked="true" onclick="selectPay('prepaid')">
-          <span class="pay-opt-copy"><strong>Prepaid</strong><small>UPI · Cards · Netbanking</small></span>
-          <span class="pay-opt-price">₹229</span>
-        </button>
-        <button type="button" class="pay-opt" data-method="cod" role="radio" aria-checked="false" onclick="selectPay('cod')">
-          <span class="pay-opt-copy"><strong>Cash on Delivery</strong><small>Pay ₹60 handling · ₹289 total</small></span>
-          <span class="pay-opt-price">₹289</span>
-        </button>
+      <!-- 1 · CONTACT -->
+      <fieldset class="ck-step">
+        <legend><span class="ck-num" aria-hidden="true">1</span>Contact</legend>
+        <div class="ck-field">
+          <label for="f_phone">Mobile number</label>
+          <div class="ck-prefix">
+            <span aria-hidden="true">+91</span>
+            <input type="tel" id="f_phone" required pattern="[0-9]{10}" autocomplete="tel-national" placeholder="98765 43210" inputmode="numeric" enterkeyhint="next" aria-describedby="phoneHint f_phone_err">
+          </div>
+          <p class="field-hint" id="phoneHint">The courier calls this number on delivery day.</p>
+          <p class="ck-err" id="f_phone_err"></p>
+        </div>
+        <div class="ck-field">
+          <label for="f_email">Email</label>
+          <input type="email" id="f_email" required maxlength="120" autocomplete="email" inputmode="email" enterkeyhint="next" placeholder="you@example.com" spellcheck="false" autocapitalize="none" aria-describedby="emailHint f_email_err">
+          <p class="field-hint" id="emailHint">Required for your receipt and delivery updates. We never share it.</p>
+          <p class="ck-err" id="f_email_err"></p>
+        </div>
       </fieldset>
 
-      <!-- Details — phone, name, then email (required for receipt & tracking) -->
-      <label for="f_phone">Phone</label>
-      <input type="tel" id="f_phone" required maxlength="10" pattern="[0-9]{10}" autocomplete="tel" placeholder="10-digit mobile" inputmode="numeric" enterkeyhint="next">
-
-      <label for="f_name">Full name</label>
-      <input type="text" id="f_name" required autocomplete="name" autocapitalize="words" spellcheck="false" enterkeyhint="next">
-
-      <label for="f_email">Email</label>
-      <input type="email" id="f_email" required maxlength="120" autocomplete="email" inputmode="email" enterkeyhint="next" placeholder="you@example.com" spellcheck="false" autocapitalize="none" aria-describedby="emailHint">
-      <p class="field-hint" id="emailHint">Required for your receipt and delivery updates. We never share it.</p>
-
-      <div class="row-3">
-        <div>
+      <!-- 2 · DELIVERY — pincode first: city and state fill themselves from it
+           (shown below it, still editable, per Baymard). -->
+      <fieldset class="ck-step">
+        <legend><span class="ck-num" aria-hidden="true">2</span>Delivery address</legend>
+        <div class="ck-field">
+          <label for="f_name">Full name</label>
+          <input type="text" id="f_name" required autocomplete="name" autocapitalize="words" spellcheck="false" enterkeyhint="next" aria-describedby="f_name_err">
+          <p class="ck-err" id="f_name_err"></p>
+        </div>
+        <div class="ck-field">
           <label for="f_pin">Pincode</label>
-          <input type="text" id="f_pin" required maxlength="6" pattern="[0-9]{6}" autocomplete="postal-code" inputmode="numeric" enterkeyhint="next">
+          <input type="text" id="f_pin" required pattern="[0-9]{6}" autocomplete="postal-code" inputmode="numeric" enterkeyhint="next" placeholder="6 digits" aria-describedby="pinHint f_pin_err">
+          <p class="field-hint" id="pinHint">We'll fill in your city and state.</p>
+          <p class="ck-err" id="f_pin_err"></p>
         </div>
-        <div>
-          <label for="f_city">City</label>
-          <input type="text" id="f_city" required autocomplete="address-level2" autocapitalize="words" spellcheck="false" enterkeyhint="next">
+        <div class="ck-row">
+          <div class="ck-field">
+            <label for="f_city">City</label>
+            <input type="text" id="f_city" required autocomplete="address-level2" autocapitalize="words" spellcheck="false" enterkeyhint="next" aria-describedby="f_city_err">
+            <p class="ck-err" id="f_city_err"></p>
+          </div>
+          <div class="ck-field">
+            <label for="f_state">State</label>
+            <input type="text" id="f_state" required autocomplete="address-level1" autocapitalize="words" spellcheck="false" enterkeyhint="next" aria-describedby="f_state_err">
+            <p class="ck-err" id="f_state_err"></p>
+          </div>
         </div>
-        <div>
-          <label for="f_state">State</label>
-          <input type="text" id="f_state" required autocomplete="address-level1" autocapitalize="words" spellcheck="false" enterkeyhint="next">
+        <div class="ck-field">
+          <label for="f_addr">House / flat, street, area</label>
+          <textarea id="f_addr" required autocomplete="street-address" rows="2" placeholder="Flat 4B, Sunrise Apts, Road No. 12, Banjara Hills" autocapitalize="sentences" spellcheck="false" enterkeyhint="next" aria-describedby="addrHint f_addr_err"></textarea>
+          <p class="field-hint" id="addrHint">Add a landmark if the courier might need one.</p>
+          <p class="ck-err" id="f_addr_err"></p>
         </div>
-      </div>
+        <p class="delivery-estimate" id="deliveryEstimate" aria-live="polite">
+          <svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg>
+          <span id="deliveryEstimateText"></span>
+        </p>
+      </fieldset>
 
-      <p class="delivery-estimate" id="deliveryEstimate" aria-live="polite">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="6" width="14" height="11" rx="1"/><path d="M15 9h4l3 3v5h-7z"/><circle cx="6" cy="18.5" r="1.6"/><circle cx="18" cy="18.5" r="1.6"/></svg>
-        <span id="deliveryEstimateText"></span>
-      </p>
-
-      <label for="f_addr">Address</label>
-      <textarea id="f_addr" required autocomplete="street-address" rows="2" placeholder="House/flat no, street, area, landmark" autocapitalize="sentences" spellcheck="false" enterkeyhint="next"></textarea>
+      <!-- 3 · PAYMENT — after the address, as Baymard's flow has it. Each option
+           states the total it means, so nobody meets the ₹60 for the first time
+           on the button. -->
+      <fieldset class="pay-toggle checkout-payment ck-step">
+        <legend><span class="ck-num" aria-hidden="true">3</span>Payment</legend>
+        <div class="ck-pay-grid" role="radiogroup" aria-label="Payment method">
+          <button type="button" class="pay-opt active" data-method="prepaid" role="radio" aria-checked="true" onclick="selectPay('prepaid')">
+            <span class="pay-radio" aria-hidden="true"></span>
+            <span class="pay-opt-copy"><strong>Pay online</strong><small>UPI · Cards · Net banking · free shipping</small></span>
+            <span class="pay-opt-price">₹229</span>
+          </button>
+          <button type="button" class="pay-opt" data-method="cod" role="radio" aria-checked="false" onclick="selectPay('cod')">
+            <span class="pay-radio" aria-hidden="true"></span>
+            <span class="pay-opt-copy"><strong>Cash on Delivery</strong><small>+₹60 handling · pay when it arrives</small></span>
+            <span class="pay-opt-price">₹289</span>
+          </button>
+        </div>
+        <div class="ck-pay-badges" aria-label="Accepted online"><span>UPI</span><span>GPay</span><span>PhonePe</span><span>Paytm</span><span>Visa</span><span>Mastercard</span><span>RuPay</span></div>
+      </fieldset>
 
       <div id="checkoutError" style="display:none" class="error-msg" role="alert" aria-live="assertive"></div>
       <a href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20tried%20to%20place%20an%20order%20on%20the%20website%20but%20it%20failed.%20Can%20you%20help%3F" class="wa-fallback" id="waFallback" style="display:none" target="_blank" rel="noopener">WhatsApp us for help →</a>
 
       <div class="checkout-action-bar">
-        <p class="checkout-reassure">🔒 Secure Razorpay checkout · Receipt &amp; delivery updates by email</p>
-        <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
-        <span id="submitText">BUY ODORSTRIKE · ₹229</span>
-      </button>
+        <button class="submit-btn" id="submitBtn" onclick="submitOrder()"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg><span id="submitText">BUY ODORSTRIKE · ₹229</span></button>
+        <p class="checkout-reassure">Payments secured by Razorpay · 7-day returns</p>
       </div>
     </div>
 
@@ -2760,6 +2432,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
     <!-- Success state -->
     <div id="successScreen" class="success-screen" style="display:none">
+      <div class="ck-done-ic" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></div>
       <div class="overlay-tag" id="successTag">Order confirmed</div>
       <h2 id="successHeading">You're done.</h2>
       <p id="successMsg">We'll ship your ODORSTRIKE within 48 hours.</p>
@@ -2769,12 +2442,12 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
       <p class="success-reassure" id="successEmailNote" style="display:none">Check your email — we just sent your order confirmation.</p>
 
-      <div class="payment-policy-link" style="margin-top:12px;font-size:11px;">
+      <div class="payment-policy-link" style="margin-top:12px;font-size:12px;">
         Payment issue? <a href="/payment-failed" onclick="openPaymentFailedOverlay();return false;">See our Payment Failed Policy</a>
       </div>
 
-      <p style="font-size:12px;margin-top:14px">Questions? WhatsApp <a id="waSuccessQuestionsLink" href="https://wa.me/919392974031" style="color:var(--acid);font-weight:500">+91 93929 74031</a></p>
-      <button class="submit-btn" onclick="closeCheckout()">Close</button>
+      <p style="font-size:13px;margin-top:14px">Questions? WhatsApp <a id="waSuccessQuestionsLink" href="https://wa.me/919392974031" style="color:var(--acid);font-weight:500">+91 93929 74031</a></p>
+      <button class="submit-btn" type="button" onclick="closeCheckout()">Close</button>
     </div>
   </div>
 </div>
@@ -3138,7 +2811,13 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     };
     set('checkoutVariant', t.qty + ' × 50ml');
     set('checkoutAmount', '₹' + t.unit + (t.qty > 1 ? ' × ' + t.qty : ''));
-    set('checkoutShipping', 'Free ✓');
+    set('checkoutShipping', 'Free');
+    // Each payment option states the total that choice means, for the
+    // quantity actually in the order (they were hard-coded to one bottle).
+    document.querySelectorAll('.pay-opt[data-method]').forEach(function (b) {
+      var price = b.querySelector('.pay-opt-price');
+      if (price) price.textContent = '₹' + (t.subtotal + t.shipping + (b.dataset.method === 'cod' ? COD_FEE : 0));
+    });
     set('checkoutTotal', '₹' + t.total);
     set('submitText', 'BUY ODORSTRIKE · ₹' + t.total);
     var feeRow = document.getElementById('codFeeRow');
@@ -3305,25 +2984,94 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (wa) wa.style.display = 'none';
   }
 
+  // ==============================
+  // INLINE VALIDATION (Baymard: validate once a field is finished, clear the
+  // error the moment it's fixed, say what to do — not just "invalid").
+  // validateForm() below still gates the submit; this layer only explains.
+  // ==============================
+  var CK_RULES = {
+    f_phone: [function (v) { return /^[6-9]\d{9}$/.test(v); }, 'Enter a 10-digit mobile number (starts with 6, 7, 8 or 9).'],
+    f_email: [function (v) { return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v); }, 'Enter an email like name@example.com — your receipt goes there.'],
+    f_name:  [function (v) { return v.length >= 2; }, 'Enter the name of the person receiving the parcel.'],
+    f_pin:   [function (v) { return /^\d{6}$/.test(v); }, 'Enter your 6-digit pincode.'],
+    f_city:  [function (v) { return v.length >= 2; }, 'Enter your city.'],
+    f_state: [function (v) { return v.length >= 2; }, 'Enter your state.'],
+    f_addr:  [function (v) { return v.length >= 8; }, 'Add your house or flat number, street and area.']
+  };
+  function ckCheck(id, showError) {
+    var el = document.getElementById(id), rule = CK_RULES[id];
+    if (!el || !rule) return true;
+    var field = el.closest('.ck-field');
+    var ok = rule[0](el.value.trim());
+    if (field) {
+      field.classList.toggle('is-ok', ok);
+      if (ok || showError) field.classList.toggle('is-err', !ok);
+      var err = document.getElementById(id + '_err');
+      if (err) err.textContent = ok ? '' : rule[1];
+    }
+    el.setAttribute('aria-invalid', ok ? 'false' : (showError ? 'true' : 'false'));
+    return ok;
+  }
+  function ckValidateAll() {
+    var first = null;
+    Object.keys(CK_RULES).forEach(function (id) { if (!ckCheck(id, true) && !first) first = id; });
+    return first;
+  }
+  (function () {
+    // Digits only, and forgive what people paste: "+91 98765 43210",
+    // "098765 43210", "500 034". A maxlength on these used to cut a pasted
+    // "+91 …" off half-way through the number.
+    var phone = document.getElementById('f_phone');
+    if (phone) phone.addEventListener('input', function () {
+      var d = phone.value.replace(/\D/g, '');
+      if (d.length > 10 && d.indexOf('91') === 0) d = d.slice(2);
+      if (d.length > 10 && d.charAt(0) === '0') d = d.slice(1);
+      if (phone.value !== d.slice(0, 10)) phone.value = d.slice(0, 10);
+    });
+    var pinEl = document.getElementById('f_pin');
+    if (pinEl) pinEl.addEventListener('input', function () {
+      var d = pinEl.value.replace(/\D/g, '').slice(0, 6);
+      if (pinEl.value !== d) pinEl.value = d; // the lookup listener runs after this one
+    });
+    Object.keys(CK_RULES).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('blur', function () { if (el.value.trim()) ckCheck(id, true); });
+      el.addEventListener('input', function () {
+        var f = el.closest('.ck-field');
+        if (f && (f.classList.contains('is-err') || f.classList.contains('is-ok'))) ckCheck(id, false);
+      });
+      // Autofilled city/state (from the pincode) count as finished fields.
+      el.addEventListener('change', function () { if (el.value.trim()) ckCheck(id, true); });
+    });
+  })();
+
+  function showFieldError(msg) {
+    showError(msg);
+    var wa = document.getElementById('waFallback');
+    if (wa) wa.style.display = 'none'; // help is for failed orders, not a typo
+  }
+
   function validateForm() {
+    ckValidateAll();
     // Clear previous red borders
     document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(i){i.style.borderColor='';});
     const fields = ['f_phone','f_name','f_email','f_addr','f_pin','f_city','f_state'];
     for (const id of fields) {
       const el = document.getElementById(id);
-      if (!el) { showError('Please fill all required fields.'); return false; }
-      if (!el.value.trim()) { el.style.borderColor='#ff6b6b'; el.focus(); showError('Please fill all required fields.'); return false; }
+      if (!el) { showFieldError('Please complete the highlighted fields.'); return false; }
+      if (!el.value.trim()) { el.style.borderColor='#ff6b6b'; el.focus(); showFieldError('Please complete the highlighted fields.'); return false; }
     }
     const phone = document.getElementById('f_phone').value.trim();
-    if (!/^[6-9]\d{9}$/.test(phone)) { document.getElementById('f_phone').style.borderColor='#ff6b6b'; showError('Enter a valid 10-digit mobile number.'); return false; }
+    if (!/^[6-9]\d{9}$/.test(phone)) { document.getElementById('f_phone').style.borderColor='#ff6b6b'; showFieldError('Enter a valid 10-digit mobile number.'); return false; }
     const pin = document.getElementById('f_pin').value.trim();
-    if (!/^\d{6}$/.test(pin)) { document.getElementById('f_pin').style.borderColor='#ff6b6b'; showError('Enter a valid 6-digit pincode.'); return false; }
+    if (!/^\d{6}$/.test(pin)) { document.getElementById('f_pin').style.borderColor='#ff6b6b'; showFieldError('Enter a valid 6-digit pincode.'); return false; }
     const emailEl = document.getElementById('f_email');
     const email = emailEl ? emailEl.value.trim().toLowerCase() : '';
     if (emailEl) emailEl.value = email;
     if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) {
       if (emailEl) { emailEl.style.borderColor='#ff6b6b'; emailEl.focus(); }
-      showError('Enter a valid email so we can send your receipt and delivery updates.');
+      showFieldError('Enter a valid email so we can send your receipt and delivery updates.');
       return false;
     }
     return true;
@@ -3681,8 +3429,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         var entry = json && json[0];
         if (!entry || entry.Status !== 'Success' || !entry.PostOffice || !entry.PostOffice.length) return;
         var po = entry.PostOffice[0];
-        if (po.District) { city.value = po.District; flash(city); }
-        if (po.State)    { st.value   = po.State;    flash(st);   }
+        if (po.District) { city.value = po.District; flash(city); city.dispatchEvent(new Event('change')); }
+        if (po.State)    { st.value   = po.State;    flash(st);   st.dispatchEvent(new Event('change')); }
       } catch(e){
         console.warn('[Smelloff] Pincode lookup failed:', e);
       } finally {
@@ -3772,7 +3520,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     function showDeliveryEstimate(){
       if (!estEl || !estText) return;
       var est = calculateDeliveryEstimate();
-      estText.textContent = est.text;
+      estText.innerHTML = '<strong>Arrives ' + fmt(est.loDate) + ' – ' + fmt(est.hiDate) + '</strong> in metros · 5–7 business days elsewhere. Ships from Hyderabad within 48 hours.';
       estEl.classList.add('show');
     }
     function hideDeliveryEstimate(){ if (estEl) estEl.classList.remove('show'); }
