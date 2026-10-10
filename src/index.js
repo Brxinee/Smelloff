@@ -12,8 +12,6 @@ import paymentStatusHandler from "../api/payment-status.js";
 import adminVerifyPaymentHandler from "../api/admin/verify-payment.js";
 import webhookHandler from "../api/webhook.js";
 import shiprocketSyncHandler from "../api/shiprocket-sync.js";
-import magicCheckoutFinalizeHandler from "../api/magic-checkout-finalize.js";
-import magicCheckoutShippingInfoHandler from "../api/magic-checkout-shipping-info.js";
 import adminHandler from "../api/admin.js";
 
 const app = express();
@@ -57,8 +55,6 @@ app.all("/api/admin", (req, res) => adminHandler(req, res));
 app.all("/api/admin/verify-payment", (req, res) => adminVerifyPaymentHandler(req, res));
 app.all("/api/webhook", (req, res) => webhookHandler(req, res));
 app.all("/api/shiprocket-sync", (req, res) => shiprocketSyncHandler(req, res));
-app.all("/api/magic-checkout-finalize", (req, res) => magicCheckoutFinalizeHandler(req, res));
-app.all("/api/magic-checkout-shipping-info", (req, res) => magicCheckoutShippingInfoHandler(req, res));
 app.all("/api/admin/test-email", (req, res) => sendEmailHandler(req, res));
 app.all("/api/resend-webhook", (req, res) => webhookHandler(req, res));
 app.all("/api/payment/create-order", (req, res) => createOrderHandler(req, res));

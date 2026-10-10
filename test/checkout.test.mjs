@@ -160,6 +160,45 @@ test('create-order: rejects manipulated price/amount', async () => {
   assert.ok(res.body.error.includes('Order amount mismatch'));
 });
 
+test('create-order: an order number taken by another customer gets a fresh one', async () => {
+  const taken = 'SMF-20261010-1234';
+  const prevKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const prevFetch = globalThis.fetch;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-key';
+  let inserted = null;
+  globalThis.fetch = async (url, opts = {}) => {
+    const u = String(url);
+    if ((opts.method || 'GET') === 'POST') {
+      inserted = JSON.parse(opts.body);
+      return new Response(JSON.stringify([{ id: 'row-2', ...inserted }]), { status: 201 });
+    }
+    const code = decodeURIComponent((u.match(/order_code=eq\.([^&]+)/) || [])[1] || '');
+    const rows = code === taken
+      ? [{ id: 'row-1', order_code: taken, customer_phone: '9000000001', customer_email: 'first@example.com', amount: 28900, payment_method: 'cod', status: 'placed' }]
+      : [];
+    return new Response(JSON.stringify(rows), { status: 200 });
+  };
+  try {
+    const res = createMockRes();
+    await createOrderHandler({
+      method: 'POST',
+      headers: {},
+      body: {
+        payment_method: 'cod', order_code: taken, email: 'second@example.com', phone: '9000000002',
+        items: [{ quantity: 1, price: 229 }], amount: 28900,
+        address: { name: 'B', line: '1 Road', city: 'Hyderabad', state: 'Telangana', pincode: '500018' },
+      },
+    }, res);
+    assert.equal(res.statusCode, 200, JSON.stringify(res.body));
+    assert.notEqual(res.body.order_code, taken, 'second customer must not reuse the first customer\'s number');
+    assert.match(res.body.order_code, /^SMF-\d{8}-\d{4}$/);
+    assert.equal(inserted.customer_phone, '9000000002');
+  } finally {
+    globalThis.fetch = prevFetch;
+    if (prevKey === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY; else process.env.SUPABASE_SERVICE_ROLE_KEY = prevKey;
+  }
+});
+
 test('webhook: rejects missing signature', async () => {
   const req = {
     method: 'POST',
@@ -788,7 +827,8 @@ test('api/send-email: orderConfirmation allows customer checkout dispatch while 
   const status = resConfirm._get().statusCode;
   assert.notEqual(status, 401, 'orderConfirmation from checkout must not be rejected with 401');
 
-  // 3. Unauthenticated request with welcomeEmail MUST NOT be rejected with 401
+  // 3. Unauthenticated welcomeEmail MUST be rejected: it would send from our
+  //    domain to any address a script supplies.
   const resWelcome = createMockRes();
   await sendEmailHandler({
     method: 'POST',
@@ -799,17 +839,7 @@ test('api/send-email: orderConfirmation allows customer checkout dispatch while 
       data: { customerName: 'Subscriber' }
     }
   }, resWelcome);
-  assert.notEqual(resWelcome._get().statusCode, 401, 'welcomeEmail from newsletter/waitlist must not be rejected with 401');
-
-  // 3b. welcomeEmail enforces recipient rate limiting
-  const resWelcomeSpam1 = createMockRes();
-  const resWelcomeSpam2 = createMockRes();
-  const resWelcomeSpam3 = createMockRes();
-  const welcomePayload = { type: 'welcomeEmail', to: 'victim-spam@example.com', data: { customerName: 'SpamTarget' } };
-  await sendEmailHandler({ method: 'POST', headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.5.5.2' }, body: welcomePayload }, resWelcomeSpam1);
-  await sendEmailHandler({ method: 'POST', headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.5.5.3' }, body: welcomePayload }, resWelcomeSpam2);
-  await sendEmailHandler({ method: 'POST', headers: { origin: 'https://smelloff.in', 'x-forwarded-for': '10.5.5.4' }, body: welcomePayload }, resWelcomeSpam3);
-  assert.equal(resWelcomeSpam3._get().statusCode, 429, 'Excessive welcome emails to same recipient must be rejected with 429');
+  assert.equal(resWelcome._get().statusCode, 401, 'unauthenticated welcomeEmail must be rejected with 401');
 
   // 4. Authenticated request with abandonedCart MUST pass authorization
   const prevAdminSecret = process.env.ADMIN_SECRET;

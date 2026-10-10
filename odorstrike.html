@@ -3658,7 +3658,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <input type="email" id="waitlistEmail" placeholder="your@email.com" required aria-label="Email address">
     <button onclick="submitWaitlist()">Join</button>
   </div>
-  <div class="ec-success" id="ecSuccess">You're in. Watch your inbox.</div>
+  <div class="ec-success" id="ecSuccess">You're on the list.</div>
 </div>
 
 
@@ -5224,7 +5224,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (emailForm) emailForm.style.display = 'none';
     var ecSuccess = document.getElementById('ecSuccess');
     if (ecSuccess) ecSuccess.style.display = 'inline-block';
-    SmelloffEmail.send('welcomeEmail', email, { customerName: 'there' }).catch(console.error);
   };
 
   // THE 30-SECOND RESET — run the ten seconds once, when it comes into view.

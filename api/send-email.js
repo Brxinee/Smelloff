@@ -48,7 +48,10 @@ const TEMPLATES = {
   diagnosticTest,
 };
 
+// welcomeEmail is here too: unauthenticated it sent from our domain to any
+// address a script supplied (per-instance rate limits don't hold on Workers).
 const RESTRICTED_TEMPLATES = new Set([
+  'welcomeEmail',
   'orderShipped',
   'outForDelivery',
   'orderDelivered',
