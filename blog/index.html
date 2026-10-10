@@ -68,7 +68,7 @@
   .b-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--accent)}
   .b-hero h1{
     font-family:'Fraunces',serif;font-weight:900;
-    font-size:clamp(34px,7vw,64px);letter-spacing:-.01em;line-height:1.02;
+    font-size:var(--fs-h1);letter-spacing:var(--ls-display);line-height:1.02;
     text-transform:none;color:var(--text);margin-bottom:18px;max-width:800px;
   }
   .b-hero h1 .acid{color:var(--accent)}
@@ -239,6 +239,17 @@
   }
   .b-card-arrow::after{content:'→';transition:transform .2s ease}
   .b-card:hover .b-card-arrow::after{transform:translateX(3px)}
+  /* Phones: 56 full-width cards ran ~25,000px of scrolling. Below the
+     two-column switch each card is a compact row — square thumb, category,
+     title, read time — so a visitor can scan the whole library. */
+  @media(max-width:679px){
+    .b-grid{gap:10px}
+    .b-card{flex-direction:row;align-items:stretch;border-radius:14px}
+    .b-card-thumb{width:104px;flex:none;aspect-ratio:auto;min-height:104px;border-bottom:0;border-right:1px solid var(--rule)}
+    .b-card-body{padding:12px 14px;gap:6px;justify-content:center}
+    .b-card h3{font-size:16.5px;line-height:1.22}
+    .b-card p,.b-card-arrow{display:none}
+  }
 
   /* Product Banner Card (Conversion Nudge) */
   .b-spotlight-sec{max-width:1120px;margin:20px auto 40px;padding:0 20px}
@@ -1009,7 +1020,7 @@
       <p>Erases fabric odor at a molecular level using HPβCD cyclodextrin and Zinc PCA. 0% oil, 0% stain, 10-second dry time. ₹229 with free express shipping across India.</p>
     </div>
     <div class="b-spotlight-cta">
-      <a href="/?buy=1" class="b-btn-primary">Buy ODORSTRIKE ₹229</a>
+      <a href="/odorstrike?buy=1" class="b-btn-primary">Buy ODORSTRIKE ₹229</a>
       <a href="/#buy" class="b-btn-secondary">View Science &amp; Specs</a>
     </div>
   </div>

@@ -28,22 +28,20 @@
 <link rel="stylesheet" href="/assets/css/tokens.css?v=ea5bd6cb">
 
 <style>
-  :root {
-    --ink:#080a0c; --text:#e2e8f0; --muted:#94a3b8; --acid:#b8ff57; --rule:#1e293b; --card:#0f172a; --mono:'JetBrains Mono', monospace;
-  }
+  /* Brand tokens come from tokens.css — see the note in the solution pages. */
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--ink);color:var(--text);font-family:system-ui,-apple-system,sans-serif;line-height:1.6;margin:0}
-  .hero{padding:32px 0 48px;border-bottom:1px solid var(--rule)}
-  h1{font-size:32px;line-height:1.2;margin-bottom:16px;font-weight:800;letter-spacing:-.02em}
-  p.lead{font-size:18px;color:var(--muted);margin-bottom:24px}
+  body{background:var(--ink);color:var(--text);font-family:var(--body);line-height:var(--lh-body);margin:0}
+  .hero{padding:40px 0 48px;border-bottom:1px solid var(--rule)}
+  h1{font-family:var(--display);font-size:clamp(36px,6vw,64px);line-height:var(--lh-display);margin-bottom:18px;font-weight:900;letter-spacing:var(--ls-display)}
+  p.lead{font-size:var(--fs-lead);color:var(--text-2);margin-bottom:24px;max-width:62ch}
 
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:32px 0}
-  @media(max-width:600px){.grid{grid-template-columns:1fr}}
-  .solution-card{background:var(--card);border:1px solid var(--rule);padding:24px;border-radius:8px;text-decoration:none;color:inherit;display:block;transition:border-color .2s}
-  .solution-card:hover{border-color:var(--acid)}
-  .solution-card h3{font-size:18px;color:var(--acid);margin-bottom:8px;font-family:var(--mono)}
-  .solution-card p{font-size:14px;color:var(--muted)}
-  .city-tag{display:inline-block;background:rgba(255,255,255,.05);color:#cbd5e1;font-size:11px;font-family:var(--mono);padding:2px 8px;border-radius:4px;margin-bottom:12px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:32px 0}
+  @media(max-width:767px){.grid{grid-template-columns:1fr}}
+  .solution-card{background:var(--surface);border:1px solid var(--border-default);padding:24px;border-radius:var(--sq-lg);text-decoration:none;color:inherit;display:block;transition:border-color .2s}
+  .solution-card:hover{border-color:var(--border-focus)}
+  .solution-card h3{font-family:var(--display);font-weight:900;font-size:21px;line-height:1.15;color:var(--text);margin-bottom:8px}
+  .solution-card p{font-size:15px;color:var(--text-2)}
+  .city-tag{display:inline-block;color:var(--acid);font-size:11px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
 </style>
 
 <script src="/assets/js/track.js?v=801e292b" defer></script>

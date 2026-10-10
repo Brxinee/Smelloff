@@ -1,3 +1,15 @@
+/* Site-wide type: blog posts use the same three families and colours as
+   every other page (tokens.css). Until 2026-10-10 --font-body was never
+   defined, so posts fell back to DM Sans and read as a different site. */
+:root {
+  --font-body: var(--body, 'Inter Tight', 'Inter Tight Fallback', sans-serif);
+  --font-display: var(--display, 'Fraunces', 'Fraunces Fallback', serif);
+  --font-mono: var(--mono, 'JetBrains Mono', monospace);
+  --color-bg: var(--ink, #080808);
+  --color-text-primary: var(--text, #F4F1EA);
+  --color-accent: var(--acid, #B8FF57);
+}
+
 /* =====================================================================
    Smelloff Blog — Canonical Editorial Stylesheet (Single Source of Truth)
    Tokens from /assets/css/tokens.css. Shared Chrome from /assets/css/chrome.css.
@@ -147,7 +159,7 @@ img {
 /* Headlines */
 h1 {
   font-family: var(--font-display, 'Fraunces', Georgia, serif);
-  font-weight: 700;
+  font-weight: 900;
   font-size: clamp(28px, 5.2vw, 44px);
   letter-spacing: -0.02em;
   line-height: 1.15;
@@ -249,7 +261,7 @@ h1 em {
    ===================================================================== */
 h2 {
   font-family: var(--font-display, 'Fraunces', Georgia, serif);
-  font-weight: 700;
+  font-weight: 900;
   font-size: clamp(22px, 3.6vw, 30px);
   letter-spacing: -0.015em;
   line-height: 1.25;
@@ -262,7 +274,7 @@ h2 {
 
 h3 {
   font-family: var(--font-display, 'Fraunces', Georgia, serif);
-  font-weight: 700;
+  font-weight: 900;
   font-size: clamp(18px, 2.6vw, 22px);
   letter-spacing: -0.01em;
   line-height: 1.32;
@@ -507,7 +519,7 @@ blockquote {
 .end-cta h3,
 .end-cta h4 {
   font-family: var(--font-display, 'Fraunces', Georgia, serif);
-  font-weight: 700;
+  font-weight: 900;
   font-size: clamp(22px, 3.4vw, 27px);
   color: #FFFFFF;
   margin-bottom: 8px;
@@ -534,7 +546,7 @@ blockquote {
 }
 .end-cta .current-price {
   font-family: var(--font-display, 'Fraunces', Georgia, serif);
-  font-weight: 700;
+  font-weight: 900;
   font-size: 24px;
   color: var(--color-accent, #B8FF57);
   line-height: 1.2;
@@ -573,7 +585,7 @@ blockquote {
 .faq h2#faq-heading,
 .faq h2 {
   font-family: var(--font-display, 'Fraunces', Georgia, serif);
-  font-weight: 700;
+  font-weight: 900;
   font-size: clamp(24px, 3.8vw, 32px);
   line-height: 1.15;
   letter-spacing: -0.02em;
@@ -597,7 +609,7 @@ blockquote {
   cursor: pointer;
   padding: 17px 18px;
   font-family: var(--font-display, 'Fraunces', Georgia, serif);
-  font-weight: 700;
+  font-weight: 900;
   font-size: 17px;
   line-height: 1.35;
   letter-spacing: -0.01em;
@@ -695,7 +707,7 @@ blockquote {
 .guide-card__title,
 .guide-card span:first-child {
   font-family: var(--font-display, 'Fraunces', Georgia, serif);
-  font-weight: 700;
+  font-weight: 900;
   font-size: 15px;
   line-height: 1.35;
   color: #F0F0F0;
@@ -890,3 +902,33 @@ select:focus-visible,
     animation: none !important;
   }
 }
+
+/* Quick answer: the question restored as a real <h2> (it is the speakable
+   target) — keep it compact inside the box rather than at section scale. */
+.quick-answer .qa-q {
+  margin: 0 0 8px;
+  padding: 0;
+  border: 0;
+  font-size: clamp(19px, 2.4vw, 22px);
+  line-height: 1.25;
+}
+.quick-answer .qa-q::before, .quick-answer .qa-q::after { content: none; }
+
+/* Read next: soft.css already makes .read-next the card (border, radius,
+   surface), so the link inside is plain — no box inside a box. */
+.read-next { margin: 48px 0 0; padding: 18px 20px; }
+.read-next .eyebrow {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--color-accent, #B8FF57); margin: 0 0 8px;
+}
+.read-next__card {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  color: #F4F1EA; text-decoration: none; min-height: 44px;
+}
+.read-next__card:hover .read-next__title { color: var(--color-accent, #B8FF57); }
+.read-next__title {
+  font-family: var(--font-display, 'Fraunces', serif); font-weight: 900;
+  font-size: clamp(18px, 2.2vw, 22px); line-height: 1.2; transition: color .2s ease;
+}
+.read-next__arrow { color: var(--color-accent, #B8FF57); font-size: 22px; flex: none; }

@@ -1342,9 +1342,9 @@
   .showcase-text h2{
     font-family:var(--display);
     font-weight:900;
-    font-size:clamp(32px,4vw,56px);
-    line-height:1.04;
-    letter-spacing:-.03em;
+    font-size:var(--fs-h2);
+    line-height:var(--lh-display);
+    letter-spacing:var(--ls-display);
     margin-bottom:24px;
   }
   .showcase-text p{
@@ -1394,20 +1394,14 @@
   .science h2{
     font-family:var(--display);
     font-weight:900;
-    font-size:clamp(48px,8vw,120px);
-    line-height:.9;
-    letter-spacing:-.04em;
+    font-size:var(--fs-h2);
+    line-height:var(--lh-display);
+    letter-spacing:var(--ls-display);
     max-width:1000px;
   }
-  .science h2 .acid-mark{
-    background:var(--acid);
-    color:var(--ink);
-    padding:0 .15em;
-    display:inline-block;
-    font-style:italic;
-    font-weight:400;
-    transform:rotate(-1deg);
-  }
+  /* Accent words are acid text, as on every other page (was a tilted
+     acid highlight block in a lighter italic — PDP-only). */
+  .science h2 .acid-mark{color:var(--acid)}
   .ingredients{
     margin-top:80px;
     display:grid;
@@ -1462,9 +1456,9 @@
   .pricing h2{
     font-family:var(--display);
     font-weight:900;
-    font-size:clamp(48px,8vw,120px);
-    line-height:.9;
-    letter-spacing:-.04em;
+    font-size:var(--fs-h2);
+    line-height:var(--lh-display);
+    letter-spacing:var(--ls-display);
     margin-bottom:24px;
   }
   .pricing .sub{
@@ -1505,7 +1499,7 @@
      card's rounded top-left corner once the card gained a radius — it read
      as a rendering fault. Centred on the top edge it reads as a ribbon. */
   .price-card.featured::before{
-    content:'ONE SKU. NO BUNDLES.';
+    content:'BEST PRICE · DIRECT FROM US';
     position:absolute;
     top:-13px;left:50%;
     transform:translateX(-50%);
@@ -1656,6 +1650,18 @@
   @media(max-width:720px){
     .review-grid{grid-template-columns:1fr}
   }
+  /* Phones: the three quotes stacked into ~800px of scrolling between the
+     showcase and the chemistry. A swipe row keeps one full quote in view
+     and the next one peeking, so it reads as "there's more". */
+  @media(max-width:767px){
+    .review-grid{
+      grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:84%;
+      gap:12px;margin-top:32px;overflow-x:auto;scroll-snap-type:x mandatory;
+      padding-bottom:8px;scrollbar-width:none;
+    }
+    .review-grid::-webkit-scrollbar{display:none}
+    .review{scroll-snap-align:start;padding:24px}
+  }
 
   /* Final CTA */
   .final{
@@ -1673,7 +1679,6 @@
   .final h2{
     font-family:var(--display);
     font-weight:900;
-    font-style:italic;
     font-size:clamp(38px,6vw,72px);
     line-height:1;
     letter-spacing:-.03em;
@@ -2704,21 +2709,14 @@
   }
   .use-cases h2{
     font-family:var(--display);
-    font-weight:400;
-    font-style:italic;
-    font-size:clamp(40px,7vw,96px);
-    line-height:1;
+    font-weight:900;
+    font-size:var(--fs-h2);
+    line-height:var(--lh-display);
     letter-spacing:-.03em;
     max-width:1200px;
   }
   .use-cases h2 b{font-style:normal;font-weight:900}
-  .use-cases h2 .acid-mark{
-    background:var(--acid);
-    color:var(--ink);
-    padding:0 .15em;
-    display:inline-block;
-    transform:rotate(-1deg);
-  }
+  .use-cases h2 .acid-mark{color:var(--acid)}
   .use-grid{
     margin-top:80px;
     display:grid;
@@ -2787,9 +2785,8 @@
   }
   .htu-head h3{
     font-family:var(--display);
-    font-weight:400;
-    font-style:italic;
-    font-size:clamp(32px,4vw,52px);
+    font-weight:900;
+    font-size:var(--fs-h3);
     line-height:1.05;
     letter-spacing:-.02em;
     margin-top:16px;
@@ -3631,7 +3628,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
            and CFG.PRICES.solo — a discount % that doesn't match the two prices
            shown on the same card is a misleading-price claim. -->
       <div class="save">54% OFF</div>
-      <div class="cod-line">Free shipping across India · 7-day returns</div>
+      <div class="cod-line">Free shipping on prepaid · COD ₹289 (₹60 handling) · 7-day returns</div>
       <button onclick="buyNow()">Buy now</button>
     </div>
   </div>
@@ -3639,7 +3636,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
        CFG.VERIFIED_REVIEWS has real entries; bottles-sold only when CFG.BOTTLES_SOLD > 0 -->
   <div id="buyProofMount"></div>
   <div class="buy-trust"><a href="#reviews">Read early tester reviews</a><span>Free shipping</span><span>Made in India</span><span>Secure checkout</span></div>
-  <p class="pay-modes">UPI, Cards, Net Banking &amp; COD · Fast &amp; Secure Checkout</p>
+  <p class="pay-modes">UPI, Cards &amp; Net Banking — free shipping · Cash on Delivery +₹60</p>
 </section>
 
 

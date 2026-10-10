@@ -113,12 +113,14 @@
   h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(36px,6vw,56px);letter-spacing:-.02em;line-height:1.05;text-transform:none;margin-bottom:12px}
   .p-sub{color:var(--text-secondary);font-size:15px;margin-bottom:32px}
   .c-channels{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
-  @media(max-width:560px){.c-channels{grid-template-columns:1fr}}
-  .c-card{display:block;background:var(--bg-surface);border:1px solid var(--rule);border-radius:10px;padding:18px 16px;text-decoration:none;transition:border-color .15s ease,background .15s ease}
+  /* Phones: two columns, WhatsApp (the fastest channel) full width on top —
+     seven stacked cards was a screen of scrolling before the form. */
+  @media(max-width:767px){.c-channels{grid-template-columns:1fr 1fr;gap:10px}.c-channels .c-card:first-child{grid-column:1/-1}.c-card{padding:14px}}
+  .c-card{display:block;background:var(--bg-surface);border:1px solid var(--rule);border-radius:var(--sq-lg);padding:18px 16px;text-decoration:none;transition:border-color .15s ease,background .15s ease}
   .c-card:hover{border-color:var(--accent);background:#141414}
   .c-card .c-k{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:4px}
   .c-card .c-v{font-size:13px;color:var(--text-secondary);line-height:1.5;display:block}
-  form{background:var(--bg-surface);border:1px solid var(--rule);border-radius:10px;padding:22px 20px}
+  form{background:var(--bg-surface);border:1px solid var(--rule);border-radius:var(--sq-lg);padding:22px 20px}
   .f-head{font-family:'Fraunces',serif;font-weight:800;font-size:20px;letter-spacing:-.01em;text-transform:none;margin-bottom:4px}
   .f-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
   label{display:block;font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
@@ -132,7 +134,7 @@
   .c-btn:hover{background:var(--green-light)}
   .c-btn[disabled]{opacity:.6;cursor:wait}
   .c-error{display:none;background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.4);color:var(--red);border-radius:6px;font-size:14px;padding:12px 14px;margin-top:14px}
-  .c-done{display:none;background:var(--green-dim);border:1px solid rgba(var(--accent-rgb),.35);border-radius:10px;padding:24px 20px;text-align:center}
+  .c-done{display:none;background:var(--green-dim);border:1px solid rgba(var(--accent-rgb),.35);border-radius:var(--sq-lg);padding:24px 20px;text-align:center}
   .c-done h2{font-family:'Fraunces',serif;font-weight:800;font-size:22px;letter-spacing:-.01em;text-transform:none;margin-bottom:8px;color:var(--accent)}
   .c-done p{font-size:14px;color:var(--text-secondary)}
   .c-note{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.6}
