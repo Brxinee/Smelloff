@@ -311,8 +311,11 @@ header.site,nav.site-nav,.b-nav{
   border-radius:var(--sq-xl) 0 0 var(--sq-xl);
   border-left:var(--hair) solid var(--rule);
 }
+/* The PDP cart drawer slides in from the right at every width, so it keeps
+   its left-hand radius on phones too; the bottom-sheet shape below is for
+   panels that rise from the bottom. */
 @media(max-width:640px){
-  .cart-drawer,.overlay-panel,.minicart,#cartDrawer,.drawer,
+  .overlay-panel,.minicart,#cartDrawer,.drawer,
   .b-drawer,.checkout-panel{
     border-radius:var(--sq-xl) var(--sq-xl) 0 0;
     border-left:0;
