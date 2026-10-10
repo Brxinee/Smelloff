@@ -26,8 +26,8 @@ import {
 import { BASE_PRODUCT } from '../shared/products-config-workers.js';
 import { sendTransactionalEmail, getIdempotencyKey, getSenderConfig, getEmailDiagnostics } from './_email.js';
 
-const FROM = 'ODORSTRIKE <orders@smelloff.in>';
-const REPLY_TO = 'smelloffsupport@gmail.com';
+const FROM = 'ODORSTRIKE <info@smelloff.in>';
+const REPLY_TO = 'info@smelloff.in';
 
 const TEMPLATES = {
   orderConfirmation,

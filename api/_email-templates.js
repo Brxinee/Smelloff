@@ -16,7 +16,7 @@ const PANEL = '#F7F7F2';
 const FONT = "Arial, Helvetica, sans-serif";
 const HEADING_FONT = "Arial, Helvetica, sans-serif";
 
-const SUPPORT_EMAIL = BASE_PRODUCT.manufacturer.email || 'smelloffsupport@gmail.com';
+const SUPPORT_EMAIL = BASE_PRODUCT.manufacturer.email || 'info@smelloff.in';
 const SITE_URL = 'https://smelloff.in';
 const ADMIN_URL = 'https://admin.smelloff.in';
 const PRICE = BASE_PRODUCT.price;

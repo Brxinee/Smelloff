@@ -5,7 +5,7 @@ const DEPLOYMENT_ORIGIN = process.env.VERIFY_DEPLOYMENT_URL || '';
 
 function normalizeCloudflareHtml(html) {
   return html
-    .replace(/<a href="\/cdn-cgi\/l\/email-protection#[^"]*"><span class="__cf_email__"[^>]*>\[email&#160;protected\]<\/span><\/a>/g, '<a href="mailto:smelloffsupport@gmail.com">smelloffsupport@gmail.com</a>')
+    .replace(/<a href="\/cdn-cgi\/l\/email-protection#[^"]*"><span class="__cf_email__"[^>]*>\[email&#160;protected\]<\/span><\/a>/g, '<a href="mailto:info@smelloff.in">info@smelloff.in</a>')
     .replace(/<script data-cfasync="false" src="\/cdn-cgi\/scripts\/[a-z0-9]+\/cloudflare-static\/email-decode\.min\.js"><\/script>/g, '');
 }
 

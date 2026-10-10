@@ -281,6 +281,17 @@ github.com/settings/installations → Vercel / Netlify → Uninstall (and delete
 the projects in each dashboard). Nothing in the repo can stop them. Cloudflare
 Workers Builds is the only deploy.
 
+## One email address: info@smelloff.in (2026-10-10)
+Owner's call: every address on the site and in the email system is
+`info@smelloff.in` — it replaced `smelloffsupport@gmail.com` (contact links,
+footer, schema, policies, llms files, email templates, Reply-To) and
+`orders@smelloff.in` (the transactional From, `DEFAULT_FROM` in
+`api/_email.js`, `send-email.js`, the payment follow-up script). Same domain,
+so SPF/DKIM/DMARC alignment is unchanged. **Two things live outside the
+repo:** Cloudflare Email Routing must forward `info@smelloff.in` to the
+founder's inbox, and an `EMAIL_FROM` / `EMAIL_REPLY_TO` Worker variable, if
+set, overrides the code defaults. Test fixtures (`buyer@…`) are unchanged.
+
 ## Phone menu: left drawer, icon-only burger (2026-10-10)
 - **The menu did not open in production.** The build's inlined critical CSS
   (`criticalChrome` in `apply-chrome.mjs`) set `.sf-hdr__menu` to

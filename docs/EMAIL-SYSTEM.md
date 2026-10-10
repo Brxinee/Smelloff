@@ -4,7 +4,7 @@ Single server-side sender: `api/_email.js` (Resend).
 Templates: `api/_email-templates.js`.
 Order / payment / fulfillment dispatch: `api/_email-dispatch.js`.
 
-Production sender must stay `ODORSTRIKE <orders@smelloff.in>`.
+Production sender must stay `ODORSTRIKE <info@smelloff.in>`.
 There is **no** `resend.dev` fallback in production.
 Email failure **never** rolls back a captured payment or a placed COD order.
 
@@ -24,11 +24,11 @@ Authoritative sources used: [Gmail sender guidelines](https://support.google.com
 | Bulk senders (5,000+/day to Gmail): SPF **and** DKIM, DMARC `p=none` minimum, From-domain alignment, spam < 0.3% (aim 0.1%) | Smelloff is far below bulk. Authenticate anyway. Current `_dmarc` is `p=none; adkim=s; aspf=s` — **strict alignment**, so SPF or DKIM must pass on `smelloff.in`. |
 | One-click unsubscribe (RFC 8058) | **Required for marketing. Transactional is exempt.** Receipts, shipping, delivery, failed-payment, cancel, refund stay transactional. No `List-Unsubscribe` header. |
 | Review request | One-time, order-tied, no offer, no list. Treated as transactional follow-up. If campaigns are added later, send them from a **different subdomain**. |
-| From alignment | Visible From domain must be the domain that passed SPF or DKIM. Keep `orders@smelloff.in`. Do not send production mail from `@resend.dev`. |
+| From alignment | Visible From domain must be the domain that passed SPF or DKIM. Keep `info@smelloff.in`. Do not send production mail from `@resend.dev`. |
 | Resend domain | Resend recommends a sending subdomain (`mail.` / `orders.`). Changing From now would require new DNS + warming. **Keep apex From** until the current domain is Verified. Future marketing: `news.smelloff.in`, never the transactional From. |
-| Reply-To | Avoid `noreply@`. Founder inbox is `smelloffsupport@gmail.com`. Reply-To does not affect DMARC. Switch Reply-To to `orders@smelloff.in` once Cloudflare Email Routing delivers that mailbox. |
+| Reply-To | Avoid `noreply@`. One address for everything: `info@smelloff.in` (From and Reply-To, since 2026-10-10). Reply-To does not affect DMARC. **Cloudflare Email Routing must forward `info@smelloff.in` to the founder inbox**, or replies go nowhere. |
 | Bounce / suppression | Resend webhook updates `email_events`. Do not retry hard bounces. |
-| Apex SPF today | Cloudflare inbound only (`include:_spf.mx.cloudflare.net`). That does **not** authorize Resend. Until Resend is Verified, Gmail may junk or reject `orders@smelloff.in`. |
+| Apex SPF today | Cloudflare inbound only (`include:_spf.mx.cloudflare.net`). That does **not** authorize Resend. Until Resend is Verified, Gmail may junk or reject `info@smelloff.in`. |
 
 ### UX patterns borrowed (not copied)
 
@@ -228,9 +228,9 @@ Required:
 
 Recommended:
 
-- `EMAIL_FROM=ODORSTRIKE <orders@smelloff.in>`
-- `EMAIL_REPLY_TO=smelloffsupport@gmail.com`
-- `ADMIN_NOTIFY_EMAIL=smelloffsupport@gmail.com`
+- `EMAIL_FROM=ODORSTRIKE <info@smelloff.in>`
+- `EMAIL_REPLY_TO=info@smelloff.in`
+- `ADMIN_NOTIFY_EMAIL=info@smelloff.in`
 - `RESEND_WEBHOOK_SECRET` (Svix signing secret from Resend → Webhooks)
 
 Do not set `EMAIL_FROM` to any `@resend.dev` address in production.
@@ -271,12 +271,12 @@ Queried via Cloudflare DNS-over-HTTPS. **Do not paste invented DKIM CNAMEs.**
 |---|---|---|
 | `smelloff.in` MX | Cloudflare Email Routing (`route1/2.mx.cloudflare.net`) | Inbound mail is Cloudflare, not Resend |
 | `smelloff.in` TXT SPF | `v=spf1 include:_spf.mx.cloudflare.net ~all` | **No Resend / Amazon SES include** on the apex |
-| `_dmarc.smelloff.in` TXT | `v=DMARC1; p=none; rua=mailto:smelloffsupport@gmail.com; pct=100; adkim=s; aspf=s` | Strict alignment. SPF/DKIM must pass for `smelloff.in` |
+| `_dmarc.smelloff.in` TXT | `v=DMARC1; p=none; rua=mailto:info@smelloff.in; pct=100; adkim=s; aspf=s` | Strict alignment. SPF/DKIM must pass for `smelloff.in` |
 | `resend._domainkey.smelloff.in` TXT | DKIM TXT present (older 1024-bit style, not a CNAME) | Historical Resend TXT DKIM install |
 | `send.smelloff.in` MX | `10 feedback-smtp.ap-northeast-1.amazonses.com` | Resend bounce/feedback domain (SES) |
 | `send.smelloff.in` TXT | Cloudflare `_spfm` include, **not** `amazonses.com` | Bounce-domain SPF does not currently include SES |
 
-Because apex SPF has no Resend/SES include and DMARC is strict, production delivery from `orders@smelloff.in` is **DOMAIN_CONFIGURATION_REQUIRED** until the Resend dashboard shows the domain **Verified** and the records Resend currently displays are the ones in DNS.
+Because apex SPF has no Resend/SES include and DMARC is strict, production delivery from `info@smelloff.in` is **DOMAIN_CONFIGURATION_REQUIRED** until the Resend dashboard shows the domain **Verified** and the records Resend currently displays are the ones in DNS.
 
 ---
 
@@ -285,7 +285,7 @@ Because apex SPF has no Resend/SES include and DMARC is strict, production deliv
 1. Open [Resend → Domains](https://resend.com/domains) for `smelloff.in`.
 2. Confirm status is **Verified**. If not, add **exactly** the records Resend shows (DKIM CNAME(s), optional `send` MX/SPF). Do not invent values.
 3. If Resend now uses CNAME DKIM (`resend._domainkey` → `….resend.com`) and DNS still has the old TXT, replace the TXT with the CNAME Resend displays.
-4. Keep `From` as `ODORSTRIKE <orders@smelloff.in>`. Enable click-tracking only if you accept Resend rewriting links.
+4. Keep `From` as `ODORSTRIKE <info@smelloff.in>`. Enable click-tracking only if you accept Resend rewriting links.
 5. Add webhook `https://smelloff.in/api/resend-webhook` for sent/delivered/failed/bounced/complained/delivery_delayed. Put the signing secret in the Worker's secrets as `RESEND_WEBHOOK_SECRET`.
 6. Apply the `email_events` migration in the Smelloff Supabase project.
 7. Send `POST /api/admin/test-email` to a real inbox you control (not `@example.com` — Resend rejects it).
