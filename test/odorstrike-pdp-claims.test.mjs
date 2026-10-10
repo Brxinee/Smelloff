@@ -9,10 +9,10 @@ const PDP_PATH = path.join(ROOT, 'odorstrike.html');
 describe('ODORSTRIKE PDP Claims & Architectural Guardrails', () => {
   const html = fs.readFileSync(PDP_PATH, 'utf8');
 
-  it('contains canonical pricing (₹229) and single SKU invariants', () => {
-    assert.ok(html.includes('₹229'), 'Must contain price ₹229');
+  it('contains canonical pricing (₹299) and single SKU invariants', () => {
+    assert.ok(html.includes('₹299'), 'Must contain price ₹299');
     assert.ok(html.includes('MRP ₹499') || html.includes('M.R.P. ₹499'), 'Must contain MRP ₹499');
-    assert.ok(html.includes('54% OFF'), 'Must state 54% discount');
+    assert.ok(html.includes('40% OFF'), 'Must state 40% discount');
     assert.ok(!/Duo\s*₹?\s*399|Trio\s*₹?\s*549|Solo\s*₹?\s*179/i.test(html), 'Must not contain retired bundle pricing');
     assert.ok(!/₹\s*579/i.test(html), 'Must not contain obsolete ₹579 price');
   });
@@ -45,7 +45,7 @@ describe('ODORSTRIKE PDP Claims & Architectural Guardrails', () => {
     
     // Validate price & currency
     const offerPrice = String(productNode.offers.price);
-    assert.ok(offerPrice === '229' || offerPrice === '229.00', `Product offer price must be 229 or 229.00, got ${offerPrice}`);
+    assert.ok(offerPrice === '299' || offerPrice === '299.00', `Product offer price must be 299 or 299.00, got ${offerPrice}`);
     assert.equal(productNode.offers.priceCurrency, 'INR', 'Product offer currency must be INR');
     assert.equal(productNode.offers.url, 'https://smelloff.in/odorstrike#buy', 'Product offer URL must target canonical #buy');
 

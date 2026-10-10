@@ -238,7 +238,7 @@
   function unitPriceRupees() {
     return (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES && window.SMELLOFF_CONFIG.PRICES.solo) ||
       (window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.pricePrepaid) ||
-      (window.SMELLOFF_TRUTH && window.SMELLOFF_TRUTH.pricePrepaid) || 229;
+      (window.SMELLOFF_TRUTH && window.SMELLOFF_TRUTH.pricePrepaid) || 299;
   }
 
   function codFeeRupees() {

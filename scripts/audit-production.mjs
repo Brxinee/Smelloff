@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { PRODUCT } from './product-config.mjs';
 
 const ROOT = process.cwd();
 const failures = [];
@@ -123,7 +124,7 @@ if (fs.existsSync(indexPath)) {
 const odorPath = path.join(ROOT, 'odorstrike.html');
 if (fs.existsSync(odorPath)) {
   const odorHtml = read(odorPath);
-  if (!odorHtml.includes('₹229')) fail('odorstrike.html missing canonical price ₹229');
+  if (!odorHtml.includes(`₹${PRODUCT.price}`)) fail(`odorstrike.html missing canonical price ₹${PRODUCT.price}`);
   if (!odorHtml.includes('MRP ₹499')) fail('odorstrike.html missing canonical MRP ₹499');
   if (!odorHtml.includes('GET ODORSTRIKE')) fail('odorstrike.html missing canonical CTA: "GET ODORSTRIKE"');
   if (!odorHtml.includes('id="mobileBarLabel"')) fail('odorstrike.html missing critical marker: id="mobileBarLabel"');

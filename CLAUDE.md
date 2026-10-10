@@ -40,6 +40,29 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Price ₹299; COD amount only in checkout (2026-10-11, owner's call)
+- **₹299 prepaid** (was ₹229), MRP ₹499 → 40% off (was 54%). COD adds the same
+  **₹60 handling charge → ₹359** for one bottle. `config/product.json` is the
+  source (price, paise, priceCod, discountPercent); `CFG.PRICES.solo` in
+  `odorstrike.html` must match. Schema, `products.json` and
+  `merchant-feed.xml` are regenerated from it (`npm run schema`).
+- **Outside checkout the site says only "Cash on Delivery available."** The ₹60
+  and ₹359 appear on the COD payment option in the checkout modal (its own
+  total, before "Place order"), in the checkout summary, and in the policies
+  (`/shipping`, `/refund`, `/faq`, plus terms/privacy). `track-order` shows
+  what an order was charged. This **supersedes** "It must be visible before the
+  checkout modal opens" in "COD carries a ₹60 handling charge" below.
+  The floor that still applies: the amount must be on the COD option before
+  the order is placed — never first in the final summary or after placing.
+  `test/cod-checkout-regression.test.mjs` pins both sides.
+- **The Supabase `create-order` edge function bundles `config/product.json` at
+  deploy time.** Until it is redeployed it still expects ₹229 and rejects every
+  ₹299 order as "Order total mismatch". Deploy it together with the site.
+- Blog cost maths moved with the price: ~₹1.20 per spray, ~₹2.99 per refresh,
+  ₹2.40–3.75 per use. The `products` table seed in
+  `supabase/migrations/20260711_products_catalog.sql` still says 22900; nothing
+  reads it.
+
 ## Search Console fixes: one host, merchant data from one file (2026-10-10)
 From the GSC export (Apr–Oct 2026: 687 clicks, 24.5k impressions; product
 snippets 631 impressions, review snippet 17, merchant listings 2):

@@ -19,6 +19,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PRODUCT } from './product-config.mjs';
+
+const PRICE = PRODUCT.price;
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..');
@@ -419,8 +422,8 @@ async function runAudit(options = {}) {
     const pdpDefects = [];
 
     if (pdpHtml) {
-      if (!pdpHtml.includes('₹229')) {
-        pdpDefects.push('Missing visible ₹229 price');
+      if (!pdpHtml.includes(`₹${PRICE}`)) {
+        pdpDefects.push(`Missing visible ₹${PRICE} price`);
       }
       if (/anti-regrowth/i.test(pdpHtml)) {
         pdpDefects.push('Prohibited "anti-regrowth" claim present');
@@ -463,7 +466,7 @@ async function runAudit(options = {}) {
           const parsed = JSON.parse(block[1]);
           if (parsed['@type'] === 'Product') {
             productCount++;
-            if (parsed.offers && (parsed.offers.price === '229.00' || parsed.offers.price === '229' || parsed.offers.price === 229)) {
+            if (parsed.offers && (String(parsed.offers.price) === `${PRICE}.00` || String(parsed.offers.price) === String(PRICE))) {
               offerPriceValid = true;
             }
             if (parsed.aggregateRating) hasAggregateRating = true;
@@ -477,7 +480,7 @@ async function runAudit(options = {}) {
         pdpDefects.push(`Expected exactly 1 Product JSON-LD node, found ${productCount}`);
       }
       if (!offerPriceValid) {
-        pdpDefects.push('Product schema offer price is not 229 / 229.00');
+        pdpDefects.push(`Product schema offer price is not ${PRICE} / ${PRICE}.00`);
       }
       if (hasFaqPage) {
         pdpDefects.push('Prohibited FAQPage JSON-LD present on PDP');
