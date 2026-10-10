@@ -47,3 +47,23 @@ test('Worker owns the apex and www as custom domains', () => {
       `${host} must be a Worker custom domain, or the zone DNS answers it with error 1000`);
   }
 });
+
+test('www and http are 301d to https://smelloff.in in one hop; /api is never redirected', async () => {
+  const { canonicalRedirect, upgradeTemporaryRedirect } = await import('../src/canonical.js');
+  assert.equal(canonicalRedirect('https://www.smelloff.in/'), 'https://smelloff.in/');
+  assert.equal(canonicalRedirect('https://www.smelloff.in/blog/deodorant-vs-fabric-mist/'), 'https://smelloff.in/blog/deodorant-vs-fabric-mist');
+  assert.equal(canonicalRedirect('https://www.smelloff.in/privacy.html?x=1'), 'https://smelloff.in/privacy?x=1');
+  assert.equal(canonicalRedirect('https://www.smelloff.in/blog/index.html'), 'https://smelloff.in/blog');
+  assert.equal(canonicalRedirect('http://smelloff.in/odorstrike'), 'https://smelloff.in/odorstrike');
+  assert.equal(canonicalRedirect('https://smelloff.in/odorstrike'), null);
+  assert.equal(canonicalRedirect('https://www.smelloff.in/api/webhook'), null, 'a 301 would turn webhook POSTs into GETs');
+  assert.equal(canonicalRedirect('https://smelloff.example.workers.dev/'), null);
+
+  const temp = new Response(null, { status: 307, headers: { location: '/privacy' } });
+  assert.equal(upgradeTemporaryRedirect('https://smelloff.in/privacy.html', temp).status, 301);
+  assert.equal(upgradeTemporaryRedirect('https://smelloff.in/faq/', temp).status, 301);
+  assert.equal(upgradeTemporaryRedirect('https://smelloff.in/assets/a@640.webp', temp).status, 307);
+
+  const cfg = fs.readFileSync('wrangler.jsonc', 'utf8');
+  assert.match(cfg, /"run_worker_first": \[\s*"\/\*",\s*"!\/assets\/\*"\s*\]/, 'pages must reach the Worker or www is never redirected');
+});

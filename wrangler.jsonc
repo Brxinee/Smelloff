@@ -7,8 +7,11 @@
     "directory": "./public",
     "binding": "ASSETS",
     "html_handling": "drop-trailing-slash",
+    // Pages go through the Worker so www/http can be 301'd to the apex
+    // (src/canonical.js); hashed /assets/* skip it and stay free to serve.
     "run_worker_first": [
-      "/api/*"
+      "/*",
+      "!/assets/*"
     ]
   },
   // Attach the Worker to the whole apex and www. Without this the zone's own

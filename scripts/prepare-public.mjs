@@ -29,6 +29,7 @@ const ROOT_FILES = [
   'llms.txt',
   'llms-full.txt',
   'products.json',
+  'merchant-feed.xml',
   'manifest.json',
   'sw.js',
   'favicon.ico',

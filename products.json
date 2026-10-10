@@ -9,24 +9,24 @@
       "sku": "OS-001-50ML",
       "mpn": "SMLF-ODST-50",
       "title": "Smelloff ODORSTRIKE Fabric Odor Eliminator Spray (50ml)",
-      "description": "Smelloff ODORSTRIKE is a fabric-only odor-control mist designed to reduce unwanted odor in clothing. It contains a light fragrance that provides a subtle fresh scent immediately after spraying, but the fragrance is not the product's primary purpose. The scent fades quickly while the odor-control benefit is intended to remain.",
-      "url": "https://smelloff.in/",
-      "image_url": "https://smelloff.in/assets/odorstrike-bottle.webp",
+      "description": "A pocket-sized fabric odor remover spray for clothes. 50ml mist that targets trapped sweat odor, gym smell, and shirt odor in fabric — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA helps neutralize them, Triethyl Citrate helps prevent odor formation, and Zinc Gluconate supports long-lasting fabric freshness. Up to 8 hours odor protection on fabric under normal office/commute conditions. Glycerine-free and fast-drying; dries clear with no stiff residue when sprayed from 15–20 cm. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
+      "url": "https://smelloff.in/odorstrike",
+      "image_url": "https://smelloff.in/assets/pdp-01-hero.webp",
       "brand": "Smelloff",
-      "price": 229.00,
+      "price": 229,
       "currency": "INR",
       "availability": "in_stock",
       "condition": "new",
       "shipping": {
         "country": "IN",
         "service": "Standard",
-        "price": 0.00,
+        "price": 0,
         "currency": "INR"
       },
       "return_policy": {
         "country": "IN",
         "return_window_days": 7,
-        "policy_category": "MerchantReturnFiniteReturnWindow"
+        "policy_category": "https://schema.org/MerchantReturnFiniteReturnWindow"
       }
     }
   ]
