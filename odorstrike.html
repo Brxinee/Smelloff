@@ -1505,7 +1505,7 @@
      card's rounded top-left corner once the card gained a radius — it read
      as a rendering fault. Centred on the top edge it reads as a ribbon. */
   .price-card.featured::before{
-    content:'ONE SKU. NO BUNDLES.';
+    content:'BEST PRICE · DIRECT FROM US';
     position:absolute;
     top:-13px;left:50%;
     transform:translateX(-50%);
@@ -1655,6 +1655,18 @@
   }
   @media(max-width:720px){
     .review-grid{grid-template-columns:1fr}
+  }
+  /* Phones: the three quotes stacked into ~800px of scrolling between the
+     showcase and the chemistry. A swipe row keeps one full quote in view
+     and the next one peeking, so it reads as "there's more". */
+  @media(max-width:767px){
+    .review-grid{
+      grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:84%;
+      gap:12px;margin-top:32px;overflow-x:auto;scroll-snap-type:x mandatory;
+      padding-bottom:8px;scrollbar-width:none;
+    }
+    .review-grid::-webkit-scrollbar{display:none}
+    .review{scroll-snap-align:start;padding:24px}
   }
 
   /* Final CTA */
@@ -3631,7 +3643,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
            and CFG.PRICES.solo — a discount % that doesn't match the two prices
            shown on the same card is a misleading-price claim. -->
       <div class="save">54% OFF</div>
-      <div class="cod-line">Free shipping across India · 7-day returns</div>
+      <div class="cod-line">Free shipping on prepaid · COD ₹289 (₹60 handling) · 7-day returns</div>
       <button onclick="buyNow()">Buy now</button>
     </div>
   </div>
@@ -3639,7 +3651,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
        CFG.VERIFIED_REVIEWS has real entries; bottles-sold only when CFG.BOTTLES_SOLD > 0 -->
   <div id="buyProofMount"></div>
   <div class="buy-trust"><a href="#reviews">Read early tester reviews</a><span>Free shipping</span><span>Made in India</span><span>Secure checkout</span></div>
-  <p class="pay-modes">UPI, Cards, Net Banking &amp; COD · Fast &amp; Secure Checkout</p>
+  <p class="pay-modes">UPI, Cards &amp; Net Banking — free shipping · Cash on Delivery +₹60</p>
 </section>
 
 

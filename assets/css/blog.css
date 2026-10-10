@@ -890,3 +890,33 @@ select:focus-visible,
     animation: none !important;
   }
 }
+
+/* Quick answer: the question restored as a real <h2> (it is the speakable
+   target) — keep it compact inside the box rather than at section scale. */
+.quick-answer .qa-q {
+  margin: 0 0 8px;
+  padding: 0;
+  border: 0;
+  font-size: clamp(19px, 2.4vw, 22px);
+  line-height: 1.25;
+}
+.quick-answer .qa-q::before, .quick-answer .qa-q::after { content: none; }
+
+/* Read next: soft.css already makes .read-next the card (border, radius,
+   surface), so the link inside is plain — no box inside a box. */
+.read-next { margin: 48px 0 0; padding: 18px 20px; }
+.read-next .eyebrow {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--color-accent, #B8FF57); margin: 0 0 8px;
+}
+.read-next__card {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  color: #F4F1EA; text-decoration: none; min-height: 44px;
+}
+.read-next__card:hover .read-next__title { color: var(--color-accent, #B8FF57); }
+.read-next__title {
+  font-family: var(--font-display, 'Fraunces', serif); font-weight: 900;
+  font-size: clamp(18px, 2.2vw, 22px); line-height: 1.2; transition: color .2s ease;
+}
+.read-next__arrow { color: var(--color-accent, #B8FF57); font-size: 22px; flex: none; }

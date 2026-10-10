@@ -86,6 +86,31 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
 
+## UI/UX pass: blog repair, PDP, policy copy (2026-10-10)
+- **20 blog posts had corrupted markup** since `dd86e68a` (5 Sep): every
+  opening tag that carried an inline `style` was stripped to a bare `<>`, so
+  the quick-answer block rendered as literal "<> <>Quick answer" text, and 21
+  posts had the "Meet the Fix" product box torn in two (contents orphaned
+  before Read Next, an empty shell after). Restored line by line from
+  `dd86e68a^`; quick answers now use the same class markup as the healthy
+  posts (`.quick-answer > .qa-label + h2.qa-q + p`). Grep for `^\s*<>` if it
+  ever recurs. `.read-next` had no styles at all — added to `blog.css`.
+- **46 posts' "BUY NOW" pointed at `/?buy=1`** — the homepage, which ignores
+  `?buy`. They now point at `/odorstrike?buy=1`.
+- Blog index on phones: cards are compact rows (thumb + category + title)
+  below 680px; the page went from ~27,700px to ~10,300px.
+- PDP: reviews are a swipe row on phones; the `#buy` card's `.cod-line` and
+  `.pay-modes` state the ₹60 COD charge again (both had lost it); the ribbon
+  no longer says "ONE SKU. NO BUNDLES." (combos are planned).
+- `/shipping` said COD had **no handling fee** — corrected to ₹60 / ₹289.
+  `/reviews` promised a "money-back guarantee" — now "7-day returns", which
+  is what `/returns` actually offers. `/faq` lost a duplicate stain question
+  that also carried an unverified "30+ wash cycles" claim.
+- Open, not changed: the `/reviews` page renders beta-tester quotes from
+  `assets/js/reviews-system.js` (Rohit S./Aarav M./Priya K., with stars) that
+  differ from the three on `/` and `/odorstrike`; and its "verified buyer"
+  list (from Supabase) includes a review by the founder.
+
 ## Vercel removed — Cloudflare only (2026-10-10)
 - `vercel.json` → **`config/routing.json`** (redirects, rewrites, headers only;
   same rule shapes). Its `crons` already existed as Worker cron triggers in
