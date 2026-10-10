@@ -194,11 +194,6 @@
     if (feeRow) feeRow.style.display = method === 'cod' ? 'flex' : 'none';
     if (feeAmount) feeAmount.textContent = '₹' + fee;
 
-    var modes = document.querySelector('.pay-modes');
-    if (modes) modes.textContent = method === 'cod'
-      ? 'COD · ₹60 handling'
-      : 'UPI · Cards · Netbanking';
-
     var reassure = document.querySelector('.checkout-reassure');
     if (reassure) reassure.textContent = method === 'cod'
       ? '₹60 handling · Pay on delivery'
