@@ -1,5 +1,5 @@
-/* Minimal static server for local checks, matching the two vercel.json rules
-   that change which file a URL resolves to: cleanUrls (/odorstrike serves
+/* Minimal static server for local checks, matching the two production rules
+   that change which file a URL resolves to: clean URLs (/odorstrike serves
    odorstrike.html) and directory index (/blog/ serves blog/index.html).
    Used by scripts/audit-responsive.mjs; not part of the deploy. */
 

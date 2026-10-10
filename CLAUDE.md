@@ -1,11 +1,11 @@
 # Smelloff — Claude Code Context
 
 ## What this project is
-Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — pocket-sized fabric odor remover spray for clothes (50ml, ₹229). Built as a static/SSR site deployed on Vercel. Single product, direct-to-consumer, COD-enabled, ships pan-India from Hyderabad.
+Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — pocket-sized fabric odor remover spray for clothes (50ml, ₹229). Static pages plus one Cloudflare Worker, deployed on Cloudflare Workers only. Single product, direct-to-consumer, COD-enabled, ships pan-India from Hyderabad.
 
 ## Stack
 - Static HTML + vanilla JS (no framework)
-- Cloudflare Workers deployment (`wrangler.jsonc`, `src/index.js`); `vercel.json` is still the routing source of truth — see below
+- Cloudflare Workers deployment (`wrangler.jsonc`, `src/index.js`); redirects + headers live in `config/routing.json` — see below
 - Supabase (orders/data)
 - Google Sheets webhook (order backup)
 - GA4 + Meta Pixel (consent-gated)
@@ -24,9 +24,10 @@ the move silently dropped, now restored:
   `/assets/optimized/*`, which is gitignored build output) and `apply:chrome`.
   Both mutate the working tree, so a second local build reports stale pages —
   restore with `git restore .` first; CI always builds from a fresh clone.
-- **Cloudflare ignores `vercel.json`.** `scripts/cloudflare-routing.mjs`
-  translates its redirects and headers into `public/_redirects` and
-  `public/_headers` on every build — keep editing `vercel.json`. Host-based
+- **Routing lives in `config/routing.json`** (it was `vercel.json`; Vercel was
+  removed for good on 2026-10-10 — see below). `scripts/cloudflare-routing.mjs`
+  compiles its redirects and headers into `public/_redirects` and
+  `public/_headers` on every build — edit `config/routing.json`. Host-based
   rules (www → apex) can't be expressed there; that needs a Cloudflare Redirect
   Rule on the zone. `assets.html_handling = "drop-trailing-slash"` replaces
   `cleanUrls` + `trailingSlash:false`.
@@ -84,6 +85,25 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
 - Homepage tests in `test/product-config.test.mjs` now pin guardrails (one H1,
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
+
+## Vercel removed — Cloudflare only (2026-10-10)
+- `vercel.json` → **`config/routing.json`** (redirects, rewrites, headers only;
+  same rule shapes). Its `crons` already existed as Worker cron triggers in
+  `wrangler.jsonc`, and `cleanUrls`/`trailingSlash` are `html_handling`.
+  `middleware.js` (Vercel Routing Middleware) is deleted; the GSC verification
+  file is a static asset. `audit-production.mjs` fails if either file returns.
+- **`APP_ENV=production`** is a `vars` entry in `wrangler.jsonc`. The email
+  code used `VERCEL_ENV`, which never exists on Cloudflare, so two production
+  guards had been silently off since the move: the "no resend.dev sender in
+  production" block, and `send-email`'s origin check, which accepted **any
+  `*.vercel.app` / `*.run.app` origin**. Those origins are gone entirely now;
+  only localhost is allowed, and only outside production.
+- Secrets go in Cloudflare → Workers & Pages → smelloff → Settings → Variables
+  and Secrets (or `npx wrangler secret put NAME`). The setup docs say so.
+- Not done from the repo: the Vercel GitHub app and the two Vercel projects
+  (`smelloff`, `smelloff-6v6v`) still build every PR until they're
+  disconnected/deleted in Vercel and GitHub settings. Old dated audits under
+  `docs/audits/` and `docs/plans/` still mention Vercel — they're history.
 
 ## Owner dashboard at /admin (2026-10-10)
 Replaces the separate `Brxinee/Admin` repo (a 470KB SPA + 323KB API + a
@@ -335,7 +355,7 @@ footers, so moving from `/` to `/privacy` or `/blog` read as a different site.
   expensive one — it carries the consent gate, the analytics loaders and the
   injected consent bar for the 30 pages without an inline copy, so it is the
   file most likely to need to reach everyone and was the least likely to.)
-  `vercel.json` serves `/assets/(.*)` with
+  `config/routing.json` serves `/assets/(.*)` with
   `Cache-Control: public, max-age=31536000, immutable`. `immutable` means the
   browser never revalidates, so an unversioned `/assets/css/soft.css` froze
   every returning visitor on whatever copy they fetched first — for a year.
@@ -564,7 +584,7 @@ buttons with uppercase wide-tracked labels and a bounce on hover.
 - `/shipping`, `/returns`, `/refund`, `/privacy`, `/terms` — policy pages
 - `/llms.txt`, `/llms-full.txt` — AI/LLM context files
 - `/sitemap.xml`, `/robots.txt`, `/manifest.json`
-- `/admin` — private admin dashboard ("Mission Control"), served at `admin.smelloff.in` (noindex, password-gated). Single self-contained SPA `admin/index.html` + one serverless function `api/admin.js` (session login, Supabase service-role CRUD over orders/reviews/messages/waitlist/blog_comments, computed business stats, first-party analytics reports, optional GA4 Data API proxy). Order status pipeline: placed→confirmed→packed→dispatched→out_for_delivery→delivered (+upi_pending, cancelled); admin has one-tap "advance" buttons and the customer `track-order.html` timeline mirrors it. Every status change is timestamped into `orders.status_history` (jsonb `[{status,at}]`) + `orders.updated_at` by the `orders_track_status` DB trigger (migration `20260711_order_status_history.sql`), so the customer timeline shows *when* each stage happened plus an estimated-delivery window — no admin wiring needed, the trigger fires on any status update. Setup + env vars in `docs/ADMIN-SETUP.md`. Secrets (`ADMIN_PASSWORD`, `SUPABASE_SERVICE_ROLE_KEY`, optional `GA4_*`) live only in Vercel env — never in the client. Reuses brand fonts/colors; charts follow the validated dark-mode dataviz palette.
+- `/admin` — private admin dashboard ("Mission Control"), served at `admin.smelloff.in` (noindex, password-gated). Single self-contained SPA `admin/index.html` + one serverless function `api/admin.js` (session login, Supabase service-role CRUD over orders/reviews/messages/waitlist/blog_comments, computed business stats, first-party analytics reports, optional GA4 Data API proxy). Order status pipeline: placed→confirmed→packed→dispatched→out_for_delivery→delivered (+upi_pending, cancelled); admin has one-tap "advance" buttons and the customer `track-order.html` timeline mirrors it. Every status change is timestamped into `orders.status_history` (jsonb `[{status,at}]`) + `orders.updated_at` by the `orders_track_status` DB trigger (migration `20260711_order_status_history.sql`), so the customer timeline shows *when* each stage happened plus an estimated-delivery window — no admin wiring needed, the trigger fires on any status update. Setup + env vars in `docs/ADMIN-SETUP.md`. Secrets (`ADMIN_PASSWORD`, `SUPABASE_SERVICE_ROLE_KEY`, optional `GA4_*`) live only in Cloudflare Worker secrets — never in the client. Reuses brand fonts/colors; charts follow the validated dark-mode dataviz palette.
 - **First-party analytics** — cookieless, no-Google web analytics. `api/track.js` receives a beacon from every page (added inline to index/faq/odorstrike, via `assets/js/consent-analytics.js` everywhere else) and stores an anonymised row in `page_views` (daily-rotating visitor hash from IP+UA+salt; no cookie, no PII). Aggregated by the `site_analytics()`/`site_realtime()` RPCs (service-role only) and shown in the admin Analytics tab. Runs regardless of the GA/Pixel consent choice because it stores nothing on the device and no personal data. Migration: `supabase/migrations/20260711_first_party_analytics.sql`.
 
 ## Blog thumbnails (2026-08-03)
@@ -646,7 +666,7 @@ content only. Kept: `why-i-built-odorstrike`, `odorstrike-review-30-day-india-te
 `odorstrike-vs-febreze-india`, `ambi-pur-vs-odorstrike`, `what-is-fabric-odor-eliminator`,
 `hpbcd-cyclodextrin-fabric-odor`, `zinc-pca-fabric-odor-ingredient-guide`,
 `beta-cyclodextrin-odor-removal-science`.
-- All 40 deleted slugs **301 to `/odorstrike`** in `vercel.json`, so existing
+- All 40 deleted slugs **301 to `/odorstrike`** in the routing config (now `config/routing.json`), so existing
   backlinks still land somewhere useful instead of 404ing.
 - Sitemap went 61 → 22 URLs; `llms.txt` / `llms-full.txt` pruned to match.
 - The blog index collapsed from six sections (Featured / Trending / Most Read /

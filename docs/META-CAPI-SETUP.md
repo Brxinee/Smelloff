@@ -18,7 +18,7 @@ orders.status changes (admin / edge fn / SQL)
      │    → 'confirmed'            ⇒ Purchase
      │    → 'cancelled'/'returned' ⇒ Refund   (COD RTO correction)
      ▼
-Vercel Cron → /api/meta-capi-drain  ── sends Purchase/Refund to Meta with full
+Worker cron → /api/meta-capi-drain  ── sends Purchase/Refund to Meta with full
      Advanced Matching, logs response, idempotent on (event_id,event_name)
 ```
 
@@ -34,10 +34,10 @@ browser's placement signal is `Lead`.
    attribution write is best-effort and the browser stays on `Lead` — but the
    server-side Purchase/Refund need it.
 2. Deploy the Edge Function: `supabase functions deploy create-order`.
-3. Deploy the site (Vercel) — ships the new `api/*` functions, the cron, and the
+3. Deploy the site (Cloudflare Workers, `npm run deploy` or a push to main) — ships the new `api/*` functions, the cron, and the
    `odorstrike.html` changes.
 
-## Environment variables (Vercel)
+## Environment variables (Cloudflare Worker secrets)
 
 | Var | Required | Purpose |
 |---|---|---|
@@ -46,10 +46,10 @@ browser's placement signal is `Lead`.
 | `META_PIXEL_ID` | optional | Defaults to `1455100092891684`. |
 | `META_API_VERSION` | optional | Defaults to `v21.0`. |
 | `META_TEST_EVENT_CODE` | during testing | Routes events to Events Manager → Test Events. **Remove for live traffic.** |
-| `CRON_SECRET` | recommended | Bearer secret guarding `/api/meta-capi-drain`. Vercel Cron sends it automatically. |
+| `CRON_SECRET` | recommended | Bearer secret guarding `/api/meta-capi-drain`. The Worker's cron handler sends it automatically. |
 | `META_DPO` / `META_DPO_COUNTRY` / `META_DPO_STATE` | optional | Limited Data Use flag. Leave unset for India (consent gate already governs). |
 
-Never put the token in client code. It lives only in Vercel env.
+Never put the token in client code. It lives only in the Worker's secrets.
 
 ## Consent / DPDP
 
@@ -84,8 +84,8 @@ Set `META_TEST_EVENT_CODE` and open Events Manager → **Test Events**.
 `curl -H "Authorization: Bearer $CRON_SECRET" https://smelloff.in/api/meta-capi-drain`
 — processes pending rows immediately instead of waiting for the cron.
 
-The cron runs **once daily** (`0 3 * * *`) because Vercel's Hobby plan caps crons
-at daily; Meta accepts events up to 7 days old, so this loses no attribution,
-only freshness. For same-day optimisation either upgrade to Vercel Pro and set a
-more frequent schedule, or ping the endpoint (above) from your admin's
+The cron runs **once daily** (`0 3 * * *`, `triggers` in `wrangler.jsonc`).
+Meta accepts events up to 7 days old, so this loses no attribution, only
+freshness. For same-day optimisation either add a more frequent cron trigger
+(and map it in `src/index.js` `scheduled`), or ping the endpoint (above) from your admin's
 status-change action so Purchase/Refund send the moment an order is confirmed.

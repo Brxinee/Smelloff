@@ -66,7 +66,7 @@ ODORSTRIKE is used the same day it arrives, but a useful review needs one or two
 Razorpay Checkout `prefill.email` is optional. Buyers can skip it, paste a typo, or use a wallet that never returns email. Smelloff therefore:
 
 1. Requires + validates email on `/odorstrike` **before** `startRazorpay()`.
-2. Rejects `/api/create-order` without a valid email (Vercel + Edge Function).
+2. Rejects `/api/create-order` without a valid email (Worker API + Edge Function).
 3. Persists `orders.customer_email`.
 4. Triggers mail from **server** events (webhook, verify-payment, create-order, shiprocket-sync). Client `SmelloffEmail.send` is a fallback with the Postgres confirmation claim.
 
@@ -216,14 +216,14 @@ Status labels: API accept → `QUEUED`. Webhook `email.sent` → `SENT`. `email.
 
 ---
 
-## I. Environment (Vercel Production)
+## I. Environment (Cloudflare Worker secrets)
 
 Required:
 
 - `RESEND_API_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `ADMIN_SECRET` / `ADMIN_KEY` (diagnostic)
-- `CRON_SECRET` (Vercel cron on `/api/shiprocket-sync`)
+- `CRON_SECRET` (sent by the Worker's 10:00 UTC cron to `/api/shiprocket-sync`)
 - `RAZORPAY_WEBHOOK_SECRET`
 
 Recommended:
@@ -286,10 +286,10 @@ Because apex SPF has no Resend/SES include and DMARC is strict, production deliv
 2. Confirm status is **Verified**. If not, add **exactly** the records Resend shows (DKIM CNAME(s), optional `send` MX/SPF). Do not invent values.
 3. If Resend now uses CNAME DKIM (`resend._domainkey` → `….resend.com`) and DNS still has the old TXT, replace the TXT with the CNAME Resend displays.
 4. Keep `From` as `ODORSTRIKE <orders@smelloff.in>`. Enable click-tracking only if you accept Resend rewriting links.
-5. Add webhook `https://smelloff.in/api/resend-webhook` for sent/delivered/failed/bounced/complained/delivery_delayed. Put the signing secret in Vercel Production as `RESEND_WEBHOOK_SECRET`.
+5. Add webhook `https://smelloff.in/api/resend-webhook` for sent/delivered/failed/bounced/complained/delivery_delayed. Put the signing secret in the Worker's secrets as `RESEND_WEBHOOK_SECRET`.
 6. Apply the `email_events` migration in the Smelloff Supabase project.
 7. Send `POST /api/admin/test-email` to a real inbox you control (not `@example.com` — Resend rejects it).
-8. Confirm Vercel Production has `CRON_SECRET` so the 10:00 UTC `/api/shiprocket-sync` cron is authorized.
+8. Confirm the Worker has a `CRON_SECRET` secret so the 10:00 UTC `/api/shiprocket-sync` cron is authorized.
 
 Cloudflare Email Routing on the apex MX is fine for **inbound** `orders@` / support aliases. It is not a substitute for Resend **outbound** DKIM/SPF.
 

@@ -7,8 +7,8 @@
  *   node scripts/seo/build-sitemap.mjs --check   # dry run, exits 1 if stale
  *
  * WHAT IT FIXED WHEN IT WAS WRITTEN
- *   - /solutions/ was listed with a trailing slash. vercel.json sets
- *     trailingSlash:false, so that URL 308s to /solutions and Search Console
+ *   - /solutions/ was listed with a trailing slash. production drops
+ *     trailing slashes, so that URL 308s to /solutions and Search Console
  *     files it under "Page with redirect" — a sitemap should never contain a
  *     URL that redirects. The URL builder below cannot emit one.
  *   - Six blog posts carried a lastmod up to five weeks in the FUTURE. Google
@@ -47,7 +47,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 /* Directories that never contain a crawlable page. */
 const SKIP_DIRS = new Set([
   'node_modules', '.git', '.github', 'scripts', 'docs', 'api', 'supabase',
-  '_shared', 'emails', 'admin', 'outreach', '.thumbnail-sources', '.vercel',
+  '_shared', 'emails', 'admin', 'outreach', '.thumbnail-sources',
 ]);
 
 /* Ranking hints. First matching rule wins, so order matters. */
@@ -114,8 +114,8 @@ function walk(dir, out = []) {
 }
 
 /**
- * File path -> canonical URL path, honouring vercel.json's
- * `cleanUrls: true` + `trailingSlash: false`. This is the only place a URL is
+ * File path -> canonical URL path, honouring production's clean URLs and
+ * no trailing slash (wrangler.jsonc: html_handling = "drop-trailing-slash"). This is the only place a URL is
  * constructed, which is what guarantees no trailing slash ever ships again.
  */
 function urlPathFor(file) {

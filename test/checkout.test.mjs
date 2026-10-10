@@ -14,16 +14,16 @@ import adminVerifyPaymentHandler from '../api/admin/verify-payment.js';
 import shiprocketSyncHandler from '../api/shiprocket-sync.js';
 import metaCapiDrainHandler from '../api/meta-capi-drain.js';
 
-test('vercel.json routing integrity', () => {
-  const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
-  const redirects = vercel.redirects || [];
+test('config/routing.json routing integrity', () => {
+  const routing = JSON.parse(fs.readFileSync('config/routing.json', 'utf8'));
+  const redirects = routing.redirects || [];
   
   // Ensure /odorstrike is NOT redirected away
   const odorstrikeRedirect = redirects.find(r => r.source === '/odorstrike' || r.source === '/odorstrike/');
   assert.equal(odorstrikeRedirect, undefined, '/odorstrike should not be redirected to home');
 
   // Verify CSP contains Razorpay endpoints
-  const headers = vercel.headers || [];
+  const headers = routing.headers || [];
   const globalHeader = headers.find(h => h.source === '/(.*)');
   assert.ok(globalHeader, 'global header config should exist');
   const csp = globalHeader.headers.find(h => h.key === 'Content-Security-Policy');
@@ -31,9 +31,11 @@ test('vercel.json routing integrity', () => {
   assert.ok(csp.value.includes('https://checkout.razorpay.com'), 'CSP must include checkout.razorpay.com');
   assert.ok(csp.value.includes('https://api.razorpay.com'), 'CSP must include api.razorpay.com');
 
-  const crons = vercel.crons || [];
-  assert.ok(crons.some((c) => c.path === '/api/shiprocket-sync'), 'daily shiprocket/review cron must exist');
-  const rewrites = vercel.rewrites || [];
+  // Crons are Cloudflare cron triggers now; src/index.js maps 10:00 to shiprocket-sync.
+  const wrangler = fs.readFileSync('wrangler.jsonc', 'utf8');
+  assert.ok(wrangler.includes('"0 10 * * *"'), 'daily shiprocket/review cron trigger must exist');
+  assert.ok(fs.readFileSync('src/index.js', 'utf8').includes('shiprocket-sync'), 'cron must route to shiprocket-sync');
+  const rewrites = routing.rewrites || [];
   assert.ok(rewrites.some((r) => r.source === '/api/admin/test-email'), 'test-email rewrite must exist');
   assert.ok(rewrites.some((r) => r.source === '/api/resend-webhook'), 'resend-webhook rewrite must exist');
 });

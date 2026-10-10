@@ -25,9 +25,9 @@ const REPO = path.resolve(HERE, '..');
 const ORIGIN = 'https://smelloff.in';
 const IS_LIVE = process.argv.includes('--live');
 
-// Load redirects from vercel.json
-const vercel = JSON.parse(fs.readFileSync(path.join(REPO, 'vercel.json'), 'utf8'));
-const redirects = vercel.redirects || [];
+// Load redirects from config/routing.json
+const routing = JSON.parse(fs.readFileSync(path.join(REPO, 'config', 'routing.json'), 'utf8'));
+const redirects = routing.redirects || [];
 
 /**
  * Simulates Vercel route matching for a given hostname and pathname.

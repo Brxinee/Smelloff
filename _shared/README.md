@@ -4,7 +4,7 @@ Every blog post (`/blog/*.html`) and the blog index (`/blog/index.html`) share *
 nav, **one** end-of-post stack, and **one** footer. This folder is the canonical
 reference; the live styling is centralized in **`/assets/css/blog.css`**.
 
-No build step runs on Vercel — the shared markup is stamped into each static `.html`
+The shared markup is stamped into each static `.html`
 file so the footer/related links exist as real `<a>` tags in the initial HTML response
 (critical for SEO/crawlability). JS only enhances (progress bar, year, service worker).
 

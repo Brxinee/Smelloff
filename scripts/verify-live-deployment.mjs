@@ -57,8 +57,7 @@ async function verifyRoute(routePath, localFilePath, isHtml = false, isRobots = 
   const matched = liveClean === localRaw;
   console.log(`  Status: ${res.status}`);
   console.log(`  cf-cache-status: ${res.headers.get('cf-cache-status') || 'N/A'}`);
-  console.log(`  x-vercel-cache: ${res.headers.get('x-vercel-cache') || 'N/A'}`);
-  console.log(`  x-vercel-id: ${res.headers.get('x-vercel-id') || 'N/A'}`);
+  console.log(`  cf-ray: ${res.headers.get('cf-ray') || 'N/A'}`);
   console.log(`  Live bytes (normalized): ${liveClean.length}, Local bytes: ${localRaw.length}`);
   console.log(`  Exact byte-for-byte match: ${matched ? 'PASS ✓' : 'FAIL ✗'}`);
 

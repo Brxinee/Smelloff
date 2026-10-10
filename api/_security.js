@@ -8,7 +8,6 @@ function allowedOrigins() {
   const extra = String(process.env.SMELLOFF_ALLOWED_ORIGINS || '')
     .split(',').map(v => v.trim().replace(/\/$/, '')).filter(Boolean);
   for (const origin of extra) origins.add(origin);
-  if (process.env.VERCEL_URL) origins.add(`https://${process.env.VERCEL_URL}`);
   if (process.env.SMELLOFF_ALLOW_AISTUDIO_PREVIEW !== '0') {
     for (const origin of PREVIEW_ORIGINS) origins.add(origin);
   }

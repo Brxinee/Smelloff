@@ -37,7 +37,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
 
 /* --- cache busting ---------------------------------------------------
-   `vercel.json` serves everything under /assets with
+   config/routing.json serves everything under /assets with
 
        Cache-Control: public, max-age=31536000, immutable
 

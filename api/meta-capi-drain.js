@@ -14,10 +14,11 @@
 // reported ROAS converging toward real margin instead of counting parcels that
 // come back to origin.
 //
-// TRIGGERING: designed for Vercel Cron (see vercel.json). Because Meta accepts
+// TRIGGERING: the Worker's 03:00 UTC cron (wrangler.jsonc `triggers`, handled
+// in src/index.js `scheduled`). Because Meta accepts
 // events up to 7 days old, an hourly (even daily) drain loses no attribution.
-// Can also be hit manually. Protected by a bearer secret; Vercel Cron's own
-// Authorization header is accepted automatically.
+// Can also be hit manually. Protected by a bearer secret; the cron handler sends
+// CRON_SECRET as its Authorization header.
 //
 // SAFETY: inert until META_CAPI_TOKEN + SUPABASE_SERVICE_ROLE_KEY are set;
 // each row is claimed atomically (pending → sending) so overlapping runs never
@@ -42,7 +43,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (!authorized(req)) {
     const hint = (process.env.META_CAPI_TOKEN && !process.env.CRON_SECRET && !process.env.META_CAPI_DRAIN_SECRET)
-      ? 'CRON_SECRET (or META_CAPI_DRAIN_SECRET) must be set in Vercel env once Meta CAPI is armed'
+      ? 'CRON_SECRET (or META_CAPI_DRAIN_SECRET) must be set as a Worker secret once Meta CAPI is armed'
       : undefined;
     return res.status(401).json({ error: 'Unauthorized', ...(hint ? { hint } : {}) });
   }

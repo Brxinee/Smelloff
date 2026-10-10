@@ -17,7 +17,7 @@ one place to see and edit *everything* about the store:
   waitlist.
 - **Settings** — connection status for every integration and session controls.
 
-It reuses the existing site infrastructure — same Vercel project, same Supabase
+It reuses the existing site infrastructure — same Cloudflare Worker, same Supabase
 database, same brand design — so there is **nothing new to host and no second
 repo to maintain.**
 
@@ -28,21 +28,21 @@ repo to maintain.**
 | Piece | What it is |
 |---|---|
 | `admin/index.html` | The entire dashboard — one self-contained file (inline CSS/JS, brand fonts, hand-rolled SVG charts). Hash-routed SPA. |
-| `api/admin.js` | One Vercel serverless function. Password login → signed 12-hour session token; then Supabase CRUD (service-role), computed business stats, first-party site-analytics reports, and an optional GA4 Data API proxy. All server-side — no secrets ever reach the browser. |
+| `api/admin.js` | One API handler on the Cloudflare Worker. Password login → signed 12-hour session token; then Supabase CRUD (service-role), computed business stats, first-party site-analytics reports, and an optional GA4 Data API proxy. All server-side — no secrets ever reach the browser. |
 | `api/track.js` | The cookieless analytics beacon. Every page on the site posts its path here; the server derives device + country + a daily-rotating **anonymous** visitor hash and stores a row in `page_views`. No cookie, no client storage, no personal data at rest. |
-| `vercel.json` | Rewrites `admin.smelloff.in/` → the dashboard, and marks `/admin` + `/api/admin` `noindex` / `no-store`. |
+| `config/routing.json` | Marks `/admin` + `/api/admin` `noindex` / `no-store` (compiled to `_headers` at build). |
 
 Security model: the browser only ever holds a short-lived HMAC session token.
 The Supabase **service-role key**, the **admin password**, and the **GA4 service
-account** live only in Vercel environment variables and are used only inside the
-serverless function. The admin API is `noindex`, rate-limited on login, and every
+account** live only in Cloudflare Worker secrets and are used only inside the
+Worker. The admin API is `noindex`, rate-limited on login, and every
 DB write is constrained to a fixed table/column allow-list.
 
 ---
 
-## 1. Required environment variables (Vercel → Settings → Environment Variables)
+## 1. Required secrets (Cloudflare → Workers & Pages → smelloff → Settings → Variables and Secrets (or `npx wrangler secret put NAME`))
 
-Add these to the **Production** (and Preview, if you want) environment, then
+Add these as **secrets** on the Worker, then
 redeploy.
 
 | Variable | Required | What to put |
@@ -73,7 +73,7 @@ shows visitors, pageviews, a daily trend, traffic sources, top pages, devices,
 countries, and a live "active right now" counter.
 
 **There is nothing to set up.** As soon as `SUPABASE_SERVICE_ROLE_KEY` is in
-Vercel (§1), analytics work. No Google account, no service account, no credit
+the Worker (§1), analytics work. No Google account, no service account, no credit
 card, no cookie banner needed for it.
 
 **Privacy:** no cookie or browser storage is used, and no personal data is kept.
@@ -96,7 +96,7 @@ should just use the built-in analytics above.
 5. **GA4 → Admin → Property access management** → **+** → add the service
    account email with the **Viewer** role.
 6. **GA4 → Admin → Property details** → copy the **numeric property ID**.
-7. In Vercel set `GA4_PROPERTY_ID` (the number) and `GA4_SERVICE_ACCOUNT_JSON`
+7. In the Worker's secrets set `GA4_PROPERTY_ID` (the number) and `GA4_SERVICE_ACCOUNT_JSON`
    (the whole JSON file), then redeploy. The Settings tab will show GA4 as
    connected.
 
@@ -108,13 +108,11 @@ The dashboard is **already reachable at `https://smelloff.in/admin`** after
 deploy (password-gated), so you can use it before touching DNS. To get the clean
 subdomain:
 
-1. **Vercel → Project → Settings → Domains → Add** → enter `admin.smelloff.in`.
-2. Vercel shows a DNS record to add. In your DNS provider add a **CNAME**:
-   - Name/host: `admin`
-   - Value: `cname.vercel-dns.com` (use whatever Vercel shows you).
-3. Wait for it to verify. `vercel.json` already rewrites `admin.smelloff.in/` to
-   the dashboard, so once the domain is live, visiting the subdomain shows the
-   login screen.
+1. Add `{ "pattern": "admin.smelloff.in", "custom_domain": true }` to `routes`
+   in `wrangler.jsonc` and deploy — the Worker then owns that host (don't
+   hand-make a DNS record for it).
+2. Add a Cloudflare Redirect Rule on the zone sending `admin.smelloff.in/` to
+   `https://smelloff.in/admin` (host-based rules can't live in `_redirects`).
 
 The main site is unaffected — `www` still redirects to the apex, and the admin
 host serves only the dashboard.
@@ -137,7 +135,7 @@ host serves only the dashboard.
   filters on Orders).
 
 ### Rotating the password / revoking access
-Change `ADMIN_PASSWORD` in Vercel and redeploy. Because sessions are signed from
+Change the `ADMIN_PASSWORD` Worker secret (it takes effect on the next request). Because sessions are signed from
 it (unless you set a separate `ADMIN_SESSION_SECRET`), every existing session is
 immediately invalidated.
 

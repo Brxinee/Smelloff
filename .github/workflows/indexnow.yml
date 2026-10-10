@@ -3,7 +3,7 @@
 # recrawl. Google does NOT participate in IndexNow — for Google the levers are
 # the sitemap in robots.txt and internal linking, both already in place.
 #
-# It waits before firing: the push to main is what triggers Vercel's build, so
+# It waits before firing: the push to main is what triggers the Cloudflare Workers build, so
 # submitting immediately would point crawlers at the OLD deploy. The step below
 # polls the live sitemap until it matches the commit being deployed, then pings.
 name: IndexNow
@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: '22'
 
-      # Vercel builds from the same push. Wait for the deploy to actually serve
+      # Cloudflare Workers Builds deploys from the same push. Wait for the deploy to actually serve
       # this commit's sitemap before telling anyone to come and read it.
       - name: Wait for the new sitemap to go live
         run: |

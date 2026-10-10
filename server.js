@@ -30,10 +30,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-const vercelConfigPath = path.join(__dirname, 'vercel.json');
-if (fs.existsSync(vercelConfigPath)) {
+const routingConfigPath = path.join(__dirname, 'config', 'routing.json');
+if (fs.existsSync(routingConfigPath)) {
   try {
-    const { redirects } = JSON.parse(fs.readFileSync(vercelConfigPath, 'utf8'));
+    const { redirects } = JSON.parse(fs.readFileSync(routingConfigPath, 'utf8'));
     if (Array.isArray(redirects)) {
       for (const rule of redirects) {
         if (!rule.source || !rule.destination || rule.has) continue;
@@ -43,7 +43,7 @@ if (fs.existsSync(vercelConfigPath)) {
       }
     }
   } catch (err) {
-    console.error('server.js: could not read redirects from vercel.json —', err.message);
+    console.error('server.js: could not read redirects from config/routing.json —', err.message);
   }
 }
 

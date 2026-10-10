@@ -3,19 +3,20 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 test('production performance hardening configuration', () => {
-  const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
+  const routing = JSON.parse(fs.readFileSync('config/routing.json', 'utf8'));
   const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   // Production deploys to Cloudflare Workers via `npm run build`; it must do
-  // the same asset work the Vercel buildCommand does, or /assets/optimized/*
+  // its asset work (optimize, stamp chrome, stage public/), or /assets/optimized/*
   // 404s and pages ship without stamped chrome.
-  for (const [name, command] of [['vercel buildCommand', vercel.buildCommand], ['npm run build', pkg.scripts.build]]) {
+  assert.equal(fs.existsSync('vercel.json'), false, 'Cloudflare-only: vercel.json must not come back');
+  for (const [name, command] of [['npm run build', pkg.scripts.build]]) {
     const steps = ['optimize:critical', 'apply:chrome', 'prepare'];
     const at = steps.map((step) => command.indexOf(step));
     assert.ok(at.every((i) => i >= 0), `${name} must generate responsive assets, stamp chrome, and stage static output`);
     assert.deepEqual([...at].sort((a, b) => a - b), at, `${name} must run those steps in that order`);
   }
 
-  const globalHeader = (vercel.headers || []).find((h) => h.source === '/(.*)');
+  const globalHeader = (routing.headers || []).find((h) => h.source === '/(.*)');
   const csp = (globalHeader?.headers || []).find((h) => h.key === 'Content-Security-Policy');
   assert.ok(csp, 'global CSP must exist');
   assert.ok(

@@ -78,8 +78,9 @@ export function getSenderConfig() {
     replyTo ||
     DEFAULT_REPLY_TO
   ).trim().toLowerCase();
-  const vercelEnv = process.env.VERCEL_ENV || process.env.NODE_ENV || 'unknown';
-  const production = vercelEnv === 'production';
+  // APP_ENV is set to "production" in wrangler.jsonc `vars`.
+  const appEnv = process.env.APP_ENV || process.env.NODE_ENV || 'unknown';
+  const production = appEnv === 'production';
   const usesResendDev = RESEND_DEV_RE.test(from) || parsed.domain === 'resend.dev';
   const domainOk = parsed.domain === REQUIRED_FROM_DOMAIN && !usesResendDev;
   return {
@@ -88,7 +89,7 @@ export function getSenderConfig() {
     fromDomain: parsed.domain || DEFAULT_FROM_DOMAIN,
     replyTo,
     adminNotify,
-    vercelEnv,
+    appEnv,
     production,
     usesResendDev,
     apiKeyConfigured: Boolean(String(process.env.RESEND_API_KEY || '').trim()),
@@ -107,7 +108,7 @@ export function getEmailDiagnostics() {
     senderDomain: sender.fromDomain,
     replyTo: sender.replyTo,
     adminNotify: maskEmail(sender.adminNotify),
-    vercelEnv: sender.vercelEnv,
+    appEnv: sender.appEnv,
     domainStatus: sender.domainStatus,
     usesResendDev: sender.usesResendDev,
     provider: EMAIL_PROVIDER,
@@ -285,7 +286,7 @@ export function logEmailEvent(level, code, details) {
     errorMessage: details.errorMessage || null,
     errorName: details.errorName || null,
     httpStatus: details.httpStatus || null,
-    vercelEnv: details.vercelEnv || process.env.VERCEL_ENV || null,
+    appEnv: details.appEnv || process.env.APP_ENV || null,
   };
   const line = JSON.stringify(payload);
   if (level === 'error') console.error(line);
@@ -393,7 +394,7 @@ export async function sendTransactionalEmail({
     logEmailEvent('error', 'EMAIL_FAILURE', {
       type, orderId: orderCode, to: recipient, from: sender.from,
       originatingRoute, errorCode: failure.errorCode, errorMessage: failure.errorMessage,
-      vercelEnv: sender.vercelEnv,
+      appEnv: sender.appEnv,
     });
     return failure;
   }
@@ -405,7 +406,7 @@ export async function sendTransactionalEmail({
     from: sender.from,
     idempotencyKey: resolvedIdempotencyKey,
     originatingRoute,
-    vercelEnv: sender.vercelEnv,
+    appEnv: sender.appEnv,
   };
 
   logEmailEvent('info', 'EMAIL_ATTEMPT', baseLog);
@@ -560,7 +561,7 @@ export async function sendTransactionalEmail({
     const failure = {
       ok: false,
       provider: EMAIL_PROVIDER,
-      errorCode: classified.errorCode === 'RESEND_API_ERROR' ? 'VERCEL_FUNCTION_ERROR' : classified.errorCode,
+      errorCode: classified.errorCode === 'RESEND_API_ERROR' ? 'WORKER_FUNCTION_ERROR' : classified.errorCode,
       errorMessage: classified.errorMessage || err?.message || 'Email delivery failed',
       errorName: err?.name || 'Error',
       httpStatus: classified.httpStatus || 502,

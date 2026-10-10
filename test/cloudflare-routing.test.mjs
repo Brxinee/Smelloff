@@ -3,13 +3,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { buildHeaders, buildRedirects } from '../scripts/cloudflare-routing.mjs';
 
-const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
+const routing = JSON.parse(fs.readFileSync('config/routing.json', 'utf8'));
 
-test('vercel.json redirects translate to Cloudflare _redirects', () => {
-  const lines = buildRedirects(vercel).trim().split('\n');
+test('config/routing.json redirects translate to Cloudflare _redirects', () => {
+  const lines = buildRedirects(routing).trim().split('\n');
   const rules = new Map(lines.map((l) => { const [from, to, status] = l.split(' '); return [from, { to, status }]; }));
 
-  for (const r of vercel.redirects.filter((r) => !r.has && !/[(:*]/.test(r.source))) {
+  for (const r of routing.redirects.filter((r) => !r.has && !/[(:*]/.test(r.source))) {
     assert.equal(rules.get(r.source)?.to, r.destination, `missing redirect ${r.source}`);
   }
   assert.deepEqual(rules.get('/policies/terms'), { to: '/terms', status: '301' });
@@ -21,8 +21,8 @@ test('vercel.json redirects translate to Cloudflare _redirects', () => {
   assert.ok(lines.length <= 2000, 'Cloudflare caps _redirects at 2000 static rules');
 });
 
-test('vercel.json headers translate to Cloudflare _headers', () => {
-  const headers = buildHeaders(vercel);
+test('config/routing.json headers translate to Cloudflare _headers', () => {
+  const headers = buildHeaders(routing);
   assert.match(headers, /^\/\*\n(  .+\n)*  Content-Security-Policy: default-src 'self'/m);
   assert.match(headers, /^\/assets\/\*\n  Cache-Control: public, max-age=31536000, immutable$/m);
   assert.match(headers, /^\/sw\.js\n  Cache-Control: public, max-age=0, must-revalidate$/m);
