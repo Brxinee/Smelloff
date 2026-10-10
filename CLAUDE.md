@@ -86,6 +86,40 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
 
+## PDP redesign + "View product" route + icons (2026-10-10)
+- **Two routes from the homepage, on purpose.** Every buy CTA still goes to
+  `/odorstrike?buy=1` (checkout opens). Beside the hero, offer-box and final
+  CTAs there is now a ghost `.hm-btn--ghost` "View product" → plain
+  `/odorstrike`, and the hero bottle links there too. Plain `/odorstrike`
+  never opens checkout. A test pins both routes.
+- **`odorstrike.html` body was rebuilt** (hero → icon strip → `#how` →
+  `#why` → `#compare` → `#reviews` → `#science` → `#uses` → `#buy` → `#faq`
+  → final). All new CSS is one `pd-`-prefixed block in the page's `<style>`;
+  ~1,300 lines of old body CSS (and the dead fixed-`nav` rules) are gone.
+  Checkout, cart drawer, viewer and consent CSS are untouched.
+  - Kept IDs the JS drives: `gallery`, `galDots`, `galCur`, `pdpQty*`,
+    `pdpBuyBtn/Text`, `pdpCartBtn`, `showcaseBuyBtn` (now the `#buy` box
+    button), `finalBuyBtn`, `reset30` + `r30-*`, the proof mounts, `mobileBar`.
+  - Gallery is one swipe row at every width; ≥768 it is one tile + an
+    8-thumbnail strip (`.pd-thumb`, synced in the gallery indicator JS), and
+    the gallery column is the sticky one. Phone hero: Buy ends ~837px on
+    390×844 — crumbs and stock pill hide <768 to get it there.
+  - The step-03 ring now counts the real 30 seconds (it ran 30→0 in 15 s).
+  - `#compare` is the gallery's deo/perfume tile as real markup. Keep its
+    competitor cells modest — no claims about what they *can't* do beyond
+    "not made for it".
+- **Icons are an inline SVG sprite** (`<symbol id="i-…">`, Lucide-style
+  stroke, `currentColor`) at the top of each page's body, used as
+  `<svg class="ic"><use href="#i-…"/></svg>`. No icon font, no request. Each
+  page's sprite is trimmed to the ids it uses — **add the `<symbol>` when you
+  add a `<use>`** (a test checks the PDP).
+- **Fixed: `chrome.js` overwrote the PDP's `.pay-modes`** ("Cash on Delivery
+  +₹60") with "UPI · Cards · Netbanking" on every load — it was meant for a
+  checkout element that no longer exists, and it silently removed one of the
+  required COD disclosures. Deleted.
+- `.pd-btn` / `.pd-card` joined the soft.css §9 lists. Consent-bar privacy
+  links are underlined in all three copies (axe link-in-text-block).
+
 ## Ponytail audit fixes (2026-10-10)
 Ran the Ponytail (`DietrichGebert/ponytail`) repo audit; the plugin is
 installed for Claude Code (`/ponytail-audit`, `/ponytail-review`). Fixed:

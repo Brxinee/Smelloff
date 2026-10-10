@@ -72,7 +72,7 @@
     var css = '#smelloff-consent-bar{display:block;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#111;border-top:1px solid rgba(244,241,234,.12);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));font-family:"Inter Tight","DM Sans",system-ui,sans-serif}' +
       '#smelloff-consent-bar .cb-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}' +
       '#smelloff-consent-bar p{flex:1;font-size:13px;color:#9a958d;line-height:1.5;margin:0;min-width:200px}' +
-      '#smelloff-consent-bar p a{color:#b8ff57;text-decoration:none}' +
+      '#smelloff-consent-bar p a{color:#b8ff57;text-decoration:underline;text-underline-offset:2px}' +
       // flex-wrap + shrink: this row was `flex-shrink:0` with no wrap, so at
       // 320px the two buttons measured 315px inside a 300px content box and
       // "Reject non-essential" hung off the right edge of the screen. Below

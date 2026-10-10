@@ -436,7 +436,7 @@ img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-
    Colours stay with each page (acid fill, ink fill on acid bands, ghost). */
 .hm-btn,.hero-cta,.fix-cta,.final-btn,.price-card button,.end-cta .buy-btn,
 .b-btn-primary,.faq-cta,.c-btn,.t-btn,.cta-btn,.buy-band a,.mb-btn,.combo-btn,
-.b-news-btn,.bc-cta,.nf-btn{
+.b-news-btn,.bc-cta,.nf-btn,.pd-btn{
   border-radius:var(--sq-sm) !important;
   font-family:var(--mono) !important;
   font-weight:700 !important;
@@ -452,7 +452,7 @@ img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-
 
 /* Cards 16px, large panels and media 20px (tokens: --sq-lg / --sq-xl). */
 .rc,.c-card,.b-spotlight,.b-featured-card,.quick-answer,.geo-answer-block,
-.solution-card,.read-next,.how-step,.rv,.combo,.ph-img--sq{
+.solution-card,.read-next,.how-step,.rv,.combo,.ph-img--sq,.pd-card{
   border-radius:var(--sq-lg) !important;
 }
 .hero-visual,.beat-art,.offer,.ph-img,.cta-box,.gal-tile,.buy-band{

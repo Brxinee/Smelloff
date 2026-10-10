@@ -233,82 +233,36 @@ test('index.html homepage claims discipline and formula secrecy', () => {
   assert.ok(faq.includes('never skin, face, hair or body'), 'fabric-only limit must be stated');
 });
 
-test('odorstrike.html PDP hero and primary buy area UX hierarchy, canonical pricing, and claims discipline', () => {
+// PDP redesigned 2026-10-10. These pin guardrails — positioning, price,
+// COD disclosure before checkout, the buy controls the JS drives, and claim
+// discipline — rather than the old markup line by line.
+test('odorstrike.html PDP hero and primary buy area: positioning, canonical pricing, COD disclosure, claims discipline', () => {
   const html = readFileSync('odorstrike.html', 'utf8');
-
-  // Extract .product-info block
   const pInfoStart = html.indexOf('<div class="product-info">');
   assert.ok(pInfoStart !== -1, 'Must have <div class="product-info">');
-  const pInfoEnd = html.indexOf('<div id="heroProofMount">', pInfoStart);
-  const pInfo = html.slice(pInfoStart, pInfoEnd);
+  const pInfo = html.slice(pInfoStart, html.indexOf('<div id="heroProofMount">', pInfoStart));
 
-  // 1. Positioning & Product identity in eyebrow and H1
-  assert.ok(pInfo.includes('FABRIC ODOR CONTROL · 50ML'), 'Eyebrow must prominently declare fabric odor control positioning');
-  assert.ok(pInfo.includes('<h1>ODORSTRIKE</h1>'), 'Headline must be clear brand name ODORSTRIKE');
+  assert.equal([...html.matchAll(/<h1\b/g)].length, 1, 'PDP must have exactly one <h1>');
+  assert.ok(/<h1[^>]*>ODORSTRIKE<\/h1>/.test(pInfo), 'H1 must be the product name');
+  assert.ok(pInfo.includes('FABRIC ODOR CONTROL · 50ML'), 'Eyebrow must declare fabric odor control');
+  assert.ok(pInfo.includes('A pocket-sized fabric odor mist for clothes'), 'Tagline must define the category');
+  assert.ok(pInfo.includes('up to 8 hours'), 'Tagline must carry the locked protection claim');
+  for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(pInfo.includes(tag), `Must say ${tag}`);
 
-  // 2. Tagline what it is and core benefit
-  assert.ok(pInfo.includes('A pocket-sized fabric odor mist for clothes'), 'Tagline must define product category');
-  assert.ok(pInfo.includes('neutralizes them directly in fabric fibres'), 'Tagline must state neutralizes in fabric fibres');
-  assert.ok(pInfo.includes('up to 8 hours of clean odor protection') || pInfo.includes('up to 8 hours'), 'Tagline must state up to 8 hours');
-  assert.ok(pInfo.includes('residue') || pInfo.includes('fast-drying'), 'Tagline must state clean drying residue profile');
+  assert.ok(pInfo.includes('<span class="pd-amt">₹229</span>'), 'Price must display ₹229');
+  assert.ok(pInfo.includes('MRP ₹499') && pInfo.includes('54% OFF'), 'MRP and discount must agree');
+  assert.ok(pInfo.includes('1 × 50ml bottle'), 'Pack size must be stated');
+  assert.ok(pInfo.includes('COD ₹289') && pInfo.includes('₹60 handling'), 'COD total must be disclosed in the hero, before checkout');
 
-  // 3. Clear differentiator badges
-  assert.ok(pInfo.includes('NOT PERFUME'), 'Must display NOT PERFUME badge');
-  assert.ok(pInfo.includes('NOT BODY DEODORANT'), 'Must display NOT BODY DEODORANT badge');
-  assert.ok(pInfo.includes('FABRIC ONLY'), 'Must display FABRIC ONLY badge');
+  for (const id of ['pdpQtyDec', 'pdpQtyVal', 'pdpQtyInc', 'pdpBuyBtn', 'pdpBuyText', 'pdpCartBtn']) assert.ok(pInfo.includes(`id="${id}"`), `#${id} must exist`);
+  assert.ok(/id="pdpBuyBtn" onclick="buyNow\(\)"/.test(pInfo), 'Primary CTA must go straight to checkout');
+  assert.ok(/id="pdpCartBtn" onclick="addToCart\(\)"/.test(pInfo), 'Secondary CTA must add to cart');
+  assert.ok(pInfo.includes('GET ODORSTRIKE — ₹229'), 'Initial buy text must match canonical price');
+  assert.ok(pInfo.indexOf('class="pd-price"') < pInfo.indexOf('class="buy-actions"'), 'Price must precede the buy controls');
+  for (const t of ['Free shipping', 'Cash on Delivery', '3–5 days', '7-day returns']) assert.ok(pInfo.includes(t), `Reassurance must include ${t}`);
 
-  // 4. Authoritative commercial pricing hierarchy
-  assert.ok(pInfo.includes('class="price">₹229</span>'), 'Price must display ₹229');
-  assert.ok(pInfo.includes('1 × 50ml bottle'), 'Pack size must display 1 × 50ml bottle');
-  assert.ok(pInfo.includes('MRP ₹499'), 'Struck price must be MRP ₹499');
-  assert.ok(pInfo.includes('54% OFF'), 'Discount must be 54% OFF');
-  assert.ok(pInfo.includes('FREE SHIPPING</strong> — PREPAID'), 'Prepaid shipping must be free');
-  assert.ok(pInfo.includes('COD AVAILABLE</strong> (₹60 HANDLING · ₹289 TOTAL)'), 'COD fee must be ₹60 with ₹289 total');
-
-  // 5. Purchase actions & controls
-  assert.ok(pInfo.includes('id="pdpQtyDec"'), 'Qty decrement button must exist');
-  assert.ok(pInfo.includes('id="pdpQtyVal"'), 'Qty output display must exist');
-  assert.ok(pInfo.includes('id="pdpQtyInc"'), 'Qty increment button must exist');
-  assert.ok(pInfo.includes('id="pdpBuyBtn"'), 'Primary buy button id must exist');
-  assert.ok(pInfo.includes('GET ODORSTRIKE — ₹229'), 'Initial buy button text must match canonical price');
-  assert.ok(pInfo.includes('id="pdpCartBtn"'), 'Secondary cart button id must exist');
-
-  // 6. Buying reassurance strip
-  assert.ok(pInfo.includes('Free Shipping Pan-India'), 'Reassurance: Free shipping pan-India');
-  assert.ok(pInfo.includes('COD Available · ₹60 Handling'), 'Reassurance: COD with ₹60 handling');
-  assert.ok(pInfo.includes('Typically 3–5 business days to metros · 5–7 outside'), 'Reassurance: calendar-style metro/outside windows');
-  assert.ok(pInfo.includes('7-Day Returns'), 'Reassurance: 7-day returns');
-
-  // 7. Strict visual reading order in DOM
-  const idxEyebrow = pInfo.indexOf('class="ph-eyebrow"');
-  const idxH1 = pInfo.indexOf('<h1>ODORSTRIKE</h1>');
-  const idxTagline = pInfo.indexOf('class="ph-tagline"');
-  const idxBadges = pInfo.indexOf('class="ph-badges"');
-  const idxPrice = pInfo.indexOf('class="ph-price"');
-  const idxBuyActions = pInfo.indexOf('class="buy-actions"');
-  const idxTrust = pInfo.indexOf('class="hero-trust"');
-  const idxScale = pInfo.indexOf('class="spec-scale"');
-
-  assert.ok(idxEyebrow < idxH1, 'Eyebrow must precede H1');
-  assert.ok(idxH1 < idxTagline, 'H1 must precede Tagline');
-  assert.ok(idxTagline < idxBadges, 'Tagline must precede Badges');
-  assert.ok(idxBadges < idxPrice, 'Badges must precede Price');
-  assert.ok(idxPrice < idxBuyActions, 'Price must precede Buy Actions');
-  assert.ok(idxBuyActions < idxTrust, 'Buy Actions must precede Trust');
-  assert.ok(idxTrust < idxScale, 'Trust must precede Spec Scale');
-
-  // 8. Mobile navigation & sticky bar
-  assert.ok(html.includes('class="gal-mobile-indicator"'), 'Must have mobile gallery indicator');
-  assert.ok(html.includes('id="galDots"'), 'Must have gallery dots navigation');
-  assert.ok(html.includes('id="galCur"'), 'Must have gallery counter');
-  assert.ok(html.includes('class="mobile-bar" id="mobileBar"'), 'Must have sticky mobile bar');
-  assert.ok(html.includes('id="mobileBarBuyBtn"'), 'Sticky mobile bar must have buy button');
-
-  // 9. Claim discipline guardrails in product-hero area
-  const heroSectionStart = html.indexOf('<div class="product-hero"');
-  const heroSectionEnd = html.indexOf('</section>', heroSectionStart);
-  const heroSection = html.slice(heroSectionStart, heroSectionEnd);
-  assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(heroSection), false, 'Hero section must not contain prohibited claims');
+  assert.ok(html.includes('class="mobile-bar" id="mobileBar"') && html.includes('id="mobileBarBuyBtn"'), 'Must have the sticky mobile bar');
+  assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(pInfo), false, 'Hero must not contain prohibited claims');
 });
 
 test('odorstrike.html PDP gallery information hierarchy, asset order, accessibility, and performance', () => {
@@ -405,7 +359,7 @@ test('odorstrike.html PDP How to Use section UX hierarchy, canonical values, tim
 
   assert.ok(reset30Html.includes('class="section-tag">How to use · Fabric only</div>'), 'Must have fabric-only section tag');
   assert.ok(reset30Html.includes('Hold. Spray. Wait. Wear.'), 'Must state concise 4-step heading');
-  assert.ok(reset30Html.includes('class="htu-sub"'), 'Must have subtitle with fabric-only clarity');
+  assert.ok(reset30Html.includes('htu-sub') && reset30Html.includes('never spray directly onto skin'), 'Must have subtitle with fabric-only clarity');
 
   // 2. 4-step sequence inside ordered list <ol class="r30-steps">
   assert.ok(reset30Html.includes('<ol class="r30-steps">'), 'Must use semantic <ol class="r30-steps">');
@@ -524,56 +478,41 @@ test('odorstrike.html PDP FAQ objection-first hierarchy, schema deprecation, and
   assert.ok(faqSection.includes('Up to 8 hours'), 'FAQ must state Up to 8 hours duration');
 });
 
-test('odorstrike.html PDP showcase section UX hierarchy, non-sticky layout, buyNow integration, and claims discipline', () => {
+test('odorstrike.html PDP buy box (#buy): showcaseBuyBtn → buyNow(), canonical price and COD, claims discipline', () => {
   const html = readFileSync('odorstrike.html', 'utf8');
+  const start = html.indexOf('<section class="pd-sec pricing" id="buy"');
+  assert.ok(start !== -1, 'Must have the #buy section');
+  const box = html.slice(start, html.indexOf('</section>', start));
 
-  // Extract .showcase block
-  const scStart = html.indexOf('<section class="showcase">');
-  assert.ok(scStart !== -1, 'Must have <section class="showcase">');
-  const scEnd = html.indexOf('</section>', scStart) + 10;
-  const showcase = html.slice(scStart, scEnd);
-
-  // 1. CTA button architecture & buyNow() pathway
-  assert.equal(/<a[^>]+class="[^"]*fix-cta[^"]*"[^>]*href="#buy"/i.test(showcase), false, '.fix-cta must not use href="#buy"');
-  assert.ok(/<button[^>]+class="[^"]*fix-cta[^"]*"[^>]*onclick="buyNow\(\)"/i.test(showcase), '.fix-cta must be a button calling buyNow()');
-  assert.ok(showcase.includes('id="showcaseBuyBtn"'), '.fix-cta must have id="showcaseBuyBtn"');
-  assert.ok(showcase.includes('GET ODORSTRIKE — ₹229'), '.fix-cta must have accessible text GET ODORSTRIKE — ₹229 matching canonical price');
-
-  // 2. renderPdpQty updates showcaseBuyBtn
+  assert.ok(/<button[^>]+class="pd-btn" id="showcaseBuyBtn" onclick="buyNow\(\)">GET ODORSTRIKE — ₹229<\/button>/.test(box), '#showcaseBuyBtn must be a button calling buyNow() with the canonical price');
   assert.ok(html.includes("document.getElementById('showcaseBuyBtn')"), 'renderPdpQty must synchronize showcaseBuyBtn');
-
-  // 3. Non-sticky layout: .fix-buy must be in normal document flow
-  assert.equal(/\.fix-buy\s*\{[^}]*position:\s*sticky/i.test(html), false, '.fix-buy must not have position: sticky');
-  assert.equal(/\.fix-buy\s*\{[^}]*top:\s*96px/i.test(html), false, '.fix-buy must not have top: 96px');
-
-  // 4. Claims discipline & prohibited claims removal
-  assert.equal(/kills odor/i.test(showcase), false, '"Kills odor" must be absent from showcase');
-  assert.ok(showcase.includes("Neutralizes odor — doesn't hide it"), 'Must use approved "Neutralizes odor — doesn\'t hide it"');
-
-  const forbiddenTerms = [
-    'kills', 'killing', 'destroy', 'destroys', 'instant', 'instantly',
-    'permanent', 'guaranteed', 'miracle', '4 months', 'months of daily use',
-    'odor-proof', 'bacteria', 'antibacterial', 'antimicrobial', '100%'
-  ];
-  for (const term of forbiddenTerms) {
-    assert.equal(new RegExp(term, 'i').test(showcase), false, `Showcase must not contain forbidden term: ${term}`);
+  assert.ok(box.includes('₹229') && box.includes('₹499') && box.includes('54% OFF'), 'Price, MRP and discount must be shown');
+  assert.ok(box.includes('₹60 handling') && box.includes('₹289'), 'COD charge must be disclosed on the buy box');
+  assert.ok(box.includes('class="pay-modes"') && box.includes('Cash on Delivery +₹60'), '.pay-modes must state the COD charge');
+  assert.ok(box.includes('Free shipping') && box.includes('7-day returns'), 'Shipping and returns must be stated');
+  assert.ok(box.includes('~250 sprays') && box.includes('refreshes'), 'Must cite canonical sprays/refreshes');
+  assert.ok(box.includes('id="buyProofMount"'), 'Gated proof mount must stay');
+  for (const term of ['kills', 'destroy', 'instant', 'permanent', 'guaranteed', 'miracle', 'odor-proof', 'bacteria', '100%']) {
+    assert.equal(new RegExp(term, 'i').test(box), false, `Buy box must not contain: ${term}`);
   }
+  assert.equal(/month|weeks/i.test(box), false, 'No month-based bottle life');
 
-  // 5. Month-based bottle-life wording removed, canonical spray count used
-  assert.equal(/month|months|weeks/i.test(showcase), false, 'Month/week-based bottle life must be absent from showcase');
-  assert.ok(showcase.includes('~250 sprays'), 'Showcase must cite canonical ~250 sprays');
-  assert.ok(showcase.includes('refreshes'), 'Showcase must cite canonical refreshes');
+  // "Why it works" keeps the approved wording.
+  const why = html.slice(html.indexOf('id="why"'), html.indexOf('</section>', html.indexOf('id="why"')));
+  assert.ok(why.includes("Neutralizes odor — doesn't hide it"), 'Must use approved "Neutralizes odor — doesn\'t hide it"');
+  assert.equal(/kills odor|antibacterial|instantly/i.test(why), false, 'No prohibited claims in #why');
+});
 
-  // 6. Redundant product positioning removed
-  assert.equal(/Not a perfume/i.test(showcase), false, 'Showcase must not repeat "Not a perfume"');
-  assert.equal(/Not a deodorant/i.test(showcase), false, 'Showcase must not repeat "Not a deodorant"');
-
-  // 7. Compact secondary purchase card (.fix-buy) specs & pricing
-  assert.ok(showcase.includes('ODORSTRIKE 50ml'), '.fix-buy must show product name');
-  assert.ok(showcase.includes('₹229'), '.fix-buy must show canonical prepaid price ₹229');
-  assert.ok(showcase.includes('₹499'), '.fix-buy must show canonical MRP ₹499');
-  assert.ok(showcase.includes('₹289 on COD'), '.fix-buy must show canonical COD total ₹289');
-  assert.ok(showcase.includes('Free shipping'), '.fix-buy must confirm free shipping');
+test('pages give a route to the product page that does not open checkout', () => {
+  const home = readFileSync('index.html', 'utf8');
+  const main = home.slice(home.indexOf('<main'), home.indexOf('</main>'));
+  const pdpLinks = main.match(/href="\/odorstrike"/g) || [];
+  assert.ok(pdpLinks.length >= 4, `homepage needs plain /odorstrike links beside the buy CTAs, found ${pdpLinks.length}`);
+  const hero = home.slice(home.indexOf('<section class="hero"'), home.indexOf('</section>', home.indexOf('<section class="hero"')));
+  assert.ok(/class="hm-btn hm-btn--ghost" href="\/odorstrike"/.test(hero), 'hero must offer "View product" next to buy');
+  const pdp = readFileSync('odorstrike.html', 'utf8');
+  assert.equal(/\.pay-modes'\)/.test(readFileSync('assets/js/chrome.js', 'utf8')), false, 'chrome.js must not overwrite the PDP COD disclosure');
+  for (const id of new Set([...pdp.matchAll(/<use href="#(i-[a-z-]+)"/g)].map(m => m[1]))) assert.ok(pdp.includes(`<symbol id="${id}"`), `icon ${id} must exist in the sprite`);
 });
 
 test('odorstrike.html mobile sticky buy bar (#mobileBar) price synchronization, unified CTA observer, and regression checks', () => {
