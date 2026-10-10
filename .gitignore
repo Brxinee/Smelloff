@@ -25,3 +25,6 @@ data/**/*.xlsx
 public/
 assets/optimized/
 .wrangler/
+
+# output of scripts/scan-repo.mjs
+scan-results.json

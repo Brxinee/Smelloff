@@ -1,6 +1,0 @@
-{
-  "name": "Smelloff",
-  "description": "Smelloff — Fabric Odor, Sweat Science & Real Fixes for Indian men",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

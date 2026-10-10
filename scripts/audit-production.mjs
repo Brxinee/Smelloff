@@ -41,7 +41,7 @@ for (const rel of ['api/_security.js', 'api/send-email.js']) {
     fail(`${rel} permits arbitrary *.vercel.app / *.run.app origins`);
   }
 }
-for (const name of ['vercel.json', 'middleware.js']) {
+for (const name of ['vercel.json', 'middleware.js', 'netlify.toml', 'metadata.json']) {
   if (fs.existsSync(path.join(ROOT, name))) fail(`${name} must not exist; the site deploys to Cloudflare only (routing lives in config/routing.json)`);
 }
 
