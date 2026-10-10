@@ -17,8 +17,8 @@
 - Size: 50ml
 - SKU: OS-001-50ML
 - MRP: ₹499
-- Prepaid price: ₹229
-- COD total: ₹289 (₹60 handling)
+- Prepaid price: ₹299
+- Cash on Delivery: available (COD total shown at checkout)
 - Shipping: Free within India. Dispatch within 48 hours of confirmation (not Sundays/public holidays); COD orders after a phone confirmation
 - Delivery: metros 3–5 business days; tier 2/3 cities 5–7; remote / North-East 7–10
 - Returns: 7 days from delivery; bottle at least 80% full, original packaging; reverse pickup where serviceable

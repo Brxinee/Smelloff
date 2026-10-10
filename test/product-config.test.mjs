@@ -16,7 +16,7 @@ import { BASE_PRODUCT } from '../shared/products-config.js';
 
 test('product.json schema and authoritative values', () => {
   assert.equal(PRODUCT.title, 'Smelloff ODORSTRIKE Fabric Odor Eliminator Spray (50ml)');
-  assert.equal(PRODUCT.price, 229);
+  assert.equal(PRODUCT.price, 299);
   assert.equal(PRODUCT.mrp, 499);
   assert.equal(PRODUCT.codFee, 60);
   assert.equal(PRODUCT.size, '50ml');
@@ -35,38 +35,38 @@ test('product.json schema and authoritative values', () => {
 test('commercial pricing math via calculateOrderTotal()', () => {
   // 1 unit prepaid
   const p1 = calculateOrderTotal(1, 'upi');
-  assert.equal(p1.subtotal, 229);
+  assert.equal(p1.subtotal, 299);
   assert.equal(p1.shipping, 0);
   assert.equal(p1.codFee, 0);
-  assert.equal(p1.total, 229);
-  assert.equal(p1.totalPaise, 22900);
+  assert.equal(p1.total, 299);
+  assert.equal(p1.totalPaise, 29900);
 
   // 1 unit COD
   const c1 = calculateOrderTotal(1, 'cod');
-  assert.equal(c1.subtotal, 229);
+  assert.equal(c1.subtotal, 299);
   assert.equal(c1.shipping, 0);
   assert.equal(c1.codFee, 60);
-  assert.equal(c1.total, 289);
-  assert.equal(c1.totalPaise, 28900);
+  assert.equal(c1.total, 359);
+  assert.equal(c1.totalPaise, 35900);
 
   // 2 units prepaid
   const p2 = calculateOrderTotal(2, 'prepaid');
-  assert.equal(p2.subtotal, 458);
+  assert.equal(p2.subtotal, 598);
   assert.equal(p2.shipping, 0);
   assert.equal(p2.codFee, 0);
-  assert.equal(p2.total, 458);
-  assert.equal(p2.totalPaise, 45800);
+  assert.equal(p2.total, 598);
+  assert.equal(p2.totalPaise, 59800);
 
   // 2 units COD
   const c2 = calculateOrderTotal(2, 'cod');
-  assert.equal(c2.subtotal, 458);
+  assert.equal(c2.subtotal, 598);
   assert.equal(c2.codFee, 60);
-  assert.equal(c2.total, 518);
-  assert.equal(c2.totalPaise, 51800);
+  assert.equal(c2.total, 658);
+  assert.equal(c2.totalPaise, 65800);
 });
 
 test('shared/product-truth.js is synchronized with product.json', () => {
-  assert.equal(SMELLOFF_PRODUCT_TRUTH.pricePrepaid, 229);
+  assert.equal(SMELLOFF_PRODUCT_TRUTH.pricePrepaid, 299);
   assert.equal(SMELLOFF_PRODUCT_TRUTH.mrp, 499);
   assert.equal(SMELLOFF_PRODUCT_TRUTH.codFee, 60);
   assert.equal(SMELLOFF_PRODUCT_TRUTH.size, '50ml');
@@ -76,7 +76,7 @@ test('shared/product-truth.js is synchronized with product.json', () => {
 });
 
 test('shared/products-config.js BASE_PRODUCT is synchronized with product.json', () => {
-  assert.equal(BASE_PRODUCT.price, 229);
+  assert.equal(BASE_PRODUCT.price, 299);
   assert.equal(BASE_PRODUCT.mrp, 499);
   assert.equal(BASE_PRODUCT.codFee, 60);
   assert.equal(BASE_PRODUCT.sku, 'OS-001-50ML');
@@ -90,7 +90,7 @@ test('buildProductJsonLd generates valid Schema.org Product object', () => {
   assert.equal(jsonLd['@type'], 'Product');
   assert.equal(jsonLd.name, PRODUCT.name);
   assert.equal(jsonLd.sku, PRODUCT.sku);
-  assert.equal(jsonLd.offers.price, '229.00');
+  assert.equal(jsonLd.offers.price, '299.00');
   assert.equal(jsonLd.offers.priceCurrency, 'INR');
 });
 
@@ -143,20 +143,20 @@ test('supabase/functions/create-order/index.ts derives from product.json without
   assert.ok(code.includes('UNIT_PRICE_RUPEES = productConfig.product.price'));
   assert.ok(code.includes('COD_FEE_RUPEES = productConfig.product.codFee'));
   assert.ok(code.includes('MAX_QTY = productConfig.product.maxQuantity'));
-  assert.equal(code.includes('UNIT_PRICE_RUPEES = 229'), false);
+  assert.equal(code.includes('UNIT_PRICE_RUPEES = 299'), false);
   assert.equal(code.includes('COD_FEE_RUPEES = 60'), false);
   assert.equal(code.includes('MAX_QTY = 5'), false);
 });
 
-test('production backend endpoints derive from canonical BASE_PRODUCT without fallback 229 literals', () => {
+test('production backend endpoints derive from canonical BASE_PRODUCT without fallback 299 literals', () => {
   const shiprocketCode = readFileSync('api/_shiprocket.js', 'utf8');
   assert.ok(shiprocketCode.includes('BASE_PRODUCT.price'));
-  assert.equal(shiprocketCode.includes('?? 229'), false);
+  assert.equal(shiprocketCode.includes('?? 299'), false);
 
   const paymentStatusCode = readFileSync('api/payment-status.js', 'utf8');
   assert.ok(paymentStatusCode.includes('BASE_PRODUCT.price'));
-  assert.equal(paymentStatusCode.includes(': 229'), false);
-  assert.equal(paymentStatusCode.includes("'229.00'"), false);
+  assert.equal(paymentStatusCode.includes(': 299'), false);
+  assert.equal(paymentStatusCode.includes("'299.00'"), false);
 });
 
 // Homepage rebuilt 2026-10-10 as a conversion page (dudewipes-style: few
@@ -172,10 +172,11 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   assert.ok(hero.includes('FABRIC ODOR CONTROL · FOR CLOTHES'));
   assert.ok(hero.includes('ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin.'));
   for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
-  assert.ok(hero.includes('<b>₹229</b>'), 'Hero must show ₹229');
-  assert.ok(hero.includes('M.R.P. ₹499') && hero.includes('54% OFF'), 'MRP and discount must agree with the PDP');
-  assert.ok(hero.includes('FIX MY SHIRT — ₹229') && hero.includes('href="/odorstrike?buy=1"'), 'Primary CTA must open checkout');
-  assert.ok(hero.includes('+₹60') && hero.includes('₹289'), 'COD handling charge must be disclosed in the hero (no drip pricing)');
+  assert.ok(hero.includes('<b>₹299</b>'), 'Hero must show ₹299');
+  assert.ok(hero.includes('M.R.P. ₹499') && hero.includes('40% OFF'), 'MRP and discount must agree with the PDP');
+  assert.ok(hero.includes('FIX MY SHIRT — ₹299') && hero.includes('href="/odorstrike?buy=1"'), 'Primary CTA must open checkout');
+  // Owner's call (2026-10-11): outside checkout, say COD exists; the amount is on the COD option in checkout.
+  assert.ok(hero.includes('Cash on Delivery') && !/₹\s*(60|359)\b/.test(hero), 'Hero names COD availability without the COD amount');
   assert.ok(hero.includes('2–3 sprays') && hero.includes('15–30 sec'), 'Usage microcopy must match the PDP');
   assert.ok(html.includes('/assets/odorstrike-bottle-cutout.webp'), 'Hero bottle cutout must be present');
 });
@@ -192,8 +193,8 @@ test('index.html homepage: every section ends in a route to checkout', () => {
 test('index.html homepage offer box: canonical price, COD, shipping, returns', () => {
   const html = readFileSync('index.html', 'utf8');
   const offer = html.slice(html.indexOf('id="buy"'), html.indexOf('</section>', html.indexOf('id="buy"')));
-  assert.ok(offer.includes('<b>₹229</b>'));
-  assert.ok(offer.includes('₹60 handling') && offer.includes('₹289 collected'), 'COD fee must be stated');
+  assert.ok(offer.includes('<b>₹299</b>'));
+  assert.ok(offer.includes('Cash on Delivery') && !/₹\s*(60|359)\b/.test(offer), 'Offer box names COD availability without the COD amount');
   assert.ok(offer.includes('Free shipping') && offer.includes('7-day returns'));
   assert.ok(offer.includes('Up to 8 hours') && offer.includes('on fabric'), 'Protection claim must stay the locked one');
 });
@@ -214,7 +215,7 @@ test('index.html homepage combos are placeholders only — no prices, no live CT
   assert.ok(start !== -1, 'combos placeholder section must exist');
   const sec = html.slice(start, html.indexOf('</section>', start));
   assert.equal((sec.match(/class="combo"/g) || []).length, 3);
-  assert.equal(/₹\s*\d/.test(sec.replace(/Fix my shirt — ₹229/, '')), false, 'combo cards must not show a price until checkout supports combos');
+  assert.equal(/₹\s*\d/.test(sec.replace(/Fix my shirt — ₹299/, '')), false, 'combo cards must not show a price until checkout supports combos');
   assert.equal((sec.match(/<button class="combo-btn" type="button" disabled>/g) || []).length, 3, 'combo buttons must be disabled');
   assert.equal(/"@type"\s*:\s*"(Offer|AggregateOffer)"/.test(html), false, 'no offer schema for combos');
 });
@@ -249,15 +250,15 @@ test('odorstrike.html PDP hero and primary buy area: positioning, canonical pric
   assert.ok(pInfo.includes('up to 8 hours'), 'Tagline must carry the locked protection claim');
   for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(pInfo.includes(tag), `Must say ${tag}`);
 
-  assert.ok(pInfo.includes('<span class="pd-amt">₹229</span>'), 'Price must display ₹229');
-  assert.ok(pInfo.includes('MRP ₹499') && pInfo.includes('54% OFF'), 'MRP and discount must agree');
+  assert.ok(pInfo.includes('<span class="pd-amt">₹299</span>'), 'Price must display ₹299');
+  assert.ok(pInfo.includes('MRP ₹499') && pInfo.includes('40% OFF'), 'MRP and discount must agree');
   assert.ok(pInfo.includes('1 × 50ml bottle'), 'Pack size must be stated');
-  assert.ok(pInfo.includes('COD ₹289') && pInfo.includes('₹60 handling'), 'COD total must be disclosed in the hero, before checkout');
+  assert.ok(pInfo.includes('Cash on Delivery') && !/₹\s*(60|359)\b/.test(pInfo), 'PDP hero names COD availability without the COD amount');
 
   for (const id of ['pdpQtyDec', 'pdpQtyVal', 'pdpQtyInc', 'pdpBuyBtn', 'pdpBuyText', 'pdpCartBtn']) assert.ok(pInfo.includes(`id="${id}"`), `#${id} must exist`);
   assert.ok(/id="pdpBuyBtn" onclick="buyNow\(\)"/.test(pInfo), 'Primary CTA must go straight to checkout');
   assert.ok(/id="pdpCartBtn" onclick="addToCart\(\)"/.test(pInfo), 'Secondary CTA must add to cart');
-  assert.ok(pInfo.includes('GET ODORSTRIKE — ₹229'), 'Initial buy text must match canonical price');
+  assert.ok(pInfo.includes('GET ODORSTRIKE — ₹299'), 'Initial buy text must match canonical price');
   assert.ok(pInfo.indexOf('class="pd-price"') < pInfo.indexOf('class="buy-actions"'), 'Price must precede the buy controls');
   for (const t of ['Free shipping', 'Cash on Delivery', '3–5 days', '7-day returns']) assert.ok(pInfo.includes(t), `Reassurance must include ${t}`);
 
@@ -462,9 +463,8 @@ test('odorstrike.html PDP FAQ objection-first hierarchy, schema deprecation, and
   assert.equal(/2–3 months|month-based/i.test(faqSection), false, 'FAQ must not encode month-based bottle life');
 
   // 6. Commercial values match canonical configuration
-  assert.ok(faqSection.includes('₹229'), 'FAQ must state ₹229 prepaid price');
-  assert.ok(faqSection.includes('₹60'), 'FAQ must state ₹60 COD fee');
-  assert.ok(faqSection.includes('₹289'), 'FAQ must state ₹289 COD total');
+  assert.ok(faqSection.includes('₹299'), 'FAQ must state ₹299 prepaid price');
+  assert.ok(/Cash on Delivery is available/.test(faqSection) && !/₹\s*(60|359)\b/.test(faqSection), 'PDP FAQ names COD; the amount lives on the COD option in checkout and on /faq');
   assert.ok(faqSection.includes('7-day return window'), 'FAQ must state 7-day return window');
   assert.ok(faqSection.includes('80% full'), 'FAQ must state 80% full condition');
   assert.ok(faqSection.includes('48 hours'), 'FAQ must state 48-hour dispatch');
@@ -484,11 +484,11 @@ test('odorstrike.html PDP buy box (#buy): showcaseBuyBtn → buyNow(), canonical
   assert.ok(start !== -1, 'Must have the #buy section');
   const box = html.slice(start, html.indexOf('</section>', start));
 
-  assert.ok(/<button[^>]+class="pd-btn" id="showcaseBuyBtn" onclick="buyNow\(\)">GET ODORSTRIKE — ₹229<\/button>/.test(box), '#showcaseBuyBtn must be a button calling buyNow() with the canonical price');
+  assert.ok(/<button[^>]+class="pd-btn" id="showcaseBuyBtn" onclick="buyNow\(\)">GET ODORSTRIKE — ₹299<\/button>/.test(box), '#showcaseBuyBtn must be a button calling buyNow() with the canonical price');
   assert.ok(html.includes("document.getElementById('showcaseBuyBtn')"), 'renderPdpQty must synchronize showcaseBuyBtn');
-  assert.ok(box.includes('₹229') && box.includes('₹499') && box.includes('54% OFF'), 'Price, MRP and discount must be shown');
-  assert.ok(box.includes('₹60 handling') && box.includes('₹289'), 'COD charge must be disclosed on the buy box');
-  assert.ok(box.includes('class="pay-modes"') && box.includes('Cash on Delivery +₹60'), '.pay-modes must state the COD charge');
+  assert.ok(box.includes('₹299') && box.includes('₹499') && box.includes('40% OFF'), 'Price, MRP and discount must be shown');
+  assert.ok(box.includes('Cash on Delivery') && !/₹\s*(60|359)\b/.test(box), 'Buy box names COD availability without the COD amount');
+  assert.ok(box.includes('class="pay-modes"') && box.includes('Cash on Delivery'), '.pay-modes must name COD');
   assert.ok(box.includes('Free shipping') && box.includes('7-day returns'), 'Shipping and returns must be stated');
   assert.ok(box.includes('~250 sprays') && box.includes('refreshes'), 'Must cite canonical sprays/refreshes');
   assert.ok(box.includes('id="buyProofMount"'), 'Gated proof mount must stay');
@@ -526,7 +526,7 @@ test('odorstrike.html mobile sticky buy bar (#mobileBar) price synchronization, 
 
   // 2. #mobileBarLabel exists with stable ID, polite aria-live, and canonical default
   assert.ok(html.includes('id="mobileBarLabel"'), 'Must have stable id="mobileBarLabel"');
-  assert.ok(/<span[^>]+id="mobileBarLabel"[^>]*aria-live="polite"[^>]*aria-atomic="true"[^>]*>[\s\S]*?ODORSTRIKE 50ml · ₹229[\s\S]*?<\/span>/.test(barContent),
+  assert.ok(/<span[^>]+id="mobileBarLabel"[^>]*aria-live="polite"[^>]*aria-atomic="true"[^>]*>[\s\S]*?ODORSTRIKE 50ml · ₹299[\s\S]*?<\/span>/.test(barContent),
     '#mobileBarLabel must declare aria-live="polite", aria-atomic="true", and initial canonical label');
 
   // 3. #mobileBarBuyBtn exists, calls buyNow(), has 44px+ touch target, and accessible description
@@ -539,22 +539,22 @@ test('odorstrike.html mobile sticky buy bar (#mobileBar) price synchronization, 
   assert.ok(html.includes("document.getElementById('mobileBarLabel')"), 'renderPdpQty must update mobileBarLabel');
 
   // Verify synchronization formula in renderPdpQty
-  const unit = PRODUCT.price; // 229
+  const unit = PRODUCT.price; // 299
   function deriveMobileBarLabel(qty) {
     const subtotal = unit * qty;
     return (qty > 1 ? (qty + ' × ') : '') + 'ODORSTRIKE 50ml · ₹' + subtotal;
   }
 
   // Check state calculations for Qty 1, 2, 3, and max configured quantity
-  assert.equal(deriveMobileBarLabel(1), 'ODORSTRIKE 50ml · ₹229', 'Quantity 1 produces canonical single unit subtotal');
-  assert.equal(deriveMobileBarLabel(2), '2 × ODORSTRIKE 50ml · ₹458', 'Quantity 2 produces canonical 2-unit subtotal');
-  assert.equal(deriveMobileBarLabel(3), '3 × ODORSTRIKE 50ml · ₹687', 'Quantity 3 produces canonical 3-unit subtotal');
+  assert.equal(deriveMobileBarLabel(1), 'ODORSTRIKE 50ml · ₹299', 'Quantity 1 produces canonical single unit subtotal');
+  assert.equal(deriveMobileBarLabel(2), '2 × ODORSTRIKE 50ml · ₹598', 'Quantity 2 produces canonical 2-unit subtotal');
+  assert.equal(deriveMobileBarLabel(3), '3 × ODORSTRIKE 50ml · ₹897', 'Quantity 3 produces canonical 3-unit subtotal');
   const maxQ = PRODUCT.maxQuantity || 10;
   assert.equal(deriveMobileBarLabel(maxQ), `${maxQ} × ODORSTRIKE 50ml · ₹${unit * maxQ}`, 'Max quantity produces canonical subtotal');
 
   // 5. No hardcoded separate price constants in mobile bar logic
-  assert.equal(/ODORSTRIKE 50ml · ₹458/i.test(html), false, 'Must not hardcode secondary quantity prices as string literals');
-  assert.equal(/ODORSTRIKE 50ml · ₹687/i.test(html), false, 'Must not hardcode tertiary quantity prices as string literals');
+  assert.equal(/ODORSTRIKE 50ml · ₹598/i.test(html), false, 'Must not hardcode secondary quantity prices as string literals');
+  assert.equal(/ODORSTRIKE 50ml · ₹897/i.test(html), false, 'Must not hardcode tertiary quantity prices as string literals');
 
   // 6. Unified IntersectionObserver for all actionable purchase CTAs
   const obsStart = html.indexOf('// Mobile sticky bar — visible whenever no other buy control is on screen');
@@ -621,20 +621,20 @@ test('odorstrike.html final purchase CTA (section.final) structure, canonical pr
     'renderPdpQty() must derive final CTA price dynamically from canonical unit price and quantity'
   );
 
-  // 5. Quantity 1 price is correct (canonical ₹229)
-  const unit = PRODUCT.price; // 229
-  assert.equal(unit * 1, 229, 'Canonical unit price must equal 229');
-  assert.ok(finalBlock.includes('GET ODORSTRIKE — ₹229'), 'Initial HTML markup for quantity 1 must display canonical ₹229');
+  // 5. Quantity 1 price is correct (canonical ₹299)
+  const unit = PRODUCT.price; // 299
+  assert.equal(unit * 1, 299, 'Canonical unit price must equal 299');
+  assert.ok(finalBlock.includes('GET ODORSTRIKE — ₹299'), 'Initial HTML markup for quantity 1 must display canonical ₹299');
 
-  // 6. Quantity 2 price is correct (₹458)
-  assert.equal(unit * 2, 458, 'Quantity 2 subtotal must equal ₹458');
+  // 6. Quantity 2 price is correct (₹598)
+  assert.equal(unit * 2, 598, 'Quantity 2 subtotal must equal ₹598');
 
-  // 7. Quantity 3 price is correct (₹687)
-  assert.equal(unit * 3, 687, 'Quantity 3 subtotal must equal ₹687');
+  // 7. Quantity 3 price is correct (₹897)
+  assert.equal(unit * 3, 897, 'Quantity 3 subtotal must equal ₹897');
 
   // 8. Maximum quantity uses canonical config (MAX_QTY or maxQuantity)
   const maxQ = PRODUCT.maxQuantity || 10;
-  assert.equal(unit * maxQ, 2290, 'Maximum quantity subtotal must equal canonical price * maxQuantity');
+  assert.equal(unit * maxQ, 2990, 'Maximum quantity subtotal must equal canonical price * maxQuantity');
 
   // 9. Final CTA and checkout use the same subtotal derivation (unit * qty)
   const orderTotalsMatch = html.match(/function\s+orderTotals\s*\(\)\s*\{([\s\S]*?)\n\s*\}/);
@@ -679,9 +679,8 @@ test('cart drawer: no prices, COD charge still named, slides instead of popping 
   // Owner's call: the drawer is for choosing how many; checkout states totals.
   assert.ok(!/₹\s*\d{3}/.test(drawer), 'Drawer markup must not show a product price or total');
   assert.ok(!/'₹'/.test(fn), 'renderCart must not write prices into the drawer');
-  // ...but the COD surcharge is a fee, and naming it before checkout is the
-  // no-drip-pricing rule.
-  assert.ok(/cash on delivery/i.test(drawer) && drawer.includes('₹60'), 'Drawer must disclose the ₹60 COD charge');
+  // COD is named; its amount is stated on the COD option in checkout.
+  assert.ok(/cash on delivery/i.test(drawer) && !/₹\s*(60|359)\b/.test(drawer), 'Drawer names COD without the COD amount');
   assert.ok(/Free shipping/.test(drawer), 'Drawer must state shipping');
   assert.ok(/class="cart-keep"/.test(drawer), 'Drawer needs a way back to the page');
   assert.ok(/cartAddFromEmpty\(\)/.test(drawer), 'Empty state needs a next step');

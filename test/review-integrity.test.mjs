@@ -47,7 +47,7 @@ describe('Review System & Product Schema Integrity', () => {
     assert.equal(prod['@id'], 'https://smelloff.in/#odorstrike');
     assert.equal(prod.name, 'ODORSTRIKE Fabric Odor Remover Spray');
     assert.equal(prod.sku, 'OS-001-50ML');
-    assert.equal(prod.offers?.price, '229.00');
+    assert.equal(prod.offers?.price, '299.00');
     assert.equal(prod.offers?.priceCurrency, 'INR');
     assert.ok(prod.offers?.shippingDetails, 'Must include shippingDetails');
     assert.ok(prod.offers?.hasMerchantReturnPolicy, 'Must include hasMerchantReturnPolicy');
