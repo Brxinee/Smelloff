@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import Razorpay from 'razorpay';
 import {
   isAllowedOrigin,
@@ -349,6 +350,27 @@ async function ensureCodLocalOrder(payload) {
   }
 }
 
+function newOrderCode() {
+  const now = new Date();
+  const date = `${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, '0')}${String(now.getUTCDate()).padStart(2, '0')}`;
+  return `SMF-${date}-${String(crypto.randomInt(10000)).padStart(4, '0')}`;
+}
+
+// The browser picks the order number from 9,000 per day, so two customers can
+// draw the same one. Keep it if it is free or already this customer's (a
+// retry); otherwise pick a fresh one. The browser uses the code we return.
+async function ownOrderCode(requested, phone, email) {
+  let code = requested || newOrderCode();
+  for (let i = 0; i < 5; i++) {
+    const existing = await fetchOrderByCode(code);
+    if (!existing) return code;
+    if (normalizePhone(existing.customer_phone) === phone
+      && String(existing.customer_email || '').trim().toLowerCase() === email) return code;
+    code = newOrderCode();
+  }
+  fail('Could not allocate an order number. Please try again.', 503);
+}
+
 function responseForOrder(localOrder, razorpayOrderId) {
   return {
     id: localOrder.id,
@@ -476,11 +498,7 @@ export default async function handler(req, res) {
     if (orderCode && !ORDER_CODE_RE.test(orderCode)) {
       return res.status(400).json({ error: 'Invalid order code.' });
     }
-    if (!orderCode) {
-      const now = new Date();
-      const date = `${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, '0')}${String(now.getUTCDate()).padStart(2, '0')}`;
-      orderCode = `SMF-${date}-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`;
-    }
+    orderCode = await ownOrderCode(orderCode, phone, email);
 
     const sanitizedPayload = {
       email,

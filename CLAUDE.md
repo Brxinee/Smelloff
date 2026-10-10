@@ -86,6 +86,26 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
 
+## Ponytail audit fixes (2026-10-10)
+Ran the Ponytail (`DietrichGebert/ponytail`) repo audit; the plugin is
+installed for Claude Code (`/ponytail-audit`, `/ponytail-review`). Fixed:
+- **`welcomeEmail` is admin-only now.** Unauthenticated, `/api/send-email`
+  sent our welcome email to any address a script supplied (the Origin check
+  passes when there is no Origin, and the rate limits are per Worker
+  instance). The footer waitlist still saves the address; it just no longer
+  emails. Bring it back only with a double opt-in.
+- **Order-number collisions.** The browser draws `SMF-<date>-NNNN` from 9,000
+  per day; a second customer drawing a taken number got "checkout session is
+  no longer valid". `create-order` now keeps the number if it is free or
+  this customer's (a retry), else picks a fresh one with `crypto.randomInt`;
+  the browser already uses the returned `order_code`. Test in
+  `test/checkout.test.mjs` fails without the fix.
+- Deleted the unused Razorpay Magic Checkout endpoints
+  (`magic-checkout-finalize.js`, `magic-checkout-shipping-info.js`, ~360 lines).
+- Known shortcut, not changed: `checkRateLimit` is an in-memory Map, so it
+  counts per Worker instance. Fine at this load; needs a shared store (KV /
+  Supabase) only if abuse shows up.
+
 ## Leftovers removed (2026-10-10)
 Deleted: the unreferenced `neo.css`/`neo-lite.css`/`main.css`, `neo.js`,
 `scroll-effects.js`, `assets/icons/shoe.png`/`helmet.png`; Google AI Studio's
