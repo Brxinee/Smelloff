@@ -684,3 +684,18 @@ test('cart drawer: button total equals summary total, COD charge named before ch
   assert.ok(/class="cart-keep"/.test(drawer), 'Drawer needs a way back to the page');
   assert.ok(/cartAddFromEmpty\(\)/.test(drawer), 'Empty state needs a next step');
 });
+
+test('phone menu: build-time critical CSS cannot trap the drawer shut', () => {
+  // The build inlines critical header CSS into every page. It once set the
+  // menu to max-height:0;overflow:hidden, which chrome.css never reset, so
+  // the menu "opened" at 0px tall in production only.
+  const src = readFileSync(new URL('../scripts/apply-chrome.mjs', import.meta.url), 'utf8');
+  const crit = src.slice(src.indexOf('const criticalChrome'), src.indexOf('</style>`', src.indexOf('const criticalChrome')));
+  const rule = (crit.match(/\.sf-hdr__menu\{[^}]*\}/) || [''])[0];
+  assert.ok(rule, 'critical CSS must style .sf-hdr__menu');
+  assert.ok(!/max-height\s*:\s*0/.test(rule) && !/display\s*:\s*none/.test(rule), 'critical menu rule must not collapse or hide the drawer');
+  const css = readFileSync(new URL('../assets/css/chrome.css', import.meta.url), 'utf8');
+  const hdr = (css.match(/\n\.sf-hdr\{[^}]*\}/) || [''])[0];
+  assert.ok(!/backdrop-filter/.test(hdr), '.sf-hdr must not use backdrop-filter: it would trap the fixed drawer inside the header');
+  assert.ok(/\.sf-hdr__menu\.is-open\{[^}]*transform:none/.test(css), 'open drawer slides in');
+});
