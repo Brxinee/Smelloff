@@ -270,6 +270,15 @@ html.sf-menu-open #smelloff-consent-bar,html.sf-menu-open .mobile-bar{display:no
 .mobile-bar .mb-btn:hover{background:var(--acid-hi)}
 .mobile-bar .mb-btn:focus-visible{outline:2px solid var(--text);outline-offset:2px}
 @media(max-width:767px){body{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
+/* ≤379px (iPhone SE, small Androids): the thumb goes so name, price and
+   the COD line fit instead of truncating to "ODORST…". */
+@media(max-width:379px){
+  .mobile-bar{gap:10px;padding-left:14px}
+  .mobile-bar .mb-thumb{display:none}
+  .mobile-bar .mb-label{font-size:13.5px}
+  .mobile-bar .mb-sub{font-size:11.5px}
+  .mobile-bar .mb-btn{padding:0 14px}
+}
 @media(min-width:768px){.mobile-bar{display:none !important}}
 @media(prefers-reduced-motion:reduce){.mobile-bar{transition:none}}
 

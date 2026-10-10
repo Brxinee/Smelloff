@@ -281,6 +281,26 @@ github.com/settings/installations → Vercel / Netlify → Uninstall (and delete
 the projects in each dashboard). Nothing in the repo can stop them. Cloudflare
 Workers Builds is the only deploy.
 
+## Bug sweep (2026-10-10)
+Automated: all 77 pages at 390 and 1280 — JS errors, failed requests, broken
+images, H1 count, duplicate ids, dead #anchors, horizontal overflow, axe WCAG
+2.2 AA; static: every internal href resolves (file or routing rule), every
+referenced asset exists, all 168 JSON-LD blocks parse; functional: checkout
+COD ×1/×2 and prepaid (Razorpay opens with the right amount), cart
+`?cart=open`, `?buy=1`, blog filters/search/show-all, header badge. Fixed:
+- `/faq` carries a **fourth** inline copy of the consent bar; its Privacy
+  link wasn't underlined (axe link-in-text-block). Underlined.
+- Blog index: one post (`data-cat="founder"`) had no topic chip, so chips
+  summed to 55 of 56. Added "Founder story".
+- Sticky buy bar truncated to "ODORST…" at ≤379px; the thumb hides there.
+- "Your shirt holds 70% of the smell" (unsourced statistic) in one post's
+  meta, its blog-index card and `feed.xml` → "The smell often lives in your
+  shirt."
+- Open, needs the owner: 44 posts say the spray dries in ~10 seconds (some
+  inside first-person test write-ups and titles); the product pages say
+  15–30 seconds. Not changed — rewriting reported test results is not a
+  copy edit. Two posts also state "pH 5.5–6.0".
+
 ## Homepage hero v3 — first impression (2026-10-10)
 Researched (Baymard mobile homepage/product-image findings, Stripe landing
 guidance on one action + a quote by the buy button) and rebuilt `.hero`:
@@ -516,8 +536,10 @@ and checkout took a second click. It now goes **straight to `openCheckout()`**.
   cart" twice on a one-product store must not silently mean four bottles. The
   drawer's own +/− mirrors back via `syncPdpQtyFromCart()`; the two controls can
   never disagree.
-- **COD is the checkout default** (`payMethod = 'cod'`, and the markup order and
-  visible panel match). The UPI path is manual — copy the VPA, switch app, pay,
+- **Superseded (checked 2026-10-10): the code defaults to prepaid**
+  (`payMethod = 'prepaid'`, prepaid option first and active). The original
+  note read: "COD is the checkout default (`payMethod = 'cod'`, and the markup
+  order and visible panel match)." The UPI path is manual — copy the VPA, switch app, pay,
   screenshot, WhatsApp the screenshot and UTR — and each step sheds orders. COD
   is ₹0 advance and one tap. `/faq`'s "How to pay" now leads with COD too; keep
   the two in step. **Flip both back together** if RTO cost ever outweighs it.
