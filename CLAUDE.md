@@ -298,6 +298,11 @@ Workers Builds is the only deploy.
 - PDP: hero preload said `1200w` while the `<img>` said `1196w`, so the hero
   downloaded twice; aligned. Gallery tiles 2–8 are `fetchpriority="low"`.
   `/faq`'s `.sub` no longer pulls the 80 KB Fraunces italic.
+- **`@` in asset paths cost a redirect.** Cloudflare's asset server 307s
+  `x@640.webp` to `x%40640.webp`, so every `@640`/`@1200` image (the PDP's
+  LCP image, all blog thumbnails) paid an extra round trip.
+  `prepare-public.mjs` (last build step) rewrites them to `%40` in the
+  shipped HTML/CSS/JS/XML and throws if one is left. Sources keep `@`.
 - **Skeleton loading:** `soft.css` §10 shimmers every `<img>` in its reserved
   box until chrome.js adds `.is-loaded` (load or error; capture listener +
   a sweep for images that finished first). `data-no-skel` opts out. Still
