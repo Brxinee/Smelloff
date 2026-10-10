@@ -1071,7 +1071,7 @@
   #smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}
   @media(max-width:520px){
     #smelloff-consent-bar .cb-actions{width:100%}
-    #smelloff-consent-bar .cb-actions button{flex:1 1 100%}
+    #smelloff-consent-bar .cb-actions button{flex:1 1 130px;padding-inline:10px}
   }
   #smelloff-consent-bar button{
     font-family:var(--mono);
@@ -1343,6 +1343,12 @@
   /* Small tiles on phones: the slot number only; the brief stays in data-ph. */
   @media(max-width:959px){.r30-step .ph-img::after{display:none}}
   @media(max-width:767px){.pd-fix .ph-img{aspect-ratio:4/3}}
+  /* Kept out of the live site until the photo exists (2026-10-11): customers
+     were seeing "IMAGE 01 · 4:5 · 1200×1500 · WebP" in a dashed box. The slot
+     stays in the markup, so swapping in the <img> is still a one-line edit —
+     an <img> doesn't carry .ph-img, so this rule never hides a real photo. */
+  .ph-img{display:none !important}
+  .pd-fix:has(> .ph-img){grid-template-columns:minmax(0,1fr);max-width:760px}
   .pd-scale{display:grid;grid-auto-flow:column;grid-auto-columns:78%;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
     scrollbar-width:none;margin:0 calc(var(--gutter) * -1);padding:0 var(--gutter);scroll-padding-inline:var(--gutter)}
   .pd-scale::-webkit-scrollbar{display:none}
@@ -1556,7 +1562,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 </script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=2bfcae5f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=2ea019c1">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=fe433ec5">
 <script src="/assets/js/chrome.js?v=df3e13b5" defer></script>
 </head>
 <body>
@@ -1845,7 +1851,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
              buyer needs before the price. The detail lives further down. -->
         <ul class="pd-highlights">
           <li><span>Removes sweat smell from the shirt — no perfume cover-up</span></li>
-          <li><span>Dries clear in 15–30 seconds, no marks</span></li>
+          <li><span>Dries clear in 15–30 seconds</span></li>
           <li><span>Lasts up to 8 hours on fabric*</span></li>
         </ul>
 
@@ -1928,7 +1934,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <p class="r30-body">On the collar, underarm fabric, or chest. Not for skin.</p>
       </li>
       <li class="r30-step r30-step--timer">
-        <div class="ph-img" role="img" aria-label="Image coming soon: shirt drying clear" data-ph-n="STEP 03" data-ph="Same shirt seconds later — dry, no marks, no damp patch." data-ph-spec="1:1 · 1000×1000 · WebP"></div>
+        <div class="ph-img" role="img" aria-label="Image coming soon: shirt drying clear" data-ph-n="STEP 03" data-ph="Same shirt seconds later — dried clear." data-ph-spec="1:1 · 1000×1000 · WebP"></div>
         <div class="r30-step-head">
           <span class="r30-num">03 · WAIT</span>
           <!-- The ring is aria-hidden; the heading and body carry the meaning. -->
@@ -1958,7 +1964,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <h2 id="whyTitle" class="pd-h2">Deo is for skin. <span class="acid">This is for the shirt.</span></h2>
         <ul class="fix-features">
           <li><span><strong>Neutralizes odor — doesn't hide it.</strong>HPβCD traps odor in the fibres; Zinc PCA neutralizes it.</span></li>
-          <li><span><strong>Glycerine-free, dries clear.</strong>No marks or damp patch on tested fabrics. Spot-test silk and delicates first.</span></li>
+          <li><span><strong>Glycerine-free, dries clear.</strong>No stiff residue on tested fabrics. Spot-test silk and delicates first.</span></li>
           <li><span><strong>Up to 8 hours on fabric*.</strong>Light scent that fades in minutes.</span></li>
         </ul>
       </div>
@@ -1980,7 +1986,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 
 <!-- SEE THE SIZE — Baymard: 42% of shoppers try to judge size from the
      images, so the page shows it in scale, in a hand and a pocket. -->
-<section class="pd-sec" id="size" aria-labelledby="sizeTitle">
+<!-- Hidden until the three in-scale photos exist; it was three empty slots. -->
+<section class="pd-sec" id="size" aria-labelledby="sizeTitle" hidden>
   <div class="pd-wrap">
     <div class="pd-head">
       <div class="section-tag">Pocket size</div>
@@ -2443,7 +2450,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- DPDP Consent Bar -->
 <div id="smelloff-consent-bar" role="dialog" aria-label="Cookie and tracking consent">
   <div class="cb-inner">
-    <p>We use analytics cookies (Google Analytics, Meta Pixel) to understand how you use our site. You can opt out — core shopping functions work either way. <a href="/privacy">Privacy Policy</a></p>
+    <p>We use analytics cookies (Google Analytics, Meta Pixel) to see how the site is used. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>
     <div class="cb-actions">
       <button class="cb-accept" onclick="window.smelloffSetConsent('accepted')">Accept all</button>
       <button class="cb-reject" onclick="window.smelloffSetConsent('rejected')">Reject non-essential</button>
@@ -3466,8 +3473,12 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       var loCount = (tier === 'tier23') ? 5 : 3;
       var hiCount = (tier === 'tier23') ? 7 : 5;
 
+      // Transit counts from dispatch, and dispatch is "within 48 hours"
+      // (/shipping). The early date assumes same-day dispatch; the late date
+      // adds the full two days, so the window is one we can keep.
+      var DISPATCH_DAYS = 2;
       var lo = addBusinessDays(now, loCount);
-      var hi = addBusinessDays(now, hiCount);
+      var hi = addBusinessDays(now, hiCount + DISPATCH_DAYS);
 
       if (hi.getTime() <= lo.getTime()) {
         hi = addBusinessDays(lo, 1);

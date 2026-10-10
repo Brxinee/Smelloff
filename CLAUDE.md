@@ -40,6 +40,30 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## UX pass from a live render (2026-10-11)
+Rendered `/`, `/odorstrike`, checkout, `/blog`, a post and `/faq` at 390×844
+and 1280×800 from a production build. Fixed:
+- **Photo placeholders were live.** Every `.ph-img` slot showed customers a
+  dashed box reading "IMAGE 01 · 4:5 · 1200×1500 · WebP", and the homepage
+  combo cards read "Combo name / ₹ —". `.ph-img{display:none !important}` on
+  both pages (a real `<img>` has no `.ph-img`, so a swapped-in photo shows);
+  a beat or `.pd-fix` with a hidden slot goes single-column. `#combos` (home)
+  and `#size` (PDP, three empty slots) carry `hidden` until they have content.
+  Pages are ~2,600px (home) and ~1,150px (PDP) shorter on phones.
+- **Prohibited claims on the money pages:** "no white marks" (home beat 4,
+  home step 2, PDP hero bullet, PDP why-list) and "Anti-regrowth" (home
+  layer chips) → the approved "dries clear with no stiff residue" and
+  "Sustain". 23 posts' product boxes said "zero residue"/"residue-free" →
+  "no stiff residue"/"dries clear". Left alone: first-person test results in
+  the 30-day review and the founder's story; the ~10-second dry time (owner).
+- **Consent bar 197px → 148px on a 390px phone** (73px desktop): shorter
+  sentence, Accept and Reject side by side at equal weight (`flex:1 1 130px`)
+  in all four copies + chrome.css.
+- **Checkout delivery date ignored dispatch.** It promised arrival 3–5
+  business days from the order; dispatch is "within 48 hours", so the late
+  date now adds 2 (`DISPATCH_DAYS`): a Saturday order reads Wed 14 – Tue 20.
+- `test/ux-guardrails.test.mjs` pins all four.
+
 ## Price ₹299; COD amount only in checkout (2026-10-11, owner's call)
 - **₹299 prepaid** (was ₹229), MRP ₹499 → 40% off (was 54%). COD adds the same
   **₹60 handling charge → ₹359** for one bottle. `config/product.json` is the

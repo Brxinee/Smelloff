@@ -408,7 +408,7 @@ html.sf-menu-open #smelloff-consent-bar,html.sf-menu-open .mobile-bar{display:no
 @media(max-width:520px){
   #smelloff-consent-bar .cb-inner{gap:12px}
   #smelloff-consent-bar .cb-actions{width:100%}
-  #smelloff-consent-bar .cb-actions button{flex:1 1 100%}
+  #smelloff-consent-bar .cb-actions button{flex:1 1 130px;padding-inline:10px}
 }
 #smelloff-consent-bar button{min-height:44px}
 #smelloff-consent-bar{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
