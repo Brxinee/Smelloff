@@ -38,3 +38,12 @@ test('delivery estimate counts the 48-hour dispatch window into the late date', 
   const html = fs.readFileSync('odorstrike.html', 'utf8');
   assert.match(html, /var hi = addBusinessDays\(now, hiCount \+ DISPATCH_DAYS\);/);
 });
+
+// Owner's call (2026-10-11): show three key ingredients and count the rest.
+test('the full ingredient list is not published — three actives plus a count', () => {
+  const supporting = /polysorbate|PE9010|ethylhexylglycerin|citric acid/i;
+  for (const f of ['odorstrike.html', 'index.html', 'blog/odorstrike-ingredients.html', 'llms.txt', 'llms-full.txt', 'products.json', 'merchant-feed.xml']) {
+    assert.doesNotMatch(fs.readFileSync(f, 'utf8'), supporting, `${f} names a supporting ingredient`);
+  }
+  assert.match(fs.readFileSync('odorstrike.html', 'utf8'), /HPβCD · Zinc PCA · Triethyl Citrate <span class="pd-inci-more">\+ 8 more<\/span>/);
+});

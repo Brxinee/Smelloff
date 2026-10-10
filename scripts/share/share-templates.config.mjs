@@ -88,8 +88,8 @@ export const POSTS = {
     x: 'Zinc PCA neutralises odor compounds rather than trapping them, which is why a good fabric formula uses more than one mechanism. Odor is not one compound, so one active was never going to do it.',
   },
   'odorstrike-ingredients': {
-    wa: 'Full ingredient list for ODORSTRIKE, including the three things deliberately left out and why each one failed: {url}',
-    x: 'The whole ingredient list, in order, plus the three ingredients that were deliberately left out — glycerine among them, because on fabric a humectant leaves a tacky patch that then collects dust.',
+    wa: 'The key actives in ODORSTRIKE, plus the three things deliberately left out and why each one failed: {url}',
+    x: 'The three key actives in ODORSTRIKE, plus the three ingredients that were deliberately left out — glycerine among them, because on fabric a humectant leaves a tacky patch that then collects dust.',
   },
   'what-is-fabric-odor-eliminator': {
     wa: 'Turns out this is a third category — not deodorant, not perfume. Goes on the shirt, not on you: {url}',

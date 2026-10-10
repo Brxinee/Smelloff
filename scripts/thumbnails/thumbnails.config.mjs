@@ -116,7 +116,7 @@ export const POSTS = [
   },
   {
     slug: 'odorstrike-ingredients',
-    kicker: 'Full ingredient list',
+    kicker: 'Key ingredients',
     top: "What's",
     hi: 'actually inside?',
     photo: 379375891,

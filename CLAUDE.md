@@ -791,7 +791,8 @@ April 2026 codebase, paired with current-correct data:
 - Claim: "up to 8 hours odor protection on fabric". Glycerine-free, zero residue.
 - 4-layer mechanism: TRAP HPβCD · NEUTRALIZE Zinc PCA · PREVENT Triethyl Citrate · ANTI-REGROWTH Zinc Gluconate (Formula v3.1).
 - NEVER list Zinc Ricinoleate, Sodium Bicarbonate, or Glycerine as ingredients.
-- **NEVER publish formula percentages/concentrations anywhere** (site, schema, llms.txt, blog). Ingredient NAMES are public; exact amounts are a trade secret. Say "exact concentrations are proprietary" if asked.
+- **NEVER publish formula percentages/concentrations anywhere** (site, schema, llms.txt, blog). Exact amounts are a trade secret. Say "exact concentrations are proprietary" if asked.
+- **Owner's call (2026-10-11): name only three key actives — HPβCD, Zinc PCA, Triethyl Citrate — and count the rest ("+ 8 more").** The full INCI lives in `config/product.json` and is not published: the PDP ingredient box, `/blog/odorstrike-ingredients` (now "The Key Actives, Explained") and the posts that called the base "water and isopropyl alcohol" (now "a fast-drying water base") were changed. The four-layer story still names Zinc Gluconate. Customers who need the full list for an allergy check are pointed to info@smelloff.in. Pinned in `test/ux-guardrails.test.mjs`. The post's thumbnail still has "Full ingredient list" burnt into its pixels — the config kicker now says "Key ingredients"; re-render it with `npm run thumbnails` when the source photo is available.
 - Canonical domain is `https://smelloff.in` (non-www; www redirects).
 
 ## Page roles (corrected 2026-07-28)
