@@ -5,12 +5,34 @@ Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — pocket-sized fabric
 
 ## Stack
 - Static HTML + vanilla JS (no framework)
-- Vercel deployment
+- Cloudflare Workers deployment (`wrangler.jsonc`, `src/index.js`); `vercel.json` is still the routing source of truth — see below
 - Supabase (orders/data)
 - Google Sheets webhook (order backup)
 - GA4 + Meta Pixel (consent-gated)
 - Resend transactional email via `/api/send-email`
 - Self-hosted fonts (Fraunces + JetBrains Mono + Inter Tight + Barlow Condensed)
+
+## Cloudflare Workers deploy (2026-10-10)
+Production moved from Vercel to Cloudflare Workers on 2026-09-26. Three things
+the move silently dropped, now restored:
+- **`src/index.js` crashed on every Worker request** (`worker.fetch is not a
+  function`, Cloudflare error 1101): `httpServerHandler()` returns `{ fetch }`,
+  and the object itself was exported as `fetch`. Static pages masked it; every
+  `/api/*` call — checkout, payment verify, webhooks — failed.
+- **`npm run build` is the Cloudflare build** and must do what Vercel's
+  `buildCommand` did: `optimize:critical` (the homepage `<picture>` points at
+  `/assets/optimized/*`, which is gitignored build output) and `apply:chrome`.
+  Both mutate the working tree, so a second local build reports stale pages —
+  restore with `git restore .` first; CI always builds from a fresh clone.
+- **Cloudflare ignores `vercel.json`.** `scripts/cloudflare-routing.mjs`
+  translates its redirects and headers into `public/_redirects` and
+  `public/_headers` on every build — keep editing `vercel.json`. Host-based
+  rules (www → apex) can't be expressed there; that needs a Cloudflare Redirect
+  Rule on the zone. `assets.html_handling = "drop-trailing-slash"` replaces
+  `cleanUrls` + `trailingSlash:false`.
+- The Worker parses JSON with a `verify` hook that keeps `req.rawBody`: the
+  Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
+  re-serialising `req.body` does not reproduce them.
 
 ## Signature sections (2026-08-02)
 Two owned experiences replaced four generic ones. Both are built the same way

@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildHeaders, buildRedirects } from './cloudflare-routing.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = path.join(ROOT, 'public');
@@ -29,6 +30,7 @@ const ROOT_FILES = [
   'llms-full.txt',
   'products.json',
   'manifest.json',
+  'sw.js',
   'favicon.ico',
   'favicon-32.png',
   'apple-touch-icon.png',
@@ -64,5 +66,10 @@ resetPublic();
 for (const file of ROOT_FILES) copyFile(file);
 for (const dir of DIRECTORIES) copyDir(dir);
 
-console.log('Prepared Vercel static output: public/');
+// Cloudflare ignores vercel.json; carry its redirects and headers across.
+const vercel = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
+fs.writeFileSync(path.join(PUBLIC, '_redirects'), buildRedirects(vercel));
+fs.writeFileSync(path.join(PUBLIC, '_headers'), buildHeaders(vercel));
+
+console.log('Prepared static output: public/');
 console.log('Files:', fs.readdirSync(PUBLIC).length, 'top-level entries');
