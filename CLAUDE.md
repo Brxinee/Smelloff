@@ -106,6 +106,16 @@ installed for Claude Code (`/ponytail-audit`, `/ponytail-review`). Fixed:
   counts per Worker instance. Fine at this load; needs a shared store (KV /
   Supabase) only if abuse shows up.
 
+## Vercel / Netlify bots on PRs (2026-10-10)
+The repo holds **no** Vercel or Netlify config (`audit-production.mjs` fails if
+`vercel.json`, `middleware.js` or `netlify.toml` comes back). The "Vercel –
+smelloff / smelloff-6v6v: Error" checks and the Netlify
+`spontaneous-longma-4f03b5` rows come from those services' **GitHub Apps**,
+still installed on the account. They can only be removed by the owner:
+github.com/settings/installations → Vercel / Netlify → Uninstall (and delete
+the projects in each dashboard). Nothing in the repo can stop them. Cloudflare
+Workers Builds is the only deploy.
+
 ## Leftovers removed (2026-10-10)
 Deleted: the unreferenced `neo.css`/`neo-lite.css`/`main.css`, `neo.js`,
 `scroll-effects.js`, `assets/icons/shoe.png`/`helmet.png`; Google AI Studio's
