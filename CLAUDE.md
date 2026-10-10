@@ -86,6 +86,31 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
 
+## Header + sticky buy strip (2026-10-10)
+- **Offer strip** above the header on every page (acid band, inside the
+  `SF-CHROME:HEADER` block): "Free shipping on prepaid · Cash on Delivery ·
+  7-day returns" — the cart-abandonment reasons we can answer up front. Not
+  sticky; the tail hides under 380px.
+- **Header:** phones = burger · logo · cart · Buy ₹229; ≥900 = logo · centred
+  nav (Shop · Guides · Reviews · FAQ · Track order) · cart · Buy. Current page
+  gets an acid underline (`aria-current`, set by chrome.js). Shadow appears
+  once scrolled (`.is-scrolled`). The phone menu opens with a product card,
+  then the pages, then WhatsApp. Header is 64px on phones, 68px ≥900 — the
+  blog index's sticky topic bar uses those offsets.
+- **Buy strip (`.mobile-bar`, homepage + PDP)** is styled once in
+  `chrome.css` §1b: a floating card 10px off the edges (Baymard: space around
+  a sticky buy button, not full width) with thumb, name + price, "Free
+  shipping · COD +₹60", one button. Pages still decide when it shows. The PDP
+  lifts it above the consent bar (`setBottomOffset`, +10px gap).
+- **Generator fixes found on the way:** `apply-chrome.mjs` only looked 400
+  chars back for the HEADER marker — with the strip in the block it stacked a
+  new copy every run (one run put 5 strips on 77 pages). Now 3000, bounded by
+  the previous close marker. The critical inline CSS in that script was
+  updated for the new header. `apply-share-templates.mjs` inserted at "+2
+  chars past" a tag and fell back to `</head>`, which fought apply-chrome for
+  the same spot; it now inserts right after the tag and otherwise above the
+  shared-layers block.
+
 ## PDP simplified — less text, image slots (2026-10-10)
 Following Baymard's product-page research (highlights over paragraphs, an
 "in scale" image — 42% of shoppers try to judge size from photos — and

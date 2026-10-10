@@ -29,6 +29,29 @@
     });
   }
 
+  // Shadow under the sticky bar once the page has moved — a quiet cue that
+  // the bar is floating over content, not part of it.
+  var hdr = document.querySelector('.sf-hdr');
+  if (hdr) {
+    var scrolled = false;
+    var onScroll = function () {
+      var now = window.scrollY > 8;
+      if (now !== scrolled) { scrolled = now; hdr.classList.toggle('is-scrolled', now); }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+  // A tap on a menu link that stays on this page (an #anchor) must close it.
+  if (menu && burger) {
+    menu.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('a')) {
+        menu.classList.remove('is-open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.setAttribute('aria-label', 'Open menu');
+      }
+    });
+  }
+
   var badge = document.getElementById('sfCartCount');
   if (badge) {
     var refresh = function () {
