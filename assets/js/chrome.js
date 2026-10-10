@@ -13,20 +13,35 @@
 
   var burger = document.querySelector('.sf-burger');
   var menu = document.getElementById('sfMenu');
+  // One switch: the menu is a full-height layer under the bar, so its height
+  // is whatever the viewport leaves below the header, and the page behind is
+  // locked (html.sf-menu-open) while it is open.
+  function setMenu(open, refocus) {
+    if (!burger || !menu) return;
+    if (open) {
+      var h = document.querySelector('.sf-hdr');
+      var bottom = h ? h.getBoundingClientRect().bottom : 106;
+      menu.style.setProperty('--sf-menu-h', Math.max(240, window.innerHeight - bottom) + 'px');
+    }
+    menu.classList.toggle('is-open', open);
+    document.documentElement.classList.toggle('sf-menu-open', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    var label = burger.querySelector('.sf-burger__label');
+    if (label) label.textContent = open ? 'Close' : 'Menu';
+    // Focus stays on the toggle (it reads "Close", expanded); Tab moves into the list.
+    if (!open && refocus) burger.focus();
+  }
   if (burger && menu) {
-    burger.addEventListener('click', function () {
-      var open = menu.classList.toggle('is-open');
-      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    });
+    burger.addEventListener('click', function () { setMenu(!menu.classList.contains('is-open')); });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && menu.classList.contains('is-open')) {
-        menu.classList.remove('is-open');
-        burger.setAttribute('aria-expanded', 'false');
-        burger.setAttribute('aria-label', 'Open menu');
-        burger.focus();
-      }
+      if (e.key === 'Escape' && menu.classList.contains('is-open')) setMenu(false, true);
     });
+    // Widening to desktop hides the menu in CSS; drop the scroll lock too.
+    if (window.matchMedia) {
+      var wide = window.matchMedia('(min-width:900px)');
+      var onWide = function () { if (wide.matches) setMenu(false); };
+      if (wide.addEventListener) wide.addEventListener('change', onWide); else if (wide.addListener) wide.addListener(onWide);
+    }
   }
 
   // Shadow under the sticky bar once the page has moved — a quiet cue that
@@ -44,11 +59,7 @@
   // A tap on a menu link that stays on this page (an #anchor) must close it.
   if (menu && burger) {
     menu.addEventListener('click', function (e) {
-      if (e.target.closest && e.target.closest('a')) {
-        menu.classList.remove('is-open');
-        burger.setAttribute('aria-expanded', 'false');
-        burger.setAttribute('aria-label', 'Open menu');
-      }
+      if (e.target.closest && e.target.closest('a')) setMenu(false);
     });
   }
 
