@@ -86,6 +86,27 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
 
+## PDP simplified — less text, image slots (2026-10-10)
+Following Baymard's product-page research (highlights over paragraphs, an
+"in scale" image — 42% of shoppers try to judge size from photos — and
+lifestyle shots). Page is ~1,000px shorter on phones.
+- **Hero:** one-line tagline + three highlight bullets above the price; the
+  long tagline and the four-item list below the CTA are gone. Phones hide
+  `.pd-pack`, shrink the chips and show the gallery at 68% so **Buy still ends
+  ~841px on 390×844** — re-measure if you add anything above it.
+- **Sections now:** strip → `#how` (4 one-line steps, each with a square
+  image slot; the ring still counts 30 s) → `#why` (lifestyle slot + 3
+  reasons + the comparison table, `#compare` id kept) → `#size` (3 in-scale
+  slots: jeans pocket, in hand next to a phone, on a desk) → reviews →
+  science (one line per ingredient) → `#buy` → FAQ → final.
+- **Removed:** "Moments you can't rewash for" (use cases), the stat cards,
+  the email capture (and its `submitWaitlist()` JS), two buy-box lines
+  (sprays/8 h — both still in the specs/hero).
+- **Image slots are `.ph-img`** — same pattern as the homepage: the label is
+  CSS from `data-ph-n/data-ph/data-ph-spec`; replace the div with an `<img>`
+  of the stated ratio (1:1 for steps, 4:5 for lifestyle/size). Shoot to the
+  clothing-only rule: shirt, never skin; pocket/hand/desk, never a gym bag.
+
 ## Blog redesign — index + all 56 posts (2026-10-10)
 Grounded in NN/g reading research: people scan by headings (layer-cake), want
 the answer first, and use a TOC on long pages.
