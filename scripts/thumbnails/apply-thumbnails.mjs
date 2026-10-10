@@ -54,7 +54,8 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').repl
  */
 const SIZES = {
   hero: '(min-width: 900px) 820px, 100vw',
-  card: '(min-width: 900px) 380px, 100vw',
+  // Phones show cards as rows with a ~200px-wide cropped thumb, not full-bleed.
+  card: '(max-width: 767px) 200px, (min-width: 900px) 380px, 100vw',
 };
 
 function pictureBlock(post, { role, imgAttrs }) {

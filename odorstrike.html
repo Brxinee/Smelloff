@@ -221,10 +221,6 @@
 <link rel="preconnect" href="https://tnuqjydmoxczdjnsgpci.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="https://connect.facebook.net">
 <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-<link rel="prefetch" href="/track-order" as="document">
-<link rel="prefetch" href="/reviews" as="document">
-<link rel="prefetch" href="/blog" as="document">
-<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
 
 <!-- Config -->
 <script>
@@ -301,7 +297,7 @@
      preloaded. -->
 <link rel="preload" as="image" type="image/webp"
       href="/assets/pdp-01-hero.webp"
-      imagesrcset="/assets/pdp-01-hero@640.webp 640w, /assets/pdp-01-hero.webp 1200w"
+      imagesrcset="/assets/pdp-01-hero@640.webp 640w, /assets/pdp-01-hero.webp 1196w"
       imagesizes="(min-width:960px) 46vw, 84vw" fetchpriority="high">
 <!-- Preload ONLY the faces that paint above the fold. This page renders in
      exactly three families — Fraunces (--display), JetBrains Mono (--mono) and
@@ -605,11 +601,10 @@
   }
   .cart-remove:hover{color:var(--text)}
   .cart-add2{
-    display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+    display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
     margin-top:22px;padding:14px;border:1px solid var(--rule);border-radius:var(--sq-lg,16px);
     background:var(--ink);
   }
-  .cart-add2 .ic{width:22px;height:22px;color:var(--acid)}
   .cart-add2 p{margin:0;font-family:var(--body);font-size:13px;line-height:1.4;color:var(--text-2)}
   .cart-add2 p strong{display:block;color:var(--text);font-size:14px;font-weight:600}
   .cart-add2 button{
@@ -620,7 +615,7 @@
   .cart-add2 button:hover{background:var(--acid);color:var(--ink)}
   .cart-perks{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:10px}
   .cart-perks li{display:flex;gap:10px;align-items:center;font-family:var(--body);font-size:13px;color:var(--text-2);line-height:1.4}
-  .cart-perks .ic{width:18px;height:18px;color:var(--acid);flex-shrink:0}
+  .cart-perks li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--acid)}
   .cart-foot{border-top:1px solid var(--rule);padding:16px 20px calc(16px + env(safe-area-inset-bottom));background:var(--surface)}
   .cart-sum{margin:0 0 14px;display:grid;gap:6px}
   .cart-sum div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:var(--body);font-size:14px;color:var(--text-2)}
@@ -1326,7 +1321,6 @@
     background:var(--acid);color:var(--on-acid);padding:4px 8px;border-radius:6px;align-self:center}
   .pd-pack{margin-top:8px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--muted)}
   .price-note{display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-size:14px;line-height:1.4;color:var(--text-2)}
-  .price-note .ic{width:18px;height:18px;color:var(--acid);margin-top:1px}
   .price-note strong{color:var(--text)}
   .buy-actions{display:flex;gap:10px;margin-top:18px}
   .qty-picker{display:inline-flex;align-items:center;flex:0 0 auto;border:1px solid var(--border-strong);border-radius:var(--sq-sm)}
@@ -1349,7 +1343,7 @@
   .pd-assure b{display:block;color:var(--text);font-weight:600;font-size:13.5px;margin-bottom:1px}
   .pd-highlights{list-style:none;margin-top:20px;display:grid;gap:12px}
   .pd-highlights li{display:flex;align-items:flex-start;gap:12px;font-size:15px;line-height:1.45;color:var(--text-2)}
-  .pd-highlights .ic{color:var(--acid)}
+  .pd-highlights li::before{content:"";flex:none;width:6px;height:6px;margin-top:9px;border-radius:50%;background:var(--acid)}
   .pd-footnote{margin-top:14px;font-size:12px;line-height:1.5;color:var(--muted)}
   /* Phones: the CTA is the point of the hero. Tagline trims to three lines. */
   @media(max-width:767px){
@@ -1383,7 +1377,6 @@
   .pd-strip ul{display:grid;grid-template-columns:1fr 1fr;list-style:none}
   .pd-strip li{display:flex;align-items:center;gap:12px;padding:18px 4px;
     font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
-  .pd-strip .ic{width:26px;height:26px;color:var(--acid);stroke-width:1.5}
   @media(min-width:768px){
     .pd-strip ul{grid-template-columns:repeat(4,1fr)}
     .pd-strip li{justify-content:center;padding:22px 8px}
@@ -1436,11 +1429,9 @@
   .pd-scale figcaption{margin-top:10px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
   @media(min-width:768px){.pd-scale{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;margin:0;padding:0}}
   .fix-features{list-style:none;margin-top:26px;display:grid;gap:18px}
-  .fix-features li{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;
+  .fix-features li{display:block;gap:14px;align-items:start;
     font-size:15px;line-height:1.55;color:var(--text-2)}
   .fix-features strong{display:block;color:var(--text);font-size:16px;margin-bottom:2px}
-  .pd-ibox{width:44px;height:44px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;
-    border:1px solid var(--rule);background:var(--ink);color:var(--acid)}
 
   /* ---------- Comparison ---------- */
   .pd-scroll{overflow-x:auto;border-radius:var(--sq-lg)}
@@ -1512,7 +1503,7 @@
   .pd-offer-body .pd-h2{margin-top:0}
   .pd-offer-list{list-style:none;display:grid;gap:11px}
   .pd-offer-list li{display:flex;align-items:flex-start;gap:12px;font-size:15px;line-height:1.45;color:var(--text-2)}
-  .pd-offer-list .ic{color:var(--acid);margin-top:1px}
+  .pd-offer-list li::before{content:"";flex:none;width:6px;height:6px;margin-top:9px;border-radius:50%;background:var(--acid)}
   .pd-offer-list strong{color:var(--text)}
   #showcaseBuyBtn{width:100%}
   .cod-line{text-align:center;font-size:13px;color:var(--muted);margin-top:-6px}
@@ -1640,15 +1631,16 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 }
 </script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=2f881f0b">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=aec48682">
-<script src="/assets/js/chrome.js?v=87ec5916" defer></script>
+<link rel="stylesheet" href="/assets/css/soft.css?v=afea31a0">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=2457f85a">
+<script src="/assets/js/chrome.js?v=e5f40955" defer></script>
 </head>
 <body>
 
 
 <!-- SF-CHROME:HEADER — generated by scripts/apply-chrome.mjs. Edit there, not here. -->
 <a class="sf-skip" href="#sf-main">Skip to content</a>
+<script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/api/*","/admin*"]}}]},"eagerness":"moderate"}]}</script>
 <div class="sf-announce" role="region" aria-label="Shipping and payment">
   <div class="sf-wrap sf-announce__row">
     <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg><span><b>Free shipping</b> on prepaid<span class="sf-announce__more"> · Cash on Delivery · 7-day returns</span></span></p>
@@ -1686,11 +1678,11 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <span class="sf-menu__go">Shop</span>
       </a>
       <ul class="sf-menu__list">
-        <li><a href="/blog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg><span>Guides<small>Fabric odor, explained</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
-        <li><a href="/reviews"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.5 2.3a.5.5 0 0 1 1 0l2.3 4.7a2.1 2.1 0 0 0 1.6 1.2l5.2.7a.5.5 0 0 1 .3.9l-3.8 3.7a2.1 2.1 0 0 0-.6 1.9l.9 5.1a.5.5 0 0 1-.8.6l-4.6-2.4a2.1 2.1 0 0 0-2 0L6.4 21a.5.5 0 0 1-.8-.6l.9-5.1a2.1 2.1 0 0 0-.6-1.9L2.2 9.8a.5.5 0 0 1 .3-.9l5.1-.7a2.1 2.1 0 0 0 1.6-1.2z"/></svg><span>Reviews<small>What testers said</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
-        <li><a href="/faq"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span>FAQ<small>Use, safety, COD, returns</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
-        <li><a href="/track-order"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg><span>Track order<small>With your order ID</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
-        <li><a href="/contact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span>Contact<small>Write to us</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        <li><a href="/blog"><span>Guides<small>Fabric odor, explained</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        <li><a href="/reviews"><span>Reviews<small>What testers said</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        <li><a href="/faq"><span>FAQ<small>Use, safety, COD, returns</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        <li><a href="/track-order"><span>Track order<small>With your order ID</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        <li><a href="/contact"><span>Contact<small>Write to us</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
       </ul>
       <a class="sf-menu__help" href="https://wa.me/919392974031" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span><b>Questions? Chat on WhatsApp</b><small>+91 93929 74031</small></span></a>
       <p class="sf-menu__perks">COD · 7-day returns · Ships from Hyderabad</p>
@@ -1751,15 +1743,13 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </div>
         <!-- Only at quantity 1: one quiet, honest add-on (same product, same
              price, no discount implied). Hidden once there are two. -->
-        <div class="cart-add2" id="cartAdd2">
-          <svg class="ic" aria-hidden="true"><use href="#i-shirt"/></svg>
-          <p><strong>Add a second bottle</strong>One at home, one in your office drawer.</p>
+        <div class="cart-add2" id="cartAdd2"><p><strong>Add a second bottle</strong>One at home, one in your office drawer.</p>
           <button type="button" onclick="cartInc()">+ ₹229</button>
         </div>
         <ul class="cart-perks">
-          <li><svg class="ic" aria-hidden="true"><use href="#i-cash"/></svg>Pay by UPI, or cash on delivery (+₹60)</li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-return"/></svg>7-day returns from delivery</li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>Ships from Hyderabad, pan-India</li>
+          <li>Pay by UPI, or cash on delivery (+₹60)</li>
+          <li>7-day returns from delivery</li>
+          <li>Ships from Hyderabad, pan-India</li>
         </ul>
       </div>
     </div>
@@ -1784,35 +1774,14 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <symbol id="i-cash" viewBox="0 0 24 24"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></symbol>
   <symbol id="i-return" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
-  <symbol id="i-timer" viewBox="0 0 24 24"><path d="M10 2h4"/><path d="m12 14 3-3"/><circle cx="12" cy="14" r="8"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
-  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
-  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0l1.58 6.14a2 2 0 0 0 1.44 1.44l6.14 1.58a.5.5 0 0 1 0 .96l-6.14 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/><path d="M20 3v4M22 5h-4"/></symbol>
-  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></symbol>
-  <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></symbol>
-  <symbol id="i-spray" viewBox="0 0 24 24"><path d="M3 3h.01M7 5h.01M11 7h.01M3 7h.01M7 9h.01M3 11h.01"/><rect width="4" height="4" x="15" y="5"/><path d="m19 9 2 2v10c0 .6-.4 1-1 1h-6c-.6 0-1-.4-1-1V11l2-2"/><path d="m13 14 8-2M13 19l8-2"/></symbol>
-  <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2"/></symbol>
-  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
-  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-5.54 10.19-7.4 11.8a1 1 0 0 1-1.2 0C9.54 20.19 4 15 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
-  <symbol id="i-box" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/></symbol>
-  <symbol id="i-ring" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v5M12 16v5M3 12h5M16 12h5"/></symbol>
-  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></symbol>
-  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
-  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
-  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol>
-  <symbol id="i-rain" viewBox="0 0 24 24"><path d="M4 14.9A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.24"/><path d="M16 14v6M8 14v6M12 16v6"/></symbol>
-  <symbol id="i-jeans" viewBox="0 0 24 24"><path d="M6 2h12l1 20h-5l-2-12-2 12H5z"/><path d="M6 6h12"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
   <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
-  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
   <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
-  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></symbol>
   <symbol id="i-zoom" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></symbol>
-  <symbol id="i-quote" viewBox="0 0 24 24"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/></symbol>
-  <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
 </svg>
 
 <!-- ===================================================================
@@ -1853,7 +1822,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
               <img src="/assets/pdp-04-pocket-size.webp"
                    srcset="/assets/pdp-04-pocket-size@640.webp 640w, /assets/pdp-04-pocket-size.webp 1196w"
                    sizes="(min-width:960px) 46vw, 84vw"
-                   alt="ODORSTRIKE 50ml bottle shown carried in jeans pocket, gym bag, and laptop sleeve" width="1196" height="1315" loading="lazy" decoding="async">
+                   alt="ODORSTRIKE 50ml bottle shown carried in jeans pocket, gym bag, and laptop sleeve" width="1196" height="1315" loading="lazy" fetchpriority="low" decoding="async">
               <span class="gal-hint" aria-hidden="true"><svg class="ic"><use href="#i-zoom"/></svg></span>
             </button>
           </figure>
@@ -1863,7 +1832,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
               <img src="/assets/pdp-03-how-to-use.webp"
                    srcset="/assets/pdp-03-how-to-use@640.webp 640w, /assets/pdp-03-how-to-use.webp 1196w"
                    sizes="(min-width:960px) 46vw, 84vw"
-                   alt="Three-step visual guide showing spray distance, drying time, and garment application" width="1196" height="1315" loading="lazy" decoding="async">
+                   alt="Three-step visual guide showing spray distance, drying time, and garment application" width="1196" height="1315" loading="lazy" fetchpriority="low" decoding="async">
               <span class="gal-hint" aria-hidden="true"><svg class="ic"><use href="#i-zoom"/></svg></span>
             </button>
           </figure>
@@ -1873,7 +1842,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
               <img src="/assets/pdp-05-proof.webp"
                    srcset="/assets/pdp-05-proof@640.webp 640w, /assets/pdp-05-proof.webp 1195w"
                    sizes="(min-width:960px) 46vw, 84vw"
-                   alt="Fabric comparison showing spray application on dark shirt" width="1195" height="1316" loading="lazy" decoding="async">
+                   alt="Fabric comparison showing spray application on dark shirt" width="1195" height="1316" loading="lazy" fetchpriority="low" decoding="async">
               <span class="gal-hint" aria-hidden="true"><svg class="ic"><use href="#i-zoom"/></svg></span>
             </button>
           </figure>
@@ -1883,7 +1852,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
               <img src="/assets/pdp-07-fabric-only.webp"
                    srcset="/assets/pdp-07-fabric-only@640.webp 640w, /assets/pdp-07-fabric-only.webp 1190w"
                    sizes="(min-width:960px) 46vw, 84vw"
-                   alt="Graphic emphasizing fabric-only garment use on shirts, jackets, and hoodies" width="1190" height="1322" loading="lazy" decoding="async">
+                   alt="Graphic emphasizing fabric-only garment use on shirts, jackets, and hoodies" width="1190" height="1322" loading="lazy" fetchpriority="low" decoding="async">
               <span class="gal-hint" aria-hidden="true"><svg class="ic"><use href="#i-zoom"/></svg></span>
             </button>
           </figure>
@@ -1893,7 +1862,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
               <img src="/assets/pdp-02-problem.webp"
                    srcset="/assets/pdp-02-problem@640.webp 640w, /assets/pdp-02-problem.webp 1195w"
                    sizes="(min-width:960px) 46vw, 84vw"
-                   alt="Cross-section illustration of clothing fabric weave with trapped sweat odor molecules" width="1195" height="1316" loading="lazy" decoding="async">
+                   alt="Cross-section illustration of clothing fabric weave with trapped sweat odor molecules" width="1195" height="1316" loading="lazy" fetchpriority="low" decoding="async">
               <span class="gal-hint" aria-hidden="true"><svg class="ic"><use href="#i-zoom"/></svg></span>
             </button>
           </figure>
@@ -1903,7 +1872,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
               <img src="/assets/pdp-06-science.webp"
                    srcset="/assets/pdp-06-science@640.webp 640w, /assets/pdp-06-science.webp 1196w"
                    sizes="(min-width:960px) 46vw, 84vw"
-                   alt="Molecular diagram illustrating cyclodextrin ring structure and active zinc compounds" width="1196" height="1315" loading="lazy" decoding="async">
+                   alt="Molecular diagram illustrating cyclodextrin ring structure and active zinc compounds" width="1196" height="1315" loading="lazy" fetchpriority="low" decoding="async">
               <span class="gal-hint" aria-hidden="true"><svg class="ic"><use href="#i-zoom"/></svg></span>
             </button>
           </figure>
@@ -1913,7 +1882,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
               <img src="/assets/pdp-08-comparison.webp"
                    srcset="/assets/pdp-08-comparison@640.webp 640w, /assets/pdp-08-comparison.webp 1196w"
                    sizes="(min-width:960px) 46vw, 84vw"
-                   alt="Comparison chart comparing fabric odor mist with body deodorants and perfumes" width="1196" height="1315" loading="lazy" decoding="async">
+                   alt="Comparison chart comparing fabric odor mist with body deodorants and perfumes" width="1196" height="1315" loading="lazy" fetchpriority="low" decoding="async">
               <span class="gal-hint" aria-hidden="true"><svg class="ic"><use href="#i-zoom"/></svg></span>
             </button>
           </figure>
@@ -1955,9 +1924,9 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <!-- Highlights, not paragraphs (Baymard): the three things a first-time
              buyer needs before the price. The detail lives further down. -->
         <ul class="pd-highlights">
-          <li><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg><span>Removes sweat smell from the shirt — no perfume cover-up</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg><span>Dries clear in 15–30 seconds, no marks</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg><span>Lasts up to 8 hours on fabric*</span></li>
+          <li><span>Removes sweat smell from the shirt — no perfume cover-up</span></li>
+          <li><span>Dries clear in 15–30 seconds, no marks</span></li>
+          <li><span>Lasts up to 8 hours on fabric*</span></li>
         </ul>
 
         <ul class="pd-not" aria-label="What ODORSTRIKE is and is not">
@@ -1975,7 +1944,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
             <span class="pd-off">54% OFF</span>
           </div>
           <p class="pd-pack">1 × 50ml bottle · ~250 sprays</p>
-          <p class="price-note"><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span>Free shipping on prepaid · <strong>COD ₹289</strong> (₹60 handling)</span></p>
+          <p class="price-note"><span>Free shipping on prepaid · <strong>COD ₹289</strong> (₹60 handling)</span></p>
         </div>
 
         <div class="buy-actions">
@@ -1984,9 +1953,9 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
             <output id="pdpQtyVal" for="pdpQtyDec pdpQtyInc" aria-live="polite">1</output>
             <button type="button" id="pdpQtyInc" onclick="pdpQtyStep(1)" aria-label="Increase quantity"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg></button>
           </div>
-          <button type="button" class="pd-btn" id="pdpBuyBtn" onclick="buyNow()"><span id="pdpBuyText">GET ODORSTRIKE — ₹229</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <button type="button" class="pd-btn" id="pdpBuyBtn" onclick="buyNow()"><span id="pdpBuyText">GET ODORSTRIKE — ₹229</span></button>
         </div>
-        <button type="button" class="pd-btn pd-btn--ghost" id="pdpCartBtn" onclick="addToCart()"><svg class="ic" aria-hidden="true"><use href="#i-bag"/></svg>Add to cart</button>
+        <button type="button" class="pd-btn pd-btn--ghost" id="pdpCartBtn" onclick="addToCart()">Add to cart</button>
         <p class="pd-pay"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>Secure checkout · UPI · Cards · Net banking · COD</p>
 
         <ul class="pd-assure" aria-label="Delivery and returns">
@@ -2007,10 +1976,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- BENEFIT STRIP -->
 <div class="pd-strip">
   <ul class="pd-wrap" aria-label="At a glance">
-    <li><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg>Glycerine-free</li>
-    <li><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg>Dries clear</li>
-    <li><svg class="ic" aria-hidden="true"><use href="#i-ruler"/></svg>10.5 cm pocket size</li>
-    <li><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>Made in Hyderabad</li>
+    <li>Glycerine-free</li>
+    <li>Dries clear</li>
+    <li>10.5 cm pocket size</li>
+    <li>Made in Hyderabad</li>
   </ul>
 </div>
 
@@ -2068,9 +2037,9 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <div class="section-tag">Why it works</div>
         <h2 id="whyTitle" class="pd-h2">Deo is for skin. <span class="acid">This is for the shirt.</span></h2>
         <ul class="fix-features">
-          <li><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-sparkles"/></svg></span><span><strong>Neutralizes odor — doesn't hide it.</strong>HPβCD traps odor in the fibres; Zinc PCA neutralizes it.</span></li>
-          <li><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-drop"/></svg></span><span><strong>Glycerine-free, dries clear.</strong>No marks or damp patch on tested fabrics. Spot-test silk and delicates first.</span></li>
-          <li><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-timer"/></svg></span><span><strong>Up to 8 hours on fabric*.</strong>Light scent that fades in minutes.</span></li>
+          <li><span><strong>Neutralizes odor — doesn't hide it.</strong>HPβCD traps odor in the fibres; Zinc PCA neutralizes it.</span></li>
+          <li><span><strong>Glycerine-free, dries clear.</strong>No marks or damp patch on tested fabrics. Spot-test silk and delicates first.</span></li>
+          <li><span><strong>Up to 8 hours on fabric*.</strong>Light scent that fades in minutes.</span></li>
         </ul>
       </div>
     </div>
@@ -2119,17 +2088,17 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     </div>
     <div class="review-grid" tabindex="0" role="region" aria-label="Tester reviews — scroll sideways for more">
       <figure class="review">
-        <svg class="ic ic-quote" aria-hidden="true"><use href="#i-quote"/></svg>
+        
         <blockquote>"Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched."</blockquote>
         <figcaption><cite>Rohit, 26 / Bengaluru</cite><span class="beta-tag">Beta tester</span></figcaption>
       </figure>
       <figure class="review">
-        <svg class="ic ic-quote" aria-hidden="true"><use href="#i-quote"/></svg>
+        
         <blockquote>"Lives in my gym bag now. Post-workout, pre-Uber, no more 'should I shower at office' anxiety."</blockquote>
         <figcaption><cite>Aakash, 24 / Pune</cite><span class="beta-tag">Beta tester</span></figcaption>
       </figure>
       <figure class="review">
-        <svg class="ic ic-quote" aria-hidden="true"><use href="#i-quote"/></svg>
+        
         <blockquote>"Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger."</blockquote>
         <figcaption><cite>Karan, 29 / Delhi</cite><span class="beta-tag">Beta tester</span></figcaption>
       </figure>
@@ -2146,10 +2115,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <h2 id="scienceTitle" class="pd-h2">Four layers do the <span class="acid">heavy lifting.</span></h2>
     </div>
     <div class="pd-ingr">
-      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-ring"/></svg><span class="pd-step">01 — Trap</span><h3>HPβCD (Cyclodextrin)</h3><p>Cages odor molecules inside its ring.</p></div>
-      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg><span class="pd-step">02 — Neutralize</span><h3>Zinc PCA</h3><p>Deactivates the captured odor compounds.</p></div>
-      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span class="pd-step">03 — Prevent</span><h3>Triethyl Citrate</h3><p>Slows new odor forming from fresh sweat.</p></div>
-      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg><span class="pd-step">04 — Sustain</span><h3>Zinc Gluconate</h3><p>Binds what's left, between wears.</p></div>
+      <div class="pd-card"><span class="pd-step">01 — Trap</span><h3>HPβCD (Cyclodextrin)</h3><p>Cages odor molecules inside its ring.</p></div>
+      <div class="pd-card"><span class="pd-step">02 — Neutralize</span><h3>Zinc PCA</h3><p>Deactivates the captured odor compounds.</p></div>
+      <div class="pd-card"><span class="pd-step">03 — Prevent</span><h3>Triethyl Citrate</h3><p>Slows new odor forming from fresh sweat.</p></div>
+      <div class="pd-card"><span class="pd-step">04 — Sustain</span><h3>Zinc Gluconate</h3><p>Binds what's left, between wears.</p></div>
     </div>
     <details class="pd-inci">
       <summary>Full ingredient list <svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></summary>
@@ -2186,10 +2155,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
              shown on the same card is a misleading-price claim. -->
         <div class="pd-price-row"><span class="pd-amt">₹229</span><s>M.R.P. ₹499</s><span class="pd-off">54% OFF</span></div>
         <ul class="pd-offer-list">
-          <li><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><strong>Free shipping</strong> on prepaid orders, pan-India</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-cash"/></svg><span><strong>Cash on Delivery</strong> · ₹60 handling · ₹289 collected</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-box"/></svg><span><strong>Ships from Hyderabad</strong> in 48 hours · 3–5 days to metros</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-return"/></svg><span><strong>7-day returns</strong> if it isn't for you</span></li>
+          <li><span><strong>Free shipping</strong> on prepaid orders, pan-India</span></li>
+          <li><span><strong>Cash on Delivery</strong> · ₹60 handling · ₹289 collected</span></li>
+          <li><span><strong>Ships from Hyderabad</strong> in 48 hours · 3–5 days to metros</span></li>
+          <li><span><strong>7-day returns</strong> if it isn't for you</span></li>
         </ul>
         <button type="button" class="pd-btn" id="showcaseBuyBtn" onclick="buyNow()">GET ODORSTRIKE — ₹229</button>
         <p class="cod-line"><s>₹499</s> ₹229 prepaid · Free shipping · ₹289 on COD</p>
@@ -2893,6 +2862,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   }
 
   function openCheckout(variant, ctaLocation) {
+    if (typeof window.smfWarmRazorpay === 'function') window.smfWarmRazorpay();
     _checkoutTrigger = document.activeElement;
     currentVariant = variant;
     if (!ctaLocation && _checkoutTrigger) {

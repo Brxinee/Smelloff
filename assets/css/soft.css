@@ -459,3 +459,21 @@ img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-
   border-radius:var(--sq-xl) !important;
 }
 .ph-img--sq{border-radius:var(--sq-lg) !important}
+
+/* =====================================================================
+   §10 Skeleton loading (2026-10-10)
+   On a slow phone an image box sat empty (or showed the page colour) until
+   the file arrived. Every <img> now shows a soft shimmer in its reserved
+   box (width/height are set on all of them, so the box exists before the
+   file) until chrome.js marks it .is-loaded on load or error. Opt out with
+   data-no-skel. Reduced motion gets a still placeholder, not the sweep.
+   ===================================================================== */
+img:not(.is-loaded):not([data-no-skel]){
+  background-color:var(--surface);
+  background-image:linear-gradient(100deg,transparent 30%,rgba(244,241,234,.06) 50%,transparent 70%);
+  background-size:250% 100%;background-repeat:no-repeat;
+}
+@media (prefers-reduced-motion:no-preference){
+  img:not(.is-loaded):not([data-no-skel]){animation:sfSkel 1.3s linear infinite}
+}
+@keyframes sfSkel{from{background-position:150% 0}to{background-position:-100% 0}}

@@ -281,6 +281,34 @@ github.com/settings/installations → Vercel / Netlify → Uninstall (and delete
 the projects in each dashboard). Nothing in the repo can stop them. Cloudflare
 Workers Builds is the only deploy.
 
+## Speed, skeletons, fewer icons (2026-10-10)
+- **Razorpay loads on checkout intent, not on page load.** The static
+  `checkout.js` tag pulled ~1.3 MB of Razorpay JS/CSS on every `/odorstrike`
+  visit. `getRazorpayReady()` in chrome.js now injects the one tag (reused if
+  present, dropped on error so a retry refetches) and `openCheckout()` warms
+  it via `window.smfWarmRazorpay()`. Test pinned in `test/checkout.test.mjs`
+  (this reverses the old "static tag, no injection" test).
+- **No `<link rel=prefetch>` for whole pages** (the homepage downloaded
+  `/odorstrike` + `/blog`, ~330 KB, on every visit). The header block now
+  carries one `speculationrules` script: prefetch on hover / tap-start,
+  excluding `/api/*` and `/admin*`.
+- **Blog thumbnails have a 640w step** (`WIDTHS = [1920, 1200, 640]`); card
+  `sizes` say 200px on phones, where cards are rows with a small thumb.
+  1.55 MB vs 6.25 MB for the set. `build-thumbnails.mjs` now emits 640 too.
+- PDP: hero preload said `1200w` while the `<img>` said `1196w`, so the hero
+  downloaded twice; aligned. Gallery tiles 2–8 are `fetchpriority="low"`.
+  `/faq`'s `.sub` no longer pulls the 80 KB Fraunces italic.
+- **Skeleton loading:** `soft.css` §10 shimmers every `<img>` in its reserved
+  box until chrome.js adds `.is-loaded` (load or error; capture listener +
+  a sweep for images that finished first). `data-no-skel` opts out. Still
+  under reduced motion.
+- **Icons only where they do a job:** controls (close, ±, zoom, search,
+  menu chevrons), the padlock on pay buttons, the ✓/⊘ fabric-only chips,
+  the compare-table checks and the **one** shipping/COD/returns row per page.
+  Removed from feature lists, highlights, offer lists, step numbers, science
+  cards, quotes, spec chips, ghost-button arrows, blog card "Read" arrows,
+  blog hero chips and the phone-menu rows. Sprites trimmed to match.
+
 ## Cart drawer rebuilt (2026-10-10)
 `/odorstrike` cart drawer (`#cartOverlay`), rebuilt on Baymard cart findings:
 - **The button total now equals the summary total.** `renderCart()` added

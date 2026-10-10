@@ -191,18 +191,13 @@ html.sf-menu-open #smelloff-consent-bar,html.sf-menu-open .mobile-bar{display:no
   background:var(--acid);color:var(--on-acid);font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .sf-menu__list{list-style:none;margin:0;padding:0}
 .sf-menu__list a{
-  display:grid;grid-template-columns:40px 1fr 18px;gap:14px;align-items:center;min-height:64px;padding:8px 2px;
+  display:grid;grid-template-columns:1fr 18px;gap:14px;align-items:center;min-height:60px;padding:8px 2px;
   border-bottom:1px solid var(--rule-soft);color:var(--text);text-decoration:none;
 }
-.sf-menu__list a > svg:first-child{
-  width:40px;height:40px;padding:10px;border-radius:12px;background:var(--surface);border:1px solid var(--rule-soft);
-  fill:none;stroke:var(--acid);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
-}
-.sf-menu__list a > svg:last-child{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sf-menu__list a > svg{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sf-menu__list span{font-family:var(--body);font-size:17px;font-weight:600;line-height:1.25}
 .sf-menu__list small{display:block;margin-top:2px;font-size:13px;font-weight:400;color:var(--muted)}
 .sf-menu__list a:hover span,.sf-menu__list a[aria-current="page"] span{color:var(--acid)}
-.sf-menu__list a[aria-current="page"] > svg:first-child{border-color:var(--acid)}
 .sf-menu__help{
   display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:center;margin-top:18px;padding:14px 16px;
   border:1px solid var(--rule);border-radius:var(--sq-lg,16px);color:var(--text);text-decoration:none;

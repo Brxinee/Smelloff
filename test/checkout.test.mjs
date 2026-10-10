@@ -42,7 +42,8 @@ test('config/routing.json routing integrity', () => {
 
 test('odorstrike.html includes Razorpay Checkout script and clean UI', () => {
   const html = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.ok(html.includes('https://checkout.razorpay.com/v1/checkout.js'), 'Razorpay checkout script must be in odorstrike.html');
+  const chromeSrc = fs.readFileSync('assets/js/chrome.js', 'utf8');
+  assert.ok(chromeSrc.includes('https://checkout.razorpay.com/v1/checkout.js'), 'Razorpay checkout script must be loaded by chrome.js');
   assert.ok(!html.includes('id="upiInlineId"'), 'Static manual UPI ID element should not appear in checkout UI');
   assert.ok(html.includes('BUY ODORSTRIKE'), 'Modern unified buy button should be present');
 });
@@ -238,15 +239,19 @@ test('frontend submit architecture: odorstrike.html submitOrder is sole router a
   assert.ok(html.includes("onclick=\"submitOrder()\""), 'submit button must have onclick submitOrder');
 });
 
-test('Step 3: Razorpay SDK loading is deterministic and has no dynamic script injection', () => {
+test('Step 3: Razorpay SDK loads on checkout intent, once, through one readiness promise', () => {
   const chromeJs = fs.readFileSync('assets/js/chrome.js', 'utf8');
   const html = fs.readFileSync('odorstrike.html', 'utf8');
 
-  // 1. Static Razorpay script exists
-  assert.ok(html.includes('<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>'), 'Static script tag must exist in odorstrike.html');
+  // 1. Not on page load: the SDK pulls ~1.3 MB; it is fetched when checkout opens.
+  assert.ok(!html.includes('<script src="https://checkout.razorpay.com/v1/checkout.js"'), 'No static Razorpay tag on page load');
+  const open = html.slice(html.indexOf('function openCheckout('), html.indexOf('function openCheckout(') + 300);
+  assert.ok(open.includes('window.smfWarmRazorpay()'), 'openCheckout must warm the SDK');
 
-  // 2. No dynamic script injection in chrome.js
-  assert.ok(!chromeJs.includes("document.createElement('script')"), 'chrome.js must not dynamically create script tags');
+  // 2. One tag, reused; a failed tag is removed so a retry refetches.
+  const ready = chromeJs.slice(chromeJs.indexOf('function getRazorpayReady'), chromeJs.indexOf('window.smfWarmRazorpay'));
+  assert.ok(ready.includes("document.querySelector('script[src=\"' + RAZORPAY_SCRIPT"), 'Must reuse an existing tag');
+  assert.ok(ready.includes('removeChild(script)'), 'Failed tag must be dropped');
   assert.ok(!chromeJs.includes("loadRazorpay("), 'old loadRazorpay function must be removed');
 
   // 3. Single readiness promise

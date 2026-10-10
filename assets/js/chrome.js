@@ -11,6 +11,15 @@
 (function () {
   'use strict';
 
+  // Skeleton loading: soft.css §10 shimmers every <img> until it is marked
+  // loaded. Capture-phase listeners because load/error don't bubble; the
+  // sweep catches images that finished before this deferred script ran.
+  function markImg(img) { img.classList.add('is-loaded'); }
+  ['load', 'error'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) { if (e.target && e.target.tagName === 'IMG') markImg(e.target); }, true);
+  });
+  Array.prototype.forEach.call(document.images, function (img) { if (img.complete) markImg(img); });
+
   var burger = document.querySelector('.sf-burger');
   var menu = document.getElementById('sfMenu');
   // One switch: the menu is a full-height layer under the bar, so its height
@@ -162,14 +171,22 @@
         reject(new Error('Unable to load Razorpay Checkout. Please try again.'));
       }
 
+      // Loaded on demand: the SDK pulls ~1.3 MB of Razorpay JS/CSS, which the
+      // product page used to download on every visit before anyone tapped Buy.
+      // openCheckout() warms it, so it is ready by the time the form is filled.
       var script = document.querySelector('script[src="' + RAZORPAY_SCRIPT + '"]');
       if (!script) {
-        failLoad();
-        return;
+        script = document.createElement('script');
+        script.src = RAZORPAY_SCRIPT;
+        script.async = true;
+        document.head.appendChild(script);
       }
       script.addEventListener('load', succeed, { once: true });
-      script.addEventListener('error', failLoad, { once: true });
-      window.setTimeout(succeed, 0);
+      script.addEventListener('error', function () {
+        // Drop the failed tag so the next attempt fetches it again.
+        if (script.parentNode) script.parentNode.removeChild(script);
+        failLoad();
+      }, { once: true });
     }).catch(function (error) {
       window.smfRazorpayReady = null;
       throw error;
@@ -177,6 +194,7 @@
 
     return window.smfRazorpayReady;
   }
+  window.smfWarmRazorpay = function () { getRazorpayReady().catch(function () {}); };
 
   function textValue(id) {
     var el = document.getElementById(id);
