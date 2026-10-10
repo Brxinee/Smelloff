@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "brand": {
     "name": "Smelloff",
-    "alternateNames": ["Smelloff Grooming", "Smelloff India"],
+    "alternateNames": ["Smell Off", "Smelloff India", "Smelloff Grooming"],
     "legalName": "Smelloff",
     "operator": "Smelloff (Sole Proprietorship)",
     "founder": "Jogdhande Nikhil Patil",
@@ -52,7 +52,7 @@
       "Fabric Refresher Spray for Clothes",
       "Pocket Fabric Freshener"
     ],
-    "description": "A pocket-sized fabric odor remover spray for clothes. 50ml mist that targets trapped sweat odor, gym smell, and shirt odor in fabric — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA helps neutralize them, Triethyl Citrate helps prevent odor formation, and Zinc Gluconate supports long-lasting fabric freshness. Up to 8 hours odor protection on fabric under normal office/commute conditions*. Glycerine-free, fast-drying, residue-free finish. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
+    "description": "A pocket-sized fabric odor remover spray for clothes. 50ml mist that targets trapped sweat odor, gym smell, and shirt odor in fabric — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA helps neutralize them, Triethyl Citrate helps prevent odor formation, and Zinc Gluconate supports long-lasting fabric freshness. Up to 8 hours odor protection on fabric under normal office/commute conditions. Glycerine-free and fast-drying; dries clear with no stiff residue when sprayed from 15–20 cm. Not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
     "size": "50ml",
     "netQuantity": "50ml / 1.69 fl oz",
     "format": "Liquid spray",
@@ -106,12 +106,13 @@
     "transitRemote": "7–10 business days",
     "handlingTimeDays": {
       "min": 0,
-      "max": 1
+      "max": 2
     },
     "transitTimeDays": {
-      "min": 2,
-      "max": 7
+      "min": 3,
+      "max": 10
     },
+    "businessDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     "origin": "Hyderabad, Telangana, India"
   },
   "returns": {

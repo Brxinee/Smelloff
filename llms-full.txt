@@ -19,7 +19,10 @@
 - MRP: ₹499
 - Prepaid price: ₹229
 - COD total: ₹289 (₹60 handling)
-- Shipping: Free within India
+- Shipping: Free within India. Dispatch within 48 hours of confirmation (not Sundays/public holidays); COD orders after a phone confirmation
+- Delivery: metros 3–5 business days; tier 2/3 cities 5–7; remote / North-East 7–10
+- Returns: 7 days from delivery; bottle at least 80% full, original packaging; reverse pickup where serviceable
+- Feeds: https://smelloff.in/products.json · https://smelloff.in/merchant-feed.xml
 - Audience: Men and anyone needing fabric odor control; positioned for Indian heat, humidity and daily wear
 - Use surface: Clothes/fabric only
 - Do not use on: skin, face, eyes, leather, suede, or dry-clean-only garments

@@ -28,8 +28,8 @@ the move silently dropped, now restored:
   removed for good on 2026-10-10 — see below). `scripts/cloudflare-routing.mjs`
   compiles its redirects and headers into `public/_redirects` and
   `public/_headers` on every build — edit `config/routing.json`. Host-based
-  rules (www → apex) can't be expressed there; that needs a Cloudflare Redirect
-  Rule on the zone. `assets.html_handling = "drop-trailing-slash"` replaces
+  rules (www → apex) can't be expressed there; the Worker does them
+  (`src/canonical.js`, see "Search Console fixes" below). `assets.html_handling = "drop-trailing-slash"` replaces
   `cleanUrls` + `trailingSlash:false`.
 - **The Worker owns `smelloff.in` and `www.smelloff.in` as custom domains**
   (`routes` in `wrangler.jsonc`, applied by `wrangler deploy`). Before that,
@@ -39,6 +39,44 @@ the move silently dropped, now restored:
 - The Worker parses JSON with a `verify` hook that keeps `req.rawBody`: the
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
+
+## Search Console fixes: one host, merchant data from one file (2026-10-10)
+From the GSC export (Apr–Oct 2026: 687 clicks, 24.5k impressions; product
+snippets 631 impressions, review snippet 17, merchant listings 2):
+- **www.smelloff.in served every page with a 200**, so Google indexed 56 pages
+  twice and split their signals (`/` 299 clicks + `www/` 201). The Worker now
+  301s www and http to `https://smelloff.in` (`src/canonical.js`), and turns the
+  asset server's **307** for `/page.html` and `/page/` into a 301 (14
+  trailing-slash URLs were indexed). For that, pages reach the Worker first:
+  `run_worker_first: ["/*", "!/assets/*"]`. `env.ASSETS.fetch()` still applies
+  `_redirects`, `_headers` and `html_handling` (verified in wrangler dev).
+  **`/api/*` is never redirected** — a 301 turns webhook POSTs into GETs.
+- Eight slugs that look AI-mangled (`which-fabric-holds-odor-most`,
+  `why-traffic-fumes-cling-to-cloth`…) 404'd; each now 301s to the real post.
+- **Structured data is generated**: `scripts/seo/apply-structured-data.mjs`
+  stamps `#org-jsonld`, `#website-jsonld` and `#product-jsonld` into `/` and
+  `/odorstrike`, and writes `products.json` and **`merchant-feed.xml`** (Google
+  Merchant Center RSS feed, taxonomy 6240 Fabric Refreshers) from
+  `config/product.json`. `npm run build` fails if they're stale — edit the
+  config and run `npm run schema`. The PDP had two different blocks sharing
+  `#organization`; it is now one `OnlineStore` with the return policy on it.
+- Shipping schema now says what `/shipping` says: handling 0–2 days (dispatch
+  within 48 h, Mon–Sat), transit 3–10 business days. It said 0–1 / 2–7.
+- **Only `/odorstrike` carries a Product.** `where-to-buy-odorstrike-india` had
+  a second Product with the same @id and an offer URL on the homepage; the
+  30-day review post marked the founder's own 9.6/10 as a `Review` of our
+  product, and the four `/solutions/*` pages each nested a full Product +
+  Offer (with the old 0–1 / 2–7 day shipping) as `mainEntity`. All removed (the Articles now point at the product via `about`).
+  Review stars need real verified-buyer reviews — `buildProductJsonLd()` takes
+  `includeRating` for when they exist; never fill it from beta quotes.
+- `/refund` said "there is no COD handling fee". Corrected to ₹60 / ₹289.
+- Not changed, needs the owner: `/returns` says the seal must be intact,
+  `config/product.json` says "at least 80% full" — pick one. Whether the ₹60
+  COD charge is refunded on a return isn't stated anywhere.
+- Merchant Center: add `https://smelloff.in/merchant-feed.xml` as a scheduled
+  file feed, and set shipping (free, India) and returns (7 days) in the account
+  so they match the feed.
+- `test/structured-data.test.mjs` pins all of the above.
 
 ## Conversion rebuild, modelled on dudewipes.com (2026-10-10)
 The homepage was rebuilt from scratch (100KB → ~64KB). Palette, fonts and

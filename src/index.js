@@ -2,6 +2,8 @@ import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import express from "express";
 
+import { canonicalRedirect, upgradeTemporaryRedirect } from "./canonical.js";
+
 import sendEmailHandler from "../api/send-email.js";
 import trackHandler from "../api/track.js";
 import metaCapiHandler from "../api/meta-capi.js";
@@ -177,8 +179,25 @@ async function keepDatabaseAwake() {
   }
 }
 
+// Every page request reaches the Worker first (wrangler.jsonc
+// run_worker_first, minus /assets/*) so www and http can be 301'd to
+// https://smelloff.in. Pages are still served by the asset server —
+// env.ASSETS.fetch() applies _redirects, _headers and html_handling exactly as
+// a direct hit does. Misses fall through to Express (404 page, /api).
+async function handleFetch(request, workerEnv, ctx) {
+  const target = canonicalRedirect(request.url);
+  if (target) return Response.redirect(target, 301);
+
+  const { pathname } = new URL(request.url);
+  if (!pathname.startsWith("/api/") && (request.method === "GET" || request.method === "HEAD")) {
+    const asset = await workerEnv.ASSETS.fetch(request);
+    if (asset.status !== 404) return upgradeTemporaryRedirect(request.url, asset);
+  }
+  return fetchHandler(request, workerEnv, ctx);
+}
+
 export default {
-  fetch: fetchHandler,
+  fetch: handleFetch,
   async scheduled(controller) {
     const cron = controller?.cron || "";
     if (cron === "0 3 * * *") {

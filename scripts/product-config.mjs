@@ -43,15 +43,38 @@ export const CLAIMS = {
 };
 PRODUCT_CONFIG.claims.forbidden = CLAIMS.forbidden;
 
+const ORG_ID = 'https://smelloff.in/#organization';
+const RETURN_POLICY_ID = 'https://smelloff.in/#return-policy';
+
+/** The store's return policy — on the Organization and on every Offer. */
+export function buildReturnPolicyJsonLd() {
+  const r = getProductConfig().returns;
+  return {
+    '@type': 'MerchantReturnPolicy',
+    '@id': RETURN_POLICY_ID,
+    'applicableCountry': r.applicableCountry,
+    'returnPolicyCategory': r.policyCategory,
+    'merchantReturnDays': r.windowDays,
+    'returnMethod': r.returnMethod,
+    'returnFees': r.returnFees,
+    'refundType': 'https://schema.org/FullRefund',
+    'merchantReturnLink': 'https://smelloff.in/returns'
+  };
+}
+
 /**
  * Generate canonical Schema.org Product JSON-LD object.
+ *
+ * This is what Google reads for product snippets and merchant listings, so
+ * every value must match what the page and the policy pages say: dispatch
+ * "within 48 hours" (handling 0–2 days, Mon–Sat) and transit "3–5 / 5–7 /
+ * 7–10 business days" (3–10) per /shipping.
  */
 export function buildProductJsonLd(options = {}) {
   const cfg = getProductConfig();
   const p = cfg.product;
   const b = cfg.brand;
   const s = cfg.shipping;
-  const r = cfg.returns;
 
   const productLd = {
     '@context': 'https://schema.org',
@@ -59,6 +82,7 @@ export function buildProductJsonLd(options = {}) {
     '@id': `${b.website}/#odorstrike`,
     'name': p.name,
     'alternateName': p.alternateNames,
+    'url': p.url,
     'description': p.description,
     'image': p.images,
     'brand': {
@@ -66,17 +90,9 @@ export function buildProductJsonLd(options = {}) {
       'name': b.name,
       'logo': b.logo
     },
-    'manufacturer': {
-      '@type': 'Organization',
-      'name': b.name,
-      'address': {
-        '@type': 'PostalAddress',
-        'addressLocality': b.addressLocality,
-        'addressRegion': b.addressRegion,
-        'addressCountry': b.countryCode
-      }
-    },
+    'manufacturer': { '@id': ORG_ID },
     'category': p.category,
+    'size': p.size,
     'audience': {
       '@type': 'PeopleAudience',
       'suggestedGender': 'male',
@@ -97,18 +113,14 @@ export function buildProductJsonLd(options = {}) {
       'availability': p.availability,
       'itemCondition': p.itemCondition,
       'url': p.buyUrl,
-      'seller': {
-        '@type': 'Organization',
-        'name': b.name,
-        '@id': `${b.website}/#organization`
-      },
+      'seller': { '@id': ORG_ID },
       'validFrom': p.validFrom,
       'priceValidUntil': p.priceValidUntil,
       'shippingDetails': {
         '@type': 'OfferShippingDetails',
         'shippingRate': {
           '@type': 'MonetaryAmount',
-          'value': '0.00',
+          'value': `${s.prepaid.rate}.00`,
           'currency': p.currency
         },
         'shippingDestination': {
@@ -117,6 +129,10 @@ export function buildProductJsonLd(options = {}) {
         },
         'deliveryTime': {
           '@type': 'ShippingDeliveryTime',
+          'businessDays': {
+            '@type': 'OpeningHoursSpecification',
+            'dayOfWeek': s.businessDays.map((d) => `https://schema.org/${d}`)
+          },
           'handlingTime': {
             '@type': 'QuantitativeValue',
             'minValue': s.handlingTimeDays.min,
@@ -131,14 +147,7 @@ export function buildProductJsonLd(options = {}) {
           }
         }
       },
-      'hasMerchantReturnPolicy': {
-        '@type': 'MerchantReturnPolicy',
-        'applicableCountry': r.applicableCountry,
-        'returnPolicyCategory': r.policyCategory,
-        'merchantReturnDays': r.windowDays,
-        'returnMethod': r.returnMethod,
-        'returnFees': r.returnFees
-      }
+      'hasMerchantReturnPolicy': buildReturnPolicyJsonLd()
     }
   };
 
@@ -158,6 +167,13 @@ export function buildProductJsonLd(options = {}) {
 
 /**
  * Generate canonical Schema.org Organization JSON-LD object.
+ *
+ * One entity, one @id, identical on / and /odorstrike. It used to be two
+ * different blocks sharing "#organization" on the PDP (an Organization and an
+ * OnlineStore with a different description and phone format), which hands
+ * Google two conflicting versions of the same business. OnlineStore is the
+ * Organization subtype Google recommends for merchants; the store-wide return
+ * policy lives on it.
  */
 export function buildOrganizationJsonLd() {
   const cfg = getProductConfig();
@@ -165,10 +181,11 @@ export function buildOrganizationJsonLd() {
 
   return {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
-    '@id': `${b.website}/#organization`,
+    '@type': 'OnlineStore',
+    '@id': ORG_ID,
     'name': b.name,
     'alternateName': b.alternateNames,
+    'legalName': b.legalName,
     'url': b.website,
     'logo': {
       '@type': 'ImageObject',
@@ -177,6 +194,8 @@ export function buildOrganizationJsonLd() {
       'height': 180
     },
     'image': b.image,
+    'email': b.supportEmail,
+    'telephone': b.supportPhoneRaw,
     'foundingDate': '2026',
     'foundingLocation': {
       '@type': 'Place',
@@ -186,8 +205,7 @@ export function buildOrganizationJsonLd() {
       '@type': 'Person',
       'name': b.founder,
       'jobTitle': b.jobTitle,
-      'url': `${b.website}/about`,
-      'worksFor': b.name
+      'url': `${b.website}/about`
     },
     'description': b.description,
     'slogan': b.slogan,
@@ -195,29 +213,51 @@ export function buildOrganizationJsonLd() {
       'fabric odor',
       'sweat smell in clothes',
       'fabric odor neutralizer',
-      "men's grooming",
-      'fabric care',
+      'cyclodextrin',
+      'zinc pca',
       'shirt collar odor',
       'polyester odor'
     ],
     'address': {
       '@type': 'PostalAddress',
+      'streetAddress': 'Sanathnagar, Erragadda',
       'addressLocality': b.addressLocality,
       'addressRegion': b.addressRegion,
       'postalCode': b.postalCode,
       'addressCountry': b.countryCode
     },
+    'areaServed': { '@type': 'Country', 'name': b.country },
     'contactPoint': [
       {
         '@type': 'ContactPoint',
-        'telephone': b.supportPhone,
+        'telephone': b.supportPhoneRaw,
         'contactType': 'customer service',
         'email': b.supportEmail,
         'areaServed': b.countryCode,
         'availableLanguage': ['English', 'Hindi', 'Telugu']
       }
     ],
+    'hasMerchantReturnPolicy': buildReturnPolicyJsonLd(),
     'sameAs': b.sameAs
+  };
+}
+
+/**
+ * WebSite entity. `alternateName` feeds Google's site-name system: people
+ * search "smell off" (317 impressions in GSC, 4.7% CTR vs 60% for
+ * "smelloff"), so the spaced spelling is declared as ours.
+ */
+export function buildWebSiteJsonLd() {
+  const b = getProductConfig().brand;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${b.website}/#website`,
+    'name': b.name,
+    'alternateName': ['Smell Off', 'smelloff.in'],
+    'url': `${b.website}/`,
+    'inLanguage': 'en-IN',
+    'publisher': { '@id': ORG_ID }
   };
 }
 
@@ -288,8 +328,8 @@ export function buildProductsCatalogFeed() {
         mpn: p.mpn,
         title: p.title,
         description: p.description,
-        url: `${b.website}/`,
-        image_url: p.imageUrl,
+        url: p.url,
+        image_url: p.images[0],
         brand: b.name,
         price: p.price,
         currency: p.currency,
@@ -323,6 +363,8 @@ export default {
   CLAIMS,
   buildProductJsonLd,
   buildOrganizationJsonLd,
+  buildWebSiteJsonLd,
+  buildReturnPolicyJsonLd,
   calculateOrderTotal,
   buildProductsCatalogFeed
 };

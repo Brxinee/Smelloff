@@ -973,6 +973,46 @@
       "statusCode": 301
     },
     {
+      "source": "/blog/does-vinegar-baking-soda-or-fabric-softener-remove-odor",
+      "destination": "/blog/vinegar-baking-soda-fabric-softener",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/keep-clothes-fresh-while-suitcases",
+      "destination": "/blog/keep-clothes-fresh-while-travelling",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/which-fabric-holds-odor-most",
+      "destination": "/blog/which-fabrics-hold-odor-most",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/which-fabrics-hold-most-odor",
+      "destination": "/blog/which-fabrics-hold-odor-most",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/which-fabrics-hold-most-cotton-vs-polyester-vs-wool",
+      "destination": "/blog/which-fabrics-hold-odor-most",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/why-clothes-smell-in-wardrobe-even-clean",
+      "destination": "/blog/why-clothes-smell-in-wardrobe-even-when-clean",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/why-collar-and-armpits-smell-after-washing",
+      "destination": "/blog/why-shirt-zones-smell-after-washing",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/why-traffic-fumes-cling-to-cloth",
+      "destination": "/blog/why-traffic-fumes-cling-to-clothes",
+      "statusCode": 301
+    },
+    {
       "source": "/(.*)\\.html",
       "destination": "/$1",
       "statusCode": 301
@@ -1157,6 +1197,19 @@
         {
           "key": "X-Robots-Tag",
           "value": "index, follow"
+        }
+      ]
+    },
+    {
+      "source": "/merchant-feed.xml",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
         }
       ]
     },
