@@ -99,6 +99,17 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   then the pages, then WhatsApp. **Things sticky under the header use those
   heights:** blog topic bar `top:72/84px`, PDP gallery `top:100px`, blog TOC
   `top:104px` + `scroll-margin-top:104px`. Change them together.
+- **Nav bar v3 (2026-10-10, NN/g hamburger research):** the burger reads
+  "Menu" (icon-only menus are found and used less); the logo stays centred
+  via `grid-template-columns:1fr auto 1fr`. Desktop cart reads "Cart" with
+  the count inline. The phone menu is now a **full-height layer** under the
+  bar (`position:absolute; top:100%` of the sticky header; chrome.js sets
+  `--sf-menu-h` to the space left below it): product card, five rows with an
+  icon + one-line hint, a WhatsApp card, perks. `html.sf-menu-open` hides the
+  consent bar and the buy strip. **Don't lock scroll with
+  `html{overflow:hidden}`** — with `body{overflow-x:hidden}` it makes body
+  the scroll container and the sticky bar jumps off screen; the layer uses
+  `overscroll-behavior:contain` instead.
 - **Buy strip (`.mobile-bar`, homepage + PDP)** is styled once in
   `chrome.css` §1b: a floating card 10px off the edges (Baymard: space around
   a sticky buy button, not full width) with thumb, name + price, "Free

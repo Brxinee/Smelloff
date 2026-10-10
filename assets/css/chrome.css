@@ -101,11 +101,12 @@
   transition:box-shadow .25s var(--ease),border-color .25s var(--ease);
 }
 .sf-hdr.is-scrolled{border-bottom-color:var(--rule);box-shadow:0 8px 24px -12px rgba(0,0,0,.8)}
-.sf-hdr__row{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;min-height:72px}
+.sf-hdr__row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;min-height:72px}
 .sf-hdr__logo{display:flex;align-items:center;justify-content:center;min-height:44px}
 .sf-hdr__logo img{height:26px;width:auto;display:block}
 .sf-hdr__nav{display:none}
-.sf-hdr__right{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.sf-hdr__right{display:flex;align-items:center;justify-content:flex-end;gap:6px;justify-self:end}
+.sf-cart__label{display:none}
 
 .sf-cart{
   position:relative;display:inline-flex;align-items:center;justify-content:center;
@@ -144,29 +145,43 @@
 .sf-nav a[aria-current="page"]::after{transform:scaleX(1);opacity:1}
 
 
+/* Burger carries a visible "Menu" label: NN/g's hamburger studies found an
+   icon-only menu is found and used less; the word fixes most of that. */
 .sf-burger{
-  display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:5px;width:44px;height:44px;margin-left:-10px;background:none;padding:0;
-  border:0;color:var(--text);cursor:pointer;
+  justify-self:start;display:inline-flex;align-items:center;gap:8px;
+  min-height:44px;margin-left:-8px;padding:0 8px;background:none;border:0;border-radius:var(--sq-sm,8px);
+  color:var(--text);cursor:pointer;font-family:var(--body);font-size:14px;font-weight:600;letter-spacing:.01em;
 }
-.sf-burger span{
-  display:block;width:22px;height:2px;border-radius:100px;background:currentColor;
+.sf-burger__bars{display:flex;flex-direction:column;gap:5px}
+.sf-burger__bars span{
+  display:block;width:20px;height:2px;border-radius:100px;background:currentColor;
   transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease;
 }
-.sf-burger:hover{color:var(--acid)}
-.sf-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.sf-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
-.sf-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.sf-burger:hover,.sf-burger[aria-expanded="true"]{color:var(--acid)}
+.sf-burger[aria-expanded="true"] .sf-burger__bars span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.sf-burger[aria-expanded="true"] .sf-burger__bars span:nth-child(2){opacity:0}
+.sf-burger[aria-expanded="true"] .sf-burger__bars span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
-/* Phone menu: product first, then the pages, then a human. */
+/* Phone menu: a full-height layer under the bar (it used to open inline and
+   push the page down, with the page still scrolling behind it and the
+   consent bar over it). Product first, then the pages with a one-line hint
+   each, then a human. chrome.js sets the height and html.sf-menu-open. */
 .sf-hdr__menu{
-  display:block;max-height:0;opacity:0;visibility:hidden;overflow:hidden;pointer-events:none;
-  transition:max-height .38s cubic-bezier(.16,1,.3,1),opacity .3s cubic-bezier(.16,1,.3,1),visibility .38s;
+  position:absolute;left:0;right:0;top:100%;height:var(--sf-menu-h,calc(100dvh - 106px));
+  overflow-y:auto;overscroll-behavior:contain;
+  padding:8px max(var(--gutter,20px),env(safe-area-inset-left)) calc(28px + env(safe-area-inset-bottom));
+  background:var(--ink);border-top:1px solid var(--rule-soft);
+  opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-8px);
+  transition:opacity .25s cubic-bezier(.16,1,.3,1),transform .3s cubic-bezier(.16,1,.3,1),visibility .3s;
 }
-.sf-hdr__menu.is-open{max-height:620px;opacity:1;visibility:visible;pointer-events:auto;padding:4px 0 18px}
+.sf-hdr__menu.is-open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+/* No overflow lock on html: it turns body (overflow-x:hidden) into the scroll
+   container and the sticky bar jumps out of view. The layer covers the page
+   and overscroll-behavior keeps its scrolling to itself. */
+html.sf-menu-open #smelloff-consent-bar,html.sf-menu-open .mobile-bar{display:none !important}
 .sf-menu__product{
   display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;
-  margin:6px 0 10px;padding:10px 12px 10px 10px;border:1px solid var(--rule);border-radius:var(--sq-lg,16px);
+  margin:8px 0 14px;padding:10px 12px 10px 10px;border:1px solid var(--rule);border-radius:var(--sq-lg,16px);
   background:var(--surface);color:var(--text);text-decoration:none;
 }
 .sf-menu__product img{width:52px;height:57px;object-fit:cover;border-radius:10px;background:#fff}
@@ -174,16 +189,29 @@
 .sf-menu__product small{display:block;margin-top:2px;font-size:13px;color:var(--muted)}
 .sf-menu__go{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:var(--sq-sm,8px);
   background:var(--acid);color:var(--on-acid);font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-.sf-hdr__menu ul{list-style:none;margin:0;padding:0}
-.sf-hdr__menu li a{
-  display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:0 4px;
-  border-bottom:1px solid var(--rule-soft);
-  font-family:var(--body);font-size:17px;font-weight:500;color:var(--text);text-decoration:none;
+.sf-menu__list{list-style:none;margin:0;padding:0}
+.sf-menu__list a{
+  display:grid;grid-template-columns:40px 1fr 18px;gap:14px;align-items:center;min-height:64px;padding:8px 2px;
+  border-bottom:1px solid var(--rule-soft);color:var(--text);text-decoration:none;
 }
-.sf-hdr__menu li a::after{content:"→";color:var(--muted);font-size:15px}
-.sf-hdr__menu li a:hover,.sf-hdr__menu li a[aria-current="page"]{color:var(--acid)}
-.sf-menu__help{display:flex;align-items:center;min-height:48px;margin-top:10px;font-size:14px;color:var(--text-2);text-decoration:none}
-.sf-menu__help:hover{color:var(--acid)}
+.sf-menu__list a > svg:first-child{
+  width:40px;height:40px;padding:10px;border-radius:12px;background:var(--surface);border:1px solid var(--rule-soft);
+  fill:none;stroke:var(--acid);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+.sf-menu__list a > svg:last-child{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sf-menu__list span{font-family:var(--body);font-size:17px;font-weight:600;line-height:1.25}
+.sf-menu__list small{display:block;margin-top:2px;font-size:13px;font-weight:400;color:var(--muted)}
+.sf-menu__list a:hover span,.sf-menu__list a[aria-current="page"] span{color:var(--acid)}
+.sf-menu__list a[aria-current="page"] > svg:first-child{border-color:var(--acid)}
+.sf-menu__help{
+  display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:center;margin-top:18px;padding:14px 16px;
+  border:1px solid var(--rule);border-radius:var(--sq-lg,16px);color:var(--text);text-decoration:none;
+}
+.sf-menu__help svg{width:24px;height:24px;fill:none;stroke:var(--acid);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sf-menu__help b{display:block;font-size:15px;font-weight:600}
+.sf-menu__help small{display:block;margin-top:2px;font-size:13px;color:var(--muted)}
+.sf-menu__help:hover{border-color:var(--acid)}
+.sf-menu__perks{margin:16px 0 0;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 
 @media(min-width:900px){
   .sf-hdr__row{grid-template-columns:auto 1fr auto;gap:24px;min-height:84px}
@@ -195,13 +223,15 @@
   .sf-nav{gap:6px}
   .sf-nav a{font-size:15.5px;padding:0 16px}
   .sf-nav a::after{left:16px;right:16px;bottom:6px}
-  .sf-cart{width:48px;height:48px}
-  .sf-cart svg{width:26px;height:26px}
+  .sf-cart{width:auto;height:48px;gap:10px;padding:0 14px;border-radius:var(--sq-pill,100px)}
+  .sf-cart svg{width:24px;height:24px}
+  .sf-cart__label{display:inline;font-family:var(--body);font-size:15px;font-weight:500}
+  .sf-cart__count{position:static;box-shadow:none}
 }
 @media(max-width:359px){.sf-hdr__logo img{height:22px}}
 @media(prefers-reduced-motion:reduce){
   .sf-cart:hover svg{animation:none}
-  .sf-burger span,.sf-nav a::after{transition:none}
+  .sf-burger__bars span,.sf-nav a::after{transition:none}
   .sf-hdr__menu{transition:none !important}
 }
 

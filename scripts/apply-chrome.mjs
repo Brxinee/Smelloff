@@ -73,14 +73,24 @@ const CART_ICON = `<svg viewBox="0 0 576 512" fill="currentColor" aria-hidden="t
 
 const CART = {
   link: `<a class="sf-cart" href="/odorstrike?cart=open" aria-label="Cart — view what you've added">
-          ${CART_ICON}
+          ${CART_ICON}<span class="sf-cart__label" aria-hidden="true">Cart</span>
           <span class="sf-cart__count" id="sfCartCount" hidden>0</span>
         </a>`,
   drawer: `<button class="sf-cart" type="button" id="cartBtn" onclick="openCartDrawer()" aria-label="Open cart">
-          ${CART_ICON}
+          ${CART_ICON}<span class="sf-cart__label" aria-hidden="true">Cart</span>
           <span class="sf-cart__count" id="cartCount" data-empty="1">0</span>
         </button>`,
 };
+
+const IC = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+const ICON_WA = IC('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>');
+const ICON_MAIL = IC('<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>');
+const ICON_BOX = IC('<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/>');
+const ICON_BOOK = IC('<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>');
+const ICON_STAR = IC('<path d="M11.5 2.3a.5.5 0 0 1 1 0l2.3 4.7a2.1 2.1 0 0 0 1.6 1.2l5.2.7a.5.5 0 0 1 .3.9l-3.8 3.7a2.1 2.1 0 0 0-.6 1.9l.9 5.1a.5.5 0 0 1-.8.6l-4.6-2.4a2.1 2.1 0 0 0-2 0L6.4 21a.5.5 0 0 1-.8-.6l.9-5.1a2.1 2.1 0 0 0-.6-1.9L2.2 9.8a.5.5 0 0 1 .3-.9l5.1-.7a2.1 2.1 0 0 0 1.6-1.2z"/>');
+const ICON_HELP = IC('<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>');
+const ICON_TRUCK = IC('<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>');
+const ICON_CHEV = IC('<path d="m9 18 6-6-6-6"/>');
 
 /* The skip link is part of the header block so all 24 pages get it from one
    place. Before this it existed on exactly two — index.html and
@@ -110,8 +120,8 @@ ${ANNOUNCE}
 <header class="sf-hdr">
   <div class="sf-wrap">
     <div class="sf-hdr__row">
-      <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
-        <span></span><span></span><span></span>
+      <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu">
+        <span class="sf-burger__bars" aria-hidden="true"><span></span><span></span><span></span></span><span class="sf-burger__label">Menu</span>
       </button>
       <a href="/" class="sf-hdr__logo" aria-label="Smelloff home">
         <img src="/assets/optimized/logo-smelloff-white-160.webp" alt="SMELLOFF" width="1200" height="261" decoding="async">
@@ -129,21 +139,22 @@ ${ANNOUNCE}
         ${CART[cart]}
       </div>
     </div>
-    <div class="sf-hdr__menu" id="sfMenu">
+    <nav class="sf-hdr__menu" id="sfMenu" aria-label="Menu">
       <a class="sf-menu__product" href="/odorstrike">
         <img src="/assets/pdp-01-hero@640.webp" alt="" width="640" height="704" loading="lazy" decoding="async">
         <span><b>ODORSTRIKE · 50ml</b><small>₹${PRODUCT_CONFIG.product.price} · free shipping on prepaid</small></span>
         <span class="sf-menu__go">Shop</span>
       </a>
-      <ul>
-        <li><a href="/blog">Guides</a></li>
-        <li><a href="/reviews">Reviews</a></li>
-        <li><a href="/faq">FAQ</a></li>
-        <li><a href="/track-order">Track order</a></li>
-        <li><a href="/contact">Contact</a></li>
+      <ul class="sf-menu__list">
+        <li><a href="/blog">${ICON_BOOK}<span>Guides<small>Fabric odor, explained</small></span>${ICON_CHEV}</a></li>
+        <li><a href="/reviews">${ICON_STAR}<span>Reviews<small>What testers said</small></span>${ICON_CHEV}</a></li>
+        <li><a href="/faq">${ICON_HELP}<span>FAQ<small>Use, safety, COD, returns</small></span>${ICON_CHEV}</a></li>
+        <li><a href="/track-order">${ICON_TRUCK}<span>Track order<small>With your order ID</small></span>${ICON_CHEV}</a></li>
+        <li><a href="/contact">${ICON_MAIL}<span>Contact<small>Write to us</small></span>${ICON_CHEV}</a></li>
       </ul>
-      <a class="sf-menu__help" href="https://wa.me/919392974031" target="_blank" rel="noopener">Questions? WhatsApp +91 93929 74031</a>
-    </div>
+      <a class="sf-menu__help" href="https://wa.me/919392974031" target="_blank" rel="noopener">${ICON_WA}<span><b>Questions? Chat on WhatsApp</b><small>+91 93929 74031</small></span></a>
+      <p class="sf-menu__perks">COD · 7-day returns · Ships from Hyderabad</p>
+    </nav>
   </div>
 </header>
 <!-- /SF-CHROME:HEADER -->`;
@@ -171,10 +182,6 @@ const SOCIALS = [
    chrome.js), the three link columns (kept side by side on phones — stacked
    they ran ~1200px), socials and the payment methods, and a legal line in
    sentence case at reading size. */
-const IC = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
-const ICON_WA = IC('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>');
-const ICON_MAIL = IC('<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>');
-const ICON_BOX = IC('<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/>');
 
 const FOOTER = `<!-- SF-CHROME:FOOTER — generated by scripts/apply-chrome.mjs. Edit there, not here. -->
 <footer class="sf-ftr">
@@ -392,7 +399,7 @@ function ensureAssets(html) {
   const jsTag = `<script src="/assets/js/chrome.js?v=${hashOf('assets/js/chrome.js')}" defer></script>`;
   const softTag = `<link rel="preload" href="${softHref}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${softHref}"></noscript>`;
   const chromeTag = `<link rel="preload" href="${chromeHref}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${chromeHref}"></noscript>`;
-  const criticalChrome = `<style id="sf-critical-chrome">.sf-wrap{width:100%;max-width:1160px;margin-inline:auto;padding-inline:20px}.sf-announce{background:#B8FF57;color:#080808}.sf-announce__row{display:flex;align-items:center;justify-content:center;min-height:34px}.sf-announce p{display:flex;align-items:center;gap:7px;margin:0;font:12.5px/1.3 system-ui,sans-serif;white-space:nowrap;overflow:hidden}.sf-announce svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}.sf-hdr{position:sticky;top:0;z-index:70;background:#080808;border-bottom:1px solid rgba(244,241,234,.08)}.sf-hdr__row{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;min-height:72px}.sf-hdr__logo{display:flex;align-items:center;justify-content:center;min-height:44px}.sf-hdr__logo img{height:26px;width:auto;display:block}.sf-hdr__nav{display:none}.sf-hdr__right{display:flex;align-items:center;gap:6px}.sf-cart{position:relative;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;background:transparent;color:#F4F1EA;text-decoration:none;border:0;cursor:pointer}.sf-cart svg{width:22px;height:22px;display:block}.sf-cart__count{position:absolute;top:3px;right:0;background:#B8FF57;color:#080808;min-width:18px;height:18px;padding:0 5px;border-radius:100px;display:inline-flex;align-items:center;justify-content:center;font:700 11px/1 system-ui,sans-serif}.sf-cart__count[hidden],.sf-cart__count[data-empty="1"]{display:none}.sf-nav{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}.sf-nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;font:500 14.5px/1 system-ui,sans-serif;color:#C9C5BD;text-decoration:none}.sf-burger{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:44px;height:44px;margin-left:-10px;background:none;padding:0;border:0;color:#F4F1EA;cursor:pointer}.sf-burger span{display:block;width:22px;height:2px;border-radius:100px;background:currentColor}.sf-hdr__menu{display:block;max-height:0;opacity:0;visibility:hidden;overflow:hidden;pointer-events:none}.sf-skip{position:absolute;left:-9999px;top:0;z-index:200;background:#B8FF57;color:#080808;padding:12px 20px;font-weight:700;text-decoration:none}.sf-skip:focus{left:0}@media(max-width:379px){.sf-announce__more{display:none}}@media(min-width:900px){.sf-hdr__row{grid-template-columns:auto 1fr auto;min-height:84px}.sf-hdr__nav{display:block;justify-self:center}.sf-hdr__logo{justify-content:flex-start}.sf-burger{display:none}.sf-hdr__menu{display:none!important}.sf-hdr__logo img{height:32px}}</style>`;
+  const criticalChrome = `<style id="sf-critical-chrome">.sf-wrap{width:100%;max-width:1160px;margin-inline:auto;padding-inline:20px}.sf-announce{background:#B8FF57;color:#080808}.sf-announce__row{display:flex;align-items:center;justify-content:center;min-height:34px}.sf-announce p{display:flex;align-items:center;gap:7px;margin:0;font:12.5px/1.3 system-ui,sans-serif;white-space:nowrap;overflow:hidden}.sf-announce svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}.sf-hdr{position:sticky;top:0;z-index:70;background:#080808;border-bottom:1px solid rgba(244,241,234,.08)}.sf-hdr__row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;min-height:72px}.sf-hdr__right{justify-self:end}.sf-cart__label{display:none}.sf-hdr__logo{display:flex;align-items:center;justify-content:center;min-height:44px}.sf-hdr__logo img{height:26px;width:auto;display:block}.sf-hdr__nav{display:none}.sf-hdr__right{display:flex;align-items:center;gap:6px}.sf-cart{position:relative;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;background:transparent;color:#F4F1EA;text-decoration:none;border:0;cursor:pointer}.sf-cart svg{width:22px;height:22px;display:block}.sf-cart__count{position:absolute;top:3px;right:0;background:#B8FF57;color:#080808;min-width:18px;height:18px;padding:0 5px;border-radius:100px;display:inline-flex;align-items:center;justify-content:center;font:700 11px/1 system-ui,sans-serif}.sf-cart__count[hidden],.sf-cart__count[data-empty="1"]{display:none}.sf-nav{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}.sf-nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;font:500 14.5px/1 system-ui,sans-serif;color:#C9C5BD;text-decoration:none}.sf-burger{justify-self:start;display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-left:-8px;padding:0 8px;background:none;border:0;color:#F4F1EA;font:600 14px/1 system-ui,sans-serif;cursor:pointer}.sf-burger__bars{display:flex;flex-direction:column;gap:5px}.sf-burger__bars span{display:block;width:20px;height:2px;border-radius:100px;background:currentColor}.sf-hdr__menu{display:block;max-height:0;opacity:0;visibility:hidden;overflow:hidden;pointer-events:none}.sf-skip{position:absolute;left:-9999px;top:0;z-index:200;background:#B8FF57;color:#080808;padding:12px 20px;font-weight:700;text-decoration:none}.sf-skip:focus{left:0}@media(max-width:379px){.sf-announce__more{display:none}}@media(min-width:900px){.sf-hdr__row{grid-template-columns:auto 1fr auto;min-height:84px}.sf-hdr__nav{display:block;justify-self:center}.sf-hdr__logo{justify-content:flex-start}.sf-burger{display:none}.sf-hdr__menu{display:none!important}.sf-hdr__logo img{height:32px}}</style>`;
 
   // Drop existing references (any attribute order / query string) and the
   // banner comment, so a re-run relocates them instead of stacking copies.
