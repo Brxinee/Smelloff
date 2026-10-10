@@ -116,7 +116,7 @@
   #smelloff-consent-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#111;border-top:1px solid var(--rule);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));font-family:'Inter Tight',sans-serif}
   #smelloff-consent-bar .cb-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
   #smelloff-consent-bar p{flex:1;font-size:13px;color:var(--muted);line-height:1.5;margin:0;min-width:200px}
-  #smelloff-consent-bar p a{color:var(--acid);text-decoration:none}
+  #smelloff-consent-bar p a{color:var(--acid);text-decoration:underline;text-underline-offset:2px}
   #smelloff-consent-bar .cb-actions{display:flex;gap:10px;flex-shrink:0}
   #smelloff-consent-bar button{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 18px;border-radius:2px;cursor:pointer}
   #smelloff-consent-bar .cb-accept{background:var(--acid);color:var(--ink);border:none}
@@ -127,7 +127,7 @@
 <link rel="alternate" hreflang="x-default" href="https://smelloff.in/faq">
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=afea31a0">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=2457f85a">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=1e0f71a5">
 <script src="/assets/js/chrome.js?v=e5f40955" defer></script>
 </head>
 <body>
