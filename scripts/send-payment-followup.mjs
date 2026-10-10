@@ -19,8 +19,8 @@ import { dirname, resolve } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_PATH = resolve(__dirname, '..', 'emails', 'payment-followup-email.html');
 
-const FROM = 'ODORSTRIKE <orders@smelloff.in>';
-const REPLY_TO = 'smelloffsupport@gmail.com';
+const FROM = 'ODORSTRIKE <info@smelloff.in>';
+const REPLY_TO = 'info@smelloff.in';
 const SUBJECT = 'Action needed: complete your ODORSTRIKE order';
 
 /**
@@ -77,7 +77,7 @@ export async function sendPaymentFollowup(opts) {
     subject: SUBJECT,
     html,
     headers: {
-      'List-Unsubscribe': '<mailto:smelloffsupport@gmail.com?subject=unsubscribe>',
+      'List-Unsubscribe': '<mailto:info@smelloff.in?subject=unsubscribe>',
     },
   });
 

@@ -1,10 +1,10 @@
 import { Resend } from 'resend';
 
 export const EMAIL_PROVIDER = 'resend';
-export const DEFAULT_FROM = 'ODORSTRIKE <orders@smelloff.in>';
-export const DEFAULT_FROM_ADDRESS = 'orders@smelloff.in';
+export const DEFAULT_FROM = 'ODORSTRIKE <info@smelloff.in>';
+export const DEFAULT_FROM_ADDRESS = 'info@smelloff.in';
 export const DEFAULT_FROM_DOMAIN = 'smelloff.in';
-export const DEFAULT_REPLY_TO = 'smelloffsupport@gmail.com';
+export const DEFAULT_REPLY_TO = 'info@smelloff.in';
 export const REQUIRED_FROM_DOMAIN = 'smelloff.in';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -444,7 +444,7 @@ export async function sendTransactionalEmail({
       ok: false,
       provider: EMAIL_PROVIDER,
       errorCode: 'DOMAIN_MISMATCH',
-      errorMessage: 'Production sender must be orders@smelloff.in. resend.dev fallback is blocked.',
+      errorMessage: 'Production sender must be info@smelloff.in. resend.dev fallback is blocked.',
       httpStatus: 500,
       idempotencyKey: resolvedIdempotencyKey,
     };

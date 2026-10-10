@@ -109,7 +109,7 @@
         say('You\u2019re on the list.', 'ok');
       }).catch(function () {
         btn.disabled = false;
-        say('That didn\u2019t go through. Try again, or email smelloffsupport@gmail.com.', 'err');
+        say('That didn\u2019t go through. Try again, or email info@smelloff.in.', 'err');
       });
     });
   }
