@@ -72,8 +72,13 @@ function run() {
     // Sit them with the other social metadata: right after the Twitter card,
     // which is where a reader looks for anything share-related.
     const anchor = html.lastIndexOf('<meta name="twitter:image:alt"');
-    const at =
-      anchor !== -1 ? html.indexOf('>', anchor) + 2 : html.lastIndexOf('</head>');
+    // Just past that tag's '>' (and its newline, when it has one — on some
+    // posts the next tag shares the line, and a fixed +2 split it in half).
+    // No Twitter card: go above the shared CSS/JS block apply-chrome.mjs keeps
+    // last in <head>, so the two generators don't keep swapping places.
+    const shared = html.indexOf('<!-- Shared layers load LAST');
+    let at = anchor !== -1 ? html.indexOf('>', anchor) + 1 : shared !== -1 ? shared : html.lastIndexOf('</head>');
+    if (anchor !== -1 && html[at] === '\n') at++;
     html = html.slice(0, at) + block(t) + '\n' + html.slice(at);
 
     if (html !== before) {
