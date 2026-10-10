@@ -14,6 +14,7 @@ import webhookHandler from "../api/webhook.js";
 import shiprocketSyncHandler from "../api/shiprocket-sync.js";
 import magicCheckoutFinalizeHandler from "../api/magic-checkout-finalize.js";
 import magicCheckoutShippingInfoHandler from "../api/magic-checkout-shipping-info.js";
+import adminHandler from "../api/admin.js";
 
 const app = express();
 
@@ -25,8 +26,20 @@ app.use(express.json({ limit: "1mb", verify: keepRawBody }));
 app.use(express.urlencoded({ extended: true, limit: "1mb", verify: keepRawBody }));
 app.use("/api", (_req, res, next) => { res.setHeader("X-Robots-Tag", "noindex, nofollow"); next(); });
 
+// Presence only — never values. Lets the owner see which Cloudflare secrets
+// are missing without logging in anywhere.
+const has = (...names) => names.every((n) => Boolean(process.env[n]));
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok" });
+  res.setHeader("Cache-Control", "no-store");
+  res.json({
+    status: "ok",
+    configured: {
+      database: has("SUPABASE_SERVICE_ROLE_KEY"),
+      email: has("RESEND_API_KEY"),
+      razorpay: has("RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET"),
+      admin: has("ADMIN_PASSWORD"),
+    },
+  });
 });
 
 app.all("/api/send-email", (req, res) => sendEmailHandler(req, res));
@@ -36,6 +49,7 @@ app.all("/api/meta-capi-drain", (req, res) => metaCapiDrainHandler(req, res));
 app.all("/api/create-order", (req, res) => createOrderHandler(req, res));
 app.all("/api/verify-payment", (req, res) => verifyPaymentHandler(req, res));
 app.all("/api/payment-status", (req, res) => paymentStatusHandler(req, res));
+app.all("/api/admin", (req, res) => adminHandler(req, res));
 app.all("/api/admin/verify-payment", (req, res) => adminVerifyPaymentHandler(req, res));
 app.all("/api/webhook", (req, res) => webhookHandler(req, res));
 app.all("/api/shiprocket-sync", (req, res) => shiprocketSyncHandler(req, res));
@@ -150,11 +164,25 @@ async function runScheduled(handler) {
   return res.statusCode;
 }
 
+// Supabase's free tier pauses a project after ~7 days without API traffic,
+// which silently stops orders being saved. One tiny read a day prevents it.
+async function keepDatabaseAwake() {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key) return;
+  const base = (process.env.SUPABASE_URL || "https://tnuqjydmoxczdjnsgpci.supabase.co").replace(/\/$/, "");
+  try {
+    await fetch(`${base}/rest/v1/orders?select=id&limit=1`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
+  } catch (error) {
+    console.error("[cron] database keep-alive failed:", error?.message || error);
+  }
+}
+
 export default {
   fetch: fetchHandler,
   async scheduled(controller) {
     const cron = controller?.cron || "";
     if (cron === "0 3 * * *") {
+      await keepDatabaseAwake();
       await runScheduled(metaCapiDrainHandler);
       return;
     }

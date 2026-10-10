@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#080808">
+<title>Smelloff Admin</title>
+<link rel="icon" href="/favicon-32.png">
+<style>
+:root{--ink:#080808;--surface:#111;--line:rgba(244,241,234,.12);--text:#F4F1EA;--muted:#9A958D;--acid:#B8FF57;--red:#ff6b6b;--amber:#ffc657;--blue:#7cc4ff;
+--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;background:var(--ink);color:var(--text);font:15px/1.45 var(--sans)}
+a{color:var(--acid)}button,input,select{font:inherit;color:inherit}
+.hidden{display:none!important}
+/* login */
+.login{min-height:100vh;display:grid;place-items:center;padding:24px}
+.login form{width:100%;max-width:340px;display:grid;gap:12px}
+.login h1{font-size:22px;margin:0 0 4px}.login p{color:var(--muted);margin:0 0 8px}
+input,select{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:16px;width:100%}
+input:focus,select:focus{outline:2px solid var(--acid);outline-offset:1px}
+.btn{background:var(--acid);color:var(--ink);border:0;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.err{color:var(--red);min-height:1.2em;font-size:14px}
+/* shell */
+header{position:sticky;top:0;z-index:5;background:var(--ink);border-bottom:1px solid var(--line)}
+.bar{max-width:1200px;margin:auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:800;letter-spacing:.06em}.brand span{color:var(--acid)}
+nav{display:flex;gap:4px;flex:1;overflow-x:auto}
+nav button{background:none;border:0;padding:9px 12px;border-radius:8px;color:var(--muted);cursor:pointer;white-space:nowrap}
+nav button[aria-current="page"]{background:var(--surface);color:var(--text)}
+nav .count{background:var(--acid);color:var(--ink);border-radius:99px;padding:0 6px;font-size:12px;margin-left:4px;font-weight:700}
+main{max-width:1200px;margin:auto;padding:16px}
+h2{font-size:18px;margin:8px 0 14px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpi .label{color:var(--muted);font:12px var(--mono);text-transform:uppercase;letter-spacing:.08em}
+.kpi .value{font-size:26px;font-weight:800;margin-top:4px}.kpi .sub{color:var(--muted);font-size:13px}
+.kpi.alert .value{color:var(--amber)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tools input{flex:1;min-width:180px}.tools select{width:auto}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font:12px var(--mono);text-transform:uppercase;letter-spacing:.06em}
+tbody tr{cursor:pointer}tbody tr:hover{background:rgba(255,255,255,.03)}
+.mono{font-family:var(--mono);font-size:13px}.muted{color:var(--muted)}.right{text-align:right}
+.pill{display:inline-block;border-radius:99px;padding:2px 9px;font:12px var(--mono);border:1px solid var(--line);white-space:nowrap}
+.s-placed,.s-confirmed{color:var(--acid);border-color:rgba(184,255,87,.4)}
+.s-upi_pending,.s-verification_pending,.s-packed{color:var(--amber);border-color:rgba(255,198,87,.4)}
+.s-dispatched,.s-out_for_delivery{color:var(--blue);border-color:rgba(124,196,255,.4)}
+.s-delivered{color:var(--muted)}.s-cancelled,.s-payment_not_verified{color:var(--red);border-color:rgba(255,107,107,.4)}
+.s-new{color:var(--acid)}.s-replied{color:var(--blue)}.s-closed{color:var(--muted)}
+.empty{color:var(--muted);padding:30px;text-align:center}
+.bars{display:grid;gap:6px}.bars div{display:grid;grid-template-columns:150px 1fr 40px;gap:8px;align-items:center;font-size:13px}
+.bars i{display:block;height:8px;background:var(--acid);border-radius:4px}
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(480px,100%);background:var(--ink);border-left:1px solid var(--line);z-index:11;overflow:auto;padding:18px}
+.drawer h3{margin:0 0 4px}.drawer dl{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;margin:14px 0}
+.drawer dt{color:var(--muted);font-size:13px}.drawer dd{margin:0;word-break:break-word}
+.drawer form{display:grid;gap:10px;margin-top:12px}.drawer label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.row{display:flex;gap:8px;justify-content:space-between;align-items:center}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--line);padding:10px 16px;border-radius:10px;z-index:20}
+@media(max-width:720px){.hide-sm{display:none}th,td{padding:9px 5px}}
+</style>
+</head>
+<body>
+
+<section class="login" id="login">
+  <form id="loginForm">
+    <h1>Smelloff <span style="color:var(--acid)">Admin</span></h1>
+    <p>Orders, customers and messages.</p>
+    <input id="password" type="password" autocomplete="current-password" placeholder="Password" required>
+    <button class="btn" type="submit">Sign in</button>
+    <div class="err" id="loginErr" role="alert"></div>
+  </form>
+</section>
+
+<div id="app" class="hidden">
+  <header><div class="bar">
+    <div class="brand">SMELLOFF <span>ADMIN</span></div>
+    <nav id="nav">
+      <button data-view="overview">Overview</button>
+      <button data-view="orders">Orders <span class="count hidden" id="openCount"></span></button>
+      <button data-view="customers">Customers</button>
+      <button data-view="messages">Messages <span class="count hidden" id="msgCount"></span></button>
+    </nav>
+    <button class="btn ghost" id="logout">Sign out</button>
+  </div></header>
+  <main id="view"></main>
+</div>
+
+<div id="drawerRoot"></div>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const inr = (paise) => '₹' + (Number(paise || 0) / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+const when = (iso) => iso ? new Date(iso).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+const label = (s) => String(s || '').replace(/_/g, ' ');
+const n = (count, word) => `${count} ${word}${count === 1 ? '' : 's'}`;
+const pill = (s) => `<span class="pill s-${esc(s)}">${esc(label(s))}</span>`;
+const STATUSES = ['placed','upi_pending','verification_pending','payment_not_verified','confirmed','packed','dispatched','out_for_delivery','delivered','cancelled'];
+const NEXT = { placed: 'confirmed', confirmed: 'packed', packed: 'dispatched', dispatched: 'out_for_delivery', out_for_delivery: 'delivered', verification_pending: 'confirmed', upi_pending: 'confirmed' };
+
+async function api(action, data = {}) {
+  const r = await fetch('/api/admin', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, ...data }) });
+  const json = await r.json().catch(() => ({ error: 'Bad response from server' }));
+  if (r.status === 401 && action !== 'login') { showLogin(); throw new Error('Session expired. Sign in again.'); }
+  if (!r.ok) throw new Error(json.error || `Error ${r.status}`);
+  return json;
+}
+function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.append(t); setTimeout(() => t.remove(), 2600); }
+function fail(e) { $('#view').innerHTML = `<div class="card empty">⚠️ ${esc(e.message)}</div>`; }
+
+function showLogin() { $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); $('#password').focus(); }
+function showApp() { $('#login').classList.add('hidden'); $('#app').classList.remove('hidden'); route(); }
+
+$('#loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); $('#loginErr').textContent = '';
+  const btn = e.submitter; btn.disabled = true;
+  try { await api('login', { password: $('#password').value }); $('#password').value = ''; showApp(); }
+  catch (err) { $('#loginErr').textContent = err.message; }
+  finally { btn.disabled = false; }
+});
+$('#logout').addEventListener('click', async () => { await api('logout').catch(() => {}); showLogin(); });
+$('#nav').addEventListener('click', (e) => { const b = e.target.closest('button[data-view]'); if (b) location.hash = b.dataset.view; });
+window.addEventListener('hashchange', route);
+
+function route() {
+  const view = (location.hash.slice(1) || 'overview').split('?')[0];
+  for (const b of document.querySelectorAll('#nav button')) b.dataset.view === view ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current');
+  ({ overview, orders, customers, messages }[view] || overview)();
+}
+
+/* ── overview ── */
+async function overview() {
+  $('#view').innerHTML = '<div class="empty">Loading…</div>';
+  try {
+    const { stats: s, latest } = await api('overview');
+    setCount('#openCount', s.needsAction);
+    const total = Object.values(s.byStatus).reduce((a, b) => a + b, 0) || 1;
+    $('#view').innerHTML = `
+      <h2>Overview</h2>
+      <div class="grid">
+        <div class="card kpi"><div class="label">Today</div><div class="value">${inr(s.today.revenue)}</div><div class="sub">${n(s.today.orders, 'order')}</div></div>
+        <div class="card kpi"><div class="label">Last 7 days</div><div class="value">${inr(s.week.revenue)}</div><div class="sub">${n(s.week.orders, 'order')}</div></div>
+        <div class="card kpi"><div class="label">Last 30 days</div><div class="value">${inr(s.month.revenue)}</div><div class="sub">${n(s.month.orders, 'order')} · AOV ${inr(s.month.aov)}</div></div>
+        <div class="card kpi ${s.needsAction ? 'alert' : ''}"><div class="label">To ship / confirm</div><div class="value">${s.needsAction}</div><div class="sub">open orders</div></div>
+        <div class="card kpi"><div class="label">Customers</div><div class="value">${s.customers}</div><div class="sub">${n(s.allTime.orders, 'order')} · ${inr(s.allTime.revenue)} all time</div></div>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+        <div class="card"><h2 style="margin-top:0">Latest orders</h2>${orderTable(latest, true)}</div>
+        <div class="card"><h2 style="margin-top:0">Orders by status</h2><div class="bars">${
+          Object.entries(s.byStatus).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<div><span>${pill(k)}</span><i style="width:${Math.max(4, v / total * 100)}%"></i><span class="right mono">${v}</span></div>`).join('') || '<div class="empty">No orders yet</div>'
+        }</div></div>
+      </div>`;
+    bindRows(latest);
+  } catch (e) { fail(e); }
+}
+
+/* ── orders ── */
+let orderCache = [];
+async function orders() {
+  const params = new URLSearchParams(location.hash.split('?')[1] || '');
+  $('#view').innerHTML = `
+    <h2>Orders</h2>
+    <div class="tools">
+      <input id="q" type="search" placeholder="Search order ID, phone or email" value="${esc(params.get('q') || '')}">
+      <select id="status"><option value="">All statuses</option>${STATUSES.map((s) => `<option value="${s}" ${params.get('status') === s ? 'selected' : ''}>${label(s)}</option>`).join('')}</select>
+      <button class="btn ghost" id="csv">Export CSV</button>
+    </div>
+    <div class="card" id="list"><div class="empty">Loading…</div></div>`;
+  let timer;
+  const load = async () => {
+    try {
+      const { orders } = await api('orders', { q: $('#q').value, status: $('#status').value, limit: 500 });
+      orderCache = orders;
+      $('#list').innerHTML = orderTable(orders);
+      bindRows(orders);
+    } catch (e) { $('#list').innerHTML = `<div class="empty">⚠️ ${esc(e.message)}</div>`; }
+  };
+  $('#q').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(load, 300); });
+  $('#status').addEventListener('change', load);
+  $('#csv').addEventListener('click', () => downloadCsv(orderCache));
+  load();
+}
+
+function addr(o) { const a = o.address || {}; return a; }
+function custName(o) { const a = addr(o); return a.name || a.full_name || [a.first_name, a.last_name].filter(Boolean).join(' ') || ''; }
+function qty(o) { return (o.items || []).reduce((s, i) => s + Number(i.quantity || i.qty || 1), 0); }
+
+function orderTable(list, compact = false) {
+  if (!list.length) return '<div class="empty">No orders found.</div>';
+  return `<table><thead><tr><th>Order</th><th>Customer</th>${compact ? '' : '<th class="hide-sm">City</th><th class="hide-sm">Pay</th>'}<th class="right">Amount</th><th>Status</th></tr></thead><tbody>${
+    list.map((o, i) => `<tr data-i="${i}">
+      <td><div class="mono">${esc(o.order_code)}</div><div class="muted" style="font-size:12px">${when(o.created_at)}</div></td>
+      <td>${esc(custName(o) || '—')}<div class="muted mono" style="font-size:12px">${esc(o.customer_phone)}</div></td>
+      ${compact ? '' : `<td class="hide-sm">${esc(addr(o).city || '')}</td><td class="hide-sm mono">${esc(String(o.payment_method || '').toUpperCase())}</td>`}
+      <td class="right mono">${inr(o.amount)}</td><td>${pill(o.status)}</td></tr>`).join('')
+  }</tbody></table>`;
+}
+function bindRows(list) { for (const tr of document.querySelectorAll('tbody tr[data-i]')) tr.onclick = () => openOrder(list[tr.dataset.i]); }
+
+function openOrder(o) {
+  const a = addr(o);
+  const items = (o.items || []).map((i) => `${esc(i.name || i.title || i.id || 'Item')} × ${esc(i.quantity || i.qty || 1)}`).join('<br>') || '—';
+  const full = [a.line || a.line1 || a.address || a.address1, a.line2 || a.address2, a.landmark, a.city, a.state, a.pincode || a.pin || a.zip].filter(Boolean).map(esc).join(', ');
+  const next = NEXT[o.status];
+  drawer(`
+    <div class="row"><h3 class="mono">${esc(o.order_code)}</h3><button class="btn ghost" data-close>Close</button></div>
+    <div>${pill(o.status)} <span class="muted">${when(o.created_at)}</span></div>
+    <dl>
+      <dt>Customer</dt><dd>${esc(custName(o) || '—')}</dd>
+      <dt>Phone</dt><dd><a href="tel:${esc(o.customer_phone)}">${esc(o.customer_phone)}</a> · <a href="https://wa.me/${esc(String(o.customer_phone || '').replace(/\D/g, '').replace(/^(\d{10})$/, '91$1'))}" target="_blank" rel="noopener">WhatsApp</a></dd>
+      <dt>Email</dt><dd>${o.customer_email ? `<a href="mailto:${esc(o.customer_email)}">${esc(o.customer_email)}</a>` : '—'}</dd>
+      <dt>Address</dt><dd>${full || '—'}</dd>
+      ${a.customer_note ? `<dt>Note</dt><dd>${esc(a.customer_note)}</dd>` : ''}
+      <dt>Items</dt><dd>${items} <span class="muted">(${qty(o)} total)</span></dd>
+      <dt>Amount</dt><dd>${inr(o.amount)}${o.cod_fee ? ` <span class="muted">incl. COD fee ${inr(o.cod_fee)}</span>` : ''}</dd>
+      <dt>Payment</dt><dd>${esc(String(o.payment_method || '').toUpperCase())}${o.upi_ref ? ` · UTR <span class="mono">${esc(o.upi_ref)}</span>` : ''}</dd>
+      ${!o.tracking_id && o.shiprocket_awb ? `<dt>Shiprocket</dt><dd>${esc(o.shiprocket_courier || '')} AWB <span class="mono">${esc(o.shiprocket_awb)}</span>${o.shiprocket_status ? ` · ${esc(o.shiprocket_status)}` : ''}</dd>` : ''}
+      ${o.tracking_id ? `<dt>Tracking</dt><dd>${esc(o.courier || '')} <span class="mono">${esc(o.tracking_id)}</span>${o.tracking_url ? ` · <a href="${esc(o.tracking_url)}" target="_blank" rel="noopener">track</a>` : ''}</dd>` : ''}
+    </dl>
+    ${next ? `<button class="btn" id="advance" style="width:100%">Mark as ${esc(label(next))}</button>` : ''}
+    <form id="orderForm">
+      <label>Status<select name="status">${STATUSES.map((s) => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${label(s)}</option>`).join('')}</select></label>
+      <label>Courier<input name="courier" value="${esc(o.courier || '')}" placeholder="e.g. Delhivery"></label>
+      <label>Tracking number<input name="tracking_id" value="${esc(o.tracking_id || '')}"></label>
+      <label>Tracking link<input name="tracking_url" value="${esc(o.tracking_url || '')}" placeholder="https://"></label>
+      <button class="btn ghost" type="submit">Save changes</button>
+    </form>
+    ${(o.status_history || []).length ? `<h3 style="margin-top:20px;font-size:15px">History</h3><dl>${o.status_history.map((h) => `<dt>${when(h.at)}</dt><dd>${pill(h.status)}</dd>`).join('')}</dl>` : ''}
+  `);
+  const save = async (patch) => {
+    try { const { order } = await api('updateOrder', { id: o.id, ...patch }); Object.assign(o, order); toast('Saved'); closeDrawer(); route(); }
+    catch (e) { toast('⚠️ ' + e.message); }
+  };
+  $('#advance')?.addEventListener('click', () => save({ status: next }));
+  $('#orderForm').addEventListener('submit', (e) => { e.preventDefault(); save(Object.fromEntries(new FormData(e.target))); });
+}
+
+function downloadCsv(list) {
+  const cols = ['order_code','created_at','status','payment_method','amount_inr','cod_fee_inr','name','phone','email','city','state','pincode','address','items','courier','tracking_id'];
+  const rows = list.map((o) => { const a = addr(o); return [o.order_code, o.created_at, o.status, o.payment_method, o.amount / 100, (o.cod_fee || 0) / 100, custName(o), o.customer_phone, o.customer_email, a.city, a.state, a.pincode || a.pin, [a.line || a.line1 || a.address || a.address1, a.line2 || a.address2].filter(Boolean).join(' '), (o.items || []).map((i) => `${i.name || i.id} x${i.quantity || i.qty || 1}`).join('; '), o.courier, o.tracking_id]; });
+  const csv = [cols, ...rows].map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+  const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })), download: `smelloff-orders-${new Date().toISOString().slice(0, 10)}.csv` });
+  link.click();
+}
+
+/* ── customers ── */
+async function customers() {
+  $('#view').innerHTML = `<h2>Customers</h2><div class="tools"><input id="q" type="search" placeholder="Search name, phone, email or city"><button class="btn ghost" id="csv">Export CSV</button></div><div class="card" id="list"><div class="empty">Loading…</div></div>`;
+  let timer, cache = [];
+  const load = async () => {
+    try {
+      const { customers } = await api('customers', { q: $('#q').value });
+      cache = customers;
+      $('#list').innerHTML = customers.length ? `<table><thead><tr><th>Customer</th><th class="hide-sm">Email</th><th class="hide-sm">City</th><th class="right">Orders</th><th class="right">Spent</th><th class="hide-sm">Last order</th></tr></thead><tbody>${
+        customers.map((c) => `<tr data-q="${esc(c.phone || c.email)}"><td>${esc(c.name || '—')}<div class="muted mono" style="font-size:12px">${esc(c.phone)}</div></td><td class="hide-sm">${esc(c.email)}</td><td class="hide-sm">${esc(c.city)}</td><td class="right mono">${c.orders}</td><td class="right mono">${inr(c.spent)}</td><td class="hide-sm muted">${when(c.last)}</td></tr>`).join('')
+      }</tbody></table>` : '<div class="empty">No customers yet.</div>';
+      for (const tr of document.querySelectorAll('tbody tr[data-q]')) tr.onclick = () => { location.hash = 'orders?q=' + encodeURIComponent(tr.dataset.q); };
+    } catch (e) { $('#list').innerHTML = `<div class="empty">⚠️ ${esc(e.message)}</div>`; }
+  };
+  $('#q').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(load, 300); });
+  $('#csv').addEventListener('click', () => {
+    const csv = [['name','phone','email','city','orders','spent_inr','first_order','last_order'], ...cache.map((c) => [c.name, c.phone, c.email, c.city, c.orders, c.spent / 100, c.first, c.last])].map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+    Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })), download: 'smelloff-customers.csv' }).click();
+  });
+  load();
+}
+
+/* ── messages ── */
+async function messages() {
+  $('#view').innerHTML = '<h2>Messages</h2><div id="list"><div class="empty">Loading…</div></div>';
+  try {
+    const { messages: list } = await api('messages');
+    setCount('#msgCount', list.filter((m) => m.status === 'new').length);
+    $('#list').innerHTML = list.length ? list.map((m, i) => `
+      <div class="card" style="margin-bottom:10px">
+        <div class="row"><strong>${esc(m.name || 'Anonymous')}</strong>${pill(m.status || 'new')}</div>
+        <div class="muted" style="font-size:13px">${when(m.created_at)} · ${m.email ? `<a href="mailto:${esc(m.email)}?subject=Re:%20your%20message%20to%20Smelloff">${esc(m.email)}</a>` : ''} ${m.phone ? '· ' + esc(m.phone) : ''}</div>
+        ${m.topic ? `<div style="margin-top:6px"><strong>${esc(m.topic)}</strong></div>` : ''}
+        <p style="white-space:pre-wrap;margin:8px 0">${esc(m.message || m.body || '')}</p>
+        <div class="row" style="justify-content:flex-start">${['new','replied','closed'].filter((s) => s !== m.status).map((s) => `<button class="btn ghost" data-i="${i}" data-s="${s}">Mark ${s}</button>`).join('')}</div>
+      </div>`).join('') : '<div class="card empty">No messages yet.</div>';
+    for (const b of document.querySelectorAll('button[data-s]')) b.onclick = async () => {
+      try { await api('updateMessage', { id: list[b.dataset.i].id, status: b.dataset.s }); toast('Updated'); messages(); } catch (e) { toast('⚠️ ' + e.message); }
+    };
+  } catch (e) { fail(e); }
+}
+
+function setCount(sel, n) { const el = $(sel); el.textContent = n; el.classList.toggle('hidden', !n); }
+function drawer(html) {
+  $('#drawerRoot').innerHTML = `<div class="scrim" data-close></div><aside class="drawer" role="dialog" aria-modal="true">${html}</aside>`;
+  for (const el of document.querySelectorAll('[data-close]')) el.onclick = closeDrawer;
+}
+function closeDrawer() { $('#drawerRoot').innerHTML = ''; }
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+
+api('me').then(showApp).catch(showLogin);
+</script>
+</body>
+</html>

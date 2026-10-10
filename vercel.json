@@ -1283,6 +1283,19 @@
           "value": "/"
         }
       ]
+    },
+    {
+      "source": "/admin",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
     }
   ],
   "buildCommand": "npm run optimize:critical && npm run apply:chrome && npm run prepare:public"
