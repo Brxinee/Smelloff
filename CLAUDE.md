@@ -39,6 +39,42 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Conversion rebuild, modelled on dudewipes.com (2026-10-10)
+The homepage was rebuilt from scratch (100KB → ~64KB). Palette, fonts and
+tokens are unchanged. The idea taken from dudewipes: **few sections, one loud
+claim each, and a buy CTA under every one.** Order: hero → ticker → `#how`
+(Spray. Wait. Wear.) → `#why` (four claim + CTA blocks, "Your skin has a fix.
+Your shirt didn't.") → `#reviews` (beta testers, verbatim) → `#buy` (offer
+box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → final band.
+- **Removed:** "Your shirt remembers" (the scrubber — the signature-section
+  notes below describe it historically), the zone cards, benefits strip,
+  featured-product block and the science/INCI section. The full INCI list
+  still lives on `/odorstrike`.
+- Every CTA points at `/odorstrike?buy=1`. The sticky mobile bar shows only
+  while neither the hero CTA nor `#offerBuyBtn` is on screen.
+- Classes are `hm-` prefixed so `soft.css` (which restyles `.btn-ghost`,
+  `.price-card`, `.tag`…) can't reach in. FAQ markup still uses the shared
+  `details.faq-item` accordion.
+- The one photo is `pdp-02-problem@640`, cropped `aspect-ratio:3/5` from the
+  left so the creative's burnt-in "Kills odor" bullets never show. **Don't use
+  the other gallery creatives on the homepage** — their pixels carry "10 SEC",
+  "leather" and (`pdp-05-proof`) "TRUSTED BY 10,000+ CUSTOMERS ★4.8/5", none of
+  which match this site's copy. The last one is on the PDP gallery today and
+  needs a recut — it is an unsupported social-proof claim.
+- `chrome.css` §7 ("mobile homepage hero visibility fix") is gone. It forced
+  `padding-top:84px` on **every** `.hero` under 768px, including the PDP's,
+  undoing the PDP fold work below.
+- **PDP:** the buy button had drifted to y=1208 on 390×844. Now ~880 with the
+  price at ~735 (meta row hidden on phones, tagline cut to three lines,
+  badges on one row, compact price box; gallery untouched). Removed the
+  `problem` tiles, the animated before/after "proof" dots (an illustration
+  posing as evidence), the share widget under the CTA and the field-guides
+  strip; reviews moved up to sit right after the showcase. Page is ~3100px
+  shorter on phones.
+- Homepage tests in `test/product-config.test.mjs` now pin guardrails (one H1,
+  COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
+  concentrations) instead of the old copy line by line.
+
 ## Owner dashboard at /admin (2026-10-10)
 Replaces the separate `Brxinee/Admin` repo (a 470KB SPA + 323KB API + a
 half-built `mission-control/` app, on a Vercel deploy that no longer served).

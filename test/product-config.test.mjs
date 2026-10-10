@@ -159,273 +159,67 @@ test('production backend endpoints derive from canonical BASE_PRODUCT without fa
   assert.equal(paymentStatusCode.includes("'229.00'"), false);
 });
 
-test('index.html homepage hero UX hierarchy and claim integrity', () => {
+// Homepage rebuilt 2026-10-10 as a conversion page (dudewipes-style: few
+// sections, one claim each, a buy CTA under every one). These tests pin the
+// guardrails rather than the old section-by-section copy.
+test('index.html homepage hero: one H1, fabric positioning, price and COD disclosed before checkout', () => {
   const html = readFileSync('index.html', 'utf8');
-  
-  // Single semantic H1
-  const h1Matches = [...html.matchAll(/<h1\b[^>]*>(.*?)<\/h1>/gis)];
-  assert.equal(h1Matches.length, 1, 'Homepage must contain exactly one <h1>');
-  assert.ok(h1Matches[0][1].includes('Your shirt smells'), 'H1 must lead with "Your shirt smells"');
-  assert.ok(h1Matches[0][1].includes('Fix it.'), 'H1 must include "Fix it."');
+  const h1 = [...html.matchAll(/<h1\b[^>]*>(.*?)<\/h1>/gis)];
+  assert.equal(h1.length, 1, 'Homepage must contain exactly one <h1>');
+  assert.ok(h1[0][1].includes('Your shirt smells') && h1[0][1].includes('Fix it.'), 'H1 must be "Your shirt smells. Fix it."');
 
-  // Eyebrow and core positioning
-  assert.ok(html.includes('FABRIC ODOR CONTROL · FOR CLOTHES'), 'Eyebrow must communicate fabric odor control for clothes');
-  assert.ok(html.includes('ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin.'), 'Explanation must communicate fabric vs skin');
-
-  // Category clarification
-  assert.ok(html.includes('NOT PERFUME'), 'Hero must clarify NOT PERFUME');
-  assert.ok(html.includes('NOT BODY DEODORANT'), 'Hero must clarify NOT BODY DEODORANT');
-  assert.ok(html.includes('FABRIC ONLY'), 'Hero must clarify FABRIC ONLY');
-
-  // CTAs and Canonical Pricing
-  assert.ok(html.includes('FIX MY SHIRT — ₹229'), 'Primary CTA must be FIX MY SHIRT — ₹229');
-  assert.ok(html.includes('href="/odorstrike?buy=1"'), 'Primary CTA must link to /odorstrike?buy=1');
-  assert.ok(html.includes('See how it works'), 'Secondary action must be present');
-
-  // Usage microcopy
-  assert.ok(html.includes('2–3 sprays'), 'Usage microcopy must state 2–3 sprays');
-  assert.ok(html.includes('wait 15–30 sec'), 'Usage microcopy must state 15–30 sec wait');
-  assert.ok(html.includes('wear'), 'Usage microcopy must state wear');
-
-  // Visual & Demo Slot
-  assert.ok(html.includes('id="heroDemoSlot"'), 'Isolated demo slot must exist');
-  assert.ok(html.includes('/assets/odorstrike-bottle-cutout.webp'), 'Preloaded bottle cutout must be present');
-  assert.ok(html.includes('WAIT 15–30 SEC'), 'Demo slot must clearly state WAIT 15–30 SEC');
-  assert.ok(html.includes('WEAR FRESH'), 'Demo slot must clearly state WEAR FRESH end state');
-  assert.ok(html.includes('class="hero-demo-steps"'), 'Demo slot must contain structured steps');
-
-  // Negative Guardrails
-  assert.equal(/579|60%\s*OFF/i.test(html), false, 'Hero must not contain obsolete pricing or discount hype');
-  assert.equal(/instantly kills smell|miracle cure|guaranteed odor cure/i.test(html), false, 'Hero must not contain prohibited claims');
+  const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
+  assert.ok(hero.includes('FABRIC ODOR CONTROL · FOR CLOTHES'));
+  assert.ok(hero.includes('ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin.'));
+  for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
+  assert.ok(hero.includes('<b>₹229</b>'), 'Hero must show ₹229');
+  assert.ok(hero.includes('M.R.P. ₹499') && hero.includes('54% OFF'), 'MRP and discount must agree with the PDP');
+  assert.ok(hero.includes('FIX MY SHIRT — ₹229') && hero.includes('href="/odorstrike?buy=1"'), 'Primary CTA must open checkout');
+  assert.ok(hero.includes('+₹60') && hero.includes('₹289'), 'COD handling charge must be disclosed in the hero (no drip pricing)');
+  assert.ok(hero.includes('2–3 sprays') && hero.includes('15–30 sec'), 'Usage microcopy must match the PDP');
+  assert.ok(html.includes('/assets/odorstrike-bottle-cutout.webp'), 'Hero bottle cutout must be present');
 });
 
-test('index.html homepage problem story section UX hierarchy and claims', () => {
+test('index.html homepage: every section ends in a route to checkout', () => {
   const html = readFileSync('index.html', 'utf8');
-
-  // Eyebrow and Section H2
-  assert.ok(html.includes('THE CLOTHING ODOR PROBLEM'), 'Eyebrow must state clothing odor problem');
-  assert.ok(html.includes('id="remembersTitle"'), 'Remembers section H2 id must exist');
-  assert.ok(html.includes('Your shirt remembers'), 'H2 must state "Your shirt remembers"');
-
-  // Clear Problem Differentiation (Skin vs Fabric)
-  assert.ok(html.includes('Deodorant works on your skin'), 'Intro must explain deodorant on skin');
-  assert.ok(html.includes('trapped inside the weave of your clothes'), 'Intro must clarify trapped in fabric weave');
-
-  // Narrative Timeline Moments (no fabricated lab testing claims)
-  assert.ok(html.includes('07:30'), 'Timeline must start with morning moment');
-  assert.ok(html.includes('19:45'), 'Timeline must transition to evening moment');
-  assert.ok(html.includes('Reset with ODORSTRIKE'), 'Timeline axis must point to ODORSTRIKE reset');
-  assert.ok(html.includes('These are everyday moments, not lab tests.'), 'Footnote must ground timeline as everyday moments');
-  assert.ok(html.includes('Fix your shirt — ₹229'), 'CTA must provide clear action');
+  const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
+  const ctas = main.match(/href="\/odorstrike\?buy=1"/g) || [];
+  assert.ok(ctas.length >= 6, `expected a buy CTA in most sections, found ${ctas.length}`);
+  for (const id of ['how', 'why', 'reviews', 'buy', 'faq']) assert.ok(main.includes(`id="${id}"`), `section #${id} must exist`);
+  assert.ok(html.includes('id="homeMobileBar"') && html.includes('id="offerBuyBtn"'), 'sticky bar must track the hero and offer CTAs');
 });
 
-test('index.html homepage .zones garment cards structure and fabric positioning', () => {
+test('index.html homepage offer box: canonical price, COD, shipping, returns', () => {
   const html = readFileSync('index.html', 'utf8');
-
-  // Exactly 3 garment zone cards
-  const zoneMatches = html.match(/class="zone"/g) || [];
-  assert.equal(zoneMatches.length, 3, 'Must contain exactly 3 garment zone cards');
-
-  // Garment titles & semantic H3 headings
-  assert.ok(html.includes('<h3 class="z-title">Shirt collar</h3>'), 'Card 1 must be Shirt collar');
-  assert.ok(html.includes('<h3 class="z-title">Hoodie &amp; tees</h3>'), 'Card 2 must be Hoodie & tees');
-  assert.ok(html.includes('<h3 class="z-title">Blazer &amp; jacket</h3>'), 'Card 3 must be Blazer & jacket');
-
-  // Problem situation tags
-  assert.ok(html.includes('HEAT &amp; SWEAT'), 'Card 1 must include HEAT & SWEAT tag');
-  assert.ok(html.includes('REPEAT WEAR'), 'Card 2 must include REPEAT WEAR tag');
-  assert.ok(html.includes('BETWEEN WASHES'), 'Card 3 must include BETWEEN WASHES tag');
-
-  // Guardrails
-  assert.equal(/kills bacteria in shirts|odor-proof guarantee/i.test(html), false, 'Cards must not contain prohibited claims');
+  const offer = html.slice(html.indexOf('id="buy"'), html.indexOf('</section>', html.indexOf('id="buy"')));
+  assert.ok(offer.includes('<b>₹229</b>'));
+  assert.ok(offer.includes('₹60 handling') && offer.includes('₹289 collected'), 'COD fee must be stated');
+  assert.ok(offer.includes('Free shipping') && offer.includes('7-day returns'));
+  assert.ok(offer.includes('Up to 8 hours') && offer.includes('on fabric'), 'Protection claim must stay the locked one');
 });
 
-test('index.html homepage featured product section UX hierarchy, pricing and claims', () => {
+test('index.html homepage reviews: beta-tester quotes only, verbatim, labelled', () => {
   const html = readFileSync('index.html', 'utf8');
-
-  // Section exists and has proper ARIA linkage
-  assert.ok(html.includes('id="odorstrike-featured"'), 'Featured product section id must exist');
-  assert.ok(html.includes('id="productTitle"'), 'Product title id must exist');
-
-  // Category & Skin differentiation
-  assert.ok(html.includes('FABRIC ODOR CONTROL · 50ML'), 'Eyebrow must state fabric category and size');
-  assert.ok(html.includes('FABRIC ONLY'), 'Must include FABRIC ONLY badge');
-  assert.ok(html.includes('NOT FOR SKIN'), 'Must include NOT FOR SKIN badge');
-
-  // Core benefits & specs
-  assert.ok(html.includes('50ml Pocket Mist (~250 sprays)'), 'Must state 50ml and sprays');
-  assert.ok(html.includes('HPβCD &amp; Zinc PCA active formula'), 'Must state active formula');
-  assert.ok(html.includes('Dries clean in 15–30s · Zero residue'), 'Must state dry time and zero residue');
-
-  // Canonical pricing, terms & CTAs
-  assert.ok(html.includes('₹229'), 'Must state canonical price ₹229');
-  assert.ok(html.includes('for 1 × 50ml ODORSTRIKE'), 'Must state unit volume and product name');
-  assert.ok(html.includes('MRP ₹499'), 'Must state MRP ₹499');
-  assert.ok(html.includes('FREE SHIPPING PAN-INDIA') || html.includes('FREE SHIPPING — PREPAID'), 'Must state free shipping');
-  assert.ok(html.includes('7-DAY RETURNS'), 'Must state 7-day returns');
-  assert.ok(html.includes('GET ODORSTRIKE — ₹229'), 'Must include prominent primary buy CTA');
-
-  // Prohibited claims
-  assert.equal(/instant miracle|kills bacteria on contact|100% odor-proof/i.test(html), false, 'Must not contain prohibited claims');
+  const rv = html.slice(html.indexOf('id="reviews"'), html.indexOf('</section>', html.indexOf('id="reviews"')));
+  assert.equal((rv.match(/Beta tester/g) || []).length, 3, 'all three quotes must be labelled as beta testers');
+  assert.ok(rv.includes('Nobody flinched.'));
+  assert.ok(rv.includes('Lives in my gym bag now.'));
+  assert.ok(rv.includes('Biryani jacket — fixed.'));
+  assert.equal(/★|\d\.\d\s*\/\s*5|\d[\d,]*\+\s*(customers|reviews)/i.test(html.slice(html.indexOf('<main'), html.indexOf('</main>'))), false, 'no ratings or customer counts until real verified reviews exist');
 });
 
-test('index.html homepage how-it-works science and formula UX hierarchy and claims', () => {
+test('index.html homepage claims discipline and formula secrecy', () => {
   const html = readFileSync('index.html', 'utf8');
-
-  // Section exists and has proper anchor / ARIA linkage
-  assert.ok(html.includes('id="how-it-works"'), 'How it works anchor id must exist');
-  assert.ok(html.includes('id="proofTitle"'), 'Proof title id must exist');
-
-  // Category & Positioning: Fabric odor control vs Perfume
-  assert.ok(html.includes('FABRIC ODOR CONTROL · THE SCIENCE'), 'Eyebrow must state fabric odor control and science');
-  assert.ok(html.includes('Not perfume. Not deodorant.'), 'Title must establish odor control vs perfume');
-  assert.ok(html.includes('Sweat and daily odors get trapped inside the weave of your clothes'), 'Must explain trapped odor in fabric weave');
-  assert.ok(html.includes('neutralizing it at the source instead of masking'), 'Must explain neutralization at source vs masking');
-
-  // 4-layer functional actives with accurate canonical roles
-  assert.ok(html.includes('01 — TRAP'), 'Layer 1 must be TRAP');
-  assert.ok(html.includes('HPβCD'), 'Must feature HPβCD active');
-  assert.ok(html.includes('02 — NEUTRALIZE'), 'Layer 2 must be NEUTRALIZE');
-  assert.ok(html.includes('Zinc PCA'), 'Must feature Zinc PCA active');
-  assert.ok(html.includes('03 — PREVENT'), 'Layer 3 must be PREVENT');
-  assert.ok(html.includes('Triethyl Citrate'), 'Must feature Triethyl Citrate active');
-  assert.ok(html.includes('04 — ANTI-REGROWTH'), 'Layer 4 must be ANTI-REGROWTH');
-  assert.ok(html.includes('Zinc Gluconate'), 'Must feature Zinc Gluconate active');
-
-  // Progressive disclosure: INCI details
-  assert.ok(html.includes('Formula v3.1 — full 11-ingredient INCI list'), 'Must provide progressive disclosure for full INCI list');
-  assert.ok(html.includes('hydroxypropyl-β-cyclodextrin'), 'INCI list must include chemical name');
-
-  // Prohibited claims
-  assert.equal(/kills bacteria|antimicrobial drug|instant miracle|100% odor-proof|guaranteed odor cure/i.test(html), false, 'Must not contain prohibited claims');
-});
-
-test('index.html homepage founder trust section UX hierarchy, identity and claim discipline', () => {
-  const html = readFileSync('index.html', 'utf8');
-
-  // Section exists and has proper ARIA linkage
-  assert.ok(html.includes('class="founder"'), 'Founder section class must exist');
-  assert.ok(html.includes('aria-labelledby="founderTitle"'), 'Founder section must be labeled by founderTitle');
-  assert.ok(html.includes('id="founderTitle"'), 'Founder title id must exist');
-
-  // Hierarchy 1: Founder Identity
-  assert.ok(html.includes('FOUNDER · HYDERABAD'), 'Eyebrow must state founder and location');
-  assert.ok(html.includes('Jogdhande Nikhil Patil'), 'Must state authoritative founder name');
-  assert.ok(html.includes('Founder, Smelloff · Hyderabad'), 'Must state canonical founder role and city');
-
-  // Hierarchy 2: Why Smelloff exists
-  assert.ok(html.includes('41°C Hyderabad heat'), 'Must ground story in documented 41C Hyderabad commute');
-  assert.ok(html.includes('morning deodorant had worked on skin, but the shirt had trapped the sweat'), 'Must state core insight: skin vs fabric gap');
-  assert.ok(html.includes('layering perfume over it only makes it worse'), 'Must reject fragrance masking');
-
-  // Hierarchy 3: What was built
-  assert.ok(html.includes('ODORSTRIKE'), 'Must name product built');
-  assert.ok(html.includes('neutralize trapped odor compounds inside clothing fibres rather than masking'), 'Must state neutralizer mechanism over perfume');
-
-  // Hierarchy 4: Real-world credibility & Link
-  assert.ok(html.includes('Built and tested in Hyderabad'), 'Must carry documented built & tested in Hyderabad copy');
-  assert.ok(html.includes('Made in India'), 'Must carry Made in India truth');
-  assert.ok(html.includes('href="/about"'), 'Must link to /about page');
-  assert.ok(html.includes('class="founder-link"'), 'Must have accessible thumb-friendly founder link class');
-
-  // Prohibited founder claims and false authority guardrails
-  assert.equal(/chemist|scientist|expert|dermatologist tested|clinically tested|lab certified|India's #1|India's first|award-winning|venture backed|patented breakthrough/i.test(html.slice(html.indexOf('class="founder"'), html.indexOf('class="proof"'))), false, 'Founder section must not contain prohibited false authority claims');
-});
-
-test('index.html homepage testimonial and beta tester voices section UX hierarchy and claims discipline', () => {
-  const html = readFileSync('index.html', 'utf8');
-
-  // Section exists and has proper ARIA linkage
-  assert.ok(html.includes('class="voices"'), 'Voices section class must exist');
-  assert.ok(html.includes('aria-labelledby="voicesTitle"'), 'Voices section must be labeled by voicesTitle');
-  assert.ok(html.includes('id="voicesTitle"'), 'Voices title id must exist');
-
-  // Honest labelling: Early testers / Beta tester, never fake "verified buyer"
-  assert.ok(html.includes('Early testers'), 'Eyebrow must state Early testers');
-  assert.ok(html.includes('What it\'s like to carry one'), 'Title must be What it\'s like to carry one');
-  assert.equal((html.match(/class="v-tag">Beta tester<\/span>/g) || []).length, 3, 'Must have 3 Beta tester tags');
-
-  // Card 1: Rohit (Bengaluru)
-  assert.ok(html.includes('Rohit, 26 · Bengaluru'), 'Card 1 must identify Rohit, 26 · Bengaluru');
-  assert.ok(html.includes('2-hour bike ride → client meeting'), 'Card 1 must describe 2-hour bike ride context');
-  assert.ok(html.includes('Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.'), 'Card 1 quote must match authentic text');
-
-  // Card 2: Aakash (Pune)
-  assert.ok(html.includes('Aakash, 24 · Pune'), 'Card 2 must identify Aakash, 24 · Pune');
-  assert.ok(html.includes('Gym bag · Post-workout to office'), 'Card 2 must describe gym bag context');
-  assert.ok(html.includes('Lives in my gym bag now. Post-workout, pre-Uber, no more ‘should I shower at office’ anxiety.'), 'Card 2 quote must match authentic text');
-
-  // Card 3: Karan (Delhi)
-  assert.ok(html.includes('Karan, 29 · Delhi'), 'Card 3 must identify Karan, 29 · Delhi');
-  assert.ok(html.includes('Dinner jacket · Biryani odor reset'), 'Card 3 must describe dinner jacket context');
-  assert.ok(html.includes('Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger.'), 'Card 3 quote must match authentic text');
-
-  // Link to long version review
-  assert.ok(html.includes('href="/blog/odorstrike-review-30-day-india-test"'), 'Must link to 30-day India test review');
-
-  // Prohibited social proof fabrications
-  const voicesBlock = html.slice(html.indexOf('class="voices"'), html.indexOf('class="founder"'));
-  assert.equal(/verified buyer|verified purchase|4\.9\/5|5\.0\/5|1,000\+ customers|10,000\+ happy|★★★★★|ratingValue/i.test(voicesBlock), false, 'Voices section must not contain fabricated social proof or fake ratings');
-});
-
-test('index.html homepage FAQ objection-first hierarchy, schema deprecation and claims discipline', () => {
-  const html = readFileSync('index.html', 'utf8');
-
-  // FAQPage JSON-LD block must be deprecated/removed to prevent search penalty
-  const faqPageMatches = html.match(/"@type"\s*:\s*"FAQPage"/g) || [];
-  assert.equal(faqPageMatches.length, 0, 'index.html must have 0 FAQPage schema blocks (deprecated)');
-
-  // Extract visible FAQ items from <section class="faq"
-  const faqSectionStart = html.indexOf('<section class="faq"');
-  assert.ok(faqSectionStart !== -1, 'Must have <section class="faq"');
-  const faqSectionEnd = html.indexOf('</section>', faqSectionStart);
-  const faqSection = html.slice(faqSectionStart, faqSectionEnd);
-
-  // Extract visible questions and answers
-  const qMatches = [...faqSection.matchAll(/<summary><h3>([\s\S]*?)<\/h3><\/summary>/g)].map(m => m[1].trim());
-  const aMatches = [...faqSection.matchAll(/<div class="faq-answer-wrap"><div><p>([\s\S]*?)<\/p><\/div><\/div>/g)].map(m => m[1].trim());
-
-  assert.equal(qMatches.length, 10, 'Must have exactly 10 visible FAQ questions');
-  assert.equal(aMatches.length, 10, 'Must have exactly 10 visible FAQ answers');
-
-  // Expected 10 objection questions in order
-  const expectedQuestions = [
-    'Is ODORSTRIKE safe on skin?',
-    'Will it stain my clothes?',
-    'How do I use it?',
-    'How long does the effect last?',
-    'What fabrics can I use it on?',
-    'Does it replace washing?',
-    'Is the fragrance strong?',
-    'Is COD available?',
-    'How long does shipping take?',
-    'What is the return policy?'
-  ];
-
-  for (let i = 0; i < expectedQuestions.length; i++) {
-    assert.equal(qMatches[i], expectedQuestions[i], `Question ${i + 1} must match expected objection: ${expectedQuestions[i]}`);
-    assert.ok(aMatches[i].length > 20, `Answer ${i + 1} in HTML must have non-empty substantive answer text`);
-  }
-
-  // Claim discipline guardrails in FAQ section
-  assert.equal(/kills bacteria|antimicrobial|antibacterial|miracle|100% effective|clinically tested|dermatologist tested|permanent|instant |instantly |odor-proof/i.test(faqSection), false, 'FAQ must not contain prohibited claims');
-  assert.equal(/fragrance-free|unscented|scentless/i.test(faqSection), false, 'FAQ must not claim fragrance-free');
-
-  // Commercial values match canonical configuration
-  assert.ok(faqSection.includes('₹229'), 'FAQ must state ₹229 prepaid price');
-  assert.ok(faqSection.includes('₹60'), 'FAQ must state ₹60 COD fee');
-  assert.ok(faqSection.includes('₹289'), 'FAQ must state ₹289 COD total');
-  assert.ok(faqSection.includes('7-day return window'), 'FAQ must state 7-day return window');
-  assert.ok(faqSection.includes('80% full'), 'FAQ must state 80% full condition');
-  assert.ok(faqSection.includes('48 hours'), 'FAQ must state 48-hour dispatch');
-  assert.ok(faqSection.includes('3–5 business days'), 'FAQ must state 3–5 days metro delivery');
-
-  // Fabric-only safety guardrail
-  assert.ok(faqSection.includes('never skin, face, hair, or body'), 'FAQ must strictly prohibit skin, face, hair, or body application');
-  assert.ok(/zero residue|without stiff residue|residue-free|dries clear/i.test(faqSection), 'FAQ must state residue-free/without stiff residue');
-  assert.ok(faqSection.includes('15–20 cm'), 'FAQ must state 15–20 cm spray distance');
-  assert.ok(faqSection.includes('15–30 seconds'), 'FAQ must state 15–30 seconds dry time');
-  assert.ok(faqSection.includes('Up to 8 hours'), 'FAQ must state Up to 8 hours duration');
+  assert.ok(html.includes('Jogdhande Nikhil Patil'), 'founder must be named');
+  for (const a of ['HPβCD', 'Zinc PCA', 'Triethyl Citrate', 'Zinc Gluconate']) assert.ok(html.includes(a), `${a} must be named`);
+  assert.equal(/Zinc Ricinoleate|Sodium Bicarbonate/i.test(html), false, 'banned ingredients must not appear');
+  assert.equal(/\d+(\.\d+)?\s*%\s*(w\/w|w\/v|HPβCD|Zinc)/i.test(html), false, 'no formula concentrations');
+  assert.equal(/kills (odor|bacteria)|antibacterial|instantly|miracle|guaranteed|clinically/i.test(html), false, 'no prohibited claims');
+  assert.equal(/\b(shoes?|sneakers?|helmets?|car seats?|sofas?|curtains?)\b/i.test(html.slice(html.indexOf('<main'), html.indexOf('</main>'))), false, 'clothing-only positioning');
+  assert.equal(/"@type"\s*:\s*"FAQPage"/.test(html), false, 'no deprecated FAQPage schema');
+  const faq = html.slice(html.indexOf('id="faq"'), html.indexOf('</section>', html.indexOf('id="faq"')));
+  assert.ok(faq.includes('Does it replace washing?') && faq.includes('does not remove dirt, oils or stains'), 'honest limits must be stated');
+  assert.ok(faq.includes('never skin, face, hair or body'), 'fabric-only limit must be stated');
 });
 
 test('odorstrike.html PDP hero and primary buy area UX hierarchy, canonical pricing, and claims discipline', () => {

@@ -30,10 +30,6 @@ test('production performance hardening configuration', () => {
     'homepage must not preconnect to checkout-only Supabase',
   );
   assert.ok(
-    homepage.includes('/assets/optimized/odorstrike-bottle-720.webp'),
-    'homepage product section must use a high-resolution responsive product asset',
-  );
-  assert.ok(
     homepage.includes('/assets/odorstrike-bottle-cutout.webp'),
     'hero bottle must preserve its native high-resolution source',
   );

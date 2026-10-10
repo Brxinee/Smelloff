@@ -2,19 +2,18 @@
 <html lang="en-IN">
 <head>
 
-  <!-- FACT SOURCING NOTE (2026-07-21): this page was rebuilt as the brand homepage.
-       The task brief named .claude/skills/smelloff-spec/SKILL.md as the source of
-       truth, but that file does not exist anywhere in this repo or its git history.
-       Every claim/brand line here comes verbatim from the rebuild brief + CLAUDE.md
-       (locked: "up to 8 hours odor protection on fabric", zero residue,
-       glycerine-free, fabric only). No pricing, ingredients, or new claims appear
-       on this page by design — the buy flow lives at /odorstrike. -->
+  <!-- Rebuilt 2026-10-10 as a conversion page, modelled on dudewipes.com:
+       few sections, one loud claim each, a buy CTA under every one. Every
+       claim is a locked one from CLAUDE.md (up to 8 hours on fabric,
+       glycerine-free, zero residue, fabric only, ₹229 / COD ₹289). The
+       checkout itself lives on /odorstrike; every CTA here deep-links to
+       /odorstrike?buy=1, which opens it on load. -->
   <meta name="facebook-domain-verification" content="qkmubnkgt53mot0cmk9fx6lr7gpjb9" />
   <meta name="google-site-verification" content="163974d1a8d940cf89b0ec712246c779" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Smelloff — Fabric Odor Neutralizer for Clothes</title>
-<meta name="description" content="Smelloff makes ODORSTRIKE, a pocket fabric odor neutralizer for clothes. Targets trapped shirt odor — not skin. Not perfume. Not deodorant. Made in India.">
+<meta name="description" content="Your shirt smells? Fix it. ODORSTRIKE is a pocket fabric odor neutralizer for clothes — not perfume, not deodorant. ₹229 with free prepaid shipping, COD across India.">
 <meta name="theme-color" content="#080808">
 <script>document.documentElement.className+=' js';</script>
 
@@ -35,7 +34,7 @@
 <!-- Open Graph (brand page, not product) -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Smelloff — Fabric Odor Neutralizer for Clothes">
-<meta property="og:description" content="Smelloff makes ODORSTRIKE, a pocket fabric odor neutralizer for clothes. Targets trapped shirt odor — not skin. Not perfume. Not deodorant. Made in India.">
+<meta property="og:description" content="Your shirt smells? Fix it. ODORSTRIKE is a pocket fabric odor neutralizer for clothes — not perfume, not deodorant. ₹229 with free prepaid shipping, COD across India.">
 <meta property="og:url" content="https://smelloff.in/">
 <meta property="og:site_name" content="Smelloff">
 <meta property="og:image" content="https://smelloff.in/assets/og-brand.jpg">
@@ -47,7 +46,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Smelloff — Fabric Odor Neutralizer for Clothes">
-<meta name="twitter:description" content="Smelloff makes ODORSTRIKE, a pocket fabric odor neutralizer for clothes. Targets trapped shirt odor — not skin. Not perfume. Not deodorant. Made in India.">
+<meta name="twitter:description" content="Your shirt smells? Fix it. ODORSTRIKE is a pocket fabric odor neutralizer for clothes — not perfume, not deodorant. ₹229 with free prepaid shipping, COD across India.">
 <meta name="twitter:image" content="https://smelloff.in/assets/og-brand.jpg">
 <meta name="twitter:image:alt" content="Smelloff — Fabric Odor Neutralizer for Clothes. Light fresh fabric scent.">
 
@@ -305,952 +304,299 @@
     overflow-x:hidden;
     -webkit-font-smoothing:antialiased;
   }
-  /* Film-grain texture over the black — subtle richness, no asset request */
-  body::before{
-    content:'';
-    position:fixed;inset:0;
-    pointer-events:none;z-index:90;
-    opacity:.055;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
   ::selection{background:var(--acid);color:var(--ink)}
-  img{max-width:100%;height:auto}
+  img{max-width:100%;height:auto;display:block}
   a{color:inherit}
-
-  .skip-link{
-    position:absolute;left:-9999px;top:0;z-index:200;
-    background:var(--acid);color:var(--ink);padding:12px 20px;
-    font-weight:700;text-decoration:none;
-  }
-  .skip-link:focus{left:0}
-
-  /* Focus visibility on every interactive element */
-  a:focus-visible,button:focus-visible{
-    outline:3px solid var(--acid);
-    outline-offset:3px;
-  }
-
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--acid);outline-offset:3px}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter)}
+  .acid{color:var(--acid)}
 
-  /* Header + footer are no longer styled here — both now come from the
-     shared chrome layer (/assets/css/chrome.css), which every page links.
-     See scripts/apply-chrome.mjs for the markup. */
+  /* Header + footer come from the shared chrome layer (chrome.css). */
 
-  /* ============ Hero ============
-     Asymmetric two-column composition on desktop: copy and buy actions hold the left,
-     the bottle visual and 3-step demonstration sequence sit on the right.
-     Mobile collapses to a conversion-ordered single stack:
-     Eyebrow -> H1 -> Subtext -> Visual/Demo -> Price -> Primary CTA -> Clarification -> Usage microcopy -> Secondary action. */
-  .hero{padding:clamp(36px,5vw,64px) 0 clamp(48px,6vw,72px);overflow:hidden}
-  .hero-grid{display:grid;grid-template-columns:1fr;gap:clamp(20px,4vw,36px)}
-  
-  .hero-eyebrow{margin:0 0 16px}
-  .hero-eyebrow-pill{
-    display:inline-flex;align-items:center;
-    font-family:var(--mono);font-size:12px;font-weight:700;
-    letter-spacing:.16em;text-transform:uppercase;
-    color:var(--acid);background:rgba(184,255,87,.08);
-    border:1.5px solid rgba(184,255,87,.35);
-    padding:6px 14px;border-radius:2px;
+  /* ============ Shared pieces ============
+     Every block on this page ends in a way to buy. That is the whole idea
+     borrowed from dudewipes: few sections, one loud claim each, and a CTA
+     under every one of them. Class names are hm- prefixed so soft.css
+     (which restyles .btn-ghost, .price-card, .tag, .pill…) can't reach in. */
+  .hm-eyebrow{
+    font-family:var(--mono);font-size:var(--fs-eyebrow);
+    letter-spacing:var(--ls-eyebrow);text-transform:uppercase;
+    color:var(--acid);margin-bottom:14px;
   }
-
-  .hero-title{
-    font-family:var(--display);
-    font-weight:900;
-    font-size:clamp(38px,6.8vw,84px);
-    line-height:.94;
-    letter-spacing:-.03em;
-    color:var(--text);
-    margin:0 0 18px;
-    max-width:14ch;
-  }
-  .hero-title .acid{color:var(--acid)}
-
-  .hero-sub{
-    max-width:38ch;
-    margin:0 0 20px;
-    font-size:clamp(17px,1.6vw,20px);
-    line-height:1.48;
-    color:var(--text);
-  }
-
-  /* Critical category clarification */
-  .hero-clarify{
-    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-    font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--text);background:var(--surface);
-    border:1.5px solid var(--rule-strong);
-    padding:10px 14px;border-radius:2px;
-    width:fit-content;max-width:100%;
-  }
-  .hero-clarify-tag{color:var(--muted);white-space:nowrap}
-  .hero-clarify-dot{color:var(--rule-strong);font-weight:700}
-  .hero-clarify-highlight{
-    color:var(--acid);font-weight:700;
-    background:rgba(184,255,87,.12);
-    padding:2px 6px;border:1px solid rgba(184,255,87,.4);
-    border-radius:2px;
-  }
-  .hero-clarify--desktop{display:flex;margin-bottom:24px}
-  .hero-clarify--mobile{display:none}
-
-  /* Bottle visual & Demonstration sequence */
-  .hero-visual-wrap{
-    display:flex;flex-direction:column;align-items:center;gap:18px;
-    position:relative;
-  }
-  .hero-visual{
-    position:relative;
-    display:flex;align-items:center;justify-content:center;
-    min-height:clamp(300px,64vw,440px);
-    width:100%;
-  }
-  .hero-visual::before{
-    content:'';
-    position:absolute;top:50%;left:50%;
-    width:clamp(200px,46vw,320px);aspect-ratio:1;
-    transform:translate(-50%,-50%);
-    background:var(--acid);
-    border-radius:50%;
-    z-index:0;
-  }
-  .hero-visual img{
-    position:relative;z-index:1;
-    height:clamp(280px,58vw,420px);width:auto;
-    display:block;
-    filter:drop-shadow(0 20px 38px rgba(0,0,0,.75));
-  }
-  .hero-visual figcaption{
-    position:absolute;z-index:2;
-    right:0;top:50%;
-    transform:translateY(-50%) rotate(90deg);
-    transform-origin:right center;
-    font-family:var(--mono);font-size:11px;
-    letter-spacing:.22em;text-transform:uppercase;
-    color:var(--muted);
-    white-space:nowrap;
-    background:rgba(8,8,8,.85);
-    padding:3px 8px;
-    border:1px solid var(--rule);
-  }
-
-  /* Isolated config-gated demo slot (SPRAY -> WAIT ~10 SEC -> WEAR FRESH) */
-  .hero-demo-slot{
-    width:100%;
-    max-width:390px;
-    z-index:2;
-  }
-  .hero-demo-card{
-    background:var(--surface);
-    border:1px solid var(--border-default);
-    border-radius:var(--r-sm);
-    padding:10px 12px;
-  }
-  .hero-demo-tagline{
-    display:flex;align-items:center;justify-content:space-between;gap:8px;
-    padding-bottom:8px;margin-bottom:8px;
-    border-bottom:1px solid var(--rule);
-  }
-  .hdt-title{
-    font-family:var(--mono);font-size:10px;font-weight:700;
-    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-  }
-  .hdt-badge{
-    font-family:var(--mono);font-size:9.5px;font-weight:700;
-    letter-spacing:.12em;text-transform:uppercase;
-    color:var(--acid);background:rgba(184,255,87,.08);
-    border:1px solid rgba(184,255,87,.3);padding:2px 6px;border-radius:2px;
-    white-space:nowrap;
-  }
-  .hero-demo-steps{
-    list-style:none;margin:0;padding:0;
-    display:grid;grid-template-columns:1fr auto 1.15fr auto 1.15fr;
-    align-items:center;gap:4px;
-  }
-  .hero-demo-step{display:flex;flex-direction:column;gap:2px}
-  .hds-top{display:flex;align-items:baseline;gap:3px;flex-wrap:wrap}
-  .hds-num{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--acid);letter-spacing:.12em}
-  .hds-action{
-    font-family:var(--mono);font-size:11.5px;font-weight:700;
-    color:var(--text);letter-spacing:.06em;text-transform:uppercase;
-    white-space:nowrap;
-  }
-  .hds-desc{
-    font-family:var(--body);font-size:10.5px;line-height:1.2;
-    color:var(--muted);
-  }
-  .hds-sep{
-    color:var(--acid);font-family:var(--mono);font-size:13px;font-weight:700;
-    opacity:.85;user-select:none;padding:0 2px;
-  }
-  .hero-demo-step.hds-result .hds-action{color:var(--acid)}
-  .hero-demo-step.hds-result .hds-desc{color:var(--text)}
-
-  /* Offer & Pricing */
-  .hero-offer{
-    display:flex;flex-direction:column;gap:6px;
-    padding:18px 0;
-    border-top:1px solid var(--rule);
-    border-bottom:1px solid var(--rule);
-    margin-bottom:20px;
-  }
-  .hero-offer-top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-  .hero-price{
+  .hm-h2{
     font-family:var(--display);font-weight:900;
-    font-size:clamp(42px,6.5vw,60px);line-height:1;letter-spacing:-.03em;
-    color:var(--acid);
+    font-size:var(--fs-h2);line-height:var(--lh-display);
+    letter-spacing:var(--ls-display);text-transform:uppercase;
   }
-  .hero-mrp{
-    font-family:var(--mono);font-size:14px;letter-spacing:.08em;
-    color:var(--muted);text-decoration:line-through;
-  }
-  .hero-price-meta{
-    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-    font-family:var(--mono);font-size:12px;letter-spacing:.08em;
-    text-transform:uppercase;color:var(--text);opacity:.9;
-  }
-  .hero-meta-dot{color:var(--acid);opacity:.7}
-
-  /* CTAs */
-  .hero-cta-group{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
-  .btn{
+  .hm-sec{padding:var(--section-y) 0;border-top:1px solid var(--border-subtle)}
+  .hm-btn{
     display:inline-flex;align-items:center;justify-content:center;gap:10px;
-    background:var(--acid);color:var(--ink);text-decoration:none;
-    font-family:var(--mono);font-weight:700;
-    font-size:15px;letter-spacing:.06em;text-transform:uppercase;
-    padding:15px 28px;min-height:50px;
-    border:0;
-    border-radius:var(--r-sm);
-    cursor:pointer;
-    transition:background .15s ease,transform .15s ease;
+    min-height:58px;padding:16px 30px;
+    background:var(--acid);color:var(--on-acid);
+    font-family:var(--mono);font-weight:700;font-size:14px;
+    letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+    border-radius:var(--r-pill);border:0;cursor:pointer;
+    transition:background-color var(--dur) ease,transform .25s var(--ease);
   }
-  .btn:hover{background:#d1ff8a;transform:translateY(-1px)}
-  .btn:active{transform:scale(.98)}
-  .btn:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+  .hm-btn:hover{background:var(--acid-hi)}
+  .hm-link{
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--acid);text-decoration:none;
+    display:inline-flex;align-items:center;gap:8px;min-height:44px;
+  }
+  .hm-link:hover{text-decoration:underline;text-underline-offset:4px}
 
-  .btn-ghost{
-    background:transparent;color:var(--text);
-    border:1px solid var(--border-strong);
-    border-radius:var(--r-sm);
-    font-weight:500;font-size:14px;padding:15px 22px;
-    transition:background .15s ease,border-color .15s ease;
+  /* ============ 1 · Hero ============
+     Phones: headline and bottle side by side, then price and CTA — the CTA
+     has to clear the fold on a 390×844 screen without scrolling.
+     ≥960: copy left, bottle on an acid panel right. */
+  .hero{padding:28px 0 40px;position:relative}
+  .hero-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 92px;
+    grid-template-areas:"copy bottle" "not not" "buy buy";
+    column-gap:14px;align-items:start;
   }
-  .btn-ghost:hover{background:var(--surface-2);color:var(--text);border-color:var(--border-focus)}
-  .btn-ghost:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
-
-  /* Usage Microcopy & Trust mini */
-  .hero-usage{
-    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-    font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
-    color:var(--muted);margin-bottom:14px;
+  .hero-copy{grid-area:copy}
+  .hero-visual{grid-area:bottle;position:relative;align-self:stretch}
+  .hero-buy{grid-area:buy;margin-top:22px}
+  .hero-eyebrow{
+    display:inline-block;font-family:var(--mono);font-size:10px;
+    letter-spacing:.06em;text-transform:uppercase;
+    color:var(--acid);border:1px solid var(--border-focus);
+    border-radius:var(--r-pill);padding:6px 12px;margin-bottom:16px;
   }
-  .hero-usage-label{color:var(--text);font-weight:700;margin-right:2px}
-  .hero-usage-pill{
-    background:var(--surface-2);border:1px solid var(--rule);
-    padding:4px 8px;border-radius:2px;color:var(--text);white-space:nowrap;
+  .hero-title{
+    font-family:var(--display);font-weight:900;
+    font-size:clamp(44px,12.5vw,104px);line-height:.94;
+    letter-spacing:-.03em;text-transform:uppercase;
   }
-  .hero-usage-arrow{color:var(--acid);font-weight:700}
-  .hero-trust-mini{
-    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-    font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+  .hero-title .acid{display:block}
+  .hero-sub{
+    margin-top:16px;font-size:var(--fs-lead);line-height:1.45;
+    color:var(--text-2);max-width:30ch;
+  }
+  .hero-sub strong{color:var(--text);font-weight:500}
+  .hero-not{
+    grid-area:not;display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;list-style:none;
+  }
+  .hero-not li{
+    font-family:var(--mono);font-size:10px;letter-spacing:.05em;
     text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--border-default);border-radius:var(--r-pill);
+    padding:5px 10px;
   }
-  .hero-trust-mini .htm-dot{color:var(--rule-strong)}
-
-  /* Desktop Grid (>= 960px) */
+  .hero-not li.on{color:var(--on-acid);background:var(--acid);border-color:var(--acid)}
+  .hero-visual img{
+    width:100%;height:auto;max-height:340px;object-fit:contain;
+    filter:drop-shadow(0 18px 30px rgba(var(--acid-rgb),.18));
+  }
+  .hero-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px}
+  .hero-price b{font-family:var(--display);font-weight:900;font-size:44px;line-height:1;color:var(--text)}
+  .hero-price s{font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .hero-price .off{
+    font-family:var(--mono);font-size:11px;letter-spacing:.08em;font-weight:700;
+    color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 9px;
+  }
+  .hero-price .size{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em;flex-basis:100%}
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:16px}
+  .hero-ctas .hm-btn{flex:1 1 100%}
+  .hero-ship{
+    margin-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;list-style:none;
+  }
+  .hero-ship li{
+    font-size:12.5px;line-height:1.3;color:var(--text-2);
+    border:1px solid var(--border-subtle);border-radius:var(--r-md);
+    padding:10px;background:var(--surface);
+  }
+  .hero-ship li b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--acid);font-weight:400;margin-bottom:3px}
+  @media(min-width:520px){
+    .hero-grid{grid-template-columns:minmax(0,1fr) 130px}
+    .hero-ctas .hm-btn{flex:0 1 auto}
+  }
   @media(min-width:960px){
-    .hero{padding:clamp(44px,6vw,76px) 0 clamp(48px,6vw,80px)}
+    .hero{padding:56px 0 72px}
     .hero-grid{
-      grid-template-columns:1.15fr .85fr;
-      grid-template-areas:
-        "header visual"
-        "buy    visual";
-      gap:0 clamp(36px,4.5vw,64px);
-      align-items:center;
+      grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+      grid-template-areas:"copy bottle" "not bottle" "buy bottle";
+      column-gap:56px;align-items:center;
     }
-    .hero-header{grid-area:header;align-self:end}
-    .hero-visual-wrap{grid-area:visual;align-self:center;margin-right:calc(var(--gutter) * -2)}
-    .hero-buy{grid-area:buy;align-self:start}
-    .hero-visual{min-height:480px}
-    .hero-visual img{height:clamp(380px,38vw,500px)}
-    .hero-demo-slot{max-width:400px}
+    .hero-buy{margin-top:30px;align-self:start}
+    .hero-not{align-self:start}
+    .hero-visual{
+      align-self:stretch;min-height:560px;border-radius:var(--r-xl);
+      background:radial-gradient(circle at 50% 46%,var(--acid) 0 38%,transparent 38.2%),var(--surface);
+      border:1px solid var(--border-subtle);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .hero-visual img{width:auto;height:470px;max-height:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
+    .hero-sub{max-width:36ch}
   }
 
-  /* Mobile Conversion Stack (< 960px) */
-  @media(max-width:959px){
-    .hero-grid{display:flex;flex-direction:column;gap:20px}
-    .hero-header{order:1}
-    .hero-visual-wrap{order:2;margin:6px 0}
-    .hero-buy{display:flex;flex-direction:column;gap:14px;order:3}
-    .hero-offer{order:1;margin-bottom:0;padding:12px 0}
-    .hero-cta-group{order:2;margin-bottom:0;flex-direction:column;width:100%}
-    .hero-btn-primary{order:1;width:100%;text-align:center}
-    .hero-clarify--desktop{display:none}
-    .hero-clarify--mobile{order:3;display:flex;width:100%;justify-content:center;text-align:center;margin:2px 0}
-    .hero-usage{order:4;margin-bottom:0;justify-content:center;text-align:center}
-    .hero-btn-secondary{order:5;width:100%;text-align:center}
-    .hero-trust-mini{order:6;justify-content:center;text-align:center;margin-top:2px}
-    .hero-visual{min-height:clamp(280px,72vw,360px)}
-    .hero-visual img{height:clamp(270px,68vw,340px)}
-    .hero-demo-steps{padding:10px 12px}
-    .hds-desc{font-size:10px}
+  /* Decorative acid ticker (aria-hidden) */
+  .ticker{background:var(--acid);color:var(--on-acid);overflow:hidden;white-space:nowrap;padding:12px 0}
+  .ticker-track{display:inline-flex;gap:28px;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  .ticker-track span{flex:none}
+  @media(prefers-reduced-motion:no-preference){
+    .ticker-track{animation:hm-tick 28s linear infinite}
+    @keyframes hm-tick{to{transform:translateX(-50%)}}
   }
 
-  /* Hero zones — where smell hides: collar, hoodie, blazer (all clothing) */
-  .zones{
-    margin-top:clamp(40px,5vw,56px);
-    display:grid;grid-template-columns:1fr;gap:16px;
+  /* ============ 2 · Spray. Wait. Wear. ============ */
+  .how-steps{list-style:none;display:grid;gap:12px;margin-top:32px;counter-reset:s}
+  .how-step{
+    border:1px solid var(--border-default);border-radius:var(--r-xl);
+    background:var(--surface);padding:24px;
+    display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:baseline;
   }
-  .zone{
-    border:1px solid var(--border-default);
-    border-radius:var(--r-md);
-    padding:18px 16px;
-    display:flex;align-items:flex-start;gap:16px;
-    background:var(--surface);
-    transition:border-color .18s ease,background-color .18s ease,transform .18s ease;
-  }
-  /* Sizing lives on `.zone svg`; stroke styling on .z-ico */
-  .zone svg{flex:none;width:56px;height:56px}
-  .mask-ico{
-    display:inline-block;flex:0 0 auto;
-    background-color:var(--acid);
-    -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-    -webkit-mask-position:center;mask-position:center;
-    -webkit-mask-size:contain;mask-size:contain;
-  }
-  /* Zone garment icons: line art, so they read crisp on retina without shipping bitmaps */
-  .z-ico{
-    fill:none;stroke:var(--acid);
-    stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;
-  }
-  .ico-india{-webkit-mask-image:url(/assets/icons/india.png);mask-image:url(/assets/icons/india.png)}
-  .ico-truck{-webkit-mask-image:url(/assets/icons/truck.png);mask-image:url(/assets/icons/truck.png)}
-  .ico-cod{-webkit-mask-image:url(/assets/icons/cod.png);mask-image:url(/assets/icons/cod.png)}
-  .ico-hyderabad{-webkit-mask-image:url(/assets/icons/hyderabad.png);mask-image:url(/assets/icons/hyderabad.png)}
-  .zone .z-content{flex:1;min-width:0}
-  .zone .z-head{
-    display:flex;align-items:center;justify-content:space-between;gap:8px;
-    margin-bottom:4px;
-  }
-  .zone .z-num{
-    display:inline-block;
-    font-family:var(--mono);font-weight:700;
-    font-size:12px;color:var(--acid);letter-spacing:.16em;
-  }
-  .zone .z-tag{
-    font-family:var(--mono);font-size:9.5px;font-weight:700;
-    letter-spacing:.12em;text-transform:uppercase;
-    color:var(--text);background:var(--surface-2);
-    border:1px solid var(--rule-strong);padding:2px 6px;border-radius:2px;
-    white-space:nowrap;
-  }
-  .zone .z-title{
-    font-family:var(--display);font-weight:900;
-    font-size:22px;letter-spacing:-.01em;
-    line-height:1.1;
-    color:var(--text);
-    margin:0 0 6px;
-  }
-  .zone p.z-desc{
-    font-size:13.5px;line-height:1.45;color:var(--muted);margin:0;
-  }
+  .how-num{grid-row:span 2;font-family:var(--mono);font-size:12px;color:var(--acid);letter-spacing:.1em}
+  .how-step h3{font-family:var(--display);font-weight:900;font-size:clamp(30px,4.4vw,46px);line-height:1;text-transform:uppercase;letter-spacing:-.02em}
+  .how-step p{color:var(--text-2);font-size:15px}
+  .how-foot{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+  .how-foot p{font-size:13.5px;color:var(--muted);max-width:52ch}
   @media(min-width:768px){
-    .zones{grid-template-columns:repeat(3,1fr);gap:20px}
-    .zone{flex-direction:column;align-items:flex-start;padding:24px 22px}
-    .zone svg{width:64px;height:64px;margin-bottom:14px}
-    .zone .z-head{margin-bottom:6px}
-    .zone .z-title{font-size:24px;margin-bottom:8px}
-    .zone p.z-desc{font-size:14px}
+    .how-steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .how-step{grid-template-columns:1fr;padding:30px}
+    .how-num{grid-row:auto}
   }
 
-  /* ============ Sections ============ */
-  section{padding:var(--section-y) 0}
-  .eyebrow{
-    font-family:var(--mono);font-weight:400;
-    font-size:var(--fs-eyebrow);letter-spacing:var(--ls-eyebrow);text-transform:uppercase;
-    color:var(--acid);
-    margin-bottom:14px;
+  /* ============ 3 · Fabric beats skin ============
+     Four alternating blocks, each one claim + one CTA (dudewipes' "Wet
+     beats dry"). Visuals are type and CSS, not burnt-in ad creatives: the
+     gallery creatives carry claims (dry times, ratings) that don't match
+     this page's copy, and a homepage must not contradict its own words. */
+  .beats-intro{max-width:720px}
+  .beats-intro p{margin-top:14px;color:var(--text-2);font-size:var(--fs-lead)}
+  .beat{
+    display:grid;gap:22px;margin-top:44px;align-items:center;
   }
-  h2{
-    font-family:var(--display);font-weight:900;
-    font-size:var(--fs-h2);
-    line-height:var(--lh-display);
-    letter-spacing:var(--ls-display);
-    margin-bottom:22px;
-    max-width:16ch;
+  .beat-art{
+    border-radius:var(--r-xl);overflow:hidden;border:1px solid var(--border-subtle);
+    background:var(--surface);min-height:240px;position:relative;
+    display:flex;align-items:center;justify-content:center;padding:28px;
   }
-  .section-body{max-width:640px;font-size:var(--fs-lead)}
-  .section-body p+p{margin-top:16px}
-
-  /* ============ Your shirt remembers ============
-     Every visual state keys off [data-step] on the section, so dragging the
-     slider changes one attribute and CSS does the rest — no per-frame JS, no
-     layout thrash. Transitions are on opacity/transform only. */
-  .remembers{border-top:2px solid var(--rule)}
-  .rm-intro{max-width:560px;font-size:var(--fs-lead);color:var(--text-2);margin-top:18px}
-
-  .rm-stage{
-    display:grid;grid-template-columns:1fr;gap:22px;align-items:center;
-    margin-top:44px;
-    border:1px solid var(--rule);border-radius:28px;
-    background:var(--surface);
-    padding:32px 24px;
+  .beat-copy h3{
+    font-family:var(--display);font-weight:900;font-size:var(--fs-h3);
+    line-height:1.04;letter-spacing:-.02em;
   }
-  .rm-shirt-wrap{position:relative;justify-self:center;width:150px;height:162px}
-  .rm-shirt{width:100%;height:100%;overflow:visible}
-  .rm-outline{
-    fill:none;stroke:var(--muted);stroke-width:2.4;
-    stroke-linejoin:round;
-    transition:stroke .45s ease;
-  }
-  /* The haze is the day's load. It never carries a number — it just grows. */
-  .rm-haze{opacity:0;transition:opacity .5s ease,transform .5s ease;transform-origin:60px 60px}
-  .remembers[data-step="1"] .rm-haze{opacity:.20;transform:scale(.72)}
-  .remembers[data-step="2"] .rm-haze{opacity:.42;transform:scale(.84)}
-  .remembers[data-step="3"] .rm-haze{opacity:.58;transform:scale(.92)}
-  .remembers[data-step="4"] .rm-haze{opacity:.78;transform:scale(1)}
-  .remembers[data-step="5"] .rm-haze{opacity:1;transform:scale(1.06)}
-  .remembers[data-step="6"] .rm-haze{opacity:0;transform:scale(.55)}
-  .remembers[data-step="6"] .rm-outline{stroke:var(--acid)}
-
-  /* One-shot sweep when the day resets — the reward for reaching the end. */
-  .rm-flash{
-    position:absolute;inset:0;border-radius:50%;
-    background:radial-gradient(circle,var(--acid) 0%,transparent 68%);
-    opacity:0;pointer-events:none;
-  }
-  .remembers[data-step="6"] .rm-flash{animation:rmFlash .7s ease-out}
-  @keyframes rmFlash{0%{opacity:0;transform:scale(.5)}35%{opacity:.30}100%{opacity:0;transform:scale(1.5)}}
-
-  .rm-readout{min-height:132px}
-  .rm-time{
-    font-family:var(--mono);font-size:13px;letter-spacing:.2em;
-    color:var(--acid);margin-bottom:10px;
-  }
-  .rm-event{
-    font-family:var(--display);font-weight:900;
-    font-size:clamp(23px,5.2vw,32px);line-height:1.12;
-    letter-spacing:-.01em;color:var(--text);
-  }
-  .rm-state{
-    display:inline-block;margin-top:14px;
-    font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--muted);
-    border:1px solid var(--rule);border-radius:999px;padding:6px 13px;
-  }
-  .remembers[data-step="6"] .rm-state{color:var(--ink);background:var(--acid);border-color:var(--acid)}
-
-  /* Native range input: keyboard, touch and AT support with no library. */
-  .rm-control{margin-top:26px}
-  .rm-scrub{
-    -webkit-appearance:none;appearance:none;
-    width:100%;height:44px;background:transparent;cursor:grab;display:block;
-  }
-  .rm-scrub:active{cursor:grabbing}
-  .rm-scrub::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--rule-strong,rgba(244,241,234,.28))}
-  .rm-scrub::-moz-range-track{height:4px;border-radius:2px;background:rgba(244,241,234,.28)}
-  .rm-scrub::-webkit-slider-thumb{
-    -webkit-appearance:none;appearance:none;
-    width:24px;height:24px;margin-top:-10px;border-radius:50%;
-    background:var(--acid);border:2px solid var(--ink);
-    box-shadow:0 0 0 1px var(--acid);
-    transition:transform .15s ease;
-  }
-  .rm-scrub::-moz-range-thumb{
-    width:24px;height:24px;border-radius:50%;
-    background:var(--acid);border:2px solid var(--ink);
-  }
-  .rm-scrub:hover::-webkit-slider-thumb{transform:scale(1.14)}
-  .rm-scrub:focus-visible{outline:none}
-  .rm-scrub:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px rgba(184,255,87,.4)}
-  .rm-axis{
-    display:flex;justify-content:space-between;
-    font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);
-    padding:0 2px;
-  }
-  .rm-foot{margin-top:26px;max-width:560px;font-size:var(--fs-sm);color:var(--muted)}
-  .rm-cta{
-    display:inline-block;margin-top:22px;
-    background:var(--acid);color:var(--ink);text-decoration:none;
-    font-family:var(--mono);font-size:13px;font-weight:700;
-    letter-spacing:.14em;text-transform:uppercase;
-    padding:16px 26px;border-radius:999px;
-    transition:transform .15s ease;
-  }
-  .rm-cta:hover{transform:translateY(-2px)}
-
+  .beat-copy p{margin-top:12px;color:var(--text-2);max-width:46ch}
+  .beat-copy .hm-link{margin-top:10px}
   @media(min-width:768px){
-    .rm-stage{grid-template-columns:auto 1fr;gap:44px;padding:40px}
-    .rm-shirt-wrap{width:180px;height:196px}
-    .rm-control{max-width:640px}
+    .beat{grid-template-columns:repeat(2,minmax(0,1fr));gap:56px;margin-top:64px}
+    .beat:nth-of-type(even) .beat-art{order:2}
+    .beat-art{min-height:340px}
   }
-  /* The whole section is a story, not a required control — if someone has
-     asked for less motion, hold every state still and let the copy carry it. */
-  @media(prefers-reduced-motion:reduce){
-    .rm-haze,.rm-outline{transition:none}
-    .remembers[data-step="6"] .rm-flash{animation:none}
-    .rm-cta:hover{transform:none}
+  /* Art 1 — the real problem shot, cropped to the face and headline */
+  /* 3:5 keeps only the left two-thirds of the creative (face + "Your shirt
+     does"); the right third carries burnt-in bullets this page doesn't use. */
+  .beat-art--photo{padding:0;background:var(--ink);min-height:0;display:block}
+  .beat-art--photo img{width:100%;height:auto;aspect-ratio:3/5;object-fit:cover;object-position:0% 50%}
+  @media(min-width:768px){.beat-art--photo{max-width:380px;justify-self:center;width:100%}}
+  /* Art 2 — the four layers */
+  .layers{list-style:none;width:100%;display:grid;gap:8px}
+  .layers li{
+    display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    border:1px solid var(--border-default);border-radius:var(--r-md);padding:14px 16px;
   }
+  .layers li span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--acid)}
+  .layers li b{font-family:var(--display);font-weight:900;font-size:19px}
+  /* Art 3 — the pocket */
+  .beat-art--pocket{gap:24px}
+  .beat-art--pocket img{height:220px;width:auto}
+  .pocket-facts{list-style:none;display:grid;gap:14px}
+  .pocket-facts li{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .pocket-facts b{display:block;font-family:var(--display);font-size:34px;line-height:1;color:var(--text);letter-spacing:-.02em;text-transform:none}
+  /* Art 4 — dries clear */
+  .beat-art--clear{flex-direction:column;align-items:flex-start;justify-content:flex-end;background:linear-gradient(160deg,var(--surface-2),var(--ink))}
+  .clear-word{font-family:var(--display);font-weight:900;font-size:clamp(46px,8vw,84px);line-height:.92;letter-spacing:-.03em;text-transform:uppercase}
+  .clear-word .acid{display:block}
+  .clear-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px;list-style:none}
+  .clear-tags li{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border-strong);border-radius:var(--r-pill);padding:5px 10px;color:var(--text-2)}
 
-  /* ============ Featured product ============ */
-  .product{border-top:1px solid var(--border-default);padding:clamp(56px,7vw,80px) 0 0}
-  .product-grid{display:grid;grid-template-columns:1fr;gap:36px;align-items:center}
-  .product-visual{
-    border:1px solid var(--border-default);
-    border-radius:var(--r-lg);
-    background:var(--surface);
-    padding:clamp(16px,4vw,28px);
-    max-width:480px;
-    margin:0 auto;
-    width:100%;
-    transition:border-color .18s ease,transform .18s ease;
+  /* ============ 4 · Reviews ============
+     Beta-tester quotes, word for word and labelled as such. A scroll-snap
+     row on phones, three columns on desktop. No stars and no counts until
+     real verified reviews exist. */
+  .rv-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:14px}
+  .rv-row{
+    list-style:none;display:grid;grid-auto-flow:column;grid-auto-columns:84%;
+    gap:12px;margin-top:28px;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding-bottom:8px;scrollbar-width:none;
   }
-  .product-visual img{display:block;width:100%;height:auto}
-  .product-info{display:flex;flex-direction:column}
-  .prod-badge-row{
-    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-    margin-bottom:12px;
+  .rv-row::-webkit-scrollbar{display:none}
+  .rv{
+    scroll-snap-align:start;border:1px solid var(--border-default);
+    border-radius:var(--r-xl);background:var(--surface);padding:26px;
+    display:flex;flex-direction:column;gap:16px;
   }
-  .prod-badge{
-    font-family:var(--mono);font-size:10px;font-weight:700;
-    letter-spacing:.14em;text-transform:uppercase;
-    color:var(--ink);background:var(--acid);
-    padding:3px 7px;border-radius:2px;
-  }
-  .prod-badge-dim{
-    font-family:var(--mono);font-size:9.5px;font-weight:700;
-    letter-spacing:.12em;text-transform:uppercase;
-    color:var(--text);background:var(--surface-2);
-    border:1px solid var(--rule-strong);
-    padding:2px 6px;border-radius:2px;
-  }
-  .product-info #productTitle{
-    font-family:var(--display);font-weight:900;
-    font-size:clamp(32px,5vw,46px);line-height:1.06;
-    letter-spacing:-.02em;color:var(--text);
-    margin:0 0 12px;
-  }
-  .prod-lead{
-    font-size:clamp(15px,1.6vw,16.5px);line-height:1.55;
-    color:var(--text);opacity:.9;
-    max-width:56ch;margin:0 0 20px;
-  }
-  .prod-specs{
-    list-style:none;margin:0 0 22px;padding:0;
-    display:grid;grid-template-columns:1fr;gap:10px;
-  }
-  .prod-spec{
-    display:flex;align-items:baseline;gap:12px;
-    padding:10px 14px;background:var(--surface);
-    border:1px solid var(--rule-strong);
-  }
-  .ps-label{
-    font-family:var(--mono);font-size:10.5px;font-weight:700;
-    letter-spacing:.14em;text-transform:uppercase;
-    color:var(--acid);flex:0 0 64px;
-  }
-  .ps-val{
-    font-family:var(--body);font-size:13.5px;
-    color:var(--text);line-height:1.35;
-  }
-  .prod-offer{
-    display:flex;flex-direction:column;gap:8px;
-    padding:16px 0;
-    border-top:1px solid var(--rule);
-    border-bottom:1px solid var(--rule);
-    margin-bottom:20px;
-  }
-  .prod-price-top{display:flex;align-items:baseline;gap:10px 14px;flex-wrap:wrap}
-  .prod-price{
-    font-family:var(--display);font-weight:900;
-    font-size:clamp(38px,5.5vw,50px);line-height:1;letter-spacing:-.03em;
-    color:var(--acid);
-  }
-  .prod-unit{
-    font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em;
-  }
-  .prod-mrp{
-    font-family:var(--mono);font-size:13.5px;letter-spacing:.06em;
-    color:var(--muted);text-decoration:line-through;opacity:.85;
-  }
-  .prod-discount{
-    font-family:var(--mono);font-size:10.5px;font-weight:700;
-    letter-spacing:.1em;text-transform:uppercase;
-    color:var(--acid);background:rgba(184,255,87,.08);
-    border:1px solid rgba(184,255,87,.3);padding:2px 6px;border-radius:2px;
-  }
-  .prod-price-meta{
-    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-    font-family:var(--mono);font-size:11px;letter-spacing:.08em;
-    text-transform:uppercase;color:var(--text);opacity:.9;
-  }
-  .prod-dot{color:var(--acid);opacity:.7}
-  .prod-cta-group{
-    display:flex;gap:12px;flex-wrap:wrap;align-items:center;
-    margin-bottom:12px;
-  }
-  .prod-trust-sub{
-    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-    font-family:var(--mono);font-size:11px;letter-spacing:.08em;
-    color:var(--muted);
-  }
-  .pts-dot{color:var(--rule-strong)}
-  @media(min-width:768px){
-    .product-grid{grid-template-columns:5fr 6fr;gap:44px;align-items:start}
-    .product-visual{max-width:none;margin:0}
-    .prod-specs{grid-template-columns:repeat(2,1fr);gap:10px}
-  }
+  .rv blockquote{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.3;letter-spacing:-.01em}
+  .rv-who{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .rv-who cite{font-style:normal;font-size:14px;color:var(--text-2)}
+  .rv-tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid);border:1px solid var(--border-focus);border-radius:var(--r-pill);padding:4px 9px;white-space:nowrap}
+  .rv-more{margin-top:20px;font-size:14px;color:var(--muted)}
+  .rv-more a{color:var(--acid)}
+  @media(min-width:768px){.rv-row{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible}}
 
-  /* Hinglish band — dark technical editorial treatment */
-  .band{
-    margin-top:64px;
-    background:var(--surface);
-    border-top:1px solid var(--border-subtle);
-    border-bottom:1px solid var(--border-subtle);
-    padding:26px 0;
-    overflow:hidden;
-  }
-  .band p{
-    font-family:var(--display);font-weight:900;
-    font-size:clamp(26px,5.5vw,48px);
-    line-height:1.1;
-    color:var(--text);
-    text-align:center;
-    letter-spacing:-.01em;
-  }
-
-  /* ============ Brand proof / How it works ============ */
-  .proof{
-    border-top:1px solid var(--border-default);
-    scroll-margin-top:calc(70px + env(safe-area-inset-top,0px));
-  }
-  .science-grid{
-    margin-top:40px;
+  /* ============ 5 · The offer ============ */
+  .offer{
+    border:1px solid var(--border-strong);border-radius:var(--r-xl);
+    background:var(--surface);overflow:hidden;
     display:grid;
-    grid-template-columns:1fr;
-    gap:16px;
-    list-style:none;
-    padding:0;
   }
-  .science-card{
-    border:1px solid var(--border-default);
-    border-radius:var(--r-md);
-    background:var(--surface);
-    padding:24px 20px;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    transition:border-color .2s ease;
+  .offer-art{
+    background:radial-gradient(circle at 50% 55%,var(--acid) 0 34%,transparent 34.3%),var(--surface-2);
+    display:flex;align-items:center;justify-content:center;padding:28px;min-height:280px;
   }
-  .science-card:hover{
-    border-color:rgba(184,255,87,.4);
-  }
-  .sc-role{
-    font-family:var(--mono);
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:.12em;
-    color:var(--acid);
-    text-transform:uppercase;
-  }
-  .sc-name{
-    font-family:var(--display);
-    font-weight:900;
-    font-size:22px;
-    letter-spacing:-.02em;
-    line-height:1.15;
-    color:var(--text);
-  }
-  .sc-desc{
-    font-size:14px;
-    line-height:1.5;
-    color:var(--muted);
-    margin:0;
-  }
-  @media(min-width:640px){
-    .science-grid{
-      grid-template-columns:repeat(2,1fr);
-      gap:16px;
-    }
-  }
-  @media(min-width:1024px){
-    .science-grid{
-      grid-template-columns:repeat(4,1fr);
-      gap:18px;
-    }
-    .science-card{
-      padding:28px 22px;
-    }
-  }
-
-  /* Deeper Detail: Accessible INCI Disclosure */
-  .science-inci{
-    margin-top:32px;
-    border-top:1px solid var(--rule);
-    border-bottom:1px solid var(--rule);
-  }
-  .science-inci-summary{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:16px 0;
-    font-family:var(--mono);
-    font-size:11.5px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--muted);
-    cursor:pointer;
-    list-style:none;
-    min-height:48px;
-    transition:color .2s ease;
-  }
-  .science-inci-summary::-webkit-details-marker{display:none}
-  .science-inci-summary:hover,
-  .science-inci-summary:focus-visible{
-    color:var(--acid);
-    outline:none;
-  }
-  .science-inci-summary:focus-visible{
-    outline:2px solid var(--acid);
-    outline-offset:2px;
-  }
-  .science-inci-arrow{
-    font-size:14px;
-    transition:transform .2s ease;
-    display:inline-block;
-  }
-  .science-inci[open] .science-inci-arrow{
-    transform:rotate(180deg);
-  }
-  .science-inci-table{
-    padding:0 0 20px;
-    display:grid;
-    gap:0;
-  }
-  .inci-row{
-    display:grid;
-    grid-template-columns:40px 1fr auto;
-    gap:12px;
-    align-items:baseline;
-    padding:10px 0;
-    border-bottom:1px solid var(--rule);
-    font-size:13px;
-  }
-  .inci-row:last-child{border-bottom:none}
-  .inci-row .i-pct{
-    font-family:var(--mono);
-    font-size:11px;
-    color:var(--muted);
-    letter-spacing:.05em;
-  }
-  .inci-row .i-name{
-    font-family:var(--body);
-    font-weight:600;
-    font-size:13.5px;
-    color:var(--text);
-  }
-  .inci-row .i-role{
-    font-family:var(--mono);
-    font-size:10.5px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--muted);
-    text-align:right;
-  }
-  .trust-row{
-    margin-top:40px;
-    display:grid;grid-template-columns:repeat(2,1fr);gap:14px;
-    list-style:none;
-  }
-  .trust-row li{
-    border:1px solid var(--border-default);
-    border-radius:var(--r-md);
-    background:var(--surface);
-    padding:18px 14px;
-    display:flex;align-items:center;gap:12px;
-    font-family:var(--mono);font-weight:500;
-    font-size:12px;letter-spacing:.08em;text-transform:uppercase;
-  }
-  .trust-row svg{flex:0 0 28px;width:28px;height:28px}
-  .trust-row .mask-ico{flex:0 0 28px;width:28px;height:28px}
+  .offer-art img{height:240px;width:auto;filter:drop-shadow(0 24px 30px rgba(0,0,0,.5))}
+  .offer-body{padding:28px 24px 30px}
+  .offer-body .hm-h2{font-size:clamp(30px,4.6vw,48px)}
+  .offer-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;margin-top:18px}
+  .offer-price b{font-family:var(--display);font-weight:900;font-size:56px;line-height:1}
+  .offer-price s{font-family:var(--mono);font-size:14px;color:var(--muted)}
+  .offer-price .off{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;background:var(--acid);color:var(--on-acid);border-radius:var(--r-pill);padding:4px 9px}
+  .offer-list{list-style:none;margin:20px 0 24px;display:grid;gap:10px}
+  .offer-list li{display:flex;gap:12px;font-size:15px;color:var(--text-2);line-height:1.4}
+  .offer-list li::before{content:'';flex:none;width:18px;height:18px;margin-top:1px;border-radius:50%;background:var(--acid) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23080808' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E") center/11px no-repeat}
+  .offer-list li strong{color:var(--text);font-weight:500}
+  .offer .hm-btn{width:100%}
+  .offer-pay{margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);text-align:center}
   @media(min-width:768px){
-    .trust-row{grid-template-columns:repeat(4,1fr);gap:20px}
-    .trust-row li{padding:22px 18px;font-size:13px}
+    .offer{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+    .offer-art{min-height:100%}
+    .offer-art img{height:340px}
+    .offer-body{padding:44px 44px 40px}
   }
 
-  /* ============ Benefits strip ============
-     Was buried above the FAQ as part of the "proof" section. Promoted to
-     directly under the hero: these four facts (made in India, ships
-     pan-India, COD, Hyderabad) are the objection-killers, and they were
-     doing no work eight screens down. */
-  .benefits-strip{
-    border-top:1px solid var(--border-default);
-    border-bottom:1px solid var(--border-default);
-    background:var(--surface);
-    padding:0;
-  }
-  .benefits-strip .trust-row{margin:0;border:0;gap:0}
-  .benefits-strip .trust-row li{
-    border:0;
-    border-radius:0;
-    border-right:1px solid var(--rule);
-    padding:20px 16px;
-    justify-content:center;
-  }
-  .benefits-strip .trust-row li:last-child{border-right:0}
-  @media(max-width:767px){
-    .benefits-strip .trust-row li:nth-child(2n){border-right:0}
-    .benefits-strip .trust-row li:nth-child(-n+2){border-bottom:1px solid var(--rule)}
-  }
+  /* ============ 6 · Founder (one strip, not a section of prose) ============ */
+  .founder{display:grid;gap:16px}
+  .founder p{color:var(--text-2);max-width:62ch}
+  .founder .f-name{font-family:var(--display);font-weight:900;font-size:var(--fs-h4);color:var(--text)}
+  .founder .f-role{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-top:4px}
+  @media(min-width:768px){.founder{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:48px;align-items:start}}
 
-  /* ============ Problem ============
-     Names why the alternatives fail before pitching the fix. Four blunt
-     answers in acid, each with the reason underneath. */
-  /* ============ Voices (social proof) ============ */
-  .voices{border-top:1px solid var(--border-default)}
-  .voice-grid{
-    margin-top:40px;
-    display:grid;grid-template-columns:1fr;gap:20px;
-    list-style:none;
-  }
-  .voice{
-    border:1px solid var(--border-default);
-    border-radius:var(--r-md);
-    background:var(--surface);
-    padding:24px;
-    display:flex;flex-direction:column;gap:12px;
-    transition:border-color .18s ease,background-color .18s ease,transform .18s ease;
-  }
-  .voice-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:8px;
-    flex-wrap:wrap;
-    padding-bottom:12px;
-    border-bottom:1px solid var(--rule);
-  }
-  .voice .v-person{
-    font-family:var(--mono);font-size:12.5px;font-style:normal;
-    letter-spacing:.06em;text-transform:uppercase;color:var(--text);
-    font-weight:700;
-  }
-  .voice .v-tag{
-    font-family:var(--mono);font-size:10.5px;
-    letter-spacing:.14em;text-transform:uppercase;
-    color:var(--acid);font-weight:600;
-    border:1px solid rgba(184,255,87,.35);
-    padding:2px 7px;
-  }
-  .voice .v-situation{
-    font-family:var(--mono);font-size:11px;
-    letter-spacing:.09em;text-transform:uppercase;
-    color:var(--muted);
-    margin:0;line-height:1.4;
-  }
-  .voice blockquote{
-    font-family:var(--display);font-weight:400;
-    font-size:18px;line-height:1.38;letter-spacing:-.01em;
-    color:var(--text);
-    margin:0;flex-grow:1;
-  }
-  .voices-note{
-    margin-top:26px;font-size:var(--fs-sm);color:var(--muted);max-width:60ch;
-    line-height:1.5;
-  }
-  .voices-note a{
-    color:var(--acid);text-decoration:underline;text-underline-offset:3px;
-    transition:color .18s ease;
-  }
-  .voices-note a:hover{color:var(--text)}
-  .voices-note a:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
-  @media(max-width:480px){
-    .voice{padding:20px 18px}
-  }
-  @media(min-width:768px){
-    .voice-grid{grid-template-columns:repeat(3,1fr);gap:24px}
-  }
-
-  /* ============ Founder ============ */
-  .founder{border-top:var(--bw-thin) solid var(--rule)}
-  .founder-grid{display:grid;grid-template-columns:1fr;gap:28px;align-items:start}
-  .founder-meta{display:flex;flex-direction:column}
-  .founder-identity{
-    margin-top:18px;
-    padding-top:14px;
-    border-top:1px solid var(--rule);
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-  }
-  .founder-identity .f-name{
-    font-family:var(--body);
-    font-weight:700;
-    font-size:15px;
-    color:var(--text);
-    letter-spacing:-.01em;
-  }
-  .founder-identity .f-role{
-    font-family:var(--mono);
-    font-size:11.5px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--muted);
-  }
-  .founder-body{max-width:62ch;font-size:var(--fs-lead);line-height:1.55}
-  .founder-body p+p{margin-top:16px}
-  .founder-link{
-    display:inline-flex;
-    align-items:center;
-    min-height:44px;
-    color:var(--acid);
-    text-decoration:underline;
-    text-underline-offset:3px;
-    font-size:var(--fs-sm);
-    font-family:var(--mono);
-    letter-spacing:.04em;
-    transition:color .18s ease;
-  }
-  .founder-link:hover{color:var(--text)}
-  .founder-link:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
-  .founder-sig{
-    margin-top:26px;padding-top:18px;
-    border-top:1px solid var(--rule);
-    font-family:var(--mono);font-size:12px;
-    letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
-  }
-  .founder-sig strong{color:var(--text);font-weight:400}
-  @media(min-width:900px){
-    .founder-grid{grid-template-columns:minmax(280px,360px) 1fr;gap:56px}
-    .founder-identity{margin-top:22px}
-  }
-
-  /* ============ FAQ ============ */
-  .faq{border-top:1px solid var(--border-default)}
-  .faq-list{max-width:760px}
-  .faq-item{
-    border:1px solid var(--border-default);
-    border-radius:var(--r-md);
-    background:var(--surface);
-    margin-bottom:12px;
-    transition:border-color .18s ease,background-color .18s ease;
-  }
-  .faq-item h3{
-    font-family:var(--display);font-weight:900;
-    font-size:25px;letter-spacing:-.01em;
-    line-height:1.1;
-    margin:0;
-    display:inline;
-  }
-  /* Accordion: the item is a <details>, the question is the <summary>.
-     Open/closed chrome (the +/- and the row transition) lives in soft.css. */
-  .faq-item{padding:0}
-  .faq-item > summary{padding:22px 26px}
-  .faq-item .faq-answer-wrap > div{padding:0 26px 22px}
-  .faq-item .faq-answer-wrap p{margin-top:2px}
-  .faq-item p{font-size:16px;line-height:1.55;color:var(--text)}
+  /* ============ 7 · FAQ ============
+     Shape, padding, type and the +/− all come from soft.css §3. */
+  .faq .hm-h2{margin-bottom:28px}
+  .faq-item p{font-size:16px;line-height:1.55;color:var(--text-2)}
   .faq-item a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
-  .faq-item a:hover{color:#d1ff8a}
+  .faq-guides{margin-top:24px;font-size:14px;color:var(--muted)}
+  .faq-guides a{color:var(--acid)}
+
+  /* ============ 8 · Final ============ */
+  .final{background:var(--acid);color:var(--on-acid);padding:var(--section-y) 0;text-align:center}
+  .final h2{font-family:var(--display);font-weight:900;font-size:clamp(40px,8.5vw,96px);line-height:.94;letter-spacing:-.03em;text-transform:uppercase}
+  .final p{margin:16px auto 26px;max-width:44ch;font-size:var(--fs-lead)}
+  .final .hm-btn{background:var(--ink);color:var(--acid)}
+  .final .hm-btn:hover{background:var(--surface-2)}
+  .final small{display:block;margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.06em}
+
+  /* Scroll reveal — opacity/transform only, opt-in to motion */
+  @media(prefers-reduced-motion:no-preference){
+    .js .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+    .js .reveal.in{opacity:1;transform:none}
+    .hm-btn:active{transform:scale(.97)}
+  }
 
   /* ============ Consent bar ============ */
   #smelloff-consent-bar{
@@ -1280,130 +626,39 @@
   #smelloff-consent-bar .cb-accept{background:var(--acid);color:var(--ink);border:0}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
 
-  /* ===================================================================== */
-  /* MOTION + EDITORIAL PASS                                               */
-  /* All motion is opt-in via prefers-reduced-motion: no-preference and    */
-  /* uses transform/opacity only, so it never shifts layout (CLS stays 0). */
-  /* ===================================================================== */
-
-  /* Technical editorial ticker strip (sits under the hero) */
-  .ticker{
-    background:var(--surface);color:var(--text);
-    border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);
-    overflow:hidden;white-space:nowrap;
-  }
-  .ticker-track{
-    display:inline-block;
-    font-family:var(--display);font-weight:700;
-    font-size:clamp(16px,2.2vw,22px);letter-spacing:-.01em;
-    padding:12px 0;
-  }
-  .ticker-track span{padding:0 24px}
-  .ticker-track .dot{color:var(--acid);opacity:.8}
-
-  /* Hinglish band as a moving marquee (static, centred fallback below) */
-  .band-marquee{display:none}
-  .band .band-static{margin:0}
-
-  @media (prefers-reduced-motion: no-preference){
-    .ticker-track{animation:ticker 28s linear infinite;will-change:transform}
-    @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-    /* Keep the static line in the accessibility tree (screen readers still
-       get the phrase) but hide it visually; the marquee is aria-hidden. */
-    .band .band-static{
-      position:absolute;width:1px;height:1px;padding:0;margin:-1px;
-      overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
-    }
-    .band-marquee{
-      display:block;overflow:hidden;white-space:nowrap;
-    }
-    .bm-track{
-      display:inline-block;
-      font-family:var(--display);font-weight:900;
-      font-size:clamp(26px,5.5vw,48px);line-height:1.1;letter-spacing:-.01em;
-      color:var(--text);
-      animation:ticker 30s linear infinite;will-change:transform;
-    }
-    .bm-track span{padding:0 32px}
-
-    /* Scroll-reveal — only when JS is on AND motion is allowed. Never on the
-       hero (LCP), so the headline paints immediately. Transform-only (no
-       opacity fade): the text stays fully opaque, so contrast is always valid
-       and content can never render dim or invisible; it just slides up into
-       place. Transforms don't affect layout, so CLS stays 0. */
-    .js .reveal{transform:translateY(28px);transition:transform .55s cubic-bezier(.2,.6,.2,1)}
-    .js .reveal.in{transform:none}
-  }
-
-  /* Controlled technical hovers (pointer devices only) */
-  .zone,.faq-item,.trust-row li,.product-visual,.voice{transition:transform .18s ease,border-color .18s ease,background-color .18s ease}
-  @media(hover:hover){
-    .zone:hover{transform:translateY(-1px);border-color:var(--border-strong);background:var(--surface-2)}
-    .faq-item:hover{border-color:var(--border-strong);background:var(--surface-2)}
-    .product-visual:hover{transform:translateY(-1px);border-color:var(--border-strong)}
-    .voice:hover{transform:translateY(-1px);border-color:var(--border-strong);background:var(--surface-2)}
-    .benefits-strip .trust-row li:hover{background:var(--surface-2);color:var(--text)}
-  }
-
-  /* Sticky mobile buy bar — homepage only. Hidden until the hero CTA
-     leaves the viewport; hidden again at ≥768px where the header CTA is enough. */
+  /* Sticky mobile buy bar. Shown only while neither the hero CTA nor the
+     offer CTA is on screen, so there is always exactly one route to
+     checkout in view. Hidden at ≥768px where the header CTA is enough. */
   .mobile-bar{
-    position:fixed;bottom:0;left:0;right:0;
-    z-index:60;
+    position:fixed;bottom:0;left:0;right:0;z-index:60;
     background:var(--ink);
     padding:12px max(20px,env(safe-area-inset-left,0px))
             calc(12px + env(safe-area-inset-bottom,0px))
             max(20px,env(safe-area-inset-right,0px));
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    transform:translateY(100%);
-    transition:transform .3s ease;
-    border-top:1px solid rgba(244,241,234,.1);
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    transform:translateY(100%);transition:transform .3s ease;
+    border-top:1px solid var(--border-default);
   }
   .mobile-bar.visible{transform:translateY(0)}
   @media(max-width:767px){
     body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   }
-  .mobile-bar .mb-label{
-    font-family:var(--mono);
-    font-size:11px;
-    line-height:1.3;
-    letter-spacing:.08em;
-    color:var(--paper, var(--text));
-    opacity:.8;
-    margin-right:12px;
-    flex:1 1 auto;
-  }
+  .mobile-bar .mb-label{font-family:var(--mono);font-size:11px;line-height:1.35;letter-spacing:.06em;color:var(--text-2);flex:1 1 auto}
+  .mobile-bar .mb-label b{display:block;color:var(--text);font-size:13px}
   .mobile-bar .mb-btn{
-    background:var(--acid);
-    color:var(--ink);
-    border:none;
-    min-height:44px;
-    padding:12px 24px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    font-family:var(--mono);
-    font-size:12px;
-    font-weight:700;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    text-decoration:none;
-    cursor:pointer;
-    border-radius:2px;
-    flex-shrink:0;
-    white-space:nowrap;
+    background:var(--acid);color:var(--ink);min-height:48px;padding:12px 22px;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;text-decoration:none;border-radius:var(--r-pill);
+    flex-shrink:0;white-space:nowrap;
   }
-  .mobile-bar .mb-btn:focus-visible{outline:2px solid var(--paper, var(--text));outline-offset:2px}
   @media(min-width:768px){.mobile-bar{display:none !important}}
 </style>
+<style id="a11y-utility-css">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=6bc5918a">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=9c0f9c3e">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=8525b9ce">
 <script src="/assets/js/chrome.js?v=567c18e0" defer></script>
-<style id="a11y-utility-css">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
 </head>
 <body>
 
@@ -1447,517 +702,288 @@
 <!-- /SF-CHROME:HEADER -->
 
 <div class="mobile-bar" id="homeMobileBar" aria-hidden="true">
-  <span class="mb-label">ODORSTRIKE 50ml · ₹229</span>
-  <a class="mb-btn" href="/odorstrike?buy=1">GET ODORSTRIKE</a>
+  <span class="mb-label"><b>ODORSTRIKE · ₹229</b>Free prepaid shipping · COD +₹60</span>
+  <a class="mb-btn" href="/odorstrike?buy=1" tabindex="-1">FIX MY SHIRT</a>
 </div>
 
 <main id="sf-main" tabindex="-1">
 
-  <!-- ============ 1 · HERO ============ -->
+  <!-- ============ 1 · HERO ============
+       One claim, one price, one button. On a 390×844 phone the CTA sits
+       above the fold; the bottle rides beside the headline instead of
+       pushing everything down. The COD charge is stated here, before the
+       checkout — see "COD carries a ₹60 handling charge" in CLAUDE.md. -->
   <section class="hero" aria-labelledby="heroTitle">
-    <div class="wrap">
-      <!-- Asymmetric two-column composition on desktop, conversion-ordered stack on mobile.
-           Communicates in 3 seconds: product, fabric location, problem solved, not perfume/deo, price, and CTA. -->
-      <div class="hero-grid">
-        <div class="hero-header">
-          <p class="hero-eyebrow"><span class="hero-eyebrow-pill">FABRIC ODOR CONTROL · FOR CLOTHES</span></p>
-          <h1 id="heroTitle" class="hero-title">Your shirt smells. <span class="acid">Fix it.</span></h1>
-          <p class="hero-sub">ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin.</p>
-          <div class="hero-clarify hero-clarify--desktop" aria-label="Product classification">
-            <span class="hero-clarify-tag">NOT PERFUME</span>
-            <span class="hero-clarify-dot">/</span>
-            <span class="hero-clarify-tag">NOT BODY DEODORANT</span>
-            <span class="hero-clarify-dot">/</span>
-            <span class="hero-clarify-tag hero-clarify-highlight">FABRIC ONLY</span>
-          </div>
-        </div>
-
-        <!-- The product visual + isolated config-gated demo slot -->
-        <div class="hero-visual-wrap">
-          <figure class="hero-visual" id="heroVisual">
-            <picture>
-              <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml pocket fabric odor eliminator spray bottle for clothes" width="241" height="915" fetchpriority="high" decoding="async">
-            </picture>
-            <figcaption>50ml · ~250 sprays</figcaption>
-          </figure>
-
-          <!-- Isolated demonstration slot (graceful fallback to structured action sequence) -->
-          <div class="hero-demo-slot" id="heroDemoSlot" data-demo-state="fallback">
-            <div class="hero-demo-card">
-              <div class="hero-demo-tagline">
-                <span class="hdt-title">HOW IT WORKS</span>
-                <span class="hdt-badge">FABRIC ONLY</span>
-              </div>
-              <ol class="hero-demo-steps" aria-label="3-step odor neutralization workflow">
-                <li class="hero-demo-step">
-                  <div class="hds-top">
-                    <span class="hds-num">01</span>
-                    <strong class="hds-action">SPRAY</strong>
-                  </div>
-                  <span class="hds-desc">2–3 pumps on fabric</span>
-                </li>
-                <li class="hds-sep" aria-hidden="true">→</li>
-                <li class="hero-demo-step">
-                  <div class="hds-top">
-                    <span class="hds-num">02</span>
-                    <strong class="hds-action">WAIT 15–30 SEC</strong>
-                  </div>
-                  <span class="hds-desc">Fast dry · binds odor</span>
-                </li>
-                <li class="hds-sep" aria-hidden="true">→</li>
-                <li class="hero-demo-step hds-result">
-                  <div class="hds-top">
-                    <span class="hds-num">03</span>
-                    <strong class="hds-action">WEAR FRESH</strong>
-                  </div>
-                  <span class="hds-desc">Clean shirt · fresh fabric</span>
-                </li>
-              </ol>
-            </div>
-          </div>
-        </div>
-
-        <!-- Price, CTAs, clarification tag on mobile, usage microcopy, and trust badges -->
-        <div class="hero-buy">
-          <div class="hero-offer">
-            <div class="hero-offer-top">
-              <span class="hero-price">₹229</span>
-              <span class="hero-mrp">M.R.P. ₹499</span>
-            </div>
-            <div class="hero-price-meta">
-              <span>50ml · ~250 sprays</span>
-              <span class="hero-meta-dot">·</span>
-              <span>Free shipping across India</span>
-            </div>
-          </div>
-
-          <div class="hero-cta-group">
-            <a class="btn hero-btn-primary" href="/odorstrike?buy=1" id="heroBuyBtn">FIX MY SHIRT — ₹229</a>
-            <a class="btn btn-ghost hero-btn-secondary" href="#remembers" id="heroHowBtn">See how it works</a>
-          </div>
-
-          <div class="hero-clarify hero-clarify--mobile" aria-label="Product classification">
-            <span class="hero-clarify-tag">NOT PERFUME</span>
-            <span class="hero-clarify-dot">/</span>
-            <span class="hero-clarify-tag">NOT BODY DEODORANT</span>
-            <span class="hero-clarify-dot">/</span>
-            <span class="hero-clarify-tag hero-clarify-highlight">FABRIC ONLY</span>
-          </div>
-
-          <div class="hero-usage" aria-label="Usage guide">
-            <span class="hero-usage-label">HOW TO USE:</span>
-            <span class="hero-usage-pill">2–3 sprays</span>
-            <span class="hero-usage-arrow" aria-hidden="true">→</span>
-            <span class="hero-usage-pill">wait 15–30 sec</span>
-            <span class="hero-usage-arrow" aria-hidden="true">→</span>
-            <span class="hero-usage-pill">wear</span>
-          </div>
-
-          <div class="hero-trust-mini">
-            <span>Made in India</span>
-            <span class="htm-dot">/</span>
-            <span>Free shipping across India</span>
-            <span class="htm-dot">/</span>
-            <span>7-day returns</span>
-          </div>
-        </div>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">FABRIC ODOR CONTROL · FOR CLOTHES</p>
+        <h1 id="heroTitle" class="hero-title">Your shirt smells. <span class="acid">Fix it.</span></h1>
+        <p class="hero-sub">ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin. <strong>2–3 sprays. Dry in 15–30 sec. Wear.</strong></p>
       </div>
 
-      <!-- Where smell hides — all three are clothing situations. -->
-      <h2 class="sr-only">Where odor hides</h2>
-      <div class="zones">
-        <div class="zone">
-          <svg class="z-ico" viewBox="0 0 24 24" role="img" aria-hidden="true">
-            <path d="M8 3 4.5 5 3 9.5l3 1.4V21h12V10.9l3-1.4L19.5 5 16 3l-1.5 2.2a3.2 3.2 0 0 1-5 0Z"/>
-          </svg>
-          <div class="z-content">
-            <div class="z-head">
-              <span class="z-num">01</span>
-              <span class="z-tag">HEAT &amp; SWEAT</span>
-            </div>
-            <h3 class="z-title">Shirt collar</h3>
-            <p class="z-desc">Sits tight against your neck all day. Sweat and body heat soak directly into the cotton weave where skin deodorant cannot reach.</p>
-          </div>
+      <figure class="hero-visual">
+        <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml pocket fabric odor spray bottle for clothes" width="241" height="915" fetchpriority="high" decoding="async">
+      </figure>
+
+      <ul class="hero-not" aria-label="What ODORSTRIKE is and is not">
+        <li>NOT PERFUME</li>
+        <li>NOT BODY DEODORANT</li>
+        <li class="on">FABRIC ONLY</li>
+      </ul>
+
+      <div class="hero-buy">
+        <p class="hero-price">
+          <b>₹229</b>
+          <s>M.R.P. ₹499</s>
+          <span class="off">54% OFF</span>
+          <span class="size">50ml pocket bottle · ~250 sprays · up to 8 hours on fabric</span>
+        </p>
+        <div class="hero-ctas">
+          <a class="hm-btn" href="/odorstrike?buy=1" id="heroBuyBtn">FIX MY SHIRT — ₹229</a>
+          <a class="hm-link" href="#how">See how it works ↓</a>
         </div>
-        <div class="zone">
-          <svg class="z-ico" viewBox="0 0 24 24" role="img" aria-hidden="true">
-            <path d="M9 5.6 4.5 7.4 3 11.6l3 1.2V21.4h12v-8.6l3-1.2-1.5-4.2L15 5.6"/>
-            <path d="M8.8 6.4C8.8 3.6 10.2 2.4 12 2.4s3.2 1.2 3.2 4"/>
-            <path d="M9.8 6.6c.4 1.6 1.2 2.4 2.2 2.4s1.8-.8 2.2-2.4"/>
-            <path d="M11 9.2 10.6 13M13 9.2l.4 3.8"/>
-          </svg>
-          <div class="z-content">
-            <div class="z-head">
-              <span class="z-num">02</span>
-              <span class="z-tag">REPEAT WEAR</span>
-            </div>
-            <h3 class="z-title">Hoodie &amp; tees</h3>
-            <p class="z-desc">Worn through long hours and crowded commutes. Heavier fabric absorbs daily sweat and ambient odor, holding it between washes.</p>
-          </div>
-        </div>
-        <div class="zone">
-          <svg class="z-ico" viewBox="0 0 24 24" role="img" aria-hidden="true">
-            <path d="M8.4 3.4 4.4 5.4 3 10l2.6 1.2V21h13V11.2L21.2 10l-1.4-4.6-4-2"/>
-            <path d="m8.4 3.4 3.7 6.2 3.7-6.2M12.1 9.6V21"/>
-            <path d="M7.6 15.2h2.2M14.6 15.2h2.2"/>
-          </svg>
-          <div class="z-content">
-            <div class="z-head">
-              <span class="z-num">03</span>
-              <span class="z-tag">BETWEEN WASHES</span>
-            </div>
-            <h3 class="z-title">Blazer &amp; jacket</h3>
-            <p class="z-desc">Can't be washed after every wear. Sits over your shirt all day and carries accumulated odor right into evening meetings.</p>
-          </div>
-        </div>
+        <ul class="hero-ship" aria-label="Delivery and payment">
+          <li><b>Free</b>shipping on prepaid</li>
+          <li><b>COD</b>+₹60 · ₹289 total</li>
+          <li><b>7-day</b>returns</li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- ============ 1b · BENEFITS STRIP ============
-       Promoted from the old "proof" section further down the page — these
-       are the objection-killers (COD, free shipping, made in India) and
-       they belong immediately under the buy CTA, not eight screens away. -->
-  <div class="benefits-strip">
-    <div class="wrap">
-      <ul class="trust-row">
-        <li>
-          <span class="mask-ico ico-india" role="img" aria-hidden="true"></span>
-          Made in India
-        </li>
-        <li>
-          <span class="mask-ico ico-truck" role="img" aria-hidden="true"></span>
-          Ships across India
-        </li>
-        <li>
-          <span class="mask-ico ico-shield" role="img" aria-hidden="true"></span>
-          7-Day Returns
-        </li>
-        <li>
-          <span class="mask-ico ico-hyderabad" role="img" aria-hidden="true"></span>
-          Based in Hyderabad
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Acid ticker strip (decorative brand phrases; hidden from AT) -->
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
-      <span>Fresh On The Go.</span><span class="dot">/</span><span>Built For Fabric.</span><span class="dot">/</span><span>Shirts · Hoodies · Jackets · Jeans</span><span class="dot">/</span><span>Fresh On The Go.</span><span class="dot">/</span><span>Built For Fabric.</span><span class="dot">/</span><span>Shirts · Hoodies · Jackets · Jeans</span><span class="dot">/</span>
+      <span>Smell Khatam. Confidence Qaayam.</span><span>/</span><span>Shirts · Hoodies · Jackets · Jeans</span><span>/</span><span>Made in Hyderabad</span><span>/</span><span>Smell Khatam. Confidence Qaayam.</span><span>/</span><span>Shirts · Hoodies · Jackets · Jeans</span><span>/</span><span>Made in Hyderabad</span><span>/</span>
     </div>
   </div>
 
-  <!-- ============ 2 · YOUR SHIRT REMEMBERS ============
-       Walks the visitor through their own day so they recognize that odor lives
-       in fabric, not just on skin.
-       Sequence: PROBLEM -> WHY IT HAPPENS -> REAL-LIFE MOMENT -> ODORSTRIKE MAKES SENSE. -->
-  <section class="remembers" id="remembers" aria-labelledby="remembersTitle" data-step="0">
+  <!-- ============ 2 · SPRAY. WAIT. WEAR. ============ -->
+  <section class="hm-sec" id="how" aria-labelledby="howTitle">
     <div class="wrap">
-      <p class="eyebrow reveal">THE CLOTHING ODOR PROBLEM</p>
-      <h2 id="remembersTitle" class="reveal">Your shirt remembers<br>everything you did today.</h2>
-      <p class="rm-intro reveal">Deodorant works on your skin. But sweat and daily odors get trapped inside the weave of your clothes — where body sprays can't fix them. Drag through the day to see why odor builds up in fabric.</p>
-
-      <div class="rm-stage reveal">
-        <!-- The garment. Three zones (collar, both underarms) gain a soft
-             haze as the day loads up; the whole shirt strokes acid on reset. -->
-        <div class="rm-shirt-wrap">
-          <svg class="rm-shirt" viewBox="0 0 120 130" role="img" aria-hidden="true">
-            <defs>
-              <radialGradient id="rmHaze">
-                <stop offset="0%" stop-color="var(--muted)" stop-opacity=".85"/>
-                <stop offset="100%" stop-color="var(--muted)" stop-opacity="0"/>
-              </radialGradient>
-            </defs>
-            <g class="rm-haze">
-              <circle cx="60" cy="26" r="17" fill="url(#rmHaze)"/>
-              <circle cx="27" cy="52" r="15" fill="url(#rmHaze)"/>
-              <circle cx="93" cy="52" r="15" fill="url(#rmHaze)"/>
-              <circle cx="60" cy="66" r="20" fill="url(#rmHaze)"/>
-            </g>
-            <path class="rm-outline" d="M40 12 20 24 12 50l16 7v62h64V57l16-7-8-26-20-12-8 11a16 16 0 0 1-24 0Z"/>
-          </svg>
-          <span class="rm-flash" aria-hidden="true"></span>
-        </div>
-
-        <!-- aria-live so the story is announced as the slider moves; the
-             slider itself carries the accessible name and value text. -->
-        <div class="rm-readout" aria-live="polite">
-          <p class="rm-time" id="rmTime">07:30</p>
-          <p class="rm-event" id="rmEvent">Fresh shirt on. Morning deodorant applied to skin.</p>
-          <p class="rm-state" id="rmState">Clean start</p>
-        </div>
-      </div>
-
-      <div class="rm-control reveal">
-        <input class="rm-scrub" id="rmScrub" type="range" min="0" max="6" step="1" value="0"
-               aria-labelledby="remembersTitle" aria-describedby="rmEvent">
-        <div class="rm-axis" aria-hidden="true">
-          <span>07:30 Morning</span><span>19:45 Evening</span><span>Reset with ODORSTRIKE</span>
-        </div>
-      </div>
-
-      <p class="rm-foot reveal">These are everyday moments, not lab tests. Deodorant takes care of your skin — ODORSTRIKE neutralizes odor trapped in your clothes without replacing regular laundry.</p>
-      <a class="rm-cta reveal" href="/odorstrike?buy=1">Fix your shirt — ₹229</a>
-    </div>
-  </section>
-
-  <!-- ============ 3 · FEATURED PRODUCT ============ -->
-  <section class="product" id="odorstrike-featured" aria-labelledby="productTitle">
-    <div class="wrap">
-      <div class="product-grid">
-        <div class="product-visual reveal">
-          <picture>
-            <source srcset="/assets/optimized/odorstrike-bottle-720.avif 720w, /assets/optimized/odorstrike-bottle-1080.avif 1080w" sizes="(min-width:900px) 360px, 50vw" type="image/avif">
-            <source srcset="/assets/optimized/odorstrike-bottle-720.webp 720w, /assets/optimized/odorstrike-bottle-1080.webp 1080w" sizes="(min-width:900px) 360px, 50vw" type="image/webp">
-            <img src="/assets/optimized/odorstrike-bottle-720.webp" alt="ODORSTRIKE 50ml pocket fabric odor eliminator mist bottle" width="720" height="720" loading="lazy" decoding="async">
-          </picture>
-        </div>
-        <div class="product-info reveal">
-          <div class="prod-badge-row">
-            <span class="prod-badge">FABRIC ONLY</span>
-            <span class="prod-badge-dim">NOT FOR SKIN</span>
-            <span class="prod-badge-dim">NOT PERFUME</span>
-          </div>
-          <p class="eyebrow">FABRIC ODOR CONTROL · 50ML</p>
-          <h2 id="productTitle">ODORSTRIKE</h2>
-          <p class="prod-lead">A pocket-sized fabric odor eliminator mist for the clothes you're already wearing. Neutralizes sweat and trapped ambient odor in the weave — giving you up to 8 hours of fabric odor protection under normal office/commute conditions.</p>
-          
-          <ul class="prod-specs" aria-label="Product features and specifications">
-            <li class="prod-spec">
-              <span class="ps-label">SIZE</span>
-              <span class="ps-val">50ml Pocket Mist (~250 sprays)</span>
-            </li>
-            <li class="prod-spec">
-              <span class="ps-label">ACTIVES</span>
-              <span class="ps-val">HPβCD &amp; Zinc PCA active formula</span>
-            </li>
-            <li class="prod-spec">
-              <span class="ps-label">FINISH</span>
-              <span class="ps-val">Dries clean in 15–30s · Zero residue</span>
-            </li>
-            <li class="prod-spec">
-              <span class="ps-label">SCENT</span>
-              <span class="ps-val">Light fresh fabric scent · Not a perfume</span>
-            </li>
-          </ul>
-
-          <div class="prod-offer">
-            <div class="prod-price-top">
-              <span class="prod-price">₹229</span>
-              <span class="prod-unit">for 1 × 50ml ODORSTRIKE</span>
-              <span class="prod-mrp">MRP ₹499</span>
-              <span class="prod-discount">54% OFF</span>
-            </div>
-            <div class="prod-price-meta">
-              <span>FREE SHIPPING PAN-INDIA</span>
-              <span class="prod-dot" aria-hidden="true">·</span>
-              <span>7-DAY RETURNS</span>
-              <span class="prod-dot" aria-hidden="true">·</span>
-              <span>SECURE CHECKOUT</span>
-            </div>
-          </div>
-
-          <div class="prod-cta-group">
-            <a class="btn" href="/odorstrike?buy=1">GET ODORSTRIKE — ₹229</a>
-            <a class="btn-ghost" href="/odorstrike">View Full Specs →</a>
-          </div>
-          <div class="prod-trust-sub">
-            <span>Made in Hyderabad</span>
-            <span class="pts-dot" aria-hidden="true">·</span>
-            <span>Zero Residue</span>
-            <span class="pts-dot" aria-hidden="true">·</span>
-            <span>Non-Aerosol Mist</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="band">
-      <p class="band-static">Smell Khatam. Confidence Qaayam.</p>
-      <div class="band-marquee" aria-hidden="true">
-        <div class="bm-track">
-          <span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 3b · VOICES ============
-       The same three beta-tester quotes that run on the ODORSTRIKE product
-       page, kept word-for-word and labelled as beta testers. These are the
-       only first-hand accounts that exist — do not add invented ones here.
-       When real verified customer reviews land, swap these and update the
-       Product schema on /odorstrike at the same time. -->
-  <section class="voices" aria-labelledby="voicesTitle">
-    <div class="wrap">
-      <p class="eyebrow reveal">Early testers</p>
-      <h2 id="voicesTitle" class="reveal">What it's like to carry one</h2>
-      <ul class="voice-grid">
-        <li class="voice reveal">
-          <div class="voice-head">
-            <cite class="v-person">Rohit, 26 · Bengaluru</cite>
-            <span class="v-tag">Beta tester</span>
-          </div>
-          <p class="v-situation">2-hour bike ride → client meeting</p>
-          <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
+      <p class="hm-eyebrow reveal">HOW IT WORKS · FABRIC ONLY</p>
+      <h2 id="howTitle" class="hm-h2 reveal">Spray. Wait. Wear.</h2>
+      <ol class="how-steps">
+        <li class="how-step reveal">
+          <span class="how-num">01</span>
+          <h3>Spray</h3>
+          <p>2–3 light sprays from 15–20 cm onto the collar, underarms or chest of the shirt. Fabric, never skin.</p>
         </li>
-        <li class="voice reveal">
-          <div class="voice-head">
-            <cite class="v-person">Aakash, 24 · Pune</cite>
-            <span class="v-tag">Beta tester</span>
-          </div>
-          <p class="v-situation">Gym bag · Post-workout to office</p>
-          <blockquote>“Lives in my gym bag now. Post-workout, pre-Uber, no more ‘should I shower at office’ anxiety.”</blockquote>
+        <li class="how-step reveal">
+          <span class="how-num">02</span>
+          <h3>Wait</h3>
+          <p>15–30 seconds. It dries clear — glycerine-free, no white marks, no damp patch.</p>
         </li>
-        <li class="voice reveal">
-          <div class="voice-head">
-            <cite class="v-person">Karan, 29 · Delhi</cite>
-            <span class="v-tag">Beta tester</span>
-          </div>
-          <p class="v-situation">Dinner jacket · Biryani odor reset</p>
-          <blockquote>“Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger.”</blockquote>
-        </li>
-      </ul>
-      <p class="voices-note reveal">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review</a> — worn, sweated and stain-tested across India.</p>
-    </div>
-  </section>
-
-  <!-- ============ 3c · FOUNDER ============
-       Refined founder trust hierarchy:
-       1. Founder identity (Jogdhande Nikhil Patil, Founder, Smelloff · Hyderabad)
-       2. Why Smelloff exists (The gap between skin deodorant and fabric weave in Indian heat)
-       3. What was built (ODORSTRIKE: pocket fabric mist to neutralize trapped clothing odor)
-       4. Real-world credibility (Formulated and tested in Hyderabad for everyday commutes)
-       5. Link to /about -->
-  <section class="founder" aria-labelledby="founderTitle">
-    <div class="wrap">
-      <div class="founder-grid">
-        <div class="founder-meta reveal">
-          <p class="eyebrow">FOUNDER · HYDERABAD</p>
-          <h2 id="founderTitle">Built for the gap<br>deodorant leaves behind</h2>
-          <div class="founder-identity">
-            <span class="f-name">Jogdhande Nikhil Patil</span>
-            <span class="f-role">Founder, Smelloff · Hyderabad</span>
-          </div>
-        </div>
-        <div class="founder-body reveal">
-          <p>Smelloff started from an everyday problem in 41°C Hyderabad heat: morning deodorant had worked on skin, but the shirt had trapped the sweat. Deodorant takes care of skin, but the odor people notice mid-day lives in the fabric weave — and layering perfume over it only makes it worse.</p>
-          <p>That gap is why Smelloff was built. Instead of launching another fragrance brand, we spent six months testing prototypes to create ODORSTRIKE — a pocket-sized mist formulated specifically to neutralize trapped odor compounds inside clothing fibres rather than masking them.</p>
-          <p>Built and tested in Hyderabad around the actual heat, humidity, and daily commutes Indian clothes go through every day. Made in India, focused entirely on fabric odor control.</p>
-          <p><a class="founder-link" href="/about">Read the full founder story →</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 4 · BRAND PROOF / THE SCIENCE ============ -->
-  <section class="proof" id="how-it-works" aria-labelledby="proofTitle">
-    <div class="wrap">
-      <p class="eyebrow reveal">FABRIC ODOR CONTROL · THE SCIENCE</p>
-      <h2 id="proofTitle" class="reveal">Not perfume. Not deodorant.<br>Odor control for clothes.</h2>
-      <div class="section-body reveal">
-        <p>Sweat and daily odors get trapped inside the weave of your clothes. Perfumes and body sprays only sit on top of the fabric and layer heavy scent over the smell. ODORSTRIKE targets trapped odor directly in the fibres — neutralizing it at the source instead of masking.</p>
-      </div>
-
-      <ol class="science-grid reveal" aria-label="4-layer fabric odor control mechanism">
-        <li class="science-card">
-          <div class="sc-head">
-            <span class="sc-role">01 — TRAP</span>
-          </div>
-          <h3 class="sc-name">HPβCD</h3>
-          <p class="sc-desc">Hollow ring-shaped molecule physically cages trapped odor compounds inside fabric fibres so smell cannot escape.</p>
-        </li>
-        <li class="science-card">
-          <div class="sc-head">
-            <span class="sc-role">02 — NEUTRALIZE</span>
-          </div>
-          <h3 class="sc-name">Zinc PCA</h3>
-          <p class="sc-desc">Zinc salt binds to captured odor compounds and neutralizes them directly at the fabric source instead of masking.</p>
-        </li>
-        <li class="science-card">
-          <div class="sc-head">
-            <span class="sc-role">03 — PREVENT</span>
-          </div>
-          <h3 class="sc-name">Triethyl Citrate</h3>
-          <p class="sc-desc">Slows the breakdown of fresh sweat in fibres before new odor can form, maintaining up to 8 hours of fabric protection.</p>
-        </li>
-        <li class="science-card">
-          <div class="sc-head">
-            <span class="sc-role">04 — ANTI-REGROWTH</span>
-          </div>
-          <h3 class="sc-name">Zinc Gluconate</h3>
-          <p class="sc-desc">Helps prevent odor from re-developing in garment fibres between wears so the reset holds throughout your day.</p>
+        <li class="how-step reveal">
+          <span class="how-num">03</span>
+          <h3>Wear</h3>
+          <p>Walk in fresh, with up to 8 hours of odor protection on fabric.</p>
         </li>
       </ol>
-
-      <details class="science-inci reveal">
-        <summary class="science-inci-summary">
-          <span>Formula v3.1 — full 11-ingredient INCI list</span>
-          <span class="science-inci-arrow" aria-hidden="true">▾</span>
-        </summary>
-        <div class="science-inci-table">
-          <div class="inci-row"><span class="i-pct">01</span><span class="i-name">Water</span><span class="i-role">Base</span></div>
-          <div class="inci-row"><span class="i-pct">02</span><span class="i-name">Isopropyl Alcohol</span><span class="i-role">Fast-evaporating solvent</span></div>
-          <div class="inci-row"><span class="i-pct">03</span><span class="i-name">Triethyl Citrate</span><span class="i-role">Prevent</span></div>
-          <div class="inci-row"><span class="i-pct">04</span><span class="i-name">HPβCD (hydroxypropyl-β-cyclodextrin)</span><span class="i-role">Trap</span></div>
-          <div class="inci-row"><span class="i-pct">05</span><span class="i-name">Polysorbate 20</span><span class="i-role">Emulsifier</span></div>
-          <div class="inci-row"><span class="i-pct">06</span><span class="i-name">Zinc PCA</span><span class="i-role">Neutralize</span></div>
-          <div class="inci-row"><span class="i-pct">07</span><span class="i-name">PE9010</span><span class="i-role">Preservative</span></div>
-          <div class="inci-row"><span class="i-pct">08</span><span class="i-name">Fragrance</span><span class="i-role">Light scent</span></div>
-          <div class="inci-row"><span class="i-pct">09</span><span class="i-name">Zinc Gluconate</span><span class="i-role">Anti-regrowth</span></div>
-          <div class="inci-row"><span class="i-pct">10</span><span class="i-name">Ethylhexylglycerin</span><span class="i-role">Preservative booster</span></div>
-          <div class="inci-row"><span class="i-pct">11</span><span class="i-name">Citric Acid</span><span class="i-role">pH balancer</span></div>
-        </div>
-      </details>
+      <div class="how-foot reveal">
+        <a class="hm-btn" href="/odorstrike?buy=1">Get ODORSTRIKE — ₹229</a>
+        <p>It neutralizes odor between washes. It doesn't replace laundry, and it doesn't remove stains.</p>
+      </div>
     </div>
   </section>
 
-  <!-- ============ 5 · FAQ ============ -->
-  <section class="faq" id="faq" aria-labelledby="faqTitle">
+  <!-- ============ 3 · FABRIC BEATS SKIN ============
+       Four claims, four CTAs. Replaces "Your shirt remembers", the featured
+       product block and the science section, which made the same argument
+       three times before the visitor reached a price. -->
+  <section class="hm-sec" id="why" aria-labelledby="whyTitle">
     <div class="wrap">
-      <h2 id="faqTitle" class="reveal">Questions, answered</h2>
+      <div class="beats-intro">
+        <p class="hm-eyebrow reveal">WHY YOUR DEO ISN'T ENOUGH</p>
+        <h2 id="whyTitle" class="hm-h2 reveal">Your skin has a fix.<br>Your shirt didn't.</h2>
+      </div>
+
+      <div class="beat">
+        <div class="beat-art beat-art--photo reveal">
+          <img src="/assets/pdp-02-problem@640.webp" alt="A man checking his t-shirt for sweat odor — you don't smell, your shirt does" width="640" height="704" loading="lazy" decoding="async">
+        </div>
+        <div class="beat-copy reveal">
+          <h3>Deodorant guards your skin. Nothing was guarding your shirt.</h3>
+          <p>Sweat, commute heat, lunch and smoke soak into the weave of the fabric. Body sprays sit on skin — they never reach the smell already sitting in the cotton.</p>
+          <a class="hm-link" href="/odorstrike?buy=1">Guard the shirt →</a>
+        </div>
+      </div>
+
+      <div class="beat">
+        <div class="beat-art reveal">
+          <ol class="layers" aria-label="Formula v3.1 — four layers">
+            <li><span>01 · TRAP</span><b>HPβCD</b></li>
+            <li><span>02 · NEUTRALIZE</span><b>Zinc PCA</b></li>
+            <li><span>03 · PREVENT</span><b>Triethyl Citrate</b></li>
+            <li><span>04 · ANTI-REGROWTH</span><b>Zinc Gluconate</b></li>
+          </ol>
+        </div>
+        <div class="beat-copy reveal">
+          <h3>Perfume covers it up. ODORSTRIKE neutralizes it.</h3>
+          <p>A ring-shaped HPβCD molecule cages odor compounds in the fibres and Zinc PCA neutralizes them. What's left is a light fresh fabric scent — not a cologne layered over sweat.</p>
+          <a class="hm-link" href="/odorstrike#science">See the formula →</a>
+        </div>
+      </div>
+
+      <div class="beat">
+        <div class="beat-art beat-art--pocket reveal">
+          <img src="/assets/odorstrike-bottle-cutout.webp" alt="" width="241" height="915" loading="lazy" decoding="async">
+          <ul class="pocket-facts">
+            <li><b>50ml</b>Fits a jeans pocket</li>
+            <li><b>~250</b>sprays per bottle</li>
+            <li><b>₹229</b>delivered free, prepaid</li>
+          </ul>
+        </div>
+        <div class="beat-copy reveal">
+          <h3>Fits in a pocket. Works where the laundry can't.</h3>
+          <p>Post-commute, pre-meeting, after the biryani, before the date. 50ml sits within common 100ml carry-on liquid limits, so it travels too (check your airline's rules).</p>
+          <a class="hm-link" href="/odorstrike?buy=1">Get the pocket fix →</a>
+        </div>
+      </div>
+
+      <div class="beat">
+        <div class="beat-art beat-art--clear reveal">
+          <p class="clear-word" aria-hidden="true">Dries<span class="acid">clear.</span></p>
+          <ul class="clear-tags" aria-label="Finish">
+            <li>Glycerine-free</li>
+            <li>Zero residue</li>
+            <li>Cotton · Poly · Denim</li>
+          </ul>
+        </div>
+        <div class="beat-copy reveal">
+          <h3>No white marks. No sticky film. Not on black, not on white.</h3>
+          <p>Safe on everyday washable fabrics — cotton, polyester, denim, nylon and wool blends. Patch-test silk and zari on a hidden seam first.</p>
+          <a class="hm-link" href="/odorstrike?buy=1">Fix my shirt →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4 · REVIEWS ============
+       The same three beta-tester quotes that run on /odorstrike, word for
+       word and labelled as beta testers. These are the only first-hand
+       accounts that exist — do not add invented ones. Swap them for real
+       verified reviews when they land. -->
+  <section class="hm-sec" id="reviews" aria-labelledby="voicesTitle">
+    <div class="wrap">
+      <div class="rv-head">
+        <div>
+          <p class="hm-eyebrow reveal">EARLY TESTERS</p>
+          <h2 id="voicesTitle" class="hm-h2 reveal">Real sweaty reviews.</h2>
+        </div>
+        <a class="hm-link reveal" href="/reviews">All reviews →</a>
+      </div>
+      <ul class="rv-row">
+        <li class="rv reveal">
+          <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
+          <div class="rv-who"><cite>Rohit, 26 · Bengaluru</cite><span class="rv-tag">Beta tester</span></div>
+        </li>
+        <li class="rv reveal">
+          <blockquote>“Lives in my gym bag now. Post-workout, pre-Uber, no more ‘should I shower at office’ anxiety.”</blockquote>
+          <div class="rv-who"><cite>Aakash, 24 · Pune</cite><span class="rv-tag">Beta tester</span></div>
+        </li>
+        <li class="rv reveal">
+          <blockquote>“Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger.”</blockquote>
+          <div class="rv-who"><cite>Karan, 29 · Delhi</cite><span class="rv-tag">Beta tester</span></div>
+        </li>
+      </ul>
+      <p class="rv-more reveal">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review</a> — worn, sweated and stain-tested across India.</p>
+    </div>
+  </section>
+
+  <!-- ============ 5 · THE OFFER ============
+       The one place on the page where everything a buyer needs to decide
+       sits in one box: price, what's in it, delivery, COD cost, returns. -->
+  <section class="hm-sec" id="buy" aria-labelledby="offerTitle">
+    <div class="wrap">
+      <div class="offer reveal">
+        <div class="offer-art">
+          <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml bottle" width="241" height="915" loading="lazy" decoding="async">
+        </div>
+        <div class="offer-body">
+          <p class="hm-eyebrow">ODORSTRIKE · 50ML POCKET MIST</p>
+          <h2 id="offerTitle" class="hm-h2">One bottle. One price.</h2>
+          <p class="offer-price"><b>₹229</b><s>M.R.P. ₹499</s><span class="off">54% OFF</span></p>
+          <ul class="offer-list">
+            <li><span><strong>~250 sprays</strong> — under ₹3 a refresh</span></li>
+            <li><span><strong>Up to 8 hours</strong> of odor protection on fabric</span></li>
+            <li><span><strong>Free shipping</strong> on prepaid UPI orders, pan-India</span></li>
+            <li><span><strong>Cash on Delivery</strong> available · ₹60 handling · ₹289 collected</span></li>
+            <li><span><strong>Ships from Hyderabad</strong> in 48 hours · 3–5 days to metros</span></li>
+            <li><span><strong>7-day returns</strong> if it isn't for you</span></li>
+          </ul>
+          <a class="hm-btn" href="/odorstrike?buy=1" id="offerBuyBtn">FIX MY SHIRT — ₹229</a>
+          <p class="offer-pay">UPI · CASH ON DELIVERY · <a href="/odorstrike" style="color:inherit">FULL PRODUCT DETAILS</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6 · FOUNDER ============ -->
+  <section class="hm-sec" aria-labelledby="founderTitle">
+    <div class="wrap founder">
+      <div class="reveal">
+        <p class="hm-eyebrow">FOUNDER · HYDERABAD</p>
+        <h2 id="founderTitle" class="hm-h2" style="font-size:var(--fs-h3)">Built for the gap deodorant leaves behind</h2>
+      </div>
+      <div class="reveal">
+        <p>Smelloff started in 41°C Hyderabad heat: the morning deodorant had worked on skin, but by afternoon the shirt had trapped the sweat — and perfume on top only made it worse. Six months of prototypes later, ODORSTRIKE neutralizes the odor in the fabric instead of masking it.</p>
+        <p style="margin-top:14px"><span class="f-name">Jogdhande Nikhil Patil</span><span class="f-role">Founder, Smelloff · Made in India</span></p>
+        <a class="hm-link" href="/about">Read the founder story →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7 · FAQ ============
+       The objections that stop a first order, in the order they come up.
+       No FAQPage schema — deprecated, and tests assert it stays out. -->
+  <section class="hm-sec faq" id="faq" aria-labelledby="faqTitle">
+    <div class="wrap">
+      <h2 id="faqTitle" class="hm-h2 reveal">Questions, answered</h2>
       <div class="faq-list">
-        <details class="faq-item reveal">
+        <details class="faq-item">
           <summary><h3>Is ODORSTRIKE safe on skin?</h3></summary>
-          <div class="faq-answer-wrap"><div><p>No. ODORSTRIKE is formulated exclusively for fabric — never skin, face, hair, or body. Keep using your regular deodorant on skin; use ODORSTRIKE on the clothes that trap sweat odor. If accidental skin contact occurs, rinse with clean water.</p></div></div>
+          <div class="faq-answer-wrap"><div><p>Don't use it on skin. ODORSTRIKE is formulated exclusively for fabric — never skin, face, hair or body. Keep your regular deodorant for skin and use ODORSTRIKE on the clothes that trap sweat odor. If it touches skin, rinse with clean water.</p></div></div>
         </details>
-        <details class="faq-item reveal">
+        <details class="faq-item">
           <summary><h3>Will it stain my clothes?</h3></summary>
-          <div class="faq-answer-wrap"><div><p>No. ODORSTRIKE is glycerine-free and dries clear without stiff residue when sprayed from the recommended 15–20 cm distance. It leaves no stiff powdery marks or oily film on dark or light clothes when properly dried. Safe on everyday washable fabrics like cotton, polyester, denim, and wool. Patch-test silk, zari, and delicate embroidery on a hidden seam first.</p></div></div>
+          <div class="faq-answer-wrap"><div><p>No. It is glycerine-free and dries clear with no stiff or powdery residue when sprayed from 15–20 cm. Safe on everyday washable fabrics like cotton, polyester, denim and wool blends. Patch-test silk, zari and delicate embroidery on a hidden seam first.</p></div></div>
         </details>
-        <details class="faq-item reveal">
-          <summary><h3>How do I use it?</h3></summary>
-          <div class="faq-answer-wrap"><div><p>Hold the bottle 15–20 cm away, spray 2–3 light mists directly onto odor-prone zones (underarms, collar, or chest), let the fine mist dry clean in 15–30 seconds, and wear. In high humidity, allow the fabric to dry fully before putting the garment on.</p></div></div>
+        <details class="faq-item">
+          <summary><h3>How long does it last?</h3></summary>
+          <div class="faq-answer-wrap"><div><p>Up to 8 hours of odor protection on fabric under normal office and commute conditions. On very hot days or after a workout, reapply 1–2 sprays. One 50ml bottle gives about 250 sprays.</p></div></div>
         </details>
-        <details class="faq-item reveal">
-          <summary><h3>How long does the effect last?</h3></summary>
-          <div class="faq-answer-wrap"><div><p>Up to 8 hours of odor protection on fabric under normal office and commute conditions. On high-heat days, heavy workouts, or extended commutes, reapply 1–2 sprays to high-friction areas as needed. One 50ml bottle provides approximately 250 sprays.</p></div></div>
-        </details>
-        <details class="faq-item reveal">
-          <summary><h3>What fabrics can I use it on?</h3></summary>
-          <div class="faq-answer-wrap"><div><p>ODORSTRIKE works on everyday washable clothing fabrics including cotton, polyester, denim, nylon, wool, and synthetic blends. Do not use on leather, suede, or dry-clean-only garments. When in doubt on delicate fabrics, test a small inside seam first.</p></div></div>
-        </details>
-        <details class="faq-item reveal">
+        <details class="faq-item">
           <summary><h3>Does it replace washing?</h3></summary>
-          <div class="faq-answer-wrap"><div><p>No. ODORSTRIKE neutralizes odor molecules trapped in clothing fibres, but it does not remove dirt, oils, or stains. Think of it as an odor reset between wears to keep clothes fresh, complementing your normal shower routine and regular laundry.</p></div></div>
+          <div class="faq-answer-wrap"><div><p>No. It neutralizes odor trapped in clothing fibres but does not remove dirt, oils or stains. Think of it as an odor reset between wears, alongside your normal laundry.</p></div></div>
         </details>
-        <details class="faq-item reveal">
-          <summary><h3>Is the fragrance strong?</h3></summary>
-          <div class="faq-answer-wrap"><div><p>No. ODORSTRIKE has a light fresh fabric scent — not a perfume. It provides sensory confirmation of clean fabric without acting as a perfume or heavy cologne, settling close to the weave while active neutralizers target trapped odor.</p></div></div>
-        </details>
-        <details class="faq-item reveal">
+        <details class="faq-item">
           <summary><h3>Is COD available?</h3></summary>
-          <div class="faq-answer-wrap"><div><p>Yes. Cash on Delivery is available across India with a ₹60 handling charge (collectable total ₹289 for one 50ml bottle, compared to ₹229 prepaid with free shipping). COD orders are confirmed via a quick phone call before dispatch.</p></div></div>
+          <div class="faq-answer-wrap"><div><p>Yes. Cash on Delivery is available across India with a ₹60 handling charge — ₹289 collected for one bottle, against ₹229 prepaid with free shipping. COD orders are confirmed by a quick call before dispatch.</p></div></div>
         </details>
-        <details class="faq-item reveal">
+        <details class="faq-item">
           <summary><h3>How long does shipping take?</h3></summary>
-          <div class="faq-answer-wrap"><div><p>Orders dispatch from Hyderabad within 48 hours of confirmation. Delivery takes 3–5 business days for major metros and 5–7 business days for tier 2 and tier 3 cities. Prepaid orders ship free nationwide.</p></div></div>
+          <div class="faq-answer-wrap"><div><p>Orders dispatch from Hyderabad within 48 hours of confirmation. Delivery takes 3–5 business days to major metros and 5–7 to tier 2 and tier 3 cities. Prepaid orders ship free nationwide.</p></div></div>
         </details>
-        <details class="faq-item reveal">
-          <summary><h3>What is the return policy?</h3></summary>
-          <div class="faq-answer-wrap"><div><p>We offer a 7-day return window from the date of delivery. The bottle must be at least 80% full and in its original packaging. Reverse pickup is arranged where serviceable, and refunds are processed within 5–7 business days.</p></div></div>
+        <details class="faq-item">
+          <summary><h3>What if I don't like it?</h3></summary>
+          <div class="faq-answer-wrap"><div><p>You have 7 days from delivery to return it. The bottle must be at least 80% full and in its original packaging. Reverse pickup is arranged where serviceable and refunds are processed within 5–7 business days. <a href="/returns">Returns policy</a>.</p></div></div>
+        </details>
+        <details class="faq-item">
+          <summary><h3>Is the fragrance strong?</h3></summary>
+          <div class="faq-answer-wrap"><div><p>No. It has a light fresh fabric scent that settles close to the weave — it is not a perfume and won't fight with your cologne.</p></div></div>
         </details>
       </div>
+      <p class="faq-guides reveal">More in the guides: <a href="/blog/what-is-fabric-odor-eliminator">what a fabric odor eliminator is</a> · <a href="/blog/odorstrike-vs-febreze-india">ODORSTRIKE vs Febreze</a> · <a href="/blog/why-i-built-odorstrike">why it was built</a> · <a href="/blog">all guides</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============ 8 · FINAL ============ -->
+  <section class="final" aria-labelledby="finalTitle">
+    <div class="wrap">
+      <h2 id="finalTitle">Smell khatam.<br>Confidence qaayam.</h2>
+      <p>One pocket bottle. Every shirt you own, fresh between washes.</p>
+      <a class="hm-btn" href="/odorstrike?buy=1">FIX MY SHIRT — ₹229</a>
+      <small>Free prepaid shipping · COD +₹60 · 7-day returns</small>
     </div>
   </section>
 
@@ -2045,13 +1071,9 @@
   </div>
 </div>
 
-<!-- The cart badge and the mobile nav toggle used to live here as two
-     inline IIFEs. Both now belong to the shared header, so they moved to
-     /assets/js/chrome.js — one copy for all 24 pages instead of one per
-     page that happened to have a header. -->
-
-<!-- Scroll-reveal — progressive enhancement. If the user prefers reduced
-     motion or IntersectionObserver is missing, every .reveal is shown at once. -->
+<!-- Scroll-reveal — progressive enhancement. With reduced motion or no
+     IntersectionObserver every .reveal is shown at once (and the CSS only
+     hides them inside prefers-reduced-motion:no-preference anyway). -->
 <script>
 (function(){
   var els = [].slice.call(document.querySelectorAll('.reveal'));
@@ -2064,72 +1086,32 @@
     });
   }, { rootMargin: '0px 0px 200px 0px', threshold: 0 });
   els.forEach(function(el){ io.observe(el); });
-  // Safety net: content must never stay hidden, even if an observer callback
-  // is missed (fast scroll, tab restore, odd viewport).
+  // Content must never stay hidden, even if an observer callback is missed.
   setTimeout(revealAll, 2500);
 })();
 </script>
 
+<!-- Sticky mobile bar: visible only while neither the hero CTA nor the
+     offer CTA is on screen — always exactly one route to checkout in view. -->
 <script>
 (function(){
   var bar = document.getElementById('homeMobileBar');
-  var heroCta = document.querySelector('.hero-cta-group');
-  if (!bar || !heroCta) return;
+  var targets = [document.querySelector('.hero-ctas'), document.getElementById('offerBuyBtn')].filter(Boolean);
+  if (!bar || !targets.length) return;
+  var link = bar.querySelector('a');
   function show(on){
     bar.classList.toggle('visible', !!on);
     bar.setAttribute('aria-hidden', on ? 'false' : 'true');
+    if (link) link.tabIndex = on ? 0 : -1;
   }
-  if ('IntersectionObserver' in window) {
-    var observer = new IntersectionObserver(function(entries){
-      var inView = entries.some(function(e){ return e.isIntersecting; });
-      show(!inView);
-    }, { threshold: 0 });
-    observer.observe(heroCta);
-  } else {
-    function onScroll(){
-      var rect = heroCta.getBoundingClientRect();
-      show(rect.bottom < 0 || rect.top > window.innerHeight);
-    }
-    window.addEventListener('scroll', onScroll, {passive:true});
-    onScroll();
-  }
-})();
-</script>
-
-<!-- "Your shirt remembers" — the whole interaction is one listener writing an
-     attribute. Everything visual is CSS keyed off [data-step], so dragging
-     costs no layout and there is no animation library on this page.
-     The copy lives here rather than in the markup so the seven states can't
-     drift out of sync with the slider's range. -->
-<script>
-(function(){
-  var scrub = document.getElementById('rmScrub');
-  var sec   = document.getElementById('remembers');
-  if (!scrub || !sec) return;
-  var DAY = [
-    ['07:30', 'Fresh shirt on. Morning deodorant applied to skin.',               'Clean start'],
-    ['09:30', 'Commute heat. Sweat and humidity soak into fabric fibers.',        'Absorbing in weave'],
-    ['13:00', 'Deodorant is on skin. Odor stays trapped in the cotton.',          'Holding odor'],
-    ['15:30', 'Lunch steam & afternoon activity settle into the collar.',         'Building up'],
-    ['18:30', 'Full workday in. Stepping into a crowded lift on the way out.',    'Noticeable'],
-    ['19:45', 'Evening meeting or dinner. No time to wash or change shirts.',     'Trapped in fabric'],
-    ['RESET', '2–3 sprays of ODORSTRIKE. 15–30 sec dry time. Odor neutralized.', 'Fresh fabric']
-  ];
-  var elTime  = document.getElementById('rmTime');
-  var elEvent = document.getElementById('rmEvent');
-  var elState = document.getElementById('rmState');
-  function paint(){
-    var i = Math.max(0, Math.min(DAY.length - 1, parseInt(scrub.value, 10) || 0));
-    sec.setAttribute('data-step', String(i));
-    elTime.textContent  = DAY[i][0];
-    elEvent.textContent = DAY[i][1];
-    elState.textContent = DAY[i][2];
-    // Screen readers announce a slider by its value, and "4 of 6" says
-    // nothing here — give it the actual moment instead.
-    scrub.setAttribute('aria-valuetext', DAY[i][0] + ' — ' + DAY[i][1]);
-  }
-  scrub.addEventListener('input', paint);
-  paint();
+  if (!('IntersectionObserver' in window)) { show(true); return; }
+  var seen = new Map();
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ seen.set(e.target, e.isIntersecting); });
+    var anyInView = targets.some(function(t){ return seen.get(t); });
+    show(!anyInView);
+  }, { threshold: 0 });
+  targets.forEach(function(t){ io.observe(t); });
 })();
 </script>
 
@@ -2151,28 +1133,6 @@
   if(!existing){
     var bar=document.getElementById('smelloff-consent-bar');
     if(bar)bar.style.display='block';
-  }
-})();
-</script>
-
-<!-- Isolated config-gated hero demo slot initialization -->
-<script>
-(function initHeroDemoSlot(){
-  var slot = document.getElementById('heroDemoSlot');
-  if (!slot) return;
-  if (window.SMELLOFF_HERO_VIDEO && typeof window.SMELLOFF_HERO_VIDEO === 'string') {
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return; // Keep crisp, high-contrast static sequence when reduced motion is preferred
-    slot.setAttribute('data-demo-state', 'video');
-    var video = document.createElement('video');
-    video.src = window.SMELLOFF_HERO_VIDEO;
-    video.autoplay = true;
-    video.muted = true;
-    video.loop = true;
-    video.playsInline = true;
-    video.setAttribute('aria-label', 'ODORSTRIKE 3-step spray demonstration');
-    slot.innerHTML = '';
-    slot.appendChild(video);
   }
 })();
 </script>

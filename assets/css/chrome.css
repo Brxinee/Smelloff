@@ -382,28 +382,3 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .gra-btn{display:inline-flex;align-items:center;gap:6px;background:var(--acid,#b8ff57);color:#080808;border:none;border-radius:8px;font-family:var(--mono,monospace);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;cursor:pointer;transition:transform .15s ease,background .15s ease;white-space:nowrap}
 .gra-btn:hover{background:#c7ff73;transform:translateY(-1px)}
 
-/* =====================================================================
-   7 · MOBILE HOMEPAGE HERO VISIBILITY FIX
-   ---------------------------------------------------------------------
-   The homepage hero uses a tall 241×915 transparent bottle cutout. The
-   previous mobile hero allowed the sticky 64px chrome to sit over the first
-   part of the hero when returning to the top of the page, making the bottle
-   look chopped off at the nav. Keep the hero's image area below the chrome
-   and never clip the transparent cutout at its section boundary.
-   --------------------------------------------------------------------- */
-@media(max-width:767px){
-  .hero{
-    overflow:visible;
-    padding-top:84px;
-  }
-  .hero-visual{
-    min-height:clamp(300px,78vw,360px);
-    overflow:visible;
-  }
-  .hero-visual img{
-    height:clamp(300px,72vw,340px);
-    width:auto;
-    max-width:none;
-    object-fit:contain;
-  }
-}
