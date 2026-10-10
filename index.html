@@ -352,95 +352,126 @@
   .hm-btn--ghost:hover{background:var(--surface-2);border-color:var(--text)}
   .hm-btn--ghost .ic{color:var(--acid)}
 
-  /* ============ 1 · Hero ============
-     Phones: headline and bottle side by side, then price and CTA — the CTA
-     has to clear the fold on a 390×844 screen without scrolling.
-     ≥960: copy left, bottle on an acid panel right. */
-  .hero{padding:28px 0 40px;position:relative}
+  /* ============ 1 · Hero (v3, 2026-10-10) ============
+     One job: say what it is, show the bottle big, one buy button.
+     - Baymard: on phones product images get overlooked when small → the
+       bottle sits on an acid-lit stage, never a thumbnail.
+     - One primary action (Stripe's landing-page guidance): "View product"
+       is a text link now, not a second button of equal weight.
+     - A short, real customer quote beside the buy button (labelled beta
+       tester — never edited, never a rating).
+     - Trust is one line, not three cards; the three "what it is / isn't"
+       chips stay but lose their icons.
+     Phones: copy | bottle side by side, then price + CTA above the fold
+     (CTA bottom ≈ 700px on 390×844 incl. strip + header). ≥768: copy left,
+     big stage right with spec tags. Re-measure if you add anything above
+     the CTA. */
+  .hero{padding:22px 0 36px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:-20% -30% auto auto;width:80vw;height:80vw;max-width:900px;max-height:900px;
+    background:radial-gradient(closest-side,rgba(var(--acid-rgb),.13),transparent 70%);pointer-events:none}
   .hero-grid{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) 92px;
-    grid-template-areas:"copy bottle" "not not" "buy buy";
-    column-gap:14px;align-items:start;
+    position:relative;display:grid;
+    grid-template-columns:minmax(0,1fr) clamp(104px,30vw,170px);
+    grid-template-areas:"eye eye" "copy stage" "not not" "buy buy";
+    column-gap:12px;align-items:center;
   }
   .hero-copy{grid-area:copy}
-  .hero-visual{grid-area:bottle;position:relative;align-self:stretch}
-  .hero-buy{grid-area:buy;margin-top:22px}
   .hero-eyebrow{
-    display:inline-block;font-family:var(--mono);font-size:10px;
+    grid-area:eye;justify-self:start;display:inline-block;font-family:var(--mono);font-size:10px;
     letter-spacing:.06em;text-transform:uppercase;
     color:var(--acid);border:1px solid var(--border-focus);
-    border-radius:var(--r-pill);padding:6px 12px;margin-bottom:16px;
+    border-radius:var(--r-pill);padding:6px 11px;margin-bottom:14px;
   }
   .hero-title{
     font-family:var(--display);font-weight:900;
-    font-size:clamp(44px,12.5vw,104px);line-height:.94;
-    letter-spacing:-.03em;
+    font-size:clamp(40px,11.2vw,112px);line-height:.93;letter-spacing:-.03em;
+    text-wrap:balance;
   }
   .hero-title .acid{display:block}
-  .hero-sub{
-    margin-top:16px;font-size:var(--fs-lead);line-height:1.45;
-    color:var(--text-2);max-width:30ch;
-  }
+  .hero-sub{margin-top:12px;font-size:clamp(15px,3.9vw,19px);line-height:1.45;color:var(--text-2);max-width:34ch}
   .hero-sub strong{color:var(--text);font-weight:500}
-  .hero-not{
-    grid-area:not;display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;list-style:none;
+
+  .hero-stage{grid-area:stage;position:relative;margin:0;align-self:stretch;display:flex;align-items:center;justify-content:center}
+  .hero-stage::before{content:"";position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1;transform:translate(-50%,-46%);
+    border-radius:50%;background:radial-gradient(closest-side,rgba(var(--acid-rgb),.32),rgba(var(--acid-rgb),.08) 60%,transparent 72%)}
+  .hero-stage a{position:relative;display:block;border-radius:var(--r-md)}
+  .hero-stage img{
+    display:block;width:100%;height:auto;max-height:min(58vh,360px);object-fit:contain;
+    filter:drop-shadow(0 22px 26px rgba(0,0,0,.55));
   }
+  .hero-tags{display:none}
+
+  .hero-not{grid-area:not;display:flex;flex-wrap:wrap;gap:5px;margin-top:16px;list-style:none}
   .hero-not li{
     display:inline-flex;align-items:center;gap:5px;
-    font-family:var(--mono);font-size:10px;letter-spacing:.05em;
-    text-transform:uppercase;color:var(--muted);
-    border:1px solid var(--border-default);border-radius:var(--r-pill);
-    padding:5px 10px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--border-default);border-radius:var(--r-pill);padding:5px 9px;white-space:nowrap;
   }
   .hero-not li.on{color:var(--on-acid);background:var(--acid);border-color:var(--acid)}
   .hero-not .ic{width:12px;height:12px;stroke-width:2.5}
-  .hero-visual a{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:inherit}
-  .hero-visual img{
-    width:100%;height:auto;max-height:340px;object-fit:contain;
-    filter:drop-shadow(0 18px 30px rgba(var(--acid-rgb),.18));
-  }
+
+  .hero-buy{grid-area:buy;margin-top:16px}
   .hero-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px}
-  .hero-price b{font-family:var(--display);font-weight:900;font-size:44px;line-height:1;color:var(--text)}
+  .hero-price b{font-family:var(--display);font-weight:900;font-size:clamp(40px,10vw,56px);line-height:1;color:var(--text)}
   .hero-price s{font-family:var(--mono);font-size:13px;color:var(--muted)}
   .hero-price .off{
     font-family:var(--mono);font-size:11px;letter-spacing:.08em;font-weight:700;
     color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 9px;
   }
-  .hero-price .size{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em;flex-basis:100%}
-  .hero-ctas{display:grid;gap:10px;margin-top:16px}
+  .hero-price .size{display:none;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.03em;flex-basis:100%}
+  .hero-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin-top:14px}
+  .hero-ctas .hm-btn{flex:1 1 100%}
+  .hero-more{margin:0 auto}
   .hero-ship{
-    margin-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:8px;list-style:none;
+    display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin-top:10px;list-style:none;
+    font-size:12.5px;color:var(--text-2);
   }
-  .hero-ship li{
-    font-size:12.5px;line-height:1.3;color:var(--text-2);
-    border:1px solid var(--border-subtle);border-radius:var(--r-md);
-    padding:10px;background:var(--surface);
-  }
-  .hero-ship .ic{display:block;width:20px;height:20px;color:var(--acid);margin-bottom:6px}
-  .hero-ship li b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--acid);font-weight:400;margin-bottom:3px}
-  @media(min-width:520px){
-    .hero-grid{grid-template-columns:minmax(0,1fr) 130px}
-    .hero-ctas{grid-template-columns:auto auto;justify-content:start}
-  }
-  @media(min-width:960px){
-    .hero{padding:56px 0 72px}
+  .hero-ship li{display:inline-flex;align-items:center;gap:6px}
+  .hero-ship .ic{width:16px;height:16px;color:var(--acid)}
+  .hero-ship b{color:var(--text);font-weight:600}
+  .hero-quote{margin:18px 0 0;padding:14px 16px;border:1px solid var(--border-subtle);border-radius:var(--r-md);background:var(--surface)}
+  .hero-quote blockquote{margin:0;font-size:15px;line-height:1.45;color:var(--text)}
+  .hero-quote figcaption{margin-top:6px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted)}
+  .hero-quote figcaption span{color:var(--acid)}
+
+  @media(min-width:768px){
+    .hero{padding:48px 0 64px}
     .hero-grid{
-      grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
-      grid-template-areas:"copy bottle" "not bottle" "buy bottle";
-      column-gap:56px;align-items:center;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
+      grid-template-areas:"eye stage" "copy stage" "not stage" "buy stage";
+      grid-template-rows:auto auto auto 1fr;
+      column-gap:clamp(28px,5vw,72px);align-items:start;
     }
-    .hero-buy{margin-top:30px;align-self:start}
-    .hero-not{align-self:start}
-    .hero-visual{
-      align-self:stretch;min-height:560px;border-radius:var(--r-xl);
-      background:radial-gradient(circle at 50% 46%,var(--acid) 0 38%,transparent 38.2%),var(--surface);
-      border:1px solid var(--border-subtle);
-      display:flex;align-items:center;justify-content:center;
+    .hero-title{font-size:clamp(54px,6.6vw,96px)}
+    .hero-price .size{display:block}
+    .hero-eyebrow{align-self:end}
+    .hero-ctas .hm-btn{flex:0 1 auto;padding-inline:32px}
+    .hero-more{margin:0}
+    .hero-ship{justify-content:flex-start}
+    .hero-quote{max-width:46ch}
+    .hero-stage{
+      min-height:clamp(420px,46vw,600px);border-radius:var(--r-xl);
+      background:var(--surface);border:1px solid var(--border-subtle);overflow:hidden;
     }
-    .hero-visual img{width:auto;height:470px;max-height:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
-    .hero-sub{max-width:36ch}
+    .hero-stage::before{width:78%;transform:translate(-50%,-50%);
+      background:radial-gradient(closest-side,var(--acid) 0 92%,transparent 93%)}
+    .hero-stage img{width:auto;height:clamp(320px,36vw,480px);max-height:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
+    .hero-tags{display:block;position:absolute;inset:0;list-style:none;pointer-events:none}
+    .hero-tags li{
+      position:absolute;padding:8px 12px;border-radius:var(--r-pill);
+      background:rgba(8,8,8,.86);border:1px solid var(--border-default);color:var(--text);
+      font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;
+      -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    }
+    .hero-tags li b{color:var(--acid);font-weight:700}
+    .hero-tags li:nth-child(1){top:12%;left:6%}
+    .hero-tags li:nth-child(2){top:46%;right:5%}
+    .hero-tags li:nth-child(3){bottom:11%;left:9%}
+  }
+  @media(min-width:1160px){.hero{padding:56px 0 80px}}
+  @media(max-width:359px){
+    .hero-grid{grid-template-columns:minmax(0,1fr) 92px}
+    .hero-not li{font-size:9.5px;padding:4px 8px}
   }
 
   /* Decorative acid ticker (aria-hidden) */
@@ -712,7 +743,6 @@
   <symbol id="i-cash" viewBox="0 0 24 24"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></symbol>
   <symbol id="i-return" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
-  <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
 </svg>
 
 
@@ -784,21 +814,26 @@
        checkout — see "COD carries a ₹60 handling charge" in CLAUDE.md. -->
   <section class="hero" aria-labelledby="heroTitle">
     <div class="wrap hero-grid">
+      <p class="hero-eyebrow">FABRIC ODOR CONTROL · FOR CLOTHES</p>
       <div class="hero-copy">
-        <p class="hero-eyebrow">FABRIC ODOR CONTROL · FOR CLOTHES</p>
         <h1 id="heroTitle" class="hero-title">Your shirt smells. <span class="acid">Fix it.</span></h1>
         <p class="hero-sub">ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin. <strong>2–3 sprays. Dry in 15–30 sec. Wear.</strong></p>
       </div>
 
-      <figure class="hero-visual">
+      <figure class="hero-stage">
         <a href="/odorstrike" aria-label="View the ODORSTRIKE product page">
-          <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml pocket fabric odor spray bottle for clothes" width="241" height="915" fetchpriority="high" decoding="async">
+          <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml pocket fabric odor spray bottle for clothes" width="241" height="915" fetchpriority="high" decoding="async" data-no-skel>
         </a>
+        <ul class="hero-tags" aria-hidden="true">
+          <li><b>50ml</b> · fits a pocket</li>
+          <li>Dry in <b>15–30 s</b></li>
+          <li>Up to <b>8 h</b> on fabric</li>
+        </ul>
       </figure>
 
       <ul class="hero-not" aria-label="What ODORSTRIKE is and is not">
-        <li><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg>NOT PERFUME</li>
-        <li><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg>NOT BODY DEODORANT</li>
+        <li>NOT PERFUME</li>
+        <li>NOT BODY DEODORANT</li>
         <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>FABRIC ONLY</li>
       </ul>
 
@@ -811,13 +846,17 @@
         </p>
         <div class="hero-ctas">
           <a class="hm-btn" href="/odorstrike?buy=1" id="heroBuyBtn">FIX MY SHIRT — ₹229</a>
-          <a class="hm-btn hm-btn--ghost" href="/odorstrike">View product</a>
+          <a class="hm-link hero-more" href="/odorstrike">View product details</a>
         </div>
         <ul class="hero-ship" aria-label="Delivery and payment">
-          <li><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><b>Free</b>shipping on prepaid</li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-cash"/></svg><b>COD</b>+₹60 · ₹289 total</li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-return"/></svg><b>7-day</b>returns</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><b>Free</b> shipping on prepaid</span></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-cash"/></svg><span><b>COD</b> +₹60 · ₹289 total</span></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-return"/></svg><span><b>7-day</b> returns</span></li>
         </ul>
+        <figure class="hero-quote">
+          <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
+          <figcaption>Rohit, 26 · Bengaluru · <span>Beta tester</span></figcaption>
+        </figure>
       </div>
     </div>
   </section>
