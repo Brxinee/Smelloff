@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import Razorpay from 'razorpay';
+import { createRazorpayOrder } from './_razorpay.js';
 import {
   isAllowedOrigin,
   generateOrderToken,
@@ -60,17 +60,7 @@ function razorpayClient() {
     };
   }
 
-  const keyId = getRazorpayKeyId();
-  const keySecret = getRazorpayKeySecret();
-
-  if (!keyId || !keySecret) {
-    fail('Razorpay credentials are not configured.');
-  }
-
-  return new Razorpay({
-    key_id: keyId,
-    key_secret: keySecret,
-  });
+  return { orders: { create: createRazorpayOrder } };
 }
 
 function supabaseHeaders() {

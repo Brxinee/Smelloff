@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import Razorpay from 'razorpay';
+import { fetchRazorpayPayment } from './_razorpay.js';
 import {
   isAllowedOrigin,
   clientIp,
@@ -17,10 +17,6 @@ function getServiceKey() {
   return process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 }
 
-function getRazorpayKeyId() {
-  return process.env.RAZORPAY_KEY_ID || '';
-}
-
 function getRazorpayKeySecret() {
   return process.env.RAZORPAY_KEY_SECRET || '';
 }
@@ -33,10 +29,7 @@ function razorpayClient() {
       }
     };
   }
-  const keyId = getRazorpayKeyId();
-  const keySecret = getRazorpayKeySecret();
-  if (!keyId || !keySecret) throw new Error('Razorpay credentials are not configured.');
-  return new Razorpay({ key_id: keyId, key_secret: keySecret });
+  return { payments: { fetch: fetchRazorpayPayment } };
 }
 
 async function fetchOrderByCode(orderCode) {
