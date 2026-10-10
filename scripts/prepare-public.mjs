@@ -66,6 +66,27 @@ resetPublic();
 for (const file of ROOT_FILES) copyFile(file);
 for (const dir of DIRECTORIES) copyDir(dir);
 
+// Cloudflare's asset server answers a path containing "@" (pdp-01-hero@640.webp,
+// every blog thumbnail) with a 307 to the %40-encoded path, so each of those
+// images cost an extra round trip before it could start loading — including
+// the PDP's LCP image. Write the encoded form in the shipped text files.
+// Sources keep "@" (readable, and what the generators write).
+const AT_ASSET = /([A-Za-z0-9_.-])@(\d+x?\.(?:webp|avif|jpe?g|png|gif|svg))/g;
+function encodeAtAssets(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) { encodeAtAssets(full); continue; }
+    if (!/\.(html|css|js|xml|json|txt|webmanifest)$/.test(entry.name)) continue;
+    const before = fs.readFileSync(full, 'utf8');
+    const after = before.replace(AT_ASSET, '$1%40$2');
+    if (after !== before) fs.writeFileSync(full, after);
+    // Self-check: nothing left that would 307.
+    if (AT_ASSET.test(after)) throw new Error('Unencoded @ asset path left in ' + full);
+    AT_ASSET.lastIndex = 0;
+  }
+}
+encodeAtAssets(PUBLIC);
+
 // Compile config/routing.json into Cloudflare's _redirects and _headers.
 const routing = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'routing.json'), 'utf8'));
 fs.writeFileSync(path.join(PUBLIC, '_redirects'), buildRedirects(routing));
