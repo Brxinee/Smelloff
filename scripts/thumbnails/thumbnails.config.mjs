@@ -28,7 +28,7 @@
 export const CANVAS = { width: 1920, height: 1080 }; // 16:9, 2,073,600px — clears the >920,000px Discover benchmark
 
 /** Widths emitted for the responsive srcset. The first is the canonical asset. */
-export const WIDTHS = [1920, 1200];
+export const WIDTHS = [1920, 1200, 640]; // 640: phone card thumbnails (112px-wide rows)
 
 export const POSTS = [
   // 2026-08/09 series. Photo choice is bound by the clothing-only rule above:
