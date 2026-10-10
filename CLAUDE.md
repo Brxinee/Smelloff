@@ -39,6 +39,23 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Owner dashboard at /admin (2026-10-10)
+Replaces the separate `Brxinee/Admin` repo (a 470KB SPA + 323KB API + a
+half-built `mission-control/` app, on a Vercel deploy that no longer served).
+The new one is deliberately small and ships with the storefront Worker:
+- `admin/index.html` — one self-contained page (no libraries): Overview,
+  Orders (search, status filter, detail drawer, one-tap "Mark as …", courier
+  + tracking, CSV), Customers (grouped by phone, CSV), Messages.
+- `api/admin.js` — one POST endpoint. `ADMIN_PASSWORD` → signed HttpOnly
+  SameSite=Strict cookie (12 h); same-origin check; writes limited to
+  `status/courier/tracking_id/tracking_url` on orders and `status` on
+  `contact_messages`. Money is **paise** in the DB; the UI divides by 100.
+- `/api/health` reports which secrets are present (`configured.database`,
+  `email`, `razorpay`, `admin`) — booleans only, never values.
+- **Supabase free tier pauses after ~7 days without traffic.** It was paused on
+  2026-10-10, so orders weren't being saved. The 03:00 cron now does one tiny
+  read (`keepDatabaseAwake`) before the Meta drain.
+
 ## Signature sections (2026-08-02)
 Two owned experiences replaced four generic ones. Both are built the same way
 and that way is the point: **an attribute or a custom property drives CSS, and
