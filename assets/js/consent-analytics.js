@@ -80,7 +80,7 @@
       // chrome.css §5.2 and the two inline copies in index/odorstrike.
       '#smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}' +
       '#smelloff-consent-bar button{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 18px;min-height:44px;border-radius:2px;cursor:pointer}' +
-      '@media(max-width:520px){#smelloff-consent-bar .cb-actions{width:100%}#smelloff-consent-bar .cb-actions button{flex:1 1 100%}}' +
+      '@media(max-width:520px){#smelloff-consent-bar .cb-actions{width:100%}#smelloff-consent-bar .cb-actions button{flex:1 1 130px;padding-inline:10px}}' +
       '#smelloff-consent-bar .cb-accept{background:#b8ff57;color:#080808;border:none}' +
       '#smelloff-consent-bar .cb-reject{background:transparent;color:#f4f1ea;border:1px solid rgba(244,241,234,.25)}';
     var style = document.createElement('style');
@@ -91,7 +91,7 @@
     bar.setAttribute('role', 'dialog');
     bar.setAttribute('aria-label', 'Cookie and tracking consent');
     bar.innerHTML = '<div class="cb-inner">' +
-      '<p>We use analytics cookies (Google Analytics, Meta Pixel) to understand how you use our site. You can opt out — core shopping functions work either way. <a href="/privacy">Privacy Policy</a></p>' +
+      '<p>We use analytics cookies (Google Analytics, Meta Pixel) to see how the site is used. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>' +
       '<div class="cb-actions">' +
       '<button class="cb-accept" onclick="window.smelloffSetConsent(\'accepted\')">Accept all</button>' +
       '<button class="cb-reject" onclick="window.smelloffSetConsent(\'rejected\')">Reject non-essential</button>' +
