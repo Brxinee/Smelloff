@@ -281,6 +281,26 @@ github.com/settings/installations → Vercel / Netlify → Uninstall (and delete
 the projects in each dashboard). Nothing in the repo can stop them. Cloudflare
 Workers Builds is the only deploy.
 
+## Homepage hero v3 — first impression (2026-10-10)
+Researched (Baymard mobile homepage/product-image findings, Stripe landing
+guidance on one action + a quote by the buy button) and rebuilt `.hero`:
+- **Bottle on a stage, never a thumbnail:** phones keep copy | bottle side
+  by side with an acid glow behind it; ≥768 the bottle sits on the acid disc
+  in a stage card with three spec tags (50ml / dry 15–30 s / up to 8 h —
+  locked claims only, `aria-hidden`, the same facts are in the copy).
+- **One primary action:** "View product" is now a text link
+  (`.hm-link.hero-more`), not a second full button. A test pins the route.
+- **Proof by the button:** one real beta-tester quote (Rohit, verbatim,
+  labelled "Beta tester"). Never edit it, never add stars.
+- Category label is its own full-width row (it wrapped in the narrow
+  column); chips lost their ⊘ icons and fit one row at 390; trust is one
+  line, not three cards; the size/sprays line shows from 768.
+- Tablet now gets the two-column layout from **768** (was 960).
+- Measured CTA bottom: 703px at 390×844, 670 at 768×1024, 702 at
+  1024×768, 757 at 1280×800. Below 390 the CTA drops under the fold and the
+  sticky buy bar takes over (it shows whenever the hero CTA is off screen).
+- The bottle image is `data-no-skel` (transparent cutout; no shimmer).
+
 ## Speed, skeletons, fewer icons (2026-10-10)
 - **Razorpay loads on checkout intent, not on page load.** The static
   `checkout.js` tag pulled ~1.3 MB of Razorpay JS/CSS on every `/odorstrike`

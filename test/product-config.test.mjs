@@ -509,7 +509,7 @@ test('pages give a route to the product page that does not open checkout', () =>
   const pdpLinks = main.match(/href="\/odorstrike"/g) || [];
   assert.ok(pdpLinks.length >= 4, `homepage needs plain /odorstrike links beside the buy CTAs, found ${pdpLinks.length}`);
   const hero = home.slice(home.indexOf('<section class="hero"'), home.indexOf('</section>', home.indexOf('<section class="hero"')));
-  assert.ok(/class="hm-btn hm-btn--ghost" href="\/odorstrike"/.test(hero), 'hero must offer "View product" next to buy');
+  assert.ok(/class="hm-link hero-more" href="\/odorstrike"/.test(hero), 'hero must offer a route to the product page next to buy (a text link: one primary action)');
   const pdp = readFileSync('odorstrike.html', 'utf8');
   assert.equal(/\.pay-modes'\)/.test(readFileSync('assets/js/chrome.js', 'utf8')), false, 'chrome.js must not overwrite the PDP COD disclosure');
   for (const id of new Set([...pdp.matchAll(/<use href="#(i-[a-z-]+)"/g)].map(m => m[1]))) assert.ok(pdp.includes(`<symbol id="${id}"`), `icon ${id} must exist in the sprite`);
