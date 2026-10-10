@@ -67,7 +67,7 @@ function clientIp(req) {
 
 function countryFrom(req) {
   const pick = (v) => String(Array.isArray(v) ? v[0] : v || '').trim().toUpperCase();
-  const c = pick(req.headers['cf-ipcountry']) || pick(req.headers['x-vercel-ip-country']);
+  const c = pick(req.headers['cf-ipcountry']);
   return !c || c === 'XX' || c === 'T1' ? null : c.slice(0, 2);
 }
 

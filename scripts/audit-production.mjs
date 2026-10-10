@@ -34,9 +34,15 @@ for (const name of ['scripts/blog_data.py','scripts/build_blogs.py','scripts/fix
   if (fs.existsSync(path.join(ROOT, name))) fail(`${name} must not exist; it is a stale generator/rewrite path`);
 }
 
-const security = path.join(ROOT, 'api/_security.js');
-if (fs.existsSync(security) && /\.endsWith\(['"]\.vercel\.app/i.test(read(security))) {
-  fail('api/_security.js permits arbitrary *.vercel.app origins');
+// The site is Cloudflare-only: no API may trust *.vercel.app / *.run.app origins.
+for (const rel of ['api/_security.js', 'api/send-email.js']) {
+  const p = path.join(ROOT, rel);
+  if (fs.existsSync(p) && /\.endsWith\(['"]\.(vercel|run)\.app/i.test(read(p))) {
+    fail(`${rel} permits arbitrary *.vercel.app / *.run.app origins`);
+  }
+}
+for (const name of ['vercel.json', 'middleware.js']) {
+  if (fs.existsSync(path.join(ROOT, name))) fail(`${name} must not exist; the site deploys to Cloudflare only (routing lives in config/routing.json)`);
 }
 
 const createOrder = path.join(ROOT, 'supabase/functions/create-order/index.ts');
@@ -305,11 +311,11 @@ if (!fs.existsSync(sitemapPath)) {
   }
 }
 
-// 3. Vercel redirect rules integrity
-const vercelPath = path.join(ROOT, 'vercel.json');
-if (fs.existsSync(vercelPath)) {
-  const vercelConfig = JSON.parse(read(vercelPath));
-  const redirects = vercelConfig.redirects || [];
+// 3. Redirect rules integrity (config/routing.json)
+const routingPath = path.join(ROOT, 'config', 'routing.json');
+if (fs.existsSync(routingPath)) {
+  const routingConfig = JSON.parse(read(routingPath));
+  const redirects = routingConfig.redirects || [];
 
   const generalSources = new Set(redirects.filter(r => !r.has).map(r => r.source));
 
@@ -322,7 +328,7 @@ if (fs.existsSync(vercelPath)) {
 
     // Prevent redirect chains within configuration
     if (!dest.includes(':') && !dest.includes('$') && generalSources.has(dest)) {
-      fail(`vercel.json redirect chain detected: ${r.source} -> ${r.destination} (which is another redirect source)`);
+      fail(`config/routing.json redirect chain detected: ${r.source} -> ${r.destination} (which is another redirect source)`);
     }
 
     // Ensure www rules point to canonical domain

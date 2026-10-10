@@ -1,41 +1,5 @@
 {
-  "cleanUrls": true,
-  "crons": [
-    {
-      "path": "/api/meta-capi-drain",
-      "schedule": "0 3 * * *"
-    },
-    {
-      "path": "/api/shiprocket-sync",
-      "schedule": "0 10 * * *"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/admin/test-email",
-      "destination": "/api/send-email?diagnostic=1"
-    },
-    {
-      "source": "/api/resend-webhook",
-      "destination": "/api/webhook?provider=resend"
-    },
-    {
-      "source": "/.well-known/llms.txt",
-      "destination": "/llms.txt"
-    },
-    {
-      "source": "/.well-known/llms-full.txt",
-      "destination": "/llms-full.txt"
-    },
-    {
-      "source": "/.well-known/ai.txt",
-      "destination": "/llms.txt"
-    },
-    {
-      "source": "/ai.txt",
-      "destination": "/llms.txt"
-    }
-  ],
+  "$comment": "Source of truth for redirects, rewrites and headers. scripts/cloudflare-routing.mjs compiles this into public/_redirects and public/_headers on every build. Rule shapes are {source, destination, permanent} / {source, headers:[{key,value}]}.",
   "redirects": [
     {
       "source": "/r/:code",
@@ -1019,6 +983,32 @@
       "statusCode": 301
     }
   ],
+  "rewrites": [
+    {
+      "source": "/api/admin/test-email",
+      "destination": "/api/send-email?diagnostic=1"
+    },
+    {
+      "source": "/api/resend-webhook",
+      "destination": "/api/webhook?provider=resend"
+    },
+    {
+      "source": "/.well-known/llms.txt",
+      "destination": "/llms.txt"
+    },
+    {
+      "source": "/.well-known/llms-full.txt",
+      "destination": "/llms-full.txt"
+    },
+    {
+      "source": "/.well-known/ai.txt",
+      "destination": "/llms.txt"
+    },
+    {
+      "source": "/ai.txt",
+      "destination": "/llms.txt"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -1297,6 +1287,5 @@
         }
       ]
     }
-  ],
-  "buildCommand": "npm run optimize:critical && npm run apply:chrome && npm run prepare:public"
+  ]
 }

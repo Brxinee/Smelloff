@@ -1,11 +1,11 @@
 /*
- * vercel.json → Cloudflare Workers static-asset routing files.
+ * config/routing.json → Cloudflare Workers static-asset routing files.
  *
- * The site deploys to Cloudflare Workers (wrangler.jsonc), which ignores
- * vercel.json entirely. Without this, every 301 for a deleted blog slug, the
- * /.well-known/llms.txt aliases and all security/cache headers silently
- * disappear. vercel.json stays the single source of truth; prepare-public.mjs
- * writes public/_redirects and public/_headers from it on every build.
+ * config/routing.json is the single source of truth for redirects, rewrites
+ * and headers (it was vercel.json until the site left Vercel for good).
+ * prepare-public.mjs writes public/_redirects and public/_headers from it on
+ * every build — without that, every 301 for a deleted blog slug, the
+ * /.well-known/llms.txt aliases and all security/cache headers disappear.
  *
  * Deliberately NOT translated (Cloudflare handles them another way):
  *   - rules with `has` (host = www.smelloff.in): _redirects cannot match on
@@ -22,7 +22,7 @@
  *     own must-revalidate rule.
  */
 
-const STATUS_DEFAULT = 307; // Vercel's default when `permanent` is unset/false.
+const STATUS_DEFAULT = 307; // temporary unless the rule says `permanent: true`.
 
 function statusOf(rule) {
   if (rule.statusCode) return rule.statusCode;
@@ -37,7 +37,7 @@ function expandAlternation(source) {
   return alts.split('|').map((value) => ({ path: prefix + value, name, value }));
 }
 
-export function buildRedirects(vercel) {
+export function buildRedirects(routing) {
   const lines = [];
   const seen = new Set();
   const push = (from, to, status) => {
@@ -46,7 +46,7 @@ export function buildRedirects(vercel) {
     lines.push(`${from} ${to} ${status}`);
   };
 
-  for (const rule of vercel.redirects || []) {
+  for (const rule of routing.redirects || []) {
     if (rule.has || rule.missing) continue;
     const { source, destination } = rule;
     const status = statusOf(rule);
@@ -66,13 +66,13 @@ export function buildRedirects(vercel) {
       throw new Error(`cloudflare-routing: cannot translate redirect source ${source}`);
     }
     push(source, destination, status);
-    // Vercel matched these regardless of a trailing slash; _redirects does not.
+    // Match with and without a trailing slash; _redirects is exact.
     if (!source.includes(':') && source !== '/' && !source.endsWith('/')) {
       push(source + '/', destination, status);
     }
   }
 
-  for (const rule of vercel.rewrites || []) {
+  for (const rule of routing.rewrites || []) {
     if (rule.source.startsWith('/api/')) continue;
     if (/[():*]/.test(rule.source)) {
       throw new Error(`cloudflare-routing: cannot translate rewrite source ${rule.source}`);
@@ -86,9 +86,9 @@ export function buildRedirects(vercel) {
   return [...lines.filter((l) => !isDynamic(l)), ...lines.filter(isDynamic)].join('\n') + '\n';
 }
 
-export function buildHeaders(vercel) {
+export function buildHeaders(routing) {
   const blocks = [];
-  for (const rule of vercel.headers || []) {
+  for (const rule of routing.headers || []) {
     const { source } = rule;
     if (source.startsWith('/api/')) continue;
     if (source === '/(.*\\.html)') continue; // clean URLs never end in .html

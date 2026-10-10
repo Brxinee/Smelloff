@@ -66,10 +66,10 @@ resetPublic();
 for (const file of ROOT_FILES) copyFile(file);
 for (const dir of DIRECTORIES) copyDir(dir);
 
-// Cloudflare ignores vercel.json; carry its redirects and headers across.
-const vercel = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
-fs.writeFileSync(path.join(PUBLIC, '_redirects'), buildRedirects(vercel));
-fs.writeFileSync(path.join(PUBLIC, '_headers'), buildHeaders(vercel));
+// Compile config/routing.json into Cloudflare's _redirects and _headers.
+const routing = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'routing.json'), 'utf8'));
+fs.writeFileSync(path.join(PUBLIC, '_redirects'), buildRedirects(routing));
+fs.writeFileSync(path.join(PUBLIC, '_headers'), buildHeaders(routing));
 
 console.log('Prepared static output: public/');
 console.log('Files:', fs.readdirSync(PUBLIC).length, 'top-level entries');

@@ -26,7 +26,7 @@ test('product pricing keeps prepaid at ₹229 and COD fee at ₹60', () => {
   assert.equal(product.product.priceCod, 289);
 });
 
-test('Vercel order API has an explicit COD branch and preserves prepaid Razorpay', () => {
+test('Order API has an explicit COD branch and preserves prepaid Razorpay', () => {
   assert.match(api, /const COD_FEE_RUPEES = Number\(BASE_PRODUCT\.codFee\);/);
   assert.match(api, /const COD_PAYMENT_METHOD = 'cod';/);
   assert.match(api, /const COD_INITIAL_STATUS = 'placed';/);

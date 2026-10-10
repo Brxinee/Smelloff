@@ -37,8 +37,8 @@ it carries `noindex`, if it is `404.html`, or if it is a Search Console
 verification stub. So `payment-failed` and `404` exclude *themselves* — nothing
 to maintain.
 
-**The URL.** Built in exactly one function, honouring `cleanUrls: true` +
-`trailingSlash: false` from `vercel.json`. `index.html` → `/`,
+**The URL.** Built in exactly one function, honouring clean URLs +
+no trailing slash (`html_handling: "drop-trailing-slash"` in `wrangler.jsonc`). `index.html` → `/`,
 `solutions/index.html` → `/solutions`, `blog/foo.html` → `/blog/foo`. Because
 that is the only place a URL is constructed, a trailing slash cannot ship again.
 

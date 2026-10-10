@@ -497,8 +497,10 @@ export async function fetchOrderByCode(orderCode) {
 function isAllowedOrigin(origin) {
   if (!origin) return true; // same-origin/server-to-server requests may omit Origin
   if (ALLOWED_ORIGINS.has(origin)) return true;
-  if (process.env.VERCEL_ENV !== 'production') {
-    if (origin.endsWith('.vercel.app') || origin.endsWith('.run.app') || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) return true;
+  // Local development only. There are no hosted preview origins to trust: the
+  // site runs on Cloudflare alone, and *.vercel.app / *.run.app are anyone's.
+  if (process.env.APP_ENV !== 'production') {
+    if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) return true;
   }
   return false;
 }
@@ -548,7 +550,7 @@ async function handleDiagnosticTest(req, res, body) {
   const timestamp = new Date().toISOString();
   const rendered = diagnosticTest({
     emailId: 'pending',
-    environment: sender.vercelEnv,
+    environment: sender.appEnv,
     timestamp,
   });
 

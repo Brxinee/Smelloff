@@ -76,7 +76,7 @@
 </script>
 <!-- JSON-LD WebPage -->
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://smelloff.in/odorstrike#webpage","name":"Smelloff ODORSTRIKE — Fabric Odor Remover Spray","url":"https://smelloff.in/odorstrike","description":"A pocket-sized fabric odor mist for clothes. Neutralizes trapped sweat and fabric odor. Not a perfume, not a deodorant.","inLanguage":"en-IN","isPartOf":{"@type":"WebSite","name":"Smelloff","url":"https://smelloff.in"},"about":{"@type":"Thing","name":"Fabric Odor Elimination"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://smelloff.in/assets/odorstrike-bottle.webp"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".hero h1",".ph-tagline",".problem h2"]}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://smelloff.in/odorstrike#webpage","name":"Smelloff ODORSTRIKE — Fabric Odor Remover Spray","url":"https://smelloff.in/odorstrike","description":"A pocket-sized fabric odor mist for clothes. Neutralizes trapped sweat and fabric odor. Not a perfume, not a deodorant.","inLanguage":"en-IN","isPartOf":{"@type":"WebSite","name":"Smelloff","url":"https://smelloff.in"},"about":{"@type":"Thing","name":"Fabric Odor Elimination"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://smelloff.in/assets/odorstrike-bottle.webp"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".hero h1",".ph-tagline",".showcase h2"]}}
 </script>
 <!-- JSON-LD Product (single SKU — ₹229, no bundles) -->
 <!-- RATING IS GATED — no "aggregateRating" is emitted right now.
@@ -1163,40 +1163,6 @@
   }
   .hero-trust span::before{content:'·';color:var(--acid);margin-right:14px}
   .hero-trust span:first-child::before{content:''; margin-right:0}
-
-  /* Product Social Share Widget */
-  .product-share-box{
-    margin-top:22px;padding-top:18px;
-    border-top:1px solid var(--rule);
-  }
-  .p-share-head{
-    font-family:var(--mono);font-size:11px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--muted);margin-bottom:12px;
-    display:flex;align-items:center;gap:8px;
-  }
-  .p-share-head svg{fill:var(--acid);width:14px;height:14px}
-  .p-share-row{
-    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
-  }
-  .p-share-link{
-    display:inline-flex;align-items:center;gap:7px;
-    padding:8px 12px;background:rgba(255,255,255,.04);
-    border:1px solid var(--rule);border-radius:4px;
-    color:var(--text);font-family:var(--mono);font-size:11px;
-    letter-spacing:.06em;text-decoration:none;
-    transition:all .18s ease;cursor:pointer;
-  }
-  .p-share-link:hover{
-    background:rgba(184,255,87,.12);
-    border-color:var(--acid);
-    color:var(--text);
-    transform:translateY(-1px);
-  }
-  .p-share-link img{width:15px;height:15px;object-fit:contain;display:block}
-  .p-share-link svg{width:15px;height:15px;fill:currentColor;display:block}
-  .p-share-link.is-copied{
-    background:var(--acid);color:var(--ink);border-color:var(--acid);
-  }
   /* Single column below the tablet breakpoint only. This was max-width:900px
      and it sits later in the file than the min-width:768px rule above, so at
      equal specificity it won on source order and forced one column across
@@ -1220,9 +1186,28 @@
     .product-hero{margin-top:16px;gap:20px}
     .product-info h1{font-size:clamp(40px,10.5vw,64px);line-height:.95}
     .product-info h1 .ph-sub{font-size:12px;letter-spacing:.14em;margin-top:14px}
-    .ph-tagline{font-size:17px}
+    .ph-tagline{font-size:16px}
     .hero-cta{margin-top:16px;padding:16px 24px}
     .buy-actions{margin-top:14px}
+  }
+  /* 2026-10-10: the buy button had drifted to y=1208 on a 390x844 phone —
+     a full screen below the fold. The decorative meta row, 52px of top
+     padding under a sticky header, an eight-line tagline and badges that
+     wrapped to two rows were all above it. The gallery is untouched. */
+  @media(max-width:767px){
+    .hero{padding-top:14px}
+    .hero-meta{display:none}
+    .product-hero{margin-top:0}
+    .product-info h1{font-size:clamp(36px,9.5vw,56px)}
+    .ph-tagline{margin-top:12px}
+    .ph-badges{gap:6px;margin-top:12px}
+    .ph-badge{padding:5px 8px;font-size:10px;letter-spacing:.04em}
+    .ph-price{margin-top:14px;padding:12px 14px;gap:8px}
+    .ph-price-row{gap:6px 10px}
+    .ph-price .price{font-size:38px}
+    .ph-price .ph-pack{font-size:11px}
+    .ph-price-details{padding-top:8px;font-size:10px;gap:4px 8px}
+    .buy-actions .hero-cta{padding:14px 12px;font-size:13px;white-space:nowrap;letter-spacing:.05em}
   }
 
   /* Marquee */
@@ -1269,53 +1254,6 @@
     content:'';
     width:32px;height:1px;
     background:var(--muted);
-  }
-
-  /* Problem section */
-  .problem h2{
-    font-family:var(--display);
-    font-weight:400;
-    font-style:italic;
-    font-size:clamp(40px,7vw,96px);
-    line-height:1;
-    letter-spacing:-.03em;
-    max-width:1200px;
-  }
-  .problem h2 b{
-    font-style:normal;
-    font-weight:900;
-  }
-  .problem-grid{
-    margin-top:80px;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:32px;
-    border-top:1px solid var(--rule);
-    padding-top:40px;
-  }
-  .problem-grid div{
-    border-right:1px solid var(--rule);
-    padding-right:24px;
-  }
-  .problem-grid div:last-child{border-right:none}
-  .problem-grid h3{
-    font-family:var(--display);
-    font-weight:900;
-    /* Word labels, not 2–4 character figures — scale down so they never overflow
-       the 4-up column or wrap awkwardly on small screens. */
-    font-size:clamp(28px,3.4vw,44px);
-    letter-spacing:-.03em;
-    line-height:1.05;
-    margin-bottom:12px;
-    color:var(--acid);
-    hyphens:none;
-  }
-  .problem-grid p{
-    font-size:14px;
-    color:var(--muted);
-  }
-  @media(max-width:720px){
-    .problem-grid{grid-template-columns:1fr 1fr;gap:20px}
   }
 
   /* Product showcase
@@ -2750,84 +2688,9 @@
       transition:none !important;
     }
   }
-
-  /* ============================= */
-  /* BEFORE/AFTER PROOF            */
-  /* ============================= */
-  .proof{
-    background:var(--bg);
-    overflow:hidden;
-  }
-  .proof-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:0;
-    margin-top:60px;
-    border:1px solid var(--rule);
-  }
-  .proof-side{
-    padding:60px 40px;
-    text-align:center;
-    position:relative;
-  }
-  .proof-side:first-child{
-    border-right:1px solid var(--rule);
-    background:rgba(244,241,234,.03);
-  }
-  .proof-label{
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin-bottom:20px;
-  }
-  .proof-visual{
-    height:120px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-bottom:20px;
-  }
-  .odor-dot{
-    width:12px;height:12px;
-    border-radius:50%;
-    display:inline-block;
-    animation:drift 3s ease-in-out infinite;
-  }
-  .odor-dot:nth-child(2){animation-delay:.3s}
-  .odor-dot:nth-child(3){animation-delay:.6s}
-  .odor-dot:nth-child(4){animation-delay:.9s}
-  .odor-dot:nth-child(5){animation-delay:1.2s}
-  .odor-dot:nth-child(6){animation-delay:1.5s}
-  .odor-dot.active{background:var(--acid)}
-  .odor-dot.dead{background:#3a3a3a;opacity:.5}
   @keyframes drift{
     0%,100%{transform:translateY(0)}
     50%{transform:translateY(-6px)}
-  }
-  .proof-caption{
-    font-family:var(--display);
-    font-weight:900;
-    font-size:20px;
-    letter-spacing:-.01em;
-    line-height:1.2;
-  }
-  .proof-footer{
-    text-align:center;
-    margin-top:40px;
-    font-family:var(--display);
-    font-style:italic;
-    font-size:clamp(16px,2vw,22px);
-    color:var(--muted);
-    line-height:1.4;
-  }
-  @media(max-width:720px){
-    .proof-grid{grid-template-columns:1fr}
-    .proof-side:first-child{border-right:none;border-bottom:1px solid var(--rule)}
-    .proof-side{padding:40px 24px}
   }
 
   /* ============================= */
@@ -3151,14 +3014,6 @@
   #buyProofMount .vr-summary{max-width:560px;margin:24px auto 0}
   .reviews-more{margin-top:32px;font-family:var(--body);font-size:14px;color:var(--muted);line-height:1.6}
   .reviews-more a{color:var(--acid);text-decoration:none;border-bottom:1px solid rgba(184,255,87,.35)}
-  .guides-strip{padding:60px 32px;border-top:1px solid var(--rule)}
-  .guides-strip ul{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:12px}
-  /* Styled on the <li> so an entry without a link can never fall back to
-     the body face mid-list, the way two of these used to. */
-  .guides-strip li{font-family:var(--display);font-size:clamp(16px,1.6vw,20px);color:var(--text);border-bottom:1px solid var(--rule);padding-bottom:12px}
-  .guides-strip li a{color:inherit;text-decoration:none;display:block;transition:color .15s}
-  .guides-strip li a:hover{color:var(--acid)}
-  .guides-all{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--acid);text-decoration:none}
 
   /* ============================= */
   /* MOTION POLISH                 */
@@ -3253,7 +3108,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 </script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=6bc5918a">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=9c0f9c3e">
+<link rel="stylesheet" href="/assets/css/chrome.css?v=8525b9ce">
 <script src="/assets/js/chrome.js?v=567c18e0" defer></script>
 </head>
 <body>
@@ -3474,7 +3329,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <div class="product-info">
       <p class="ph-eyebrow">FABRIC ODOR CONTROL · 50ML</p>
       <h1>ODORSTRIKE</h1>
-      <p class="ph-tagline">A pocket-sized fabric odor mist for clothes. Sweat and daily odor molecules get trapped deep in the weave of your shirts and jackets. ODORSTRIKE neutralizes them directly in fabric fibres — giving you up to 8 hours of clean odor protection on fabric under normal office/commute conditions* with a fast-drying, residue-free finish.</p>
+      <p class="ph-tagline">A pocket-sized fabric odor mist for clothes. Sweat odor molecules hide in the weave — ODORSTRIKE neutralizes them directly in fabric fibres — up to 8 hours on fabric*, residue-free.</p>
       
       <div class="ph-badges" aria-label="Usage distinction">
         <span class="ph-badge">NOT PERFUME</span>
@@ -3539,39 +3394,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <!-- Gated proof (under primary CTA): renders only with real data -->
       <div id="heroProofMount"></div>
 
-      <!-- Product Social Share Widget -->
-      <div class="product-share-box" aria-label="Share ODORSTRIKE product">
-        <div class="p-share-head">
-          <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M307 34.8c-11.5 5.1-19 16.6-19 29.2l0 64-112 0C78.8 128 0 206.8 0 304C0 417.3 81.5 467.9 100.2 478.1c2.5 1.4 5.3 1.9 8.1 1.9c10.9 0 19.7-8.9 19.7-19.7c0-7.5-4.3-14.4-9.8-19.5C108.8 431.9 96 414.4 96 384c0-53 43-96 96-96l96 0 0 64c0 12.6 7.4 24.1 19 29.2s25 3 34.4-5.4l160-144c6.7-6.1 10.6-14.7 10.6-23.8s-3.8-17.7-10.6-23.8l-160-144c-9.4-8.5-22.9-10.6-34.4-5.4z"/></svg>
-          <span>Share ODORSTRIKE</span>
-        </div>
-        <div class="p-share-row">
-          <button type="button" class="p-share-link" id="pShareNative" hidden aria-label="Share via apps">
-            <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M307 34.8c-11.5 5.1-19 16.6-19 29.2l0 64-112 0C78.8 128 0 206.8 0 304C0 417.3 81.5 467.9 100.2 478.1c2.5 1.4 5.3 1.9 8.1 1.9c10.9 0 19.7-8.9 19.7-19.7c0-7.5-4.3-14.4-9.8-19.5C108.8 431.9 96 414.4 96 384c0-53 43-96 96-96l96 0 0 64c0 12.6 7.4 24.1 19 29.2s25 3 34.4-5.4l160-144c6.7-6.1 10.6-14.7 10.6-23.8s-3.8-17.7-10.6-23.8l-160-144c-9.4-8.5-22.9-10.6-34.4-5.4z"/></svg>
-            <span>Share</span>
-          </button>
-          <a class="p-share-link" href="https://wa.me/?text=Check%20out%20ODORSTRIKE%20Fabric%20Odor%20Spray%20for%20Clothes%20%E2%82%B9229%20by%20Smelloff%20%E2%80%94%20https%3A%2F%2Fsmelloff.in%2Fodorstrike" target="_blank" rel="noopener nofollow" aria-label="Share ODORSTRIKE on WhatsApp">
-            <img src="/assets/icon-whatsapp-white.png" alt="" width="15" height="15" loading="lazy">
-            <span>WhatsApp</span>
-          </a>
-          <a class="p-share-link" href="https://twitter.com/intent/tweet?text=Check%20out%20ODORSTRIKE%20Fabric%20Odor%20Spray%20for%20Clothes%20%E2%82%B9229%20by%20%40smelloffindia&url=https%3A%2F%2Fsmelloff.in%2Fodorstrike" target="_blank" rel="noopener nofollow" aria-label="Share ODORSTRIKE on X (Twitter)">
-            <img src="/assets/icon-x.png" alt="" width="15" height="15" loading="lazy">
-            <span>X</span>
-          </a>
-          <a class="p-share-link" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fsmelloff.in%2Fodorstrike" target="_blank" rel="noopener nofollow" aria-label="Share ODORSTRIKE on LinkedIn">
-            <img src="/assets/icon-linkedin-white.png" alt="" width="15" height="15" loading="lazy">
-            <span>LinkedIn</span>
-          </a>
-          <a class="p-share-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fsmelloff.in%2Fodorstrike" target="_blank" rel="noopener nofollow" aria-label="Share ODORSTRIKE on Facebook">
-            <img src="/assets/icon-facebook-white.png" alt="" width="15" height="15" loading="lazy">
-            <span>Facebook</span>
-          </a>
-          <button type="button" class="p-share-link" id="pCopyBtn" aria-label="Copy product link">
-            <svg viewBox="0 0 640 512" aria-hidden="true"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C81.8 372 81.8 321 113.3 289.5L225.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg>
-            <span id="pCopyLabel">Copy Link</span>
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </header>
@@ -3633,32 +3455,33 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </div>
 </div>
 
-<!-- PROBLEM -->
-<section class="problem">
-  <div class="section-tag">The problem</div>
-  <h2>You don't fear smelling bad. You fear <b>someone noticing.</b></h2>
 
-  <!-- These four tiles carry no numbers on purpose. Any objectively ascertainable
-       figure here (hours, multiples, seconds) would need a dated, citable source
-       under the ASCI code — so unless someone supplies one, keep them qualitative. -->
-  <div class="problem-grid">
-    <div>
-      <h3>All day</h3>
-      <p>Your morning shower is long gone by the evening commute home.</p>
+<!-- REVIEWS -->
+<!-- AggregateRating (JSON-LD) + numeric star are intentionally GATED: the only
+     testimonials so far are pre-launch beta quotes, so emitting a rating would be
+     a Google structured-data violation. Re-add the Product "aggregateRating" block
+     and a visible ★ figure ONLY when computed from real verified-purchase reviews. -->
+<section class="reviews" id="reviews">
+  <div id="verifiedReviewsMount"></div>
+  <div class="section-tag">Early testers say</div>
+  <div class="review-grid">
+    <div class="review">
+      <div class="beta-tag">Beta tester</div>
+      <blockquote>"Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched."</blockquote>
+      <cite>— Rohit, 26 / Bengaluru</cite>
     </div>
-    <div>
-      <h3>Again</h3>
-      <p>And again. Your shirt keeps collecting sweat, smoke and food smell all through an office day.</p>
+    <div class="review">
+      <div class="beta-tag">Beta tester</div>
+      <blockquote>"Lives in my gym bag now. Post-workout, pre-Uber, no more 'should I shower at office' anxiety."</blockquote>
+      <cite>— Aakash, 24 / Pune</cite>
     </div>
-    <div>
-      <h3>None</h3>
-      <p>Deodorants work on skin. None of them reach the smell already sitting in fabric.</p>
-    </div>
-    <div>
-      <h3>Seconds</h3>
-      <p>Spray 2–3 light mists, wait 15–30 seconds, walk into the meeting fresh.</p>
+    <div class="review">
+      <div class="beta-tag">Beta tester</div>
+      <blockquote>"Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger."</blockquote>
+      <cite>— Karan, 29 / Delhi</cite>
     </div>
   </div>
+  <p class="reviews-more">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review — worn, sweated and stain-tested across India</a>, see how it stacks up against Febreze and 4 other sprays, or compare 5 deodorant sprays for clothes (not skin) side-by-side.</p>
 </section>
 
 <!-- SCIENCE -->
@@ -3710,37 +3533,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </div>
 </section>
 
-<!-- BEFORE / AFTER PROOF -->
-<section class="proof">
-  <div class="section-tag">The proof</div>
-  <div class="proof-grid">
-    <div class="proof-side">
-      <div class="proof-label">Before</div>
-      <div class="proof-visual">
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-        <span class="odor-dot active"></span>
-      </div>
-      <div class="proof-caption">Odor molecules floating free in fabric fibers</div>
-    </div>
-    <div class="proof-side">
-      <div class="proof-label">After ODORSTRIKE</div>
-      <div class="proof-visual">
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-        <span class="odor-dot dead"></span>
-      </div>
-      <div class="proof-caption">Captured. Neutralized. Gone.</div>
-    </div>
-  </div>
-  <p class="proof-footer">Odor molecules don't get masked. They get trapped and neutralized directly in fabric fibers. Based on founder wear observations across common wardrobe fabrics (cotton, polyester, denim); performance varies with sweat volume, fabric type, and ambient humidity. <a href="/blog/odorstrike-review-30-day-india-test">Read the full test report →</a></p>
-</section>
 
 <!-- MOMENTS YOU CAN'T REWASH FOR
      This block used to be labelled "content block for SEO word count", and it
@@ -3850,33 +3642,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <p class="pay-modes">UPI, Cards, Net Banking &amp; COD · Fast &amp; Secure Checkout</p>
 </section>
 
-<!-- REVIEWS -->
-<!-- AggregateRating (JSON-LD) + numeric star are intentionally GATED: the only
-     testimonials so far are pre-launch beta quotes, so emitting a rating would be
-     a Google structured-data violation. Re-add the Product "aggregateRating" block
-     and a visible ★ figure ONLY when computed from real verified-purchase reviews. -->
-<section class="reviews" id="reviews">
-  <div id="verifiedReviewsMount"></div>
-  <div class="section-tag">Early testers say</div>
-  <div class="review-grid">
-    <div class="review">
-      <div class="beta-tag">Beta tester</div>
-      <blockquote>"Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched."</blockquote>
-      <cite>— Rohit, 26 / Bengaluru</cite>
-    </div>
-    <div class="review">
-      <div class="beta-tag">Beta tester</div>
-      <blockquote>"Lives in my gym bag now. Post-workout, pre-Uber, no more 'should I shower at office' anxiety."</blockquote>
-      <cite>— Aakash, 24 / Pune</cite>
-    </div>
-    <div class="review">
-      <div class="beta-tag">Beta tester</div>
-      <blockquote>"Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger."</blockquote>
-      <cite>— Karan, 29 / Delhi</cite>
-    </div>
-  </div>
-  <p class="reviews-more">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review — worn, sweated and stain-tested across India</a>, see how it stacks up against Febreze and 4 other sprays, or compare 5 deodorant sprays for clothes (not skin) side-by-side.</p>
-</section>
 
 <!-- FAQ -->
 <section class="faq" id="faq" aria-labelledby="faqHeading">
@@ -3945,23 +3710,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <div class="ec-success" id="ecSuccess">You're in. Watch your inbox.</div>
 </div>
 
-<!-- FIELD GUIDES -->
-<section class="guides-strip">
-  <div class="section-tag">Field guides</div>
-  <ul>
-    <li><a href="/blog/why-i-built-odorstrike">Why I built ODORSTRIKE — the founder story behind India's ₹229 pocket fabric spray</a></li>
-    <li><a href="/blog/hpbcd-cyclodextrin-fabric-odor">The science: how beta-cyclodextrin traps odor molecules in fabric</a></li>
-    <!-- Two entries here were plain <li> text with no link — leftovers from
-         the blog prune, pointing at posts that no longer exist. They also
-         rendered in the body face while their linked neighbours rendered in
-         Fraunces, which is why this list looked like two different lists.
-         Replaced with guides that are actually still published. -->
-    <li><a href="/blog/odorstrike-vs-febreze-india">ODORSTRIKE vs Febreze — which works better on Indian clothes</a></li>
-    <li><a href="/blog/zinc-pca-fabric-odor-ingredient-guide">Zinc PCA for fabric odor — what it is and why it works</a></li>
-    <li><a href="/blog/odorstrike-review-30-day-india-test">ODORSTRIKE 30-day India test — is it worth ₹229?</a></li>
-  </ul>
-  <a class="guides-all" href="/blog">All guides →</a>
-</section>
 
 <!-- SF-CHROME:FOOTER — generated by scripts/apply-chrome.mjs. Edit there, not here. -->
 <footer class="sf-ftr">
@@ -5668,54 +5416,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
 })();
 </script>
 
-<!-- PRODUCT SHARE SCRIPT -->
-<script>
-(function(){
-  var url = 'https://smelloff.in/odorstrike';
-  var title = 'ODORSTRIKE Fabric Odor Spray for Clothes ₹229 | Smelloff';
-
-  // Native share sheet (mobile)
-  var nativeBtn = document.getElementById('pShareNative');
-  if (nativeBtn && navigator.share) {
-    nativeBtn.hidden = false;
-    nativeBtn.addEventListener('click', function(){
-      navigator.share({ title: title, url: url }).catch(function(){});
-    });
-  }
-
-  // Copy product link
-  var copyBtn = document.getElementById('pCopyBtn');
-  var copyLabel = document.getElementById('pCopyLabel');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', function(){
-      function done(){
-        if (copyLabel) copyLabel.textContent = 'Copied!';
-        copyBtn.classList.add('is-copied');
-        setTimeout(function(){
-          if (copyLabel) copyLabel.textContent = 'Copy Link';
-          copyBtn.classList.remove('is-copied');
-        }, 1800);
-      }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(done).catch(fallback);
-      } else {
-        fallback();
-      }
-      function fallback(){
-        var t = document.createElement('textarea');
-        t.value = url;
-        t.setAttribute('readonly', '');
-        t.style.position = 'absolute';
-        t.style.left = '-9999px';
-        document.body.appendChild(t);
-        t.select();
-        try { document.execCommand('copy'); done(); } catch (e) {}
-        document.body.removeChild(t);
-      }
-    });
-  }
-})();
-</script>
 
 <!-- SOCIAL PROOF RENDERER (all gated) — reads ONLY SMELLOFF_CONFIG.VERIFIED_REVIEWS
      and BOTTLES_SOLD. With no real data (the shipped default) it renders NOTHING.

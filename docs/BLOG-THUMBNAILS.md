@@ -16,7 +16,7 @@ npm run thumbnails:check    # dry run — exits 1 if markup is out of sync
 
 `npm run build` runs `thumbnails:check` + `node -c server.js`. It deliberately does
 **not** regenerate images: the source photography is not in the repo, so a build on
-a fresh clone (or on Vercel) must not depend on it.
+a fresh clone (or the Cloudflare build) must not depend on it.
 
 ---
 

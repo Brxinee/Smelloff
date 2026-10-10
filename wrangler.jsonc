@@ -17,6 +17,12 @@
     { "pattern": "smelloff.in", "custom_domain": true },
     { "pattern": "www.smelloff.in", "custom_domain": true }
   ],
+  // Read by api/_email.js and api/send-email.js. Keeps the production-only
+  // guards on (no resend.dev sender, no localhost origins). nodejs_compat with
+  // a 2025-04-01+ compatibility_date exposes vars on process.env.
+  "vars": {
+    "APP_ENV": "production"
+  },
   "observability": {
     "enabled": true
   },

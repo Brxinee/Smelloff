@@ -246,10 +246,10 @@ test('classifyResendError distinguishes unverified sender, invalid key, rate lim
 test('production resend.dev sender is blocked as DOMAIN_MISMATCH', async () => {
   const prevKey = process.env.RESEND_API_KEY;
   const prevFrom = process.env.EMAIL_FROM;
-  const prevEnv = process.env.VERCEL_ENV;
+  const prevEnv = process.env.APP_ENV;
   process.env.RESEND_API_KEY = 're_test_key';
   process.env.EMAIL_FROM = 'ODORSTRIKE <orders@resend.dev>';
-  process.env.VERCEL_ENV = 'production';
+  process.env.APP_ENV = 'production';
   const original = Resend.prototype.post;
   let called = 0;
   Resend.prototype.post = async () => { called += 1; return { data: { id: 'x' }, error: null }; };
@@ -269,7 +269,7 @@ test('production resend.dev sender is blocked as DOMAIN_MISMATCH', async () => {
     Resend.prototype.post = original;
     if (prevKey !== undefined) process.env.RESEND_API_KEY = prevKey; else delete process.env.RESEND_API_KEY;
     if (prevFrom !== undefined) process.env.EMAIL_FROM = prevFrom; else delete process.env.EMAIL_FROM;
-    if (prevEnv !== undefined) process.env.VERCEL_ENV = prevEnv; else delete process.env.VERCEL_ENV;
+    if (prevEnv !== undefined) process.env.APP_ENV = prevEnv; else delete process.env.APP_ENV;
   }
 });
 
