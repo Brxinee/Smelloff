@@ -65,7 +65,7 @@ img { max-width: 100%; height: auto; display: block; }
     padding-right: calc(var(--toc-w) + 64px + var(--gutter, 20px));
   }
 }
-:where(.article-wrap) h2[id], :where(.article-wrap) [id] { scroll-margin-top: 88px; }
+:where(.article-wrap) h2[id], :where(.article-wrap) [id] { scroll-margin-top: 104px; }
 
 /* ---------------------------------------------------------------------
    Header
@@ -195,9 +195,9 @@ h1 em { font-style: normal; color: var(--acid); }
      sticky child can't move outside it.) The negative margin equals its
      width + gap, so it takes no room from the text column. */
   .toc {
-    float: right; position: sticky; top: 84px;
+    float: right; position: sticky; top: 104px;
     width: var(--toc-w); margin: 0 calc(-1 * (var(--toc-w) + 64px)) 0 0;
-    max-height: calc(100vh - 108px); overflow-y: auto; padding-left: 2px;
+    max-height: calc(100vh - 128px); overflow-y: auto; padding-left: 2px;
     border: 0; background: none;
   }
   .toc > summary { min-height: 0; padding: 0 0 10px; border-bottom: 1px solid var(--border-subtle); pointer-events: none; }

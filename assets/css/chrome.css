@@ -77,9 +77,10 @@
 }
 
 /* ---------------------------------------------------------------------
-   1 · HEADER (2026-10-10)
-   Offer strip (scrolls away) + one sticky bar. Phones: burger · logo ·
-   cart · Buy. ≥900: logo · nav · cart · Buy. The current section's link is
+   1 · HEADER (2026-10-10, v2)
+   Offer strip (scrolls away) + one sticky bar. Phones: burger · centred
+   logo · cart (a balanced three-column bar, 72px). ≥900: logo · nav · cart
+   (84px). No Buy button here — page bodies and the buy strip carry it. The current section's link is
    underlined in acid. Kept lean on purpose: on a phone the bar is the only
    persistent chrome besides the buy strip.
    --------------------------------------------------------------------- */
@@ -94,17 +95,17 @@
 
 .sf-hdr{
   position:sticky;top:0;z-index:70;
-  background:rgba(8,8,8,.94);
+  background:rgba(8,8,8,.98);
   -webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);
   border-bottom:1px solid var(--rule-soft);
   transition:box-shadow .25s var(--ease),border-color .25s var(--ease);
 }
 .sf-hdr.is-scrolled{border-bottom-color:var(--rule);box-shadow:0 8px 24px -12px rgba(0,0,0,.8)}
-.sf-hdr__row{display:flex;align-items:center;gap:8px;min-height:64px}
-.sf-hdr__logo{display:flex;align-items:center;min-height:44px;margin-right:auto}
-.sf-hdr__logo img{height:22px;width:auto;display:block}
+.sf-hdr__row{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;min-height:72px}
+.sf-hdr__logo{display:flex;align-items:center;justify-content:center;min-height:44px}
+.sf-hdr__logo img{height:26px;width:auto;display:block}
 .sf-hdr__nav{display:none}
-.sf-hdr__right{display:flex;align-items:center;gap:6px}
+.sf-hdr__right{display:flex;align-items:center;justify-content:flex-end;gap:6px}
 
 .sf-cart{
   position:relative;display:inline-flex;align-items:center;justify-content:center;
@@ -113,7 +114,7 @@
   transition:background-color .2s var(--ease),color .2s var(--ease);
 }
 .sf-cart:hover{color:var(--acid);background:var(--surface-2)}
-.sf-cart svg{width:22px;height:22px;display:block;transform-origin:60% 100%}
+.sf-cart svg{width:24px;height:24px;display:block;transform-origin:60% 100%}
 @keyframes sfCartNudge{
   0%,100%{transform:translateX(0) rotate(0)}
   25%{transform:translateX(-2px) rotate(-4deg)}
@@ -142,15 +143,6 @@
 .sf-nav a[aria-current="page"]{color:var(--text)}
 .sf-nav a[aria-current="page"]::after{transform:scaleX(1);opacity:1}
 
-.sf-hdr__cta{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-height:40px;padding:0 14px;
-  background:var(--acid);color:var(--on-acid);text-decoration:none;
-  border:0;border-radius:var(--sq-sm,8px);
-  font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
-  transition:background-color .2s var(--ease);
-}
-.sf-hdr__cta:hover{background:var(--acid-hi)}
 
 .sf-burger{
   display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
@@ -194,19 +186,19 @@
 .sf-menu__help:hover{color:var(--acid)}
 
 @media(min-width:900px){
-  .sf-hdr__row{min-height:68px}
-  .sf-hdr__nav{display:block;margin:0 auto}
-  .sf-hdr__logo{margin-right:0}
+  .sf-hdr__row{grid-template-columns:auto 1fr auto;gap:24px;min-height:84px}
+  .sf-hdr__nav{display:block;justify-self:center}
+  .sf-hdr__logo{justify-content:flex-start}
   .sf-burger{display:none}
   .sf-hdr__menu{display:none !important}
-  .sf-hdr__logo img{height:26px}
-  .sf-hdr__right{gap:10px}
-  .sf-hdr__cta{min-height:44px;padding:0 18px;font-size:13px}
+  .sf-hdr__logo img{height:32px}
+  .sf-nav{gap:6px}
+  .sf-nav a{font-size:15.5px;padding:0 16px}
+  .sf-nav a::after{left:16px;right:16px;bottom:6px}
+  .sf-cart{width:48px;height:48px}
+  .sf-cart svg{width:26px;height:26px}
 }
-@media(max-width:359px){
-  .sf-hdr__logo img{height:19px}
-  .sf-hdr__cta{padding:0 10px;font-size:11.5px}
-}
+@media(max-width:359px){.sf-hdr__logo img{height:22px}}
 @media(prefers-reduced-motion:reduce){
   .sf-cart:hover svg{animation:none}
   .sf-burger span,.sf-nav a::after{transition:none}
@@ -257,67 +249,81 @@
 @media(prefers-reduced-motion:reduce){.mobile-bar{transition:none}}
 
 /* ---------------------------------------------------------------------
-   2 · FOOTER
-   Four columns on desktop, stacked on mobile, acid rule on top.
+   2 · FOOTER (2026-10-10, NN/g "Footers 101")
+   Help first (contact is the #1 reason people scroll to a footer), then
+   brand + newsletter and three link columns, socials + payment methods,
+   and the legal lines in sentence case. Link columns stay three-across on
+   phones: stacked they made the footer ~1200px — taller than the screen.
    --------------------------------------------------------------------- */
-.sf-ftr{
-  border-top:1px solid var(--border-default);
-  padding:40px 0 28px;
-  background:var(--ink);
-  text-align:left;
+.sf-ftr{border-top:1px solid var(--border-default);padding:36px 0 28px;background:var(--surface);text-align:left}
+.sf-ftr svg{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+
+.sf-ftr__help{display:grid;gap:14px;padding-bottom:28px;margin-bottom:28px;border-bottom:1px solid var(--rule)}
+.sf-ftr__help-title{margin:0;font-family:var(--display);font-weight:900;font-size:clamp(22px,3vw,28px);line-height:1.15;color:var(--text)}
+.sf-ftr__help-title span{display:block;margin-top:4px;font-family:var(--body);font-weight:400;font-size:14.5px;color:var(--muted)}
+.sf-ftr__help-links{display:grid;gap:8px}
+.sf-ftr__help-links a{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 14px;
+  border:1px solid var(--rule);border-radius:var(--sq-lg,16px);background:var(--ink);color:var(--text);text-decoration:none;
+  transition:border-color .2s var(--ease)}
+.sf-ftr__help-links a:hover{border-color:rgba(var(--acid-rgb),.5)}
+.sf-ftr__help-links svg{color:var(--acid)}
+.sf-ftr__help-links span{display:flex;flex-direction:column;font-size:13.5px;line-height:1.35;color:var(--muted);min-width:0;overflow-wrap:anywhere}
+.sf-ftr__help-links b{font-size:14.5px;font-weight:600;color:var(--text)}
+/* Phones: three compact tiles in a row — the number/address are in the
+   link itself (tel/mailto), the detail line only adds height here. */
+@media(max-width:767px){
+  .sf-ftr__help-links{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .sf-ftr__help-links a{flex-direction:column;justify-content:center;gap:6px;min-height:72px;padding:10px 6px;text-align:center}
+  .sf-ftr__help-links span{font-size:0;line-height:0}
+  .sf-ftr__help-links b{font-size:13px;line-height:1.2}
 }
-.sf-ftr__grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:22px 12px;
-  align-items:start;
-}
-.sf-ftr__brand,.sf-ftr__socials{grid-column:1 / -1}
 @media(min-width:768px){
-  .sf-ftr__grid{grid-template-columns:2fr 1fr 1fr 1fr;gap:28px 36px}
+  .sf-ftr__help{grid-template-columns:minmax(0,.9fr) minmax(0,2fr);align-items:center;gap:32px}
+  .sf-ftr__help-links{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+.sf-ftr__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 12px;align-items:start}
+.sf-ftr__brand{grid-column:1 / -1}
+@media(min-width:768px){
+  .sf-ftr__grid{grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr));gap:28px 36px}
   .sf-ftr__brand{grid-column:1}
 }
-.sf-ftr__brand img{height:24px;width:auto;display:block}
-.sf-ftr__brand p{
-  color:var(--muted);margin-top:8px;
-  font-size:var(--fs-sm);max-width:34ch;
-}
-.sf-ftr h3{
-  font-family:var(--mono);font-weight:600;
-  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--muted);margin:0 0 8px;
-}
+.sf-ftr__brand img{height:26px;width:auto;display:block}
+.sf-ftr__brand>p{margin:10px 0 0;color:var(--muted);font-size:var(--fs-sm);max-width:36ch}
+.sf-ftr__news{margin-top:18px;max-width:420px}
+.sf-ftr__news label{display:block;margin-bottom:8px;font-size:13.5px;color:var(--text-2)}
+.sf-ftr__news-row{display:flex;gap:8px}
+.sf-ftr__news input{flex:1;min-width:0;min-height:48px;padding:0 14px;font:16px var(--body);color:var(--text);
+  background:var(--ink);border:1px solid var(--border-strong);border-radius:var(--sq-sm,8px);outline:none}
+.sf-ftr__news input:focus{border-color:var(--acid);box-shadow:0 0 0 3px var(--acid-dim)}
+.sf-ftr__news button{min-height:48px;padding:0 18px;border:0;border-radius:var(--sq-sm,8px);background:var(--acid);color:var(--on-acid);
+  font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.sf-ftr__news button:hover{background:var(--acid-hi)}
+.sf-ftr__news button:disabled{opacity:.6;cursor:default}
+.sf-ftr__news-status{min-height:1.2em;margin:8px 0 0;font-size:13px;color:var(--muted)}
+.sf-ftr__news-status[data-state="ok"]{color:var(--acid)}
+.sf-ftr__news-status[data-state="err"]{color:#ff9a9a}
+
+.sf-ftr h3{margin:0 0 6px;font-family:var(--body);font-weight:600;font-size:13px;letter-spacing:0;text-transform:none;color:var(--text)}
 .sf-ftr ul{list-style:none;margin:0;padding:0}
 .sf-ftr li{margin:0}
-.sf-ftr ul a{
-  display:block;padding:5px 0;min-height:34px;
-  color:var(--text);text-decoration:none;
-  font-size:13.5px;line-height:1.55;
-  transition:color .2s var(--ease);
-}
-@media(min-width:768px){.sf-ftr ul a{font-size:var(--fs-sm)}}
-.sf-ftr ul a:hover{color:var(--acid)}
-.sf-ftr__socials{display:flex;flex-wrap:wrap;gap:2px;margin-top:4px}
-.sf-ftr__socials a{
-  display:inline-flex;align-items:center;justify-content:center;
-  flex:0 0 auto;
-  width:clamp(36px,11vw,40px);height:40px;
-  border-radius:var(--sq-pill,100px);
-}
-.sf-ftr__socials img{width:19px;height:19px;opacity:.85}
-.sf-ftr__socials a:hover img{opacity:1}
-.sf-ftr__bottom{
-  margin-top:28px;padding-top:16px;
-  border-top:1px solid var(--rule);
-  display:flex;flex-direction:column;gap:8px;
-  font-family:var(--mono);
-  font-size:10.5px;line-height:1.6;color:var(--muted);
-  letter-spacing:.05em;text-transform:uppercase;
-}
-@media(min-width:768px){
-  .sf-ftr__bottom{flex-direction:row;justify-content:space-between;gap:24px;font-size:11.5px}
-}
-.sf-ftr__disclaimer{margin-top:14px;font-size:11px;line-height:1.6;color:var(--muted);max-width:78ch}
+.sf-ftr__grid ul a{display:flex;align-items:center;min-height:34px;color:var(--muted);text-decoration:none;font-size:13.5px;line-height:1.4;transition:color .2s var(--ease)}
+@media(min-width:768px){.sf-ftr__grid ul a{font-size:var(--fs-sm)}}
+.sf-ftr__grid ul a:hover{color:var(--acid)}
+
+.sf-ftr__meta{display:flex;flex-direction:column;gap:14px;margin-top:28px;padding-top:20px;border-top:1px solid var(--rule)}
+@media(min-width:768px){.sf-ftr__meta{flex-direction:row;align-items:center;justify-content:space-between}}
+.sf-ftr__socials{display:flex;flex-wrap:wrap;gap:6px}
+.sf-ftr__socials a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;
+  border:1px solid var(--rule);border-radius:50%;transition:border-color .2s var(--ease),background-color .2s var(--ease)}
+.sf-ftr__socials a:hover{border-color:var(--acid);background:rgba(var(--acid-rgb),.08)}
+.sf-ftr__socials img{width:17px;height:17px;opacity:.9}
+.sf-ftr__pay{display:flex;flex-wrap:wrap;gap:6px}
+.sf-ftr__pay li{padding:5px 9px;border:1px solid var(--rule);border-radius:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--text-2);background:var(--ink)}
+
+.sf-ftr__bottom{margin-top:20px;display:grid;gap:8px}
+.sf-ftr__bottom p{margin:0;font-size:12.5px;line-height:1.6;color:var(--muted);max-width:90ch}
+.sf-ftr__disclaimer{font-size:11.5px !important}
 
 /* ---------------------------------------------------------------------
    3 · LONG-FORM PROSE
