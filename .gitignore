@@ -21,3 +21,8 @@ data/**/*.tsv
 data/**/*.xlsx
 !data/.gitkeep
 
+
+# Build output (npm run build)
+public/
+assets/optimized/
+.wrangler/

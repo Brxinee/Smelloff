@@ -18,8 +18,12 @@ import magicCheckoutShippingInfoHandler from "../api/magic-checkout-shipping-inf
 const app = express();
 
 app.disable("x-powered-by");
-app.use(express.json({ limit: "1mb" }));
-app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+// Keep the exact request bytes: the Razorpay and Resend webhooks verify an
+// HMAC over them, and re-serialising the parsed body does not reproduce them.
+const keepRawBody = (req, _res, buf) => { req.rawBody = buf.toString("utf8"); };
+app.use(express.json({ limit: "1mb", verify: keepRawBody }));
+app.use(express.urlencoded({ extended: true, limit: "1mb", verify: keepRawBody }));
+app.use("/api", (_req, res, next) => { res.setHeader("X-Robots-Tag", "noindex, nofollow"); next(); });
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
@@ -116,7 +120,8 @@ app.use((_req, res) => {
 });
 
 app.listen(3000);
-const fetchHandler = httpServerHandler({ port: 3000 });
+// httpServerHandler() returns an ExportedHandler ({ fetch }), not a function.
+const { fetch: fetchHandler } = httpServerHandler({ port: 3000 });
 
 function scheduledMockResponse() {
   return {

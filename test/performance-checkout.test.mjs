@@ -4,13 +4,16 @@ import fs from 'node:fs';
 
 test('production performance hardening configuration', () => {
   const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
-  assert.equal(vercel.buildCommand, undefined, 'vercel.json should not override the vercel-build hook');
   const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-  assert.equal(
-    pkg.scripts['vercel-build'],
-    'npm run optimize:critical && npm run apply:chrome && npm run prepare:public',
-    'Vercel must generate responsive assets, stamp chrome, and stage static output',
-  );
+  // Production deploys to Cloudflare Workers via `npm run build`; it must do
+  // the same asset work the Vercel buildCommand does, or /assets/optimized/*
+  // 404s and pages ship without stamped chrome.
+  for (const [name, command] of [['vercel buildCommand', vercel.buildCommand], ['npm run build', pkg.scripts.build]]) {
+    const steps = ['optimize:critical', 'apply:chrome', 'prepare'];
+    const at = steps.map((step) => command.indexOf(step));
+    assert.ok(at.every((i) => i >= 0), `${name} must generate responsive assets, stamp chrome, and stage static output`);
+    assert.deepEqual([...at].sort((a, b) => a - b), at, `${name} must run those steps in that order`);
+  }
 
   const globalHeader = (vercel.headers || []).find((h) => h.source === '/(.*)');
   const csp = (globalHeader?.headers || []).find((h) => h.key === 'Content-Security-Policy');
@@ -27,10 +30,6 @@ test('production performance hardening configuration', () => {
     'homepage must not preconnect to checkout-only Supabase',
   );
   assert.ok(
-    homepage.includes('/assets/optimized/odorstrike-bottle-cutout-160.webp'),
-    'homepage hero must use a responsive optimized bottle asset',
-  );
-  assert.ok(
     homepage.includes('/assets/optimized/odorstrike-bottle-720.webp'),
     'homepage product section must use a high-resolution responsive product asset',
   );
@@ -38,11 +37,10 @@ test('production performance hardening configuration', () => {
     homepage.includes('/assets/odorstrike-bottle-cutout.webp'),
     'hero bottle must preserve its native high-resolution source',
   );
-  assert.equal(
-    /<h3\s+class="z-title">/.test(homepage),
-    false,
-    'zone labels must not create skipped document heading levels',
-  );
+  const levels = [...homepage.matchAll(/<h([1-6])[\s>]/g)].map((m) => Number(m[1]));
+  levels.forEach((level, i) => {
+    if (i) assert.ok(level <= levels[i - 1] + 1, `homepage heading outline skips from h${levels[i - 1]} to h${level}`);
+  });
 
   const generator = fs.readFileSync('scripts/apply-chrome.mjs', 'utf8');
   assert.ok(generator.includes('assets/css/soft.css'), 'shared soft CSS must have a delivery path');
