@@ -1,16 +1,15 @@
 import crypto from 'node:crypto';
 
+// Production only. aistudio.google.com used to be allowed by default for AI
+// Studio previews — a shared host anyone can publish on, so it was removed.
+// Add a trusted origin with SMELLOFF_ALLOWED_ORIGINS if one is ever needed.
 const PRODUCTION_ORIGINS = new Set(['https://smelloff.in', 'https://www.smelloff.in']);
-const PREVIEW_ORIGINS = new Set(['https://aistudio.google.com']);
 
 function allowedOrigins() {
   const origins = new Set(PRODUCTION_ORIGINS);
   const extra = String(process.env.SMELLOFF_ALLOWED_ORIGINS || '')
     .split(',').map(v => v.trim().replace(/\/$/, '')).filter(Boolean);
   for (const origin of extra) origins.add(origin);
-  if (process.env.SMELLOFF_ALLOW_AISTUDIO_PREVIEW !== '0') {
-    for (const origin of PREVIEW_ORIGINS) origins.add(origin);
-  }
   return origins;
 }
 

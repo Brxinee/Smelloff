@@ -86,6 +86,19 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
 
+## Leftovers removed (2026-10-10)
+Deleted: the unreferenced `neo.css`/`neo-lite.css`/`main.css`, `neo.js`,
+`scroll-effects.js`, `assets/icons/shoe.png`/`helmet.png`; Google AI Studio's
+`metadata.json`; the generated `scan-results.json` (now gitignored);
+`skills-lock.json`; the `.jules/` agent notes; the Vercel React skill in
+`.claude/skills/react-best-practices` (the site has no React); the legacy
+`scripts/standardize_blog.py`. **`api/_security.js` no longer trusts
+`https://aistudio.google.com`** — it was allowed by default, and anyone can
+publish on that host. The audit now also fails on `netlify.toml` or
+`metadata.json`. Still connected outside the repo (GitHub apps, remove in
+GitHub settings): Vercel, Netlify (`spontaneous-longma-4f03b5`) and the
+ChatGPT Codex reviewer.
+
 ## Full-site audit: WCAG 2.2 AA clean, structure clean (2026-10-10)
 Audited all 77 HTML pages at 390px with axe-core (WCAG 2.2 AA) plus a style
 and structure pass. Result after fixes: **0 axe violations, 0 tap targets
@@ -348,7 +361,7 @@ helmet liners. All of it is gone.
 - The homepage hero zone cards are now Shirt collar / Hoodie / Blazer & jacket,
   drawn as **inline SVG** (`.z-ico`) instead of masked PNGs — crisper, and two
   fewer image requests above the fold. `assets/icons/shoe.png` and `helmet.png`
-  are now unreferenced. Sizing lives on `.zone svg`; `.z-ico` is stroke only.
+  were unreferenced and are deleted (2026-10-10). Sizing lives on `.zone svg`; `.z-ico` is stroke only.
   Do not put a `flex-basis` back on it — `.zone` is a row on phones and a
   **column** at ≥768, where a basis resolves against the cross axis and rendered
   the icons 72×64 instead of square.
@@ -468,9 +481,8 @@ apart across three naming families — three different whites (`#F4F1EA`,
   CSS against the canonical names; don't grow the aliases.
 - Metric-matched fallback faces (`Fraunces Fallback` etc.) live in
   `assets/fonts.css` and inline in `index.html`, holding CLS near zero.
-- Unreferenced stylesheets: `assets/css/neo.css`, `neo-lite.css` and `main.css`
-  are no longer loaded by any page (blog posts use `blog.css`). Left in place,
-  but they are dead weight and safe to delete.
+- `neo.css`, `neo-lite.css`, `main.css`, `neo.js` and `scroll-effects.js` were
+  loaded by no page and are deleted (2026-10-10). Blog posts use `blog.css`.
 - Text selection is enabled site-wide. It used to be blocked on `body` in
   `odorstrike.html` and `blog.css`, which stopped customers copying their own
   order ID and readers quoting a guide. Only interactive chrome opts out now.
