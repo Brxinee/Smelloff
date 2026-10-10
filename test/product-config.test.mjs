@@ -672,17 +672,25 @@ test('odorstrike.html final purchase CTA (section.final) structure, canonical pr
 
 
 
-test('cart drawer: button total equals summary total, COD charge named before checkout', () => {
+test('cart drawer: no prices, COD charge still named, slides instead of popping in', () => {
   const html = readFileSync(new URL('../odorstrike.html', import.meta.url), 'utf8');
   const fn = html.slice(html.indexOf('function renderCart()'), html.indexOf('function syncModalState()'));
-  // The drawer once showed Subtotal ₹229 above a "Checkout · ₹289" button.
-  assert.match(fn, /set\('cartCheckoutAmt', '₹' \+ sub\)/, 'Checkout button must show the subtotal, not subtotal + COD fee');
-  assert.match(fn, /set\('cartTotal', '₹' \+ sub\)/);
   const drawer = html.slice(html.indexOf('id="cartOverlay"'), html.indexOf('</aside>', html.indexOf('id="cartOverlay"')));
+  // Owner's call: the drawer is for choosing how many; checkout states totals.
+  assert.ok(!/₹\s*\d{3}/.test(drawer), 'Drawer markup must not show a product price or total');
+  assert.ok(!/'₹'/.test(fn), 'renderCart must not write prices into the drawer');
+  // ...but the COD surcharge is a fee, and naming it before checkout is the
+  // no-drip-pricing rule.
   assert.ok(/cash on delivery/i.test(drawer) && drawer.includes('₹60'), 'Drawer must disclose the ₹60 COD charge');
   assert.ok(/Free shipping/.test(drawer), 'Drawer must state shipping');
   assert.ok(/class="cart-keep"/.test(drawer), 'Drawer needs a way back to the page');
   assert.ok(/cartAddFromEmpty\(\)/.test(drawer), 'Empty state needs a next step');
+  // display:none -> block gave the drawer no start position, so it appeared
+  // instead of sliding. It must stay rendered and toggle visibility.
+  const css = html.slice(html.indexOf('  .cart-overlay{'), html.indexOf('  .cart-head{'));
+  assert.ok(!/display:none/.test(css) && /visibility:hidden/.test(css), 'Cart overlay must hide with visibility, not display');
+  assert.ok(/translate3d\(100%/.test(css) && /transition:transform/.test(css), 'Drawer must slide from the right');
+  assert.ok(!/backdrop-filter/.test(css), 'No full-screen blur under a sliding panel');
 });
 
 test('phone menu: build-time critical CSS cannot trap the drawer shut', () => {

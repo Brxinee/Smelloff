@@ -398,6 +398,24 @@ guidance on one action + a quote by the buy button) and rebuilt `.hero`:
 - Empty state adds a bottle straight from the drawer (`cartAddFromEmpty()`).
 - 0 axe violations at 390px; every control ≥44px.
 
+## Cart drawer v2: no prices, real slide (2026-10-10)
+Owner's call: **the cart drawer shows no prices** — no line total, unit
+price, subtotal/total or amount on the button. It is for choosing how many;
+checkout states every total. The ₹60 COD charge is a fee, not a price, and
+stays named in the perks (no drip pricing). Test pins both.
+- **It never slid.** The overlay went `display:none → block`, so the drawer
+  had no start position and appeared in place. The overlay is now always
+  rendered and toggles `visibility` (delayed .32s on close), the scrim is a
+  `::before` fading on opacity, and the drawer animates `translate3d` both
+  ways. `.cart-overlay` left the MOTION POLISH `@starting-style` list.
+- The full-screen `backdrop-filter:blur` under it is gone (it made the slide
+  stutter on phones). On phones the drawer leaves a 28px strip of page
+  visible; tapping it closes the drawer. soft.css no longer gives
+  `.cart-drawer` the bottom-sheet radius under 640px.
+- The bottle image is fetched at idle / on cart hover, so it is decoded
+  before the drawer opens. Focus moves into the drawer and back to the cart
+  button on close.
+
 ## Leftovers removed (2026-10-10)
 Deleted: the unreferenced `neo.css`/`neo-lite.css`/`main.css`, `neo.js`,
 `scroll-effects.js`, `assets/icons/shoe.png`/`helmet.png`; Google AI Studio's
