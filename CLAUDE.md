@@ -270,6 +270,21 @@ github.com/settings/installations → Vercel / Netlify → Uninstall (and delete
 the projects in each dashboard). Nothing in the repo can stop them. Cloudflare
 Workers Builds is the only deploy.
 
+## Cart drawer rebuilt (2026-10-10)
+`/odorstrike` cart drawer (`#cartOverlay`), rebuilt on Baymard cart findings:
+- **The button total now equals the summary total.** `renderCart()` added
+  `CFG.COD_FEE` to the "Checkout · ₹X" button unconditionally, so the drawer
+  read Subtotal ₹229 above a ₹289 button. COD depends on a choice made in
+  checkout, so the drawer *names* it ("Paying cash on delivery? It's ₹289…")
+  and the button shows the subtotal. Pinned in `test/product-config.test.mjs`.
+- Layout: count in the title, a free-shipping + "3–7 business days" bar,
+  88px product tile with line total, 44px stepper with Remove beside it,
+  one honest "Add a second bottle +₹229" row at qty 1 (same price, no
+  discount implied), perks (UPI/COD +₹60, 7-day returns, ships from
+  Hyderabad), a Subtotal / Shipping Free / Total summary, and "Keep shopping".
+- Empty state adds a bottle straight from the drawer (`cartAddFromEmpty()`).
+- 0 axe violations at 390px; every control ≥44px.
+
 ## Leftovers removed (2026-10-10)
 Deleted: the unreferenced `neo.css`/`neo-lite.css`/`main.css`, `neo.js`,
 `scroll-effects.js`, `assets/icons/shoe.png`/`helmet.png`; Google AI Studio's
