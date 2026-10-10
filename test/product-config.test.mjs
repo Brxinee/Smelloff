@@ -208,6 +208,17 @@ test('index.html homepage reviews: beta-tester quotes only, verbatim, labelled',
   assert.equal(/★|\d\.\d\s*\/\s*5|\d[\d,]*\+\s*(customers|reviews)/i.test(html.slice(html.indexOf('<main'), html.indexOf('</main>'))), false, 'no ratings or customer counts until real verified reviews exist');
 });
 
+test('index.html homepage combos are placeholders only — no prices, no live CTA', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const start = html.indexOf('id="combos"');
+  assert.ok(start !== -1, 'combos placeholder section must exist');
+  const sec = html.slice(start, html.indexOf('</section>', start));
+  assert.equal((sec.match(/class="combo"/g) || []).length, 3);
+  assert.equal(/₹\s*\d/.test(sec.replace(/Fix my shirt — ₹229/, '')), false, 'combo cards must not show a price until checkout supports combos');
+  assert.equal((sec.match(/<button class="combo-btn" type="button" disabled>/g) || []).length, 3, 'combo buttons must be disabled');
+  assert.equal(/"@type"\s*:\s*"(Offer|AggregateOffer)"/.test(html), false, 'no offer schema for combos');
+});
+
 test('index.html homepage claims discipline and formula secrecy', () => {
   const html = readFileSync('index.html', 'utf8');
   assert.ok(html.includes('Jogdhande Nikhil Patil'), 'founder must be named');

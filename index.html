@@ -487,32 +487,61 @@
     .beat:nth-of-type(even) .beat-art{order:2}
     .beat-art{min-height:340px}
   }
-  /* Art 1 — the real problem shot, cropped to the face and headline */
-  /* 3:5 keeps only the left two-thirds of the creative (face + "Your shirt
-     does"); the right third carries burnt-in bullets this page doesn't use. */
-  .beat-art--photo{padding:0;background:var(--ink);min-height:0;display:block}
-  .beat-art--photo img{width:100%;height:auto;aspect-ratio:3/5;object-fit:cover;object-position:0% 50%}
-  @media(min-width:768px){.beat-art--photo{max-width:380px;justify-self:center;width:100%}}
-  /* Art 2 — the four layers */
-  .layers{list-style:none;width:100%;display:grid;gap:8px}
-  .layers li{
-    display:flex;justify-content:space-between;align-items:baseline;gap:12px;
-    border:1px solid var(--border-default);border-radius:var(--r-md);padding:14px 16px;
+  /* ============ Image placeholders ============
+     Every image slot on this page that's waiting for photography is a
+     .ph-img box. Its label is pure CSS: the number, the brief and the spec
+     come from data-ph-n / data-ph / data-ph-spec via attr(). Swap the div for
+     an <img> of the stated ratio when the photo exists. */
+  .ph-img{
+    position:relative;aspect-ratio:4/5;width:100%;
+    border:1.5px dashed var(--border-focus);border-radius:var(--r-xl);
+    background:
+      repeating-linear-gradient(135deg,transparent 0 14px,rgba(var(--acid-rgb),.035) 14px 28px),
+      var(--surface);
+    display:flex;flex-direction:column;justify-content:flex-end;gap:8px;
+    padding:22px;overflow:hidden;min-height:0;
   }
-  .layers li span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--acid)}
-  .layers li b{font-family:var(--display);font-weight:900;font-size:19px}
-  /* Art 3 — the pocket */
-  .beat-art--pocket{gap:24px}
-  .beat-art--pocket img{height:220px;width:auto}
-  .pocket-facts{list-style:none;display:grid;gap:14px}
-  .pocket-facts li{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-  .pocket-facts b{display:block;font-family:var(--display);font-size:34px;line-height:1;color:var(--text);letter-spacing:-.02em;text-transform:none}
-  /* Art 4 — dries clear */
-  .beat-art--clear{flex-direction:column;align-items:flex-start;justify-content:flex-end;background:linear-gradient(160deg,var(--surface-2),var(--ink))}
-  .clear-word{font-family:var(--display);font-weight:900;font-size:clamp(46px,8vw,84px);line-height:.92;letter-spacing:-.03em;text-transform:uppercase}
-  .clear-word .acid{display:block}
-  .clear-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px;list-style:none}
-  .clear-tags li{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border-strong);border-radius:var(--r-pill);padding:5px 10px;color:var(--text-2)}
+  .ph-img::before{
+    content:attr(data-ph-n);position:absolute;top:18px;left:18px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+    color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px;
+  }
+  .ph-img::after{
+    content:attr(data-ph) "\A" attr(data-ph-spec);white-space:pre-line;
+    font-family:var(--mono);font-size:12px;line-height:1.55;letter-spacing:.03em;color:var(--muted);
+  }
+  .ph-img--sq{aspect-ratio:1/1;border-radius:var(--r-lg)}
+  @media(min-width:768px){.beat .ph-img{max-width:440px;justify-self:center}}
+  .layers-inline{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+  .layers-inline li{font-family:var(--display);font-weight:900;font-size:15px;border:1px solid var(--border-default);border-radius:var(--r-pill);padding:6px 12px}
+  .layers-inline span{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid);margin-right:8px}
+
+  /* Text placeholders: the words are CSS-generated so they can't be mistaken
+     for (or indexed as) a real offer. */
+  .ph-text::after{content:attr(data-ph)}
+  .ph-text{color:var(--muted);font-size:14px;border-bottom:1px dashed var(--border-strong);display:inline-block;padding-bottom:2px}
+  .ph-text--title{font-family:var(--display);font-weight:900;font-size:22px;color:var(--text-2)}
+  .ph-text--price{font-family:var(--display);font-weight:900;font-size:30px;color:var(--text-2);border:0}
+  .ph-text--mrp{font-family:var(--mono);font-size:12px;border:0}
+
+  /* ============ 5b · Combos (placeholder) ============ */
+  .combo-row{
+    list-style:none;display:grid;gap:12px;margin-top:28px;
+    grid-auto-flow:column;grid-auto-columns:78%;overflow-x:auto;
+    scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:none;
+  }
+  .combo-row::-webkit-scrollbar{display:none}
+  .combo{scroll-snap-align:start}
+  .combo{border:1px solid var(--border-default);border-radius:var(--r-xl);background:var(--surface);padding:12px;display:flex;flex-direction:column;gap:14px}
+  .combo-body{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:4px 8px 8px}
+  .combo-price{display:flex;align-items:baseline;gap:12px;margin-top:4px}
+  .combo-btn{
+    width:100%;min-height:52px;margin-top:6px;border-radius:var(--r-pill);
+    border:1px dashed var(--border-strong);background:transparent;color:var(--muted);
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;cursor:not-allowed;
+  }
+  .combo-now{margin-top:22px;color:var(--text-2);display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
+  @media(min-width:768px){.combo-row{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible}}
 
   /* ============ 4 · Reviews ============
      Beta-tester quotes, word for word and labelled as such. A scroll-snap
@@ -798,9 +827,7 @@
       </div>
 
       <div class="beat">
-        <div class="beat-art beat-art--photo reveal">
-          <img src="/assets/pdp-02-problem@640.webp" alt="A man checking his t-shirt for sweat odor — you don't smell, your shirt does" width="640" height="704" loading="lazy" decoding="async">
-        </div>
+        <div class="beat-art ph-img reveal" role="img" aria-label="Image coming soon" data-ph-n="IMAGE 01" data-ph="Lifestyle photo — man checking his shirt collar after the commute. Shirt, not skin." data-ph-spec="4:5 · 1200×1500 · WebP"></div>
         <div class="beat-copy reveal">
           <h3>Deodorant guards your skin. Nothing was guarding your shirt.</h3>
           <p>Sweat, commute heat, lunch and smoke soak into the weave of the fabric. Body sprays sit on skin — they never reach the smell already sitting in the cotton.</p>
@@ -809,30 +836,19 @@
       </div>
 
       <div class="beat">
-        <div class="beat-art reveal">
-          <ol class="layers" aria-label="Formula v3.1 — four layers">
-            <li><span>01 · TRAP</span><b>HPβCD</b></li>
-            <li><span>02 · NEUTRALIZE</span><b>Zinc PCA</b></li>
-            <li><span>03 · PREVENT</span><b>Triethyl Citrate</b></li>
-            <li><span>04 · ANTI-REGROWTH</span><b>Zinc Gluconate</b></li>
-          </ol>
-        </div>
+        <div class="beat-art ph-img reveal" role="img" aria-label="Image coming soon" data-ph-n="IMAGE 02" data-ph="Close-up — fine mist landing on shirt fabric (collar or underarm of the shirt)." data-ph-spec="4:5 · 1200×1500 · WebP"></div>
         <div class="beat-copy reveal">
           <h3>Perfume covers it up. ODORSTRIKE neutralizes it.</h3>
           <p>A ring-shaped HPβCD molecule cages odor compounds in the fibres and Zinc PCA neutralizes them. What's left is a light fresh fabric scent — not a cologne layered over sweat.</p>
+          <ol class="layers-inline" aria-label="Formula v3.1 — four layers">
+            <li><span>Trap</span>HPβCD</li><li><span>Neutralize</span>Zinc PCA</li><li><span>Prevent</span>Triethyl Citrate</li><li><span>Anti-regrowth</span>Zinc Gluconate</li>
+          </ol>
           <a class="hm-link" href="/odorstrike#science">See the formula →</a>
         </div>
       </div>
 
       <div class="beat">
-        <div class="beat-art beat-art--pocket reveal">
-          <img src="/assets/odorstrike-bottle-cutout.webp" alt="" width="241" height="915" loading="lazy" decoding="async">
-          <ul class="pocket-facts">
-            <li><b>50ml</b>Fits a jeans pocket</li>
-            <li><b>~250</b>sprays per bottle</li>
-            <li><b>₹229</b>delivered free, prepaid</li>
-          </ul>
-        </div>
+        <div class="beat-art ph-img reveal" role="img" aria-label="Image coming soon" data-ph-n="IMAGE 03" data-ph="ODORSTRIKE bottle in a jeans or shirt pocket." data-ph-spec="4:5 · 1200×1500 · WebP"></div>
         <div class="beat-copy reveal">
           <h3>Fits in a pocket. Works where the laundry can't.</h3>
           <p>Post-commute, pre-meeting, after the biryani, before the date. 50ml sits within common 100ml carry-on liquid limits, so it travels too (check your airline's rules).</p>
@@ -841,14 +857,7 @@
       </div>
 
       <div class="beat">
-        <div class="beat-art beat-art--clear reveal">
-          <p class="clear-word" aria-hidden="true">Dries<span class="acid">clear.</span></p>
-          <ul class="clear-tags" aria-label="Finish">
-            <li>Glycerine-free</li>
-            <li>Zero residue</li>
-            <li>Cotton · Poly · Denim</li>
-          </ul>
-        </div>
+        <div class="beat-art ph-img reveal" role="img" aria-label="Image coming soon" data-ph-n="IMAGE 04" data-ph="Black shirt right after spraying — no white marks, no damp patch." data-ph-spec="4:5 · 1200×1500 · WebP"></div>
         <div class="beat-copy reveal">
           <h3>No white marks. No sticky film. Not on black, not on white.</h3>
           <p>Safe on everyday washable fabrics — cotton, polyester, denim, nylon and wool blends. Patch-test silk and zari on a hidden seam first.</p>
@@ -915,6 +924,53 @@
           <p class="offer-pay">UPI · CASH ON DELIVERY · <a href="/odorstrike" style="color:inherit">FULL PRODUCT DETAILS</a></p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ 5b · COMBOS (PLACEHOLDER) ============
+       Combos are planned but not priced. Everything in here is a placeholder:
+       the visible text is CSS-generated from data-ph so nothing reads as a
+       real offer to search engines or schema. To launch a combo:
+         1. swap the .ph-img div for an <img> (keep width/height, loading="lazy"),
+         2. replace each .ph-text with real text,
+         3. point the button at checkout and drop `disabled`.
+       Checkout is still single-SKU: CFG.PRICES in odorstrike.html, products.json
+       and supabase/functions/create-order must all learn the combo first, or
+       every combo order will fail the server-side total check. -->
+  <section class="hm-sec" id="combos" aria-labelledby="combosTitle">
+    <div class="wrap">
+      <p class="hm-eyebrow reveal">COMBOS · COMING SOON</p>
+      <h2 id="combosTitle" class="hm-h2 reveal">Stock up. Save more.</h2>
+      <ul class="combo-row">
+        <li class="combo">
+          <div class="ph-img ph-img--sq" role="img" aria-label="Combo image coming soon" data-ph-n="COMBO 01" data-ph="Pack shot of the combo on a plain background." data-ph-spec="1:1 · 1200×1200 · WebP"></div>
+          <div class="combo-body">
+            <p class="ph-text ph-text--title" data-ph="Combo name"></p>
+            <p class="ph-text" data-ph="What's inside — e.g. bottles / sizes"></p>
+            <p class="combo-price"><span class="ph-text ph-text--price" data-ph="₹ —"></span><span class="ph-text ph-text--mrp" data-ph="M.R.P. —"></span></p>
+            <button class="combo-btn" type="button" disabled>Coming soon</button>
+          </div>
+        </li>
+        <li class="combo">
+          <div class="ph-img ph-img--sq" role="img" aria-label="Combo image coming soon" data-ph-n="COMBO 02" data-ph="Pack shot of the combo on a plain background." data-ph-spec="1:1 · 1200×1200 · WebP"></div>
+          <div class="combo-body">
+            <p class="ph-text ph-text--title" data-ph="Combo name"></p>
+            <p class="ph-text" data-ph="What's inside — e.g. bottles / sizes"></p>
+            <p class="combo-price"><span class="ph-text ph-text--price" data-ph="₹ —"></span><span class="ph-text ph-text--mrp" data-ph="M.R.P. —"></span></p>
+            <button class="combo-btn" type="button" disabled>Coming soon</button>
+          </div>
+        </li>
+        <li class="combo">
+          <div class="ph-img ph-img--sq" role="img" aria-label="Combo image coming soon" data-ph-n="COMBO 03" data-ph="Pack shot of the combo on a plain background." data-ph-spec="1:1 · 1200×1200 · WebP"></div>
+          <div class="combo-body">
+            <p class="ph-text ph-text--title" data-ph="Combo name"></p>
+            <p class="ph-text" data-ph="What's inside — e.g. bottles / sizes"></p>
+            <p class="combo-price"><span class="ph-text ph-text--price" data-ph="₹ —"></span><span class="ph-text ph-text--mrp" data-ph="M.R.P. —"></span></p>
+            <button class="combo-btn" type="button" disabled>Coming soon</button>
+          </div>
+        </li>
+      </ul>
+      <p class="combo-now reveal">Can't wait? The single bottle ships today. <a class="hm-link" href="/odorstrike?buy=1">Fix my shirt — ₹229 →</a></p>
     </div>
   </section>
 

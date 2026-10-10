@@ -71,6 +71,16 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   posing as evidence), the share widget under the CTA and the field-guides
   strip; reviews moved up to sit right after the showcase. Page is ~3100px
   shorter on phones.
+- **Placeholders, pending photography and combos.** The four `#why` visuals
+  and the `#combos` cards are `.ph-img` / `.ph-text` boxes whose labels are
+  CSS-generated from `data-ph*` attributes (so nothing reads as a real offer
+  to crawlers). Swap a `.ph-img` div for an `<img>` of the stated ratio.
+  **Combos are planned but not built**: the "₹229 solo is the ONLY SKU" rule
+  below still describes checkout. Before any combo goes live, `CFG.PRICES`
+  in `odorstrike.html`, `products.json`, `shared/product-truth.js` and
+  `supabase/functions/create-order` must all learn it — the edge function
+  rejects any total it doesn't recognise. Never reuse the retired
+  Duo ₹399 / Trio ₹549 prices; the audit fails on them.
 - Homepage tests in `test/product-config.test.mjs` now pin guardrails (one H1,
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
