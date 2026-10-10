@@ -37,7 +37,11 @@ app.get("/api/health", (_req, res) => {
       database: has("SUPABASE_SERVICE_ROLE_KEY"),
       email: has("RESEND_API_KEY"),
       razorpay: has("RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET"),
+      razorpayWebhook: has("RAZORPAY_WEBHOOK_SECRET"),
       admin: has("ADMIN_PASSWORD"),
+      cron: has("CRON_SECRET"),
+      shiprocket: has("SHIPROCKET_EMAIL", "SHIPROCKET_PASSWORD"),
+      metaCapi: has("META_CAPI_TOKEN"),
     },
   });
 });
