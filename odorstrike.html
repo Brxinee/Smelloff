@@ -1420,6 +1420,11 @@
   .pd-inci li span:first-child,.pd-inci li span:last-child{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted)}
   .pd-inci li span:last-child{text-transform:uppercase}
   .pd-inci-note{padding:4px 22px 18px;font-size:12.5px;color:var(--muted)}
+  .pd-inci-row{display:grid;gap:6px;padding:18px 22px 8px}
+  .pd-inci-k{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .pd-inci-v{font-family:var(--display);font-weight:900;font-size:17px;color:var(--text)}
+  .pd-inci-more{font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:.06em;color:var(--acid);margin-left:6px;white-space:nowrap}
+  .pd-inci-note a{color:var(--acid);text-decoration:underline;text-underline-offset:2px}
 
   /* ---------- Buy ---------- */
   .pd-offer{display:grid;overflow:hidden;border:1px solid var(--rule);border-radius:var(--sq-xl);background:var(--surface)}
@@ -1706,7 +1711,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
-  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-zoom" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></symbol>
 </svg>
 
@@ -2047,23 +2051,12 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <div class="pd-card"><span class="pd-step">03 — Prevent</span><h3>Triethyl Citrate</h3><p>Slows new odor forming from fresh sweat.</p></div>
       <div class="pd-card"><span class="pd-step">04 — Sustain</span><h3>Zinc Gluconate</h3><p>Binds what's left, between wears.</p></div>
     </div>
-    <details class="pd-inci">
-      <summary>Full ingredient list <svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></summary>
-      <ol>
-        <li><span>01</span><span>Water</span><span>Base</span></li>
-        <li><span>02</span><span>Isopropyl Alcohol</span><span>Solvent</span></li>
-        <li><span>03</span><span>Triethyl Citrate</span><span>Prevent</span></li>
-        <li><span>04</span><span>HPβCD</span><span>Trap</span></li>
-        <li><span>05</span><span>Polysorbate 20</span><span>Emulsifier</span></li>
-        <li><span>06</span><span>Zinc PCA</span><span>Neutralize</span></li>
-        <li><span>07</span><span>PE9010</span><span>Preservative</span></li>
-        <li><span>08</span><span>Fragrance</span><span>Scent</span></li>
-        <li><span>09</span><span>Zinc Gluconate</span><span>Odor control</span></li>
-        <li><span>10</span><span>Ethylhexylglycerin</span><span>Booster</span></li>
-        <li><span>11</span><span>Citric Acid</span><span>pH balancer</span></li>
-      </ol>
-      <p class="pd-inci-note">Exact concentrations are proprietary.</p>
-    </details>
+    <!-- Owner's call (2026-10-11): name the three key actives, count the rest.
+         The full INCI stays in config/product.json; it is not published. -->
+    <div class="pd-inci">
+      <p class="pd-inci-row"><span class="pd-inci-k">Key ingredients</span><span class="pd-inci-v">HPβCD · Zinc PCA · Triethyl Citrate <span class="pd-inci-more">+ 8 more</span></span></p>
+      <p class="pd-inci-note">Exact concentrations are proprietary. Need the full list for an allergy check? Write to <a href="mailto:info@smelloff.in">info@smelloff.in</a>.</p>
+    </div>
   </div>
 </section>
 
