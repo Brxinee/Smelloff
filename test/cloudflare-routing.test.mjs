@@ -39,3 +39,11 @@ test('Cloudflare Worker exports a fetch function and keeps webhook raw bodies', 
 test('static output includes the service worker every page registers', () => {
   assert.match(fs.readFileSync('scripts/prepare-public.mjs', 'utf8'), /'sw\.js'/);
 });
+
+test('Worker owns the apex and www as custom domains', () => {
+  const cfg = fs.readFileSync('wrangler.jsonc', 'utf8');
+  for (const host of ['smelloff.in', 'www.smelloff.in']) {
+    assert.ok(cfg.includes(`{ "pattern": "${host}", "custom_domain": true }`),
+      `${host} must be a Worker custom domain, or the zone DNS answers it with error 1000`);
+  }
+});

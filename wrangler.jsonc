@@ -11,6 +11,12 @@
       "/api/*"
     ]
   },
+  // Attach the Worker to the whole apex and www. Without this the zone's own
+  // DNS record answered most paths and pointed back at Cloudflare (error 1000).
+  "routes": [
+    { "pattern": "smelloff.in", "custom_domain": true },
+    { "pattern": "www.smelloff.in", "custom_domain": true }
+  ],
   "observability": {
     "enabled": true
   },

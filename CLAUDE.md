@@ -30,6 +30,11 @@ the move silently dropped, now restored:
   rules (www → apex) can't be expressed there; that needs a Cloudflare Redirect
   Rule on the zone. `assets.html_handling = "drop-trailing-slash"` replaces
   `cleanUrls` + `trailingSlash:false`.
+- **The Worker owns `smelloff.in` and `www.smelloff.in` as custom domains**
+  (`routes` in `wrangler.jsonc`, applied by `wrangler deploy`). Before that,
+  only `/` reached the Worker; every other path fell through to a zone DNS
+  record pointing at a Cloudflare IP and returned **error 1000**. Don't add
+  dashboard routes or hand-made DNS records for these hosts.
 - The Worker parses JSON with a `verify` hook that keeps `req.rawBody`: the
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
