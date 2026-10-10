@@ -52,6 +52,43 @@
     });
   }
 
+  // Footer newsletter — the same `waitlist` table and approach as the blog
+  // index form: direct REST insert with the public anon key (insert-only
+  // under RLS), duplicates ignored so a returning reader isn't told it failed.
+  var news = document.querySelector('[data-sf-news]');
+  if (news) {
+    news.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = news.querySelector('input[type="email"]');
+      var btn = news.querySelector('button');
+      var status = news.querySelector('.sf-ftr__news-status');
+      var email = (input.value || '').trim();
+      var say = function (msg, state) { status.textContent = msg; status.setAttribute('data-state', state); };
+      if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        input.setAttribute('aria-invalid', 'true');
+        say('That email address doesn\u2019t look right.', 'err');
+        input.focus();
+        return;
+      }
+      input.removeAttribute('aria-invalid');
+      btn.disabled = true;
+      var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudXFqeWRtb3hjemRqbnNncGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzI2NDgsImV4cCI6MjA5MzEwODY0OH0.6qyyo-1lpntK7FC3H9j_oqWp0W_R1XydVG_IxVUd6F4';
+      fetch('https://tnuqjydmoxczdjnsgpci.supabase.co/rest/v1/waitlist', {
+        method: 'POST',
+        headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json',
+          Prefer: 'return=minimal,resolution=ignore-duplicates' },
+        body: JSON.stringify({ email: email, source: 'footer' })
+      }).then(function (r) {
+        if (!r.ok) throw new Error('http ' + r.status);
+        news.querySelector('.sf-ftr__news-row').hidden = true;
+        say('You\u2019re on the list.', 'ok');
+      }).catch(function () {
+        btn.disabled = false;
+        say('That didn\u2019t go through. Try again, or email smelloffsupport@gmail.com.', 'err');
+      });
+    });
+  }
+
   var badge = document.getElementById('sfCartCount');
   if (badge) {
     var refresh = function () {

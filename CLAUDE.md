@@ -91,12 +91,14 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   `SF-CHROME:HEADER` block): "Free shipping on prepaid · Cash on Delivery ·
   7-day returns" — the cart-abandonment reasons we can answer up front. Not
   sticky; the tail hides under 380px.
-- **Header:** phones = burger · logo · cart · Buy ₹229; ≥900 = logo · centred
-  nav (Shop · Guides · Reviews · FAQ · Track order) · cart · Buy. Current page
+- **Header (v2, owner's call: taller, no Buy button):** phones = burger ·
+  centred logo (26px) · cart, 72px tall; ≥900 = logo (32px) · centred nav
+  (Shop · Guides · Reviews · FAQ · Track order) · cart, 84px. Current page
   gets an acid underline (`aria-current`, set by chrome.js). Shadow appears
   once scrolled (`.is-scrolled`). The phone menu opens with a product card,
-  then the pages, then WhatsApp. Header is 64px on phones, 68px ≥900 — the
-  blog index's sticky topic bar uses those offsets.
+  then the pages, then WhatsApp. **Things sticky under the header use those
+  heights:** blog topic bar `top:72/84px`, PDP gallery `top:100px`, blog TOC
+  `top:104px` + `scroll-margin-top:104px`. Change them together.
 - **Buy strip (`.mobile-bar`, homepage + PDP)** is styled once in
   `chrome.css` §1b: a floating card 10px off the edges (Baymard: space around
   a sticky buy button, not full width) with thumb, name + price, "Free
@@ -110,6 +112,20 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   chars past" a tag and fell back to `</head>`, which fought apply-chrome for
   the same spot; it now inserts right after the tag and otherwise above the
   shared-layers block.
+
+## Footer redesign (2026-10-10, NN/g "Footers 101")
+- Order: **help band first** (WhatsApp / Email / Track order — contact is
+  the top reason people scroll to a footer; three icon tiles on phones),
+  then logo + one-line pitch + **newsletter signup**, the three link columns
+  (Shop · Help · Company, still three-across on phones), socials + payment
+  chips (UPI, Visa, Mastercard, RuPay, Net banking, COD), then the legal
+  line and the trademark disclaimer in sentence case (they were tracked
+  mono caps). Footer is ~1,050px on a 390px phone.
+- The signup is handled in `chrome.js` (`[data-sf-news]`): same `waitlist`
+  table + public anon key + `resolution=ignore-duplicates` as the blog index
+  form, `source: 'footer'`. CSP connect-src already allows Supabase.
+- **Keep the trademark disclaimer on every page** (Merchant Center
+  misrepresentation policy — see the comment in the template).
 
 ## PDP simplified — less text, image slots (2026-10-10)
 Following Baymard's product-page research (highlights over paragraphs, an
