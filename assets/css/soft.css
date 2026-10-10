@@ -436,7 +436,7 @@ img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-
    Colours stay with each page (acid fill, ink fill on acid bands, ghost). */
 .hm-btn,.hero-cta,.fix-cta,.final-btn,.price-card button,.end-cta .buy-btn,
 .b-btn-primary,.faq-cta,.c-btn,.t-btn,.cta-btn,.buy-band a,.mb-btn,.combo-btn,
-.b-news-btn,.bc-cta{
+.b-news-btn,.bc-cta,.nf-btn{
   border-radius:var(--sq-sm) !important;
   font-family:var(--mono) !important;
   font-weight:700 !important;

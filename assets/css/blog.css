@@ -109,6 +109,10 @@ img {
 .article-breadcrumbs a {
   color: #AAAAAA;
   text-decoration: none;
+  /* WCAG 2.2 2.5.8: at least 24px tall to tap (was 19px). */
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   transition: color 0.15s ease;
 }
 .article-breadcrumbs a:hover {
@@ -541,7 +545,7 @@ blockquote {
 }
 .end-cta .strike-price {
   font-size: 15px;
-  color: #777777;
+  color: var(--muted, #9A958D); /* #777 on #0F0F0F failed WCAG AA contrast */
   text-decoration: line-through;
 }
 .end-cta .current-price {
