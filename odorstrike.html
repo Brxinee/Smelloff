@@ -1316,9 +1316,15 @@
   .pd-footnote{margin-top:14px;font-size:12px;line-height:1.5;color:var(--muted)}
   /* Phones: the CTA is the point of the hero. Tagline trims to three lines. */
   @media(max-width:767px){
+    .pd-not{gap:5px}
+    .pd-not li{padding:5px 8px;font-size:9.5px;letter-spacing:.05em;gap:4px}
+    .pd-not .ic{width:12px;height:12px}
+    .pd-highlights{gap:6px;margin-top:12px}
+    .pd-highlights li{font-size:14.5px;gap:10px}
     .pd-crumbs,.pd-stock{display:none}
     .pd-hero{padding-top:12px}
-    .gallery-stack{grid-auto-columns:74%}
+    .gallery-stack{grid-auto-columns:68%}
+    .pd-pack{display:none}
     .pd-not{margin-top:12px}
     .pd-price{margin-top:14px;padding-top:12px}
     .buy-actions{margin-top:12px}
@@ -1348,41 +1354,56 @@
   }
 
   /* ---------- How to use ---------- */
-  .r30-steps{list-style:none;display:grid;gap:12px}
-  @media(min-width:768px){.r30-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media(min-width:1160px){.r30-steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
-  .r30-step{display:flex;flex-direction:column;gap:10px;padding:22px;border:1px solid var(--rule);
+  .r30-steps{list-style:none;display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media(min-width:960px){.r30-steps{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}}
+  @media(max-width:519px){.r30-title{font-size:17px}.r30-body{font-size:13.5px}}
+  .r30-step{display:flex;flex-direction:column;gap:6px;padding:14px 14px 18px;border:1px solid var(--rule);
     border-radius:var(--sq-lg);background:var(--surface)}
-  .r30-step-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
-  .r30-icon{width:52px;height:52px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;
-    background:var(--acid-dim);color:var(--acid)}
-  .r30-icon .ic{width:26px;height:26px;stroke-width:1.6}
+  .r30-step-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px}
   .r30-num{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted)}
   .r30-title{font-family:var(--display);font-weight:900;font-size:var(--fs-h4);line-height:1.15;color:var(--text);margin-top:6px}
   .r30-body{font-size:14.5px;line-height:1.55;color:var(--text-2)}
-  .r30-ring{--r30-deg:0deg;position:relative;width:52px;height:52px;border-radius:50%;
+  .r30-ring{--r30-deg:0deg;position:relative;width:40px;height:40px;border-radius:50%;
     display:inline-flex;align-items:center;justify-content:center;
     background:conic-gradient(var(--acid) var(--r30-deg),rgba(244,241,234,.1) 0)}
   .r30-ring-fill{position:absolute;inset:4px;border-radius:50%;background:var(--surface)}
-  .r30-ring-num{position:relative;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text)}
+  .r30-ring-num{position:relative;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text)}
   .r30-step--timer.is-done .r30-ring-num{color:var(--acid)}
   .r30-step--timer.is-done{border-color:rgba(var(--acid-rgb),.4)}
 
   /* ---------- Why it works ---------- */
-  .pd-fix{display:grid;gap:36px}
-  @media(min-width:960px){.pd-fix{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:64px;align-items:center}}
+  .pd-fix{display:grid;gap:28px;align-items:center}
+  @media(min-width:768px){.pd-fix{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:48px}}
+  @media(min-width:960px){.pd-fix{gap:72px}}
+  #why .pd-scroll{margin-top:clamp(32px,5vw,56px)}
+  /* Image slots waiting for photography (same as the homepage's): the label
+     is CSS-generated from data-ph-n / data-ph / data-ph-spec, so nothing in
+     it is indexable copy. Swap the div for an <img> of the stated ratio. */
+  .ph-img{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:flex-end;padding:18px;
+    border:1.5px dashed var(--border-focus);border-radius:var(--sq-xl);
+    background:repeating-linear-gradient(135deg,transparent 0 14px,rgba(var(--acid-rgb),.035) 14px 28px),var(--ink)}
+  .ph-img::before{content:attr(data-ph-n);position:absolute;top:14px;left:14px;padding:4px 10px;border-radius:var(--r-pill);
+    background:var(--acid);color:var(--on-acid);font-family:var(--mono);font-size:10px;letter-spacing:.12em}
+  .ph-img::after{content:attr(data-ph) "\A" attr(data-ph-spec);white-space:pre-line;
+    font-family:var(--mono);font-size:11.5px;line-height:1.5;color:var(--muted)}
+  .r30-step .ph-img{aspect-ratio:1/1;border-radius:var(--sq-md);margin-bottom:4px}
+  /* Small tiles on phones: the slot number only; the brief stays in data-ph. */
+  @media(max-width:959px){.r30-step .ph-img::after{display:none}}
+  @media(max-width:767px){.pd-fix .ph-img{aspect-ratio:4/3}}
+  .pd-scale{display:grid;grid-auto-flow:column;grid-auto-columns:78%;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+    scrollbar-width:none;margin:0 calc(var(--gutter) * -1);padding:0 var(--gutter);scroll-padding-inline:var(--gutter)}
+  .pd-scale::-webkit-scrollbar{display:none}
+  .pd-scale:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+  .pd-scale figure{margin:0;scroll-snap-align:start}
+  .pd-scale figcaption{margin-top:10px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
+  @media(min-width:768px){.pd-scale{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;margin:0;padding:0}}
   .fix-features{list-style:none;margin-top:26px;display:grid;gap:18px}
   .fix-features li{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;
     font-size:15px;line-height:1.55;color:var(--text-2)}
   .fix-features strong{display:block;color:var(--text);font-size:16px;margin-bottom:2px}
   .pd-ibox{width:44px;height:44px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;
     border:1px solid var(--rule);background:var(--ink);color:var(--acid)}
-  .pd-stats{list-style:none;display:grid;gap:12px}
-  .pd-stat{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center;padding:22px;
-    border:1px solid var(--rule);border-radius:var(--sq-lg);background:var(--ink)}
-  .pd-stat .ic{grid-row:span 2;width:34px;height:34px;color:var(--acid);stroke-width:1.4}
-  .pd-stat b{font-family:var(--display);font-weight:900;font-size:clamp(28px,3.4vw,38px);line-height:1;color:var(--text)}
-  .pd-stat span{font-size:14px;line-height:1.45;color:var(--muted)}
 
   /* ---------- Comparison ---------- */
   .pd-scroll{overflow-x:auto;border-radius:var(--sq-lg)}
@@ -1419,14 +1440,13 @@
   .reviews-more{margin-top:24px;font-size:14.5px;line-height:1.6;color:var(--muted);max-width:70ch}
 
   /* ---------- Science + uses: cards ---------- */
-  .pd-ingr,.pd-uses{display:grid;gap:12px}
-  @media(min-width:768px){.pd-ingr,.pd-uses{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .pd-ingr{display:grid;gap:12px}
+  @media(min-width:768px){.pd-ingr{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media(min-width:1160px){.pd-ingr{grid-template-columns:repeat(4,minmax(0,1fr))}}
   .pd-card{display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid var(--rule);
     border-radius:var(--sq-lg);background:var(--surface)}
   .pd-sec--alt .pd-card{background:var(--ink)}
   .pd-ingr .pd-card>.ic{width:32px;height:32px;color:var(--acid);stroke-width:1.5;margin-bottom:6px}
-  .pd-uses .pd-ibox{margin-bottom:6px}
   .pd-step{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   .pd-card h3{font-family:var(--display);font-weight:900;font-size:var(--fs-h4);line-height:1.15;color:var(--text)}
   .pd-card p{font-size:14.5px;line-height:1.55;color:var(--text-2)}
@@ -1481,19 +1501,6 @@
   .final-inner .pd-h2{margin-top:0}
   .final-reassurance{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2)}
   .final-btn{min-width:min(100%,340px)}
-  .email-capture{padding-block:32px;border-top:1px solid var(--rule-soft)}
-  .ec-inner{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
-  .ec-text{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--text-2)}
-  .ec-text .ic{color:var(--acid)}
-  .email-form{display:flex;gap:8px;width:100%;max-width:440px}
-  .email-form input{flex:1;min-width:0;min-height:50px;padding:0 16px;font:16px var(--body);color:var(--text);
-    background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--sq-sm)}
-  .email-form input:focus{outline:none;border-color:var(--acid)}
-  .email-form button{min-height:50px;padding:0 20px;border:1px solid var(--text);border-radius:var(--sq-sm);
-    background:var(--text);color:var(--ink);font-family:var(--mono);font-weight:700;font-size:13px;
-    letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
-  .email-form button:hover{background:var(--acid);border-color:var(--acid)}
-  .ec-success{display:none;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--acid)}
 
   /* Cart drawer + viewer close buttons carry the sprite's ✕ now. */
   .cart-close .ic,.gal-viewer-close .ic{width:18px;height:18px;stroke-width:2}
@@ -1872,7 +1879,14 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <span class="pd-stock"><span class="pd-dot" aria-hidden="true"></span>In stock · ships in 48 h</span>
         </div>
         <h1 id="pdTitle" class="pd-title">ODORSTRIKE</h1>
-        <p class="pd-tagline">A pocket-sized fabric odor mist for clothes. Sweat odor hides in the weave — ODORSTRIKE neutralizes it right in the fabric fibres, with up to 8 hours of protection on fabric* and no residue.</p>
+        <p class="pd-tagline">A pocket-sized fabric odor mist for clothes.</p>
+        <!-- Highlights, not paragraphs (Baymard): the three things a first-time
+             buyer needs before the price. The detail lives further down. -->
+        <ul class="pd-highlights">
+          <li><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg><span>Removes sweat smell from the shirt — no perfume cover-up</span></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg><span>Dries clear in 15–30 seconds, no marks</span></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg><span>Lasts up to 8 hours on fabric*</span></li>
+        </ul>
 
         <ul class="pd-not" aria-label="What ODORSTRIKE is and is not">
           <li><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg>NOT PERFUME</li>
@@ -1910,12 +1924,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <li><svg class="ic" aria-hidden="true"><use href="#i-return"/></svg><span><b>7-day returns</b>If it isn't for you</span></li>
         </ul>
 
-        <ul class="pd-highlights">
-          <li><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg><span>Neutralizes odor in the fabric — doesn't cover it with perfume</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg><span>Glycerine-free · dries clear in 15–30 seconds</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg><span>Up to 8 hours of odor protection on fabric*</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-shirt"/></svg><span>Shirts, tees, hoodies, jackets, jeans, uniforms</span></li>
-        </ul>
         <p class="pd-footnote">*Observed in internal office and commute wear testing. Fabric only — never on skin.</p>
         <!-- Gated proof (under primary CTA): renders only with real data -->
         <div id="heroProofMount"></div>
@@ -1934,97 +1942,93 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </ul>
 </div>
 
-<!-- HOW TO USE (THE FABRIC RESET)
-     Four steps: HOLD, SPRAY, WAIT, WEAR. The ring on step 03 runs the
-     30-second upper bound of the dry time once when scrolled into view —
-     a demonstration of the stated range, not a new claim. Still a real
-     <ol>: the steps read as a list with JS off. -->
+<!-- HOW TO USE — four steps, one line each. Each step has an image slot
+     (.ph-img: the label is CSS-generated from data-ph*; swap the div for an
+     <img> of the stated ratio when the photo exists). The ring on step 03
+     counts the real 30-second upper bound once when scrolled into view. -->
 <section class="pd-sec" id="how" aria-labelledby="howTitle">
   <div class="pd-wrap reset30" id="reset30">
     <div class="pd-head htu-head">
       <div class="section-tag">How to use · Fabric only</div>
       <h2 id="howTitle" class="pd-h2">Hold. Spray. Wait. Wear.</h2>
-      <p class="pd-lede htu-sub">Thirty seconds between you and a fresh shirt. Formulated for clothing fabric only — never spray directly onto skin or body.</p>
+      <p class="pd-lede htu-sub">Thirty seconds, on the clothes you're wearing — never spray directly onto skin.</p>
     </div>
     <ol class="r30-steps">
       <li class="r30-step">
-        <div class="r30-step-head">
-          <span class="r30-icon" aria-hidden="true"><svg class="ic"><use href="#i-ruler"/></svg></span>
-          <span class="r30-num">01 · HOLD</span>
-        </div>
+        <div class="ph-img" role="img" aria-label="Image coming soon: holding the bottle 15–20 cm from a shirt" data-ph-n="STEP 01" data-ph="Hand holding ODORSTRIKE 15–20 cm from a shirt collar." data-ph-spec="1:1 · 1000×1000 · WebP"></div>
+        <div class="r30-step-head"><span class="r30-num">01 · HOLD</span></div>
         <h3 class="r30-title">15–20 cm away</h3>
-        <p class="r30-body">Keep the bottle about 15–20 cm from the fabric so the mist spreads evenly without oversaturating.</p>
+        <p class="r30-body">Keep the bottle about 15–20 cm from the fabric.</p>
       </li>
       <li class="r30-step">
-        <div class="r30-step-head">
-          <span class="r30-icon" aria-hidden="true"><svg class="ic"><use href="#i-spray"/></svg></span>
-          <span class="r30-num">02 · SPRAY</span>
-        </div>
+        <div class="ph-img" role="img" aria-label="Image coming soon: mist landing on the collar" data-ph-n="STEP 02" data-ph="Fine mist landing on a collar or underarm seam. Shirt, not skin." data-ph-spec="1:1 · 1000×1000 · WebP"></div>
+        <div class="r30-step-head"><span class="r30-num">02 · SPRAY</span></div>
         <h3 class="r30-title">2–3 light sprays</h3>
-        <p class="r30-body">Apply 2–3 light sprays onto odor-prone clothing zones — collar, underarm fabric, or chest. Not for skin.</p>
+        <p class="r30-body">On the collar, underarm fabric, or chest. Not for skin.</p>
       </li>
       <li class="r30-step r30-step--timer">
+        <div class="ph-img" role="img" aria-label="Image coming soon: shirt drying clear" data-ph-n="STEP 03" data-ph="Same shirt seconds later — dry, no marks, no damp patch." data-ph-spec="1:1 · 1000×1000 · WebP"></div>
         <div class="r30-step-head">
+          <span class="r30-num">03 · WAIT</span>
           <!-- The ring is aria-hidden; the heading and body carry the meaning. -->
           <span class="r30-ring" aria-hidden="true"><span class="r30-ring-fill"></span><span class="r30-ring-num">30</span></span>
-          <span class="r30-num">03 · WAIT</span>
         </div>
         <h3 class="r30-title">Wait 15–30 seconds</h3>
-        <p class="r30-body">The fine mist dries clean on the fabric in 15–30 seconds from 15–20 cm. Dries clear, with no stiff residue on tested fabrics.</p>
+        <p class="r30-body">It dries clear — no stiff residue.</p>
       </li>
       <li class="r30-step">
-        <div class="r30-step-head">
-          <span class="r30-icon" aria-hidden="true"><svg class="ic"><use href="#i-shirt"/></svg></span>
-          <span class="r30-num">04 · WEAR</span>
-        </div>
+        <div class="ph-img" role="img" aria-label="Image coming soon: wearing the fresh shirt" data-ph-n="STEP 04" data-ph="Walking into the office in the same shirt, confident." data-ph-spec="1:1 · 1000×1000 · WebP"></div>
+        <div class="r30-step-head"><span class="r30-num">04 · WEAR</span></div>
         <h3 class="r30-title">Wear normally</h3>
-        <p class="r30-body">Once dry, wear it as usual — with up to 8 hours of fabric odor protection*, neutralized right in the fibres.</p>
+        <p class="r30-body">With up to 8 hours of fabric odor protection*.</p>
       </li>
     </ol>
   </div>
 </section>
 
-<!-- WHY IT WORKS -->
+<!-- WHY IT WORKS — one lifestyle image, three short reasons, and the
+     comparison as a small table (the same message as gallery tile 8). -->
 <section class="pd-sec pd-sec--alt showcase" id="why" aria-labelledby="whyTitle">
-  <div class="pd-wrap pd-fix">
-    <div>
-      <div class="section-tag">The fix</div>
-      <h2 id="whyTitle" class="pd-h2">Your deo works on skin. <span class="acid">The smell lives in the shirt.</span></h2>
-      <p class="pd-lede">Sweat odor bonds to the fibres at the collar, underarms and cuffs, and body sprays fade long before it does. <a href="/blog/hpbcd-cyclodextrin-fabric-odor">HPβCD cyclodextrin</a> traps those odor molecules in the fabric while Zinc PCA neutralizes them.</p>
-      <ul class="fix-features">
-        <li><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-sparkles"/></svg></span><span><strong>Neutralizes odor — doesn't hide it.</strong>Traps and binds odor molecules instead of masking them with heavy perfume. <a href="#science">See the chemistry ↓</a></span></li>
-        <li><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-timer"/></svg></span><span><strong>Up to 8 hours on fabric*</strong>Observed under normal commute and office conditions.</span></li>
-        <li><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-drop"/></svg></span><span><strong>Glycerine-free, dries clear.</strong>15–30 seconds, with no stiffness or powdery residue on tested fabrics.</span></li>
-        <li><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-shirt"/></svg></span><span><strong>Everyday washable fabrics.</strong>Tested on cotton, polyester, denim and blends. Spot-test delicates and silk first.</span></li>
-      </ul>
-    </div>
-    <ul class="pd-stats" aria-label="Size and value">
-      <li class="pd-stat"><svg class="ic" aria-hidden="true"><use href="#i-ruler"/></svg><b>10.5 cm</b><span>Fits a jeans pocket, a jacket pocket or a desk drawer.</span></li>
-      <li class="pd-stat"><svg class="ic" aria-hidden="true"><use href="#i-plane"/></svg><b>50ml</b><span>Within common 100ml carry-on liquid limits (check your airline's rules).</span></li>
-      <li class="pd-stat"><svg class="ic" aria-hidden="true"><use href="#i-spray"/></svg><b>~250 sprays</b><span>~83–125 refreshes at 2–3 sprays each — about ₹1.83–₹2.75 a refresh.</span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- COMPARISON — the same message as gallery tile 8, as indexable markup. -->
-<section class="pd-sec" id="compare" aria-labelledby="compareTitle">
   <div class="pd-wrap">
-    <div class="pd-head">
-      <div class="section-tag">Not another body spray</div>
-      <h2 id="compareTitle" class="pd-h2">Different job, <span class="acid">different bottle.</span></h2>
+    <div class="pd-fix">
+      <div class="ph-img" role="img" aria-label="Image coming soon: commuter checking his shirt collar" data-ph-n="LIFESTYLE" data-ph="Commuter sniffing his shirt collar after the metro — the moment ODORSTRIKE is for." data-ph-spec="4:5 · 1200×1500 · WebP"></div>
+      <div>
+        <div class="section-tag">Why it works</div>
+        <h2 id="whyTitle" class="pd-h2">Deo is for skin. <span class="acid">This is for the shirt.</span></h2>
+        <ul class="fix-features">
+          <li><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-sparkles"/></svg></span><span><strong>Neutralizes odor — doesn't hide it.</strong>HPβCD traps odor in the fibres; Zinc PCA neutralizes it.</span></li>
+          <li><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-drop"/></svg></span><span><strong>Glycerine-free, dries clear.</strong>No marks or damp patch on tested fabrics. Spot-test silk and delicates first.</span></li>
+          <li><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-timer"/></svg></span><span><strong>Up to 8 hours on fabric*.</strong>Light scent that fades in minutes.</span></li>
+        </ul>
+      </div>
     </div>
-    <div class="pd-scroll" tabindex="0" role="region" aria-label="ODORSTRIKE compared with deodorant and perfume — scroll sideways on small screens">
+    <div class="pd-scroll" id="compare" tabindex="0" role="region" aria-label="ODORSTRIKE compared with deodorant and perfume — scroll sideways on small screens">
       <table class="pd-compare">
         <thead>
           <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col" class="us">ODORSTRIKE</th><th scope="col">Deodorant</th><th scope="col">Perfume</th></tr>
         </thead>
         <tbody>
           <tr><th scope="row">Goes on</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Clothes</td><td>Skin</td><td>Skin</td></tr>
-          <tr><th scope="row">Odor already in the shirt</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Neutralizes it</td><td>Not made for it</td><td>Covers it with scent</td></tr>
-          <tr><th scope="row">Scent</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Light, fades in minutes</td><td>Varies</td><td>Strong, by design</td></tr>
-          <tr><th scope="row">Use together?</th><td class="us" colspan="3">Yes — keep your deodorant for skin. ODORSTRIKE is for the fabric.</td></tr>
+          <tr><th scope="row">Odor in the shirt</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Neutralizes it</td><td>Not made for it</td><td>Covers it</td></tr>
+          <tr><th scope="row">Scent</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Light, fades fast</td><td>Varies</td><td>Strong</td></tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</section>
+
+<!-- SEE THE SIZE — Baymard: 42% of shoppers try to judge size from the
+     images, so the page shows it in scale, in a hand and a pocket. -->
+<section class="pd-sec" id="size" aria-labelledby="sizeTitle">
+  <div class="pd-wrap">
+    <div class="pd-head">
+      <div class="section-tag">Pocket size</div>
+      <h2 id="sizeTitle" class="pd-h2">Goes where <span class="acid">you go.</span></h2>
+    </div>
+    <div class="pd-scale" tabindex="0" role="region" aria-label="Size photos — scroll sideways on small screens">
+      <figure><div class="ph-img" role="img" aria-label="Image coming soon: bottle in a jeans pocket" data-ph-n="IN SCALE" data-ph="Bottle half out of a jeans back pocket." data-ph-spec="4:5 · 1200×1500 · WebP"></div><figcaption>Fits a jeans pocket</figcaption></figure>
+      <figure><div class="ph-img" role="img" aria-label="Image coming soon: bottle in a hand next to a phone" data-ph-n="IN SCALE" data-ph="Bottle in an open palm, next to a phone for size." data-ph-spec="4:5 · 1200×1500 · WebP"></div><figcaption>10.5 cm tall · 50ml</figcaption></figure>
+      <figure><div class="ph-img" role="img" aria-label="Image coming soon: bottle on an office desk" data-ph-n="IN USE" data-ph="On an office desk beside a laptop — the mid-day reset." data-ph-spec="4:5 · 1200×1500 · WebP"></div><figcaption>~250 sprays a bottle</figcaption></figure>
     </div>
   </div>
 </section>
@@ -2070,10 +2074,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <h2 id="scienceTitle" class="pd-h2">Four layers do the <span class="acid">heavy lifting.</span></h2>
     </div>
     <div class="pd-ingr">
-      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-ring"/></svg><span class="pd-step">01 — Trap</span><h3>HPβCD (Cyclodextrin)</h3><p>A hollow ring-shaped molecule that cages odor molecules inside itself. The smell isn't covered — it's captured.</p></div>
-      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg><span class="pd-step">02 — Neutralize</span><h3>Zinc PCA</h3><p>A zinc salt that deactivates the captured odor compounds and shuts the smell down at the source.</p></div>
-      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span class="pd-step">03 — Prevent</span><h3>Triethyl Citrate</h3><p>Slows the enzymatic breakdown of fresh sweat lipids before new odor forms on the fabric.</p></div>
-      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg><span class="pd-step">04 — Sustain</span><h3>Zinc Gluconate</h3><p>A second zinc complex that binds leftover odor compounds and keeps fabric fresher between wears.</p></div>
+      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-ring"/></svg><span class="pd-step">01 — Trap</span><h3>HPβCD (Cyclodextrin)</h3><p>Cages odor molecules inside its ring.</p></div>
+      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg><span class="pd-step">02 — Neutralize</span><h3>Zinc PCA</h3><p>Deactivates the captured odor compounds.</p></div>
+      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span class="pd-step">03 — Prevent</span><h3>Triethyl Citrate</h3><p>Slows new odor forming from fresh sweat.</p></div>
+      <div class="pd-card"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg><span class="pd-step">04 — Sustain</span><h3>Zinc Gluconate</h3><p>Binds what's left, between wears.</p></div>
     </div>
     <details class="pd-inci">
       <summary>Full ingredient list <svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></summary>
@@ -2095,22 +2099,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   </div>
 </section>
 
-<!-- MOMENTS YOU CAN'T REWASH FOR -->
-<section class="pd-sec pd-sec--alt use-cases" id="uses" aria-labelledby="usesTitle">
-  <div class="pd-wrap">
-    <div class="pd-head">
-      <div class="section-tag">Moments you can't rewash for</div>
-      <h2 id="usesTitle" class="pd-h2">You don't get to go home <span class="acid">and change.</span></h2>
-    </div>
-    <div class="pd-uses">
-      <div class="pd-card"><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-sun"/></svg></span><span class="pd-step">01 — After a sweat</span><h3>Same shirt, next meeting</h3><p>A long commute or a workout leaves the tee smelling like a locker, and there's no time to change. Two sprays across the collar and underarm fabric, wait 15–30 seconds, walk out clean.</p></div>
-      <div class="pd-card"><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-jeans"/></svg></span><span class="pd-step">02 — Re-wears</span><h3>Denim you don't want to wash</h3><p>Denim doesn't need constant washing. Between wears, ODORSTRIKE neutralizes trapped food, smoke and sweat odor without a stiff or damp finish. Spot-test vintage or delicate dyes first.</p></div>
-      <div class="pd-card"><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-plane"/></svg></span><span class="pd-step">03 — Travel</span><h3>Four days, two shirts</h3><p>The 50ml bottle sits within common 100ml carry-on limits (check your airline's rules) and gives ~83–125 quick resets between meetings and flights.</p></div>
-      <div class="pd-card"><span class="pd-ibox" aria-hidden="true"><svg class="ic"><use href="#i-rain"/></svg></span><span class="pd-step">04 — Monsoon</span><h3>That damp-laundry smell</h3><p>Humidity makes stored clothes smell musty. ODORSTRIKE neutralizes trapped damp odor on kurtas, shirts and trousers.</p></div>
-    </div>
-  </div>
-</section>
-
 <!-- BUY — everything a buyer needs to decide, in one box. -->
 <section class="pd-sec pricing" id="buy" aria-labelledby="buyTitle">
   <div class="pd-wrap">
@@ -2126,8 +2114,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
              shown on the same card is a misleading-price claim. -->
         <div class="pd-price-row"><span class="pd-amt">₹229</span><s>M.R.P. ₹499</s><span class="pd-off">54% OFF</span></div>
         <ul class="pd-offer-list">
-          <li><svg class="ic" aria-hidden="true"><use href="#i-spray"/></svg><span><strong>~250 sprays</strong> — ~83–125 refreshes</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-timer"/></svg><span><strong>Up to 8 hours</strong> of odor protection on fabric*</span></li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><strong>Free shipping</strong> on prepaid orders, pan-India</span></li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-cash"/></svg><span><strong>Cash on Delivery</strong> · ₹60 handling · ₹289 collected</span></li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-box"/></svg><span><strong>Ships from Hyderabad</strong> in 48 hours · 3–5 days to metros</span></li>
@@ -2140,7 +2126,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <div id="buyProofMount"></div>
         <dl class="pd-specs">
           <div><dt>Format</dt><dd>50ml pocket mist</dd></div>
-          <div><dt>Capacity</dt><dd>~250 sprays</dd></div>
+          <div><dt>Capacity</dt><dd>~250 sprays (~83–125 refreshes)</dd></div>
           <div><dt>Dry time</dt><dd>15–30 seconds</dd></div>
           <div><dt>Application</dt><dd>Fabric only</dd></div>
         </dl>
@@ -2210,18 +2196,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <button type="button" class="pd-btn final-btn" id="finalBuyBtn" onclick="buyNow()">GET ODORSTRIKE — ₹229</button>
   </div>
 </section>
-
-<!-- EMAIL CAPTURE -->
-<div class="email-capture">
-  <div class="pd-wrap ec-inner">
-    <p class="ec-text"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>Not ready yet? Get launch drops and restock alerts.</p>
-    <div class="email-form" id="emailForm">
-      <input type="email" id="waitlistEmail" placeholder="your@email.com" required aria-label="Email address" autocomplete="email">
-      <button type="button" onclick="submitWaitlist()">Join</button>
-    </div>
-    <div class="ec-success" id="ecSuccess" role="status">You're on the list.</div>
-  </div>
-</div>
 
 </main>
 
@@ -3869,47 +3843,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   document.querySelectorAll('.overlay input, .overlay textarea').forEach(function(input){
     input.addEventListener('focus',function(){this.style.borderColor='';});
   });
-
-  // Waitlist email capture — Supabase primary, Sheets backup, Resend welcome
-  window.submitWaitlist = function() {
-    const input = document.getElementById('waitlistEmail');
-    if (!input) return;
-    const email = input.value.trim();
-    if (!email || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email)) {
-      input.style.borderColor = '#ff6b6b';
-      return;
-    }
-    input.style.borderColor = '';
-    // Primary store: Supabase waitlist table (anon insert-only RLS).
-    if (CFG.SUPABASE_URL && CFG.SUPABASE_KEY) {
-      fetch(CFG.SUPABASE_URL + '/rest/v1/waitlist', {
-        method: 'POST',
-        headers: {
-          'apikey': CFG.SUPABASE_KEY,
-          'Authorization': 'Bearer ' + CFG.SUPABASE_KEY,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({ email: email, source: 'footer' }),
-        keepalive: true
-      }).catch(function(){ /* sheets backup below still fires */ });
-    }
-    const url = CFG.SHEETS_ENDPOINT + '?email=' + encodeURIComponent(email);
-    // Backup: fire via image pixel (most reliable cross-origin)
-    const img = new Image();
-    img.onerror = function(){};
-    img.src = url;
-    // Also sendBeacon as backup
-    if (navigator.sendBeacon) {
-      const fd = new FormData();
-      fd.append('email', email);
-      navigator.sendBeacon(CFG.SHEETS_ENDPOINT, fd);
-    }
-    var emailForm = document.getElementById('emailForm');
-    if (emailForm) emailForm.style.display = 'none';
-    var ecSuccess = document.getElementById('ecSuccess');
-    if (ecSuccess) ecSuccess.style.display = 'inline-block';
-  };
 
   // THE 30-SECOND RESET — counts down the 30-second upper bound of the dry
   // time once, in real time, when the step comes into view.
