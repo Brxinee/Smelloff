@@ -95,8 +95,7 @@
 
 .sf-hdr{
   position:sticky;top:0;z-index:70;
-  background:rgba(8,8,8,.98);
-  -webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);
+  background:var(--ink);
   border-bottom:1px solid var(--rule-soft);
   transition:box-shadow .25s var(--ease),border-color .25s var(--ease);
 }
@@ -145,36 +144,43 @@
 .sf-nav a[aria-current="page"]::after{transform:scaleX(1);opacity:1}
 
 
-/* Burger carries a visible "Menu" label: NN/g's hamburger studies found an
-   icon-only menu is found and used less; the word fixes most of that. */
+/* Burger: three lines, no label (owner's call, 2026-10-10). */
 .sf-burger{
-  justify-self:start;display:inline-flex;align-items:center;gap:8px;
-  min-height:44px;margin-left:-8px;padding:0 8px;background:none;border:0;border-radius:var(--sq-sm,8px);
-  color:var(--text);cursor:pointer;font-family:var(--body);font-size:14px;font-weight:600;letter-spacing:.01em;
+  justify-self:start;display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;margin-left:-10px;padding:0;background:none;border:0;border-radius:var(--sq-sm,8px);
+  color:var(--text);cursor:pointer;
 }
 .sf-burger__bars{display:flex;flex-direction:column;gap:5px}
-.sf-burger__bars span{
-  display:block;width:20px;height:2px;border-radius:100px;background:currentColor;
-  transition:transform .3s cubic-bezier(.65,0,.35,1),opacity .2s ease;
-}
-.sf-burger:hover,.sf-burger[aria-expanded="true"]{color:var(--acid)}
-.sf-burger[aria-expanded="true"] .sf-burger__bars span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.sf-burger[aria-expanded="true"] .sf-burger__bars span:nth-child(2){opacity:0}
-.sf-burger[aria-expanded="true"] .sf-burger__bars span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.sf-burger__bars span{display:block;width:22px;height:2px;border-radius:100px;background:currentColor}
+.sf-burger:hover{color:var(--acid)}
 
-/* Phone menu: a full-height layer under the bar (it used to open inline and
-   push the page down, with the page still scrolling behind it and the
-   consent bar over it). Product first, then the pages with a one-line hint
-   each, then a human. chrome.js sets the height and html.sf-menu-open. */
+/* Phone menu: a drawer from the left (owner's call). Full height, page
+   dimmed behind it by a shadow (a tap outside closes — chrome.js), its own
+   close button. Fixed to the viewport: .sf-hdr has no backdrop-filter, which
+   would otherwise become the containing block and trap it in the header.
+   html.sf-menu-open hides the consent bar and the buy strip. */
 .sf-hdr__menu{
-  position:absolute;left:0;right:0;top:100%;height:var(--sf-menu-h,calc(100dvh - 106px));
+  position:fixed;top:0;bottom:0;left:0;z-index:2;
+  width:min(86vw,380px);
   overflow-y:auto;overscroll-behavior:contain;
-  padding:8px max(var(--gutter,20px),env(safe-area-inset-left)) calc(28px + env(safe-area-inset-bottom));
-  background:var(--ink);border-top:1px solid var(--rule-soft);
-  opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-8px);
-  transition:opacity .25s cubic-bezier(.16,1,.3,1),transform .3s cubic-bezier(.16,1,.3,1),visibility .3s;
+  padding:0 20px calc(28px + env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));
+  background:var(--ink);border-right:1px solid var(--rule);
+  box-shadow:0 0 0 100vmax rgba(0,0,0,0);
+  visibility:hidden;transform:translateX(-100%);
+  transition:transform .32s cubic-bezier(.16,1,.3,1),box-shadow .32s ease,visibility .32s;
 }
-.sf-hdr__menu.is-open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.sf-hdr__menu.is-open{visibility:visible;transform:none;box-shadow:0 0 0 100vmax rgba(0,0,0,.62)}
+.sf-menu__top{
+  position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;
+  min-height:72px;margin:0 -20px 4px;padding:0 12px 0 20px;background:var(--ink);border-bottom:1px solid var(--rule-soft);
+}
+.sf-menu__top img{height:24px;width:auto;display:block}
+.sf-menu__close{
+  width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
+  background:none;border:1px solid var(--rule);border-radius:50%;color:var(--text);cursor:pointer;
+}
+.sf-menu__close svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.sf-menu__close:hover{border-color:var(--acid);color:var(--acid)}
 /* No overflow lock on html: it turns body (overflow-x:hidden) into the scroll
    container and the sticky bar jumps out of view. The layer covers the page
    and overscroll-behavior keeps its scrolling to itself. */
@@ -226,7 +232,7 @@ html.sf-menu-open #smelloff-consent-bar,html.sf-menu-open .mobile-bar{display:no
 @media(max-width:359px){.sf-hdr__logo img{height:22px}}
 @media(prefers-reduced-motion:reduce){
   .sf-cart:hover svg{animation:none}
-  .sf-burger__bars span,.sf-nav a::after{transition:none}
+  .sf-nav a::after{transition:none}
   .sf-hdr__menu{transition:none !important}
 }
 

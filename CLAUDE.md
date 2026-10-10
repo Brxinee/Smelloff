@@ -281,6 +281,24 @@ github.com/settings/installations → Vercel / Netlify → Uninstall (and delete
 the projects in each dashboard). Nothing in the repo can stop them. Cloudflare
 Workers Builds is the only deploy.
 
+## Phone menu: left drawer, icon-only burger (2026-10-10)
+- **The menu did not open in production.** The build's inlined critical CSS
+  (`criticalChrome` in `apply-chrome.mjs`) set `.sf-hdr__menu` to
+  `max-height:0;overflow:hidden`; chrome.css never reset `max-height`, so the
+  menu opened 0px tall — only on the live site, because that CSS is a
+  build-time transform and local runs never had it. **Test UI changes with
+  the build transforms applied** (`npm run optimize:critical && node
+  scripts/apply-chrome.mjs`, then revert). A test now guards the rule.
+- Owner's call: the burger is **three lines, no "Menu" word** (aria-label
+  carries "Open/Close menu"), and the menu is a **drawer from the left**:
+  fixed, full height, `min(86vw,380px)`, page dimmed by a box-shadow, own
+  logo + ✕ row. A tap outside is swallowed (capture listener) and closes it;
+  Escape and ✕ return focus to the burger.
+- `.sf-hdr` lost its `backdrop-filter` (the bar is opaque anyway): a
+  backdrop-filter makes the header the containing block for `position:fixed`
+  children and would trap the drawer inside the 72px bar.
+- Supersedes the "Nav bar v3" note above on the label and the layer.
+
 ## Bug sweep (2026-10-10)
 Automated: all 77 pages at 390 and 1280 — JS errors, failed requests, broken
 images, H1 count, duplicate ids, dead #anchors, horizontal overflow, axe WCAG

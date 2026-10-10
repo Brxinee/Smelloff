@@ -210,8 +210,8 @@
 <script src="/assets/js/consent-analytics.js?v=26d989b6" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=afea31a0">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=1e0f71a5">
-<script src="/assets/js/chrome.js?v=e5f40955" defer></script>
+<link rel="stylesheet" href="/assets/css/chrome.css?v=2ea019c1">
+<script src="/assets/js/chrome.js?v=9084223b" defer></script>
 </head>
 <body>
 
@@ -226,8 +226,8 @@
 <header class="sf-hdr">
   <div class="sf-wrap">
     <div class="sf-hdr__row">
-      <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu">
-        <span class="sf-burger__bars" aria-hidden="true"><span></span><span></span><span></span></span><span class="sf-burger__label">Menu</span>
+      <button class="sf-burger" type="button" aria-expanded="false" aria-controls="sfMenu" aria-label="Open menu">
+        <span class="sf-burger__bars" aria-hidden="true"><span></span><span></span><span></span></span>
       </button>
       <a href="/" class="sf-hdr__logo" aria-label="Smelloff home">
         <img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" decoding="async">
@@ -249,6 +249,10 @@
       </div>
     </div>
     <nav class="sf-hdr__menu" id="sfMenu" aria-label="Menu">
+      <div class="sf-menu__top">
+        <img src="/assets/brand/logo-smelloff-white.png?v=2" alt="SMELLOFF" width="1200" height="261" loading="lazy" decoding="async">
+        <button class="sf-menu__close" type="button" aria-label="Close menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
       <a class="sf-menu__product" href="/odorstrike">
         <img src="/assets/pdp-01-hero@640.webp" alt="" width="640" height="704" loading="lazy" decoding="async">
         <span><b>ODORSTRIKE · 50ml</b><small>₹229 · free shipping on prepaid</small></span>
