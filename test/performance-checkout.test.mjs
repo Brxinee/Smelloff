@@ -47,14 +47,24 @@ test('production performance hardening configuration', () => {
   assert.ok(generator.includes('/assets/optimized/logo-smelloff-white-160.webp'), 'chrome generator must use optimized logo assets');
 });
 
-test('checkout markup is semantic, static, and payment-method-first', () => {
+// Checkout redesigned 2026-10-10 against Baymard: contact → delivery →
+// payment, each payment option stating its own total.
+test('checkout markup is semantic, static, and discloses COD before the button', () => {
   const html = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.ok(html.includes('<h2 id="checkoutTitle">ODORSTRIKE 50ml</h2>'), 'checkout title must be an h2');
-  assert.ok(html.includes('<fieldset class="pay-toggle checkout-payment"'), 'payment selector must be present in HTML');
+  assert.ok(/<div class="overlay" id="checkoutOverlay" role="dialog" aria-modal="true" aria-labelledby="checkoutHeading">/.test(html), 'checkout dialog must be labelled by its heading');
+  assert.ok(html.includes('<h2 class="ck-title" id="checkoutHeading">'), 'checkout heading must be an h2');
+  assert.ok(html.includes('id="checkoutTitle">ODORSTRIKE 50ml<'), 'summary must name the product');
+  assert.ok(html.includes('<fieldset class="pay-toggle checkout-payment'), 'payment selector must be present in HTML');
+  const form = html.slice(html.indexOf('id="checkoutForm"'), html.indexOf('id="loadingScreen"'));
+  const order = ['f_phone', 'f_email', 'f_name', 'f_pin', 'f_city', 'f_state', 'f_addr', 'checkout-payment', 'submitBtn'].map(id => form.indexOf(id));
+  assert.deepEqual([...order].sort((x, y) => x - y), order, 'order must be contact → delivery (pincode before city/state) → payment → button');
+  assert.equal((form.match(/<(input|textarea)\b/g) || []).length, 7, 'seven fields, no more');
+  assert.equal(/id="f_phone"[^>]*maxlength/.test(form), false, 'no maxlength on phone — it truncated pasted "+91 …" numbers');
   assert.ok(html.includes('onclick="selectPay(\'prepaid\')"'), 'prepaid must be directly actionable');
   assert.ok(html.includes('onclick="selectPay(\'cod\')"'), 'COD must be directly actionable');
   assert.ok(html.includes('id="codFeeRow"'), 'COD handling fee must be explicit in the summary');
-  assert.ok(html.includes('₹60 handling · ₹289 total'), 'COD total must disclose the handling charge before checkout');
+  assert.ok(/data-method="cod"[\s\S]{0,300}\+₹60 handling[\s\S]{0,120}class="pay-opt-price">₹289</.test(html), 'COD option must state the ₹60 and its own ₹289 total');
+  assert.ok(html.includes("price.textContent = '₹' + (t.subtotal + t.shipping + (b.dataset.method === 'cod' ? COD_FEE : 0));"), 'option totals must follow the quantity');
   assert.ok(html.includes('checkout-action-bar'), 'primary checkout action should remain reachable on long mobile forms');
 
   const chrome = fs.readFileSync('assets/js/chrome.js', 'utf8');

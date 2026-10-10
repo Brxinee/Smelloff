@@ -86,6 +86,30 @@ box: price, COD ₹289, shipping, returns) → founder strip → `#faq` → fina
   COD disclosed in hero, beta-tester labels, no ratings, clothing-only, no
   concentrations) instead of the old copy line by line.
 
+## Checkout redesign, against Baymard (2026-10-10)
+The `#checkoutOverlay` markup and its CSS block were rewritten; the checkout
+JS (orderTotals, submitOrder, Razorpay in chrome.js, COD path) is unchanged
+apart from what's listed. Rules it follows, from Baymard's checkout research:
+- **Contact → delivery → payment, one column.** Payment moved below the
+  address. A test pins the field order and the count: **7 fields** (Baymard's
+  benchmark average is 11.3). Don't add one without removing one.
+- **Pincode before city/state; they autofill from it and stay editable**
+  (postalpincode.in lookup now fires `change`, so they show as valid).
+- **Inline validation** (`CK_RULES`, `ckCheck`): on blur once a field has a
+  value, cleared live as it's fixed, messages say what to do. `validateForm()`
+  still gates submit; its errors no longer show the WhatsApp "help" link
+  (that's for failed orders). Phone/pincode strip non-digits and a pasted
+  `+91`/leading `0` — the old `maxlength` truncated pasted numbers.
+- **Each payment option shows its own total**, recomputed from
+  `orderTotals()` for the quantity (they were hard-coded to one bottle).
+- **The pay bar is solid and sticky.** It used to be a transparent gradient
+  that sat on top of the address field. The overlay has no bottom padding on
+  purpose — sticky pins to the scrollport edge and padding showed form under it.
+- Labels are sentence-case body text; phones get a full-height sheet.
+- Note: earlier sections say COD is the default payment method. The code
+  defaults to **prepaid** (`payMethod = 'prepaid'`) and was already that way
+  before this change.
+
 ## PDP redesign + "View product" route + icons (2026-10-10)
 - **Two routes from the homepage, on purpose.** Every buy CTA still goes to
   `/odorstrike?buy=1` (checkout opens). Beside the hero, offer-box and final
