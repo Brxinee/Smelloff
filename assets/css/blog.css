@@ -14,9 +14,9 @@
    except the ink/surface fallbacks.
    ===================================================================== */
 :root {
-  --font-body: var(--body, 'Geist', system-ui, sans-serif);
-  --font-display: var(--display, 'Bricolage Grotesque', system-ui, sans-serif);
-  --font-mono: var(--mono, 'Geist', system-ui, sans-serif);
+  --font-body: var(--body, 'Inter', system-ui, sans-serif);
+  --font-display: var(--display, 'Space Grotesk', system-ui, sans-serif);
+  --font-mono: var(--mono, 'Inter', system-ui, sans-serif);
   --measure: 720px;
   --toc-w: 248px;
 }
