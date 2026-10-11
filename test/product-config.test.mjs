@@ -279,16 +279,16 @@ test('odorstrike.html PDP gallery information hierarchy, asset order, accessibil
   // Tile 1: Product hero / bottle
   // Tile 2: Pocket size / portability & scale
   // Tile 3: 3-step fabric application
-  // Tile 4: Zero residue / dark fabric proof
+  // Tile 4: Dark fabric, just sprayed → dried clear
   // Tile 5: Fabric-only guideline (not skin)
   // Tile 6: Trapped garment odor problem
   // Tile 7: Science & molecular neutralizer
   // Tile 8: Product comparison vs deo & perfume
   const expectedOrder = [
     'pdp-01-hero.webp',
-    'pdp-04-pocket-size.webp',
+    'pdp-04-in-hand.webp',
     'pdp-03-how-to-use.webp',
-    'pdp-05-proof.webp',
+    'pdp-05-dried-clear.webp',
     'pdp-07-fabric-only.webp',
     'pdp-02-problem.webp',
     'pdp-06-science.webp',
@@ -322,9 +322,9 @@ test('odorstrike.html PDP gallery information hierarchy, asset order, accessibil
 
   // 4. Accessibility: zoom buttons with descriptive aria-label
   assert.ok(galHtml.includes('aria-label="Enlarge image 1 of 8: ODORSTRIKE 50ml bottle"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 2 of 8: Pocket size and portability"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 2 of 8: Size in the hand, next to a phone"'));
   assert.ok(galHtml.includes('aria-label="Enlarge image 3 of 8: Three-step application on fabric"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 4 of 8: Fabric test demonstration"') || galHtml.includes('aria-label="Enlarge image 4 of 8: Fabric test showing zero residue and no white marks"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 4 of 8: Black collar just sprayed, then dried clear"'));
   assert.ok(galHtml.includes('aria-label="Enlarge image 5 of 8: Fabric only usage guidance"'));
   assert.ok(galHtml.includes('aria-label="Enlarge image 6 of 8: Why clothes trap odor"'));
   assert.ok(galHtml.includes('aria-label="Enlarge image 7 of 8: Molecular odor trap and neutralization science"'));

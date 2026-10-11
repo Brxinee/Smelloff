@@ -514,6 +514,11 @@
   }
   .ph-img--sq{aspect-ratio:1/1;border-radius:var(--r-lg)}
   @media(min-width:768px){.beat .ph-img{max-width:460px;justify-self:center}}
+  /* A filled slot: the same box as .ph-img, holding the photo. */
+  .beat-art.ph-photo{display:block;padding:0;min-height:0;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover}
+  /* Square on phones: four 4:5 photos stacked ran ~1,740px. */
+  @media(max-width:767px){.beat-art.ph-photo{aspect-ratio:1/1}}
+  @media(min-width:768px){.beat .ph-photo{max-width:460px;justify-self:center}}
   .layers-inline{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
   .layers-inline li{font-family:var(--display);font-weight:700;font-size:15px;border:1px solid var(--border-default);border-radius:var(--r-pill);padding:6px 12px}
   .layers-inline span{font-family:var(--body);font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--acid);margin-right:8px}
@@ -884,7 +889,7 @@
       </div>
 
       <div class="beat">
-        <div class="beat-art ph-img reveal" role="img" aria-label="Image coming soon" data-ph-n="IMAGE 01" data-ph="Lifestyle photo — man checking his shirt collar after the commute. Shirt, not skin." data-ph-spec="4:5 · 1200×1500 · WebP"></div>
+        <img class="beat-art ph-photo reveal" src="/assets/photos/home-01-collar-check.webp" srcset="/assets/photos/home-01-collar-check@640.webp 640w, /assets/photos/home-01-collar-check.webp 1122w" sizes="(min-width:768px) 460px, calc(100vw - 40px)" width="1122" height="1402" alt="A man in a grey office shirt pulls his collar up to check how it smells after the commute." loading="lazy" decoding="async">
         <div class="beat-copy reveal">
           <h3>Deodorant guards your skin. Nothing was guarding your shirt.</h3>
           <p>Sweat, commute heat, lunch and smoke soak into the weave of the fabric. Body sprays sit on skin — they never reach the smell already sitting in the cotton.</p>
@@ -893,7 +898,7 @@
       </div>
 
       <div class="beat">
-        <div class="beat-art ph-img reveal" role="img" aria-label="Image coming soon" data-ph-n="IMAGE 02" data-ph="Close-up — fine mist landing on shirt fabric (collar or underarm of the shirt)." data-ph-spec="4:5 · 1200×1500 · WebP"></div>
+        <img class="beat-art ph-photo reveal" src="/assets/photos/home-02-mist-on-shirt.webp" srcset="/assets/photos/home-02-mist-on-shirt@640.webp 640w, /assets/photos/home-02-mist-on-shirt.webp 1122w" sizes="(min-width:768px) 460px, calc(100vw - 40px)" width="1122" height="1402" alt="A man sprays ODORSTRIKE onto a light-blue shirt hanging in his wardrobe; the mist lands on the fabric." loading="lazy" decoding="async">
         <div class="beat-copy reveal">
           <h3>Perfume covers it up. ODORSTRIKE neutralizes it.</h3>
           <p>A ring-shaped HPβCD molecule cages odor compounds in the fibres and Zinc PCA neutralizes them. What's left is a light fresh fabric scent — not a cologne layered over sweat.</p>
@@ -905,7 +910,7 @@
       </div>
 
       <div class="beat">
-        <div class="beat-art ph-img reveal" role="img" aria-label="Image coming soon" data-ph-n="IMAGE 03" data-ph="ODORSTRIKE bottle in a jeans or shirt pocket." data-ph-spec="4:5 · 1200×1500 · WebP"></div>
+        <img class="beat-art ph-photo reveal" src="/assets/photos/pocket-trousers.webp" srcset="/assets/photos/pocket-trousers@640.webp 640w, /assets/photos/pocket-trousers.webp 1122w" sizes="(min-width:768px) 460px, calc(100vw - 40px)" width="1122" height="1402" alt="The 50ml ODORSTRIKE bottle slipping into the front pocket of beige trousers." loading="lazy" decoding="async">
         <div class="beat-copy reveal">
           <h3>Fits in a pocket. Works where the laundry can't.</h3>
           <p>Post-commute, pre-meeting, after the biryani, before the date. 50ml sits within common 100ml carry-on liquid limits, so it travels too (check your airline's rules).</p>
@@ -914,7 +919,7 @@
       </div>
 
       <div class="beat">
-        <div class="beat-art ph-img reveal" role="img" aria-label="Image coming soon" data-ph-n="IMAGE 04" data-ph="Black shirt right after spraying — dried clear." data-ph-spec="4:5 · 1200×1500 · WebP"></div>
+        <img class="beat-art ph-photo reveal" src="/assets/photos/home-04-dried-clear.webp" width="580" height="725" alt="Close-up of a black shirt collar after spraying, dried clear with no visible residue." loading="lazy" decoding="async">
         <div class="beat-copy reveal">
           <h3>Dries clear. No stiff residue. On black or on white.</h3>
           <p>Sprayed from 15–20 cm, it dries clear on everyday washable fabrics — cotton, polyester, denim, nylon and wool blends. Patch-test silk and zari on a hidden seam first.</p>
