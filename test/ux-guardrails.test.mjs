@@ -106,3 +106,26 @@ test('slot photos exist and have alt text', () => {
     }
   }
 });
+
+// Photos load per network: AVIF first with a WebP fallback, several widths,
+// an inline blurred preview, and a head script that drops to the smallest
+// file on Data Saver / 2G before any lazy image picks one.
+test('slot photos are responsive, AVIF-first and network-aware', () => {
+  for (const f of money) {
+    const html = fs.readFileSync(f, 'utf8');
+    const pics = html.match(/<picture class="ph-pic">[\s\S]*?<\/picture>/g) || [];
+    assert.ok(pics.length >= 4, `${f}: expected <picture class="ph-pic"> photos`);
+    for (const p of pics) {
+      const avif = p.match(/<source type="image\/avif" srcset="([^"]+)" sizes="[^"]+">/);
+      assert.ok(avif, `${f}: photo missing its AVIF source`);
+      const files = avif[1].split(',').map(s => s.trim().split(' ')[0].slice(1));
+      assert.ok(files.length >= 2, `${f}: AVIF needs more than one width`);
+      for (const file of files) assert.ok(fs.existsSync(file), `${f}: ${file} missing`);
+      assert.match(p, /\d+w, \/assets\/[^"]+\.webp \d+w/, `${f}: WebP fallback needs several widths`);
+      assert.match(p, /data-no-skel style="background:url\(data:image\/webp;base64,/, `${f}: blurred preview missing`);
+    }
+    const head = html.slice(0, html.indexOf('</head>'));
+    assert.match(head, /navigator\.connection/, `${f}: network-aware sizes script must sit in <head>`);
+    assert.match(head, /saveData\|\|\/2g\//);
+  }
+});

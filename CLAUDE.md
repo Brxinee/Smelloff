@@ -61,6 +61,20 @@ three homepage combo slots are still briefs.
   replacing `pdp-05-proof` (its unsupported "10,000+ customers ★4.8/5"). The
   old files stay in `/assets` unreferenced; don't put them back.
 - Homepage beat photos are square under 768px (4:5 above).
+- **Photos load per network** (owner asked, same day). Every slot photo and
+  gallery tiles 2–3 are `<picture class="ph-pic">` (`display:contents`):
+  AVIF first, WebP fallback, widths 400/640/960/full, and a ~350-byte blurred
+  preview inlined as the img's background (`data-no-skel`, so no shimmer). A
+  `<head>` script reads `navigator.connection`: Data Saver or 2G rewrites
+  every `.ph-pic` `sizes` to `1px` (the 400w file), 3G to a mid size. It
+  works because the photos are lazy and pick a file only after layout; don't
+  make one eager without moving it out of `.ph-pic`. Measured on a 3× phone:
+  PDP photos ~371KB on 4G, ~100KB on 2G. Variants are built from the
+  original uploads, not re-encoded from the site's WebPs.
+- **PDP gallery is five tiles** (owner, 2026-10-11): removed
+  `pdp-03-how-to-use` ("10 SEC"), `pdp-07-fabric-only` and
+  `pdp-08-comparison`. Their messages live in markup (`#how`, the
+  fabric-only chips, `#compare`). Tests pin the five.
 
 ## Order-confirmation screen rebuilt; Google Customer Reviews removed (2026-10-11)
 - `#successScreen` in `odorstrike.html` is rebuilt as: check + headline with
@@ -1269,7 +1283,7 @@ buttons with uppercase wide-tracked labels and a bounce on hover.
 - `/odorstrike` hero is a scrolling squircle gallery beside a **sticky buy
   panel** (`.product-info` is `position:sticky` at ≥960px). The gallery is a
   horizontal scroll-snap carousel on mobile so the CTA stays reachable.
-- **PDP gallery = eight tiles, one objection each (2026-07-30)**, in the order
+- **PDP gallery = eight tiles, one objection each (2026-07-30; five since 2026-10-11, see "Photos in the image slots")**, in the order
   a first-time buyer raises them: `pdp-01-hero` (what is it — the only pure
   product shot, bottle on white), `pdp-02-problem` ("You don't smell. Your
   shirt does."), `pdp-03-how-to-use` (spray → 10 sec → wear),

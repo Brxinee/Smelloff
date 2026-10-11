@@ -164,7 +164,7 @@ describe('ODORSTRIKE PDP Claims & Architectural Guardrails', () => {
     assert.ok(galleryBlock, 'Gallery stack must be present in HTML');
     
     const imgTags = [...galleryBlock[1].matchAll(/<img\b[^>]*>/gi)].map(m => m[0]);
-    assert.equal(imgTags.length, 8, 'Must have 8 gallery images');
+    assert.equal(imgTags.length, 5, 'Must have 5 gallery images');
 
     for (const tag of imgTags) {
       const altMatch = tag.match(/alt=["']([^"']*)["']/i);
