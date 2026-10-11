@@ -27,12 +27,11 @@
     "logo": "https://smelloff.in/apple-touch-icon.png",
     "image": "https://smelloff.in/assets/og/smelloff-share.jpg",
     "sameAs": [
-      "https://instagram.com/smelloffindia",
+      "https://www.instagram.com/smelloffindia/",
       "https://x.com/smelloffindia",
       "https://t.me/smelloffindia",
       "https://www.linkedin.com/company/smelloff",
-      "https://www.facebook.com/share/1BU1dCAttY/",
-      "https://wa.me/919392974031"
+      "https://www.facebook.com/profile.php?id=61574290776912"
     ]
   },
   "product": {
@@ -43,7 +42,7 @@
     "title": "Smelloff ODORSTRIKE Fabric Odor Eliminator Spray (50ml)",
     "shortName": "ODORSTRIKE",
     "shortTitle": "ODORSTRIKE 50ml",
-    "category": "Personal Care > Fabric Care > Odor Eliminator",
+    "category": "Home & Garden > Household Supplies > Laundry Supplies > Fabric Refreshers",
     "categoryDisplay": "Fabric Odor Eliminator Spray for Clothes",
     "definition": "ODORSTRIKE is a fabric odor spray for clothes made by Smelloff in Hyderabad, India: a 50ml pocket mist that traps and neutralizes sweat, food and smoke odor in the fabric instead of covering it with perfume. It is not a perfume, not a body deodorant and not a room spray. It dries in 15–30 seconds and gives up to 8 hours of odor protection on fabric under normal office/commute conditions.",
     "alternateNames": [
@@ -76,14 +75,14 @@
     "availability": "https://schema.org/InStock",
     "availabilityStatus": "in_stock",
     "itemCondition": "https://schema.org/NewCondition",
-    "validFrom": "2026-04-18",
+    "validFrom": "2026-10-11",
     "priceValidUntil": "2027-12-31",
     "url": "https://smelloff.in/odorstrike",
     "shopUrl": "https://smelloff.in/",
     "buyUrl": "https://smelloff.in/odorstrike#buy",
     "images": [
       "https://smelloff.in/assets/pdp-01-hero.webp",
-      "https://smelloff.in/assets/odorstrike-bottle.webp",
+      "https://smelloff.in/assets/pdp-04-in-hand.webp",
       "https://smelloff.in/assets/photos/hero-spray-collar.webp"
     ]
   },

@@ -55,7 +55,8 @@ export function buildMerchantFeedXml() {
     ['g:condition', 'new'],
     ['g:brand', b.name],
     ['g:mpn', p.mpn],
-    ['g:identifier_exists', 'no'],
+    // No identifier_exists: brand + MPN are real identifiers, and "no" next to
+    // them is a Merchant Center conflict warning.
     // 6240 = Home & Garden > Household Supplies > Laundry Supplies > Fabric Refreshers
     ['g:google_product_category', '6240'],
     ['g:product_type', xml(p.category)],

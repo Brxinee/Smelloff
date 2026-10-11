@@ -16,6 +16,15 @@
      readiness": 34 posts had no first-party beacon, 9 had no consent bar).
    - The per-post inline progress-bar scripts (five variants) are removed;
      blog-share.js runs the one progress bar.
+   - Schema, one entity per thing (2026-10-11 audit: the author came in three
+     shapes and none had an @id; publishers in four): every Article's author
+     is the founder Person (@id https://smelloff.in/#founder, the same one
+     /about and the Organization name) and its publisher the Organization by
+     @id. A post's free-standing SpeakableSpecification block (valid only as a
+     property) moves onto the Article as `speakable`, keeping only selectors
+     that exist on the page. datePublished never runs after dateModified.
+   - The visible "Updated" date is the Article's dateModified (35 posts showed
+     a different date than their schema). Edit dateModified, never the text.
 
    Idempotent. `--check` exits 1 if any post would change (wired into build).
    Run `node scripts/apply-chrome.mjs` afterwards only if you also changed a
@@ -29,7 +38,16 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const CHECK = process.argv.includes('--check');
 const hash = (rel) => createHash('sha256').update(readFileSync(join(ROOT, rel))).digest('hex').slice(0, 8);
 
-const AUTHOR = 'Jogdhande Nikhil Patil';
+const BRAND = JSON.parse(readFileSync(join(ROOT, 'config', 'product.json'), 'utf8')).brand;
+const AUTHOR = BRAND.founder;
+const ORG = { '@type': 'Organization', '@id': 'https://smelloff.in/#organization', name: BRAND.name, url: `${BRAND.website}/` };
+const PERSON = {
+  '@type': 'Person', '@id': 'https://smelloff.in/#founder', name: AUTHOR, jobTitle: BRAND.jobTitle,
+  url: `${BRAND.website}/about`, worksFor: ORG,
+};
+const PUBLISHER = { ...ORG, logo: { '@type': 'ImageObject', url: BRAND.logo, width: 180, height: 180 } };
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const longDate = (iso) => { const [y, m, d] = iso.split('-').map(Number); return `${MONTHS[m - 1]} ${d}, ${y}`; };
 const strip = (h) => h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const slugify = (t) => t.toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'section';
@@ -44,6 +62,46 @@ function closeOf(html, start, tag = 'div') {
     if (depth === 0) return m.index + m[0].length;
   }
   return -1;
+}
+
+// Rewrites a JSON-LD block only when its data changes, in the block's own
+// layout (multi-line blocks stay indented), so re-runs leave files alone.
+function normalizeSchema(html) {
+  const blocks = [...html.matchAll(/(<script[^>]*application\/ld\+json[^>]*>)([\s\S]*?)(<\/script>)\n?/g)];
+  let speakable = null;
+  let article = null;
+  for (const m of blocks) {
+    let data; try { data = JSON.parse(m[2]); } catch { continue; }
+    if (data['@type'] === 'SpeakableSpecification') speakable = data.cssSelector;
+    if (data['@type'] === 'Article' || data['@type'] === 'BlogPosting') article = { m, data };
+  }
+  if (!article) return html;
+  const before = JSON.stringify(article.data);
+  const a = article.data;
+  a.author = PERSON;
+  a.publisher = PUBLISHER;
+  const sel = (speakable || a.speakable?.cssSelector || [])
+    .filter((c) => /^\.[\w-]+$/.test(c) && new RegExp(`class="(?:[^"]*\\s)?${c.slice(1)}(?:\\s[^"]*)?"`).test(html));
+  if (sel.length) a.speakable = { '@type': 'SpeakableSpecification', cssSelector: sel };
+  else delete a.speakable;
+  if (a.datePublished && a.dateModified && a.datePublished > a.dateModified) a.dateModified = a.datePublished;
+  if (JSON.stringify(a) !== before) {
+    const raw = article.m[2];
+    const body = raw.trim().includes('\n') ? `\n${JSON.stringify(a, null, 2)}\n` : JSON.stringify(a);
+    html = html.replace(article.m[0], `${article.m[1]}${body}${article.m[3]}${article.m[0].endsWith('\n') ? '\n' : ''}`);
+  }
+  // The free-standing speakable block goes (it now lives on the Article).
+  html = html.replace(/[ \t]*<script[^>]*application\/ld\+json[^>]*>\s*\{"@context": ?"https:\/\/schema\.org", ?"@type": ?"SpeakableSpecification"[\s\S]*?<\/script>\n?/g, '');
+  html = html.replace(/[ \t]*<!-- JSON-LD Speakable -->\n(?![ \t]*<script)/g, '');
+
+  // Visible date = schema date.
+  const mod = (a.dateModified || a.datePublished || '').slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(mod)) {
+    html = html.replace(/<span class="article-date">[\s\S]*?<\/span>/,
+      `<span class="article-date">Updated <time datetime="${mod}">${longDate(mod)}</time></span>`);
+    html = html.replace(/(<meta property="article:modified_time" content=")[^"]*(")/, `$1${mod}$2`);
+  }
+  return html;
 }
 
 function transform(html) {
@@ -96,11 +154,13 @@ function transform(html) {
     html = html.slice(0, at) + toc + html.slice(at);
   }
 
-  // 4 · Byline.
-  if (!html.includes('class="article-author"')) {
-    html = html.replace(/(<div class="article-meta">\s*<span class="article-category">[\s\S]*?<\/span>)/,
-      `$1\n        <span class="article-author">By <a href="/blog/why-i-built-odorstrike" rel="author">${AUTHOR}</a></span>`);
-  }
+  // 4 · Byline → the Person's url, like the schema.
+  html = html.replace(/\n\s*<span class="article-author">[\s\S]*?<\/span>(?=\s*<span class="article-)/, '');
+  html = html.replace(/(<div class="article-meta">\s*<span class="article-category">[\s\S]*?<\/span>)/,
+    `$1\n        <span class="article-author">By <a href="/about" rel="author">${AUTHOR}</a></span>`);
+
+  // 4b · Schema entities, speakable, dates.
+  html = normalizeSchema(html);
 
   // 5 · Product card: bottle + a route to the product page that isn't checkout.
   html = html.replace(/<div class="end-cta">(?!<img class="cta-img")/g,
