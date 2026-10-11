@@ -51,11 +51,12 @@ the move silently dropped, now restored:
   Schema, `products.json`, `merchant-feed.xml` regenerated (`npm run schema`).
 - Derived blog maths: ~₹0.92 per spray, ~₹2.29 per refresh, ₹4.58 per ml,
   ₹1.83–2.86 per use, ~₹7.39 per day.
-- **The live Supabase `create-order` function (v5) is not the repo's file**:
-  it hard-codes `UNIT_PRICE_RUPEES = 299` and `COD_FEE_RUPEES = 60`. It must be
-  redeployed with 229 / 89 (or the repo version, which reads the config) at
-  the same time as the site, or it rejects every order with "Invalid product
-  price" / "Order total mismatch".
+- **Checkout does not use the Supabase `create-order` edge function.** Both
+  checkout paths (`odorstrike.html`, `chrome.js`) POST to the Worker's
+  `/api/create-order`, which writes `rest/v1/orders` directly with prices from
+  `config/product.json`, so a price change ships with the site. The deployed
+  edge function (v5) is a stale standalone copy that hard-codes 299 / 60 and
+  nothing calls it; redeploy or delete it before anything starts using it.
 
 ## Quiet premium pass + placeholders back (2026-10-11, owner's call)
 "Too bold — conservative, premium, modern." Palette unchanged; the accent
