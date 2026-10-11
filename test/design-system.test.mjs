@@ -165,3 +165,30 @@ test('tracked capitals are for short labels, not for sentences or buttons', () =
   for (const sel of ['.final-reassurance', '.pay-modes', '.pd-pay', '#trackForm label', '.rv-field label']) assert.ok(css.includes(sel), `chrome.css §13 must cover ${sel}`);
   assert.ok(pdp.indexOf('id="finalBuyBtn"') < pdp.indexOf('class="final-reassurance"'), 'closing band: button, then the trust line (same order as /)');
 });
+
+// ---- Pass 3 (2026-10-11): drift a production audit still found -------------
+
+test('labels come in two tiers and buttons in one size, with nothing in between', () => {
+  const css = read('assets/css/chrome.css');
+  const rule = (sel) => { const i = css.indexOf(sel); assert.ok(i >= 0, `chrome.css: ${sel} missing`); return css.slice(i, css.indexOf('}', i)); };
+  // Card-label tier (11px/600/.14em): the labels that sat between the tiers.
+  const card = rule('.qa-label,.geo-title,.callout-label,.cta-label');
+  for (const sel of ['.beta-tag', '.rv-tag', '.layers-inline span', '.read-next .eyebrow']) assert.ok(card.includes(sel), `card-label tier must cover ${sel}`);
+  assert.match(card, /font-size:11px !important;font-weight:600 !important;letter-spacing:\.14em/);
+  assert.match(rule('.p-main .p-glance__t{'), /font-size:11px !important;font-weight:600 !important;\s*letter-spacing:\.14em/);
+  assert.match(rule('#sources-heading,'), /font-size:11px !important;font-weight:600/);
+  // Secondary buttons are the ghost button (52px, 15px); so is the skip link's text.
+  for (const sel of ['.agg-cta{', '.bc-cta{']) assert.match(rule(sel), /min-height:52px;[\s\S]*font-size:15px !important/, `${sel} must match .sf-btn--ghost`);
+  assert.match(rule('.sf-skip{'), /font-size:15px/);
+  // The policy contents list reads like the blog's (15px entries); link cards are one size.
+  assert.match(rule('.p-main .p-toc li{'), /font-size:15px !important/);
+  assert.ok(!css.includes('.p-body .p-links a{font-size:14.5px}'), 'link cards are one size (15px)');
+});
+
+test('beta-tester cites read the same on / and /odorstrike', () => {
+  const home = read('index.html'), pdp = read('odorstrike.html');
+  for (const who of ['Rohit, 26 · Bengaluru', 'Aakash, 24 · Pune', 'Karan, 29 · Delhi']) {
+    assert.ok(home.includes(`<cite>${who}</cite>`), `/ must cite "${who}"`);
+    assert.ok(pdp.includes(`<cite>${who}</cite>`), `/odorstrike must cite "${who}"`);
+  }
+});
