@@ -118,6 +118,21 @@ courier / AWB / status back into `orders`. It was daily (`0 10 * * *`).
   main's head before trusting the deploy. `src/build-info.js` is committed with
   `"dev"`; a local build rewrites it (restore with `git restore .`).
 
+## Owner alert for every order, COD included (2026-10-11)
+COD orders sent the owner nothing: `sendAdminNewOrderEmail` only ran from the
+Razorpay webhook (prepaid). `api/create-order.js` now awaits it on the COD
+branch right after the row is saved (server-side, so it goes out even if the
+customer closes the tab; best-effort, capped at 4 s, idempotency key
+`admin-new-order/<code>` absorbs retries). Prepaid is unchanged (webhook sends
+adminNewOrder + adminPaymentConfirmed).
+- `adminNewOrder` subject: `New order · ₹318 COD · Name, City · SMF-…`; body has
+  one-tap **Call** (`tel:`) and **WhatsApp** (`wa.me`) buttons, next steps, and
+  "Open in admin" (`/admin#orders`).
+- Goes to `getSenderConfig().adminNotify` (`ADMIN_NOTIFY_EMAIL` →
+  `ORDERS_NOTIFY_EMAIL` → info@smelloff.in, which Cloudflare forwards).
+  This supersedes the "COD orders still send no admin email" line below.
+- Test: `test/checkout.test.mjs` "a COD order emails the owner a new-order alert".
+
 ## Transactional email redesign (2026-10-11)
 `api/_email-templates.js` (all 17 Resend templates) now uses the site's palette
 and type. Light receipt canvas (Gmail's apps invert colours and ignore

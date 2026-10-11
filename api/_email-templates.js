@@ -580,41 +580,59 @@ export function adminNewOrder({
   product = PRODUCT_NAME,
   quantity = 1,
   address = '',
+  city = '',
+  codFee = 0,
   timestamp = '',
   paymentStatus = '',
   fulfillmentStatus = '',
 } = {}) {
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
+  const cod = isCodMethod(paymentMethod) || Number(codFee) > 0;
+  const methodShort = cod ? 'COD' : 'Prepaid';
+  const digits = String(phone || '').replace(/\D/g, '').slice(-10);
+  const when = timestamp ? new Date(timestamp) : new Date();
+  const whenLabel = Number.isNaN(when.getTime()) ? String(timestamp)
+    : when.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) + ' IST';
+  const who = [customerName, city].filter(Boolean).join(', ');
+  const contactButtons = digits ? `
+    ${table(`<tr>
+      <td width="50%" style="padding:0 6px 0 0;">${button(`tel:+91${digits}`, 'Call').replace('margin:28px 0 8px 0;', 'margin:20px 0 0 0;width:100%;')}</td>
+      <td width="50%" style="padding:0 0 0 6px;">${button(`https://wa.me/91${digits}?text=${encodeURIComponent(`Hi ${customerName || ''}, this is Smelloff about your ODORSTRIKE order ${cleanOrderId}.`)}`, 'WhatsApp').replace('margin:28px 0 8px 0;', 'margin:20px 0 0 0;width:100%;')}</td>
+    </tr>`)}` : '';
   const inner = `
-    ${hero(`New order · &#8377;${escape(rupee(amount))}`, paymentMethod ? `New order · ${paymentMethod}` : 'New order')}
+    ${hero(`&#8377;${escape(rupee(amount))} &middot; ${escape(methodShort)}`, 'New order')}
+    ${para(`<strong>${escape(who || 'New customer')}</strong> ordered ${escape(String(quantity || 1))} &times; ${escape(product || PRODUCT_NAME)}.`)}
+    ${orderMeta(cleanOrderId, whenLabel)}
     ${panel(summaryTable(`
-      ${kvRow('Order ID', escape(cleanOrderId))}
       ${kvRow('Customer', escape(customerName || '—'))}
-      ${kvRow('Phone', escape(phone || '—'))}
+      ${kvRow('Phone', digits ? `<a class="smf-link" href="tel:+91${escape(digits)}" style="color:${TEXT};">+91 ${escape(digits)}</a>` : '—')}
       ${kvRow('Email', escape(email || '—'))}
-      ${kvRow('Payment', escape(paymentMethod || '—'))}
-      ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`)}
-      ${kvRow('Product', escape(product || PRODUCT_NAME))}
-      ${kvRow('Quantity', escape(String(quantity || 1)))}
-      ${kvRow('Payment status', escape(paymentStatus || '—'))}
-      ${kvRow('Fulfillment', escape(fulfillmentStatus || '—'))}
-      ${kvRow('Timestamp', escape(timestamp || new Date().toISOString()))}
+      ${kvRow('Payment', escape(cod ? 'Cash on Delivery' : (paymentStatus || 'Prepaid')))}
+      ${kvRow(cod ? 'Collect on delivery' : 'Paid', `&#8377;${escape(rupee(amount))}`, true)}
     `))}
     ${sectionLabel('Ship to')}
     ${para(escape(address || '—'))}
-    ${button(`${ADMIN_URL}#orders`, 'Open order')}
+    ${contactButtons}
+    ${sectionLabel('Next')}
+    ${nextSteps([
+      cod ? 'Call or WhatsApp to confirm the COD order.' : 'Payment is confirmed. No call needed.',
+      'It reaches Shiprocket within 15 minutes. Open it there and tap Ship Now.',
+      'Tracking and the customer emails then go out automatically.',
+    ])}
+    ${button(`${ADMIN_URL}#orders`, 'Open in admin')}
   `;
+  const subjectWho = who ? ` · ${who}` : '';
   return {
-    subject: cleanHeader(`NEW ODORSTRIKE ORDER — ${cleanOrderId}`),
-    html: shell(inner, `New order ${cleanOrderId} · ₹${rupee(amount)} · ${paymentMethod || ''}`, { help: false }),
+    subject: cleanHeader(`New order · ₹${rupee(amount)} ${methodShort}${subjectWho} · ${cleanOrderId}`),
+    html: shell(inner, `${methodShort} order ${cleanOrderId} · ₹${rupee(amount)}${subjectWho}`, { help: false }),
     text: textBlock([
-      'SMELLOFF OPS — NEW ORDER',
+      'SMELLOFF — NEW ORDER',
       '',
       `Order ID: ${cleanOrderId}`,
       `Customer: ${customerName || '—'}`,
-      `Phone: ${phone || '—'}`,
+      `Phone: ${digits ? '+91 ' + digits : '—'}`,
       `Email: ${email || '—'}`,
-      `Payment: ${paymentMethod || '—'}`,
+      `Payment: ${cod ? 'Cash on Delivery' : 'Prepaid'}`,
       `Amount: ₹${rupee(amount)}`,
       `Product: ${product || PRODUCT_NAME}`,
       `Quantity: ${quantity || 1}`,
