@@ -10,8 +10,8 @@
 <!-- Fonts -->
 <link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=7b21e7db">
-<meta name="theme-color" content="#080808">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=ccc95b6c">
+<meta name="theme-color" content="#0A0A0A">
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -33,7 +33,7 @@
     display: flex;
     flex-direction: column;
   }
-  ::selection { background: rgba(244,241,234,.18); color: var(--text); }
+  ::selection { background: rgba(242,245,239,.18); color: var(--text); }
   body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
   /* NAV */
@@ -64,8 +64,8 @@
   }
   .blog-nav .logo::after{content:none} /* dot baked into logo image */
   .blog-nav .buy-pill {
-    background: var(--cta, #F4F1EA);
-    color: var(--on-cta, #080808);
+    background: var(--cta,#B8FF57);
+    color: var(--on-cta, #0A0A0A);
     font-family:var(--mono,system-ui,sans-serif);
     font-weight: 500;
     font-size: 12px;
@@ -91,14 +91,14 @@
     letter-spacing: -0.03em;
     color: var(--off-white);
   }
-  .nf-code .dot { color: var(--muted); }
+  .nf-code .dot { color: var(--acid); }
   .nf-label {
     font-family:var(--mono,system-ui,sans-serif);
     font-weight: 400;
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--acid);
     margin: 24px 0 14px;
   }
   .nf-line {
@@ -125,8 +125,8 @@
   }
   .nf-btn {
     display: inline-block;
-    background: var(--cta, #F4F1EA);
-    color: var(--on-cta, #080808);
+    background: var(--cta,#B8FF57);
+    color: var(--on-cta, #0A0A0A);
     font-family:var(--mono,system-ui,sans-serif);
     font-weight: 500;
     font-size: 12px;
@@ -171,7 +171,7 @@
     transition: color 0.2s;
   }
   .nf-popular a:hover { color: var(--text); }
-  .nf-popular a .arrow { color: var(--muted); margin-left: 6px; }
+  .nf-popular a .arrow { color: var(--acid); margin-left: 6px; }
 
   /* FOOTER */
   .blog-footer {
@@ -207,14 +207,18 @@
   }
 </style>
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
-<script src="/assets/js/consent-analytics.js?v=633aec72" defer></script>
+<script src="/assets/js/consent-analytics.js?v=7fe8b60d" defer></script>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
 <noscript></noscript>
 <noscript></noscript>
 <noscript></noscript>
 <noscript></noscript>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="preload" href="/assets/css/soft.css?v=cbeb7a9a" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=cbeb7a9a"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=fec2b12b" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=fec2b12b"></noscript>
+<link rel="preload" href="/assets/css/soft.css?v=7f0a09d3" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=7f0a09d3"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=31c85c83" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=31c85c83"></noscript>
 <script src="/assets/js/chrome.js?v=d358b4b4" defer></script>
 </head>
 <body>

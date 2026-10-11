@@ -14,7 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Smelloff — Fabric Odor Neutralizer for Clothes</title>
 <meta name="description" content="Your shirt smells? Fix it. ODORSTRIKE is a pocket fabric odor neutralizer for clothes — not perfume, not deodorant. ₹229 with free prepaid shipping, COD across India.">
-<meta name="theme-color" content="#080808">
+<meta name="theme-color" content="#0A0A0A">
 <script>document.documentElement.className+=' js';</script>
 
 <!-- Crawler directives: allow everyone, everywhere -->
@@ -190,25 +190,25 @@
      odorstrike.html). */
   :root{
     /* ---- Color ---- */
-    --ink:#080808;
-    --surface:#0F0F0F;
-    --surface-2:#141414;
-    --text:#F4F1EA;
-    --muted:#9A958D;
-    --text-2:#C9C5BD;
+    --ink:#0A0A0A;
+    --surface:#121212;
+    --surface-2:#1A1A1A;
+    --text:#F2F5EF;
+    --muted:#9DA398;
+    --text-2:#CDD3C8;
     --acid:#B8FF57;
     --acid-hi:#D1FF8A;
     --acid-dim:rgba(184,255,87,.12);
     --acid-rgb:184,255,87;
-    --on-acid:#080808;
-    --cta:#F4F1EA;
-    --cta-hi:#FFFFFF;
-    --on-cta:#080808;
+    --on-acid:#0A0A0A;
+    --cta:#B8FF57;
+    --cta-hi:#D1FF8A;
+    --on-cta:#0A0A0A;
 
     /* ---- Technical Borders & Dividers ---- */
-    --border-subtle:rgba(244,241,234,.08);
-    --border-default:rgba(244,241,234,.14);
-    --border-strong:rgba(244,241,234,.22);
+    --border-subtle:rgba(242,245,239,.08);
+    --border-default:rgba(242,245,239,.14);
+    --border-strong:rgba(242,245,239,.22);
     --border-focus:rgba(184,255,87,.45);
 
     /* Semantic aliases */
@@ -320,7 +320,7 @@
   .hm-btn:hover{background:var(--cta-hi)}
   .hm-link{
     font-family:var(--body);font-size:14.5px;font-weight:500;letter-spacing:0;
-    color:var(--text);text-decoration:underline;text-decoration-color:var(--border-strong);text-underline-offset:5px;
+    color:var(--text);text-decoration:underline;text-decoration-color:var(--acid);text-underline-offset:5px;
     display:inline-flex;align-items:center;gap:8px;min-height:44px;
   }
   .hm-link:hover{text-decoration-color:var(--text)}
@@ -331,7 +331,7 @@
   /* Secondary route: to the product page, without opening checkout. */
   .hm-btn--ghost{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
   .hm-btn--ghost:hover{background:var(--surface-2);border-color:var(--text)}
-  .hm-btn--ghost .ic{color:var(--text-2)}
+  .hm-btn--ghost .ic{color:var(--acid)}
 
   /* ============ 1 · Hero (v3, 2026-10-10) ============
      One job: say what it is, show the bottle big, one buy button.
@@ -349,7 +349,7 @@
      the CTA. */
   .hero{padding:22px 0 36px;position:relative;overflow:hidden}
   .hero::before{content:"";position:absolute;inset:-20% -30% auto auto;width:80vw;height:80vw;max-width:900px;max-height:900px;
-    background:radial-gradient(closest-side,rgba(244,241,234,.035),transparent 70%);pointer-events:none}
+    background:radial-gradient(closest-side,rgba(var(--acid-rgb),.08),transparent 70%);pointer-events:none}
   .hero-grid{
     position:relative;display:grid;
     grid-template-columns:minmax(0,1fr) clamp(104px,30vw,170px);
@@ -360,7 +360,7 @@
   .hero-eyebrow{
     grid-area:eye;justify-self:start;display:inline-block;font-family:var(--body);font-size:10.5px;font-weight:500;
     letter-spacing:.16em;text-transform:uppercase;
-    color:var(--muted);border:1px solid var(--border-default);
+    color:var(--acid);border:1px solid var(--border-focus);
     border-radius:var(--r-pill);padding:6px 11px;margin-bottom:14px;
   }
   .hero-title{
@@ -374,7 +374,7 @@
 
   .hero-stage{grid-area:stage;position:relative;margin:0;align-self:stretch;display:flex;align-items:center;justify-content:center}
   .hero-stage::before{content:"";position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1;transform:translate(-50%,-46%);
-    border-radius:50%;background:radial-gradient(closest-side,rgba(244,241,234,.09),rgba(244,241,234,.03) 60%,transparent 72%)}
+    border-radius:50%;background:radial-gradient(closest-side,rgba(var(--acid-rgb),.26),rgba(var(--acid-rgb),.07) 60%,transparent 72%)}
   .hero-stage a{position:relative;display:block;border-radius:var(--r-md)}
   .hero-stage img{
     display:block;width:100%;height:auto;max-height:min(58vh,360px);object-fit:contain;
@@ -388,7 +388,7 @@
     font-family:var(--body);font-size:11.5px;letter-spacing:.02em;color:var(--muted);
     border:1px solid var(--border-subtle);border-radius:var(--r-pill);padding:5px 10px;white-space:nowrap;
   }
-  .hero-not li.on{color:var(--text);border-color:var(--border-strong)}
+  .hero-not li.on{color:var(--acid);border-color:var(--border-focus)}
   .hero-not .ic{width:12px;height:12px;stroke-width:2.5}
 
   .hero-buy{grid-area:buy;margin-top:16px}
@@ -396,8 +396,8 @@
   .hero-price b{font-family:var(--display);font-weight:500;font-size:clamp(40px,10vw,56px);line-height:1;color:var(--text)}
   .hero-price s{font-family:var(--mono);font-size:13px;color:var(--muted)}
   .hero-price .off{
-    font-family:var(--body);font-size:12px;letter-spacing:.02em;font-weight:500;
-    color:var(--acid);border:1px solid var(--border-focus);border-radius:var(--r-pill);padding:3px 9px;
+    font-family:var(--body);font-size:12px;letter-spacing:.02em;font-weight:600;
+    color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px;
   }
   .hero-price .size{display:none;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.03em;flex-basis:100%}
   .hero-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin-top:14px}
@@ -408,12 +408,12 @@
     font-size:12.5px;color:var(--text-2);
   }
   .hero-ship li{display:inline-flex;align-items:center;gap:6px}
-  .hero-ship .ic{width:16px;height:16px;color:var(--text-2)}
+  .hero-ship .ic{width:16px;height:16px;color:var(--acid)}
   .hero-ship b{color:var(--text);font-weight:600}
   .hero-quote{margin:18px 0 0;padding:14px 16px;border:1px solid var(--border-subtle);border-radius:var(--r-md);background:var(--surface)}
   .hero-quote blockquote{margin:0;font-size:15px;line-height:1.45;color:var(--text)}
   .hero-quote figcaption{margin-top:6px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted)}
-  .hero-quote figcaption span{color:var(--text-2)}
+  .hero-quote figcaption span{color:var(--acid)}
 
   @media(min-width:768px){
     .hero{padding:48px 0 64px}
@@ -435,7 +435,7 @@
       background:var(--surface);border:1px solid var(--border-subtle);overflow:hidden;
     }
     .hero-stage::before{width:78%;transform:translate(-50%,-50%);
-      background:radial-gradient(closest-side,rgba(244,241,234,.07),rgba(244,241,234,.02) 70%,transparent 72%)}
+      background:radial-gradient(closest-side,rgba(var(--acid-rgb),.24),rgba(var(--acid-rgb),.06) 70%,transparent 72%)}
     .hero-stage img{width:auto;height:clamp(320px,36vw,480px);max-height:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
     .hero-tags{display:block;position:absolute;inset:0;list-style:none;pointer-events:none}
     .hero-tags li{
@@ -444,7 +444,7 @@
       font-family:var(--body);font-size:12px;letter-spacing:.02em;white-space:nowrap;
       -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
     }
-    .hero-tags li b{color:var(--text);font-weight:500}
+    .hero-tags li b{color:var(--acid);font-weight:500}
     .hero-tags li:nth-child(1){top:12%;left:6%}
     .hero-tags li:nth-child(2){top:46%;right:5%}
     .hero-tags li:nth-child(3){bottom:11%;left:9%}
@@ -456,7 +456,7 @@
   }
 
   /* Decorative acid ticker (aria-hidden) */
-  .ticker{background:transparent;color:var(--muted);overflow:hidden;white-space:nowrap;padding:16px 0;border-block:1px solid var(--border-subtle)}
+  .ticker{background:transparent;color:var(--acid);overflow:hidden;white-space:nowrap;padding:16px 0;border-block:1px solid var(--border-subtle)}
   .ticker-track{display:inline-flex;gap:32px;font-family:var(--body);font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
   .ticker-track span{flex:none}
   @media(prefers-reduced-motion:no-preference){
@@ -471,7 +471,7 @@
     background:var(--surface);padding:24px;
     display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:baseline;
   }
-  .how-num{grid-row:span 2;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:var(--body);font-size:12px;color:var(--muted);letter-spacing:.14em}
+  .how-num{grid-row:span 2;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:var(--body);font-size:12px;color:var(--acid);letter-spacing:.14em}
   .how-step h3{font-family:var(--display);font-weight:500;font-size:clamp(26px,3vw,34px);line-height:1.05;letter-spacing:-.015em}
   .how-step p{color:var(--text-2);font-size:15px}
   .how-foot{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
@@ -516,14 +516,14 @@
   .ph-img{
     position:relative;aspect-ratio:4/5;width:100%;
     border:1px solid var(--border-subtle);border-radius:var(--r-xl);
-    background:radial-gradient(120% 90% at 30% 15%,rgba(244,241,234,.05),transparent 60%),var(--surface);
+    background:radial-gradient(120% 90% at 30% 15%,rgba(var(--acid-rgb),.08),transparent 60%),var(--surface);
     display:flex;flex-direction:column;justify-content:flex-end;gap:8px;
     padding:22px;overflow:hidden;min-height:0;
   }
   .ph-img::before{
     content:attr(data-ph-n);position:absolute;top:18px;left:18px;
     font-family:var(--body);font-size:10.5px;letter-spacing:.14em;
-    color:var(--text-2);border:1px solid var(--border-default);border-radius:var(--r-pill);padding:4px 10px;
+    color:var(--acid);border:1px solid var(--border-focus);border-radius:var(--r-pill);padding:4px 10px;
   }
   .ph-img::after{
     content:attr(data-ph) "\A" attr(data-ph-spec);white-space:pre-line;
@@ -533,7 +533,7 @@
   @media(min-width:768px){.beat .ph-img{max-width:460px;justify-self:center}}
   .layers-inline{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
   .layers-inline li{font-family:var(--display);font-weight:500;font-size:15px;border:1px solid var(--border-default);border-radius:var(--r-pill);padding:6px 12px}
-  .layers-inline span{font-family:var(--body);font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+  .layers-inline span{font-family:var(--body);font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--acid);margin-right:8px}
 
   /* Text placeholders: the words are CSS-generated so they can't be mistaken
      for (or indexed as) a real offer. */
@@ -581,9 +581,9 @@
   .rv blockquote{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.3;letter-spacing:-.01em}
   .rv-who{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
   .rv-who cite{font-style:normal;font-size:14px;color:var(--text-2)}
-  .rv-tag{font-family:var(--body);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border-default);border-radius:var(--r-pill);padding:4px 9px;white-space:nowrap}
+  .rv-tag{font-family:var(--body);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--acid);border:1px solid var(--border-focus);border-radius:var(--r-pill);padding:4px 9px;white-space:nowrap}
   .rv-more{margin-top:20px;font-size:14px;color:var(--muted)}
-  .rv-more a{color:var(--text);text-underline-offset:4px}
+  .rv-more a{color:var(--text);text-decoration-color:var(--acid);text-underline-offset:4px}
   @media(min-width:768px){.rv-row{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible}}
 
   /* ============ 5 · The offer ============ */
@@ -593,7 +593,7 @@
     display:grid;
   }
   .offer-art{
-    background:radial-gradient(circle at 50% 55%,rgba(244,241,234,.07),transparent 46%),var(--surface-2);
+    background:radial-gradient(circle at 50% 55%,rgba(var(--acid-rgb),.18),transparent 48%),var(--surface-2);
     display:flex;align-items:center;justify-content:center;padding:28px;min-height:280px;
   }
   .offer-art img{height:240px;width:auto;filter:drop-shadow(0 24px 30px rgba(0,0,0,.5))}
@@ -602,11 +602,11 @@
   .offer-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;margin-top:18px}
   .offer-price b{font-family:var(--display);font-weight:500;font-size:56px;line-height:1}
   .offer-price s{font-family:var(--mono);font-size:14px;color:var(--muted)}
-  .offer-price .off{font-family:var(--body);font-size:12px;font-weight:500;letter-spacing:.02em;color:var(--acid);border:1px solid var(--border-focus);border-radius:var(--r-pill);padding:3px 9px}
+  .offer-price .off{font-family:var(--body);font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px}
   .offer-list{list-style:none;margin:20px 0 24px;display:grid;gap:10px}
   .offer-list li{display:flex;gap:12px;font-size:15px;color:var(--text-2);line-height:1.4}
   .offer-list li strong{color:var(--text);font-weight:500}
-  .offer-list li::before{content:"";flex:none;width:5px;height:5px;margin-top:8px;border-radius:50%;background:var(--text-2)}
+  .offer-list li::before{content:"";flex:none;width:5px;height:5px;margin-top:8px;border-radius:50%;background:var(--acid)}
   .offer-ctas{display:grid;gap:10px}
   .offer .hm-btn{width:100%}
   .offer-pay{margin-top:12px;font-family:var(--body);font-size:12px;letter-spacing:.02em;color:var(--muted);text-align:center}
@@ -628,12 +628,12 @@
      Shape, padding, type and the +/− all come from soft.css §3. */
   .faq .hm-h2{margin-bottom:28px}
   .faq-item p{font-size:16px;line-height:1.55;color:var(--text-2)}
-  .faq-item a{color:var(--text);text-decoration:underline;text-underline-offset:3px}
+  .faq-item a{color:var(--text);text-decoration:underline;text-decoration-color:var(--acid);text-underline-offset:3px}
   .faq-guides{margin-top:24px;font-size:14px;color:var(--muted)}
-  .faq-guides a{color:var(--text-2);text-underline-offset:3px}
+  .faq-guides a{color:var(--acid);text-underline-offset:3px}
 
   /* ============ 8 · Final ============ */
-  .final{background:var(--surface);color:var(--text);padding:var(--section-y) 0;text-align:center;border-top:1px solid var(--border-subtle)}
+  .final{background:radial-gradient(ellipse at 50% 0%,rgba(var(--acid-rgb),.10),transparent 60%),var(--surface);color:var(--text);padding:var(--section-y) 0;text-align:center;border-top:1px solid var(--border-subtle)}
   .final h2{font-family:var(--display);font-weight:500;font-size:clamp(34px,5.6vw,68px);line-height:1.04;letter-spacing:-.02em;}
   .final p{margin:18px auto 30px;max-width:44ch;font-size:var(--fs-lead);color:var(--text-2)}
   .final-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
@@ -658,7 +658,7 @@
     display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
   }
   #smelloff-consent-bar p{font-size:13.5px;color:var(--text);max-width:640px}
-  #smelloff-consent-bar p a{color:var(--text);text-decoration:underline;text-underline-offset:2px}
+  #smelloff-consent-bar p a{color:var(--acid);text-decoration:underline;text-underline-offset:2px}
   /* Wraps rather than overflowing: at 320px these two buttons measured
      315px inside a 300px content box. See chrome.css §5.2. */
   #smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}
@@ -671,7 +671,7 @@
     padding:11px 16px;min-height:44px;cursor:pointer;
     border-radius:var(--r-sm);
   }
-  #smelloff-consent-bar .cb-accept{background:var(--cta);color:var(--on-cta);border:0}
+  #smelloff-consent-bar .cb-accept{background:var(--text);color:var(--ink);border:0}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
 
   /* Sticky mobile buy bar. Shown only while neither the hero CTA nor the
@@ -707,9 +707,13 @@
 <noscript></noscript>
 <noscript></noscript>
 <noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="preload" href="/assets/css/soft.css?v=cbeb7a9a" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=cbeb7a9a"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=fec2b12b" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=fec2b12b"></noscript>
+<link rel="preload" href="/assets/css/soft.css?v=7f0a09d3" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=7f0a09d3"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=31c85c83" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=31c85c83"></noscript>
 <script src="/assets/js/chrome.js?v=d358b4b4" defer></script>
 </head>
 <body>

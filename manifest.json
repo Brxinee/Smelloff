@@ -6,8 +6,8 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#080808",
-  "background_color": "#080808",
+  "theme_color": "#0A0A0A",
+  "background_color": "#0A0A0A",
   "lang": "en-IN",
   "categories": ["shopping", "lifestyle", "health"],
   "icons": [

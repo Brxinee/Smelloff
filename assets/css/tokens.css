@@ -2,7 +2,7 @@
    Smelloff — canonical design tokens. SINGLE SOURCE OF TRUTH.
    =====================================================================
    Before this file existed there were three drifted copies of the system:
-   index.html (--text #F2F2F2), odorstrike.html (--text #f4f1ea) and
+   index.html (--text #F2F2F2), odorstrike.html (--text #F2F5EF) and
    neo.css (--nb-ink #FFFFFF). Three different whites, three type scales.
 
    Now: these values are canonical. index.html and odorstrike.html inline a
@@ -17,25 +17,25 @@
 
 :root{
   /* ---- Color -------------------------------------------------------- */
-  --ink:#080808;              /* page background */
-  --surface:#0F0F0F;          /* card / slab fill */
-  --surface-2:#141414;        /* raised slab, chips */
-  --text:#F4F1EA;             /* warm paper white — the one true text color */
-  --muted:#9A958D;            /* secondary copy */
-  --text-2:#C9C5BD;           /* secondary copy — brighter than --muted */
-  --acid:#B8FF57;             /* the single accent */
+  --ink:#0A0A0A;              /* Carbon Black — page background */
+  --surface:#121212;          /* card / slab fill */
+  --surface-2:#1A1A1A;        /* raised slab, chips */
+  --text:#F2F5EF;             /* Ice White — the one true text color */
+  --muted:#9DA398;            /* secondary copy */
+  --text-2:#CDD3C8;           /* secondary copy — brighter than --muted */
+  --acid:#B8FF57;             /* Signal Lime — the single accent */
   --acid-hi:#D1FF8A;          /* accent hover */
   --acid-dim:rgba(184,255,87,.12);
   --acid-rgb:184,255,87;
-  --on-acid:#080808;          /* text ON acid is always ink, never white */
-  --cta:#F4F1EA;              /* primary button fill — quiet paper white */
-  --cta-hi:#FFFFFF;
-  --on-cta:#080808;
+  --on-acid:#0A0A0A;          /* text ON acid is always ink, never white */
+  --cta:#B8FF57;              /* primary button fill — Signal Lime */
+  --cta-hi:#D1FF8A;
+  --on-cta:#0A0A0A;
 
   /* ---- Technical Borders & Dividers ---------------------------------- */
-  --border-subtle:rgba(244,241,234,.08);
-  --border-default:rgba(244,241,234,.14);
-  --border-strong:rgba(244,241,234,.22);
+  --border-subtle:rgba(242,245,239,.08);
+  --border-default:rgba(242,245,239,.14);
+  --border-strong:rgba(242,245,239,.22);
   --border-focus:rgba(184,255,87,.45);
 
   /* Semantic aliases */
@@ -110,8 +110,8 @@
      C  --nb-*
         (neo.css)
 
-   They also disagreed on values — three whites (#F4F1EA, #F5F5F5,
-   #FFFFFF), two card fills (#111111, #0F0F0F), two borders (#262626,
+   They also disagreed on values — three whites (#F2F5EF, #F5F5F5,
+   #FFFFFF), two card fills (#111111, #121212), two borders (#262626,
    rgba(255,255,255,.12)) and four greys. Rewriting every rule in every
    file would be a large, risky diff, so instead all three families now
    resolve to the canonical tokens above. One value to change, everywhere.

@@ -40,6 +40,24 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Brand palette: Carbon Black · Ice White · Signal Lime (2026-10-11, owner's call)
+"Use these and don't make it too pale." **`--ink #0A0A0A`** (Carbon Black),
+**`--text #F2F5EF`** (Ice White), **`--acid #B8FF57`** (Signal Lime), in all
+three TOKENS copies. Surfaces `#121212` / `#1A1A1A`; greys re-tinted cool
+(`--muted #9DA398`, `--text-2 #CDD3C8`); hairlines are `rgba(242,245,239,…)`.
+Supersedes the colour half of the quiet pass below (its type and layout stay):
+- **`--cta` is Signal Lime** (hover `--acid-hi`) — every primary buy button.
+- Lime is back on: heading accent words (`chrome.css` §11), section labels
+  (soft.css §9, `.sf-eyebrow`), the ticker text, "54% OFF" (filled pill),
+  the "Fabric only" chip, nav current underline, cart badge, FAQ +/−, list
+  bullets, link underlines, PDP compare header, checkout's active payment
+  option, blog category pills/active topic chip, photo-slot labels, and a
+  lime glow behind the bottle.
+- Still not lime: full-width bands (offer strip, ticker background, final
+  band) and the consent bar's Accept (Ice White, so it doesn't out-weigh
+  Reject). Emails (`emails/`, `api/_email-templates.js`) keep their own palette.
+- `test/ux-guardrails.test.mjs` pins the tokens.
+
 ## Price back to ₹229; COD handling ₹89 (2026-10-11, owner's call)
 - **₹229 prepaid** (was ₹299), MRP ₹499 → **54% off**. COD handling charge
   **₹89** (was ₹60) → **₹318** collected for one bottle. Supersedes the prices

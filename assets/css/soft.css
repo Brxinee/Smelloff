@@ -7,7 +7,7 @@
    corner radii, hairline outlines, no offset shadows, pill buttons with
    uppercase wide-tracked labels and a bounce on hover.
 
-   Palette and type are unchanged: still #080808 / #B8FF57 / Fraunces.
+   Palette and type are unchanged: still #0A0A0A / #B8FF57 / Fraunces.
    Only the *shapes* change.
 
    HOW THIS LOADS
@@ -245,17 +245,17 @@ details.faq-item > summary::after,.faq details > summary::after,
 .faq-list details > summary::after{
   content:'' !important;
   position:absolute;right:20px;top:50%;
-  width:14px;height:1.5px;
-  background:var(--text-2);
+  width:14px;height:2px;
+  background:var(--acid);
   transform:translateY(-50%);
   transition:none;
 }
 details.faq-item > summary::before,.faq details > summary::before,
 .faq-list details > summary::before{
   content:'';
-  position:absolute;right:26.25px;top:50%;
-  width:1.5px;height:14px;
-  background:var(--text-2);
+  position:absolute;right:26px;top:50%;
+  width:2px;height:14px;
+  background:var(--acid);
   transform:translateY(-50%);
   transition:transform .3s var(--ease),opacity .2s ease;
 }
@@ -332,7 +332,7 @@ header.site,nav.site-nav,.b-nav{
   border:var(--hair) solid var(--rule) !important;
 }
 .b-drawer-cat.active,.filter-chip.active{
-  background:var(--text) !important;color:var(--ink) !important;border-color:var(--text) !important;
+  background:var(--acid) !important;color:var(--on-acid) !important;border-color:var(--acid) !important;
 }
 
 /* ---------------------------------------------------------------------
@@ -406,7 +406,7 @@ footer:has(> a) > a{
 }
 .hero-hook{padding:8px 16px}
 img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-lg)}
-.pull-quote{border-radius:var(--sq-md);padding:20px 24px;border-left:1px solid var(--border-strong)}
+.pull-quote{border-radius:var(--sq-md);padding:20px 24px;border-left:2px solid var(--acid)}
 
 /* =====================================================================
    §9 · CONSISTENCY LAYER (2026-10-10)
@@ -419,8 +419,7 @@ img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-
    Add a new page's classes to these lists rather than restyling locally.
    ===================================================================== */
 
-/* Section label — quiet (2026-10-11): small tracked sans in muted grey with
-   a short hairline. The accent colour is kept for the rule only. */
+/* Section label: small tracked sans in Signal Lime with a short rule. */
 .hm-eyebrow,.section-tag,.p-eyebrow,.b-eyebrow{
   display:flex !important;align-items:center;gap:12px;
   font-family:var(--body) !important;
@@ -428,7 +427,7 @@ img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-
   font-weight:500 !important;
   letter-spacing:var(--ls-eyebrow) !important;
   text-transform:uppercase;
-  color:var(--muted) !important;
+  color:var(--acid) !important;
 }
 .hm-eyebrow::before,.section-tag::before,.p-eyebrow::before,.b-eyebrow::before{
   content:'' !important;
@@ -436,9 +435,8 @@ img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-
   background:var(--acid) !important;opacity:.7;
 }
 
-/* Primary button — quiet premium (2026-10-11): paper-white fill, ink text,
-   sentence case in the body face. Was acid fill, mono, uppercase. Ghost
-   variants keep their hairline. */
+/* Primary button: Signal Lime fill (--cta), Carbon Black text, sentence case
+   in the body face. Ghost variants keep their hairline. */
 .hm-btn,.hero-cta,.fix-cta,.final-btn,.price-card button,.end-cta .buy-btn,
 .b-btn-primary,.faq-cta,.c-btn,.t-btn,.cta-btn,.buy-band a,.mb-btn,.combo-btn,
 .b-news-btn,.bc-cta,.nf-btn,.pd-btn{
@@ -481,7 +479,7 @@ img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-
    ===================================================================== */
 img:not(.is-loaded):not([data-no-skel]){
   background-color:var(--surface);
-  background-image:linear-gradient(100deg,transparent 30%,rgba(244,241,234,.06) 50%,transparent 70%);
+  background-image:linear-gradient(100deg,transparent 30%,rgba(242,245,239,.06) 50%,transparent 70%);
   background-size:250% 100%;background-repeat:no-repeat;
 }
 @media (prefers-reduced-motion:no-preference){

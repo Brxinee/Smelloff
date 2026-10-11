@@ -67,7 +67,7 @@
 }
 </script>
 
-<link rel="stylesheet" href="/assets/css/tokens.css?v=7b21e7db">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=ccc95b6c">
 
 <style>
   /* Brand tokens come from tokens.css (no local :root override — the old one
@@ -76,13 +76,13 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--ink);color:var(--text);font-family:var(--body);line-height:var(--lh-body);margin:0}
   .hero{padding:40px 0 48px;border-bottom:1px solid var(--rule)}
-  .badge{display:inline-flex;align-items:center;gap:12px;color:var(--muted);font-family:var(--mono);font-size:var(--fs-eyebrow);margin-bottom:18px;letter-spacing:var(--ls-eyebrow);text-transform:uppercase}
+  .badge{display:inline-flex;align-items:center;gap:12px;color:var(--acid);font-family:var(--mono);font-size:var(--fs-eyebrow);margin-bottom:18px;letter-spacing:var(--ls-eyebrow);text-transform:uppercase}
   .badge::before{content:'';width:34px;height:1px;background:currentColor;opacity:.75}
   h1{font-family:var(--display);font-size:clamp(36px,6vw,64px);line-height:var(--lh-display);margin-bottom:18px;font-weight:500;letter-spacing:var(--ls-display)}
   p.lead{font-size:var(--fs-lead);color:var(--text-2);margin-bottom:24px;max-width:62ch}
 
-  .geo-answer-block{background:var(--surface);border:1px solid var(--border-default);border-radius:var(--sq-lg);padding:22px 24px;margin:32px 0}
-  .geo-title{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .geo-answer-block{background:var(--surface);border:1px solid var(--border-default);border-left:3px solid var(--acid);border-radius:var(--sq-lg);padding:22px 24px;margin:32px 0}
+  .geo-title{font-family:var(--mono);font-size:11px;color:var(--acid);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
   .geo-text{font-size:16px;color:var(--text)}
 
   .content-section{padding:40px 0;border-bottom:1px solid var(--rule)}
@@ -101,14 +101,18 @@
   .cta-btn:hover{background:var(--cta-hi)}
 </style>
 <script src="/assets/js/track.js?v=801e292b" defer></script>
-<script src="/assets/js/consent-analytics.js?v=633aec72" defer></script>
+<script src="/assets/js/consent-analytics.js?v=7fe8b60d" defer></script>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
 <noscript></noscript>
 <noscript></noscript>
 <noscript></noscript>
 <noscript></noscript>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="preload" href="/assets/css/soft.css?v=cbeb7a9a" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=cbeb7a9a"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=fec2b12b" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=fec2b12b"></noscript>
+<link rel="preload" href="/assets/css/soft.css?v=7f0a09d3" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=7f0a09d3"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=31c85c83" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=31c85c83"></noscript>
 <script src="/assets/js/chrome.js?v=d358b4b4" defer></script>
 </head>
 <body>
