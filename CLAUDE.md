@@ -40,6 +40,30 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Homepage hero v4: photo first (2026-10-11, owner asked for a redesign)
+Supersedes "Homepage hero v3" below. The hero is the owner's photo of the
+bottle misting a black shirt collar (`assets/photos/hero-spray-collar*`,
+AVIF + WebP at 480/720/960/1254, from the original upload), not the bottle
+cutout on a glow. Grounded in NN/g eyetracking (people study real product /
+real-use photos, skip decorative ones), NN/g "Image-focused design" (a big
+image only works if the buy action keeps equal weight) and the carousel
+studies (one static image).
+- **Phones:** full-bleed photo (`aspect-ratio:390/350`, no gutters), the
+  three chips ride on it as glass pills (`.hero-not`, "Fabric only" filled
+  lime), and the kicker + H1 overlap its faded bottom edge
+  (`.hero-body{margin-top:-58px}`). Then sub, price, one button, link, trust
+  row, Rohit's quote. CTA bottom: 686px at 390x844 (v3 706), 655 at 360x740.
+- **>=768:** `.hero-inner` grid, copy left, the photo as a square card right
+  with a faint lime glow; chips sit on the photo's bottom edge. Whole hero
+  incl. the quote fits 1280x800 (CTA bottom 582).
+- **LCP:** the photo, eager + `fetchpriority="high"`, AVIF set preloaded in
+  `<head>` with the **same `imagesizes`** as the `<picture>` (a test compares
+  them; a mismatch downloads it twice), inline blurred preview, and a
+  transform-only settle-in (opacity would delay LCP). Measured LCP 130-200ms
+  locally. The network-aware `sizes` script leaves the hero alone on purpose.
+- Copy and claims are unchanged (tests pin them). The cutout is still used in
+  the `#buy` offer box. `test/ux-guardrails.test.mjs` pins the above.
+
 ## Photos in the image slots (2026-10-11)
 Owner-supplied photos fill the homepage `#why` beats (4) and the PDP's
 `#how` steps (4), `#why` lifestyle and `#size` (3). Files are in
@@ -61,6 +85,20 @@ three homepage combo slots are still briefs.
   replacing `pdp-05-proof` (its unsupported "10,000+ customers ★4.8/5"). The
   old files stay in `/assets` unreferenced; don't put them back.
 - Homepage beat photos are square under 768px (4:5 above).
+- **Photos load per network** (owner asked, same day). Every slot photo and
+  gallery tiles 2–3 are `<picture class="ph-pic">` (`display:contents`):
+  AVIF first, WebP fallback, widths 400/640/960/full, and a ~350-byte blurred
+  preview inlined as the img's background (`data-no-skel`, so no shimmer). A
+  `<head>` script reads `navigator.connection`: Data Saver or 2G rewrites
+  every `.ph-pic` `sizes` to `1px` (the 400w file), 3G to a mid size. It
+  works because the photos are lazy and pick a file only after layout; don't
+  make one eager without moving it out of `.ph-pic`. Measured on a 3× phone:
+  PDP photos ~371KB on 4G, ~100KB on 2G. Variants are built from the
+  original uploads, not re-encoded from the site's WebPs.
+- **PDP gallery is five tiles** (owner, 2026-10-11): removed
+  `pdp-03-how-to-use` ("10 SEC"), `pdp-07-fabric-only` and
+  `pdp-08-comparison`. Their messages live in markup (`#how`, the
+  fabric-only chips, `#compare`). Tests pin the five.
 
 ## Order-confirmation screen rebuilt; Google Customer Reviews removed (2026-10-11)
 - `#successScreen` in `odorstrike.html` is rebuilt as: check + headline with
@@ -659,7 +697,7 @@ COD ×1/×2 and prepaid (Razorpay opens with the right amount), cart
   15–30 seconds. Not changed — rewriting reported test results is not a
   copy edit. Two posts also state "pH 5.5–6.0".
 
-## Homepage hero v3 — first impression (2026-10-10)
+## Homepage hero v3 — first impression (2026-10-10; superseded by v4 above)
 Researched (Baymard mobile homepage/product-image findings, Stripe landing
 guidance on one action + a quote by the buy button) and rebuilt `.hero`:
 - **Bottle on a stage, never a thumbnail:** phones keep copy | bottle side
@@ -1269,7 +1307,7 @@ buttons with uppercase wide-tracked labels and a bounce on hover.
 - `/odorstrike` hero is a scrolling squircle gallery beside a **sticky buy
   panel** (`.product-info` is `position:sticky` at ≥960px). The gallery is a
   horizontal scroll-snap carousel on mobile so the CTA stays reachable.
-- **PDP gallery = eight tiles, one objection each (2026-07-30)**, in the order
+- **PDP gallery = eight tiles, one objection each (2026-07-30; five since 2026-10-11, see "Photos in the image slots")**, in the order
   a first-time buyer raises them: `pdp-01-hero` (what is it — the only pure
   product shot, bottle on white), `pdp-02-problem` ("You don't smell. Your
   shirt does."), `pdp-03-how-to-use` (spray → 10 sec → wear),

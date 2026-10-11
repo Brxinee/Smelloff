@@ -178,7 +178,7 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   // Owner's call (2026-10-11): outside checkout, say COD exists; the amount is on the COD option in checkout.
   assert.ok(hero.includes('Cash on Delivery') && !/₹\s*(89|318)\b/.test(hero), 'Hero names COD availability without the COD amount');
   assert.ok(hero.includes('2–3 sprays') && hero.includes('15–30 sec'), 'Usage microcopy must match the PDP');
-  assert.ok(html.includes('/assets/odorstrike-bottle-cutout.webp'), 'Hero bottle cutout must be present');
+  assert.ok(hero.includes('/assets/photos/hero-spray-collar'), 'Hero must show the product in use (the collar spray photo)');
 });
 
 test('index.html homepage: every section ends in a route to checkout', () => {
@@ -275,24 +275,20 @@ test('odorstrike.html PDP gallery information hierarchy, asset order, accessibil
   const galEnd = html.indexOf('<!-- Mobile Gallery Slide Indicator -->', galStart);
   const galHtml = html.slice(galStart, galEnd);
 
-  // 2. Exact 8-tile information hierarchy:
+  // 2. Exact 5-tile information hierarchy (owner removed the how-to-use,
+  // fabric-only and comparison creatives on 2026-10-11; the page says all
+  // three in markup: #how, the fabric-only chips and #compare):
   // Tile 1: Product hero / bottle
-  // Tile 2: Pocket size / portability & scale
-  // Tile 3: 3-step fabric application
-  // Tile 4: Dark fabric, just sprayed → dried clear
-  // Tile 5: Fabric-only guideline (not skin)
-  // Tile 6: Trapped garment odor problem
-  // Tile 7: Science & molecular neutralizer
-  // Tile 8: Product comparison vs deo & perfume
+  // Tile 2: Size in the hand, next to a phone
+  // Tile 3: Dark fabric, just sprayed → dried clear
+  // Tile 4: Trapped garment odor problem
+  // Tile 5: Science & molecular neutralizer
   const expectedOrder = [
     'pdp-01-hero.webp',
     'pdp-04-in-hand.webp',
-    'pdp-03-how-to-use.webp',
     'pdp-05-dried-clear.webp',
-    'pdp-07-fabric-only.webp',
     'pdp-02-problem.webp',
-    'pdp-06-science.webp',
-    'pdp-08-comparison.webp'
+    'pdp-06-science.webp'
   ];
 
   let lastIndex = -1;
@@ -321,25 +317,25 @@ test('odorstrike.html PDP gallery information hierarchy, asset order, accessibil
   }
 
   // 4. Accessibility: zoom buttons with descriptive aria-label
-  assert.ok(galHtml.includes('aria-label="Enlarge image 1 of 8: ODORSTRIKE 50ml bottle"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 2 of 8: Size in the hand, next to a phone"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 3 of 8: Three-step application on fabric"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 4 of 8: Black collar just sprayed, then dried clear"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 5 of 8: Fabric only usage guidance"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 6 of 8: Why clothes trap odor"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 7 of 8: Molecular odor trap and neutralization science"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 8 of 8: ODORSTRIKE compared with deodorant and perfume"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 1 of 5: ODORSTRIKE 50ml bottle"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 2 of 5: Size in the hand, next to a phone"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 3 of 5: Black collar just sprayed, then dried clear"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 4 of 5: Why clothes trap odor"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 5 of 5: Molecular odor trap and neutralization science"'));
+  for (const gone of ['pdp-03-how-to-use', 'pdp-07-fabric-only', 'pdp-08-comparison']) {
+    assert.ok(!html.includes(gone), `${gone} was removed from the PDP (owner, 2026-10-11)`);
+  }
 
   // 5. Alt text non-repetitive & descriptive
   const altMatches = [...galHtml.matchAll(/alt="([^"]+)"/g)].map(m => m[1]);
-  assert.equal(altMatches.length, 8, 'Must have exactly 8 alt text entries');
+  assert.equal(altMatches.length, 5, 'Must have exactly 5 alt text entries');
   const uniqueAlts = new Set(altMatches);
-  assert.equal(uniqueAlts.size, 8, 'All 8 alt texts must be uniquely descriptive');
+  assert.equal(uniqueAlts.size, 5, 'All 5 alt texts must be uniquely descriptive');
 
   // 6. Mobile indicator dots and counter
   assert.ok(html.includes('id="galDots" role="tablist"'), 'Mobile indicator must have tablist role');
   assert.ok(html.includes('class="gal-dot active" role="tab" aria-selected="true" aria-current="true"'), 'First dot must be active and selected');
-  assert.ok(html.includes('<span id="galCur">1</span> / 8'), 'Counter must display 1 / 8');
+  assert.ok(html.includes('<span id="galCur">1</span> / 5'), 'Counter must display 1 / 5');
 
   // 7. Full-screen zoom viewer modal exists and is accessible
   assert.ok(html.includes('id="galViewer" role="dialog" aria-modal="true"'), 'Must have accessible gallery modal dialog');
