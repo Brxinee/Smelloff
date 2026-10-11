@@ -23,7 +23,7 @@
     "optimize:critical": "node scripts/optimize-critical-images.mjs",
     "apply:chrome": "node scripts/apply-chrome.mjs",
     "prepare:public": "node scripts/prepare-public.mjs",
-    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/seo/apply-structured-data.mjs --check && node scripts/blog/apply-reader.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs && node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js && npm run optimize:critical && npm run apply:chrome && node scripts/audit-production.mjs && node scripts/prepare-public.mjs",
+    "build": "node scripts/thumbnails/apply-thumbnails.mjs --check && node scripts/seo/apply-structured-data.mjs --check && node scripts/blog/apply-reader.mjs --check && node scripts/share/apply-share-templates.mjs --check && node scripts/seo/build-sitemap.mjs && node -c server.js && node -c api/create-order.js && node -c api/verify-payment.js && npm run optimize:critical && npm run apply:chrome && node scripts/audit-production.mjs && node scripts/write-build-info.mjs && node scripts/prepare-public.mjs",
     "deploy": "wrangler deploy --config ./wrangler.jsonc --assets ./public"
   },
   "dependencies": {
