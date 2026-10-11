@@ -395,7 +395,7 @@ html.sf-menu-open #smelloff-consent-bar,html.sf-menu-open .mobile-bar{display:no
 /* ---------------------------------------------------------------------
    4 · SKIP LINK + FOCUS
    --------------------------------------------------------------------- */
-.sf-skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--cta);color:var(--on-cta);padding:12px 20px;font-weight:500;text-decoration:none}
+.sf-skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--cta);color:var(--on-cta);padding:12px 20px;border-radius:0 0 var(--sq-sm) 0;font-family:var(--body);font-size:15px;font-weight:500;text-decoration:none}
 .sf-skip:focus{left:0}
 #sf-main:focus{outline:none}
 .sf-hdr a:focus-visible,.sf-hdr button:focus-visible,.sf-ftr a:focus-visible{outline:3px solid var(--acid);outline-offset:3px;border-radius:var(--sq-xs,8px)}
@@ -571,10 +571,12 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 
 /* ---- At a glance ------------------------------------------------------ */
 .p-main .p-glance{background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--sq-lg);padding:18px 18px 6px;margin:0 0 12px}
+/* A card label (inside the card, no rule): the same 11px/600/.14em as the
+   blog's card labels, not the section-label size. */
 .p-main .p-glance__t{
   display:flex;align-items:center;gap:10px;margin:0 0 4px !important;
-  font-family:var(--body) !important;font-size:var(--fs-eyebrow) !important;font-weight:600 !important;
-  letter-spacing:var(--ls-eyebrow) !important;text-transform:uppercase !important;color:var(--acid) !important;line-height:1.4 !important;
+  font-family:var(--body) !important;font-size:11px !important;font-weight:600 !important;
+  letter-spacing:.14em !important;text-transform:uppercase !important;color:var(--acid) !important;line-height:1.4 !important;
 }
 .p-main .p-glance ul{list-style:none !important;margin:0 !important;padding:0 !important}
 .p-main .p-glance li{
@@ -591,18 +593,18 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .p-main .p-toc{margin:0;border:1px solid var(--border-subtle);border-radius:var(--sq-lg);background:var(--surface)}
 .p-main .p-toc > summary{
   list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;
-  min-height:50px;padding:12px 18px;font-family:var(--body);font-size:var(--fs-eyebrow);font-weight:600;
-  letter-spacing:var(--ls-eyebrow);text-transform:uppercase;color:var(--text);
+  min-height:50px;padding:12px 18px;font-family:var(--body);font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text);
 }
 .p-main .p-toc > summary::-webkit-details-marker{display:none}
 .p-main .p-toc > summary::after{content:"+";font-size:20px;line-height:1;color:var(--acid);letter-spacing:0}
 .p-main .p-toc[open] > summary::after{content:"\2212"}
 .p-main .p-toc ol{list-style:none !important;counter-reset:ptoc;margin:0 !important;padding:0 8px 10px !important}
-.p-main .p-toc li{counter-increment:ptoc;margin:0 !important;padding:0 !important;font-size:14.5px !important;line-height:1.35 !important}
+.p-main .p-toc li{counter-increment:ptoc;margin:0 !important;padding:0 !important;font-size:15px !important;line-height:1.35 !important}
 .p-main .p-toc li::marker{content:none}
 .p-main .p-toc a{
   display:grid;grid-template-columns:26px minmax(0,1fr);gap:6px;align-items:baseline;
-  padding:8px 8px;border-radius:10px;color:var(--text-2) !important;border:0 !important;text-decoration:none !important;
+  padding:8px 8px;border-radius:10px;color:var(--text-2) !important;font-weight:400;border:0 !important;text-decoration:none !important;
 }
 .p-main .p-toc a::before{content:counter(ptoc,decimal-leading-zero);font-size:11px;color:var(--muted)}
 .p-main .p-toc a:hover{color:var(--text) !important;background:var(--surface-2)}
@@ -666,12 +668,14 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 
 /* ---- One label, one card radius, one link colour everywhere ---------- */
 /* Section labels that never joined soft.css §9 (solutions, 404, PDP). */
-.badge,.pd-eyebrow,.hero-eyebrow{
+.badge,.pd-eyebrow,.hero-eyebrow,.related-guides .eyebrow{
   font-family:var(--body) !important;font-size:var(--fs-eyebrow) !important;font-weight:500 !important;
   letter-spacing:var(--ls-eyebrow) !important;text-transform:uppercase;color:var(--acid) !important;
 }
-/* Card labels (inside a card, no rule): one size, one weight. */
-.qa-label,.geo-title,.callout-label,.cta-label,.toc-label,.article-category,.beta-tag,.c-k{
+/* Card labels (inside a card, no rule): one size, one weight. The homepage
+   "Beta tester" tag and formula chips are the PDP's .beta-tag tier. */
+.qa-label,.geo-title,.callout-label,.cta-label,.toc-label,.article-category,.beta-tag,.c-k,
+.read-next .eyebrow,.rv-tag,.layers-inline span{
   font-family:var(--body) !important;font-size:11px !important;font-weight:600 !important;letter-spacing:.14em !important;text-transform:uppercase;
 }
 .c-card{color:var(--text) !important;text-decoration:none !important}
@@ -701,9 +705,9 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .faq-main .faq-h2::before{content:'';width:24px;height:1px;flex:0 0 24px;background:var(--acid);opacity:.7}
 /* Reviews: "Write a review" is a secondary button like every other one. */
 .agg-cta{
-  display:inline-flex !important;align-items:center;justify-content:center;min-height:44px;padding:0 18px !important;
+  display:inline-flex !important;align-items:center;justify-content:center;min-height:52px;padding:0 26px !important;
   border-radius:var(--sq-sm) !important;border:1px solid var(--border-strong) !important;background:transparent !important;
-  color:var(--text) !important;font-family:var(--body) !important;font-size:14px !important;font-weight:500 !important;
+  color:var(--text) !important;font-family:var(--body) !important;font-size:15px !important;font-weight:500 !important;
   letter-spacing:.01em !important;text-transform:none !important;
 }
 .agg-cta:hover{background:var(--surface-2) !important;border-color:var(--text) !important}
@@ -750,9 +754,10 @@ main.sf-wrap[style] .content-section > p{font-size:16px !important;line-height:1
 .faq-answer,.faq-steps li{font-size:16px !important;line-height:1.65 !important}
 
 /* ---- Meta lines and captions: sentence case -------------------------- */
-.pd-pay,.final-reassurance,.pay-modes,.cart-secure,.offer-pay,.pd-scale figcaption,.ps-copy,.post-share-title{
+.pd-pay,.final-reassurance,.pay-modes,.cart-secure,.offer-pay,.pd-scale figcaption,.ps-copy,.post-share-title,.founder .f-role{
   font-family:var(--body) !important;letter-spacing:.01em !important;text-transform:none !important;
 }
+.founder .f-role{font-size:13px !important}
 .pd-pay,.final-reassurance,.pay-modes,.cart-secure,.offer-pay{font-size:12.5px !important;line-height:1.5}
 .pd-scale figcaption{font-size:14px !important;font-weight:500;color:var(--text-2)}
 .ps-copy{font-size:13px !important;font-weight:500}
@@ -797,9 +802,9 @@ main.sf-wrap[style] .content-section > p{font-size:16px !important;line-height:1
 
 /* ---- Blog comments: a secondary action is never lime (lime = buy) --- */
 .bc-cta{
-  display:inline-flex !important;align-items:center;justify-content:center;min-height:44px;padding:0 18px !important;
+  display:inline-flex !important;align-items:center;justify-content:center;min-height:52px;padding:0 26px !important;
   background:transparent !important;color:var(--text) !important;border:1px solid var(--border-strong) !important;
-  border-radius:var(--sq-sm) !important;font-family:var(--body) !important;font-size:14px !important;font-weight:500 !important;
+  border-radius:var(--sq-sm) !important;font-family:var(--body) !important;font-size:15px !important;font-weight:500 !important;
 }
 .bc-cta:hover{background:var(--surface-2) !important;border-color:var(--text) !important}
 
@@ -855,7 +860,6 @@ main.sf-wrap[style] .content-section > p{font-size:16px !important;line-height:1
 /* Related policies sit at the end of the reading column. */
 .p-body .p-links{grid-template-columns:1fr !important}
 @media(min-width:768px){.p-body .p-links{grid-template-columns:repeat(3,minmax(0,1fr)) !important}}
-.p-body .p-links a{font-size:14.5px}
 
 /* ---- Closing band: one size and one order on / and /odorstrike -------- */
 section.final h2{font-size:clamp(34px,2.4vw + 24px,60px) !important;line-height:1.02 !important;letter-spacing:-.03em !important}
@@ -866,3 +870,22 @@ section.final small,section.final .final-reassurance{display:block;margin-top:16
 /* One button text size: the PDP's buttons were 13/14/15px and the blog
    newsletter's fell back to the browser default (13.3px). */
 .pd-btn,.b-news-btn,.c-btn,.t-btn,.rv-primary-btn{font-size:15px !important;font-family:var(--body) !important}
+
+/* =====================================================================
+   §14 · THE LAST DRIFT (2026-10-11, pass 3, from the production audit)
+   ---------------------------------------------------------------------
+   Two label tiers, one button, nothing in between: section labels are
+   11.5px/500/.16em (§12, with the rule); card labels are 11px/600/.14em
+   (§12 list). Labels that sat between the two (glance and contents
+   headers, "Read next", the homepage beta tag and formula chips), ghost
+   buttons at 44px/14px and the skip link (16px, 18px on posts) are folded
+   in above. What is left is the Sources box.
+   ===================================================================== */
+/* Sources: 19 posts label it with an inline-styled <p id="sources-heading">,
+   one an unstyled .sources-label, three a full-size <h2>, one a .source-box. One
+   muted card label for all of them (the H2 stays a heading for the outline;
+   apply-reader leaves it out of the contents list). */
+#sources-heading,.sources > .sources-label,.article-wrap .sources > h2,.source-box > p:first-child{
+  margin:0 0 8px !important;font-family:var(--body) !important;font-size:11px !important;font-weight:600 !important;
+  letter-spacing:.14em !important;line-height:1.4 !important;text-transform:uppercase !important;color:var(--muted) !important;
+}

@@ -83,6 +83,14 @@ length, WCAG 1.4.8. chrome.css **§13** holds it.
   got its section label.
 - `build-sitemap.mjs` now skips `public/` — a second local build had added
   every page again as `smelloff.in/public/…` to the committed sitemap.
+- **Pass 3 (same day, from a full audit of the live site):** labels are two
+  tiers only — section label 11.5px/500/.16em (§12, with the rule), card label
+  11px/600/.14em (§12 list; colour by role: lime, Ice White for contents
+  headers, muted for Sources). Folded in: "At a glance", the policy "On this
+  page", "Read next", the homepage beta tag + formula chips, every post's
+  Sources label (four markup variants, chrome.css §14). `.bc-cta`/`.agg-cta`
+  = the ghost button (52px, 15px); skip link 15px; policy contents 15px/400
+  like the blog's. PDP cites use "·" like the homepage. Tests pin them.
 - **Local workflow:** commit before `npm run build`, then `git checkout -- .`
   restores only the build's transforms. Running it with uncommitted edits
   throws them away (it happened twice in this pass).
