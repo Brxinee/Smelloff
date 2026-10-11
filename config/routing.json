@@ -387,7 +387,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
+      "destination": "https://smelloff.in/blog/remove-smell-from-hoodie-without-washing",
       "statusCode": 301
     },
     {
@@ -848,7 +848,7 @@
     },
     {
       "source": "/blog/how-to-remove-smell-from-hoodies-sweatshirts",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
+      "destination": "/blog/remove-smell-from-hoodie-without-washing",
       "statusCode": 301
     },
     {
