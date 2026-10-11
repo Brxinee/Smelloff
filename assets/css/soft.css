@@ -204,7 +204,7 @@ details.faq-item > summary,.faq details > summary,.faq-list details > summary{
      nested <h3> instead, which is why its questions came out in the display
      face at 25px while everyone else's were 19px. */
   font-family:var(--display);
-  font-weight:500;
+  font-weight:700;
   font-size:clamp(16px,2.2vw,19px);
   line-height:1.35;
   letter-spacing:-.01em;

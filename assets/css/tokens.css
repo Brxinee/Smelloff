@@ -45,16 +45,16 @@
   --overlay:rgba(0,0,0,.75);
 
   /* ---- Type families ------------------------------------------------ */
-  --display:'Fraunces','Fraunces Fallback',serif;
-  --mono:'Inter Tight','Inter Tight Fallback',system-ui,sans-serif;  /* label face — was JetBrains Mono; quiet premium pass (2026-10-11) sets labels in the body sans */
-  --body:'Inter Tight','Inter Tight Fallback',sans-serif;
+  --display:'Bricolage Grotesque','Bricolage Grotesque Fallback',system-ui,sans-serif;
+  --mono:'Geist','Geist Fallback',system-ui,sans-serif;  /* label face — the body sans, tracked uppercase */
+  --body:'Geist','Geist Fallback',system-ui,sans-serif;
 
   /* ---- Type scale & rhythm -------------------------------------------
      Display line-height is tuned so multi-line headlines breathe naturally
      without excessive vertical sprawling. Tracking is restrained and confident. */
   --lh-display:1.08;
   --lh-body:1.55;
-  --ls-display:-.015em;
+  --ls-display:-.025em;
 
   --fs-h1:clamp(36px,5.6vw,68px);
   --fs-h2:clamp(28px,4vw,46px);

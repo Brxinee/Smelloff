@@ -8,9 +8,9 @@
 <meta name="robots" content="noindex,follow">
 
 <!-- Fonts -->
-<link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=ccc95b6c">
+<link rel="preload" href="/assets/fonts.css?v=ad39ffed" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/assets/fonts.css?v=ad39ffed"></noscript>
+<link rel="stylesheet" href="/assets/css/tokens.css?v=3480b430">
 <meta name="theme-color" content="#0A0A0A">
 
 <!-- Favicon -->
@@ -25,7 +25,7 @@
   body {
     background: var(--black);
     color: var(--off-white);
-    font-family: var(--body, 'Inter Tight', sans-serif);
+    font-family: var(--body, var(--body,system-ui,sans-serif));
     font-size: 18px;
     line-height: 1.75;
     -webkit-font-smoothing: antialiased;
@@ -52,7 +52,7 @@
     justify-content: space-between;
   }
   .blog-nav .logo {
-    font-family: 'Inter Tight', sans-serif;
+    font-family: var(--body,system-ui,sans-serif);
     font-weight: 800;
     font-size: 20px;
     letter-spacing: .02em;
@@ -84,8 +84,8 @@
     width: 100%;
   }
   .nf-code {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
+    font-family: var(--display,system-ui,sans-serif);
+    font-weight:700;
     font-size: clamp(96px, 22vw, 200px);
     line-height: 0.9;
     letter-spacing: -0.03em;
@@ -102,7 +102,7 @@
     margin: 24px 0 14px;
   }
   .nf-line {
-    font-family: 'Fraunces', serif;
+    font-family: var(--display,system-ui,sans-serif);
     font-style: italic;
     font-size: clamp(22px, 4vw, 30px);
     line-height: 1.3;
@@ -162,8 +162,8 @@
     gap: 4px;
   }
   .nf-popular a {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
+    font-family: var(--display,system-ui,sans-serif);
+    font-weight:700;
     font-size: 20px;
     color: var(--off-white);
     text-decoration: none;
@@ -187,16 +187,16 @@
     text-align: center;
     gap: 14px 24px;
   }
-  .bf-brand{font-family:'Inter Tight',sans-serif;font-weight:800;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:var(--text);text-decoration:none;margin-bottom:4px}
+  .bf-brand{font-family:var(--body,system-ui,sans-serif);font-weight:800;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:var(--text);text-decoration:none;margin-bottom:4px}
   .bf-brand-inner{position:relative;padding-right:.2em}
   .bf-brand-dot{position:absolute;top:-.06em;right:0;width:.16em;height:.16em;background:var(--accent);border-radius:50%}
   .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font-family:var(--mono,system-ui,sans-serif);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
   .footer-links a{color:var(--muted);text-decoration:none;transition:color .15s ease}
   .footer-links a:hover{color:var(--text)}
-  .footer-policy{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-family:'Inter Tight',sans-serif;font-size:11px}
+  .footer-policy{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-family:var(--body,system-ui,sans-serif);font-size:11px}
   .footer-policy a{color:var(--muted);text-decoration:none;letter-spacing:.02em;transition:color .15s ease}
   .footer-policy a:hover{color:var(--text)}
-  .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(var(--accent-rgb),.15);font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--muted);text-align:center;letter-spacing:.02em;margin-top:4px}
+  .footer-bottom{width:100%;padding-top:16px;border-top:1px solid rgba(var(--accent-rgb),.15);font-family:var(--body,system-ui,sans-serif);font-size:11px;color:var(--muted);text-align:center;letter-spacing:.02em;margin-top:4px}
 
   a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 
@@ -207,7 +207,11 @@
   }
 </style>
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
-<script src="/assets/js/consent-analytics.js?v=7fe8b60d" defer></script>
+<script src="/assets/js/consent-analytics.js?v=1d4ea28e" defer></script>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
 <noscript></noscript>
 <noscript></noscript>
 <noscript></noscript>
@@ -217,8 +221,8 @@
 <noscript></noscript>
 <noscript></noscript>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="preload" href="/assets/css/soft.css?v=7f0a09d3" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=7f0a09d3"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=31c85c83" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=31c85c83"></noscript>
+<link rel="preload" href="/assets/css/soft.css?v=68220171" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=68220171"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=7af5af31" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=7af5af31"></noscript>
 <script src="/assets/js/chrome.js?v=d358b4b4" defer></script>
 </head>
 <body>

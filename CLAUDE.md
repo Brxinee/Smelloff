@@ -40,6 +40,28 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Type: Bricolage Grotesque + Geist (2026-10-11, owner's call)
+"Use best fonts." Display = **Bricolage Grotesque** (variable 200–800,
+headings and prices at **700**, owner: "somewhat bold"); body and labels = **Geist** (variable
+100–900). Both SIL OFL 1.1, self-hosted from Fontsource (`assets/fonts/*-wght.woff2`,
+licences in `assets/fonts/OFL-*.txt`). Supersedes Fraunces / Inter Tight /
+JetBrains Mono everywhere in the notes below.
+- Declared in **two** places, same block: `assets/fonts.css` and the inline
+  `<style>` in `index.html`. Tokens `--display` / `--body` / `--mono` (mono =
+  Geist, tracked uppercase labels) in all three TOKENS copies; heading tracking
+  `--ls-display -.025em`.
+- ₹ is carved out of latin-ext and served from ~1KB `*-rupee-wght.woff2`
+  subsets (pyftsubset `--unicodes=U+20B9`). Fallbacks `'Bricolage Grotesque
+  Fallback'` / `'Geist Fallback'` (local Arial, size-adjust 108.30% / 102.66%,
+  computed against Liberation Sans) keep the swap CLS-free.
+- Preloads on `/` and `/odorstrike` and the service-worker precache (`sw.js`,
+  VERSION bumped to v33) point at the two latin files. A page loads ~72KB of
+  fonts (was 132–211KB).
+- Hard-coded `'Fraunces'`/`'Inter Tight'` stacks across pages, `blog.css` and
+  `blog-comments.js` now use `var(--display)` / `var(--body)`. The old font
+  files stay in `assets/fonts/` only because `scripts/thumbnails/` still
+  renders blog thumbnails with Fraunces.
+
 ## Brand palette: Carbon Black · Ice White · Signal Lime (2026-10-11, owner's call)
 "Use these and don't make it too pale." **`--ink #0A0A0A`** (Carbon Black),
 **`--text #F2F5EF`** (Ice White), **`--acid #B8FF57`** (Signal Lime), in all
