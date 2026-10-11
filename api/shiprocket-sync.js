@@ -282,7 +282,17 @@ export default async function handler(req, res) {
     if (isShiprocketConfigured()) {
       const orders = await listSyncCandidates(50);
       scanned = orders.length;
-      for (const order of orders) results.push(await syncSingleOrder(order));
+      for (const order of orders) {
+        const result = await syncSingleOrder(order);
+        results.push(result);
+        // A rejected login fails every order the same way, and each order
+        // would log in again: one bad password used to cost eight attempts a
+        // run, and Shiprocket locks the user after a handful. Stop at the first.
+        if (/authentication failed/i.test(String(result?.error || ''))) {
+          results.push({ status: 'stopped', reason: 'SHIPROCKET_AUTH_FAILED', remaining: orders.length - results.length });
+          break;
+        }
+      }
     }
 
     let reviews = { scanned: 0, sent: 0, results: [] };

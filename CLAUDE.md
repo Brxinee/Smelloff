@@ -66,6 +66,18 @@ courier / AWB / status back into `orders`. It was daily (`0 10 * * *`).
   has no endpoint for it, and the 15-minute sync polls tracking instead.
 - Cancel test orders before turning it on: the sync pushes every `placed` /
   `confirmed` order.
+- **A failed login stops the run** (first `authentication failed` result breaks
+  the loop). Before, every order logged in again, so one wrong password cost
+  eight attempts per run and Shiprocket blocked the user ("User blocked due to
+  too many failed login attempts"). That happened on 2026-10-11 with the main
+  account login in Cloudflare. The API refuses the main login anyway (it also
+  failed on 2026-09-25); only the API user works.
+- On 2026-10-11 the live Worker kept running the pre-#470 sync code after the
+  merge: it still scanned delivered orders. The likeliest cause is saving
+  variables in the Cloudflare dashboard around the same time, which can
+  redeploy the version the dashboard had loaded; that was not confirmed. If
+  `/api/shiprocket-sync` results list delivered orders, the old code is live.
+  Redeploy main.
 
 ## Transactional email redesign (2026-10-11)
 `api/_email-templates.js` (all 17 Resend templates) now uses the site's palette
