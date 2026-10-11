@@ -1,7 +1,7 @@
 import { isAllowedOrigin, clientIp, checkRateLimit, isAdminAuthorized, isCronAuthorized } from './_security.js';
 import {
   createShiprocketOrder,
-  getShiprocketShipment,
+  getShiprocketOrder,
   trackShiprocketAwb,
   extractShiprocketIds,
   isShiprocketConfigured,
@@ -30,8 +30,13 @@ const STATUS_RANK = {
   verification_pending: 99
 };
 
+// Orders a Shiprocket cancellation may close on the site. Once dispatched,
+// a "cancel" in Shiprocket is an RTO/return question, not a site status.
+const CANCELLABLE_STATUSES = ['placed', 'confirmed', 'packed'];
+
 function mapShiprocketStatus(currentStatus) {
   const status = String(currentStatus || '').trim().toLowerCase();
+  if (status === 'canceled' || status === 'cancelled') return 'cancelled';
   if (status === 'delivered') return 'delivered';
   if (status === 'out for delivery' || status === 'out_for_delivery') return 'out_for_delivery';
   if (status === 'in transit' || status === 'shipped' || status === 'picked up' || status === 'handover to courier') return 'dispatched';
@@ -177,18 +182,22 @@ async function syncSingleOrder(order) {
     order = { ...order, ...createdIds };
   }
 
-  let shipment = null;
   let awb = order.shiprocket_awb || null;
   let courier = order.shiprocket_courier || null;
   let shiprocketStatus = order.shiprocket_status || null;
   let trackingData = null;
 
   try {
-    if (order.shiprocket_shipment_id) {
-      shipment = await getShiprocketShipment(order.shiprocket_shipment_id);
-      const ids = extractShiprocketIds(shipment);
-      awb = awb || ids.awb;
-      courier = courier || ids.courier;
+    // Before a courier is assigned there is no AWB to track, so read the
+    // order itself: it carries the status (e.g. CANCELED when the owner
+    // cancels in the panel) and the AWB once one is assigned. /shipments/{id}
+    // only returns a numeric status the site can't use.
+    if (!awb && order.shiprocket_order_id) {
+      const srOrder = (await getShiprocketOrder(order.shiprocket_order_id))?.data || {};
+      const srShipment = srOrder.shipments && typeof srOrder.shipments === 'object' ? srOrder.shipments : {};
+      awb = srShipment.awb || null;
+      courier = courier || srShipment.courier || null;
+      shiprocketStatus = srOrder.status || shiprocketStatus;
     }
 
     if (awb) {
@@ -202,7 +211,8 @@ async function syncSingleOrder(order) {
     const nextStatus = mapShiprocketStatus(shiprocketStatus);
     const currentRank = STATUS_RANK[order.status] ?? 0;
     const nextRank = nextStatus ? (STATUS_RANK[nextStatus] ?? 0) : currentRank;
-    const statusPatch = nextStatus && nextRank >= currentRank && nextStatus !== order.status
+    const cancelAllowed = nextStatus !== 'cancelled' || CANCELLABLE_STATUSES.includes(String(order.status || '').toLowerCase());
+    const statusPatch = nextStatus && cancelAllowed && nextRank >= currentRank && nextStatus !== order.status
       ? { status: nextStatus, updated_at: new Date().toISOString() }
       : {};
 
