@@ -39,7 +39,7 @@ const ROOT_FILES = [
   'google163974d1a8d940cf89b0ec712246c779.html'
 ];
 
-const DIRECTORIES = ['assets', 'blog', 'solutions', 'admin'];
+const DIRECTORIES = ['assets', 'blog', 'admin'];
 
 function resetPublic() {
   fs.rmSync(PUBLIC, { recursive: true, force: true });

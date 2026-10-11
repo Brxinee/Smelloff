@@ -2,6 +2,91 @@
   "$comment": "Source of truth for redirects, rewrites and headers. scripts/cloudflare-routing.mjs compiles this into public/_redirects and public/_headers on every build. Rule shapes are {source, destination, permanent} / {source, headers:[{key,value}]}.",
   "redirects": [
     {
+      "source": "/solutions",
+      "destination": "/blog",
+      "statusCode": 301
+    },
+    {
+      "source": "/solutions/index",
+      "destination": "/blog",
+      "statusCode": 301
+    },
+    {
+      "source": "/solutions/post-gym-workout-sweat-spray",
+      "destination": "/blog/gym-clothes-smell-after-washing",
+      "statusCode": 301
+    },
+    {
+      "source": "/solutions/monsoon-damp-fabric-care",
+      "destination": "/blog/damp-clothes-musty-smell-monsoon-fix",
+      "statusCode": 301
+    },
+    {
+      "source": "/solutions/office-commute-fabric-refresher",
+      "destination": "/blog/keep-office-trousers-fresh-without-washing",
+      "statusCode": 301
+    },
+    {
+      "source": "/solutions/denim-outerwear-dry-care",
+      "destination": "/blog/remove-smell-from-blazer-without-dry-cleaning",
+      "statusCode": 301
+    },
+    {
+      "source": "/smelloff",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/smelloff.html",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/index-2",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/index-2.html",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/Index",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/Index.html",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/.well-known/llms.txt",
+      "destination": "/llms.txt",
+      "statusCode": 301
+    },
+    {
+      "source": "/.well-known/llms-full.txt",
+      "destination": "/llms-full.txt",
+      "statusCode": 301
+    },
+    {
+      "source": "/.well-known/ai.txt",
+      "destination": "/llms.txt",
+      "statusCode": 301
+    },
+    {
+      "source": "/ai.txt",
+      "destination": "/llms.txt",
+      "statusCode": 301
+    },
+    {
+      "source": "/public/:path*",
+      "destination": "/:path*",
+      "statusCode": 301
+    },
+    {
       "source": "/r/:code",
       "destination": "/?ref=:code"
     },
@@ -35,7 +120,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/solutions",
+      "destination": "https://smelloff.in/blog",
       "statusCode": 301
     },
     {
@@ -409,7 +494,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/solutions/denim-outerwear-dry-care",
+      "destination": "https://smelloff.in/blog/remove-smell-from-blazer-without-dry-cleaning",
       "statusCode": 301
     },
     {
@@ -687,11 +772,6 @@
       "statusCode": 301
     },
     {
-      "source": "/solutions/index",
-      "destination": "/solutions",
-      "statusCode": 301
-    },
-    {
       "source": "/blog/zinc-ricinoleate-fabric-odor-ingredient",
       "destination": "/blog/zinc-pca-fabric-odor-ingredient-guide",
       "statusCode": 301
@@ -858,7 +938,7 @@
     },
     {
       "source": "/blog/how-to-remove-smell-from-winter-jackets-sweaters",
-      "destination": "/solutions/denim-outerwear-dry-care",
+      "destination": "/blog/remove-smell-from-blazer-without-dry-cleaning",
       "statusCode": 301
     },
     {
@@ -1015,32 +1095,12 @@
     {
       "source": "/api/resend-webhook",
       "destination": "/api/webhook?provider=resend"
-    },
-    {
-      "source": "/.well-known/llms.txt",
-      "destination": "/llms.txt"
-    },
-    {
-      "source": "/.well-known/llms-full.txt",
-      "destination": "/llms-full.txt"
-    },
-    {
-      "source": "/.well-known/ai.txt",
-      "destination": "/llms.txt"
-    },
-    {
-      "source": "/ai.txt",
-      "destination": "/llms.txt"
     }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-        },
         {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
@@ -1194,40 +1254,6 @@
         {
           "key": "X-Robots-Tag",
           "value": "noindex"
-        }
-      ]
-    },
-    {
-      "source": "/.well-known/llms.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow"
-        }
-      ]
-    },
-    {
-      "source": "/.well-known/llms-full.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow"
         }
       ]
     },

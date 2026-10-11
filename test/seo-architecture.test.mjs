@@ -33,10 +33,12 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
     const sitemapXml = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
     const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
 
-    it('sitemap contains exactly 76 canonical URLs', () => {
+    it('sitemap contains exactly 71 canonical URLs', () => {
       // 75 → 76 (2026-10-11): the -instantly duplicate merged into -quickly;
       // the hoodie and blazer guides deleted by dd86e68 were restored.
-      assert.equal(sitemapUrls.length, 76);
+      // 76 → 71 (same day): the /solutions hub and its four thin city pages
+      // were retired into the guides that cover them.
+      assert.equal(sitemapUrls.length, 71);
     });
 
     for (const url of sitemapUrls) {
@@ -133,9 +135,9 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
         maxHops: 1,
       },
       {
-        description: 'solutions hub index redirects to /solutions in 1 hop',
+        description: 'the retired solutions hub index redirects to /blog in 1 hop',
         url: 'https://smelloff.in/solutions/index',
-        expectedFinal: 'https://smelloff.in/solutions',
+        expectedFinal: 'https://smelloff.in/blog',
         maxHops: 1,
       },
       {

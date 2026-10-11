@@ -63,3 +63,23 @@ export function upgradeTemporaryRedirect(requestUrl, response) {
   const headers = new Headers(response.headers);
   return new Response(null, { status: 301, headers });
 }
+
+/**
+ * /404 is a page in the asset store, so a direct hit answered 200 with a
+ * noindex tag: a soft 404 in Search Console. It is only ever an error page.
+ */
+export function notFoundStatus(requestUrl, response) {
+  const { pathname } = new URL(requestUrl);
+  if (pathname !== "/404" || response.status !== 200) return response;
+  return new Response(response.body, { status: 404, headers: response.headers });
+}
+
+/**
+ * Search Console's HTML-file verification fetches /google<token>.html. The
+ * asset server would 307 (and we 301) it to the extensionless URL; serve it
+ * where Google looks instead, so ownership never depends on a redirect.
+ */
+export function verificationAssetPath(requestUrl) {
+  const { pathname } = new URL(requestUrl);
+  return /^\/google[0-9a-f]{16,}\.html$/.test(pathname) ? pathname.slice(0, -5) : null;
+}

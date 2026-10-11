@@ -9,7 +9,7 @@ import fs from 'node:fs';
 // named as the active (it is HPβCD). One set of facts everywhere.
 const product = JSON.parse(fs.readFileSync('config/product.json', 'utf8'));
 const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html'))
-  .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)))
+  .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)))
   .concat(['feed.xml', 'llms.txt', 'llms-full.txt']);
 
 test('config still states the dry time the pages use', () => {

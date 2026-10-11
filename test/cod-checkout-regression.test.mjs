@@ -66,7 +66,7 @@ test('COD amount appears only in checkout and on /shipping, /refund, /faq', () =
   // Policies, plus the post-purchase pages that show what an order was charged.
   const policy = new Set(['shipping.html', 'refund.html', 'faq.html', 'terms.html', 'privacy.html', 'track-order.html', 'payment-failed.html']);
   const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html'))
-    .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+    .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
   for (const f of pages) {
     if (policy.has(f)) continue;
     let html = fs.readFileSync(f, 'utf8');

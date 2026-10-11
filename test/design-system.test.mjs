@@ -12,9 +12,7 @@ const INNER = ['about.html', 'contact.html', 'reviews.html', 'track-order.html',
   'shipping.html', 'returns.html', 'refund.html', 'cancellation.html', 'payment-failed.html', 'privacy.html', 'terms.html'];
 const POLICIES = ['shipping.html', 'returns.html', 'refund.html', 'cancellation.html', 'payment-failed.html', 'privacy.html', 'terms.html'];
 const GLANCE = ['shipping.html', 'returns.html', 'refund.html', 'cancellation.html', 'payment-failed.html'];
-const ENDCAP = [...INNER.filter((f) => f !== 'track-order.html'), 'solutions/index.html',
-  'solutions/denim-outerwear-dry-care.html', 'solutions/monsoon-damp-fabric-care.html',
-  'solutions/office-commute-fabric-refresher.html', 'solutions/post-gym-workout-sweat-spray.html'];
+const ENDCAP = INNER.filter((f) => f !== 'track-order.html');
 
 test('every inner page opens with the shared masthead: label, one H1, lede', () => {
   for (const f of INNER) {
@@ -87,7 +85,7 @@ test('shared CSS/JS stamps match the files (run scripts/apply-chrome.mjs after e
   const want = { 'chrome.css': h('assets/css/chrome.css'), 'soft.css': h('assets/css/soft.css'),
     'chrome.js': h('assets/js/chrome.js'), 'blog.css': h('assets/css/blog.css') };
   const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html'))
-    .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+    .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
   for (const f of pages) {
     const html = read(f);
     for (const [name, v] of Object.entries(want)) {
@@ -102,7 +100,7 @@ test('shared CSS/JS stamps match the files (run scripts/apply-chrome.mjs after e
 
 test('no page styles bare form/label/input elements (they leak into the shared footer form)', () => {
   const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html'))
-    .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+    .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
   for (const f of pages) {
     const css = [...read(f).matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join('\n');
     for (const line of css.split('\n')) {
@@ -119,7 +117,7 @@ test('link previews: one on-brand share image, never the retired banners', () =>
   while (i < img.length) { const m = img[i + 1]; const len = img.readUInt16BE(i + 2); if (m === 0xc0 || m === 0xc2) { h = img.readUInt16BE(i + 5); w = img.readUInt16BE(i + 7); break; } i += 2 + len; }
   assert.deepEqual([w, h], [1200, 630]);
   const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html') && !f.startsWith('google'))
-    .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+    .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
   for (const f of pages) {
     const html = read(f);
     assert.doesNotMatch(html, /assets\/og-(image|brand)\.jpg/, `${f}: retired preview banner (it listed shoes/helmets/gear)`);

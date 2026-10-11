@@ -128,13 +128,6 @@ test('claims guardrails: forbidden claims are flagged and not in approved list',
   assert.equal(odorstrikeHtml.includes('10% off'), false, 'odorstrike.html must not contain fake 10% off discount');
   assert.equal(odorstrikeHtml.includes('Spray, shake'), false, 'odorstrike.html must not instruct users to shake');
   assert.equal(odorstrikeHtml.includes('towels, bedsheets'), false, 'odorstrike.html must not recommend household linens');
-
-  const solutionFiles = ['office-commute-fabric-refresher.html', 'monsoon-damp-fabric-care.html', 'denim-outerwear-dry-care.html', 'post-gym-workout-sweat-spray.html'];
-  for (const sf of solutionFiles) {
-    const sHtml = readFileSync(`solutions/${sf}`, 'utf8');
-    assert.equal(sHtml.includes('kills sweat smell'), false, `${sf} must not contain "kills sweat smell"`);
-    assert.equal(sHtml.includes('stink in seconds'), false, `${sf} must not contain "stink in seconds"`);
-  }
 });
 
 test('supabase/functions/create-order/index.ts derives from product.json without independent hardcodes', () => {

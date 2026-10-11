@@ -5,7 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { getProductConfig } from '../scripts/product-config.mjs';
 
 const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html'))
-  .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+  .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
 
 function nodes(file) {
   const html = fs.readFileSync(file, 'utf8');
@@ -108,7 +108,7 @@ test('the Offer carries the MRP as a StrikethroughPrice (the only priceType Goog
 test('every indexable page: title ≤ 60 characters, description 70–160', () => {
   const decode = (s) => s.replace(/&amp;/g, '&').replace(/&#39;|&#x27;|&rsquo;|&#8217;/g, "'").replace(/&quot;/g, '"').replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)));
   const files = fs.readdirSync('.').filter((f) => f.endsWith('.html') && !f.startsWith('google'))
-    .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+    .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
   for (const f of files) {
     const html = fs.readFileSync(f, 'utf8');
     if (/<meta name="robots" content="[^"]*noindex/.test(html)) continue;
