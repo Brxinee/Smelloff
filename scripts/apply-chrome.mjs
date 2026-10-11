@@ -381,7 +381,7 @@ const PAGES = [
     'solutions/post-gym-workout-sweat-spray.html',
     'solutions/office-commute-fabric-refresher.html',
     'solutions/denim-outerwear-dry-care.html',
-  ].map((f) => ({ file: f, header: 'header', footer: 'footer' })),
+  ].map((f) => ({ file: f, header: 'header', footer: 'footer', endcap: true })),
   // the two self-contained pages
   { file: 'index.html', header: 'header.site', footer: 'footer' },
   { file: 'odorstrike.html', header: 'nav.site-nav', footer: 'footer', cart: 'drawer', skip: 'product-hero' },
@@ -462,6 +462,10 @@ function ensureAssets(html) {
     /[ \t]*<script[^>]+src="\/assets\/js\/chrome\.js[^"]*"[^>]*><\/script>\n?/g,
     ''
   );
+  // Removing the <link> inside each <noscript> above leaves an empty
+  // <noscript></noscript> behind, and every run stacked two more (pages had
+  // up to five). Drop the empties.
+  html = html.replace(/[ \t]*<noscript><\/noscript>\n?/g, '');
 
   // These are hand-linked per page rather than inserted here, but they sit
   // under the same immutable cache rule — so re-stamp their query strings in

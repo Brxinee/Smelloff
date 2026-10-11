@@ -515,14 +515,16 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 @media(max-width:519px){.p-actions .sf-btn{flex:1 1 100%}}
 
 /* ---- Shell ----------------------------------------------------------- */
-.p-main{
-  width:100%;max-width:calc(var(--measure-page) + 2 * var(--gutter)) !important;margin:0 auto !important;
+/* Every inner page shares the site container, so its label and H1 start at
+   the same left edge as the logo; prose keeps a reading width inside it. */
+.p-main,.faq-main{
+  width:100%;max-width:var(--maxw) !important;margin:0 auto !important;
   padding:clamp(28px,5vw,56px) max(var(--gutter),env(safe-area-inset-right,0px)) clamp(56px,8vw,96px) max(var(--gutter),env(safe-area-inset-left,0px)) !important;
 }
 .p-main--wide{max-width:var(--maxw) !important}
 
 /* ---- Masthead -------------------------------------------------------- */
-.p-head{position:relative;margin:0 0 clamp(28px,4vw,44px);padding-bottom:clamp(24px,3.5vw,36px);border-bottom:1px solid var(--border-subtle)}
+.p-head{position:relative;margin:0 0 clamp(28px,4vw,40px);padding-bottom:clamp(24px,3.5vw,36px);border-bottom:1px solid var(--border-default)}
 .p-head .p-eyebrow{margin:0 0 14px !important}
 .p-main h1,.p-head h1{
   font-family:var(--display) !important;font-weight:700 !important;
@@ -558,8 +560,11 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 @media(min-width:960px){
   .p-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;column-gap:72px;align-items:start}
   .p-body{grid-column:1;grid-row:1;max-width:var(--measure-page);min-width:0}
-  .p-aside{grid-column:2;grid-row:1;position:sticky;top:var(--sticky-top);margin:0;
-    max-height:calc(100vh - var(--sticky-top) - 24px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+  /* The aside stretches to the body's height; the summary scrolls away with
+     the page and only the contents list sticks (a sticky aside with both in
+     it left room for three entries). */
+  .p-aside{grid-column:2;grid-row:1;align-self:stretch;margin:0}
+  .p-main .p-toc{position:sticky;top:var(--sticky-top);max-height:calc(100vh - var(--sticky-top) - 24px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
 }
 .p-top{display:inline-flex;align-items:center;gap:6px;margin-top:40px;font-size:14px;color:var(--muted) !important;border:0 !important;text-decoration:none}
 .p-top:hover{color:var(--text) !important}
@@ -652,7 +657,8 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .sf-endcap__perks{margin:14px 0 0;font-size:12.5px;line-height:1.5;color:var(--muted)}
 @media(min-width:768px){
   .sf-endcap__card{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);box-shadow:0 60px 120px -80px rgba(var(--acid-rgb),.45)}
-  .sf-endcap__media{aspect-ratio:auto;min-height:340px}
+  .sf-endcap__media{position:relative;aspect-ratio:auto;min-height:360px}
+  .sf-endcap__media img{position:absolute;inset:0}
   .sf-endcap__copy{align-self:center;padding:clamp(28px,4vw,52px)}
   .sf-endcap__ctas .sf-btn{flex:0 1 auto}
   .sf-endcap__more{margin:0}
@@ -680,7 +686,30 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 }
 .article-wrap h2,main.sf-wrap h2{font-size:var(--fs-prose-h2) !important;line-height:1.15 !important;letter-spacing:-.02em !important}
 /* Wide pages (masthead with a photo) keep their prose at reading width. */
-.p-main--wide > :not(.p-head):not(.p-grid):not(.grid):not(.p-links):not(.agg){max-width:var(--measure-page)}
+.p-main > :not(.p-head):not(.p-grid):not(.grid):not(.p-links):not(.agg){max-width:var(--measure-page)}
 .p-head__media--desk{display:none}
 @media(min-width:768px){.p-head__media--desk{display:block}}
 .p-body{max-width:var(--measure-page);min-width:0}
+
+/* FAQ: same shell as the other inner pages; its "Common questions" heading
+   is a section label like everywhere else. */
+.faq-main .faq-h2{
+  display:flex !important;align-items:center;gap:12px;margin:0 0 16px !important;
+  font-family:var(--body) !important;font-size:var(--fs-eyebrow) !important;font-weight:500 !important;
+  letter-spacing:var(--ls-eyebrow) !important;text-transform:uppercase !important;color:var(--acid) !important;
+}
+.faq-main .faq-h2::before{content:'';width:24px;height:1px;flex:0 0 24px;background:var(--acid);opacity:.7}
+/* Reviews: "Write a review" is a secondary button like every other one. */
+.agg-cta{
+  display:inline-flex !important;align-items:center;justify-content:center;min-height:44px;padding:0 18px !important;
+  border-radius:var(--sq-sm) !important;border:1px solid var(--border-strong) !important;background:transparent !important;
+  color:var(--text) !important;font-family:var(--body) !important;font-size:14px !important;font-weight:500 !important;
+  letter-spacing:.01em !important;text-transform:none !important;
+}
+.agg-cta:hover{background:var(--surface-2) !important;border-color:var(--text) !important}
+/* /solutions: an inline style pinned the column to 900px and centred it, so
+   its H1 started ~210px right of every other page's. Same container now,
+   prose at reading width. */
+main.sf-wrap[style]{max-width:var(--maxw) !important}
+main.sf-wrap[style] > *{max-width:var(--measure-page)}
+main.sf-wrap[style] > .solution-grid,main.sf-wrap[style] > .grid{max-width:none}
