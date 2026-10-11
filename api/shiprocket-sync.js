@@ -61,10 +61,16 @@ async function getOrder(orderCode) {
   return Array.isArray(data) && data.length ? data[0] : null;
 }
 
+// Orders the sync creates in Shiprocket. Anything already dispatched or
+// delivered without a Shiprocket id was fulfilled by hand; creating it now
+// would book a second shipment.
+const CREATE_STATUSES = ['placed', 'confirmed', 'packed'];
+
 async function listSyncCandidates(limit = 50) {
+  // Delivered is terminal: nothing left to create or track.
   const params = new URLSearchParams({
     select: '*',
-    status: 'in.(placed,confirmed,packed,dispatched,out_for_delivery,delivered)',
+    status: 'in.(placed,confirmed,packed,dispatched,out_for_delivery)',
     order: 'created_at.desc',
     limit: String(Math.min(50, Math.max(1, limit)))
   });
@@ -92,7 +98,7 @@ async function createMissingShiprocketOrder(order) {
       shiprocket_courier: order.shiprocket_courier ? String(order.shiprocket_courier) : null
     };
   }
-  if (!['placed', 'confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'].includes(String(order.status || '').toLowerCase())) {
+  if (!CREATE_STATUSES.includes(String(order.status || '').toLowerCase())) {
     return null;
   }
 
@@ -207,9 +213,12 @@ async function syncSingleOrder(order) {
 
     if (Object.keys(patch).length) await patchOrder(order.order_code, patch);
 
+    // Email only on a status change: the sync runs every 15 minutes, and
+    // Resend's idempotency key lasts 24 h, so re-sending on every pass would
+    // mail the customer the same "shipped" email day after day.
     const merged = { ...order, ...patch };
-    const fulfillmentStatus = statusPatch.status || order.status;
-    if (['dispatched', 'out_for_delivery', 'delivered'].includes(String(fulfillmentStatus || '').toLowerCase())) {
+    const fulfillmentStatus = statusPatch.status;
+    if (fulfillmentStatus && ['dispatched', 'out_for_delivery', 'delivered'].includes(fulfillmentStatus)) {
       try {
         await sendFulfillmentEmail(merged, fulfillmentStatus, { route: '/api/shiprocket-sync' });
       } catch (emailErr) {

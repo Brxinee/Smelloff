@@ -40,6 +40,28 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Shiprocket sync: every 15 minutes, new orders only (2026-10-11)
+`api/shiprocket-sync.js` (cron `*/15 * * * *` in `wrangler.jsonc`, mapped in
+`src/index.js`) creates a Shiprocket order for each new site order and pulls
+courier / AWB / status back into `orders`. It was daily (`0 10 * * *`).
+- **Creates only for `placed` / `confirmed` / `packed`** (`CREATE_STATUSES`).
+  It used to create for dispatched and delivered orders too, and the five
+  hand-fulfilled orders delivered before Shiprocket was connected would have
+  been booked as new shipments on the first run. Delivered orders are no longer
+  sync candidates at all.
+- **Fulfilment emails go out only on a status change.** Before, every sync
+  re-sent "Shipped" / "Out for delivery" / "Delivered" for any order in that
+  state (Resend's idempotency key lasts only 24 h).
+- **Review requests are sent once per order**: `dispatchDueReviewRequests`
+  checks `email_events` for a non-failed `reviewRequest` first (it fails closed).
+- Needs `SHIPROCKET_EMAIL` / `SHIPROCKET_PASSWORD` (a Shiprocket **API user**,
+  not the login) and `CRON_SECRET`. The pickup location defaults to
+  "Opposite ANcorner bakery" and the channel id to `41464314146431`; override
+  them with `SHIPROCKET_PICKUP_LOCATION` / `SHIPROCKET_CHANNEL_ID`. A wrong
+  pickup name fails with the list of names the account has.
+- Cancel test orders before turning it on: the sync pushes every `placed` /
+  `confirmed` order.
+
 ## Transactional email redesign (2026-10-11)
 `api/_email-templates.js` (all 17 Resend templates) now uses the site's palette
 and type. Light receipt canvas (Gmail's apps invert colours and ignore
