@@ -46,7 +46,7 @@
               '<div id="rvAuthError" class="rv-error-msg"></div>' +
             '</form>' +
             '<div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);font-size:13px;color:rgba(255,255,255,0.6);text-align:center">' +
-              'Haven’t ordered yet? <a href="/odorstrike#buy" style="color:var(--acid,#b8ff57);font-weight:600;text-decoration:none">Buy ODORSTRIKE ₹299 →</a>' +
+              'Haven’t ordered yet? <a href="/odorstrike#buy" style="color:var(--text,#F4F1EA);font-weight:500;text-decoration:underline;text-underline-offset:4px">Buy ODORSTRIKE ₹299 →</a>' +
             '</div>' +
           '</div>' +
 

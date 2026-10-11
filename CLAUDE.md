@@ -40,6 +40,44 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Quiet premium pass + placeholders back (2026-10-11, owner's call)
+"Too bold — conservative, premium, modern." Palette unchanged; the accent
+became a detail instead of a surface. **Supersedes** the placeholder hiding
+in "UX pass from a live render" below and the acid/mono/900 rules in older
+sections.
+- **Photo slots are visible again** (`.ph-img`, `#combos`, `#size` — no
+  `display:none`, no `hidden`), restyled as quiet hairline cards with the brief
+  in grey. Swap each div for an `<img>` of the stated ratio when shot.
+- **Type:** Fraunces **500** everywhere (was 900; the face is variable 400–900).
+  Smaller heading scale, `--lh-display 1.08`. `--mono` now resolves to Inter
+  Tight — labels are tracked sans, not JetBrains Mono (its preload is gone).
+  Accent words in headings render grey (`chrome.css` §11), not acid.
+- **Buttons are paper white** (`--cta #F4F1EA`, `--on-cta`, `--cta-hi`, in all
+  three TOKENS copies), sentence case, body face — soft.css §9. Copy is
+  "Buy now — ₹299" (was "FIX MY SHIRT" / "GET ODORSTRIKE"); tests and the
+  audit pin the new text. Chips read "Not perfume · Not body deodorant ·
+  Fabric only".
+- **No acid bands:** offer strip, ticker and the homepage final band are dark
+  with hairlines; hero/offer acid discs and glows are faint warm light. Acid
+  stays for the eyebrow rule, the "40% off" outline, focus rings and the PDP
+  timer ring. `test/ux-guardrails.test.mjs` pins it.
+- **Second pass (same day):** blog index + `blog.css` (category pill, links,
+  drop cap, quick-answer card, TOC, end-of-post box, quiz), policy-page
+  template, `/faq` (CTA, WhatsApp strip, grievance line), `/404`,
+  `/solutions/*` (buy button, answer box — its label is now "Quick answer",
+  not "AI Search & Answer Engine Summary"), checkout/cart (pay button reads
+  "Pay ₹299 securely" / "Place COD order · ₹359", neutral delivery box and
+  payment options), the review modal and the blog comments widget. Hard-coded
+  `'JetBrains Mono'` became `var(--mono)`. The consent bar's buttons are
+  sentence case in all four copies. Emails (`emails/`) still use acid —
+  that's a separate template system.
+- Fixed on the way: the blog index had the "Founder story" chip twice, and
+  `.b-about` cards overflowed a 320px screen by 19px (grid items without
+  `minmax(0,1fr)`).
+- `apply-chrome.mjs` is a build transform (critical CSS + optimized logo):
+  after running it locally, revert those two bits and keep only the `?v=`
+  stamps — or let the cache-buster bot do it.
+
 ## UX pass from a live render (2026-10-11)
 Rendered `/`, `/odorstrike`, checkout, `/blog`, a post and `/faq` at 390×844
 and 1280×800 from a production build. Fixed:

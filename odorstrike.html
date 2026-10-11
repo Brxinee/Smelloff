@@ -205,7 +205,6 @@
        · barlow-condensed-900 — not used on this page at all. It was being
          fetched at top priority to render nothing. -->
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-mono-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
 <link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
@@ -267,6 +266,9 @@
     --acid-dim:rgba(184,255,87,.12);
     --acid-rgb:184,255,87;
     --on-acid:#080808;
+    --cta:#F4F1EA;
+    --cta-hi:#FFFFFF;
+    --on-cta:#080808;
 
     /* ---- Technical Borders & Dividers ---- */
     --border-subtle:rgba(244,241,234,.08);
@@ -282,29 +284,29 @@
 
     /* ---- Type families ---- */
     --display:'Fraunces','Fraunces Fallback',serif;
-    --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
+    --mono:'Inter Tight','Inter Tight Fallback',system-ui,sans-serif;
     --body:'Inter Tight','Inter Tight Fallback',sans-serif;
 
     /* ---- Type scale & rhythm ---- */
-    --lh-display:1.02;
+    --lh-display:1.08;
     --lh-body:1.55;
-    --ls-display:-.02em;
+    --ls-display:-.015em;
 
-    --fs-h1:clamp(42px,7vw,84px);
-    --fs-h2:clamp(32px,5.2vw,56px);
-    --fs-h3:clamp(22px,3vw,34px);
+    --fs-h1:clamp(36px,5.6vw,68px);
+    --fs-h2:clamp(28px,4vw,46px);
+    --fs-h3:clamp(21px,2.4vw,28px);
     --fs-h4:clamp(18px,1.8vw,22px);
     --fs-lead:clamp(16px,1.3vw,19px);
     --fs-body:16px;
     --fs-sm:14px;
     --fs-eyebrow:11.5px;
-    --ls-eyebrow:.1em;
+    --ls-eyebrow:.16em;
     --ls-mono:.06em;
 
     /* ---- Rhythm ---- */
     --maxw:1160px;
     --gutter:20px;
-    --section-y:clamp(48px,6.5vw,96px);
+    --section-y:clamp(64px,8vw,120px);
 
     /* ---- Restrained Form & Radius System ---- */
     --bw:1px;
@@ -383,7 +385,7 @@
     display:inline-flex;align-items:center;gap:5px;line-height:1;
     transition:color .18s;
   }
-  .cart-btn:hover{color:var(--acid) !important}
+  .cart-btn:hover{color:var(--text-2) !important}
   .cart-btn .cart-ico{width:25px;height:25px;display:block;transform-origin:60% 100%}
   /* Cart nudges forward on hover, like it's being pushed. */
   @keyframes cartNudge{
@@ -393,7 +395,7 @@
   }
   .cart-btn:hover .cart-ico{animation:cartNudge .55s ease}
   .cart-btn .cart-count{
-    background:var(--acid);color:var(--ink);border-radius:100px;
+    background:var(--text);color:var(--ink);border-radius:100px;
     min-width:18px;height:18px;padding:0 5px;
     display:inline-flex;align-items:center;justify-content:center;
     font-size:11px;font-weight:700;letter-spacing:0;
@@ -438,6 +440,7 @@
     transition:transform .32s cubic-bezier(.22,1,.36,1);
     will-change:transform;
   }
+  .cart-drawer:focus-visible{outline:none}
   .cart-overlay.active .cart-drawer{transform:translate3d(0,0,0)}
   @media(prefers-reduced-motion:reduce){
     .cart-overlay,.cart-overlay::before,.cart-drawer{transition:none}
@@ -448,12 +451,12 @@
   }
   .cart-head h3{
     display:flex;align-items:center;gap:10px;
-    font-family:var(--display);font-weight:900;font-size:22px;
+    font-family:var(--display);font-weight:500;font-size:22px;
     letter-spacing:-.01em;color:var(--text);margin:0;
   }
   .cart-n{
     display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 7px;
-    border-radius:100px;background:var(--acid);color:var(--ink);
+    border-radius:100px;background:var(--surface-2);color:var(--text);
     font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:0;
   }
   .cart-n[hidden]{display:none}
@@ -466,34 +469,34 @@
   .cart-close .ic{width:18px;height:18px}
   .cart-ship-bar{
     display:flex;align-items:center;gap:10px;padding:11px 20px;
-    background:rgba(184,255,87,.07);border-bottom:1px solid var(--rule);
+    background:transparent;border-bottom:1px solid var(--rule);
     font-family:var(--body);font-size:13px;line-height:1.35;color:var(--text-2);
   }
-  .cart-ship-bar .ic{width:18px;height:18px;color:var(--acid);flex-shrink:0}
+  .cart-ship-bar .ic{width:18px;height:18px;color:var(--text-2);flex-shrink:0}
   .cart-ship-bar strong{color:var(--text);font-weight:600}
   .cart-body{flex:1;overflow-y:auto;padding:20px;overscroll-behavior:contain}
-  /* The bottle sits on an acid glow, the same stage it has on the homepage. */
+  /* The bottle sits on a faint warm light, the same stage it has on the homepage. */
   .cart-line-art,.cart-empty-art{
     display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(circle at 50% 58%,rgba(184,255,87,.22),rgba(184,255,87,0) 62%),var(--ink);
+    background:radial-gradient(circle at 50% 58%,rgba(244,241,234,.08),rgba(244,241,234,0) 62%),var(--ink);
     border:1px solid var(--rule);border-radius:var(--sq-lg,16px);
   }
   .cart-img{display:block;width:auto;height:100%;object-fit:contain}
   .cart-empty{text-align:center;padding:28px 4px}
   .cart-empty-art{width:120px;height:150px;margin:0 auto 20px;padding:14px 0}
   .cart-empty-msg{
-    font-family:var(--display);font-weight:900;font-size:22px;
+    font-family:var(--display);font-weight:500;font-size:22px;
     color:var(--text);margin:0 0 6px;
   }
   .cart-empty-sub{font-family:var(--body);font-size:14px;color:var(--muted);margin:0 auto 22px;line-height:1.5;max-width:28ch}
   .cart-empty-cta{
-    display:inline-flex;align-items:center;justify-content:center;background:var(--acid);color:var(--ink);
+    display:inline-flex;align-items:center;justify-content:center;background:var(--cta);color:var(--on-cta);
     border:none;border-radius:var(--sq-sm,8px);cursor:pointer;
     padding:0 26px;min-height:52px;
     font-family:var(--mono);font-size:14px;font-weight:700;
     letter-spacing:.06em;text-transform:uppercase;
   }
-  .cart-empty-cta:hover{background:var(--acid-hi)}
+  .cart-empty-cta:hover{background:var(--cta-hi)}
   .cart-line{
     display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center;
     padding:12px;border:1px solid var(--rule);border-radius:var(--sq-xl,20px);background:rgba(244,241,234,.02);
@@ -501,7 +504,7 @@
   .cart-line-art{width:96px;height:120px;padding:12px 0}
   .cart-line-info{min-width:0}
   .cart-line-name{
-    font-family:var(--display);font-weight:900;font-size:19px;
+    font-family:var(--display);font-weight:500;font-size:19px;
     color:var(--text);line-height:1.15;
   }
   .cart-line-unit{
@@ -536,24 +539,24 @@
   .cart-add2 button{
     display:inline-flex;align-items:center;gap:6px;
     min-height:44px;padding:0 16px;border-radius:100px;cursor:pointer;
-    background:transparent;border:1px solid var(--acid);color:var(--acid);
+    background:transparent;border:1px solid var(--border-strong);color:var(--text);
     font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
   }
   .cart-add2 button .ic{width:14px;height:14px}
-  .cart-add2 button:hover{background:var(--acid);color:var(--ink)}
+  .cart-add2 button:hover{background:var(--surface-2);color:var(--text)}
   .cart-perks{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:10px}
   .cart-perks li{display:flex;gap:10px;align-items:center;font-family:var(--body);font-size:13px;color:var(--text-2);line-height:1.4}
-  .cart-perks .ic{width:16px;height:16px;flex:none;color:var(--acid)}
+  .cart-perks .ic{width:16px;height:16px;flex:none;color:var(--text-2)}
   .cart-foot{border-top:1px solid var(--rule);padding:16px 20px calc(12px + env(safe-area-inset-bottom));background:var(--surface)}
   .cart-foot[hidden],#cartFilled[hidden]{display:none}
   .cart-checkout{
     width:100%;min-height:56px;display:flex;align-items:center;justify-content:center;gap:10px;
-    background:var(--acid);color:var(--ink);border:none;border-radius:var(--sq-sm,8px);
+    background:var(--cta);color:var(--on-cta);border:none;border-radius:var(--sq-sm,8px);
     padding:0 18px;font-family:var(--mono);font-size:15px;
     font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
   }
   .cart-checkout .ic{width:16px;height:16px}
-  .cart-checkout:hover{background:var(--acid-hi)}
+  .cart-checkout:hover{background:var(--cta-hi)}
   .cart-checkout:disabled{opacity:.4;cursor:not-allowed}
   .cart-foot-note{font-family:var(--body);font-size:12px;color:var(--muted);margin:10px 0 0;line-height:1.45;text-align:center}
   .cart-keep{
@@ -602,7 +605,7 @@
     background:rgba(12,12,12,.9);color:var(--text);
     font-size:19px;line-height:1;cursor:pointer;
   }
-  .gal-viewer-close:hover{background:var(--acid);color:var(--ink);border-color:var(--acid)}
+  .gal-viewer-close:hover{background:var(--text);color:var(--ink);border-color:var(--text)}
   /* Footer */
   /* The legacy footer{…} rules lived here. The page uses the shared .sf-ftr
      (chrome.css); those rules faded its headings to 2.4:1 contrast. */
@@ -669,9 +672,9 @@
   /* Head + summary */
   .ck-head{padding-right:52px;margin-bottom:16px}
   .ck-eyebrow{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;
-    letter-spacing:.08em;text-transform:uppercase;color:var(--acid)}
+    letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
   .ck-eyebrow .ic{width:14px;height:14px;stroke-width:2}
-  .ck-title{font-family:var(--display);font-weight:900;font-size:30px;line-height:1.05;letter-spacing:-.02em;margin-top:4px}
+  .ck-title{font-family:var(--display);font-weight:500;font-size:30px;line-height:1.05;letter-spacing:-.02em;margin-top:4px}
   .ck-summary{border:1px solid var(--rule);border-radius:var(--sq-lg);background:var(--ink);padding:14px 16px;margin-bottom:22px}
   .ck-item{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--rule-soft)}
   .ck-thumb{width:52px;height:57px;border-radius:10px;overflow:hidden;background:#fff}
@@ -684,14 +687,14 @@
   .overlay .summary .amt.free{color:var(--acid)}
   .overlay .summary .amt.fee{color:var(--text)}
   .overlay .summary.total{margin-top:8px;padding-top:10px;border-top:1px solid var(--rule-soft);font-size:16px;font-weight:700;color:var(--text)}
-  .overlay .summary.total .amt{font-family:var(--display);font-weight:900;font-size:22px;line-height:1}
+  .overlay .summary.total .amt{font-family:var(--display);font-weight:500;font-size:22px;line-height:1}
 
   /* Steps */
   .ck-step{border:0;padding:0;margin:0 0 22px;min-width:0}
   .ck-step legend{display:flex;align-items:center;gap:10px;padding:0;margin-bottom:12px;
-    font-family:var(--display);font-weight:900;font-size:19px;color:var(--text)}
+    font-family:var(--display);font-weight:500;font-size:19px;color:var(--text)}
   .ck-num{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
-    background:var(--acid);color:var(--on-acid);font-family:var(--mono);font-size:12px;font-weight:700}
+    background:var(--surface-2);color:var(--text);border:1px solid var(--border-default);font-family:var(--mono);font-size:12px;font-weight:700}
   .ck-field{margin-top:14px}
   .ck-step legend+.ck-field{margin-top:0}
   .ck-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -721,9 +724,9 @@
   .ck-err{display:none;margin-top:6px;font-size:13px;line-height:1.4;color:#ff9a9a}
   .ck-field.is-err .ck-err{display:block}
   .delivery-estimate{display:none;align-items:flex-start;gap:10px;margin-top:12px;padding:12px 14px;
-    border-radius:var(--sq-sm);background:var(--acid-dim);font-size:13.5px;line-height:1.4;color:var(--text-2)}
+    border-radius:var(--sq-sm);background:var(--surface-2);border:1px solid var(--border-subtle);font-size:13.5px;line-height:1.4;color:var(--text-2)}
   .delivery-estimate.show{display:flex}
-  .delivery-estimate .ic{width:20px;height:20px;color:var(--acid)}
+  .delivery-estimate .ic{width:20px;height:20px;color:var(--text-2)}
   .delivery-estimate strong{color:var(--text)}
 
   /* Payment */
@@ -737,15 +740,15 @@
     transition:border-color .15s,background-color .15s;touch-action:manipulation;
   }
   .overlay .pay-opt:hover{border-color:var(--text-2)}
-  .overlay .pay-opt.active{border-color:var(--acid);background:rgba(var(--acid-rgb),.07);box-shadow:inset 0 0 0 1px var(--acid)}
+  .overlay .pay-opt.active{border-color:var(--text-2);background:rgba(244,241,234,.04);box-shadow:inset 0 0 0 1px var(--text-2)}
   .overlay .pay-opt:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
   .pay-radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-strong);display:inline-flex;align-items:center;justify-content:center}
-  .pay-opt.active .pay-radio{border-color:var(--acid)}
-  .pay-opt.active .pay-radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--acid)}
+  .pay-opt.active .pay-radio{border-color:var(--text)}
+  .pay-opt.active .pay-radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--text)}
   .overlay .pay-opt-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
   .overlay .pay-opt-copy strong{font-size:15px;font-weight:600}
   .overlay .pay-opt-copy small{font-size:12.5px;line-height:1.35;color:var(--muted)}
-  .overlay .pay-opt-price{font-family:var(--display);font-weight:900;font-size:22px;line-height:1;white-space:nowrap}
+  .overlay .pay-opt-price{font-family:var(--display);font-weight:500;font-size:22px;line-height:1;white-space:nowrap}
   .ck-pay-badges{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px;font-size:12px;color:var(--muted)}
   .ck-pay-badges span{padding:4px 8px;border:1px solid var(--rule);border-radius:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--text-2)}
 
@@ -764,12 +767,12 @@
   .overlay .submit-btn{
     width:100%;min-height:56px;padding:0 18px;
     display:inline-flex;align-items:center;justify-content:center;gap:10px;
-    background:var(--acid);color:var(--on-acid);border:0;border-radius:var(--sq-sm);
+    background:var(--cta);color:var(--on-cta);border:0;border-radius:var(--sq-sm);
     font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
     cursor:pointer;transition:background-color .2s;
   }
   .overlay .submit-btn .ic{width:18px;height:18px;stroke-width:2}
-  .overlay .submit-btn:hover{background:var(--acid-hi)}
+  .overlay .submit-btn:hover{background:var(--cta-hi)}
   .overlay .submit-btn:disabled{opacity:.55;cursor:not-allowed}
   .overlay .submit-btn:focus-visible{outline:2px solid var(--text);outline-offset:3px}
   .checkout-reassure{margin-top:8px;text-align:center;font-size:12px;line-height:1.4;color:var(--muted)}
@@ -784,8 +787,8 @@
   .ck-done-ic{width:64px;height:64px;margin:4px auto 14px;border-radius:50%;display:flex;align-items:center;justify-content:center;
     background:var(--acid);color:var(--on-acid)}
   .ck-done-ic .ic{width:30px;height:30px;stroke-width:2.5}
-  .overlay-tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);margin-bottom:6px}
-  .overlay .success-screen h2{font-family:var(--display);font-weight:900;font-size:34px;line-height:1.05;margin-bottom:10px}
+  .overlay-tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .overlay .success-screen h2{font-family:var(--display);font-weight:500;font-size:34px;line-height:1.05;margin-bottom:10px}
   .overlay .success-screen p{color:var(--text-2);margin-bottom:16px;font-size:15px}
   .overlay .success-screen .order-id{display:inline-block;margin-bottom:16px;padding:12px 16px;border-radius:var(--sq-sm);
     font-family:var(--mono);font-size:14px;letter-spacing:.08em;color:var(--acid);background:var(--acid-dim);border:1px solid rgba(var(--acid-rgb),.3)}
@@ -818,7 +821,7 @@
   }
   .ls-label{
     font-family:var(--display);
-    font-weight:900;
+    font-weight:500;
     font-size:24px;
     margin-bottom:6px;
   }
@@ -854,7 +857,7 @@
   }
   .po-close{font-size:16px;padding:6px 12px}
   .po-logo{
-    font-family:var(--body);font-weight:900;
+    font-family:var(--body);font-weight:500;
     font-size:18px;letter-spacing:2px;text-transform:uppercase;
     position:relative;padding-right:12px;
   }
@@ -869,7 +872,7 @@
     margin-bottom:16px;
   }
   .po-main h2{
-    font-family:var(--display);font-weight:900;
+    font-family:var(--display);font-weight:500;
     font-size:clamp(24px,4vw,36px);letter-spacing:-.02em;line-height:1.15;
     margin:32px 0 12px;
   }
@@ -990,7 +993,7 @@
     padding:20px 24px;
     cursor:pointer;
     font-family:var(--display);
-    font-weight:900;
+    font-weight:500;
     font-size:clamp(17px,2.2vw,20px);
     letter-spacing:-.01em;
     line-height:1.35;
@@ -1065,7 +1068,7 @@
   #smelloff-consent-bar p{
     flex:1;font-size:13px;color:var(--muted);line-height:1.5;margin:0;min-width:200px;
   }
-  #smelloff-consent-bar p a{color:var(--acid);text-decoration:underline;text-underline-offset:2px}
+  #smelloff-consent-bar p a{color:var(--text);text-decoration:underline;text-underline-offset:2px}
   /* Wraps rather than overflowing: at 320px these two buttons measured
      315px inside a 300px content box. See chrome.css §5.2. */
   #smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}
@@ -1074,13 +1077,13 @@
     #smelloff-consent-bar .cb-actions button{flex:1 1 130px;padding-inline:10px}
   }
   #smelloff-consent-bar button{
-    font-family:var(--mono);
-    font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    font-family:var(--body);
+    font-size:14px;font-weight:500;letter-spacing:.01em;
     /* min-height was absent here but present in index.html's copy, so the
        same control was 34px tall on this page and 44px on the homepage. */
-    padding:9px 18px;min-height:44px;border-radius:2px;cursor:pointer;
+    padding:9px 18px;min-height:44px;border-radius:var(--sq-sm,8px);cursor:pointer;
   }
-  #smelloff-consent-bar .cb-accept{background:var(--acid);color:var(--ink);border:none}
+  #smelloff-consent-bar .cb-accept{background:var(--cta,#F4F1EA);color:var(--on-cta,#080808);border:none}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--rule)}
 
   /* ============================= */
@@ -1100,7 +1103,7 @@
   .pay-opt:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
   /* ---- Gated social proof (verified reviews / distribution / bottles sold) ---- */
   .vr-summary{border:1px solid var(--rule);padding:18px 20px;margin:0 0 28px;display:flex;flex-wrap:wrap;gap:18px 34px;align-items:center}
-  .vr-avg{font-family:var(--display);font-weight:900;font-size:44px;line-height:1}
+  .vr-avg{font-family:var(--display);font-weight:500;font-size:44px;line-height:1}
   .vr-stars{color:var(--acid);letter-spacing:2px;font-size:15px}
   .vr-count{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
   .vr-dist{flex:1;min-width:200px;display:grid;gap:4px}
@@ -1135,24 +1138,24 @@
   .pd-sec--alt{background:var(--surface)}
   .pd .section-tag{margin:0}
   .pd-head{max-width:760px;margin-bottom:clamp(28px,4vw,44px)}
-  .pd-h2{font-family:var(--display);font-weight:900;font-size:var(--fs-h2);
+  .pd-h2{font-family:var(--display);font-weight:500;font-size:var(--fs-h2);
     line-height:var(--lh-display);letter-spacing:var(--ls-display);margin-top:14px;color:var(--text);text-wrap:balance}
   .pd .acid{color:var(--acid)}
   .pd-lede{font-size:var(--fs-lead);line-height:var(--lh-body);color:var(--text-2);margin-top:14px;max-width:62ch}
-  .pd p a,.pd li a{color:var(--acid);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+  .pd p a,.pd li a{color:var(--text);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
 
   /* Buttons — primary acid, ghost outline. Shape comes from soft.css §9. */
   .pd-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;
-    min-height:56px;padding:0 22px;border:1px solid var(--acid);background:var(--acid);color:var(--on-acid);
+    min-height:56px;padding:0 22px;border:1px solid var(--cta);background:var(--cta);color:var(--on-cta);
     font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;
     text-decoration:none;cursor:pointer;white-space:nowrap;
     transition:background-color .2s var(--ease),border-color .2s var(--ease),transform .16s var(--ease-snap)}
-  .pd-btn:hover{background:var(--acid-hi);border-color:var(--acid-hi)}
+  .pd-btn:hover{background:var(--cta-hi);border-color:var(--cta-hi)}
   .pd-btn .ic{width:18px;height:18px;stroke-width:2}
   .pd-btn:focus-visible,.final-btn:focus-visible{outline:2px solid var(--text);outline-offset:3px}
   .pd-btn--ghost{background:transparent;color:var(--text);border-color:var(--border-strong)}
   .pd-btn--ghost:hover{background:var(--surface-2);border-color:var(--text)}
-  .pd-btn--ghost .ic{color:var(--acid)}
+  .pd-btn--ghost .ic{color:var(--text-2)}
   @media(prefers-reduced-motion:no-preference){.pd-btn:active{transform:scale(.97)}}
 
   /* ---------- Hero ---------- */
@@ -1202,7 +1205,7 @@
   .gal-dot::after{content:"";width:7px;height:7px;border-radius:50%;background:rgba(244,241,234,.28);
     transition:width .2s var(--ease),background-color .2s var(--ease)}
   .gal-dot.active{width:34px}
-  .gal-dot.active::after{width:22px;border-radius:4px;background:var(--acid)}
+  .gal-dot.active::after{width:22px;border-radius:4px;background:var(--text)}
   .gal-dot:focus-visible{outline:2px solid var(--acid);outline-offset:-2px;border-radius:6px}
   .gal-counter{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--text-2);
     padding:3px 10px;border:1px solid var(--rule);border-radius:var(--r-pill)}
@@ -1215,32 +1218,32 @@
     .pd-thumb:first-child{background:#fff}
     .pd-thumb img{width:100%;height:auto;display:block}
     .pd-thumb:hover{opacity:.9}
-    .pd-thumb.active{opacity:1;border-color:var(--acid)}
+    .pd-thumb.active{opacity:1;border-color:var(--text-2)}
     .pd-thumb:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
   }
 
   /* Buy panel */
   .product-info{display:flex;flex-direction:column;min-width:0}
   .pd-kicker{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px}
-  .pd-eyebrow{font-family:var(--mono);font-size:var(--fs-eyebrow);letter-spacing:var(--ls-eyebrow);color:var(--acid)}
+  .pd-eyebrow{font-family:var(--mono);font-size:var(--fs-eyebrow);letter-spacing:var(--ls-eyebrow);color:var(--muted);text-transform:uppercase;font-weight:500}
   .pd-stock{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;
     letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
-  .pd-dot{width:8px;height:8px;border-radius:50%;background:var(--acid);box-shadow:0 0 0 4px var(--acid-dim)}
-  .pd-title{font-family:var(--display);font-weight:900;font-size:clamp(44px,5.2vw,68px);
-    line-height:.95;letter-spacing:-.025em;margin-top:10px;color:var(--text)}
+  .pd-dot{width:8px;height:8px;border-radius:50%;background:var(--acid)}
+  .pd-title{font-family:var(--display);font-weight:500;font-size:clamp(44px,5.2vw,68px);
+    line-height:1.02;letter-spacing:-.02em;margin-top:10px;color:var(--text)}
   .pd-tagline{font-size:var(--fs-lead);line-height:1.5;color:var(--text-2);margin-top:12px;max-width:54ch}
   .pd-not{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin-top:16px}
   .pd-not li{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid var(--rule);
     border-radius:var(--r-pill);font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--text-2)}
   .pd-not .ic{width:14px;height:14px;color:var(--muted)}
-  .pd-not li.on{border-color:rgba(var(--acid-rgb),.5);background:var(--acid-dim);color:var(--acid)}
-  .pd-not li.on .ic{color:var(--acid);stroke-width:2.5}
+  .pd-not li.on{border-color:var(--border-strong);color:var(--text)}
+  .pd-not li.on .ic{color:var(--text);stroke-width:2.5}
   .pd-price{margin-top:20px;padding-top:18px;border-top:1px solid var(--rule)}
   .pd-price-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
-  .pd-amt{font-family:var(--display);font-weight:900;font-size:clamp(40px,5vw,52px);line-height:1;color:var(--text)}
+  .pd-amt{font-family:var(--display);font-weight:500;font-size:clamp(40px,5vw,52px);line-height:1;color:var(--text)}
   .pd-price-row s{font-family:var(--mono);font-size:13px;color:var(--muted)}
-  .pd-off{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;
-    background:var(--acid);color:var(--on-acid);padding:4px 8px;border-radius:6px;align-self:center}
+  .pd-off{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.02em;
+    color:var(--acid);border:1px solid var(--border-focus);padding:3px 9px;border-radius:var(--r-pill);align-self:center}
   .pd-pack{margin-top:8px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--muted)}
   .price-note{display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-size:14px;line-height:1.4;color:var(--text-2)}
   .price-note strong{color:var(--text)}
@@ -1249,7 +1252,7 @@
   .qty-picker button{width:44px;height:54px;display:inline-flex;align-items:center;justify-content:center;
     background:none;border:0;color:var(--text);cursor:pointer}
   .qty-picker button .ic{width:16px;height:16px;stroke-width:2}
-  .qty-picker button:hover:not(:disabled){color:var(--acid)}
+  .qty-picker button:hover:not(:disabled){color:var(--text-2)}
   .qty-picker button:disabled{opacity:.3;cursor:not-allowed}
   .qty-picker output{min-width:26px;text-align:center;font-family:var(--mono);font-size:16px}
   .buy-actions .pd-btn{flex:1 1 auto;min-width:0;padding:0 16px}
@@ -1261,11 +1264,11 @@
   .pd-assure{display:grid;grid-template-columns:1fr 1fr;gap:8px;list-style:none;margin-top:18px}
   .pd-assure li{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--rule-soft);
     border-radius:12px;background:var(--surface);font-size:12.5px;line-height:1.35;color:var(--muted)}
-  .pd-assure .ic{color:var(--acid);margin-top:1px}
+  .pd-assure .ic{color:var(--text-2);margin-top:1px}
   .pd-assure b{display:block;color:var(--text);font-weight:600;font-size:13.5px;margin-bottom:1px}
   .pd-highlights{list-style:none;margin-top:20px;display:grid;gap:12px}
   .pd-highlights li{display:flex;align-items:flex-start;gap:12px;font-size:15px;line-height:1.45;color:var(--text-2)}
-  .pd-highlights li::before{content:"";flex:none;width:6px;height:6px;margin-top:9px;border-radius:50%;background:var(--acid)}
+  .pd-highlights li::before{content:"";flex:none;width:5px;height:5px;margin-top:9px;border-radius:50%;background:var(--text-2)}
   .pd-footnote{margin-top:14px;font-size:12px;line-height:1.5;color:var(--muted)}
   /* Phones: the CTA is the point of the hero. Tagline trims to three lines. */
   @media(max-width:767px){
@@ -1313,7 +1316,7 @@
     border-radius:var(--sq-lg);background:var(--surface)}
   .r30-step-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px}
   .r30-num{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted)}
-  .r30-title{font-family:var(--display);font-weight:900;font-size:var(--fs-h4);line-height:1.15;color:var(--text);margin-top:6px}
+  .r30-title{font-family:var(--display);font-weight:500;font-size:var(--fs-h4);line-height:1.15;color:var(--text);margin-top:6px}
   .r30-body{font-size:14.5px;line-height:1.55;color:var(--text-2)}
   .r30-ring{--r30-deg:0deg;position:relative;width:40px;height:40px;border-radius:50%;
     display:inline-flex;align-items:center;justify-content:center;
@@ -1333,22 +1336,16 @@
      it is indexable copy. Swap the div for an <img> of the stated ratio. */
   .ph-img{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;
     display:flex;flex-direction:column;justify-content:flex-end;padding:18px;
-    border:1.5px dashed var(--border-focus);border-radius:var(--sq-xl);
-    background:repeating-linear-gradient(135deg,transparent 0 14px,rgba(var(--acid-rgb),.035) 14px 28px),var(--ink)}
+    border:1px solid var(--border-subtle);border-radius:var(--sq-xl);
+    background:radial-gradient(120% 90% at 30% 15%,rgba(244,241,234,.05),transparent 60%),var(--surface)}
   .ph-img::before{content:attr(data-ph-n);position:absolute;top:14px;left:14px;padding:4px 10px;border-radius:var(--r-pill);
-    background:var(--acid);color:var(--on-acid);font-family:var(--mono);font-size:10px;letter-spacing:.12em}
+    border:1px solid var(--border-default);color:var(--text-2);font-family:var(--body);font-size:10.5px;letter-spacing:.14em}
   .ph-img::after{content:attr(data-ph) "\A" attr(data-ph-spec);white-space:pre-line;
-    font-family:var(--mono);font-size:11.5px;line-height:1.5;color:var(--muted)}
+    font-family:var(--body);font-size:12.5px;line-height:1.5;color:var(--muted)}
   .r30-step .ph-img{aspect-ratio:1/1;border-radius:var(--sq-md);margin-bottom:4px}
   /* Small tiles on phones: the slot number only; the brief stays in data-ph. */
   @media(max-width:959px){.r30-step .ph-img::after{display:none}}
   @media(max-width:767px){.pd-fix .ph-img{aspect-ratio:4/3}}
-  /* Kept out of the live site until the photo exists (2026-10-11): customers
-     were seeing "IMAGE 01 · 4:5 · 1200×1500 · WebP" in a dashed box. The slot
-     stays in the markup, so swapping in the <img> is still a one-line edit —
-     an <img> doesn't carry .ph-img, so this rule never hides a real photo. */
-  .ph-img{display:none !important}
-  .pd-fix:has(> .ph-img){grid-template-columns:minmax(0,1fr);max-width:760px}
   .pd-scale{display:grid;grid-auto-flow:column;grid-auto-columns:78%;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
     scrollbar-width:none;margin:0 calc(var(--gutter) * -1);padding:0 var(--gutter);scroll-padding-inline:var(--gutter)}
   .pd-scale::-webkit-scrollbar{display:none}
@@ -1371,10 +1368,10 @@
   .pd-compare tbody tr:last-child>*{border-bottom:0}
   .pd-compare thead th{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.08em;
     text-transform:uppercase;color:var(--muted);background:var(--surface)}
-  .pd-compare thead th.us{background:var(--acid);color:var(--on-acid);font-weight:700}
+  .pd-compare thead th.us{background:var(--surface-2);color:var(--text);font-weight:500}
   .pd-compare tbody th{width:30%;font-weight:600;color:var(--text)}
   .pd-compare td{color:var(--muted)}
-  .pd-compare td.us{color:var(--text);background:rgba(var(--acid-rgb),.06)}
+  .pd-compare td.us{color:var(--text);background:rgba(244,241,234,.03)}
   .pd-compare td.us .ic{width:16px;height:16px;color:var(--acid);stroke-width:2.5;margin-right:6px;vertical-align:-3px}
 
   /* ---------- Reviews ---------- */
@@ -1386,13 +1383,13 @@
   @media(min-width:768px){.review-grid{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;margin:0;padding:0}}
   .pd .review{scroll-snap-align:start;display:flex;flex-direction:column;gap:16px;padding:24px;margin:0;
     border:1px solid var(--rule);border-radius:var(--sq-lg);background:var(--ink)}
-  .ic-quote{width:30px;height:30px;color:var(--acid);fill:currentColor;stroke:none}
+  .ic-quote{width:30px;height:30px;color:var(--border-strong);fill:currentColor;stroke:none}
   .review blockquote{flex:1;font-family:var(--display);font-size:19px;line-height:1.4;color:var(--text)}
   .review figcaption{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
     padding-top:14px;border-top:1px solid var(--rule-soft)}
   .review cite{font-style:normal;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--text-2)}
-  .beta-tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid);
-    border:1px solid rgba(var(--acid-rgb),.4);padding:3px 8px;border-radius:var(--r-pill)}
+  .beta-tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--border-default);padding:3px 8px;border-radius:var(--r-pill)}
   .reviews-more{margin-top:24px;font-size:14.5px;line-height:1.6;color:var(--muted);max-width:70ch}
 
   /* ---------- Science + uses: cards ---------- */
@@ -1402,16 +1399,16 @@
   .pd-card{display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid var(--rule);
     border-radius:var(--sq-lg);background:var(--surface)}
   .pd-sec--alt .pd-card{background:var(--ink)}
-  .pd-ingr .pd-card>.ic{width:32px;height:32px;color:var(--acid);stroke-width:1.5;margin-bottom:6px}
+  .pd-ingr .pd-card>.ic{width:32px;height:32px;color:var(--text-2);stroke-width:1.5;margin-bottom:6px}
   .pd-step{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .pd-card h3{font-family:var(--display);font-weight:900;font-size:var(--fs-h4);line-height:1.15;color:var(--text)}
+  .pd-card h3{font-family:var(--display);font-weight:500;font-size:var(--fs-h4);line-height:1.15;color:var(--text)}
   .pd-card p{font-size:14.5px;line-height:1.55;color:var(--text-2)}
   .pd-inci{margin-top:14px;border:1px solid var(--rule);border-radius:var(--sq-lg);background:var(--surface)}
   .pd-inci summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;
     min-height:56px;padding:16px 22px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
   .pd-inci summary::-webkit-details-marker{display:none}
   .pd-inci summary:focus-visible{outline:2px solid var(--acid);outline-offset:-2px;border-radius:var(--sq-lg)}
-  .pd-inci summary .ic{color:var(--acid);transition:transform .2s var(--ease)}
+  .pd-inci summary .ic{color:var(--text-2);transition:transform .2s var(--ease)}
   .pd-inci[open] summary .ic{transform:rotate(180deg)}
   .pd-inci ol{list-style:none;padding:0 22px 6px;display:grid}
   @media(min-width:768px){.pd-inci ol{grid-template-columns:1fr 1fr;column-gap:40px}}
@@ -1422,21 +1419,21 @@
   .pd-inci-note{padding:4px 22px 18px;font-size:12.5px;color:var(--muted)}
   .pd-inci-row{display:grid;gap:6px;padding:18px 22px 8px}
   .pd-inci-k{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  .pd-inci-v{font-family:var(--display);font-weight:900;font-size:17px;color:var(--text)}
-  .pd-inci-more{font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:.06em;color:var(--acid);margin-left:6px;white-space:nowrap}
-  .pd-inci-note a{color:var(--acid);text-decoration:underline;text-underline-offset:2px}
+  .pd-inci-v{font-family:var(--display);font-weight:500;font-size:17px;color:var(--text)}
+  .pd-inci-more{font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:.06em;color:var(--muted);margin-left:6px;white-space:nowrap}
+  .pd-inci-note a{color:var(--text);text-decoration:underline;text-underline-offset:2px}
 
   /* ---------- Buy ---------- */
   .pd-offer{display:grid;overflow:hidden;border:1px solid var(--rule);border-radius:var(--sq-xl);background:var(--surface)}
   @media(min-width:768px){.pd-offer{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}}
   .pd-offer-art{display:flex;align-items:center;justify-content:center;padding:28px;min-height:250px;
-    background:radial-gradient(circle at 50% 45%,rgba(var(--acid-rgb),.2),transparent 62%),var(--ink)}
+    background:radial-gradient(circle at 50% 45%,rgba(244,241,234,.07),transparent 62%),var(--ink)}
   .pd-offer-art img{height:clamp(220px,34vw,400px);width:auto}
   .pd-offer-body{display:flex;flex-direction:column;gap:16px;padding:clamp(22px,4vw,44px)}
   .pd-offer-body .pd-h2{margin-top:0}
   .pd-offer-list{list-style:none;display:grid;gap:11px}
   .pd-offer-list li{display:flex;align-items:flex-start;gap:12px;font-size:15px;line-height:1.45;color:var(--text-2)}
-  .pd-offer-list li::before{content:"";flex:none;width:6px;height:6px;margin-top:9px;border-radius:50%;background:var(--acid)}
+  .pd-offer-list li::before{content:"";flex:none;width:5px;height:5px;margin-top:9px;border-radius:50%;background:var(--text-2)}
   .pd-offer-list strong{color:var(--text)}
   #showcaseBuyBtn{width:100%}
   .cod-line{text-align:center;font-size:13px;color:var(--muted);margin-top:-6px}
@@ -1451,12 +1448,12 @@
 
   /* ---------- FAQ: the accordion itself is soft.css §3 + the FAQ block above ---------- */
   .pd .faq{padding-block:var(--section-y);border-top:1px solid var(--rule-soft);background:var(--ink)}
-  .pd .faq .section-tag{color:var(--acid)}
+  .pd .faq .section-tag{color:var(--muted)}
   .pd .faq .section-tag::before{background:currentColor}
 
   /* ---------- Final + email ---------- */
   .pd .final{padding-block:clamp(56px,8vw,112px);text-align:center;
-    background:radial-gradient(ellipse at 50% 0%,rgba(var(--acid-rgb),.14),transparent 60%),var(--surface);
+    background:radial-gradient(ellipse at 50% 0%,rgba(244,241,234,.05),transparent 60%),var(--surface);
     border-top:1px solid var(--rule-soft)}
   .final-inner{display:flex;flex-direction:column;align-items:center;gap:18px}
   .final-inner .pd-h2{margin-top:0}
@@ -1565,10 +1562,14 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   } catch (e) {}
 }
 </script>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=2bfcae5f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=fe433ec5">
-<script src="/assets/js/chrome.js?v=df3e13b5" defer></script>
+<link rel="preload" href="/assets/css/soft.css?v=cbeb7a9a" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=cbeb7a9a"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=fec2b12b" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=fec2b12b"></noscript>
+<script src="/assets/js/chrome.js?v=15df4e80" defer></script>
 </head>
 <body>
 
@@ -1634,7 +1635,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <div class="mobile-bar" id="mobileBar">
   <img class="mb-thumb" src="/assets/pdp-01-hero@640.webp" alt="" width="640" height="704" loading="lazy" decoding="async">
   <span class="mb-text"><span class="mb-label" id="mobileBarLabel" aria-live="polite" aria-atomic="true">ODORSTRIKE 50ml · ₹299</span><span class="mb-sub">Free shipping · Cash on Delivery</span></span>
-  <button class="mb-btn" id="mobileBarBuyBtn" onclick="buyNow()" aria-describedby="mobileBarLabel">GET ODORSTRIKE</button>
+  <button class="mb-btn" id="mobileBarBuyBtn" onclick="buyNow()" aria-describedby="mobileBarLabel">Buy now</button>
 </div>
 
 <!-- CART DRAWER -->
@@ -1860,9 +1861,9 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </ul>
 
         <ul class="pd-not" aria-label="What ODORSTRIKE is and is not">
-          <li><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg>NOT PERFUME</li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg>NOT BODY DEODORANT</li>
-          <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>FABRIC ONLY</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg>Not perfume</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg>Not body deodorant</li>
+          <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Fabric only</li>
         </ul>
 
         <!-- Price: figure, struck MRP and discount, pack, then BOTH payable
@@ -1883,7 +1884,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
             <output id="pdpQtyVal" for="pdpQtyDec pdpQtyInc" aria-live="polite">1</output>
             <button type="button" id="pdpQtyInc" onclick="pdpQtyStep(1)" aria-label="Increase quantity"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg></button>
           </div>
-          <button type="button" class="pd-btn" id="pdpBuyBtn" onclick="buyNow()"><span id="pdpBuyText">GET ODORSTRIKE — ₹299</span></button>
+          <button type="button" class="pd-btn" id="pdpBuyBtn" onclick="buyNow()"><span id="pdpBuyText">Buy now — ₹299</span></button>
         </div>
         <button type="button" class="pd-btn pd-btn--ghost" id="pdpCartBtn" onclick="addToCart()">Add to cart</button>
         <p class="pd-pay"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>Secure checkout · UPI · Cards · Net banking · COD</p>
@@ -1991,7 +1992,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- SEE THE SIZE — Baymard: 42% of shoppers try to judge size from the
      images, so the page shows it in scale, in a hand and a pocket. -->
 <!-- Hidden until the three in-scale photos exist; it was three empty slots. -->
-<section class="pd-sec" id="size" aria-labelledby="sizeTitle" hidden>
+<section class="pd-sec" id="size" aria-labelledby="sizeTitle">
   <div class="pd-wrap">
     <div class="pd-head">
       <div class="section-tag">Pocket size</div>
@@ -2080,7 +2081,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <li><span><strong>Ships from Hyderabad</strong> in 48 hours · 3–5 days to metros</span></li>
           <li><span><strong>7-day returns</strong> if it isn't for you</span></li>
         </ul>
-        <button type="button" class="pd-btn" id="showcaseBuyBtn" onclick="buyNow()">GET ODORSTRIKE — ₹299</button>
+        <button type="button" class="pd-btn" id="showcaseBuyBtn" onclick="buyNow()">Buy now — ₹299</button>
         <p class="cod-line"><s>₹499</s> ₹299 prepaid · Free shipping · Cash on Delivery available</p>
         <!-- Gated proof (adjacent to buy tile): rating summary renders here ONLY when
              CFG.VERIFIED_REVIEWS has real entries; bottles-sold only when CFG.BOTTLES_SOLD > 0 -->
@@ -2154,7 +2155,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <div class="pd-wrap final-inner">
     <h2 id="finalCtaTitle" class="pd-h2">Smell khatam.<br>Confidence qaayam.</h2>
     <p class="final-reassurance">Free prepaid shipping · COD available · 7-day returns</p>
-    <button type="button" class="pd-btn final-btn" id="finalBuyBtn" onclick="buyNow()">GET ODORSTRIKE — ₹299</button>
+    <button type="button" class="pd-btn final-btn" id="finalBuyBtn" onclick="buyNow()">Buy now — ₹299</button>
   </div>
 </section>
 
@@ -2361,7 +2362,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <a href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20tried%20to%20place%20an%20order%20on%20the%20website%20but%20it%20failed.%20Can%20you%20help%3F" class="wa-fallback" id="waFallback" style="display:none" target="_blank" rel="noopener">WhatsApp us for help →</a>
 
       <div class="checkout-action-bar">
-        <button class="submit-btn" id="submitBtn" onclick="submitOrder()"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg><span id="submitText">BUY ODORSTRIKE · ₹299</span></button>
+        <button class="submit-btn" id="submitBtn" onclick="submitOrder()"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg><span id="submitText">Buy ODORSTRIKE · ₹299</span></button>
         <p class="checkout-reassure">Payments secured by Razorpay · 7-day returns</p>
       </div>
     </div>
@@ -2659,13 +2660,13 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     var v = document.getElementById('pdpQtyVal');
     if (v) v.textContent = String(pdpQty);
     var t = document.getElementById('pdpBuyText');
-    if (t) t.textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty);
+    if (t) t.textContent = 'Buy now — ₹' + (unitPrice() * pdpQty);
     var sc = document.getElementById('showcaseBuyBtn');
-    if (sc) sc.textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty);
+    if (sc) sc.textContent = 'Buy now — ₹' + (unitPrice() * pdpQty);
     var finalBtn = document.getElementById('finalBuyBtn');
     if (finalBtn) {
       var subtotal = unitPrice() * pdpQty;
-      finalBtn.textContent = 'GET ODORSTRIKE — ₹' + subtotal;
+      finalBtn.textContent = 'Buy now — ₹' + subtotal;
     }
     var mbLabel = document.getElementById('mobileBarLabel');
     if (mbLabel) {
@@ -2797,7 +2798,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       if (price) price.textContent = '₹' + (t.subtotal + t.shipping + (b.dataset.method === 'cod' ? COD_FEE : 0));
     });
     set('checkoutTotal', '₹' + t.total);
-    set('submitText', 'BUY ODORSTRIKE · ₹' + t.total);
+    set('submitText', 'Buy ODORSTRIKE · ₹' + t.total);
     var feeRow = document.getElementById('codFeeRow');
     if (feeRow) feeRow.style.display = 'none';
   }

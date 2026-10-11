@@ -29,7 +29,7 @@
 <!-- Fonts -->
 <link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=ea5bd6cb">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=7b21e7db">
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
@@ -68,12 +68,12 @@
   html{scroll-behavior:smooth}
   body{background:var(--bg);color:var(--text);font-family:'Inter Tight',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
   body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-  ::selection{background:var(--acid);color:var(--ink)}
+  ::selection{background:rgba(244,241,234,.18);color:var(--text)}
   nav.p-nav{display:flex;justify-content:space-between;align-items:center;padding:24px 32px;border-bottom:1px solid var(--rule)}
   nav.p-nav a{color:var(--text);text-decoration:none}
-  .p-logo{font-family:'Fraunces',serif;font-weight:900;font-size:22px;letter-spacing:-.02em}
-  .p-logo .p-dot{color:var(--acid)}
-  .p-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .p-logo{font-family:'Fraunces',serif;font-weight:500;font-size:22px;letter-spacing:-.02em}
+  .p-logo .p-dot{color:var(--muted)}
+  .p-back{font-family:var(--mono,system-ui,sans-serif);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
   .p-back:hover{color:var(--text)}
   /* The FAQ list is two columns site-wide (see soft.css). At the old 800px
      cap that meant two ~350px tracks and almost every question wrapped to
@@ -82,53 +82,58 @@
   main{max-width:var(--maxw);margin:0 auto;padding:80px 32px 120px}
   /* …but the intro copy above the list still wants a reading measure. */
   main > .p-eyebrow,main > h1,main > .p-sub{max-width:800px}
-  .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+  .tag{font-family:var(--mono,system-ui,sans-serif);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:12px}
   .tag::before{content:'';width:32px;height:1px;background:var(--muted)}
-  h1{font-family:'Fraunces',serif;font-weight:900;font-size:var(--fs-h1);line-height:.95;letter-spacing:-.03em;margin-bottom:16px}
-  h1 .h1-dot{color:var(--acid)}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:var(--fs-h1);line-height:.95;letter-spacing:-.03em;margin-bottom:16px}
+  h1 .h1-dot{color:var(--muted)}
   .sub{font-family:'Fraunces',serif;font-size:20px;color:var(--muted);margin-bottom:56px;max-width:560px}
   /* Section heading above the accordion — carries the document outline so the
      page doesn't skip h1 -> h3 (the questions themselves are <summary>). */
-  .faq-h2{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 18px}
+  .faq-h2{font-family:var(--mono,system-ui,sans-serif);font-weight:400;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 18px}
   .faq-list details{border-bottom:1px solid var(--rule)}
-  .faq-list summary{padding:24px 0;cursor:pointer;font-family:'Fraunces',serif;font-weight:900;font-size:clamp(18px,2.5vw,24px);letter-spacing:-.01em;line-height:1.3;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--text)}
+  .faq-list summary{padding:24px 0;cursor:pointer;font-family:'Fraunces',serif;font-weight:500;font-size:clamp(18px,2.5vw,24px);letter-spacing:-.01em;line-height:1.3;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--text)}
   .faq-list summary::-webkit-details-marker{display:none}
-  .faq-list summary::after{content:'+';font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:400;color:var(--muted);flex-shrink:0;transition:transform .2s}
+  .faq-list summary::after{content:'+';font-family:var(--mono,system-ui,sans-serif);font-size:20px;font-weight:400;color:var(--muted);flex-shrink:0;transition:transform .2s}
   .faq-list details[open] summary::after{content:'−'}
   .faq-answer-wrap{padding:0 0 24px;font-size:15px;line-height:1.6;color:var(--muted);max-width:680px}
   .faq-answer-wrap p{margin-bottom:12px}
   .faq-answer-wrap p:last-child{margin-bottom:0}
-  .faq-answer-wrap a{color:var(--acid);text-decoration:none;border-bottom:1px solid rgba(184,255,87,.3)}
+  .faq-answer-wrap a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--border-strong)}
   .faq-answer-wrap ol,.faq-answer-wrap ul{padding-left:20px;margin-bottom:14px}
-  .faq-cta{display:block;margin-top:56px;padding:24px;text-align:center;background:var(--acid);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;font-weight:500;transition:transform .2s}
-  .faq-cta:hover{transform:scale(1.01)}
-  .wa-strip{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px;padding:16px;border:1px solid rgba(37,211,102,.3);background:rgba(37,211,102,.08);color:#25d366;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none}
+  .faq-cta{display:block;margin-top:56px;padding:20px 24px;text-align:center;background:var(--cta);color:var(--on-cta);font-family:var(--body);font-size:15px;letter-spacing:.01em;text-decoration:none;font-weight:500;transition:background-color .2s}
+  .faq-cta:hover{background:var(--cta-hi)}
+  .wa-strip{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px;padding:16px;border:1px solid var(--border-default);border-radius:var(--sq-sm,8px);background:transparent;color:var(--text);font-family:var(--body);font-size:14.5px;letter-spacing:.01em;text-decoration:none}
+  .wa-strip:hover{border-color:var(--border-strong);background:var(--surface)}
   .wa-strip svg{width:18px;height:18px;fill:currentColor}
-  .meta-line{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-top:60px;padding-top:24px;border-top:1px solid var(--rule);line-height:1.9}
+  .meta-line{font-family:var(--body);font-size:12.5px;letter-spacing:0;color:var(--muted);margin-top:60px;padding-top:24px;border-top:1px solid var(--rule);line-height:1.9}
   .meta-line a{color:var(--muted);display:inline-block;padding:5px 0}
   footer.p-footer{border-top:1px solid var(--rule);padding:36px 32px calc(20px + env(safe-area-inset-bottom,0px));text-align:center}
-  .p-footer-brand{font-family:'Fraunces',serif;font-weight:900;font-size:28px;letter-spacing:-.02em;color:var(--text);text-decoration:none;display:inline-block;margin-bottom:18px}
-  .p-footer-brand .p-dot{color:var(--acid)}
+  .p-footer-brand{font-family:'Fraunces',serif;font-weight:500;font-size:28px;letter-spacing:-.02em;color:var(--text);text-decoration:none;display:inline-block;margin-bottom:18px}
+  .p-footer-brand .p-dot{color:var(--muted)}
   .p-footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 20px;margin-bottom:22px}
-  .p-footer-links a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text);opacity:.8;text-decoration:none}
-  .p-footer-links a:hover{color:var(--acid);opacity:1}
-  .p-footer-bottom{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:16px;border-top:1px solid rgba(184,255,87,.15);max-width:720px;margin:0 auto}
+  .p-footer-links a{font-family:var(--mono,system-ui,sans-serif);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text);opacity:.8;text-decoration:none}
+  .p-footer-links a:hover{color:var(--text);opacity:1}
+  .p-footer-bottom{font-family:var(--mono,system-ui,sans-serif);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:16px;border-top:1px solid rgba(184,255,87,.15);max-width:720px;margin:0 auto}
   #smelloff-consent-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#111;border-top:1px solid var(--rule);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));font-family:'Inter Tight',sans-serif}
   #smelloff-consent-bar .cb-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
   #smelloff-consent-bar p{flex:1;font-size:13px;color:var(--muted);line-height:1.5;margin:0;min-width:200px}
-  #smelloff-consent-bar p a{color:var(--acid);text-decoration:underline;text-underline-offset:2px}
+  #smelloff-consent-bar p a{color:var(--text);text-decoration:underline;text-underline-offset:2px}
   #smelloff-consent-bar .cb-actions{display:flex;gap:10px;flex-shrink:0}
-  #smelloff-consent-bar button{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 18px;border-radius:2px;cursor:pointer}
-  #smelloff-consent-bar .cb-accept{background:var(--acid);color:var(--ink);border:none}
+  #smelloff-consent-bar button{font-family:var(--body);font-size:14px;font-weight:500;letter-spacing:.01em;padding:9px 18px;border-radius:var(--sq-sm,8px);cursor:pointer}
+  #smelloff-consent-bar .cb-accept{background:var(--cta,#F4F1EA);color:var(--on-cta,#080808);border:none}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--rule)}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
 </style>
 <link rel="alternate" hreflang="en-IN" href="https://smelloff.in/faq">
 <link rel="alternate" hreflang="x-default" href="https://smelloff.in/faq">
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=2bfcae5f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=fe433ec5">
-<script src="/assets/js/chrome.js?v=df3e13b5" defer></script>
+<link rel="preload" href="/assets/css/soft.css?v=cbeb7a9a" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=cbeb7a9a"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=fec2b12b" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=fec2b12b"></noscript>
+<script src="/assets/js/chrome.js?v=15df4e80" defer></script>
 </head>
 <body>
 <!-- SF-CHROME:HEADER — generated by scripts/apply-chrome.mjs. Edit there, not here. -->

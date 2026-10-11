@@ -126,7 +126,7 @@ if (fs.existsSync(odorPath)) {
   const odorHtml = read(odorPath);
   if (!odorHtml.includes(`₹${PRODUCT.price}`)) fail(`odorstrike.html missing canonical price ₹${PRODUCT.price}`);
   if (!odorHtml.includes('MRP ₹499')) fail('odorstrike.html missing canonical MRP ₹499');
-  if (!odorHtml.includes('GET ODORSTRIKE')) fail('odorstrike.html missing canonical CTA: "GET ODORSTRIKE"');
+  if (!odorHtml.includes('Buy now — ₹')) fail('odorstrike.html missing canonical CTA: "Buy now — ₹…"');
   if (!odorHtml.includes('id="mobileBarLabel"')) fail('odorstrike.html missing critical marker: id="mobileBarLabel"');
   if (!odorHtml.includes('id="showcaseBuyBtn"') || !odorHtml.includes('buyNow()')) {
     fail('odorstrike.html missing canonical showcase CTA calling buyNow()');

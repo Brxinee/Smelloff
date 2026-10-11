@@ -10,7 +10,7 @@
 <!-- Fonts -->
 <link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=ea5bd6cb">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=7b21e7db">
 <meta name="theme-color" content="#080808">
 
 <!-- Favicon -->
@@ -33,7 +33,7 @@
     display: flex;
     flex-direction: column;
   }
-  ::selection { background: var(--acid); color: var(--black); }
+  ::selection { background: rgba(244,241,234,.18); color: var(--text); }
   body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
   /* NAV */
@@ -64,9 +64,9 @@
   }
   .blog-nav .logo::after{content:none} /* dot baked into logo image */
   .blog-nav .buy-pill {
-    background: var(--acid);
-    color: var(--black);
-    font-family: 'JetBrains Mono',monospace;
+    background: var(--cta, #F4F1EA);
+    color: var(--on-cta, #080808);
+    font-family:var(--mono,system-ui,sans-serif);
     font-weight: 500;
     font-size: 12px;
     letter-spacing: .12em;
@@ -91,14 +91,14 @@
     letter-spacing: -0.03em;
     color: var(--off-white);
   }
-  .nf-code .dot { color: var(--acid); }
+  .nf-code .dot { color: var(--muted); }
   .nf-label {
-    font-family: 'JetBrains Mono', monospace;
+    font-family:var(--mono,system-ui,sans-serif);
     font-weight: 400;
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--acid);
+    color: var(--muted);
     margin: 24px 0 14px;
   }
   .nf-line {
@@ -125,9 +125,9 @@
   }
   .nf-btn {
     display: inline-block;
-    background: var(--acid);
-    color: var(--black);
-    font-family: 'JetBrains Mono', monospace;
+    background: var(--cta, #F4F1EA);
+    color: var(--on-cta, #080808);
+    font-family:var(--mono,system-ui,sans-serif);
     font-weight: 500;
     font-size: 12px;
     letter-spacing: .12em;
@@ -143,10 +143,10 @@
     color: var(--off-white);
     border: 1px solid var(--line);
   }
-  .nf-btn.ghost:hover { border-color: var(--acid); color: var(--acid); }
+  .nf-btn.ghost:hover { border-color: var(--text-2); color: var(--text); }
 
   .nf-popular-label {
-    font-family: 'JetBrains Mono', monospace;
+    font-family:var(--mono,system-ui,sans-serif);
     font-weight: 400;
     font-size: 11px;
     letter-spacing: 0.2em;
@@ -170,8 +170,8 @@
     padding: 8px 0;
     transition: color 0.2s;
   }
-  .nf-popular a:hover { color: var(--acid); }
-  .nf-popular a .arrow { color: var(--acid); margin-left: 6px; }
+  .nf-popular a:hover { color: var(--text); }
+  .nf-popular a .arrow { color: var(--muted); margin-left: 6px; }
 
   /* FOOTER */
   .blog-footer {
@@ -190,7 +190,7 @@
   .bf-brand{font-family:'Inter Tight',sans-serif;font-weight:800;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:var(--text);text-decoration:none;margin-bottom:4px}
   .bf-brand-inner{position:relative;padding-right:.2em}
   .bf-brand-dot{position:absolute;top:-.06em;right:0;width:.16em;height:.16em;background:var(--accent);border-radius:50%}
-  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+  .footer-links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font-family:var(--mono,system-ui,sans-serif);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
   .footer-links a{color:var(--muted);text-decoration:none;transition:color .15s ease}
   .footer-links a:hover{color:var(--text)}
   .footer-policy{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-family:'Inter Tight',sans-serif;font-size:11px}
@@ -207,11 +207,15 @@
   }
 </style>
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
-<script src="/assets/js/consent-analytics.js?v=182abc9f" defer></script>
+<script src="/assets/js/consent-analytics.js?v=633aec72" defer></script>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=2bfcae5f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=fe433ec5">
-<script src="/assets/js/chrome.js?v=df3e13b5" defer></script>
+<link rel="preload" href="/assets/css/soft.css?v=cbeb7a9a" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=cbeb7a9a"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=fec2b12b" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=fec2b12b"></noscript>
+<script src="/assets/js/chrome.js?v=15df4e80" defer></script>
 </head>
 <body>
 

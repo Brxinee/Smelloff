@@ -135,9 +135,9 @@ describe('ODORSTRIKE PDP Claims & Architectural Guardrails', () => {
   });
 
   it('strictly enforces Fabric-Only distinction throughout UI', () => {
-    assert.ok(html.includes('NOT PERFUME'), 'Must include NOT PERFUME badge');
-    assert.ok(html.includes('NOT BODY DEODORANT'), 'Must include NOT BODY DEODORANT badge');
-    assert.ok(html.includes('FABRIC ONLY'), 'Must include FABRIC ONLY badge');
+    assert.ok(html.includes('Not perfume'), 'Must include NOT PERFUME badge');
+    assert.ok(html.includes('Not body deodorant'), 'Must include NOT BODY DEODORANT badge');
+    assert.ok(html.includes('Fabric only'), 'Must include FABRIC ONLY badge');
     assert.ok(/never\s+(?:spray\s+directly\s+onto\s+skin|on\s+skin|for\s+skin)/i.test(html), 'Must explicitly state not for skin');
   });
 

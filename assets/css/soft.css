@@ -204,7 +204,7 @@ details.faq-item > summary,.faq details > summary,.faq-list details > summary{
      nested <h3> instead, which is why its questions came out in the display
      face at 25px while everyone else's were 19px. */
   font-family:var(--display);
-  font-weight:900;
+  font-weight:500;
   font-size:clamp(16px,2.2vw,19px);
   line-height:1.35;
   letter-spacing:-.01em;
@@ -225,7 +225,7 @@ details.faq-item > summary :is(h2,h3,h4),
   font-size:inherit;
   line-height:inherit;
   font-family:inherit;
-  font-weight:900;
+  font-weight:500;
   letter-spacing:-.01em;
   margin:0;
   display:inline;
@@ -245,17 +245,17 @@ details.faq-item > summary::after,.faq details > summary::after,
 .faq-list details > summary::after{
   content:'' !important;
   position:absolute;right:20px;top:50%;
-  width:16px;height:2px;
-  background:var(--acid);
+  width:14px;height:1.5px;
+  background:var(--text-2);
   transform:translateY(-50%);
   transition:none;
 }
 details.faq-item > summary::before,.faq details > summary::before,
 .faq-list details > summary::before{
   content:'';
-  position:absolute;right:27px;top:50%;
-  width:2px;height:16px;
-  background:var(--acid);
+  position:absolute;right:26.25px;top:50%;
+  width:1.5px;height:14px;
+  background:var(--text-2);
   transform:translateY(-50%);
   transition:transform .3s var(--ease),opacity .2s ease;
 }
@@ -332,7 +332,7 @@ header.site,nav.site-nav,.b-nav{
   border:var(--hair) solid var(--rule) !important;
 }
 .b-drawer-cat.active,.filter-chip.active{
-  background:var(--acid) !important;color:var(--on-acid) !important;border-color:var(--acid) !important;
+  background:var(--text) !important;color:var(--ink) !important;border-color:var(--text) !important;
 }
 
 /* ---------------------------------------------------------------------
@@ -406,7 +406,7 @@ footer:has(> a) > a{
 }
 .hero-hook{padding:8px 16px}
 img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-lg)}
-.pull-quote{border-radius:var(--sq-md);padding:20px 24px;border-left:2px solid var(--acid)}
+.pull-quote{border-radius:var(--sq-md);padding:20px 24px;border-left:1px solid var(--border-strong)}
 
 /* =====================================================================
    §9 · CONSISTENCY LAYER (2026-10-10)
@@ -419,38 +419,46 @@ img.rounded,.post-hero img,.article-hero img,.b-hero img{border-radius:var(--sq-
    Add a new page's classes to these lists rather than restyling locally.
    ===================================================================== */
 
-/* Section label — same as chrome.css .sf-eyebrow: acid, mono, 34px rule. */
+/* Section label — quiet (2026-10-11): small tracked sans in muted grey with
+   a short hairline. The accent colour is kept for the rule only. */
 .hm-eyebrow,.section-tag,.p-eyebrow,.b-eyebrow{
   display:flex !important;align-items:center;gap:12px;
-  font-family:var(--mono) !important;
+  font-family:var(--body) !important;
   font-size:var(--fs-eyebrow) !important;
-  font-weight:400 !important;
+  font-weight:500 !important;
   letter-spacing:var(--ls-eyebrow) !important;
   text-transform:uppercase;
-  color:var(--acid) !important;
+  color:var(--muted) !important;
 }
 .hm-eyebrow::before,.section-tag::before,.p-eyebrow::before,.b-eyebrow::before{
   content:'' !important;
-  width:34px !important;height:1px !important;flex:0 0 34px;
-  background:currentColor !important;opacity:.75;
+  width:24px !important;height:1px !important;flex:0 0 24px;
+  background:var(--acid) !important;opacity:.7;
 }
 
-/* Primary button — 8px radius, mono, bold, uppercase, ≥52px tall.
-   Colours stay with each page (acid fill, ink fill on acid bands, ghost). */
+/* Primary button — quiet premium (2026-10-11): paper-white fill, ink text,
+   sentence case in the body face. Was acid fill, mono, uppercase. Ghost
+   variants keep their hairline. */
 .hm-btn,.hero-cta,.fix-cta,.final-btn,.price-card button,.end-cta .buy-btn,
 .b-btn-primary,.faq-cta,.c-btn,.t-btn,.cta-btn,.buy-band a,.mb-btn,.combo-btn,
 .b-news-btn,.bc-cta,.nf-btn,.pd-btn{
   border-radius:var(--sq-sm) !important;
-  font-family:var(--mono) !important;
-  font-weight:700 !important;
-  letter-spacing:.1em !important;
-  text-transform:uppercase !important;
+  font-family:var(--body) !important;
+  font-weight:500 !important;
+  letter-spacing:.01em !important;
+  text-transform:none !important;
 }
 .hm-btn,.hero-cta,.fix-cta,.final-btn,.price-card button,.end-cta .buy-btn,
 .b-btn-primary,.c-btn,.t-btn,.cta-btn,.buy-band a{
   min-height:52px;
-  font-size:14px !important;
+  font-size:15px !important;
   display:inline-flex;align-items:center;justify-content:center;
+}
+:is(.hm-btn,.hero-cta,.fix-cta,.final-btn,.end-cta .buy-btn,.b-btn-primary,.faq-cta,.cta-btn,.c-btn,.t-btn,.nf-btn,.buy-band a,.mb-btn,.b-news-btn,.bc-cta,.nf-btn,.pd-btn,.cart-checkout,.sf-ftr__news button,.sf-menu__buy):not([class*="ghost"]):not(:disabled){
+  background:var(--cta) !important;color:var(--on-cta) !important;border-color:var(--cta) !important;
+}
+:is(.hm-btn,.hero-cta,.fix-cta,.final-btn,.end-cta .buy-btn,.b-btn-primary,.faq-cta,.cta-btn,.c-btn,.t-btn,.nf-btn,.buy-band a,.mb-btn,.b-news-btn,.bc-cta,.nf-btn,.pd-btn,.cart-checkout,.sf-ftr__news button,.sf-menu__buy):not([class*="ghost"]):not(:disabled):hover{
+  background:var(--cta-hi) !important;
 }
 
 /* Cards 16px, large panels and media 20px (tokens: --sq-lg / --sq-xl). */

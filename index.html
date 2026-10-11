@@ -201,6 +201,9 @@
     --acid-dim:rgba(184,255,87,.12);
     --acid-rgb:184,255,87;
     --on-acid:#080808;
+    --cta:#F4F1EA;
+    --cta-hi:#FFFFFF;
+    --on-cta:#080808;
 
     /* ---- Technical Borders & Dividers ---- */
     --border-subtle:rgba(244,241,234,.08);
@@ -216,29 +219,29 @@
 
     /* ---- Type families ---- */
     --display:'Fraunces','Fraunces Fallback',serif;
-    --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
+    --mono:'Inter Tight','Inter Tight Fallback',system-ui,sans-serif;
     --body:'Inter Tight','Inter Tight Fallback',sans-serif;
 
     /* ---- Type scale & rhythm ---- */
-    --lh-display:1.02;
+    --lh-display:1.08;
     --lh-body:1.55;
-    --ls-display:-.02em;
+    --ls-display:-.015em;
 
-    --fs-h1:clamp(42px,7vw,84px);
-    --fs-h2:clamp(32px,5.2vw,56px);
-    --fs-h3:clamp(22px,3vw,34px);
+    --fs-h1:clamp(36px,5.6vw,68px);
+    --fs-h2:clamp(28px,4vw,46px);
+    --fs-h3:clamp(21px,2.4vw,28px);
     --fs-h4:clamp(18px,1.8vw,22px);
     --fs-lead:clamp(16px,1.3vw,19px);
     --fs-body:16px;
     --fs-sm:14px;
     --fs-eyebrow:11.5px;
-    --ls-eyebrow:.1em;
+    --ls-eyebrow:.16em;
     --ls-mono:.06em;
 
     /* ---- Rhythm ---- */
     --maxw:1160px;
     --gutter:20px;
-    --section-y:clamp(48px,6.5vw,96px);
+    --section-y:clamp(64px,8vw,120px);
 
     /* ---- Restrained Form & Radius System ---- */
     --bw:1px;
@@ -300,27 +303,27 @@
     color:var(--acid);margin-bottom:14px;
   }
   .hm-h2{
-    font-family:var(--display);font-weight:900;
+    font-family:var(--display);font-weight:500;
     font-size:var(--fs-h2);line-height:var(--lh-display);
     letter-spacing:var(--ls-display);
   }
   .hm-sec{padding:var(--section-y) 0;border-top:1px solid var(--border-subtle)}
   .hm-btn{
     display:inline-flex;align-items:center;justify-content:center;gap:10px;
-    min-height:58px;padding:16px 30px;
-    background:var(--acid);color:var(--on-acid);
-    font-family:var(--mono);font-weight:700;font-size:14px;
-    letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
-    border-radius:var(--r-pill);border:0;cursor:pointer;
+    min-height:54px;padding:15px 30px;
+    background:var(--cta);color:var(--on-cta);
+    font-family:var(--body);font-weight:500;font-size:15px;
+    letter-spacing:.01em;text-decoration:none;
+    border-radius:var(--r-sm);border:0;cursor:pointer;
     transition:background-color var(--dur) ease,transform .25s var(--ease);
   }
-  .hm-btn:hover{background:var(--acid-hi)}
+  .hm-btn:hover{background:var(--cta-hi)}
   .hm-link{
-    font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--acid);text-decoration:none;
+    font-family:var(--body);font-size:14.5px;font-weight:500;letter-spacing:0;
+    color:var(--text);text-decoration:underline;text-decoration-color:var(--border-strong);text-underline-offset:5px;
     display:inline-flex;align-items:center;gap:8px;min-height:44px;
   }
-  .hm-link:hover{text-decoration:underline;text-underline-offset:4px}
+  .hm-link:hover{text-decoration-color:var(--text)}
   /* Icons: one inline sprite (top of <body>), stroke-only, currentColor. */
   .ic{width:20px;height:20px;flex:0 0 auto;display:inline-block;vertical-align:middle;
     fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
@@ -328,7 +331,7 @@
   /* Secondary route: to the product page, without opening checkout. */
   .hm-btn--ghost{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
   .hm-btn--ghost:hover{background:var(--surface-2);border-color:var(--text)}
-  .hm-btn--ghost .ic{color:var(--acid)}
+  .hm-btn--ghost .ic{color:var(--text-2)}
 
   /* ============ 1 · Hero (v3, 2026-10-10) ============
      One job: say what it is, show the bottle big, one buy button.
@@ -346,7 +349,7 @@
      the CTA. */
   .hero{padding:22px 0 36px;position:relative;overflow:hidden}
   .hero::before{content:"";position:absolute;inset:-20% -30% auto auto;width:80vw;height:80vw;max-width:900px;max-height:900px;
-    background:radial-gradient(closest-side,rgba(var(--acid-rgb),.13),transparent 70%);pointer-events:none}
+    background:radial-gradient(closest-side,rgba(244,241,234,.035),transparent 70%);pointer-events:none}
   .hero-grid{
     position:relative;display:grid;
     grid-template-columns:minmax(0,1fr) clamp(104px,30vw,170px);
@@ -355,14 +358,14 @@
   }
   .hero-copy{grid-area:copy}
   .hero-eyebrow{
-    grid-area:eye;justify-self:start;display:inline-block;font-family:var(--mono);font-size:10px;
-    letter-spacing:.06em;text-transform:uppercase;
-    color:var(--acid);border:1px solid var(--border-focus);
+    grid-area:eye;justify-self:start;display:inline-block;font-family:var(--body);font-size:10.5px;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);border:1px solid var(--border-default);
     border-radius:var(--r-pill);padding:6px 11px;margin-bottom:14px;
   }
   .hero-title{
-    font-family:var(--display);font-weight:900;
-    font-size:clamp(40px,11.2vw,112px);line-height:.93;letter-spacing:-.03em;
+    font-family:var(--display);font-weight:500;
+    font-size:clamp(36px,10vw,96px);line-height:1;letter-spacing:-.025em;
     text-wrap:balance;
   }
   .hero-title .acid{display:block}
@@ -371,7 +374,7 @@
 
   .hero-stage{grid-area:stage;position:relative;margin:0;align-self:stretch;display:flex;align-items:center;justify-content:center}
   .hero-stage::before{content:"";position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1;transform:translate(-50%,-46%);
-    border-radius:50%;background:radial-gradient(closest-side,rgba(var(--acid-rgb),.32),rgba(var(--acid-rgb),.08) 60%,transparent 72%)}
+    border-radius:50%;background:radial-gradient(closest-side,rgba(244,241,234,.09),rgba(244,241,234,.03) 60%,transparent 72%)}
   .hero-stage a{position:relative;display:block;border-radius:var(--r-md)}
   .hero-stage img{
     display:block;width:100%;height:auto;max-height:min(58vh,360px);object-fit:contain;
@@ -382,19 +385,19 @@
   .hero-not{grid-area:not;display:flex;flex-wrap:wrap;gap:5px;margin-top:16px;list-style:none}
   .hero-not li{
     display:inline-flex;align-items:center;gap:5px;
-    font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
-    border:1px solid var(--border-default);border-radius:var(--r-pill);padding:5px 9px;white-space:nowrap;
+    font-family:var(--body);font-size:11.5px;letter-spacing:.02em;color:var(--muted);
+    border:1px solid var(--border-subtle);border-radius:var(--r-pill);padding:5px 10px;white-space:nowrap;
   }
-  .hero-not li.on{color:var(--on-acid);background:var(--acid);border-color:var(--acid)}
+  .hero-not li.on{color:var(--text);border-color:var(--border-strong)}
   .hero-not .ic{width:12px;height:12px;stroke-width:2.5}
 
   .hero-buy{grid-area:buy;margin-top:16px}
   .hero-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px}
-  .hero-price b{font-family:var(--display);font-weight:900;font-size:clamp(40px,10vw,56px);line-height:1;color:var(--text)}
+  .hero-price b{font-family:var(--display);font-weight:500;font-size:clamp(40px,10vw,56px);line-height:1;color:var(--text)}
   .hero-price s{font-family:var(--mono);font-size:13px;color:var(--muted)}
   .hero-price .off{
-    font-family:var(--mono);font-size:11px;letter-spacing:.08em;font-weight:700;
-    color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 9px;
+    font-family:var(--body);font-size:12px;letter-spacing:.02em;font-weight:500;
+    color:var(--acid);border:1px solid var(--border-focus);border-radius:var(--r-pill);padding:3px 9px;
   }
   .hero-price .size{display:none;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.03em;flex-basis:100%}
   .hero-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin-top:14px}
@@ -405,12 +408,12 @@
     font-size:12.5px;color:var(--text-2);
   }
   .hero-ship li{display:inline-flex;align-items:center;gap:6px}
-  .hero-ship .ic{width:16px;height:16px;color:var(--acid)}
+  .hero-ship .ic{width:16px;height:16px;color:var(--text-2)}
   .hero-ship b{color:var(--text);font-weight:600}
   .hero-quote{margin:18px 0 0;padding:14px 16px;border:1px solid var(--border-subtle);border-radius:var(--r-md);background:var(--surface)}
   .hero-quote blockquote{margin:0;font-size:15px;line-height:1.45;color:var(--text)}
   .hero-quote figcaption{margin-top:6px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted)}
-  .hero-quote figcaption span{color:var(--acid)}
+  .hero-quote figcaption span{color:var(--text-2)}
 
   @media(min-width:768px){
     .hero{padding:48px 0 64px}
@@ -420,7 +423,7 @@
       grid-template-rows:auto auto auto 1fr;
       column-gap:clamp(28px,5vw,72px);align-items:start;
     }
-    .hero-title{font-size:clamp(54px,6.6vw,96px)}
+    .hero-title{font-size:clamp(48px,5.6vw,80px)}
     .hero-price .size{display:block}
     .hero-eyebrow{align-self:end}
     .hero-ctas .hm-btn{flex:0 1 auto;padding-inline:32px}
@@ -432,16 +435,16 @@
       background:var(--surface);border:1px solid var(--border-subtle);overflow:hidden;
     }
     .hero-stage::before{width:78%;transform:translate(-50%,-50%);
-      background:radial-gradient(closest-side,var(--acid) 0 92%,transparent 93%)}
+      background:radial-gradient(closest-side,rgba(244,241,234,.07),rgba(244,241,234,.02) 70%,transparent 72%)}
     .hero-stage img{width:auto;height:clamp(320px,36vw,480px);max-height:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
     .hero-tags{display:block;position:absolute;inset:0;list-style:none;pointer-events:none}
     .hero-tags li{
       position:absolute;padding:8px 12px;border-radius:var(--r-pill);
       background:rgba(8,8,8,.86);border:1px solid var(--border-default);color:var(--text);
-      font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;
+      font-family:var(--body);font-size:12px;letter-spacing:.02em;white-space:nowrap;
       -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
     }
-    .hero-tags li b{color:var(--acid);font-weight:700}
+    .hero-tags li b{color:var(--text);font-weight:500}
     .hero-tags li:nth-child(1){top:12%;left:6%}
     .hero-tags li:nth-child(2){top:46%;right:5%}
     .hero-tags li:nth-child(3){bottom:11%;left:9%}
@@ -453,11 +456,11 @@
   }
 
   /* Decorative acid ticker (aria-hidden) */
-  .ticker{background:var(--acid);color:var(--on-acid);overflow:hidden;white-space:nowrap;padding:12px 0}
-  .ticker-track{display:inline-flex;gap:28px;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  .ticker{background:transparent;color:var(--muted);overflow:hidden;white-space:nowrap;padding:16px 0;border-block:1px solid var(--border-subtle)}
+  .ticker-track{display:inline-flex;gap:32px;font-family:var(--body);font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
   .ticker-track span{flex:none}
   @media(prefers-reduced-motion:no-preference){
-    .ticker-track{animation:hm-tick 28s linear infinite}
+    .ticker-track{animation:hm-tick 60s linear infinite}
     @keyframes hm-tick{to{transform:translateX(-50%)}}
   }
 
@@ -468,8 +471,8 @@
     background:var(--surface);padding:24px;
     display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:baseline;
   }
-  .how-num{grid-row:span 2;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--acid);letter-spacing:.1em}
-  .how-step h3{font-family:var(--display);font-weight:900;font-size:clamp(30px,4.4vw,46px);line-height:1;letter-spacing:-.02em}
+  .how-num{grid-row:span 2;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:var(--body);font-size:12px;color:var(--muted);letter-spacing:.14em}
+  .how-step h3{font-family:var(--display);font-weight:500;font-size:clamp(26px,3vw,34px);line-height:1.05;letter-spacing:-.015em}
   .how-step p{color:var(--text-2);font-size:15px}
   .how-foot{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
   .how-foot p{font-size:13.5px;color:var(--muted);max-width:52ch}
@@ -495,7 +498,7 @@
     display:flex;align-items:center;justify-content:center;padding:28px;
   }
   .beat-copy h3{
-    font-family:var(--display);font-weight:900;font-size:var(--fs-h3);
+    font-family:var(--display);font-weight:500;font-size:var(--fs-h3);
     line-height:1.04;letter-spacing:-.02em;
   }
   .beat-copy p{margin-top:12px;color:var(--text-2);max-width:46ch}
@@ -512,40 +515,32 @@
      an <img> of the stated ratio when the photo exists. */
   .ph-img{
     position:relative;aspect-ratio:4/5;width:100%;
-    border:1.5px dashed var(--border-focus);border-radius:var(--r-xl);
-    background:
-      repeating-linear-gradient(135deg,transparent 0 14px,rgba(var(--acid-rgb),.035) 14px 28px),
-      var(--surface);
+    border:1px solid var(--border-subtle);border-radius:var(--r-xl);
+    background:radial-gradient(120% 90% at 30% 15%,rgba(244,241,234,.05),transparent 60%),var(--surface);
     display:flex;flex-direction:column;justify-content:flex-end;gap:8px;
     padding:22px;overflow:hidden;min-height:0;
   }
   .ph-img::before{
     content:attr(data-ph-n);position:absolute;top:18px;left:18px;
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
-    color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px;
+    font-family:var(--body);font-size:10.5px;letter-spacing:.14em;
+    color:var(--text-2);border:1px solid var(--border-default);border-radius:var(--r-pill);padding:4px 10px;
   }
   .ph-img::after{
     content:attr(data-ph) "\A" attr(data-ph-spec);white-space:pre-line;
-    font-family:var(--mono);font-size:12px;line-height:1.55;letter-spacing:.03em;color:var(--muted);
+    font-family:var(--body);font-size:13px;line-height:1.55;color:var(--muted);
   }
   .ph-img--sq{aspect-ratio:1/1;border-radius:var(--r-lg)}
-  /* Kept out of the live site until the photo exists (2026-10-11): customers
-     were seeing "IMAGE 01 · 4:5 · 1200×1500 · WebP" in a dashed box. The slot
-     stays in the markup, so swapping in the <img> is still a one-line edit —
-     an <img> doesn't carry .ph-img, so this rule never hides a real photo. */
-  .ph-img{display:none !important}
-  @media(min-width:768px){.beat:has(> .ph-img){grid-template-columns:minmax(0,1fr);max-width:760px}}
-  @media(min-width:768px){.beat .ph-img{max-width:440px;justify-self:center}}
+  @media(min-width:768px){.beat .ph-img{max-width:460px;justify-self:center}}
   .layers-inline{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
-  .layers-inline li{font-family:var(--display);font-weight:900;font-size:15px;border:1px solid var(--border-default);border-radius:var(--r-pill);padding:6px 12px}
-  .layers-inline span{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid);margin-right:8px}
+  .layers-inline li{font-family:var(--display);font-weight:500;font-size:15px;border:1px solid var(--border-default);border-radius:var(--r-pill);padding:6px 12px}
+  .layers-inline span{font-family:var(--body);font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:8px}
 
   /* Text placeholders: the words are CSS-generated so they can't be mistaken
      for (or indexed as) a real offer. */
   .ph-text::after{content:attr(data-ph)}
   .ph-text{color:var(--muted);font-size:14px;border-bottom:1px dashed var(--border-strong);display:inline-block;padding-bottom:2px}
-  .ph-text--title{font-family:var(--display);font-weight:900;font-size:22px;color:var(--text-2)}
-  .ph-text--price{font-family:var(--display);font-weight:900;font-size:30px;color:var(--text-2);border:0}
+  .ph-text--title{font-family:var(--display);font-weight:500;font-size:22px;color:var(--text-2)}
+  .ph-text--price{font-family:var(--display);font-weight:500;font-size:30px;color:var(--text-2);border:0}
   .ph-text--mrp{font-family:var(--mono);font-size:12px;border:0}
 
   /* ============ 5b · Combos (placeholder) ============ */
@@ -586,9 +581,9 @@
   .rv blockquote{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.3;letter-spacing:-.01em}
   .rv-who{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
   .rv-who cite{font-style:normal;font-size:14px;color:var(--text-2)}
-  .rv-tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid);border:1px solid var(--border-focus);border-radius:var(--r-pill);padding:4px 9px;white-space:nowrap}
+  .rv-tag{font-family:var(--body);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border-default);border-radius:var(--r-pill);padding:4px 9px;white-space:nowrap}
   .rv-more{margin-top:20px;font-size:14px;color:var(--muted)}
-  .rv-more a{color:var(--acid)}
+  .rv-more a{color:var(--text);text-underline-offset:4px}
   @media(min-width:768px){.rv-row{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible}}
 
   /* ============ 5 · The offer ============ */
@@ -598,23 +593,23 @@
     display:grid;
   }
   .offer-art{
-    background:radial-gradient(circle at 50% 55%,var(--acid) 0 34%,transparent 34.3%),var(--surface-2);
+    background:radial-gradient(circle at 50% 55%,rgba(244,241,234,.07),transparent 46%),var(--surface-2);
     display:flex;align-items:center;justify-content:center;padding:28px;min-height:280px;
   }
   .offer-art img{height:240px;width:auto;filter:drop-shadow(0 24px 30px rgba(0,0,0,.5))}
   .offer-body{padding:28px 24px 30px}
   .offer-body .hm-h2{font-size:clamp(30px,4.6vw,48px)}
   .offer-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;margin-top:18px}
-  .offer-price b{font-family:var(--display);font-weight:900;font-size:56px;line-height:1}
+  .offer-price b{font-family:var(--display);font-weight:500;font-size:56px;line-height:1}
   .offer-price s{font-family:var(--mono);font-size:14px;color:var(--muted)}
-  .offer-price .off{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;background:var(--acid);color:var(--on-acid);border-radius:var(--r-pill);padding:4px 9px}
+  .offer-price .off{font-family:var(--body);font-size:12px;font-weight:500;letter-spacing:.02em;color:var(--acid);border:1px solid var(--border-focus);border-radius:var(--r-pill);padding:3px 9px}
   .offer-list{list-style:none;margin:20px 0 24px;display:grid;gap:10px}
   .offer-list li{display:flex;gap:12px;font-size:15px;color:var(--text-2);line-height:1.4}
   .offer-list li strong{color:var(--text);font-weight:500}
-  .offer-list li::before{content:"";flex:none;width:6px;height:6px;margin-top:8px;border-radius:50%;background:var(--acid)}
+  .offer-list li::before{content:"";flex:none;width:5px;height:5px;margin-top:8px;border-radius:50%;background:var(--text-2)}
   .offer-ctas{display:grid;gap:10px}
   .offer .hm-btn{width:100%}
-  .offer-pay{margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);text-align:center}
+  .offer-pay{margin-top:12px;font-family:var(--body);font-size:12px;letter-spacing:.02em;color:var(--muted);text-align:center}
   @media(min-width:768px){
     .offer{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
     .offer-art{min-height:100%}
@@ -625,29 +620,24 @@
   /* ============ 6 · Founder (one strip, not a section of prose) ============ */
   .founder{display:grid;gap:16px}
   .founder p{color:var(--text-2);max-width:62ch}
-  .founder .f-name{font-family:var(--display);font-weight:900;font-size:var(--fs-h4);color:var(--text)}
-  .founder .f-role{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-top:4px}
+  .founder .f-name{font-family:var(--display);font-weight:500;font-size:var(--fs-h4);color:var(--text)}
+  .founder .f-role{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:block;margin-top:4px}
   @media(min-width:768px){.founder{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:48px;align-items:start}}
 
   /* ============ 7 · FAQ ============
      Shape, padding, type and the +/− all come from soft.css §3. */
   .faq .hm-h2{margin-bottom:28px}
   .faq-item p{font-size:16px;line-height:1.55;color:var(--text-2)}
-  .faq-item a{color:var(--acid);text-decoration:underline;text-underline-offset:3px}
+  .faq-item a{color:var(--text);text-decoration:underline;text-underline-offset:3px}
   .faq-guides{margin-top:24px;font-size:14px;color:var(--muted)}
-  .faq-guides a{color:var(--acid)}
+  .faq-guides a{color:var(--text-2);text-underline-offset:3px}
 
   /* ============ 8 · Final ============ */
-  .final{background:var(--acid);color:var(--on-acid);padding:var(--section-y) 0;text-align:center}
-  .final h2{font-family:var(--display);font-weight:900;font-size:clamp(40px,8.5vw,96px);line-height:.94;letter-spacing:-.03em;}
-  .final p{margin:16px auto 26px;max-width:44ch;font-size:var(--fs-lead)}
-  .final .hm-btn{background:var(--ink);color:var(--acid)}
-  .final .hm-btn:hover{background:var(--surface-2)}
+  .final{background:var(--surface);color:var(--text);padding:var(--section-y) 0;text-align:center;border-top:1px solid var(--border-subtle)}
+  .final h2{font-family:var(--display);font-weight:500;font-size:clamp(34px,5.6vw,68px);line-height:1.04;letter-spacing:-.02em;}
+  .final p{margin:18px auto 30px;max-width:44ch;font-size:var(--fs-lead);color:var(--text-2)}
   .final-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
-  .final .hm-btn--ghost{background:transparent;color:var(--on-acid);border-color:rgba(8,8,8,.45)}
-  .final .hm-btn--ghost .ic{color:var(--on-acid)}
-  .final .hm-btn--ghost:hover{background:rgba(8,8,8,.08);border-color:var(--on-acid)}
-  .final small{display:block;margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.06em}
+  .final small{display:block;margin-top:16px;font-family:var(--body);font-size:12px;letter-spacing:.02em;color:var(--muted)}
 
   /* Scroll reveal — opacity/transform only, opt-in to motion */
   @media(prefers-reduced-motion:no-preference){
@@ -668,7 +658,7 @@
     display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
   }
   #smelloff-consent-bar p{font-size:13.5px;color:var(--text);max-width:640px}
-  #smelloff-consent-bar p a{color:var(--acid);text-decoration:underline;text-underline-offset:2px}
+  #smelloff-consent-bar p a{color:var(--text);text-decoration:underline;text-underline-offset:2px}
   /* Wraps rather than overflowing: at 320px these two buttons measured
      315px inside a 300px content box. See chrome.css §5.2. */
   #smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}
@@ -677,11 +667,11 @@
     #smelloff-consent-bar .cb-actions button{flex:1 1 130px;padding-inline:10px}
   }
   #smelloff-consent-bar button{
-    font-family:var(--body);font-size:13.5px;font-weight:700;
+    font-family:var(--body);font-size:14px;font-weight:500;
     padding:11px 16px;min-height:44px;cursor:pointer;
     border-radius:var(--r-sm);
   }
-  #smelloff-consent-bar .cb-accept{background:var(--acid);color:var(--ink);border:0}
+  #smelloff-consent-bar .cb-accept{background:var(--cta);color:var(--on-cta);border:0}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
 
   /* Sticky mobile buy bar. Shown only while neither the hero CTA nor the
@@ -713,10 +703,14 @@
   @media(min-width:768px){.mobile-bar{display:none !important}}
 </style>
 <style id="a11y-utility-css">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
+<noscript></noscript>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=2bfcae5f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=fe433ec5">
-<script src="/assets/js/chrome.js?v=df3e13b5" defer></script>
+<link rel="preload" href="/assets/css/soft.css?v=cbeb7a9a" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=cbeb7a9a"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=fec2b12b" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=fec2b12b"></noscript>
+<script src="/assets/js/chrome.js?v=15df4e80" defer></script>
 </head>
 <body>
 <!-- ICON SPRITE — one inline set, referenced with <svg class="ic"><use href="#i-…"/></svg>.
@@ -790,7 +784,7 @@
 <div class="mobile-bar" id="homeMobileBar" aria-hidden="true">
   <img class="mb-thumb" src="/assets/pdp-01-hero@640.webp" alt="" width="640" height="704" loading="lazy" decoding="async">
   <span class="mb-text"><span class="mb-label">ODORSTRIKE · ₹299</span><span class="mb-sub">Free shipping · Cash on Delivery</span></span>
-  <a class="mb-btn" href="/odorstrike?buy=1" tabindex="-1">FIX MY SHIRT</a>
+  <a class="mb-btn" href="/odorstrike?buy=1" tabindex="-1">Buy now</a>
 </div>
 
 <main id="sf-main" tabindex="-1">
@@ -821,9 +815,9 @@
       </figure>
 
       <ul class="hero-not" aria-label="What ODORSTRIKE is and is not">
-        <li>NOT PERFUME</li>
-        <li>NOT BODY DEODORANT</li>
-        <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>FABRIC ONLY</li>
+        <li>Not perfume</li>
+        <li>Not body deodorant</li>
+        <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Fabric only</li>
       </ul>
 
       <div class="hero-buy">
@@ -834,7 +828,7 @@
           <span class="size">50ml pocket bottle · ~250 sprays · up to 8 hours on fabric</span>
         </p>
         <div class="hero-ctas">
-          <a class="hm-btn" href="/odorstrike?buy=1" id="heroBuyBtn">FIX MY SHIRT — ₹299</a>
+          <a class="hm-btn" href="/odorstrike?buy=1" id="heroBuyBtn">Buy now — ₹299</a>
           <a class="hm-link hero-more" href="/odorstrike">View product details</a>
         </div>
         <ul class="hero-ship" aria-label="Delivery and payment">
@@ -859,7 +853,7 @@
   <!-- ============ 2 · SPRAY. WAIT. WEAR. ============ -->
   <section class="hm-sec" id="how" aria-labelledby="howTitle">
     <div class="wrap">
-      <p class="hm-eyebrow reveal">HOW IT WORKS · FABRIC ONLY</p>
+      <p class="hm-eyebrow reveal">HOW IT WORKS · Fabric only</p>
       <h2 id="howTitle" class="hm-h2 reveal">Spray. Wait. Wear.</h2>
       <ol class="how-steps">
         <li class="how-step reveal">
@@ -931,7 +925,7 @@
         <div class="beat-copy reveal">
           <h3>Dries clear. No stiff residue. On black or on white.</h3>
           <p>Sprayed from 15–20 cm, it dries clear on everyday washable fabrics — cotton, polyester, denim, nylon and wool blends. Patch-test silk and zari on a hidden seam first.</p>
-          <a class="hm-link" href="/odorstrike?buy=1">Fix my shirt →</a>
+          <a class="hm-link" href="/odorstrike?buy=1">Buy now →</a>
         </div>
       </div>
     </div>
@@ -991,7 +985,7 @@
             <li><span><strong>7-day returns</strong> if it isn't for you</span></li>
           </ul>
           <div class="offer-ctas">
-            <a class="hm-btn" href="/odorstrike?buy=1" id="offerBuyBtn">FIX MY SHIRT — ₹299</a>
+            <a class="hm-btn" href="/odorstrike?buy=1" id="offerBuyBtn">Buy now — ₹299</a>
             <a class="hm-btn hm-btn--ghost" href="/odorstrike">See full product details</a>
           </div>
           <p class="offer-pay">UPI · CARDS · CASH ON DELIVERY</p>
@@ -1010,7 +1004,7 @@
        Checkout is still single-SKU: CFG.PRICES in odorstrike.html, products.json
        and supabase/functions/create-order must all learn the combo first, or
        every combo order will fail the server-side total check. -->
-  <section class="hm-sec" id="combos" aria-labelledby="combosTitle" hidden>
+  <section class="hm-sec" id="combos" aria-labelledby="combosTitle">
     <div class="wrap">
       <p class="hm-eyebrow reveal">COMBOS · COMING SOON</p>
       <h2 id="combosTitle" class="hm-h2 reveal">Stock up. Save more.</h2>
@@ -1043,7 +1037,7 @@
           </div>
         </li>
       </ul>
-      <p class="combo-now reveal">Can't wait? The single bottle ships today. <a class="hm-link" href="/odorstrike?buy=1">Fix my shirt — ₹299 →</a></p>
+      <p class="combo-now reveal">Can't wait? The single bottle ships today. <a class="hm-link" href="/odorstrike?buy=1">Buy now — ₹299 →</a></p>
     </div>
   </section>
 
@@ -1112,7 +1106,7 @@
       <h2 id="finalTitle">Smell khatam.<br>Confidence qaayam.</h2>
       <p>One pocket bottle. Every shirt you own, fresh between washes.</p>
       <div class="final-ctas">
-        <a class="hm-btn" href="/odorstrike?buy=1">FIX MY SHIRT — ₹299</a>
+        <a class="hm-btn" href="/odorstrike?buy=1">Buy now — ₹299</a>
         <a class="hm-btn hm-btn--ghost" href="/odorstrike">View product</a>
       </div>
       <small>Free prepaid shipping · Cash on Delivery · 7-day returns</small>
