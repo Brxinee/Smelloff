@@ -127,6 +127,8 @@ export async function sendAdminNewOrderEmail(order, { route } = {}) {
     product: ctx.product,
     quantity: ctx.quantity,
     address: ctx.address,
+    city: String(order?.address?.city || '').trim(),
+    codFee: ctx.codFee,
     timestamp: ctx.timestamp,
     paymentStatus: isCod(order)
       ? 'COD — collect on delivery'

@@ -170,6 +170,8 @@ test('create-order: an order number taken by another customer gets a fresh one',
   globalThis.fetch = async (url, opts = {}) => {
     const u = String(url);
     if ((opts.method || 'GET') === 'POST') {
+      // Only the orders insert; the COD admin alert also POSTs (email log / mail API).
+      if (!u.includes('/rest/v1/orders')) return new Response('{}', { status: 200 });
       inserted = JSON.parse(opts.body);
       return new Response(JSON.stringify([{ id: 'row-2', ...inserted }]), { status: 201 });
     }
@@ -197,6 +199,53 @@ test('create-order: an order number taken by another customer gets a fresh one',
   } finally {
     globalThis.fetch = prevFetch;
     if (prevKey === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY; else process.env.SUPABASE_SERVICE_ROLE_KEY = prevKey;
+  }
+});
+
+test('create-order: a COD order emails the owner a new-order alert', async () => {
+  const prevKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const prevResend = process.env.RESEND_API_KEY;
+  const prevFetch = globalThis.fetch;
+  const originalPost = Resend.prototype.post;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-key';
+  process.env.RESEND_API_KEY = 're_test_key';
+  globalThis.fetch = async (url, opts = {}) => {
+    const u = String(url);
+    if ((opts.method || 'GET') === 'POST' && u.includes('/rest/v1/orders')) {
+      const row = JSON.parse(opts.body);
+      return new Response(JSON.stringify([{ id: 'row-9', ...row }]), { status: 201 });
+    }
+    return new Response(JSON.stringify([]), { status: 200 });
+  };
+  const sent = [];
+  Resend.prototype.post = async (path, payload) => {
+    sent.push(payload);
+    return { data: { id: `email_${sent.length}` }, error: null };
+  };
+  try {
+    const res = createMockRes();
+    await createOrderHandler({
+      method: 'POST',
+      headers: {},
+      body: {
+        payment_method: 'cod', order_code: 'SMF-20261011-4321', name: 'Asha', email: 'asha@example.com', phone: '9000000003',
+        items: [{ quantity: 1, price: 229 }], amount: 31800,
+        address: { name: 'Asha', line: '1 Road', city: 'Pune', state: 'Maharashtra', pincode: '411001' },
+      },
+    }, res);
+    assert.equal(res.statusCode, 200, JSON.stringify(res.body));
+    const alert = sent.find((p) => /^New order/.test(p.subject || ''));
+    assert.ok(alert, `owner alert must be sent; got ${JSON.stringify(sent.map((p) => p.subject))}`);
+    assert.deepEqual([].concat(alert.to), ['info@smelloff.in']);
+    assert.match(alert.subject, /₹318 COD/);
+    assert.match(alert.subject, /Pune/);
+    assert.match(alert.html, /tel:\+919000000003/);
+    assert.match(alert.html, /wa\.me\/919000000003/);
+  } finally {
+    Resend.prototype.post = originalPost;
+    globalThis.fetch = prevFetch;
+    if (prevKey === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY; else process.env.SUPABASE_SERVICE_ROLE_KEY = prevKey;
+    if (prevResend === undefined) delete process.env.RESEND_API_KEY; else process.env.RESEND_API_KEY = prevResend;
   }
 });
 
