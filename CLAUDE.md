@@ -40,6 +40,30 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Homepage hero v4: photo first (2026-10-11, owner asked for a redesign)
+Supersedes "Homepage hero v3" below. The hero is the owner's photo of the
+bottle misting a black shirt collar (`assets/photos/hero-spray-collar*`,
+AVIF + WebP at 480/720/960/1254, from the original upload), not the bottle
+cutout on a glow. Grounded in NN/g eyetracking (people study real product /
+real-use photos, skip decorative ones), NN/g "Image-focused design" (a big
+image only works if the buy action keeps equal weight) and the carousel
+studies (one static image).
+- **Phones:** full-bleed photo (`aspect-ratio:390/350`, no gutters), the
+  three chips ride on it as glass pills (`.hero-not`, "Fabric only" filled
+  lime), and the kicker + H1 overlap its faded bottom edge
+  (`.hero-body{margin-top:-58px}`). Then sub, price, one button, link, trust
+  row, Rohit's quote. CTA bottom: 686px at 390x844 (v3 706), 655 at 360x740.
+- **>=768:** `.hero-inner` grid, copy left, the photo as a square card right
+  with a faint lime glow; chips sit on the photo's bottom edge. Whole hero
+  incl. the quote fits 1280x800 (CTA bottom 582).
+- **LCP:** the photo, eager + `fetchpriority="high"`, AVIF set preloaded in
+  `<head>` with the **same `imagesizes`** as the `<picture>` (a test compares
+  them; a mismatch downloads it twice), inline blurred preview, and a
+  transform-only settle-in (opacity would delay LCP). Measured LCP 130-200ms
+  locally. The network-aware `sizes` script leaves the hero alone on purpose.
+- Copy and claims are unchanged (tests pin them). The cutout is still used in
+  the `#buy` offer box. `test/ux-guardrails.test.mjs` pins the above.
+
 ## Photos in the image slots (2026-10-11)
 Owner-supplied photos fill the homepage `#why` beats (4) and the PDP's
 `#how` steps (4), `#why` lifestyle and `#size` (3). Files are in
@@ -673,7 +697,7 @@ COD ×1/×2 and prepaid (Razorpay opens with the right amount), cart
   15–30 seconds. Not changed — rewriting reported test results is not a
   copy edit. Two posts also state "pH 5.5–6.0".
 
-## Homepage hero v3 — first impression (2026-10-10)
+## Homepage hero v3 — first impression (2026-10-10; superseded by v4 above)
 Researched (Baymard mobile homepage/product-image findings, Stripe landing
 guidance on one action + a quote by the buy button) and rebuilt `.hero`:
 - **Bottle on a stage, never a thumbnail:** phones keep copy | bottle side

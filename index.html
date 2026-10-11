@@ -116,10 +116,11 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/space-grotesk-normal-latin-wght.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-normal-latin-wght.woff2" crossorigin>
 
-<!-- Hero bottle is above the fold and an LCP candidate. This is the background-
-     removed cutout (the catalogue shot has a white studio sweep baked in, which
-     read as a white card sitting on the hero's acid disc). -->
-<link rel="preload" as="image" type="image/webp" href="/assets/odorstrike-bottle-cutout.webp" fetchpriority="high">
+<!-- The hero photo is the LCP image. Preload the AVIF set with the same sizes
+     as the <picture>, so the browser fetches exactly the file it will paint. -->
+<link rel="preload" as="image" type="image/avif" fetchpriority="high"
+      imagesrcset="/assets/photos/hero-spray-collar@480.avif 480w, /assets/photos/hero-spray-collar@720.avif 720w, /assets/photos/hero-spray-collar@960.avif 960w, /assets/photos/hero-spray-collar.avif 1254w"
+      imagesizes="(min-width:1160px) 540px, (min-width:768px) 46vw, 100vw">
 
 <!-- AI/LLM context files (answer-engine discovery hint) -->
 <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
@@ -328,80 +329,66 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .hm-btn--ghost:hover{background:var(--surface-2);border-color:var(--text)}
   .hm-btn--ghost .ic{color:var(--acid)}
 
-  /* ============ 1 · Hero (v3, 2026-10-10) ============
-     One job: say what it is, show the bottle big, one buy button.
-     - Baymard: on phones product images get overlooked when small → the
-       bottle sits on an acid-lit stage, never a thumbnail.
-     - One primary action (Stripe's landing-page guidance): "View product"
-       is a text link now, not a second button of equal weight.
-     - A short, real customer quote beside the buy button (labelled beta
-       tester — never edited, never a rating).
-     - Trust is one line, not three cards; the three "what it is / isn't"
-       chips stay but lose their icons.
-     Phones: copy | bottle side by side, then price + CTA above the fold
-     (CTA bottom ≈ 700px on 390×844 incl. strip + header). ≥768: copy left,
-     big stage right with spec tags. Re-measure if you add anything above
-     the CTA. */
-  .hero{padding:22px 0 36px;position:relative;overflow:hidden}
-  .hero::before{content:"";position:absolute;inset:-20% -30% auto auto;width:80vw;height:80vw;max-width:900px;max-height:900px;
-    background:radial-gradient(closest-side,rgba(var(--acid-rgb),.08),transparent 70%);pointer-events:none}
-  .hero-grid{
-    position:relative;display:grid;
-    grid-template-columns:minmax(0,1fr) clamp(104px,30vw,170px);
-    grid-template-areas:"eye eye" "copy stage" "not not" "buy buy";
-    column-gap:12px;align-items:center;
+  /* ============ 1 · Hero (v4, 2026-10-11) ============
+     Photo first. What it rests on:
+     - NN/g eyetracking: people study photos of the real product and real
+       use, and skip decorative imagery. So the hero is the owner's photo
+       of the bottle misting a shirt collar (product + use + "fabric, not
+       skin" in one frame), not a cutout on a glow.
+     - NN/g "Image-focused design": a big image works only when the buy
+       action keeps equal weight. One filled button, price beside it.
+     - Static, not a carousel; one headline; restraint over abundance.
+     - Trust (COD, free prepaid shipping, returns) and one real quote sit
+       by the button; the three "what it is / isn't" chips ride on the
+       photo instead of taking a row.
+     Phones: the photo is full-bleed (no gutters) and the headline overlaps
+     its faded bottom edge. CTA bottom ~690px on 390x844 (v3: 706).
+     >=768: copy left, the photo as a large card right.
+     The photo is the LCP image: eager, fetchpriority high, AVIF preloaded in
+     <head>, inline blurred preview, and the settle-in is transform-only so
+     it never delays LCP. Re-measure if you add anything above the CTA. */
+  .hero{position:relative;padding:0 0 32px}
+  .hero-media{position:relative;margin:0;aspect-ratio:390/350;overflow:hidden;background:var(--surface)}
+  .hero-media picture{display:contents}
+  .hero-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:35% 40%}
+  .hero-media::after{content:"";position:absolute;left:0;right:0;bottom:0;height:44%;pointer-events:none;
+    background:linear-gradient(to bottom,rgba(10,10,10,0),rgba(10,10,10,.74) 62%,var(--ink))}
+  .hero-not{position:absolute;z-index:1;top:12px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+  .hero-not li{
+    display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
+    font-family:var(--body);font-size:11.5px;font-weight:500;letter-spacing:.01em;color:var(--text);
+    background:rgba(10,10,10,.58);border:1px solid rgba(242,245,239,.18);border-radius:var(--r-pill);padding:5px 10px;
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
   }
-  .hero-copy{grid-area:copy}
+  .hero-not li.on{color:var(--on-acid);background:var(--acid);border-color:var(--acid)}
+  .hero-not .ic{width:12px;height:12px;stroke-width:2.6}
+
+  .hero-body{position:relative;z-index:1;margin-top:-58px;padding:0 var(--gutter)}
   .hero-eyebrow{
-    grid-area:eye;justify-self:start;display:inline-block;font-family:var(--body);font-size:10.5px;font-weight:500;
-    letter-spacing:.16em;text-transform:uppercase;
-    color:var(--acid);border:1px solid var(--border-focus);
-    border-radius:var(--r-pill);padding:6px 11px;margin-bottom:14px;
+    margin:0 0 8px;font-family:var(--body);font-size:11px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--acid);
   }
   .hero-title{
     font-family:var(--display);font-weight:700;
-    font-size:clamp(36px,10vw,96px);line-height:1;letter-spacing:-.025em;
-    text-wrap:balance;
+    font-size:clamp(33px,9vw,44px);line-height:1;letter-spacing:-.03em;text-wrap:balance;
   }
   .hero-title .acid{display:block}
-  .hero-sub{margin-top:12px;font-size:clamp(15px,3.9vw,19px);line-height:1.45;color:var(--text-2);max-width:34ch}
+  .hero-sub{margin-top:12px;font-size:15px;line-height:1.45;color:var(--text-2);max-width:42ch}
   .hero-sub strong{color:var(--text);font-weight:500}
 
-  .hero-stage{grid-area:stage;position:relative;margin:0;align-self:stretch;display:flex;align-items:center;justify-content:center}
-  .hero-stage::before{content:"";position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1;transform:translate(-50%,-46%);
-    border-radius:50%;background:radial-gradient(closest-side,rgba(var(--acid-rgb),.26),rgba(var(--acid-rgb),.07) 60%,transparent 72%)}
-  .hero-stage a{position:relative;display:block;border-radius:var(--r-md)}
-  .hero-stage img{
-    display:block;width:100%;height:auto;max-height:min(58vh,360px);object-fit:contain;
-    filter:drop-shadow(0 22px 26px rgba(0,0,0,.55));
-  }
-  .hero-tags{display:none}
-
-  .hero-not{grid-area:not;display:flex;flex-wrap:wrap;gap:5px;margin-top:16px;list-style:none}
-  .hero-not li{
-    display:inline-flex;align-items:center;gap:5px;
-    font-family:var(--body);font-size:11.5px;letter-spacing:.02em;color:var(--muted);
-    border:1px solid var(--border-subtle);border-radius:var(--r-pill);padding:5px 10px;white-space:nowrap;
-  }
-  .hero-not li.on{color:var(--acid);border-color:var(--border-focus)}
-  .hero-not .ic{width:12px;height:12px;stroke-width:2.5}
-
-  .hero-buy{grid-area:buy;margin-top:16px}
-  .hero-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px}
-  .hero-price b{font-family:var(--display);font-weight:700;font-size:clamp(40px,10vw,56px);line-height:1;color:var(--text)}
-  .hero-price s{font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .hero-buy{margin-top:16px}
+  .hero-price{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px}
+  .hero-price b{font-family:var(--display);font-weight:700;font-size:32px;line-height:1;letter-spacing:-.02em;color:var(--text)}
+  .hero-price s{font-size:13px;color:var(--muted)}
   .hero-price .off{
     font-family:var(--body);font-size:12px;letter-spacing:.02em;font-weight:600;
     color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px;
   }
-  .hero-price .size{display:none;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.03em;flex-basis:100%}
-  .hero-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin-top:14px}
+  .hero-price .size{display:none;flex-basis:100%;margin-top:6px;font-size:12.5px;color:var(--muted);letter-spacing:.01em}
+  .hero-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;margin-top:12px}
   .hero-ctas .hm-btn{flex:1 1 100%}
-  .hero-more{margin:0 auto}
-  .hero-ship{
-    display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin-top:10px;list-style:none;
-    font-size:12.5px;color:var(--text-2);
-  }
+  .hero-more{margin:2px auto 0}
+  .hero-ship{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin-top:12px;list-style:none;font-size:12.5px;color:var(--text-2)}
   .hero-ship li{display:inline-flex;align-items:center;gap:6px}
   .hero-ship .ic{width:16px;height:16px;color:var(--acid)}
   .hero-ship b{color:var(--text);font-weight:600}
@@ -410,44 +397,48 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .hero-quote figcaption{margin-top:6px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted)}
   .hero-quote figcaption span{color:var(--acid)}
 
+  @media(prefers-reduced-motion:no-preference){
+    .hero-media img{animation:hero-settle 1.8s cubic-bezier(.2,.7,.2,1) both}
+    @keyframes hero-settle{from{transform:scale(1.07)}}
+  }
+
   @media(min-width:768px){
-    .hero{padding:48px 0 64px}
-    .hero-grid{
-      grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
-      grid-template-areas:"eye stage" "copy stage" "not stage" "buy stage";
-      grid-template-rows:auto auto auto 1fr;
-      column-gap:clamp(28px,5vw,72px);align-items:start;
+    .hero{padding:40px 0 64px}
+    .hero-inner{
+      max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter);
+      display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      column-gap:clamp(32px,5vw,72px);align-items:center;
     }
-    .hero-title{font-size:clamp(48px,5.6vw,80px)}
+    .hero-media{
+      order:2;aspect-ratio:1/1;border-radius:var(--r-xl);border:1px solid var(--border-subtle);
+      box-shadow:0 60px 120px -70px rgba(var(--acid-rgb),.45);
+    }
+    .hero-media::after{height:34%;background:linear-gradient(to bottom,rgba(10,10,10,0),rgba(10,10,10,.6))}
+    .hero-not{top:auto;bottom:12px;left:12px;right:12px;gap:5px}
+    .hero-not li{font-size:10.5px;padding:4px 9px;gap:4px}
+    .hero-body{margin-top:0;padding:0}
+    .hero-eyebrow{font-size:12px;margin-bottom:16px}
+    .hero-title{font-size:clamp(44px,5vw,72px)}
+    .hero-sub{margin-top:18px;font-size:clamp(16px,1.5vw,19px)}
+    .hero-buy{margin-top:26px}
+    .hero-price b{font-size:clamp(40px,3.6vw,52px)}
     .hero-price .size{display:block}
-    .hero-eyebrow{align-self:end}
-    .hero-ctas .hm-btn{flex:0 1 auto;padding-inline:32px}
+    .hero-ctas{margin-top:16px}
+    .hero-ctas .hm-btn{flex:0 1 auto;padding-inline:34px}
     .hero-more{margin:0}
     .hero-ship{justify-content:flex-start}
     .hero-quote{max-width:46ch}
-    .hero-stage{
-      min-height:clamp(420px,46vw,600px);border-radius:var(--r-xl);
-      background:var(--surface);border:1px solid var(--border-subtle);overflow:hidden;
-    }
-    .hero-stage::before{width:78%;transform:translate(-50%,-50%);
-      background:radial-gradient(closest-side,rgba(var(--acid-rgb),.24),rgba(var(--acid-rgb),.06) 70%,transparent 72%)}
-    .hero-stage img{width:auto;height:clamp(320px,36vw,480px);max-height:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
-    .hero-tags{display:block;position:absolute;inset:0;list-style:none;pointer-events:none}
-    .hero-tags li{
-      position:absolute;padding:8px 12px;border-radius:var(--r-pill);
-      background:rgba(8,8,8,.86);border:1px solid var(--border-default);color:var(--text);
-      font-family:var(--body);font-size:12px;letter-spacing:.02em;white-space:nowrap;
-      -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-    }
-    .hero-tags li b{color:var(--acid);font-weight:500}
-    .hero-tags li:nth-child(1){top:12%;left:6%}
-    .hero-tags li:nth-child(2){top:46%;right:5%}
-    .hero-tags li:nth-child(3){bottom:11%;left:9%}
   }
-  @media(min-width:1160px){.hero{padding:56px 0 80px}}
-  @media(max-width:359px){
-    .hero-grid{grid-template-columns:minmax(0,1fr) 92px}
-    .hero-not li{font-size:9.5px;padding:4px 8px}
+  @media(min-width:1160px){
+    .hero{padding:56px 0 80px}
+    .hero-not{bottom:18px;left:18px;right:18px}
+    .hero-not li{font-size:12.5px;padding:7px 13px}
+  }
+  /* Narrow phones: keep the three chips on one row, clear of the nozzle. */
+  @media(max-width:389px){
+    .hero-not{top:10px;left:10px;right:10px;gap:5px}
+    .hero-not li{font-size:10.5px;padding:4px 8px;gap:4px}
+    .hero-not .ic{width:11px;height:11px}
   }
 
   /* Decorative acid ticker (aria-hidden) */
@@ -801,56 +792,50 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <main id="sf-main" tabindex="-1">
 
   <!-- ============ 1 · HERO ============
-       One claim, one price, one button. On a 390×844 phone the CTA sits
-       above the fold; the bottle rides beside the headline instead of
-       pushing everything down. COD availability is stated here; its handling
+       One photo of the product in use, one claim, one price, one button. On a
+       390×844 phone the CTA sits above the fold under a full-bleed photo. COD availability is stated here; its handling
        charge is shown only on the COD option in checkout (owner's call,
        2026-10-11 — see CLAUDE.md "Price ₹229"). -->
   <section class="hero" aria-labelledby="heroTitle">
-    <div class="wrap hero-grid">
-      <p class="hero-eyebrow">FABRIC ODOR CONTROL · FOR CLOTHES</p>
-      <div class="hero-copy">
-        <h1 id="heroTitle" class="hero-title">Your shirt smells. <span class="acid">Fix it.</span></h1>
-        <p class="hero-sub">ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin. <strong>2–3 sprays. Dry in 15–30 sec. Wear.</strong></p>
-      </div>
-
-      <figure class="hero-stage">
-        <a href="/odorstrike" aria-label="View the ODORSTRIKE product page">
-          <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml pocket fabric odor spray bottle for clothes" width="241" height="915" fetchpriority="high" decoding="async" data-no-skel>
-        </a>
-        <ul class="hero-tags" aria-hidden="true">
-          <li><b>50ml</b> · fits a pocket</li>
-          <li>Dry in <b>15–30 s</b></li>
-          <li>Up to <b>8 h</b> on fabric</li>
+    <div class="hero-inner">
+      <figure class="hero-media">
+        <picture>
+          <source type="image/avif" srcset="/assets/photos/hero-spray-collar@480.avif 480w, /assets/photos/hero-spray-collar@720.avif 720w, /assets/photos/hero-spray-collar@960.avif 960w, /assets/photos/hero-spray-collar.avif 1254w" sizes="(min-width:1160px) 540px, (min-width:768px) 46vw, 100vw">
+          <img src="/assets/photos/hero-spray-collar@960.webp" srcset="/assets/photos/hero-spray-collar@480.webp 480w, /assets/photos/hero-spray-collar@720.webp 720w, /assets/photos/hero-spray-collar@960.webp 960w, /assets/photos/hero-spray-collar.webp 1254w" sizes="(min-width:1160px) 540px, (min-width:768px) 46vw, 100vw" width="1254" height="1254" alt="ODORSTRIKE being sprayed onto the collar of a black shirt: a fine mist on the fabric, not the skin" fetchpriority="high" decoding="async" data-no-skel style="background:url(data:image/webp;base64,UklGRuQAAABXRUJQVlA4INgAAABwBQCdASoYABgAPt1gqk8opSOiKAqpEBuJQBBZSTCsgTLjIhSFgp7ZHm4OsLARlazmLkAAAP7u7ak3VPSTt1bpgRArhlNznU+OgDnSFFy06oPb9WPhYF6/9LJR+fpjI7szkw3ZqrDJ1gQUdnENHlpX96yF+iVq+cfJGkRmg7pIsee6FszSvpVc80+rRgBxZy48/6oEVokooDZPqTcGspleRZ5A4stxAr+z3LWkW6zPUMDtBgWc8oAZ4V/yWknxahAYlnBES5tq7OhEELbgRSyp0Iteh0gAAAA=) center/cover no-repeat">
+        </picture>
+        <ul class="hero-not" aria-label="What ODORSTRIKE is and is not">
+          <li>Not perfume</li>
+          <li>Not body deodorant</li>
+          <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Fabric only</li>
         </ul>
       </figure>
 
-      <ul class="hero-not" aria-label="What ODORSTRIKE is and is not">
-        <li>Not perfume</li>
-        <li>Not body deodorant</li>
-        <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Fabric only</li>
-      </ul>
+      <div class="hero-body">
+        <p class="hero-eyebrow">FABRIC ODOR CONTROL · FOR CLOTHES</p>
+        <h1 id="heroTitle" class="hero-title">Your shirt smells. <span class="acid">Fix it.</span></h1>
+        <p class="hero-sub">ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin. <strong>2–3 sprays. Dry in 15–30 sec. Wear.</strong></p>
 
-      <div class="hero-buy">
-        <p class="hero-price">
-          <b>₹229</b>
-          <s>M.R.P. ₹499</s>
-          <span class="off">54% OFF</span>
-          <span class="size">50ml pocket bottle · ~250 sprays · up to 8 hours on fabric</span>
-        </p>
-        <div class="hero-ctas">
-          <a class="hm-btn" href="/odorstrike?buy=1" id="heroBuyBtn">Buy now — ₹229</a>
-          <a class="hm-link hero-more" href="/odorstrike">View product details</a>
+        <div class="hero-buy">
+          <p class="hero-price">
+            <b>₹229</b>
+            <s>M.R.P. ₹499</s>
+            <span class="off">54% OFF</span>
+            <span class="size">50ml pocket bottle · ~250 sprays · up to 8 hours on fabric</span>
+          </p>
+          <div class="hero-ctas">
+            <a class="hm-btn" href="/odorstrike?buy=1" id="heroBuyBtn">Buy now — ₹229</a>
+            <a class="hm-link hero-more" href="/odorstrike">View product details</a>
+          </div>
+          <ul class="hero-ship" aria-label="Delivery and payment">
+            <li><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><b>Free</b> shipping on prepaid</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-cash"/></svg><span><b>Cash on Delivery</b> available</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-return"/></svg><span><b>7-day</b> returns</span></li>
+          </ul>
+          <figure class="hero-quote">
+            <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
+            <figcaption>Rohit, 26 · Bengaluru · <span>Beta tester</span></figcaption>
+          </figure>
         </div>
-        <ul class="hero-ship" aria-label="Delivery and payment">
-          <li><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><b>Free</b> shipping on prepaid</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-cash"/></svg><span><b>Cash on Delivery</b> available</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-return"/></svg><span><b>7-day</b> returns</span></li>
-        </ul>
-        <figure class="hero-quote">
-          <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
-          <figcaption>Rohit, 26 · Bengaluru · <span>Beta tester</span></figcaption>
-        </figure>
       </div>
     </div>
   </section>

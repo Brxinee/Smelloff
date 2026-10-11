@@ -129,3 +129,25 @@ test('slot photos are responsive, AVIF-first and network-aware', () => {
     assert.match(head, /saveData\|\|\/2g\//);
   }
 });
+
+// Homepage hero v4 (2026-10-11): photo first — the product in use, one static
+// image, one buy button. The photo is the LCP image, so it must never be lazy,
+// and the head preload must ask for the same sizes the <picture> will.
+test('homepage hero is a fast, static, product-in-use photo', () => {
+  const html = fs.readFileSync('index.html', 'utf8');
+  const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
+  const img = hero.match(/<img [^>]*hero-spray-collar[^>]*>/);
+  assert.ok(img, 'hero photo missing');
+  assert.match(img[0], /fetchpriority="high"/);
+  assert.doesNotMatch(img[0], /loading="lazy"/, 'the LCP image must load eagerly');
+  assert.match(img[0], /alt="[^"]*fabric, not the skin"/, 'alt must say what the photo shows');
+  assert.match(img[0], /style="background:url\(data:image\/webp;base64,/, 'blurred preview missing');
+  assert.match(hero, /<source type="image\/avif" srcset="[^"]+"/);
+  const picSizes = hero.match(/<source type="image\/avif" srcset="[^"]+" sizes="([^"]+)"/)[1];
+  const preload = html.match(/<link rel="preload" as="image" type="image\/avif" fetchpriority="high"\s+imagesrcset="[^"]+"\s+imagesizes="([^"]+)">/);
+  assert.ok(preload, 'hero AVIF preload missing');
+  assert.equal(preload[1], picSizes, 'preload imagesizes must match the <picture> sizes, or the photo downloads twice');
+  for (const f of hero.match(/\/assets\/photos\/hero-spray-collar[^ "]*\.(avif|webp)/g)) assert.ok(fs.existsSync(f.slice(1)), `${f} missing`);
+  assert.ok(!/carousel|swiper|slick/i.test(hero), 'one static hero image, not a carousel');
+  assert.equal((hero.match(/class="hm-btn"/g) || []).length, 1, 'one primary action in the hero');
+});

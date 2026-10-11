@@ -178,7 +178,7 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   // Owner's call (2026-10-11): outside checkout, say COD exists; the amount is on the COD option in checkout.
   assert.ok(hero.includes('Cash on Delivery') && !/₹\s*(89|318)\b/.test(hero), 'Hero names COD availability without the COD amount');
   assert.ok(hero.includes('2–3 sprays') && hero.includes('15–30 sec'), 'Usage microcopy must match the PDP');
-  assert.ok(html.includes('/assets/odorstrike-bottle-cutout.webp'), 'Hero bottle cutout must be present');
+  assert.ok(hero.includes('/assets/photos/hero-spray-collar'), 'Hero must show the product in use (the collar spray photo)');
 });
 
 test('index.html homepage: every section ends in a route to checkout', () => {
