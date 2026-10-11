@@ -45,9 +45,9 @@
   --overlay:rgba(0,0,0,.75);
 
   /* ---- Type families ------------------------------------------------ */
-  --display:'Bricolage Grotesque','Bricolage Grotesque Fallback',system-ui,sans-serif;
-  --mono:'Geist','Geist Fallback',system-ui,sans-serif;  /* label face — the body sans, tracked uppercase */
-  --body:'Geist','Geist Fallback',system-ui,sans-serif;
+  --display:'Space Grotesk','Space Grotesk Fallback',system-ui,sans-serif;
+  --mono:'Inter','Inter Fallback',system-ui,sans-serif;  /* label face — the body sans, tracked uppercase */
+  --body:'Inter','Inter Fallback',system-ui,sans-serif;
 
   /* ---- Type scale & rhythm -------------------------------------------
      Display line-height is tuned so multi-line headlines breathe naturally
