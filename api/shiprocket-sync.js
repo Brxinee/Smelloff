@@ -171,7 +171,10 @@ async function syncSingleOrder(order) {
       return { orderCode: order.order_code, status: createResult?.status || 'skipped', error: createResult?.error || null };
     }
     // Critical: use the newly-created carrier IDs for this same sync pass.
-    order = { ...order, ...createResult };
+    // Keep the order's own status: createResult.status is the sync outcome
+    // ('created'), not an order status.
+    const { status: _syncOutcome, ...createdIds } = createResult;
+    order = { ...order, ...createdIds };
   }
 
   let shipment = null;
