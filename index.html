@@ -516,6 +516,8 @@
   @media(min-width:768px){.beat .ph-img{max-width:460px;justify-self:center}}
   /* A filled slot: the same box as .ph-img, holding the photo. */
   .beat-art.ph-photo{display:block;padding:0;min-height:0;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover}
+  /* Square on phones: four 4:5 photos stacked ran ~1,740px. */
+  @media(max-width:767px){.beat-art.ph-photo{aspect-ratio:1/1}}
   @media(min-width:768px){.beat .ph-photo{max-width:460px;justify-self:center}}
   .layers-inline{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
   .layers-inline li{font-family:var(--display);font-weight:700;font-size:15px;border:1px solid var(--border-default);border-radius:var(--r-pill);padding:6px 12px}

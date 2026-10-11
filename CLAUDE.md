@@ -54,6 +54,13 @@ three homepage combo slots are still briefs.
 - The PDP size caption is "Fits a trouser pocket" (the photo is trousers,
   not jeans); the third size slot shows a jacket lining, not a desk.
 - `test/ux-guardrails.test.mjs` checks every slot photo exists and has alt text.
+- **PDP gallery tiles 2 and 4 are recut** with the same photos: tile 2 is
+  `pdp-04-in-hand` (bottle next to a phone, 10.5 × 3 cm), replacing
+  `pdp-04-pocket-size` ("GYM BAG" burnt in); tile 4 is `pdp-05-dried-clear`
+  (just sprayed → dried, cropped above the "~10 seconds / no marks" pills),
+  replacing `pdp-05-proof` (its unsupported "10,000+ customers ★4.8/5"). The
+  old files stay in `/assets` unreferenced; don't put them back.
+- Homepage beat photos are square under 768px (4:5 above).
 
 ## Order-confirmation screen rebuilt; Google Customer Reviews removed (2026-10-11)
 - `#successScreen` in `odorstrike.html` is rebuilt as: check + headline with
