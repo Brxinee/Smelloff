@@ -40,6 +40,23 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Price back to ₹229; COD handling ₹89 (2026-10-11, owner's call)
+- **₹229 prepaid** (was ₹299), MRP ₹499 → **54% off**. COD handling charge
+  **₹89** (was ₹60) → **₹318** collected for one bottle. Supersedes the prices
+  in "Price ₹299; COD amount only in checkout" below; its rule on *where* the
+  COD amount may appear still holds.
+- Source: `config/product.json` (price/paise, discountPercent, codFee/paise,
+  priceCod/paise). Copies: `CFG.PRICES.solo` / `CFG.COD_FEE` in
+  `odorstrike.html`, the chrome.js fallback, the PDP `product:price` meta.
+  Schema, `products.json`, `merchant-feed.xml` regenerated (`npm run schema`).
+- Derived blog maths: ~₹0.92 per spray, ~₹2.29 per refresh, ₹4.58 per ml,
+  ₹1.83–2.86 per use, ~₹7.39 per day.
+- **The live Supabase `create-order` function (v5) is not the repo's file**:
+  it hard-codes `UNIT_PRICE_RUPEES = 299` and `COD_FEE_RUPEES = 60`. It must be
+  redeployed with 229 / 89 (or the repo version, which reads the config) at
+  the same time as the site, or it rejects every order with "Invalid product
+  price" / "Order total mismatch".
+
 ## Quiet premium pass + placeholders back (2026-10-11, owner's call)
 "Too bold — conservative, premium, modern." Palette unchanged; the accent
 became a detail instead of a surface. **Supersedes** the placeholder hiding

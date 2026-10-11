@@ -22,14 +22,14 @@ function makeResponse() {
 
 function validBody(overrides = {}) {
   return {
-    amount: 29900,
+    amount: 22900,
     email: 'buyer@smelloff.test',
     phone: '9392974031',
     items: [{
       name: 'ODORSTRIKE Fabric Mist',
       variant: '50ml',
       quantity: 1,
-      price: 299,
+      price: 229,
     }],
     address: {
       name: 'Test Buyer',
@@ -157,7 +157,7 @@ test('create-order persists a database-valid prepaid method instead of pending',
         order_code: 'SMF-20260917-1234',
         customer_email: 'buyer@smelloff.test',
         customer_phone: '9392974031',
-        amount: 29900,
+        amount: 22900,
         payment_attempt_id: body.payment_attempt_id,
       }]);
     }
