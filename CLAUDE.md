@@ -54,11 +54,16 @@ courier / AWB / status back into `orders`. It was daily (`0 10 * * *`).
   state (Resend's idempotency key lasts only 24 h).
 - **Review requests are sent once per order**: `dispatchDueReviewRequests`
   checks `email_events` for a non-failed `reviewRequest` first (it fails closed).
-- Needs `SHIPROCKET_EMAIL` / `SHIPROCKET_PASSWORD` (a Shiprocket **API user**,
-  not the login) and `CRON_SECRET`. The pickup location defaults to
-  "Opposite ANcorner bakery" and the channel id to `41464314146431`; override
-  them with `SHIPROCKET_PICKUP_LOCATION` / `SHIPROCKET_CHANNEL_ID`. A wrong
-  pickup name fails with the list of names the account has.
+- Needs `SHIPROCKET_EMAIL` / `SHIPROCKET_PASSWORD` (the API user
+  `info@smelloff.in`, made under Settings → API Users; not the login) and
+  `CRON_SECRET`. Defaults match the live account (company 11447397): pickup
+  `sanathnagar` (Hyderabad 500018), channel CUSTOM `12051492`. The old defaults
+  ("Opposite ANcorner bakery", `41464314146431`) were from another account and
+  would have failed every create. Override with `SHIPROCKET_PICKUP_LOCATION` /
+  `SHIPROCKET_CHANNEL_ID`. A wrong pickup name fails with the list of names the
+  account has.
+- Shiprocket's own tracking webhook (Settings → Webhooks) is not used: the site
+  has no endpoint for it, and the 15-minute sync polls tracking instead.
 - Cancel test orders before turning it on: the sync pushes every `placed` /
   `confirmed` order.
 

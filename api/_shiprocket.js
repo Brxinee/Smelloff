@@ -7,8 +7,11 @@ let tokenExpiresAt = 0;
 let pickupLocationCache = null;
 let pickupLocationCacheExpiresAt = 0;
 
-const DEFAULT_PICKUP_LOCATION = 'Opposite ANcorner bakery';
-const DEFAULT_CHANNEL_ID = '41464314146431';
+// Read from the live account on 2026-10-11 (company 11447397): the one pickup
+// address is "sanathnagar" (Hyderabad 500018) and the custom-site channel is
+// CUSTOM 12051492. Override with SHIPROCKET_PICKUP_LOCATION / _CHANNEL_ID.
+const DEFAULT_PICKUP_LOCATION = 'sanathnagar';
+const DEFAULT_CHANNEL_ID = '12051492';
 
 export function isShiprocketConfigured() {
   return Boolean(process.env.SHIPROCKET_EMAIL && process.env.SHIPROCKET_PASSWORD);
