@@ -101,3 +101,20 @@ test('the Offer carries the MRP as a ListPrice (strikethrough in results), from 
   assert.equal(Number(block.offers.price), cfg.price);
   assert.ok(cfg.mrp > cfg.price, 'a list price only makes sense above the offer price');
 });
+
+// GSC export (2026-10-12): pages at position 5–10 with ~0.3% CTR, many with
+// titles Google cut mid-word or descriptions it rewrote. Keep every indexable
+// page's snippet inside what Google shows.
+test('every indexable page: title ≤ 60 characters, description 70–160', () => {
+  const decode = (s) => s.replace(/&amp;/g, '&').replace(/&#39;|&#x27;|&rsquo;|&#8217;/g, "'").replace(/&quot;/g, '"').replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)));
+  const files = fs.readdirSync('.').filter((f) => f.endsWith('.html') && !f.startsWith('google'))
+    .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+  for (const f of files) {
+    const html = fs.readFileSync(f, 'utf8');
+    if (/<meta name="robots" content="[^"]*noindex/.test(html)) continue;
+    const title = decode((html.match(/<title>([^<]*)<\/title>/) || [])[1] || '');
+    const desc = decode((html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '');
+    assert.ok(title.length > 0 && title.length <= 60, `${f}: title is ${title.length} characters`);
+    assert.ok(desc.length >= 70 && desc.length <= 160, `${f}: description is ${desc.length} characters`);
+  }
+});
