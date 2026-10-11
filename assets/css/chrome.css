@@ -882,10 +882,10 @@ section.final small,section.final .final-reassurance{display:block;margin-top:16
    in above. What is left is the Sources box.
    ===================================================================== */
 /* Sources: 19 posts label it with an inline-styled <p id="sources-heading">,
-   one with an unstyled .sources-label, three with a full-size <h2>. One
+   one an unstyled .sources-label, three a full-size <h2>, one a .source-box. One
    muted card label for all of them (the H2 stays a heading for the outline;
    apply-reader leaves it out of the contents list). */
-#sources-heading,.sources > .sources-label,.article-wrap .sources > h2{
+#sources-heading,.sources > .sources-label,.article-wrap .sources > h2,.source-box > p:first-child{
   margin:0 0 8px !important;font-family:var(--body) !important;font-size:11px !important;font-weight:600 !important;
   letter-spacing:.14em !important;line-height:1.4 !important;text-transform:uppercase !important;color:var(--muted) !important;
 }
