@@ -6,12 +6,14 @@ const money = ['index.html', 'odorstrike.html'];
 
 // Owner's call (2026-10-11): the photo slots stay visible as briefs until the
 // photography lands (reverses the earlier "hide them" fix). Swap each .ph-img
-// div for an <img> of the stated ratio.
+// div for an <img class="ph-photo"> of the stated ratio.
 test('photo placeholder slots are visible on the homepage and PDP', () => {
   for (const f of money) {
     const html = fs.readFileSync(f, 'utf8');
     assert.doesNotMatch(html, /\.ph-img\{display:none/, `${f}: .ph-img slots must render`);
-    assert.ok((html.match(/class="[^"]*\bph-img\b/g) || []).length >= 4, `${f}: image slots missing`);
+    // A slot is either still a brief (.ph-img) or filled with its photo (.ph-photo).
+    const slots = (html.match(/class="[^"]*\bph-(img|photo)\b/g) || []).length;
+    assert.ok(slots >= 4, `${f}: image slots missing`);
   }
   assert.doesNotMatch(fs.readFileSync('index.html', 'utf8'), /<section class="hm-sec" id="combos"[^>]*\shidden>/);
   assert.doesNotMatch(fs.readFileSync('odorstrike.html', 'utf8'), /<section class="pd-sec" id="size"[^>]*\shidden>/);
@@ -83,4 +85,24 @@ test('the full ingredient list is not published — three actives plus a count',
     assert.doesNotMatch(fs.readFileSync(f, 'utf8'), supporting, `${f} names a supporting ingredient`);
   }
   assert.match(fs.readFileSync('odorstrike.html', 'utf8'), /HPβCD · Zinc PCA · Triethyl Citrate <span class="pd-inci-more">\+ 8 more<\/span>/);
+});
+
+// Photos dropped into the slots: every one exists, carries real alt text and
+// lazy-loads (they're all below the fold).
+test('slot photos exist and have alt text', () => {
+  for (const f of money) {
+    const html = fs.readFileSync(f, 'utf8');
+    const imgs = html.match(/<img class="[^"]*\bph-photo\b[^>]*>/g) || [];
+    assert.ok(imgs.length >= 4, `${f}: expected filled photo slots`);
+    for (const tag of imgs) {
+      const src = tag.match(/ src="\/([^"]+)"/)[1];
+      assert.ok(fs.existsSync(src), `${f}: ${src} missing`);
+      for (const s of (tag.match(/srcset="([^"]+)"/)?.[1] || '').split(',').filter(Boolean)) {
+        const p = s.trim().split(' ')[0].slice(1);
+        assert.ok(fs.existsSync(p), `${f}: ${p} missing`);
+      }
+      assert.match(tag, /alt="[^"]{20,}"/, `${f}: ${src} needs descriptive alt`);
+      assert.match(tag, /loading="lazy"/);
+    }
+  }
 });

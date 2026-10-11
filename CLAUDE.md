@@ -40,6 +40,21 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Photos in the image slots (2026-10-11)
+Owner-supplied photos fill the homepage `#why` beats (4) and the PDP's
+`#how` steps (4), `#why` lifestyle and `#size` (3). Files are in
+`assets/photos/` (WebP + `@640`/`@500`); each is an `<img class="ph-photo">`
+in the old `.ph-img` box (same ratio, `object-fit:cover`, lazy). Only the
+three homepage combo slots are still briefs.
+- **Not used, clothing-only rule:** two gym-bag shots (one with sneakers) and
+  a backpack in a car. Don't put them on the site.
+- The before/after collar shot has "DRIES IN ~10 SECONDS · NO MARKS. NO
+  RESIDUE." burnt in (both contradict the locked copy). Only its right half,
+  above that pill, is used (`home-04-dried-clear`, `pdp-step-03-dried-clear`).
+- The PDP size caption is "Fits a trouser pocket" (the photo is trousers,
+  not jeans); the third size slot shows a jacket lining, not a desk.
+- `test/ux-guardrails.test.mjs` checks every slot photo exists and has alt text.
+
 ## Order-confirmation screen rebuilt; Google Customer Reviews removed (2026-10-11)
 - `#successScreen` in `odorstrike.html` is rebuilt as: check + headline with
   the buyer's first name → order number with Copy → item + Subtotal /
