@@ -193,16 +193,6 @@ export const POSTS = [
     alt: 'A woman recoils from the smell of her own shirt, framing the search for the best fabric odor spray in India',
   },
   {
-    slug: 'spray-to-remove-sweat-smell-from-clothes-instantly',
-    kicker: '10-second fix',
-    top: 'Sweat smell gone',
-    hi: 'in seconds',
-    photo: 1183970639,
-    focal: '44% 26%',
-    tone: 'brightness(1.18) contrast(1.08) saturate(1.06)',
-    alt: 'An office worker wilting in the heat with a damp shirt, the moment a 10-second fabric spray is meant for',
-  },
-  {
     slug: 'wedding-festive-wear-odor-guide',
     kicker: 'Festive wear',
     // "Sherwani" named a garment nobody in the photograph is wearing.

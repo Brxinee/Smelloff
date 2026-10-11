@@ -8,8 +8,30 @@
 // /api/* is never redirected: a 301 turns a webhook POST into a GET and the
 // Razorpay / Resend signatures would stop arriving.
 
+import routing from "../config/routing.json" with { type: "json" };
+
 export const CANONICAL_ORIGIN = "https://smelloff.in";
 const OUR_HOSTS = new Set(["smelloff.in", "www.smelloff.in"]);
+
+// Static, host-agnostic permanent redirects (retired blog slugs etc.). When we
+// are already 301ing a www/http URL, follow these too so Google gets ONE hop:
+// GSC (Oct 2026) listed 20 legacy www URLs going www → apex → new post.
+const STATIC_REDIRECTS = new Map(
+  routing.redirects
+    .filter((r) => !r.has && !/[(:*]/.test(r.source) && [301, 308].includes(r.statusCode ?? 301))
+    .map((r) => [r.source, r.destination.replace(CANONICAL_ORIGIN, "")]),
+);
+
+/** Follow the static redirect table to its end (max 5 links, no loops). */
+export function resolveStaticRedirect(path) {
+  let current = path;
+  for (let i = 0; i < 5 && STATIC_REDIRECTS.has(current); i++) {
+    const next = STATIC_REDIRECTS.get(current);
+    if (!next.startsWith("/") || next === current) break;
+    current = next;
+  }
+  return current;
+}
 
 function canonicalPath(pathname) {
   let path = pathname;
@@ -25,7 +47,7 @@ export function canonicalRedirect(requestUrl) {
   if (!OUR_HOSTS.has(url.hostname)) return null; // workers.dev, previews, localhost
   if (url.pathname.startsWith("/api/")) return null;
   if (url.hostname === "smelloff.in" && url.protocol === "https:") return null;
-  return CANONICAL_ORIGIN + canonicalPath(url.pathname) + url.search;
+  return CANONICAL_ORIGIN + resolveStaticRedirect(canonicalPath(url.pathname)) + url.search;
 }
 
 /**

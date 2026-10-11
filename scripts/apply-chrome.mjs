@@ -327,10 +327,10 @@ const PAGES = [
     'why-i-built-odorstrike', 'odorstrike-review-30-day-india-test',
     'odorstrike-vs-febreze-india', 'ambi-pur-vs-odorstrike',
     'what-is-fabric-odor-eliminator', 'hpbcd-cyclodextrin-fabric-odor',
-    'zinc-pca-fabric-odor-ingredient-guide', 'beta-cyclodextrin-odor-removal-science',
+    'zinc-pca-fabric-odor-ingredient-guide',
     // buyer-intent posts recovered from the 2026-07-28 prune
     'best-fabric-odor-spray-india-2026-body-odor', 'best-deodorant-spray-for-clothes-not-skin',
-    'deodorant-vs-fabric-mist', 'spray-to-remove-sweat-smell-from-clothes-instantly',
+    'deodorant-vs-fabric-mist',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
   // posts generated with no chrome of their own: the markers get inserted
   ...[

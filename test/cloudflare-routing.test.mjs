@@ -58,6 +58,13 @@ test('www and http are 301d to https://smelloff.in in one hop; /api is never red
   assert.equal(canonicalRedirect('https://smelloff.in/odorstrike'), null);
   assert.equal(canonicalRedirect('https://www.smelloff.in/api/webhook'), null, 'a 301 would turn webhook POSTs into GETs');
   assert.equal(canonicalRedirect('https://smelloff.example.workers.dev/'), null);
+  // A retired www slug lands on its final post in one hop, not www → apex → post.
+  assert.equal(canonicalRedirect('https://www.smelloff.in/blog/dri-fit-shirts-smell'), 'https://smelloff.in/blog/gym-clothes-smell-after-washing');
+  assert.equal(canonicalRedirect('https://www.smelloff.in/blog/beta-cyclodextrin-odor-removal-science/'), 'https://smelloff.in/blog/hpbcd-cyclodextrin-fabric-odor');
+  for (const r of routing.redirects.filter((r) => !r.has && !/[(:*]/.test(r.source) && (r.statusCode ?? 301) === 301)) {
+    const once = canonicalRedirect(`https://www.smelloff.in${r.source}`).replace('https://smelloff.in', '');
+    assert.ok(!routing.redirects.some((x) => !x.has && x.source === once), `${r.source} → ${once} still redirects (a chain)`);
+  }
 
   const temp = new Response(null, { status: 307, headers: { location: '/privacy' } });
   assert.equal(upgradeTemporaryRedirect('https://smelloff.in/privacy.html', temp).status, 301);
