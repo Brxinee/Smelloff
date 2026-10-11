@@ -299,8 +299,8 @@
     var submitText = document.getElementById('submitText');
     if (submitText && !checkoutButton.disabled) {
       submitText.textContent = method === 'cod'
-        ? 'PLACE COD ORDER · ₹' + total
-        : 'PAY ₹' + subtotal + ' SECURELY';
+        ? 'Place COD order · ₹' + total
+        : 'Pay ₹' + subtotal + ' securely';
     }
 
     if (method === 'cod') {
@@ -347,8 +347,8 @@
     if (label) label.textContent = loading
       ? 'Opening secure checkout…'
       : (currentPaymentMethod() === 'cod'
-        ? 'PLACE COD ORDER · ₹' + (unitPriceRupees() * quantityFromCheckout() + codFeeRupees())
-        : 'PAY ₹' + (unitPriceRupees() * quantityFromCheckout()) + ' SECURELY');
+        ? 'Place COD order · ₹' + (unitPriceRupees() * quantityFromCheckout() + codFeeRupees())
+        : 'Pay ₹' + (unitPriceRupees() * quantityFromCheckout()) + ' securely');
   }
 
   function showPaymentError(message) {

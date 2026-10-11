@@ -61,6 +61,19 @@ sections.
   with hairlines; hero/offer acid discs and glows are faint warm light. Acid
   stays for the eyebrow rule, the "40% off" outline, focus rings and the PDP
   timer ring. `test/ux-guardrails.test.mjs` pins it.
+- **Second pass (same day):** blog index + `blog.css` (category pill, links,
+  drop cap, quick-answer card, TOC, end-of-post box, quiz), policy-page
+  template, `/faq` (CTA, WhatsApp strip, grievance line), `/404`,
+  `/solutions/*` (buy button, answer box — its label is now "Quick answer",
+  not "AI Search & Answer Engine Summary"), checkout/cart (pay button reads
+  "Pay ₹299 securely" / "Place COD order · ₹359", neutral delivery box and
+  payment options), the review modal and the blog comments widget. Hard-coded
+  `'JetBrains Mono'` became `var(--mono)`. The consent bar's buttons are
+  sentence case in all four copies. Emails (`emails/`) still use acid —
+  that's a separate template system.
+- Fixed on the way: the blog index had the "Founder story" chip twice, and
+  `.b-about` cards overflowed a 320px screen by 19px (grid items without
+  `minmax(0,1fr)`).
 - `apply-chrome.mjs` is a build transform (critical CSS + optimized logo):
   after running it locally, revert those two bits and keep only the `?v=`
   stamps — or let the cache-buster bot do it.

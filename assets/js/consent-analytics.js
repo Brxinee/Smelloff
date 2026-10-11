@@ -79,7 +79,7 @@
       // the phone breakpoint they take a row each instead. Kept in sync with
       // chrome.css §5.2 and the two inline copies in index/odorstrike.
       '#smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}' +
-      '#smelloff-consent-bar button{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 18px;min-height:44px;border-radius:2px;cursor:pointer}' +
+      '#smelloff-consent-bar button{font-family:var(--body,system-ui,sans-serif);font-size:14px;font-weight:500;letter-spacing:.01em;padding:9px 18px;min-height:44px;border-radius:8px;cursor:pointer}' +
       '@media(max-width:520px){#smelloff-consent-bar .cb-actions{width:100%}#smelloff-consent-bar .cb-actions button{flex:1 1 130px;padding-inline:10px}}' +
       '#smelloff-consent-bar .cb-accept{background:#F4F1EA;color:#080808;border:none}' +
       '#smelloff-consent-bar .cb-reject{background:transparent;color:#f4f1ea;border:1px solid rgba(244,241,234,.25)}';

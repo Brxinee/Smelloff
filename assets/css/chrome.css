@@ -422,8 +422,8 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .rv-modal-card{position:relative;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:#111;border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:32px 24px;color:#fff;box-shadow:0 24px 48px rgba(0,0,0,.7);transform:translateY(12px) scale(.98);transition:transform .25s var(--ease,ease)}
 .rv-modal-overlay.open .rv-modal-card{transform:translateY(0) scale(1)}
 .rv-modal-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;line-height:1;transition:background .15s ease,border-color .15s ease}
-.rv-modal-close:hover{background:rgba(255,255,255,.2);border-color:var(--acid,#b8ff57)}
-.rv-modal-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono,monospace);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid,#b8ff57);background:rgba(184,255,87,.12);border:1px solid rgba(184,255,87,.3);padding:4px 12px;border-radius:100px;margin-bottom:14px}
+.rv-modal-close:hover{background:rgba(255,255,255,.2);border-color:var(--text-2)}
+.rv-modal-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono,monospace);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-2);background:transparent;border:1px solid var(--border-default);padding:4px 12px;border-radius:100px;margin-bottom:14px}
 .rv-modal-card h2{font-family:var(--display,serif);font-weight:500;font-size:26px;line-height:1.15;letter-spacing:-.02em;margin:0 0 8px;color:#fff}
 .rv-modal-card p.rv-desc{font-size:14px;color:rgba(255,255,255,.7);line-height:1.5;margin-bottom:22px}
 .rv-field{margin-bottom:18px}
@@ -434,8 +434,8 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .rv-stars-picker{display:flex;gap:8px;margin:8px 0 18px}
 .rv-stars-picker button{background:none;border:none;font-size:32px;color:rgba(255,255,255,.25);cursor:pointer;padding:0;transition:color .15s ease,transform .15s ease;line-height:1}
 .rv-stars-picker button:hover,.rv-stars-picker button.filled{color:#FFD700;transform:scale(1.15)}
-.rv-primary-btn{width:100%;background:var(--acid,#b8ff57);color:#080808;border:none;border-radius:8px;font-family:var(--mono,monospace);font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;padding:14px;cursor:pointer;transition:background .15s ease,transform .15s ease;min-height:48px}
-.rv-primary-btn:hover{background:#c7ff73;transform:translateY(-1px)}
+.rv-primary-btn{width:100%;background:var(--cta,#F4F1EA);color:#080808;border:none;border-radius:8px;font-family:var(--body,sans-serif);font-weight:500;font-size:15px;letter-spacing:.01em;padding:14px;cursor:pointer;transition:background .15s ease,transform .15s ease;min-height:48px}
+.rv-primary-btn:hover{background:var(--cta-hi,#fff);transform:translateY(-1px)}
 .rv-primary-btn[disabled]{opacity:.5;cursor:wait}
 .rv-error-msg{display:none;background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.4);color:#ff6b6b;border-radius:8px;font-size:13px;padding:10px 14px;margin-top:14px;line-height:1.4}
 .google-review-aggregator{background:var(--bg-surface,#111);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:20px 22px;margin:24px 0;display:flex;flex-direction:column;gap:16px}
@@ -452,8 +452,8 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 .gra-actions{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
 @media(min-width:640px){.gra-actions{align-items:flex-end}}
 .gra-sub{font-family:var(--mono,monospace);font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.05em;text-transform:uppercase}
-.gra-btn{display:inline-flex;align-items:center;gap:6px;background:var(--acid,#b8ff57);color:#080808;border:none;border-radius:8px;font-family:var(--mono,monospace);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;cursor:pointer;transition:transform .15s ease,background .15s ease;white-space:nowrap}
-.gra-btn:hover{background:#c7ff73;transform:translateY(-1px)}
+.gra-btn{display:inline-flex;align-items:center;gap:6px;background:var(--cta,#F4F1EA);color:#080808;border:none;border-radius:8px;font-family:var(--body,sans-serif);font-weight:500;font-size:14px;letter-spacing:.01em;padding:10px 16px;cursor:pointer;transition:transform .15s ease,background .15s ease;white-space:nowrap}
+.gra-btn:hover{background:var(--cta-hi,#fff);transform:translateY(-1px)}
 
 
 /* =====================================================================

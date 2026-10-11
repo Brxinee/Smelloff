@@ -45,7 +45,7 @@ test('odorstrike.html includes Razorpay Checkout script and clean UI', () => {
   const chromeSrc = fs.readFileSync('assets/js/chrome.js', 'utf8');
   assert.ok(chromeSrc.includes('https://checkout.razorpay.com/v1/checkout.js'), 'Razorpay checkout script must be loaded by chrome.js');
   assert.ok(!html.includes('id="upiInlineId"'), 'Static manual UPI ID element should not appear in checkout UI');
-  assert.ok(html.includes('BUY ODORSTRIKE'), 'Modern unified buy button should be present');
+  assert.ok(html.includes('Buy ODORSTRIKE'), 'Modern unified buy button should be present');
 });
 
 test('api/verify-payment.js signature calculation & constant-time comparison', () => {
@@ -234,7 +234,7 @@ test('frontend submit architecture: chrome.js has no capture click interceptors 
 
 test('frontend submit architecture: odorstrike.html submitOrder is sole router and button copy is clear', () => {
   const html = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.ok(html.includes("submitText', 'BUY ODORSTRIKE · ₹"), 'Button copy must say BUY ODORSTRIKE · ₹');
+  assert.ok(html.includes("submitText', 'Buy ODORSTRIKE · ₹"), 'Button copy must say Buy ODORSTRIKE · ₹');
   assert.ok(html.includes("return window.startRazorpay();"), 'submitOrder must invoke startRazorpay for prepaid');
   assert.ok(html.includes("onclick=\"submitOrder()\""), 'submit button must have onclick submitOrder');
 });
@@ -504,7 +504,7 @@ test('Multi-quantity orderPayload calculation integrity in chrome.js', () => {
 
   // Verify static submitText in odorstrike.html matches default total
   const html = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.ok(html.includes('<span id="submitText">BUY ODORSTRIKE · ₹299</span>'), 'Static submit button must match default total ₹299');
+  assert.ok(html.includes('<span id="submitText">Buy ODORSTRIKE · ₹299</span>'), 'Static submit button must match default total ₹299');
 
   // Exhaustive quantity testing: 1, 2, 3, 4, 5, 10
   const unitPrice = 299;

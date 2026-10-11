@@ -28,6 +28,20 @@ test('no acid bands or acid-filled primary buttons', () => {
   assert.doesNotMatch(fs.readFileSync('assets/css/chrome.css', 'utf8') + fs.readFileSync('assets/css/soft.css', 'utf8'), /font-weight:900/);
 });
 
+test('blog, solutions and checkout follow the quiet layer too', () => {
+  const blog = fs.readFileSync('assets/css/blog.css', 'utf8');
+  for (const sel of ['.article-category', '.end-cta .buy-btn']) {
+    const at = blog.indexOf(sel + ' {') >= 0 ? blog.indexOf(sel + ' {') : blog.indexOf(sel + '{');
+    assert.ok(at >= 0, `blog.css lost ${sel}`);
+    assert.doesNotMatch(blog.slice(at, blog.indexOf('}', at)), /background: ?var\(--acid\)/, `blog.css ${sel} is acid again`);
+  }
+  for (const f of fs.readdirSync('solutions').filter(f => f.endsWith('.html'))) {
+    assert.doesNotMatch(fs.readFileSync(`solutions/${f}`, 'utf8'), /\.cta-btn\{[^}]*background:var\(--acid\)/, `solutions/${f}`);
+  }
+  const chrome = fs.readFileSync('assets/js/chrome.js', 'utf8');
+  assert.ok(!/'PAY ₹|'PLACE COD ORDER/.test(chrome), 'checkout button labels are sentence case');
+});
+
 // config/product.json claims.prohibited, enforced on the visible copy of the two money pages.
 test('money pages carry no prohibited product claims', () => {
   const banned = /no white marks|no marks\b|anti-regrowth|anti regrowth|zero residue|residue-free/i;
