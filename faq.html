@@ -29,7 +29,7 @@
 <!-- Fonts -->
 <link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=ea5bd6cb">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=7b21e7db">
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
@@ -71,7 +71,7 @@
   ::selection{background:var(--acid);color:var(--ink)}
   nav.p-nav{display:flex;justify-content:space-between;align-items:center;padding:24px 32px;border-bottom:1px solid var(--rule)}
   nav.p-nav a{color:var(--text);text-decoration:none}
-  .p-logo{font-family:'Fraunces',serif;font-weight:900;font-size:22px;letter-spacing:-.02em}
+  .p-logo{font-family:'Fraunces',serif;font-weight:500;font-size:22px;letter-spacing:-.02em}
   .p-logo .p-dot{color:var(--acid)}
   .p-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
   .p-back:hover{color:var(--text)}
@@ -84,14 +84,14 @@
   main > .p-eyebrow,main > h1,main > .p-sub{max-width:800px}
   .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:12px}
   .tag::before{content:'';width:32px;height:1px;background:var(--muted)}
-  h1{font-family:'Fraunces',serif;font-weight:900;font-size:var(--fs-h1);line-height:.95;letter-spacing:-.03em;margin-bottom:16px}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:var(--fs-h1);line-height:.95;letter-spacing:-.03em;margin-bottom:16px}
   h1 .h1-dot{color:var(--acid)}
   .sub{font-family:'Fraunces',serif;font-size:20px;color:var(--muted);margin-bottom:56px;max-width:560px}
   /* Section heading above the accordion — carries the document outline so the
      page doesn't skip h1 -> h3 (the questions themselves are <summary>). */
   .faq-h2{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 18px}
   .faq-list details{border-bottom:1px solid var(--rule)}
-  .faq-list summary{padding:24px 0;cursor:pointer;font-family:'Fraunces',serif;font-weight:900;font-size:clamp(18px,2.5vw,24px);letter-spacing:-.01em;line-height:1.3;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--text)}
+  .faq-list summary{padding:24px 0;cursor:pointer;font-family:'Fraunces',serif;font-weight:500;font-size:clamp(18px,2.5vw,24px);letter-spacing:-.01em;line-height:1.3;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--text)}
   .faq-list summary::-webkit-details-marker{display:none}
   .faq-list summary::after{content:'+';font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:400;color:var(--muted);flex-shrink:0;transition:transform .2s}
   .faq-list details[open] summary::after{content:'−'}
@@ -107,7 +107,7 @@
   .meta-line{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-top:60px;padding-top:24px;border-top:1px solid var(--rule);line-height:1.9}
   .meta-line a{color:var(--muted);display:inline-block;padding:5px 0}
   footer.p-footer{border-top:1px solid var(--rule);padding:36px 32px calc(20px + env(safe-area-inset-bottom,0px));text-align:center}
-  .p-footer-brand{font-family:'Fraunces',serif;font-weight:900;font-size:28px;letter-spacing:-.02em;color:var(--text);text-decoration:none;display:inline-block;margin-bottom:18px}
+  .p-footer-brand{font-family:'Fraunces',serif;font-weight:500;font-size:28px;letter-spacing:-.02em;color:var(--text);text-decoration:none;display:inline-block;margin-bottom:18px}
   .p-footer-brand .p-dot{color:var(--acid)}
   .p-footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 20px;margin-bottom:22px}
   .p-footer-links a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text);opacity:.8;text-decoration:none}
@@ -119,15 +119,15 @@
   #smelloff-consent-bar p a{color:var(--acid);text-decoration:underline;text-underline-offset:2px}
   #smelloff-consent-bar .cb-actions{display:flex;gap:10px;flex-shrink:0}
   #smelloff-consent-bar button{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 18px;border-radius:2px;cursor:pointer}
-  #smelloff-consent-bar .cb-accept{background:var(--acid);color:var(--ink);border:none}
+  #smelloff-consent-bar .cb-accept{background:var(--cta,#F4F1EA);color:var(--on-cta,#080808);border:none}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--rule)}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
 </style>
 <link rel="alternate" hreflang="en-IN" href="https://smelloff.in/faq">
 <link rel="alternate" hreflang="x-default" href="https://smelloff.in/faq">
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=2bfcae5f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=fe433ec5">
+<link rel="preload" href="/assets/css/soft.css?v=31513cda" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=31513cda"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=0438fe9c" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=0438fe9c"></noscript>
 <script src="/assets/js/chrome.js?v=df3e13b5" defer></script>
 </head>
 <body>

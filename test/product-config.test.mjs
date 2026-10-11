@@ -171,10 +171,10 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
   assert.ok(hero.includes('FABRIC ODOR CONTROL · FOR CLOTHES'));
   assert.ok(hero.includes('ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin.'));
-  for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
+  for (const tag of ['Not perfume', 'Not body deodorant', 'Fabric only']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
   assert.ok(hero.includes('<b>₹299</b>'), 'Hero must show ₹299');
   assert.ok(hero.includes('M.R.P. ₹499') && hero.includes('40% OFF'), 'MRP and discount must agree with the PDP');
-  assert.ok(hero.includes('FIX MY SHIRT — ₹299') && hero.includes('href="/odorstrike?buy=1"'), 'Primary CTA must open checkout');
+  assert.ok(hero.includes('Buy now — ₹299') && hero.includes('href="/odorstrike?buy=1"'), 'Primary CTA must open checkout');
   // Owner's call (2026-10-11): outside checkout, say COD exists; the amount is on the COD option in checkout.
   assert.ok(hero.includes('Cash on Delivery') && !/₹\s*(60|359)\b/.test(hero), 'Hero names COD availability without the COD amount');
   assert.ok(hero.includes('2–3 sprays') && hero.includes('15–30 sec'), 'Usage microcopy must match the PDP');
@@ -215,7 +215,7 @@ test('index.html homepage combos are placeholders only — no prices, no live CT
   assert.ok(start !== -1, 'combos placeholder section must exist');
   const sec = html.slice(start, html.indexOf('</section>', start));
   assert.equal((sec.match(/class="combo"/g) || []).length, 3);
-  assert.equal(/₹\s*\d/.test(sec.replace(/Fix my shirt — ₹299/, '')), false, 'combo cards must not show a price until checkout supports combos');
+  assert.equal(/₹\s*\d/.test(sec.replace(/Buy now — ₹299/, '')), false, 'combo cards must not show a price until checkout supports combos');
   assert.equal((sec.match(/<button class="combo-btn" type="button" disabled>/g) || []).length, 3, 'combo buttons must be disabled');
   assert.equal(/"@type"\s*:\s*"(Offer|AggregateOffer)"/.test(html), false, 'no offer schema for combos');
 });
@@ -248,7 +248,7 @@ test('odorstrike.html PDP hero and primary buy area: positioning, canonical pric
   assert.ok(pInfo.includes('FABRIC ODOR CONTROL · 50ML'), 'Eyebrow must declare fabric odor control');
   assert.ok(pInfo.includes('A pocket-sized fabric odor mist for clothes'), 'Tagline must define the category');
   assert.ok(pInfo.includes('up to 8 hours'), 'Tagline must carry the locked protection claim');
-  for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(pInfo.includes(tag), `Must say ${tag}`);
+  for (const tag of ['Not perfume', 'Not body deodorant', 'Fabric only']) assert.ok(pInfo.includes(tag), `Must say ${tag}`);
 
   assert.ok(pInfo.includes('<span class="pd-amt">₹299</span>'), 'Price must display ₹299');
   assert.ok(pInfo.includes('MRP ₹499') && pInfo.includes('40% OFF'), 'MRP and discount must agree');
@@ -258,7 +258,7 @@ test('odorstrike.html PDP hero and primary buy area: positioning, canonical pric
   for (const id of ['pdpQtyDec', 'pdpQtyVal', 'pdpQtyInc', 'pdpBuyBtn', 'pdpBuyText', 'pdpCartBtn']) assert.ok(pInfo.includes(`id="${id}"`), `#${id} must exist`);
   assert.ok(/id="pdpBuyBtn" onclick="buyNow\(\)"/.test(pInfo), 'Primary CTA must go straight to checkout');
   assert.ok(/id="pdpCartBtn" onclick="addToCart\(\)"/.test(pInfo), 'Secondary CTA must add to cart');
-  assert.ok(pInfo.includes('GET ODORSTRIKE — ₹299'), 'Initial buy text must match canonical price');
+  assert.ok(pInfo.includes('Buy now — ₹299'), 'Initial buy text must match canonical price');
   assert.ok(pInfo.indexOf('class="pd-price"') < pInfo.indexOf('class="buy-actions"'), 'Price must precede the buy controls');
   for (const t of ['Free shipping', 'Cash on Delivery', '3–5 days', '7-day returns']) assert.ok(pInfo.includes(t), `Reassurance must include ${t}`);
 
@@ -484,7 +484,7 @@ test('odorstrike.html PDP buy box (#buy): showcaseBuyBtn → buyNow(), canonical
   assert.ok(start !== -1, 'Must have the #buy section');
   const box = html.slice(start, html.indexOf('</section>', start));
 
-  assert.ok(/<button[^>]+class="pd-btn" id="showcaseBuyBtn" onclick="buyNow\(\)">GET ODORSTRIKE — ₹299<\/button>/.test(box), '#showcaseBuyBtn must be a button calling buyNow() with the canonical price');
+  assert.ok(/<button[^>]+class="pd-btn" id="showcaseBuyBtn" onclick="buyNow\(\)">Buy now — ₹299<\/button>/.test(box), '#showcaseBuyBtn must be a button calling buyNow() with the canonical price');
   assert.ok(html.includes("document.getElementById('showcaseBuyBtn')"), 'renderPdpQty must synchronize showcaseBuyBtn');
   assert.ok(box.includes('₹299') && box.includes('₹499') && box.includes('40% OFF'), 'Price, MRP and discount must be shown');
   assert.ok(box.includes('Cash on Delivery') && !/₹\s*(60|359)\b/.test(box), 'Buy box names COD availability without the COD amount');
@@ -531,8 +531,8 @@ test('odorstrike.html mobile sticky buy bar (#mobileBar) price synchronization, 
 
   // 3. #mobileBarBuyBtn exists, calls buyNow(), has 44px+ touch target, and accessible description
   assert.ok(html.includes('id="mobileBarBuyBtn"'), 'Must have id="mobileBarBuyBtn"');
-  assert.ok(/<button[^>]+id="mobileBarBuyBtn"[^>]*onclick="buyNow\(\)"[^>]*aria-describedby="mobileBarLabel"[^>]*>GET ODORSTRIKE<\/button>/.test(barContent) ||
-            /<button[^>]+onclick="buyNow\(\)"[^>]*id="mobileBarBuyBtn"[^>]*aria-describedby="mobileBarLabel"[^>]*>GET ODORSTRIKE<\/button>/.test(barContent),
+  assert.ok(/<button[^>]+id="mobileBarBuyBtn"[^>]*onclick="buyNow\(\)"[^>]*aria-describedby="mobileBarLabel"[^>]*>Buy now<\/button>/.test(barContent) ||
+            /<button[^>]+onclick="buyNow\(\)"[^>]*id="mobileBarBuyBtn"[^>]*aria-describedby="mobileBarLabel"[^>]*>Buy now<\/button>/.test(barContent),
     '#mobileBarBuyBtn must invoke buyNow() and associate with #mobileBarLabel via aria-describedby');
 
   // 4. renderPdpQty synchronizes mobileBarLabel dynamically
@@ -615,16 +615,16 @@ test('odorstrike.html final purchase CTA (section.final) structure, canonical pr
   const renderQtyBody = renderQtyMatch[1];
   assert.ok(renderQtyBody.includes('finalBuyBtn'), 'renderPdpQty() must synchronize finalBuyBtn state');
   assert.ok(
-    renderQtyBody.includes("textContent = 'GET ODORSTRIKE — ₹' + subtotal") ||
-    renderQtyBody.includes('textContent = "GET ODORSTRIKE — ₹" + subtotal') ||
-    renderQtyBody.includes("textContent = 'GET ODORSTRIKE — ₹' + (unitPrice() * pdpQty)"),
+    renderQtyBody.includes("textContent = 'Buy now — ₹' + subtotal") ||
+    renderQtyBody.includes('textContent = "Buy now — ₹" + subtotal') ||
+    renderQtyBody.includes("textContent = 'Buy now — ₹' + (unitPrice() * pdpQty)"),
     'renderPdpQty() must derive final CTA price dynamically from canonical unit price and quantity'
   );
 
   // 5. Quantity 1 price is correct (canonical ₹299)
   const unit = PRODUCT.price; // 299
   assert.equal(unit * 1, 299, 'Canonical unit price must equal 299');
-  assert.ok(finalBlock.includes('GET ODORSTRIKE — ₹299'), 'Initial HTML markup for quantity 1 must display canonical ₹299');
+  assert.ok(finalBlock.includes('Buy now — ₹299'), 'Initial HTML markup for quantity 1 must display canonical ₹299');
 
   // 6. Quantity 2 price is correct (₹598)
   assert.equal(unit * 2, 598, 'Quantity 2 subtotal must equal ₹598');

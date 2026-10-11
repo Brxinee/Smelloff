@@ -78,7 +78,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=ea5bd6cb">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=7b21e7db">
 <style>
   :root{--red:#FF6B6B}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -96,7 +96,7 @@
   .p-main{flex:1;width:100%;max-width:620px;margin:0 auto;padding:48px 20px 80px}
   .p-eyebrow{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
   .p-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--accent)}
-  h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(36px,6vw,56px);letter-spacing:-.02em;line-height:1.05;text-transform:none;margin-bottom:12px}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(36px,6vw,56px);letter-spacing:-.02em;line-height:1.05;text-transform:none;margin-bottom:12px}
   .p-sub{color:var(--text-secondary);font-size:15px;margin-bottom:32px}
   form{background:var(--bg-surface);border:1px solid var(--rule);border-radius:var(--sq-lg);padding:22px 20px;margin-bottom:28px}
   label{display:block;font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
@@ -154,17 +154,17 @@
   body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
   ::selection{background:var(--acid);color:#080808}
   .p-nav{position:static;display:flex;height:auto;justify-content:space-between;align-items:center;padding:24px 32px;background:var(--bg);border-bottom:1px solid var(--rule)}
-  .p-logo{font-family:'Fraunces',serif;font-weight:900;font-size:22px;letter-spacing:-.02em;text-transform:none;padding-right:0;color:var(--text)}
+  .p-logo{font-family:'Fraunces',serif;font-weight:500;font-size:22px;letter-spacing:-.02em;text-transform:none;padding-right:0;color:var(--text)}
   .p-logo .p-dot,.p-footer-brand .p-dot{position:static;display:inline;width:auto;height:auto;background:transparent;border-radius:0;color:var(--acid)}
   .p-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:0}
   .p-back:hover{color:var(--text)}
   .p-main{max-width:760px;padding:80px 32px 120px}
   .p-eyebrow{font-family:'JetBrains Mono',monospace;font-weight:400;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:12px}
   .p-eyebrow::before{content:'';width:32px;height:1px;background:var(--muted)}
-  .p-main h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(44px,6.5vw,88px);line-height:.95;letter-spacing:-.03em;text-transform:none;margin-bottom:40px;color:var(--text)}
+  .p-main h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(44px,6.5vw,88px);line-height:.95;letter-spacing:-.03em;text-transform:none;margin-bottom:40px;color:var(--text)}
   .p-main h1 .h1-dot{color:var(--acid)}
-  .p-main h2{font-family:'Fraunces',serif;font-weight:900;font-size:28px;letter-spacing:-.02em;text-transform:none;margin:40px 0 12px;line-height:1.2;color:var(--text)}
-  .p-main h3{font-family:'Fraunces',serif;font-weight:900;letter-spacing:-.01em;text-transform:none;color:var(--text)}
+  .p-main h2{font-family:'Fraunces',serif;font-weight:500;font-size:28px;letter-spacing:-.02em;text-transform:none;margin:40px 0 12px;line-height:1.2;color:var(--text)}
+  .p-main h3{font-family:'Fraunces',serif;font-weight:500;letter-spacing:-.01em;text-transform:none;color:var(--text)}
   .p-main p{color:var(--text);font-size:16px}
   .p-main .p-sub{color:var(--muted)}
   .p-main li{color:var(--text);font-size:16px}
@@ -175,7 +175,7 @@
   .p-main .callout p{color:var(--text);font-size:15px}
   .p-meta{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-top:60px;padding-top:24px;border-top:1px solid var(--rule);line-height:1.8}
   .p-footer{border-top:1px solid var(--rule)}
-  .p-footer-brand{font-family:'Fraunces',serif;font-weight:900;font-size:28px;letter-spacing:-.02em;text-transform:none}
+  .p-footer-brand{font-family:'Fraunces',serif;font-weight:500;font-size:28px;letter-spacing:-.02em;text-transform:none}
   .p-footer-links a,.p-footer-policy a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text);opacity:.8;border-bottom:none}
   .p-footer-links a:hover,.p-footer-policy a:hover{color:var(--acid);opacity:1}
   .p-footer-guides a{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom-color:rgba(184,255,87,.25)}
@@ -185,10 +185,10 @@
   .p-cta{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:11px;letter-spacing:.15em;background:var(--acid);color:#080808;border-radius:100px;padding:8px 16px}
 </style>
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
-<script src="/assets/js/consent-analytics.js?v=182abc9f" defer></script>
+<script src="/assets/js/consent-analytics.js?v=55549138" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=2bfcae5f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=fe433ec5">
+<link rel="preload" href="/assets/css/soft.css?v=31513cda" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=31513cda"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=0438fe9c" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=0438fe9c"></noscript>
 <script src="/assets/js/chrome.js?v=df3e13b5" defer></script>
 </head>
 <body>

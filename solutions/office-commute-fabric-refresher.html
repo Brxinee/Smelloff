@@ -67,7 +67,7 @@
 }
 </script>
 
-<link rel="stylesheet" href="/assets/css/tokens.css?v=ea5bd6cb">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=7b21e7db">
 
 <style>
   /* Brand tokens come from tokens.css (no local :root override — the old one
@@ -78,7 +78,7 @@
   .hero{padding:40px 0 48px;border-bottom:1px solid var(--rule)}
   .badge{display:inline-flex;align-items:center;gap:12px;color:var(--acid);font-family:var(--mono);font-size:var(--fs-eyebrow);margin-bottom:18px;letter-spacing:var(--ls-eyebrow);text-transform:uppercase}
   .badge::before{content:'';width:34px;height:1px;background:currentColor;opacity:.75}
-  h1{font-family:var(--display);font-size:clamp(36px,6vw,64px);line-height:var(--lh-display);margin-bottom:18px;font-weight:900;letter-spacing:var(--ls-display)}
+  h1{font-family:var(--display);font-size:clamp(36px,6vw,64px);line-height:var(--lh-display);margin-bottom:18px;font-weight:500;letter-spacing:var(--ls-display)}
   p.lead{font-size:var(--fs-lead);color:var(--text-2);margin-bottom:24px;max-width:62ch}
 
   .geo-answer-block{background:var(--surface);border:1px solid var(--border-focus);border-left:3px solid var(--acid);border-radius:var(--sq-lg);padding:22px 24px;margin:32px 0}
@@ -86,25 +86,25 @@
   .geo-text{font-size:16px;color:var(--text)}
 
   .content-section{padding:40px 0;border-bottom:1px solid var(--rule)}
-  .content-section h2{font-family:var(--display);font-weight:900;font-size:clamp(24px,3.2vw,34px);line-height:1.1;letter-spacing:-.01em;margin-bottom:16px;color:var(--text)}
+  .content-section h2{font-family:var(--display);font-weight:500;font-size:clamp(24px,3.2vw,34px);line-height:1.1;letter-spacing:-.01em;margin-bottom:16px;color:var(--text)}
   .content-section p{color:var(--text-2)}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
   @media(max-width:767px){.grid{grid-template-columns:1fr}}
   .card{background:var(--surface);border:1px solid var(--border-default);padding:22px;border-radius:var(--sq-lg)}
-  .card h3{font-family:var(--display);font-weight:900;font-size:19px;color:var(--text);margin-bottom:8px}
+  .card h3{font-family:var(--display);font-weight:500;font-size:19px;color:var(--text);margin-bottom:8px}
   .card p{color:var(--text-2);font-size:15px}
 
   .cta-box{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--sq-xl);padding:36px 24px;text-align:center;margin:40px 0}
-  .cta-box h2{font-family:var(--display);font-weight:900;font-size:clamp(26px,3.6vw,38px);line-height:1.08;margin-bottom:12px}
+  .cta-box h2{font-family:var(--display);font-weight:500;font-size:clamp(26px,3.6vw,38px);line-height:1.08;margin-bottom:12px}
   .cta-box p{color:var(--text-2)}
   .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;background:var(--acid);color:var(--on-acid);padding:14px 28px;border-radius:var(--sq-sm);font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;margin-top:16px}
   .cta-btn:hover{background:var(--acid-hi)}
 </style>
 <script src="/assets/js/track.js?v=801e292b" defer></script>
-<script src="/assets/js/consent-analytics.js?v=182abc9f" defer></script>
+<script src="/assets/js/consent-analytics.js?v=55549138" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=2bfcae5f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=fe433ec5">
+<link rel="preload" href="/assets/css/soft.css?v=31513cda" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=31513cda"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=0438fe9c" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=0438fe9c"></noscript>
 <script src="/assets/js/chrome.js?v=df3e13b5" defer></script>
 </head>
 <body>
@@ -211,7 +211,7 @@
   <section class="cta-box">
     <h2>Keep Your Work Wear Fresh All Day</h2>
     <p style="color:var(--muted)">50ml Pocket Spray · 250+ Sprays · Free Delivery Pan-India · Cash on Delivery</p>
-    <a href="/odorstrike" class="cta-btn">GET ODORSTRIKE — ₹299</a>
+    <a href="/odorstrike" class="cta-btn">Buy now — ₹299</a>
   </section>
 </main>
 

@@ -4,15 +4,28 @@ import fs from 'node:fs';
 
 const money = ['index.html', 'odorstrike.html'];
 
-// Image slots waiting for photography rendered as dashed boxes reading
-// "IMAGE 01 · 4:5 · 1200×1500 · WebP" on the live homepage and PDP.
-test('photo placeholders never reach customers', () => {
+// Owner's call (2026-10-11): the photo slots stay visible as briefs until the
+// photography lands (reverses the earlier "hide them" fix). Swap each .ph-img
+// div for an <img> of the stated ratio.
+test('photo placeholder slots are visible on the homepage and PDP', () => {
   for (const f of money) {
     const html = fs.readFileSync(f, 'utf8');
-    assert.match(html, /\.ph-img\{display:none !important\}/, `${f}: .ph-img slots must stay hidden until the photo exists`);
+    assert.doesNotMatch(html, /\.ph-img\{display:none/, `${f}: .ph-img slots must render`);
+    assert.ok((html.match(/class="[^"]*\bph-img\b/g) || []).length >= 4, `${f}: image slots missing`);
   }
-  assert.match(fs.readFileSync('index.html', 'utf8'), /<section class="hm-sec" id="combos"[^>]*\shidden>/, 'combo cards are template text until combos exist');
-  assert.match(fs.readFileSync('odorstrike.html', 'utf8'), /<section class="pd-sec" id="size"[^>]*\shidden>/, '#size is three empty slots until shot');
+  assert.doesNotMatch(fs.readFileSync('index.html', 'utf8'), /<section class="hm-sec" id="combos"[^>]*\shidden>/);
+  assert.doesNotMatch(fs.readFileSync('odorstrike.html', 'utf8'), /<section class="pd-sec" id="size"[^>]*\shidden>/);
+});
+
+// Quiet premium pass (2026-10-11): the accent is a detail, not a surface.
+test('no acid bands or acid-filled primary buttons', () => {
+  const idx = fs.readFileSync('index.html', 'utf8');
+  for (const sel of ['.final{', '.ticker{', '.hm-btn{']) {
+    const rule = idx.slice(idx.indexOf('  ' + sel), idx.indexOf('}', idx.indexOf('  ' + sel)));
+    assert.doesNotMatch(rule, /background:var\(--acid\)/, `index.html ${sel} is acid again`);
+  }
+  assert.match(fs.readFileSync('assets/css/chrome.css', 'utf8'), /\.sf-announce\{background:var\(--surface\)/);
+  assert.doesNotMatch(fs.readFileSync('assets/css/chrome.css', 'utf8') + fs.readFileSync('assets/css/soft.css', 'utf8'), /font-weight:900/);
 });
 
 // config/product.json claims.prohibited, enforced on the visible copy of the two money pages.

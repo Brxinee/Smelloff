@@ -25,30 +25,30 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts.css?v=bf4ac0b7" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="/assets/fonts.css?v=bf4ac0b7"></noscript>
-<link rel="stylesheet" href="/assets/css/tokens.css?v=ea5bd6cb">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=7b21e7db">
 
 <style>
   /* Brand tokens come from tokens.css — see the note in the solution pages. */
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--ink);color:var(--text);font-family:var(--body);line-height:var(--lh-body);margin:0}
   .hero{padding:40px 0 48px;border-bottom:1px solid var(--rule)}
-  h1{font-family:var(--display);font-size:clamp(36px,6vw,64px);line-height:var(--lh-display);margin-bottom:18px;font-weight:900;letter-spacing:var(--ls-display)}
+  h1{font-family:var(--display);font-size:clamp(36px,6vw,64px);line-height:var(--lh-display);margin-bottom:18px;font-weight:500;letter-spacing:var(--ls-display)}
   p.lead{font-size:var(--fs-lead);color:var(--text-2);margin-bottom:24px;max-width:62ch}
 
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:32px 0}
   @media(max-width:767px){.grid{grid-template-columns:1fr}}
   .solution-card{background:var(--surface);border:1px solid var(--border-default);padding:24px;border-radius:var(--sq-lg);text-decoration:none;color:inherit;display:block;transition:border-color .2s}
   .solution-card:hover{border-color:var(--border-focus)}
-  .solution-card h3{font-family:var(--display);font-weight:900;font-size:21px;line-height:1.15;color:var(--text);margin-bottom:8px}
+  .solution-card h3{font-family:var(--display);font-weight:500;font-size:21px;line-height:1.15;color:var(--text);margin-bottom:8px}
   .solution-card p{font-size:15px;color:var(--text-2)}
   .city-tag{display:inline-block;color:var(--acid);font-size:11px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
 </style>
 
 <script src="/assets/js/track.js?v=801e292b" defer></script>
-<script src="/assets/js/consent-analytics.js?v=182abc9f" defer></script>
+<script src="/assets/js/consent-analytics.js?v=55549138" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="stylesheet" href="/assets/css/soft.css?v=2bfcae5f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=fe433ec5">
+<link rel="preload" href="/assets/css/soft.css?v=31513cda" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=31513cda"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=0438fe9c" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=0438fe9c"></noscript>
 <script src="/assets/js/chrome.js?v=df3e13b5" defer></script>
 </head>
 <body>
