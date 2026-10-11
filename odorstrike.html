@@ -1271,7 +1271,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .pd-dot{width:8px;height:8px;border-radius:50%;background:var(--acid);box-shadow:0 0 0 4px var(--acid-dim)}
   .pd-title{font-family:var(--display);font-weight:700;font-size:clamp(44px,5.2vw,68px);
     line-height:1.02;letter-spacing:-.02em;margin-top:10px;color:var(--text)}
-  .pd-tagline{font-size:var(--fs-lead);line-height:1.5;color:var(--text-2);margin-top:12px;max-width:54ch}
+  .pd-title__cat{display:block;font-family:var(--body);font-weight:400;font-size:var(--fs-lead);line-height:1.5;
+    letter-spacing:0;color:var(--text-2);margin-top:12px;max-width:54ch}
   .pd-not{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin-top:16px}
   .pd-not li{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid var(--rule);
     border-radius:var(--r-pill);font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--text-2)}
@@ -1329,8 +1330,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     .buy-actions .pd-btn .ic{display:none}
     .pd-offer-art{min-height:0;padding:24px}
     .pd-offer-art img{height:200px}
-    .pd-tagline{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:15.5px}
     .pd-title{font-size:44px}
+    .pd-title__cat{font-size:15.5px}
   }
   @media(max-width:359px){
     .pd-assure{grid-template-columns:1fr}
@@ -1851,8 +1852,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <p class="pd-eyebrow">FABRIC ODOR CONTROL · 50ML</p>
           <span class="pd-stock"><span class="pd-dot" aria-hidden="true"></span>In stock · ships in 48 h</span>
         </div>
-        <h1 id="pdTitle" class="pd-title">ODORSTRIKE</h1>
-        <p class="pd-tagline">A pocket-sized fabric odor mist for clothes.</p>
+        <!-- The category is part of the H1 (people search "fabric odor spray for
+             clothes", not the brand) and it replaces the old one-line tagline,
+             so the hero is no taller. -->
+        <h1 id="pdTitle" class="pd-title">ODORSTRIKE <span class="pd-title__cat">Pocket-sized fabric odor spray for clothes</span></h1>
         <!-- Highlights, not paragraphs (Baymard): the three things a first-time
              buyer needs before the price. The detail lives further down. -->
         <ul class="pd-highlights">
@@ -2106,6 +2109,10 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
     <h2 class="pd-h2" id="faqHeading">Before you buy.</h2>
   </div>
   <div class="faq-list">
+    <details>
+      <summary><h3>What is ODORSTRIKE?</h3></summary>
+      <p class="faq-answer">ODORSTRIKE is a fabric odor spray for clothes made by Smelloff in Hyderabad, India: a 50ml pocket mist that traps and neutralizes sweat, food and smoke odor in the fabric instead of covering it with perfume. It is not a perfume, not a body deodorant and not a room spray. It dries in 15–30 seconds and gives up to 8 hours of odor protection on fabric under normal office/commute conditions.</p>
+    </details>
     <details>
       <summary><h3>Is ODORSTRIKE safe on skin?</h3></summary>
       <p class="faq-answer">No. ODORSTRIKE is formulated exclusively for fabric — never skin, face, hair, or body. Keep using your regular deodorant on skin; use ODORSTRIKE on the clothes that trap sweat odor. If accidental skin contact occurs, rinse with clean water.</p>

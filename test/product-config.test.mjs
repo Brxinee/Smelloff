@@ -244,9 +244,8 @@ test('odorstrike.html PDP hero and primary buy area: positioning, canonical pric
   const pInfo = html.slice(pInfoStart, html.indexOf('<div id="heroProofMount">', pInfoStart));
 
   assert.equal([...html.matchAll(/<h1\b/g)].length, 1, 'PDP must have exactly one <h1>');
-  assert.ok(/<h1[^>]*>ODORSTRIKE<\/h1>/.test(pInfo), 'H1 must be the product name');
+  assert.ok(/<h1[^>]*>ODORSTRIKE <span class="pd-title__cat">[^<]*fabric odor spray for clothes<\/span><\/h1>/.test(pInfo), 'H1 must be the product name plus its category');
   assert.ok(pInfo.includes('FABRIC ODOR CONTROL · 50ML'), 'Eyebrow must declare fabric odor control');
-  assert.ok(pInfo.includes('A pocket-sized fabric odor mist for clothes'), 'Tagline must define the category');
   assert.ok(pInfo.includes('up to 8 hours'), 'Tagline must carry the locked protection claim');
   for (const tag of ['Not perfume', 'Not body deodorant', 'Fabric only']) assert.ok(pInfo.includes(tag), `Must say ${tag}`);
 
@@ -430,11 +429,12 @@ test('odorstrike.html PDP FAQ objection-first hierarchy, schema deprecation, and
   const qMatches = [...faqSection.matchAll(/<summary><h3>([\s\S]*?)<\/h3><\/summary>/g)].map(m => m[1].trim());
   const aMatches = [...faqSection.matchAll(/<p class="faq-answer">([\s\S]*?)<\/p>/g)].map(m => m[1].trim());
 
-  assert.equal(qMatches.length, 10, 'Must have exactly 10 visible FAQ questions');
-  assert.equal(aMatches.length, 10, 'Must have exactly 10 visible FAQ answers');
+  assert.equal(qMatches.length, 11, 'Must have exactly 11 visible FAQ questions');
+  assert.equal(aMatches.length, 11, 'Must have exactly 11 visible FAQ answers');
 
-  // 4. Expected 10 objection questions in order
+  // 4. The definition first (the passage answer engines quote), then the objections in order
   const expectedQuestions = [
+    'What is ODORSTRIKE?',
     'Is ODORSTRIKE safe on skin?',
     'Will it stain my clothes?',
     'How do I use it?',
