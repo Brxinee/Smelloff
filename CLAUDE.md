@@ -84,6 +84,15 @@ courier / AWB / status back into `orders`. It was daily (`0 10 * * *`).
   API: fee in `transaction_charges` → total 318; fee in `sub_total` → 407
   (double-counted). Prepaid orders send 0 and `cod: 0`.
   `test/shiprocket-payload.test.mjs` pins it.
+- **Cancelling in the Shiprocket panel closes the order on the site.** An
+  order with no AWB yet is read via `/orders/show/{id}` (status `CANCELED`,
+  code 5; it also carries the AWB once assigned). It was read via
+  `/shipments/{id}`, which only returns a numeric status, so a cancellation
+  never reached the site and the order stayed open and was re-synced forever.
+  Only `placed` / `confirmed` / `packed` orders are closed
+  (`CANCELLABLE_STATUSES`). No customer email is sent: the owner cancelled it,
+  and a paid order's refund is a separate decision.
+  `test/shiprocket-cancel-sync.test.mjs` pins it.
 - **`/api/health` now reports `build.commit`** (stamped by
   `scripts/write-build-info.mjs` during `npm run build` from
   `WORKERS_CI_COMMIT_SHA`, else git). After every merge, check that it matches

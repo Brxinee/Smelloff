@@ -199,6 +199,9 @@ export async function createShiprocketOrder(order) {
   return shiprocketRequest('/orders/create/adhoc', { method: 'POST', body: JSON.stringify(payload) });
 }
 
+export async function getShiprocketOrder(orderId) {
+  return shiprocketRequest(`/orders/show/${encodeURIComponent(String(orderId))}`, { method: 'GET' });
+}
 export async function getShiprocketShipment(shipmentId) {
   return shiprocketRequest(`/shipments/${encodeURIComponent(String(shipmentId))}`, { method: 'GET' });
 }
