@@ -14,9 +14,9 @@
    except the ink/surface fallbacks.
    ===================================================================== */
 :root {
-  --font-body: var(--body, 'Inter Tight', 'Inter Tight Fallback', sans-serif);
-  --font-display: var(--display, 'Fraunces', 'Fraunces Fallback', serif);
-  --font-mono: var(--mono, 'JetBrains Mono', monospace);
+  --font-body: var(--body, 'Geist', system-ui, sans-serif);
+  --font-display: var(--display, 'Bricolage Grotesque', system-ui, sans-serif);
+  --font-mono: var(--mono, 'Geist', system-ui, sans-serif);
   --measure: 720px;
   --toc-w: 248px;
 }
@@ -99,7 +99,7 @@ img { max-width: 100%; height: auto; display: block; }
 
 h1 {
   font-family: var(--font-display);
-  font-weight:500;
+  font-weight:600;
   font-size: clamp(32px, 5.4vw, 52px);
   line-height: 1.06;
   letter-spacing: -.02em;
@@ -210,14 +210,14 @@ h1 em { font-style: normal; color: var(--acid); }
    Prose
    --------------------------------------------------------------------- */
 .article-wrap h2 {
-  font-family: var(--font-display); font-weight:500;
+  font-family: var(--font-display); font-weight:600;
   font-size: clamp(24px, 3.4vw, 32px); line-height: 1.18; letter-spacing: -.015em;
   color: var(--text);
   margin: 52px 0 16px;
   text-wrap: balance;
 }
 .article-wrap h3 {
-  font-family: var(--font-display); font-weight:500;
+  font-family: var(--font-display); font-weight:600;
   font-size: clamp(19px, 2.4vw, 22px); line-height: 1.3; letter-spacing: -.01em;
   color: var(--text);
   margin: 32px 0 10px;
@@ -227,7 +227,7 @@ h1 em { font-style: normal; color: var(--acid); }
 strong { color: var(--text); font-weight: 650; }
 .drop-cap::first-letter {
   float: left; margin: 6px 10px 0 0;
-  font-family: var(--font-display); font-weight:500; font-size: 3.4em; line-height: .8; color: var(--acid);
+  font-family: var(--font-display); font-weight:600; font-size: 3.4em; line-height: .8; color: var(--acid);
 }
 
 .article-wrap ul:not([class]), main ul.prose-list { list-style: disc; margin: 0 0 22px 22px; }
@@ -333,11 +333,11 @@ a:not([class]):hover, .inline-cta:hover, .sources a:hover { color: var(--acid); 
   }
 }
 .end-cta .cta-label { margin-bottom: 6px; font-family: var(--font-mono); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--acid); }
-.end-cta h3, .end-cta h4 { margin: 0 0 6px; font-family: var(--font-display); font-weight:500; font-size: clamp(21px, 3vw, 26px); line-height: 1.2; color: var(--text); }
+.end-cta h3, .end-cta h4 { margin: 0 0 6px; font-family: var(--font-display); font-weight:600; font-size: clamp(21px, 3vw, 26px); line-height: 1.2; color: var(--text); }
 .end-cta .cta-spec, .end-cta > p { margin: 0 0 4px; color: var(--text-2) !important; font-size: 15px !important; line-height: 1.55; }
 .end-cta .price-row { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 0; }
 .end-cta .strike-price { font-size: 14px; color: var(--muted); text-decoration: line-through; }
-.end-cta .current-price { font-family: var(--font-display); font-weight:500; font-size: 26px; line-height: 1.1; color: var(--text); }
+.end-cta .current-price { font-family: var(--font-display); font-weight:600; font-size: 26px; line-height: 1.1; color: var(--text); }
 .end-cta .buy-btn, .end-cta .cta-link {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 50px; padding: 0 20px; margin: 14px 8px 0 0;
@@ -357,7 +357,7 @@ a:not([class]):hover, .inline-cta:hover, .sources a:hover { color: var(--acid); 
 .faq h2, .faq-wrap > h2 { margin: 0 0 18px; font-size: clamp(24px, 3.4vw, 32px); }
 .faq .faq-a p { margin: 0; font-size: 16px; line-height: 1.65; color: var(--text-2); max-width: none; }
 .faq-wrap .faq-item { padding: 18px 20px; margin-bottom: 10px; }
-.faq-wrap .faq-q { margin: 0 0 6px; font-family: var(--font-display); font-weight:500; font-size: 17px; line-height: 1.35; color: var(--text); }
+.faq-wrap .faq-q { margin: 0 0 6px; font-family: var(--font-display); font-weight:600; font-size: 17px; line-height: 1.35; color: var(--text); }
 .faq-wrap .faq-a { margin: 0; font-size: 15.5px; color: var(--text-2); }
 
 /* ---------------------------------------------------------------------
@@ -375,14 +375,14 @@ a:not([class]):hover, .inline-cta:hover, .sources a:hover { color: var(--acid); 
   min-height: 108px; padding: 18px;
   text-decoration: none !important; color: var(--text);
 }
-.guide-card span:first-child { font-family: var(--font-display); font-weight:500; font-size: 16px; line-height: 1.3; }
+.guide-card span:first-child { font-family: var(--font-display); font-weight:600; font-size: 16px; line-height: 1.3; }
 .guide-card span:last-child { align-self: flex-end; color: var(--acid); font-weight: 500; }
 .guide-card:hover { border-color: var(--border-strong) !important; }
 
 .read-next { margin: 48px 0 0; padding: 18px 20px; }
 .read-next__card { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; color: var(--text); text-decoration: none; }
 .read-next__card:hover .read-next__title { color: var(--acid); }
-.read-next__title { font-family: var(--font-display); font-weight:500; font-size: clamp(18px, 2.2vw, 22px); line-height: 1.2; }
+.read-next__title { font-family: var(--font-display); font-weight:600; font-size: clamp(18px, 2.2vw, 22px); line-height: 1.2; }
 .read-next__arrow { color: var(--acid); font-size: 22px; flex: none; }
 
 /* ---------------------------------------------------------------------

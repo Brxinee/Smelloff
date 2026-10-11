@@ -69,7 +69,7 @@
 
   function injectConsentBar() {
     if (document.getElementById('smelloff-consent-bar')) return;
-    var css = '#smelloff-consent-bar{display:block;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#111;border-top:1px solid rgba(242,245,239,.12);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));font-family:"Inter Tight","DM Sans",system-ui,sans-serif}' +
+    var css = '#smelloff-consent-bar{display:block;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#111;border-top:1px solid rgba(242,245,239,.12);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));font-family:var(--body,system-ui,sans-serif)}' +
       '#smelloff-consent-bar .cb-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}' +
       '#smelloff-consent-bar p{flex:1;font-size:13px;color:#9DA398;line-height:1.5;margin:0;min-width:200px}' +
       '#smelloff-consent-bar p a{color:#B8FF57;text-decoration:underline;text-underline-offset:2px}' +
