@@ -713,3 +713,8 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 main.sf-wrap[style]{max-width:var(--maxw) !important}
 main.sf-wrap[style] > *{max-width:var(--measure-page)}
 main.sf-wrap[style] > .solution-grid,main.sf-wrap[style] > .grid{max-width:none}
+main.sf-wrap[style]{padding-top:clamp(28px,5vw,56px) !important;padding-bottom:clamp(56px,8vw,96px) !important}
+main.sf-wrap[style] > .hero:first-child{padding-top:0 !important;margin-top:0 !important}
+/* /solutions' .badge is the section label: same rule-and-text look. */
+main.sf-wrap .badge{display:flex !important;align-items:center;gap:12px;margin:0 0 16px !important}
+main.sf-wrap .badge::before{content:'';width:24px;height:1px;flex:0 0 24px;background:var(--acid);opacity:.7}
