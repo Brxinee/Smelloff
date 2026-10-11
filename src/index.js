@@ -3,6 +3,7 @@ import { httpServerHandler } from "cloudflare:node";
 import express from "express";
 
 import { canonicalRedirect, upgradeTemporaryRedirect } from "./canonical.js";
+import { BUILD } from "./build-info.js";
 
 import sendEmailHandler from "../api/send-email.js";
 import trackHandler from "../api/track.js";
@@ -33,6 +34,8 @@ app.get("/api/health", (_req, res) => {
   res.setHeader("Cache-Control", "no-store");
   res.json({
     status: "ok",
+    // Which commit is live: compare with main after a deploy.
+    build: BUILD,
     configured: {
       database: has("SUPABASE_SERVICE_ROLE_KEY"),
       email: has("RESEND_API_KEY"),

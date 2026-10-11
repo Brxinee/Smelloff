@@ -78,6 +78,11 @@ courier / AWB / status back into `orders`. It was daily (`0 10 * * *`).
   redeploy the version the dashboard had loaded; that was not confirmed. If
   `/api/shiprocket-sync` results list delivered orders, the old code is live.
   Redeploy main.
+- **`/api/health` now reports `build.commit`** (stamped by
+  `scripts/write-build-info.mjs` during `npm run build` from
+  `WORKERS_CI_COMMIT_SHA`, else git). After every merge, check that it matches
+  main's head before trusting the deploy. `src/build-info.js` is committed with
+  `"dev"`; a local build rewrites it (restore with `git restore .`).
 
 ## Transactional email redesign (2026-10-11)
 `api/_email-templates.js` (all 17 Resend templates) now uses the site's palette
