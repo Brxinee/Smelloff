@@ -443,7 +443,6 @@ function ensureAssets(html) {
     // blog-share.js is NOT stamped here — see ensureShareScript(), which
     // inserts it rather than only re-stamping a tag that already exists.
     ['assets/js/track.js', /(src="\/assets\/js\/track\.js)(\?[^"]*)?"/g],
-    ['assets/js/google-customer-reviews.js', /(src="\/assets\/js\/google-customer-reviews\.js)(\?[^"]*)?"/g],
   ]) {
     const v = hashOf(file);
     if (v) html = html.replace(pattern, `$1?v=${v}"`);
