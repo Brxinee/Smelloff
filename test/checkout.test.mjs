@@ -249,6 +249,53 @@ test('create-order: a COD order emails the owner a new-order alert', async () =>
   }
 });
 
+test('create-order: a COD order is booked in Shiprocket straight away', async () => {
+  const saved = {};
+  for (const k of ['SUPABASE_SERVICE_ROLE_KEY', 'SHIPROCKET_EMAIL', 'SHIPROCKET_PASSWORD', 'RESEND_API_KEY']) saved[k] = process.env[k];
+  const prevFetch = globalThis.fetch;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-key';
+  process.env.SHIPROCKET_EMAIL = 'api@example.com';
+  process.env.SHIPROCKET_PASSWORD = 'pw';
+  delete process.env.RESEND_API_KEY;
+  const calls = [];
+  let finalized = null;
+  globalThis.fetch = async (url, opts = {}) => {
+    const u = String(url);
+    const method = opts.method || 'GET';
+    calls.push(`${method} ${u.replace(/^https:\/\/[^/]+/, '')}`);
+    const json = (body, status = 200) => new Response(JSON.stringify(body), { status });
+    if (u.includes('/auth/login')) return json({ token: 'tok' });
+    if (u.includes('/settings/company/pickup')) return json({ data: { shipping_address: [{ pickup_location: 'sanathnagar', pin_code: '500018' }] } });
+    if (u.includes('/orders/create/adhoc')) return json({ order_id: 777001, shipment_id: 888001, status: 'NEW' });
+    if (u.includes('/rpc/claim_shiprocket_fulfillment')) return json([{ claimed: true, already_created: false }]);
+    if (u.includes('/rpc/finalize_shiprocket_fulfillment')) { finalized = JSON.parse(opts.body); return json([{ ok: true }]); }
+    if (method === 'POST' && u.includes('/rest/v1/orders')) {
+      const row = JSON.parse(opts.body);
+      return json([{ id: 'row-7', status: 'placed', ...row }], 201);
+    }
+    return json([]);
+  };
+  try {
+    const res = createMockRes();
+    await createOrderHandler({
+      method: 'POST',
+      headers: {},
+      body: {
+        payment_method: 'cod', order_code: 'SMF-20261011-5555', name: 'Ravi', email: 'ravi@example.com', phone: '9000000004',
+        items: [{ quantity: 1, price: 229 }], amount: 31800,
+        address: { name: 'Ravi', line: '2 Road', city: 'Hyderabad', state: 'Telangana', pincode: '500018' },
+      },
+    }, res);
+    assert.equal(res.statusCode, 200, JSON.stringify(res.body));
+    assert.ok(calls.some((c) => c.startsWith('POST /v1/external/orders/create/adhoc')), `Shiprocket create not called: ${calls.join(' | ')}`);
+    assert.ok(finalized, 'Shiprocket ids must be saved on the order');
+    assert.equal(String(finalized.p_order_code), 'SMF-20261011-5555');
+  } finally {
+    globalThis.fetch = prevFetch;
+    for (const [k, v] of Object.entries(saved)) { if (v === undefined) delete process.env[k]; else process.env[k] = v; }
+  }
+});
+
 test('webhook: rejects missing signature', async () => {
   const req = {
     method: 'POST',

@@ -166,6 +166,24 @@ async function createMissingShiprocketOrder(order) {
   }
 }
 
+// Creates the Shiprocket order the moment a site order becomes real (COD
+// placed, prepaid confirmed) instead of waiting for the 15-minute cron, which
+// stays on as the retry for anything this misses. The fulfilment claim in
+// createMissingShiprocketOrder stops the cron and this from booking it twice.
+export async function pushOrderToShiprocketNow(order, { route = 'unknown' } = {}) {
+  if (!order?.order_code || !isShiprocketConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) return null;
+  try {
+    const result = await createMissingShiprocketOrder(order);
+    if (result?.status === 'create_failed') {
+      console.error(`[shiprocket-now] ${route} ${order.order_code}: ${result.error}`);
+    }
+    return result;
+  } catch (err) {
+    console.error(`[shiprocket-now] ${route} ${order.order_code}:`, err?.message || err);
+    return null;
+  }
+}
+
 async function syncSingleOrder(order) {
   if (!order) return { orderCode: null, status: 'skipped' };
 

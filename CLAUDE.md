@@ -60,6 +60,14 @@ the move silently dropped, now restored:
   sending domain needs a few opens / "Not spam" marks to build reputation.
 
 ## Shiprocket sync: every 15 minutes, new orders only (2026-10-11)
+**Orders now reach Shiprocket within seconds** (owner asked, same day):
+`pushOrderToShiprocketNow()` (in `api/shiprocket-sync.js`) runs when a COD
+order is saved (`create-order`) and when a prepaid order is confirmed
+(`verify-payment`, the Razorpay `webhook`, `payment-status`). It runs after
+the response via `runAfterResponse()` (`api/_background.js`: `waitUntil` from
+`cloudflare:workers`; awaited where that module doesn't exist, i.e. tests).
+The cron below stays as the retry. The fulfilment claim stops a double
+booking when several paths fire for one order.
 `api/shiprocket-sync.js` (cron `*/15 * * * *` in `wrangler.jsonc`, mapped in
 `src/index.js`) creates a Shiprocket order for each new site order and pulls
 courier / AWB / status back into `orders`. It was daily (`0 10 * * *`).

@@ -1,5 +1,7 @@
 import crypto from 'node:crypto';
 import { fetchRazorpayPayment } from './_razorpay.js';
+import { pushOrderToShiprocketNow } from './shiprocket-sync.js';
+import { runAfterResponse } from './_background.js';
 import {
   isAllowedOrigin,
   clientIp,
@@ -216,6 +218,9 @@ async function verifyRazorpayPayment(body, order) {
   } catch (emailErr) {
     console.error('[verify-payment] Email dispatch exception (payment remains confirmed):', emailErr?.message || emailErr);
   }
+
+  await runAfterResponse('verify-payment', () =>
+    pushOrderToShiprocketNow({ ...order, ...updated, status: 'confirmed' }, { route: '/api/verify-payment' }));
 
   const dbPhone = String(order.customer_phone || '').replace(/\D/g, '').slice(-10);
   const dbEmail = String(order.customer_email || '').trim().toLowerCase();
