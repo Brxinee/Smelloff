@@ -25,7 +25,7 @@
     "slogan": "Traps and neutralizes clothing odor molecules on fabric",
     "description": "Indian odor-control brand for men. Goes after the smell trapped in your clothes instead of covering it with fragrance. Maker of ODORSTRIKE, a pocket-sized fabric odor neutralizer mist for clothes.",
     "logo": "https://smelloff.in/apple-touch-icon.png",
-    "image": "https://smelloff.in/assets/og-brand.jpg",
+    "image": "https://smelloff.in/assets/og/smelloff-share.jpg",
     "sameAs": [
       "https://instagram.com/smelloffindia",
       "https://x.com/smelloffindia",
@@ -83,7 +83,7 @@
     "images": [
       "https://smelloff.in/assets/pdp-01-hero.webp",
       "https://smelloff.in/assets/odorstrike-bottle.webp",
-      "https://smelloff.in/assets/og-image.jpg"
+      "https://smelloff.in/assets/photos/hero-spray-collar.webp"
     ]
   },
   "shipping": {

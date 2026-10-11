@@ -209,8 +209,8 @@
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
 <script src="/assets/js/consent-analytics.js?v=1d4ea28e" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="preload" href="/assets/css/soft.css?v=68220171" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=68220171"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=0ec55e48" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=0ec55e48"></noscript>
+<link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=c8ba0f84" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=c8ba0f84"></noscript>
 <script src="/assets/js/chrome.js?v=79ff758e" defer></script>
 </head>
 <body>
@@ -290,6 +290,14 @@
       </picture>
     </figure>
   </header>
+
+  <form class="p-search" action="/blog" method="get" role="search">
+    <label for="nfSearch">Looking for a guide?</label>
+    <div class="p-search__row">
+      <input type="search" id="nfSearch" name="q" placeholder="Try: sweat smell, monsoon, Zinc PCA" autocomplete="off" enterkeyhint="search">
+      <button type="submit" class="sf-btn sf-btn--ghost">Search</button>
+    </div>
+  </form>
 
   <h2 class="p-sublabel">Popular guides</h2>
   <ul class="p-links">

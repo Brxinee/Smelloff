@@ -161,7 +161,7 @@ function lastmodFor(html, urlPath, previous) {
  * Image entry from the page's own OG tags, so it can never drift from them.
  *
  * Only pages with their OWN artwork get one. 15 pages share
- * /assets/og-image.jpg as a house default, and listing that same file 15 times
+ * /assets/og/smelloff-share.jpg as a house default, and listing that same file 15 times
  * is noise in an image sitemap, not coverage — Google is being asked to index
  * one image, not fifteen pages that happen to reference it. Uniqueness is
  * measured across the site rather than hardcoded, so a page that gains its own

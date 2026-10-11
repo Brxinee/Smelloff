@@ -75,16 +75,16 @@ describe('Review System & Product Schema Integrity', () => {
     assert.ok(secCode.includes('constantTimeEqual'), 'security.ts must use constant-time equality');
   });
 
-  it('html files reference the updated cache-busted reviews-system.js?v=3', () => {
+  it('html files reference the updated cache-busted reviews-system.js?v=4', () => {
     const odor = fs.readFileSync(path.join(ROOT, 'odorstrike.html'), 'utf8');
     const rev = fs.readFileSync(path.join(ROOT, 'reviews.html'), 'utf8');
     const idx = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
     const trk = fs.readFileSync(path.join(ROOT, 'track-order.html'), 'utf8');
 
-    assert.ok(odor.includes('/assets/js/reviews-system.js?v=3'), 'odorstrike.html must use ?v=3');
-    assert.ok(rev.includes('/assets/js/reviews-system.js?v=3'), 'reviews.html must use ?v=3');
-    assert.ok(idx.includes('/assets/js/reviews-system.js?v=3'), 'index.html must use ?v=3');
-    assert.ok(trk.includes('/assets/js/reviews-system.js?v=3'), 'track-order.html must use ?v=3');
+    assert.ok(odor.includes('/assets/js/reviews-system.js?v=4'), 'odorstrike.html must use ?v=4');
+    assert.ok(rev.includes('/assets/js/reviews-system.js?v=4'), 'reviews.html must use ?v=4');
+    assert.ok(idx.includes('/assets/js/reviews-system.js?v=4'), 'index.html must use ?v=4');
+    assert.ok(trk.includes('/assets/js/reviews-system.js?v=4'), 'track-order.html must use ?v=4');
   });
 
   it('index.html does not contain googleReviewWidgetMount', () => {

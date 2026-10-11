@@ -18,7 +18,9 @@
 <meta property="og:title" content="ODORSTRIKE FAQ — Every Question Answered">
 <meta property="og:description" content="Ingredients, staining, fabrics, COD, shipping, returns, how to pay — all answered.">
 <meta property="og:site_name" content="Smelloff">
-<meta property="og:image" content="https://smelloff.in/assets/og-image.jpg?v=2">
+<meta property="og:image" content="https://smelloff.in/assets/og/smelloff-share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ODORSTRIKE FAQ — Every Question Answered">
 
@@ -127,8 +129,8 @@
 <link rel="alternate" hreflang="en-IN" href="https://smelloff.in/faq">
 <link rel="alternate" hreflang="x-default" href="https://smelloff.in/faq">
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
-<link rel="preload" href="/assets/css/soft.css?v=68220171" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=68220171"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=0ec55e48" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=0ec55e48"></noscript>
+<link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=c8ba0f84" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=c8ba0f84"></noscript>
 <script src="/assets/js/chrome.js?v=79ff758e" defer></script>
 </head>
 <body>
@@ -212,23 +214,23 @@
   <div class="faq-list">
     <details>
       <summary>How to pay</summary>
-      <!-- COD leads because it is the checkout default and the only method
-           that finishes without leaving the page. Keep this order in step
-           with the .pay-opt order in odorstrike.html. -->
-      <div class="faq-answer-wrap"><p class="faq-answer" style="font-weight:600;color:var(--text);margin-bottom:8px">Cash on Delivery (default)</p>
-        <ol style="padding-left:18px;margin-bottom:14px">
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Tap BUY → enter your address.</li>
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">COD is already selected. No advance payment — a ₹89 handling charge applies, so you pay ₹318 on delivery.</li>
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Pay ₹318 cash to the delivery agent on arrival.</li>
-          <li style="color:var(--text-secondary);font-size:14px">7-day return window if the bottle is 80%+ full and in original packaging.</li>
+      <!-- Order mirrors checkout: "Pay online" is the default and listed
+           first there, then Cash on Delivery. Keep the two in step. -->
+      <div class="faq-answer-wrap">
+        <p class="faq-answer faq-answer__h">Pay online — UPI, cards or netbanking (default)</p>
+        <ol class="faq-steps">
+          <li>Tap <b>Buy now</b> and enter your address.</li>
+          <li>Keep <b>Pay online</b> selected — shipping is free and you pay ₹229.</li>
+          <li>Pay with any UPI app (GPay, PhonePe, Paytm, BHIM), a card or netbanking.</li>
+          <li>Your order is confirmed instantly and dispatched within 48 hours.</li>
         </ol>
-        <p class="faq-answer" style="font-weight:600;color:var(--text);margin-bottom:8px">UPI & Online Payment (Prepaid)</p>
-        <ol style="padding-left:18px;margin-bottom:14px">
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Tap BUY → enter your address.</li>
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Choose Prepaid (UPI / Cards / Netbanking) to get free shipping pan-India (₹229 total).</li>
-          <li style="margin-bottom:5px;color:var(--text-secondary);font-size:14px">Pay securely via any UPI app — GPay, PhonePe, Paytm, BHIM — or cards/netbanking.</li>
-          <li style="color:var(--text-secondary);font-size:14px">Your order is confirmed instantly and dispatched within 48 hours.</li>
+        <p class="faq-answer faq-answer__h">Cash on Delivery</p>
+        <ol class="faq-steps">
+          <li>Tap <b>Buy now</b> and enter your address.</li>
+          <li>Choose <b>Cash on Delivery</b> — no advance payment; a ₹89 handling charge applies, so you pay ₹318.</li>
+          <li>Pay ₹318 in cash to the delivery agent when it arrives.</li>
         </ol>
+        <p class="faq-answer">Either way, you get 7-day returns if the bottle is at least 80% full and in its original packaging.</p>
       </div>
     </details>
     <details>
