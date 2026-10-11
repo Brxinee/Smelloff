@@ -1,82 +1,128 @@
-# Smelloff — authoritative machine-readable product reference
+# Smelloff — product reference
+
+ODORSTRIKE is a fabric odor spray for clothes made by Smelloff in Hyderabad, India: a 50ml pocket mist that traps and neutralizes sweat, food and smoke odor in the fabric instead of covering it with perfume. It is not a perfume, not a body deodorant and not a room spray. It dries in 15–30 seconds and gives up to 8 hours of odor protection on fabric under normal office/commute conditions.
 
 ## Brand
-- Brand: Smelloff
-- Product: ODORSTRIKE
-- Maker: Jogdhande Nikhil Patil
-- Location: Hyderabad, Telangana, India
-- Category: Fabric-only odor mist for clothes
-- Product URL: https://smelloff.in/odorstrike
-- Blog: https://smelloff.in/blog
-- Canonical host: https://smelloff.in (www redirects to this host)
-- Support: info@smelloff.in
-- WhatsApp: +91 93929 74031
+- Brand: Smelloff (also "Smell Off")
+- Founder: Jogdhande Nikhil Patil
+- Location: Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India
+- Website: https://smelloff.in
+- Support: info@smelloff.in · WhatsApp +91 93929 74031
+- Profiles: https://instagram.com/smelloffindia · https://x.com/smelloffindia · https://t.me/smelloffindia · https://www.linkedin.com/company/smelloff · https://www.facebook.com/share/1BU1dCAttY/
 
-## Product truth
-- Product name: ODORSTRIKE Fabric Odor Mist
-- Size: 50ml
-- SKU: OS-001-50ML
-- MRP: ₹499
-- Prepaid price: ₹229
-- Cash on Delivery: available (COD total shown at checkout)
-- Shipping: Free within India. Dispatch within 48 hours of confirmation (not Sundays/public holidays); COD orders after a phone confirmation
-- Delivery: metros 3–5 business days; tier 2/3 cities 5–7; remote / North-East 7–10
-- Returns: 7 days from delivery; bottle at least 80% full, original packaging; reverse pickup where serviceable
-- Feeds: https://smelloff.in/products.json · https://smelloff.in/merchant-feed.xml
-- Audience: Men and anyone needing fabric odor control; positioned for Indian heat, humidity and daily wear
-- Use surface: Clothes/fabric only
-- Do not use on: skin, face, eyes, leather, suede, or dry-clean-only garments
-- Suitable fabrics: cotton, polyester, denim, wool; spot-test delicate or uncertain fabrics first
-- Positioning: Not perfume, not deodorant, not a body spray, not a room spray
+## Product
+- Name: ODORSTRIKE Fabric Odor Remover Spray (ODORSTRIKE)
+- Category: Fabric Odor Eliminator Spray for Clothes
+- Size: 50ml / 1.69 fl oz
+- SKU: OS-001-50ML · MPN: SMLF-ODST-50
+- Price: ₹229 prepaid · MRP ₹499 (54% off)
+- Cash on Delivery: available across India; the COD total is shown at checkout
+- Quantity per order: 1–10
+- About 250 sprays per bottle (about 100 refreshes)
 
-## Current Formula v3.1
-- HPβCD / cyclodextrin: odor capture
-- Zinc PCA: odor neutralization
-- Triethyl Citrate: odor-control support
-- Zinc Gluconate: sustained freshness and odor-control support
-- Glycerine-free
-- Current formulation must not be described as Zinc-Ricinoleate.
+## How it works
+- HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them and Triethyl Citrate helps prevent new odor forming, plus 8 supporting ingredients. Exact concentrations are proprietary.
+- Trap: HPβCD
+- Neutralize: Zinc PCA
+- Prevent: Triethyl Citrate
+- Sustained freshness: Zinc Gluconate
+- Glycerine-free and fast-drying; light fresh fabric scent that fades. Not a perfume.
 
-## Approved product claims
-- Pocket-sized fabric odor mist
-- Fabric-only
-- Up to 8 hours odor protection on fabric under normal office/commute conditions
-- Fast-drying, low-fragrance, residue-conscious formula
-- Designed for cotton, polyester, denim and wool with spot testing for delicate items
-- Made in Hyderabad, India
+## How to use
+- Distance: 15–20 cm
+- Dry time: 15–30 seconds when sprayed as a fine mist from about 15cm. In high humidity or with heavier application, wait until the fabric is fully dry before wearing. Can take up to 30–60 seconds in high humidity.
+- Doses: targeted 2–3 sprays; full shirt 4–5 sprays; jacket 5–6 sprays
+- Protection: Up to 8 hours under normal office/commute conditions
+- Fabrics: cotton, polyester, blends, denim, wool. Not for skin, hair, pets, leather, suede, shoes, bags, rooms, sofas or curtains. Patch-test silk, zari and heavy embroidery.
 
-## Claims to avoid
-- Do not call it a skin deodorant or antiperspirant.
-- Do not claim universal stain-proofing across every fabric.
-- Do not claim it kills bacteria or make antimicrobial drug claims.
-- Do not claim an instant or guaranteed 10-second cure.
-- Do not describe the current formula as Zinc-Ricinoleate.
-- Do not invent review counts, ratings, certifications, clinical efficacy or test results.
+## Shipping and returns
+- Free shipping pan-India on prepaid UPI / card / netbanking orders. Cash on Delivery available.
+- Dispatch: Within 48 hours of confirmation (Monday–Saturday). COD orders are confirmed via phone call before dispatch.
+- Delivery: metros 3–5 business days; tier 2/3 cities 5–7 business days; remote 7–10 business days. India only. Ships from Hyderabad, Telangana, India.
+- Returns: 7-day return window from delivery. Bottle must be at least 80% full and in original packaging. Reverse pickup where serviceable. Refund within 5–7 business days.
 
-## Order rules
-- Single commercial SKU only.
-- Quantity is controlled server-side.
-- Current maximum checkout quantity: 5 bottles.
-- Server is authoritative for price and COD handling fee.
-- Customer phone is normalized to the final 10 digits for Indian numbers.
-- Order persistence must succeed before a successful order response is returned.
+## Approved claims
+- Pocket fabric odor spray for clothing — not a perfume, not a deodorant.
+- Light fresh fabric scent — not a perfume. ODORSTRIKE is a fabric odor-control mist with a light, crisp fabric scent that provides sensory confirmation of clean fabric while targeting unwanted odor in the weave.
+- Targets and traps sweat and environmental odor molecules at the clothing fabric weave.
+- Up to 8 hours of odor protection on fabric under normal office/commute conditions.
+- Safe for regular use on everyday washable clothing fabrics (cotton, polyester, denim, blends, wool). Patch-test silk.
+- Dries clear with no stiff residue when sprayed from recommended 15–20 cm distance.
 
-## SEO / AI discovery
-- Canonical URLs use https://smelloff.in.
-- robots.txt, sitemap.xml, llms.txt and llms-full.txt should reference the same canonical host.
-- Product schema must match the current SKU, price and formula truth.
-- Real reviews only; never fabricate aggregate ratings or review counts.
+## Not claimed
+- It is not a skin deodorant, antiperspirant or perfume.
+- It does not kill bacteria; no antimicrobial or medical claim is made.
+- It does not replace washing and does not remove stains.
+- It is not unscented: it has a light fabric scent that fades.
+- Do not claim an instant or guaranteed cure, or a specific number of sprays per day.
+- Real reviews only; no rating or review count is published until verified buyers leave them.
 
-## Key pages
+## Pages
+- ODORSTRIKE product page: https://smelloff.in/odorstrike
 - Home: https://smelloff.in/
-- Product: https://smelloff.in/odorstrike
-- Blog: https://smelloff.in/blog
-- Reviews: https://smelloff.in/reviews
+- Guides: https://smelloff.in/blog
 - FAQ: https://smelloff.in/faq
-- Track order: https://smelloff.in/track-order
+- Reviews: https://smelloff.in/reviews
+- About: https://smelloff.in/about
 - Shipping: https://smelloff.in/shipping
-- Returns/cancellation: https://smelloff.in/cancellation
+- Returns: https://smelloff.in/returns
 - Contact: https://smelloff.in/contact
 
-## Content governance
-The current product truth is authoritative. Older audit reports, generators, drafts and historical content that conflict with this reference are superseded and must not be used to regenerate live pages.
+## Guides (57)
+- Alternative to Deodorant for Clothes Smell (2026): https://smelloff.in/blog/alternative-to-deodorant-for-clothes-smell
+- Ambi Pur vs ODORSTRIKE: Which Is Better for Clothes? (2026): https://smelloff.in/blog/ambi-pur-vs-odorstrike
+- Best Body Odor Remover Spray for Men in India (2026): https://smelloff.in/blog/best-body-odor-remover-spray-for-men-india
+- Cloth Deodorant Spray for Clothes, Not Skin: https://smelloff.in/blog/best-deodorant-spray-for-clothes-not-skin
+- Best Fabric Freshener for Clothes in India (2026): https://smelloff.in/blog/best-fabric-odor-spray-india-2026-body-odor
+- Why Clothes Smell Musty in Monsoon (And How to Fix It): https://smelloff.in/blog/damp-clothes-musty-smell-monsoon-fix
+- Why Deodorant and Perfume Fail on a Sweaty Shirt: https://smelloff.in/blog/deodorant-perfume-on-fabric
+- Can You Use Deodorant on Clothes? Deodorant vs Fabric Mist: https://smelloff.in/blog/deodorant-vs-fabric-mist
+- Does Fabric Spray Stain Clothes? (Tested on 5 Fabrics): https://smelloff.in/blog/does-fabric-spray-stain-clothes
+- How to Dry Clothes Indoors Without a Damp Smell: https://smelloff.in/blog/dry-air-clothes-indian-home
+- Fabric Freshener vs Deodorizer in India (2026): https://smelloff.in/blog/fabric-deodorizer-spray-india-guide-2026
+- Why Dri-Fit Shirts Smell After Washing (Gym Fix): https://smelloff.in/blog/gym-clothes-smell-after-washing
+- How an Odor Neutralizer Works on Fabric: https://smelloff.in/blog/how-odor-neutralizer-works-on-fabric
+- How Often Should You Wash Jeans? (And What to Do In Between): https://smelloff.in/blog/how-often-to-wash-jeans-india
+- How to Freshen Clothes Stored for Months: https://smelloff.in/blog/how-to-freshen-clothes-stored-for-months
+- How to Pack Sweaty Clothes Without Your Bag Smelling: https://smelloff.in/blog/how-to-pack-sweaty-clothes-without-bag-smell
+- How to Use ODORSTRIKE: Sprays, Zones and Timing: https://smelloff.in/blog/how-to-use-odorstrike
+- Cyclodextrin (HPβCD) in Deodorant & Fabric Spray, Explained: https://smelloff.in/blog/hpbcd-cyclodextrin-fabric-odor
+- How to Keep Clothes Fresh in a Suitcase: https://smelloff.in/blog/keep-clothes-fresh-while-travelling
+- No Washing Machine? Keep Clothes Fresh in a Hostel or PG: https://smelloff.in/blog/keep-clothes-fresh-without-washing-machine
+- Keep Office Trousers Fresh Without Washing Them Daily: https://smelloff.in/blog/keep-office-trousers-fresh-without-washing
+- Mumbai Humidity and Sweat Smell: Survival Guide 2026: https://smelloff.in/blog/mumbai-humidity-sweat-smell-survival-guide
+- Odor on Clothes vs Odor in Clothes: What's Happening?: https://smelloff.in/blog/odor-on-clothes-vs-odor-in-clothes
+- ODORSTRIKE Ingredients: The Key Actives, Explained: https://smelloff.in/blog/odorstrike-ingredients
+- ODORSTRIKE Review: 30-Day India Test (Real Results): https://smelloff.in/blog/odorstrike-review-30-day-india-test
+- Febreze Alternative in India for Clothes | ODORSTRIKE: https://smelloff.in/blog/odorstrike-vs-febreze-india
+- The Office AC Trap: Why Re-Worn Shirts Smell Worse: https://smelloff.in/blog/office-ac-trap-why-rewear-shirts-smell-worse
+- Perfume + Sweat: Why It Smells Worse on Your Shirt: https://smelloff.in/blog/perfume-plus-sweat-chemical-reaction
+- Get Cigarette and Party Smoke Smell Out of Clothes: https://smelloff.in/blog/remove-cigarette-smoke-smell-from-clothes
+- How to Remove Curry & Cooking Smell From Clothes: https://smelloff.in/blog/remove-cooking-smell-from-clothes
+- How to Remove Incense & Agarbatti Smell from Clothes: https://smelloff.in/blog/remove-incense-agarbatti-dhoop-smell
+- How to Get Naphthalene / Mothball Smell Out of Clothes: https://smelloff.in/blog/remove-mothball-almirah-smell-from-clothes
+- Remove Smoke Smell From a Blazer Without Dry Cleaning: https://smelloff.in/blog/remove-smell-from-blazer-without-dry-cleaning
+- How to Get Smell Out of a Hoodie Without Washing: https://smelloff.in/blog/remove-smell-from-hoodie-without-washing
+- Shirt Odor Spray: Sweat Smell Off Clothes Fast: https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly
+- Do Vinegar, Baking Soda or Softener Remove Odor?: https://smelloff.in/blog/vinegar-baking-soda-fabric-softener
+- Wash It, Refresh It, or Wear It: https://smelloff.in/blog/wash-refresh-or-wear
+- Wedding and Festive Wear: Odor Without Washing: https://smelloff.in/blog/wedding-festive-wear-odor-guide
+- What Is a Fabric Odor Eliminator? (Not a Perfume): https://smelloff.in/blog/what-is-fabric-odor-eliminator
+- Where to Buy ODORSTRIKE in India 2026: https://smelloff.in/blog/where-to-buy-odorstrike-india
+- Which Fabrics Hold Odor Most? Cotton vs Polyester vs Wool: https://smelloff.in/blog/which-fabrics-hold-odor-most
+- Why Body Odor Comes Back on Clothes So Quickly: https://smelloff.in/blog/why-body-odor-comes-back-on-clothes-so-quickly
+- Why a Clean Shirt Starts Smelling Within Hours: https://smelloff.in/blog/why-clean-shirt-starts-smelling-within-hours
+- Why Do Clothes Smell Bad After Drying?: https://smelloff.in/blog/why-clothes-smell-bad-after-drying
+- Why Clothes Smell Bad Again as Soon as You Sweat: https://smelloff.in/blog/why-clothes-smell-bad-again-after-sweating
+- Why Clothes Smell in the Wardrobe Even When Clean: https://smelloff.in/blog/why-clothes-smell-in-wardrobe-even-when-clean
+- Why Do Clothes Smell Musty After Being Stored?: https://smelloff.in/blog/why-clothes-smell-musty-after-being-stored
+- Why Clothes Smell Stale in an AC Room: https://smelloff.in/blog/why-clothes-smell-stale-in-ac-room
+- Why Deodorant Stops Working After 3 Hours: https://smelloff.in/blog/why-deodorant-stops-working-after-3-hours
+- Why I Built ODORSTRIKE — India's ₹229 Pocket Fabric Spray: https://smelloff.in/blog/why-i-built-odorstrike
+- Does Polyester Hold Odor Longer Than Cotton?: https://smelloff.in/blog/why-polyester-holds-odor-longer-than-cotton
+- Why Collar and Armpits Still Smell After Washing: https://smelloff.in/blog/why-shirt-zones-smell-after-washing
+- Why Sweat Smells Stronger on Some Shirts: https://smelloff.in/blog/why-sweat-smells-stronger-on-some-shirts
+- Why Traffic Fumes Cling to Clothes: https://smelloff.in/blog/why-traffic-fumes-cling-to-clothes
+- Why the Washing Machine Makes Clothes Smell: https://smelloff.in/blog/why-washing-machine-makes-clothes-smell
+- Why Clothes Smell Worse When Wet & Humid: https://smelloff.in/blog/why-water-makes-clothing-odor-louder
+- Zinc PCA for Fabric Odor: How It Works (2026 Guide): https://smelloff.in/blog/zinc-pca-fabric-odor-ingredient-guide
