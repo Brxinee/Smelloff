@@ -48,6 +48,9 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const SKIP_DIRS = new Set([
   'node_modules', '.git', '.github', 'scripts', 'docs', 'api', 'supabase',
   '_shared', 'emails', 'admin', 'outreach', '.thumbnail-sources',
+  // The build output (prepare-public.mjs). A second local build used to list
+  // every page again as https://smelloff.in/public/… in the committed sitemap.
+  'public',
 ]);
 
 /* Ranking hints. First matching rule wins, so order matters. */

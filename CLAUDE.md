@@ -40,6 +40,53 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Design system pass 2: previews, forms, text tiers, contact (2026-10-11, owner: "use max efforts")
+Deep audit of every section, state and form (full-page renders, checkout,
+cart, menu, modals, form errors) plus NN/g form/contact guidance, Baymard line
+length, WCAG 1.4.8. chrome.css **§13** holds it.
+- **Link previews:** `og-brand.jpg` (the WhatsApp/Facebook preview for `/` and
+  `/odorstrike`) said "CLOTHES · SHOES · HELMETS · GEAR" in the retired serif —
+  a clothing-only violation on the two most-shared links; `og-image.jpg` (19
+  pages) was the retired condensed type. Both replaced by
+  **`assets/og/smelloff-share.jpg`** (1200×630, 113KB — keep it under 300KB or
+  WhatsApp may drop the preview; no price, so it can't go stale). Source:
+  `scripts/og/share-template.html.txt` (instructions inside; it is .txt because
+  the generators walk every .html). The old two files now hold the same pixels.
+  Seven posts that pointed at the generic banner use their own thumbnails;
+  `config/product.json` brand.image → the share image, product.images → the
+  collar photo (no text banner in Merchant images).
+- **One form style** (checkout's, Baymard): visible 14px sentence-case label
+  above a 52px field, lime focus ring — track order, contact, review modal,
+  blog comments, both newsletters (were 11px grey capitals, 45–48px fields).
+  The blog newsletter had no visible label (placeholder only) — fixed.
+- **Bare `form{}`/`label{}`/`input{}` in contact's and track-order's inline CSS
+  leaked into the shared footer** (newsletter became a bordered card with an
+  all-caps label). Scoped to `#contactForm` / `#trackForm`; a test forbids bare
+  form-element selectors in any page `<style>`.
+- **Text tiers:** prose 660px wide, 17px from 768 (was 64–82 characters per
+  line at 700px/16px; target 50–75). Tracked capitals only for labels of ≤4
+  words; meta lines, captions and trust lines are sentence case (PDP pay lines,
+  closing-band trust line, size captions, share "Copy link", blog buttons).
+  `text-wrap:pretty` on prose, `balance` on headings. All buttons 15px.
+- **FAQ "How to pay" was wrong:** it said COD is the default and "already
+  selected"; checkout defaults to Pay online (`payMethod = 'prepaid'`). Now Pay
+  online first; a test ties the FAQ to the checkout default.
+- **Contact** (NN/g): WhatsApp + Email first, each with its response time and a
+  direct action → the 5-field form → socials as a compact row → grievance
+  notice. **Policies** end with three related-policy links (Baymard: people
+  confuse returns and refunds). **404** has a guide search (`/blog?q=`; the blog
+  index now reads `?q=`). Track order's review prompt and the review modal use
+  tokens and sentence case (`reviews-system.js?v=4`).
+- Homepage `#buy` and closing band: the secondary action is the "View product
+  details" text link (was a second outlined button). Closing band on `/` and
+  `/odorstrike`: same H2 size and order (button, then trust line). Homepage FAQ
+  got its section label.
+- `build-sitemap.mjs` now skips `public/` — a second local build had added
+  every page again as `smelloff.in/public/…` to the committed sitemap.
+- **Local workflow:** commit before `npm run build`, then `git checkout -- .`
+  restores only the build's transforms. Running it with uncommitted edits
+  throws them away (it happened twice in this pass).
+
 ## One design system for every page (2026-10-11, owner: "consistent design everywhere, branding is important")
 Audited all 77 pages (production build, computed styles at 390 and 1280, axe
 WCAG 2.2 AA): six H1 sizes (52–83px), nine H2 sizes, 13 section-label styles,
