@@ -8,6 +8,8 @@ import {
 import { BASE_PRODUCT } from '../shared/products-config-workers.js';
 import { isValidEmail } from './_email.js';
 import { sendAdminNewOrderEmail } from './_email-dispatch.js';
+import { pushOrderToShiprocketNow } from './shiprocket-sync.js';
+import { runAfterResponse } from './_background.js';
 
 function getSupabaseUrl() {
   return (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
@@ -511,16 +513,14 @@ export default async function handler(req, res) {
 
     if (isCod) {
       const localOrder = await ensureCodLocalOrder(sanitizedPayload);
-      // Owner's "new order" alert. A COD order is real the moment it exists,
-      // and nothing else sends this for COD (prepaid gets it from the payment
-      // webhook). Best-effort and capped at 4 s so a slow mail API can't stall
-      // checkout; a retried request is de-duplicated by the idempotency key.
-      await Promise.race([
-        sendAdminNewOrderEmail(localOrder, { route: '/api/create-order' }).catch((err) => {
-          console.error('[create-order] admin alert failed:', err?.message || err);
-        }),
-        new Promise((resolve) => setTimeout(resolve, 4000)),
-      ]);
+      // A COD order is real the moment it exists: alert the owner and book it
+      // in Shiprocket now. Both run after the response (waitUntil on Workers),
+      // so checkout doesn't wait. The alert's idempotency key absorbs retries;
+      // the 15-minute sync retries any Shiprocket create that fails here.
+      await runAfterResponse('create-order', () => Promise.all([
+        sendAdminNewOrderEmail(localOrder, { route: '/api/create-order' }),
+        pushOrderToShiprocketNow(localOrder, { route: '/api/create-order' }),
+      ]));
       return res.status(200).json(responseForCod(localOrder));
     }
 
