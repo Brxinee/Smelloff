@@ -487,7 +487,9 @@
         amount: Number(created.amount),
         currency: created.currency || 'INR',
         name: 'Smelloff',
-        description: 'ODORSTRIKE 50ml — Fabric odor-control mist',
+        // UPI apps strip everything but letters, digits and spaces from this
+        // (it becomes the payment remark), so keep it to those.
+        description: 'ODORSTRIKE 50ml Fabric Odor Spray',
         image: 'https://smelloff.in/assets/odorstrike-bottle.webp',
         order_id: created.order_id,
         prefill: {
