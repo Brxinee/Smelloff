@@ -40,6 +40,44 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Search Console round 2: indexing, duplicates, snippets (2026-10-11, GSC export dated 10-12)
+Eight reports (performance 6 months, coverage x2, HTTPS, breadcrumbs, product
+snippets, merchant listings, review snippets). What they showed and did:
+- **Indexing collapsed in the Cloudflare move**, not from content: indexed
+  pages 74 → 35 (sitemap-filtered: 3), 69 "Blocked (403)", product snippets /
+  breadcrumbs / HTTPS-valid all to 0 between 26 Sep and 10 Oct — the error-1000
+  window (a 403). A Googlebot-UA crawl of all 153 known URLs now gets 200
+  everywhere. Recovery needs the owner in GSC (see below), not code.
+- **Legacy www URLs took 2 hops** (www → apex → new post). `src/canonical.js`
+  now resolves the static redirect table inside the same 301; a test fails on
+  any chain.
+- **Duplicate post:** `spray-to-remove-sweat-smell-from-clothes-instantly` and
+  `-quickly` were the same article (81% shared 5-grams). `-instantly` 301s to
+  `-quickly` (the hub six legacy redirects already used). Blog is **57** posts.
+- **Restored** `remove-smell-from-hoodie-without-washing` and
+  `remove-smell-from-blazer-without-dry-cleaning`: deleted by `dd86e68` (the
+  commit that corrupted 20 posts) and 301'd to the trousers post; seven links
+  labelled "blazer guide" pointed at trousers. Ported into the current
+  template with config facts (15–30 s dry, "dries clear with no stiff
+  residue"), no FAQ schema. History: `git show dd86e68^:blog/<slug>.html`.
+- **Snippets:** titles ≤ 60 and descriptions 70–160 on every indexable page
+  (test in `test/structured-data.test.mjs`); pages retitled in #460 kept their
+  titles. The gym/dri-fit post got an answer-first quick answer, a dri-fit
+  section and question-shaped H2s.
+- **Merchant/product:** the live Product already had every flagged field
+  (the errors were from the old duplicate blocks); added the MRP as an Offer
+  `priceSpecification` ListPrice (strikethrough). The Merchant feed's
+  `g:price` stays ₹229 — a `g:sale_price` against MRP is the owner's call.
+- **Review snippets** need real verified-buyer reviews (`includeRating` in
+  `buildProductJsonLd()`); never from beta quotes or the founder's review.
+- **Owner, in GSC:** Pages → "Blocked due to access forbidden (403)" and
+  "Crawled – currently not indexed" → Validate fix; Sitemaps → resubmit
+  `sitemap.xml`; URL Inspection → Request indexing for `/`, `/odorstrike`,
+  `/blog` and the top posts. Ahrefs' GSC tools need a higher plan.
+- Still open (owner): the `-quickly` post's body and ~44 posts say ~10 s dry;
+  the blog end card anchor "View product details" is pinned copy (a more
+  descriptive anchor would help `/odorstrike` rank for "fabric odor spray").
+
 ## Design system pass 2: previews, forms, text tiers, contact (2026-10-11, owner: "use max efforts")
 Deep audit of every section, state and form (full-page renders, checkout,
 cart, menu, modals, form errors) plus NN/g form/contact guidance, Baymard line

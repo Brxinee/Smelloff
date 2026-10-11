@@ -114,10 +114,6 @@ export const POSTS = {
     wa: 'For the function — sherwani and silk can\'t be washed, but there\'s a 30-second collar reset between events. Spot-test first though: {url}',
     x: 'Six-hour functions in Indian heat, in garments that cannot be washed. The pre-event routine, the mid-event collar reset, and which fabrics need a spot test before anything goes near them.',
   },
-  'spray-to-remove-sweat-smell-from-clothes-instantly': {
-    wa: 'For those days you realise at 4pm. Ten seconds on the collar and underarms and the shirt is wearable again: {url}',
-    x: 'The 4pm problem: you don\'t smell, your shirt does, and you\'re nowhere near a change of clothes. What actually works on the fabric in the ten seconds you have.',
-  },
 
   /* ---- comparisons and buyer intent ---------------------------------- */
 

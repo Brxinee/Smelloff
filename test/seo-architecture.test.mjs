@@ -33,8 +33,10 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
     const sitemapXml = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
     const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
 
-    it('sitemap contains exactly 75 canonical URLs', () => {
-      assert.equal(sitemapUrls.length, 75);
+    it('sitemap contains exactly 76 canonical URLs', () => {
+      // 75 → 76 (2026-10-11): the -instantly duplicate merged into -quickly;
+      // the hoodie and blazer guides deleted by dd86e68 were restored.
+      assert.equal(sitemapUrls.length, 76);
     });
 
     for (const url of sitemapUrls) {
@@ -155,9 +157,15 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
         maxHops: 1,
       },
       {
-        description: 'legacy how-to-remove-sweat-smell-from-clothes-instantly redirects to spray-to-remove-sweat-smell-from-clothes-instantly',
+        description: 'legacy how-to-remove-sweat-smell-from-clothes-instantly redirects to the merged spray-to-remove-sweat-smell-from-clothes-quickly',
         url: 'https://smelloff.in/blog/how-to-remove-sweat-smell-from-clothes-instantly',
-        expectedFinal: 'https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-instantly',
+        expectedFinal: 'https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly',
+        maxHops: 1,
+      },
+      {
+        description: 'the -instantly duplicate (same article) 301s to -quickly',
+        url: 'https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-instantly',
+        expectedFinal: 'https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly',
         maxHops: 1,
       },
     ];

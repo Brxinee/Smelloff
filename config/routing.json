@@ -101,7 +101,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-instantly",
+      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
       "statusCode": 301
     },
     {
@@ -387,7 +387,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
+      "destination": "https://smelloff.in/blog/remove-smell-from-hoodie-without-washing",
       "statusCode": 301
     },
     {
@@ -534,28 +534,6 @@
       "statusCode": 301
     },
     {
-      "source": "/blog/remove-smell-from-blazer-without-dry-cleaning",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/remove-smell-from-hoodie-without-washing",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.smelloff.in"
-        }
-      ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
       "source": "/blog/how-to-remove-cooking-smell-from-clothes/",
       "has": [
         {
@@ -666,6 +644,17 @@
       "statusCode": 301
     },
     {
+      "source": "/blog/spray-to-remove-sweat-smell-from-clothes-instantly",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.smelloff.in"
+        }
+      ],
+      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
+      "statusCode": 301
+    },
+    {
       "source": "/:path+/",
       "has": [
         {
@@ -729,7 +718,7 @@
     },
     {
       "source": "/blog/how-to-remove-sweat-smell-from-clothes-instantly",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-instantly",
+      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
       "statusCode": 301
     },
     {
@@ -859,7 +848,7 @@
     },
     {
       "source": "/blog/how-to-remove-smell-from-hoodies-sweatshirts",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
+      "destination": "/blog/remove-smell-from-hoodie-without-washing",
       "statusCode": 301
     },
     {
@@ -925,16 +914,6 @@
     {
       "source": "/blog/beta-cyclodextrin-odor-removal-science",
       "destination": "/blog/hpbcd-cyclodextrin-fabric-odor",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/remove-smell-from-blazer-without-dry-cleaning",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/remove-smell-from-hoodie-without-washing",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
       "statusCode": 301
     },
     {
@@ -1010,6 +989,11 @@
     {
       "source": "/blog/why-traffic-fumes-cling-to-cloth",
       "destination": "/blog/why-traffic-fumes-cling-to-clothes",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/spray-to-remove-sweat-smell-from-clothes-instantly",
+      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
       "statusCode": 301
     },
     {

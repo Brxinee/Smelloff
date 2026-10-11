@@ -110,6 +110,14 @@ export function buildProductJsonLd(options = {}) {
       'sku': p.sku,
       'priceCurrency': p.currency,
       'price': `${p.price}.00`,
+      // The MRP the page prints ("M.R.P. ₹499 · 54% OFF"). Google shows a
+      // ListPrice as a strikethrough beside the offer price in results.
+      'priceSpecification': {
+        '@type': 'UnitPriceSpecification',
+        'priceType': 'https://schema.org/ListPrice',
+        'price': `${p.mrp}.00`,
+        'priceCurrency': p.currency
+      },
       'availability': p.availability,
       'itemCondition': p.itemCondition,
       'url': p.buyUrl,
