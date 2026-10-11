@@ -783,19 +783,47 @@
     font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
 
   /* Success */
-  .overlay .success-screen{text-align:center;padding:12px 0 28px}
+  .overlay .success-screen{padding:8px 0 28px;text-align:left}
+  .sx-head{text-align:center;margin-bottom:22px}
   .ck-done-ic{width:64px;height:64px;margin:4px auto 14px;border-radius:50%;display:flex;align-items:center;justify-content:center;
     background:var(--acid);color:var(--on-acid)}
   .ck-done-ic .ic{width:30px;height:30px;stroke-width:2.5}
-  .overlay-tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);margin-bottom:6px}
-  .overlay .success-screen h2{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.05;margin-bottom:10px}
-  .overlay .success-screen p{color:var(--text-2);margin-bottom:16px;font-size:15px}
-  .overlay .success-screen .order-id{display:inline-block;margin-bottom:16px;padding:12px 16px;border-radius:var(--sq-sm);
-    font-family:var(--mono);font-size:14px;letter-spacing:.08em;color:var(--acid);background:var(--acid-dim);border:1px solid rgba(var(--acid-rgb),.3)}
-  .success-track-link{display:none;margin-bottom:14px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
-    color:var(--acid);text-decoration:underline;text-underline-offset:3px}
-  .success-reassure{font-size:13px !important;color:var(--acid) !important}
-  .overlay .success-screen .submit-btn{margin-top:18px}
+  @media (prefers-reduced-motion:no-preference){.ck-done-ic{animation:sxPop .45s var(--ease) both}}
+  @keyframes sxPop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .overlay-tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);margin-bottom:8px}
+  .overlay .success-screen h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,7vw,32px);line-height:1.1;letter-spacing:var(--ls-display);margin:0 0 10px}
+  .overlay .success-screen .sx-msg{color:var(--text-2);font-size:15px;line-height:1.55;margin:0 auto;max-width:34ch}
+  .sx-k{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .sx-id{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;margin-bottom:12px;
+    border-radius:var(--sq-sm);background:var(--acid-dim);border:1px solid rgba(var(--acid-rgb),.3)}
+  .sx-id .order-id{font-family:var(--mono);font-size:16px;font-weight:600;letter-spacing:.06em;color:var(--acid)}
+  .sx-copy{flex:none;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid rgba(var(--acid-rgb),.45);background:transparent;
+    color:var(--acid);font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer}
+  .sx-card{padding:16px;margin-bottom:12px;border-radius:var(--sq-sm);background:var(--surface-2);border:1px solid rgba(242,245,239,.10)}
+  .sx-item{display:flex;align-items:center;gap:12px}
+  .sx-item img{width:56px;height:56px;border-radius:10px;object-fit:cover;background:var(--surface-2);flex:none}
+  .sx-item-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:15px}
+  .sx-item-txt span{color:var(--muted);font-size:13px}
+  .sx-rows{margin:14px 0 0;padding:12px 0 0;border-top:1px solid var(--hair);display:grid;grid-template-columns:1fr auto;gap:8px 12px;font-size:14px}
+  .sx-rows dt{color:var(--text-2)}
+  .sx-rows dd{margin:0;text-align:right;color:var(--text)}
+  .sx-rows .sx-total{padding-top:10px;border-top:1px solid var(--hair-strong);font-weight:600;color:var(--text)}
+  .sx-rows dd.sx-total{font-family:var(--display);font-size:20px;font-weight:700}
+  .sx-two{display:grid;grid-template-columns:1fr;gap:14px}
+  @media (min-width:520px){.sx-two{grid-template-columns:1fr 1fr}}
+  .sx-v{margin:0;font-size:14px;line-height:1.5;color:var(--text)}
+  .sx-steps{list-style:none;margin:4px 0 0;padding:0;counter-reset:sx}
+  .sx-steps li{counter-increment:sx;position:relative;padding:0 0 12px 34px;font-size:14px;line-height:1.5;color:var(--text)}
+  .sx-steps li:last-child{padding-bottom:0}
+  .sx-steps li::before{content:counter(sx);position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;
+    background:var(--acid);color:var(--on-acid);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .sx-email{margin:4px 0 16px;font-size:13.5px;line-height:1.5;color:var(--text-2);text-align:center}
+  .sx-email strong{color:var(--text)}
+  .overlay .success-screen .sx-primary{display:flex;text-decoration:none;margin-top:6px}
+  .sx-secondary{width:100%;min-height:52px;margin-top:10px;border-radius:var(--sq-sm);border:1px solid rgba(242,245,239,.28) !important;background:transparent;
+    color:var(--text);font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer}
+  .sx-help{margin:14px 0 0;text-align:center;font-size:13px;color:var(--muted)}
+  .sx-help a{color:var(--text);text-decoration:underline;text-underline-offset:3px}
 
   .loader{display:inline-block;width:14px;height:14px;margin-right:8px;vertical-align:middle;
     border:2px solid rgba(8,8,8,.3);border-top-color:var(--ink);border-radius:50%;animation:spin .7s linear infinite}
@@ -2384,24 +2412,51 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <div class="ls-sub" id="loadingSub">Hang tight</div>
     </div>
 
-    <!-- Success state -->
-    <div id="successScreen" class="success-screen" style="display:none">
-      <div class="ck-done-ic" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></div>
-      <div class="overlay-tag" id="successTag">Order confirmed</div>
-      <h2 id="successHeading">You're done.</h2>
-      <p id="successMsg">We'll ship your ODORSTRIKE within 48 hours.</p>
-      <div class="order-id" id="orderIdDisplay" role="group" aria-label="Order ID"></div>
-      <br>
-      <a class="success-track-link" id="successTrackLink" href="/track-order" style="display:none">Track this order anytime →</a>
-
-      <p class="success-reassure" id="successEmailNote" style="display:none">Check your email — we just sent your order confirmation.</p>
-
-      <div class="payment-policy-link" style="margin-top:12px;font-size:12px;">
-        Payment issue? <a href="/payment-failed" onclick="openPaymentFailedOverlay();return false;">See our Payment Failed Policy</a>
+    <!-- Success state: confirmation → order number → summary → delivery →
+         what happens next → one primary action (Baymard order-confirmation
+         findings). showSuccess() fills every field with textContent. -->
+    <div id="successScreen" class="success-screen" style="display:none" role="status" aria-live="polite">
+      <div class="sx-head">
+        <div class="ck-done-ic" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></div>
+        <div class="overlay-tag" id="successTag">Order confirmed</div>
+        <h2 id="successHeading">You're done.</h2>
+        <p id="successMsg" class="sx-msg">We'll ship your ODORSTRIKE within 48 hours.</p>
       </div>
 
-      <p style="font-size:13px;margin-top:14px">Questions? WhatsApp <a id="waSuccessQuestionsLink" href="https://wa.me/919392974031" style="color:var(--acid);font-weight:500">+91 93929 74031</a></p>
-      <button class="submit-btn" type="button" onclick="closeCheckout()">Close</button>
+      <div class="sx-id">
+        <div>
+          <span class="sx-k">Order number</span>
+          <span class="order-id" id="orderIdDisplay"></span>
+        </div>
+        <button type="button" class="sx-copy" id="successCopyBtn" onclick="smfCopyOrderId()">Copy</button>
+      </div>
+
+      <div class="sx-card">
+        <div class="sx-item">
+          <img src="/assets/odorstrike-bottle.webp" width="56" height="56" alt="" loading="lazy" data-no-skel>
+          <div class="sx-item-txt"><strong>ODORSTRIKE 50ml</strong><span id="successQty">Fabric odor spray · Qty 1</span></div>
+          <strong id="successItemTotal"></strong>
+        </div>
+        <dl class="sx-rows" id="successRows"></dl>
+      </div>
+
+      <div class="sx-card sx-two">
+        <div><span class="sx-k">Delivering to</span><p id="successAddress" class="sx-v"></p></div>
+        <div><span class="sx-k">Estimated arrival</span><p id="successEta" class="sx-v"></p></div>
+      </div>
+
+      <div class="sx-card">
+        <span class="sx-k">What happens next</span>
+        <ol class="sx-steps" id="successSteps"></ol>
+      </div>
+
+      <p class="sx-email" id="successEmailNote" style="display:none"></p>
+
+      <a class="submit-btn sx-primary" id="successTrackLink" href="/track-order">Track your order</a>
+      <button class="sx-secondary" type="button" onclick="closeCheckout()">Continue browsing</button>
+
+      <p class="sx-help">Questions? WhatsApp <a id="waSuccessQuestionsLink" href="https://wa.me/919392974031">+91 93929 74031</a> or email <a href="mailto:info@smelloff.in">info@smelloff.in</a></p>
+      <p class="sx-help" id="successPolicy" style="display:none">Payment issue? <a href="/payment-failed" onclick="openPaymentFailedOverlay();return false;">Payment Failed Policy</a></p>
     </div>
   </div>
 </div>
@@ -3188,7 +3243,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     var oid = document.getElementById('orderIdDisplay');
     if (oid) oid.textContent = orderId;
     var trk = document.getElementById('successTrackLink');
-    if (trk) { trk.href = '/track-order?code=' + encodeURIComponent(orderId); trk.style.display = 'inline-block'; }
+    if (trk) { trk.href = '/track-order?code=' + encodeURIComponent(orderId); }
     try { localStorage.setItem('smelloff_last_order', JSON.stringify({ code: orderId, ts: Date.now() })); } catch (e) {}
 
     var t = orderTotals();
@@ -3198,28 +3253,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     var phone = (document.getElementById('f_phone') ? document.getElementById('f_phone').value.trim() : '') || '';
     var buyerEmail = (details && details.email) || (document.getElementById('f_email') ? document.getElementById('f_email').value : '').trim().toLowerCase();
 
-    if (method === 'cod') {
-      document.getElementById('successTag').textContent = 'Order received';
-      document.getElementById('successHeading').textContent = "COD order placed.";
-      document.getElementById('successMsg').textContent = 'Our team will call to confirm within 24 hours. Pay ₹' + amount + ' to the delivery person on arrival.';
-
-      // Google Customer Reviews opt-in. COD only, deliberately: this is a real
-      // placed order the moment it exists (₹0 advance, confirmed by phone), so
-      // it is a genuine order-confirmation event.
-      try {
-        var gcrEmail = document.getElementById('f_email');
-        if (typeof window.smfGoogleReviewOptIn === 'function') {
-          window.smfGoogleReviewOptIn({
-            orderId: orderId,
-            email: gcrEmail ? gcrEmail.value.trim() : ''
-          });
-        }
-      } catch (e) {}
-    } else {
-      document.getElementById('successTag').textContent = 'Payment confirmed';
-      document.getElementById('successHeading').textContent = "Payment confirmed.";
-      document.getElementById('successMsg').textContent = 'Your ODORSTRIKE order is confirmed. We’ll ship within 48 hours.';
-    }
+    renderSuccessDetails(orderId, method, amount, qty, name, phone, buyerEmail);
 
     // Inject order ID into WhatsApp questions link
     var qLink = document.getElementById('waSuccessQuestionsLink');
@@ -3267,9 +3301,104 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       } catch (e) { /* localStorage may be blocked in private mode */ }
     }
 
-    var emailNote = document.getElementById('successEmailNote');
-    if (emailNote) emailNote.style.display = buyerEmail ? 'block' : 'none';
   }
+
+  // Fills the confirmation screen. Everything goes in via textContent: the
+  // name and address are what the buyer typed.
+  function renderSuccessDetails(orderId, method, amount, qty, name, phone, buyerEmail) {
+    var cod = method === 'cod';
+    var fee = cod ? (Number(CFG.COD_FEE) || 0) : 0;
+    var subtotal = Math.max(0, amount - fee);
+    var first = String(name || '').trim().split(/\s+/)[0];
+    var set = function (id, text) { var el = document.getElementById(id); if (el) el.textContent = text; };
+
+    set('successTag', cod ? 'Order received · Cash on Delivery' : 'Payment confirmed');
+    set('successHeading', cod ? ('Order placed' + (first ? ', ' + first : '') + '.') : ('Payment received' + (first ? ', ' + first : '') + '.'));
+    set('successMsg', cod
+      ? 'Nothing to pay now. Keep ₹' + amount + ' ready, cash or UPI, when it arrives.'
+      : 'Your ODORSTRIKE is confirmed. We ship within 48 hours.');
+    set('successQty', 'Fabric odor spray · Qty ' + qty);
+    set('successItemTotal', '₹' + subtotal);
+
+    var rows = document.getElementById('successRows');
+    if (rows) {
+      rows.textContent = '';
+      var add = function (k, v, total) {
+        var dt = document.createElement('dt'); dt.textContent = k;
+        var dd = document.createElement('dd'); dd.textContent = v;
+        if (total) { dt.className = 'sx-total'; dd.className = 'sx-total'; }
+        rows.appendChild(dt); rows.appendChild(dd);
+      };
+      add('Subtotal', '₹' + subtotal);
+      add('Shipping', 'Free');
+      if (fee) add('COD handling', '₹' + fee);
+      add(cod ? 'Pay on delivery' : 'Total paid', '₹' + amount, true);
+    }
+
+    var val = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+    var addr = document.getElementById('successAddress');
+    if (addr) {
+      addr.textContent = '';
+      [name, val('f_addr'), [val('f_city'), val('f_state'), val('f_pin')].filter(Boolean).join(', '), phone ? '+91 ' + phone : '']
+        .filter(Boolean).forEach(function (line, i) {
+          if (i) addr.appendChild(document.createElement('br'));
+          addr.appendChild(document.createTextNode(line));
+        });
+    }
+
+    var eta = document.getElementById('successEta');
+    if (eta) {
+      var D = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var f = function (d) { return D[d.getDay()] + ' ' + d.getDate() + ' ' + M[d.getMonth()]; };
+      var est = typeof window.calculateDeliveryEstimate === 'function' ? window.calculateDeliveryEstimate() : null;
+      eta.textContent = est ? f(est.loDate) + ' – ' + f(est.hiDate) : 'Within 3–7 business days';
+      var small = document.createElement('span');
+      small.style.cssText = 'display:block;color:var(--muted);font-size:13px;margin-top:2px';
+      small.textContent = 'Ships from Hyderabad within 48 hours';
+      eta.appendChild(small);
+    }
+
+    var steps = document.getElementById('successSteps');
+    if (steps) {
+      steps.textContent = '';
+      (cod
+        ? ['We call or WhatsApp you to confirm the order.', 'We pack and ship from Hyderabad within 48 hours.', 'Your tracking link arrives by email once the courier picks it up.', 'Pay ₹' + amount + ' in cash or UPI at your door.']
+        : ['We pack and ship from Hyderabad within 48 hours.', 'Your tracking link arrives by email once the courier picks it up.', 'Spray 15–20 cm from the fabric: collar, underarms, cuffs. Fabric only.']
+      ).forEach(function (t) { var li = document.createElement('li'); li.textContent = t; steps.appendChild(li); });
+    }
+
+    var note = document.getElementById('successEmailNote');
+    if (note) {
+      note.textContent = '';
+      if (buyerEmail) {
+        note.appendChild(document.createTextNode('Confirmation sent to '));
+        var b = document.createElement('strong'); b.textContent = buyerEmail; note.appendChild(b);
+        note.appendChild(document.createTextNode('. Not in your inbox? Check Spam or Promotions.'));
+        note.style.display = 'block';
+      } else {
+        note.style.display = 'none';
+      }
+    }
+
+    var pol = document.getElementById('successPolicy');
+    if (pol) pol.style.display = cod ? 'none' : 'block';
+
+    var ov = document.getElementById('checkoutOverlay');
+    if (ov) ov.scrollTop = 0;
+  }
+
+  window.smfCopyOrderId = function () {
+    var el = document.getElementById('orderIdDisplay');
+    var btn = document.getElementById('successCopyBtn');
+    var code = el ? el.textContent.trim() : '';
+    if (!code) return;
+    var done = function () { if (btn) { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 2000); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(done, function () {});
+    } else {
+      try { var r = document.createRange(); r.selectNodeContents(el); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); done(); } catch (e) {}
+    }
+  };
 
   async function submitOrder() {
     hideError();
@@ -4063,12 +4192,5 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
 <script src="/assets/js/reviews-system.js?v=3" defer></script>
 <script src="/assets/js/track.js?v=801e292b" defer></script>
-<!-- Google Customer Reviews. Loaded on the PDP only, because that is the page
-     that carries the checkout and therefore the order-confirmation moment.
-     `defer` so it costs nothing on the LCP path — it does no work at all until
-     showSuccess() calls it. If the seller-rating badge is ever switched on
-     (BADGE_ENABLED in that file), move this into scripts/apply-chrome.mjs so
-     the badge can render site-wide. -->
-<script src="/assets/js/google-customer-reviews.js?v=4273c93e" defer></script>
 </body>
 </html>

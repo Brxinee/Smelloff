@@ -40,6 +40,25 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Order-confirmation screen rebuilt; Google Customer Reviews removed (2026-10-11)
+- `#successScreen` in `odorstrike.html` is rebuilt as: check + headline with
+  the buyer's first name → order number with Copy → item + Subtotal /
+  Shipping / COD handling / total → "Delivering to" + estimated arrival
+  (`calculateDeliveryEstimate`) → numbered "What happens next" (COD and
+  prepaid variants) → "Confirmation sent to <email>. Not in your inbox? Check
+  Spam or Promotions." → Track your order (primary) / Continue browsing.
+  `renderSuccessDetails()` fills it, with textContent only. The Payment Failed
+  link shows on prepaid only.
+- **Google Customer Reviews is gone** (owner's call): the opt-in popup asked
+  buyers whether Google could email them a survey, right on the confirmation.
+  Removed `assets/js/google-customer-reviews.js`, its call in `showSuccess()`,
+  its `apply-chrome.mjs` stamp, its CSP allowances (`apis.google.com`,
+  `www.gstatic.com`, `frame-src www.google.com`) and both `/privacy` mentions.
+- An owner test order (SMF-20261011-9420) was reported as "no email". Resend
+  shows it was delivered to Gmail (brxinee@gmail.com), so it landed in
+  Spam/Promotions. SPF/DKIM/DMARC pass (DKIM aligned; DMARC `p=none`). A new
+  sending domain needs a few opens / "Not spam" marks to build reputation.
+
 ## Shiprocket sync: every 15 minutes, new orders only (2026-10-11)
 `api/shiprocket-sync.js` (cron `*/15 * * * *` in `wrangler.jsonc`, mapped in
 `src/index.js`) creates a Shiprocket order for each new site order and pulls
