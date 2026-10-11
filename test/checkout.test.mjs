@@ -31,9 +31,9 @@ test('config/routing.json routing integrity', () => {
   assert.ok(csp.value.includes('https://checkout.razorpay.com'), 'CSP must include checkout.razorpay.com');
   assert.ok(csp.value.includes('https://api.razorpay.com'), 'CSP must include api.razorpay.com');
 
-  // Crons are Cloudflare cron triggers now; src/index.js maps 10:00 to shiprocket-sync.
+  // Crons are Cloudflare cron triggers now; src/index.js maps */15 to shiprocket-sync.
   const wrangler = fs.readFileSync('wrangler.jsonc', 'utf8');
-  assert.ok(wrangler.includes('"0 10 * * *"'), 'daily shiprocket/review cron trigger must exist');
+  assert.ok(wrangler.includes('"*/15 * * * *"'), '15-minute shiprocket/review cron trigger must exist');
   assert.ok(fs.readFileSync('src/index.js', 'utf8').includes('shiprocket-sync'), 'cron must route to shiprocket-sync');
   const rewrites = routing.rewrites || [];
   assert.ok(rewrites.some((r) => r.source === '/api/admin/test-email'), 'test-email rewrite must exist');

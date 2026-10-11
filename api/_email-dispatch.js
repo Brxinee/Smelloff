@@ -238,6 +238,27 @@ export async function sendRefundProcessedEmail(order, { route, amount, method } 
   }, { route, orderId: ctx.orderId });
 }
 
+// True when email_events already holds a non-failed reviewRequest for the
+// order. Fails closed (returns true) if the log can't be read, so a database
+// hiccup skips one ask instead of repeating it.
+async function reviewRequestAlreadySent(orderCode) {
+  if (!orderCode || typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') return false;
+  const supabaseUrl = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  if (!serviceKey) return true;
+  try {
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/email_events?order_code=eq.${encodeURIComponent(orderCode)}&email_type=eq.reviewRequest&status=neq.FAILED&select=id&limit=1`,
+      { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` }, signal: AbortSignal.timeout(10000) }
+    );
+    if (!res.ok) return true;
+    const rows = await res.json().catch(() => null);
+    return !Array.isArray(rows) || rows.length > 0;
+  } catch {
+    return true;
+  }
+}
+
 export async function dispatchDueReviewRequests({ route } = {}, now = Date.now()) {
   let orders = [];
   if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
@@ -271,6 +292,11 @@ export async function dispatchDueReviewRequests({ route } = {}, now = Date.now()
   const due = orders.filter((order) => isReviewRequestDue(order, now));
   const results = [];
   for (const order of due) {
+    // One ask per order: the cron runs every 15 minutes across a 9-day window.
+    if (await reviewRequestAlreadySent(order.order_code)) {
+      results.push({ ok: true, skipped: true, reason: 'ALREADY_SENT', orderId: order.order_code });
+      continue;
+    }
     results.push(await sendReviewRequestEmail(order, { route }));
   }
   return {

@@ -285,7 +285,7 @@ test('template rendering: HTML + plaintext, missing fields, malformed address, X
   assert.equal(rendered.html.includes('<script>alert(1)</script>'), false);
   const escapedName = `&${'lt;'}script&${'gt;'}`;
   assert.equal(rendered.html.includes(escapedName), true);
-  assert.equal(rendered.html.includes('#080808'), true);
+  assert.equal(rendered.html.includes('#0A0A0A'), true);
   assert.equal(rendered.html.includes('#B8FF57'), true);
   assert.match(rendered.text, /Order ID: SMF-20260915-1001/);
   assert.match(rendered.text, /Track order:/);

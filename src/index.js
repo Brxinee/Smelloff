@@ -205,7 +205,7 @@ export default {
       await runScheduled(metaCapiDrainHandler);
       return;
     }
-    if (cron === "0 10 * * *") {
+    if (cron === "*/15 * * * *") {
       await runScheduled(shiprocketSyncHandler);
       return;
     }

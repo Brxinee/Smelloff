@@ -40,6 +40,57 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Shiprocket sync: every 15 minutes, new orders only (2026-10-11)
+`api/shiprocket-sync.js` (cron `*/15 * * * *` in `wrangler.jsonc`, mapped in
+`src/index.js`) creates a Shiprocket order for each new site order and pulls
+courier / AWB / status back into `orders`. It was daily (`0 10 * * *`).
+- **Creates only for `placed` / `confirmed` / `packed`** (`CREATE_STATUSES`).
+  It used to create for dispatched and delivered orders too, and the five
+  hand-fulfilled orders delivered before Shiprocket was connected would have
+  been booked as new shipments on the first run. Delivered orders are no longer
+  sync candidates at all.
+- **Fulfilment emails go out only on a status change.** Before, every sync
+  re-sent "Shipped" / "Out for delivery" / "Delivered" for any order in that
+  state (Resend's idempotency key lasts only 24 h).
+- **Review requests are sent once per order**: `dispatchDueReviewRequests`
+  checks `email_events` for a non-failed `reviewRequest` first (it fails closed).
+- Needs `SHIPROCKET_EMAIL` / `SHIPROCKET_PASSWORD` (the API user
+  `info@smelloff.in`, made under Settings → API Users; not the login) and
+  `CRON_SECRET`. Defaults match the live account (company 11447397): pickup
+  `sanathnagar` (Hyderabad 500018), channel CUSTOM `12051492`. The old defaults
+  ("Opposite ANcorner bakery", `41464314146431`) were from another account and
+  would have failed every create. Override with `SHIPROCKET_PICKUP_LOCATION` /
+  `SHIPROCKET_CHANNEL_ID`. A wrong pickup name fails with the list of names the
+  account has.
+- Shiprocket's own tracking webhook (Settings → Webhooks) is not used: the site
+  has no endpoint for it, and the 15-minute sync polls tracking instead.
+- Cancel test orders before turning it on: the sync pushes every `placed` /
+  `confirmed` order.
+
+## Transactional email redesign (2026-10-11)
+`api/_email-templates.js` (all 17 Resend templates) now uses the site's palette
+and type. Light receipt canvas (Gmail's apps invert colours and ignore
+`prefers-color-scheme`); Apple Mail gets the site's dark theme from the
+`@media (prefers-color-scheme: dark)` block in `shell()`.
+- Carbon Black header band with `assets/email/logo-on-ink.png`. The logo has
+  its own black background baked in so it can't vanish when a client inverts
+  the band. Product thumb: `assets/email/odorstrike-bottle-thumb.png`. Both are
+  PNG (Outlook has no WebP).
+- Components: lime kicker pill (`hero(text, label)`), order-journey `tracker(i)`
+  (Confirmed → Shipped → Out for delivery → Delivered) on the lifecycle
+  emails, bulletproof lime `button()` (full width on phones), `productRow`,
+  totals via `kvRow(…, true)` (heavy rule; keep it the last row), `infoColumns`,
+  numbered `nextSteps`, and a contact panel (`helpPanel`: reply / info@ /
+  WhatsApp) on customer emails (`shell(…, { help: false })` for admin).
+- Lime is only ever a fill under black text. Space Grotesk / Inter load from
+  Google Fonts where allowed; Gmail/Outlook fall back to Helvetica/Arial.
+- Admin links go to `https://smelloff.in/admin` (`admin.smelloff.in` returns
+  403). Emails are 8–17KB, far under Gmail's 102KB clip.
+- Not changed, needs the owner: the sender name is "ODORSTRIKE" (not
+  "Smelloff"); the ETA copy says "Typically 3–7 days" while `/shipping` says
+  dispatch within 48 h + 3–10 business days. COD orders still send no admin
+  "new order" email: `dispatchCodPlacementEmails()` exists but nothing calls it.
+
 ## Type: Space Grotesk + Inter (2026-10-11, owner's call)
 "Headings: Space Grotesk. Body text: Inter. Keep the hierarchy." Display =
 **Space Grotesk** (variable 300–700; headings and prices at **700**, rules

@@ -1,30 +1,39 @@
 import { BASE_PRODUCT } from '../shared/products-config-workers.js';
 
-// Light receipt canvas. Forced-dark shells invert in Gmail iOS/Android
-// (white logos vanish, acid-green CTAs go magenta). Apple Mail ~62% of
-// opens, Gmail ~27% (Litmus July 2026). Brand lives in the green accent
-// + CTA, not a black page. Keep #080808 / #B8FF57 tokens for contrast.
-const BLACK = '#080808';
-const GREEN = '#B8FF57';
-const PAGE = '#EDEDE8';
+// Email design system (2026-10-11): the site's palette on a light receipt.
+// Light canvas because Gmail's apps invert colours and ignore
+// prefers-color-scheme; Apple Mail (most opens) honours it and gets the
+// site's own dark theme from the @media block in shell(). Brand lives in the
+// Carbon Black header band, Signal Lime fills (kicker, tracker, button) and
+// the type. Lime is only ever a fill under black text, never text on white.
+// Avoid pure #FFF/#000: some clients invert them harder than near-whites.
+const INK = '#0A0A0A';
+const LIME = '#B8FF57';
+const PAGE = '#F2F5EF';
 const CARD = '#FFFFFE';
-const TEXT = BLACK;
-const MUTED = '#6B6B66';
-const BORDER = '#E2E2DC';
-const PANEL = '#F7F7F2';
+const TEXT = INK;
+const MUTED = '#5C6158';
+const BORDER = '#E3E7DF';
+const PANEL = '#F6F8F3';
 
-const FONT = "Arial, Helvetica, sans-serif";
-const HEADING_FONT = "Arial, Helvetica, sans-serif";
+// Space Grotesk / Inter load from Google Fonts where the client allows it
+// (Apple Mail, iOS Mail); Gmail and Outlook fall back to Helvetica/Arial.
+const FONT = "'Inter','Helvetica Neue',Helvetica,Arial,sans-serif";
+const HEADING_FONT = "'Space Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif";
+const FONT_LINK = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap';
 
 const SUPPORT_EMAIL = BASE_PRODUCT.manufacturer.email || 'info@smelloff.in';
 const SITE_URL = 'https://smelloff.in';
-const ADMIN_URL = 'https://admin.smelloff.in';
+const ADMIN_URL = 'https://smelloff.in/admin';
+const WHATSAPP_URL = 'https://wa.me/919392974031';
+const WHATSAPP_LABEL = '+91 93929 74031';
 const PRICE = BASE_PRODUCT.price;
 const MRP = BASE_PRODUCT.mrp;
 const PRODUCT_NAME = 'ODORSTRIKE 50ml';
-const PRODUCT_IMAGE = `${SITE_URL}/assets/odorstrike-bottle-cutout.png`;
-const LOGO_BLACK = `${SITE_URL}/assets/brand/logo-smelloff-black.png`;
-const LOGO_WHITE = `${SITE_URL}/assets/brand/logo-smelloff-white.png?v=2`;
+// Email-only renders (PNG, not WebP, for Outlook). The logo carries its own
+// Carbon Black background so it can't vanish when a client inverts the band.
+const PRODUCT_IMAGE = `${SITE_URL}/assets/email/odorstrike-bottle-thumb.png`;
+const LOGO = `${SITE_URL}/assets/email/logo-on-ink.png`;
 const SHIPPING_LABEL = 'Free';
 const ETA_COPY = 'Typically 3–7 days across India';
 
@@ -33,11 +42,11 @@ export const trackUrl = (orderId = '') =>
 
 const escape = (s = '') =>
   String(s)
-    .replace(/&/g, '\u0026amp;')
-    .replace(/</g, '\u0026lt;')
-    .replace(/>/g, '\u0026gt;')
-    .replace(/"/g, '\u0026quot;')
-    .replace(/'/g, '\u0026#39;');
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 
 
 const cleanHeader = (s = '') => String(s).replace(/[\r\n]+/g, ' ').trim();
@@ -53,6 +62,8 @@ const rupee = (value) => {
   const n = String(value ?? '').replace(/[^\d.]/g, '');
   return n || '0';
 };
+
+const firstName = (name = '') => String(name || '').trim().split(/\s+/)[0] || 'there';
 
 function formatOrderDate(value) {
   if (!value) return '';
@@ -72,21 +83,30 @@ function customerPaymentLabel(paymentMethod = '') {
   return raw;
 }
 
-function productRow({ quantity = 1, product = PRODUCT_NAME } = {}) {
+const table = (inner, style = '') =>
+  `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;${style}">${inner}</table>`;
+
+function productRow({ quantity = 1, product = PRODUCT_NAME, price = '' } = {}) {
   const qty = Number(quantity) || 1;
-  return `
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 20px 0;">
+  return table(`
   <tr>
-    <td width="88" valign="middle" style="width:88px;padding:12px;background-color:${PANEL};border:1px solid ${BORDER};">
-      <img src="${PRODUCT_IMAGE}" alt="${escape(product)}" width="64" height="64" style="display:block;width:64px;height:64px;object-fit:contain;border:0;">
+    <td width="72" valign="middle" style="width:72px;padding:0;">
+      <img src="${PRODUCT_IMAGE}" alt="${escape(product)}" width="72" height="72" style="display:block;width:72px;height:72px;border:0;border-radius:12px;">
     </td>
-    <td valign="middle" style="font-family:${FONT};color:${TEXT};padding:12px 0 12px 16px;background-color:${CARD};">
-      <p style="margin:0 0 4px 0;font-size:16px;font-weight:700;line-height:1.3;color:${TEXT};">${escape(product)}</p>
-      <p style="margin:0;font-size:13px;line-height:1.4;color:${MUTED};">Fabric-only odor mist · 50ml · Qty ${escape(String(qty))}</p>
+    <td valign="middle" style="padding:0 0 0 16px;font-family:${FONT};">
+      <p class="smf-text" style="margin:0 0 4px 0;font-family:${HEADING_FONT};font-size:16px;font-weight:700;line-height:1.3;color:${TEXT};">${escape(product)}</p>
+      <p class="smf-muted" style="margin:0;font-size:13px;line-height:1.45;color:${MUTED};">Fabric odor spray · Qty ${escape(String(qty))}</p>
     </td>
-  </tr>
-</table>`;
+    ${price ? `<td valign="middle" align="right" class="smf-text" style="padding:0 0 0 12px;font-family:${FONT};font-size:15px;font-weight:600;color:${TEXT};white-space:nowrap;">${price}</td>` : ''}
+  </tr>`, 'margin:0 0 4px 0;');
 }
+
+// Label / value row. `emphasize` is the total line: a heavier rule above it.
+const kvRow = (label, value, emphasize = false) => `
+<tr>
+  <td class="${emphasize ? 'smf-text smf-rule-strong' : 'smf-muted smf-rule'}" style="font-family:${FONT};font-size:${emphasize ? '15px' : '14px'};font-weight:${emphasize ? '600' : '400'};color:${emphasize ? TEXT : MUTED};padding:${emphasize ? '14px' : '10px'} 0 ${emphasize ? '4px' : '10px'} 0;border-top:${emphasize ? `2px solid ${TEXT}` : `1px solid ${BORDER}`};width:46%;">${escape(label)}</td>
+  <td class="smf-text${emphasize ? ' smf-rule-strong' : ' smf-rule'}" style="font-family:${emphasize ? HEADING_FONT : FONT};font-size:${emphasize ? '22px' : '14px'};font-weight:${emphasize ? '700' : '500'};color:${TEXT};padding:${emphasize ? '12px' : '10px'} 0 ${emphasize ? '4px' : '10px'} 12px;border-top:${emphasize ? `2px solid ${TEXT}` : `1px solid ${BORDER}`};text-align:right;">${value}</td>
+</tr>`;
 
 function priceBreakdown({ quantity = 1, amount = '', codFee = 0 } = {}) {
   const qty = Number(quantity) || 1;
@@ -95,7 +115,7 @@ function priceBreakdown({ quantity = 1, amount = '', codFee = 0 } = {}) {
   const subtotal = Math.max(0, total - fee);
   const unit = qty > 0 ? Math.round(subtotal / qty) : subtotal;
   return summaryTable(`
-    ${kvRow(`${PRODUCT_NAME} × ${qty}`, `&#8377;${escape(String(unit * qty || subtotal))}`)}
+    ${kvRow(`Subtotal (${qty} item${qty > 1 ? 's' : ''})`, `&#8377;${escape(String(unit * qty || subtotal))}`)}
     ${kvRow('Shipping', escape(SHIPPING_LABEL))}
     ${fee > 0 ? kvRow('COD handling', `&#8377;${escape(String(fee))}`) : ''}
     ${kvRow(fee > 0 ? 'Amount due' : 'Total paid', `&#8377;${escape(String(total || subtotal))}`, true)}
@@ -108,127 +128,167 @@ export function formatAddress(address) {
   return [address.line, address.city, address.state, address.pincode].filter(Boolean).join(', ');
 }
 
+// Bulletproof button: the <td> carries the fill, so it survives image-off and
+// Outlook. Full width on phones (.smf-btn-wrap).
 const button = (href, label) => `
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0 8px 0;">
+<table role="presentation" class="smf-btn-wrap" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0 8px 0;">
   <tr>
-    <td class="smf-btn" style="background-color:${GREEN};border:2px solid ${BLACK};border-radius:2px;">
-      <a href="${safeUrl(href)}" style="display:inline-block;padding:14px 28px;font-family:${HEADING_FONT};font-weight:700;font-size:15px;line-height:1;letter-spacing:0.2px;color:${BLACK};text-decoration:none;">
-        ${escape(label)}
+    <td class="smf-btn" align="center" style="background-color:${LIME};border-radius:12px;mso-padding-alt:16px 32px;">
+      <a href="${safeUrl(href)}" style="display:inline-block;padding:16px 32px;font-family:${FONT};font-weight:600;font-size:16px;line-height:1;color:${INK};text-decoration:none;border-radius:12px;">
+        ${escape(label)}&nbsp;&rarr;
       </a>
     </td>
   </tr>
 </table>`;
 
-const kvRow = (label, value, emphasize = false) => `
-<tr>
-  <td style="font-family:${FONT};font-size:13px;color:${MUTED};padding:10px 0;border-bottom:1px solid ${BORDER};width:42%;background-color:${PANEL};">${escape(label)}</td>
-  <td style="font-family:${FONT};font-size:${emphasize ? '18px' : '14px'};font-weight:${emphasize ? '700' : '400'};color:${TEXT};padding:10px 0 10px 12px;border-bottom:1px solid ${BORDER};text-align:right;background-color:${PANEL};">${value}</td>
-</tr>`;
-
 const statusPill = (label) =>
-  `<span style="display:inline-block;background-color:${GREEN};color:${BLACK};padding:3px 8px;font-family:${FONT};font-size:11px;font-weight:700;">${label}</span>`;
+  `<span style="display:inline-block;background-color:${LIME};color:${INK};padding:4px 10px;border-radius:999px;font-family:${FONT};font-size:11px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;line-height:1.4;">${label}</span>`;
 
-const shell = (inner, preheader = '') => `<!DOCTYPE html>
-<html lang="en">
+// Contact panel at the foot of every customer email (admin emails skip it).
+const helpPanel = () => `
+        <tr>
+          <td class="smf-pad smf-card" style="padding:0 36px 32px 36px;background-color:${CARD};">
+            ${table(`<tr><td class="smf-panel" style="background-color:${PANEL};border:1px solid ${BORDER};border-radius:14px;padding:18px 20px;font-family:${FONT};">
+              <p class="smf-text" style="margin:0 0 4px 0;font-family:${HEADING_FONT};font-size:15px;font-weight:700;color:${TEXT};">Questions? We reply fast.</p>
+              <p class="smf-muted" style="margin:0;font-size:14px;line-height:1.55;color:${MUTED};">Reply to this email, write to <a class="smf-link" href="mailto:${SUPPORT_EMAIL}" style="color:${TEXT};font-weight:600;text-decoration:underline;">${SUPPORT_EMAIL}</a> or WhatsApp <a class="smf-link" href="${WHATSAPP_URL}" style="color:${TEXT};font-weight:600;text-decoration:underline;">${WHATSAPP_LABEL}</a>.</p>
+            </td></tr>`)}
+          </td>
+        </tr>`;
+
+const shell = (inner, preheader = '', { help = true } = {}) => `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
 <meta name="supported-color-schemes" content="light dark">
 <meta name="x-apple-disable-message-reformatting">
-<title>SMELLOFF</title>
+<meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+<title>Smelloff</title>
 <!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
+<!--[if !mso]><!--><link href="${FONT_LINK}" rel="stylesheet"><!--<![endif]-->
 <style type="text/css">
-  :root { color-scheme: light dark; }
+  :root { color-scheme: light dark; supported-color-schemes: light dark; }
+  body { margin:0; padding:0; -webkit-text-size-adjust:100%; }
+  a { color:${INK}; }
   @media only screen and (max-width: 620px) {
-    .smf-wrap { width: 100% !important; }
-    .smf-pad { padding: 24px 18px !important; }
-    .smf-hero { font-size: 22px !important; line-height: 1.2 !important; }
+    .smf-wrap { width: 100% !important; border-radius: 0 !important; }
+    .smf-outer { padding: 0 !important; }
+    .smf-pad { padding-left: 20px !important; padding-right: 20px !important; }
+    .smf-hero { font-size: 26px !important; }
+    .smf-col { display: block !important; width: 100% !important; padding: 0 0 16px 0 !important; }
+    .smf-btn-wrap { width: 100% !important; }
+    .smf-btn a { display: block !important; }
+    .smf-step-label { font-size: 10px !important; }
   }
   @media (prefers-color-scheme: dark) {
-    .smf-page { background-color: #16181d !important; }
-    .smf-wrap { background-color: #21242b !important; border-color: #4a4a4a !important; }
-    .smf-pad, .smf-panel { background-color: #21242b !important; }
-    .smf-panel { background-color: #2a2d34 !important; border-color: #4a4a4a !important; }
-    .smf-hero, .smf-text { color: #e8eaed !important; }
-    .smf-muted, .smf-kicker { color: #9aa0a6 !important; }
-    .smf-btn { background-color: #B8FF57 !important; border-color: #080808 !important; }
-    .logo-light { display: none !important; max-height: 0 !important; overflow: hidden !important; }
-    .logo-dark { display: block !important; width: auto !important; max-height: none !important; height: 22px !important; overflow: visible !important; }
+    .smf-page { background-color: ${INK} !important; }
+    .smf-wrap, .smf-card { background-color: #121212 !important; }
+    .smf-panel { background-color: #1A1A1A !important; border-color: #2A2D27 !important; }
+    .smf-text, .smf-hero { color: #F2F5EF !important; }
+    .smf-muted { color: #9DA398 !important; }
+    .smf-rule { border-color: #2A2D27 !important; }
+    .smf-rule-strong { border-color: #F2F5EF !important; }
+    .smf-step-off { background-color: #2A2D27 !important; }
+    .smf-link { color: #F2F5EF !important; }
   }
 </style>
 </head>
 <body class="smf-page" style="margin:0;padding:0;background-color:${PAGE};font-family:${FONT};color:${TEXT};-webkit-font-smoothing:antialiased;">
-<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;opacity:0;color:transparent;">${escape(preheader)}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;opacity:0;color:transparent;">${escape(preheader)}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
 <table class="smf-page" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${PAGE};">
   <tr>
-    <td align="center" style="padding:28px 12px;background-color:${PAGE};">
-      <table role="presentation" class="smf-wrap" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:${CARD};border:1px solid ${BORDER};">
+    <td align="center" class="smf-outer" style="padding:32px 12px;">
+      <table role="presentation" class="smf-wrap" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:${CARD};border-radius:20px;overflow:hidden;">
         <tr>
-          <td style="height:4px;line-height:4px;font-size:0;background-color:${GREEN};">&nbsp;</td>
-        </tr>
-        <tr>
-          <td class="smf-pad" style="padding:22px 36px;border-bottom:1px solid ${BORDER};background-color:${CARD};">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="vertical-align:middle;background-color:${CARD};">
-                  <a href="${SITE_URL}" style="text-decoration:none;">
-                    <img class="logo-light" src="${LOGO_BLACK}" alt="SMELLOFF" height="22" style="height:22px;width:auto;display:block;border:0;">
-                    <img class="logo-dark" src="${LOGO_WHITE}" alt="" height="22" width="0" style="display:none;width:0;max-height:0;overflow:hidden;height:0;border:0;" aria-hidden="true">
-                  </a>
-                </td>
-                <td align="right" class="smf-kicker" style="vertical-align:middle;font-family:${FONT};font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:${MUTED};background-color:${CARD};">
-                  ODORSTRIKE
-                </td>
-              </tr>
-            </table>
+          <td class="smf-pad" style="background-color:${INK};padding:22px 36px;">
+            ${table(`<tr>
+              <td valign="middle"><a href="${SITE_URL}" style="text-decoration:none;"><img src="${LOGO}" alt="SMELLOFF" width="132" height="25" style="display:block;width:132px;height:auto;border:0;"></a></td>
+              <td valign="middle" align="right" style="font-family:${FONT};font-size:11px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:${LIME};">ODORSTRIKE</td>
+            </tr>`)}
           </td>
         </tr>
         <tr>
-          <td class="smf-pad" style="padding:36px 36px 32px 36px;background-color:${CARD};">
+          <td class="smf-pad smf-card" style="padding:36px 36px 32px 36px;background-color:${CARD};">
             ${inner}
           </td>
         </tr>
+        ${help ? helpPanel() : ''}
+      </table>
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
         <tr>
-          <td class="smf-pad smf-muted" style="padding:22px 36px 28px 36px;border-top:1px solid ${BORDER};font-family:${FONT};font-size:12px;color:${MUTED};line-height:1.6;background-color:${CARD};">
-            <p class="smf-text" style="margin:0 0 8px 0;color:${TEXT};letter-spacing:0.4px;font-size:12px;font-weight:700;">Smelloff · Hyderabad, India</p>
-            <p style="margin:0 0 8px 0;">Need help? <a href="mailto:${SUPPORT_EMAIL}" style="color:${TEXT};text-decoration:underline;">${SUPPORT_EMAIL}</a></p>
-            <p style="margin:0;">
-              <a href="${SITE_URL}" style="color:${MUTED};text-decoration:none;">smelloff.in</a>
-              &nbsp;·&nbsp;
-              <a href="https://instagram.com/smelloffindia" style="color:${MUTED};text-decoration:none;">@smelloffindia</a>
+          <td class="smf-pad" align="center" style="padding:24px 36px 8px 36px;font-family:${FONT};font-size:12px;line-height:1.7;color:${MUTED};">
+            <p class="smf-muted" style="margin:0 0 6px 0;">
+              <a class="smf-link" href="${SITE_URL}/track-order" style="color:${TEXT};text-decoration:none;font-weight:600;">Track order</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a class="smf-link" href="${SITE_URL}/returns" style="color:${TEXT};text-decoration:none;font-weight:600;">Returns</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a class="smf-link" href="${SITE_URL}/faq" style="color:${TEXT};text-decoration:none;font-weight:600;">FAQ</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a class="smf-link" href="https://instagram.com/smelloffindia" style="color:${TEXT};text-decoration:none;font-weight:600;">Instagram</a>
             </p>
+            <p class="smf-muted" style="margin:0;color:${MUTED};">Smelloff · Hyderabad, India · Pocket-sized fabric odor spray</p>
           </td>
         </tr>
       </table>
-      <p class="smf-muted" style="font-family:${FONT};font-size:11px;letter-spacing:0.4px;color:${MUTED};margin:16px 0 0 0;">
-        Pocket-sized fabric odor reset spray
-      </p>
     </td>
   </tr>
 </table>
 </body>
 </html>`;
 
-const hero = (text) =>
-  `<h1 class="smf-hero" style="font-family:${HEADING_FONT};font-weight:700;font-size:26px;line-height:1.2;letter-spacing:-0.3px;color:${TEXT};margin:0 0 16px 0;">${text}</h1>`;
+const kicker = (label) =>
+  `<p style="margin:0 0 16px 0;">${statusPill(escape(label))}</p>`;
+
+const hero = (text, label = '') =>
+  `${label ? kicker(label) : ''}<h1 class="smf-hero" style="font-family:${HEADING_FONT};font-weight:700;font-size:30px;line-height:1.12;letter-spacing:-0.6px;color:${TEXT};margin:0 0 14px 0;">${text}</h1>`;
 
 const para = (text) =>
-  `<p class="smf-text" style="font-family:${FONT};font-size:16px;line-height:1.55;color:${TEXT};margin:0 0 16px 0;">${text}</p>`;
+  `<p class="smf-text" style="font-family:${FONT};font-size:16px;line-height:1.6;color:${TEXT};margin:0 0 16px 0;">${text}</p>`;
 
 const muted = (text) =>
-  `<p class="smf-muted" style="font-family:${FONT};font-size:14px;line-height:1.55;color:${MUTED};margin:0 0 14px 0;">${text}</p>`;
+  `<p class="smf-muted" style="font-family:${FONT};font-size:14px;line-height:1.6;color:${MUTED};margin:0 0 14px 0;">${text}</p>`;
+
+const sectionLabel = (text) =>
+  `<p class="smf-muted" style="font-family:${FONT};font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:${MUTED};margin:28px 0 12px 0;">${text}</p>`;
 
 const panel = (content) =>
-  `<div class="smf-panel" style="background-color:${PANEL};border:1px solid ${BORDER};border-left:3px solid ${GREEN};padding:18px 20px;margin:20px 0;">${content}</div>`;
+  table(`<tr><td class="smf-panel" style="background-color:${PANEL};border:1px solid ${BORDER};border-radius:14px;padding:6px 20px 14px 20px;">${content}</td></tr>`, 'margin:20px 0;');
 
 function summaryTable(rows) {
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${rows}</table>`;
 }
 
-function footerHelp() {
-  return muted(`Need help? Contact Smelloff Support at <a href="mailto:${SUPPORT_EMAIL}" style="color:${TEXT};text-decoration:underline;">${SUPPORT_EMAIL}</a>.`);
+// Order journey: Confirmed → Shipped → Out for delivery → Delivered.
+// `current` is the index of the step the email is about.
+const STEPS = ['Confirmed', 'Shipped', 'Out for delivery', 'Delivered'];
+function tracker(current = 0) {
+  const cells = STEPS.map((label, i) => {
+    const done = i <= current;
+    return `<td width="25%" valign="top" style="width:25%;padding:0 ${i < STEPS.length - 1 ? '4px' : '0'} 0 0;">
+      <div class="${done ? '' : 'smf-step-off'}" style="height:6px;line-height:6px;font-size:0;border-radius:3px;background-color:${done ? LIME : BORDER};">&nbsp;</div>
+      <p class="smf-step-label ${i === current ? 'smf-text' : 'smf-muted'}" style="margin:8px 0 0 0;font-family:${FONT};font-size:11px;line-height:1.3;font-weight:${i === current ? '600' : '400'};color:${i === current ? TEXT : MUTED};">${label}</p>
+    </td>`;
+  }).join('');
+  return table(`<tr>${cells}</tr>`, 'margin:24px 0 8px 0;');
 }
+
+// Short numbered "what happens next" list.
+function nextSteps(items = []) {
+  const rows = items.map((item, i) => `<tr>
+    <td width="28" valign="top" style="width:28px;padding:0 0 12px 0;">
+      <div style="width:22px;height:22px;line-height:22px;border-radius:11px;background-color:${LIME};color:${INK};font-family:${FONT};font-size:12px;font-weight:600;text-align:center;">${i + 1}</div>
+    </td>
+    <td valign="top" class="smf-text" style="padding:1px 0 12px 8px;font-family:${FONT};font-size:14px;line-height:1.55;color:${TEXT};">${item}</td>
+  </tr>`).join('');
+  return table(rows);
+}
+
+// Two side-by-side facts (stack on phones).
+function infoColumns(left, right) {
+  const col = ({ label, value }) => `<td class="smf-col" width="50%" valign="top" style="width:50%;padding:0 12px 0 0;">
+      <p class="smf-muted" style="margin:0 0 6px 0;font-family:${FONT};font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:${MUTED};">${label}</p>
+      <p class="smf-text" style="margin:0;font-family:${FONT};font-size:14px;line-height:1.55;color:${TEXT};">${value}</p>
+    </td>`;
+  return table(`<tr>${col(left)}${col(right)}</tr>`, 'margin:24px 0 0 0;');
+}
+
+const orderMeta = (orderId, dateLabel = '') =>
+  muted(`Order <strong class="smf-text" style="color:${TEXT};font-weight:600;">#${escape(orderId || '—')}</strong>${dateLabel ? ` · ${escape(dateLabel)}` : ''}`);
 
 function textBlock(lines) {
   return lines.filter((line) => line !== null && line !== undefined).join('\n');
@@ -264,36 +324,33 @@ export function orderConfirmation({
   const statusLabel = cod ? 'Confirmed · pay on delivery' : (paymentStatus && /paid|confirmed/i.test(paymentStatus) ? 'Paid' : 'Paid');
   const eta = estimatedDelivery || ETA_COPY;
 
+  const subtotalRupees = Math.max(0, (Number(rupee(amount)) || 0) - fee);
   const inner = `
-    ${hero('Order confirmed')}
-    ${para(`Hey ${escape(name)},`)}
+    ${hero(`Thanks, ${escape(firstName(name))}. Your order is in.`, cod ? 'Order confirmed · Cash on Delivery' : 'Order confirmed · Paid')}
     ${para(cod
-      ? `Your ODORSTRIKE is locked in. Nothing has been charged — pay &#8377;${escape(rupee(amount))} in cash or UPI when it arrives.`
-      : `Payment received. Your ODORSTRIKE is locked in.`)}
-
-    ${productRow({ quantity: qty })}
-
-    ${panel(`
-      <p class="smf-kicker" style="font-family:${FONT};font-size:12px;letter-spacing:0.4px;color:${MUTED};margin:0 0 10px 0;">Order ${escape(cleanOrderId || '—')}</p>
-      ${priceBreakdown({ quantity: qty, amount, codFee: fee })}
-      ${summaryTable(`
-        ${kvRow('Payment', escape(methodLabel))}
-        ${kvRow('Status', escape(statusLabel))}
-        ${!cod && transactionRef ? kvRow('Reference', escape(transactionRef)) : ''}
-        ${kvRow('Order date', escape(dateLabel))}
-        ${kvRow('Delivery', escape(eta))}
-      `)}
-    `)}
-
-    <p class="smf-kicker" style="font-family:${FONT};font-size:12px;letter-spacing:0.4px;color:${MUTED};margin:24px 0 6px 0;">Ships to</p>
-    ${muted(escape(address || '—').replace(/\n/g, '<br>'))}
-
-    ${muted(cod
-      ? 'We pack within 48 hours. Keep this email — it is your receipt and your tracking key.'
-      : 'We pack within 48 hours. Tracking lands here the moment the courier scans it.')}
-
+      ? `Nothing has been charged. Pay <strong>&#8377;${escape(rupee(amount))}</strong> in cash or UPI when it arrives.`
+      : `We've received your payment of <strong>&#8377;${escape(rupee(amount))}</strong>. Your ODORSTRIKE is locked in.`)}
+    ${orderMeta(cleanOrderId, dateLabel)}
+    ${tracker(0)}
     ${button(trackUrl(cleanOrderId), 'Track order')}
-    ${footerHelp()}
+
+    ${sectionLabel('Your order')}
+    ${productRow({ quantity: qty, price: subtotalRupees ? `&#8377;${escape(String(subtotalRupees))}` : '' })}
+    ${table(`<tr><td style="padding-top:16px;">${priceBreakdown({ quantity: qty, amount, codFee: fee })}</td></tr>`)}
+
+    ${infoColumns(
+      { label: 'Delivering to', value: escape(address || '—').replace(/\n/g, '<br>') },
+      { label: 'Payment', value: `${escape(methodLabel)}<br><span class="smf-muted" style="color:${MUTED};">${escape(statusLabel)}${!cod && transactionRef ? ` · Ref ${escape(transactionRef)}` : ''}</span>` },
+    )}
+
+    ${sectionLabel('What happens next')}
+    ${nextSteps([
+      'We pack your order within 48 hours (Mon–Sat).',
+      `The courier picks it up and the tracking link lands in your inbox. Delivery: ${escape(eta.charAt(0).toLowerCase() + eta.slice(1))}.`,
+      cod
+        ? `Keep <strong>&#8377;${escape(rupee(amount))}</strong> ready, cash or UPI, when it arrives.`
+        : 'Spray 15–20 cm from the fabric: collar, underarms, cuffs. Fabric only, never skin.',
+    ])}
   `;
 
   const subject = cleanHeader(
@@ -355,20 +412,15 @@ export function paymentConfirmation({
   const name = customerName || 'there';
   const methodLabel = customerPaymentLabel(paymentMethod);
   const inner = `
-    ${hero('Payment received')}
-    ${para(`Hey ${escape(name)},`)}
-    ${para('Payment for your ODORSTRIKE order came through.')}
-    ${panel(`
-      <p class="smf-hero" style="font-family:${HEADING_FONT};font-size:32px;font-weight:700;color:${TEXT};margin:0 0 8px 0;letter-spacing:-0.5px;">&#8377;${escape(rupee(amount))}</p>
-      <p class="smf-kicker" style="font-family:${FONT};font-size:12px;color:${MUTED};margin:0 0 16px 0;">${statusPill('Paid successfully')}</p>
-      ${summaryTable(`
-        ${kvRow('Order', `#${escape(cleanOrderId)}`)}
-        ${kvRow('Payment method', escape(methodLabel))}
-        ${transactionRef ? kvRow('Reference', escape(transactionRef)) : ''}
-      `)}
-    `)}
+    ${hero(`&#8377;${escape(rupee(amount))} received.`, 'Payment received')}
+    ${para(`Thanks, ${escape(firstName(name))}. Payment for your ODORSTRIKE order came through.`)}
+    ${panel(summaryTable(`
+      ${kvRow('Order', `#${escape(cleanOrderId)}`)}
+      ${kvRow('Payment method', escape(methodLabel))}
+      ${transactionRef ? kvRow('Reference', escape(transactionRef)) : ''}
+      ${kvRow('Amount paid', `&#8377;${escape(rupee(amount))}`, true)}
+    `))}
     ${button(trackUrl(cleanOrderId), 'View order')}
-    ${footerHelp()}
   `;
   return {
     subject: cleanHeader(`Payment received — #${cleanOrderId}`),
@@ -401,17 +453,17 @@ export function orderShipped({
   const name = customerName || 'there';
   const href = trackingUrl || trackUrl(cleanOrderId);
   const inner = `
-    ${hero('On the move')}
-    ${para(`${escape(name)}, your ODORSTRIKE has left the warehouse.`)}
-    ${panel(summaryTable(`
-      ${kvRow('Order', `#${escape(cleanOrderId)}`)}
-      ${kvRow('Courier', escape(courier || 'Assigned'))}
-      ${kvRow('Tracking', `<span style="font-weight:700;letter-spacing:0.4px;">${escape(trackingId || 'Updating shortly')}</span>`)}
-      ${kvRow('Status', statusPill('Shipped'))}
-    `))}
-    ${muted('Delivery is typically 3–7 days from this scan, depending on your city.')}
+    ${hero(`It's on the way, ${escape(firstName(name))}.`, 'Shipped')}
+    ${para('Your ODORSTRIKE has left our Hyderabad warehouse.')}
+    ${orderMeta(cleanOrderId)}
+    ${tracker(1)}
     ${button(href, 'Track shipment')}
-    ${footerHelp()}
+    ${panel(summaryTable(`
+      ${kvRow('Courier', escape(courier || 'Assigned'))}
+      ${kvRow('Tracking number', `<span style="font-weight:600;letter-spacing:0.4px;">${escape(trackingId || 'Updating shortly')}</span>`)}
+      ${kvRow('Expected', 'Typically 3–7 days from this scan')}
+    `))}
+    ${muted('Delivery time depends on your city. You will get another email when it is out for delivery.')}
   `;
   return {
     subject: cleanHeader(
@@ -448,17 +500,16 @@ export function outForDelivery({
   const name = customerName || 'there';
   const href = trackingUrl || trackUrl(cleanOrderId);
   const inner = `
-    ${hero('Out for delivery')}
-    ${para(`${escape(name)}, your ODORSTRIKE is on the last stretch today. Keep your phone close.`)}
-    ${panel(summaryTable(`
-      ${kvRow('Order', `#${escape(cleanOrderId)}`)}
-      ${kvRow('Courier', escape(courier || 'Courier'))}
-      ${trackingId ? kvRow('Tracking', escape(trackingId)) : ''}
-      ${kvRow('Status', statusPill('Out for delivery'))}
-    `))}
-    ${muted('If this is Cash on Delivery, keep the exact amount ready — cash or UPI.')}
+    ${hero('Arriving today.', 'Out for delivery')}
+    ${para(`${escape(firstName(name))}, your ODORSTRIKE is on the last stretch. Keep your phone close for the courier's call.`)}
+    ${orderMeta(cleanOrderId)}
+    ${tracker(2)}
     ${button(href, 'Track shipment')}
-    ${footerHelp()}
+    ${panel(summaryTable(`
+      ${kvRow('Courier', escape(courier || 'Courier'))}
+      ${trackingId ? kvRow('Tracking number', escape(trackingId)) : ''}
+    `))}
+    ${muted('Paying cash on delivery? Keep the exact amount ready, cash or UPI.')}
   `;
   return {
     subject: cleanHeader(`Out for delivery today — #${cleanOrderId}`),
@@ -487,11 +538,17 @@ export function orderDelivered({
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
   const inner = `
-    ${hero('Delivered')}
-    ${para(`${escape(name)}, your ODORSTRIKE is in.`)}
-    ${muted('Hold 15–20cm from the fabric. Two or three sprays on collar, underarms, cuffs. Let it air for 30 seconds. Not for skin.')}
-    ${button(`${SITE_URL}/blog/how-to-use-odorstrike`, 'How to use ODORSTRIKE')}
-    ${footerHelp()}
+    ${hero(`It's here, ${escape(firstName(name))}.`, 'Delivered')}
+    ${para('Your ODORSTRIKE has arrived. Here is how to get the most from it.')}
+    ${orderMeta(cleanOrderId)}
+    ${tracker(3)}
+    ${sectionLabel('How to use it')}
+    ${nextSteps([
+      'Hold the bottle 15–20 cm from the fabric.',
+      'Two or three sprays on the collar, underarms and cuffs.',
+      'Let it air for 30 seconds, then wear. Fabric only, never skin.',
+    ])}
+    ${button(`${SITE_URL}/blog/how-to-use-odorstrike`, 'Read the full guide')}
   `;
   return {
     subject: cleanHeader(`Delivered — #${cleanOrderId}`),
@@ -529,27 +586,27 @@ export function adminNewOrder({
 } = {}) {
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const inner = `
-    ${hero('New ODORSTRIKE order')}
+    ${hero(`New order · &#8377;${escape(rupee(amount))}`, paymentMethod ? `New order · ${paymentMethod}` : 'New order')}
     ${panel(summaryTable(`
       ${kvRow('Order ID', escape(cleanOrderId))}
       ${kvRow('Customer', escape(customerName || '—'))}
       ${kvRow('Phone', escape(phone || '—'))}
       ${kvRow('Email', escape(email || '—'))}
       ${kvRow('Payment', escape(paymentMethod || '—'))}
-      ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`, true)}
+      ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`)}
       ${kvRow('Product', escape(product || PRODUCT_NAME))}
       ${kvRow('Quantity', escape(String(quantity || 1)))}
       ${kvRow('Payment status', escape(paymentStatus || '—'))}
       ${kvRow('Fulfillment', escape(fulfillmentStatus || '—'))}
       ${kvRow('Timestamp', escape(timestamp || new Date().toISOString()))}
     `))}
-    <p class="smf-kicker" style="font-family:${FONT};font-size:12px;letter-spacing:0.4px;color:${MUTED};margin:24px 0 6px 0;">Address</p>
-    ${muted(escape(address || '—'))}
-    ${button(`${ADMIN_URL}/#orders`, 'Open order')}
+    ${sectionLabel('Ship to')}
+    ${para(escape(address || '—'))}
+    ${button(`${ADMIN_URL}#orders`, 'Open order')}
   `;
   return {
     subject: cleanHeader(`NEW ODORSTRIKE ORDER — ${cleanOrderId}`),
-    html: shell(inner, `New order ${cleanOrderId} · ₹${rupee(amount)} · ${paymentMethod || ''}`),
+    html: shell(inner, `New order ${cleanOrderId} · ₹${rupee(amount)} · ${paymentMethod || ''}`, { help: false }),
     text: textBlock([
       'SMELLOFF OPS — NEW ORDER',
       '',
@@ -568,7 +625,7 @@ export function adminNewOrder({
       'ADDRESS',
       address || '—',
       '',
-      `Open order: ${ADMIN_URL}/#orders`,
+      `Open order: ${ADMIN_URL}#orders`,
     ]),
   };
 }
@@ -583,20 +640,20 @@ export function adminPaymentConfirmed({
 } = {}) {
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const inner = `
-    ${hero('Payment verified')}
+    ${hero(`&#8377;${escape(rupee(amount))} verified`, 'Payment verified')}
     ${panel(summaryTable(`
       ${kvRow('Order ID', escape(cleanOrderId))}
-      ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`, true)}
+      ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`)}
       ${kvRow('Customer', escape(customerName || '—'))}
       ${kvRow('Payment method', escape(paymentMethod || 'Prepaid'))}
       ${transactionRef ? kvRow('Transaction', escape(transactionRef)) : ''}
       ${kvRow('Timestamp', escape(timestamp || new Date().toISOString()))}
     `))}
-    ${button(`${ADMIN_URL}/#orders`, 'Open order')}
+    ${button(`${ADMIN_URL}#orders`, 'Open order')}
   `;
   return {
     subject: cleanHeader(`PAYMENT VERIFIED — ${cleanOrderId}`),
-    html: shell(inner, `Payment verified for ${cleanOrderId} · ₹${rupee(amount)}`),
+    html: shell(inner, `Payment verified for ${cleanOrderId} · ₹${rupee(amount)}`, { help: false }),
     text: textBlock([
       'SMELLOFF OPS — PAYMENT VERIFIED',
       '',
@@ -607,7 +664,7 @@ export function adminPaymentConfirmed({
       transactionRef ? `Transaction: ${transactionRef}` : null,
       `Timestamp: ${timestamp || new Date().toISOString()}`,
       '',
-      `Open order: ${ADMIN_URL}/#orders`,
+      `Open order: ${ADMIN_URL}#orders`,
     ]),
   };
 }
@@ -622,7 +679,7 @@ export function emailFailure({
   timestamp = '',
 } = {}) {
   const inner = `
-    ${hero('Email delivery failure')}
+    ${hero('An email did not send', 'Email delivery failure')}
     ${panel(summaryTable(`
       ${kvRow('Email type', escape(emailType || '—'))}
       ${kvRow('Order ID', escape(orderId || '—'))}
@@ -635,7 +692,7 @@ export function emailFailure({
   `;
   return {
     subject: cleanHeader(`EMAIL DELIVERY FAILURE — ${emailType || 'unknown'} ${orderId || ''}`.trim()),
-    html: shell(inner, `Email failure: ${emailType} ${orderId}`),
+    html: shell(inner, `Email failure: ${emailType} ${orderId}`, { help: false }),
     text: textBlock([
       'SMELLOFF OPS — EMAIL DELIVERY FAILURE',
       '',
@@ -656,7 +713,7 @@ export function diagnosticTest({
   timestamp = '',
 } = {}) {
   const inner = `
-    ${hero('Smelloff email system test')}
+    ${hero('Email system test', 'System test')}
     ${panel(summaryTable(`
       ${kvRow('Status', statusPill('RESEND API → ACCEPTED'))}
       ${kvRow('Email ID', escape(emailId || 'pending'))}
@@ -666,7 +723,7 @@ export function diagnosticTest({
   `;
   return {
     subject: cleanHeader('SMELLOFF EMAIL SYSTEM TEST'),
-    html: shell(inner, 'Smelloff email system test — Resend API accepted.'),
+    html: shell(inner, 'Smelloff email system test — Resend API accepted.', { help: false }),
     text: textBlock([
       'SMELLOFF EMAIL SYSTEM TEST',
       '',
@@ -681,15 +738,11 @@ export function diagnosticTest({
 export function welcomeEmail({ customerName = 'there' } = {}) {
   const name = customerName || 'there';
   const inner = `
-    ${hero("You're in.")}
-    ${para(`Hey ${escape(name)}. Welcome to Smelloff.`)}
-    ${muted('ODORSTRIKE is a 50ml fabric-only odor reset spray. Not perfume. Not deodorant. One pocket-sized bottle for clothes — sweat, smoke, food, gym, day-two shirts.')}
-    ${panel(`
-      <p class="smf-kicker" style="font-family:${FONT};font-size:12px;color:${MUTED};margin:0 0 8px 0;">ODORSTRIKE 50ml</p>
-      <p class="smf-text" style="margin:0;font-family:${HEADING_FONT};font-size:28px;font-weight:700;color:${TEXT};">&#8377;${PRICE} <span style="font-size:14px;color:${MUTED};text-decoration:line-through;font-weight:400;">&#8377;${MRP}</span></p>
-    `)}
+    ${hero("You're in.", 'Welcome to Smelloff')}
+    ${para(`Hey ${escape(firstName(name))}. Welcome to Smelloff.`)}
+    ${muted('ODORSTRIKE is a 50ml fabric-only odor reset spray. Not perfume. Not deodorant. One pocket-sized bottle for clothes — sweat, smoke, food, day-two shirts.')}
+    ${table(`<tr><td style="padding:8px 0 0 0;">${productRow({ price: `&#8377;${PRICE}&nbsp;<span class="smf-muted" style="font-size:13px;font-weight:400;color:${MUTED};text-decoration:line-through;">&#8377;${MRP}</span>` })}</td></tr>`)}
     ${button(SITE_URL, 'Shop now')}
-    ${footerHelp()}
   `;
   return {
     subject: 'Welcome to Smelloff',
@@ -713,14 +766,11 @@ export function abandonedCart({
 } = {}) {
   const name = customerName || 'there';
   const inner = `
-    ${hero('You left something.')}
-    ${para(`${escape(name)}, your ODORSTRIKE is still in the cart.`)}
-    ${panel(`
-      <p class="smf-text" style="font-family:${HEADING_FONT};font-size:18px;font-weight:700;color:${TEXT};margin:0 0 6px 0;">${PRODUCT_NAME}</p>
-      <p class="smf-text" style="margin:0;color:${TEXT};font-size:24px;font-weight:700;">&#8377;${PRICE}</p>
-    `)}
+    ${hero('You left something.', 'Still in your cart')}
+    ${para(`${escape(firstName(name))}, your ODORSTRIKE is still in the cart.`)}
+    ${table(`<tr><td style="padding:8px 0 0 0;">${productRow({ price: `&#8377;${PRICE}` })}</td></tr>`)}
+    ${muted('Free shipping on prepaid orders · Cash on Delivery available · 7-day returns')}
     ${button(productUrl, 'Finish order')}
-    ${footerHelp()}
   `;
   return {
     subject: 'You left something behind.',
@@ -746,14 +796,13 @@ export function paymentReminder({
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
   const inner = `
-    ${hero('One step left.')}
-    ${para(`${escape(name)}, order #${escape(cleanOrderId)} is reserved. Payment has not landed yet.`)}
+    ${hero('One step left.', 'Payment pending')}
+    ${para(`${escape(firstName(name))}, order #${escape(cleanOrderId)} is reserved. Payment has not landed yet.`)}
     ${panel(summaryTable(`
       ${kvRow('Order', `#${escape(cleanOrderId)}`)}
       ${kvRow('Amount due', `&#8377;${escape(rupee(amount))}`, true)}
     `))}
     ${button(trackUrl(cleanOrderId), 'Complete order')}
-    ${footerHelp()}
   `;
   return {
     subject: cleanHeader(`Payment pending — complete your order #${cleanOrderId}`),
@@ -779,12 +828,11 @@ export function orderCancelled({
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
   const inner = `
-    ${hero('Order cancelled')}
-    ${para(`${escape(name)}, ODORSTRIKE order #${escape(cleanOrderId)} has been cancelled.`)}
-    ${reason ? panel(`<p class="smf-text" style="margin:0;color:${TEXT};font-size:14px;">${escape(reason)}</p>`) : ''}
+    ${hero('Your order was cancelled.', 'Order cancelled')}
+    ${para(`${escape(firstName(name))}, ODORSTRIKE order #${escape(cleanOrderId)} has been cancelled.`)}
+    ${reason ? panel(summaryTable(kvRow('Reason', escape(reason)))) : ''}
     ${muted('If you already paid, the refund is in motion and usually lands in 5–7 business days. Cash on Delivery orders have nothing to reverse.')}
     ${button(SITE_URL, 'Shop again')}
-    ${footerHelp()}
   `;
   return {
     subject: cleanHeader(`Order cancelled — #${cleanOrderId}`),
@@ -813,15 +861,14 @@ export function refundProcessed({
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
   const inner = `
-    ${hero('Refund on its way')}
-    ${para(`${escape(name)}, we processed the refund for order #${escape(cleanOrderId)}.`)}
+    ${hero(`&#8377;${escape(rupee(amount))} is on its way back.`, 'Refund processed')}
+    ${para(`${escape(firstName(name))}, we processed the refund for order #${escape(cleanOrderId)}.`)}
     ${panel(summaryTable(`
       ${kvRow('Order', `#${escape(cleanOrderId)}`)}
-      ${kvRow('Refund', `&#8377;${escape(rupee(amount))}`, true)}
       ${kvRow('Back to', escape(method))}
+      ${kvRow('Refund', `&#8377;${escape(rupee(amount))}`, true)}
     `))}
     ${muted('It usually lands in 5–7 business days, depending on your bank. Same source as the original payment.')}
-    ${footerHelp()}
   `;
   return {
     subject: cleanHeader(`Refund processed — #${cleanOrderId}`),
@@ -849,16 +896,15 @@ export function paymentFailed({
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
   const inner = `
-    ${hero("Payment didn't land")}
-    ${para(`${escape(name)}, the prepaid attempt for order #${escape(cleanOrderId)} did not complete.`)}
+    ${hero("Your payment didn't go through.", 'Not charged')}
+    ${para(`${escape(firstName(name))}, the prepaid attempt for order #${escape(cleanOrderId)} did not complete.`)}
     ${panel(summaryTable(`
       ${kvRow('Order', `#${escape(cleanOrderId)}`)}
-      ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`, true)}
       ${kvRow('Status', statusPill('Not charged'))}
+      ${kvRow('Amount', `&#8377;${escape(rupee(amount))}`, true)}
     `))}
     ${muted('Nothing was taken from your account. You can try UPI again, or switch to Cash on Delivery at checkout.')}
     ${button(retryUrl, 'Try again')}
-    ${footerHelp()}
   `;
   return {
     subject: cleanHeader(`Payment didn't go through — #${cleanOrderId}`),
@@ -885,12 +931,11 @@ export function reviewRequest({
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
   const inner = `
-    ${hero("How's it working?")}
-    ${para(`${escape(name)}, you've had ODORSTRIKE for a few days.`)}
-    ${para('If it earned a place in your bag — gym, office, travel — a short review helps the next person decide. No pressure if it did not.')}
+    ${hero("How's it working?", 'Quick question')}
+    ${para(`${escape(firstName(name))}, you've had ODORSTRIKE for a few days.`)}
+    ${para('If it earned a spot in your day (office, commute, travel), a short review helps the next person decide. No pressure if it did not.')}
     ${button(reviewUrl, 'Leave a review')}
     ${muted(`Order #${escape(cleanOrderId)} · this is a one-time ask.`)}
-    ${footerHelp()}
   `;
   return {
     subject: cleanHeader("How's ODORSTRIKE treating your clothes?"),
@@ -900,7 +945,7 @@ export function reviewRequest({
       '',
       `${name}, you've had ODORSTRIKE for a few days.`,
       '',
-      'If it earned a place in your bag, a short review helps the next person decide.',
+      'If it earned a spot in your day, a short review helps the next person decide.',
       '',
       `Leave a review: ${reviewUrl}`,
       `Order: #${cleanOrderId}`,
