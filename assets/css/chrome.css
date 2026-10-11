@@ -468,3 +468,253 @@ html.sf-modal-open #smelloff-consent-bar{display:none !important}
 :is(h1,h2,h3) :is(.acid,.h1-dot,em){color:var(--acid) !important}
 ::selection{background:var(--acid);color:var(--on-acid)}
 .submit-btn,.cart-checkout,.cart-empty-cta,.cart-add2 button,.sf-menu__go{font-family:var(--body) !important;font-weight:500 !important;letter-spacing:.01em !important;text-transform:none !important}
+
+/* =====================================================================
+   §12 · INNER PAGES v2 + SHARED COMPONENTS (2026-10-11)
+   ---------------------------------------------------------------------
+   A computed-style audit of all 77 pages (390 and 1280, production build)
+   found six H1 sizes (52–83px), nine H2 sizes, 13 section-label styles,
+   21 button styles, and inner pages that were a bare text column with an
+   empty right half at desktop — a plainer, different-looking site from
+   the homepage and product page. This section is the ONE definition of:
+     .sf-btn / .sf-btn--ghost   primary and secondary buttons
+     .p-head (+ --media)        page masthead: label, H1, lede, photo card
+     .p-grid / .p-aside / .p-body   reading column + aside (sticky >=960)
+     .p-glance                  "At a glance": the policy in plain words
+     .p-toc                     "On this page" (static list; chrome.js
+                                lights the current section, opens it wide)
+     .sf-endcap                 closing product card (apply-chrome,
+                                `endcap: true`)
+   Why: NN/g heuristic 4 (one source of truth for components), NN/g
+   table-of-contents guidelines (in the body near the top on phones, a
+   sticky rail with the current section highlighted on desktop), Baymard
+   (policy jargon costs sales, so the plain summary comes first).
+   ===================================================================== */
+:root{
+  --fs-page-h1:clamp(34px,2.6vw + 24px,56px);
+  --fs-prose-h2:clamp(22px,1vw + 18px,28px);
+  --fs-page-lede:clamp(16px,.5vw + 14px,19px);
+  --sticky-top:104px;
+  --measure-page:700px;
+}
+
+/* ---- Buttons --------------------------------------------------------- */
+.sf-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:52px;padding:0 26px;border-radius:var(--sq-sm);
+  font-family:var(--body);font-size:15px;font-weight:500;letter-spacing:.01em;line-height:1.2;
+  text-decoration:none !important;text-align:center;white-space:nowrap;
+  background:var(--cta);color:var(--on-cta) !important;border:1px solid var(--cta) !important;
+  transition:background-color .15s ease,border-color .15s ease;
+}
+.sf-btn:hover{background:var(--cta-hi);border-color:var(--cta-hi) !important}
+.sf-btn--ghost{background:transparent;color:var(--text) !important;border-color:var(--border-strong) !important}
+.sf-btn--ghost:hover{background:var(--surface-2);border-color:var(--text) !important}
+.sf-btn:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+.p-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+@media(max-width:519px){.p-actions .sf-btn{flex:1 1 100%}}
+
+/* ---- Shell ----------------------------------------------------------- */
+/* Every inner page shares the site container, so its label and H1 start at
+   the same left edge as the logo; prose keeps a reading width inside it. */
+.p-main,.faq-main{
+  width:100%;max-width:var(--maxw) !important;margin:0 auto !important;
+  padding:clamp(28px,5vw,56px) max(var(--gutter),env(safe-area-inset-right,0px)) clamp(56px,8vw,96px) max(var(--gutter),env(safe-area-inset-left,0px)) !important;
+}
+.p-main--wide{max-width:var(--maxw) !important}
+
+/* ---- Masthead -------------------------------------------------------- */
+.p-head{position:relative;margin:0 0 clamp(28px,4vw,40px);padding-bottom:clamp(24px,3.5vw,36px);border-bottom:1px solid var(--border-default)}
+.p-head .p-eyebrow{margin:0 0 14px !important}
+.p-main h1,.p-head h1{
+  font-family:var(--display) !important;font-weight:700 !important;
+  font-size:var(--fs-page-h1) !important;line-height:1.04 !important;letter-spacing:-.03em !important;
+  text-transform:none !important;color:var(--text) !important;margin:0 0 16px !important;text-wrap:balance;
+}
+.p-head h1:last-child{margin-bottom:0 !important}
+.p-lede,.p-head .p-sub,.p-head .sub{
+  font-size:var(--fs-page-lede) !important;line-height:1.55 !important;color:var(--text-2) !important;
+  max-width:60ch;margin:0 !important;
+}
+.p-lede strong,.p-head .p-sub strong{color:var(--text)}
+.p-head__meta{margin:14px 0 0;font-size:12.5px;color:var(--muted)}
+.p-head__media{margin:24px 0 0;border-radius:var(--sq-xl);overflow:hidden;border:1px solid var(--border-subtle);background:var(--surface);aspect-ratio:16/10}
+.p-head__media picture{display:contents}
+.p-head__media img{display:block;width:100%;height:100%;object-fit:cover}
+@media(min-width:768px){
+  .p-head--media{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,64px);align-items:center}
+  .p-head--media .p-head__media{margin:0;aspect-ratio:1/1;box-shadow:0 60px 120px -70px rgba(var(--acid-rgb),.45)}
+}
+
+/* ---- Reading column + aside ----------------------------------------- */
+.p-main h2:not([class]),.p-body h2:not(.p-sublabel){
+  font-family:var(--display) !important;font-weight:700 !important;
+  font-size:var(--fs-prose-h2) !important;line-height:1.15 !important;letter-spacing:-.02em !important;
+  text-transform:none !important;color:var(--text) !important;
+  margin:clamp(36px,4vw,48px) 0 12px !important;scroll-margin-top:var(--sticky-top);
+}
+.p-body > :first-child,.p-body > h2:first-child{margin-top:0 !important}
+.p-main p,.p-main li{font-size:16px !important;line-height:1.7 !important}
+.p-main .p-head p.p-lede{font-size:var(--fs-page-lede) !important}
+.p-aside{margin:0 0 clamp(28px,5vw,40px)}
+@media(min-width:960px){
+  .p-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;column-gap:72px;align-items:start}
+  .p-body{grid-column:1;grid-row:1;max-width:var(--measure-page);min-width:0}
+  /* The aside stretches to the body's height; the summary scrolls away with
+     the page and only the contents list sticks (a sticky aside with both in
+     it left room for three entries). */
+  .p-aside{grid-column:2;grid-row:1;align-self:stretch;margin:0}
+  .p-main .p-toc{position:sticky;top:var(--sticky-top);max-height:calc(100vh - var(--sticky-top) - 24px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+}
+.p-top{display:inline-flex;align-items:center;gap:6px;margin-top:40px;font-size:14px;color:var(--muted) !important;border:0 !important;text-decoration:none}
+.p-top:hover{color:var(--text) !important}
+
+/* ---- At a glance ------------------------------------------------------ */
+.p-main .p-glance{background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--sq-lg);padding:18px 18px 6px;margin:0 0 12px}
+.p-main .p-glance__t{
+  display:flex;align-items:center;gap:10px;margin:0 0 4px !important;
+  font-family:var(--body) !important;font-size:var(--fs-eyebrow) !important;font-weight:600 !important;
+  letter-spacing:var(--ls-eyebrow) !important;text-transform:uppercase !important;color:var(--acid) !important;line-height:1.4 !important;
+}
+.p-main .p-glance ul{list-style:none !important;margin:0 !important;padding:0 !important}
+.p-main .p-glance li{
+  display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px;align-items:start;
+  margin:0 !important;padding:11px 0 !important;border-top:1px solid var(--border-subtle);
+  font-size:14.5px !important;line-height:1.5 !important;color:var(--text-2) !important;
+}
+.p-main .p-glance li:first-child{border-top:0}
+.p-main .p-glance li::marker{content:none}
+.p-main .p-glance li b{display:block;color:var(--text);font-weight:600}
+.p-glance svg{width:18px;height:18px;margin-top:2px;fill:none;stroke:var(--acid);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- On this page (same look as the blog's .toc) --------------------- */
+.p-main .p-toc{margin:0;border:1px solid var(--border-subtle);border-radius:var(--sq-lg);background:var(--surface)}
+.p-main .p-toc > summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:50px;padding:12px 18px;font-family:var(--body);font-size:var(--fs-eyebrow);font-weight:600;
+  letter-spacing:var(--ls-eyebrow);text-transform:uppercase;color:var(--text);
+}
+.p-main .p-toc > summary::-webkit-details-marker{display:none}
+.p-main .p-toc > summary::after{content:"+";font-size:20px;line-height:1;color:var(--acid);letter-spacing:0}
+.p-main .p-toc[open] > summary::after{content:"\2212"}
+.p-main .p-toc ol{list-style:none !important;counter-reset:ptoc;margin:0 !important;padding:0 8px 10px !important}
+.p-main .p-toc li{counter-increment:ptoc;margin:0 !important;padding:0 !important;font-size:14.5px !important;line-height:1.35 !important}
+.p-main .p-toc li::marker{content:none}
+.p-main .p-toc a{
+  display:grid;grid-template-columns:26px minmax(0,1fr);gap:6px;align-items:baseline;
+  padding:8px 8px;border-radius:10px;color:var(--text-2) !important;border:0 !important;text-decoration:none !important;
+}
+.p-main .p-toc a::before{content:counter(ptoc,decimal-leading-zero);font-size:11px;color:var(--muted)}
+.p-main .p-toc a:hover{color:var(--text) !important;background:var(--surface-2)}
+.p-main .p-toc a.is-active{color:var(--text) !important;background:rgba(242,245,239,.05)}
+.p-main .p-toc a.is-active::before{color:var(--acid)}
+@media(min-width:960px){
+  .p-main .p-toc{border:0;background:none;margin-top:18px}
+  .p-main .p-toc > summary{min-height:0;padding:0 0 10px 8px;border-bottom:1px solid var(--border-subtle);pointer-events:none}
+  .p-main .p-toc > summary::after{display:none}
+  .p-main .p-toc ol{padding:8px 0 0 !important}
+}
+
+/* ---- Sub-label inside a page (e.g. "Popular guides") ----------------- */
+.p-sublabel{
+  display:flex !important;align-items:center;gap:12px;margin:clamp(36px,5vw,56px) 0 14px !important;
+  font-family:var(--body) !important;font-size:var(--fs-eyebrow) !important;font-weight:500 !important;
+  letter-spacing:var(--ls-eyebrow) !important;text-transform:uppercase !important;color:var(--acid) !important;line-height:1.4 !important;
+}
+.p-sublabel::before{content:'';width:24px;height:1px;flex:0 0 24px;background:var(--acid);opacity:.7}
+
+/* ---- Link cards (404 popular guides, related links) ------------------ */
+.p-links{display:grid;gap:10px;list-style:none;margin:0;padding:0}
+@media(min-width:768px){.p-links{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.p-links a{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;height:100%;min-height:64px;
+  padding:16px 18px;border:1px solid var(--border-subtle);border-radius:var(--sq-lg);background:var(--surface);
+  color:var(--text) !important;font-size:15px;font-weight:500;line-height:1.4;text-decoration:none !important;
+  transition:border-color .15s ease,background-color .15s ease;
+}
+.p-links a:hover{border-color:var(--border-strong);background:var(--surface-2)}
+.p-links a::after{content:"\2192";color:var(--acid);flex:0 0 auto}
+
+/* ---- Closing product card ------------------------------------------- */
+.sf-endcap{padding:clamp(8px,2vw,16px) 0 clamp(48px,7vw,80px)}
+.sf-endcap__card{display:grid;border:1px solid var(--border-subtle);border-radius:var(--sq-xl);overflow:hidden;background:var(--surface)}
+.sf-endcap__media{display:block;margin:0;aspect-ratio:16/10;overflow:hidden;background:var(--surface-2)}
+.sf-endcap__media picture{display:contents}
+.sf-endcap__media img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.sf-endcap__copy{padding:22px 20px 24px}
+.sf-endcap__k{display:flex;align-items:center;gap:12px;margin:0;font-family:var(--body);font-size:var(--fs-eyebrow);font-weight:500;letter-spacing:var(--ls-eyebrow);text-transform:uppercase;color:var(--acid)}
+.sf-endcap__k::before{content:'';width:24px;height:1px;flex:0 0 24px;background:var(--acid);opacity:.7}
+.sf-endcap__t{margin:12px 0 10px;font-family:var(--display);font-weight:700;font-size:clamp(28px,1.6vw + 22px,42px);line-height:1.04;letter-spacing:-.03em;color:var(--text);text-wrap:balance}
+.sf-endcap__t .acid{color:var(--acid)}
+.sf-endcap__p{margin:0;max-width:46ch;font-size:15.5px;line-height:1.55;color:var(--text-2)}
+.sf-endcap__price{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin:18px 0 0}
+.sf-endcap__price b{font-family:var(--display);font-weight:700;font-size:30px;line-height:1;letter-spacing:-.02em;color:var(--text)}
+.sf-endcap__price s{font-size:13px;color:var(--muted)}
+.sf-endcap__price span{font-size:12px;font-weight:600;color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px}
+.sf-endcap__ctas{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin-top:14px}
+.sf-endcap__ctas .sf-btn{flex:1 1 100%}
+.sf-endcap__more{margin:0 auto;font-size:15px;font-weight:500;color:var(--text);text-decoration:underline;text-decoration-color:var(--acid);text-underline-offset:5px;text-decoration-thickness:1.5px}
+.sf-endcap__perks{margin:14px 0 0;font-size:12.5px;line-height:1.5;color:var(--muted)}
+@media(min-width:768px){
+  .sf-endcap__card{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);box-shadow:0 60px 120px -80px rgba(var(--acid-rgb),.45)}
+  .sf-endcap__media{position:relative;aspect-ratio:auto;min-height:360px}
+  .sf-endcap__media img{position:absolute;inset:0}
+  .sf-endcap__copy{align-self:center;padding:clamp(28px,4vw,52px)}
+  .sf-endcap__ctas .sf-btn{flex:0 1 auto}
+  .sf-endcap__more{margin:0}
+}
+
+/* ---- One label, one card radius, one link colour everywhere ---------- */
+/* Section labels that never joined soft.css §9 (solutions, 404, PDP). */
+.badge,.pd-eyebrow,.hero-eyebrow{
+  font-family:var(--body) !important;font-size:var(--fs-eyebrow) !important;font-weight:500 !important;
+  letter-spacing:var(--ls-eyebrow) !important;text-transform:uppercase;color:var(--acid) !important;
+}
+/* Card labels (inside a card, no rule): one size, one weight. */
+.qa-label,.geo-title,.callout-label,.cta-label,.toc-label,.article-category,.beta-tag,.c-k{
+  font-family:var(--body) !important;font-size:11px !important;font-weight:600 !important;letter-spacing:.14em !important;text-transform:uppercase;
+}
+.c-card{color:var(--text) !important;text-decoration:none !important}
+.c-card .c-v{color:var(--text-2)}
+.cta-box,.end-cta{border:1px solid var(--border-subtle) !important;background:var(--surface) !important;box-shadow:0 60px 120px -80px rgba(var(--acid-rgb),.35)}
+
+/* One H1 / prose-H2 scale on the content pages that are not .p-main:
+   FAQ, blog index + posts, /solutions. The homepage hero and the PDP keep
+   their own display sizes on purpose. */
+.b-hero h1,.article-wrap h1,.article-header h1,main.sf-wrap > .hero h1{
+  font-size:var(--fs-page-h1) !important;line-height:1.04 !important;letter-spacing:-.03em !important;
+}
+.article-wrap h2,main.sf-wrap h2{font-size:var(--fs-prose-h2) !important;line-height:1.15 !important;letter-spacing:-.02em !important}
+/* Wide pages (masthead with a photo) keep their prose at reading width. */
+.p-main > :not(.p-head):not(.p-grid):not(.grid):not(.p-links):not(.agg){max-width:var(--measure-page)}
+.p-head__media--desk{display:none}
+@media(min-width:768px){.p-head__media--desk{display:block}}
+.p-body{max-width:var(--measure-page);min-width:0}
+
+/* FAQ: same shell as the other inner pages; its "Common questions" heading
+   is a section label like everywhere else. */
+.faq-main .faq-h2{
+  display:flex !important;align-items:center;gap:12px;margin:0 0 16px !important;
+  font-family:var(--body) !important;font-size:var(--fs-eyebrow) !important;font-weight:500 !important;
+  letter-spacing:var(--ls-eyebrow) !important;text-transform:uppercase !important;color:var(--acid) !important;
+}
+.faq-main .faq-h2::before{content:'';width:24px;height:1px;flex:0 0 24px;background:var(--acid);opacity:.7}
+/* Reviews: "Write a review" is a secondary button like every other one. */
+.agg-cta{
+  display:inline-flex !important;align-items:center;justify-content:center;min-height:44px;padding:0 18px !important;
+  border-radius:var(--sq-sm) !important;border:1px solid var(--border-strong) !important;background:transparent !important;
+  color:var(--text) !important;font-family:var(--body) !important;font-size:14px !important;font-weight:500 !important;
+  letter-spacing:.01em !important;text-transform:none !important;
+}
+.agg-cta:hover{background:var(--surface-2) !important;border-color:var(--text) !important}
+/* /solutions: an inline style pinned the column to 900px and centred it, so
+   its H1 started ~210px right of every other page's. Same container now,
+   prose at reading width. */
+main.sf-wrap[style]{max-width:var(--maxw) !important}
+main.sf-wrap[style] > *{max-width:var(--measure-page)}
+main.sf-wrap[style] > .solution-grid,main.sf-wrap[style] > .grid{max-width:none}
+main.sf-wrap[style]{padding-top:clamp(28px,5vw,56px) !important;padding-bottom:clamp(56px,8vw,96px) !important}
+main.sf-wrap[style] > .hero:first-child{padding-top:0 !important;margin-top:0 !important}
+/* /solutions' .badge is the section label: same rule-and-text look. */
+main.sf-wrap .badge{display:flex !important;align-items:center;gap:12px;margin:0 0 16px !important}
+main.sf-wrap .badge::before{content:'';width:24px;height:1px;flex:0 0 24px;background:var(--acid);opacity:.7}

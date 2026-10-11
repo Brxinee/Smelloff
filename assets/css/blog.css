@@ -338,17 +338,18 @@ a:not([class]):hover, .inline-cta:hover, .sources a:hover { color: var(--acid); 
 .end-cta .price-row { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 0; }
 .end-cta .strike-price { font-size: 14px; color: var(--muted); text-decoration: line-through; }
 .end-cta .current-price { font-family: var(--font-display); font-weight:700; font-size: 26px; line-height: 1.1; color: var(--text); }
+/* Same pair as every other page (chrome.css §12): one filled button in
+   sentence case, then "View product details" as an underlined text link. */
 .end-cta .buy-btn, .end-cta .cta-link {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  min-height: 50px; padding: 0 20px; margin: 14px 8px 0 0;
-  font-family: var(--font-mono); font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
-  text-decoration: none !important; border-radius: var(--sq-sm, 8px); vertical-align: top;
+  min-height: 52px; margin: 16px 18px 0 0;
+  font-family: var(--font-body); font-weight: 500; font-size: 15px; letter-spacing: .01em; text-transform: none;
+  border-radius: var(--sq-sm, 8px); vertical-align: top;
 }
-.end-cta .buy-btn { background: var(--cta,#B8FF57); color: var(--on-cta, #0A0A0A) !important; }
+.end-cta .buy-btn { padding: 0 26px; text-decoration: none !important; background: var(--cta,#B8FF57); color: var(--on-cta, #0A0A0A) !important; }
 .end-cta .buy-btn:hover { background: var(--cta-hi,#D1FF8A); }
-.end-cta .cta-link { border: 1px solid var(--border-strong); color: var(--text); }
-.end-cta .cta-link:hover { border-color: var(--text); }
-@media (max-width: 559px) { .end-cta .buy-btn, .end-cta .cta-link { width: 100%; margin-right: 0; } .end-cta .cta-link { margin-top: 8px; } }
+.end-cta .cta-link { padding: 0 2px; color: var(--text) !important; text-decoration: underline !important; text-decoration-color: var(--acid) !important; text-underline-offset: 5px; text-decoration-thickness: 1.5px; }
+@media (max-width: 559px) { .end-cta .buy-btn { width: 100%; margin-right: 0; } .end-cta .cta-link { display: flex; margin: 6px auto 0; width: max-content; } }
 
 /* ---------------------------------------------------------------------
    FAQ — the accordion shape is soft.css §3; this is spacing + heading.

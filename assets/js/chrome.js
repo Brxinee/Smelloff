@@ -537,3 +537,41 @@
   window.startRazorpay = startRazorpay;
   installCheckoutOverrides();
 })();
+
+/* "On this page" on inner pages (.p-toc, chrome.css §12). Same behaviour as
+   the blog's TOC in blog-share.js: an open rail from 960px, folded on
+   phones until asked, and the section you're reading is highlighted. */
+(function(){
+  var toc = document.querySelector('.p-toc');
+  if (!toc) return;
+  var wide = window.matchMedia('(min-width: 960px)');
+  var sync = function(){ if (wide.matches) toc.open = true; };
+  sync();
+  if (wide.addEventListener) wide.addEventListener('change', sync);
+
+  var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+  var byId = {};
+  var targets = links.map(function(a){
+    var el = document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));
+    if (el) byId[el.id] = a;
+    return el;
+  }).filter(Boolean);
+  if (!targets.length) return;
+  var current = null, queued = false;
+  var setActive = function(){
+    queued = false;
+    var line = window.innerHeight * 0.33, pick = targets[0].id;
+    targets.forEach(function(t){ if (t.getBoundingClientRect().top <= line) pick = t.id; });
+    if (current === pick) return;
+    current = pick;
+    links.forEach(function(a){
+      var on = byId[pick] === a;
+      a.classList.toggle('is-active', on);
+      if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    });
+  };
+  window.addEventListener('scroll', function(){
+    if (!queued) { queued = true; window.requestAnimationFrame(setActive); }
+  }, { passive: true });
+  setActive();
+})();

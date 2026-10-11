@@ -106,7 +106,7 @@ function transform(html) {
   html = html.replace(/<div class="end-cta">(?!<img class="cta-img")/g,
     '<div class="end-cta"><img class="cta-img" src="/assets/odorstrike-bottle-cutout.webp" alt="" width="241" height="915" loading="lazy" decoding="async">');
   html = html.replace(/(<a [^>]*class="buy-btn"[^>]*>(?:(?!<\/a>)[\s\S])*<\/a>)(?!\s*<a class="cta-link")/g,
-    '$1 <a class="cta-link" href="/odorstrike">View product →</a>');
+    '$1 <a class="cta-link" href="/odorstrike">View product details</a>');
 
   // 5b · Every table scrolls inside its own keyboard-reachable region on
   // phones (13 bare <table>s were pushing the page 4–50px wide).
