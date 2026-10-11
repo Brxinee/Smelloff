@@ -17,10 +17,20 @@ test('photo placeholder slots are visible on the homepage and PDP', () => {
   assert.doesNotMatch(fs.readFileSync('odorstrike.html', 'utf8'), /<section class="pd-sec" id="size"[^>]*\shidden>/);
 });
 
-// Quiet premium pass (2026-10-11): the accent is a detail, not a surface.
-test('no acid bands or acid-filled primary buttons', () => {
+// Brand palette (owner, 2026-10-11): Carbon Black, Ice White, Signal Lime.
+test('tokens use the brand palette and buttons are Signal Lime', () => {
+  for (const f of ['assets/css/tokens.css', 'index.html', 'odorstrike.html']) {
+    const src = fs.readFileSync(f, 'utf8');
+    for (const t of ['--ink:#0A0A0A;', '--text:#F2F5EF;', '--acid:#B8FF57;', '--cta:#B8FF57;']) {
+      assert.ok(src.includes(t), `${f}: missing ${t}`);
+    }
+  }
+});
+
+// Calm layout (2026-10-11): no full-width acid bands; lime is the accent.
+test('no acid bands', () => {
   const idx = fs.readFileSync('index.html', 'utf8');
-  for (const sel of ['.final{', '.ticker{', '.hm-btn{']) {
+  for (const sel of ['.final{', '.ticker{']) {
     const rule = idx.slice(idx.indexOf('  ' + sel), idx.indexOf('}', idx.indexOf('  ' + sel)));
     assert.doesNotMatch(rule, /background:var\(--acid\)/, `index.html ${sel} is acid again`);
   }

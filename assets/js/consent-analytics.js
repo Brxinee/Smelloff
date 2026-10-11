@@ -69,10 +69,10 @@
 
   function injectConsentBar() {
     if (document.getElementById('smelloff-consent-bar')) return;
-    var css = '#smelloff-consent-bar{display:block;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#111;border-top:1px solid rgba(244,241,234,.12);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));font-family:"Inter Tight","DM Sans",system-ui,sans-serif}' +
+    var css = '#smelloff-consent-bar{display:block;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#111;border-top:1px solid rgba(242,245,239,.12);padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));font-family:"Inter Tight","DM Sans",system-ui,sans-serif}' +
       '#smelloff-consent-bar .cb-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}' +
-      '#smelloff-consent-bar p{flex:1;font-size:13px;color:#9a958d;line-height:1.5;margin:0;min-width:200px}' +
-      '#smelloff-consent-bar p a{color:#F4F1EA;text-decoration:underline;text-underline-offset:2px}' +
+      '#smelloff-consent-bar p{flex:1;font-size:13px;color:#9DA398;line-height:1.5;margin:0;min-width:200px}' +
+      '#smelloff-consent-bar p a{color:#B8FF57;text-decoration:underline;text-underline-offset:2px}' +
       // flex-wrap + shrink: this row was `flex-shrink:0` with no wrap, so at
       // 320px the two buttons measured 315px inside a 300px content box and
       // "Reject non-essential" hung off the right edge of the screen. Below
@@ -81,8 +81,8 @@
       '#smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}' +
       '#smelloff-consent-bar button{font-family:var(--body,system-ui,sans-serif);font-size:14px;font-weight:500;letter-spacing:.01em;padding:9px 18px;min-height:44px;border-radius:8px;cursor:pointer}' +
       '@media(max-width:520px){#smelloff-consent-bar .cb-actions{width:100%}#smelloff-consent-bar .cb-actions button{flex:1 1 130px;padding-inline:10px}}' +
-      '#smelloff-consent-bar .cb-accept{background:#F4F1EA;color:#080808;border:none}' +
-      '#smelloff-consent-bar .cb-reject{background:transparent;color:#f4f1ea;border:1px solid rgba(244,241,234,.25)}';
+      '#smelloff-consent-bar .cb-accept{background:#F2F5EF;color:#0A0A0A;border:none}' +
+      '#smelloff-consent-bar .cb-reject{background:transparent;color:#F2F5EF;border:1px solid rgba(242,245,239,.25)}';
     var style = document.createElement('style');
     style.textContent = css;
     document.head.appendChild(style);

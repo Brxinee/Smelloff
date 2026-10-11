@@ -100,8 +100,8 @@ function template({ kicker, top, hi, photo, focal, tone }) {
   src:url('${F('jetbrains-mono-normal-latin-400.woff2')}') format('woff2');}
 
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:${CANVAS.width}px;height:${CANVAS.height}px;overflow:hidden;background:#080808}
-.stage{position:relative;width:${CANVAS.width}px;height:${CANVAS.height}px;background:#080808;overflow:hidden}
+html,body{width:${CANVAS.width}px;height:${CANVAS.height}px;overflow:hidden;background:#0A0A0A}
+.stage{position:relative;width:${CANVAS.width}px;height:${CANVAS.height}px;background:#0A0A0A;overflow:hidden}
 
 /* --- photography: anchored right, bled off the top/bottom/right edges ----- */
 .shot{position:absolute;inset:0 0 0 34%;overflow:hidden}
@@ -109,7 +109,7 @@ html,body{width:${CANVAS.width}px;height:${CANVAS.height}px;overflow:hidden;back
 /* blend the photo's left edge into the ink so there is no hard seam or border
    (the research flags artificial coloured borders as commercial noise) */
 .shot::after{content:'';position:absolute;inset:0;background:
-  linear-gradient(90deg,#080808 0%,rgba(8,8,8,.97) 14%,rgba(8,8,8,.72) 30%,rgba(8,8,8,.28) 48%,rgba(8,8,8,0) 66%)}
+  linear-gradient(90deg,#0A0A0A 0%,rgba(8,8,8,.97) 14%,rgba(8,8,8,.72) 30%,rgba(8,8,8,.28) 48%,rgba(8,8,8,0) 66%)}
 /* keep the bottom third weighted so the wordmark always has contrast under it */
 .vig{position:absolute;inset:0;background:
   radial-gradient(120% 85% at 78% 38%,rgba(184,255,87,.10),transparent 58%),
@@ -121,10 +121,10 @@ html,body{width:${CANVAS.width}px;height:${CANVAS.height}px;overflow:hidden;back
 .copy{position:absolute;left:96px;top:0;bottom:0;width:760px;display:flex;flex-direction:column;justify-content:center;z-index:4}
 .kicker{font-family:'JetBrains Mono',monospace;font-size:26px;letter-spacing:.24em;text-transform:uppercase;color:#B8FF57;margin-bottom:30px;display:flex;align-items:center;gap:18px}
 .kicker::before{content:'';width:52px;height:3px;background:#B8FF57;flex:none}
-.head{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:${size}px;line-height:.98;letter-spacing:-.022em;color:#F4F1EA;text-wrap:balance}
+.head{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:${size}px;line-height:.98;letter-spacing:-.022em;color:#F2F5EF;text-wrap:balance}
 .head .hi{color:#B8FF57;display:block}
-.mark{position:absolute;left:96px;bottom:64px;line-height:1.4;font-family:'JetBrains Mono',monospace;font-size:23px;letter-spacing:.2em;text-transform:uppercase;color:#9A958D;z-index:4}
-.mark b{color:#F4F1EA;font-weight:400}
+.mark{position:absolute;left:96px;bottom:64px;line-height:1.4;font-family:'JetBrains Mono',monospace;font-size:23px;letter-spacing:.2em;text-transform:uppercase;color:#9DA398;z-index:4}
+.mark b{color:#F2F5EF;font-weight:400}
 </style></head><body><div class="stage">
   <div class="shot"><img src="${fileUrl(photoPath)}" alt=""></div>
   <div class="vig"></div><div class="grain"></div>

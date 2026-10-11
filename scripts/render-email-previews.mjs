@@ -86,17 +86,17 @@ function writeIndex(withPng) {
 <title>Smelloff email templates</title>
 <style>
   :root { color-scheme: light; }
-  body { margin:0; background:#EDEDE8; color:#080808; font-family: Arial, Helvetica, sans-serif; }
+  body { margin:0; background:#EDEDE8; color:#0A0A0A; font-family: Arial, Helvetica, sans-serif; }
   header { padding:32px 20px 16px; max-width:720px; margin:0 auto; }
   h1 { font-size:26px; letter-spacing:-0.3px; margin:0 0 10px; font-weight:700; }
   p { color:#6B6B66; font-size:15px; line-height:1.55; margin:0 0 14px; }
-  .why { background:#FFFFFE; border:1px solid #E2E2DC; border-left:3px solid #B8FF57; padding:16px 18px; margin:0 0 20px; font-size:14px; color:#080808; }
+  .why { background:#FFFFFE; border:1px solid #E2E2DC; border-left:3px solid #B8FF57; padding:16px 18px; margin:0 0 20px; font-size:14px; color:#0A0A0A; }
   .why strong { display:block; margin:0 0 6px; }
   .nav { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 8px; }
-  .nav a { color:#080808; background:#B8FF57; text-decoration:none; font-size:12px; font-weight:700; padding:8px 10px; border:2px solid #080808; }
+  .nav a { color:#0A0A0A; background:#B8FF57; text-decoration:none; font-size:12px; font-weight:700; padding:8px 10px; border:2px solid #0A0A0A; }
   section { max-width:720px; margin:0 auto 40px; padding:0 16px 32px; border-bottom:1px solid #E2E2DC; }
   .meta { font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:#6B6B66; margin:0 0 6px; }
-  .subject { font-size:14px; color:#080808; margin:0 0 16px; }
+  .subject { font-size:14px; color:#0A0A0A; margin:0 0 16px; }
   h2 { font-size:18px; margin:0 0 8px; }
   img.shot { width:100%; max-width:640px; height:auto; border:1px solid #E2E2DC; background:#FFFFFE; display:block; }
   iframe { width:100%; max-width:640px; height:1100px; border:1px solid #E2E2DC; background:#FFFFFE; display:block; }
