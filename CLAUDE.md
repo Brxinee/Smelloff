@@ -40,6 +40,24 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Price back to ₹229; COD handling ₹89 (2026-10-11, owner's call)
+- **₹229 prepaid** (was ₹299), MRP ₹499 → **54% off**. COD handling charge
+  **₹89** (was ₹60) → **₹318** collected for one bottle. Supersedes the prices
+  in "Price ₹299; COD amount only in checkout" below; its rule on *where* the
+  COD amount may appear still holds.
+- Source: `config/product.json` (price/paise, discountPercent, codFee/paise,
+  priceCod/paise). Copies: `CFG.PRICES.solo` / `CFG.COD_FEE` in
+  `odorstrike.html`, the chrome.js fallback, the PDP `product:price` meta.
+  Schema, `products.json`, `merchant-feed.xml` regenerated (`npm run schema`).
+- Derived blog maths: ~₹0.92 per spray, ~₹2.29 per refresh, ₹4.58 per ml,
+  ₹1.83–2.86 per use, ~₹7.39 per day.
+- **Checkout does not use the Supabase `create-order` edge function.** Both
+  checkout paths (`odorstrike.html`, `chrome.js`) POST to the Worker's
+  `/api/create-order`, which writes `rest/v1/orders` directly with prices from
+  `config/product.json`, so a price change ships with the site. The deployed
+  edge function (v5) is a stale standalone copy that hard-codes 299 / 60 and
+  nothing calls it; redeploy or delete it before anything starts using it.
+
 ## Quiet premium pass + placeholders back (2026-10-11, owner's call)
 "Too bold — conservative, premium, modern." Palette unchanged; the accent
 became a detail instead of a surface. **Supersedes** the placeholder hiding

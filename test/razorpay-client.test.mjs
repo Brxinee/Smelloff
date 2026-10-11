@@ -30,15 +30,15 @@ test('createRazorpayOrder posts JSON with Basic auth and returns the order', asy
   let seen;
   await withFetch(async (url, init) => {
     seen = { url, init };
-    return new Response(JSON.stringify({ id: 'order_1', amount: 29900, currency: 'INR' }), { status: 200 });
+    return new Response(JSON.stringify({ id: 'order_1', amount: 22900, currency: 'INR' }), { status: 200 });
   }, async () => {
-    const order = await createRazorpayOrder({ amount: 29900, currency: 'INR', receipt: 'SMF-20261010-0001' });
+    const order = await createRazorpayOrder({ amount: 22900, currency: 'INR', receipt: 'SMF-20261010-0001' });
     assert.equal(order.id, 'order_1');
   });
   assert.equal(seen.url, 'https://api.razorpay.com/v1/orders');
   assert.equal(seen.init.method, 'POST');
   assert.equal(seen.init.headers.Authorization, `Basic ${btoa('rzp_test_abc:shh')}`);
-  assert.deepEqual(JSON.parse(seen.init.body), { amount: 29900, currency: 'INR', receipt: 'SMF-20261010-0001' });
+  assert.deepEqual(JSON.parse(seen.init.body), { amount: 22900, currency: 'INR', receipt: 'SMF-20261010-0001' });
 });
 
 test('fetchRazorpayPayment GETs the payment by id', async () => {

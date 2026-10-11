@@ -21,10 +21,10 @@ test('checkout exposes optional COD without replacing the working Razorpay path'
   assert.doesNotMatch(chrome, /\[50, 150, 300, 750, 1500\]\.forEach/);
 });
 
-test('product pricing keeps prepaid at ₹299 and COD fee at ₹60', () => {
-  assert.equal(product.product.price, 299);
-  assert.equal(product.product.codFee, 60);
-  assert.equal(product.product.priceCod, 359);
+test('product pricing keeps prepaid at ₹229 and COD fee at ₹89', () => {
+  assert.equal(product.product.price, 229);
+  assert.equal(product.product.codFee, 89);
+  assert.equal(product.product.priceCod, 318);
 });
 
 test('Order API has an explicit COD branch and preserves prepaid Razorpay', () => {

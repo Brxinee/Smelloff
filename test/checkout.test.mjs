@@ -153,7 +153,7 @@ test('create-order: rejects manipulated price/amount', async () => {
   const req = {
     method: 'POST',
     headers: {},
-    body: { quantity: 1, amount: 1000, payment_method: 'upi' } // ₹10 instead of ₹299 (29900 paise)
+    body: { quantity: 1, amount: 1000, payment_method: 'upi' } // ₹10 instead of ₹229 (22900 paise)
   };
   const res = createMockRes();
   await createOrderHandler(req, res);
@@ -175,7 +175,7 @@ test('create-order: an order number taken by another customer gets a fresh one',
     }
     const code = decodeURIComponent((u.match(/order_code=eq\.([^&]+)/) || [])[1] || '');
     const rows = code === taken
-      ? [{ id: 'row-1', order_code: taken, customer_phone: '9000000001', customer_email: 'first@example.com', amount: 35900, payment_method: 'cod', status: 'placed' }]
+      ? [{ id: 'row-1', order_code: taken, customer_phone: '9000000001', customer_email: 'first@example.com', amount: 31800, payment_method: 'cod', status: 'placed' }]
       : [];
     return new Response(JSON.stringify(rows), { status: 200 });
   };
@@ -186,7 +186,7 @@ test('create-order: an order number taken by another customer gets a fresh one',
       headers: {},
       body: {
         payment_method: 'cod', order_code: taken, email: 'second@example.com', phone: '9000000002',
-        items: [{ quantity: 1, price: 299 }], amount: 35900,
+        items: [{ quantity: 1, price: 229 }], amount: 31800,
         address: { name: 'B', line: '1 Road', city: 'Hyderabad', state: 'Telangana', pincode: '500018' },
       },
     }, res);
@@ -396,7 +396,7 @@ test('Step 4 Backend: webhook raw body HMAC verification and replay protection',
         entity: {
           id: 'pay_test_001',
           order_id: 'order_test_001',
-          amount: 29900,
+          amount: 22900,
           currency: 'INR'
         }
       }
@@ -477,24 +477,24 @@ test('Step 4 Backend: webhook handles payment.failed without downgrading confirm
 });
 
 test('Step 4 Backend: amount validation logic strictly enforces paise integrity', () => {
-  const unitPrice = 299;
-  const codFee = 60;
+  const unitPrice = 229;
+  const codFee = 89;
 
-  // Prepaid 1 unit = 29900 paise
+  // Prepaid 1 unit = 22900 paise
   const prepaid1 = unitPrice * 1 * 100;
-  assert.equal(prepaid1, 29900);
+  assert.equal(prepaid1, 22900);
 
-  // Prepaid 2 units = 59800 paise
+  // Prepaid 2 units = 45800 paise
   const prepaid2 = unitPrice * 2 * 100;
-  assert.equal(prepaid2, 59800);
+  assert.equal(prepaid2, 45800);
 
-  // COD 1 unit = 35900 paise
+  // COD 1 unit = 31800 paise
   const cod1 = (unitPrice * 1 + codFee) * 100;
-  assert.equal(cod1, 35900);
+  assert.equal(cod1, 31800);
 
-  // COD 2 units = 65800 paise
+  // COD 2 units = 54700 paise
   const cod2 = (unitPrice * 2 + codFee) * 100;
-  assert.equal(cod2, 65800);
+  assert.equal(cod2, 54700);
 });
 
 test('Multi-quantity orderPayload calculation integrity in chrome.js', () => {
@@ -504,11 +504,11 @@ test('Multi-quantity orderPayload calculation integrity in chrome.js', () => {
 
   // Verify static submitText in odorstrike.html matches default total
   const html = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.ok(html.includes('<span id="submitText">Buy ODORSTRIKE · ₹299</span>'), 'Static submit button must match default total ₹299');
+  assert.ok(html.includes('<span id="submitText">Buy ODORSTRIKE · ₹229</span>'), 'Static submit button must match default total ₹229');
 
   // Exhaustive quantity testing: 1, 2, 3, 4, 5, 10
-  const unitPrice = 299;
-  const codFee = 60;
+  const unitPrice = 229;
+  const codFee = 89;
   const testQuantities = [1, 2, 3, 4, 5, 10];
 
   for (const q of testQuantities) {
@@ -826,7 +826,7 @@ test('api/send-email: orderConfirmation allows customer checkout dispatch while 
     body: {
       type: 'orderConfirmation',
       to: 'customer@example.com',
-      data: { orderId: 'SMF-20260913-1234', customerName: 'Test Buyer', amount: '299' }
+      data: { orderId: 'SMF-20260913-1234', customerName: 'Test Buyer', amount: '229' }
     }
   }, resConfirm);
   const status = resConfirm._get().statusCode;
@@ -898,7 +898,7 @@ test('api/send-email: orderConfirmation security boundaries, token verification,
     customer_phone: '9876543210',
     status: 'confirmed',
     payment_method: 'prepaid',
-    amount: 29900,
+    amount: 22900,
     address: {
       name: 'Authoritative Buyer',
       line: '123 Verified Street',
@@ -1078,7 +1078,7 @@ test('api/send-email: distributed idempotency across 10 concurrent requests (at 
     customer_phone: '9876543210',
     status: 'confirmed',
     payment_method: 'prepaid',
-    amount: 29900,
+    amount: 22900,
     address: {
       name: 'Concurrent Buyer',
       line: '123 Multi-Thread Way',
@@ -1192,8 +1192,8 @@ test('api/send-email: multi-instance simulation (Instance A and Instance B both 
     customer_phone: '9876543210',
     status: 'confirmed',
     payment_method: 'cod',
-    amount: 35900,
-    cod_fee: 6000,
+    amount: 31800,
+    cod_fee: 8900,
     address: { name: 'Shared DB Buyer', line: '789 Distributed St', city: 'Delhi', state: 'Delhi', pincode: '110001' },
     confirmation_email_sent_at: null,
     confirmation_email_claimed_at: null,
@@ -1277,7 +1277,7 @@ test('api/send-email: provider error handling & retryability (Resend failure rel
     customer_phone: '9876543210',
     status: 'confirmed',
     payment_method: 'prepaid',
-    amount: 29900,
+    amount: 22900,
     address: { name: 'Retryable Buyer', line: '321 Fault Tol Ave', city: 'Pune', state: 'MH', pincode: '411001' },
     confirmation_email_sent_at: null,
     confirmation_email_claimed_at: null,
@@ -1371,7 +1371,7 @@ test('api/send-email: stale claim recovery (crashed instance claim > 90s is safe
     customer_phone: '9876543210',
     status: 'confirmed',
     payment_method: 'prepaid',
-    amount: 29900,
+    amount: 22900,
     address: { name: 'Stale Claim Buyer', line: '999 Recovery Rd', city: 'Chennai', state: 'Tamil Nadu', pincode: '600001' },
     confirmation_email_sent_at: null,
     confirmation_email_claimed_at: new Date(Date.now() - 120 * 1000).toISOString(),
@@ -1463,7 +1463,7 @@ test('api/send-email: Resend SDK receives deterministic idempotencyKey option, c
     customer_phone: '9876543210',
     status: 'confirmed',
     payment_method: 'prepaid',
-    amount: 29900,
+    amount: 22900,
     address: { name: 'Key Test Buyer', line: '555 Key St', city: 'Mumbai', state: 'Maharashtra', pincode: '400001' },
     confirmation_email_sent_at: null,
     confirmation_email_claimed_at: null,
@@ -1569,7 +1569,7 @@ test('api/send-email: crash after provider acceptance before DB finalize is dedu
     customer_phone: '9876543210',
     status: 'confirmed',
     payment_method: 'prepaid',
-    amount: 29900,
+    amount: 22900,
     address: { name: 'Crash Test Buyer', line: '777 Crash Ave', city: 'Delhi', state: 'Delhi', pincode: '110001' },
     confirmation_email_sent_at: null,
     // Claimed 100 seconds ago by Worker A which crashed right after Resend accepted the email
@@ -1690,7 +1690,7 @@ test('P1 Capture Authority: verify-payment rejects authorized-only payment and a
 
   const mockOrder = {
     order_code: 'SMF-20260913-1111',
-    amount: 29900,
+    amount: 22900,
     status: 'upi_pending',
     payment_method: 'upi',
     payment_attempt_id: 'order_test_capture_123',
@@ -1715,7 +1715,7 @@ test('P1 Capture Authority: verify-payment rejects authorized-only payment and a
     id,
     order_id: orderId,
     status: 'authorized',
-    amount: 29900,
+    amount: 22900,
     currency: 'INR'
   });
 
@@ -1740,7 +1740,7 @@ test('P1 Capture Authority: verify-payment rejects authorized-only payment and a
     id,
     order_id: orderId,
     status: 'captured',
-    amount: 29900,
+    amount: 22900,
     currency: 'INR'
   });
 
@@ -1806,7 +1806,7 @@ test('P1 Capture Authority: webhook handles payment.authorized without confirmin
 
   const mockOrder = {
     order_code: 'SMF-20260913-2222',
-    amount: 29900,
+    amount: 22900,
     status: 'upi_pending',
     payment_method: 'upi',
     payment_attempt_id: 'order_webhook_capture_456',
@@ -1824,7 +1824,7 @@ test('P1 Capture Authority: webhook handles payment.authorized without confirmin
         entity: {
           id: 'pay_wh_auth_456',
           order_id: 'order_webhook_capture_456',
-          amount: 29900,
+          amount: 22900,
           currency: 'INR',
           status: 'authorized'
         }
@@ -1856,7 +1856,7 @@ test('P1 Capture Authority: webhook handles payment.authorized without confirmin
         entity: {
           id: 'pay_wh_auth_456',
           order_id: 'order_webhook_capture_456',
-          amount: 29900,
+          amount: 22900,
           currency: 'INR',
           status: 'captured'
         }
@@ -1913,9 +1913,9 @@ test('Post-Capture Financial Lifecycle Matrix: 16 verification scenarios', async
   assert.equal(isValidTransition('delivered', 'cancelled', 'prepaid'), false);
 
   // 7. full refund amounts match authoritative paise for all quantities (1, 2, 3, 5, 10)
-  const basePricePaise = 29900;
+  const basePricePaise = 22900;
   const quantities = [1, 2, 3, 5, 10];
-  const expectedRefundPaise = [29900, 59800, 89700, 149500, 299000];
+  const expectedRefundPaise = [22900, 45800, 68700, 114500, 229000];
   quantities.forEach((qty, idx) => {
     assert.equal(qty * basePricePaise, expectedRefundPaise[idx]);
   });

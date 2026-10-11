@@ -40,7 +40,7 @@ export const BASE_PRODUCT = {
 };
 
 export const BUNDLES_CONFIG = {
-  enabled: false, // Pure single-SKU configuration (₹299 per 50ml unit)
+  enabled: false, // Pure single-SKU configuration (₹229 per 50ml unit)
   variants: {
     solo: { id: 'solo', qty: 1, title: '1 × 50ml Bottle', sku: P.sku, price: P.price, mrp: P.mrp, badge: 'Standard' }
   }

@@ -68,11 +68,11 @@ test('create-order: handles missing Razorpay credentials gracefully', async () =
       method: 'POST',
       headers: { origin: 'https://smelloff.in' },
       body: {
-        amount: 29900,
+        amount: 22900,
         payment_method: 'upi',
         phone: '9876543210',
         email: 'buyer@smelloff.test',
-        items: [{ name: 'ODORSTRIKE Fabric Mist', variant: '50ml', quantity: 1, price: 299 }]
+        items: [{ name: 'ODORSTRIKE Fabric Mist', variant: '50ml', quantity: 1, price: 229 }]
       }
     };
     const res = createMockRes();
@@ -142,7 +142,7 @@ test('verify-payment: rejects manual UTR submission on modern Razorpay prepaid o
           status: 'upi_pending',
           payment_method: 'upi',
           payment_attempt_id: 'order_rzp_mock_12345',
-          amount: 29900
+          amount: 22900
         }]
       };
     }
@@ -234,7 +234,7 @@ test('verify-payment: Razorpay order binding test matrix', async () => {
     status: 'upi_pending',
     payment_method: 'upi',
     payment_attempt_id: 'order_rzp_A',
-    amount: 29900
+    amount: 22900
   };
 
   const orderB = {
@@ -244,7 +244,7 @@ test('verify-payment: Razorpay order binding test matrix', async () => {
     status: 'upi_pending',
     payment_method: 'upi',
     payment_attempt_id: 'order_rzp_B',
-    amount: 59800
+    amount: 45800
   };
 
   // Mock fetch router
@@ -295,7 +295,7 @@ test('verify-payment: Razorpay order binding test matrix', async () => {
     mockPaymentFetchResult = {
       id: paymentIdA,
       order_id: 'order_rzp_A',
-      amount: 29900,
+      amount: 22900,
       currency: 'INR',
       status: 'captured'
     };
@@ -364,7 +364,7 @@ test('verify-payment: Razorpay order binding test matrix', async () => {
     mockPaymentFetchResult = {
       id: paymentIdA,
       order_id: 'order_rzp_A',
-      amount: 59800, // 59800 instead of 29900
+      amount: 45800, // 45800 instead of 22900
       currency: 'INR',
       status: 'captured'
     };
@@ -378,7 +378,7 @@ test('verify-payment: Razorpay order binding test matrix', async () => {
     mockPaymentFetchResult = {
       id: paymentIdA,
       order_id: 'order_rzp_A',
-      amount: 29900,
+      amount: 22900,
       currency: 'USD',
       status: 'captured'
     };
@@ -392,7 +392,7 @@ test('verify-payment: Razorpay order binding test matrix', async () => {
     mockPaymentFetchResult = {
       id: paymentIdA,
       order_id: 'order_rzp_A',
-      amount: 29900,
+      amount: 22900,
       currency: 'INR',
       status: 'failed'
     };
