@@ -28,10 +28,10 @@
           '<div id="rvStepAuth" style="display:none">' +
             '<div class="rv-modal-badge">' +
               '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>' +
-              ' Verified Buyer Required' +
+              ' Verified buyers only' +
             '</div>' +
-            '<h2 id="rvModalTitle">Write a Verified Review</h2>' +
-            '<p class="rv-desc">To ensure 100% genuine feedback, only customers who have bought ODORSTRIKE can post reviews. Enter your Order ID &amp; Phone number to verify your purchase.</p>' +
+            '<h2 id="rvModalTitle">Write a review</h2>' +
+            '<p class="rv-desc">To ensure 100% genuine feedback, only customers who have bought ODORSTRIKE can post reviews. Enter your order ID and phone number to verify your purchase.</p>' +
 
             '<form onsubmit="verifyOrderAndContinue(event); return false;">' +
               '<div class="rv-field">' +
@@ -39,14 +39,14 @@
                 '<input type="text" id="rvAuthCode" placeholder="SMF-20260610-1234" autocomplete="off" autocapitalize="characters" required>' +
               '</div>' +
               '<div class="rv-field">' +
-                '<label for="rvAuthPhone">Phone Number</label>' +
+                '<label for="rvAuthPhone">Phone number</label>' +
                 '<input type="tel" id="rvAuthPhone" placeholder="10-digit mobile number" maxlength="10" pattern="[0-9]{10}" inputmode="numeric" required>' +
               '</div>' +
-              '<button type="submit" class="rv-primary-btn" id="rvVerifyBtn">Verify Order &amp; Continue →</button>' +
+              '<button type="submit" class="rv-primary-btn" id="rvVerifyBtn">Verify order</button>' +
               '<div id="rvAuthError" class="rv-error-msg"></div>' +
             '</form>' +
             '<div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);font-size:13px;color:rgba(255,255,255,0.6);text-align:center">' +
-              'Haven’t ordered yet? <a href="/odorstrike#buy" style="color:var(--text,#F2F5EF);font-weight:500;text-decoration:underline;text-underline-offset:4px">Buy ODORSTRIKE ₹229 →</a>' +
+              'Haven’t ordered yet? <a href="/odorstrike?buy=1" class="rv-buy-link">Buy now — ₹229</a>' +
             '</div>' +
           '</div>' +
 
@@ -54,13 +54,13 @@
           '<div id="rvStepForm" style="display:none">' +
             '<div class="rv-modal-badge">' +
               '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>' +
-              ' Verified Purchase Unlocked' +
+              ' Order verified' +
             '</div>' +
-            '<h2>Rate &amp; Review ODORSTRIKE</h2>' +
+            '<h2>Rate ODORSTRIKE</h2>' +
             '<p class="rv-desc">Share how ODORSTRIKE handled sweat, dampness, or shirt odors for you.</p>' +
 
             '<div class="rv-field">' +
-              '<label>Your Overall Rating</label>' +
+              '<label>Your rating</label>' +
               '<div class="rv-stars-picker" id="rvStarPicker" role="radiogroup" aria-label="Rating stars">' +
                 '<button type="button" data-star="1" aria-label="1 star">★</button>' +
                 '<button type="button" data-star="2" aria-label="2 stars">★</button>' +
@@ -71,14 +71,14 @@
             '</div>' +
 
             '<div class="rv-field">' +
-              '<label for="rvText">Your Review</label>' +
+              '<label for="rvText">Your review</label>' +
               '<textarea id="rvText" placeholder="Did it clear collar odor? How did it hold up on a gym tee, a hoodie or a blazer? Be specific." maxlength="400" required></textarea>' +
               '<div style="font-size:11px;color:rgba(255,255,255,0.4);text-align:right;margin-top:4px" id="rvCharCount">0/400</div>' +
             '</div>' +
 
             '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
               '<div class="rv-field">' +
-                '<label for="rvName">Your Name</label>' +
+                '<label for="rvName">Your name</label>' +
                 '<input type="text" id="rvName" placeholder="e.g. Rahul S.">' +
               '</div>' +
               '<div class="rv-field">' +
@@ -92,7 +92,7 @@
               '<label for="rvAnon" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer">Post review anonymously</label>' +
             '</div>' +
 
-            '<button type="button" class="rv-primary-btn rv-submit" onclick="submitVerifiedReview()">Post Verified Review ★</button>' +
+            '<button type="button" class="rv-primary-btn rv-submit" onclick="submitVerifiedReview()">Post review</button>' +
             '<div id="rvFormError" class="rv-error-msg"></div>' +
           '</div>' +
 
@@ -101,7 +101,7 @@
             '<div style="width:56px;height:56px;background:rgba(184,255,87,0.15);border:1px solid var(--acid,#b8ff57);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--acid,#b8ff57)">' +
               '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5 9-9"/></svg>' +
             '</div>' +
-            '<h2>Review Published!</h2>' +
+            '<h2>Review published</h2>' +
             '<p class="rv-desc" style="max-width:380px;margin:0 auto 24px">Thank you for sharing your experience. Your verified customer review is now live and will help fellow shoppers.</p>' +
             '<button type="button" class="rv-primary-btn" onclick="closeReviewForm()">Done</button>' +
           '</div>' +
@@ -203,7 +203,7 @@
     }
 
     btn.disabled = true;
-    btn.textContent = 'Verifying Order…';
+    btn.textContent = 'Verifying…';
 
     fetch(SUPA_URL + '/functions/v1/track-order/', {
       method: 'POST',
@@ -213,7 +213,7 @@
     .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
     .then(function(res){
       btn.disabled = false;
-      btn.textContent = 'Verify Order & Continue →';
+      btn.textContent = 'Verify order';
       if (!res.ok) {
         err.textContent = (res.j && res.j.error) || 'Order not found. Please check your Order ID and Phone number.';
         err.style.display = 'block';
@@ -239,7 +239,7 @@
     })
     .catch(function(){
       btn.disabled = false;
-      btn.textContent = 'Verify Order & Continue →';
+      btn.textContent = 'Verify order';
       err.textContent = 'Connection error. Please try again.';
       err.style.display = 'block';
     });
@@ -278,7 +278,7 @@
     }
 
     var submitBtn = document.querySelector('#rvStepForm .rv-submit');
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Posting Review…'; }
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Posting…'; }
 
     fetch(SUPA_URL + '/functions/v1/submit-review', {
       method: 'POST',
@@ -294,7 +294,7 @@
       })
     })
     .then(function(r){
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Post Verified Review ★'; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Post review'; }
       if (!r.ok) {
         return r.json().catch(function(){ return {}; }).then(function(j){
           errEl.textContent = (j && j.error) || 'Could not post review. Please try again.';
@@ -307,7 +307,7 @@
       });
     })
     .catch(function(){
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Post Verified Review ★'; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Post review'; }
       errEl.textContent = 'Network error. Please try again.';
       errEl.style.display = 'block';
     });
