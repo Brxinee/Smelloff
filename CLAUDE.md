@@ -40,6 +40,30 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Transactional email redesign (2026-10-11)
+`api/_email-templates.js` (all 17 Resend templates) now uses the site's palette
+and type. Light receipt canvas (Gmail's apps invert colours and ignore
+`prefers-color-scheme`); Apple Mail gets the site's dark theme from the
+`@media (prefers-color-scheme: dark)` block in `shell()`.
+- Carbon Black header band with `assets/email/logo-on-ink.png`. The logo has
+  its own black background baked in so it can't vanish when a client inverts
+  the band. Product thumb: `assets/email/odorstrike-bottle-thumb.png`. Both are
+  PNG (Outlook has no WebP).
+- Components: lime kicker pill (`hero(text, label)`), order-journey `tracker(i)`
+  (Confirmed → Shipped → Out for delivery → Delivered) on the lifecycle
+  emails, bulletproof lime `button()` (full width on phones), `productRow`,
+  totals via `kvRow(…, true)` (heavy rule; keep it the last row), `infoColumns`,
+  numbered `nextSteps`, and a contact panel (`helpPanel`: reply / info@ /
+  WhatsApp) on customer emails (`shell(…, { help: false })` for admin).
+- Lime is only ever a fill under black text. Space Grotesk / Inter load from
+  Google Fonts where allowed; Gmail/Outlook fall back to Helvetica/Arial.
+- Admin links go to `https://smelloff.in/admin` (`admin.smelloff.in` returns
+  403). Emails are 8–17KB, far under Gmail's 102KB clip.
+- Not changed, needs the owner: the sender name is "ODORSTRIKE" (not
+  "Smelloff"); the ETA copy says "Typically 3–7 days" while `/shipping` says
+  dispatch within 48 h + 3–10 business days. COD orders still send no admin
+  "new order" email: `dispatchCodPlacementEmails()` exists but nothing calls it.
+
 ## Type: Space Grotesk + Inter (2026-10-11, owner's call)
 "Headings: Space Grotesk. Body text: Inter. Keep the hierarchy." Display =
 **Space Grotesk** (variable 300–700; headings and prices at **700**, rules
