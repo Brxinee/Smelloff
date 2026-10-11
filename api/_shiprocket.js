@@ -136,6 +136,11 @@ export async function createShiprocketOrder(order) {
   const heightCm = Number(process.env.SHIPROCKET_HEIGHT_CM || '6');
   const paymentMethod = String(order.payment_method || '').toLowerCase() === 'cod' ? 'COD' : 'Prepaid';
   const safeSubtotal = Math.max(0, Math.round(subtotal));
+  // The COD handling charge goes in transaction_charges: Shiprocket's order
+  // total (what the courier collects) = items + transaction_charges. With 0
+  // here the courier collected ₹229 on a ₹318 COD order (checked live,
+  // 2026-10-11). Putting it in sub_total instead double-counts (₹407).
+  const codFeeRupees = paymentMethod === 'COD' ? Math.max(0, Math.round(Number(order.cod_fee || 0) / 100)) : 0;
 
   const payload = {
     order_id: String(order.order_code),
@@ -179,7 +184,7 @@ export async function createShiprocketOrder(order) {
     payment_method: paymentMethod,
     shipping_charges: 0,
     giftwrap_charges: 0,
-    transaction_charges: 0,
+    transaction_charges: codFeeRupees,
     total_discount: 0,
     sub_total: safeSubtotal,
     length: lengthCm,

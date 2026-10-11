@@ -78,6 +78,12 @@ courier / AWB / status back into `orders`. It was daily (`0 10 * * *`).
   redeploy the version the dashboard had loaded; that was not confirmed. If
   `/api/shiprocket-sync` results list delivered orders, the old code is live.
   Redeploy main.
+- **COD orders reach Shiprocket with the ₹89 fee as `transaction_charges`**,
+  so the courier collects ₹318. Before, it sent 0 and Shiprocket's order total
+  (the COD amount the courier collects) was ₹229. Verified against the live
+  API: fee in `transaction_charges` → total 318; fee in `sub_total` → 407
+  (double-counted). Prepaid orders send 0 and `cod: 0`.
+  `test/shiprocket-payload.test.mjs` pins it.
 - **`/api/health` now reports `build.commit`** (stamped by
   `scripts/write-build-info.mjs` during `npm run build` from
   `WORKERS_CI_COMMIT_SHA`, else git). After every merge, check that it matches
