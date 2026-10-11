@@ -122,14 +122,14 @@
   .c-card:hover{border-color:var(--accent);background:#1A1A1A}
   .c-card .c-k{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:4px}
   .c-card .c-v{font-size:13px;color:var(--text-secondary);line-height:1.5;display:block}
-  form{background:var(--bg-surface);border:1px solid var(--rule);border-radius:var(--sq-lg);padding:22px 20px}
+  #contactForm{background:var(--bg-surface);border:1px solid var(--rule);border-radius:var(--sq-lg);padding:22px 20px}
   .f-head{font-family:var(--display,system-ui,sans-serif);font-weight:800;font-size:20px;letter-spacing:-.01em;text-transform:none;margin-bottom:4px}
   .f-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
-  label{display:block;font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
-  input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--rule);border-radius:6px;color:var(--text);font-family:var(--body,system-ui,sans-serif);font-size:16px;padding:12px 14px;margin-bottom:16px}
-  input::placeholder,textarea::placeholder{color:#5a5a5a}
-  input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:none}
-  textarea{resize:vertical;min-height:110px}
+  #contactForm label{display:block;margin:0 0 6px}
+  #contactForm :is(input,select,textarea){width:100%;background:var(--bg);border:1px solid var(--rule);border-radius:6px;color:var(--text);font-family:var(--body,system-ui,sans-serif);font-size:16px;padding:12px 14px;margin-bottom:16px}
+  #contactForm ::placeholder{color:var(--muted)}
+  #contactForm :is(input,select,textarea):focus{border-color:var(--accent);outline:none}
+  #contactForm textarea{resize:vertical;min-height:110px}
   .row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   @media(max-width:560px){.row-2{grid-template-columns:1fr}}
   .c-btn{width:100%;background:var(--accent);color:var(--bg);border:none;border-radius:6px;font-family:var(--body,system-ui,sans-serif);font-weight:700;font-size:15px;letter-spacing:.04em;text-transform:uppercase;padding:14px;cursor:pointer;transition:background .15s ease}
@@ -189,7 +189,7 @@
 <script src="/assets/js/consent-analytics.js?v=1d4ea28e" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=c8ba0f84" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=c8ba0f84"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=59364ff4" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=59364ff4"></noscript>
 <script src="/assets/js/chrome.js?v=79ff758e" defer></script>
 </head>
 <body>

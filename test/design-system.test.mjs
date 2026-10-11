@@ -97,3 +97,71 @@ test('shared CSS/JS stamps match the files (run scripts/apply-chrome.mjs after e
     }
   }
 });
+
+// ---- Pass 2 (2026-10-11) ----------------------------------------------------
+
+test('no page styles bare form/label/input elements (they leak into the shared footer form)', () => {
+  const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html'))
+    .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+  for (const f of pages) {
+    const css = [...read(f).matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join('\n');
+    for (const line of css.split('\n')) {
+      assert.doesNotMatch(line, /^\s*(form|label|input|select|textarea)\s*(\{|,|::?placeholder|:focus)/, `${f}: scope "${line.trim().slice(0, 60)}" to its own form id`);
+    }
+  }
+});
+
+test('link previews: one on-brand share image, never the retired banners', () => {
+  const img = fs.readFileSync('assets/og/smelloff-share.jpg');
+  assert.ok(img.length < 300 * 1024, 'share image must stay under 300KB (WhatsApp may skip larger previews)');
+  // JPEG SOF0/SOF2 marker carries the size: 1200x630.
+  let i = 2, w = 0, h = 0;
+  while (i < img.length) { const m = img[i + 1]; const len = img.readUInt16BE(i + 2); if (m === 0xc0 || m === 0xc2) { h = img.readUInt16BE(i + 5); w = img.readUInt16BE(i + 7); break; } i += 2 + len; }
+  assert.deepEqual([w, h], [1200, 630]);
+  const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html') && !f.startsWith('google'))
+    .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+  for (const f of pages) {
+    const html = read(f);
+    assert.doesNotMatch(html, /assets\/og-(image|brand)\.jpg/, `${f}: retired preview banner (it listed shoes/helmets/gear)`);
+    const og = html.match(/<meta property="og:image" content="([^"]+)"/);
+    if (og && og[1].includes('smelloff-share')) assert.match(html, /<meta property="og:image:width" content="1200">/, `${f}: share image needs its size`);
+  }
+  const cfg = read('config/product.json');
+  assert.ok(cfg.includes('"image": "https://smelloff.in/assets/og/smelloff-share.jpg"'));
+  assert.ok(!/og-(image|brand)\.jpg/.test(cfg), 'product images must be product photos, not the text banner');
+});
+
+test('FAQ "How to pay" matches checkout: online payment is the default and listed first', () => {
+  const faq = read('faq.html');
+  const block = faq.slice(faq.indexOf('<summary>How to pay</summary>'), faq.indexOf('</details>', faq.indexOf('<summary>How to pay</summary>')));
+  assert.ok(block.indexOf('Pay online') !== -1 && block.indexOf('Pay online') < block.indexOf('Cash on Delivery'), 'Pay online first');
+  assert.doesNotMatch(block, /already selected|Cash on Delivery \(default\)/, 'COD is not pre-selected at checkout');
+  assert.match(read('odorstrike.html'), /let payMethod = 'prepaid';/, 'checkout default changed: update the FAQ with it');
+});
+
+test('policies end with related policies, contact leads with real channels, 404 can search', () => {
+  for (const f of POLICIES) {
+    const html = read(f);
+    const rel = html.match(/<h2 class="p-sublabel p-related">Related policies<\/h2>\s*<ul class="p-links">([\s\S]*?)<\/ul>/);
+    assert.ok(rel, `${f}: related policies missing`);
+    for (const [, href] of rel[1].matchAll(/href="\/([a-z-]+)"/g)) assert.ok(fs.existsSync(`${href}.html`), `${f}: /${href} does not exist`);
+  }
+  const c = read('contact.html');
+  const iChan = c.indexOf('class="c-primary"'), iForm = c.indexOf('<form id="contactForm"'), iLegal = c.indexOf('class="callout c-legal"');
+  assert.ok(iChan > 0 && iChan < iForm && iForm < iLegal, 'contact: channels, then the form, then the grievance notice');
+  assert.match(c, /usually a reply within hours/); assert.match(c, /A reply within 24–48 hours/);
+  const nf = read('404.html');
+  assert.match(nf, /<form class="p-search" action="\/blog" method="get" role="search">[\s\S]*?name="q"/);
+  assert.match(read('blog/index.html'), /new URLSearchParams\(window\.location\.search\)\.get\('q'\)/, 'blog search must read ?q=');
+});
+
+test('tracked capitals are for short labels, not for sentences or buttons', () => {
+  const home = read('index.html'), pdp = read('odorstrike.html');
+  assert.ok(!home.includes('UPI · CARDS · CASH ON DELIVERY'));
+  assert.ok(!/hm-btn--ghost" href="\/odorstrike">(See full product details|View product)</.test(home), 'secondary route is the "View product details" text link');
+  assert.ok(!read('assets/js/reviews-system.js').includes('Write a Verified Review'));
+  assert.ok(!read('blog/index.html').includes('>All Articles<'));
+  const css = read('assets/css/chrome.css');
+  for (const sel of ['.final-reassurance', '.pay-modes', '.pd-pay', '#trackForm label', '.rv-field label']) assert.ok(css.includes(sel), `chrome.css §13 must cover ${sel}`);
+  assert.ok(pdp.indexOf('id="finalBuyBtn"') < pdp.indexOf('class="final-reassurance"'), 'closing band: button, then the trust line (same order as /)');
+});

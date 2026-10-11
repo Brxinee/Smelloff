@@ -833,7 +833,7 @@ main.sf-wrap[style] .content-section > p{font-size:16px !important;line-height:1
 
 /* ---- FAQ "How to pay" steps ------------------------------------------- */
 .faq-answer__h{font-weight:600 !important;color:var(--text) !important;margin:4px 0 8px !important}
-.faq-steps{margin:0 0 16px !important;padding-left:20px !important}
+.faq-steps{margin:0 22px 16px !important;padding-left:22px !important}
 .faq-steps li{margin-bottom:6px;color:var(--text-2)}
 .faq-steps li::marker{color:var(--acid)}
 .faq-steps b{color:var(--text);font-weight:600}
