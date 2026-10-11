@@ -42,7 +42,7 @@ the move silently dropped, now restored:
 
 ## Type: Bricolage Grotesque + Geist (2026-10-11, owner's call)
 "Use best fonts." Display = **Bricolage Grotesque** (variable 200–800,
-headings and prices at **600**); body and labels = **Geist** (variable
+headings and prices at **700**, owner: "somewhat bold"); body and labels = **Geist** (variable
 100–900). Both SIL OFL 1.1, self-hosted from Fontsource (`assets/fonts/*-wght.woff2`,
 licences in `assets/fonts/OFL-*.txt`). Supersedes Fraunces / Inter Tight /
 JetBrains Mono everywhere in the notes below.

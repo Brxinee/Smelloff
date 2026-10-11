@@ -77,7 +77,7 @@
     '.bc-wrap{max-width:680px;margin:0 auto;padding:0 32px 80px;font-family:var(--body,system-ui,sans-serif)}',
     '.bc-wrap *{box-sizing:border-box}',
     '.bc-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 0 20px}',
-    '.bc-title{font-family:var(--display,system-ui,sans-serif);font-weight:600;font-size:24px;letter-spacing:-.01em;text-transform:none;color:#F5F5F5;margin:0;line-height:1.2}',
+    '.bc-title{font-family:var(--display,system-ui,sans-serif);font-weight:700;font-size:24px;letter-spacing:-.01em;text-transform:none;color:#F5F5F5;margin:0;line-height:1.2}',
     '.bc-count{font-family:var(--mono,system-ui,sans-serif);font-weight:500;font-size:14px;color:#9DA398;letter-spacing:.05em}',
     // Trigger button — technical CTA
     '.bc-cta{display:inline-flex;align-items:center;gap:8px;background:#B8FF57;color:#0A0A0A;font-family:var(--body,system-ui,sans-serif);font-weight:500;font-size:13.5px;letter-spacing:.02em;text-transform:none;padding:10px 18px;border:none;border-radius:8px;box-shadow:none;cursor:pointer;transition:background-color .15s ease,transform .15s ease}',
@@ -103,7 +103,7 @@
     '.bc-modal[hidden]{display:none}',
     '.bc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.78)}',
     '.bc-modal-card{position:relative;width:100%;max-width:520px;margin:auto;background:#111111;border:1px solid rgba(255,255,255,.14);border-radius:16px;box-shadow:0 20px 48px rgba(0,0,0,.7);padding:26px 24px}',
-    '.bc-modal-title{font-family:var(--display,system-ui,sans-serif);font-weight:600;font-size:20px;letter-spacing:-.01em;text-transform:none;color:#F5F5F5;margin:0 0 4px;padding-right:40px}',
+    '.bc-modal-title{font-family:var(--display,system-ui,sans-serif);font-weight:700;font-size:20px;letter-spacing:-.01em;text-transform:none;color:#F5F5F5;margin:0 0 4px;padding-right:40px}',
     '.bc-modal-sub{font-family:var(--body,system-ui,sans-serif);font-size:13px;color:#8C8C8C;margin:0 0 18px}',
     '.bc-x{position:absolute;top:14px;right:14px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#0A0A0A;color:#F5F5F5;font-family:var(--body,system-ui,sans-serif);font-weight:500;font-size:18px;line-height:1;border:1px solid #262626;border-radius:6px;cursor:pointer;transition:background .12s ease,color .12s ease}',
     '.bc-x:hover{background:#F2F5EF;color:#0A0A0A;border-color:#F2F5EF}',
