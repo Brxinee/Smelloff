@@ -90,3 +90,14 @@ test('every blog post has a complete Article and a BreadcrumbList', () => {
     assert.ok(ns.some((n) => typeOf(n) === 'BreadcrumbList'), `${f}: BreadcrumbList`);
   }
 });
+
+test('the Offer carries the MRP as a ListPrice (strikethrough in results), from config', () => {
+  const pdp = fs.readFileSync('odorstrike.html', 'utf8');
+  const block = JSON.parse(pdp.match(/<script type="application\/ld\+json" id="product-jsonld">([\s\S]*?)<\/script>/)[1]);
+  const cfg = JSON.parse(fs.readFileSync('config/product.json', 'utf8')).product;
+  const spec = block.offers.priceSpecification;
+  assert.equal(spec.priceType, 'https://schema.org/ListPrice');
+  assert.equal(Number(spec.price), cfg.mrp);
+  assert.equal(Number(block.offers.price), cfg.price);
+  assert.ok(cfg.mrp > cfg.price, 'a list price only makes sense above the offer price');
+});
