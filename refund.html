@@ -241,60 +241,91 @@
 </header>
 <!-- /SF-CHROME:HEADER -->
 
-<main id="sf-main" tabindex="-1" class="p-main">
-  <div class="p-eyebrow">Policy · Refund</div>
-  <h1>Refund Policy<span class="h1-dot">.</span></h1>
+<main id="sf-main" tabindex="-1" class="p-main p-main--wide">
+  <header class="p-head">
+    <div class="p-eyebrow">Policy · Refund</div>
+    <h1>Refund Policy<span class="h1-dot">.</span></h1>
+    <p class="p-lede">Refunds are processed for valid returns, cancellations, and failed payments. Below are the specific terms.</p>
+  </header>
 
-  <p>Refunds are processed for valid returns, cancellations, and failed payments. Below are the specific terms.</p>
+  <div class="p-grid">
+    <aside class="p-aside" aria-label="Summary and contents">
+      <section class="p-glance" aria-labelledby="glanceTitle">
+        <h2 class="p-glance__t" id="glanceTitle">At a glance</h2>
+        <ul>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Prepaid orders</b>Back to the original UPI, card or netbanking account</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Timeline</b>5–7 business days after the return is received and checked</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Cancelled before dispatch</b>Refund started within 24 hours</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>COD orders</b>Refunded by bank transfer (NEFT/IMPS) in 5–7 business days</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Amount</b>The full product amount — shipping is free, so nothing is deducted for it</span></li>
+        </ul>
+      </section>
+      <details class="p-toc" id="pToc">
+        <summary>On this page</summary>
+        <ol>
+          <li><a href="#eligibility-for-refund">Eligibility for refund</a></li>
+          <li><a href="#refund-timeline">Refund timeline</a></li>
+          <li><a href="#refund-amount">Refund amount</a></li>
+          <li><a href="#partial-refunds">Partial refunds</a></li>
+          <li><a href="#how-to-track-your-refund">How to track your refund</a></li>
+          <li><a href="#order-cancellation">Order cancellation</a></li>
+          <li><a href="#refund-support-enquiries">Refund Support &amp; Enquiries</a></li>
+        </ol>
+      </details>
+    </aside>
 
-  <h2>Eligibility for refund</h2>
-  <ul>
-    <li>Product returned within 7-day return window (see <a class="inline" href="/returns">Returns Policy</a>)</li>
-    <li>Order cancelled before dispatch</li>
-    <li>Damaged or wrong product delivered</li>
-    <li>Package lost in transit and not recoverable</li>
-    <li>Payment deducted but order not confirmed (auto-refund within 5–7 days by payment gateway)</li>
-  </ul>
+    <div class="p-body">
+      <h2 id="eligibility-for-refund">Eligibility for refund</h2>
+        <ul>
+          <li>Product returned within 7-day return window (see <a class="inline" href="/returns">Returns Policy</a>)</li>
+          <li>Order cancelled before dispatch</li>
+          <li>Damaged or wrong product delivered</li>
+          <li>Package lost in transit and not recoverable</li>
+          <li>Payment deducted but order not confirmed (auto-refund within 5–7 days by payment gateway)</li>
+        </ul>
 
-  <h2>Refund timeline</h2>
-  <ul>
-    <li><strong>UPI / Cards / Netbanking:</strong> 5–7 business days after return is received and inspected</li>
-    <li><strong>COD orders:</strong> 5–7 business days via bank transfer (NEFT/IMPS) after we collect your account details</li>
-    <li><strong>Cancellations before dispatch:</strong> refund initiated within 24 hours</li>
-  </ul>
+        <h2 id="refund-timeline">Refund timeline</h2>
+        <ul>
+          <li><strong>UPI / Cards / Netbanking:</strong> 5–7 business days after return is received and inspected</li>
+          <li><strong>COD orders:</strong> 5–7 business days via bank transfer (NEFT/IMPS) after we collect your account details</li>
+          <li><strong>Cancellations before dispatch:</strong> refund initiated within 24 hours</li>
+        </ul>
 
-  <h2>Refund amount</h2>
-  <p>The full product amount is refunded. Shipping is free on all orders, so nothing is deducted for it. Cash on Delivery orders carry a ₹89 handling charge (₹318 collected on delivery), shown on the product page and at checkout before you order. Where shipping was charged on a prepaid order (rare), it is non-refundable except in cases of a damaged/wrong product or order cancellation before dispatch.</p>
+        <h2 id="refund-amount">Refund amount</h2>
+        <p>The full product amount is refunded. Shipping is free on all orders, so nothing is deducted for it. Cash on Delivery orders carry a ₹89 handling charge (₹318 collected on delivery), shown on the product page and at checkout before you order. Where shipping was charged on a prepaid order (rare), it is non-refundable except in cases of a damaged/wrong product or order cancellation before dispatch.</p>
 
-  <h2>Partial refunds</h2>
-  <p>ODORSTRIKE is sold as a single 50ml unit (₹229). If you ordered more than one bottle and return only some of them, a partial refund is processed for the returned units at their per-unit price. The units you keep are not affected.</p>
+        <h2 id="partial-refunds">Partial refunds</h2>
+        <p>ODORSTRIKE is sold as a single 50ml unit (₹229). If you ordered more than one bottle and return only some of them, a partial refund is processed for the returned units at their per-unit price. The units you keep are not affected.</p>
 
-  <h2>How to track your refund</h2>
-  <p>Once we initiate the refund, you'll receive a confirmation notification with the refund transaction reference ID. For bank/UPI refunds, the amount appears in your account based on your bank's processing SLA (usually 5–7 business days). If the refund is delayed beyond 10 business days, contact <a class="inline" href="mailto:info@smelloff.in">info@smelloff.in</a> or WhatsApp <a class="inline" href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20have%20a%20question%20about%20a%20refund.%0AOrder%20ID%3A%20">+91 93929 74031</a>.</p>
+        <h2 id="how-to-track-your-refund">How to track your refund</h2>
+        <p>Once we initiate the refund, you'll receive a confirmation notification with the refund transaction reference ID. For bank/UPI refunds, the amount appears in your account based on your bank's processing SLA (usually 5–7 business days). If the refund is delayed beyond 10 business days, contact <a class="inline" href="mailto:info@smelloff.in">info@smelloff.in</a> or WhatsApp <a class="inline" href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20have%20a%20question%20about%20a%20refund.%0AOrder%20ID%3A%20">+91 93929 74031</a>.</p>
 
-  <h2>Order cancellation</h2>
-  <p>You can cancel any order before it is dispatched for a 100% full refund — see our <a class="inline" href="/cancellation">Cancellation Policy</a>. Once dispatched, the order cannot be cancelled in transit but can be returned post-delivery as per our <a class="inline" href="/returns">Returns Policy</a>.</p>
+        <h2 id="order-cancellation">Order cancellation</h2>
+        <p>You can cancel any order before it is dispatched for a 100% full refund — see our <a class="inline" href="/cancellation">Cancellation Policy</a>. Once dispatched, the order cannot be cancelled in transit but can be returned post-delivery as per our <a class="inline" href="/returns">Returns Policy</a>.</p>
 
-  <h2>Refund Support &amp; Enquiries</h2>
-  <div class="callout">
-    <p><strong>Questions about a pending refund or status?</strong><br>
-    Email: <a class="inline" href="mailto:info@smelloff.in">info@smelloff.in</a><br>
-    WhatsApp: <a class="inline" href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20have%20a%20refund%20query.">+91 93929 74031</a> (Fastest response)<br>
-    Please include your Order ID and payment ID / bank reference (for online payments) for instant assistance.</p>
-  </div>
+        <h2 id="refund-support-enquiries">Refund Support &amp; Enquiries</h2>
+        <div class="callout">
+          <p><strong>Questions about a pending refund or status?</strong><br>
+          Email: <a class="inline" href="mailto:info@smelloff.in">info@smelloff.in</a><br>
+          WhatsApp: <a class="inline" href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%20have%20a%20refund%20query.">+91 93929 74031</a> (Fastest response)<br>
+          Please include your Order ID and payment ID / bank reference (for online payments) for instant assistance.</p>
+        </div>
 
-  <div class="p-meta">
-    <!-- GSTIN: add the number here once allotted, e.g. "· GSTIN 36ABCDE1234F1Z5".
-         Until then this line carries no GSTIN at all. It previously read
-         a bracketed pending placeholder on all eight policy pages — a visible placeholder on
-         the pages a cautious buyer opens precisely to check the seller is real
-         reads as an unfinished shop, and a bracketed token is worse than an
-         absent field. A proprietorship under the registration threshold is not
-         required to display one, so omitting it is accurate either way;
-         asserting a pending status is not. -->
-    Operator: Smelloff (Sole Proprietorship) · Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India<br>
-    Smelloff · Hyderabad, Telangana, India<br>
-    Last updated: August 2026
+        <a class="p-top" href="#sf-main">Back to top <span aria-hidden="true">↑</span></a>
+        <div class="p-meta">
+          <!-- GSTIN: add the number here once allotted, e.g. "· GSTIN 36ABCDE1234F1Z5".
+               Until then this line carries no GSTIN at all. It previously read
+               a bracketed pending placeholder on all eight policy pages — a visible placeholder on
+               the pages a cautious buyer opens precisely to check the seller is real
+               reads as an unfinished shop, and a bracketed token is worse than an
+               absent field. A proprietorship under the registration threshold is not
+               required to display one, so omitting it is accurate either way;
+               asserting a pending status is not. -->
+          Operator: Smelloff (Sole Proprietorship) · Sanathnagar, Erragadda, Hyderabad, Telangana 500018, India<br>
+          Smelloff · Hyderabad, Telangana, India<br>
+          Last updated: August 2026
+        </div>
+    </div>
   </div>
 </main>
 
