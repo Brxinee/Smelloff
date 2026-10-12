@@ -584,11 +584,11 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     background:var(--surface);overflow:hidden;
     display:grid;
   }
-  .offer-art{
-    background:radial-gradient(circle at 50% 55%,rgba(var(--acid-rgb),.18),transparent 48%),var(--surface-2);
-    display:flex;align-items:center;justify-content:center;padding:28px;min-height:280px;
-  }
-  .offer-art img{height:240px;width:auto;filter:drop-shadow(0 24px 30px rgba(0,0,0,.5))}
+  /* Real photo (bottle in hand beside a phone), not the low-res cutout:
+     it shows the bottle sharp and at true size. Square on phones,
+     fills the column from 768. */
+  .offer-art{position:relative;background:var(--surface-2);aspect-ratio:1/1;overflow:hidden}
+  .offer-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
   .offer-body{padding:28px 24px 30px}
   .offer-body .hm-h2{font-size:clamp(30px,4.6vw,48px)}
   .offer-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;margin-top:18px}
@@ -605,8 +605,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .offer-pay{margin-top:12px;font-family:var(--body);font-size:12px;letter-spacing:.02em;color:var(--muted);text-align:center}
   @media(min-width:768px){
     .offer{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
-    .offer-art{min-height:100%}
-    .offer-art img{height:340px}
+    .offer-art{aspect-ratio:auto;min-height:100%}
     .offer-body{padding:44px 44px 40px}
   }
 
@@ -953,7 +952,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     <div class="wrap">
       <div class="offer reveal">
         <div class="offer-art">
-          <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml bottle" width="241" height="915" loading="lazy" decoding="async">
+          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/pdp-size-in-hand@400.avif 400w, /assets/photos/pdp-size-in-hand@640.avif 640w, /assets/photos/pdp-size-in-hand@960.avif 960w, /assets/photos/pdp-size-in-hand.avif 1122w" sizes="(min-width:1160px) 480px, (min-width:768px) 42vw, 100vw"><img class="ph-photo offer-photo" src="/assets/photos/pdp-size-in-hand.webp" srcset="/assets/photos/pdp-size-in-hand@400.webp 400w, /assets/photos/pdp-size-in-hand@640.webp 640w, /assets/photos/pdp-size-in-hand@960.webp 960w, /assets/photos/pdp-size-in-hand.webp 1122w" sizes="(min-width:1160px) 480px, (min-width:768px) 42vw, 100vw" width="1122" height="1402" alt="ODORSTRIKE held in one hand next to a smartphone in the other, marked 10.5 cm tall and 3 cm across." loading="lazy" decoding="async" data-no-skel style="background:url(data:image/webp;base64,UklGRuwAAABXRUJQVlA4IOAAAADwBQCdASoUABkAPu1ur1IppiQiqAgBMB2JYgC1GzL4KTAAtbNl5xaZNhJ9P8xuFz51Q+JAV/nhIAD+h9KD3IJDxwGMnT2nh+VR7RL6zmcA1u84CG/NBRmPU4d8OpgZ7ti3rA54vgBNH0tV2Rby6TPV45blCzx8+qNoxQc/fybYTfpS6tQM4KEAAMrCyLdFiOHgHFr77PGNh2iQh5WbwMrr4S5wzC03DB8ITgMJNMHdCeEz5lIUPRU0zvGImhYJgowwqluWOdby/EG1kelk25COfRxPXGejtUj42bTZZfAAAA==) center/cover no-repeat"></picture>
         </div>
         <div class="offer-body">
           <p class="hm-eyebrow">ODORSTRIKE · 50ML POCKET MIST</p>
