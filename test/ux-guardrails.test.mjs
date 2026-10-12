@@ -150,18 +150,20 @@ test('homepage hero is a fast, static, product-in-use photo', () => {
   assert.equal((hero.match(/class="hm-btn"/g) || []).length, 1, 'one primary action in the hero');
 });
 
-// Sharp images (2026-10-12, owner): the 241px bottle cutout had stair-stepped
-// edges and looked blurry. The offer boxes use the in-hand photo; small spots
-// (cart, blog cards) use the matted studio cutout. Neither page nor post may
-// go back to the old file.
-test('no page uses the low-res 241px bottle cutout', () => {
+// Sharp images (2026-10-12, owner): no cut-out bottles and no cropping. The
+// old 241px cutout looked blurry; the owner then asked for real photos shown
+// whole instead of cutouts. Offer boxes, cart and blog cards use the in-hand
+// photo on black with `contain`.
+test('no page uses a bottle cutout; the in-hand photo is shown whole', () => {
   const pages = ['index.html', 'odorstrike.html', 'blog/index.html',
     ...fs.readdirSync('blog').filter((f) => f.endsWith('.html')).map((f) => `blog/${f}`)];
   for (const f of pages) {
-    assert.doesNotMatch(fs.readFileSync(f, 'utf8'), /odorstrike-bottle-cutout\.(webp|png)/, `${f}: use odorstrike-bottle-studio-* or the offer photo`);
+    assert.doesNotMatch(fs.readFileSync(f, 'utf8'), /odorstrike-bottle-(cutout|studio)/, `${f}: use the in-hand photo, not a cutout`);
   }
-  assert.doesNotMatch(fs.readFileSync('scripts/blog/apply-reader.mjs', 'utf8'), /odorstrike-bottle-cutout/);
-  for (const f of ['index.html', 'odorstrike.html']) {
-    assert.match(fs.readFileSync(f, 'utf8'), /offer-in-hand-black@960\.webp/, `${f}: offer box photo missing`);
-  }
+  assert.doesNotMatch(fs.readFileSync('scripts/blog/apply-reader.mjs', 'utf8'), /odorstrike-bottle-(cutout|studio)/);
+  const home = fs.readFileSync('index.html', 'utf8');
+  const pdp = fs.readFileSync('odorstrike.html', 'utf8');
+  assert.match(home, /\.offer-art \.offer-photo\{[^}]*object-fit:contain/, 'homepage offer photo must not be cropped');
+  assert.match(pdp, /\.pd-offer-art \.pd-offer-photo\{[^}]*object-fit:contain/, 'PDP offer photo must not be cropped');
+  for (const html of [home, pdp]) assert.match(html, /offer-in-hand-black@960\.webp/, 'offer box photo missing');
 });

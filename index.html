@@ -585,11 +585,11 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     display:grid;
   }
   /* The owner's photo of the bottle in hand on pure black (2026-10-12),
-     replacing a 241px cutout on a glow. The panel is #000 so the photo's own
-     black runs edge to edge; the skeleton shimmer shows until it loads.
-     4:5 on phones, fills the column from 768. */
+     shown whole (owner: never crop it). The panel is #000, so the photo's
+     own black meets it invisibly and `contain` leaves no visible bars.
+     4:5 panel on phones, fills the column from 768. Skeleton until loaded. */
   .offer-art{position:relative;overflow:hidden;background:#000;aspect-ratio:4/5}
-  .offer-art .offer-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+  .offer-art .offer-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
   .offer-body{padding:28px 24px 30px}
   .offer-body .hm-h2{font-size:clamp(30px,4.6vw,48px)}
   .offer-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;margin-top:18px}
@@ -953,7 +953,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     <div class="wrap">
       <div class="offer reveal">
         <div class="offer-art">
-          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/offer-in-hand-black@400.avif 400w, /assets/photos/offer-in-hand-black@640.avif 640w, /assets/photos/offer-in-hand-black@960.avif 960w, /assets/photos/offer-in-hand-black.avif 1152w" sizes="(min-width:1160px) 504px, (min-width:768px) 45vw, 100vw"><img class="ph-photo offer-photo" src="/assets/photos/offer-in-hand-black@960.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w, /assets/photos/offer-in-hand-black@960.webp 960w, /assets/photos/offer-in-hand-black.webp 1152w" sizes="(min-width:1160px) 504px, (min-width:768px) 45vw, 100vw" width="1152" height="2048" alt="A hand holding the ODORSTRIKE 50ml fabric odor spray bottle against a black background" loading="lazy" decoding="async"></picture>
+          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/offer-in-hand-black@400.avif 400w, /assets/photos/offer-in-hand-black@640.avif 640w, /assets/photos/offer-in-hand-black@960.avif 960w, /assets/photos/offer-in-hand-black.avif 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 70vw"><img class="ph-photo offer-photo" src="/assets/photos/offer-in-hand-black@960.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w, /assets/photos/offer-in-hand-black@960.webp 960w, /assets/photos/offer-in-hand-black.webp 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 70vw" width="1152" height="2048" alt="A hand holding the ODORSTRIKE 50ml fabric odor spray bottle against a black background" loading="lazy" decoding="async"></picture>
         </div>
         <div class="offer-body">
           <p class="hm-eyebrow">ODORSTRIKE · 50ML POCKET MIST</p>

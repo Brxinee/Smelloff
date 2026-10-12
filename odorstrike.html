@@ -487,15 +487,16 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .cart-ship-bar .ic{width:18px;height:18px;color:var(--acid);flex-shrink:0}
   .cart-ship-bar strong{color:var(--text);font-weight:600}
   .cart-body{flex:1;overflow-y:auto;padding:20px;overscroll-behavior:contain}
-  /* The bottle sits on a faint warm light, the same stage it has on the homepage. */
+  /* The in-hand photo, whole: its pure black meets the #000 tile, so
+     `contain` shows no bars and nothing is cropped or cut out. */
   .cart-line-art,.cart-empty-art{
-    display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(circle at 50% 58%,rgba(242,245,239,.08),rgba(242,245,239,0) 62%),var(--ink);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    background:#000;
     border:1px solid var(--rule);border-radius:var(--sq-lg,16px);
   }
   .cart-img{display:block;width:auto;height:100%;object-fit:contain}
   .cart-empty{text-align:center;padding:28px 4px}
-  .cart-empty-art{width:120px;height:150px;margin:0 auto 20px;padding:14px 0}
+  .cart-empty-art{width:120px;height:150px;margin:0 auto 20px;padding:0}
   .cart-empty-msg{
     font-family:var(--display);font-weight:700;font-size:22px;
     color:var(--text);margin:0 0 6px;
@@ -513,7 +514,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center;
     padding:12px;border:1px solid var(--rule);border-radius:var(--sq-xl,20px);background:rgba(242,245,239,.02);
   }
-  .cart-line-art{width:96px;height:120px;padding:12px 0}
+  .cart-line-art{width:96px;height:120px;padding:0}
   .cart-line-info{min-width:0}
   .cart-line-name{
     font-family:var(--display);font-weight:700;font-size:19px;
@@ -1471,10 +1472,11 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .pd-offer{display:grid;overflow:hidden;border:1px solid var(--rule);border-radius:var(--sq-xl);background:var(--surface)}
   @media(min-width:768px){.pd-offer{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}}
   /* Same as the homepage offer box: the owner's in-hand photo on pure black,
-     skeleton until loaded. 4:5 on phones, fills the column from 768. The
-     .ph-photo card styles (border, radius, 4:5) are reset here. */
+     shown whole (owner: never crop it; `contain` on a #000 panel shows no
+     bars). Skeleton until loaded. 4:5 on phones, fills the column from 768.
+     The .ph-photo card styles (border, radius, 4:5) are reset here. */
   .pd-offer-art{position:relative;overflow:hidden;background:#000;aspect-ratio:4/5}
-  .pd-offer-art .pd-offer-photo{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;object-fit:cover;object-position:50% 45%;border:0;border-radius:0}
+  .pd-offer-art .pd-offer-photo{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;object-fit:contain;border:0;border-radius:0;background-color:transparent}
   @media(min-width:768px){.pd-offer-art{aspect-ratio:auto;min-height:100%}}
   .pd-offer-body{display:flex;flex-direction:column;gap:16px;padding:clamp(22px,4vw,44px)}
   .pd-offer-body .pd-h2{margin-top:0}
@@ -1700,14 +1702,14 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
            the header cart on another page (/odorstrike?cart=open) must get a
            next step, not a blank panel. -->
       <div class="cart-empty" id="cartEmpty">
-        <div class="cart-empty-art"><img class="cart-img" src="/assets/odorstrike-bottle-studio-140.webp" srcset="/assets/odorstrike-bottle-studio-140.webp 140w, /assets/odorstrike-bottle-studio-276.webp 276w" sizes="34px" alt="" width="276" height="1047" loading="lazy" decoding="async" data-no-skel></div>
+        <div class="cart-empty-art"><img class="cart-img" src="/assets/photos/offer-in-hand-black@400.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w" sizes="85px" alt="" width="1152" height="2048" loading="lazy" decoding="async" data-no-skel></div>
         <p class="cart-empty-msg">Your cart is empty</p>
         <p class="cart-empty-sub">The pocket spray for clothes. Free shipping across India.</p>
         <button type="button" class="cart-empty-cta" onclick="cartAddFromEmpty()">Add ODORSTRIKE</button>
       </div>
       <div id="cartFilled" hidden>
         <div class="cart-line" id="cartLine">
-          <div class="cart-line-art"><img class="cart-img" src="/assets/odorstrike-bottle-studio-140.webp" srcset="/assets/odorstrike-bottle-studio-140.webp 140w, /assets/odorstrike-bottle-studio-276.webp 276w" sizes="34px" alt="ODORSTRIKE 50ml bottle" width="276" height="1047" loading="lazy" decoding="async" data-no-skel></div>
+          <div class="cart-line-art"><img class="cart-img" src="/assets/photos/offer-in-hand-black@400.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w" sizes="85px" alt="ODORSTRIKE 50ml bottle held in a hand" width="1152" height="2048" loading="lazy" decoding="async" data-no-skel></div>
           <div class="cart-line-info">
             <div class="cart-line-name">ODORSTRIKE</div>
             <div class="cart-line-unit">Fabric odor spray · 50ml</div>
@@ -2070,7 +2072,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
   <div class="pd-wrap">
     <div class="pd-offer">
       <div class="pd-offer-art">
-        <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/offer-in-hand-black@400.avif 400w, /assets/photos/offer-in-hand-black@640.avif 640w, /assets/photos/offer-in-hand-black@960.avif 960w, /assets/photos/offer-in-hand-black.avif 1152w" sizes="(min-width:1160px) 504px, (min-width:768px) 45vw, 100vw"><img class="ph-photo pd-offer-photo" src="/assets/photos/offer-in-hand-black@960.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w, /assets/photos/offer-in-hand-black@960.webp 960w, /assets/photos/offer-in-hand-black.webp 1152w" sizes="(min-width:1160px) 504px, (min-width:768px) 45vw, 100vw" width="1152" height="2048" alt="A hand holding the ODORSTRIKE 50ml fabric odor spray bottle against a black background" loading="lazy" decoding="async"></picture>
+        <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/offer-in-hand-black@400.avif 400w, /assets/photos/offer-in-hand-black@640.avif 640w, /assets/photos/offer-in-hand-black@960.avif 960w, /assets/photos/offer-in-hand-black.avif 1152w" sizes="(min-width:1160px) 340px, (min-width:768px) 40vw, 70vw"><img class="ph-photo pd-offer-photo" src="/assets/photos/offer-in-hand-black@960.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w, /assets/photos/offer-in-hand-black@960.webp 960w, /assets/photos/offer-in-hand-black.webp 1152w" sizes="(min-width:1160px) 340px, (min-width:768px) 40vw, 70vw" width="1152" height="2048" alt="A hand holding the ODORSTRIKE 50ml fabric odor spray bottle against a black background" loading="lazy" decoding="async"></picture>
       </div>
       <div class="pd-offer-body">
         <div class="section-tag">ODORSTRIKE · 50ML POCKET MIST</div>

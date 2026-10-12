@@ -213,7 +213,7 @@ function transform(html, slug) {
   // Re-stamped every run so a new bottle image reaches every post.
   html = html.replace(/<div class="end-cta"><img class="cta-img"[^>]*>/g, '<div class="end-cta">');
   html = html.replace(/<div class="end-cta">(?!<img class="cta-img")/g,
-    '<div class="end-cta"><img class="cta-img" src="/assets/odorstrike-bottle-studio-140.webp" srcset="/assets/odorstrike-bottle-studio-140.webp 140w, /assets/odorstrike-bottle-studio-276.webp 276w" sizes="62px" alt="" width="276" height="1047" loading="lazy" decoding="async" data-no-skel>');
+    '<div class="end-cta"><img class="cta-img" src="/assets/photos/offer-in-hand-black@400.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w" sizes="62px" alt="" width="1152" height="2048" loading="lazy" decoding="async" style="border-radius:10px;border:1px solid rgba(242,245,239,.08)">');
   html = html.replace(/(<a [^>]*class="buy-btn"[^>]*>(?:(?!<\/a>)[\s\S])*<\/a>)(?!\s*<a class="cta-link")/g,
     '$1 <a class="cta-link" href="/odorstrike">View product details</a>');
 
