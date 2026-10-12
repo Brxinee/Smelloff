@@ -164,6 +164,10 @@ export const POSTS = {
     wa: 'Mothball smell survives washing because naphthalene goes solid straight to vapour and gets into every fold. Also stop putting the saree in the sun: {url}',
     x: 'Naphthalene sublimes — solid straight to vapour — so a closed almirah fills with it and it reaches every fold and seam. It\'s also barely water-soluble, which is why washing does so little.',
   },
+  'remove-smell-from-clothes-without-washing': {
+    wa: 'Sweat sits in the collar, curry and smoke sit on the front, musty smell is everywhere. Treat the right place and most clothes need no wash: {url}',
+    x: 'Most clothes that smell are not dirty. Sweat soaks the collar and underarms from inside; food and smoke land on the outside front. Treat the zone, not the whole shirt.',
+  },
   'keep-office-trousers-fresh-without-washing': {
     wa: 'Four zones on the inside of your formals carry almost all of it. Everyone responds by washing the whole trouser, which is what kills the waistband: {url}',
     x: 'Waistband, inner thigh seams, collar lining, cuffs. Four zones on the inside of formal wear produce nearly all the smell, and the standard response is to wash the entire garment every night.',

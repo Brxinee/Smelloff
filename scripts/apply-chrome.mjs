@@ -351,6 +351,7 @@ const PAGES = [
   // first run exactly as they were for the 2026-07-29 batch.
   ...[
     'remove-cooking-smell-from-clothes', 'remove-smell-from-hoodie-without-washing',
+    'remove-smell-from-clothes-without-washing',
     'keep-clothes-fresh-without-washing-machine', 'remove-cigarette-smoke-smell-from-clothes',
     'remove-mothball-almirah-smell-from-clothes', 'keep-office-trousers-fresh-without-washing',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),

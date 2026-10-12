@@ -90,6 +90,22 @@ aggregateRating", which needs real verified-buyer reviews (never beta quotes).
   returns; ask the five delivered customers for reviews (the only route to
   review stars).
 
+## Competitor-informed SEO (2026-10-12, owner: "learn from competitors, don't change design")
+Source: Notion "Fabric Odor Spray Competitor Intelligence" (Faultless ReWear,
+Fresh Wave, Febreze, Mrs. Meyer's, Aquos Silver, NEPSAN, Sano Maxima…). Taken
+as structure, never copy or claims:
+- **Hub `blog/remove-smell-from-clothes-without-washing`** (Fresh Wave's "shop
+  by odor" + ReWear's "between washes"): a smell → where it sits → fix → guide
+  table linking the per-smell and per-garment posts, a refresh-or-wash table,
+  and a Hinglish section ("Kapdon se badbu kaise nikale bina dhoye?") for
+  Indian queries. Blog is **58**; sitemap 72. Uses the collar-check photo (no
+  generated thumbnail; not in apply-thumbnails).
+- PDP meta/OG description leads with "refresh clothes between washes … instead
+  of masking it".
+- Owner-side lessons from the same research: Amazon.in/Flipkart listings
+  (ReWear, TetraClean and Zerodor sell through marketplaces), real reviews on
+  the PDP, and refills/bundles only if margins allow.
+
 ## Search Console round 2: indexing, duplicates, snippets (2026-10-11, GSC export dated 10-12)
 Eight reports (performance 6 months, coverage x2, HTTPS, breadcrumbs, product
 snippets, merchant listings, review snippets). What they showed and did:
