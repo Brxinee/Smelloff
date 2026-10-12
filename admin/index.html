@@ -292,12 +292,9 @@ async function messages() {
 }
 
 /* ── reviews ── */
-// Only verified purchases with no disclosed connection count toward the star
-// rating; everything else is shown on the site with a tag.
+// The site shows and rates only reviews tied to an order (verified buyers).
 function reviewSource(r) {
-  if (r.verified_purchase && r.disclosure === 'none') return ['Verified buyer · counts', 'counts'];
-  if (r.disclosure === 'connection') return ['Buyer · knows the founder', 'tagged'];
-  return ['No order · not verified', 'tagged'];
+  return r.order_id ? ['Verified buyer · shown', 'counts'] : ['No order · hidden on site', 'tagged'];
 }
 
 async function reviews() {
@@ -309,7 +306,7 @@ async function reviews() {
     $('#list').innerHTML = `
       <div class="grid">
         <div class="card kpi"><div class="label">Star rating</div><div class="value">${avg}</div><div class="sub">from ${n(counted.length, 'verified buyer review')}</div></div>
-        <div class="card kpi"><div class="label">All reviews</div><div class="value">${list.length}</div><div class="sub">${list.length - counted.length} tagged, not counted</div></div>
+        <div class="card kpi"><div class="label">All reviews</div><div class="value">${list.length}</div><div class="sub">${list.length - counted.length} hidden (no order)</div></div>
       </div>
       <div class="card">${list.length ? list.map((r) => { const [label, cls] = reviewSource(r); return `
         <div style="border-bottom:1px solid var(--line);padding:10px 0">

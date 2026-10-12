@@ -92,7 +92,7 @@ describe('Review System & Product Schema Integrity', () => {
     assert.ok(!html.includes('googleReviewWidgetMount'), 'index.html must not contain googleReviewWidgetMount');
   });
 
-  it('/reviews shows the same verbatim beta quotes as / and /odorstrike, without stars', () => {
+  it('beta quotes match / word for word, carry no stars and stay off /reviews', () => {
     const code = fs.readFileSync(path.join(ROOT, 'assets/js/reviews-system.js'), 'utf8');
     const idx = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
     const rev = fs.readFileSync(path.join(ROOT, 'reviews.html'), 'utf8');
@@ -101,26 +101,15 @@ describe('Review System & Product Schema Integrity', () => {
     assert.equal(quotes.length, 3);
     for (const q of quotes) assert.ok(idx.includes(q), `beta quote not on the homepage: ${q}`);
     assert.doesNotMatch(block, /r:[1-5]\b/, 'beta testers carry no star rating');
-    assert.match(rev, /\(r\.r \? '<div class="rc-stars"/, 'beta testers (r:0) render without stars');
+    assert.doesNotMatch(rev, /betaTesters|Beta tester/, '/reviews shows verified buyers only');
   });
 
-  it('only verified purchases with no disclosed connection count toward the rating', () => {
+  it('/reviews shows and rates only reviews tied to an order', () => {
     const code = fs.readFileSync(path.join(ROOT, 'assets/js/reviews-system.js'), 'utf8');
-    assert.match(code, /var counts = r\.verified_purchase === true && \(r\.disclosure \|\| 'none'\) === 'none';/);
-    assert.match(code, /buyer: counts/);
-    assert.match(code, /connection: 'Knows the founder'/);
+    assert.match(code, /\/rest\/v1\/reviews\?select=name,rating,body,city,anonymous,created_at&order_id=not\.is\.null&/,
+      'rows without an order never reach the page, and order ids are not sent to the browser');
     const rev = fs.readFileSync(path.join(ROOT, 'reviews.html'), 'utf8');
-    assert.match(rev, /var avg = buyers\.reduce/, 'the aggregate is computed from buyerReviews only');
-    assert.match(rev, /left out of it\./, '/reviews says tagged reviews are left out of the rating');
-  });
-
-  it('the database decides who is a verified buyer', () => {
-    const sql = fs.readFileSync(path.join(ROOT, 'supabase/migrations/20261012_review_disclosure.sql'), 'utf8');
-    assert.match(sql, /verified_purchase boolean\s+generated always as \(order_id is not null\) stored/);
-    assert.match(sql, /where verified_purchase and disclosure = 'none'/, 'rating stats count verified, undisclosed reviews only');
-
-    const fn = fs.readFileSync(path.join(ROOT, 'supabase/functions/submit-review/index.ts'), 'utf8');
-    assert.match(fn, /const disclosure = b\.connection === true \? "connection" : "none";/);
-    assert.doesNotMatch(fn, /disclosure: b\.disclosure/, 'the client never picks its own disclosure value');
+    assert.match(rev, /grid\.innerHTML = buyers\.map\(card\)\.join\(''\)/);
+    assert.match(rev, /var avg = buyers\.reduce/, 'the aggregate is computed from verified buyers only');
   });
 });

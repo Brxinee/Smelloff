@@ -40,24 +40,22 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
-## Star rating from verified buyers only (2026-10-12)
+## /reviews shows verified buyers only (2026-10-12, owner's call)
 Owner asked to generate reviews under friends' names (with their consent) to
 win review stars. That is a fake review under IS 19000:2022 / CCPA and
 Google's review-snippet policy; it was refused. An invite-code flow for
-friends with gifted bottles was built and then removed at the owner's request.
-What stays:
-- **`reviews.verified_purchase` is a generated column** (`order_id is not
-  null`). Only `verified_purchase and disclosure='none'` counts: the /reviews
-  aggregate, the admin Reviews tab and the `review_rating_stats` view (the
-  only allowed source if `includeRating` is ever wired into Product schema).
-  The pre-hardening review with no order shows "Purchase not verified".
-- **Buyers disclose a connection** with a checkbox ("I know the founder or the
-  team") → `disclosure='connection'`, tag "Knows the founder", not counted.
-- Migration `20261012_review_disclosure.sql` must be applied **before** the new
-  `submit-review` is deployed. Until then the site falls back to the old
-  select and nothing counts toward the rating.
+gifted bottles and a "knows the founder" disclosure were built and removed at
+the owner's request ("only buyers' ratings, nothing else"). What stays:
+- **`/reviews` shows and rates only reviews tied to an order.** The query in
+  `reviews-system.js` filters `order_id=not.is.null` server-side (order ids
+  are never selected). The one pre-hardening review with no order is hidden,
+  not deleted. Beta-tester quotes are no longer rendered on `/reviews` (they
+  stay on `/` and `/odorstrike`); the menu hint reads "From verified buyers".
+- `/admin` → Reviews lists every review and marks the ones the site hides.
+- No migration or edge-function change: nothing to deploy outside the Worker.
 - Never write, edit or seed a review for anyone. Never delete a review because
-  it is negative (CCPA dark-pattern guidelines).
+  it is negative (CCPA dark-pattern guidelines). Product schema stars
+  (`includeRating`) may only use reviews with an order.
 
 ## Search, citation and GSC compliance, round 3 (2026-10-11/12, owner: "rank everywhere in the niche")
 A compliance audit of every JSON-LD block, the merchant feed and all live URLs,

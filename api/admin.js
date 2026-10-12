@@ -14,7 +14,7 @@
  *   customers {q?}                 → customers aggregated from orders
  *   messages                       → contact form inbox
  *   updateMessage {id, status}
- *   reviews                        → every review, with whether it counts
+ *   reviews                        → every review; only ones with an order show
  */
 import crypto from 'node:crypto';
 import { checkRateLimit, clientIp } from './_security.js';
@@ -202,7 +202,7 @@ const actions = {
     return { message: rows?.[0] || null };
   },
   async reviews() {
-    return { reviews: await db('reviews?select=id,created_at,name,city,rating,body,anonymous,verified_purchase,disclosure,order_id&order=created_at.desc&limit=300') };
+    return { reviews: await db('reviews?select=id,created_at,name,city,rating,body,anonymous,order_id&order=created_at.desc&limit=300') };
   },
 };
 

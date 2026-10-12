@@ -37,11 +37,6 @@ Deno.serve(async (req: Request) => {
     const anonymous = !!b.anonymous;
     const name = anonymous ? "Anonymous" : String(b.name || "").trim().slice(0, 60) || "Anonymous";
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
-
     if (!UUID_RE.test(orderId)) {
       return jsonResponse(req, { error: "Reviews are for verified buyers — we couldn't find your purchase on this device." }, 403);
     }
@@ -54,6 +49,11 @@ Deno.serve(async (req: Request) => {
     if (body.length < 8 || body.length > 600) {
       return jsonResponse(req, { error: "Write at least a sentence (max 600 characters)." }, 400);
     }
+
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
 
     // The order must exist and be in a review-eligible state (paid/delivered)
     const { data: order, error: orderErr } = await supabase
@@ -74,9 +74,6 @@ Deno.serve(async (req: Request) => {
       return jsonResponse(req, { error: "Invalid or expired review authorization token. Please track your order to get a fresh review link." }, 403);
     }
 
-    // A buyer who knows the founder or the team says so; the review shows the
-    // tag and stays out of the star rating.
-    const disclosure = b.connection === true ? "connection" : "none";
     const addr = (order.address || {}) as Record<string, string>;
     const { data, error } = await supabase
       .from("reviews")
@@ -87,9 +84,8 @@ Deno.serve(async (req: Request) => {
         anonymous,
         city: addr.city || null,
         order_id: order.id,
-        disclosure,
       })
-      .select("name, rating, body, city, anonymous, created_at, verified_purchase, disclosure")
+      .select("name, rating, body, city, anonymous, created_at")
       .single();
 
     if (error) {

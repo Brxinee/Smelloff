@@ -151,7 +151,7 @@ ${ANNOUNCE}
       </a>
       <ul class="sf-menu__list">
         <li><a href="/blog"><span>Guides<small>Fabric odor, explained</small></span>${ICON_CHEV}</a></li>
-        <li><a href="/reviews"><span>Reviews<small>What testers said</small></span>${ICON_CHEV}</a></li>
+        <li><a href="/reviews"><span>Reviews<small>From verified buyers</small></span>${ICON_CHEV}</a></li>
         <li><a href="/faq"><span>FAQ<small>Use, safety, COD, returns</small></span>${ICON_CHEV}</a></li>
         <li><a href="/track-order"><span>Track order<small>With your order ID</small></span>${ICON_CHEV}</a></li>
         <li><a href="/contact"><span>Contact<small>Write to us</small></span>${ICON_CHEV}</a></li>

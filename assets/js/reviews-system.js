@@ -8,10 +8,6 @@
   var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudXFqeWRtb3hjemRqbnNncGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzI2NDgsImV4cCI6MjA5MzEwODY0OH0.6qyyo-1lpntK7FC3H9j_oqWp0W_R1XydVG_IxVUd6F4';
 
   var selectedStars = 0;
-  // Tags for reviews that must not count toward the star rating.
-  var DISCLOSURE_TAGS = {
-    connection: 'Knows the founder'
-  };
 
   // The same three pre-launch beta testers, word for word, as / and
   // /odorstrike. They carry no star rating: they didn't buy, so they aren't
@@ -100,10 +96,6 @@
               '<label for="rvAnon" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer">Post review anonymously</label>' +
             '</div>' +
 
-            '<div id="rvConnectionRow" style="margin:-12px 0 20px;display:flex;align-items:flex-start;gap:8px">' +
-              '<input type="checkbox" id="rvConnection" style="width:16px;height:16px;margin-top:2px;flex:none;accent-color:var(--acid,#b8ff57)">' +
-              '<label for="rvConnection" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer">I know the founder or the Smelloff team personally. <span style="color:rgba(255,255,255,0.5)">Your review will say so and won’t count toward the star rating.</span></label>' +
-            '</div>' +
 
             '<button type="button" class="rv-primary-btn rv-submit" onclick="submitVerifiedReview()">Post review</button>' +
             '<div id="rvFormError" class="rv-error-msg"></div>' +
@@ -191,7 +183,6 @@
     selectedStars = 0;
     document.querySelectorAll('#rvStarPicker button').forEach(function(b){ b.classList.remove('filled'); });
     var ta = document.getElementById('rvText'); if (ta) ta.value = '';
-    var cx = document.getElementById('rvConnection'); if (cx) cx.checked = false;
     var err = document.getElementById('rvFormError'); if (err) err.style.display = 'none';
     var aerr = document.getElementById('rvAuthError'); if (aerr) aerr.style.display = 'none';
   };
@@ -300,7 +291,6 @@
     }
     payload.order_id = orderUuid;
     payload.review_token = reviewToken;
-    payload.connection = !!(document.getElementById('rvConnection') || {}).checked;
 
     var submitBtn = document.querySelector('#rvStepForm .rv-submit');
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Posting…'; }
@@ -330,64 +320,38 @@
     });
   };
 
-  // Splits reviews three ways:
-  //   buyerReviews — a verified purchase with no disclosed connection. The
-  //                  ONLY reviews that count toward the star rating.
-  //   otherReviews — buyers who know the founder, and old rows
-  //                  with no order behind them. Shown with a tag, never counted.
-  //   betaTesters  — the pre-launch quotes, no stars.
-  var REVIEW_COLUMNS = 'name,rating,body,city,anonymous,created_at,verified_purchase,disclosure';
-  var LEGACY_COLUMNS = 'name,rating,body,city,anonymous,created_at';
-
-  function fetchReviews(columns){
-    return fetch(SUPA_URL + '/rest/v1/reviews?select=' + columns + '&order=created_at.desc&limit=200', {
+  // Only reviews tied to a real order are shown or counted. The filter runs
+  // in the query (order_id=not.is.null) so order ids are never sent to the
+  // browser, and rows with no order behind them never reach the page.
+  function refreshAllReviews(){
+    fetch(SUPA_URL + '/rest/v1/reviews?select=name,rating,body,city,anonymous,created_at&order_id=not.is.null&order=created_at.desc&limit=200', {
       headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
-    }).then(function(r){
+    })
+    .then(function(r){
       if (!r.ok) throw new Error('reviews ' + r.status);
       return r.json();
-    });
-  }
-
-  function toCard(r){
-    var counts = r.verified_purchase === true && (r.disclosure || 'none') === 'none';
-    var tag = '';
-    if (!counts) {
-      // verified_purchase is undefined only on the legacy select: no tag
-      // either way, and the review still doesn't count.
-      tag = DISCLOSURE_TAGS[r.disclosure] || (r.verified_purchase === false ? 'Purchase not verified' : '');
-    }
-    return {
-      n: (r.anonymous || !r.name) ? 'Anonymous' : r.name,
-      c: r.city || '',
-      r: Math.max(1, Math.min(5, Number(r.rating) || 5)),
-      t: r.body || '',
-      buyer: counts,
-      tag: tag,
-      created_at: r.created_at || null
-    };
-  }
-
-  function refreshAllReviews(){
-    fetchReviews(REVIEW_COLUMNS)
-    .catch(function(){
-      // Before the disclosure migration is applied the new columns don't
-      // exist. Rows without verified_purchase never count toward the rating.
-      return fetchReviews(LEGACY_COLUMNS);
     })
     .then(function(rows){
-      var cards = (Array.isArray(rows) ? rows : []).map(toCard).filter(function(r){ return r.t; });
-      var buyerReviews = cards.filter(function(r){ return r.buyer; });
-      var otherReviews = cards.filter(function(r){ return !r.buyer; });
+      var verifiedBuyerReviews = (Array.isArray(rows) ? rows : []).map(function(r){
+        return {
+          n: (r.anonymous || !r.name) ? 'Anonymous' : r.name,
+          c: r.city || '',
+          r: Math.max(1, Math.min(5, Number(r.rating) || 5)),
+          t: r.body || '',
+          buyer: true,
+          created_at: r.created_at || null
+        };
+      }).filter(function(r){ return r.t; });
 
       // Callback if page handles rendering
       if (typeof window.onReviewsRefreshed === 'function') {
-        window.onReviewsRefreshed(buyerReviews, BETA_TESTER_TESTIMONIALS, false, otherReviews);
+        window.onReviewsRefreshed(verifiedBuyerReviews, BETA_TESTER_TESTIMONIALS, false);
       }
     })
     .catch(function(){
       // In case of error, do not fabricate numbers! Pass error flag
       if (typeof window.onReviewsRefreshed === 'function') {
-        window.onReviewsRefreshed([], BETA_TESTER_TESTIMONIALS, true, []);
+        window.onReviewsRefreshed([], BETA_TESTER_TESTIMONIALS, true);
       }
     });
   }
