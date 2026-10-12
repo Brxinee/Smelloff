@@ -8,6 +8,15 @@
   var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudXFqeWRtb3hjemRqbnNncGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzI2NDgsImV4cCI6MjA5MzEwODY0OH0.6qyyo-1lpntK7FC3H9j_oqWp0W_R1XydVG_IxVUd6F4';
 
   var selectedStars = 0;
+  // 'buyer' (order verified) or 'invite' (a gifted bottle, single-use code).
+  var reviewMode = 'buyer';
+  var inviteCode = '';
+
+  // Tags for reviews that must not count toward the star rating.
+  var DISCLOSURE_TAGS = {
+    free_product: 'Received a free bottle',
+    connection: 'Knows the founder'
+  };
 
   // The same three pre-launch beta testers, word for word, as / and
   // /odorstrike. They carry no star rating: they didn't buy, so they aren't
@@ -50,14 +59,32 @@
             '</form>' +
             '<div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);font-size:13px;color:rgba(255,255,255,0.6);text-align:center">' +
               'Haven’t ordered yet? <a href="/odorstrike?buy=1" class="rv-buy-link">Buy now — ₹229</a>' +
+              '<br>Got a free bottle from us? <a href="#" class="rv-buy-link" onclick="showInviteStep(); return false;">Use your invite code</a>' +
+            '</div>' +
+          '</div>' +
+
+          '<!-- STEP 1b: Invite code for a gifted bottle -->' +
+          '<div id="rvStepInvite" style="display:none">' +
+            '<h2>Review your free bottle</h2>' +
+            '<p class="rv-desc">Enter the invite code we sent you. Your review will be labelled “Received a free bottle” and won’t count toward the star rating, which comes from paying customers only.</p>' +
+            '<form onsubmit="verifyInviteAndContinue(event); return false;">' +
+              '<div class="rv-field">' +
+                '<label for="rvInviteCode">Invite code</label>' +
+                '<input type="text" id="rvInviteCode" placeholder="8 letters and numbers" maxlength="8" autocomplete="off" autocapitalize="characters" required>' +
+              '</div>' +
+              '<button type="submit" class="rv-primary-btn" id="rvInviteBtn">Continue</button>' +
+              '<div id="rvInviteError" class="rv-error-msg"></div>' +
+            '</form>' +
+            '<div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);font-size:13px;color:rgba(255,255,255,0.6);text-align:center">' +
+              'Bought it? <a href="#" class="rv-buy-link" onclick="showBuyerStep(); return false;">Verify your order instead</a>' +
             '</div>' +
           '</div>' +
 
           '<!-- STEP 2: Review Form -->' +
           '<div id="rvStepForm" style="display:none">' +
-            '<div class="rv-modal-badge">' +
+            '<div class="rv-modal-badge" id="rvFormBadge">' +
               '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>' +
-              ' Order verified' +
+              ' <span id="rvFormBadgeText">Order verified</span>' +
             '</div>' +
             '<h2>Rate ODORSTRIKE</h2>' +
             '<p class="rv-desc">Share how ODORSTRIKE handled sweat, dampness, or shirt odors for you.</p>' +
@@ -95,6 +122,12 @@
               '<label for="rvAnon" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer">Post review anonymously</label>' +
             '</div>' +
 
+            '<div id="rvConnectionRow" style="margin:-12px 0 20px;display:flex;align-items:flex-start;gap:8px">' +
+              '<input type="checkbox" id="rvConnection" style="width:16px;height:16px;margin-top:2px;flex:none;accent-color:var(--acid,#b8ff57)">' +
+              '<label for="rvConnection" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer">I know the founder or the Smelloff team personally. <span style="color:rgba(255,255,255,0.5)">Your review will say so and won’t count toward the star rating.</span></label>' +
+            '</div>' +
+            '<p id="rvInviteNote" style="display:none;margin:-8px 0 20px;font-size:13px;color:rgba(255,255,255,0.6)">This review will be labelled “Received a free bottle” and won’t count toward the star rating.</p>' +
+
             '<button type="button" class="rv-primary-btn rv-submit" onclick="submitVerifiedReview()">Post review</button>' +
             '<div id="rvFormError" class="rv-error-msg"></div>' +
           '</div>' +
@@ -105,7 +138,7 @@
               '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5 9-9"/></svg>' +
             '</div>' +
             '<h2>Review published</h2>' +
-            '<p class="rv-desc" style="max-width:380px;margin:0 auto 24px">Thank you for sharing your experience. Your verified customer review is now live and will help fellow shoppers.</p>' +
+            '<p class="rv-desc" style="max-width:380px;margin:0 auto 24px">Thank you for sharing your experience. Your review is now live and will help other shoppers.</p>' +
             '<button type="button" class="rv-primary-btn" onclick="closeReviewForm()">Done</button>' +
           '</div>' +
 
@@ -146,11 +179,32 @@
   }
 
   function showStep(stepId){
-    ['rvStepAuth', 'rvStepForm', 'rvStepDone'].forEach(function(id){
+    ['rvStepAuth', 'rvStepInvite', 'rvStepForm', 'rvStepDone'].forEach(function(id){
       var el = document.getElementById(id);
       if (el) el.style.display = (id === stepId) ? 'block' : 'none';
     });
   }
+
+  // The form step shows the disclosure that fits how this person got the bottle.
+  function showForm(mode){
+    reviewMode = mode;
+    var invite = mode === 'invite';
+    var badge = document.getElementById('rvFormBadgeText');
+    if (badge) badge.textContent = invite ? 'Free bottle' : 'Order verified';
+    var row = document.getElementById('rvConnectionRow');
+    if (row) row.style.display = invite ? 'none' : 'flex';
+    var note = document.getElementById('rvInviteNote');
+    if (note) note.style.display = invite ? 'block' : 'none';
+    showStep('rvStepForm');
+  }
+
+  window.showInviteStep = function(){
+    ensureModalDOM();
+    showStep('rvStepInvite');
+  };
+  window.showBuyerStep = function(){
+    showStep('rvStepAuth');
+  };
 
   function isVerifiedBuyer(){
     try {
@@ -168,7 +222,46 @@
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
-    showStep(isVerifiedBuyer() ? 'rvStepForm' : 'rvStepAuth');
+    if (isVerifiedBuyer()) showForm('buyer');
+    else showStep('rvStepAuth');
+  };
+
+  window.verifyInviteAndContinue = function(e){
+    if (e && e.preventDefault) e.preventDefault();
+    var btn = document.getElementById('rvInviteBtn');
+    var err = document.getElementById('rvInviteError');
+    var code = (document.getElementById('rvInviteCode').value || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    err.style.display = 'none';
+    if (code.length !== 8) {
+      err.textContent = 'Invite codes are 8 letters and numbers.';
+      err.style.display = 'block';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Checking…';
+    fetch(SUPA_URL + '/functions/v1/submit-review', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ invite_code: code, check: true })
+    })
+    .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return { ok: r.ok, j: j }; }); })
+    .then(function(res){
+      btn.disabled = false;
+      btn.textContent = 'Continue';
+      if (!res.ok) {
+        err.textContent = (res.j && res.j.error) || 'We couldn’t check that code. Please try again.';
+        err.style.display = 'block';
+        return;
+      }
+      inviteCode = code;
+      showForm('invite');
+    })
+    .catch(function(){
+      btn.disabled = false;
+      btn.textContent = 'Continue';
+      err.textContent = 'Connection error. Please try again.';
+      err.style.display = 'block';
+    });
   };
 
   window.closeReviewForm = function(){
@@ -181,6 +274,7 @@
     selectedStars = 0;
     document.querySelectorAll('#rvStarPicker button').forEach(function(b){ b.classList.remove('filled'); });
     var ta = document.getElementById('rvText'); if (ta) ta.value = '';
+    var cx = document.getElementById('rvConnection'); if (cx) cx.checked = false;
     var err = document.getElementById('rvFormError'); if (err) err.style.display = 'none';
     var aerr = document.getElementById('rvAuthError'); if (aerr) aerr.style.display = 'none';
   };
@@ -238,7 +332,7 @@
         localStorage.setItem('smelloff_last_order', JSON.stringify({ code: code, phone: phone }));
       } catch(e){}
 
-      showStep('rvStepForm');
+      showForm('buyer');
     })
     .catch(function(){
       btn.disabled = false;
@@ -268,16 +362,32 @@
       return;
     }
 
-    var orderUuid = '';
-    var reviewToken = '';
-    try {
-      orderUuid = localStorage.getItem('smelloff_order_uuid') || '';
-      reviewToken = localStorage.getItem('smelloff_review_token') || '';
-    } catch(e){}
+    var payload = {
+      name: anon ? 'Anonymous' : (name || (reviewMode === 'invite' ? 'Anonymous' : 'Verified Buyer')),
+      city: city || 'India',
+      rating: selectedStars,
+      body: text,
+      anonymous: anon
+    };
 
-    if (!orderUuid || !reviewToken) {
-      showStep('rvStepAuth');
-      return;
+    if (reviewMode === 'invite') {
+      if (!inviteCode) { showStep('rvStepInvite'); return; }
+      payload.invite_code = inviteCode;
+    } else {
+      var orderUuid = '';
+      var reviewToken = '';
+      try {
+        orderUuid = localStorage.getItem('smelloff_order_uuid') || '';
+        reviewToken = localStorage.getItem('smelloff_review_token') || '';
+      } catch(e){}
+
+      if (!orderUuid || !reviewToken) {
+        showStep('rvStepAuth');
+        return;
+      }
+      payload.order_id = orderUuid;
+      payload.review_token = reviewToken;
+      payload.connection = !!(document.getElementById('rvConnection') || {}).checked;
     }
 
     var submitBtn = document.querySelector('#rvStepForm .rv-submit');
@@ -286,15 +396,7 @@
     fetch(SUPA_URL + '/functions/v1/submit-review', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        order_id: orderUuid,
-        review_token: reviewToken,
-        name: anon ? 'Anonymous' : (name || 'Verified Buyer'),
-        city: city || 'India',
-        rating: selectedStars,
-        body: text,
-        anonymous: anon
-      })
+      body: JSON.stringify(payload)
     })
     .then(function(r){
       if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Post review'; }
@@ -305,6 +407,7 @@
         });
       }
       return r.json().then(function(_j){
+        if (reviewMode === 'invite') inviteCode = '';
         showStep('rvStepDone');
         refreshAllReviews();
       });
@@ -316,32 +419,64 @@
     });
   };
 
-  function refreshAllReviews(){
-    fetch(SUPA_URL + '/rest/v1/reviews?select=name,rating,body,city,anonymous,created_at&order=created_at.desc&limit=200', {
+  // Splits reviews three ways:
+  //   buyerReviews — a verified purchase with no disclosed connection. The
+  //                  ONLY reviews that count toward the star rating.
+  //   otherReviews — gifted bottles, buyers who know the founder, and old rows
+  //                  with no order behind them. Shown with a tag, never counted.
+  //   betaTesters  — the pre-launch quotes, no stars.
+  var REVIEW_COLUMNS = 'name,rating,body,city,anonymous,created_at,verified_purchase,disclosure';
+  var LEGACY_COLUMNS = 'name,rating,body,city,anonymous,created_at';
+
+  function fetchReviews(columns){
+    return fetch(SUPA_URL + '/rest/v1/reviews?select=' + columns + '&order=created_at.desc&limit=200', {
       headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
+    }).then(function(r){
+      if (!r.ok) throw new Error('reviews ' + r.status);
+      return r.json();
+    });
+  }
+
+  function toCard(r){
+    var counts = r.verified_purchase === true && (r.disclosure || 'none') === 'none';
+    var tag = '';
+    if (!counts) {
+      // verified_purchase is undefined only on the legacy select: no tag
+      // either way, and the review still doesn't count.
+      tag = DISCLOSURE_TAGS[r.disclosure] || (r.verified_purchase === false ? 'Purchase not verified' : '');
+    }
+    return {
+      n: (r.anonymous || !r.name) ? 'Anonymous' : r.name,
+      c: r.city || '',
+      r: Math.max(1, Math.min(5, Number(r.rating) || 5)),
+      t: r.body || '',
+      buyer: counts,
+      tag: tag,
+      created_at: r.created_at || null
+    };
+  }
+
+  function refreshAllReviews(){
+    fetchReviews(REVIEW_COLUMNS)
+    .catch(function(){
+      // Before the disclosure migration is applied the new columns don't
+      // exist. Rows without verified_purchase never count toward the rating.
+      return fetchReviews(LEGACY_COLUMNS);
     })
-    .then(function(r){ return r.ok ? r.json() : []; })
     .then(function(rows){
-      var verifiedBuyerReviews = (Array.isArray(rows) ? rows : []).map(function(r){
-        return {
-          n: (r.anonymous || !r.name) ? 'Anonymous' : r.name,
-          c: r.city || '',
-          r: Math.max(1, Math.min(5, Number(r.rating) || 5)),
-          t: r.body || '',
-          buyer: true,
-          created_at: r.created_at || null
-        };
-      }).filter(function(r){ return r.t; });
+      var cards = (Array.isArray(rows) ? rows : []).map(toCard).filter(function(r){ return r.t; });
+      var buyerReviews = cards.filter(function(r){ return r.buyer; });
+      var otherReviews = cards.filter(function(r){ return !r.buyer; });
 
       // Callback if page handles rendering
       if (typeof window.onReviewsRefreshed === 'function') {
-        window.onReviewsRefreshed(verifiedBuyerReviews, BETA_TESTER_TESTIMONIALS, false);
+        window.onReviewsRefreshed(buyerReviews, BETA_TESTER_TESTIMONIALS, false, otherReviews);
       }
     })
     .catch(function(){
       // In case of error, do not fabricate numbers! Pass error flag
       if (typeof window.onReviewsRefreshed === 'function') {
-        window.onReviewsRefreshed([], BETA_TESTER_TESTIMONIALS, true);
+        window.onReviewsRefreshed([], BETA_TESTER_TESTIMONIALS, true, []);
       }
     });
   }
@@ -354,9 +489,18 @@
     }
   });
 
-  // Auto-init on page load
+  // Auto-init on page load. /reviews?invite=CODE opens the gifted-bottle
+  // step with the code filled in (the link the owner sends from /admin).
   document.addEventListener('DOMContentLoaded', function(){
     refreshAllReviews();
+    var invite = '';
+    try { invite = new URLSearchParams(location.search).get('invite') || ''; } catch(e){}
+    invite = invite.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 8);
+    if (invite) {
+      window.openReviewForm();
+      document.getElementById('rvInviteCode').value = invite;
+      showStep('rvStepInvite');
+    }
   });
 
 })();

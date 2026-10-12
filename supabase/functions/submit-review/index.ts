@@ -10,6 +10,7 @@ import {
 } from "../_shared/security.ts";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const INVITE_RE = /^[A-Z0-9]{8}$/;
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return preflight(req);
@@ -32,10 +33,57 @@ Deno.serve(async (req: Request) => {
 
     const orderId = String(b.order_id || "").trim();
     const reviewToken = String(b.review_token || "").trim();
+    const inviteCode = String(b.invite_code || "").trim().toUpperCase();
     const rating = Number(b.rating);
     const body = String(b.body || "").trim();
     const anonymous = !!b.anonymous;
     const name = anonymous ? "Anonymous" : String(b.name || "").trim().slice(0, 60) || "Anonymous";
+
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+
+    // Gifted bottle: a single-use invite from /admin. The review is always
+    // tagged free_product and never counts toward the star rating.
+    if (inviteCode) {
+      if (!INVITE_RE.test(inviteCode)) {
+        return jsonResponse(req, { error: "That invite code doesn't look right. It's 8 letters and numbers." }, 400);
+      }
+      const { data: invite } = await supabase
+        .from("review_invites")
+        .select("id, used_at")
+        .eq("code", inviteCode)
+        .maybeSingle();
+      if (!invite) {
+        return jsonResponse(req, { error: "We couldn't find that invite code." }, 404);
+      }
+      if (invite.used_at) {
+        return jsonResponse(req, { error: "This invite code has already been used for a review." }, 409);
+      }
+      if (b.check === true) return jsonResponse(req, { ok: true });
+
+      if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+        return jsonResponse(req, { error: "Pick a star rating." }, 400);
+      }
+      if (body.length < 8 || body.length > 600) {
+        return jsonResponse(req, { error: "Write at least a sentence (max 600 characters)." }, 400);
+      }
+      const city = String(b.city || "").trim().slice(0, 40) || null;
+      const { data, error } = await supabase
+        .from("reviews")
+        .insert({ name, rating, body, anonymous, city, invite_id: invite.id, disclosure: "free_product" })
+        .select("name, rating, body, city, anonymous, created_at, verified_purchase, disclosure")
+        .single();
+      if (error) {
+        if (String(error.code) === "23505") {
+          return jsonResponse(req, { error: "This invite code has already been used for a review." }, 409);
+        }
+        throw error;
+      }
+      await supabase.from("review_invites").update({ used_at: new Date().toISOString() }).eq("id", invite.id);
+      return jsonResponse(req, { review: data });
+    }
 
     if (!UUID_RE.test(orderId)) {
       return jsonResponse(req, { error: "Reviews are for verified buyers — we couldn't find your purchase on this device." }, 403);
@@ -49,11 +97,6 @@ Deno.serve(async (req: Request) => {
     if (body.length < 8 || body.length > 600) {
       return jsonResponse(req, { error: "Write at least a sentence (max 600 characters)." }, 400);
     }
-
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
 
     // The order must exist and be in a review-eligible state (paid/delivered)
     const { data: order, error: orderErr } = await supabase
@@ -74,6 +117,9 @@ Deno.serve(async (req: Request) => {
       return jsonResponse(req, { error: "Invalid or expired review authorization token. Please track your order to get a fresh review link." }, 403);
     }
 
+    // A buyer who knows the founder or the team says so; the review shows the
+    // tag and stays out of the star rating.
+    const disclosure = b.connection === true ? "connection" : "none";
     const addr = (order.address || {}) as Record<string, string>;
     const { data, error } = await supabase
       .from("reviews")
@@ -84,8 +130,9 @@ Deno.serve(async (req: Request) => {
         anonymous,
         city: addr.city || null,
         order_id: order.id,
+        disclosure,
       })
-      .select("name, rating, body, city, anonymous, created_at")
+      .select("name, rating, body, city, anonymous, created_at, verified_purchase, disclosure")
       .single();
 
     if (error) {

@@ -59,6 +59,8 @@
   .agg-count{display:block;font-size:13px;color:var(--muted);margin-top:2px}
   .agg-cta{margin-left:auto;background:transparent;cursor:pointer;min-height:44px;font-family:var(--body,system-ui,sans-serif);font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);text-decoration:none;border:1px solid var(--accent);border-radius:6px;padding:10px 16px}
   .agg-cta:hover{background:var(--green-dim)}
+  .agg{margin-bottom:12px}
+  .agg-note{margin:0 0 28px;font-size:14px;line-height:1.5;color:var(--muted);max-width:660px}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
   .rc{background:var(--bg-surface);border:1px solid var(--rule);border-radius:var(--sq-lg);padding:18px 16px;display:flex;flex-direction:column}
   .rc-stars{color:var(--accent);font-size:14px;letter-spacing:2px;margin-bottom:8px}
@@ -206,6 +208,8 @@
     <button type="button" class="agg-cta" onclick="openReviewForm()">Write a review</button>
   </div>
 
+  <p class="agg-note">The rating comes from verified buyers only. Reviews from people who got a free bottle or know the founder are labelled and left out of it.</p>
+
   <div class="grid" id="grid" role="list"></div>
   <div class="empty" id="empty">No verified buyer reviews yet: ODORSTRIKE is new, and reviews from people who bought it appear here as they post them. Below is what pre-launch beta testers said.</div>
 
@@ -316,7 +320,7 @@
 </footer>
 <!-- /SF-CHROME:FOOTER -->
 
-<script src="/assets/js/reviews-system.js?v=5" defer></script>
+<script src="/assets/js/reviews-system.js?v=6" defer></script>
 <script>
 (function(){
   function esc(s){
@@ -328,17 +332,24 @@
     var full = '★★★★★'.slice(0, r), rest = '★★★★★'.slice(r);
     return full + '<span class="dim">' + rest + '</span>';
   }
+  // Beta testers have r:0 (no stars). Gifted / connected reviews keep their
+  // stars on the card but carry their tag and never enter the aggregate.
+  function badge(r){
+    if (r.buyer) return 'Verified buyer';
+    if (r.tag) return r.tag;
+    return r.r ? 'Review' : 'Beta tester';
+  }
   function card(r){
     return '<div class="rc" role="listitem">' +
-      (r.buyer ? '<div class="rc-stars" aria-label="' + r.r + ' out of 5">' + stars(r.r) + '</div>' : '') +
+      (r.r ? '<div class="rc-stars" aria-label="' + r.r + ' out of 5">' + stars(r.r) + '</div>' : '') +
       '<p class="rc-text">' + esc(r.t) + '</p>' +
       '<div class="rc-foot"><b>' + esc(r.n) + '</b>' + (r.c ? ' · ' + esc(r.c) : '') +
       (r.u ? ' · ' + esc(r.u) : '') +
-      (r.buyer ? '<span class="rc-badge">Verified buyer</span>' : '<span class="rc-badge">Beta tester</span>') +
+      '<span class="rc-badge">' + esc(badge(r)) + '</span>' +
       '</div></div>';
   }
 
-  window.onReviewsRefreshed = function(buyerReviews, betaTesters, isError){
+  window.onReviewsRefreshed = function(buyerReviews, betaTesters, isError, otherReviews){
     var aggNum = document.getElementById('aggNum');
     var aggStars = document.getElementById('aggStars');
     var aggCount = document.getElementById('aggCount');
@@ -387,7 +398,8 @@
       }
     }
 
-    var allCards = buyers.concat(testers);
+    var others = Array.isArray(otherReviews) ? otherReviews : [];
+    var allCards = buyers.concat(others, testers);
     if (grid) {
       grid.innerHTML = allCards.map(card).join('');
     }

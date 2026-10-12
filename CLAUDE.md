@@ -40,6 +40,28 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Reviews from friends: disclosed, never in the rating (2026-10-12)
+Owner asked to post friends' reviews to win review stars. Writing reviews for
+people (even with their consent) is a fake review under IS 19000:2022 / CCPA
+and Google's review-snippet policy, so it was refused. Built instead:
+- **Invite codes for gifted bottles.** /admin → Reviews → "Create invite"
+  makes a single-use 8-character code (`review_invites`, no anon access) and a
+  WhatsApp message with `https://smelloff.in/reviews?invite=CODE`. The friend
+  writes their own review; `submit-review` forces `disclosure='free_product'`
+  (a DB check enforces it too). Tag: "Received a free bottle".
+- **Buyers disclose a connection** with a checkbox ("I know the founder or the
+  team") → `disclosure='connection'`, tag "Knows the founder".
+- **`reviews.verified_purchase` is a generated column** (`order_id is not
+  null`). Only `verified_purchase and disclosure='none'` counts: the /reviews
+  aggregate, the admin "Star rating" and the `review_rating_stats` view (the
+  only allowed source if `includeRating` is ever wired into Product schema).
+  The pre-hardening review with no order shows "Purchase not verified".
+- Migration `20261012_review_disclosure_and_invites.sql` must be applied
+  **before** the new `submit-review` is deployed. Until then the site falls
+  back to the old select and nothing counts toward the rating.
+- Never write, edit or seed a review for anyone. Never delete a review because
+  it is negative (CCPA dark-pattern guidelines).
+
 ## Search, citation and GSC compliance, round 3 (2026-10-11/12, owner: "rank everywhere in the niche")
 A compliance audit of every JSON-LD block, the merchant feed and all live URLs,
 plus GSC query data. Every structured-data error in the export came from markup
