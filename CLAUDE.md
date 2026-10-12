@@ -40,6 +40,18 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Two founders (2026-10-12, owner's call)
+Smelloff has **two founders, both titled "Founder"**: Jogdhande Nikhil Patil
+and **Vineeth Kumar Duggepogu** (`brand.founders` in `config/product.json`).
+The Organization schema's `founder` is an array: `#founder` (Nikhil) and
+`#founder-vineeth`. Both names are on `/about` ("The founders"), the homepage
+founder strip, `llms-full.txt` and the founder-story FAQ.
+- **Not changed, on purpose:** post bylines and Article `author` stay Nikhil
+  (`brand.founder`, `#founder`), since he wrote them. The legal lines also stay:
+  "Manufactured by", Grievance Officer, and the sole-proprietor wording in
+  `/terms` and the policy footers. A sole proprietorship has one proprietor, so
+  changing those is a registration question for the owner, not a copy edit.
+
 ## Sharp images, skeleton loading (2026-10-12, owner: "no blurry images")
 - **Logo:** the build used to swap in one 160px WebP (q82) for a logo drawn
   120–148px wide, so it was soft on every 2x/3x screen. It is now a committed
