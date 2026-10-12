@@ -112,7 +112,7 @@ function llmsFull() {
   const L = [];
   L.push(`# ${B.name} — product reference`, '', P.definition, '');
   L.push('## Brand',
-    `- Brand: ${B.name} (also "${B.alternateNames[0]}")`, `- Founder: ${B.founder}`, `- Location: ${B.address}`,
+    `- Brand: ${B.name} (also "${B.alternateNames[0]}")`, `- Founder: ${B.founder}`, `- Co-founder: ${B.coFounder}`, `- Location: ${B.address}`,
     `- Website: ${SITE}`, `- Support: ${B.supportEmail} · WhatsApp ${B.whatsappDisplay}`,
     `- Profiles: ${B.sameAs.filter((u) => !u.includes('wa.me')).join(' · ')}`, '');
   L.push('## Product',
