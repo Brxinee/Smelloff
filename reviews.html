@@ -208,7 +208,7 @@
     <button type="button" class="agg-cta" onclick="openReviewForm()">Write a review</button>
   </div>
 
-  <p class="agg-note">The rating comes from verified buyers only. Reviews from people who got a free bottle or know the founder are labelled and left out of it.</p>
+  <p class="agg-note">The rating comes from verified buyers only. Reviews from people who know the founder are labelled and left out of it.</p>
 
   <div class="grid" id="grid" role="list"></div>
   <div class="empty" id="empty">No verified buyer reviews yet: ODORSTRIKE is new, and reviews from people who bought it appear here as they post them. Below is what pre-launch beta testers said.</div>
@@ -332,7 +332,7 @@
     var full = '★★★★★'.slice(0, r), rest = '★★★★★'.slice(r);
     return full + '<span class="dim">' + rest + '</span>';
   }
-  // Beta testers have r:0 (no stars). Gifted / connected reviews keep their
+  // Beta testers have r:0 (no stars). Connected reviews keep their
   // stars on the card but carry their tag and never enter the aggregate.
   function badge(r){
     if (r.buyer) return 'Verified buyer';

@@ -292,66 +292,32 @@ async function messages() {
 }
 
 /* ── reviews ── */
-// Friends who get a free bottle review it with a single-use invite code. Their
-// review is tagged "Received a free bottle" on the site and never counts toward
-// the star rating; only verified purchases without a disclosed connection do.
-const SOURCE = {
-  free_product: 'Free bottle (invite)',
-  connection: 'Buyer · knows the founder',
-};
+// Only verified purchases with no disclosed connection count toward the star
+// rating; everything else is shown on the site with a tag.
 function reviewSource(r) {
   if (r.verified_purchase && r.disclosure === 'none') return ['Verified buyer · counts', 'counts'];
-  return [SOURCE[r.disclosure] || 'No order · not verified', 'tagged'];
+  if (r.disclosure === 'connection') return ['Buyer · knows the founder', 'tagged'];
+  return ['No order · not verified', 'tagged'];
 }
-const inviteLink = (code) => `https://smelloff.in/reviews?invite=${code}`;
-const inviteMessage = (code) => `Hey! Hope the ODORSTRIKE bottle's been useful 🙂 Whenever you get a sec, could you drop a quick review? Just be honest, even if you didn't like it.\n\n${inviteLink(code)}`;
 
 async function reviews() {
-  $('#view').innerHTML = `
-    <h2>Reviews</h2>
-    <div class="card" style="margin-bottom:16px">
-      <h2 style="margin-top:0">Invite a friend who got a free bottle</h2>
-      <p class="muted" style="margin:0 0 12px;font-size:14px">One code per bottle, single use. Their review shows “Received a free bottle” and is left out of the star rating. Ask for an honest review, and never write it for them.</p>
-      <form id="inviteForm" class="tools" style="margin:0">
-        <input name="note" maxlength="80" placeholder="Who is it for? (only you see this)">
-        <button class="btn" type="submit">Create invite</button>
-      </form>
-    </div>
-    <div id="list"><div class="empty">Loading…</div></div>`;
-  $('#inviteForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = e.submitter; btn.disabled = true;
-    try { await api('createReviewInvite', { note: e.target.note.value }); e.target.reset(); toast('Invite created'); load(); }
-    catch (err) { toast('⚠️ ' + err.message); }
-    finally { btn.disabled = false; }
-  });
-  const load = async () => {
-    try {
-      const { reviews: list, invites } = await api('reviews');
-      const counted = list.filter((r) => reviewSource(r)[1] === 'counts');
-      const avg = counted.length ? (counted.reduce((s, r) => s + Number(r.rating), 0) / counted.length).toFixed(1) : '—';
-      $('#list').innerHTML = `
-        <div class="grid">
-          <div class="card kpi"><div class="label">Star rating</div><div class="value">${avg}</div><div class="sub">from ${n(counted.length, 'verified buyer review')}</div></div>
-          <div class="card kpi"><div class="label">All reviews</div><div class="value">${list.length}</div><div class="sub">${list.length - counted.length} tagged, not counted</div></div>
-          <div class="card kpi"><div class="label">Invites</div><div class="value">${invites.length}</div><div class="sub">${invites.filter((i) => i.used_at).length} used</div></div>
-        </div>
-        <div class="card" style="margin-bottom:16px"><h2 style="margin-top:0">Invites</h2>${invites.length ? `<table><thead><tr><th>Code</th><th>For</th><th class="hide-sm">Created</th><th>Status</th><th></th></tr></thead><tbody>${
-          invites.map((i) => `<tr><td class="mono">${esc(i.code)}</td><td>${esc(i.note || '—')}</td><td class="hide-sm muted">${when(i.created_at)}</td><td>${i.used_at ? pill('used') : pill('new')}</td><td class="right">${i.used_at ? '' : `<button class="btn ghost" data-copy="${esc(i.code)}">Copy message</button> <a class="btn ghost" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(inviteMessage(i.code))}">WhatsApp</a>`}</td></tr>`).join('')
-        }</tbody></table>` : '<div class="empty">No invites yet.</div>'}</div>
-        <div class="card"><h2 style="margin-top:0">All reviews</h2>${list.length ? list.map((r) => { const [label, cls] = reviewSource(r); return `
-          <div style="border-bottom:1px solid var(--line);padding:10px 0">
-            <div class="row"><strong>${'★'.repeat(r.rating)}<span class="muted">${'★'.repeat(5 - r.rating)}</span> ${esc(r.anonymous ? 'Anonymous' : r.name)}${r.city ? ' · ' + esc(r.city) : ''}</strong><span class="pill s-${cls}">${esc(label)}</span></div>
-            <p style="margin:6px 0;white-space:pre-wrap">${esc(r.body)}</p>
-            <div class="muted" style="font-size:12px">${when(r.created_at)}</div>
-          </div>`; }).join('') : '<div class="empty">No reviews yet.</div>'}</div>`;
-      for (const b of document.querySelectorAll('button[data-copy]')) b.onclick = async () => {
-        try { await navigator.clipboard.writeText(inviteMessage(b.dataset.copy)); toast('Message copied'); }
-        catch { toast(inviteLink(b.dataset.copy)); }
-      };
-    } catch (e) { $('#list').innerHTML = `<div class="card empty">⚠️ ${esc(e.message)}</div>`; }
-  };
-  load();
+  $('#view').innerHTML = '<h2>Reviews</h2><div id="list"><div class="empty">Loading…</div></div>';
+  try {
+    const { reviews: list } = await api('reviews');
+    const counted = list.filter((r) => reviewSource(r)[1] === 'counts');
+    const avg = counted.length ? (counted.reduce((s, r) => s + Number(r.rating), 0) / counted.length).toFixed(1) : '—';
+    $('#list').innerHTML = `
+      <div class="grid">
+        <div class="card kpi"><div class="label">Star rating</div><div class="value">${avg}</div><div class="sub">from ${n(counted.length, 'verified buyer review')}</div></div>
+        <div class="card kpi"><div class="label">All reviews</div><div class="value">${list.length}</div><div class="sub">${list.length - counted.length} tagged, not counted</div></div>
+      </div>
+      <div class="card">${list.length ? list.map((r) => { const [label, cls] = reviewSource(r); return `
+        <div style="border-bottom:1px solid var(--line);padding:10px 0">
+          <div class="row"><strong>${'★'.repeat(r.rating)}<span class="muted">${'★'.repeat(5 - r.rating)}</span> ${esc(r.anonymous ? 'Anonymous' : r.name)}${r.city ? ' · ' + esc(r.city) : ''}</strong><span class="pill s-${cls}">${esc(label)}</span></div>
+          <p style="margin:6px 0;white-space:pre-wrap">${esc(r.body)}</p>
+          <div class="muted" style="font-size:12px">${when(r.created_at)}</div>
+        </div>`; }).join('') : '<div class="empty">No reviews yet.</div>'}</div>`;
+  } catch (e) { fail(e); }
 }
 
 function setCount(sel, n) { const el = $(sel); el.textContent = n; el.classList.toggle('hidden', !n); }

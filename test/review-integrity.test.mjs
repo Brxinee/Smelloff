@@ -108,24 +108,19 @@ describe('Review System & Product Schema Integrity', () => {
     const code = fs.readFileSync(path.join(ROOT, 'assets/js/reviews-system.js'), 'utf8');
     assert.match(code, /var counts = r\.verified_purchase === true && \(r\.disclosure \|\| 'none'\) === 'none';/);
     assert.match(code, /buyer: counts/);
-    assert.match(code, /free_product: 'Received a free bottle'/);
     assert.match(code, /connection: 'Knows the founder'/);
     const rev = fs.readFileSync(path.join(ROOT, 'reviews.html'), 'utf8');
     assert.match(rev, /var avg = buyers\.reduce/, 'the aggregate is computed from buyerReviews only');
     assert.match(rev, /left out of it\./, '/reviews says tagged reviews are left out of the rating');
   });
 
-  it('the database decides who is a verified buyer and forces the free-bottle tag on invites', () => {
-    const sql = fs.readFileSync(path.join(ROOT, 'supabase/migrations/20261012_review_disclosure_and_invites.sql'), 'utf8');
+  it('the database decides who is a verified buyer', () => {
+    const sql = fs.readFileSync(path.join(ROOT, 'supabase/migrations/20261012_review_disclosure.sql'), 'utf8');
     assert.match(sql, /verified_purchase boolean\s+generated always as \(order_id is not null\) stored/);
-    assert.match(sql, /check \(invite_id is null or disclosure = 'free_product'\)/);
-    assert.match(sql, /check \(order_id is null or invite_id is null\)/);
-    assert.match(sql, /revoke all on public\.review_invites from anon, authenticated/);
     assert.match(sql, /where verified_purchase and disclosure = 'none'/, 'rating stats count verified, undisclosed reviews only');
 
     const fn = fs.readFileSync(path.join(ROOT, 'supabase/functions/submit-review/index.ts'), 'utf8');
-    assert.match(fn, /invite_id: invite\.id, disclosure: "free_product"/);
-    assert.match(fn, /if \(invite\.used_at\)/, 'an invite is single use');
+    assert.match(fn, /const disclosure = b\.connection === true \? "connection" : "none";/);
     assert.doesNotMatch(fn, /disclosure: b\.disclosure/, 'the client never picks its own disclosure value');
   });
 });

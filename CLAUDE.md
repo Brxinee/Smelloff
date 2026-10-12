@@ -40,25 +40,22 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
-## Reviews from friends: disclosed, never in the rating (2026-10-12)
-Owner asked to post friends' reviews to win review stars. Writing reviews for
-people (even with their consent) is a fake review under IS 19000:2022 / CCPA
-and Google's review-snippet policy, so it was refused. Built instead:
-- **Invite codes for gifted bottles.** /admin → Reviews → "Create invite"
-  makes a single-use 8-character code (`review_invites`, no anon access) and a
-  WhatsApp message with `https://smelloff.in/reviews?invite=CODE`. The friend
-  writes their own review; `submit-review` forces `disclosure='free_product'`
-  (a DB check enforces it too). Tag: "Received a free bottle".
-- **Buyers disclose a connection** with a checkbox ("I know the founder or the
-  team") → `disclosure='connection'`, tag "Knows the founder".
+## Star rating from verified buyers only (2026-10-12)
+Owner asked to generate reviews under friends' names (with their consent) to
+win review stars. That is a fake review under IS 19000:2022 / CCPA and
+Google's review-snippet policy; it was refused. An invite-code flow for
+friends with gifted bottles was built and then removed at the owner's request.
+What stays:
 - **`reviews.verified_purchase` is a generated column** (`order_id is not
   null`). Only `verified_purchase and disclosure='none'` counts: the /reviews
-  aggregate, the admin "Star rating" and the `review_rating_stats` view (the
+  aggregate, the admin Reviews tab and the `review_rating_stats` view (the
   only allowed source if `includeRating` is ever wired into Product schema).
   The pre-hardening review with no order shows "Purchase not verified".
-- Migration `20261012_review_disclosure_and_invites.sql` must be applied
-  **before** the new `submit-review` is deployed. Until then the site falls
-  back to the old select and nothing counts toward the rating.
+- **Buyers disclose a connection** with a checkbox ("I know the founder or the
+  team") → `disclosure='connection'`, tag "Knows the founder", not counted.
+- Migration `20261012_review_disclosure.sql` must be applied **before** the new
+  `submit-review` is deployed. Until then the site falls back to the old
+  select and nothing counts toward the rating.
 - Never write, edit or seed a review for anyone. Never delete a review because
   it is negative (CCPA dark-pattern guidelines).
 

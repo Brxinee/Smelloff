@@ -14,8 +14,7 @@
  *   customers {q?}                 → customers aggregated from orders
  *   messages                       → contact form inbox
  *   updateMessage {id, status}
- *   reviews                        → every review (with its source) + invites
- *   createReviewInvite {note?}     → a single-use code for a gifted bottle
+ *   reviews                        → every review, with whether it counts
  */
 import crypto from 'node:crypto';
 import { checkRateLimit, clientIp } from './_security.js';
@@ -165,17 +164,6 @@ export function aggregateCustomers(orders) {
   return [...map.values()].sort((a, b) => (a.last < b.last ? 1 : -1));
 }
 
-/* ── review invites ──────────────────────────────────────────────────── */
-
-// No 0/O/1/I so a code read out over the phone can't be mistyped.
-const INVITE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-
-export function newInviteCode() {
-  let code = '';
-  for (let i = 0; i < 8; i += 1) code += INVITE_ALPHABET[crypto.randomInt(INVITE_ALPHABET.length)];
-  return code;
-}
-
 /* ── actions ─────────────────────────────────────────────────────────── */
 
 const actions = {
@@ -214,25 +202,7 @@ const actions = {
     return { message: rows?.[0] || null };
   },
   async reviews() {
-    const [reviews, invites] = await Promise.all([
-      db('reviews?select=id,created_at,name,city,rating,body,anonymous,verified_purchase,disclosure,order_id,invite_id&order=created_at.desc&limit=300'),
-      db('review_invites?select=id,code,note,created_at,used_at&order=created_at.desc&limit=300'),
-    ]);
-    return { reviews, invites };
-  },
-  async createReviewInvite(body) {
-    const note = String(body.note || '').replace(/[\u0000-\u001f]/g, '').trim().slice(0, 80) || null;
-    // A collision on an 8-character code from 32 symbols is ~1 in 10^12; one
-    // retry covers it.
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      try {
-        const rows = await db('review_invites?select=id,code,note,created_at,used_at', { method: 'POST', body: { code: newInviteCode(), note } });
-        return { invite: rows[0] };
-      } catch (error) {
-        if (attempt === 1 || !/duplicate|unique/i.test(error.message)) throw error;
-      }
-    }
-    return null;
+    return { reviews: await db('reviews?select=id,created_at,name,city,rating,body,anonymous,verified_purchase,disclosure,order_id&order=created_at.desc&limit=300') };
   },
 };
 

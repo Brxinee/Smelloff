@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 process.env.ADMIN_PASSWORD = 'correct horse';
-const { issueSession, verifySession, summarize, aggregateCustomers, newInviteCode, default: handler } = await import('../api/admin.js');
+const { issueSession, verifySession, summarize, aggregateCustomers, default: handler } = await import('../api/admin.js');
 
 function call(body, headers = {}) {
   return new Promise((resolve) => {
@@ -56,35 +56,3 @@ test('stats count only collected money and group customers by phone', () => {
   assert.deepEqual([asha.orders, asha.spent, asha.city], [2, 51800, 'Pune']);
 });
 
-test('review invite codes are 8 unambiguous characters', () => {
-  const seen = new Set();
-  for (let i = 0; i < 500; i += 1) {
-    const code = newInviteCode();
-    assert.match(code, /^[A-HJ-NP-Z2-9]{8}$/);
-    seen.add(code);
-  }
-  assert.equal(seen.size, 500);
-});
-
-test('creating a review invite needs a session and stores only code + note', async () => {
-  assert.equal((await call({ action: 'createReviewInvite', note: 'x' })).status, 401);
-  process.env.SUPABASE_SERVICE_ROLE_KEY = 'service';
-  const realFetch = globalThis.fetch;
-  let sent;
-  globalThis.fetch = async (url, init) => {
-    sent = { url: String(url), body: JSON.parse(init.body) };
-    return new Response(JSON.stringify([{ id: 'i1', ...sent.body, used_at: null }]), { status: 201 });
-  };
-  try {
-    const cookie = `sf_admin=${encodeURIComponent(issueSession())}`;
-    const out = await call({ action: 'createReviewInvite', note: '  Ravi, college\n' }, { cookie });
-    assert.equal(out.status, 200);
-    assert.match(sent.url, /\/rest\/v1\/review_invites\?/);
-    assert.deepEqual(Object.keys(sent.body).sort(), ['code', 'note']);
-    assert.equal(sent.body.note, 'Ravi, college');
-    assert.equal(out.body.invite.code, sent.body.code);
-  } finally {
-    globalThis.fetch = realFetch;
-    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
-  }
-});
