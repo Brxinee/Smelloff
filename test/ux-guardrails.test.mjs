@@ -105,12 +105,13 @@ test('slot photos exist and have alt text', () => {
 });
 
 // Photos load per network: AVIF first with a WebP fallback, several widths,
-// an inline blurred preview, and a head script that drops to the smallest
+// the skeleton shimmer while they load (soft.css §10; owner, 2026-10-12: no
+// blurry previews), and a head script that drops to the smallest
 // file on Data Saver / 2G before any lazy image picks one.
 test('slot photos are responsive, AVIF-first and network-aware', () => {
   for (const f of money) {
     const html = fs.readFileSync(f, 'utf8');
-    const pics = html.match(/<picture class="ph-pic">[\s\S]*?<\/picture>/g) || [];
+    const pics = html.match(/<picture class="ph-pic"><source[\s\S]*?<\/picture>/g) || [];
     assert.ok(pics.length >= 4, `${f}: expected <picture class="ph-pic"> photos`);
     for (const p of pics) {
       const avif = p.match(/<source type="image\/avif" srcset="([^"]+)" sizes="[^"]+">/);
@@ -119,7 +120,7 @@ test('slot photos are responsive, AVIF-first and network-aware', () => {
       assert.ok(files.length >= 2, `${f}: AVIF needs more than one width`);
       for (const file of files) assert.ok(fs.existsSync(file), `${f}: ${file} missing`);
       assert.match(p, /\d+w, \/assets\/[^"]+\.webp \d+w/, `${f}: WebP fallback needs several widths`);
-      assert.match(p, /data-no-skel style="background:url\(data:image\/webp;base64,/, `${f}: blurred preview missing`);
+      assert.doesNotMatch(p, /data-no-skel|data:image/, `${f}: photos show the skeleton while loading, never a blurred preview`);
     }
     const head = html.slice(0, html.indexOf('</head>'));
     assert.match(head, /navigator\.connection/, `${f}: network-aware sizes script must sit in <head>`);
@@ -138,7 +139,7 @@ test('homepage hero is a fast, static, product-in-use photo', () => {
   assert.match(img[0], /fetchpriority="high"/);
   assert.doesNotMatch(img[0], /loading="lazy"/, 'the LCP image must load eagerly');
   assert.match(img[0], /alt="[^"]*fabric, not the skin"/, 'alt must say what the photo shows');
-  assert.match(img[0], /style="background:url\(data:image\/webp;base64,/, 'blurred preview missing');
+  assert.doesNotMatch(img[0], /data-no-skel|data:image/, 'the hero shows the skeleton while loading, not a blurred preview');
   assert.match(hero, /<source type="image\/avif" srcset="[^"]+"/);
   const picSizes = hero.match(/<source type="image\/avif" srcset="[^"]+" sizes="([^"]+)"/)[1];
   const preload = html.match(/<link rel="preload" as="image" type="image\/avif" fetchpriority="high"\s+imagesrcset="[^"]+"\s+imagesizes="([^"]+)">/);
