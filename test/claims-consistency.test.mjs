@@ -32,3 +32,13 @@ test('no page contradicts the product facts in config/product.json', () => {
     }
   }
 });
+
+// 2026-10-11: a chat tool's citation token ("fileciteturn8file0")
+// had been pasted into the best-fabric guide and was live in the page text.
+test('no pasted AI-tool residue (citation tokens, private-use or zero-width characters)', () => {
+  for (const f of pages) {
+    const text = fs.readFileSync(f, 'utf8');
+    const m = text.match(/[-​-‍⁠﻿]|filecite|citeturn|turn\d+(?:file|search|view)\d+|oaicite|contentReference\[/);
+    assert.ok(!m, `${f}: "${m && text.slice(Math.max(0, m.index - 30), m.index + 30)}"`);
+  }
+});
