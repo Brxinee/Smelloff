@@ -327,3 +327,21 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
     });
   });
 });
+
+// 2026-10-11: seven guides had no link from any other guide and 19 had at
+// most one. apply-reader's CLUSTERS give each post three related guides,
+// rotated so each is linked from three others in its topic.
+it('every guide links three related guides and is linked from at least three', () => {
+  const posts = fs.readdirSync('blog').filter((f) => f.endsWith('.html') && f !== 'index.html').map((f) => f.slice(0, -5));
+  const inbound = Object.fromEntries(posts.map((p) => [p, new Set()]));
+  for (const p of posts) {
+    const html = fs.readFileSync(`blog/${p}.html`, 'utf8');
+    const block = html.match(/<!-- RELATED:START[\s\S]*?<!-- RELATED:END -->/);
+    assert.ok(block, `${p}: no related-guides block`);
+    const links = [...block[0].matchAll(/href="\/blog\/([a-z0-9-]+)"/g)].map((m) => m[1]);
+    assert.equal(links.length, 3, `${p}: related guides`);
+    for (const l of links) assert.ok(posts.includes(l) && l !== p, `${p}: bad related link ${l}`);
+    for (const m of html.matchAll(/href="(?:https:\/\/smelloff\.in)?\/blog\/([a-z0-9-]+)/g)) if (m[1] !== p && inbound[m[1]]) inbound[m[1]].add(p);
+  }
+  for (const [p, from] of Object.entries(inbound)) assert.ok(from.size >= 3, `${p} is linked from ${from.size} guides`);
+});

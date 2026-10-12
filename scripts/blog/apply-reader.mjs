@@ -25,6 +25,11 @@
      that exist on the page. datePublished never runs after dateModified.
    - The visible "Updated" date is the Article's dateModified (35 posts showed
      a different date than their schema). Edit dateModified, never the text.
+   - "Related guides": three links to posts in the same topic cluster
+     (CLUSTERS below), rotated so every post in a cluster is linked from three
+     others. 19 guides had at most one link from another guide and seven had
+     none (only the /blog index), the classic "crawled, not indexed" profile.
+     A new post must join a cluster or this script throws.
 
    Idempotent. `--check` exits 1 if any post would change (wired into build).
    Run `node scripts/apply-chrome.mjs` afterwards only if you also changed a
@@ -46,6 +51,45 @@ const PERSON = {
   url: `${BRAND.website}/about`, worksFor: ORG,
 };
 const PUBLISHER = { ...ORG, logo: { '@type': 'ImageObject', url: BRAND.logo, width: 180, height: 180 } };
+// Topic clusters by search intent. Order matters: post i links to the next
+// three in its cluster (wrapping), so each is linked from exactly three.
+const CLUSTERS = {
+  sweat: ['why-shirt-zones-smell-after-washing', 'why-clothes-smell-bad-again-after-sweating',
+    'why-body-odor-comes-back-on-clothes-so-quickly', 'why-clean-shirt-starts-smelling-within-hours',
+    'why-sweat-smells-stronger-on-some-shirts', 'office-ac-trap-why-rewear-shirts-smell-worse',
+    'spray-to-remove-sweat-smell-from-clothes-quickly', 'odor-on-clothes-vs-odor-in-clothes',
+    'why-water-makes-clothing-odor-louder', 'mumbai-humidity-sweat-smell-survival-guide'],
+  fabric: ['which-fabrics-hold-odor-most', 'why-polyester-holds-odor-longer-than-cotton',
+    'gym-clothes-smell-after-washing', 'how-often-to-wash-jeans-india', 'does-fabric-spray-stain-clothes'],
+  laundry: ['why-clothes-smell-bad-after-drying', 'why-washing-machine-makes-clothes-smell',
+    'dry-air-clothes-indian-home', 'damp-clothes-musty-smell-monsoon-fix',
+    'why-clothes-smell-musty-after-being-stored', 'how-to-freshen-clothes-stored-for-months',
+    'why-clothes-smell-in-wardrobe-even-when-clean', 'remove-mothball-almirah-smell-from-clothes',
+    'vinegar-baking-soda-fabric-softener', 'why-clothes-smell-stale-in-ac-room'],
+  smells: ['remove-cooking-smell-from-clothes', 'remove-cigarette-smoke-smell-from-clothes',
+    'remove-incense-agarbatti-dhoop-smell', 'why-traffic-fumes-cling-to-clothes',
+    'remove-smell-from-blazer-without-dry-cleaning'],
+  refresh: ['remove-smell-from-hoodie-without-washing', 'keep-office-trousers-fresh-without-washing',
+    'keep-clothes-fresh-without-washing-machine', 'keep-clothes-fresh-while-travelling',
+    'how-to-pack-sweaty-clothes-without-bag-smell', 'wedding-festive-wear-odor-guide', 'wash-refresh-or-wear'],
+  category: ['deodorant-vs-fabric-mist', 'deodorant-perfume-on-fabric', 'perfume-plus-sweat-chemical-reaction',
+    'why-deodorant-stops-working-after-3-hours', 'alternative-to-deodorant-for-clothes-smell',
+    'best-deodorant-spray-for-clothes-not-skin', 'what-is-fabric-odor-eliminator'],
+  buying: ['best-fabric-odor-spray-india-2026-body-odor', 'best-body-odor-remover-spray-for-men-india',
+    'fabric-deodorizer-spray-india-guide-2026', 'odorstrike-vs-febreze-india', 'ambi-pur-vs-odorstrike',
+    'where-to-buy-odorstrike-india', 'odorstrike-review-30-day-india-test'],
+  product: ['how-to-use-odorstrike', 'odorstrike-ingredients', 'hpbcd-cyclodextrin-fabric-odor',
+    'zinc-pca-fabric-odor-ingredient-guide', 'how-odor-neutralizer-works-on-fabric', 'why-i-built-odorstrike'],
+};
+const RELATED = 3;
+function relatedFor(slug) {
+  const list = Object.values(CLUSTERS).find((c) => c.includes(slug));
+  if (!list) throw new Error(`apply-reader: blog/${slug}.html is in no CLUSTERS topic — add it to one`);
+  const i = list.indexOf(slug);
+  return Array.from({ length: Math.min(RELATED, list.length - 1) }, (_, k) => list[(i + 1 + k) % list.length]);
+}
+let TITLES = {};
+
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const longDate = (iso) => { const [y, m, d] = iso.split('-').map(Number); return `${MONTHS[m - 1]} ${d}, ${y}`; };
 const strip = (h) => h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
@@ -104,7 +148,7 @@ function normalizeSchema(html) {
   return html;
 }
 
-function transform(html) {
+function transform(html, slug) {
   // 1 · Remove an earlier TOC so re-runs replace rather than stack.
   html = html.replace(/\n?[ \t]*<!-- TOC:START[\s\S]*?<!-- TOC:END -->\n?/g, '');
 
@@ -168,6 +212,24 @@ function transform(html) {
   html = html.replace(/(<a [^>]*class="buy-btn"[^>]*>(?:(?!<\/a>)[\s\S])*<\/a>)(?!\s*<a class="cta-link")/g,
     '$1 <a class="cta-link" href="/odorstrike">View product details</a>');
 
+  // 5a · Related guides (same topic cluster).
+  html = html.replace(/\n?[ \t]*<!-- RELATED:START[\s\S]*?<!-- RELATED:END -->/g, '\n    <!-- RELATED:SLOT -->');
+  html = html.replace(/\n?[ \t]*<section class="related-guides"[\s\S]*?<\/section>/g, (m) =>
+    html.includes('<!-- RELATED:SLOT -->') ? '' : '\n    <!-- RELATED:SLOT -->');
+  if (!html.includes('<!-- RELATED:SLOT -->')) {
+    const at = html.indexOf('<aside class="post-share"') !== -1 ? html.indexOf('<aside class="post-share"') : html.indexOf('</article>');
+    html = `${html.slice(0, at)}<!-- RELATED:SLOT -->\n    ${html.slice(at)}`;
+  }
+  const cards = relatedFor(slug).map((r) =>
+    `      <li><a class="guide-card" href="/blog/${r}"><span class="guide-card__title">${esc(TITLES[r])}</span><span class="guide-card__arrow" aria-hidden="true">&#8594;</span></a></li>`).join('\n');
+  html = html.replace(/<!-- RELATED:SLOT -->(?:\n<!-- RELATED:SLOT -->)*/,
+    `<!-- RELATED:START — generated by scripts/blog/apply-reader.mjs from its CLUSTERS. -->\n` +
+    `    <section class="related-guides" aria-labelledby="related-heading">\n` +
+    `    <p class="eyebrow" id="related-heading">Related guides</p>\n` +
+    `    <ul class="guide-grid">\n${cards}\n    </ul>\n    </section>\n    <!-- RELATED:END -->`);
+  html = html.replace(/\n?[ \t]*<!-- RELATED:SLOT -->/g, '');
+  html = html.replace(/\n(?:[ \t]*\n){2,}([ \t]*<!-- RELATED:START)/, '\n\n$1');
+
   // 5b · Every table scrolls inside its own keyboard-reachable region on
   // phones (13 bare <table>s were pushing the page 4–50px wide).
   html = html.replace(/(<div class="table-scroll"[^>]*>)?(<table\b[\s\S]*?<\/table>)(<\/div>)?/g, (m, open, table) =>
@@ -196,10 +258,21 @@ function transform(html) {
 }
 
 let changed = 0;
-for (const f of readdirSync(join(ROOT, 'blog')).filter((f) => f.endsWith('.html') && f !== 'index.html')) {
+const POSTS = readdirSync(join(ROOT, 'blog')).filter((f) => f.endsWith('.html') && f !== 'index.html');
+// Card text = the post's <title> without the brand suffix: written for search,
+// so it says what the post answers (some H1s are editorial, e.g. "The drum
+// handed the smell back"), which makes it the better anchor text.
+TITLES = Object.fromEntries(POSTS.map((f) => {
+  const t = readFileSync(join(ROOT, 'blog', f), 'utf8').match(/<title>([\s\S]*?)<\/title>/);
+  return [f.slice(0, -5), strip(t ? t[1] : f).replace(/\s+\|\s+(?:Smelloff|ODORSTRIKE)\s*$/i, '')];
+}));
+const clustered = Object.values(CLUSTERS).flat();
+for (const s of clustered) if (!TITLES[s]) throw new Error(`apply-reader: CLUSTERS lists ${s}, which has no post`);
+if (new Set(clustered).size !== clustered.length) throw new Error('apply-reader: a post is in two CLUSTERS');
+for (const f of POSTS) {
   const p = join(ROOT, 'blog', f);
   const before = readFileSync(p, 'utf8');
-  const after = transform(before);
+  const after = transform(before, f.slice(0, -5));
   if (after !== before) {
     changed++;
     if (CHECK) console.log(`  ${f} (stale)`);
