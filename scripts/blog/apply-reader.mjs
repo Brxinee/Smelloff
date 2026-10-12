@@ -210,8 +210,10 @@ function transform(html, slug) {
   html = normalizeSchema(html);
 
   // 5 · Product card: bottle + a route to the product page that isn't checkout.
+  // Re-stamped every run so a new bottle image reaches every post.
+  html = html.replace(/<div class="end-cta"><img class="cta-img"[^>]*>/g, '<div class="end-cta">');
   html = html.replace(/<div class="end-cta">(?!<img class="cta-img")/g,
-    '<div class="end-cta"><img class="cta-img" src="/assets/odorstrike-bottle-cutout.webp" alt="" width="241" height="915" loading="lazy" decoding="async">');
+    '<div class="end-cta"><img class="cta-img" src="/assets/odorstrike-bottle-studio-140.webp" srcset="/assets/odorstrike-bottle-studio-140.webp 140w, /assets/odorstrike-bottle-studio-276.webp 276w" sizes="62px" alt="" width="276" height="1047" loading="lazy" decoding="async" data-no-skel>');
   html = html.replace(/(<a [^>]*class="buy-btn"[^>]*>(?:(?!<\/a>)[\s\S])*<\/a>)(?!\s*<a class="cta-link")/g,
     '$1 <a class="cta-link" href="/odorstrike">View product details</a>');
 

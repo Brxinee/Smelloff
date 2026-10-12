@@ -50,6 +50,20 @@ the move silently dropped, now restored:
   show the soft.css §10 skeleton shimmer until loaded; a test forbids
   `data:image` previews in `.ph-pic`. Transparent cutouts keep `data-no-skel`.
 - Blog index lead story has its own `sizes` (`lead` in apply-thumbnails).
+- **Offer boxes (`/#buy`, `/odorstrike#buy`) show the owner's photo of the
+  bottle in hand on pure black** (`assets/photos/offer-in-hand-black*`, AVIF
+  q76 4:4:4 + WebP q88 at 400/640/960/1152 from the original upload; panel
+  `#000` so it runs edge to edge; 4:5 on phones, fills the column from 768).
+  Owner's pick over the cutout-on-a-lime-disc version.
+- **The old `odorstrike-bottle-cutout` (241px, stair-stepped edges) is retired
+  from pages.** Cart drawer, blog end cards and the blog index band use
+  `assets/odorstrike-bottle-studio-{140,276}.{avif,webp}`: matted from
+  `pdp-01-hero.webp` against its fitted grey background, clear cap kept, the
+  floor shadow clipped by mirroring the base. A test forbids the old file on
+  pages. The old file stays in `/assets` for emails/other links.
+- **Label artwork typos, owner's call:** every bottle render and the in-hand
+  photo read "Fabric Oolor Eiiminator Mist" and "GYMWEAR" as "OYMWEAR" /
+  "GYNWEAR". Readable on desktop in the offer box.
 - A DPR-3/DPR-2 audit of the built site: every image now gets ≥2 device px per
   CSS px except four photos already at their largest file
   (`home-04-dried-clear`, `pdp-05-dried-clear`, `pdp-commute-collar`,
