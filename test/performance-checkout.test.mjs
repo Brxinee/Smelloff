@@ -44,7 +44,10 @@ test('production performance hardening configuration', () => {
   assert.ok(generator.includes('assets/css/chrome.css'), 'shared chrome CSS must have a delivery path');
   assert.ok(generator.includes('rel="preload"'), 'shared CSS should start as non-render-blocking preloads');
   assert.ok(generator.includes('sf-critical-chrome'), 'critical chrome styles must remain inline for first paint');
-  assert.ok(generator.includes('/assets/optimized/logo-smelloff-white-160.webp'), 'chrome generator must use optimized logo assets');
+  // The logo is a committed lossless WebP set with srcset: one 160px file
+  // was soft on every 2x/3x screen (2026-10-12).
+  assert.ok(generator.includes('/assets/brand/logo-smelloff-white-480.webp 480w'), 'logo needs a 3x-sharp srcset');
+  for (const w of [160, 320, 480]) assert.ok(fs.existsSync(`assets/brand/logo-smelloff-white-${w}.webp`), `logo ${w}w missing`);
 });
 
 // Checkout redesigned 2026-10-10 against Baymard: contact → delivery →

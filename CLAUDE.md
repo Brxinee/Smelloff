@@ -40,6 +40,34 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Sharp images, skeleton loading (2026-10-12, owner: "no blurry images")
+- **Logo:** the build used to swap in one 160px WebP (q82) for a logo drawn
+  120–148px wide, so it was soft on every 2x/3x screen. It is now a committed
+  lossless set `assets/brand/logo-smelloff-white-{160,320,480}.webp` (4–9KB)
+  with `srcset` + `sizes="(min-width:900px) 148px, 120px"`, in every page and
+  in `apply-chrome.mjs`. Nothing to strip after a local apply-chrome run.
+- **No blurred previews.** Photos on `/` and `/odorstrike` (hero included)
+  show the soft.css §10 skeleton shimmer until loaded; a test forbids
+  `data:image` previews in `.ph-pic`. Transparent cutouts keep `data-no-skel`.
+- Blog index lead story has its own `sizes` (`lead` in apply-thumbnails).
+- **Owner: no cutouts and no cropping ("don't cut").** The offer boxes
+  (`/#buy`, `/odorstrike#buy`), the cart drawer, every post's end card and
+  the blog index band show the owner's photo of the bottle in hand on pure
+  black (`assets/photos/offer-in-hand-black*`, AVIF q76 4:4:4 + WebP q88 at
+  400/640/960/1152 from the original upload), **whole**: `object-fit:contain`
+  on a `#000` panel, so the photo's black meets the panel and no bars show.
+  The PDP's `.ph-photo` grey background is cleared for it (it showed beside
+  the photo). The old 241px `odorstrike-bottle-cutout` stays in `/assets`
+  for emails only; a test forbids any bottle cutout on pages and pins
+  `contain` on both offer photos.
+- **Label artwork typos, owner's call:** every bottle render and the in-hand
+  photo read "Fabric Oolor Eiiminator Mist" and "GYMWEAR" as "OYMWEAR" /
+  "GYNWEAR". Readable on desktop in the offer box.
+- A DPR-3/DPR-2 audit of the built site: every image now gets ≥2 device px per
+  CSS px except four photos already at their largest file
+  (`home-04-dried-clear`, `pdp-05-dried-clear`, `pdp-commute-collar`,
+  `home-01-collar-check` on a post): they need higher-resolution originals.
+
 ## Search, citation and GSC compliance, round 3 (2026-10-11/12, owner: "rank everywhere in the niche")
 A compliance audit of every JSON-LD block, the merchant feed and all live URLs,
 plus GSC query data. Every structured-data error in the export came from markup
