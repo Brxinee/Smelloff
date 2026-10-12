@@ -9,10 +9,13 @@
 
   var selectedStars = 0;
 
+  // The same three pre-launch beta testers, word for word, as / and
+  // /odorstrike. They carry no star rating: they didn't buy, so they aren't
+  // rated reviews, and they never count towards the aggregate.
   var BETA_TESTER_TESTIMONIALS = [
-    {n:'Rohit S.', c:'Hyderabad', r:5, u:'Commute', t:"Bike rider in Hyderabad heat — 2 sprays on the collar before leaving and the shirt smells neutral after a 40-min ride. Fits in my back pocket. Game changer.", buyer:false},
-    {n:'Aarav M.', c:'Bangalore', r:5, u:'Gym', t:"Used it on a polyester gym tee that already smelled even after washing. Sprayed it, waited 10 seconds — odor gone. Not masked. Actually gone.", buyer:false},
-    {n:'Priya K.', c:'Mumbai', r:4, u:'Office formals', t:"Works on cotton kurtas and office shirts. Doesn't replace washing for heavy stains, but for re-wear days it's perfect. Pocket size is the real win.", buyer:false}
+    {n:'Rohit, 26', c:'Bengaluru', r:0, u:'', t:"Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.", buyer:false},
+    {n:'Aakash, 24', c:'Pune', r:0, u:'', t:"Lives in my gym bag now. Post-workout, pre-Uber, no more ‘should I shower at office’ anxiety.", buyer:false},
+    {n:'Karan, 29', c:'Delhi', r:0, u:'', t:"Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger.", buyer:false}
   ];
 
   // Injects #rvModal into body if not already present

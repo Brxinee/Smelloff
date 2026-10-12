@@ -1693,7 +1693,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <h3 id="cartTitle">Your cart <span class="cart-n" id="cartN" hidden></span></h3>
       <button type="button" class="cart-close" aria-label="Close cart" onclick="closeCartDrawer()"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
     </div>
-    <div class="cart-ship-bar"><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><strong>Free shipping</strong> · arrives in 3–7 business days</span></div>
+    <div class="cart-ship-bar"><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><strong>Free shipping</strong> · ships in 48 hours · 3–5 business days to metros</span></div>
     <div class="cart-body">
       <!-- An empty state with no way out is a dead end: anyone arriving from
            the header cart on another page (/odorstrike?cart=open) must get a
@@ -3323,7 +3323,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       var D = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       var f = function (d) { return D[d.getDay()] + ' ' + d.getDate() + ' ' + M[d.getMonth()]; };
       var est = typeof window.calculateDeliveryEstimate === 'function' ? window.calculateDeliveryEstimate() : null;
-      eta.textContent = est ? f(est.loDate) + ' – ' + f(est.hiDate) : 'Within 3–7 business days';
+      eta.textContent = est ? f(est.loDate) + ' – ' + f(est.hiDate) : '3–5 business days to metros, 5–7 elsewhere';
       var small = document.createElement('span');
       small.style.cssText = 'display:block;color:var(--muted);font-size:13px;margin-top:2px';
       small.textContent = 'Ships from Hyderabad within 48 hours';
@@ -4162,7 +4162,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
-<script src="/assets/js/reviews-system.js?v=4" defer></script>
+<script src="/assets/js/reviews-system.js?v=5" defer></script>
 <script src="/assets/js/track.js?v=801e292b" defer></script>
 </body>
 </html>

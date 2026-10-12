@@ -75,20 +75,32 @@ describe('Review System & Product Schema Integrity', () => {
     assert.ok(secCode.includes('constantTimeEqual'), 'security.ts must use constant-time equality');
   });
 
-  it('html files reference the updated cache-busted reviews-system.js?v=4', () => {
+  it('html files reference the updated cache-busted reviews-system.js?v=5', () => {
     const odor = fs.readFileSync(path.join(ROOT, 'odorstrike.html'), 'utf8');
     const rev = fs.readFileSync(path.join(ROOT, 'reviews.html'), 'utf8');
     const idx = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
     const trk = fs.readFileSync(path.join(ROOT, 'track-order.html'), 'utf8');
 
-    assert.ok(odor.includes('/assets/js/reviews-system.js?v=4'), 'odorstrike.html must use ?v=4');
-    assert.ok(rev.includes('/assets/js/reviews-system.js?v=4'), 'reviews.html must use ?v=4');
-    assert.ok(idx.includes('/assets/js/reviews-system.js?v=4'), 'index.html must use ?v=4');
-    assert.ok(trk.includes('/assets/js/reviews-system.js?v=4'), 'track-order.html must use ?v=4');
+    assert.ok(odor.includes('/assets/js/reviews-system.js?v=5'), 'odorstrike.html must use ?v=5');
+    assert.ok(rev.includes('/assets/js/reviews-system.js?v=5'), 'reviews.html must use ?v=5');
+    assert.ok(idx.includes('/assets/js/reviews-system.js?v=5'), 'index.html must use ?v=5');
+    assert.ok(trk.includes('/assets/js/reviews-system.js?v=5'), 'track-order.html must use ?v=5');
   });
 
   it('index.html does not contain googleReviewWidgetMount', () => {
     const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
     assert.ok(!html.includes('googleReviewWidgetMount'), 'index.html must not contain googleReviewWidgetMount');
+  });
+
+  it('/reviews shows the same verbatim beta quotes as / and /odorstrike, without stars', () => {
+    const code = fs.readFileSync(path.join(ROOT, 'assets/js/reviews-system.js'), 'utf8');
+    const idx = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+    const rev = fs.readFileSync(path.join(ROOT, 'reviews.html'), 'utf8');
+    const block = code.match(/var BETA_TESTER_TESTIMONIALS = \[([\s\S]*?)\];/)[1];
+    const quotes = [...block.matchAll(/t:"([^"]+)"/g)].map(m => m[1]);
+    assert.equal(quotes.length, 3);
+    for (const q of quotes) assert.ok(idx.includes(q), `beta quote not on the homepage: ${q}`);
+    assert.doesNotMatch(block, /r:[1-5]\b/, 'beta testers carry no star rating');
+    assert.match(rev, /\(r\.buyer \? '<div class="rc-stars"/, 'stars render for verified buyers only');
   });
 });

@@ -316,7 +316,7 @@
 </footer>
 <!-- /SF-CHROME:FOOTER -->
 
-<script src="/assets/js/reviews-system.js?v=4" defer></script>
+<script src="/assets/js/reviews-system.js?v=5" defer></script>
 <script>
 (function(){
   function esc(s){
@@ -330,7 +330,7 @@
   }
   function card(r){
     return '<div class="rc" role="listitem">' +
-      '<div class="rc-stars" aria-label="' + r.r + ' out of 5">' + stars(r.r) + '</div>' +
+      (r.buyer ? '<div class="rc-stars" aria-label="' + r.r + ' out of 5">' + stars(r.r) + '</div>' : '') +
       '<p class="rc-text">' + esc(r.t) + '</p>' +
       '<div class="rc-foot"><b>' + esc(r.n) + '</b>' + (r.c ? ' · ' + esc(r.c) : '') +
       (r.u ? ' · ' + esc(r.u) : '') +

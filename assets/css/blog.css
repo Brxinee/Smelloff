@@ -80,7 +80,7 @@ img { max-width: 100%; height: auto; display: block; }
 .article-breadcrumbs a { display: inline-flex; align-items: center; min-height: 24px; color: var(--text-2); text-decoration: none; }
 .article-breadcrumbs a:hover { color: var(--acid); }
 .article-breadcrumbs .sep { opacity: .5; }
-.article-breadcrumbs [aria-current] { color: var(--muted); }
+.article-breadcrumbs [aria-current] { color: var(--muted); min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .article-meta {
   display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
