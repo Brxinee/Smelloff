@@ -415,8 +415,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .cart-btn .cart-count[data-empty="1"]{display:none}
 
   /* CART DRAWER (2026-10-10) — Baymard cart research, applied:
-     · the total on the button must equal the total in the summary (it said
-       ₹229 above and ₹289 on the button: the COD fee was always added);
+     · the total on the button must equal the total in the summary (the
+       button used to add the COD fee to a prepaid subtotal);
      · fees named before checkout, shipping shown as a line, not a footnote;
      · Remove sits beside the quantity, not a screen away from it;
      · delivery window + returns + COD next to the decision;
@@ -1611,7 +1611,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
 <link rel="preload" href="/assets/css/chrome.css?v=b664f938" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=b664f938"></noscript>
-<script src="/assets/js/chrome.js?v=79ff758e" defer></script>
+<script src="/assets/js/chrome.js?v=12c40350" defer></script>
 </head>
 <body>
 
@@ -1693,7 +1693,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <h3 id="cartTitle">Your cart <span class="cart-n" id="cartN" hidden></span></h3>
       <button type="button" class="cart-close" aria-label="Close cart" onclick="closeCartDrawer()"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
     </div>
-    <div class="cart-ship-bar"><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><strong>Free shipping</strong> · arrives in 3–7 business days</span></div>
+    <div class="cart-ship-bar"><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><strong>Free shipping</strong> · ships in 48 hours · 3–5 business days to metros</span></div>
     <div class="cart-body">
       <!-- An empty state with no way out is a dead end: anyone arriving from
            the header cart on another page (/odorstrike?cart=open) must get a
@@ -1974,7 +1974,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <ul class="fix-features">
           <li><span><strong>Neutralizes odor — doesn't hide it.</strong>HPβCD traps odor in the fibres; Zinc PCA neutralizes it.</span></li>
           <li><span><strong>Glycerine-free, dries clear.</strong>No stiff residue on tested fabrics. Spot-test silk and delicates first.</span></li>
-          <li><span><strong>Up to 8 hours on fabric*.</strong>Light scent that fades in minutes.</span></li>
+          <li><span><strong>Up to 8 hours on fabric*.</strong>Light, subtle scent — not a perfume.</span></li>
         </ul>
       </div>
     </div>
@@ -2833,8 +2833,11 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     });
     set('checkoutTotal', '₹' + t.total);
     set('submitText', 'Buy ODORSTRIKE · ₹' + t.total);
+    // The summary names the COD charge whenever the total includes it, so the
+    // Total line never carries a fee the rows above it don't show.
+    set('codFeeAmount', '₹' + COD_FEE);
     var feeRow = document.getElementById('codFeeRow');
-    if (feeRow) feeRow.style.display = 'none';
+    if (feeRow) feeRow.style.display = t.codFee ? 'flex' : 'none';
   }
 
   function openCheckout(variant, ctaLocation) {
@@ -3320,7 +3323,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       var D = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       var f = function (d) { return D[d.getDay()] + ' ' + d.getDate() + ' ' + M[d.getMonth()]; };
       var est = typeof window.calculateDeliveryEstimate === 'function' ? window.calculateDeliveryEstimate() : null;
-      eta.textContent = est ? f(est.loDate) + ' – ' + f(est.hiDate) : 'Within 3–7 business days';
+      eta.textContent = est ? f(est.loDate) + ' – ' + f(est.hiDate) : '3–5 business days to metros, 5–7 elsewhere';
       var small = document.createElement('span');
       small.style.cssText = 'display:block;color:var(--muted);font-size:13px;margin-top:2px';
       small.textContent = 'Ships from Hyderabad within 48 hours';
@@ -4159,7 +4162,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
-<script src="/assets/js/reviews-system.js?v=4" defer></script>
+<script src="/assets/js/reviews-system.js?v=5" defer></script>
 <script src="/assets/js/track.js?v=801e292b" defer></script>
 </body>
 </html>

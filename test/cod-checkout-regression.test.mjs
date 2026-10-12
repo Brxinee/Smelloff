@@ -27,6 +27,27 @@ test('product pricing keeps prepaid at ₹229 and COD fee at ₹89', () => {
   assert.equal(product.product.priceCod, 318);
 });
 
+test('no stale price or COD figure survives anywhere a customer or crawler can read', () => {
+  const { price, codFee, priceCod } = product.product;
+  // Every hard-coded copy of the numbers matches config/product.json.
+  assert.match(checkout, new RegExp('PRICES: \\{ solo: ' + price + ' \\}'));
+  assert.match(checkout, new RegExp('COD_FEE: ' + codFee + ','));
+  assert.match(chrome, new RegExp('\\|\\| ' + price + ';'));
+  assert.match(chrome, new RegExp('n : ' + codFee + ';'));
+  // Retired prices (₹299 / 40% off, ₹60 fee → ₹289 / ₹359) are not even in
+  // comments: answer engines read the raw HTML and quote them as live.
+  for (const stale of ['₹299', '₹289', '₹359', '₹60', '40% off']) {
+    assert.ok(!checkout.includes(stale), `odorstrike.html still says ${stale}`);
+  }
+  assert.ok(checkout.includes('₹' + priceCod));
+});
+
+test('the summary shows the COD row whenever its Total includes the fee', () => {
+  const fn = checkout.match(/function renderCheckoutPrices\(\) \{[\s\S]*?\n  \}/)[0];
+  assert.match(fn, /feeRow\.style\.display = t\.codFee \? 'flex' : 'none'/);
+  assert.match(fn, /set\('codFeeAmount', '₹' \+ COD_FEE\)/);
+});
+
 test('Order API has an explicit COD branch and preserves prepaid Razorpay', () => {
   assert.match(api, /const COD_FEE_RUPEES = Number\(BASE_PRODUCT\.codFee\);/);
   assert.match(api, /const COD_PAYMENT_METHOD = 'cod';/);

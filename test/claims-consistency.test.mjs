@@ -23,6 +23,8 @@ test('no page contradicts the product facts in config/product.json', () => {
     [/\b\d+(?:\.\d+)?\s*%\s*fragrance/i, 'a fragrance percentage (formula percentages are never published)'],
     [/\bno residue\b|\bzero residue\b|residue-free/i, 'an absolute residue claim (approved: "dries clear with no stiff residue")'],
     [/(?:Zinc PCA (?:\+|and) β-Cyclodextrin|uses β-Cyclodextrin to neutrali)/i, 'β-Cyclodextrin as the active (it is HPβCD)'],
+    [/Neutrali[sz]ation lasts|\b(?:8|9|10)\s*(?:to|–|-)\s*(?:10|12|24)\s*hours of (?:odou?r )?protection/i, 'protection beyond the locked "up to 8 hours"'],
+    [/(?:scent|fragrance)[^.<]{0,30}\bfades? (?:with)?in (?:a few )?minutes/i, 'a scent fade time (config says only "light scent")'],
   ];
   for (const f of pages) {
     const text = fs.readFileSync(f, 'utf8');
