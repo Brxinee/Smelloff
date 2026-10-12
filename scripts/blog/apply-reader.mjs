@@ -69,7 +69,7 @@ const CLUSTERS = {
   smells: ['remove-cooking-smell-from-clothes', 'remove-cigarette-smoke-smell-from-clothes',
     'remove-incense-agarbatti-dhoop-smell', 'why-traffic-fumes-cling-to-clothes',
     'remove-smell-from-blazer-without-dry-cleaning'],
-  refresh: ['remove-smell-from-hoodie-without-washing', 'keep-office-trousers-fresh-without-washing',
+  refresh: ['remove-smell-from-clothes-without-washing', 'remove-smell-from-hoodie-without-washing', 'keep-office-trousers-fresh-without-washing',
     'keep-clothes-fresh-without-washing-machine', 'keep-clothes-fresh-while-travelling',
     'how-to-pack-sweaty-clothes-without-bag-smell', 'wedding-festive-wear-odor-guide', 'wash-refresh-or-wear'],
   category: ['deodorant-vs-fabric-mist', 'deodorant-perfume-on-fabric', 'perfume-plus-sweat-chemical-reaction',
