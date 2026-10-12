@@ -245,7 +245,7 @@
     var n = Number(window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.COD_FEE);
     if (Number.isFinite(n) && n >= 0) return n;
     n = Number(window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.codFee);
-    return Number.isFinite(n) && n >= 0 ? n : 60;
+    return Number.isFinite(n) && n >= 0 ? n : 89;
   }
 
   function currentPaymentMethod() {

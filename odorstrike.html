@@ -415,8 +415,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .cart-btn .cart-count[data-empty="1"]{display:none}
 
   /* CART DRAWER (2026-10-10) — Baymard cart research, applied:
-     · the total on the button must equal the total in the summary (it said
-       ₹229 above and ₹289 on the button: the COD fee was always added);
+     · the total on the button must equal the total in the summary (the
+       button used to add the COD fee to a prepaid subtotal);
      · fees named before checkout, shipping shown as a line, not a footnote;
      · Remove sits beside the quantity, not a screen away from it;
      · delivery window + returns + COD next to the decision;
@@ -1611,7 +1611,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
 <link rel="preload" href="/assets/css/chrome.css?v=b664f938" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=b664f938"></noscript>
-<script src="/assets/js/chrome.js?v=79ff758e" defer></script>
+<script src="/assets/js/chrome.js?v=12c40350" defer></script>
 </head>
 <body>
 
@@ -2833,8 +2833,11 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     });
     set('checkoutTotal', '₹' + t.total);
     set('submitText', 'Buy ODORSTRIKE · ₹' + t.total);
+    // The summary names the COD charge whenever the total includes it, so the
+    // Total line never carries a fee the rows above it don't show.
+    set('codFeeAmount', '₹' + COD_FEE);
     var feeRow = document.getElementById('codFeeRow');
-    if (feeRow) feeRow.style.display = 'none';
+    if (feeRow) feeRow.style.display = t.codFee ? 'flex' : 'none';
   }
 
   function openCheckout(variant, ctaLocation) {
