@@ -105,12 +105,13 @@ test('slot photos exist and have alt text', () => {
 });
 
 // Photos load per network: AVIF first with a WebP fallback, several widths,
-// an inline blurred preview, and a head script that drops to the smallest
+// the skeleton shimmer while they load (soft.css §10; owner, 2026-10-12: no
+// blurry previews), and a head script that drops to the smallest
 // file on Data Saver / 2G before any lazy image picks one.
 test('slot photos are responsive, AVIF-first and network-aware', () => {
   for (const f of money) {
     const html = fs.readFileSync(f, 'utf8');
-    const pics = html.match(/<picture class="ph-pic">[\s\S]*?<\/picture>/g) || [];
+    const pics = html.match(/<picture class="ph-pic"><source[\s\S]*?<\/picture>/g) || [];
     assert.ok(pics.length >= 4, `${f}: expected <picture class="ph-pic"> photos`);
     for (const p of pics) {
       const avif = p.match(/<source type="image\/avif" srcset="([^"]+)" sizes="[^"]+">/);
@@ -119,7 +120,7 @@ test('slot photos are responsive, AVIF-first and network-aware', () => {
       assert.ok(files.length >= 2, `${f}: AVIF needs more than one width`);
       for (const file of files) assert.ok(fs.existsSync(file), `${f}: ${file} missing`);
       assert.match(p, /\d+w, \/assets\/[^"]+\.webp \d+w/, `${f}: WebP fallback needs several widths`);
-      assert.match(p, /data-no-skel style="background:url\(data:image\/webp;base64,/, `${f}: blurred preview missing`);
+      assert.doesNotMatch(p, /data-no-skel|data:image/, `${f}: photos show the skeleton while loading, never a blurred preview`);
     }
     const head = html.slice(0, html.indexOf('</head>'));
     assert.match(head, /navigator\.connection/, `${f}: network-aware sizes script must sit in <head>`);
@@ -138,7 +139,7 @@ test('homepage hero is a fast, static, product-in-use photo', () => {
   assert.match(img[0], /fetchpriority="high"/);
   assert.doesNotMatch(img[0], /loading="lazy"/, 'the LCP image must load eagerly');
   assert.match(img[0], /alt="[^"]*fabric, not the skin"/, 'alt must say what the photo shows');
-  assert.match(img[0], /style="background:url\(data:image\/webp;base64,/, 'blurred preview missing');
+  assert.doesNotMatch(img[0], /data-no-skel|data:image/, 'the hero shows the skeleton while loading, not a blurred preview');
   assert.match(hero, /<source type="image\/avif" srcset="[^"]+"/);
   const picSizes = hero.match(/<source type="image\/avif" srcset="[^"]+" sizes="([^"]+)"/)[1];
   const preload = html.match(/<link rel="preload" as="image" type="image\/avif" fetchpriority="high"\s+imagesrcset="[^"]+"\s+imagesizes="([^"]+)">/);
@@ -147,4 +148,22 @@ test('homepage hero is a fast, static, product-in-use photo', () => {
   for (const f of hero.match(/\/assets\/photos\/hero-spray-collar[^ "]*\.(avif|webp)/g)) assert.ok(fs.existsSync(f.slice(1)), `${f} missing`);
   assert.ok(!/carousel|swiper|slick/i.test(hero), 'one static hero image, not a carousel');
   assert.equal((hero.match(/class="hm-btn"/g) || []).length, 1, 'one primary action in the hero');
+});
+
+// Sharp images (2026-10-12, owner): no cut-out bottles and no cropping. The
+// old 241px cutout looked blurry; the owner then asked for real photos shown
+// whole instead of cutouts. Offer boxes, cart and blog cards use the in-hand
+// photo on black with `contain`.
+test('no page uses a bottle cutout; the in-hand photo is shown whole', () => {
+  const pages = ['index.html', 'odorstrike.html', 'blog/index.html',
+    ...fs.readdirSync('blog').filter((f) => f.endsWith('.html')).map((f) => `blog/${f}`)];
+  for (const f of pages) {
+    assert.doesNotMatch(fs.readFileSync(f, 'utf8'), /odorstrike-bottle-(cutout|studio)/, `${f}: use the in-hand photo, not a cutout`);
+  }
+  assert.doesNotMatch(fs.readFileSync('scripts/blog/apply-reader.mjs', 'utf8'), /odorstrike-bottle-(cutout|studio)/);
+  const home = fs.readFileSync('index.html', 'utf8');
+  const pdp = fs.readFileSync('odorstrike.html', 'utf8');
+  assert.match(home, /\.offer-art \.offer-photo\{[^}]*object-fit:contain/, 'homepage offer photo must not be cropped');
+  assert.match(pdp, /\.pd-offer-art \.pd-offer-photo\{[^}]*object-fit:contain/, 'PDP offer photo must not be cropped');
+  for (const html of [home, pdp]) assert.match(html, /offer-in-hand-black@960\.webp/, 'offer box photo missing');
 });

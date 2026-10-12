@@ -56,6 +56,11 @@ const SIZES = {
   hero: '(min-width: 900px) 820px, 100vw',
   // Phones show cards as rows with a ~200px-wide cropped thumb, not full-bleed.
   card: '(max-width: 767px) 200px, (min-width: 900px) 380px, 100vw',
+  // The index's lead story (the one fetchpriority=high card): full width on
+  // phones, and from 768 a 16:9 photo cropped to fill a ~528px-tall column,
+  // so it is drawn ~940px wide. The card sizes picked the 640/1200 files and
+  // it rendered soft on 2x/3x screens.
+  lead: '(min-width: 768px) 940px, 100vw',
 };
 
 function pictureBlock(post, { role, imgAttrs }) {
@@ -96,7 +101,8 @@ function rewritePictures(html, role) {
     if (style) keep.push(`style="${style[1]}"`);
 
     touched++;
-    return pictureBlock(post, { role, imgAttrs: keep.join(' ') });
+    const r = role === 'card' && keep.includes('fetchpriority="high"') ? 'lead' : role;
+    return pictureBlock(post, { role: r, imgAttrs: keep.join(' ') });
   });
   return { out, touched };
 }
