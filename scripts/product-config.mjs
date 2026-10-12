@@ -47,8 +47,8 @@ const ORG_ID = 'https://smelloff.in/#organization';
 const RETURN_POLICY_ID = 'https://smelloff.in/#return-policy';
 // The one Person behind every post byline, the Organization's founder and /about.
 export const FOUNDER_ID = 'https://smelloff.in/#founder';
-// The second founder: on the Organization and /about, never a post byline.
-export const SECOND_FOUNDER_ID = 'https://smelloff.in/#founder-vineeth';
+// The co-founder: on the Organization and /about, never a post byline.
+export const COFOUNDER_ID = 'https://smelloff.in/#cofounder';
 
 /** The store's return policy — on the Organization and on every Offer. */
 export function buildReturnPolicyJsonLd() {
@@ -226,9 +226,9 @@ export function buildOrganizationJsonLd() {
       },
       {
         '@type': 'Person',
-        '@id': SECOND_FOUNDER_ID,
-        'name': b.founders[1],
-        'jobTitle': b.jobTitle,
+        '@id': COFOUNDER_ID,
+        'name': b.coFounder,
+        'jobTitle': b.coFounderJobTitle,
         'url': `${b.website}/about`
       }
     ],

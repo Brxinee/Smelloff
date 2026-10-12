@@ -147,8 +147,8 @@ test('Organization sameAs lists profiles only, and returns name the country they
   const org = JSON.parse(pdp.match(/<script type="application\/ld\+json" id="org-jsonld">([\s\S]*?)<\/script>/)[1]);
   assert.ok(org.sameAs.length >= 4);
   for (const u of org.sameAs) assert.ok(!/wa\.me|\/share\//.test(u), `not a profile: ${u}`);
-  assert.deepEqual(org.founder.map((p) => p['@id']), ['https://smelloff.in/#founder', 'https://smelloff.in/#founder-vineeth']);
-  assert.ok(org.founder.every((p) => p.jobTitle === 'Founder'));
+  assert.deepEqual(org.founder.map((p) => p['@id']), ['https://smelloff.in/#founder', 'https://smelloff.in/#cofounder']);
+  assert.deepEqual(org.founder.map((p) => p.jobTitle), ['Founder', 'Co-founder']);
   assert.equal(org.founder[1].name, 'Vineeth Kumar Duggepogu');
   assert.equal(org.hasMerchantReturnPolicy.returnPolicyCountry, 'IN');
   const feed = fs.readFileSync('merchant-feed.xml', 'utf8');
