@@ -55,4 +55,3 @@ test('stats count only collected money and group customers by phone', () => {
   const asha = customers.find((c) => c.name === 'Asha');
   assert.deepEqual([asha.orders, asha.spent, asha.city], [2, 51800, 'Pune']);
 });
-
