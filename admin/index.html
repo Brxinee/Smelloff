@@ -304,7 +304,7 @@ function reviewSource(r) {
   return [SOURCE[r.disclosure] || 'No order · not verified', 'tagged'];
 }
 const inviteLink = (code) => `https://smelloff.in/reviews?invite=${code}`;
-const inviteMessage = (code) => `Hey! Thanks for trying ODORSTRIKE. When you've used it for a few days, could you leave an honest review, good or bad? Your review will be marked "Received a free bottle".\n\n${inviteLink(code)}\n\n(Your invite code is ${code}.)`;
+const inviteMessage = (code) => `Hey! Hope the ODORSTRIKE bottle's been useful 🙂 Whenever you get a sec, could you drop a quick review? Just be honest, even if you didn't like it.\n\n${inviteLink(code)}`;
 
 async function reviews() {
   $('#view').innerHTML = `
