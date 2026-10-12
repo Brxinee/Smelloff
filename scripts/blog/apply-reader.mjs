@@ -131,7 +131,10 @@ function normalizeSchema(html) {
   if (a.datePublished && a.dateModified && a.datePublished > a.dateModified) a.dateModified = a.datePublished;
   if (JSON.stringify(a) !== before) {
     const raw = article.m[2];
-    const body = raw.trim().includes('\n') ? `\n${JSON.stringify(a, null, 2)}\n` : JSON.stringify(a);
+    // apply-thumbnails.mjs owns "image" and writes it on one line; match it,
+    // or each generator would undo the other on every build.
+    const pretty = JSON.stringify(a, null, 2).replace(/"image": \[\s*("[^"]*")\s*\]/, '"image": [$1]');
+    const body = raw.trim().includes('\n') ? `\n${pretty}\n` : JSON.stringify(a);
     html = html.replace(article.m[0], `${article.m[1]}${body}${article.m[3]}${article.m[0].endsWith('\n') ? '\n' : ''}`);
   }
   // The free-standing speakable block goes (it now lives on the Article).
