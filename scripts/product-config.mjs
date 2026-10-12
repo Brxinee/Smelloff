@@ -45,6 +45,8 @@ PRODUCT_CONFIG.claims.forbidden = CLAIMS.forbidden;
 
 const ORG_ID = 'https://smelloff.in/#organization';
 const RETURN_POLICY_ID = 'https://smelloff.in/#return-policy';
+// The one Person behind every post byline, the Organization's founder and /about.
+export const FOUNDER_ID = 'https://smelloff.in/#founder';
 
 /** The store's return policy — on the Organization and on every Offer. */
 export function buildReturnPolicyJsonLd() {
@@ -53,6 +55,8 @@ export function buildReturnPolicyJsonLd() {
     '@type': 'MerchantReturnPolicy',
     '@id': RETURN_POLICY_ID,
     'applicableCountry': r.applicableCountry,
+    // Where a return is sent (Hyderabad). Recommended by Google's return-policy docs.
+    'returnPolicyCountry': r.applicableCountry,
     'returnPolicyCategory': r.policyCategory,
     'merchantReturnDays': r.windowDays,
     'returnMethod': r.returnMethod,
@@ -101,7 +105,6 @@ export function buildProductJsonLd(options = {}) {
         'name': b.country
       }
     },
-    'material': 'HPβCD (Cyclodextrin), Zinc PCA, Triethyl Citrate, Zinc Gluconate',
     'sku': p.sku,
     'mpn': p.mpn,
     'offers': {
@@ -110,11 +113,13 @@ export function buildProductJsonLd(options = {}) {
       'sku': p.sku,
       'priceCurrency': p.currency,
       'price': `${p.price}.00`,
-      // The MRP the page prints ("M.R.P. ₹499 · 54% OFF"). Google shows a
-      // ListPrice as a strikethrough beside the offer price in results.
+      // The MRP the page prints ("M.R.P. ₹499 · 54% OFF"), shown struck
+      // through beside the offer price. Google's merchant-listing docs: "You
+      // must set the priceType to https://schema.org/StrikethroughPrice"
+      // (ListPrice was only accepted for a transition period).
       'priceSpecification': {
         '@type': 'UnitPriceSpecification',
-        'priceType': 'https://schema.org/ListPrice',
+        'priceType': 'https://schema.org/StrikethroughPrice',
         'price': `${p.mrp}.00`,
         'priceCurrency': p.currency
       },
@@ -211,6 +216,7 @@ export function buildOrganizationJsonLd() {
     },
     'founder': {
       '@type': 'Person',
+      '@id': FOUNDER_ID,
       'name': b.founder,
       'jobTitle': b.jobTitle,
       'url': `${b.website}/about`

@@ -49,7 +49,10 @@ export function simulateRedirect(hostname, pathname) {
       .replace(/:path\+/g, '(.+)')
       .replace(/:slug\([^)]+\)/g, '([^/]+)')
       .replace(/:slug/g, '([^/]+)')
-      .replace(/:code/g, '([^/]+)') + '$';
+      .replace(/:code/g, '([^/]+)')
+      // cloudflare-routing.mjs also emits `source/` for every plain source,
+      // so /old/ goes straight to the target (one hop), like production.
+      + (!/[:(*]/.test(r.source) && r.source !== '/' && !r.source.endsWith('/') ? '/?' : '') + '$';
 
     try {
       const re = new RegExp(reStr);

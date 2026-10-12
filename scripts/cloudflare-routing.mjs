@@ -61,6 +61,13 @@ export function buildRedirects(routing) {
       continue;
     }
 
+    // `/prefix/:name*` (any depth) is a native splat: `/prefix/*  …/:splat`.
+    const splat = source.match(/^(\/[\w.-]+)\/:(\w+)\*$/);
+    if (splat) {
+      push(`${splat[1]}/*`, destination.replace(`:${splat[2]}*`, ':splat'), status);
+      continue;
+    }
+
     // Plain paths and simple `:name` placeholders are native _redirects syntax.
     if (/[()*+?\\]/.test(source)) {
       throw new Error(`cloudflare-routing: cannot translate redirect source ${source}`);

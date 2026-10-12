@@ -374,14 +374,8 @@ const PAGES = [
     'why-sweat-smells-stronger-on-some-shirts', 'why-traffic-fumes-cling-to-clothes',
     'why-washing-machine-makes-clothes-smell', 'why-water-makes-clothing-odor-louder',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
-  // solutions hub & regional guides
-  ...[
-    'solutions/index.html',
-    'solutions/monsoon-damp-fabric-care.html',
-    'solutions/post-gym-workout-sweat-spray.html',
-    'solutions/office-commute-fabric-refresher.html',
-    'solutions/denim-outerwear-dry-care.html',
-  ].map((f) => ({ file: f, header: 'header', footer: 'footer', endcap: true })),
+  // (The /solutions hub and its four city pages were retired 2026-10-11 and
+  // 301 to the guides that cover the same ground — config/routing.json.)
   // the two self-contained pages
   { file: 'index.html', header: 'header.site', footer: 'footer' },
   { file: 'odorstrike.html', header: 'nav.site-nav', footer: 'footer', cart: 'drawer', skip: 'product-hero' },

@@ -40,6 +40,56 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Search, citation and GSC compliance, round 3 (2026-10-11/12, owner: "rank everywhere in the niche")
+A compliance audit of every JSON-LD block, the merchant feed and all live URLs,
+plus GSC query data. Every structured-data error in the export came from markup
+#460/#482 already removed; the only live warning left is "Missing review /
+aggregateRating", which needs real verified-buyer reviews (never beta quotes).
+- **One set of facts** (`test/claims-consistency.test.mjs`): dry time is
+  15–30 s everywhere (146 "~10 seconds" in 42 posts, feed, llms), no pH, no
+  fragrance %, no absolute "no residue", HPβCD (not β-CD) as the active. AI
+  engines drop or hedge facts a site contradicts. The same test fails on pasted
+  AI-tool residue (a "filecite…turn8file0" token was live in a post).
+- **`llms.txt` / `llms-full.txt` are generated** by `scripts/seo/build-llms.mjs`
+  (`npm run llms`; `--check` in the build) from `config/product.json` and the
+  post list. Its ANSWERS cite post slugs and throw if one disappears.
+  `product.definition` in the config is the one definition passage, used as the
+  first FAQ ("What is ODORSTRIKE?") on `/`, `/odorstrike` and `/faq`.
+- **PDP H1** is `ODORSTRIKE <span class="pd-title__cat">Pocket-sized fabric odor
+  spray for clothes</span>` (replaced the tagline; hero no taller).
+- **Schema:** Offer MRP is `StrikethroughPrice` (Google: "no other values are
+  supported"); `returnPolicyCountry` IN; `validFrom` 2026-10-11 (₹229 returned);
+  product images are tiles the PDP shows; `category` is the Google taxonomy
+  path; no `material`. Merchant feed has no `identifier_exists` (brand + MPN are
+  identifiers). Organization `sameAs` = profiles only (no wa.me, no FB share
+  link). The founder is one Person `@id https://smelloff.in/#founder` on every
+  post, `/about` and the Organization.
+- **`apply-reader.mjs` now also stamps** on every post: author/publisher by
+  `@id`, `speakable` on the Article (free-standing SpeakableSpecification blocks
+  were invalid), datePublished ≤ dateModified, the visible "Updated" date from
+  `dateModified` (edit the schema date, never the text), the byline → `/about`,
+  and **Related guides**: three links from its topic cluster (`CLUSTERS`), rotated
+  so each post is linked from three others. A new post must join a cluster or
+  the build fails. Seven posts had no inbound guide link before.
+- **Routing:** `/solutions` and its four city pages are retired (thin, orphaned,
+  0 clicks in six months) and 301 to the matching guides; the export's Not
+  found URLs (`/smelloff`, `/index-2`, `/Index`) and `/public/*` 301; `/ai.txt`
+  and `/.well-known/llms*.txt` 301 to the one file; no global X-Robots-Tag
+  (pages carry meta robots); `/404` returns status 404; the GSC verification
+  file is served at its `.html` URL without a redirect. `routing.json` accepts
+  `/prefix/:name*` splats. Sitemap: 71 URLs.
+- **Content aimed at GSC queries at #5–12 with no clicks:** best fabric
+  freshener (H1 = query; "Are cheap fabric refreshers as good as the popular
+  brands in India?" + a five-type table), can deodorant be used on clothes (H1
+  = question, body-or-clothes table), cyclodextrin in deodorant + safety +
+  solubility (Saokham 2018), washing-machine H1 is the question. Every `/#buy`
+  in posts → `/odorstrike`. Per-spray maths: ₹0.92.
+- **Owner, outside the repo:** GSC → Validate fix on every Merchant listings,
+  Product snippets and Page indexing issue, resubmit `sitemap.xml`, request
+  indexing for `/odorstrike`; Merchant Center: add the feed and set shipping and
+  returns; ask the five delivered customers for reviews (the only route to
+  review stars).
+
 ## Search Console round 2: indexing, duplicates, snippets (2026-10-11, GSC export dated 10-12)
 Eight reports (performance 6 months, coverage x2, HTTPS, breadcrumbs, product
 snippets, merchant listings, review snippets). What they showed and did:
@@ -66,7 +116,7 @@ snippets, merchant listings, review snippets). What they showed and did:
   section and question-shaped H2s.
 - **Merchant/product:** the live Product already had every flagged field
   (the errors were from the old duplicate blocks); added the MRP as an Offer
-  `priceSpecification` ListPrice (strikethrough). The Merchant feed's
+  `priceSpecification` (now StrikethroughPrice, round 3). The Merchant feed's
   `g:price` stays ₹229 — a `g:sale_price` against MRP is the owner's call.
 - **Review snippets** need real verified-buyer reviews (`includeRating` in
   `buildProductJsonLd()`); never from beta quotes or the founder's review.
@@ -74,8 +124,7 @@ snippets, merchant listings, review snippets). What they showed and did:
   "Crawled – currently not indexed" → Validate fix; Sitemaps → resubmit
   `sitemap.xml`; URL Inspection → Request indexing for `/`, `/odorstrike`,
   `/blog` and the top posts. Ahrefs' GSC tools need a higher plan.
-- Still open (owner): the `-quickly` post's body and ~44 posts say ~10 s dry;
-  the blog end card anchor "View product details" is pinned copy (a more
+- Fixed in round 3: the ~10 s dry claims. Still open: the blog end card anchor "View product details" is pinned copy (a more
   descriptive anchor would help `/odorstrike` rank for "fabric odor spray").
 
 ## Design system pass 2: previews, forms, text tiers, contact (2026-10-11, owner: "use max efforts")
@@ -156,7 +205,7 @@ locally.
   Returns/cancellation glances must not state the COD amount.
 - **Closing product card** `.sf-endcap`: generated by apply-chrome in its own
   `SF-CHROME:ENDCAP` block above the footer on pages with `endcap: true` (all
-  inner pages except track-order, and /solutions). Price/MRP/discount come
+  inner pages except track-order). Price/MRP/discount come
   from `config/product.json`. It replaced the FAQ's lime bar, Reviews'
   uppercase buy band and the /solutions "cta-box".
 - **Buttons:** `.sf-btn` / `.sf-btn--ghost` (52px, 8px radius, sentence case).

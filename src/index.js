@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import express from "express";
 
-import { canonicalRedirect, upgradeTemporaryRedirect } from "./canonical.js";
+import { canonicalRedirect, notFoundStatus, upgradeTemporaryRedirect, verificationAssetPath } from "./canonical.js";
 import { BUILD } from "./build-info.js";
 
 import sendEmailHandler from "../api/send-email.js";
@@ -72,7 +72,6 @@ function redirectToCanonical(req, res, next) {
   const path = url.pathname;
 
   if (path === "/index") return res.redirect(301, "/");
-  if (path === "/solutions/index") return res.redirect(301, "/solutions");
   if (path === "/blog/index") return res.redirect(301, "/blog");
 
   if (path.endsWith(".html")) {
@@ -193,8 +192,15 @@ async function handleFetch(request, workerEnv, ctx) {
 
   const { pathname } = new URL(request.url);
   if (!pathname.startsWith("/api/") && (request.method === "GET" || request.method === "HEAD")) {
+    const verification = verificationAssetPath(request.url);
+    if (verification) {
+      const url = new URL(request.url);
+      url.pathname = verification;
+      const file = await workerEnv.ASSETS.fetch(new Request(url.toString(), request));
+      if (file.status === 200) return file;
+    }
     const asset = await workerEnv.ASSETS.fetch(request);
-    if (asset.status !== 404) return upgradeTemporaryRedirect(request.url, asset);
+    if (asset.status !== 404) return notFoundStatus(request.url, upgradeTemporaryRedirect(request.url, asset));
   }
   return fetchHandler(request, workerEnv, ctx);
 }

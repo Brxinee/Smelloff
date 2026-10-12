@@ -1,12 +1,12 @@
 ---
 name: smelloff-aeo
-description: Fires on any edit to blog or content files (routes under /blog and content pages). Enforces answer-engine (AEO) and generative-engine (GEO) optimization so posts get extracted and cited by ChatGPT, Perplexity, Google AI Overviews, Gemini, and Claude, and rank in classic search. Never overrides smelloff-spec. All formula and pricing facts come from smelloff-spec verbatim.
+description: Fires on any edit to blog or content files (routes under /blog and content pages). Enforces answer-engine (AEO) and generative-engine (GEO) optimization so posts get extracted and cited by ChatGPT, Perplexity, Google AI Overviews, Gemini, and Claude, and rank in classic search. Never overrides config/product.json. All formula, claim and pricing facts come from config/product.json verbatim.
 ---
 
 # Smelloff AEO/GEO Content Skill
 
 ## Prime directive
-Before writing or editing content, load `smelloff-spec`. All formula, ingredient, and pricing facts come from it verbatim. Never restate the v3.1 formula or prices from memory. If a needed fact is missing there, stop and flag it — never invent.
+Before writing or editing content, read `config/product.json` (the single source of truth: `product`, `usage`, `claims.approved`, `claims.prohibited`, `formula.heroActives`). All formula, ingredient, dry-time and pricing facts come from it verbatim; `test/claims-consistency.test.mjs` fails on the known contradictions. Never restate the v3.1 formula or prices from memory. If a needed fact is missing there, stop and flag it — never invent.
 
 ## Every post must have (hard checklist)
 1. Answer-first block: the first 40–60 words directly and completely answer the exact question in the H1. Self-contained, quotable, no wind-up. This is the block engines lift.
@@ -17,20 +17,20 @@ Before writing or editing content, load `smelloff-spec`. All formula, ingredient
 6. Entity clarity: define the thing plainly and consistently — "ODORSTRIKE is a fabric odor eliminator mist, a third spray distinct from deodorant (skin) and perfume (scent)."
 7. Scannable structure: short paragraphs, bullets/numbered lists where natural, clean H1 -> H2 -> H3, one topic per section.
 8. Freshness: visible "Last updated" date; bump dateModified on every edit.
-9. FAQ block of 3–6 real questions with concise standalone answers, mirrored in FAQPage JSON-LD.
+9. FAQ block of 3–6 real questions with concise standalone answers. No FAQPage JSON-LD: it was removed site-wide on 2026-09-18 (Google limits FAQ rich results to government and health sites).
 
 ## Schema (JSON-LD) required per post
 - Article: headline, datePublished, dateModified, author, publisher.
-- FAQPage matching the on-page FAQ.
+- BreadcrumbList (Home → Blog → post), same as every other post.
 - Keep author/publisher/brand identical across all posts for entity building.
 - Inject schema without touching any protected integration script.
 
 ## Unique-data angles (Smelloff's citation moat — mechanism, not marketing)
-Lean into first-party / mechanism content competitors cannot copy. Pull every specific from smelloff-spec:
+Lean into first-party / mechanism content competitors cannot copy. Pull every specific from config/product.json:
 - The "third spray" category definition.
 - How cyclodextrin (HPβCD) traps odor molecules on fabric vs masking them.
 - Zinc odor neutralisation (Zinc PCA / Zinc Gluconate) — the actual mechanism.
-- Why fabric-only, zero-residue, glycerine-free matters (residue on dark fabric).
+- Why fabric-only, glycerine-free and "dries clear with no stiff residue" matter (residue on dark fabric). Never "zero residue" or "no residue" — both are prohibited absolute claims.
 - Realistic longevity: "up to 8 hours odor protection on fabric."
 
 ## Do NOT
@@ -38,7 +38,7 @@ Lean into first-party / mechanism content competitors cannot copy. Pull every sp
 - Do not keyword-stuff — engines penalise it.
 - Do not ship surface-level content — depth and specificity get cited.
 - Do not touch protected integrations: Razorpay, COD/OTP, Firebase, Google Sheets, GA4, Meta Pixel, Meta Conversions API, Google Ads, Supabase, Resend, WhatsApp.
-- Do not restate or alter the v3.1 formula or pricing — defer to smelloff-spec.
+- Do not restate or alter the v3.1 formula or pricing — defer to config/product.json.
 
 ## Crawlability (an engine can only cite a page it can read)
 - Allow the answer/search agents in robots.txt: OAI-SearchBot, Claude-SearchBot, ChatGPT-User, Claude-User, PerplexityBot, Google-Extended, Bingbot. Blocking these removes eligibility for citations.

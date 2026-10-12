@@ -33,10 +33,12 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
     const sitemapXml = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
     const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
 
-    it('sitemap contains exactly 76 canonical URLs', () => {
+    it('sitemap contains exactly 71 canonical URLs', () => {
       // 75 → 76 (2026-10-11): the -instantly duplicate merged into -quickly;
       // the hoodie and blazer guides deleted by dd86e68 were restored.
-      assert.equal(sitemapUrls.length, 76);
+      // 76 → 71 (same day): the /solutions hub and its four thin city pages
+      // were retired into the guides that cover them.
+      assert.equal(sitemapUrls.length, 71);
     });
 
     for (const url of sitemapUrls) {
@@ -133,9 +135,9 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
         maxHops: 1,
       },
       {
-        description: 'solutions hub index redirects to /solutions in 1 hop',
+        description: 'the retired solutions hub index redirects to /blog in 1 hop',
         url: 'https://smelloff.in/solutions/index',
-        expectedFinal: 'https://smelloff.in/solutions',
+        expectedFinal: 'https://smelloff.in/blog',
         maxHops: 1,
       },
       {
@@ -324,4 +326,22 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
       }
     });
   });
+});
+
+// 2026-10-11: seven guides had no link from any other guide and 19 had at
+// most one. apply-reader's CLUSTERS give each post three related guides,
+// rotated so each is linked from three others in its topic.
+it('every guide links three related guides and is linked from at least three', () => {
+  const posts = fs.readdirSync('blog').filter((f) => f.endsWith('.html') && f !== 'index.html').map((f) => f.slice(0, -5));
+  const inbound = Object.fromEntries(posts.map((p) => [p, new Set()]));
+  for (const p of posts) {
+    const html = fs.readFileSync(`blog/${p}.html`, 'utf8');
+    const block = html.match(/<!-- RELATED:START[\s\S]*?<!-- RELATED:END -->/);
+    assert.ok(block, `${p}: no related-guides block`);
+    const links = [...block[0].matchAll(/href="\/blog\/([a-z0-9-]+)"/g)].map((m) => m[1]);
+    assert.equal(links.length, 3, `${p}: related guides`);
+    for (const l of links) assert.ok(posts.includes(l) && l !== p, `${p}: bad related link ${l}`);
+    for (const m of html.matchAll(/href="(?:https:\/\/smelloff\.in)?\/blog\/([a-z0-9-]+)/g)) if (m[1] !== p && inbound[m[1]]) inbound[m[1]].add(p);
+  }
+  for (const [p, from] of Object.entries(inbound)) assert.ok(from.size >= 3, `${p} is linked from ${from.size} guides`);
 });

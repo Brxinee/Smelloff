@@ -59,8 +59,6 @@ const RULES = [
   [/^\/odorstrike$/,             { priority: '1.0',  changefreq: 'weekly'  }],
   [/^\/blog$/,                   { priority: '0.8',  changefreq: 'weekly'  }],
   [/^\/blog\//,                  { priority: '0.8',  changefreq: 'monthly' }],
-  [/^\/solutions$/,              { priority: '0.9',  changefreq: 'weekly'  }],
-  [/^\/solutions\//,             { priority: '0.85', changefreq: 'weekly'  }],
   [/^\/reviews$/,                { priority: '0.7',  changefreq: 'weekly'  }],
   [/^\/faq$/,                    { priority: '0.7',  changefreq: 'monthly' }],
   [/^\/about$/,                  { priority: '0.6',  changefreq: 'yearly'  }],
@@ -218,7 +216,7 @@ function build() {
       priority: PRIORITY_OVERRIDES[urlPath] || rule.priority,
       image: imageFor(html, shared),
       sort: [urlPath === '/' ? 0 : urlPath.startsWith('/odorstrike') ? 1
-            : urlPath.startsWith('/blog') ? 2 : urlPath.startsWith('/solutions') ? 3 : 4, urlPath],
+            : urlPath.startsWith('/blog') ? 2 : 4, urlPath],
     });
   }
 

@@ -5,7 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { getProductConfig } from '../scripts/product-config.mjs';
 
 const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html'))
-  .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+  .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
 
 function nodes(file) {
   const html = fs.readFileSync(file, 'utf8');
@@ -91,12 +91,12 @@ test('every blog post has a complete Article and a BreadcrumbList', () => {
   }
 });
 
-test('the Offer carries the MRP as a ListPrice (strikethrough in results), from config', () => {
+test('the Offer carries the MRP as a StrikethroughPrice (the only priceType Google supports), from config', () => {
   const pdp = fs.readFileSync('odorstrike.html', 'utf8');
   const block = JSON.parse(pdp.match(/<script type="application\/ld\+json" id="product-jsonld">([\s\S]*?)<\/script>/)[1]);
   const cfg = JSON.parse(fs.readFileSync('config/product.json', 'utf8')).product;
   const spec = block.offers.priceSpecification;
-  assert.equal(spec.priceType, 'https://schema.org/ListPrice');
+  assert.equal(spec.priceType, 'https://schema.org/StrikethroughPrice');
   assert.equal(Number(spec.price), cfg.mrp);
   assert.equal(Number(block.offers.price), cfg.price);
   assert.ok(cfg.mrp > cfg.price, 'a list price only makes sense above the offer price');
@@ -108,7 +108,7 @@ test('the Offer carries the MRP as a ListPrice (strikethrough in results), from 
 test('every indexable page: title ≤ 60 characters, description 70–160', () => {
   const decode = (s) => s.replace(/&amp;/g, '&').replace(/&#39;|&#x27;|&rsquo;|&#8217;/g, "'").replace(/&quot;/g, '"').replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)));
   const files = fs.readdirSync('.').filter((f) => f.endsWith('.html') && !f.startsWith('google'))
-    .concat(['blog', 'solutions'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
+    .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
   for (const f of files) {
     const html = fs.readFileSync(f, 'utf8');
     if (/<meta name="robots" content="[^"]*noindex/.test(html)) continue;
@@ -117,4 +117,38 @@ test('every indexable page: title ≤ 60 characters, description 70–160', () =
     assert.ok(title.length > 0 && title.length <= 60, `${f}: title is ${title.length} characters`);
     assert.ok(desc.length >= 70 && desc.length <= 160, `${f}: description is ${desc.length} characters`);
   }
+});
+
+// 2026-10-11 audit: the author came in three shapes with no @id, publishers in
+// four, ~30 posts had a free-standing SpeakableSpecification (valid only as a
+// property) and 35 showed an "Updated" date their schema contradicted.
+// scripts/blog/apply-reader.mjs stamps all of it.
+test('every post: one founder Person, one publisher, speakable on the Article, visible date = dateModified', () => {
+  const posts = fs.readdirSync('blog').filter((f) => f.endsWith('.html') && f !== 'index.html');
+  assert.ok(posts.length > 50);
+  for (const f of posts) {
+    const html = fs.readFileSync(`blog/${f}`, 'utf8');
+    const blocks = [...html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+    assert.ok(!blocks.some((b) => b['@type'] === 'SpeakableSpecification'), `${f}: free-standing SpeakableSpecification`);
+    const a = blocks.find((b) => b['@type'] === 'Article' || b['@type'] === 'BlogPosting');
+    assert.ok(a, `${f}: Article`);
+    assert.equal(a.author['@id'], 'https://smelloff.in/#founder', `${f}: author @id`);
+    assert.equal(a.publisher['@id'], 'https://smelloff.in/#organization', `${f}: publisher @id`);
+    assert.ok(a.datePublished <= a.dateModified, `${f}: datePublished after dateModified`);
+    assert.ok(a.dateModified <= new Date().toISOString().slice(0, 10), `${f}: dateModified in the future`);
+    const shown = (html.match(/<span class="article-date">Updated <time datetime="([\d-]+)">/) || [])[1];
+    assert.equal(shown, a.dateModified.slice(0, 10), `${f}: visible date`);
+    assert.ok(html.includes('<a href="/about" rel="author">'), `${f}: byline links the Person's url`);
+  }
+});
+
+test('Organization sameAs lists profiles only, and returns name the country they go to', () => {
+  const pdp = fs.readFileSync('odorstrike.html', 'utf8');
+  const org = JSON.parse(pdp.match(/<script type="application\/ld\+json" id="org-jsonld">([\s\S]*?)<\/script>/)[1]);
+  assert.ok(org.sameAs.length >= 4);
+  for (const u of org.sameAs) assert.ok(!/wa\.me|\/share\//.test(u), `not a profile: ${u}`);
+  assert.equal(org.founder['@id'], 'https://smelloff.in/#founder');
+  assert.equal(org.hasMerchantReturnPolicy.returnPolicyCountry, 'IN');
+  const feed = fs.readFileSync('merchant-feed.xml', 'utf8');
+  assert.ok(!feed.includes('identifier_exists'), 'brand + MPN are identifiers; identifier_exists=no contradicts them');
 });
