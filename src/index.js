@@ -16,6 +16,7 @@ import adminVerifyPaymentHandler from "../api/admin/verify-payment.js";
 import webhookHandler from "../api/webhook.js";
 import shiprocketSyncHandler from "../api/shiprocket-sync.js";
 import adminHandler from "../api/admin.js";
+import supportChatHandler from "../api/support-chat.js";
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.get("/api/health", (_req, res) => {
       cron: has("CRON_SECRET"),
       shiprocket: has("SHIPROCKET_EMAIL", "SHIPROCKET_PASSWORD"),
       metaCapi: has("META_CAPI_TOKEN"),
+      supportChat: has("GEMINI_API_KEY"),
     },
   });
 });
@@ -57,6 +59,7 @@ app.all("/api/create-order", (req, res) => createOrderHandler(req, res));
 app.all("/api/verify-payment", (req, res) => verifyPaymentHandler(req, res));
 app.all("/api/payment-status", (req, res) => paymentStatusHandler(req, res));
 app.all("/api/admin", (req, res) => adminHandler(req, res));
+app.all("/api/support-chat", (req, res) => supportChatHandler(req, res));
 app.all("/api/admin/verify-payment", (req, res) => adminVerifyPaymentHandler(req, res));
 app.all("/api/webhook", (req, res) => webhookHandler(req, res));
 app.all("/api/shiprocket-sync", (req, res) => shiprocketSyncHandler(req, res));
