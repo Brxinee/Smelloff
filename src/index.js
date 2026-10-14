@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import express from "express";
 
-import { canonicalRedirect, notFoundStatus, upgradeTemporaryRedirect, verificationAssetPath } from "./canonical.js";
+import { canonicalRedirect, lowercaseCandidate, notFoundStatus, upgradeTemporaryRedirect, verificationAssetPath } from "./canonical.js";
 import { BUILD } from "./build-info.js";
 
 import sendEmailHandler from "../api/send-email.js";
@@ -201,8 +201,27 @@ async function handleFetch(request, workerEnv, ctx) {
     }
     const asset = await workerEnv.ASSETS.fetch(request);
     if (asset.status !== 404) return notFoundStatus(request.url, upgradeTemporaryRedirect(request.url, asset));
+    const lower = await lowercaseRedirect(request, workerEnv);
+    if (lower) return lower;
   }
   return fetchHandler(request, workerEnv, ctx);
+}
+
+// /Odorstrike or /Blog/Some-Post 404s on the case-sensitive asset server.
+// If the lowercase spelling is a page (or one of our redirects), send the
+// visitor there in one 301; otherwise leave the 404 alone.
+async function lowercaseRedirect(request, workerEnv) {
+  const candidate = lowercaseCandidate(request.url);
+  if (!candidate) return null;
+  const url = new URL(request.url);
+  url.pathname = candidate;
+  const probe = await workerEnv.ASSETS.fetch(new Request(url.toString(), { method: "HEAD", headers: request.headers }));
+  if (probe.status === 200) return Response.redirect(url.toString(), 301);
+  const location = probe.headers.get("location");
+  if ([301, 307, 308].includes(probe.status) && location) {
+    return Response.redirect(new URL(location, url).toString(), 301);
+  }
+  return null;
 }
 
 export default {
