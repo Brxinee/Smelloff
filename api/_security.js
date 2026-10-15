@@ -62,11 +62,13 @@ export function verifyOrderToken(orderCode, phone, token) {
   try {
     const a = Buffer.from(expected, 'utf8');
     const b = Buffer.from(token, 'utf8');
+    let isValid = false;
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
+    return isValid;
   } catch { return false; }
 }
 
@@ -98,12 +100,14 @@ export function verifyOrderConfirmationToken(orderCode, email, token) {
   try {
     const a = Buffer.from(expectedSig, 'utf8');
     const b = Buffer.from(sig, 'utf8');
+    let isValid = false;
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
-  } catch {
+    return isValid;
+    } catch {
     return false;
   }
 }
@@ -120,11 +124,13 @@ export function isAdminAuthorized(req) {
   try {
     const a = Buffer.from(adminSecret.trim(), 'utf8');
     const b = Buffer.from(token, 'utf8');
+    let isValid = false;
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
+    return isValid;
   } catch { return false; }
 }
 
@@ -140,11 +146,13 @@ export function isCronAuthorized(req) {
   try {
     const a = Buffer.from(cronSecret.trim(), 'utf8');
     const b = Buffer.from(token, 'utf8');
+    let isValid = false;
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
+    return isValid;
   } catch { return false; }
 }
 
