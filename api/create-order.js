@@ -5,7 +5,7 @@ import {
   generateOrderToken,
   generateOrderConfirmationToken,
 } from './_security.js';
-import { BASE_PRODUCT } from '../shared/products-config-workers.js';
+import { BASE_PRODUCT, subtotalForQuantity } from '../shared/products-config-workers.js';
 import { isValidEmail } from './_email.js';
 import { sendAdminNewOrderEmail } from './_email-dispatch.js';
 import { pushOrderToShiprocketNow } from './shiprocket-sync.js';
@@ -445,7 +445,8 @@ export default async function handler(req, res) {
       }
     }
 
-    const subtotalPaise = Math.round(UNIT_PRICE_RUPEES * quantity * 100);
+    // Pairs are priced at product.pairPrice ("2 for ₹419"); items[].price stays the unit price.
+    const subtotalPaise = Math.round(subtotalForQuantity(quantity) * 100);
     const codFeePaise = isCod ? Math.round(COD_FEE_RUPEES * 100) : 0;
     const totalPaise = subtotalPaise + codFeePaise;
     if (!Number.isSafeInteger(totalPaise) || totalPaise < 100) {

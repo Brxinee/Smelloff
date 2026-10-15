@@ -10,6 +10,7 @@ import { Resend } from 'resend';
 import { generateOrderToken, generateOrderConfirmationToken, isAdminAuthorized, isCronAuthorized } from '../api/_security.js';
 import { isValidTransition } from '../shared/products-config.js';
 import { claimShiprocketFulfillment } from '../api/_shiprocket.js';
+import { subtotalForQuantity } from '../shared/products-config-workers.js';
 import adminVerifyPaymentHandler from '../api/admin/verify-payment.js';
 import shiprocketSyncHandler from '../api/shiprocket-sync.js';
 import metaCapiDrainHandler from '../api/meta-capi-drain.js';
@@ -434,7 +435,7 @@ test('Step 3: trackPurchase correctly maps unitPrice, item quantity, and payment
 test('GA4 add_payment_info contract: uses standard payment_type and item subtotal value', () => {
   const html = fs.readFileSync('odorstrike.html', 'utf8');
   assert.ok(
-    html.includes("gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: t.subtotal, items: gaItems(v.amount, t.qty) })"),
+    html.includes("gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: t.subtotal, items: gaItems(t.subtotal / t.qty, t.qty) })"),
     'add_payment_info must use payment_type parameter and item subtotal value'
   );
 });
@@ -586,22 +587,26 @@ test('Step 4 Backend: amount validation logic strictly enforces paise integrity'
   const prepaid1 = unitPrice * 1 * 100;
   assert.equal(prepaid1, 22900);
 
-  // Prepaid 2 units = 45800 paise
-  const prepaid2 = unitPrice * 2 * 100;
-  assert.equal(prepaid2, 45800);
+  // Prepaid 2 units = 2 for ₹419 = 41900 paise
+  const prepaid2 = subtotalForQuantity(2) * 100;
+  assert.equal(prepaid2, 41900);
 
   // COD 1 unit = 31800 paise
   const cod1 = (unitPrice * 1 + codFee) * 100;
   assert.equal(cod1, 31800);
 
-  // COD 2 units = 54700 paise
-  const cod2 = (unitPrice * 2 + codFee) * 100;
-  assert.equal(cod2, 54700);
+  // COD 2 units = 50800 paise
+  const cod2 = (subtotalForQuantity(2) + codFee) * 100;
+  assert.equal(cod2, 50800);
+
+  // An odd bottle on top of the pairs is at the unit price
+  assert.equal(subtotalForQuantity(3), 648);
+  assert.equal(subtotalForQuantity(10), 2095);
 });
 
 test('Multi-quantity orderPayload calculation integrity in chrome.js', () => {
   const chromeJs = fs.readFileSync('assets/js/chrome.js', 'utf8');
-  assert.ok(chromeJs.includes('var amountRupees = unitPrice * qty;'), 'chrome.js must calculate amountRupees as unitPrice * qty');
+  assert.ok(chromeJs.includes('var amountRupees = subtotalRupees(qty);'), 'chrome.js must calculate amountRupees with the pair-aware subtotal');
   assert.ok(!chromeJs.includes("numberFromText('checkoutAmount')"), 'chrome.js must not parse formatted string checkoutAmount which breaks on multi-quantity');
 
   // Verify static submitText in odorstrike.html matches default total
@@ -2017,9 +2022,9 @@ test('Post-Capture Financial Lifecycle Matrix: 16 verification scenarios', async
   // 7. full refund amounts match authoritative paise for all quantities (1, 2, 3, 5, 10)
   const basePricePaise = 22900;
   const quantities = [1, 2, 3, 5, 10];
-  const expectedRefundPaise = [22900, 45800, 68700, 114500, 229000];
+  const expectedRefundPaise = [22900, 41900, 64800, 106700, 209500];
   quantities.forEach((qty, idx) => {
-    assert.equal(qty * basePricePaise, expectedRefundPaise[idx]);
+    assert.equal(subtotalForQuantity(qty) * 100, expectedRefundPaise[idx]);
   });
 
   // 8. partial refund handling: business policy enforces full-order refund integrity
@@ -2328,3 +2333,50 @@ test('Supabase Production admin_alerts RLS and Grant Hardening Security Suite', 
 
 
 
+
+// 2 for ₹419 (owner's call, 2026-10-15): the Worker prices pairs at
+// product.pairPrice and rejects the old 2 × ₹229 total.
+test('create-order prices two bottles at the pair price (2 for ₹419)', async () => {
+  const prevKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const prevResend = process.env.RESEND_API_KEY;
+  const prevFetch = globalThis.fetch;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-key';
+  delete process.env.RESEND_API_KEY;
+  const rows = [];
+  globalThis.fetch = async (url, opts = {}) => {
+    const u = String(url);
+    if ((opts.method || 'GET') === 'POST' && u.includes('/rest/v1/orders')) {
+      const row = JSON.parse(opts.body);
+      rows.push(row);
+      return new Response(JSON.stringify([{ id: 'row-pair', ...row }]), { status: 201 });
+    }
+    return new Response(JSON.stringify([]), { status: 200 });
+  };
+  const order = (code, qty, amount) => ({
+    method: 'POST',
+    headers: {},
+    body: {
+      payment_method: 'cod', order_code: code, name: 'Ravi', email: 'ravi@example.com', phone: '9000000044',
+      items: [{ quantity: qty, price: 229 }], amount,
+      address: { name: 'Ravi', line: '2 Road', city: 'Pune', state: 'Maharashtra', pincode: '411001' },
+    },
+  });
+  try {
+    const old = createMockRes();
+    await createOrderHandler(order('SMF-20261015-5101', 2, 54700), old);
+    assert.equal(old.statusCode, 400, 'the old 2 × ₹229 + ₹89 total is rejected');
+
+    const pair = createMockRes();
+    await createOrderHandler(order('SMF-20261015-5102', 2, 50800), pair);
+    assert.equal(pair.statusCode, 200, JSON.stringify(pair.body));
+
+    const three = createMockRes();
+    await createOrderHandler(order('SMF-20261015-5103', 3, 73700), three);
+    assert.equal(three.statusCode, 200, JSON.stringify(three.body));
+    assert.deepEqual(rows.map((r) => r.amount), [50800, 73700]);
+  } finally {
+    globalThis.fetch = prevFetch;
+    if (prevKey === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY; else process.env.SUPABASE_SERVICE_ROLE_KEY = prevKey;
+    if (prevResend === undefined) delete process.env.RESEND_API_KEY; else process.env.RESEND_API_KEY = prevResend;
+  }
+});

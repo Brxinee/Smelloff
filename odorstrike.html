@@ -133,7 +133,11 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     META_PIXEL_ID: "1455100092891684",
     SHEETS_ENDPOINT: "https://script.google.com/macros/s/AKfycbwvZamMivX4MF_jM83VjO3f8GDYmitlOxKkkXS2mSnivZ1wzps9ZolIQG2tvKMATIoh2Q/exec",
     WHATSAPP: "919392974031",
-    PRICES: { solo: 229 },
+    // pair = the price of two bottles together ("2 for ₹419", owner's call
+    // 2026-10-15). Every pair in an order is priced at it and an odd bottle at
+    // solo: 3 bottles = ₹648. Mirrors product.pairPrice in config/product.json,
+    // which api/create-order checks the total against.
+    PRICES: { solo: 229, pair: 419 },
     // MRP = the maximum retail price declared on the physical pack. It is only
     // legitimate to strike it through if ₹499 is the figure actually printed on
     // the bottle label; a reference price that was never on the pack and never
@@ -1308,6 +1312,14 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .buy-actions .pd-btn{flex:1 1 auto;min-width:0;padding:0 16px}
   #pdpBuyText{overflow:hidden;text-overflow:ellipsis}
   #pdpCartBtn{width:100%;margin-top:10px}
+  .pd-pair{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:52px;margin-top:10px;
+    padding:10px 14px;font:inherit;text-align:left;color:var(--text-2);background:var(--surface);
+    border:1px dashed var(--border-strong);border-radius:var(--sq-sm);cursor:pointer}
+  .pd-pair__txt{font-size:14px;line-height:1.35}
+  .pd-pair__txt b{color:var(--text);font-weight:600;margin-right:4px}
+  .pd-pair__cta{flex:0 0 auto;font-size:13px;font-weight:600;color:var(--acid);white-space:nowrap}
+  .pd-pair[aria-pressed="true"]{border-style:solid;border-color:var(--acid)}
+  .pd-pair:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
   .pd-pay{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;
     font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center}
   .pd-pay .ic{width:14px;height:14px}
@@ -1634,7 +1646,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
 <link rel="preload" href="/assets/css/chrome.css?v=b664f938" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=b664f938"></noscript>
-<script src="/assets/js/chrome.js?v=4868be31" defer></script>
+<script src="/assets/js/chrome.js?v=7bc8421b" defer></script>
 <script src="/assets/js/support-chat.js?v=63e449aa" defer></script>
 </head>
 <body>
@@ -1915,6 +1927,12 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <button type="button" class="pd-btn" id="pdpBuyBtn" onclick="buyNow()"><span id="pdpBuyText">Buy now — ₹229</span></button>
         </div>
         <button type="button" class="pd-btn pd-btn--ghost" id="pdpCartBtn" onclick="addToCart()">Add to cart</button>
+        <!-- 2 for ₹419 (owner's call, 2026-10-15). Below the buttons so the
+             phone fold doesn't move; prices from CFG.PRICES / product.pairPrice. -->
+        <button type="button" class="pd-pair" id="pdPairBtn" onclick="pdpPickPair()" aria-pressed="false">
+          <span class="pd-pair__txt"><b>2 for ₹419</b> Save ₹39 with a second bottle</span>
+          <span class="pd-pair__cta">Choose 2</span>
+        </button>
         <p class="pd-pay"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>Secure checkout · UPI · Cards · Net banking · COD</p>
 
         <ul class="pd-assure" aria-label="Delivery and returns">
@@ -2111,12 +2129,13 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       </div>
       <div class="pd-offer-body">
         <div class="section-tag">ODORSTRIKE · 50ML POCKET MIST</div>
-        <h2 id="buyTitle" class="pd-h2">One bottle. One price.</h2>
+        <h2 id="buyTitle" class="pd-h2">One bottle, or two for ₹419.</h2>
         <!-- 54% = (499 − 229) / 499, rounded. Keep this in step with CFG.MRP.solo
              and CFG.PRICES.solo — a discount % that doesn't match the two prices
              shown on the same card is a misleading-price claim. -->
         <div class="pd-price-row"><span class="pd-amt">₹229</span><s>M.R.P. ₹499</s><span class="pd-off">54% OFF</span></div>
         <ul class="pd-offer-list">
+          <li><span><strong>2 for ₹419</strong> — save ₹39 with a second bottle</span></li>
           <li><span><strong>Free shipping</strong> on prepaid orders, pan-India</span></li>
           <li><span><strong>Cash on Delivery</strong> available across India</span></li>
           <li><span><strong>Ships from Hyderabad</strong> in 48 hours · 3–5 days to metros</span></li>
@@ -2542,13 +2561,23 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
 <!-- ============================= -->
 <script>
   const CFG = window.SMELLOFF_CONFIG;
-  // ₹229 solo is the only SKU. No duo/trio/bundles.
+  // ₹229 solo is the only SKU; two bottles go at CFG.PRICES.pair (2 for ₹419).
+  // Never bring back the retired two- and three-bottle bundle prices.
   const VARIANTS = {
     solo: { title: 'ODORSTRIKE 50ml', units: '1 × 50ml', amount: CFG.PRICES.solo, mrp: CFG.MRP.solo }
   };
   // Surcharge for choosing Cash on Delivery. Read once here so the whole page has
   // one number; the static markup that quotes it is listed at CFG.COD_FEE.
   const COD_FEE = Number(CFG.COD_FEE) || 0;
+  // Product subtotal for a quantity: pairs at CFG.PRICES.pair, an odd bottle at
+  // the unit price. The same rule as subtotalForQuantity() on the server.
+  function subtotalFor(q) {
+    q = Math.max(0, Math.floor(Number(q) || 0));
+    var unit = Number(CFG.PRICES.solo) || 0;
+    var pair = Number(CFG.PRICES.pair) || unit * 2;
+    return Math.floor(q / 2) * pair + (q % 2) * unit;
+  }
+  window.smfSubtotal = subtotalFor;
 
   let currentVariant = 'solo';
   // COD is the default because it is the only method that completes without
@@ -2707,7 +2736,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         cart: {
           items: qty > 0 ? [{ name: 'ODORSTRIKE Fabric Mist', variant: '50ml', quantity: qty, price: paise }] : [],
           item_count: qty,
-          total: paise * qty,
+          total: subtotalFor(qty) * 100,
           currency: 'INR'
         }
       };
@@ -2733,23 +2762,34 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     var v = document.getElementById('pdpQtyVal');
     if (v) v.textContent = String(pdpQty);
     var t = document.getElementById('pdpBuyText');
-    if (t) t.textContent = 'Buy now — ₹' + (unitPrice() * pdpQty);
+    var subtotal = subtotalFor(pdpQty);
+    if (t) t.textContent = 'Buy now — ₹' + subtotal;
     var sc = document.getElementById('showcaseBuyBtn');
-    if (sc) sc.textContent = 'Buy now — ₹' + (unitPrice() * pdpQty);
+    if (sc) sc.textContent = 'Buy now — ₹' + subtotal;
     var finalBtn = document.getElementById('finalBuyBtn');
-    if (finalBtn) {
-      var subtotal = unitPrice() * pdpQty;
-      finalBtn.textContent = 'Buy now — ₹' + subtotal;
-    }
+    if (finalBtn) finalBtn.textContent = 'Buy now — ₹' + subtotal;
     var mbLabel = document.getElementById('mobileBarLabel');
-    if (mbLabel) {
-      var subtotal = unitPrice() * pdpQty;
-      mbLabel.textContent = (pdpQty > 1 ? (pdpQty + ' × ') : '') + 'ODORSTRIKE 50ml · ₹' + subtotal;
+    if (mbLabel) mbLabel.textContent = (pdpQty > 1 ? (pdpQty + ' × ') : '') + 'ODORSTRIKE 50ml · ₹' + subtotal;
+    var pairBtn = document.getElementById('pdPairBtn');
+    if (pairBtn) {
+      var picked = pdpQty >= 2;
+      pairBtn.setAttribute('aria-pressed', picked ? 'true' : 'false');
+      var cta = pairBtn.querySelector('.pd-pair__cta');
+      if (cta) cta.textContent = picked ? 'Selected' : 'Choose 2';
     }
     var dec = document.getElementById('pdpQtyDec');
     if (dec) dec.disabled = pdpQty <= 1;
     var inc = document.getElementById('pdpQtyInc');
     if (inc) inc.disabled = pdpQty >= maxQ;
+  }
+  // "2 for ₹419" card under the hero buttons: sets the page quantity to two
+  // (or back to one), so the Buy button above reads ₹419.
+  function pdpPickPair() {
+    pdpQty = pdpQty >= 2 ? 1 : 2;
+    renderPdpQty();
+    if (typeof window.smfTrack === 'function') {
+      try { window.smfTrack({ type: 'click', label: pdpQty === 2 ? 'pdp_pair_pick' : 'pdp_pair_unpick' }); } catch (e) {}
+    }
   }
   function pdpQtyStep(d) {
     var maxQ = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.MAX_QTY) || 10;
@@ -2848,7 +2888,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     const v = VARIANTS[currentVariant] || {};
     const qty = cartQty > 0 ? cartQty : 1;
     const unit = Number(v.amount) || CFG.PRICES.solo;
-    const subtotal = unit * qty;
+    const subtotal = subtotalFor(qty);
     const shipping = Number(calcShipping(subtotal)) || 0;
     const codFee = (typeof payMethod !== 'undefined' && payMethod === 'cod') ? COD_FEE : 0;
     return { qty: qty, unit: unit, subtotal: subtotal, shipping: shipping,
@@ -2861,8 +2901,9 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       var el = document.getElementById(id);
       if (el) el.textContent = text;
     };
-    set('checkoutVariant', t.qty + ' × 50ml');
-    set('checkoutAmount', '₹' + t.unit + (t.qty > 1 ? ' × ' + t.qty : ''));
+    var saving = t.unit * t.qty - t.subtotal;
+    set('checkoutVariant', t.qty + ' × 50ml' + (saving > 0 ? ' · you save ₹' + saving : ''));
+    set('checkoutAmount', '₹' + t.subtotal);
     set('checkoutShipping', 'Free');
     // Each payment option states the total that choice means, for the
     // quantity actually in the order (they were hard-coded to one bottle).
@@ -3021,7 +3062,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       fbq('track', 'AddPaymentInfo', _api, { eventID: _eidP });
       metaCapi('AddPaymentInfo', _eidP, { custom: _api, order_type: method === 'cod' ? 'cod' : 'prepaid' });
     }
-    if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: t.subtotal, items: gaItems(v.amount, t.qty) });
+    if (typeof gtag !== 'undefined') gtag('event', 'add_payment_info', { payment_type: method, currency: 'INR', value: t.subtotal, items: gaItems(t.subtotal / t.qty, t.qty) });
   }
 
   function showError(msg) {
@@ -3826,11 +3867,11 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   }
 
   function trackAddToCart(ctaLocation) {
-    var qty = getCartQty() > 0 ? getCartQty() : 1; var v = osValue() * qty; var eid = _eid();
+    var qty = getCartQty() > 0 ? getCartQty() : 1; var v = (window.smfSubtotal ? window.smfSubtotal(qty) : osValue() * qty); var eid = _eid();
     var c = fbContents(v, qty);
     if (ctaLocation) c.cta_location = ctaLocation;
     if (typeof fbq !== 'undefined') fbq('track', 'AddToCart', c, { eventID: eid });
-    var gaData = { currency: 'INR', value: v, items: gaItems(osValue(), qty) };
+    var gaData = { currency: 'INR', value: v, items: gaItems(v / qty, qty) };
     if (ctaLocation) gaData.cta_location = ctaLocation;
     if (typeof gtag !== 'undefined') gtag('event', 'add_to_cart', gaData);
     metaCapi('AddToCart', eid, { custom: c });
@@ -3838,11 +3879,11 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   window.trackAddToCart = trackAddToCart;
 
   function trackInitCheckout(ctaLocation) {
-    var qty = getCartQty() > 0 ? getCartQty() : 1; var v = osValue() * qty; var eid = _eid();
+    var qty = getCartQty() > 0 ? getCartQty() : 1; var v = (window.smfSubtotal ? window.smfSubtotal(qty) : osValue() * qty); var eid = _eid();
     var c = fbContents(v, qty);
     if (ctaLocation) c.cta_location = ctaLocation;
     if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', c, { eventID: eid });
-    var gaData = { currency: 'INR', value: v, items: gaItems(osValue(), qty) };
+    var gaData = { currency: 'INR', value: v, items: gaItems(v / qty, qty) };
     if (ctaLocation) gaData.cta_location = ctaLocation;
     if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', gaData);
     metaCapi('InitiateCheckout', eid, { custom: c });

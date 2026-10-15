@@ -87,6 +87,24 @@ checkout attempt (UPI, 12 Oct, failed). Real orders: 5 delivered, Aug–Sep.
 - Support-chat launcher is an icon-only 48px circle under 520px (the "Help"
   pill sat over headings and prices); the label stays as the accessible name.
 
+## 2 for ₹419 (2026-10-15, owner's call)
+Two bottles together cost **₹419** (save ₹39); COD stays ₹89. Every pair in
+an order is priced at `product.pairPrice`, an odd bottle at ₹229 (3 = ₹648,
+10 = ₹2,095). One rule in four places, keep them together:
+`subtotalForQuantity()` (`shared/products-config-workers.js`; `create-order`
+checks the client's total against it), `subtotalFor()` / `window.smfSubtotal`
+in `odorstrike.html` (`CFG.PRICES.pair`), `subtotalRupees()` in `chrome.js`,
+and `calculateOrderTotal()` in `scripts/product-config.mjs`.
+- `items[].price` stays the **unit** price (229); only the total changes.
+- **Shiprocket** gets a "(pack of 2)" line (sku `OS-001-50ML-X2`, ₹419 × pairs)
+  plus a single line for an odd bottle, so the courier collects exactly the
+  order total. One line at ₹229 × 2 would have collected ₹458 + ₹89.
+- PDP: a "2 for ₹419" toggle under Add to cart (below the fold line on
+  phones, so Buy didn't move) and a line in the `#buy` box. The cart drawer
+  still shows no prices. Checkout shows "you save ₹39" in the item line.
+- Product schema, `products.json` and the Merchant feed stay ₹229 (one bottle).
+  The support chat knows the pair price. Never bring back Duo ₹399 / Trio ₹549.
+
 ## Competitor research for orders (2026-10-15, owner: "how do competitors get orders")
 Full write-up: `docs/audits/competitor-conversion-2026-10.md`. India's fabric
 sprays sell on Amazon/Flipkart/Meesho with 22–81 ratings each (a thin,

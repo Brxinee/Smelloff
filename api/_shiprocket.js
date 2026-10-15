@@ -1,4 +1,4 @@
-import { BASE_PRODUCT } from '../shared/products-config-workers.js';
+import { BASE_PRODUCT, subtotalForQuantity } from '../shared/products-config-workers.js';
 
 const API_BASE = 'https://apiv2.shiprocket.in/v1/external';
 
@@ -142,6 +142,21 @@ export async function createShiprocketOrder(order) {
   // 2026-10-11). Putting it in sub_total instead double-counts (₹407).
   const codFeeRupees = paymentMethod === 'COD' ? Math.max(0, Math.round(Number(order.cod_fee || 0) / 100)) : 0;
 
+  // Shiprocket's order total (what a COD courier collects) is the sum of
+  // selling_price × units, so a "2 for ₹419" order can't go as one line at
+  // ₹229 each. Pairs go as their own line at the pair price, an odd bottle at
+  // the unit price; whole rupees, and they add up to exactly what we charged.
+  const itemName = String(item.name || BASE_PRODUCT.shortTitle || BASE_PRODUCT.title);
+  const itemSku = String(item.sku || BASE_PRODUCT.sku);
+  const pairs = Math.floor(quantity / 2);
+  const pairPrice = subtotalForQuantity(2);
+  const orderItems = (pairs > 0 && unitPrice === BASE_PRODUCT.price && pairPrice < unitPrice * 2)
+    ? [
+      { name: `${itemName} (pack of 2)`, sku: `${itemSku}-X2`, units: pairs, selling_price: pairPrice, discount: 0, tax: '', hsn: '' },
+      ...(quantity % 2 ? [{ name: itemName, sku: itemSku, units: 1, selling_price: unitPrice, discount: 0, tax: '', hsn: '' }] : [])
+    ]
+    : [{ name: itemName, sku: itemSku, units: quantity, selling_price: unitPrice, discount: 0, tax: '', hsn: '' }];
+
   const payload = {
     order_id: String(order.order_code),
     order_date: new Date(order.created_at || Date.now()).toISOString().slice(0, 10),
@@ -172,15 +187,7 @@ export async function createShiprocketOrder(order) {
     shipping_email: String(order.customer_email || '').trim(),
     shipping_isd_code: '91',
     shipping_phone: String(order.customer_phone || '').replace(/\D/g, '').slice(-10),
-    order_items: [{
-      name: String(item.name || BASE_PRODUCT.shortTitle || BASE_PRODUCT.title),
-      sku: String(item.sku || BASE_PRODUCT.sku),
-      units: quantity,
-      selling_price: unitPrice,
-      discount: 0,
-      tax: '',
-      hsn: ''
-    }],
+    order_items: orderItems,
     payment_method: paymentMethod,
     shipping_charges: 0,
     giftwrap_charges: 0,

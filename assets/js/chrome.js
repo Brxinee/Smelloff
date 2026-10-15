@@ -251,6 +251,16 @@
       (window.SMELLOFF_TRUTH && window.SMELLOFF_TRUTH.pricePrepaid) || 229;
   }
 
+  // Product subtotal: pairs at PRICES.pair ("2 for ₹419"), an odd bottle at the
+  // unit price. Same rule as subtotalForQuantity() in the Worker.
+  function subtotalRupees(qty) {
+    var q = Math.max(0, Math.floor(Number(qty) || 0));
+    var unit = Number(unitPriceRupees());
+    var pair = Number(window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES && window.SMELLOFF_CONFIG.PRICES.pair) ||
+      Number(window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.pairPrice) || unit * 2;
+    return Math.floor(q / 2) * pair + (q % 2) * unit;
+  }
+
   function codFeeRupees() {
     var n = Number(window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.COD_FEE);
     if (Number.isFinite(n) && n >= 0) return n;
@@ -278,7 +288,7 @@
     ensurePaymentUi();
     var method = currentPaymentMethod();
     var qty = quantityFromCheckout();
-    var subtotal = unitPriceRupees() * qty;
+    var subtotal = subtotalRupees(qty);
     var fee = method === 'cod' ? codFeeRupees() : 0;
     var total = subtotal + fee;
 
@@ -324,7 +334,7 @@
   function orderPayload() {
     var qty = quantityFromCheckout();
     var unitPrice = Number(unitPriceRupees());
-    var amountRupees = unitPrice * qty;
+    var amountRupees = subtotalRupees(qty);
     return {
       email: normalizeEmail(textValue('f_email')),
       phone: textValue('f_phone'),
@@ -360,8 +370,8 @@
     if (label) label.textContent = loading
       ? (typeof loading === 'string' ? loading : 'Opening secure payment…')
       : (currentPaymentMethod() === 'cod'
-        ? 'Place COD order · ₹' + (unitPriceRupees() * quantityFromCheckout() + codFeeRupees())
-        : 'Pay ₹' + (unitPriceRupees() * quantityFromCheckout()) + ' securely');
+        ? 'Place COD order · ₹' + (subtotalRupees(quantityFromCheckout()) + codFeeRupees())
+        : 'Pay ₹' + subtotalRupees(quantityFromCheckout()) + ' securely');
   }
 
   function showPaymentError(message) {
