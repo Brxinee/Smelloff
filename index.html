@@ -385,9 +385,15 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px;
   }
   .hero-price .size{display:none;flex-basis:100%;margin-top:6px;font-size:12.5px;color:var(--muted);letter-spacing:.01em}
-  .hero-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;margin-top:12px}
-  .hero-ctas .hm-btn{flex:1 1 100%}
-  .hero-more{margin:2px auto 0}
+  /* Two routes, one row: on the old homepage 38 phone visitors tapped
+     "See ODORSTRIKE" and ~14 tapped Buy (events, 120 days). Buy stays filled
+     and wider; the product route is a real button, not a footnote. */
+  .hero-ctas{display:flex;flex-wrap:nowrap;align-items:stretch;gap:10px;margin-top:12px}
+  .hero-ctas .hm-btn{flex:1.35 1 0;min-width:0;padding-inline:12px;white-space:nowrap}
+  .hero-ctas .hero-more{flex:1 1 0}
+  .hero-pair{margin-top:6px;text-align:center;font-size:13.5px;line-height:1.4}
+  .hero-pair a{color:var(--text-2);text-decoration:underline;text-decoration-color:var(--border-strong);text-underline-offset:4px;display:inline-block;padding:6px 0}
+  .hero-pair b{color:var(--acid);font-weight:600}
   .hero-ship{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin-top:12px;list-style:none;font-size:12.5px;color:var(--text-2)}
   .hero-ship li{display:inline-flex;align-items:center;gap:6px}
   .hero-ship .ic{width:16px;height:16px;color:var(--acid)}
@@ -425,7 +431,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     .hero-price .size{display:block}
     .hero-ctas{margin-top:16px}
     .hero-ctas .hm-btn{flex:0 1 auto;padding-inline:34px}
-    .hero-more{margin:0}
+    .hero-pair{text-align:left}
     .hero-ship{justify-content:flex-start}
     .hero-quote{max-width:46ch}
   }
@@ -450,7 +456,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     @keyframes hm-tick{to{transform:translateX(-50%)}}
   }
 
-  /* ============ 2 · Spray. Wait. Wear. ============ */
+  /* ============ 3 · Spray. Wait. Wear. ============ */
   .how-steps{list-style:none;display:grid;gap:12px;margin-top:32px;counter-reset:s}
   .how-step{
     border:1px solid var(--border-default);border-radius:var(--r-xl);
@@ -468,7 +474,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     .how-num{grid-row:auto;flex-direction:row;justify-content:space-between}
   }
 
-  /* ============ 3 · Fabric beats skin ============
+  /* ============ 4 · Fabric beats skin ============
      Four alternating blocks, each one claim + one CTA (dudewipes' "Wet
      beats dry"). Visuals are type and CSS, not burnt-in ad creatives: the
      gallery creatives carry claims (dry times, ratings) that don't match
@@ -519,6 +525,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   @media(min-width:768px){.beat .ph-img{max-width:460px;justify-self:center}}
   /* A filled slot: the same box as .ph-img, holding the photo. */
   .ph-pic{display:contents}
+  /* <source> must not become a grid item: it took cell 1 of every .beat
+     and pushed photo and copy onto different rows on desktop. */
+  .ph-pic>source{display:none}
   .beat-art.ph-photo{display:block;padding:0;min-height:0;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover}
   /* Square on phones: four 4:5 photos stacked ran ~1,740px. */
   @media(max-width:767px){.beat-art.ph-photo{aspect-ratio:1/1}}
@@ -527,34 +536,58 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .layers-inline li{font-family:var(--display);font-weight:700;font-size:15px;border:1px solid var(--border-default);border-radius:var(--r-pill);padding:6px 12px}
   .layers-inline span{font-family:var(--body);font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--acid);margin-right:8px}
 
-  /* Text placeholders: the words are CSS-generated so they can't be mistaken
-     for (or indexed as) a real offer. */
-  .ph-text::after{content:attr(data-ph)}
-  .ph-text{color:var(--muted);font-size:14px;border-bottom:1px dashed var(--border-strong);display:inline-block;padding-bottom:2px}
-  .ph-text--title{font-family:var(--display);font-weight:700;font-size:22px;color:var(--text-2)}
-  .ph-text--price{font-family:var(--display);font-weight:700;font-size:30px;color:var(--text-2);border:0}
-  .ph-text--mrp{font-family:var(--mono);font-size:12px;border:0}
-
-  /* ============ 5b · Combos (placeholder) ============ */
-  .combo-row{
-    list-style:none;display:grid;gap:12px;margin-top:28px;
-    grid-auto-flow:column;grid-auto-columns:78%;overflow-x:auto;
-    scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:none;
+  /* ============ 2 · Where it happens (2026-10-15) ============
+     Six moments in a 2-up grid on phones (short cards, so the section is
+     about one screen), three across from 768. */
+  .mo-lede{margin-top:14px;color:var(--text-2);font-size:var(--fs-lead);max-width:52ch}
+  .mo-grid{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:26px}
+  .mo{border:1px solid var(--border-default);border-radius:var(--r-lg);background:var(--surface);padding:16px 14px 18px;display:flex;flex-direction:column;gap:8px}
+  .mo-tag{align-self:flex-start;font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--acid)}
+  .mo h3{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.15;letter-spacing:-.01em;text-wrap:balance}
+  .mo p{font-size:13.5px;line-height:1.45;color:var(--text-2)}
+  .mo-foot{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+  .mo-foot .hm-btn{flex:1 1 100%}
+  .mo-foot p{font-size:13.5px;color:var(--muted);margin:0 auto}
+  @media(min-width:768px){
+    .mo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:34px}
+    .mo{padding:24px 22px 26px}
+    .mo h3{font-size:21px}
+    .mo p{font-size:15px}
+    .mo-foot .hm-btn{flex:0 1 auto}
+    .mo-foot p{margin:0}
   }
-  .combo-row::-webkit-scrollbar{display:none}
-  .combo{scroll-snap-align:start}
-  .combo{border:1px solid var(--border-default);border-radius:var(--r-xl);background:var(--surface);padding:12px;display:flex;flex-direction:column;gap:14px}
-  .combo-body{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:4px 8px 8px}
-  .combo-price{display:flex;align-items:baseline;gap:12px;margin-top:4px}
-  .combo-btn{
-    width:100%;min-height:52px;margin-top:6px;border-radius:var(--r-pill);
-    border:1px dashed var(--border-strong);background:transparent;color:var(--muted);
-    font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;cursor:not-allowed;
-  }
-  .combo-now{margin-top:22px;color:var(--text-2);display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
-  @media(min-width:768px){.combo-row{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible}}
 
-  /* ============ 4 · Reviews ============
+  /* ============ 5 · Compared (2026-10-15) ============
+     A real table (it is tabular data). Five columns fit a 390px phone at
+     13px; the wrapper scrolls only on narrower screens. */
+  .cmp-scroll{margin-top:28px;overflow-x:auto;border:1px solid var(--border-default);border-radius:var(--r-xl);background:var(--surface)}
+  .cmp{width:100%;min-width:300px;border-collapse:collapse;font-size:12.5px;line-height:1.35}
+  .cmp th,.cmp td{padding:12px 8px;text-align:left;vertical-align:top;border-top:1px solid var(--border-subtle)}
+  .cmp thead th{border-top:0;font-family:var(--body);font-weight:600;font-size:11px;letter-spacing:.04em;color:var(--muted);vertical-align:bottom}
+  .cmp tbody th{font-weight:500;color:var(--text-2);width:22%}
+  .cmp td{color:var(--muted)}
+  .cmp .us{color:var(--text);font-weight:600;background:rgba(var(--acid-rgb),.07)}
+  .cmp thead .us{color:var(--acid)}
+  .cmp td.us .ic{width:13px;height:13px;color:var(--acid);stroke-width:2.6;margin:-2px 4px 0 0}
+  .cmp td.us{overflow-wrap:break-word}
+  @media(max-width:519px){
+    .cmp .cmp-wide{display:none}
+    .cmp th,.cmp td{padding:11px 8px;font-size:13px}
+    .cmp tbody th{width:26%}
+  }
+  .cmp-note{margin-top:14px;font-size:13.5px;color:var(--muted);max-width:62ch}
+  .cmp-foot{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px 24px;align-items:center}
+  .cmp-foot .hm-btn{flex:1 1 100%}
+  .cmp-foot .hm-link{margin:0 auto}
+  @media(min-width:768px){
+    .cmp{font-size:15px}
+    .cmp th,.cmp td{padding:16px 18px}
+    .cmp thead th{font-size:12.5px}
+    .cmp-foot .hm-btn{flex:0 1 auto}
+    .cmp-foot .hm-link{margin:0}
+  }
+
+  /* ============ 6 · Reviews ============
      Beta-tester quotes, word for word and labelled as such. A scroll-snap
      row on phones, three columns on desktop. No stars and no counts until
      real verified reviews exist. */
@@ -571,14 +604,18 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     display:flex;flex-direction:column;gap:16px;
   }
   .rv blockquote{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.3;letter-spacing:-.01em}
-  .rv-who{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .rv-who{margin-top:auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 10px}
   .rv-who cite{font-style:normal;font-size:14px;color:var(--text-2)}
   .rv-tag{font-family:var(--body);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--acid);border:1px solid var(--border-focus);border-radius:var(--r-pill);padding:4px 9px;white-space:nowrap}
+  .rv--buyer{border-color:var(--border-focus)}
+  .rv-tag--buyer{display:inline-flex;align-items:center;gap:5px;color:var(--on-acid);background:var(--acid);border-color:var(--acid)}
+  .rv-tag--buyer .ic{width:11px;height:11px;stroke-width:3}
   .rv-more{margin-top:20px;font-size:14px;color:var(--muted)}
   .rv-more a{color:var(--text);text-decoration-color:var(--acid);text-underline-offset:4px}
-  @media(min-width:768px){.rv-row{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible}}
+  @media(min-width:768px){.rv-row{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}}
+  @media(min-width:1160px){.rv-row{grid-template-columns:repeat(4,minmax(0,1fr))}.rv blockquote{font-size:19px}}
 
-  /* ============ 5 · The offer ============ */
+  /* ============ 7 · The offer ============ */
   .offer{
     border:1px solid var(--border-strong);border-radius:var(--r-xl);
     background:var(--surface);overflow:hidden;
@@ -588,7 +625,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
      shown whole (owner: never crop it). The panel is #000, so the photo's
      own black meets it invisibly and `contain` leaves no visible bars.
      4:5 panel on phones, fills the column from 768. Skeleton until loaded. */
-  .offer-art{position:relative;overflow:hidden;background:#000;aspect-ratio:4/5}
+  /* Phones: a 3:2 black panel (the whole photo, contained) so the pack
+     choice starts ~190px sooner; it was a 4:5 panel ~410px tall. */
+  .offer-art{position:relative;overflow:hidden;background:#000;aspect-ratio:3/2}
   .offer-art .offer-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
   .offer-body{padding:28px 24px 30px}
   .offer-body .hm-h2{font-size:clamp(30px,4.6vw,48px)}
@@ -596,6 +635,27 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .offer-price b{font-family:var(--display);font-weight:700;font-size:56px;line-height:1}
   .offer-price s{font-family:var(--mono);font-size:14px;color:var(--muted)}
   .offer-price .off{font-family:var(--body);font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px}
+  /* Pack picker: two radio cards; the checked one gets the lime ring. */
+  .pack{border:0;margin:20px 0 0;padding:0;display:grid;gap:10px}
+  .pack-opt{position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;
+    padding:14px 16px;border:1px solid var(--border-strong);border-radius:var(--r-lg);background:var(--surface-2);cursor:pointer;
+    transition:border-color var(--dur) ease,background-color var(--dur) ease}
+  .pack-opt:hover{border-color:var(--text-2)}
+  .pack-opt input{appearance:none;-webkit-appearance:none;margin:0;width:20px;height:20px;border-radius:50%;border:2px solid var(--muted);display:grid;place-content:center;cursor:pointer}
+  .pack-opt input::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--acid);transform:scale(0);transition:transform .15s ease}
+  .pack-opt input:checked{border-color:var(--acid)}
+  .pack-opt input:checked::before{transform:scale(1)}
+  .pack-opt input:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+  .pack-opt:has(input:checked){border-color:var(--acid);background:rgba(var(--acid-rgb),.06)}
+  .pack-body{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .pack-name{font-family:var(--display);font-weight:700;font-size:17px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+  .pack-badge{font-family:var(--body);font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:3px 8px}
+  .pack-sub{font-size:12.5px;color:var(--muted);line-height:1.35}
+  .pack-off{font-weight:600;color:var(--acid)}
+  .pack-price{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+  .pack-price b{font-family:var(--display);font-weight:700;font-size:20px;line-height:1}
+  .pack-price s{font-size:12px;color:var(--muted)}
+  .pack-price em{font-style:normal;font-size:11.5px;font-weight:600;color:var(--acid)}
   .offer-list{list-style:none;margin:20px 0 24px;display:grid;gap:10px}
   .offer-list li{display:flex;gap:12px;font-size:15px;color:var(--text-2);line-height:1.4}
   .offer-list li strong{color:var(--text);font-weight:500}
@@ -610,14 +670,14 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     .offer-body{padding:44px 44px 40px}
   }
 
-  /* ============ 6 · Founder (one strip, not a section of prose) ============ */
+  /* ============ 8 · Founder (one strip, not a section of prose) ============ */
   .founder{display:grid;gap:16px}
   .founder p{color:var(--text-2);max-width:62ch}
   .founder .f-name{font-family:var(--display);font-weight:700;font-size:var(--fs-h4);color:var(--text)}
   .founder .f-role{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:block;margin-top:4px}
   @media(min-width:768px){.founder{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:48px;align-items:start}}
 
-  /* ============ 7 · FAQ ============
+  /* ============ 9 · FAQ ============
      Shape, padding, type and the +/− all come from soft.css §3. */
   .faq .hm-h2{margin-bottom:28px}
   .faq-item p{font-size:16px;line-height:1.55;color:var(--text-2)}
@@ -625,7 +685,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .faq-guides{margin-top:24px;font-size:14px;color:var(--muted)}
   .faq-guides a{color:var(--acid);text-underline-offset:3px}
 
-  /* ============ 8 · Final ============ */
+  /* ============ 10 · Final ============ */
   .final{background:radial-gradient(ellipse at 50% 0%,rgba(var(--acid-rgb),.10),transparent 60%),var(--surface);color:var(--text);padding:var(--section-y) 0;text-align:center;border-top:1px solid var(--border-subtle)}
   .final h2{font-family:var(--display);font-weight:700;font-size:clamp(34px,5.6vw,68px);line-height:1.04;letter-spacing:-.02em;}
   .final p{margin:18px auto 30px;max-width:44ch;font-size:var(--fs-lead);color:var(--text-2)}
@@ -812,8 +872,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           </p>
           <div class="hero-ctas">
             <a class="hm-btn" href="/odorstrike?buy=1" id="heroBuyBtn">Buy now — ₹229</a>
-            <a class="hm-link hero-more" href="/odorstrike">View product details</a>
+            <a class="hm-btn hm-btn--ghost hero-more" href="/odorstrike" data-track="home_hero_view">See the product</a>
           </div>
+          <p class="hero-pair"><a href="/odorstrike?buy=1&amp;qty=2" data-track="home_hero_pair">One for home, one for the office? <b>2 for ₹419</b> · save ₹39</a></p>
           <ul class="hero-ship" aria-label="Delivery and payment">
             <li><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><b>Free</b> shipping on prepaid</span></li>
             <li><svg class="ic" aria-hidden="true"><use href="#i-cash"/></svg><span><b>Cash on Delivery</b> available</span></li>
@@ -834,7 +895,32 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </div>
   </div>
 
-  <!-- ============ 2 · SPRAY. WAIT. WEAR. ============ -->
+
+  <!-- ============ 2 · WHERE IT HAPPENS (2026-10-15) ============
+       Six everyday moments a visitor recognises in a second, so the page says
+       "this is for you" before it explains how. Clothing only; each line is a
+       situation, not a claim. -->
+  <section class="hm-sec" id="moments" aria-labelledby="momentsTitle">
+    <div class="wrap">
+      <p class="hm-eyebrow reveal">WHERE IT HAPPENS</p>
+      <h2 id="momentsTitle" class="hm-h2 reveal">It's not you. <span class="acid">It's the shirt.</span></h2>
+      <p class="mo-lede reveal">Your deodorant did its job on your skin. The smell that's left is sitting in the fabric. It usually comes from one of these.</p>
+      <ul class="mo-grid">
+        <li class="mo reveal"><span class="mo-tag">Sweat</span><h3>The metro or bus commute</h3><p>Forty minutes in a crowd, and the collar and underarms of your shirt hold on to it.</p></li>
+        <li class="mo reveal"><span class="mo-tag">Heat</span><h3>A bike ride in the sun</h3><p>You arrive dry, but the back of the shirt soaked up the whole ride.</p></li>
+        <li class="mo reveal"><span class="mo-tag">Food</span><h3>Biryani, tadka, the kitchen</h3><p>Food smell clings to jackets and hoodies for the rest of the day.</p></li>
+        <li class="mo reveal"><span class="mo-tag">Smoke</span><h3>Someone else's smoke break</h3><p>Cigarette smoke settles into the weave long after you've walked away.</p></li>
+        <li class="mo reveal"><span class="mo-tag">Damp</span><h3>Monsoon musty</h3><p>Clothes that never quite dried smell stale. Dry them fully, then spray.</p></li>
+        <li class="mo reveal"><span class="mo-tag">Re-wear</span><h3>Day-two jeans and hoodies</h3><p>Not dirty, just not fresh. Refresh them between washes.</p></li>
+      </ul>
+      <div class="mo-foot reveal">
+        <a class="hm-btn" href="/odorstrike?buy=1">Fix the shirt — ₹229</a>
+        <p>2–3 sprays on the fabric, dry in 15–30 seconds.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3 · SPRAY. WAIT. WEAR. ============ -->
   <section class="hm-sec" id="how" aria-labelledby="howTitle">
     <div class="wrap">
       <p class="hm-eyebrow reveal">HOW IT WORKS · Fabric only</p>
@@ -863,8 +949,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </div>
   </section>
 
-  <!-- ============ 3 · FABRIC BEATS SKIN ============
-       Four claims, four CTAs. Replaces "Your shirt remembers", the featured
+  <!-- ============ 4 · FABRIC BEATS SKIN ============
+       Three claims, three CTAs (the fourth, "dries clear", lives in the
+       comparison below since 2026-10-15). Replaces "Your shirt remembers", the featured
        product block and the science section, which made the same argument
        three times before the visitor reached a price. -->
   <section class="hm-sec" id="why" aria-labelledby="whyTitle">
@@ -904,18 +991,42 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         </div>
       </div>
 
-      <div class="beat">
-        <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/home-04-dried-clear@400.avif 400w, /assets/photos/home-04-dried-clear.avif 580w" sizes="(min-width:768px) 460px, 100vw"><img class="beat-art ph-photo reveal" src="/assets/photos/home-04-dried-clear.webp" srcset="/assets/photos/home-04-dried-clear@400.webp 400w, /assets/photos/home-04-dried-clear.webp 580w" sizes="(min-width:768px) 460px, 100vw" width="580" height="725" alt="Close-up of a black shirt collar after spraying, dried clear with no visible residue." loading="lazy" decoding="async"></picture>
-        <div class="beat-copy reveal">
-          <h3>Dries clear. No stiff residue. On black or on white.</h3>
-          <p>Sprayed from 15–20 cm, it dries clear on everyday washable fabrics — cotton, polyester, denim, nylon and wool blends. Patch-test silk and zari on a hidden seam first.</p>
-          <a class="hm-link" href="/odorstrike?buy=1">Buy now →</a>
-        </div>
+    </div>
+  </section>
+
+
+  <!-- ============ 5 · COMPARED (2026-10-15) ============
+       What the visitor already owns, side by side. The real pocket rival in
+       India is the clothes perfume spray (docs/audits/competitor-conversion-
+       2026-10.md). The washing column is honest on purpose: ODORSTRIKE does
+       not remove dirt or stains, and the table says so. -->
+  <section class="hm-sec" id="compare" aria-labelledby="compareTitle">
+    <div class="wrap">
+      <p class="hm-eyebrow reveal">WHY NOT JUST…</p>
+      <h2 id="compareTitle" class="hm-h2 reveal">What you use now vs <span class="acid">ODORSTRIKE.</span></h2>
+      <div class="cmp-scroll reveal" tabindex="0" role="region" aria-label="ODORSTRIKE compared with deodorant, a clothes perfume spray and washing">
+        <table class="cmp">
+          <thead>
+            <tr><th scope="col"><span class="sr-only">Compared on</span></th><th scope="col" class="us">ODORSTRIKE</th><th scope="col" class="cmp-wide">Deodorant</th><th scope="col">Clothes perfume spray</th><th scope="col">Washing again</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Goes on</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Clothes</td><td class="cmp-wide">Skin</td><td>Clothes</td><td>Clothes</td></tr>
+            <tr><th scope="row">Smell in the shirt</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Neutralizes it</td><td class="cmp-wide">Not made for it</td><td>Covers it</td><td>Removes it</td></tr>
+            <tr><th scope="row">Ready to wear</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>In 15–30 sec</td><td class="cmp-wide">—</td><td>In seconds</td><td>After it dries</td></tr>
+            <tr><th scope="row">Scent</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Light, fresh</td><td class="cmp-wide">Varies</td><td>Strong</td><td>Detergent</td></tr>
+            <tr><th scope="row">Dirt and stains</th><td class="us">No, wash for that</td><td class="cmp-wide">No</td><td>No</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cmp-note reveal">Dries clear with no stiff residue on cotton, polyester, denim, nylon and wool blends. Patch-test silk and zari on a hidden seam first.</p>
+      <div class="cmp-foot reveal">
+        <a class="hm-btn" href="/odorstrike?buy=1">Buy now — ₹229</a>
+        <a class="hm-link" href="/odorstrike#science">What's in it →</a>
       </div>
     </div>
   </section>
 
-  <!-- ============ 4 · REVIEWS ============
+  <!-- ============ 6 · REVIEWS ============
        The same three beta-tester quotes that run on /odorstrike, word for
        word and labelled as beta testers. These are the only first-hand
        accounts that exist — do not add invented ones. Swap them for real
@@ -924,12 +1035,16 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     <div class="wrap">
       <div class="rv-head">
         <div>
-          <p class="hm-eyebrow reveal">EARLY TESTERS</p>
+          <p class="hm-eyebrow reveal">BUYERS AND EARLY TESTERS</p>
           <h2 id="voicesTitle" class="hm-h2 reveal">Real sweaty reviews.</h2>
         </div>
         <a class="hm-link reveal" href="/reviews">All reviews →</a>
       </div>
-      <ul class="rv-row" tabindex="0" aria-label="Tester reviews — scroll sideways for more">
+      <ul class="rv-row" tabindex="0" aria-label="Reviews — scroll sideways for more">
+        <li class="rv rv--buyer reveal">
+          <blockquote>“tbh this product is amazing 🤩 definitely give it a try...”</blockquote>
+          <div class="rv-who"><cite>Suryavamshi G. · Adilabad</cite><span class="rv-tag rv-tag--buyer"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Verified buyer</span></div>
+        </li>
         <li class="rv reveal">
           <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
           <div class="rv-who"><cite>Rohit, 26 · Bengaluru</cite><span class="rv-tag">Beta tester</span></div>
@@ -947,22 +1062,37 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </div>
   </section>
 
-  <!-- ============ 5 · THE OFFER ============
+  <!-- ============ 7 · THE OFFER ============
        The one place on the page where everything a buyer needs to decide
        sits in one box: price, what's in it, delivery, COD, returns. -->
   <section class="hm-sec" id="buy" aria-labelledby="offerTitle">
     <div class="wrap">
       <div class="offer reveal">
         <div class="offer-art">
-          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/offer-in-hand-black@400.avif 400w, /assets/photos/offer-in-hand-black@640.avif 640w, /assets/photos/offer-in-hand-black@960.avif 960w, /assets/photos/offer-in-hand-black.avif 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 70vw"><img class="ph-photo offer-photo" src="/assets/photos/offer-in-hand-black@960.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w, /assets/photos/offer-in-hand-black@960.webp 960w, /assets/photos/offer-in-hand-black.webp 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 70vw" width="1152" height="2048" alt="A hand holding the ODORSTRIKE 50ml fabric odor spray bottle against a black background" loading="lazy" decoding="async"></picture>
+          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/offer-in-hand-black@400.avif 400w, /assets/photos/offer-in-hand-black@640.avif 640w, /assets/photos/offer-in-hand-black@960.avif 960w, /assets/photos/offer-in-hand-black.avif 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 40vw"><img class="ph-photo offer-photo" src="/assets/photos/offer-in-hand-black@960.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w, /assets/photos/offer-in-hand-black@960.webp 960w, /assets/photos/offer-in-hand-black.webp 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 40vw" width="1152" height="2048" alt="A hand holding the ODORSTRIKE 50ml fabric odor spray bottle against a black background" loading="lazy" decoding="async"></picture>
         </div>
         <div class="offer-body">
           <p class="hm-eyebrow">ODORSTRIKE · 50ML POCKET MIST</p>
-          <h2 id="offerTitle" class="hm-h2">One bottle. One price.</h2>
-          <p class="offer-price"><b>₹229</b><s>M.R.P. ₹499</s><span class="off">54% OFF</span></p>
+          <h2 id="offerTitle" class="hm-h2">Pick your pack.</h2>
+          <!-- Pack picker (2026-10-15). Two real options at the prices checkout
+               charges (pairPrice in config/product.json). One bottle is
+               selected by default; nothing is added for the buyer. Without JS
+               the button still buys one bottle. -->
+          <fieldset class="pack" id="packPicker">
+            <legend class="sr-only">How many bottles</legend>
+            <label class="pack-opt">
+              <input type="radio" name="pack" value="1" checked>
+              <span class="pack-body"><span class="pack-name">1 bottle</span><span class="pack-sub">~250 sprays · <span class="pack-off">54% OFF</span></span></span>
+              <span class="pack-price"><b>₹229</b><s>M.R.P. ₹499</s></span>
+            </label>
+            <label class="pack-opt">
+              <input type="radio" name="pack" value="2">
+              <span class="pack-body"><span class="pack-name">2 bottles <span class="pack-badge">Best value</span></span><span class="pack-sub">One for home, one for the office · ₹209.50 each</span></span>
+              <span class="pack-price"><b>₹419</b><s>₹458</s><em>Save ₹39</em></span>
+            </label>
+          </fieldset>
           <ul class="offer-list">
-            <li><span><strong>~250 sprays</strong> — under ₹3 a refresh</span></li>
-            <li><span><strong>Up to 8 hours</strong> of odor protection on fabric</span></li>
+            <li><span><strong>Up to 8 hours</strong> of odor protection on fabric · under ₹3 a refresh</span></li>
             <li><span><strong>Free shipping</strong> on prepaid UPI orders, pan-India</span></li>
             <li><span><strong>Cash on Delivery</strong> available across India</span></li>
             <li><span><strong>Ships from Hyderabad</strong> in 48 hours · 3–5 days to metros</span></li>
@@ -978,55 +1108,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </div>
   </section>
 
-  <!-- ============ 5b · COMBOS (PLACEHOLDER) ============
-       Combos are planned but not priced. Everything in here is a placeholder:
-       the visible text is CSS-generated from data-ph so nothing reads as a
-       real offer to search engines or schema. To launch a combo:
-         1. swap the .ph-img div for an <img> (keep width/height, loading="lazy"),
-         2. replace each .ph-text with real text,
-         3. point the button at checkout and drop `disabled`.
-       Checkout is still single-SKU: CFG.PRICES in odorstrike.html, products.json
-       and supabase/functions/create-order must all learn the combo first, or
-       every combo order will fail the server-side total check. -->
-  <section class="hm-sec" id="combos" aria-labelledby="combosTitle" hidden>
-    <div class="wrap">
-      <p class="hm-eyebrow reveal">COMBOS · COMING SOON</p>
-      <h2 id="combosTitle" class="hm-h2 reveal">Stock up. Save more.</h2>
-      <ul class="combo-row" tabindex="0" aria-label="Combos — scroll sideways for more">
-        <li class="combo">
-          <div class="ph-img ph-img--sq" role="img" aria-label="Combo image coming soon" data-ph-n="COMBO 01" data-ph="Pack shot of the combo on a plain background." data-ph-spec="1:1 · 1200×1200 · WebP"></div>
-          <div class="combo-body">
-            <p class="ph-text ph-text--title" data-ph="Combo name"></p>
-            <p class="ph-text" data-ph="What's inside — e.g. bottles / sizes"></p>
-            <p class="combo-price"><span class="ph-text ph-text--price" data-ph="₹ —"></span><span class="ph-text ph-text--mrp" data-ph="M.R.P. —"></span></p>
-            <button class="combo-btn" type="button" disabled>Coming soon</button>
-          </div>
-        </li>
-        <li class="combo">
-          <div class="ph-img ph-img--sq" role="img" aria-label="Combo image coming soon" data-ph-n="COMBO 02" data-ph="Pack shot of the combo on a plain background." data-ph-spec="1:1 · 1200×1200 · WebP"></div>
-          <div class="combo-body">
-            <p class="ph-text ph-text--title" data-ph="Combo name"></p>
-            <p class="ph-text" data-ph="What's inside — e.g. bottles / sizes"></p>
-            <p class="combo-price"><span class="ph-text ph-text--price" data-ph="₹ —"></span><span class="ph-text ph-text--mrp" data-ph="M.R.P. —"></span></p>
-            <button class="combo-btn" type="button" disabled>Coming soon</button>
-          </div>
-        </li>
-        <li class="combo">
-          <div class="ph-img ph-img--sq" role="img" aria-label="Combo image coming soon" data-ph-n="COMBO 03" data-ph="Pack shot of the combo on a plain background." data-ph-spec="1:1 · 1200×1200 · WebP"></div>
-          <div class="combo-body">
-            <p class="ph-text ph-text--title" data-ph="Combo name"></p>
-            <p class="ph-text" data-ph="What's inside — e.g. bottles / sizes"></p>
-            <p class="combo-price"><span class="ph-text ph-text--price" data-ph="₹ —"></span><span class="ph-text ph-text--mrp" data-ph="M.R.P. —"></span></p>
-            <button class="combo-btn" type="button" disabled>Coming soon</button>
-          </div>
-        </li>
-      </ul>
-      <p class="combo-now reveal">Can't wait? The single bottle ships today. <a class="hm-link" href="/odorstrike?buy=1">Buy now — ₹229 →</a></p>
-    </div>
-  </section>
 
-  <!-- ============ 6 · FOUNDER ============ -->
-  <section class="hm-sec" aria-labelledby="founderTitle">
+  <!-- ============ 8 · FOUNDER ============ -->
+  <section class="hm-sec" id="founders" aria-labelledby="founderTitle">
     <div class="wrap founder">
       <div class="reveal">
         <p class="hm-eyebrow">FOUNDERS · HYDERABAD</p>
@@ -1041,7 +1125,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </div>
   </section>
 
-  <!-- ============ 7 · FAQ ============
+  <!-- ============ 9 · FAQ ============
        The objections that stop a first order, in the order they come up.
        No FAQPage schema — deprecated, and tests assert it stays out. -->
   <section class="hm-sec faq" id="faq" aria-labelledby="faqTitle">
@@ -1090,8 +1174,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </div>
   </section>
 
-  <!-- ============ 8 · FINAL ============ -->
-  <section class="final" aria-labelledby="finalTitle">
+  <!-- ============ 10 · FINAL ============ -->
+  <section class="final" id="final" aria-labelledby="finalTitle">
     <div class="wrap">
       <h2 id="finalTitle">Smell khatam.<br>Confidence qaayam.</h2>
       <p>One pocket bottle. Every shirt you own, fresh between washes.</p>
@@ -1237,6 +1321,53 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     show(!anyInView);
   }, { threshold: 0 });
   targets.forEach(function(t){ io.observe(t); });
+})();
+</script>
+
+<!-- Pack picker (#buy): the button follows the chosen pack. Prices are the
+     ones checkout charges (config/product.json price / pairPrice); ?qty=2
+     sets the product page's quantity before checkout opens. -->
+<script>
+(function(){
+  var box = document.getElementById('packPicker');
+  var btn = document.getElementById('offerBuyBtn');
+  if (!box || !btn) return;
+  var PACKS = { '1': { href: '/odorstrike?buy=1', label: 'Buy now — ₹229' },
+                '2': { href: '/odorstrike?buy=1&qty=2', label: 'Buy 2 — ₹419' } };
+  function sync(){
+    var on = box.querySelector('input[name="pack"]:checked');
+    var p = PACKS[on ? on.value : '1'] || PACKS['1'];
+    btn.href = p.href; btn.textContent = p.label;
+  }
+  box.addEventListener('change', function(e){
+    sync();
+    if (typeof window.smfTrack === 'function') {
+      try { window.smfTrack({ type: 'click', label: 'home_pack_' + e.target.value }); } catch (err) {}
+    }
+  });
+  sync();
+})();
+</script>
+
+<!-- Section reach: one first-party view_content event per section per page
+     view ("home_sec_moments" …), so the admin can see where phone visitors
+     stop scrolling. Cookieless, same beacon as clicks (track.js). -->
+<script>
+(function(){
+  if (!('IntersectionObserver' in window)) return;
+  var seen = {};
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (!en.isIntersecting) return;
+      var id = en.target.id; io.unobserve(en.target);
+      if (seen[id] || typeof window.smfTrack !== 'function') return;
+      seen[id] = 1;
+      try { window.smfTrack({ type: 'view_content', label: 'home_sec_' + id }); } catch (err) {}
+    });
+  }, { rootMargin: "0px 0px -40% 0px" });
+  ['moments','how','why','compare','reviews','buy','founders','faq','final'].forEach(function(id){
+    var el = document.getElementById(id); if (el) io.observe(el);
+  });
 })();
 </script>
 

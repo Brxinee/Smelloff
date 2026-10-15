@@ -1420,6 +1420,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   @media(max-width:767px){.pd-fix .ph-img{aspect-ratio:4/3}}
   /* A filled slot: same box as .ph-img, holding the photo. */
   .ph-pic{display:contents}
+  .ph-pic>source{display:none}
   .ph-photo{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border:1px solid var(--border-subtle);border-radius:var(--sq-xl);background:var(--surface)}
   .r30-step .ph-photo{aspect-ratio:1/1;border-radius:var(--sq-md);margin-bottom:4px}
   @media(max-width:767px){.pd-fix .ph-photo{aspect-ratio:4/3}}
@@ -4101,14 +4102,22 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   // Deep links from other pages.
   //   ?cart=open  — header cart button elsewhere on the site: show the drawer.
   //   ?buy=1      — a "Buy now" CTA on the homepage or a policy page: open the
-  //                 checkout form straight away. Someone who clicked Buy on
-  //                 another page has already decided; landing them on an
+  //                 checkout form straight away (with ?qty=N, for N bottles).
+  //                 Someone who clicked Buy on another page has already
+  //                 decided; landing them on an
   //                 anchor and making them find the button again is a wasted
   //                 step on the highest-intent click the site gets.
   try {
     var _q = new URLSearchParams(location.search);
     if (_q.get('cart') === 'open') openCartDrawer();
-    else if (_q.get('buy') === '1') buyNow();
+    else if (_q.get('buy') === '1') {
+      // ?qty=2 — the homepage pack picker ("2 for ₹419"). Sets the page
+      // quantity first, so checkout opens on the pack the buyer chose.
+      var _n = parseInt(_q.get('qty'), 10);
+      var _max = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.MAX_QTY) || 10;
+      if (_n >= 1 && _n <= _max) { pdpQty = _n; renderPdpQty(); }
+      buyNow(_n > 1 ? 'home_pack' : undefined);
+    }
   } catch (e) {}
 
   // Clear red border on input focus
