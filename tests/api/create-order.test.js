@@ -190,3 +190,51 @@ test('create-order persists a database-valid prepaid method instead of pending',
     restoreEnv();
   }
 });
+
+test('a fresh prepaid order is one lookup, one Razorpay call and one insert (no link PATCH)', async () => {
+  setTestEnv();
+  const originalFetch = global.fetch;
+  const originalRazorpayMock = globalThis.__MOCK_RAZORPAY_ORDER_CREATE__;
+  const calls = [];
+  let insertedBody = null;
+
+  global.fetch = async (url, options = {}) => {
+    const method = options.method || 'GET';
+    calls.push(method);
+    if (method === 'GET' && String(url).includes('/rest/v1/orders?order_code=')) return jsonResponse([]);
+    if (method === 'POST' && String(url).endsWith('/rest/v1/orders')) {
+      insertedBody = JSON.parse(options.body);
+      return jsonResponse([{
+        id: 'db-order-2',
+        order_code: insertedBody.order_code,
+        customer_email: insertedBody.customer_email,
+        customer_phone: insertedBody.customer_phone,
+        amount: insertedBody.amount,
+        payment_attempt_id: insertedBody.payment_attempt_id,
+      }], 201);
+    }
+    throw new Error(`Unexpected fetch: ${method} ${url}`);
+  };
+  globalThis.__MOCK_RAZORPAY_ORDER_CREATE__ = async (params) => ({
+    id: 'order_fast_1',
+    amount: params.amount,
+    currency: params.currency,
+  });
+
+  try {
+    const { response, result } = makeResponse();
+    await handler(
+      { method: 'POST', headers: { origin: 'https://smelloff.in' }, body: validBody() },
+      response,
+    );
+    assert.equal(result().statusCode, 200);
+    assert.equal(result().responseData.order_id, 'order_fast_1');
+    assert.equal(insertedBody.payment_attempt_id, 'order_fast_1');
+    assert.deepEqual(calls, ['GET', 'POST']);
+  } finally {
+    global.fetch = originalFetch;
+    if (originalRazorpayMock === undefined) delete globalThis.__MOCK_RAZORPAY_ORDER_CREATE__;
+    else globalThis.__MOCK_RAZORPAY_ORDER_CREATE__ = originalRazorpayMock;
+    restoreEnv();
+  }
+});

@@ -201,6 +201,16 @@
   }
   window.smfWarmRazorpay = function () { getRazorpayReady().catch(function () {}); };
 
+  // Start the download on the first sign of intent (hover, touch or focus on
+  // a Buy button), a beat before the tap that opens checkout.
+  ['pdpBuyBtn', 'showcaseBuyBtn', 'finalBuyBtn', 'mobileBarBuyBtn', 'pdpCartBtn', 'cartCheckoutBtn'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    ['pointerenter', 'touchstart', 'focus'].forEach(function (type) {
+      el.addEventListener(type, window.smfWarmRazorpay, { once: true, passive: true });
+    });
+  });
+
   function textValue(id) {
     var el = document.getElementById(id);
     return el ? String(el.value || el.textContent || '').trim() : '';
@@ -338,14 +348,17 @@
     };
   }
 
+  // `loading` is false, true ("Opening secure payment…") or a label to show
+  // while busy, e.g. while a finished payment is being confirmed.
   function setButtonState(loading) {
     var btn = document.getElementById('submitBtn');
     var label = document.getElementById('submitText');
     if (!btn) return;
     btn.disabled = !!loading;
     btn.setAttribute('aria-busy', loading ? 'true' : 'false');
+    if (loading) setPayNote('');
     if (label) label.textContent = loading
-      ? 'Opening secure checkout…'
+      ? (typeof loading === 'string' ? loading : 'Opening secure payment…')
       : (currentPaymentMethod() === 'cod'
         ? 'Place COD order · ₹' + (unitPriceRupees() * quantityFromCheckout() + codFeeRupees())
         : 'Pay ₹' + (unitPriceRupees() * quantityFromCheckout()) + ' securely');
@@ -357,6 +370,20 @@
     var error = document.getElementById('checkoutError');
     if (error) { error.textContent = safeMessage; error.style.display = 'block'; }
     else window.alert(safeMessage);
+  }
+
+  // A calm one-line status under the pay button (not an error: nothing failed).
+  function setPayNote(text) {
+    var btn = document.getElementById('submitBtn');
+    var note = document.getElementById('smfPayNote');
+    if (!note && text && btn && btn.parentNode) {
+      note = document.createElement('p');
+      note.id = 'smfPayNote';
+      note.className = 'smf-pay-note';
+      note.setAttribute('role', 'status');
+      btn.parentNode.insertBefore(note, btn.nextSibling);
+    }
+    if (note) { note.textContent = text || ''; note.hidden = !text; }
   }
 
   function hidePaymentError() {
@@ -380,6 +407,7 @@
       window.__smfPaymentSelectInstalled = true;
       window.selectPay = function () {
         var result = originalSelectPay.apply(this, arguments);
+        setPayNote('');
         renderPaymentUi();
         return result;
       };
@@ -468,9 +496,10 @@
     }
 
     try {
-      var RazorpayClass = await getRazorpayReady();
-      if (!RazorpayClass) throw new Error('Razorpay Checkout could not be loaded.');
-
+      // The Razorpay script and our order request run side by side: whichever
+      // is slower decides when the window opens, not the two added together.
+      var sdkReady = getRazorpayReady();
+      sdkReady.catch(function () {});
       var createResponse = await fetch('/api/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Checkout-Version': 'standard-v4' },
@@ -481,6 +510,8 @@
       if (!createResponse.ok || !created.order_id || !created.key_id) {
         throw new Error(created.error || 'Unable to create the payment order. Please try again.');
       }
+      var RazorpayClass = await sdkReady;
+      if (!RazorpayClass) throw new Error('Razorpay Checkout could not be loaded.');
 
       var options = {
         key: created.key_id,
@@ -499,6 +530,8 @@
           email: payload.email,
           contact: '+91' + String(payload.phone || '').replace(/\D/g, '').slice(-10)
         },
+        // Already entered in our form, so Razorpay shows them without asking again.
+        readonly: { contact: true, email: true },
         notes: { smelloff_order_code: created.order_code, sku: 'OS-001-50ML' },
         // Signal Lime for the header and pay button; Carbon Black behind the
         // window, so it opens on the site's own dark instead of a grey scrim.
@@ -516,6 +549,7 @@
         },
         retry: { enabled: true, max_count: 4 },
         handler: async function (response) {
+          setButtonState('Confirming your payment…');
           try {
             await verifyStandardPayment(created, payload, response);
           } catch (error) {
@@ -532,6 +566,7 @@
             if (!finalizedThisCheckout) {
               razorpayInFlight = false;
               setButtonState(false);
+              setPayNote('Payment not completed, and nothing was charged. Tap Pay to try again, or choose Cash on Delivery.');
             }
           }
         }

@@ -57,7 +57,7 @@ test('Order API has an explicit COD branch and preserves prepaid Razorpay', () =
   assert.match(api, /payment_method: COD_PAYMENT_METHOD/);
   assert.match(api, /status: COD_INITIAL_STATUS/);
   assert.match(api, /cod_fee: payload\.cod_fee/);
-  assert.match(api, /const localOrder = await ensureCodLocalOrder\(sanitizedPayload\);/);
+  assert.match(api, /const localOrder = await ensureCodLocalOrder\(sanitizedPayload, owned\.existing\);/);
   assert.match(api, /return res\.status\(200\)\.json\(responseForCod\(localOrder\)\);/);
   assert.match(api, /const razorpay = razorpayClient\(\);/);
   assert.match(api, /razorpay\.orders\.create\(/);
