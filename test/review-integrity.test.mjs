@@ -75,16 +75,16 @@ describe('Review System & Product Schema Integrity', () => {
     assert.ok(secCode.includes('constantTimeEqual'), 'security.ts must use constant-time equality');
   });
 
-  it('html files reference the updated cache-busted reviews-system.js?v=5', () => {
+  it('html files reference the updated cache-busted reviews-system.js?v=6', () => {
     const odor = fs.readFileSync(path.join(ROOT, 'odorstrike.html'), 'utf8');
     const rev = fs.readFileSync(path.join(ROOT, 'reviews.html'), 'utf8');
     const idx = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
     const trk = fs.readFileSync(path.join(ROOT, 'track-order.html'), 'utf8');
 
-    assert.ok(odor.includes('/assets/js/reviews-system.js?v=5'), 'odorstrike.html must use ?v=5');
-    assert.ok(rev.includes('/assets/js/reviews-system.js?v=5'), 'reviews.html must use ?v=5');
-    assert.ok(idx.includes('/assets/js/reviews-system.js?v=5'), 'index.html must use ?v=5');
-    assert.ok(trk.includes('/assets/js/reviews-system.js?v=5'), 'track-order.html must use ?v=5');
+    assert.ok(odor.includes('/assets/js/reviews-system.js?v=6'), 'odorstrike.html must use ?v=6');
+    assert.ok(rev.includes('/assets/js/reviews-system.js?v=6'), 'reviews.html must use ?v=6');
+    assert.ok(idx.includes('/assets/js/reviews-system.js?v=6'), 'index.html must use ?v=6');
+    assert.ok(trk.includes('/assets/js/reviews-system.js?v=6'), 'track-order.html must use ?v=6');
   });
 
   it('index.html does not contain googleReviewWidgetMount', () => {
@@ -92,7 +92,7 @@ describe('Review System & Product Schema Integrity', () => {
     assert.ok(!html.includes('googleReviewWidgetMount'), 'index.html must not contain googleReviewWidgetMount');
   });
 
-  it('/reviews shows the same verbatim beta quotes as / and /odorstrike, without stars', () => {
+  it('beta quotes match / word for word, carry no stars and stay off /reviews', () => {
     const code = fs.readFileSync(path.join(ROOT, 'assets/js/reviews-system.js'), 'utf8');
     const idx = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
     const rev = fs.readFileSync(path.join(ROOT, 'reviews.html'), 'utf8');
@@ -101,6 +101,15 @@ describe('Review System & Product Schema Integrity', () => {
     assert.equal(quotes.length, 3);
     for (const q of quotes) assert.ok(idx.includes(q), `beta quote not on the homepage: ${q}`);
     assert.doesNotMatch(block, /r:[1-5]\b/, 'beta testers carry no star rating');
-    assert.match(rev, /\(r\.buyer \? '<div class="rc-stars"/, 'stars render for verified buyers only');
+    assert.doesNotMatch(rev, /betaTesters|Beta tester/, '/reviews shows verified buyers only');
+  });
+
+  it('/reviews shows and rates only reviews tied to an order', () => {
+    const code = fs.readFileSync(path.join(ROOT, 'assets/js/reviews-system.js'), 'utf8');
+    assert.match(code, /\/rest\/v1\/reviews\?select=name,rating,body,city,anonymous,created_at&order_id=not\.is\.null&/,
+      'rows without an order never reach the page, and order ids are not sent to the browser');
+    const rev = fs.readFileSync(path.join(ROOT, 'reviews.html'), 'utf8');
+    assert.match(rev, /grid\.innerHTML = buyers\.map\(card\)\.join\(''\)/);
+    assert.match(rev, /var avg = buyers\.reduce/, 'the aggregate is computed from verified buyers only');
   });
 });

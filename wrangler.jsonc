@@ -26,6 +26,15 @@
   "vars": {
     "APP_ENV": "production"
   },
+  // PR builds run `npx wrangler preview`, which refuses to run in CI without
+  // this block — that is why "Workers Builds" was red on every PR. Previews
+  // don't inherit top-level vars, so APP_ENV is repeated to keep the
+  // production email guards on. No secrets, crons or routes reach a Preview.
+  "previews": {
+    "vars": {
+      "APP_ENV": "production"
+    }
+  },
   "observability": {
     "enabled": true
   },
