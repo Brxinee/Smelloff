@@ -191,12 +191,25 @@ export function isValidTransition(currentStatus, targetStatus, paymentMethod = '
  * Authoritative Server-side Price & Total Calculator
  * Enforces strict quantity bounds [1..BASE_PRODUCT.maxQuantity], recomputes all sums and taxes server-side.
  */
+/**
+ * Rupee subtotal for `qty` bottles: every pair is priced at product.pairPrice
+ * ("2 for ₹419", owner's call 2026-10-15), any odd bottle at the unit price.
+ * The one rule the browser (SMELLOFF_CONFIG.PRICES.pair), create-order and
+ * Shiprocket all follow.
+ */
+export function subtotalForQuantity(qty) {
+  const q = Math.max(0, Math.floor(Number(qty) || 0));
+  const unit = Number(P.price);
+  const pair = Number(P.pairPrice) || unit * 2;
+  return Math.floor(q / 2) * pair + (q % 2) * unit;
+}
+
 export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {
   let qty = parseInt(quantity, 10);
   if (isNaN(qty) || qty < 1) qty = 1;
   if (qty > BASE_PRODUCT.maxQuantity) qty = BASE_PRODUCT.maxQuantity;
 
-  const subtotal = qty * BASE_PRODUCT.price;
+  const subtotal = subtotalForQuantity(qty);
 
   const unitPrice = Math.round((subtotal / qty) * 100) / 100;
   const unitMrp = BASE_PRODUCT.mrp;

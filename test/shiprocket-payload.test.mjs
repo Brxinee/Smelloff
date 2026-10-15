@@ -22,7 +22,20 @@ test('createShiprocketOrder sends the COD fee as transaction_charges; prepaid se
     const base = { address: { name: 'A', line: 'L', city: 'Hyderabad', state: 'TS', pincode: '500018' }, customer_email: 'a@b.in', customer_phone: '9000000000', items: [{ quantity: 1, price: 229 }] };
     await createShiprocketOrder({ ...base, order_code: 'SMF-20261011-0001', payment_method: 'cod', amount: 31800, cod_fee: 8900 });
     await createShiprocketOrder({ ...base, order_code: 'SMF-20261011-0002', payment_method: 'upi', amount: 22900, cod_fee: 0 });
-    const [cod, prepaid] = bodies;
+    await createShiprocketOrder({ ...base, items: [{ quantity: 2, price: 229 }], order_code: 'SMF-20261015-0003', payment_method: 'cod', amount: 50800, cod_fee: 8900 });
+    await createShiprocketOrder({ ...base, items: [{ quantity: 3, price: 229 }], order_code: 'SMF-20261015-0004', payment_method: 'upi', amount: 64800, cod_fee: 0 });
+    const [cod, prepaid, codPair, prepaidThree] = bodies;
+    const itemsTotal = (b) => b.order_items.reduce((n, i) => n + i.selling_price * i.units, 0);
+    // 2 for ₹419: the courier must collect 419 + 89, not 2 × 229 + 89.
+    assert.equal(itemsTotal(codPair) + codPair.transaction_charges, 508);
+    assert.equal(codPair.order_items.length, 1);
+    assert.equal(codPair.order_items[0].selling_price, 419);
+    assert.equal(codPair.order_items[0].units, 1);
+    assert.equal(codPair.sub_total, 419);
+    // 3 bottles: one pair line + one single line = ₹648.
+    assert.equal(itemsTotal(prepaidThree), 648);
+    assert.equal(prepaidThree.order_items.length, 2);
+    assert.equal(prepaidThree.sub_total, 648);
     assert.equal(cod.payment_method, 'COD');
     assert.equal(cod.sub_total, 229);
     assert.equal(cod.transaction_charges, 89);

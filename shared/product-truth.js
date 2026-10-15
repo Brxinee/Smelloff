@@ -17,6 +17,7 @@ export const SMELLOFF_PRODUCT_TRUTH = {
   mrp: P.mrp,
   codFee: P.codFee,
   priceCod: P.priceCod,
+  pairPrice: P.pairPrice,
   freeShippingPrepaid: S.prepaid.free,
   currency: P.currency,
   spraysApprox: P.spraysApprox,

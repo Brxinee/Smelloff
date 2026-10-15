@@ -65,8 +65,8 @@ was parked on 12 Oct).
 | Name clothes perfume sprays in the compare table | **Built** | It's the real ₹149–282 pocket alternative |
 | Prepaid option says it saves the ₹89 COD charge | **Built** | Same numbers, framed as the saving (boAt pattern); checkout only |
 | List on Amazon.in (then Flipkart/Meesho) | **Owner** | Biggest order lever found; category has few reviews to beat |
-| Lower the COD fee (₹89 is 39% of ₹229; peers charge ₹0–49) | **Owner** | Pricing call; weigh against RTO cost |
-| 2-bottle price (e.g. "2 for ₹X") | **Owner** | Margin call; retired Duo ₹399 / Trio ₹549 must not return |
+| Lower the COD fee (₹89 is 39% of ₹229; peers charge ₹0–49) | **Kept ₹89** | Owner's call, 15 Oct |
+| 2-bottle price | **Built: 2 for ₹419** | Owner's call, 15 Oct; pairs at ₹419, odd bottle ₹229 |
 | Instagram creators / small Meta test to `/odorstrike` | **Owner** | Traffic, not site |
 | Reviews from the 5 delivered buyers | **Owner** | Only route to stars; never seeded |
 | Spin wheel, fake scarcity, "bought today" counters | **No** | Dark patterns; erode trust at ₹229 |

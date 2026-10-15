@@ -30,7 +30,7 @@ test('product pricing keeps prepaid at ₹229 and COD fee at ₹89', () => {
 test('no stale price or COD figure survives anywhere a customer or crawler can read', () => {
   const { price, codFee, priceCod } = product.product;
   // Every hard-coded copy of the numbers matches config/product.json.
-  assert.match(checkout, new RegExp('PRICES: \\{ solo: ' + price + ' \\}'));
+  assert.match(checkout, new RegExp('PRICES: \\{ solo: ' + price + ', pair: ' + product.product.pairPrice + ' \\}'));
   assert.match(checkout, new RegExp('COD_FEE: ' + codFee + ','));
   assert.match(chrome, new RegExp('\\|\\| ' + price + ';'));
   assert.match(chrome, new RegExp('n : ' + codFee + ';'));

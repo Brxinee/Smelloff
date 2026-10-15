@@ -113,9 +113,8 @@ function priceBreakdown({ quantity = 1, amount = '', codFee = 0 } = {}) {
   const total = Number(String(amount).replace(/[^\d.]/g, '')) || 0;
   const fee = Number(codFee) || 0;
   const subtotal = Math.max(0, total - fee);
-  const unit = qty > 0 ? Math.round(subtotal / qty) : subtotal;
   return summaryTable(`
-    ${kvRow(`Subtotal (${qty} item${qty > 1 ? 's' : ''})`, `&#8377;${escape(String(unit * qty || subtotal))}`)}
+    ${kvRow(`Subtotal (${qty} item${qty > 1 ? 's' : ''})`, `&#8377;${escape(String(subtotal))}`)}
     ${kvRow('Shipping', escape(SHIPPING_LABEL))}
     ${fee > 0 ? kvRow('COD handling', `&#8377;${escape(String(fee))}`) : ''}
     ${kvRow(fee > 0 ? 'Amount due' : 'Total paid', `&#8377;${escape(String(total || subtotal))}`, true)}

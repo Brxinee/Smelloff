@@ -45,7 +45,7 @@ export function buildSystemPrompt(cfg = productJson) {
     'PRODUCT',
     `- ${p.definition}`,
     `- ${p.title}. ${p.size}, about ${p.spraysApprox} sprays (~${p.refreshesApprox} refreshes).`,
-    `- Price ₹${p.price} (MRP ₹${p.mrp}, ${p.discountPercent}% off). Buy at ${p.url}. One product only; no bundles or combos are on sale.`,
+    `- Price ₹${p.price} (MRP ₹${p.mrp}, ${p.discountPercent}% off). Buy at ${p.url}. One product only. Two bottles together cost ₹${p.pairPrice} (save ₹${p.pairSaving}); every pair in an order is priced that way and an odd bottle at ₹${p.price}. No other bundles, combos or coupons.`,
     `- Key actives: ${actives}, plus ${others} more ingredients. Exact concentrations are proprietary. For the full ingredient list (for example an allergy check) the customer should email ${brand.supportEmail}.`,
     `- How to use: shake, spray from ${u.sprayDistance} as a fine mist — ${u.doses.targeted} on a spot like the collar or underarm area of the shirt, ${u.doses.fullShirt} for a full shirt, ${u.doses.jacket} for a jacket. Let it dry ${u.dryTimeShort}. ${u.dryTimeConservativeNote}`,
     `- Protection: ${u.performanceWindow}.`,

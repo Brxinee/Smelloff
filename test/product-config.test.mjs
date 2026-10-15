@@ -51,18 +51,22 @@ test('commercial pricing math via calculateOrderTotal()', () => {
 
   // 2 units prepaid
   const p2 = calculateOrderTotal(2, 'prepaid');
-  assert.equal(p2.subtotal, 458);
+  assert.equal(p2.subtotal, 419);
   assert.equal(p2.shipping, 0);
   assert.equal(p2.codFee, 0);
-  assert.equal(p2.total, 458);
-  assert.equal(p2.totalPaise, 45800);
+  assert.equal(p2.total, 419);
+  assert.equal(p2.totalPaise, 41900);
 
   // 2 units COD
   const c2 = calculateOrderTotal(2, 'cod');
-  assert.equal(c2.subtotal, 458);
+  assert.equal(c2.subtotal, 419);
   assert.equal(c2.codFee, 89);
-  assert.equal(c2.total, 547);
-  assert.equal(c2.totalPaise, 54700);
+  assert.equal(c2.total, 508);
+  assert.equal(c2.totalPaise, 50800);
+
+  // 3 units: one pair + one bottle
+  assert.equal(calculateOrderTotal(3, 'prepaid').subtotal, 648);
+  assert.equal(calculateOrderTotal(4, 'prepaid').subtotal, 838);
 });
 
 test('shared/product-truth.js is synchronized with product.json', () => {
@@ -529,21 +533,22 @@ test('odorstrike.html mobile sticky buy bar (#mobileBar) price synchronization, 
 
   // Verify synchronization formula in renderPdpQty
   const unit = PRODUCT.price; // 229
+  const pair = PRODUCT.pairPrice; // 419
   function deriveMobileBarLabel(qty) {
-    const subtotal = unit * qty;
+    const subtotal = Math.floor(qty / 2) * pair + (qty % 2) * unit;
     return (qty > 1 ? (qty + ' × ') : '') + 'ODORSTRIKE 50ml · ₹' + subtotal;
   }
 
   // Check state calculations for Qty 1, 2, 3, and max configured quantity
   assert.equal(deriveMobileBarLabel(1), 'ODORSTRIKE 50ml · ₹229', 'Quantity 1 produces canonical single unit subtotal');
-  assert.equal(deriveMobileBarLabel(2), '2 × ODORSTRIKE 50ml · ₹458', 'Quantity 2 produces canonical 2-unit subtotal');
-  assert.equal(deriveMobileBarLabel(3), '3 × ODORSTRIKE 50ml · ₹687', 'Quantity 3 produces canonical 3-unit subtotal');
+  assert.equal(deriveMobileBarLabel(2), '2 × ODORSTRIKE 50ml · ₹419', 'Quantity 2 is the pair price');
+  assert.equal(deriveMobileBarLabel(3), '3 × ODORSTRIKE 50ml · ₹648', 'Quantity 3 is a pair plus one bottle');
   const maxQ = PRODUCT.maxQuantity || 10;
-  assert.equal(deriveMobileBarLabel(maxQ), `${maxQ} × ODORSTRIKE 50ml · ₹${unit * maxQ}`, 'Max quantity produces canonical subtotal');
+  assert.equal(deriveMobileBarLabel(maxQ), '10 × ODORSTRIKE 50ml · ₹2095', 'Max quantity is five pairs');
 
   // 5. No hardcoded separate price constants in mobile bar logic
-  assert.equal(/ODORSTRIKE 50ml · ₹458/i.test(html), false, 'Must not hardcode secondary quantity prices as string literals');
-  assert.equal(/ODORSTRIKE 50ml · ₹687/i.test(html), false, 'Must not hardcode tertiary quantity prices as string literals');
+  assert.equal(/ODORSTRIKE 50ml · ₹419/i.test(html), false, 'Must not hardcode secondary quantity prices as string literals');
+  assert.equal(/ODORSTRIKE 50ml · ₹648/i.test(html), false, 'Must not hardcode tertiary quantity prices as string literals');
 
   // 6. Unified IntersectionObserver for all actionable purchase CTAs
   const obsStart = html.indexOf('// Mobile sticky bar — visible whenever no other buy control is on screen');
@@ -604,6 +609,7 @@ test('odorstrike.html final purchase CTA (section.final) structure, canonical pr
   const renderQtyBody = renderQtyMatch[1];
   assert.ok(renderQtyBody.includes('finalBuyBtn'), 'renderPdpQty() must synchronize finalBuyBtn state');
   assert.ok(
+    renderQtyBody.includes("finalBtn.textContent = 'Buy now — ₹' + subtotal") ||
     renderQtyBody.includes("textContent = 'Buy now — ₹' + subtotal") ||
     renderQtyBody.includes('textContent = "Buy now — ₹" + subtotal') ||
     renderQtyBody.includes("textContent = 'Buy now — ₹' + (unitPrice() * pdpQty)"),
@@ -615,20 +621,17 @@ test('odorstrike.html final purchase CTA (section.final) structure, canonical pr
   assert.equal(unit * 1, 229, 'Canonical unit price must equal 229');
   assert.ok(finalBlock.includes('Buy now — ₹229'), 'Initial HTML markup for quantity 1 must display canonical ₹229');
 
-  // 6. Quantity 2 price is correct (₹458)
-  assert.equal(unit * 2, 458, 'Quantity 2 subtotal must equal ₹458');
+  // 6–8. Pairs are 2 for ₹419, an odd bottle is ₹229 (owner's call, 2026-10-15)
+  assert.equal(PRODUCT.pairPrice, 419, 'Pair price is ₹419');
+  assert.equal(PRODUCT.pairPricePaise, 41900);
+  assert.equal(PRODUCT.pairSaving, unit * 2 - PRODUCT.pairPrice, 'pairSaving must be 2 × price − pairPrice');
+  assert.ok(html.includes('PRICES: { solo: 229, pair: 419 }'), 'CFG.PRICES carries the pair price');
+  assert.ok(renderQtyBody.includes('subtotalFor(pdpQty)'), 'Buy buttons use the pair-aware subtotal');
 
-  // 7. Quantity 3 price is correct (₹687)
-  assert.equal(unit * 3, 687, 'Quantity 3 subtotal must equal ₹687');
-
-  // 8. Maximum quantity uses canonical config (MAX_QTY or maxQuantity)
-  const maxQ = PRODUCT.maxQuantity || 10;
-  assert.equal(unit * maxQ, 2290, 'Maximum quantity subtotal must equal canonical price * maxQuantity');
-
-  // 9. Final CTA and checkout use the same subtotal derivation (unit * qty)
+  // 9. Final CTA and checkout use the same subtotal derivation
   const orderTotalsMatch = html.match(/function\s+orderTotals\s*\(\)\s*\{([\s\S]*?)\n\s*\}/);
   assert.ok(orderTotalsMatch, 'Must locate orderTotals() function in odorstrike.html');
-  assert.ok(orderTotalsMatch[1].includes('subtotal = unit * qty'), 'Checkout subtotal must multiply unit price by cart quantity');
+  assert.ok(orderTotalsMatch[1].includes('subtotal = subtotalFor(qty)'), 'Checkout subtotal must use the pair-aware subtotal'); 
 
   // 10. No prohibited claims in final CTA copy
   const forbidden = [
