@@ -490,7 +490,9 @@
         // UPI apps strip everything but letters, digits and spaces from this
         // (it becomes the payment remark), so keep it to those.
         description: 'ODORSTRIKE 50ml Fabric Odor Spray',
-        image: 'https://smelloff.in/assets/odorstrike-bottle.webp',
+        // The brand icon, square as Razorpay's logo slot expects. It was the
+        // bottle photo, which Razorpay crops into a tiny square.
+        image: 'https://smelloff.in/assets/brand/icon-smelloff-256.png',
         order_id: created.order_id,
         prefill: {
           name: payload.address.name,
@@ -498,7 +500,20 @@
           contact: '+91' + String(payload.phone || '').replace(/\D/g, '').slice(-10)
         },
         notes: { smelloff_order_code: created.order_code, sku: 'OS-001-50ML' },
-        theme: { color: '#B8FF57' },
+        // Signal Lime for the header and pay button; Carbon Black behind the
+        // window, so it opens on the site's own dark instead of a grey scrim.
+        theme: { color: '#B8FF57', backdrop_color: '#0A0A0A' },
+        // UPI first: most Indian buyers pay that way. Cards, netbanking and
+        // wallets still follow as Razorpay's default blocks.
+        config: {
+          display: {
+            blocks: {
+              upi: { name: 'Pay with UPI', instruments: [{ method: 'upi' }] }
+            },
+            sequence: ['block.upi'],
+            preferences: { show_default_blocks: true }
+          }
+        },
         retry: { enabled: true, max_count: 4 },
         handler: async function (response) {
           try {
@@ -510,6 +525,9 @@
           }
         },
         modal: {
+          // Ask before closing, so a stray tap outside the window doesn't
+          // throw away a payment in progress.
+          confirm_close: true,
           ondismiss: function () {
             if (!finalizedThisCheckout) {
               razorpayInFlight = false;
