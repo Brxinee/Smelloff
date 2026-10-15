@@ -15,8 +15,8 @@ test('photo placeholder slots are visible on the homepage and PDP', () => {
     const slots = (html.match(/class="[^"]*\bph-(img|photo)\b/g) || []).length;
     assert.ok(slots >= 4, `${f}: image slots missing`);
   }
-  // Combos stay hidden until they are real (2026-10-15): the cards read "Combo name" and "₹ —" to buyers.
-  assert.match(fs.readFileSync('index.html', 'utf8'), /<section class="hm-sec" id="combos"[^>]*\shidden>/);
+  // The placeholder combo cards ("Combo name", "₹ —") were removed on 2026-10-15; the offer box sells the real pair.
+  assert.doesNotMatch(fs.readFileSync('index.html', 'utf8'), /id="combos"|data-ph="Combo name"/);
   assert.doesNotMatch(fs.readFileSync('odorstrike.html', 'utf8'), /<section class="pd-sec" id="size"[^>]*\shidden>/);
 });
 

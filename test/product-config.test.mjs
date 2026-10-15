@@ -206,15 +206,40 @@ test('index.html homepage reviews: beta-tester quotes only, verbatim, labelled',
   assert.equal(/★|\d\.\d\s*\/\s*5|\d[\d,]*\+\s*(customers|reviews)/i.test(html.slice(html.indexOf('<main'), html.indexOf('</main>'))), false, 'no ratings or customer counts until real verified reviews exist');
 });
 
-test('index.html homepage combos are placeholders only — no prices, no live CTA', () => {
+// Homepage redesign (2026-10-15, docs/audits/homepage-conversion-2026-10.md):
+// the placeholder combos are gone; the offer box sells the real "2 for ₹419".
+test('index.html homepage pack picker: the two real packs at checkout prices, one bottle by default', () => {
   const html = readFileSync('index.html', 'utf8');
-  const start = html.indexOf('id="combos"');
-  assert.ok(start !== -1, 'combos placeholder section must exist');
-  const sec = html.slice(start, html.indexOf('</section>', start));
-  assert.equal((sec.match(/class="combo"/g) || []).length, 3);
-  assert.equal(/₹\s*\d/.test(sec.replace(/Buy now — ₹229/, '')), false, 'combo cards must not show a price until checkout supports combos');
-  assert.equal((sec.match(/<button class="combo-btn" type="button" disabled>/g) || []).length, 3, 'combo buttons must be disabled');
-  assert.equal(/"@type"\s*:\s*"(Offer|AggregateOffer)"/.test(html), false, 'no offer schema for combos');
+  const cfg = JSON.parse(readFileSync('config/product.json', 'utf8')).product;
+  assert.equal(html.includes('id="combos"'), false, 'placeholder combos must not come back');
+  const offer = html.slice(html.indexOf('id="buy"'), html.indexOf('</section>', html.indexOf('id="buy"')));
+  const opts = [...offer.matchAll(/<input type="radio" name="pack" value="(\d)"( checked)?>/g)];
+  assert.deepEqual(opts.map((m) => m[1]), ['1', '2']);
+  assert.equal(opts.filter((m) => m[2]).map((m) => m[1]).join(), '1', 'one bottle is pre-selected; the buyer opts in to two');
+  assert.ok(offer.includes(`<b>₹${cfg.price}</b>`) && offer.includes(`<b>₹${cfg.pairPrice}</b>`));
+  assert.ok(offer.includes(`Save ₹${cfg.pairSaving}`) && offer.includes(`<s>₹${cfg.price * 2}</s>`), 'pair saving is against two single bottles');
+  assert.match(html, /'2': \{ href: '\/odorstrike\?buy=1&qty=2', label: 'Buy 2 — ₹419' \}/);
+  assert.ok(/\/odorstrike\?buy=1&amp;qty=2/.test(html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')))), 'hero names the pair offer');
+  assert.equal(/Duo|Trio|₹399|₹549/.test(html), false, 'retired bundle prices never return');
+});
+
+test('odorstrike.html ?buy=1&qty=N opens checkout on N bottles', () => {
+  const pdp = readFileSync('odorstrike.html', 'utf8');
+  assert.match(pdp, /parseInt\(_q\.get\('qty'\), 10\)/);
+  assert.match(pdp, /if \(_n >= 1 && _n <= _max\) \{ pdpQty = _n; renderPdpQty\(\); \}\s*buyNow\(/);
+});
+
+test('index.html homepage: moments, an honest comparison and the verified buyer', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const sec = (id) => html.slice(html.indexOf(`id="${id}"`), html.indexOf('</section>', html.indexOf(`id="${id}"`)));
+  assert.equal((sec('moments').match(/class="mo reveal"/g) || []).length, 6);
+  const cmp = sec('compare');
+  for (const col of ['ODORSTRIKE', 'Deodorant', 'Clothes perfume spray', 'Washing again']) assert.ok(cmp.includes(`>${col}</th>`), `compare column ${col}`);
+  assert.ok(cmp.includes('No, wash for that'), 'the table admits ODORSTRIKE does not remove dirt or stains');
+  assert.ok(cmp.includes('15–30 sec') && cmp.includes('dries clear') === false && cmp.includes('Dries clear with no stiff residue'));
+  const rv = sec('reviews');
+  assert.equal((rv.match(/Verified buyer/g) || []).length, 1, 'only the one review tied to an order is labelled verified');
+  assert.ok(rv.includes('tbh this product is amazing'), 'verified review is quoted as written');
 });
 
 test('index.html homepage claims discipline and formula secrecy', () => {
