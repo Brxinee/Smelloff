@@ -41,13 +41,39 @@ function canonicalPath(pathname) {
   return path || "/";
 }
 
+// Pages that were briefly published under /public (the build's output folder).
+// GSC (Oct 2026) still knew them: bare /public answered 200 with the homepage
+// (a duplicate of /), and /public/solutions/x took two hops (→ /solutions/x →
+// the guide). Strip the prefix and resolve the table in the same 301.
+const PUBLIC_PREFIX = /^\/public(?=\/|$)/;
+
 /** The URL to 301 to, or null when the request is already canonical. */
 export function canonicalRedirect(requestUrl) {
   const url = new URL(requestUrl);
   if (!OUR_HOSTS.has(url.hostname)) return null; // workers.dev, previews, localhost
   if (url.pathname.startsWith("/api/")) return null;
-  if (url.hostname === "smelloff.in" && url.protocol === "https:") return null;
-  return CANONICAL_ORIGIN + resolveStaticRedirect(canonicalPath(url.pathname)) + url.search;
+  const isPublicCopy = PUBLIC_PREFIX.test(url.pathname);
+  if (url.hostname === "smelloff.in" && url.protocol === "https:" && !isPublicCopy) return null;
+  const pathname = isPublicCopy ? url.pathname.replace(PUBLIC_PREFIX, "") || "/" : url.pathname;
+  const target = resolveStaticRedirect(canonicalPath(pathname));
+  // /cart → /odorstrike?cart=open: keep both query strings with one "?".
+  const search = target.includes("?") && url.search ? "&" + url.search.slice(1) : url.search;
+  return CANONICAL_ORIGIN + target + search;
+}
+
+/**
+ * A path with capitals that 404'd (/Odorstrike, /Blog/Why-I-Built-Odorstrike):
+ * every page and redirect source is lowercase, so the lowercase spelling is
+ * the page that was meant. Returns that path, resolved through the redirect
+ * table, or null when lowercasing changes nothing. The caller only follows it
+ * if the lowercase URL really exists, so an unknown path still gets its 404.
+ */
+export function lowercaseCandidate(requestUrl) {
+  const { pathname } = new URL(requestUrl);
+  if (pathname.startsWith("/api/") || pathname.startsWith("/r/")) return null; // referral codes keep their case
+  const lower = pathname.toLowerCase();
+  if (lower === pathname) return null;
+  return resolveStaticRedirect(canonicalPath(lower));
 }
 
 /**

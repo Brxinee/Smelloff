@@ -104,3 +104,61 @@ test('retired and stray URLs 301 to one live page; /404 is a real 404; the verif
   assert.equal(verificationAssetPath('https://smelloff.in/google163974d1a8d940cf89b0ec712246c779.html'), '/google163974d1a8d940cf89b0ec712246c779');
   assert.equal(verificationAssetPath('https://smelloff.in/odorstrike.html'), null);
 });
+
+// 2026-10-14 Page indexing export (data to 9 Oct) + a live crawl of every URL
+// Google could know: 222 history/redirect URLs and 288 www/http/slash/.html
+// variants of the sitemap. Everything was one 301 to a 200 except these.
+test('/public copies, capitalised paths and common guessed URLs reach a live page in one 301', async () => {
+  const { canonicalRedirect, lowercaseCandidate } = await import('../src/canonical.js');
+  // Bare /public answered 200 with the homepage: a duplicate of /.
+  assert.equal(canonicalRedirect('https://smelloff.in/public'), 'https://smelloff.in/');
+  assert.equal(canonicalRedirect('https://smelloff.in/public/'), 'https://smelloff.in/');
+  assert.equal(canonicalRedirect('https://smelloff.in/public/odorstrike.html'), 'https://smelloff.in/odorstrike');
+  // Was /public/solutions/x → /solutions/x → guide (two hops).
+  assert.equal(canonicalRedirect('https://smelloff.in/public/solutions/monsoon-damp-fabric-care'), 'https://smelloff.in/blog/damp-clothes-musty-smell-monsoon-fix');
+  assert.equal(canonicalRedirect('https://www.smelloff.in/public/blog/spray-to-remove-sweat-smell-from-clothes-instantly'), 'https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly');
+  assert.equal(canonicalRedirect('https://smelloff.in/publications'), null, 'only the /public folder, not every path that starts with it');
+
+  // Capitals 404 on the case-sensitive asset server; the Worker tries lowercase.
+  assert.equal(lowercaseCandidate('https://smelloff.in/Odorstrike'), '/odorstrike');
+  assert.equal(lowercaseCandidate('https://smelloff.in/Blog/Why-I-Built-Odorstrike/'), '/blog/why-i-built-odorstrike');
+  assert.equal(lowercaseCandidate('https://smelloff.in/Solutions'), '/blog');
+  assert.equal(lowercaseCandidate('https://smelloff.in/odorstrike'), null);
+  assert.equal(lowercaseCandidate('https://smelloff.in/r/ABC123'), null, 'referral codes keep their case');
+  assert.equal(lowercaseCandidate('https://smelloff.in/api/Health'), null);
+  const index = fs.readFileSync('src/index.js', 'utf8');
+  assert.match(index, /asset\.status !== 404\)[^\n]*\n\s*const lower = await lowercaseRedirect/, 'lowercase is only tried after the real path 404s');
+
+  // A query string on a redirect whose target already has one keeps both.
+  assert.equal(canonicalRedirect('https://www.smelloff.in/cart?utm_source=ig'), 'https://smelloff.in/odorstrike?cart=open&utm_source=ig');
+
+  const out = buildRedirects(routing).split('\n');
+  for (const line of ['/shop /odorstrike 301', '/checkout /odorstrike?buy=1 301', '/about-us /about 301',
+    '/privacy-policy /privacy 301', '/return-policy /returns 301', '/track /track-order 301', '/sitemap_index.xml /sitemap.xml 301']) {
+    assert.ok(out.includes(line), `missing _redirects line: ${line}`);
+  }
+  for (const r of routing.redirects.filter((r) => !r.has && !/[(:*]/.test(r.source))) {
+    const dest = r.destination.split('?')[0];
+    if (!dest.startsWith('/') || dest === '/') continue;
+    const file = dest.replace(/^\//, '');
+    assert.ok([file, `${file}.html`, `${file}/index.html`].some((f) => fs.existsSync(f)), `${r.source} → ${r.destination}: no such page`);
+  }
+});
+
+test('machine files say noindex so Search Console only lists pages', () => {
+  const headers = buildHeaders(routing);
+  for (const p of ['/products.json', '/manifest.json', '/sw.js', '/163974d1a8d940cf89b0ec712246c779.txt', '/merchant-feed.xml']) {
+    assert.match(headers, new RegExp(`^${p.replace(/\./g, '\\.')}\\n(?:  .*\\n)*?  X-Robots-Tag: noindex`, 'm'), `${p} needs X-Robots-Tag: noindex`);
+  }
+  // The AI context files stay indexable on purpose.
+  assert.match(headers, /^\/llms\.txt\n(?:  .*\n)*?  X-Robots-Tag: index, follow/m);
+  assert.ok(!routing.headers.some((h) => h.source === '/shop'), '/shop is a redirect now, not a noindex page');
+});
+
+test('every page footer links the smell-by-smell hub guide', () => {
+  const hub = '<li><a href="/blog/remove-smell-from-clothes-without-washing">Smell guide</a></li>';
+  assert.ok(fs.readFileSync('scripts/apply-chrome.mjs', 'utf8').includes(hub), 'the footer template must carry the hub link');
+  for (const f of ['index.html', 'odorstrike.html', 'blog/index.html', 'faq.html', 'blog/how-to-use-odorstrike.html']) {
+    assert.ok(fs.readFileSync(f, 'utf8').includes(hub), `${f} footer is missing the hub link`);
+  }
+});

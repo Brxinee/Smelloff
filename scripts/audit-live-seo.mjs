@@ -14,6 +14,16 @@
  *   node scripts/audit-live-seo.mjs                 # audit local / generated files & simulated routing
  *   node scripts/audit-live-seo.mjs --live          # probe live https://smelloff.in endpoints
  *   node scripts/audit-live-seo.mjs --url <url>     # trace specific URL
+ *   node scripts/audit-live-seo.mjs --live --all-known
+ *       # every URL Google can know: each sitemap URL's www / http / trailing-
+ *       # slash / .html / capitalised spelling, its /public copy, and every
+ *       # plain redirect source in config/routing.json (~450 URLs). Run it after
+ *       # a deploy before asking Search Console to validate a fix.
+ *
+ * Live requests send Googlebot's smartphone User-Agent: a firewall or bot rule
+ * that answers it with 403 is exactly what emptied the index in Sept 2026.
+ * (Cloudflare can still treat a real Googlebot IP differently — confirm with
+ * URL Inspection → Test live URL.)
  */
 
 import fs from 'node:fs';
@@ -27,6 +37,29 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..');
 const ORIGIN = 'https://smelloff.in';
 const IS_LIVE = process.argv.includes('--live');
+const ALL_KNOWN = process.argv.includes('--all-known');
+const GOOGLEBOT_UA = 'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.6668.70 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
+
+/** Every spelling of every known URL that must end, in one 301, on a 200. */
+export function allKnownVariations(sitemapUrls) {
+  const out = new Set();
+  for (const url of sitemapUrls) {
+    const p = url.replace(ORIGIN, '') || '/';
+    out.add(`https://www.smelloff.in${p}`);
+    out.add(`http://smelloff.in${p}`);
+    out.add(`${ORIGIN}/public${p === '/' ? '' : p}`);
+    if (p !== '/') {
+      out.add(`${ORIGIN}${p}/`);
+      out.add(`${ORIGIN}${p}.html`);
+      out.add(`${ORIGIN}${p.replace(/\/([a-z])/g, (_m, c) => '/' + c.toUpperCase())}`);
+    }
+  }
+  for (const r of redirects) {
+    if (r.has || /[(:*]/.test(r.source) || /^https?:/.test(r.destination)) continue;
+    out.add(`${ORIGIN}${r.source}`);
+  }
+  return [...out];
+}
 
 // Load redirects from config/routing.json
 const routing = JSON.parse(fs.readFileSync(path.join(REPO, 'config', 'routing.json'), 'utf8'));
@@ -150,7 +183,7 @@ export async function traceLiveUrl(url, maxHops = 10) {
         method: 'GET',
         redirect: 'manual',
         headers: {
-          'User-Agent': 'Smelloff-Live-Audit-Bot/1.0 (+https://smelloff.in)',
+          'User-Agent': GOOGLEBOT_UA,
           'Accept': 'text/html,application/xhtml+xml,application/xml',
         },
       });
@@ -242,7 +275,7 @@ async function runAudit(options = {}) {
     sitemapMismatches: 0,
   };
 
-  // 1. Audit all 75 canonical URLs
+  // 1. Audit every sitemap URL
   let sitemapUrls = [];
   let sitemapXml = '';
   if (options.canonicalUrls !== undefined) {
@@ -283,6 +316,12 @@ async function runAudit(options = {}) {
           stats.canonicalMismatches++;
           logError(`  [CANONICAL MISMATCH] ${url} claims ${canonHref}`);
         }
+        const robotsMeta = res.body?.match(/<meta[^>]+name=["']robots["'][^>]+content=["']([^"']+)["']/i)?.[1] || '';
+        const robotsHeader = res.headers?.['x-robots-tag'] || '';
+        if (/noindex/i.test(robotsMeta + ' ' + robotsHeader)) {
+          stats.sitemapMismatches++;
+          logError(`  [NOINDEX IN SITEMAP] ${url}`);
+        }
       } else if (res.hopCount === 1) {
         stats.oneHop++;
       } else if (res.hopCount === 2) {
@@ -291,10 +330,10 @@ async function runAudit(options = {}) {
       } else if (res.hopCount >= 3) {
         stats.brokenChains++;
         logError(`  [3+ HOP CANONICAL] ${url} -> ${res.hopCount} hops`);
-      } else if (res.status === 404) {
+      } else if (res.status >= 400 && res.status < 500) {
         stats.status404++;
-        logError(`  [404 NOT FOUND] ${url}`);
-      } else if (res.status >= 500) {
+        logError(`  [${res.status}] ${url}`);
+      } else if (res.status >= 500 || res.status < 0) {
         stats.status5xx++;
         logError(`  [5XX SERVER ERROR] ${url} -> ${res.status}`);
       }
@@ -341,7 +380,10 @@ async function runAudit(options = {}) {
     'https://smelloff.in/policies/terms',
   ];
 
-  const testVariations = options.testVariations ?? defaultTestVariations;
+  const testVariations = options.testVariations
+    ?? (isLiveMode && (options.allKnown ?? ALL_KNOWN)
+      ? [...new Set([...defaultTestVariations, ...allKnownVariations(sitemapUrls)])]
+      : defaultTestVariations);
 
   log(`\n2. Auditing ${testVariations.length} Non-Canonical & Legacy URL Variations...`);
   for (const url of testVariations) {
@@ -366,6 +408,14 @@ async function runAudit(options = {}) {
       if (res.isLoop) {
         stats.loops++;
         logError(`  [REDIRECT LOOP] ${url}`);
+      } else if (res.hopCount === 0 && res.status === 200) {
+        // A second spelling answering 200 is a duplicate of a page (bare
+        // /public served the homepage until Oct 2026).
+        stats.canonicalMismatches++;
+        logError(`  [200 DUPLICATE, NO REDIRECT] ${url}`);
+      } else if (res.hopCount === 1 && res.status !== 200) {
+        stats.status404++;
+        logError(`  [REDIRECT TO ${res.status}] ${url} -> ${res.finalUrl}`);
       } else if (res.hopCount === 1) {
         stats.oneHop++;
       } else if (res.hopCount === 2) {
@@ -374,10 +424,10 @@ async function runAudit(options = {}) {
       } else if (res.hopCount >= 3) {
         stats.brokenChains++;
         logError(`  [3+ HOP CHAIN] ${url} -> ${res.hops.map(h => `${h.status} ${h.target}`).join(' -> ')}`);
-      } else if (res.status === 404) {
+      } else if (res.status >= 400 && res.status < 500) {
         stats.status404++;
-        logError(`  [404 NOT FOUND] ${url}`);
-      } else if (res.status >= 500) {
+        logError(`  [${res.status}] ${url}`);
+      } else if (res.status >= 500 || res.status < 0) {
         stats.status5xx++;
         logError(`  [5XX ERROR] ${url} -> ${res.status}`);
       }

@@ -40,6 +40,68 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Impressions, no clicks: search-result titles (2026-10-15)
+Owner: "only impressions, no clicks." Full write-up:
+`docs/audits/ctr-impressions-no-clicks-2026-10.md`. Clicks are mostly brand
+(homepage); guides get impressions only. Causes: AI Overviews on how-to queries,
+page-2 positions, low authority, no review stars, and snippets that promised
+nothing, with seven slogan H1s that Google could swap in as the title.
+- **`scripts/seo/apply-serp-titles.mjs` owns the title, H1, description, og/
+  twitter titles, Article headline and breadcrumb name of the 32 posts it lists.**
+  Edit the entry there and re-run it (then `apply-reader.mjs` for Related cards,
+  `build-llms.mjs`, `build-sitemap.mjs`); `--check` is in `npm run build`.
+- Rules: title = H1 (test: H1 shares ≥ half the title's words, every post); 40–60
+  chars, no " | Smelloff"; a number only if the post backs it; no price in how-to
+  descriptions.
+- Per-query GSC data wasn't reachable (Ahrefs/Semrush/Windsor plans). Next round
+  needs the owner's 3-month Queries + Pages export.
+
+## Search Console round 4: page indexing (2026-10-14, export dated 10-09)
+The five Coverage exports hold counts only (no URLs) and stop on 9 Oct, the
+day before the custom-domain fix. Indexed: 74 → 35 (22 Sep) → 22 (5 Oct);
+submitted 69 → 32 → 19; 403s 79 known / 38 submitted — the error-1000 window.
+Google drops a URL that answers 4xx (403 included) and re-adds it only after a
+recrawl gets 200, so the number climbs back as Google recrawls, not at once.
+- **Live crawl with Googlebot's UA (14 Oct), 510 URLs** — every URL in any
+  committed sitemap, every page ever committed, every routing source, and the
+  www/http/slash/.html spelling of each sitemap URL: all 200 or one 301 to a
+  200, except **bare `/public` (200 with the homepage — a duplicate of `/`)**
+  and `/public/solutions/*` (two hops). `src/canonical.js` now strips
+  `/public` and resolves the table in one 301.
+- **Capitalised paths** (`/Odorstrike`, `/FAQ`) 404'd on the case-sensitive
+  asset server. After a 404 only, the Worker tries the lowercase spelling and
+  301s if it exists (`lowercaseRedirect` in `src/index.js`); unknown paths
+  still 404, `/r/<code>` keeps its case.
+- **Guessed URLs** with a real equivalent 301 (`/shop`, `/product(s)`, `/cart`,
+  `/checkout`, `/home`, `/about-us`, `/contact-us`, `/*-policy`,
+  `/terms-and-conditions`, `/track`, `/feed`, `/rss`, `/sitemap_index.xml`).
+  A test fails if any plain redirect points at a page that doesn't exist.
+  Other unknown URLs stay 404 — Google: a 404 for a page with no replacement
+  is correct.
+- `X-Robots-Tag: noindex` on `/products.json`, `/manifest.json`, `/sw.js` and
+  the IndexNow key, so "Crawled – currently not indexed" lists pages only.
+  `llms*.txt` and `feed.xml` stay indexable on purpose.
+- Footer "Smell guide" → the hub `blog/remove-smell-from-clothes-without-washing`
+  (it had 4 inbound links; it links every per-smell guide).
+- `node scripts/audit-live-seo.mjs --live --all-known` re-runs the crawl
+  (~600 URLs, Googlebot UA; flags 4xx anywhere, a redirect to a non-200, a
+  second spelling answering 200, noindex in the sitemap). Run it after a
+  deploy, before Validate fix.
+- **Rows that need no fix** (Google's own help): Page with redirect (the
+  retired slugs, www/http, the 75 `/public/…` URLs), Alternate page with
+  proper canonical (`?buy=1`, `?cart=open`, `?ref=`), Excluded by noindex
+  (`/404`, `/payment-failed`, `/admin`), Blocked by robots.txt (`/api/`,
+  `/admin`).
+- **Owner, in GSC:** remove the submitted `https://www.smelloff.in/sitemap.xml`
+  (keep the apex one) and resubmit `https://smelloff.in/sitemap.xml`; URL
+  Inspection → Test live URL on `/` and `/odorstrike` (must say "URL is
+  available to Google"; if it shows 403, a Cloudflare security rule is
+  blocking real Googlebot — Security → Events); Request indexing for `/`,
+  `/odorstrike`, `/blog`, the hub and the top posts (≈10 a day); Validate fix
+  on "Blocked (403)" and "Not found (404)" (about two weeks). Don't validate
+  "Crawled – currently not indexed" — Google says no resubmission is needed.
+  For per-URL lists, click a reason row and export from that page.
+
 ## /reviews shows verified buyers only (2026-10-12, owner's call)
 Owner asked to generate reviews under friends' names (with their consent) to
 win review stars. That is a fake review under IS 19000:2022 / CCPA and

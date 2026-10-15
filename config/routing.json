@@ -82,6 +82,111 @@
       "statusCode": 301
     },
     {
+      "source": "/shop",
+      "destination": "/odorstrike",
+      "statusCode": 301
+    },
+    {
+      "source": "/product",
+      "destination": "/odorstrike",
+      "statusCode": 301
+    },
+    {
+      "source": "/products",
+      "destination": "/odorstrike",
+      "statusCode": 301
+    },
+    {
+      "source": "/cart",
+      "destination": "/odorstrike?cart=open",
+      "statusCode": 301
+    },
+    {
+      "source": "/checkout",
+      "destination": "/odorstrike?buy=1",
+      "statusCode": 301
+    },
+    {
+      "source": "/home",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/about-us",
+      "destination": "/about",
+      "statusCode": 301
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/contact",
+      "statusCode": 301
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/privacy",
+      "statusCode": 301
+    },
+    {
+      "source": "/refund-policy",
+      "destination": "/refund",
+      "statusCode": 301
+    },
+    {
+      "source": "/shipping-policy",
+      "destination": "/shipping",
+      "statusCode": 301
+    },
+    {
+      "source": "/terms-and-conditions",
+      "destination": "/terms",
+      "statusCode": 301
+    },
+    {
+      "source": "/terms-of-service",
+      "destination": "/terms",
+      "statusCode": 301
+    },
+    {
+      "source": "/return-policy",
+      "destination": "/returns",
+      "statusCode": 301
+    },
+    {
+      "source": "/returns-policy",
+      "destination": "/returns",
+      "statusCode": 301
+    },
+    {
+      "source": "/cancellation-policy",
+      "destination": "/cancellation",
+      "statusCode": 301
+    },
+    {
+      "source": "/track",
+      "destination": "/track-order",
+      "statusCode": 301
+    },
+    {
+      "source": "/order-tracking",
+      "destination": "/track-order",
+      "statusCode": 301
+    },
+    {
+      "source": "/feed",
+      "destination": "/feed.xml",
+      "statusCode": 301
+    },
+    {
+      "source": "/rss",
+      "destination": "/feed.xml",
+      "statusCode": 301
+    },
+    {
+      "source": "/sitemap_index.xml",
+      "destination": "/sitemap.xml",
+      "statusCode": 301
+    },
+    {
       "source": "/public/:path*",
       "destination": "/:path*",
       "statusCode": 301
@@ -1146,15 +1251,6 @@
       ]
     },
     {
-      "source": "/shop",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, follow"
-        }
-      ]
-    },
-    {
       "source": "/sitemap.xml",
       "headers": [
         {
@@ -1267,6 +1363,28 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=86400"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/products.json",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/163974d1a8d940cf89b0ec712246c779.txt",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
         }
       ]
     },
@@ -1334,6 +1452,10 @@
         {
           "key": "Service-Worker-Allowed",
           "value": "/"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
         }
       ]
     },
