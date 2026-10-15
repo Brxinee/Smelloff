@@ -36,6 +36,11 @@ the move silently dropped, now restored:
   only `/` reached the Worker; every other path fell through to a zone DNS
   record pointing at a Cloudflare IP and returned **error 1000**. Don't add
   dashboard routes or hand-made DNS records for these hosts.
+- **PR builds run `npx wrangler preview`**, which exits with an error in CI
+  unless `wrangler.jsonc` has a `previews` block. That is why "Workers Builds"
+  was red on every PR from 10 Oct to 15 Oct. Previews don't inherit top-level
+  `vars`, so `APP_ENV` is repeated in `previews.vars`. Never add crons or
+  routes to `previews`.
 - The Worker parses JSON with a `verify` hook that keeps `req.rawBody`: the
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
@@ -143,6 +148,23 @@ recrawl gets 200, so the number climbs back as Google recrawls, not at once.
   on "Blocked (403)" and "Not found (404)" (about two weeks). Don't validate
   "Crawled – currently not indexed" — Google says no resubmission is needed.
   For per-URL lists, click a reason row and export from that page.
+
+## /reviews shows verified buyers only (2026-10-12, owner's call)
+Owner asked to generate reviews under friends' names (with their consent) to
+win review stars. That is a fake review under IS 19000:2022 / CCPA and
+Google's review-snippet policy; it was refused. An invite-code flow for
+gifted bottles and a "knows the founder" disclosure were built and removed at
+the owner's request ("only buyers' ratings, nothing else"). What stays:
+- **`/reviews` shows and rates only reviews tied to an order.** The query in
+  `reviews-system.js` filters `order_id=not.is.null` server-side (order ids
+  are never selected). The one pre-hardening review with no order is hidden,
+  not deleted. Beta-tester quotes are no longer rendered on `/reviews` (they
+  stay on `/` and `/odorstrike`); the menu hint reads "From verified buyers".
+- `/admin` → Reviews lists every review and marks the ones the site hides.
+- No migration or edge-function change: nothing to deploy outside the Worker.
+- Never write, edit or seed a review for anyone. Never delete a review because
+  it is negative (CCPA dark-pattern guidelines). Product schema stars
+  (`includeRating`) may only use reviews with an order.
 
 ## Founder + co-founder (2026-10-12, owner's call)
 **Jogdhande Nikhil Patil is the Founder; Vineeth Kumar Duggepogu is the

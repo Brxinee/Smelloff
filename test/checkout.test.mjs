@@ -352,7 +352,13 @@ test('Step 3: Razorpay SDK loads on checkout intent, once, through one readiness
 
   // 3. Single readiness promise
   assert.ok(chromeJs.includes('window.smfRazorpayReady'), 'smfRazorpayReady must be used for SDK readiness');
-  assert.ok(chromeJs.includes('await getRazorpayReady()'), 'startRazorpay must await SDK readiness');
+  assert.ok(chromeJs.includes('var sdkReady = getRazorpayReady();'), 'startRazorpay must start SDK readiness');
+  assert.ok(chromeJs.includes('await sdkReady'), 'startRazorpay must await SDK readiness before opening');
+
+  // 4. The SDK and the order request run in parallel, not one after the other.
+  const start = chromeJs.slice(chromeJs.indexOf('async function startRazorpay'));
+  assert.ok(start.indexOf('getRazorpayReady()') < start.indexOf("fetch('/api/create-order'"), 'SDK load must start before the order request');
+  assert.ok(start.indexOf("fetch('/api/create-order'") < start.indexOf('await sdkReady'), 'SDK must be awaited only after the order request');
 });
 
 test('Step 3: Success ownership is deduplicated, idempotent, and single-source', () => {

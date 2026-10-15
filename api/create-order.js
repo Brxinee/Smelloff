@@ -127,6 +127,7 @@ function buildPrepaidOrderRecord(payload) {
     fbp: payload.fbp || null,
     fbc: payload.fbc || null,
     event_source_url: payload.event_source_url || null,
+    ...(payload.payment_attempt_id ? { payment_attempt_id: payload.payment_attempt_id } : {}),
   };
 }
 
@@ -302,8 +303,10 @@ function assertSameCodCheckout(existing, payload) {
   }
 }
 
-async function ensurePendingLocalOrder(payload) {
-  let existing = await fetchOrderByCode(payload.order_code);
+// `prefetched` is the row ownOrderCode() already read for this code, so the
+// lookup isn't repeated (one fewer database round trip before Pay opens).
+async function ensurePendingLocalOrder(payload, prefetched) {
+  let existing = prefetched !== undefined ? prefetched : await fetchOrderByCode(payload.order_code);
 
   if (existing) {
     assertSameCheckout(existing, payload);
@@ -324,8 +327,8 @@ async function ensurePendingLocalOrder(payload) {
   }
 }
 
-async function ensureCodLocalOrder(payload) {
-  let existing = await fetchOrderByCode(payload.order_code);
+async function ensureCodLocalOrder(payload, prefetched) {
+  let existing = prefetched !== undefined ? prefetched : await fetchOrderByCode(payload.order_code);
 
   if (existing) {
     assertSameCodCheckout(existing, payload);
@@ -352,13 +355,14 @@ function newOrderCode() {
 // The browser picks the order number from 9,000 per day, so two customers can
 // draw the same one. Keep it if it is free or already this customer's (a
 // retry); otherwise pick a fresh one. The browser uses the code we return.
+// Returns the row it read too (null when the code is free).
 async function ownOrderCode(requested, phone, email) {
   let code = requested || newOrderCode();
   for (let i = 0; i < 5; i++) {
     const existing = await fetchOrderByCode(code);
-    if (!existing) return code;
+    if (!existing) return { code, existing: null };
     if (normalizePhone(existing.customer_phone) === phone
-      && String(existing.customer_email || '').trim().toLowerCase() === email) return code;
+      && String(existing.customer_email || '').trim().toLowerCase() === email) return { code, existing };
     code = newOrderCode();
   }
   fail('Could not allocate an order number. Please try again.', 503);
@@ -491,7 +495,8 @@ export default async function handler(req, res) {
     if (orderCode && !ORDER_CODE_RE.test(orderCode)) {
       return res.status(400).json({ error: 'Invalid order code.' });
     }
-    orderCode = await ownOrderCode(orderCode, phone, email);
+    const owned = await ownOrderCode(orderCode, phone, email);
+    orderCode = owned.code;
 
     const sanitizedPayload = {
       email,
@@ -512,7 +517,7 @@ export default async function handler(req, res) {
     };
 
     if (isCod) {
-      const localOrder = await ensureCodLocalOrder(sanitizedPayload);
+      const localOrder = await ensureCodLocalOrder(sanitizedPayload, owned.existing);
       // A COD order is real the moment it exists: alert the owner and book it
       // in Shiprocket now. Both run after the response (waitUntil on Workers),
       // so checkout doesn't wait. The alert's idempotency key absorbs retries;
@@ -524,26 +529,55 @@ export default async function handler(req, res) {
       return res.status(200).json(responseForCod(localOrder));
     }
 
-    const localOrder = await ensurePendingLocalOrder({ ...sanitizedPayload, amount: subtotalPaise });
+    const prepaidPayload = { ...sanitizedPayload, amount: subtotalPaise };
+
+    async function openRazorpayOrder() {
+      const razorpay = razorpayClient();
+      const razorpayOrder = await razorpay.orders.create({
+        amount: subtotalPaise,
+        currency: 'INR',
+        receipt: orderCode,
+        notes: {
+          smelloff_order_code: orderCode,
+          sku: PRODUCT_SKU,
+        },
+      });
+      if (!razorpayOrder?.id || Number(razorpayOrder.amount) !== subtotalPaise || String(razorpayOrder.currency).toUpperCase() !== 'INR') {
+        fail('Razorpay returned an invalid order response.', 502);
+      }
+      return razorpayOrder;
+    }
+
+    // A fresh order (the usual case): create the Razorpay order first, then
+    // save the row with its id in one write. That is lookup → Razorpay →
+    // insert, where it used to be lookup → lookup → insert → Razorpay → link.
+    if (!owned.existing) {
+      const razorpayOrder = await openRazorpayOrder();
+      let inserted = null;
+      try {
+        inserted = await insertPendingOrder({ ...prepaidPayload, payment_attempt_id: razorpayOrder.id });
+      } catch (error) {
+        if (!error?.isDuplicate) throw error;
+      }
+      if (inserted && String(inserted.payment_attempt_id) === String(razorpayOrder.id)) {
+        return res.status(200).json(responseForOrder(inserted, razorpayOrder.id));
+      }
+      // Lost a race for this code (or the insert didn't keep the id): settle
+      // on the saved row as a retry would.
+      const localOrder = inserted || await ensurePendingLocalOrder(prepaidPayload);
+      if (localOrder.payment_attempt_id) {
+        return res.status(200).json(responseForOrder(localOrder, localOrder.payment_attempt_id));
+      }
+      const persisted = await persistRazorpayOrderId(orderCode, razorpayOrder.id);
+      return res.status(200).json(responseForOrder(persisted, razorpayOrder.id));
+    }
+
+    const localOrder = await ensurePendingLocalOrder(prepaidPayload, owned.existing);
     if (localOrder.payment_attempt_id) {
       return res.status(200).json(responseForOrder(localOrder, localOrder.payment_attempt_id));
     }
 
-    const razorpay = razorpayClient();
-    const razorpayOrder = await razorpay.orders.create({
-      amount: subtotalPaise,
-      currency: 'INR',
-      receipt: orderCode,
-      notes: {
-        smelloff_order_code: orderCode,
-        sku: PRODUCT_SKU,
-      },
-    });
-
-    if (!razorpayOrder?.id || Number(razorpayOrder.amount) !== subtotalPaise || String(razorpayOrder.currency).toUpperCase() !== 'INR') {
-      fail('Razorpay returned an invalid order response.', 502);
-    }
-
+    const razorpayOrder = await openRazorpayOrder();
     const persisted = await persistRazorpayOrderId(orderCode, razorpayOrder.id);
     return res.status(200).json(responseForOrder(persisted, razorpayOrder.id));
   } catch (error) {

@@ -787,6 +787,14 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .overlay .submit-btn .ic{width:18px;height:18px;stroke-width:2}
   .overlay .submit-btn:hover{background:var(--cta-hi)}
   .overlay .submit-btn:disabled{opacity:.55;cursor:not-allowed}
+  /* Busy (opening Razorpay / confirming a payment): full colour with a spinner
+     in place of the padlock, so it reads as working, not as switched off. */
+  .overlay .submit-btn[aria-busy="true"]{opacity:1;cursor:progress}
+  .overlay .submit-btn[aria-busy="true"] .ic{display:none}
+  .overlay .submit-btn[aria-busy="true"]::before{content:"";width:16px;height:16px;flex:none;border:2px solid currentColor;border-right-color:transparent;border-radius:50%}
+  @media (prefers-reduced-motion:no-preference){.overlay .submit-btn[aria-busy="true"]::before{animation:smf-spin .7s linear infinite}}
+  @keyframes smf-spin{to{transform:rotate(360deg)}}
+  .smf-pay-note{margin:10px 0 0;text-align:center;font-size:14px;line-height:1.45;color:var(--text-2)}
   .overlay .submit-btn:focus-visible{outline:2px solid var(--text);outline-offset:3px}
   .checkout-reassure{margin-top:8px;text-align:center;font-size:12px;line-height:1.4;color:var(--muted)}
   .overlay .error-msg{margin-top:4px;padding:12px 14px;border-radius:var(--sq-sm);
@@ -1614,7 +1622,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
 <link rel="preload" href="/assets/css/chrome.css?v=b664f938" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=b664f938"></noscript>
-<script src="/assets/js/chrome.js?v=b9622946" defer></script>
+<script src="/assets/js/chrome.js?v=4868be31" defer></script>
 <script src="/assets/js/support-chat.js?v=63e449aa" defer></script>
 </head>
 <body>
@@ -1665,7 +1673,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       </a>
       <ul class="sf-menu__list">
         <li><a href="/blog"><span>Guides<small>Fabric odor, explained</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
-        <li><a href="/reviews"><span>Reviews<small>What testers said</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        <li><a href="/reviews"><span>Reviews<small>From verified buyers</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
         <li><a href="/faq"><span>FAQ<small>Use, safety, COD, returns</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
         <li><a href="/track-order"><span>Track order<small>With your order ID</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
         <li><a href="/contact"><span>Contact<small>Write to us</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>
@@ -4175,7 +4183,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
-<script src="/assets/js/reviews-system.js?v=5" defer></script>
+<script src="/assets/js/reviews-system.js?v=6" defer></script>
 <script src="/assets/js/track.js?v=801e292b" defer></script>
 </body>
 </html>

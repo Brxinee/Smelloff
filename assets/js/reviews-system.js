@@ -53,6 +53,7 @@
             '</div>' +
           '</div>' +
 
+
           '<!-- STEP 2: Review Form -->' +
           '<div id="rvStepForm" style="display:none">' +
             '<div class="rv-modal-badge">' +
@@ -95,6 +96,7 @@
               '<label for="rvAnon" style="font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer">Post review anonymously</label>' +
             '</div>' +
 
+
             '<button type="button" class="rv-primary-btn rv-submit" onclick="submitVerifiedReview()">Post review</button>' +
             '<div id="rvFormError" class="rv-error-msg"></div>' +
           '</div>' +
@@ -105,7 +107,7 @@
               '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5 9-9"/></svg>' +
             '</div>' +
             '<h2>Review published</h2>' +
-            '<p class="rv-desc" style="max-width:380px;margin:0 auto 24px">Thank you for sharing your experience. Your verified customer review is now live and will help fellow shoppers.</p>' +
+            '<p class="rv-desc" style="max-width:380px;margin:0 auto 24px">Thank you for sharing your experience. Your review is now live and will help other shoppers.</p>' +
             '<button type="button" class="rv-primary-btn" onclick="closeReviewForm()">Done</button>' +
           '</div>' +
 
@@ -268,6 +270,14 @@
       return;
     }
 
+    var payload = {
+      name: anon ? 'Anonymous' : (name || 'Verified Buyer'),
+      city: city || 'India',
+      rating: selectedStars,
+      body: text,
+      anonymous: anon
+    };
+
     var orderUuid = '';
     var reviewToken = '';
     try {
@@ -279,6 +289,8 @@
       showStep('rvStepAuth');
       return;
     }
+    payload.order_id = orderUuid;
+    payload.review_token = reviewToken;
 
     var submitBtn = document.querySelector('#rvStepForm .rv-submit');
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Posting…'; }
@@ -286,15 +298,7 @@
     fetch(SUPA_URL + '/functions/v1/submit-review', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        order_id: orderUuid,
-        review_token: reviewToken,
-        name: anon ? 'Anonymous' : (name || 'Verified Buyer'),
-        city: city || 'India',
-        rating: selectedStars,
-        body: text,
-        anonymous: anon
-      })
+      body: JSON.stringify(payload)
     })
     .then(function(r){
       if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Post review'; }
@@ -316,11 +320,17 @@
     });
   };
 
+  // Only reviews tied to a real order are shown or counted. The filter runs
+  // in the query (order_id=not.is.null) so order ids are never sent to the
+  // browser, and rows with no order behind them never reach the page.
   function refreshAllReviews(){
-    fetch(SUPA_URL + '/rest/v1/reviews?select=name,rating,body,city,anonymous,created_at&order=created_at.desc&limit=200', {
+    fetch(SUPA_URL + '/rest/v1/reviews?select=name,rating,body,city,anonymous,created_at&order_id=not.is.null&order=created_at.desc&limit=200', {
       headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
     })
-    .then(function(r){ return r.ok ? r.json() : []; })
+    .then(function(r){
+      if (!r.ok) throw new Error('reviews ' + r.status);
+      return r.json();
+    })
     .then(function(rows){
       var verifiedBuyerReviews = (Array.isArray(rows) ? rows : []).map(function(r){
         return {
