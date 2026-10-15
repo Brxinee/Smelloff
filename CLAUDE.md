@@ -76,6 +76,22 @@ the browser keeps the conversation in sessionStorage and sends it each time.
 - `/privacy` "Who we share it with" names Google (Gemini API) for chat.
 - `test/support-chat.test.mjs` pins all of the above.
 
+## 20 guides for Indian buyers (2026-10-15, owner: "20 more blogs")
+Blog is **78**; sitemap 92. Topics chosen to not duplicate any live or retired
+slug: Diwali smoke, gifts under ₹500, wears per shirt, interview sweat,
+clothes perfume vs fabric spray, attar, ironing, thrift, uniforms, two-wheeler
+commute, cost per use, how long it lasts, label safety, linen/kurtas,
+heatwave, food and sweat, washing less, all-day freshness, office to evening,
+sweaters. Each is answer-first with question H2s, a primary source and an
+"Honest limits" callout; facts only from `config/product.json`.
+- New CLUSTERS topic `everyday` in `apply-reader.mjs`.
+- Thumbnails for these use the owner's photos: `file:` in
+  `thumbnails.config.mjs` (repo path) instead of an Adobe `photo` id.
+- Seven retired slugs (ironing, bike rider, how long, winter sweaters, Indian
+  summer, cotton kurtas, pre-date) now 301 to the matching new post.
+- Keyword tools (Semrush, Ahrefs) had no quota; topics came from the existing
+  keyword map, Indian search phrasing and source research.
+
 ## Homepage redesign for orders (2026-10-15, owner: "best D2C site that sells")
 Write-up: `docs/audits/homepage-conversion-2026-10.md`. India homepage traffic is
 mostly phones (239 mobile / 141 desktop in 90 days); 32% of them open the PDP.
