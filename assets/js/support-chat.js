@@ -26,6 +26,8 @@
   var css =
     '.sfc-launch{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px) + var(--sfc-lift,0px));z-index:65;display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 18px 0 14px;border-radius:100px;border:1px solid var(--rule,rgba(242,245,239,.14));background:var(--surface-2,#1A1A1A);color:var(--text,#F2F5EF);font:500 15px/1 var(--body,system-ui,sans-serif);cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.5);transition:bottom .3s var(--ease,ease),opacity .2s ease}' +
     '.sfc-launch svg{width:20px;height:20px;fill:none;stroke:var(--acid,#B8FF57);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}' +
+    // Phones: an icon-only 48px circle, so the label doesn't sit over headings and prices.
+    '@media(max-width:519px){.sfc-launch{width:48px;padding:0;justify-content:center}.sfc-launch span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}' +
     '.sfc-launch:focus-visible,.sfc-panel :focus-visible{outline:2px solid var(--acid,#B8FF57);outline-offset:2px}' +
     'html.sf-menu-open .sfc-launch,html.sf-modal-open .sfc-launch,html.sf-chat-open .sfc-launch{opacity:0;pointer-events:none;visibility:hidden}' +
     'html.sf-chat-open #smelloff-consent-bar,html.sf-chat-open .mobile-bar{display:none!important}' +
