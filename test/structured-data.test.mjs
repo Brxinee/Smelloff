@@ -119,6 +119,24 @@ test('every indexable page: title ≤ 60 characters, description 70–160', () =
   }
 });
 
+// 2026-10-15 CTR pass: when Google rewrites a title it takes the H1 first, and
+// seven posts had slogan H1s ("Three additives. Three jobs. Zero killers.",
+// "Cage, not cover.") that could become the search result. Title and H1 must
+// share most of their words. scripts/seo/apply-serp-titles.mjs holds the pairs.
+test('every blog post: H1 says what the title says', () => {
+  const words = (s) => new Set(s.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').toLowerCase()
+    .replace(/[^a-z0-9βé ]/g, ' ').split(/\s+/).filter((w) => w.length > 2 && !['the', 'and', 'for', 'how', 'why', 'what', 'does', 'smelloff'].includes(w)));
+  for (const f of fs.readdirSync('blog').filter((n) => n.endsWith('.html') && n !== 'index.html')) {
+    const html = fs.readFileSync(`blog/${f}`, 'utf8');
+    const t = words((html.match(/<title>([^<]*)<\/title>/) || [])[1] || '');
+    const h = words((html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/) || [])[1] || '');
+    const shared = [...t].filter((w) => h.has(w)).length;
+    assert.ok(shared / t.size >= 0.5, `blog/${f}: H1 shares ${shared} of ${t.size} title words`);
+  }
+  const r = spawnSync(process.execPath, ['scripts/seo/apply-serp-titles.mjs', '--check'], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr);
+});
+
 // 2026-10-11 audit: the author came in three shapes with no @id, publishers in
 // four, ~30 posts had a free-standing SpeakableSpecification (valid only as a
 // property) and 35 showed an "Updated" date their schema contradicted.

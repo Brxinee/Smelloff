@@ -40,6 +40,22 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Impressions, no clicks: search-result titles (2026-10-15)
+Owner: "only impressions, no clicks." Full write-up:
+`docs/audits/ctr-impressions-no-clicks-2026-10.md`. Clicks are mostly brand
+(homepage); guides get impressions only. Causes: AI Overviews on how-to queries,
+page-2 positions, low authority, no review stars, and snippets that promised
+nothing, with seven slogan H1s that Google could swap in as the title.
+- **`scripts/seo/apply-serp-titles.mjs` owns the title, H1, description, og/
+  twitter titles, Article headline and breadcrumb name of the 32 posts it lists.**
+  Edit the entry there and re-run it (then `apply-reader.mjs` for Related cards,
+  `build-llms.mjs`, `build-sitemap.mjs`); `--check` is in `npm run build`.
+- Rules: title = H1 (test: H1 shares ≥ half the title's words, every post); 40–60
+  chars, no " | Smelloff"; a number only if the post backs it; no price in how-to
+  descriptions.
+- Per-query GSC data wasn't reachable (Ahrefs/Semrush/Windsor plans). Next round
+  needs the owner's 3-month Queries + Pages export.
+
 ## Search Console round 4: page indexing (2026-10-14, export dated 10-09)
 The five Coverage exports hold counts only (no URLs) and stop on 9 Oct, the
 day before the custom-domain fix. Indexed: 74 → 35 (22 Sep) → 22 (5 Oct);
