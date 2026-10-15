@@ -71,6 +71,17 @@ the browser keeps the conversation in sessionStorage and sends it each time.
 - `/privacy` "Who we share it with" names Google (Gemini API) for chat.
 - `test/support-chat.test.mjs` pins all of the above.
 
+## "No orders" diagnosis (2026-10-15, owner: "is it my website design?")
+Mostly traffic, not design. First-party `page_views`: ~300–650 visitor-days a
+week in Jul–Aug, 40 in the week of 21 Sep, none the next week and 16 the week
+after (the Cloudflare error-1000 window), 78 in the week of 12 Oct. Zero
+paid/UTM traffic. 30 days to 15 Oct: ~45 visitor-days on `/odorstrike`, one real
+checkout attempt (UPI, 12 Oct, failed). Real orders: 5 delivered, Aug–Sep.
+- Homepage `#combos` is `hidden` again: its cards read "Combo name", "₹ —" and
+  the photo brief to buyers. Remove `hidden` when combos are real.
+- Support-chat launcher is an icon-only 48px circle under 520px (the "Help"
+  pill sat over headings and prices); the label stays as the accessible name.
+
 ## Impressions, no clicks: search-result titles (2026-10-15)
 Owner: "only impressions, no clicks." Full write-up:
 `docs/audits/ctr-impressions-no-clicks-2026-10.md`. Clicks are mostly brand
