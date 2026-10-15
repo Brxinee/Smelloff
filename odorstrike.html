@@ -222,8 +222,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
          fetched at top priority to render nothing. -->
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/space-grotesk-normal-latin-wght.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-normal-latin-wght.woff2" crossorigin>
-<link rel="preload" href="/assets/fonts.css?v=f26283c1" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="/assets/fonts.css?v=f26283c1"></noscript>
+<link rel="stylesheet" href="/assets/fonts.css?v=fc635713">
 
 <!-- AI/LLM context files (answer-engine discovery hint) -->
 <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
@@ -699,6 +698,15 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .ck-item-name{font-weight:600;font-size:15px;line-height:1.3;color:var(--text)}
   .ck-item-meta{font-size:13px;color:var(--muted);margin-top:2px}
   .ck-item-amt{font-weight:600;font-size:15px;color:var(--text);white-space:nowrap}
+  .ck-qty{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--rule-soft)}
+  .ck-stepper{display:inline-flex;align-items:center;border:1px solid var(--rule);border-radius:var(--sq-sm);height:44px}
+  .ck-stepper button{width:44px;height:42px;display:grid;place-items:center;background:none;border:0;color:var(--text);cursor:pointer}
+  .ck-stepper button:disabled{opacity:.35;cursor:not-allowed}
+  .ck-stepper button .ic{width:16px;height:16px}
+  .ck-stepper span{min-width:28px;text-align:center;font-weight:600;font-size:15px;color:var(--text)}
+  .ck-pair{flex:1 1 auto;min-height:44px;padding:0 12px;border:1px dashed var(--rule);border-radius:var(--sq-sm);background:none;color:var(--acid);font:600 14px/1.2 var(--body);cursor:pointer}
+  .ck-pair:hover{border-color:var(--acid)}
+  .ck-pair:focus-visible,.ck-stepper button:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
   .overlay .summary{display:flex;justify-content:space-between;gap:12px;padding:8px 0 0;font-size:14px;color:var(--text-2)}
   .overlay .summary .amt{color:var(--text)}
   .overlay .summary .amt.free{color:var(--acid)}
@@ -2276,7 +2284,6 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <h3>Company</h3>
         <ul>
           <li><a href="/about">About</a></li>
-          <li><a href="https://partners.smelloff.in">Partners</a></li>
           <li><a href="/privacy">Privacy</a></li>
           <li><a href="/terms">Terms</a></li>
         </ul>
@@ -2330,6 +2337,16 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
             <p class="ck-item-meta"><span id="checkoutVariant">1 × 50ml</span> · Fabric odor mist</p>
           </div>
           <span class="ck-item-amt" id="checkoutAmount">₹229</span>
+        </div>
+        <!-- Quantity can change here without leaving checkout. The pair offer
+             is a button the buyer presses, never pre-applied. -->
+        <div class="ck-qty">
+          <div class="ck-stepper" role="group" aria-label="Quantity">
+            <button type="button" id="ckDecBtn" aria-label="One bottle fewer" onclick="ckStepQty(-1)"><svg class="ic" aria-hidden="true"><use href="#i-minus"/></svg></button>
+            <span id="ckQtyVal" aria-live="polite">1</span>
+            <button type="button" id="ckIncBtn" aria-label="One bottle more" onclick="ckStepQty(1)"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          </div>
+          <button type="button" class="ck-pair" id="ckPairBtn" onclick="ckStepQty(1)">Add a second · 2 for ₹419</button>
         </div>
         <div class="summary">
           <span>Shipping</span>
@@ -2905,6 +2922,15 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     var saving = t.unit * t.qty - t.subtotal;
     set('checkoutVariant', t.qty + ' × 50ml' + (saving > 0 ? ' · you save ₹' + saving : ''));
     set('checkoutAmount', '₹' + t.subtotal);
+    set('ckQtyVal', String(t.qty));
+    var maxQ = (CFG && CFG.MAX_QTY) || 10;
+    var dec = document.getElementById('ckDecBtn'); if (dec) dec.disabled = t.qty <= 1;
+    var inc = document.getElementById('ckIncBtn'); if (inc) inc.disabled = t.qty >= maxQ;
+    var pairBtn = document.getElementById('ckPairBtn');
+    if (pairBtn) {
+      pairBtn.hidden = t.qty !== 1;
+      pairBtn.textContent = 'Add a second · 2 for ₹' + subtotalFor(2);
+    }
     set('checkoutShipping', 'Free');
     // Each payment option states the total that choice means, for the
     // quantity actually in the order (they were hard-coded to one bottle).
@@ -2920,6 +2946,20 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     var feeRow = document.getElementById('codFeeRow');
     if (feeRow) feeRow.style.display = t.codFee ? 'flex' : 'none';
   }
+
+  // Quantity changes inside checkout: the cart, the PDP stepper and every
+  // total follow, so the order sent is always the one on screen.
+  function ckStepQty(delta) {
+    var maxQ = (CFG && CFG.MAX_QTY) || 10;
+    var q = Math.max(1, Math.min(maxQ, (cartQty > 0 ? cartQty : 1) + delta));
+    if (q === cartQty) return;
+    cartQty = q;
+    setCartQty(q);
+    syncPdpQtyFromCart();
+    renderCheckoutPrices();
+    smfCartBeacon('cart_update');
+  }
+  window.ckStepQty = ckStepQty;
 
   function openCheckout(variant, ctaLocation) {
     if (typeof window.smfWarmRazorpay === 'function') window.smfWarmRazorpay();

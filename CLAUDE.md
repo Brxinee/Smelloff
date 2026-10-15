@@ -76,6 +76,36 @@ the browser keeps the conversation in sessionStorage and sends it each time.
 - `/privacy` "Who we share it with" names Google (Gemini API) for chat.
 - `test/support-chat.test.mjs` pins all of the above.
 
+## Full-site audit, everything but the homepage (2026-10-15, owner: "every corner matters")
+All 77 pages from a production build at 390 and 1280 (axe WCAG 2.2 AA, overflow,
+dead anchors, broken images, JS errors, tap targets), the PDP/cart/checkout by
+eye on a phone, every outbound link, and layout shift + load on throttled 4G.
+Clean already: 0 axe violations, no overflow, no JS errors, prices/returns/
+delivery copy consistent. Fixed:
+- **Layout jumps.** soft.css/chrome.css loaded async everywhere, but every page
+  except `/` and `/odorstrike` takes its layout from chrome.css §12, so it
+  painted unstyled first (blog index CLS 0.19 on 4G). `apply-chrome.mjs` now
+  emits blocking links except for `ASYNC_LAYER_PAGES` (the two self-contained
+  money pages). `fonts.css` is a blocking link on every page (3KB): async, the
+  fallback faces weren't defined at first paint.
+- **Heading fallback.** Space Grotesk is used at 700; the one fallback face was
+  Arial synthesised to bold at 105.79% (~5% too wide), so long H1s wrapped an
+  extra line until the web font landed. A real bold face (`Arial Bold`,
+  size-adjust 100.3%) now covers 600–900, in fonts.css and index.html.
+  `local('Liberation Sans')` added for Linux. Blog index H1 `max-width` is
+  `10.4em`, not `16ch` (`ch` changes with the font).
+- **Dead footer link:** "Partners" → `partners.smelloff.in`, which has no DNS
+  record. Removed. The partner `?ref=` beacons in `index.html` /
+  `odorstrike.html` still post to that host and fail silently; referral
+  attribution is broken until the owner restores the subdomain.
+- **Checkout quantity.** It was fixed once checkout opened. A stepper under the
+  item line (`ckStepQty`) updates the cart, PDP stepper and every total; at one
+  bottle an "Add a second · 2 for ₹419" button (never pre-applied).
+- Copy: contact said "One person runs Smelloff" (two founders); `/reviews` label
+  "Social proof" → "Customer reviews", and a failed review load no longer says
+  "No verified buyer reviews yet".
+Tests in `test/ux-guardrails.test.mjs`.
+
 ## Homepage redesign for orders (2026-10-15, owner: "best D2C site that sells")
 Write-up: `docs/audits/homepage-conversion-2026-10.md`. India homepage traffic is
 mostly phones (239 mobile / 141 desktop in 90 days); 32% of them open the PDP.
