@@ -168,3 +168,25 @@ test('no page uses a bottle cutout; the in-hand photo is shown whole', () => {
   assert.match(pdp, /\.pd-offer-art \.pd-offer-photo\{[^}]*object-fit:contain/, 'PDP offer photo must not be cropped');
   for (const html of [home, pdp]) assert.match(html, /offer-in-hand-black@960\.webp/, 'offer box photo missing');
 });
+
+// Competitor research (2026-10-15, docs/audits/competitor-conversion-2026-10.md).
+test('PDP delivery check: pincode → same window as checkout, no COD amount, text only', () => {
+  const pdp = fs.readFileSync('odorstrike.html', 'utf8');
+  const form = pdp.slice(pdp.indexOf('<form class="pd-pin"'), pdp.indexOf('</form>', pdp.indexOf('<form class="pd-pin"')));
+  assert.match(form, /<label for="pdPin">/, 'pincode field needs a visible label');
+  assert.match(form, /inputmode="numeric"/);
+  assert.doesNotMatch(form, /₹/, 'outside checkout the site names COD, not its amount');
+  // It sits below the buy buttons, so the phone fold measurements don't move.
+  assert.ok(pdp.indexOf('id="pdPinForm"') > pdp.indexOf('id="pdpCartBtn"'));
+  const js = pdp.slice(pdp.indexOf('// PDP DELIVERY CHECK'), pdp.indexOf('// PAYMENT FAILED POLICY OVERLAY'));
+  assert.match(js, /window\.calculateDeliveryEstimate/, 'must reuse the checkout estimate');
+  assert.doesNotMatch(js, /innerHTML/, 'API text goes through textContent');
+  assert.match(js, /getElementById\('f_pin'\)/, 'a checked pincode carries into checkout');
+});
+
+test('PDP compare table names clothes perfume sprays, modestly', () => {
+  const pdp = fs.readFileSync('odorstrike.html', 'utf8');
+  const table = pdp.slice(pdp.indexOf('<table class="pd-compare">'), pdp.indexOf('</table>', pdp.indexOf('<table class="pd-compare">')));
+  assert.match(table, /<th scope="col">Clothes perfume spray<\/th>/);
+  for (const row of table.match(/<tr>.*?<\/tr>/g)) assert.equal((row.match(/<t[hd]\b/g) || []).length, 5, row);
+});

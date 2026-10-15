@@ -87,6 +87,21 @@ checkout attempt (UPI, 12 Oct, failed). Real orders: 5 delivered, Aug–Sep.
 - Support-chat launcher is an icon-only 48px circle under 520px (the "Help"
   pill sat over headings and prices); the label stays as the accessible name.
 
+## Competitor research for orders (2026-10-15, owner: "how do competitors get orders")
+Full write-up: `docs/audits/competitor-conversion-2026-10.md`. India's fabric
+sprays sell on Amazon/Flipkart/Meesho with 22–81 ratings each (a thin,
+winnable category); the real pocket rival is the ₹149–282 clothes perfume
+spray. Built on `/odorstrike`, all below the Buy buttons (fold unchanged):
+- **Pincode delivery check** (`#pdPinForm`): postalpincode.in place name + the
+  checkout's own `calculateDeliveryEstimate()` window, text via textContent,
+  says "Cash on Delivery available" with no amount; a good pincode is saved
+  (`smf_pin`) and pre-fills checkout's `f_pin`.
+- "Rather order on WhatsApp?" link (`.pd-wa`); the compare table has a
+  "Clothes perfume spray" column; checkout's Pay online option reads "saves
+  the ₹89 COD charge". Tests in `test/ux-guardrails.test.mjs`.
+- Owner calls, not built: Amazon listing, COD fee level (₹89 vs peers' ₹0–49),
+  a 2-bottle price, creator/ads traffic.
+
 ## Impressions, no clicks: search-result titles (2026-10-15)
 Owner: "only impressions, no clicks." Full write-up:
 `docs/audits/ctr-impressions-no-clicks-2026-10.md`. Clicks are mostly brand

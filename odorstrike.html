@@ -1315,6 +1315,18 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .pd-assure li{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--rule-soft);
     border-radius:12px;background:var(--surface);font-size:12.5px;line-height:1.35;color:var(--muted)}
   .pd-assure .ic{color:var(--acid);margin-top:1px}
+  .pd-pin{margin-top:16px}
+  .pd-pin label{display:block;font-size:14px;font-weight:500;color:var(--text);margin-bottom:8px}
+  .pd-pin__row{display:flex;gap:8px}
+  .pd-pin input{flex:1 1 auto;min-width:0;height:52px;padding:0 14px;font:inherit;font-size:16px;color:var(--text);background:transparent;border:1px solid var(--rule-soft);border-radius:8px}
+  .pd-pin input:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
+  .pd-pin__btn{flex:0 0 auto;height:52px;padding:0 20px;font:inherit;font-size:15px;font-weight:600;color:var(--text);background:transparent;border:1px solid var(--text-2);border-radius:8px;cursor:pointer}
+  .pd-pin__out{margin-top:8px;font-size:14px;line-height:1.45;color:var(--text-2);min-height:0}
+  .pd-pin__out:empty{display:none}
+  .pd-pin__out b{color:var(--text);font-weight:600}
+  .pd-pin__out.is-err{color:#ff8a80}
+  .pd-wa{margin-top:12px;font-size:14px}
+  .pd-wa a{color:var(--text-2);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--acid)}
   .pd-assure b{display:block;color:var(--text);font-weight:600;font-size:13.5px;margin-bottom:1px}
   .pd-highlights{list-style:none;margin-top:20px;display:grid;gap:12px}
   .pd-highlights li{display:flex;align-items:flex-start;gap:12px;font-size:15px;line-height:1.45;color:var(--text-2)}
@@ -1912,6 +1924,20 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
           <li><svg class="ic" aria-hidden="true"><use href="#i-return"/></svg><span><b>7-day returns</b>If it isn't for you</span></li>
         </ul>
 
+        <!-- Delivery check by pincode (Indian D2C norm: Aquos, Shiprocket-store
+             widgets). Same window as checkout's calculateDeliveryEstimate(); the
+             pincode carries into the checkout form. Below the Buy button on
+             phones, so the fold measurements don't move. -->
+        <form class="pd-pin" id="pdPinForm" novalidate>
+          <label for="pdPin">Check delivery to your pincode</label>
+          <div class="pd-pin__row">
+            <input id="pdPin" name="pincode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="6-digit pincode" aria-describedby="pdPinOut">
+            <button type="submit" class="pd-pin__btn">Check</button>
+          </div>
+          <p class="pd-pin__out" id="pdPinOut" aria-live="polite"></p>
+        </form>
+        <p class="pd-wa"><a onclick="window.smfTrack&&window.smfTrack({type:'click',label:'pdp_whatsapp_order'})" href="https://wa.me/919392974031?text=Hi%20Smelloff%2C%20I%27d%20like%20to%20order%20ODORSTRIKE%20(50ml)." target="_blank" rel="noopener">Rather order on WhatsApp? Message us</a></p>
+
         <p class="pd-footnote">*Observed in internal office and commute wear testing. Fabric only — never on skin.</p>
         <!-- Gated proof (under primary CTA): renders only with real data -->
         <div id="heroProofMount"></div>
@@ -1990,15 +2016,15 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         </ul>
       </div>
     </div>
-    <div class="pd-scroll" id="compare" tabindex="0" role="region" aria-label="ODORSTRIKE compared with deodorant and perfume — scroll sideways on small screens">
+    <div class="pd-scroll" id="compare" tabindex="0" role="region" aria-label="ODORSTRIKE compared with deodorant, perfume and clothes perfume sprays — scroll sideways on small screens">
       <table class="pd-compare">
         <thead>
-          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col" class="us">ODORSTRIKE</th><th scope="col">Deodorant</th><th scope="col">Perfume</th></tr>
+          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col" class="us">ODORSTRIKE</th><th scope="col">Deodorant</th><th scope="col">Perfume</th><th scope="col">Clothes perfume spray</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Goes on</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Clothes</td><td>Skin</td><td>Skin</td></tr>
-          <tr><th scope="row">Odor in the shirt</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Neutralizes it</td><td>Not made for it</td><td>Covers it</td></tr>
-          <tr><th scope="row">Scent</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Light, fades fast</td><td>Varies</td><td>Strong</td></tr>
+          <tr><th scope="row">Goes on</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Clothes</td><td>Skin</td><td>Skin</td><td>Clothes</td></tr>
+          <tr><th scope="row">Odor in the shirt</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Neutralizes it</td><td>Not made for it</td><td>Covers it</td><td>Covers it</td></tr>
+          <tr><th scope="row">Scent</th><td class="us"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Light, fades fast</td><td>Varies</td><td>Strong</td><td>Strong</td></tr>
         </tbody>
       </table>
     </div>
@@ -2366,7 +2392,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <div class="ck-pay-grid" role="radiogroup" aria-label="Payment method">
           <button type="button" class="pay-opt active" data-method="prepaid" role="radio" aria-checked="true" onclick="selectPay('prepaid')">
             <span class="pay-radio" aria-hidden="true"></span>
-            <span class="pay-opt-copy"><strong>Pay online</strong><small>UPI · Cards · Net banking · free shipping</small></span>
+            <span class="pay-opt-copy"><strong>Pay online</strong><small>UPI · Cards · Net banking · saves the ₹89 COD charge</small></span>
             <span class="pay-opt-price">₹229</span>
           </button>
           <button type="button" class="pay-opt" data-method="cod" role="radio" aria-checked="false" onclick="selectPay('cod')">
@@ -3645,6 +3671,69 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       }
       // Keep the metro/outside-metros calendar window visible before PIN
       // is complete — there is no authoritative tier map to refine it with.
+    });
+  })();
+
+  // ==============================
+  // PDP DELIVERY CHECK — pincode → place name + the same arrival window the
+  // checkout shows. Text only (textContent), never blocks buying; a lookup
+  // failure still shows the window. A good pincode is carried into checkout.
+  // ==============================
+  (function(){
+    var form = document.getElementById('pdPinForm');
+    var input = document.getElementById('pdPin');
+    var out = document.getElementById('pdPinOut');
+    if (!form || !input || !out) return;
+    var D = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    function fmt(d){ return D[d.getDay()] + ' ' + d.getDate() + ' ' + M[d.getMonth()]; }
+    function say(parts, err){
+      out.textContent = '';
+      out.classList.toggle('is-err', !!err);
+      parts.forEach(function(p){
+        if (p.b) { var b = document.createElement('b'); b.textContent = p.b; out.appendChild(b); }
+        else out.appendChild(document.createTextNode(p));
+      });
+    }
+    try { var saved = localStorage.getItem('smf_pin'); if (saved && /^\d{6}$/.test(saved)) input.value = saved; } catch (e) {}
+    input.addEventListener('input', function(){
+      var v = input.value.replace(/\D/g, '').slice(0, 6);
+      if (v !== input.value) input.value = v;
+    });
+    var seq = 0;
+    form.addEventListener('submit', async function(ev){
+      ev.preventDefault();
+      var pin = input.value.replace(/\D/g, '').replace(/^91(?=\d{6}$)/, '').slice(0, 6);
+      input.value = pin;
+      if (!/^[1-9]\d{5}$/.test(pin)) { say(['Enter your 6-digit pincode.'], true); return; }
+      var my = ++seq;
+      say(['Checking…']);
+      var place = '';
+      var known = true;
+      try {
+        var res = await fetch('https://api.postalpincode.in/pincode/' + pin);
+        var json = res.ok ? await res.json() : null;
+        var entry = json && json[0];
+        if (entry && entry.Status === 'Success' && entry.PostOffice && entry.PostOffice.length) {
+          var po = entry.PostOffice[0];
+          place = [po.District, po.State].filter(Boolean).join(', ');
+        } else if (entry && entry.Status === 'Error') {
+          known = false;
+        }
+      } catch (e) { /* offline or API down: still show the window */ }
+      if (my !== seq) return;
+      if (!known) { say(['We couldn\u2019t find that pincode. Check the number, or WhatsApp us.'], true); return; }
+      var est = typeof window.calculateDeliveryEstimate === 'function' ? window.calculateDeliveryEstimate() : null;
+      var parts = [];
+      parts.push(place ? 'Delivers to ' + place + ' ' : 'Delivers ');
+      if (est) parts.push({ b: 'by ' + fmt(est.loDate) + ' – ' + fmt(est.hiDate) });
+      else parts.push({ b: 'in 3–7 business days' });
+      parts.push('. Ships from Hyderabad within 48 hours. Cash on Delivery available.');
+      say(parts);
+      try { localStorage.setItem('smf_pin', pin); } catch (e) {}
+      var ck = document.getElementById('f_pin');
+      if (ck && !ck.value) { ck.value = pin; ck.dispatchEvent(new Event('input')); }
+      if (typeof window.smfTrack === 'function') { try { window.smfTrack({ type: 'click', label: 'pdp_pin_check' }); } catch (e) {} }
     });
   })();
 
