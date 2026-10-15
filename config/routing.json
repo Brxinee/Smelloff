@@ -379,7 +379,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
+      "destination": "https://smelloff.in/blog/does-ironing-remove-smell-from-clothes",
       "statusCode": 301
     },
     {
@@ -401,7 +401,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
+      "destination": "https://smelloff.in/blog/bike-commute-sweat-smell-office",
       "statusCode": 301
     },
     {
@@ -423,7 +423,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
+      "destination": "https://smelloff.in/blog/freshen-up-after-work-before-going-out",
       "statusCode": 301
     },
     {
@@ -511,7 +511,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/blog/how-to-use-odorstrike",
+      "destination": "https://smelloff.in/blog/how-long-does-fabric-odor-spray-last",
       "statusCode": 301
     },
     {
@@ -522,7 +522,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
+      "destination": "https://smelloff.in/blog/keep-linen-shirts-cotton-kurtas-fresh-summer",
       "statusCode": 301
     },
     {
@@ -599,7 +599,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/blog/remove-smell-from-blazer-without-dry-cleaning",
+      "destination": "https://smelloff.in/blog/remove-smell-from-sweater-without-washing",
       "statusCode": 301
     },
     {
@@ -610,7 +610,7 @@
           "value": "www.smelloff.in"
         }
       ],
-      "destination": "https://smelloff.in/blog/keep-office-trousers-fresh-without-washing",
+      "destination": "https://smelloff.in/blog/stay-fresh-in-heatwave-north-india",
       "statusCode": 301
     },
     {
@@ -943,7 +943,7 @@
     },
     {
       "source": "/blog/shirt-smell-after-ironing",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
+      "destination": "/blog/does-ironing-remove-smell-from-clothes",
       "statusCode": 301
     },
     {
@@ -953,7 +953,7 @@
     },
     {
       "source": "/blog/bike-rider-sweat-smell-india",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
+      "destination": "/blog/bike-commute-sweat-smell-office",
       "statusCode": 301
     },
     {
@@ -963,7 +963,7 @@
     },
     {
       "source": "/blog/confidence-spray-pre-meeting-date",
-      "destination": "/blog/spray-to-remove-sweat-smell-from-clothes-quickly",
+      "destination": "/blog/freshen-up-after-work-before-going-out",
       "statusCode": 301
     },
     {
@@ -1003,12 +1003,12 @@
     },
     {
       "source": "/blog/how-long-does-fabric-spray-last-on-clothes",
-      "destination": "/blog/how-to-use-odorstrike",
+      "destination": "/blog/how-long-does-fabric-odor-spray-last",
       "statusCode": 301
     },
     {
       "source": "/blog/how-to-keep-cotton-kurtas-fresh",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
+      "destination": "/blog/keep-linen-shirts-cotton-kurtas-fresh-summer",
       "statusCode": 301
     },
     {
@@ -1043,12 +1043,12 @@
     },
     {
       "source": "/blog/how-to-remove-smell-from-winter-jackets-sweaters",
-      "destination": "/blog/remove-smell-from-blazer-without-dry-cleaning",
+      "destination": "/blog/remove-smell-from-sweater-without-washing",
       "statusCode": 301
     },
     {
       "source": "/blog/indian-summer-sweat-smell-guide",
-      "destination": "/blog/keep-office-trousers-fresh-without-washing",
+      "destination": "/blog/stay-fresh-in-heatwave-north-india",
       "statusCode": 301
     },
     {

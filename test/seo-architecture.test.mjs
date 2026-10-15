@@ -33,13 +33,14 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
     const sitemapXml = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
     const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
 
-    it('sitemap contains exactly 72 canonical URLs', () => {
+    it('sitemap contains exactly 92 canonical URLs', () => {
       // 75 → 76 (2026-10-11): the -instantly duplicate merged into -quickly;
       // the hoodie and blazer guides deleted by dd86e68 were restored.
       // 76 → 71 (same day): the /solutions hub and its four thin city pages
       // were retired into the guides that cover them.
       // 71 → 72 (2026-10-12): the remove-smell-from-clothes-without-washing hub.
-      assert.equal(sitemapUrls.length, 72);
+      // 72 → 92 (2026-10-15): twenty guides for Indian buyers.
+      assert.equal(sitemapUrls.length, 92);
     });
 
     for (const url of sitemapUrls) {
