@@ -172,6 +172,90 @@ export const POSTS = {
     wa: 'Four zones on the inside of your formals carry almost all of it. Everyone responds by washing the whole trouser, which is what kills the waistband: {url}',
     x: 'Waistband, inner thigh seams, collar lining, cuffs. Four zones on the inside of formal wear produce nearly all the smell, and the standard response is to wash the entire garment every night.',
   },
+
+  /* ---- the 2026-10-15 series: twenty guides for Indian buyers -------- */
+
+  'firecracker-smoke-smell-out-of-clothes-diwali': {
+    wa: 'Kurta smelling of crackers since last night? Air it, brush it, then treat four zones. Don\'t put perfume on top. Guide: {url}',
+    x: 'Cracker smoke is mostly sulphur-carrying dust, and woven cotton or silk catches it like a filter. Shake and brush first, then treat what is left in the weave.',
+  },
+  'gifts-for-men-under-500-india': {
+    wa: 'If you\'re stuck on a gift under ₹500 for Diwali or Bhai Dooj, this list is all daily-use stuff, no showpieces: {url}',
+    x: 'The test for a cheap gift: will he touch it once a day for three months, and is it something he\'d never buy for himself? Most ₹500 gift boxes fail both.',
+  },
+  'how-many-times-wear-shirt-before-washing': {
+    wa: 'Settles the "can I wear this shirt again" question for Indian weather, garment by garment: {url}',
+    x: 'Wear-count charts were written for cool countries. In Indian humidity a formal shirt over a vest gets two wears at most, a t-shirt one, jeans about three.',
+  },
+  'stop-sweat-smell-job-interview': {
+    wa: 'Interview coming up? This has the night-before routine and the 5-minute reset outside the room so you don\'t walk in smelling of sweat: {url}',
+    x: 'Interview nerves trigger the apocrine glands, the ones whose sweat skin bacteria turn into the strongest smell. Antiperspirant the night before, cotton shirt, reset the collar before you walk in.',
+  },
+  'clothes-perfume-spray-vs-fabric-odor-spray': {
+    wa: 'Before you buy another "cloth perfume": it just layers scent over the smell. This explains the difference from an odor spray: {url}',
+    x: 'Clothes perfume and fabric odor sprays sit at the same price on the same shelf. One adds fragrance; the other traps the odor molecules already in the fabric. Read the verbs on the label.',
+  },
+  'attar-on-clothes-vs-fabric-odor-spray': {
+    wa: 'Attar on a sweaty kurta just covers it. Clear the smell first, let it dry, then attar on the cuff. This explains why: {url}',
+    x: 'Attar lasts so long because it is fragrance in oil, not alcohol. That also means it covers sweat odor without removing it, and it can leave an oil mark on silk.',
+  },
+  'does-ironing-remove-smell-from-clothes': {
+    wa: 'That burst of sweat smell when you iron a worn shirt? Heat is releasing it, not removing it. Spray first, iron after: {url}',
+    x: 'Ironing a worn shirt makes the smell louder because heat speeds up evaporation of what is already in the fibres. It fades, then comes back once you wear it.',
+  },
+  'remove-smell-from-thrifted-clothes': {
+    wa: 'Got a thrift find that smells of someone else\'s cupboard? This tells you which smell it is and how to clear it: {url}',
+    x: 'Thrifted clothes carry one of four smells: storage, the last owner\'s sweat, their perfume, or damp. Each needs a different fix, and polyester holds the sweat one longest.',
+  },
+  'keep-work-uniform-fresh-between-washes': {
+    wa: 'If you wear a uniform six days a week with two sets, this routine keeps it fresh between washes: {url}',
+    x: 'Uniforms smell faster than your own clothes for three reasons: polyester-viscose blends hold odor, ten-hour shifts, and two sets for a six-day week.',
+  },
+  'bike-commute-sweat-smell-office': {
+    wa: 'For anyone who rides a bike or scooter to office: what to wear on the ride and a 5-min washroom reset so the shirt stays fresh: {url}',
+    x: 'A two-wheeler commute hits your shirt with sun, engine heat, a pressed-on backpack, a damp helmet collar and exhaust. Keep the office shirt off your body for the ride.',
+  },
+  'is-fabric-odor-spray-worth-it-india': {
+    wa: 'Did the maths on a fabric spray vs rewashing: about ₹2.29 per refresh, and when it\'s NOT worth buying: {url}',
+    x: 'A ₹229 fabric spray works out to about ₹2.29 per refresh. A top-loader is allowed up to 23 litres of water per kg per cycle under BEE rules. Different jobs, but the gap is real.',
+  },
+  'how-long-does-fabric-odor-spray-last': {
+    wa: 'Straight answer on how long a fabric spray lasts on a shirt, what shortens it, and how long the bottle lasts: {url}',
+    x: '"Long-lasting" means nothing without conditions. A fabric odor spray deals with the odor present; your body keeps making new odor all day, so heat, sweat and polyester shorten the window.',
+  },
+  'are-fabric-sprays-safe-label-check-india': {
+    wa: 'How to read a fabric spray label in India, and the claims that should make you suspicious: {url}',
+    x: 'Every packaged spray sold in India must name its maker and address, net quantity, MRP, month of manufacture and a customer-care contact. No maker named, no purchase.',
+  },
+  'keep-linen-shirts-cotton-kurtas-fresh-summer': {
+    wa: 'Why a cotton kurta or linen shirt can smell by evening even though it breathes, and how to keep it fresh: {url}',
+    x: 'Linen takes up about 12% moisture, cotton about 8.5%, polyester under 1%. That is why natural fibres feel cool, and why they still hold sweat by evening.',
+  },
+  'stay-fresh-in-heatwave-north-india': {
+    wa: 'For anyone in Delhi/Jaipur/Lucknow/Nagpur heat: why dry heat still makes shirts smell, and a day routine that works: {url}',
+    x: 'In dry 45°C heat, sweat evaporates fast so you never feel wet, but its salts and oils stay in the shirt. That is why a shirt that never felt damp smells by 4 pm.',
+  },
+  'does-food-change-sweat-smell-garlic-methi': {
+    wa: 'Does Indian food make your sweat smell? Methi does (it\'s a real compound called sotolon). Garlic surprised researchers: {url}',
+    x: 'In a 2016 study, 82 raters scored men\'s armpit odor as MORE pleasant after the men ate more garlic. Methi is the food that really does come through sweat, via a compound called sotolon.',
+  },
+  'wash-clothes-less-save-water-india': {
+    wa: 'Water is short in most Indian cities. Which clothes really need washing after every wear, and which don\'t: {url}',
+    x: 'BEE star-label rules let a top-loader use up to 23 litres of water per kg of laundry per cycle. Jeans worn three hours in AC do not need that. Gym clothes do.',
+  },
+  'how-to-smell-good-all-day-men-india': {
+    wa: 'Smelling good all day in Indian heat is three jobs: skin, clothes, scent. Most of us only do one. Full routine: {url}',
+    x: 'Deodorant handles skin. Perfume adds a scent on top. Neither deals with the shirt, which is where the 4 pm smell usually comes from.',
+  },
+  'freshen-up-after-work-before-going-out': {
+    wa: 'Going straight from office to dinner or a function? A 10-min washroom plan for your shirt, skin and hair: {url}',
+    x: 'By evening, most of the smell is in your shirt, not on your skin. Perfume added on top just sits on it. Sort the shirt first, perfume last.',
+  },
+  'remove-smell-from-sweater-without-washing': {
+    wa: 'Washing a sweater every few wears ruins it. How to keep it fresh through a north Indian winter without washing: {url}',
+    x: 'Wool absorbs moisture vapour and resists body odor; most budget sweaters in India are acrylic, which holds it like polyester. That decides how often you refresh.',
+  },
+
 };
 
 /**
