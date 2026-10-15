@@ -13,6 +13,7 @@ import paymentStatusHandler from './api/payment-status.js';
 import adminVerifyPaymentHandler from './api/admin/verify-payment.js';
 import webhookHandler from './api/webhook.js';
 import shiprocketSyncHandler from './api/shiprocket-sync.js';
+import supportChatHandler from './api/support-chat.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -79,6 +80,7 @@ app.all('/api/payment-status', (req, res) => paymentStatusHandler(req, res));
 app.all('/api/admin/verify-payment', (req, res) => adminVerifyPaymentHandler(req, res));
 app.all('/api/webhook', (req, res) => webhookHandler(req, res));
 app.all('/api/shiprocket-sync', (req, res) => shiprocketSyncHandler(req, res));
+app.all('/api/support-chat', (req, res) => supportChatHandler(req, res));
 app.all('/api/admin/test-email', (req, res) => sendEmailHandler(req, res));
 app.all('/api/resend-webhook', (req, res) => webhookHandler(req, res));
 app.all('/api/payment/create-order', (req, res) => createOrderHandler(req, res));
