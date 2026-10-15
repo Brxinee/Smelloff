@@ -85,6 +85,17 @@ mostly phones (239 mobile / 141 desktop in 90 days); 32% of them open the PDP.
   box is a **pack picker** (1 bottle checked by default, or 2 for ₹419). Never
   pre-select the pair. The hero has one pair line under the button.
 - `/odorstrike?buy=1&qty=N` opens checkout on N bottles (1–10).
+- **Second pass (same day, re-audit):** the hero has two buttons side by side,
+  "Buy now — ₹229" (filled) and "See the product" (ghost). In 120 days of
+  events, phone visitors tapped the product route ~3:1 over buy. Exactly one
+  filled button stays in the hero (test).
+- **`.ph-pic>source{display:none}`** (both money pages): with `display:contents`
+  on the `<picture>`, its `<source>` became a grid cell, so on desktop every
+  `#why` photo sat a row below its copy (live since the photos went in).
+- Offer photo is a 3:2 black panel on phones (whole photo, `contain`).
+- **Section reach:** one `view_content` event per section per view, labelled
+  `home_sec_<id>` (moments, how, why, compare, reviews, buy, founders, faq,
+  final). Query `events` to see where phone visitors stop scrolling.
 - The hidden placeholder `#combos` is deleted; the "dries clear" beat moved into
   the comparison note.
 

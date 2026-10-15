@@ -385,9 +385,12 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px;
   }
   .hero-price .size{display:none;flex-basis:100%;margin-top:6px;font-size:12.5px;color:var(--muted);letter-spacing:.01em}
-  .hero-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;margin-top:12px}
-  .hero-ctas .hm-btn{flex:1 1 100%}
-  .hero-more{margin:2px auto 0}
+  /* Two routes, one row: on the old homepage 38 phone visitors tapped
+     "See ODORSTRIKE" and ~14 tapped Buy (events, 120 days). Buy stays filled
+     and wider; the product route is a real button, not a footnote. */
+  .hero-ctas{display:flex;flex-wrap:nowrap;align-items:stretch;gap:10px;margin-top:12px}
+  .hero-ctas .hm-btn{flex:1.35 1 0;min-width:0;padding-inline:12px;white-space:nowrap}
+  .hero-ctas .hero-more{flex:1 1 0}
   .hero-pair{margin-top:6px;text-align:center;font-size:13.5px;line-height:1.4}
   .hero-pair a{color:var(--text-2);text-decoration:underline;text-decoration-color:var(--border-strong);text-underline-offset:4px;display:inline-block;padding:6px 0}
   .hero-pair b{color:var(--acid);font-weight:600}
@@ -428,7 +431,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     .hero-price .size{display:block}
     .hero-ctas{margin-top:16px}
     .hero-ctas .hm-btn{flex:0 1 auto;padding-inline:34px}
-    .hero-more{margin:0}
     .hero-pair{text-align:left}
     .hero-ship{justify-content:flex-start}
     .hero-quote{max-width:46ch}
@@ -523,6 +525,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   @media(min-width:768px){.beat .ph-img{max-width:460px;justify-self:center}}
   /* A filled slot: the same box as .ph-img, holding the photo. */
   .ph-pic{display:contents}
+  /* <source> must not become a grid item: it took cell 1 of every .beat
+     and pushed photo and copy onto different rows on desktop. */
+  .ph-pic>source{display:none}
   .beat-art.ph-photo{display:block;padding:0;min-height:0;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover}
   /* Square on phones: four 4:5 photos stacked ran ~1,740px. */
   @media(max-width:767px){.beat-art.ph-photo{aspect-ratio:1/1}}
@@ -599,7 +604,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     display:flex;flex-direction:column;gap:16px;
   }
   .rv blockquote{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.3;letter-spacing:-.01em}
-  .rv-who{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .rv-who{margin-top:auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 10px}
   .rv-who cite{font-style:normal;font-size:14px;color:var(--text-2)}
   .rv-tag{font-family:var(--body);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--acid);border:1px solid var(--border-focus);border-radius:var(--r-pill);padding:4px 9px;white-space:nowrap}
   .rv--buyer{border-color:var(--border-focus)}
@@ -620,7 +625,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
      shown whole (owner: never crop it). The panel is #000, so the photo's
      own black meets it invisibly and `contain` leaves no visible bars.
      4:5 panel on phones, fills the column from 768. Skeleton until loaded. */
-  .offer-art{position:relative;overflow:hidden;background:#000;aspect-ratio:4/5}
+  /* Phones: a 3:2 black panel (the whole photo, contained) so the pack
+     choice starts ~190px sooner; it was a 4:5 panel ~410px tall. */
+  .offer-art{position:relative;overflow:hidden;background:#000;aspect-ratio:3/2}
   .offer-art .offer-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
   .offer-body{padding:28px 24px 30px}
   .offer-body .hm-h2{font-size:clamp(30px,4.6vw,48px)}
@@ -865,7 +872,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           </p>
           <div class="hero-ctas">
             <a class="hm-btn" href="/odorstrike?buy=1" id="heroBuyBtn">Buy now — ₹229</a>
-            <a class="hm-link hero-more" href="/odorstrike">View product details</a>
+            <a class="hm-btn hm-btn--ghost hero-more" href="/odorstrike" data-track="home_hero_view">See the product</a>
           </div>
           <p class="hero-pair"><a href="/odorstrike?buy=1&amp;qty=2" data-track="home_hero_pair">One for home, one for the office? <b>2 for ₹419</b> · save ₹39</a></p>
           <ul class="hero-ship" aria-label="Delivery and payment">
@@ -1062,7 +1069,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     <div class="wrap">
       <div class="offer reveal">
         <div class="offer-art">
-          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/offer-in-hand-black@400.avif 400w, /assets/photos/offer-in-hand-black@640.avif 640w, /assets/photos/offer-in-hand-black@960.avif 960w, /assets/photos/offer-in-hand-black.avif 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 70vw"><img class="ph-photo offer-photo" src="/assets/photos/offer-in-hand-black@960.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w, /assets/photos/offer-in-hand-black@960.webp 960w, /assets/photos/offer-in-hand-black.webp 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 70vw" width="1152" height="2048" alt="A hand holding the ODORSTRIKE 50ml fabric odor spray bottle against a black background" loading="lazy" decoding="async"></picture>
+          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/offer-in-hand-black@400.avif 400w, /assets/photos/offer-in-hand-black@640.avif 640w, /assets/photos/offer-in-hand-black@960.avif 960w, /assets/photos/offer-in-hand-black.avif 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 40vw"><img class="ph-photo offer-photo" src="/assets/photos/offer-in-hand-black@960.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w, /assets/photos/offer-in-hand-black@960.webp 960w, /assets/photos/offer-in-hand-black.webp 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 40vw" width="1152" height="2048" alt="A hand holding the ODORSTRIKE 50ml fabric odor spray bottle against a black background" loading="lazy" decoding="async"></picture>
         </div>
         <div class="offer-body">
           <p class="hm-eyebrow">ODORSTRIKE · 50ML POCKET MIST</p>
@@ -1103,7 +1110,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 
 
   <!-- ============ 8 · FOUNDER ============ -->
-  <section class="hm-sec" aria-labelledby="founderTitle">
+  <section class="hm-sec" id="founders" aria-labelledby="founderTitle">
     <div class="wrap founder">
       <div class="reveal">
         <p class="hm-eyebrow">FOUNDERS · HYDERABAD</p>
@@ -1168,7 +1175,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   </section>
 
   <!-- ============ 10 · FINAL ============ -->
-  <section class="final" aria-labelledby="finalTitle">
+  <section class="final" id="final" aria-labelledby="finalTitle">
     <div class="wrap">
       <h2 id="finalTitle">Smell khatam.<br>Confidence qaayam.</h2>
       <p>One pocket bottle. Every shirt you own, fresh between washes.</p>
@@ -1339,6 +1346,28 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     }
   });
   sync();
+})();
+</script>
+
+<!-- Section reach: one first-party view_content event per section per page
+     view ("home_sec_moments" …), so the admin can see where phone visitors
+     stop scrolling. Cookieless, same beacon as clicks (track.js). -->
+<script>
+(function(){
+  if (!('IntersectionObserver' in window)) return;
+  var seen = {};
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (!en.isIntersecting) return;
+      var id = en.target.id; io.unobserve(en.target);
+      if (seen[id] || typeof window.smfTrack !== 'function') return;
+      seen[id] = 1;
+      try { window.smfTrack({ type: 'view_content', label: 'home_sec_' + id }); } catch (err) {}
+    });
+  }, { rootMargin: "0px 0px -40% 0px" });
+  ['moments','how','why','compare','reviews','buy','founders','faq','final'].forEach(function(id){
+    var el = document.getElementById(id); if (el) io.observe(el);
+  });
 })();
 </script>
 

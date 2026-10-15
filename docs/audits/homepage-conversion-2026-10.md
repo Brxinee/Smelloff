@@ -59,3 +59,23 @@ comparison, verified review).
 `events` labels `home_pack_1` / `home_pack_2`, `home_hero_pair`, and
 `checkout_start` with `home_pack`. Compare homepage → checkout rate and
 bottles per order for 30 days.
+
+## Re-audit, same day
+
+- **Bug found:** on desktop the three `#why` photos each sat a row below their
+  copy (an empty half-screen beside every block). The `<picture>` wrappers
+  are `display:contents`, so their `<source>` became the first grid cell.
+  Fixed with `.ph-pic>source{display:none}` on `/` and `/odorstrike`. Desktop
+  page: 10,028px → 9,183px.
+- **Data:** in 120 days of first-party events on `/` from India phones,
+  "SEE ODORSTRIKE" was tapped by 38 visitors and the buy buttons by ~14. People
+  want to look before they buy. The hero now has "See the product" as a real
+  button beside "Buy now — ₹229" instead of a text link under it (one row, so the
+  hero got 52px shorter; Buy still ends at y≈689 on 390×844).
+- **Offer box on phones:** the in-hand photo panel went from 4:5 (~410px) to
+  3:2 (~220px), whole photo on black, so the pack choice starts ~190px sooner.
+- Review byline wraps under the name on narrow cards.
+- **Measurement added:** `view_content` events `home_sec_<id>` per section.
+  After two weeks of traffic, compare reach for `#moments`, `#compare` and
+  `#buy` to decide what to cut. There was no scroll data before.
+- Phone page: 10,970px → 10,651px.

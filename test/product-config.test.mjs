@@ -527,7 +527,10 @@ test('pages give a route to the product page that does not open checkout', () =>
   const pdpLinks = main.match(/href="\/odorstrike"/g) || [];
   assert.ok(pdpLinks.length >= 4, `homepage needs plain /odorstrike links beside the buy CTAs, found ${pdpLinks.length}`);
   const hero = home.slice(home.indexOf('<section class="hero"'), home.indexOf('</section>', home.indexOf('<section class="hero"')));
-  assert.ok(/class="hm-link hero-more" href="\/odorstrike"/.test(hero), 'hero must offer a route to the product page next to buy (a text link: one primary action)');
+  // Events (120 days): phone visitors chose "see the product" ~3:1 over buy on
+  // the homepage, so the product route is a ghost button beside Buy.
+  assert.ok(/class="hm-btn hm-btn--ghost hero-more" href="\/odorstrike"/.test(hero), 'hero must offer a route to the product page beside buy');
+  assert.equal((hero.match(/class="hm-btn"/g) || []).length, 1, 'one filled (primary) button in the hero');
   const pdp = readFileSync('odorstrike.html', 'utf8');
   assert.equal(/\.pay-modes'\)/.test(readFileSync('assets/js/chrome.js', 'utf8')), false, 'chrome.js must not overwrite the PDP COD disclosure');
   for (const id of new Set([...pdp.matchAll(/<use href="#(i-[a-z-]+)"/g)].map(m => m[1]))) assert.ok(pdp.includes(`<symbol id="${id}"`), `icon ${id} must exist in the sprite`);
@@ -722,4 +725,16 @@ test('phone menu: build-time critical CSS cannot trap the drawer shut', () => {
   const hdr = (css.match(/\n\.sf-hdr\{[^}]*\}/) || [''])[0];
   assert.ok(!/backdrop-filter/.test(hdr), '.sf-hdr must not use backdrop-filter: it would trap the fixed drawer inside the header');
   assert.ok(/\.sf-hdr__menu\.is-open\{[^}]*transform:none/.test(css), 'open drawer slides in');
+});
+
+test('index.html: <picture> wrappers never add a grid cell, and section reach is measured', () => {
+  const html = readFileSync('index.html', 'utf8');
+  // display:contents on .ph-pic made its <source> a grid item, so every #why
+  // photo sat a row below its copy on desktop.
+  assert.match(html, /\.ph-pic>source\{display:none\}/);
+  assert.match(readFileSync('odorstrike.html', 'utf8'), /\.ph-pic>source\{display:none\}/);
+  for (const id of ['moments', 'how', 'why', 'compare', 'reviews', 'buy', 'founders', 'faq', 'final']) {
+    assert.ok(html.includes(`id="${id}"`), `section #${id} must exist for the reach beacon`);
+  }
+  assert.match(html, /type: 'view_content', label: 'home_sec_' \+ id/);
 });
