@@ -36,6 +36,11 @@ the move silently dropped, now restored:
   only `/` reached the Worker; every other path fell through to a zone DNS
   record pointing at a Cloudflare IP and returned **error 1000**. Don't add
   dashboard routes or hand-made DNS records for these hosts.
+- **PR builds run `npx wrangler preview`**, which exits with an error in CI
+  unless `wrangler.jsonc` has a `previews` block. That is why "Workers Builds"
+  was red on every PR from 10 Oct to 15 Oct. Previews don't inherit top-level
+  `vars`, so `APP_ENV` is repeated in `previews.vars`. Never add crons or
+  routes to `previews`.
 - The Worker parses JSON with a `verify` hook that keeps `req.rawBody`: the
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
