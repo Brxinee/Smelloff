@@ -40,6 +40,37 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## AI support chat on Gemini (2026-10-13, owner asked)
+A "Help" button bottom-right on every page opens a chat answered by Google's
+Gemini API through the Worker. Nothing is stored (no table, no message logs);
+the browser keeps the conversation in sessionStorage and sends it each time.
+- **`api/support-chat.js`** (`POST /api/support-chat`, also in `server.js`).
+  The system prompt is **built from `config/product.json`** (price, COD fee,
+  dry time, shipping, returns, the three named actives, approved/prohibited
+  claims, contact), so it moves with the config. Edit the config, not the prompt.
+- **One tool, `lookup_order(order_code, phone)`**: reads `orders` with the
+  service key, answers only when the phone matches (same rule as
+  `/track-order`), returns status / courier / tracking / total only (never
+  name, email, phone or address). Throttled 6 lookups / 10 min / IP; chat 30
+  messages / 10 min / IP (per-instance Map, like `checkRateLimit` elsewhere).
+- **Secrets (Cloudflare -> Variables and Secrets):** `GEMINI_API_KEY`
+  (required; without it the endpoint returns the WhatsApp/email fallback),
+  optional `GEMINI_MODEL` (default `gemini-3.8-flash`) and
+  `GEMINI_FALLBACK_MODEL` (default `gemini-flash-lite-latest`, tried once on
+  429/5xx/404/timeout). `gemini-2.5-flash` returns 404 for new keys. In a live
+  test (2026-10-13), 3.8-flash often answered 503 "high demand" or took over
+  12 s, so the fallback matters. `/api/health` shows `configured.supportChat`.
+- **Widget:** `assets/js/support-chat.js` (own injected CSS from tokens),
+  stamped after `chrome.js` by `apply-chrome.mjs` (`chatTag`). Launcher
+  z-index 65; it lifts above `.mobile-bar.visible` and the consent bar, and
+  hides under `sf-menu-open` / `sf-modal-open`. The panel (z 9000, full screen
+  on phones, a 380px card >=520) adds `html.sf-chat-open`, which hides the
+  consent bar and buy strip. Reply text goes through textContent; only
+  smelloff.in, wa.me and @smelloff.in become links. `[data-sf-chat]` on any
+  element opens it.
+- `/privacy` "Who we share it with" names Google (Gemini API) for chat.
+- `test/support-chat.test.mjs` pins all of the above.
+
 ## Impressions, no clicks: search-result titles (2026-10-15)
 Owner: "only impressions, no clicks." Full write-up:
 `docs/audits/ctr-impressions-no-clicks-2026-10.md`. Clicks are mostly brand
