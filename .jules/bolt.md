@@ -1,0 +1,3 @@
+## 2026-10-18 - Prevent layout thrashing in rAF scroll loops
+**Learning:** Removing a `scroll` listener based on the assumption that bottom bars are exclusively `position: fixed` is a mistake, as they can also be `sticky` or change position relative to the viewport. However, repeatedly calling `window.innerHeight` or calling `getComputedStyle` twice on the same element within a scroll handler loop still causes measurable layout thrashing.
+**Action:** Keep `scroll` listeners when tracking elements that might change position relative to the viewport (like sticky bars), but hoist viewport reads (like `window.innerHeight`) out of the loop and cache `getComputedStyle` results to avoid repeated style recalculations.
