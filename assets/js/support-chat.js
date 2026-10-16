@@ -235,15 +235,18 @@
   // Keep the launcher above whatever is pinned to the bottom of the screen:
   // the sticky buy strip (.mobile-bar.visible) and the consent bar.
   function lift() {
+    // ⚡ Bolt: Caching window.innerHeight and avoiding duplicate getComputedStyle calls
+    // to prevent layout thrashing inside the rAF loop.
     var h = 0;
     var bars = document.querySelectorAll('.mobile-bar.visible, #smelloff-consent-bar');
+    var winHeight = window.innerHeight;
     for (var i = 0; i < bars.length; i++) {
       var el = bars[i];
-      if (el.offsetParent === null && getComputedStyle(el).position !== 'fixed') continue;
       var cs = getComputedStyle(el);
+      if (el.offsetParent === null && cs.position !== 'fixed') continue;
       if (cs.display === 'none' || cs.visibility === 'hidden') continue;
       var r = el.getBoundingClientRect();
-      if (r.height && r.top < window.innerHeight) h = Math.max(h, window.innerHeight - r.top);
+      if (r.height && r.top < winHeight) h = Math.max(h, winHeight - r.top);
     }
     document.documentElement.style.setProperty('--sfc-lift', h ? (h - 6) + 'px' : '0px');
   }
