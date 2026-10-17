@@ -1,0 +1,3 @@
+## 2024-10-17 - Prevent Layout Thrashing in Scroll Listeners
+**Learning:** During scroll events, continuously reading viewport dimensions (like `window.innerHeight`) or repeatedly calling `getComputedStyle` inside loops (especially for pinned UI elements like sticky bars or chat widgets) causes severe layout thrashing. The browser is forced to recalculate styles unnecessarily on every frame.
+**Action:** Always hoist viewport reads (e.g., `window.innerHeight`) outside of loops. Cache the result of `getComputedStyle` for an element if its properties are checked multiple times within the same function execution. This applies broadly to any scroll-bound or requestAnimationFrame UI logic in this codebase.

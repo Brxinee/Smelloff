@@ -237,13 +237,16 @@
   function lift() {
     var h = 0;
     var bars = document.querySelectorAll('.mobile-bar.visible, #smelloff-consent-bar');
+    // Hoist viewport height to prevent layout thrashing inside loop
+    var winHeight = window.innerHeight;
     for (var i = 0; i < bars.length; i++) {
       var el = bars[i];
-      if (el.offsetParent === null && getComputedStyle(el).position !== 'fixed') continue;
+      // Cache getComputedStyle to avoid redundant style calculations
       var cs = getComputedStyle(el);
+      if (el.offsetParent === null && cs.position !== 'fixed') continue;
       if (cs.display === 'none' || cs.visibility === 'hidden') continue;
       var r = el.getBoundingClientRect();
-      if (r.height && r.top < window.innerHeight) h = Math.max(h, window.innerHeight - r.top);
+      if (r.height && r.top < winHeight) h = Math.max(h, winHeight - r.top);
     }
     document.documentElement.style.setProperty('--sfc-lift', h ? (h - 6) + 'px' : '0px');
   }
