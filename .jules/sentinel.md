@@ -1,0 +1,4 @@
+## 2024-10-17 - Early return in timingSafeEqual leaks length information
+**Vulnerability:** The `verifySession` function in `api/admin.js` used a short-circuiting logic `if (mac.length !== expected.length || !crypto.timingSafeEqual(...))` to verify MAC signatures.
+**Learning:** Because the condition returns early if the lengths don't match, an attacker can theoretically infer the length of the expected signature by measuring the execution time, which can compromise the integrity of the token verification.
+**Prevention:** To prevent this, when using `crypto.timingSafeEqual`, first check if the lengths match. If they don't, execute a dummy comparison (e.g., `crypto.timingSafeEqual(expected, expected)`) to ensure the execution time remains constant regardless of the length match, and store the verification result in a boolean flag instead of returning early.
