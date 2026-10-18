@@ -75,8 +75,10 @@ function headlineSize(top, hi) {
   return Math.round(Math.max(74, Math.min(132, 720 / (longest * 0.5) * 1.06)));
 }
 
-function template({ kicker, top, hi, photo, focal, tone }) {
-  const photoPath = path.join(SOURCES, `${photo}.jpg`);
+function template({ kicker, top, hi, photo, file, focal, tone }) {
+  // `file` is an owner photo committed in the repo (e.g. assets/photos/*.webp);
+  // `photo` is an Adobe Stock id whose licensed source lives in SOURCES.
+  const photoPath = file ? path.join(REPO, file) : path.join(SOURCES, `${photo}.jpg`);
   if (!fs.existsSync(photoPath)) {
     throw new Error(
       `missing source photo ${photo}.jpg\n` +
