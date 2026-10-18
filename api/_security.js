@@ -60,13 +60,16 @@ export function verifyOrderToken(orderCode, phone, token) {
   const expected = generateOrderToken(orderCode, phone);
   if (!expected) return false;
   try {
+    let isValid = false;
     const a = Buffer.from(expected, 'utf8');
     const b = Buffer.from(token, 'utf8');
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+      isValid = false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
+    return isValid;
   } catch { return false; }
 }
 
@@ -96,13 +99,16 @@ export function verifyOrderConfirmationToken(orderCode, email, token) {
   const payload = `${cleanOrderCode}:${cleanEmail}:${expiry}`;
   const expectedSig = crypto.createHmac('sha256', secret).update(payload).digest('hex').slice(0, 32);
   try {
+    let isValid = false;
     const a = Buffer.from(expectedSig, 'utf8');
     const b = Buffer.from(sig, 'utf8');
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+      isValid = false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
+    return isValid;
   } catch {
     return false;
   }
@@ -118,13 +124,16 @@ export function isAdminAuthorized(req) {
   else if (custom) token = custom;
   if (!token) return false;
   try {
+    let isValid = false;
     const a = Buffer.from(adminSecret.trim(), 'utf8');
     const b = Buffer.from(token, 'utf8');
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+      isValid = false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
+    return isValid;
   } catch { return false; }
 }
 
@@ -138,13 +147,16 @@ export function isCronAuthorized(req) {
   else if (custom) token = custom;
   if (!token) return false;
   try {
+    let isValid = false;
     const a = Buffer.from(cronSecret.trim(), 'utf8');
     const b = Buffer.from(token, 'utf8');
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+      isValid = false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
+    return isValid;
   } catch { return false; }
 }
 
