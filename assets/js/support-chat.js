@@ -76,8 +76,8 @@
     '.sfc-panel[hidden]{display:none}' +
     '@media(min-width:520px){.sfc-panel{inset:auto max(16px,env(safe-area-inset-right,0px)) 16px auto;width:400px;height:min(660px,calc(100vh - 32px));border:1px solid ' + R + ';border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6);overflow:hidden}}' +
     '.sfc-head{display:flex;align-items:center;gap:10px;padding:10px 6px 10px 14px;padding-top:max(10px,env(safe-area-inset-top,0px));border-bottom:1px solid ' + R + ';background:var(--surface,#121212)}' +
-    '.sfc-ava{flex:0 0 auto;width:36px;height:36px;border-radius:50%;background:var(--acid,#B8FF57);color:var(--on-acid,#0A0A0A);display:inline-flex;align-items:center;justify-content:center}' +
-    '.sfc-ava svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}' +
+    '.sfc-ava{flex:0 0 auto;width:40px;height:40px;border-radius:50%;overflow:hidden;background:#000;display:block}' +
+    '.sfc-ava img{display:block;width:100%;height:100%;object-fit:cover}' +
     '.sfc-head__txt{flex:1;min-width:0}' +
     '.sfc-title{margin:0;font:700 16px/1.2 var(--display,system-ui,sans-serif);letter-spacing:-.01em}' +
     '.sfc-sub{margin:2px 0 0;font-size:12.5px;color:var(--muted,#9DA398);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
@@ -203,8 +203,12 @@
   panel.hidden = true;
   panel.setAttribute('role', 'dialog');
   panel.setAttribute('aria-labelledby', 'sfcTitle');
+  // The header avatar is the owner's robot artwork (2026-10-18), lazy-loaded:
+  // the panel is hidden until opened, so pages where nobody chats don't fetch it.
   panel.innerHTML =
-    '<div class="sfc-head"><span class="sfc-ava">' + I.spark + '</span>' +
+    '<div class="sfc-head"><picture class="sfc-ava">' +
+    '<source type="image/avif" srcset="/assets/brand/chat-avatar%4080.avif 80w, /assets/brand/chat-avatar%40120.avif 120w" sizes="40px">' +
+    '<img src="/assets/brand/chat-avatar%4080.webp" srcset="/assets/brand/chat-avatar%4080.webp 80w, /assets/brand/chat-avatar%40120.webp 120w" sizes="40px" width="40" height="40" alt="" loading="lazy" decoding="async" data-no-skel></picture>' +
     '<div class="sfc-head__txt"><h2 class="sfc-title" id="sfcTitle">Smelloff assistant</h2>' +
     '<p class="sfc-sub"><i></i>AI · smell fixes, packs, orders</p></div>' +
     '<button type="button" class="sfc-ib sfc-new" aria-label="Start a new chat" title="New chat">' + I.restart + '</button>' +
