@@ -82,7 +82,7 @@ session, page-specific, dismissible.
   only; links only smelloff.in / wa.me / @smelloff.in), thumbs up/down (down
   offers WhatsApp with the question prefilled), new-chat button, voice
   (`SpeechRecognition`, en-IN / hi-IN) where supported, the brand chat mark
-  (bubble + two sparkles, owner artwork, as inline SVG `I.spark`) on the launcher
+  (rounded bubble + one sparkle, owner artwork, as inline SVG `I.spark`) on the launcher
   and header, `reveal()` scrolls to
   the START of a new answer. Teaser: once per session, never after the chat
   was opened, 25 s on `/odorstrike`, 30 s on `/`, 45% scroll on a post; none

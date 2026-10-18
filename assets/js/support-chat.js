@@ -59,7 +59,7 @@
   var R = 'var(--rule,rgba(242,245,239,.14))';
   var css =
     '.sfc-launch{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px) + var(--sfc-lift,0px));z-index:65;display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 18px 0 14px;border-radius:100px;border:1px solid ' + R + ';background:var(--surface-2,#1A1A1A);color:var(--text,#F2F5EF);font:500 15px/1 var(--body,system-ui,sans-serif);cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.5);transition:bottom .3s var(--ease,ease),opacity .2s ease}' +
-    '.sfc-launch svg{width:22px;height:22px;color:var(--acid,#B8FF57);fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}' +
+    '.sfc-launch svg{width:22px;height:22px;color:var(--acid,#B8FF57);fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}' +
     '.sfc-launch[data-dot]::after{content:"";position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:50%;background:var(--acid,#B8FF57);box-shadow:0 0 0 2px var(--surface-2,#1A1A1A)}' +
     // Phones: an icon-only 48px circle, so the label doesn't sit over headings and prices.
     '@media(max-width:519px){.sfc-launch{width:48px;padding:0;justify-content:center}.sfc-launch span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}' +
@@ -77,7 +77,7 @@
     '@media(min-width:520px){.sfc-panel{inset:auto max(16px,env(safe-area-inset-right,0px)) 16px auto;width:400px;height:min(660px,calc(100vh - 32px));border:1px solid ' + R + ';border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6);overflow:hidden}}' +
     '.sfc-head{display:flex;align-items:center;gap:10px;padding:10px 6px 10px 14px;padding-top:max(10px,env(safe-area-inset-top,0px));border-bottom:1px solid ' + R + ';background:var(--surface,#121212)}' +
     '.sfc-ava{flex:0 0 auto;width:36px;height:36px;border-radius:50%;background:var(--acid,#B8FF57);color:var(--on-acid,#0A0A0A);display:inline-flex;align-items:center;justify-content:center}' +
-    '.sfc-ava svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}' +
+    '.sfc-ava svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}' +
     '.sfc-head__txt{flex:1;min-width:0}' +
     '.sfc-title{margin:0;font:700 16px/1.2 var(--display,system-ui,sans-serif);letter-spacing:-.01em}' +
     '.sfc-sub{margin:2px 0 0;font-size:12.5px;color:var(--muted,#9DA398);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
@@ -156,12 +156,11 @@
 
   function svg(d) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + d + '</svg>'; }
   var I = {
-    // Brand chat mark (owner's artwork, 2026-10-18): speech bubble, tail
-    // bottom-left, one large and one small four-point sparkle. Outline is
-    // stroked, sparkles filled, all currentColor.
-    spark: svg('<path d="M12 3.4C18 3.4 21 6.8 21 11.5S18 19.6 12 19.6c-1.2 0-2.1-.1-3-.2L5 21l1-3.7c-1.9-1.6-3-3.5-3-5.8C3 6.8 6 3.4 12 3.4z"/>' +
-      '<path fill="currentColor" stroke-width=".7" d="M12 7.5c.5 2.8 1.7 4 4.5 4.5-2.8.5-4 1.7-4.5 4.5-.5-2.8-1.7-4-4.5-4.5 2.8-.5 4-1.7 4.5-4.5z"/>' +
-      '<path fill="currentColor" stroke-width=".5" d="M16 7.6c.2 1 .5 1.3 1.4 1.45-.9.15-1.2.45-1.4 1.45-.2-1-.5-1.3-1.4-1.45.9-.15 1.2-.45 1.4-1.45z"/>'),
+    // Brand chat mark (owner's artwork, 2026-10-18): rounded speech bubble,
+    // angled tail bottom-left, one four-point sparkle. Outline stroked,
+    // sparkle filled, all currentColor.
+    spark: svg('<path d="M6.4 3.9h11c1.7 0 2.7 1.1 2.7 2.7v7.6c0 1.7-1 2.7-2.7 2.7h-6.85L6.4 19.7l1.75-2.8H6.4c-1.7 0-2.7-1-2.7-2.7V6.6c0-1.6 1-2.7 2.7-2.7z"/>' +
+      '<path fill="currentColor" stroke="none" d="M11.95 7.92c.45 1.4 1.1 2.15 2.63 2.63-1.53.48-2.18 1.23-2.63 2.63-.45-1.4-1.1-2.15-2.63-2.63 1.53-.48 2.18-1.23 2.63-2.63z"/>'),
     x: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
     send: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
     mic: svg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>'),
