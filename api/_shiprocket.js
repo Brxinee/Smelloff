@@ -148,14 +148,20 @@ export async function createShiprocketOrder(order) {
   // the unit price; whole rupees, and they add up to exactly what we charged.
   const itemName = String(item.name || BASE_PRODUCT.shortTitle || BASE_PRODUCT.title);
   const itemSku = String(item.sku || BASE_PRODUCT.sku);
-  const pairs = Math.floor(quantity / 2);
+  // Packs of five go the same way ("5 for ₹899"), before pairs.
+  const fives = Math.floor(quantity / 5);
+  const rest = quantity % 5;
+  const pairs = Math.floor(rest / 2);
   const pairPrice = subtotalForQuantity(2);
-  const orderItems = (pairs > 0 && unitPrice === BASE_PRODUCT.price && pairPrice < unitPrice * 2)
+  const fivePrice = subtotalForQuantity(5);
+  const line = (name, sku, units, price) => ({ name, sku, units, selling_price: price, discount: 0, tax: '', hsn: '' });
+  const orderItems = ((fives > 0 || pairs > 0) && unitPrice === BASE_PRODUCT.price && pairPrice < unitPrice * 2)
     ? [
-      { name: `${itemName} (pack of 2)`, sku: `${itemSku}-X2`, units: pairs, selling_price: pairPrice, discount: 0, tax: '', hsn: '' },
-      ...(quantity % 2 ? [{ name: itemName, sku: itemSku, units: 1, selling_price: unitPrice, discount: 0, tax: '', hsn: '' }] : [])
+      ...(fives ? [line(`${itemName} (pack of 5)`, `${itemSku}-X5`, fives, fivePrice)] : []),
+      ...(pairs ? [line(`${itemName} (pack of 2)`, `${itemSku}-X2`, pairs, pairPrice)] : []),
+      ...(rest % 2 ? [line(itemName, itemSku, 1, unitPrice)] : [])
     ]
-    : [{ name: itemName, sku: itemSku, units: quantity, selling_price: unitPrice, discount: 0, tax: '', hsn: '' }];
+    : [line(itemName, itemSku, quantity, unitPrice)];
 
   const payload = {
     order_id: String(order.order_code),

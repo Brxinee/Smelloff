@@ -445,7 +445,7 @@ export default async function handler(req, res) {
       }
     }
 
-    // Pairs are priced at product.pairPrice ("2 for ₹419"); items[].price stays the unit price.
+    // Fives at product.fivePackPrice ("5 for ₹899"), pairs at product.pairPrice ("2 for ₹419"); items[].price stays the unit price.
     const subtotalPaise = Math.round(subtotalForQuantity(quantity) * 100);
     const codFeePaise = isCod ? Math.round(COD_FEE_RUPEES * 100) : 0;
     const totalPaise = subtotalPaise + codFeePaise;

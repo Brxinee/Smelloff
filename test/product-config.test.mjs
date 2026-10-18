@@ -208,17 +208,21 @@ test('index.html homepage reviews: beta-tester quotes only, verbatim, labelled',
 
 // Homepage redesign (2026-10-15, docs/audits/homepage-conversion-2026-10.md):
 // the placeholder combos are gone; the offer box sells the real "2 for ₹419".
-test('index.html homepage pack picker: the two real packs at checkout prices, one bottle by default', () => {
+test('index.html homepage pack picker: the three real packs at checkout prices, one bottle by default', () => {
   const html = readFileSync('index.html', 'utf8');
   const cfg = JSON.parse(readFileSync('config/product.json', 'utf8')).product;
   assert.equal(html.includes('id="combos"'), false, 'placeholder combos must not come back');
   const offer = html.slice(html.indexOf('id="buy"'), html.indexOf('</section>', html.indexOf('id="buy"')));
   const opts = [...offer.matchAll(/<input type="radio" name="pack" value="(\d)"( checked)?>/g)];
-  assert.deepEqual(opts.map((m) => m[1]), ['1', '2']);
-  assert.equal(opts.filter((m) => m[2]).map((m) => m[1]).join(), '1', 'one bottle is pre-selected; the buyer opts in to two');
-  assert.ok(offer.includes(`<b>₹${cfg.price}</b>`) && offer.includes(`<b>₹${cfg.pairPrice}</b>`));
+  assert.deepEqual(opts.map((m) => m[1]), ['1', '2', '5']);
+  assert.equal(opts.filter((m) => m[2]).map((m) => m[1]).join(), '1', 'one bottle is pre-selected; the buyer opts in to more');
+  assert.ok(offer.includes(`<b>₹${cfg.price}</b>`) && offer.includes(`<b>₹${cfg.pairPrice}</b>`) && offer.includes(`<b>₹${cfg.fivePackPrice}</b>`));
   assert.ok(offer.includes(`Save ₹${cfg.pairSaving}`) && offer.includes(`<s>₹${cfg.price * 2}</s>`), 'pair saving is against two single bottles');
+  assert.equal(cfg.fivePackSaving, cfg.price * 5 - cfg.fivePackPrice);
+  assert.ok(offer.includes(`Save ₹${cfg.fivePackSaving}`) && offer.includes(`<s>₹${(cfg.price * 5).toLocaleString('en-IN')}</s>`), 'five-pack saving is against five single bottles');
+  assert.ok(offer.includes(`₹${(cfg.fivePackPrice / 5).toFixed(2)} each`) && offer.includes(`₹${(cfg.pairPrice / 2).toFixed(2)} each`), 'per-bottle price on each card');
   assert.match(html, /'2': \{ href: '\/odorstrike\?buy=1&qty=2', label: 'Buy 2 — ₹419' \}/);
+  assert.match(html, /'5': \{ href: '\/odorstrike\?buy=1&qty=5', label: 'Buy 5 — ₹899' \}/);
   assert.ok(/\/odorstrike\?buy=1&amp;qty=2/.test(html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')))), 'hero names the pair offer');
   assert.equal(/Duo|Trio|₹399|₹549/.test(html), false, 'retired bundle prices never return');
 });
@@ -562,8 +566,10 @@ test('odorstrike.html mobile sticky buy bar (#mobileBar) price synchronization, 
   // Verify synchronization formula in renderPdpQty
   const unit = PRODUCT.price; // 229
   const pair = PRODUCT.pairPrice; // 419
+  const five = PRODUCT.fivePackPrice; // 899
   function deriveMobileBarLabel(qty) {
-    const subtotal = Math.floor(qty / 2) * pair + (qty % 2) * unit;
+    const r = qty % 5;
+    const subtotal = Math.floor(qty / 5) * five + Math.floor(r / 2) * pair + (r % 2) * unit;
     return (qty > 1 ? (qty + ' × ') : '') + 'ODORSTRIKE 50ml · ₹' + subtotal;
   }
 
@@ -572,7 +578,8 @@ test('odorstrike.html mobile sticky buy bar (#mobileBar) price synchronization, 
   assert.equal(deriveMobileBarLabel(2), '2 × ODORSTRIKE 50ml · ₹419', 'Quantity 2 is the pair price');
   assert.equal(deriveMobileBarLabel(3), '3 × ODORSTRIKE 50ml · ₹648', 'Quantity 3 is a pair plus one bottle');
   const maxQ = PRODUCT.maxQuantity || 10;
-  assert.equal(deriveMobileBarLabel(maxQ), '10 × ODORSTRIKE 50ml · ₹2095', 'Max quantity is five pairs');
+  assert.equal(deriveMobileBarLabel(5), '5 × ODORSTRIKE 50ml · ₹899', 'Quantity 5 is the pack of 5');
+  assert.equal(deriveMobileBarLabel(maxQ), '10 × ODORSTRIKE 50ml · ₹1798', 'Max quantity is two packs of 5');
 
   // 5. No hardcoded separate price constants in mobile bar logic
   assert.equal(/ODORSTRIKE 50ml · ₹419/i.test(html), false, 'Must not hardcode secondary quantity prices as string literals');
@@ -653,7 +660,7 @@ test('odorstrike.html final purchase CTA (section.final) structure, canonical pr
   assert.equal(PRODUCT.pairPrice, 419, 'Pair price is ₹419');
   assert.equal(PRODUCT.pairPricePaise, 41900);
   assert.equal(PRODUCT.pairSaving, unit * 2 - PRODUCT.pairPrice, 'pairSaving must be 2 × price − pairPrice');
-  assert.ok(html.includes('PRICES: { solo: 229, pair: 419 }'), 'CFG.PRICES carries the pair price');
+  assert.ok(html.includes('PRICES: { solo: 229, pair: 419, five: 899 }'), 'CFG.PRICES carries the pair and five-pack prices');
   assert.ok(renderQtyBody.includes('subtotalFor(pdpQty)'), 'Buy buttons use the pair-aware subtotal');
 
   // 9. Final CTA and checkout use the same subtotal derivation

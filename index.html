@@ -636,27 +636,28 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .offer-price b{font-family:var(--display);font-weight:700;font-size:56px;line-height:1}
   .offer-price s{font-family:var(--mono);font-size:14px;color:var(--muted)}
   .offer-price .off{font-family:var(--body);font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px}
-  /* Pack picker: two radio cards; the checked one gets the lime ring. */
-  .pack{border:0;margin:20px 0 0;padding:0;display:grid;gap:10px}
-  .pack-opt{position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;
-    padding:14px 16px;border:1px solid var(--border-strong);border-radius:var(--r-lg);background:var(--surface-2);cursor:pointer;
+  /* Pack picker: three cards side by side at every width (1 · 2 · 5); the
+     checked one gets the lime ring, the pack of 5 carries the badge. */
+  .pack{border:0;margin:22px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .pack-opt{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;
+    padding:22px 6px 14px;border:1px solid var(--border-strong);border-radius:var(--r-lg);background:var(--surface-2);cursor:pointer;
     transition:border-color var(--dur) ease,background-color var(--dur) ease}
   .pack-opt:hover{border-color:var(--text-2)}
-  .pack-opt input{appearance:none;-webkit-appearance:none;margin:0;width:20px;height:20px;border-radius:50%;border:2px solid var(--muted);display:grid;place-content:center;cursor:pointer}
-  .pack-opt input::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--acid);transform:scale(0);transition:transform .15s ease}
+  .pack-opt input{position:absolute;top:9px;left:9px;appearance:none;-webkit-appearance:none;margin:0;width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);display:grid;place-content:center;cursor:pointer}
+  .pack-opt input::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--acid);transform:scale(0);transition:transform .15s ease}
   .pack-opt input:checked{border-color:var(--acid)}
   .pack-opt input:checked::before{transform:scale(1)}
   .pack-opt input:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
-  .pack-opt:has(input:checked){border-color:var(--acid);background:rgba(var(--acid-rgb),.06)}
-  .pack-body{display:flex;flex-direction:column;gap:3px;min-width:0}
-  .pack-name{font-family:var(--display);font-weight:700;font-size:17px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
-  .pack-badge{font-family:var(--body);font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:3px 8px}
-  .pack-sub{font-size:12.5px;color:var(--muted);line-height:1.35}
-  .pack-off{font-weight:600;color:var(--acid)}
-  .pack-price{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
-  .pack-price b{font-family:var(--display);font-weight:700;font-size:20px;line-height:1}
-  .pack-price s{font-size:12px;color:var(--muted)}
-  .pack-price em{font-style:normal;font-size:11.5px;font-weight:600;color:var(--acid)}
+  .pack-opt:has(input:checked){border-color:var(--acid);background:rgba(var(--acid-rgb),.08)}
+  .pack-opt--best{border-color:var(--border-focus)}
+  .pack-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:var(--body);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:3px 8px}
+  .pack-name{font-family:var(--body);font-weight:600;font-size:14px;color:var(--text-2)}
+  .pack-opt b{font-family:var(--display);font-weight:700;font-size:24px;line-height:1.05;color:var(--text)}
+  .pack-opt s{font-size:12px;color:var(--muted)}
+  .pack-each{font-size:12px;color:var(--text-2);line-height:1.3}
+  .pack-off{margin-top:2px;font-size:11.5px;font-weight:600;color:var(--acid)}
+  .pack-opt--best .pack-off{color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:2px 7px}
+  @media(min-width:520px){.pack{gap:12px}.pack-opt{padding:24px 10px 16px}.pack-opt b{font-size:28px}.pack-name{font-size:15px}}
   .offer-list{list-style:none;margin:20px 0 24px;display:grid;gap:10px}
   .offer-list li{display:flex;gap:12px;font-size:15px;color:var(--text-2);line-height:1.4}
   .offer-list li strong{color:var(--text);font-weight:500}
@@ -760,7 +761,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
 <link rel="preload" href="/assets/css/chrome.css?v=b664f938" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=b664f938"></noscript>
-<script src="/assets/js/chrome.js?v=7bc8421b" defer></script>
+<script src="/assets/js/chrome.js?v=19af8484" defer></script>
 <script src="/assets/js/support-chat.js?v=63e449aa" defer></script>
 </head>
 <body>
@@ -1075,21 +1076,35 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         <div class="offer-body">
           <p class="hm-eyebrow">ODORSTRIKE · 50ML POCKET MIST</p>
           <h2 id="offerTitle" class="hm-h2">Pick your pack.</h2>
-          <!-- Pack picker (2026-10-15). Two real options at the prices checkout
-               charges (pairPrice in config/product.json). One bottle is
-               selected by default; nothing is added for the buyer. Without JS
-               the button still buys one bottle. -->
+          <!-- Pack picker (2026-10-15; pack of 5 added 2026-10-18). Three real
+               options at the prices checkout charges (price / pairPrice /
+               fivePackPrice in config/product.json). Each card shows the price
+               per bottle, so the ladder ₹229 → ₹209.50 → ₹179.80 does the
+               selling. One bottle is selected by default; nothing is added for
+               the buyer. Without JS the button still buys one bottle. -->
           <fieldset class="pack" id="packPicker">
             <legend class="sr-only">How many bottles</legend>
             <label class="pack-opt">
               <input type="radio" name="pack" value="1" checked>
-              <span class="pack-body"><span class="pack-name">1 bottle</span><span class="pack-sub">~250 sprays · <span class="pack-off">54% OFF</span></span></span>
-              <span class="pack-price"><b>₹229</b><s>M.R.P. ₹499</s></span>
+              <span class="pack-name">1 bottle</span>
+              <b>₹229</b><s>M.R.P. ₹499</s>
+              <span class="pack-each">₹229 each</span>
+              <span class="pack-off">54% OFF</span>
             </label>
             <label class="pack-opt">
               <input type="radio" name="pack" value="2">
-              <span class="pack-body"><span class="pack-name">2 bottles <span class="pack-badge">Best value</span></span><span class="pack-sub">One for home, one for the office · ₹209.50 each</span></span>
-              <span class="pack-price"><b>₹419</b><s>₹458</s><em>Save ₹39</em></span>
+              <span class="pack-name">2 bottles</span>
+              <b>₹419</b><s>₹458</s>
+              <span class="pack-each">₹209.50 each</span>
+              <span class="pack-off">Save ₹39</span>
+            </label>
+            <label class="pack-opt pack-opt--best">
+              <input type="radio" name="pack" value="5">
+              <span class="pack-badge">Best value</span>
+              <span class="pack-name">5 bottles</span>
+              <b>₹899</b><s>₹1,145</s>
+              <span class="pack-each">₹179.80 each</span>
+              <span class="pack-off">Save ₹246</span>
             </label>
           </fieldset>
           <ul class="offer-list">
@@ -1325,7 +1340,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 </script>
 
 <!-- Pack picker (#buy): the button follows the chosen pack. Prices are the
-     ones checkout charges (config/product.json price / pairPrice); ?qty=2
+     ones checkout charges (config/product.json price / pairPrice / fivePackPrice); ?qty=N
      sets the product page's quantity before checkout opens. -->
 <script>
 (function(){
@@ -1333,7 +1348,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   var btn = document.getElementById('offerBuyBtn');
   if (!box || !btn) return;
   var PACKS = { '1': { href: '/odorstrike?buy=1', label: 'Buy now — ₹229' },
-                '2': { href: '/odorstrike?buy=1&qty=2', label: 'Buy 2 — ₹419' } };
+                '2': { href: '/odorstrike?buy=1&qty=2', label: 'Buy 2 — ₹419' },
+                '5': { href: '/odorstrike?buy=1&qty=5', label: 'Buy 5 — ₹899' } };
   function sync(){
     var on = box.querySelector('input[name="pack"]:checked');
     var p = PACKS[on ? on.value : '1'] || PACKS['1'];

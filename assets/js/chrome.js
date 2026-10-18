@@ -251,14 +251,18 @@
       (window.SMELLOFF_TRUTH && window.SMELLOFF_TRUTH.pricePrepaid) || 229;
   }
 
-  // Product subtotal: pairs at PRICES.pair ("2 for ₹419"), an odd bottle at the
-  // unit price. Same rule as subtotalForQuantity() in the Worker.
+  // Product subtotal: fives at PRICES.five ("5 for ₹899"), pairs left at
+  // PRICES.pair ("2 for ₹419"), an odd bottle at the unit price. Same rule as
+  // subtotalForQuantity() in the Worker.
   function subtotalRupees(qty) {
     var q = Math.max(0, Math.floor(Number(qty) || 0));
     var unit = Number(unitPriceRupees());
-    var pair = Number(window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES && window.SMELLOFF_CONFIG.PRICES.pair) ||
-      Number(window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.pairPrice) || unit * 2;
-    return Math.floor(q / 2) * pair + (q % 2) * unit;
+    var PR = (window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.PRICES) || {};
+    var T = window.SMELLOFF_PRODUCT_TRUTH || {};
+    var pair = Number(PR.pair) || Number(T.pairPrice) || unit * 2;
+    var five = Number(PR.five) || Number(T.fivePackPrice) || pair * 2 + unit;
+    var r = q % 5;
+    return Math.floor(q / 5) * five + Math.floor(r / 2) * pair + (r % 2) * unit;
   }
 
   function codFeeRupees() {
