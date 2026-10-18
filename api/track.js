@@ -21,7 +21,10 @@ const ALLOWED_EVENTS = new Set([
   'refund', 'contact_submit', 'review_submit', 'search', 'error',
   'countdown_view', 'form_start', 'name_completed', 'phone_completed',
   'email_completed', 'form_submit', 'form_success', 'share_click',
-  'whatsapp_share', 'copy_link', 'page_scroll_50', 'page_scroll_90'
+  'whatsapp_share', 'copy_link', 'page_scroll_50', 'page_scroll_90',
+  // Support chat (assets/js/support-chat.js): opens, messages, answer
+  // ratings, card taps and the one-per-session teaser.
+  'chat_open', 'chat_message', 'chat_feedback', 'chat_card_click', 'chat_teaser'
 ]);
 
 const CART_EVENTS = new Set(['add_to_cart', 'remove_from_cart', 'cart', 'cart_update', 'checkout_start']);
