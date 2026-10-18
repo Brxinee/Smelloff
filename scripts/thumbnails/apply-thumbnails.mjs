@@ -32,7 +32,7 @@ const BLOG = path.join(REPO, 'blog');
 const ORIGIN = 'https://smelloff.in';
 
 /** Bump when the pixels change — /assets/* is served `immutable` for a year. */
-const V = 4;
+const V = 5;
 
 const CHECK = process.argv.includes('--check');
 const bySlug = new Map(POSTS.map((p) => [p.slug, p]));
