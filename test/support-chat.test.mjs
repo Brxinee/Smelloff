@@ -211,7 +211,9 @@ test('the widget is on every page, renders text safely and follows the NN/g chat
   assert.match(js, /z-index:65/);
   assert.match(js, /z-index:9000/);
   assert.match(js, /function reveal\(/, 'new answers scroll to their start, not the bottom');
-  assert.match(js, /SpeechRecognition/, 'voice input where the browser has it');
+  // Owner removed voice input (2026-10-18); the site's Permissions-Policy
+  // also blocks the microphone.
+  assert.ok(!/SpeechRecognition|sfc-mic/.test(js), 'no mic button');
   assert.match(js, /TEASED/, 'teaser at most once per session');
   assert.match(js, /safeHref/);
   for (const page of ['index.html', 'odorstrike.html', 'contact.html', 'faq.html', 'blog/index.html']) {

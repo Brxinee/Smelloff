@@ -50,7 +50,7 @@ Replaces the v1 notes (2026-10-13). Research: NN/g "10 Guidelines for Site AI
 Chatbots" and "Less Chat, More Answer" (9 users, 8 site bots): answer first,
 no flattery, short scannable replies, say what the bot can do for THIS page,
 tappable suggestions after every answer, product images not text links,
-don't autoscroll past the start of an answer, voice input. Proactive chat lifts
+don't autoscroll past the start of an answer. Proactive chat lifts
 engagement (vendor data only) but irrelevant/repeated nudges annoy: one per
 session, page-specific, dismissible.
 - **Three jobs** in the prompt: smell doctor (cause, where it sits, fix; says
@@ -80,19 +80,21 @@ session, page-specific, dismissible.
   per-page welcome + tiles (`OPENERS`: home, pdp, post, track), cards, chips
   after each answer, `**bold**` and "- " lists built as nodes (textContent
   only; links only smelloff.in / wa.me / @smelloff.in), thumbs up/down (down
-  offers WhatsApp with the question prefilled), new-chat button, voice
-  (`SpeechRecognition`, en-IN / hi-IN) where supported, the brand chat mark
+  offers WhatsApp with the question prefilled), new-chat button, the brand chat mark
   (rounded bubble + one sparkle, owner artwork, as inline SVG `I.spark`) on the launcher,
   and the owner's robot as the header avatar (`assets/brand/chat-avatar@{80,120}`
   AVIF + WebP, 2–3KB, lazy so it loads only when the chat opens), `reveal()` scrolls to
   the START of a new answer. Teaser: once per session, never after the chat
   was opened, 25 s on `/odorstrike`, 30 s on `/`, 45% scroll on a post; none
   on `/track-order`. `data-sf-chat="question"` opens the chat and asks it.
+- **No mic / voice input** (owner removed it, 2026-10-18). The site-wide
+  `Permissions-Policy: microphone=()` in `config/routing.json` blocks it anyway;
+  change both together if voice ever comes back.
 - Launcher z 65 (teaser 64), lifts above `.mobile-bar.visible` and the consent
   bar, hides under menu/modals; panel z 9000 (full screen on phones, 400px card
   from 520) adds `html.sf-chat-open`.
 - **Analytics** (`/api/track` allow-list): `chat_open`, `chat_message`
-  (label tile/chip/typed/voice/link), `chat_feedback` (up/down + question),
+  (label tile/chip/typed/link), `chat_feedback` (up/down + question),
   `chat_card_click` (pack:N, guide:slug, whatsapp), `chat_teaser`
   (shown/clicked/dismissed). Query `events` to see what people ask and which
   answers get a thumbs down.

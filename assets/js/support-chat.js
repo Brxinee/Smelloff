@@ -10,7 +10,8 @@
    Built on NN/g's site-chatbot research (2024–25): say what it can do for
    THIS page, tappable suggestions after every answer, images in product
    answers, short scannable replies, don't autoscroll past the start of an
-   answer, voice input. One proactive teaser per session at most.
+   answer. One proactive teaser per session at most. No voice input (owner's
+   call, 2026-10-18).
 
    - All reply text goes through textContent. **bold** and "- " lists are
      built as nodes; only smelloff.in, wa.me and @smelloff.in become links.
@@ -145,12 +146,9 @@
     '.sfc-form label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}' +
     '.sfc-input{flex:1;min-width:0;min-height:48px;max-height:120px;resize:none;padding:13px 14px;border-radius:10px;border:1px solid ' + R + ';background:var(--ink,#0A0A0A);color:var(--text,#F2F5EF);font:16px/1.4 var(--body,system-ui,sans-serif)}' +
     '.sfc-input:focus{outline:none;border-color:var(--acid,#B8FF57);box-shadow:0 0 0 3px rgba(184,255,87,.2)}' +
-    '.sfc-send,.sfc-mic{flex:0 0 auto;width:48px;height:48px;border-radius:10px;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}' +
+    '.sfc-send{flex:0 0 auto;width:48px;height:48px;border-radius:10px;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}' +
     '.sfc-send{background:var(--cta,#B8FF57);color:var(--on-cta,#0A0A0A)}.sfc-send:disabled{opacity:.5;cursor:default}' +
-    '.sfc-mic{background:transparent;color:var(--text,#F2F5EF);border:1px solid ' + R + '}' +
-    '.sfc-mic[aria-pressed="true"]{color:var(--on-acid,#0A0A0A);background:var(--acid,#B8FF57);border-color:transparent;animation:sfc-pulse 1.2s infinite}' +
-    '@keyframes sfc-pulse{50%{box-shadow:0 0 0 6px rgba(184,255,87,.18)}}@media(prefers-reduced-motion:reduce){.sfc-mic[aria-pressed="true"]{animation:none}}' +
-    '.sfc-send svg,.sfc-mic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}' +
+    '.sfc-send svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}' +
     '.sfc-foot{margin:0;padding:0 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface,#121212);font-size:12px;line-height:1.45;color:var(--muted,#9DA398)}' +
     '.sfc-foot a{color:var(--text-2,#CDD3C8);text-decoration:underline;text-underline-offset:2px}';
 
@@ -163,7 +161,6 @@
       '<path fill="currentColor" stroke="none" d="M11.95 7.92c.45 1.4 1.1 2.15 2.63 2.63-1.53.48-2.18 1.23-2.63 2.63-.45-1.4-1.1-2.15-2.63-2.63 1.53-.48 2.18-1.23 2.63-2.63z"/>'),
     x: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
     send: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
-    mic: svg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>'),
     restart: svg('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'),
     up: svg('<path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2 2v4h5.5a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.3 20H7"/>'),
     down: svg('<path d="M7 13V4H4v9zM7 13l4 8a2 2 0 0 0 2-2v-4h5.5a2 2 0 0 0 2-2.3l-1.2-7A2 2 0 0 0 17.3 4H7"/>'),
@@ -196,7 +193,6 @@
   tease.setAttribute('role', 'status');
   tease.innerHTML = '<button type="button" class="sfc-tease__go"></button><button type="button" class="sfc-tease__x" aria-label="Dismiss">×</button>';
 
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var panel = document.createElement('section');
   panel.className = 'sfc-panel';
   panel.id = 'sfcPanel';
@@ -217,7 +213,6 @@
     '<div class="sfc-chips" aria-label="Suggested replies"></div>' +
     '<form class="sfc-form" novalidate><label for="sfcInput">Your message</label>' +
     '<textarea class="sfc-input" id="sfcInput" rows="1" maxlength="1200" placeholder="Ask in any language" autocomplete="off"></textarea>' +
-    (SR ? '<button type="button" class="sfc-mic" aria-label="Speak your question" aria-pressed="false">' + I.mic + '</button>' : '') +
     '<button type="submit" class="sfc-send" aria-label="Send">' + I.send + '</button></form>' +
     '<p class="sfc-foot">AI answers can be wrong. For refunds or anything urgent, <a href="' + WA + '" target="_blank" rel="noopener">WhatsApp a person</a>. Never share card or UPI details here.</p>';
 
@@ -230,7 +225,6 @@
   var form = panel.querySelector('.sfc-form');
   var input = panel.querySelector('.sfc-input');
   var sendBtn = panel.querySelector('.sfc-send');
-  var micBtn = panel.querySelector('.sfc-mic');
 
   // history: [{role:'user'|'model', text, cards?, suggestions?, fb?}]
   var history = [];
@@ -505,36 +499,6 @@
   });
   function grow() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 120) + 'px'; }
   input.addEventListener('input', grow);
-
-  // ---------------------------------------------------------- voice
-  if (SR && micBtn) {
-    var rec = null;
-    micBtn.addEventListener('click', function () {
-      if (rec) { rec.stop(); return; }
-      try {
-        rec = new SR();
-        rec.lang = (navigator.language || '').toLowerCase().indexOf('hi') === 0 ? 'hi-IN' : 'en-IN';
-        rec.interimResults = true;
-        rec.maxAlternatives = 1;
-        var finalText = '';
-        rec.onresult = function (ev) {
-          var interim = '';
-          for (var i = ev.resultIndex; i < ev.results.length; i++) {
-            if (ev.results[i].isFinal) finalText += ev.results[i][0].transcript; else interim += ev.results[i][0].transcript;
-          }
-          input.value = (finalText + interim).trim(); grow();
-        };
-        rec.onend = function () {
-          micBtn.setAttribute('aria-pressed', 'false'); micBtn.setAttribute('aria-label', 'Speak your question');
-          rec = null;
-          if (finalText.trim()) { input.value = ''; grow(); ask(finalText.trim(), 'voice'); }
-        };
-        rec.onerror = function () { /* onend follows */ };
-        micBtn.setAttribute('aria-pressed', 'true'); micBtn.setAttribute('aria-label', 'Stop listening');
-        rec.start();
-      } catch (e) { rec = null; micBtn.setAttribute('aria-pressed', 'false'); }
-    });
-  }
 
   // ---------------------------------------------------------- open / close
   var rendered = false;
