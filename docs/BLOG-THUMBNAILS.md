@@ -221,3 +221,13 @@ shared CSS/JS layers.
   the current assets and most of its slug table was deleted in the 2026-07-28 prune.
 - `scripts/thumbnail-prompts.json` — generative prompts for the macro route that was
   never run. Superseded by licensed photography.
+
+---
+
+## In-article photos (2026-10-18)
+
+Separate from the thumbnails: every post also has one photo in its body,
+configured in `scripts/blog/figures.config.mjs` and built by
+`scripts/blog/build-figure-photos.mjs` (3:2, 640/1200, AVIF + WebP, into
+`blog/assets/inline/`). They share `.thumbnail-sources/` for Pexels originals.
+See CLAUDE.md "In-article photos and diagrams".

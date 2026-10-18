@@ -162,6 +162,28 @@ delivery copy consistent. Fixed:
   "No verified buyer reviews yet".
 Tests in `test/ux-guardrails.test.mjs`.
 
+## In-article photos and diagrams (2026-10-18, owner: "photos or diagrams in the blogs, for engagement")
+Every post (78) has **one photo and one diagram** in the body, stamped by
+`scripts/blog/apply-figures.mjs` from **`scripts/blog/figures.config.mjs`**
+between `<!-- FIG:START n -->` / `<!-- FIG:END n -->` markers, right after the
+first paragraph of the section named by `after` (an `<h2>` id or prefix).
+`--check` is in `npm run build`; `npm run figures` builds missing photos and
+stamps. **A new post needs an entry** (test/blog-figures.test.mjs fails).
+- **Diagrams are HTML, not images** (blog.css "In-article diagrams (.fx)"):
+  steps, compare, zones (garment outline + numbered spots: shirt, tee, kurta,
+  hoodie, jacket, sweater, trousers), timeline, stats, scale, decide, bars.
+  They reflow on phones and their text is real text. Copy restates the post;
+  product facts only from `config/product.json`.
+- **Photos**: Pexels (free licence, no attribution) or owner photos (`file:`,
+  used on the product posts). `build-figure-photos.mjs` crops 3:2 at `focal`
+  into `blog/assets/inline/<slug>@{640,1200}.{avif,webp}` (sources cached in
+  `.thumbnail-sources/`, fetched with curl). Bump `PHOTO_V` when pixels change.
+  Every frame was checked by eye for the clothing-only rule (rejected: shoes on
+  a rail, a sports bag, a shirtless beach shot, a liquor brand, another
+  brand's spray label).
+- Fixed on the way: `how-to-use-odorstrike` had a sprays table whose cells were
+  `<>` (the `dd86e68` corruption).
+
 ## 20 guides for Indian buyers (2026-10-15, owner: "20 more blogs")
 Blog is **78**; sitemap 92. Topics chosen to not duplicate any live or retired
 slug: Diwali smoke, gifts under ₹500, wears per shirt, interview sweat,
