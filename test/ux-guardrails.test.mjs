@@ -230,3 +230,20 @@ test('checkout lets the buyer change quantity and opt into the pair', () => {
   assert.deepEqual(cards.map((m) => m[1]), ['1', '2', '5', '1', '2', '5']);
   assert.deepEqual(cards.filter((m) => m[2] === 'true').map((m) => m[1]), ['1', '1']);
 });
+
+// Checkout states the offer itself: pack cards (1 / 2 / 5) with per-bottle
+// prices, MRP and discount rows, and what every order includes. One bottle
+// stays checked by default; the cards' prices come from CFG.PRICES.
+test('checkout shows the pack offer, the saving and what is included', () => {
+  const pdp = fs.readFileSync('odorstrike.html', 'utf8');
+  const overlay = pdp.slice(pdp.indexOf('id="checkoutOverlay"'), pdp.indexOf('<!-- 1 · CONTACT -->'));
+  const cards = [...overlay.matchAll(/class="ck-pk" data-qty="(\d+)" role="radio" aria-checked="(true|false)"/g)];
+  assert.deepEqual(cards.map((m) => m[1]), ['1', '2', '5']);
+  assert.deepEqual(cards.filter((m) => m[2] === 'true').map((m) => m[1]), ['1']);
+  for (const id of ['checkoutMrp', 'ckMrpTotal', 'ckDiscount', 'ckSaved']) assert.ok(overlay.includes(`id="${id}"`), id);
+  assert.match(pdp, /var mrp = \(\(CFG && CFG\.MRP && Number\(CFG\.MRP\.solo\)\) \|\| t\.unit\) \* t\.qty;/);
+  const perks = overlay.slice(overlay.indexOf('class="ck-perks"'));
+  for (const w of ['Free shipping', '7-day returns', 'Cash on Delivery']) assert.ok(perks.includes(w), w);
+  // The COD amount stays on the COD option, never in the perks.
+  assert.doesNotMatch(perks.slice(0, perks.indexOf('</ul>')), /₹/);
+});

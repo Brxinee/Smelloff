@@ -45,6 +45,20 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Checkout states the offer (2026-10-18, owner: "better checkout, show what we are offering, the UX too")
+Checkout used to open on one item line and a dashed "Add a second" button.
+Now, top to bottom: **pack cards** `.ck-pk` (1 / 2 / 5, radio group: price,
+per-bottle price, "Save ₹39" on 2, "Best value" on 5; one bottle checked by
+default, `ckSetQty(n)`, event `ck_pack_N`) → the summary with the struck MRP,
+**MRP / Discount / Shipping** rows and a "You save ₹X on MRP" line (MRP ×
+qty from `CFG.MRP.solo`) → **what every order includes** `.ck-perks` (free
+shipping on prepaid, ships in 48 h, 7-day returns, COD available; no COD
+amount here) → contact, address, payment as before. The stepper stays for other
+counts; `#ckPairBtn` now only appears at 3–4 bottles ("Make it 5 · only ₹X
+more"). The pay button uses chrome.js's words everywhere ("Pay ₹X securely" /
+"Place COD order · ₹X"), so changing the quantity no longer flips it to "Buy
+ODORSTRIKE". Still 7 fields. Tests in `test/ux-guardrails.test.mjs`.
+
 ## Owner icon set (2026-10-18, owner: "use these icons wherever needed")
 Four owner-supplied icons, redrawn as 24px stroke paths (`currentColor`, same
 geometry everywhere): **truck** (shipping: `i-truck` on `/` and `/odorstrike`,

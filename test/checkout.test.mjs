@@ -331,7 +331,8 @@ test('frontend submit architecture: chrome.js has no capture click interceptors 
 
 test('frontend submit architecture: odorstrike.html submitOrder is sole router and button copy is clear', () => {
   const html = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.ok(html.includes("submitText', 'Buy ODORSTRIKE · ₹"), 'Button copy must say Buy ODORSTRIKE · ₹');
+  // Same words chrome.js uses, so changing the quantity never flips the label.
+  assert.ok(html.includes("set('submitText', t.codFee ? 'Place COD order · ₹' + t.total : 'Pay ₹' + t.total + ' securely');"), 'Button copy must match chrome.js: Pay ₹X securely / Place COD order · ₹X');
   assert.ok(html.includes("return window.startRazorpay();"), 'submitOrder must invoke startRazorpay for prepaid');
   assert.ok(html.includes("onclick=\"submitOrder()\""), 'submit button must have onclick submitOrder');
 });
