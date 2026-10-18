@@ -102,6 +102,24 @@ clothing-only rule rather than on looks, which is what that rule is for:
 
 Check the frame, not just the caption, before licensing.
 
+### Pexels (2026-10-18)
+
+The twenty 2026-10-15 guides first shipped on the owner's product photos, ten
+frames shared across twenty posts. Each now has its own **Pexels** photo
+(`pexels:` in the config). The Adobe connector wasn't signed in that session, and
+Pexels' licence allows free commercial use and editing with no attribution.
+
+- `build-thumbnails.mjs` downloads missing Pexels sources itself into
+  `.thumbnail-sources/pexels-<id>.jpg` (2560px), so a fresh clone can rebuild
+  them. If Node's `fetch` can't reach the CDN through a proxy, `curl` the same URL
+  into that folder first.
+- Pexels' licence forbids showing identifiable people in a bad light. Overlays
+  that ask about smell should be questions about the fabric or the situation, not
+  about the person. The sweater post uses folded knits for that reason; a moody
+  portrait was dropped.
+- Every frame was checked against the rules below. The scooter shot is cropped
+  at the waist (`focal: '50% 12%'`) so the rider's shoes stay out of frame.
+
 ### Brand constraints on photo choice
 
 Per CLAUDE.md "Positioning: clothing only" — not stylistic preferences:

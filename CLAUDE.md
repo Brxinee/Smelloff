@@ -171,8 +171,11 @@ heatwave, food and sweat, washing less, all-day freshness, office to evening,
 sweaters. Each is answer-first with question H2s, a primary source and an
 "Honest limits" callout; facts only from `config/product.json`.
 - New CLUSTERS topic `everyday` in `apply-reader.mjs`.
-- Thumbnails for these use the owner's photos: `file:` in
-  `thumbnails.config.mjs` (repo path) instead of an Adobe `photo` id.
+- Thumbnails: each of the twenty has its own **Pexels** photo since 2026-10-18
+  (`pexels:` id in `thumbnails.config.mjs`; free licence, no attribution).
+  `build-thumbnails.mjs` fetches the source into `.thumbnail-sources/` on demand.
+  They first shipped on ten owner photos shared between twenty posts. `V` in
+  `apply-thumbnails.mjs` is 5. See `docs/BLOG-THUMBNAILS.md` "Pexels".
 - Seven retired slugs (ironing, bike rider, how long, winter sweaters, Indian
   summer, cotton kurtas, pre-date) now 301 to the matching new post.
 - Keyword tools (Semrush, Ahrefs) had no quota; topics came from the existing

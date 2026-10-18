@@ -75,13 +75,34 @@ function headlineSize(top, hi) {
   return Math.round(Math.max(74, Math.min(132, 720 / (longest * 0.5) * 1.06)));
 }
 
-function template({ kicker, top, hi, photo, file, focal, tone }) {
+/** Pexels originals are fetched on demand (free licence, no account), so a
+ *  fresh clone can rebuild them; Adobe Stock sources must be licensed by hand. */
+const pexelsPath = (id) => path.join(SOURCES, `pexels-${id}.jpg`);
+
+async function fetchPexels(posts) {
+  for (const { pexels } of posts) {
+    if (!pexels || fs.existsSync(pexelsPath(pexels))) continue;
+    const url = `https://images.pexels.com/photos/${pexels}/pexels-photo-${pexels}.jpeg?auto=compress&cs=srgb&w=2560`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Pexels ${pexels}: HTTP ${res.status} from ${url}`);
+    fs.mkdirSync(SOURCES, { recursive: true });
+    fs.writeFileSync(pexelsPath(pexels), Buffer.from(await res.arrayBuffer()));
+    console.log(`  fetched Pexels ${pexels}`);
+  }
+}
+
+function template({ kicker, top, hi, photo, pexels, file, focal, tone }) {
   // `file` is an owner photo committed in the repo (e.g. assets/photos/*.webp);
+  // `pexels` is a Pexels photo id (fetched into SOURCES by fetchPexels);
   // `photo` is an Adobe Stock id whose licensed source lives in SOURCES.
-  const photoPath = file ? path.join(REPO, file) : path.join(SOURCES, `${photo}.jpg`);
+  const photoPath = file
+    ? path.join(REPO, file)
+    : pexels
+      ? pexelsPath(pexels)
+      : path.join(SOURCES, `${photo}.jpg`);
   if (!fs.existsSync(photoPath)) {
     throw new Error(
-      `missing source photo ${photo}.jpg\n` +
+      `missing source photo ${photoPath}\n` +
         `  looked in: ${SOURCES}\n` +
         `  license it from Adobe Stock (asset id ${photo}) and save it there — see docs/BLOG-THUMBNAILS.md`
     );
@@ -220,6 +241,7 @@ async function main() {
   }
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
+  await fetchPexels(posts);
   const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'sf-thumbs-'));
   let bytes = 0;
 
