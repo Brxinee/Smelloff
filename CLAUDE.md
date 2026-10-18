@@ -45,6 +45,17 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Owner icon set (2026-10-18, owner: "use these icons wherever needed")
+Four owner-supplied icons, redrawn as 24px stroke paths (`currentColor`, same
+geometry everywhere): **truck** (shipping: `i-truck` on `/` and `/odorstrike`,
+the header offer strip in `apply-chrome.mjs` `ANNOUNCE`, the chat's
+"Track with courier"), **shield-check** (`i-shield`, "7-day returns"; replaced
+the circular-arrow `i-return`), **package-check** (`i-package`, PDP "3–5 days"
+and the footer "Track order" tile `ICON_BOX`; replaced `i-clock`) and
+**T-shirt with sparkles** (`i-shirt`, the "Fabric only" chip on both money
+pages, drawn a little larger than its neighbours). The padlock on pay buttons
+stays. Use these four for those meanings on any new surface.
+
 ## AI assistant v2: smell doctor + shop help (2026-10-18, owner: "best AI assistant")
 Replaces the v1 notes (2026-10-13). Research: NN/g "10 Guidelines for Site AI
 Chatbots" and "Less Chat, More Answer" (9 users, 8 site bots): answer first,

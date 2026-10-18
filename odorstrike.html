@@ -1300,7 +1300,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     border-radius:var(--r-pill);font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--text-2)}
   .pd-not .ic{width:14px;height:14px;color:var(--muted)}
   .pd-not li.on{border-color:var(--border-focus);color:var(--acid)}
-  .pd-not li.on .ic{color:var(--acid);stroke-width:2.5}
+  .pd-not li.on .ic{width:16px;height:16px;color:var(--acid);stroke-width:2}
   .pd-price{margin-top:20px;padding-top:18px;border-top:1px solid var(--rule)}
   .pd-price-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
   .pd-amt{font-family:var(--display);font-weight:700;font-size:clamp(40px,5vw,52px);line-height:1;color:var(--text)}
@@ -1666,7 +1666,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
 <link rel="preload" href="/assets/css/chrome.css?v=b664f938" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=b664f938"></noscript>
 <script src="/assets/js/chrome.js?v=19af8484" defer></script>
-<script src="/assets/js/support-chat.js?v=dcf37d5a" defer></script>
+<script src="/assets/js/support-chat.js?v=c16c518c" defer></script>
 </head>
 <body>
 
@@ -1676,7 +1676,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 <script type="speculationrules">{"prefetch":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/api/*","/admin*"]}}]},"eagerness":"moderate"}]}</script>
 <div class="sf-announce" role="region" aria-label="Shipping and payment">
   <div class="sf-wrap sf-announce__row">
-    <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg><span><b>Free shipping</b> on prepaid<span class="sf-announce__more"> · Cash on Delivery · 7-day returns</span></span></p>
+    <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.9 16.6H2.8V6.4h11.1v10.2M8.7 16.6h7M13.9 9h4l3.3 3.2v4.4h-1.7M17.1 9v3.2h4.1"/><circle cx="6.8" cy="17.6" r="1.9"/><circle cx="17.6" cy="17.6" r="1.9"/></svg><span><b>Free shipping</b> on prepaid<span class="sf-announce__more"> · Cash on Delivery · 7-day returns</span></span></p>
   </div>
 </div>
 <header class="sf-hdr">
@@ -1799,10 +1799,11 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
      Stroke icons on a 24px grid (Lucide-style, ISC). Inline so the page still
      makes no extra request; colour comes from currentColor. -->
 <svg class="ic-sprite" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
-  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M4.9 16.6H2.8V6.4h11.1v10.2M8.7 16.6h7M13.9 9h4l3.3 3.2v4.4h-1.7M17.1 9v3.2h4.1"/><circle cx="6.8" cy="17.6" r="1.9"/><circle cx="17.6" cy="17.6" r="1.9"/></symbol>
   <symbol id="i-cash" viewBox="0 0 24 24"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></symbol>
-  <symbol id="i-return" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
-  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 19 5.5v5.7c0 4.8-3.2 8.2-7 9.9-3.8-1.7-7-5.1-7-9.9V5.5zM8.2 12.1l2.4 2.4 5.1-5.2"/></symbol>
+  <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M16.9 13.6v4c0 .6-.4.9-1 .9H8c-.6 0-1-.3-1-.9v-7.3l-1.1 1.4-2.7-2.3 3-3.8 2.9-1.3c.6.4 1.6.9 2.9.9s2.3-.5 2.9-.9l2.9 1.3 3 4-1.8 1.8M9.1 4.3c.3 1.8 1.4 3.1 2.9 3.1s2.6-1.3 2.9-3.1"/><path fill="currentColor" stroke="none" d="M15.75 9.4c.4 1.7 1 2.2 2.6 2.6-1.6.4-2.2.9-2.6 2.6-.4-1.7-1-2.2-2.6-2.6 1.6-.4 2.2-.9 2.6-2.6zM18.2 8.5c.15.7.4.95 1.1 1.1-.7.15-.95.4-1.1 1.1-.15-.7-.4-.95-1.1-1.1.7-.15.95-.4 1.1-1.1z"/></symbol>
+  <symbol id="i-package" viewBox="0 0 24 24"><path d="M12 3.3l8.6 4.2v9L12 20.9l-8.6-4.4v-9zM3.4 7.5 12 11.8l8.6-4.3M12 11.8v9.1M7.4 9.6l8.8-4.2M8.1 14.2l2 2 4-4"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
   <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
@@ -1918,7 +1919,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <ul class="pd-not" aria-label="What ODORSTRIKE is and is not">
           <li><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg>Not perfume</li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-ban"/></svg>Not body deodorant</li>
-          <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Fabric only</li>
+          <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-shirt"/></svg>Fabric only</li>
         </ul>
 
         <!-- Price: figure, struck MRP and discount, pack, then BOTH payable
@@ -1955,8 +1956,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <ul class="pd-assure" aria-label="Delivery and returns">
           <li><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><b>Free shipping</b>Prepaid, pan-India</span></li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-cash"/></svg><span><b>Cash on Delivery</b>Pay when it arrives</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg><span><b>3–5 days</b>Metros · 5–7 elsewhere</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-return"/></svg><span><b>7-day returns</b>If it isn't for you</span></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-package"/></svg><span><b>3–5 days</b>Metros · 5–7 elsewhere</span></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span><b>7-day returns</b>If it isn't for you</span></li>
         </ul>
 
         <!-- Delivery check by pincode (Indian D2C norm: Aquos, Shiprocket-store
@@ -2255,7 +2256,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
       <div class="sf-ftr__help-links">
         <a href="https://wa.me/919392974031" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span><b>WhatsApp</b>+91 93929 74031</span></a>
         <a href="mailto:info@smelloff.in"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><b>Email</b>info@smelloff.in</span></a>
-        <a href="/track-order"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/></svg><span><b>Track order</b>Status and delivery date</span></a>
+        <a href="/track-order"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.3l8.6 4.2v9L12 20.9l-8.6-4.4v-9zM3.4 7.5 12 11.8l8.6-4.3M12 11.8v9.1M7.4 9.6l8.8-4.2M8.1 14.2l2 2 4-4"/></svg><span><b>Track order</b>Status and delivery date</span></a>
       </div>
     </div>
     <div class="sf-ftr__grid">

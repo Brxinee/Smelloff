@@ -85,7 +85,7 @@ const CART = {
 const IC = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
 const ICON_WA = IC('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>');
 const ICON_MAIL = IC('<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>');
-const ICON_BOX = IC('<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/>');
+const ICON_BOX = IC('<path d="M12 3.3l8.6 4.2v9L12 20.9l-8.6-4.4v-9zM3.4 7.5 12 11.8l8.6-4.3M12 11.8v9.1M7.4 9.6l8.8-4.2M8.1 14.2l2 2 4-4"/>');
 const ICON_CHEV = IC('<path d="m9 18 6-6-6-6"/>');
 
 /* The skip link is part of the header block so all 24 pages get it from one
@@ -109,7 +109,7 @@ const SKIP = `<a class="sf-skip" href="#sf-main">Skip to content</a>`;
    The phone menu leads with the product, not a list of words. */
 const ANNOUNCE = `<div class="sf-announce" role="region" aria-label="Shipping and payment">
   <div class="sf-wrap sf-announce__row">
-    <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg><span><b>Free shipping</b> on prepaid<span class="sf-announce__more"> · Cash on Delivery · 7-day returns</span></span></p>
+    <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.9 16.6H2.8V6.4h11.1v10.2M8.7 16.6h7M13.9 9h4l3.3 3.2v4.4h-1.7M17.1 9v3.2h4.1"/><circle cx="6.8" cy="17.6" r="1.9"/><circle cx="17.6" cy="17.6" r="1.9"/></svg><span><b>Free shipping</b> on prepaid<span class="sf-announce__more"> · Cash on Delivery · 7-day returns</span></span></p>
   </div>
 </div>`;
 
