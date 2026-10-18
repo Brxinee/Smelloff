@@ -83,9 +83,10 @@ const CART = {
 };
 
 const IC = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
-const ICON_WA = IC('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>');
+// WhatsApp mark in the line style: outline bubble + filled handset (handset from simple-icons, CC0).
+const ICON_WA = IC('<path fill="none" stroke="currentColor" d="M7.2 19.3A8.9 8.9 0 1 0 4.6 16.6L3.4 20.6z"/><path fill="currentColor" stroke="none" transform="translate(1.44 1.2) scale(.88)" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>');
 const ICON_MAIL = IC('<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>');
-const ICON_BOX = IC('<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/>');
+const ICON_BOX = IC('<path d="M12 3.3l8.6 4.2v9L12 20.9l-8.6-4.4v-9zM3.4 7.5 12 11.8l8.6-4.3M12 11.8v9.1M7.4 9.6l8.8-4.2M8.1 14.2l2 2 4-4"/>');
 const ICON_CHEV = IC('<path d="m9 18 6-6-6-6"/>');
 
 /* The skip link is part of the header block so all 24 pages get it from one
@@ -109,7 +110,7 @@ const SKIP = `<a class="sf-skip" href="#sf-main">Skip to content</a>`;
    The phone menu leads with the product, not a list of words. */
 const ANNOUNCE = `<div class="sf-announce" role="region" aria-label="Shipping and payment">
   <div class="sf-wrap sf-announce__row">
-    <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg><span><b>Free shipping</b> on prepaid<span class="sf-announce__more"> · Cash on Delivery · 7-day returns</span></span></p>
+    <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.9 16.6H2.8V6.4h11.1v10.2M8.7 16.6h7M13.9 9h4l3.3 3.2v4.4h-1.7M17.1 9v3.2h4.1"/><circle cx="6.8" cy="17.6" r="1.9"/><circle cx="17.6" cy="17.6" r="1.9"/></svg><span><b>Free shipping</b> on prepaid<span class="sf-announce__more"> · Cash on Delivery · 7-day returns</span></span></p>
   </div>
 </div>`;
 

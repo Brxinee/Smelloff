@@ -208,7 +208,7 @@ html.sf-menu-open #smelloff-consent-bar,html.sf-menu-open .mobile-bar{display:no
   display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:center;margin-top:18px;padding:14px 16px;
   border:1px solid var(--rule);border-radius:var(--sq-lg,16px);color:var(--text);text-decoration:none;
 }
-.sf-menu__help svg{width:24px;height:24px;fill:none;stroke:var(--text-2);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sf-menu__help svg{width:24px;height:24px;fill:none;color:var(--text-2);stroke:var(--text-2);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .sf-menu__help b{display:block;font-size:15px;font-weight:600}
 .sf-menu__help small{display:block;margin-top:2px;font-size:13px;color:var(--muted)}
 .sf-menu__help:hover{border-color:var(--border-strong)}
@@ -889,3 +889,9 @@ section.final small,section.final .final-reassurance{display:block;margin-top:16
   margin:0 0 8px !important;font-family:var(--body) !important;font-size:11px !important;font-weight:600 !important;
   letter-spacing:.14em !important;line-height:1.4 !important;text-transform:uppercase !important;color:var(--muted) !important;
 }
+
+/* §15 WhatsApp mark on every text link to WhatsApp (policies, guides, PDP,
+   chat replies). Links that already carry an icon or logo are skipped. The
+   mark takes the link's own colour. */
+a[href^="https://wa.me/"]:not(:has(svg,img))::before{content:"";display:inline-block;width:1.05em;height:1.05em;margin-right:.3em;
+  vertical-align:-.17em;background:currentColor;-webkit-mask:url(/assets/icons/whatsapp.svg) center/contain no-repeat;mask:url(/assets/icons/whatsapp.svg) center/contain no-repeat}

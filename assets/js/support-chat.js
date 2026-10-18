@@ -164,7 +164,7 @@
     restart: svg('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'),
     up: svg('<path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2 2v4h5.5a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.3 20H7"/>'),
     down: svg('<path d="M7 13V4H4v9zM7 13l4 8a2 2 0 0 0 2-2v-4h5.5a2 2 0 0 0 2-2.3l-1.2-7A2 2 0 0 0 17.3 4H7"/>'),
-    truck: svg('<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>')
+    truck: svg('<path d="M4.9 16.6H2.8V6.4h11.1v10.2M8.7 16.6h7M13.9 9h4l3.3 3.2v4.4h-1.7M17.1 9v3.2h4.1"/><circle cx="6.8" cy="17.6" r="1.9"/><circle cx="17.6" cy="17.6" r="1.9"/>')
   };
 
   function track(type, label, meta) {
