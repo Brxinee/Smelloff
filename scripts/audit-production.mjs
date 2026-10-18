@@ -48,11 +48,9 @@ for (const name of ['vercel.json', 'middleware.js', 'netlify.toml', 'metadata.js
 
 const createOrder = path.join(ROOT, 'supabase/functions/create-order/index.ts');
 if (fs.existsSync(createOrder)) {
+  // Retired: checkout posts to the Worker. The edge copy must stay a 410 stub.
   const s = read(createOrder);
-  if (!s.includes('product.json')) fail('Supabase order function must derive from config/product.json');
-  if (s.includes('UNIT_PRICE_RUPEES = 229')) fail('Supabase order function has hardcoded price; must derive from product.json');
-  if (s.includes('PACK_PRICES')) fail('Supabase order function still contains bundle/pack pricing');
-  if (!s.includes('generateOrderCode')) fail('Supabase order function does not generate missing order codes server-side');
+  if (!/410\)/.test(s) || s.includes('createClient')) fail('Supabase create-order function must be the retired 410 stub, not a live order writer');
 }
 
 const blogFiles = files.filter(p => p.startsWith(path.join(ROOT, 'blog')) && p.endsWith('.html'));
