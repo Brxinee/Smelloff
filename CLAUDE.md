@@ -55,6 +55,13 @@ and the footer "Track order" tile `ICON_BOX`; replaced `i-clock`) and
 **T-shirt with sparkles** (`i-shirt`, the "Fabric only" chip on both money
 pages, drawn a little larger than its neighbours). The padlock on pay buttons
 stays. Use these four for those meanings on any new surface.
+- **WhatsApp mark** (same day, owner: "wherever WhatsApp is mentioned, its icon,
+  as per the theme"): an outline bubble + filled handset (handset from
+  simple-icons, CC0) in the line style, as `ICON_WA` in `apply-chrome.mjs`
+  (footer help tile, phone-menu card), on `/contact` and the `/faq` strip.
+  Every other text link to `wa.me` gets the same mark from chrome.css §15
+  (`::before` masked with `assets/icons/whatsapp.svg`, link colour); links that
+  already hold an `<svg>`/`<img>` (footer socials PNG, chat button) are skipped.
 
 ## AI assistant v2: smell doctor + shop help (2026-10-18, owner: "best AI assistant")
 Replaces the v1 notes (2026-10-13). Research: NN/g "10 Guidelines for Site AI
