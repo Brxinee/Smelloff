@@ -59,7 +59,7 @@
   var R = 'var(--rule,rgba(242,245,239,.14))';
   var css =
     '.sfc-launch{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px) + var(--sfc-lift,0px));z-index:65;display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 18px 0 14px;border-radius:100px;border:1px solid ' + R + ';background:var(--surface-2,#1A1A1A);color:var(--text,#F2F5EF);font:500 15px/1 var(--body,system-ui,sans-serif);cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.5);transition:bottom .3s var(--ease,ease),opacity .2s ease}' +
-    '.sfc-launch svg{width:20px;height:20px;fill:none;stroke:var(--acid,#B8FF57);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}' +
+    '.sfc-launch svg{width:22px;height:22px;color:var(--acid,#B8FF57);fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}' +
     '.sfc-launch[data-dot]::after{content:"";position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:50%;background:var(--acid,#B8FF57);box-shadow:0 0 0 2px var(--surface-2,#1A1A1A)}' +
     // Phones: an icon-only 48px circle, so the label doesn't sit over headings and prices.
     '@media(max-width:519px){.sfc-launch{width:48px;padding:0;justify-content:center}.sfc-launch span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}' +
@@ -77,7 +77,7 @@
     '@media(min-width:520px){.sfc-panel{inset:auto max(16px,env(safe-area-inset-right,0px)) 16px auto;width:400px;height:min(660px,calc(100vh - 32px));border:1px solid ' + R + ';border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6);overflow:hidden}}' +
     '.sfc-head{display:flex;align-items:center;gap:10px;padding:10px 6px 10px 14px;padding-top:max(10px,env(safe-area-inset-top,0px));border-bottom:1px solid ' + R + ';background:var(--surface,#121212)}' +
     '.sfc-ava{flex:0 0 auto;width:36px;height:36px;border-radius:50%;background:var(--acid,#B8FF57);color:var(--on-acid,#0A0A0A);display:inline-flex;align-items:center;justify-content:center}' +
-    '.sfc-ava svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}' +
+    '.sfc-ava svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}' +
     '.sfc-head__txt{flex:1;min-width:0}' +
     '.sfc-title{margin:0;font:700 16px/1.2 var(--display,system-ui,sans-serif);letter-spacing:-.01em}' +
     '.sfc-sub{margin:2px 0 0;font-size:12.5px;color:var(--muted,#9DA398);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
@@ -156,12 +156,16 @@
 
   function svg(d) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + d + '</svg>'; }
   var I = {
-    chat: svg('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/>'),
+    // Brand chat mark (owner's artwork, 2026-10-18): speech bubble, tail
+    // bottom-left, one large and one small four-point sparkle. Outline is
+    // stroked, sparkles filled, all currentColor.
+    spark: svg('<path d="M12 3.4C18 3.4 21 6.8 21 11.5S18 19.6 12 19.6c-1.2 0-2.1-.1-3-.2L5 21l1-3.7c-1.9-1.6-3-3.5-3-5.8C3 6.8 6 3.4 12 3.4z"/>' +
+      '<path fill="currentColor" stroke-width=".7" d="M12 7.5c.5 2.8 1.7 4 4.5 4.5-2.8.5-4 1.7-4.5 4.5-.5-2.8-1.7-4-4.5-4.5 2.8-.5 4-1.7 4.5-4.5z"/>' +
+      '<path fill="currentColor" stroke-width=".5" d="M16 7.6c.2 1 .5 1.3 1.4 1.45-.9.15-1.2.45-1.4 1.45-.2-1-.5-1.3-1.4-1.45.9-.15 1.2-.45 1.4-1.45z"/>'),
     x: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
     send: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
     mic: svg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>'),
     restart: svg('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'),
-    spray: svg('<path d="M9 9h6v12H9zM10 9V6h4v3M14 4h3M18 2v0M20 4v0M18 6v0"/>'),
     up: svg('<path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2 2v4h5.5a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.3 20H7"/>'),
     down: svg('<path d="M7 13V4H4v9zM7 13l4 8a2 2 0 0 0 2-2v-4h5.5a2 2 0 0 0 2-2.3l-1.2-7A2 2 0 0 0 17.3 4H7"/>'),
     wa: svg('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1c-1-.5-1.5-1-2-2l1-1-1-2z"/>'),
@@ -185,7 +189,7 @@
   launch.setAttribute('aria-controls', 'sfcPanel');
   launch.setAttribute('aria-expanded', 'false');
   launch.setAttribute('aria-label', 'Chat with the Smelloff assistant');
-  launch.innerHTML = I.chat + '<span>Ask us</span>';
+  launch.innerHTML = I.spark + '<span>Ask us</span>';
 
   var tease = document.createElement('div');
   tease.className = 'sfc-tease';
@@ -201,7 +205,7 @@
   panel.setAttribute('role', 'dialog');
   panel.setAttribute('aria-labelledby', 'sfcTitle');
   panel.innerHTML =
-    '<div class="sfc-head"><span class="sfc-ava">' + I.spray + '</span>' +
+    '<div class="sfc-head"><span class="sfc-ava">' + I.spark + '</span>' +
     '<div class="sfc-head__txt"><h2 class="sfc-title" id="sfcTitle">Smelloff assistant</h2>' +
     '<p class="sfc-sub"><i></i>AI · smell fixes, packs, orders</p></div>' +
     '<button type="button" class="sfc-ib sfc-new" aria-label="Start a new chat" title="New chat">' + I.restart + '</button>' +
