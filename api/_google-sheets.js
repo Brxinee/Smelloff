@@ -90,19 +90,32 @@ async function sheetsFetch(path, { method = 'GET', body } = {}) {
   return data;
 }
 
-// Raw values (numbers stay numbers, dates come back as serial numbers) so the
-// plan can compare them with what the database says.
+// Raw values: numbers stay numbers, dates come back as serial numbers and
+// formula cells as their formula text, so the plan can compare each cell with
+// what the database says.
 export async function readTab(spreadsheetId, tab, lastColumn) {
   const range = encodeURIComponent(`'${tab.replace(/'/g, "''")}'!A1:${lastColumn}`);
-  const data = await sheetsFetch(`${spreadsheetId}/values/${range}?valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=SERIAL_NUMBER`);
+  const data = await sheetsFetch(`${spreadsheetId}/values/${range}?valueRenderOption=FORMULA&dateTimeRenderOption=SERIAL_NUMBER`);
   return Array.isArray(data.values) ? data.values : [];
 }
 
-export async function getSheetId(spreadsheetId, tab) {
+export async function getSheetProps(spreadsheetId, tab) {
   const data = await sheetsFetch(`${spreadsheetId}?fields=sheets.properties`);
   const sheet = (data.sheets || []).find((s) => s?.properties?.title === tab);
   if (!sheet) throw new Error(`Tab "${tab}" not found in spreadsheet ${spreadsheetId}.`);
-  return sheet.properties.sheetId;
+  return { sheetId: sheet.properties.sheetId, rowCount: sheet.properties.gridProperties?.rowCount || 0 };
+}
+
+// "Updated by the website …" line in each spreadsheet, so the owner can see
+// the sync is alive. Lives in the named range SyncStatus; skipped if absent.
+export async function writeStamp(spreadsheetId, text) {
+  try {
+    await sheetsFetch(`${spreadsheetId}/values/SyncStatus?valueInputOption=RAW`, {
+      method: 'PUT', body: { range: 'SyncStatus', values: [[text]] },
+    });
+  } catch (err) {
+    console.error('[sheets] status line not written:', err?.message || err);
+  }
 }
 
 export async function batchUpdate(spreadsheetId, requests) {
@@ -122,19 +135,22 @@ export function toSheetDate(value) {
 
 // Strings are sent as stringValue, which Sheets stores as literal text: a name
 // like "=IMPORTXML(…)" can never run as a formula, and phone numbers and
-// pincodes keep their digits.
+// pincodes keep their digits. Only links the code builds itself ({ formula })
+// go in as formulas; see link() in sheets-sync.js.
 function cell(value) {
   if (value === undefined || value === null || value === '') return {};
+  if (typeof value === 'object' && value.formula) return { userEnteredValue: { formulaValue: value.formula } };
   if (typeof value === 'number' && Number.isFinite(value)) return { userEnteredValue: { numberValue: value } };
   return { userEnteredValue: { stringValue: String(value) } };
 }
 
 const isBlank = (v) => v === undefined || v === null || v === '';
 
-function sameValue(a, b) {
-  if (isBlank(a) && isBlank(b)) return true;
-  if (typeof a === 'number' && typeof b === 'number') return Math.abs(a - b) < 1e-6;
-  return String(a ?? '') === String(b ?? '');
+function sameValue(have, want) {
+  if (want && typeof want === 'object') return String(have ?? '') === want.formula;
+  if (isBlank(have) && isBlank(want)) return true;
+  if (typeof have === 'number' && typeof want === 'number') return Math.abs(have - want) < 1e-6;
+  return String(have ?? '') === String(want ?? '');
 }
 
 // Column kinds:
@@ -144,7 +160,9 @@ function sameValue(a, b) {
 // The plan never deletes a row the database no longer knows, never blanks a
 // cell the database has no value for, and only removes an exact duplicate key
 // whose owner cells are empty (two order events racing to insert one order).
-export function planTabSync({ sheetId, columns, existing, rows, keyOf, merge }) {
+// rowCount is the tab's grid size: new rows copy formats and dropdowns from
+// its last row, which every tab keeps formatted and empty.
+export function planTabSync({ sheetId, rowCount = 0, columns, existing, rows, keyOf, merge }) {
   const headers = columns.map((c) => c.header);
   const requests = [];
   const header = existing[0] || [];
@@ -165,13 +183,6 @@ export function planTabSync({ sheetId, columns, existing, rows, keyOf, merge }) 
   }
 
   const ownerCols = columns.map((c, i) => (c.kind === 'owner' ? i : -1)).filter((i) => i >= 0);
-  const syncRuns = [];
-  columns.forEach((c, i) => {
-    if (c.kind !== 'sync') return;
-    const last = syncRuns[syncRuns.length - 1];
-    if (last && last.end === i) last.end = i + 1;
-    else syncRuns.push({ start: i, end: i + 1 });
-  });
 
   const rowOf = new Map();
   const duplicates = [];
@@ -191,26 +202,26 @@ export function planTabSync({ sheetId, columns, existing, rows, keyOf, merge }) 
     if (!rowOf.has(key)) { fresh.push(row); continue; }
     const r = rowOf.get(key);
     const have = existing[r] || [];
-    const final = columns.map((col, i) => {
-      if (col.kind !== 'sync') return have[i];
-      let want = merge ? merge(col, have[i], row[i]) : row[i];
-      if (isBlank(want)) want = have[i];
-      return want;
+    // Only cells whose value changed are written, in contiguous runs.
+    const changed = columns.map((col, i) => {
+      if (col.kind !== 'sync') return null;
+      const want = merge ? merge(col, have[i], row[i]) : row[i];
+      return isBlank(want) || sameValue(have[i], want) ? null : { want };
     });
-    const changed = syncRuns.some(({ start, end }) => {
-      for (let i = start; i < end; i += 1) if (!sameValue(have[i], final[i])) return true;
-      return false;
-    });
-    if (!changed) continue;
+    if (!changed.some(Boolean)) continue;
     updated += 1;
-    for (const { start, end } of syncRuns) {
+    for (let i = 0; i < changed.length; i += 1) {
+      if (!changed[i]) continue;
+      let end = i;
+      while (end + 1 < changed.length && changed[end + 1]) end += 1;
       requests.push({
         updateCells: {
-          start: { sheetId, rowIndex: r, columnIndex: start },
-          rows: [{ values: final.slice(start, end).map(cell) }],
+          start: { sheetId, rowIndex: r, columnIndex: i },
+          rows: [{ values: changed.slice(i, end + 1).map((c) => cell(c.want)) }],
           fields: 'userEnteredValue',
         },
       });
+      i = end;
     }
   }
 
@@ -219,14 +230,25 @@ export function planTabSync({ sheetId, columns, existing, rows, keyOf, merge }) 
   }
 
   if (fresh.length) {
-    // Newest first: new rows go in under the header and take the formatting
-    // of the row below them (dates, currency, dropdowns).
+    // Newest first: new rows go in under the header. Formulas elsewhere use
+    // whole columns (Orders!C:C) because a range starting at row 2 would
+    // shift down past every row inserted here.
     requests.push({
       insertDimension: {
         range: { sheetId, dimension: 'ROWS', startIndex: 1, endIndex: 1 + fresh.length },
         inheritFromBefore: false,
       },
     });
+    const template = rowCount - duplicates.length + fresh.length - 1;
+    if (rowCount > existing.length) {
+      requests.push({
+        copyPaste: {
+          source: { sheetId, startRowIndex: template, endRowIndex: template + 1, startColumnIndex: 0, endColumnIndex: columns.length },
+          destination: { sheetId, startRowIndex: 1, endRowIndex: 1 + fresh.length, startColumnIndex: 0, endColumnIndex: columns.length },
+          pasteType: 'PASTE_FORMAT',
+        },
+      });
+    }
     requests.push({
       updateCells: {
         start: { sheetId, rowIndex: 1, columnIndex: 0 },
@@ -246,11 +268,11 @@ export function columnLetter(n) {
 }
 
 export async function syncTab({ spreadsheetId, tab, columns, rows, keyOf, merge }) {
-  const [sheetId, existing] = await Promise.all([
-    getSheetId(spreadsheetId, tab),
+  const [{ sheetId, rowCount }, existing] = await Promise.all([
+    getSheetProps(spreadsheetId, tab),
     readTab(spreadsheetId, tab, columnLetter(columns.length)),
   ]);
-  const plan = planTabSync({ sheetId, columns, existing, rows, keyOf, merge });
+  const plan = planTabSync({ sheetId, rowCount, columns, existing, rows, keyOf, merge });
   await batchUpdate(spreadsheetId, plan.requests);
   return { inserted: plan.inserted, updated: plan.updated, removed: plan.removed };
 }

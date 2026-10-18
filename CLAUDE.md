@@ -45,27 +45,35 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
-## Google Sheets: orders + customers, written by the server (2026-10-18, owner: "organise my sheets")
+## Google Sheets: orders + customers, written by the server (2026-10-18, owner: "organise my sheets", "proper sync and data flow")
 The browser's Apps Script beacon is gone (it wrote most orders twice, never
 sent Razorpay-paid orders, kept every status at "NEW" and took rows from
-anyone). `api/sheets-sync.js` now mirrors Supabase into two sheets after
-every COD order / prepaid confirmation (`syncSheetsNow`, after the Shiprocket
-push) and on the 15-minute cron. Setup + rules: `docs/GOOGLE-SHEETS-SETUP.md`.
-- **Orders data** (`1VY0…`): Dashboard (KPIs, to-ship queue, 12 months, stock,
-  by state; status lists are named ranges) + Orders (A–S synced, COD call and
-  Notes the owner's). **Smelloff Customers & Emails** (`1qe8…`): Summary +
-  Contacts (one row per email or phone; "Email offers" Yes only after a
-  signup, never taken away). The April 2026 waitlist was imported by hand.
+anyone). `api/sheets-sync.js` mirrors Supabase into two sheets after every COD
+order / prepaid confirmation (`syncSheetsNow`, after the Shiprocket push),
+after an /admin order edit, on the 15-minute cron and from /admin's **Sync
+now** (`syncSheets` action). Setup, columns and rules:
+`docs/GOOGLE-SHEETS-SETUP.md`.
+- **Orders data** (`1VY0…`): Dashboard (period picker, needs-action counts,
+  12-month combo chart, state/source tables, review and to-ship lists; status
+  lists and `PeriodStart`/`PeriodEnd` are named ranges) + Orders A–Z synced
+  (WhatsApp "Confirm COD" link with a prefilled message, Track link, courier
+  status, shipped/delivered dates, refund, review, source), AA–AB the owner's.
+  **Smelloff Customers & Emails** (`1qe8…`): Summary + Contacts A–N ("Email
+  offers" Yes only after a signup, never taken away). Old tabs are hidden.
 - `api/_google-sheets.js`: service-account JWT via WebCrypto (secret
   `GOOGLE_SERVICE_ACCOUNT_JSON`, `/api/health` → `configured.sheets`) and
-  `planTabSync`: upsert by key, inserts at the top, writes only changed
-  database columns, never deletes or blanks, stops on a header mismatch,
-  strings as `stringValue` (no formula injection). **Change a column in
-  `ORDER_COLUMNS` / `CONTACT_COLUMNS` and the sheet header together.**
+  `planTabSync`: upsert by key, reads with `valueRenderOption=FORMULA`, writes
+  only changed cells, inserts at row 2 and copies formats from the grid's last
+  row, never deletes or blanks, stops on a header mismatch, customer text as
+  `stringValue`. Each run writes the named range `SyncStatus`.
+- **Sheet formulas must use whole columns** (`Orders!C:C`): inserting at row 2
+  shifts any `C2:C` range past the new row. `SUMIFS` with a list criterion
+  doesn't expand in Sheets; use `SUM(IFERROR(FILTER(…),0))`, and
+  `SUMPRODUCT(COUNTIFS(…,list,…))` for counts.
+- **Change a column in `ORDER_COLUMNS` / `CONTACT_COLUMNS` and the sheet
+  header together** (insert the sheet column so rules move with it).
 - Test orders and the business WhatsApp number's checkouts are left out.
-- The old tabs (Old orders log, Inventory, Expenses, Ad Spend, Returns,
-  Waitlist) were left for the owner to delete; the connector refused to.
-- `test/sheets-sync.test.mjs` pins all of the above.
+- `test/sheets-sync.test.mjs` + `test/admin-api.test.mjs` pin all of the above.
 
 ## Checkout summary: MRP and saving (2026-10-18)
 The checkout summary shows the struck MRP on the item, **MRP / Discount /

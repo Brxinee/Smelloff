@@ -15,9 +15,12 @@
  *   messages                       → contact form inbox
  *   updateMessage {id, status}
  *   reviews                        → every review; only ones with an order show
+ *   syncSheets                     → copy orders + contacts into the Google Sheets now
  */
 import crypto from 'node:crypto';
 import { checkRateLimit, clientIp } from './_security.js';
+import { runAfterResponse } from './_background.js';
+import { syncSheets, syncSheetsNow } from './sheets-sync.js';
 
 const COOKIE = 'sf_admin';
 const SESSION_MS = 12 * 60 * 60 * 1000;
@@ -183,6 +186,8 @@ const actions = {
     if (!Object.keys(patch).length) throw new HttpError(400, 'Nothing to update.');
     const rows = await db(`orders?id=eq.${id}&select=${ORDER_COLUMNS}`, { method: 'PATCH', body: patch });
     if (!rows?.length) throw new HttpError(404, 'Order not found.');
+    // The new status/courier reaches the Google Sheet now, not at the next cron.
+    await runAfterResponse('admin', () => syncSheetsNow('/api/admin'));
     return { order: rows[0] };
   },
   async customers(body) {
@@ -203,6 +208,10 @@ const actions = {
   },
   async reviews() {
     return { reviews: await db('reviews?select=id,created_at,name,city,rating,body,anonymous,order_id&order=created_at.desc&limit=300') };
+  },
+  async syncSheets(_body, req) {
+    if (!checkRateLimit(`admin-sheets:${clientIp(req)}`, 10, 10 * 60 * 1000)) throw new HttpError(429, 'Synced recently. Wait a few minutes.');
+    return { sheets: await syncSheets({ route: '/api/admin' }) };
   },
 };
 
@@ -238,7 +247,7 @@ export default async function handler(req, res) {
     if (action === 'me') return res.status(200).json({ ok: true });
     const fn = actions[action];
     if (!fn) throw new HttpError(400, 'Unknown action.');
-    return res.status(200).json(await fn(body));
+    return res.status(200).json(await fn(body, req));
   } catch (error) {
     const status = error instanceof HttpError ? error.status : 500;
     if (status >= 500) console.error('[api/admin]', action, error?.message || error);

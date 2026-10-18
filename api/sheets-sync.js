@@ -4,7 +4,7 @@
 // sheet too. It used to be a browser beacon to an Apps Script, which wrote
 // every order twice, missed prepaid orders entirely and accepted rows from
 // anyone who found the URL.
-import { syncTab, isSheetsConfigured, toSheetDate } from './_google-sheets.js';
+import { syncTab, isSheetsConfigured, toSheetDate, writeStamp } from './_google-sheets.js';
 import { BASE_PRODUCT } from '../shared/products-config-workers.js';
 
 // "Orders data" and "Smelloff Customers & Emails" in the owner's Drive.
@@ -19,6 +19,7 @@ export const ORDER_COLUMNS = [
   { header: 'Payment', kind: 'sync' },
   { header: 'Name', kind: 'sync' },
   { header: 'Phone', kind: 'sync' },
+  { header: 'WhatsApp', kind: 'sync' },
   { header: 'Email', kind: 'sync' },
   { header: 'Bottles', kind: 'sync' },
   { header: 'Subtotal (₹)', kind: 'sync' },
@@ -30,7 +31,13 @@ export const ORDER_COLUMNS = [
   { header: 'Pincode', kind: 'sync' },
   { header: 'Courier', kind: 'sync' },
   { header: 'AWB', kind: 'sync' },
-  { header: 'Tracking link', kind: 'sync' },
+  { header: 'Tracking', kind: 'sync' },
+  { header: 'Courier status', kind: 'sync' },
+  { header: 'Shipped on', kind: 'sync' },
+  { header: 'Delivered on', kind: 'sync' },
+  { header: 'Refund', kind: 'sync' },
+  { header: 'Review (stars)', kind: 'sync' },
+  { header: 'Source', kind: 'sync' },
   { header: 'Last update', kind: 'sync' },
   { header: 'COD call', kind: 'owner' },
   { header: 'Notes', kind: 'owner' },
@@ -40,6 +47,7 @@ export const CONTACT_COLUMNS = [
   { header: 'Email', kind: 'sync' },
   { header: 'Name', kind: 'sync' },
   { header: 'Phone', kind: 'sync' },
+  { header: 'WhatsApp', kind: 'sync' },
   { header: 'City', kind: 'sync' },
   { header: 'State', kind: 'sync' },
   { header: 'Type', kind: 'sync' },
@@ -113,10 +121,67 @@ export function moneyOf(order) {
   return { subtotal: Math.round((total - codFee) * 100) / 100, codFee, total };
 }
 
-export function orderRow(order) {
+// The only formulas the sync writes are links it builds itself: a URL made of
+// digits, encodeURIComponent output or a vetted https URL, never raw customer
+// text, so nothing a customer types can become a formula.
+const SAFE_URL = /^https:\/\/[A-Za-z0-9._~:/?#@!$&*+,;=%-]+$/;
+export function link(url, label) {
+  if (!SAFE_URL.test(url)) return '';
+  return { formula: `=HYPERLINK("${url}","${label}")` };
+}
+
+// encodeURIComponent leaves ' ( ) ! * ~ alone; encode them too so a name
+// like D'Souza still passes SAFE_URL.
+const encodeAll = (text) => encodeURIComponent(text).replace(/['()!*~]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
+
+export function whatsappLink(phone, text, label = 'Chat') {
+  const d = digits(phone);
+  if (d.length !== 10) return '';
+  return link(`https://wa.me/91${d}${text ? `?text=${encodeAll(text)}` : ''}`, label);
+}
+
+// A COD order waiting for its confirmation call gets a prefilled WhatsApp
+// message instead: confirming before dispatch is what cuts RTO on COD.
+function orderWhatsapp(order, total) {
+  if (order.payment_method === 'cod' && order.status === 'placed') {
+    const first = String(order.address?.name || '').trim().split(/\s+/)[0] || 'there';
+    const city = order.address?.city ? `, delivering to ${order.address.city}` : '';
+    const text = `Hi ${first}, this is Smelloff. Please confirm your Cash on Delivery order ${order.order_code} for ₹${total}${city}. Reply YES to confirm or NO to cancel.`;
+    return whatsappLink(order.customer_phone, text, 'Confirm COD');
+  }
+  return whatsappLink(order.customer_phone);
+}
+
+// "PICKUP_EXCEPTION" / "Pickup Exception" → "Pickup exception", keeping RTO and NDR.
+export function humanize(value) {
+  const t = String(value || '').replace(/_/g, ' ').trim().toLowerCase();
+  if (!t) return '';
+  return (t[0].toUpperCase() + t.slice(1)).replace(/\b(rto|ndr|awb|cod)\b/gi, (m) => m.toUpperCase());
+}
+
+function firstAt(order, status, { last = false } = {}) {
+  const hist = Array.isArray(order.status_history) ? order.status_history.filter((h) => h?.status === status) : [];
+  const h = last ? hist[hist.length - 1] : hist[0];
+  return h ? toSheetDate(h.at) : '';
+}
+
+// Where the buyer came from: utm_source or a partner ?ref= on the checkout
+// page, or a Meta ad click.
+export function orderSource(order) {
+  let params = null;
+  try { params = order.event_source_url ? new URL(order.event_source_url).searchParams : null; } catch { params = null; }
+  const utm = params?.get('utm_source');
+  if (utm) return utm.replace(/^www\./, '').slice(0, 60);
+  const ref = params?.get('ref');
+  if (ref) return `Partner ${ref}`.slice(0, 60);
+  if (order.fbc) return 'Meta ad';
+  return params ? 'Website' : '';
+}
+
+export function orderRow(order, { ratings = new Map() } = {}) {
   const a = order.address || {};
   const awb = order.shiprocket_awb || order.tracking_id || '';
-  const link = order.tracking_url || (awb ? `https://www.shiprocket.co/tracking/${encodeURIComponent(awb)}` : '');
+  const trackUrl = order.tracking_url || (awb ? `https://www.shiprocket.co/tracking/${encodeURIComponent(awb)}` : '');
   const { subtotal, codFee, total } = moneyOf(order);
   return [
     toSheetDate(order.created_at),
@@ -125,6 +190,7 @@ export function orderRow(order) {
     order.payment_method === 'cod' ? 'COD' : 'Prepaid',
     a.name || '',
     digits(order.customer_phone),
+    orderWhatsapp(order, total),
     lower(order.customer_email),
     bottlesOf(order),
     subtotal,
@@ -136,7 +202,13 @@ export function orderRow(order) {
     String(a.pincode || ''),
     order.shiprocket_courier || order.courier || '',
     awb,
-    link,
+    trackUrl ? link(trackUrl, 'Track') : '',
+    humanize(order.shiprocket_status),
+    firstAt(order, 'dispatched'),
+    firstAt(order, 'delivered', { last: true }),
+    humanize(order.refund_status),
+    ratings.get(order.id) ?? '',
+    orderSource(order),
     toSheetDate(order.updated_at || order.created_at),
     '',
     '',
@@ -214,6 +286,7 @@ export function buildContactRows({ orders = [], waitlist = [], messages = [], sk
       p.email,
       p.name,
       p.phone,
+      whatsappLink(p.phone),
       p.city,
       p.state,
       p.paid ? 'Customer' : p.hasOrders ? 'Tried to order' : p.subscribed ? 'Subscriber' : 'Enquiry',
@@ -246,15 +319,25 @@ async function supabaseGet(path) {
   return res.json();
 }
 
-const ORDER_FIELDS = 'order_code,created_at,updated_at,status,payment_method,amount,cod_fee,customer_email,customer_phone,address,items,courier,tracking_id,tracking_url,shiprocket_awb,shiprocket_courier';
+const ORDER_FIELDS = 'id,order_code,created_at,updated_at,status,status_history,payment_method,amount,cod_fee,customer_email,customer_phone,address,items,courier,tracking_id,tracking_url,shiprocket_awb,shiprocket_courier,shiprocket_status,refund_status,event_source_url,fbc';
+
+export function stampText({ inserted = 0, updated = 0 } = {}, now = new Date()) {
+  const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+  const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][ist.getUTCMonth()];
+  const pad = (n) => String(n).padStart(2, '0');
+  const when = `${ist.getUTCDate()} ${month} ${ist.getUTCFullYear()}, ${pad(ist.getUTCHours())}:${pad(ist.getUTCMinutes())} IST`;
+  return `Last synced by the website: ${when} (${inserted} new, ${updated} updated). Syncs after every order and every 15 minutes.`;
+}
 
 export async function syncSheets({ route = 'cron' } = {}) {
   if (!isSheetsConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) return { status: 'not_configured' };
-  const [allOrders, waitlist, messages] = await Promise.all([
+  const [allOrders, waitlist, messages, reviews] = await Promise.all([
     supabaseGet(`orders?select=${ORDER_FIELDS}&order=created_at.desc&limit=5000`),
     supabaseGet('waitlist?select=email,source,created_at&order=created_at.desc&limit=5000'),
     supabaseGet('contact_messages?select=name,email,phone,created_at&order=created_at.desc&limit=5000').catch(() => []),
+    supabaseGet('reviews?select=order_id,rating&order_id=not.is.null&order=created_at.asc&limit=5000').catch(() => []),
   ]);
+  const ratings = new Map(reviews.map((r) => [r.order_id, Number(r.rating) || '']));
   const orders = allOrders.filter((o) => o?.order_code && !isTestOrInternal(o));
   const skipEmails = new Set(allOrders.filter(isTestOrInternal).map((o) => lower(o.customer_email)).filter(Boolean));
   for (const o of orders) skipEmails.delete(lower(o.customer_email));
@@ -262,8 +345,10 @@ export async function syncSheets({ route = 'cron' } = {}) {
   // One tab failing (unshared, renamed) must not stop the other.
   try {
     result.orders = await syncTab({
-      spreadsheetId: ORDERS_SHEET_ID(), tab: 'Orders', columns: ORDER_COLUMNS, rows: orders.map(orderRow), keyOf: orderKey,
+      spreadsheetId: ORDERS_SHEET_ID(), tab: 'Orders', columns: ORDER_COLUMNS,
+      rows: orders.map((o) => orderRow(o, { ratings })), keyOf: orderKey,
     });
+    await writeStamp(ORDERS_SHEET_ID(), stampText(result.orders));
   } catch (err) {
     result.status = 'partial';
     result.ordersError = String(err?.message || err).slice(0, 300);
@@ -273,6 +358,7 @@ export async function syncSheets({ route = 'cron' } = {}) {
       spreadsheetId: CONTACTS_SHEET_ID(), tab: 'Contacts', columns: CONTACT_COLUMNS,
       rows: buildContactRows({ orders, waitlist, messages, skipEmails }), keyOf: contactKey, merge: mergeContact,
     });
+    await writeStamp(CONTACTS_SHEET_ID(), stampText(result.contacts));
   } catch (err) {
     result.status = result.status === 'partial' ? 'failed' : 'partial';
     result.contactsError = String(err?.message || err).slice(0, 300);

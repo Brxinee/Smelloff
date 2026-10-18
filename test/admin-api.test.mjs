@@ -55,3 +55,13 @@ test('stats count only collected money and group customers by phone', () => {
   const asha = customers.find((c) => c.name === 'Asha');
   assert.deepEqual([asha.orders, asha.spent, asha.city], [2, 51800, 'Pune']);
 });
+
+test('admin can run the Google Sheets sync on demand (reports when it is not set up)', async () => {
+  delete process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+  const login = await call({ action: 'login', password: 'correct horse' }, { 'cf-connecting-ip': '1.1.1.9' });
+  const cookie = login.headers['set-cookie'].split(';')[0];
+  assert.equal((await call({ action: 'syncSheets' })).status, 401, 'needs a session');
+  const out = await call({ action: 'syncSheets' }, { cookie, 'cf-connecting-ip': '1.1.1.9' });
+  assert.equal(out.status, 200);
+  assert.deepEqual(out.body, { sheets: { status: 'not_configured' } });
+});
