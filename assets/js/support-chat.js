@@ -129,7 +129,7 @@
     '.sfc-steplab{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;font-size:11px;color:var(--muted,#9DA398)}' +
     '.sfc-kv{font-size:13px;color:var(--text-2,#CDD3C8);line-height:1.5}' +
     '.sfc-act{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 14px;border-radius:8px;border:1px solid ' + R + ';color:var(--text,#F2F5EF);text-decoration:none;font:600 14px/1 var(--body,system-ui,sans-serif)}' +
-    '.sfc-act--wa{background:var(--cta,#B8FF57);border-color:transparent;color:var(--on-cta,#0A0A0A)}' +
+    '.sfc-act--wa{background:var(--surface-2,#1A1A1A);color:var(--text,#F2F5EF);align-self:flex-start;padding:0 16px 0 12px}.sfc-act--wa:hover{border-color:#25D366}.sfc-act--wa img{width:22px;height:22px;display:block}' +
     '.sfc-act svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}' +
     // Feedback.
     '.sfc-fb{display:flex;align-items:center;gap:2px;margin-top:-2px}' +
@@ -164,7 +164,6 @@
     restart: svg('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'),
     up: svg('<path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2 2v4h5.5a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.3 20H7"/>'),
     down: svg('<path d="M7 13V4H4v9zM7 13l4 8a2 2 0 0 0 2-2v-4h5.5a2 2 0 0 0 2-2.3l-1.2-7A2 2 0 0 0 17.3 4H7"/>'),
-    wa: svg('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1c-1-.5-1.5-1-2-2l1-1-1-2z"/>'),
     truck: svg('<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>')
   };
 
@@ -327,7 +326,9 @@
     }
     if (c.kind === 'whatsapp' && href) {
       var w = el('a', 'sfc-act sfc-act--wa'); w.href = href; w.target = '_blank'; w.rel = 'noopener';
-      w.innerHTML = I.wa; w.appendChild(document.createTextNode('Continue on WhatsApp'));
+      // The site's own WhatsApp logo (same file family as the footer's social row).
+      var wi = el('img'); wi.src = '/assets/icon-whatsapp.png'; wi.alt = ''; wi.width = 22; wi.height = 22; wi.loading = 'lazy'; wi.setAttribute('data-no-skel', '');
+      w.appendChild(wi); w.appendChild(document.createTextNode('Continue on WhatsApp'));
       w.addEventListener('click', function () { track('chat_card_click', 'whatsapp', { page: path }); });
       return w;
     }

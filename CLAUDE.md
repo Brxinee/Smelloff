@@ -87,6 +87,8 @@ session, page-specific, dismissible.
   the START of a new answer. Teaser: once per session, never after the chat
   was opened, 25 s on `/odorstrike`, 30 s on `/`, 45% scroll on a post; none
   on `/track-order`. `data-sf-chat="question"` opens the chat and asks it.
+- The WhatsApp card is a dark button with the site's own logo
+  (`/assets/icon-whatsapp.png`, the footer socials' family), not a drawn icon.
 - **No mic / voice input** (owner removed it, 2026-10-18). The site-wide
   `Permissions-Policy: microphone=()` in `config/routing.json` blocks it anyway;
   change both together if voice ever comes back.
