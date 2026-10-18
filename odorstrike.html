@@ -131,7 +131,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   window.SMELLOFF_CONFIG = {
     GA4_ID: "G-S1MJ58PD89",
     META_PIXEL_ID: "1455100092891684",
-    SHEETS_ENDPOINT: "https://script.google.com/macros/s/AKfycbwvZamMivX4MF_jM83VjO3f8GDYmitlOxKkkXS2mSnivZ1wzps9ZolIQG2tvKMATIoh2Q/exec",
     WHATSAPP: "919392974031",
     // pair = two bottles together ("2 for ₹419", owner's call 2026-10-15);
     // five = the pack of five ("5 for ₹899", 2026-10-18). An order is priced
@@ -3320,42 +3319,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     };
   }
 
-  function logOrderToSheets(order) {
-    const params = new URLSearchParams();
-    Object.keys(order).forEach(k => params.append(k, order[k] != null ? order[k] : ''));
-    const url = CFG.SHEETS_ENDPOINT + '?' + params.toString();
-
-    // Method 1: sendBeacon — survives page navigation, bypasses CORS
-    let beaconSent = false;
-    if (navigator.sendBeacon) {
-      try {
-        // Beacon with FormData (POST) — Apps Script doPost handles it
-        const fd = new FormData();
-        Object.keys(order).forEach(k => fd.append(k, order[k] != null ? order[k] : ''));
-        beaconSent = navigator.sendBeacon(CFG.SHEETS_ENDPOINT, fd);
-      } catch (e) {
-        console.warn('[Smelloff] sendBeacon failed:', e);
-      }
-    }
-
-    // Method 2: Image pixel — fires a GET, bypasses CORS, always works
-    // Runs in parallel as belt-and-braces backup
-    try {
-      const img = new Image();
-      // onerror is expected here (Apps Script returns a non-image response); swallow it
-      img.onerror = () => {};
-      img.src = url;
-    } catch (e) {
-      console.warn('[Smelloff] Pixel fallback failed:', e);
-    }
-
-    // Method 3: fetch as last resort (if URL is too long for beacon+img and both fail)
-    if (!beaconSent && url.length < 8000) {
-      fetch(url, { method: 'GET', mode: 'no-cors', keepalive: true })
-        .catch(e => console.warn('[Smelloff] fetch backup failed:', e));
-    }
-  }
-
   function showLoadingScreen(label, sub) {
     var cf = document.getElementById('checkoutForm');
     if (cf) cf.style.display = 'none';
@@ -3629,9 +3592,9 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       // Order persisted successfully.
       const persistedOrderId = data.order_code || orderId;
 
-      // Update the order details for Sheets/email to reflect the confirmed ID
+      // The email below uses the confirmed ID. The server copies the order
+      // into the owner's Google Sheet (api/sheets-sync.js).
       order.orderId = persistedOrderId;
-      logOrderToSheets(order);
 
       if (order.email) {
         SmelloffEmail.send('orderConfirmation', order.email, {

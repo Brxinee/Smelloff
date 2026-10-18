@@ -7,7 +7,7 @@ Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — pocket-sized fabric
 - Static HTML + vanilla JS (no framework)
 - Cloudflare Workers deployment (`wrangler.jsonc`, `src/index.js`); redirects + headers live in `config/routing.json` — see below
 - Supabase (orders/data)
-- Google Sheets webhook (order backup)
+- Google Sheets mirror of orders + customers (`api/sheets-sync.js`)
 - GA4 + Meta Pixel (consent-gated)
 - Resend transactional email via `/api/send-email`
 - Self-hosted fonts (Fraunces + JetBrains Mono + Inter Tight + Barlow Condensed)
@@ -44,6 +44,28 @@ the move silently dropped, now restored:
 - The Worker parses JSON with a `verify` hook that keeps `req.rawBody`: the
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
+
+## Google Sheets: orders + customers, written by the server (2026-10-18, owner: "organise my sheets")
+The browser's Apps Script beacon is gone (it wrote most orders twice, never
+sent Razorpay-paid orders, kept every status at "NEW" and took rows from
+anyone). `api/sheets-sync.js` now mirrors Supabase into two sheets after
+every COD order / prepaid confirmation (`syncSheetsNow`, after the Shiprocket
+push) and on the 15-minute cron. Setup + rules: `docs/GOOGLE-SHEETS-SETUP.md`.
+- **Orders data** (`1VY0…`): Dashboard (KPIs, to-ship queue, 12 months, stock,
+  by state; status lists are named ranges) + Orders (A–S synced, COD call and
+  Notes the owner's). **Smelloff Customers & Emails** (`1qe8…`): Summary +
+  Contacts (one row per email or phone; "Email offers" Yes only after a
+  signup, never taken away). The April 2026 waitlist was imported by hand.
+- `api/_google-sheets.js`: service-account JWT via WebCrypto (secret
+  `GOOGLE_SERVICE_ACCOUNT_JSON`, `/api/health` → `configured.sheets`) and
+  `planTabSync`: upsert by key, inserts at the top, writes only changed
+  database columns, never deletes or blanks, stops on a header mismatch,
+  strings as `stringValue` (no formula injection). **Change a column in
+  `ORDER_COLUMNS` / `CONTACT_COLUMNS` and the sheet header together.**
+- Test orders and the business WhatsApp number's checkouts are left out.
+- The old tabs (Old orders log, Inventory, Expenses, Ad Spend, Returns,
+  Waitlist) were left for the owner to delete; the connector refused to.
+- `test/sheets-sync.test.mjs` pins all of the above.
 
 ## Checkout summary: MRP and saving (2026-10-18)
 The checkout summary shows the struck MRP on the item, **MRP / Discount /
