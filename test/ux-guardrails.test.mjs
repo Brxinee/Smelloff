@@ -190,3 +190,38 @@ test('PDP compare table names clothes perfume sprays, modestly', () => {
   assert.match(table, /<th scope="col">Clothes perfume spray<\/th>/);
   for (const row of table.match(/<tr>.*?<\/tr>/g)) assert.equal((row.match(/<t[hd]\b/g) || []).length, 5, row);
 });
+
+// Full-site audit (2026-10-15). partners.smelloff.in has no DNS record
+// (NXDOMAIN), so the footer's "Partners" link was dead on 74 pages.
+test('the footer links nowhere that does not resolve', () => {
+  const gen = fs.readFileSync('scripts/apply-chrome.mjs', 'utf8');
+  assert.doesNotMatch(gen, /href="https:\/\/partners\.smelloff\.in"/);
+});
+
+// Pages other than / and /odorstrike take their layout from chrome.css §12.
+// Loaded async they painted unstyled and jumped (blog index CLS 0.19 on 4G).
+test('shared CSS blocks paint on every page except the two self-contained ones', () => {
+  for (const f of ['faq.html', 'about.html', 'privacy.html', 'blog/index.html', 'blog/how-to-use-odorstrike.html']) {
+    const html = fs.readFileSync(f, 'utf8');
+    assert.match(html, /<link rel="stylesheet" href="\/assets\/css\/chrome\.css\?v=/, `${f}: chrome.css must block`);
+    assert.match(html, /<link rel="stylesheet" href="\/assets\/fonts\.css\?v=/, `${f}: fonts.css must block`);
+  }
+  // A heading width in `ch` changes with the font, so it rewraps when the web font lands.
+  assert.doesNotMatch(fs.readFileSync('blog/index.html', 'utf8'), /\.b-hero h1\{[^}]*max-width:\d+ch/);
+});
+
+test('headings fall back to a real bold face sized for Space Grotesk 700', () => {
+  for (const f of ['assets/fonts.css', 'index.html']) {
+    assert.match(fs.readFileSync(f, 'utf8'), /font-family:'Space Grotesk Fallback';font-weight:600 900;src:local\('Arial Bold'\)[^}]*size-adjust:100\.3%/, f);
+  }
+});
+
+// Quantity used to be fixed once checkout opened. The pair price is offered
+// as a button the buyer presses, never pre-applied.
+test('checkout lets the buyer change quantity and opt into the pair', () => {
+  const pdp = fs.readFileSync('odorstrike.html', 'utf8');
+  const overlay = pdp.slice(pdp.indexOf('id="checkoutOverlay"'), pdp.indexOf('<!-- 1 · CONTACT -->'));
+  for (const id of ['ckDecBtn', 'ckQtyVal', 'ckIncBtn', 'ckPairBtn']) assert.ok(overlay.includes(`id="${id}"`), id);
+  assert.match(pdp, /function ckStepQty\(delta\)[\s\S]*?setCartQty\(q\);[\s\S]*?renderCheckoutPrices\(\);/);
+  assert.match(pdp, /pairBtn\.hidden = t\.qty !== 1;/);
+});
