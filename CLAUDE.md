@@ -81,7 +81,10 @@ session, page-specific, dismissible.
   after each answer, `**bold**` and "- " lists built as nodes (textContent
   only; links only smelloff.in / wa.me / @smelloff.in), thumbs up/down (down
   offers WhatsApp with the question prefilled), new-chat button, voice
-  (`SpeechRecognition`, en-IN / hi-IN) where supported, `reveal()` scrolls to
+  (`SpeechRecognition`, en-IN / hi-IN) where supported, the brand chat mark
+  (rounded bubble + one sparkle, owner artwork, as inline SVG `I.spark`) on the launcher,
+  and the owner's robot as the header avatar (`assets/brand/chat-avatar@{80,120}`
+  AVIF + WebP, 2–3KB, lazy so it loads only when the chat opens), `reveal()` scrolls to
   the START of a new answer. Teaser: once per session, never after the chat
   was opened, 25 s on `/odorstrike`, 30 s on `/`, 45% scroll on a post; none
   on `/track-order`. `data-sf-chat="question"` opens the chat and asks it.
