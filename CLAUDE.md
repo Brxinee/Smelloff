@@ -155,6 +155,21 @@ checkout attempt (UPI, 12 Oct, failed). Real orders: 5 delivered, Aug–Sep.
 - Support-chat launcher is an icon-only 48px circle under 520px (the "Help"
   pill sat over headings and prices); the label stays as the accessible name.
 
+## Pack of 5 for ₹899 (2026-10-18, owner: "add a pack of 5, combos in cards, price it to convert")
+Ladder: **1 = ₹229 · 2 = ₹419 (₹209.50 each) · 5 = ₹899 (₹179.80 each, save
+₹246)**. Each card shows the per-bottle price so the falling number sells the
+bigger pack; the 5 card carries "Best value" (true: lowest per bottle). One
+bottle stays pre-selected. An order is priced as fives, then pairs, then an
+odd bottle (4 = ₹838, 6 = ₹1,128, 10 = ₹1,798), so more bottles never cost
+less. `fivePackPrice` / `fivePackPricePaise` / `fivePackSaving` in
+`config/product.json`; `CFG.PRICES.five` in `odorstrike.html`; the same four
+rule functions as the pair (below) now handle fives.
+- Cards: homepage `#packPicker` (radios, `?qty=5`), PDP `.pd-pks` under the hero
+  buttons and in `#buy` (`pdpPickPack(n)`; `.pd-pack` is an older, unrelated
+  class). Checkout's `#ckPairBtn` offers the pair at 1 bottle and "Make it 5 ·
+  only ₹X more" at 3–4 (`ckUpsellTarget`).
+- Shiprocket gets a "(pack of 5)" line (sku `OS-001-50ML-X5`) before pairs.
+
 ## 2 for ₹419 (2026-10-15, owner's call)
 Two bottles together cost **₹419** (save ₹39); COD stays ₹89. Every pair in
 an order is priced at `product.pairPrice`, an odd bottle at ₹229 (3 = ₹648,

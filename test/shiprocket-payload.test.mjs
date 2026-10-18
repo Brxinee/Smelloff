@@ -24,7 +24,8 @@ test('createShiprocketOrder sends the COD fee as transaction_charges; prepaid se
     await createShiprocketOrder({ ...base, order_code: 'SMF-20261011-0002', payment_method: 'upi', amount: 22900, cod_fee: 0 });
     await createShiprocketOrder({ ...base, items: [{ quantity: 2, price: 229 }], order_code: 'SMF-20261015-0003', payment_method: 'cod', amount: 50800, cod_fee: 8900 });
     await createShiprocketOrder({ ...base, items: [{ quantity: 3, price: 229 }], order_code: 'SMF-20261015-0004', payment_method: 'upi', amount: 64800, cod_fee: 0 });
-    const [cod, prepaid, codPair, prepaidThree] = bodies;
+    await createShiprocketOrder({ ...base, items: [{ quantity: 6, price: 229 }], order_code: 'SMF-20261018-0005', payment_method: 'cod', amount: 121700, cod_fee: 8900 });
+    const [cod, prepaid, codPair, prepaidThree, codSix] = bodies;
     const itemsTotal = (b) => b.order_items.reduce((n, i) => n + i.selling_price * i.units, 0);
     // 2 for ₹419: the courier must collect 419 + 89, not 2 × 229 + 89.
     assert.equal(itemsTotal(codPair) + codPair.transaction_charges, 508);
@@ -36,6 +37,9 @@ test('createShiprocketOrder sends the COD fee as transaction_charges; prepaid se
     assert.equal(itemsTotal(prepaidThree), 648);
     assert.equal(prepaidThree.order_items.length, 2);
     assert.equal(prepaidThree.sub_total, 648);
+    // 6 bottles: a pack-of-5 line (₹899) + one single (₹229); COD adds ₹89.
+    assert.deepEqual(codSix.order_items.map((i) => [i.sku.slice(-3), i.units, i.selling_price]), [['-X5', 1, 899], ['0ML', 1, 229]]);
+    assert.equal(itemsTotal(codSix) + codSix.transaction_charges, 1217);
     assert.equal(cod.payment_method, 'COD');
     assert.equal(cod.sub_total, 229);
     assert.equal(cod.transaction_charges, 89);

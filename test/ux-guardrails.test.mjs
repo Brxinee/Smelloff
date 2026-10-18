@@ -223,5 +223,10 @@ test('checkout lets the buyer change quantity and opt into the pair', () => {
   const overlay = pdp.slice(pdp.indexOf('id="checkoutOverlay"'), pdp.indexOf('<!-- 1 · CONTACT -->'));
   for (const id of ['ckDecBtn', 'ckQtyVal', 'ckIncBtn', 'ckPairBtn']) assert.ok(overlay.includes(`id="${id}"`), id);
   assert.match(pdp, /function ckStepQty\(delta\)[\s\S]*?setCartQty\(q\);[\s\S]*?renderCheckoutPrices\(\);/);
-  assert.match(pdp, /pairBtn\.hidden = t\.qty !== 1;/);
+  assert.match(pdp, /pairBtn\.hidden = !up;/);
+  assert.match(pdp, /function ckUpsellTarget\(q\) \{ return q === 1 \? 2 : \(q === 3 \|\| q === 4\) \? 5 : 0; \}/);
+  // Pack cards on the PDP set the quantity; none is pre-selected beyond one.
+  const cards = [...pdp.matchAll(/class="pd-pk[^"]*" data-qty="(\d+)"[^>]*aria-pressed="(true|false)"/g)];
+  assert.deepEqual(cards.map((m) => m[1]), ['1', '2', '5', '1', '2', '5']);
+  assert.deepEqual(cards.filter((m) => m[2] === 'true').map((m) => m[1]), ['1', '1']);
 });

@@ -601,7 +601,14 @@ test('Step 4 Backend: amount validation logic strictly enforces paise integrity'
 
   // An odd bottle on top of the pairs is at the unit price
   assert.equal(subtotalForQuantity(3), 648);
-  assert.equal(subtotalForQuantity(10), 2095);
+  // Pack of 5 = ₹899; fives first, then pairs, then an odd bottle
+  assert.equal(subtotalForQuantity(4), 838);
+  assert.equal(subtotalForQuantity(5), 899);
+  assert.equal(subtotalForQuantity(6), 1128);
+  assert.equal(subtotalForQuantity(7), 1318);
+  assert.equal(subtotalForQuantity(10), 1798);
+  // Never cheaper to buy fewer bottles
+  for (let q = 1; q < 10; q++) assert.ok(subtotalForQuantity(q + 1) > subtotalForQuantity(q), `qty ${q + 1}`);
 });
 
 test('Multi-quantity orderPayload calculation integrity in chrome.js', () => {
@@ -2022,7 +2029,7 @@ test('Post-Capture Financial Lifecycle Matrix: 16 verification scenarios', async
   // 7. full refund amounts match authoritative paise for all quantities (1, 2, 3, 5, 10)
   const basePricePaise = 22900;
   const quantities = [1, 2, 3, 5, 10];
-  const expectedRefundPaise = [22900, 41900, 64800, 106700, 209500];
+  const expectedRefundPaise = [22900, 41900, 64800, 89900, 179800];
   quantities.forEach((qty, idx) => {
     assert.equal(subtotalForQuantity(qty) * 100, expectedRefundPaise[idx]);
   });

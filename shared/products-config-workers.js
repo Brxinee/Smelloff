@@ -192,16 +192,19 @@ export function isValidTransition(currentStatus, targetStatus, paymentMethod = '
  * Enforces strict quantity bounds [1..BASE_PRODUCT.maxQuantity], recomputes all sums and taxes server-side.
  */
 /**
- * Rupee subtotal for `qty` bottles: every pair is priced at product.pairPrice
- * ("2 for ₹419", owner's call 2026-10-15), any odd bottle at the unit price.
- * The one rule the browser (SMELLOFF_CONFIG.PRICES.pair), create-order and
+ * Rupee subtotal for `qty` bottles: every five is priced at
+ * product.fivePackPrice ("5 for ₹899", 2026-10-18), every pair left over at
+ * product.pairPrice ("2 for ₹419", 2026-10-15), any odd bottle at the unit
+ * price. The one rule the browser (SMELLOFF_CONFIG.PRICES), create-order and
  * Shiprocket all follow.
  */
 export function subtotalForQuantity(qty) {
   const q = Math.max(0, Math.floor(Number(qty) || 0));
   const unit = Number(P.price);
   const pair = Number(P.pairPrice) || unit * 2;
-  return Math.floor(q / 2) * pair + (q % 2) * unit;
+  const five = Number(P.fivePackPrice) || pair * 2 + unit;
+  const r = q % 5;
+  return Math.floor(q / 5) * five + Math.floor(r / 2) * pair + (r % 2) * unit;
 }
 
 export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {

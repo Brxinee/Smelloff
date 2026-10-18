@@ -304,9 +304,11 @@ export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {
 
   const unitPrice = p.price;
   const unitMrp = p.mrp;
-  // "2 for ₹419": every pair at product.pairPrice, an odd bottle at the unit price.
+  // "5 for ₹899" per five, "2 for ₹419" per pair left, an odd bottle at the unit price.
   const pairPrice = Number(p.pairPrice) || unitPrice * 2;
-  const subtotal = Math.floor(qty / 2) * pairPrice + (qty % 2) * unitPrice;
+  const fivePrice = Number(p.fivePackPrice) || pairPrice * 2 + unitPrice;
+  const rest = qty % 5;
+  const subtotal = Math.floor(qty / 5) * fivePrice + Math.floor(rest / 2) * pairPrice + (rest % 2) * unitPrice;
   const mrpTotal = qty * unitMrp;
   const shipping = cfg.shipping.prepaid.rate;
   const codFee = isCod ? p.codFee : 0;
