@@ -218,7 +218,7 @@ const shell = (inner, preheader = '', { help = true } = {}) => `<!DOCTYPE html>
         <tr>
           <td class="smf-pad" align="center" style="padding:24px 36px 8px 36px;font-family:${FONT};font-size:12px;line-height:1.7;color:${MUTED};">
             <p class="smf-muted" style="margin:0 0 6px 0;">
-              <a class="smf-link" href="${SITE_URL}/track-order" style="color:${TEXT};text-decoration:none;font-weight:600;">Track order</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a class="smf-link" href="${SITE_URL}/returns" style="color:${TEXT};text-decoration:none;font-weight:600;">Returns</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a class="smf-link" href="${SITE_URL}/faq" style="color:${TEXT};text-decoration:none;font-weight:600;">FAQ</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a class="smf-link" href="https://instagram.com/smelloffindia" style="color:${TEXT};text-decoration:none;font-weight:600;">Instagram</a>
+              <a class="smf-link" href="${SITE_URL}/track-order" style="color:${TEXT};text-decoration:none;font-weight:600;">Track order</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a class="smf-link" href="${SITE_URL}/returns" style="color:${TEXT};text-decoration:none;font-weight:600;">Returns</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a class="smf-link" href="${SITE_URL}/faq" style="color:${TEXT};text-decoration:none;font-weight:600;">FAQ</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a class="smf-link" href="https://instagram.com/smelloffx" style="color:${TEXT};text-decoration:none;font-weight:600;">Instagram</a>
             </p>
             <p class="smf-muted" style="margin:0;color:${MUTED};">Smelloff · Hyderabad, India · Pocket-sized fabric odor spray</p>
           </td>

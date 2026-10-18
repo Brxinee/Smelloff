@@ -168,7 +168,7 @@ const HEADER = header();
 
 /* --- the one footer -------------------------------------------------- */
 const SOCIALS = [
-  ['https://instagram.com/smelloffindia', 'Instagram', 'icon-instagram-white.png'],
+  ['https://instagram.com/smelloffx', 'Instagram', 'icon-instagram-white.png'],
   ['https://x.com/smelloffindia', 'X (Twitter)', 'icon-x.png'],
   ['https://t.me/smelloffindia', 'Telegram', 'icon-telegram-white.png'],
   ['https://www.linkedin.com/company/smelloff', 'LinkedIn', 'icon-linkedin-white.png'],
