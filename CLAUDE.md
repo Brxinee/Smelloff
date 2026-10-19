@@ -45,6 +45,37 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Security check-up (2026-10-18, owner: "vibe coded via various models, security check up")
+Reviewed every `/api/*` handler, the admin dashboard, client-side rendering,
+committed keys, `npm audit` (0 vulnerabilities), the live Supabase policies and
+the four deployed edge functions. Most of the Worker was already sound (HMAC
+webhooks, Razorpay amount/capture checks against the API, admin session cookie,
+escaped admin/comment/review rendering, CSP + HSTS). The only Supabase key in
+the repo is the public `anon` one. Fixed:
+- **Live edge functions were older than the repo.** `submit-review` (v1)
+  accepted any order UUID with no token and any non-cancelled status, so anyone
+  could create an order via `/api/create-order` (it returns the UUID) and post
+  a "Verified buyer" review. The hardened repo version (HMAC `review_token`
+  from `track-order`, COD only once delivered) had never been deployed, and the
+  live `track-order` didn't return the token, so the site's review flow was
+  broken too. **Deploy `supabase/functions/*` whenever they change.**
+- **Edge `create-order` (v5) and `cancel-order` are retired** to 410 stubs. The
+  first wrote orders with the service-role key from any caller at ₹299/₹60, and
+  its COD rows were booked into Shiprocket by the 15-minute sync. The second
+  depended on Supabase Auth, which the site doesn't use (0 users). Delete both
+  in the Supabase dashboard; tests fail if they come back as real code.
+- `orders` policy `users_select_own_orders` dropped and anon/authenticated
+  grants revoked (`20261018_security_hardening.sql`).
+- `/api/create-order` is throttled per IP (10 / 10 min): each COD order emails
+  the owner and books a shipment. DB error text no longer reaches the browser.
+- Razorpay webhook dedups by event id only after the signature verifies.
+- `/api/admin` refuses a non-https tracking link.
+- Not changed, owner's call: blog comments publish instantly (`approved`
+  defaults true, by design); `prelaunch_leads` accepts any anon insert;
+  rate limits are per Worker instance (see the Ponytail note).
+- **Owner, in Supabase → Authentication → Providers: turn off email sign-ups**
+  (the site has no logins), so no one can mint a session for a customer's email.
+
 ## Checkout summary: MRP and saving (2026-10-18)
 The checkout summary shows the struck MRP on the item, **MRP / Discount /
 Shipping** rows and a "You save ₹X on MRP" line (MRP × qty from

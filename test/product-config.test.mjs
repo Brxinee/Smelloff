@@ -134,15 +134,15 @@ test('claims guardrails: forbidden claims are flagged and not in approved list',
   assert.equal(odorstrikeHtml.includes('towels, bedsheets'), false, 'odorstrike.html must not recommend household linens');
 });
 
-test('supabase/functions/create-order/index.ts derives from product.json without independent hardcodes', () => {
-  const code = readFileSync('supabase/functions/create-order/index.ts', 'utf8');
-  assert.ok(code.includes('config/product.json'));
-  assert.ok(code.includes('UNIT_PRICE_RUPEES = productConfig.product.price'));
-  assert.ok(code.includes('COD_FEE_RUPEES = productConfig.product.codFee'));
-  assert.ok(code.includes('MAX_QTY = productConfig.product.maxQuantity'));
-  assert.equal(code.includes('UNIT_PRICE_RUPEES = 229'), false);
-  assert.equal(code.includes('COD_FEE_RUPEES = 89'), false);
-  assert.equal(code.includes('MAX_QTY = 5'), false);
+test('the retired Supabase create-order and cancel-order functions only answer 410', () => {
+  // Checkout uses the Worker's /api/create-order. The edge copies wrote and
+  // cancelled orders with the service-role key for any caller.
+  for (const fn of ['create-order', 'cancel-order']) {
+    const code = readFileSync(`supabase/functions/${fn}/index.ts`, 'utf8');
+    assert.match(code, /410\)/, `${fn} must answer 410`);
+    assert.equal(code.includes('SUPABASE_SERVICE_ROLE_KEY'), false, `${fn} must not touch the database`);
+    assert.equal(code.includes('createClient'), false, `${fn} must not touch the database`);
+  }
 });
 
 test('production backend endpoints derive from canonical BASE_PRODUCT without fallback 229 literals', () => {
