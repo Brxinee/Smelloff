@@ -101,6 +101,35 @@ at different spreadsheets (the ID is the long part of the sheet URL).
   checked out are "No": send them order updates, not offers, unless they opt
   in (DPDP Act).
 
+## The design is code (autopilot)
+
+`api/sheets-layout.js` builds every generated tab (Dashboard, To do,
+Settings, Summary, Follow up) and the look of Orders/Contacts: colours,
+widths, banding, status colours, dropdowns, notes, named ranges, protection.
+Each sync checks the version stamp (developer metadata `smelloff_layout`)
+against `LAYOUT_VERSION`. When they differ, the tabs are rebuilt in place;
+order and contact data, the owner columns (COD call, Notes) and your inputs
+(Period, BottlesReceived, LowStockAt) are kept. The old v2 inputs
+(Dashboard!B5, B30) are carried over once.
+- **Change the design:** edit `sheets-layout.js`, bump `LAYOUT_VERSION`. The
+  next sync (or /admin → **Rebuild design**) applies it to both sheets.
+- **Someone broke a tab by hand:** /admin → **Rebuild design**.
+- Google rejects a conditional-format rule with an empty `textFormat`, and
+  `unprotectedRanges` on a protection that isn't a whole sheet. The strict fake
+  in `test/sheets-e2e.test.mjs` enforces both, plus formula lint.
+
+## Tested
+
+`test/sheets-e2e.test.mjs` places a COD order through the real
+`/api/create-order`, follows it confirmed → shipped → delivered, and checks
+both sheets. On 19 Oct 2026 the same order (Priya Sharma, 2 bottles, ₹508
+COD) was synced into staging copies of the real sheets in Google: the order
+landed in row 2 with the "Confirm COD" WhatsApp link, Dashboard went to 7
+orders / ₹2,062 / COD to confirm 1 / To ship 2, To do listed it, and Contacts
++ Summary (59 people, 7 customers) updated. A real order on the live site
+also books a Shiprocket shipment: there is no test filter there, so cancel a
+test order in Shiprocket right away.
+
 ## Changing a column
 
 `ORDER_COLUMNS` / `CONTACT_COLUMNS` in `api/sheets-sync.js` must match the

@@ -7,7 +7,7 @@
 import { ORDER_COLUMNS, CONTACT_COLUMNS } from './_sheet-columns.js';
 import { getSpreadsheetMeta, readRanges, batchUpdate, columnLetter } from './_google-sheets.js';
 
-export const LAYOUT_VERSION = '2026-10-19.3';
+export const LAYOUT_VERSION = '2026-10-19.4';
 const STAMP_KEY = 'smelloff_layout';
 
 // Brand: Carbon Black · Ice White · Signal Lime (CLAUDE.md "Brand palette").
@@ -20,6 +20,7 @@ const C = {
   orange: '#FFD8B0',
 };
 const BODY = 'Inter';
+const PERIODS = ['All time', 'This month', 'Last month', 'Last 7 days', 'Last 30 days', 'This year'];
 const DISPLAY = 'Space Grotesk';
 
 const rgb = (hex) => {
@@ -156,21 +157,26 @@ function sizes(sheetId, dimension, list) {
   return out;
 }
 
-const cf = (ranges, formula, st) => ({
-  addConditionalFormatRule: {
-    index: 0,
-    rule: {
-      ranges,
-      booleanRule: {
-        condition: { type: 'CUSTOM_FORMULA', values: [{ userEnteredValue: formula }] },
-        format: {
-          ...(st.bg ? { backgroundColorStyle: color(st.bg) } : {}),
-          textFormat: { ...(st.fg ? { foregroundColorStyle: color(st.fg) } : {}), ...(st.bold ? { bold: true } : {}) },
+// Google rejects an empty textFormat in a rule ("only supports bold, italic,
+// strikethrough, foreground color and background color"), so leave it out.
+function cf(ranges, formula, st) {
+  const text = { ...(st.fg ? { foregroundColorStyle: color(st.fg) } : {}), ...(st.bold ? { bold: true } : {}) };
+  return {
+    addConditionalFormatRule: {
+      index: 0,
+      rule: {
+        ranges,
+        booleanRule: {
+          condition: { type: 'CUSTOM_FORMULA', values: [{ userEnteredValue: formula }] },
+          format: {
+            ...(st.bg ? { backgroundColorStyle: color(st.bg) } : {}),
+            ...(Object.keys(text).length ? { textFormat: text } : {}),
+          },
         },
       },
     },
-  },
-});
+  };
+}
 
 /* ── shared pieces ─────────────────────────────────────────────────────── */
 
@@ -243,6 +249,10 @@ function ordersRefs(columns) {
   const periodIfs = `${O('Order date')},">="&PeriodStart,${O('Order date')},"<"&PeriodEnd`;
   return { letter, O, sale, toShip, onWay, inPeriod, periodIfs };
 }
+
+// A list that may come back empty. IFERROR would replace every cell of an
+// HSTACKed error array (the message showed twice), so test the first cell.
+const listOr = (expr, msg) => `=LET(r,${expr},IF(ISERROR(INDEX(r,1,1)),"${msg}",r))`;
 
 // First name for WhatsApp messages, built inside the sheet.
 const firstName = (nm) => `IF(${nm}="","there",INDEX(SPLIT(${nm}," "),1))`;
@@ -368,7 +378,7 @@ function dashboard(sheetId, columns) {
 
   return {
     requests: [...cv.requests(), ...requests, ...sizes(sheetId, 'ROWS', rowPx), ...sizes(sheetId, 'COLUMNS', [24, 115, 115, 115, 115, 115, 115, 115, 115, 24]), chart,
-      { setDataValidation: { range: R(sheetId, 2, 3, 2, 3), rule: { condition: { type: 'ONE_OF_LIST', values: ['All time', 'This month', 'Last month', 'Last 7 days', 'Last 30 days', 'This year'].map((x) => ({ userEnteredValue: x })) }, strict: true, showCustomUi: true, inputMessage: 'Pick the period for the sales numbers' } } }],
+      { setDataValidation: { range: R(sheetId, 2, 3, 2, 3), rule: { condition: { type: 'ONE_OF_LIST', values: PERIODS.map((x) => ({ userEnteredValue: x })) }, strict: true, showCustomUi: true, inputMessage: 'Pick the period for the sales numbers' } } }],
     named: { Period: R(sheetId, 2, 3, 2, 3), SyncStatus: R(sheetId, 0, 1, 6, 7) },
     inputs: [R(sheetId, 2, 3, 2, 3)],
     grid: { rows: 80, cols: 10, frozen: 1 },
@@ -402,7 +412,7 @@ function todo(sheetId, columns) {
     sub: 'Message or call each buyer, then pick the result in the COD call column on the Orders tab. Confirming first cuts returned parcels.',
     headers: ['Order ID', 'Name', 'Phone', 'Total (₹)', 'City', 'Ordered', 'WhatsApp'],
     cap: 15, formats: [fId, {}, fTxt, fMoney, {}, fWhen, fLink],
-    formula: `=IFERROR(ARRAY_CONSTRAIN(LET(f,SORT(FILTER({${O('Order ID')},${O('Name')},${O('Phone')},${O('Total (₹)')},${O('City')},${O('Order date')}},${O('Payment')}="COD",${O('Status')}="New",${O('COD call')}=""),6,TRUE),HSTACK(f,MAP(INDEX(f,,1),INDEX(f,,2),INDEX(f,,3),INDEX(f,,4),INDEX(f,,5),LAMBDA(id,nm,ph,tot,ct,${wa('ph', `"Hi "&${name('nm')}&", this is Smelloff. Please confirm your Cash on Delivery order "&id&" for ₹"&tot&", delivering to "&ct&". Reply YES to confirm or NO to cancel."`, 'Confirm on WhatsApp')})))),15,7),"Nothing to confirm")`,
+    formula: listOr(`ARRAY_CONSTRAIN(LET(f,SORT(FILTER({${O('Order ID')},${O('Name')},${O('Phone')},${O('Total (₹)')},${O('City')},${O('Order date')}},${O('Payment')}="COD",${O('Status')}="New",${O('COD call')}=""),6,TRUE),HSTACK(f,MAP(INDEX(f,,1),INDEX(f,,2),INDEX(f,,3),INDEX(f,,4),INDEX(f,,5),LAMBDA(id,nm,ph,tot,ct,${wa('ph', `"Hi "&${name('nm')}&", this is Smelloff. Please confirm your Cash on Delivery order "&id&" for ₹"&tot&", delivering to "&ct&". Reply YES to confirm or NO to cancel."`, 'Confirm on WhatsApp')})))),15,7)`, 'Nothing to confirm'),
   });
   block({
     title: `="Ship these orders, oldest first ("&SUMPRODUCT(COUNTIF(${O('Status')},ToShipStatuses))&")"`,
@@ -417,21 +427,21 @@ function todo(sheetId, columns) {
     sub: 'Open orders where Shiprocket reports a problem. Check the parcel in Shiprocket and call the buyer if the address or phone is the issue.',
     headers: ['Order ID', 'Name', 'Phone', 'Courier', 'AWB', 'Courier status', 'Tracking'],
     cap: 10, formats: [fId, {}, fTxt, {}, fTxt, { bold: true, fg: C.redText }, fLink],
-    formula: `=IFERROR(ARRAY_CONSTRAIN(LET(f,FILTER({${O('Order ID')},${O('Name')},${O('Phone')},${O('Courier')},${O('AWB')},${O('Courier status')}},${problem},${toShip}+${onWay}),HSTACK(f,MAP(INDEX(f,,5),LAMBDA(awb,IF(awb="","",HYPERLINK("https://www.shiprocket.co/tracking/"&awb,"Track")))))),10,7),"No courier problems")`,
+    formula: listOr(`ARRAY_CONSTRAIN(LET(f,FILTER({${O('Order ID')},${O('Name')},${O('Phone')},${O('Courier')},${O('AWB')},${O('Courier status')}},${problem},${toShip}+${onWay}),HSTACK(f,MAP(INDEX(f,,5),LAMBDA(awb,IF(awb="","",HYPERLINK("https://www.shiprocket.co/tracking/"&awb,"Track")))))),10,7)`, 'No courier problems'),
   });
   block({
     title: `="Ask for a review ("&COUNTIFS(${O('Status')},"Delivered",${O('Review (stars)')},"")&")"`,
     sub: 'Delivered orders with no review yet, newest first. Reviews from real buyers are the only way to get review stars on Google.',
     headers: ['Order ID', 'Name', 'Phone', 'Delivered on', 'WhatsApp'],
     cap: 15, formats: [fId, {}, fTxt, fDay, fLink],
-    formula: `=IFERROR(ARRAY_CONSTRAIN(LET(f,SORT(FILTER({${O('Order ID')},${O('Name')},${O('Phone')},${O('Delivered on')}},${O('Status')}="Delivered",${O('Review (stars)')}=""),4,FALSE),HSTACK(f,MAP(INDEX(f,,2),INDEX(f,,3),LAMBDA(nm,ph,${wa('ph', `"Hi "&${name('nm')}&", this is Smelloff. Hope ODORSTRIKE is working well for you. Could you leave a quick review? It takes a minute: https://smelloff.in/track-order"`, 'Ask on WhatsApp')})))),15,5),"No reviews to ask for")`,
+    formula: listOr(`ARRAY_CONSTRAIN(LET(f,SORT(FILTER({${O('Order ID')},${O('Name')},${O('Phone')},${O('Delivered on')}},${O('Status')}="Delivered",${O('Review (stars)')}=""),4,FALSE),HSTACK(f,MAP(INDEX(f,,2),INDEX(f,,3),LAMBDA(nm,ph,${wa('ph', `"Hi "&${name('nm')}&", this is Smelloff. Hope ODORSTRIKE is working well for you. Could you leave a quick review? It takes a minute: https://smelloff.in/track-order"`, 'Ask on WhatsApp')})))),15,5)`, 'No reviews to ask for'),
   });
   block({
     title: '="Checkouts that did not finish, last 30 days"',
     sub: 'Payment pending or failed. A short, helpful message often saves the order.',
     headers: ['Order ID', 'Name', 'Phone', 'Total (₹)', 'Tried on', 'What happened', 'WhatsApp'],
     cap: rows - r - 4, formats: [fId, {}, fTxt, fMoney, fWhen, {}, fLink],
-    formula: `=IFERROR(LET(f,SORT(FILTER({${O('Order ID')},${O('Name')},${O('Phone')},${O('Total (₹)')},${O('Order date')},${O('Status')}},REGEXMATCH(${O('Status')},"^(Payment pending|Payment failed)$"),${O('Order date')}>=TODAY()-30),5,FALSE),HSTACK(f,MAP(INDEX(f,,1),INDEX(f,,2),INDEX(f,,3),LAMBDA(id,nm,ph,${wa('ph', `"Hi "&${name('nm')}&", this is Smelloff. Your order "&id&" did not go through. Can we help you finish it?"`, 'Chat on WhatsApp')})))),"No unfinished checkouts in the last 30 days")`,
+    formula: listOr(`LET(f,SORT(FILTER({${O('Order ID')},${O('Name')},${O('Phone')},${O('Total (₹)')},${O('Order date')},${O('Status')}},REGEXMATCH(${O('Status')},"^(Payment pending|Payment failed)$"),${O('Order date')}>=TODAY()-30),5,FALSE),HSTACK(f,MAP(INDEX(f,,1),INDEX(f,,2),INDEX(f,,3),LAMBDA(id,nm,ph,${wa('ph', `"Hi "&${name('nm')}&", this is Smelloff. Your order "&id&" did not go through. Can we help you finish it?"`, 'Chat on WhatsApp')}))))`, 'No unfinished checkouts in the last 30 days'),
   });
 
   const rowPx = Array(rows).fill(24);
@@ -548,14 +558,14 @@ function followUp(sheetId, columns) {
     sub: 'Newest first. Ask if something went wrong; a working phone number and a short message often bring the order back.',
     headers: ['Name', 'Phone', 'Email', 'Last try', 'What happened', 'WhatsApp'],
     cap: 20, formats: [{ bold: true }, fTxt, {}, fDay, {}, fLink],
-    formula: `=IFERROR(ARRAY_CONSTRAIN(LET(f,SORT(FILTER({${K('Name')},${K('Phone')},${K('Email')},${K('Last order')},${K('Last order status')}},${K('Type')}="Tried to order"),4,FALSE),HSTACK(f,MAP(INDEX(f,,1),INDEX(f,,2),LAMBDA(nm,ph,IF(ph="","",${wa('ph', `"Hi "&${firstName('nm')}&", this is Smelloff. We saw your ODORSTRIKE order did not go through. Can we help you finish it?"`, 'Chat on WhatsApp')}))))),20,6),"Nobody to follow up")`,
+    formula: listOr(`ARRAY_CONSTRAIN(LET(f,SORT(FILTER({${K('Name')},${K('Phone')},${K('Email')},${K('Last order')},${K('Last order status')}},${K('Type')}="Tried to order"),4,FALSE),HSTACK(f,MAP(INDEX(f,,1),INDEX(f,,2),LAMBDA(nm,ph,IF(ph="","",${wa('ph', `"Hi "&${firstName('nm')}&", this is Smelloff. We saw your ODORSTRIKE order did not go through. Can we help you finish it?"`, 'Chat on WhatsApp')}))))),20,6)`, 'Nobody to follow up'),
   });
   block({
     title: '="Top customers"',
     sub: 'By order value. Thank them, ask for a review, or offer the pack of 5.',
     headers: ['Name', 'Phone', 'Email', 'Last order', 'Paid orders', 'Order value (₹)', 'WhatsApp'],
     cap: rows - r - 4, formats: [{ bold: true }, fTxt, {}, fDay, { align: 'CENTER' }, { number: NUM.money }, fLink],
-    formula: `=IFERROR(ARRAY_CONSTRAIN(LET(f,SORT(FILTER({${K('Name')},${K('Phone')},${K('Email')},${K('Last order')},${K('Paid orders')},${K('Order value (₹)')}},${K('Type')}="Customer"),6,FALSE),HSTACK(f,MAP(INDEX(f,,2),LAMBDA(ph,IF(ph="","",${wa('ph', '', 'Chat')}))))),25,7),"No customers yet")`,
+    formula: listOr(`ARRAY_CONSTRAIN(LET(f,SORT(FILTER({${K('Name')},${K('Phone')},${K('Email')},${K('Last order')},${K('Paid orders')},${K('Order value (₹)')}},${K('Type')}="Customer"),6,FALSE),HSTACK(f,MAP(INDEX(f,,2),LAMBDA(ph,IF(ph="","",${wa('ph', '', 'Chat')}))))),25,7)`, 'No customers yet'),
   });
   const rowPx = Array(rows).fill(24);
   rowPx[0] = 56; rowPx[1] = 10;
@@ -649,10 +659,7 @@ function dataTab(sheetId, rowCount, columns, kind) {
   const intro = kind === 'orders'
     ? 'Filled by the website from the order database: new orders appear at the top within seconds, status, courier and dates refresh every 15 minutes. The black columns are overwritten; the lime ones (COD call, Notes) are yours. Test orders and checkouts from the business number are left out.'
     : 'Filled by the website: every buyer, newsletter signup and contact-form message, one row per person (by email, or phone when there is no email). Rows it does not know, like the April 2026 waitlist, are never changed. The lime column is yours.';
-  columns.forEach((c, i) => {
-    const note = i === 0 ? intro : c.note || '';
-    req.push({ updateCells: { start: { sheetId, rowIndex: 0, columnIndex: i }, rows: [{ values: [{ note }] }], fields: 'note' } });
-  });
+  req.push({ updateCells: { start: { sheetId, rowIndex: 0, columnIndex: 0 }, rows: [{ values: columns.map((c, i) => ({ note: i === 0 ? intro : c.note || '' })) }], fields: 'note' } });
   return req;
 }
 
@@ -667,7 +674,13 @@ export const BOOKS = {
       { title: 'Orders', id: 1002, data: true, color: C.ink },
       { title: 'Settings', id: 1004, build: (id) => settings(id), color: C.faint },
     ],
-    inputNames: ['Period', 'BottlesReceived', 'LowStockAt'],
+    // The owner's inputs survive a rebuild. `legacy` is where the hand-built
+    // design of 18 Oct 2026 kept them, before they had names.
+    inputs: {
+      Period: { legacy: "'Dashboard'!B5", valid: (v) => PERIODS.includes(v) },
+      BottlesReceived: { legacy: "'Dashboard'!B30", valid: Number.isFinite },
+      LowStockAt: { valid: Number.isFinite },
+    },
   },
   contacts: {
     dataTab: 'Contacts', kind: 'contacts', columns: CONTACT_COLUMNS,
@@ -676,7 +689,7 @@ export const BOOKS = {
       { title: 'Follow up', id: 2003, build: (id) => followUp(id, CONTACT_COLUMNS), color: C.lime },
       { title: 'Contacts', id: 2002, data: true, color: C.ink },
     ],
-    inputNames: [],
+    inputs: {},
   },
 };
 
@@ -691,14 +704,16 @@ export function stampOf(meta) {
 // current values by named range.
 export function planLayout(book, meta, { header = [], inputs = {} } = {}) {
   const sheets = new Map((meta.sheets || []).map((s) => [s.properties.title, s]));
-  const usedIds = new Set((meta.sheets || []).map((s) => s.properties.sheetId));
+  // Google may leave out a sheetId of 0 (the first tab of a new file).
+  const idOf = (s) => s.properties.sheetId ?? 0;
+  const usedIds = new Set((meta.sheets || []).map(idOf));
   const req = [];
   const ids = {};
 
   // 1. Tabs exist, in order, coloured.
   book.tabs.forEach((tab, index) => {
     const found = sheets.get(tab.title);
-    let id = found?.properties.sheetId;
+    let id = found ? idOf(found) : undefined;
     if (id === undefined) {
       id = tab.id;
       while (usedIds.has(id)) id += 100;
@@ -763,7 +778,9 @@ export function planLayout(book, meta, { header = [], inputs = {} } = {}) {
     req.push({ updateSheetProperties: { properties: { sheetId: id, gridProperties: { rowCount: built.grid.rows, columnCount: built.grid.cols, frozenRowCount: built.grid.frozen, frozenColumnCount: 0, hideGridlines: true } }, fields: 'gridProperties.rowCount,gridProperties.columnCount,gridProperties.frozenRowCount,gridProperties.frozenColumnCount,gridProperties.hideGridlines' } });
     req.push(...built.requests);
     Object.assign(named, built.named);
-    req.push({ addProtectedRange: { protectedRange: { range: R(id, 0, built.grid.rows, 0, built.grid.cols), unprotectedRanges: built.inputs, description: 'Smelloff: built by the website (yellow and lime cells are yours)', warningOnly: true } } });
+    // Google allows unprotected cells only in a protection given as the whole
+    // sheet ({ sheetId } alone), not as a range that happens to cover it.
+    req.push({ addProtectedRange: { protectedRange: { range: { sheetId: id }, unprotectedRanges: built.inputs, description: 'Smelloff: built by the website (yellow and lime cells are yours)', warningOnly: true } } });
   }
   for (const [name, range] of Object.entries(named)) req.push({ addNamedRange: { namedRange: { name, range } } });
 
@@ -795,15 +812,20 @@ export async function ensureLayout(spreadsheetId, bookKey, { force = false } = {
   const meta = await getSpreadsheetMeta(spreadsheetId);
   const data = (meta.sheets || []).find((s) => s.properties.title === book.dataTab);
   if (!force && !needsLayout(book, meta)) {
-    return { rebuilt: false, dataTab: { sheetId: data.properties.sheetId, rowCount: data.properties.gridProperties?.rowCount || 0 } };
+    return { rebuilt: false, dataTab: { sheetId: data.properties.sheetId ?? 0, rowCount: data.properties.gridProperties?.rowCount || 0 } };
   }
+  const names = new Set((meta.namedRanges || []).map((n) => n.name));
+  const wanted = Object.entries(book.inputs);
   const reads = await readRanges(spreadsheetId, [
     ...(data ? [`'${book.dataTab}'!1:1`] : []),
-    ...book.inputNames,
+    ...wanted.map(([name, x]) => (names.has(name) || !x.legacy ? name : x.legacy)),
   ]);
   const header = data ? (reads[0]?.[0] || []) : [];
   const inputs = {};
-  book.inputNames.forEach((name, i) => { inputs[name] = reads[i + (data ? 1 : 0)]?.[0]?.[0]; });
+  wanted.forEach(([name, x], i) => {
+    const value = reads[i + (data ? 1 : 0)]?.[0]?.[0];
+    if (x.valid(value)) inputs[name] = value;
+  });
   const plan = planLayout(book, meta, { header, inputs });
   await batchUpdate(spreadsheetId, plan.requests);
   return { rebuilt: true, dataTab: plan.dataTab };

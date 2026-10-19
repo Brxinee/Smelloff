@@ -73,7 +73,17 @@ now** (`syncSheets` action). Setup, columns and rules:
 - **Change a column in `ORDER_COLUMNS` / `CONTACT_COLUMNS` and the sheet
   header together** (insert the sheet column so rules move with it).
 - Test orders and the business WhatsApp number's checkouts are left out.
-- `test/sheets-sync.test.mjs` + `test/admin-api.test.mjs` pin all of the above.
+- **The design is code** (`api/sheets-layout.js`, 2026-10-19, owner: "autopilot,
+  not one time use"): every sync compares the `smelloff_layout` stamp with
+  `LAYOUT_VERSION` and rebuilds the generated tabs in place when they differ,
+  keeping data, owner columns and inputs. Bump the version after any design
+  edit; /admin **Rebuild design** forces it. Google rejects an empty
+  `textFormat` in a CF rule and `unprotectedRanges` on a non-whole-sheet
+  protection.
+- `test/sheets-sync.test.mjs`, `test/sheets-e2e.test.mjs` (COD order through
+  `create-order` into a strict fake Sheets API) + `test/admin-api.test.mjs` pin
+  all of the above. Verified on staging copies in Google on 2026-10-19.
+- A live test order also books a Shiprocket shipment (no test filter there).
 
 ## Security check-up (2026-10-18, owner: "vibe coded via various models, security check up")
 Reviewed every `/api/*` handler, the admin dashboard, client-side rendering,

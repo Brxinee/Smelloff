@@ -74,6 +74,7 @@ class FakeBook {
   move(sheet, dim, at, n) {
     const [s, e] = DIM[dim];
     for (const r of this.rangesOf(sheet)) {
+      if (r[s] === undefined) continue; // a whole-sheet range moves with the sheet
       if (n > 0) {
         if (r[s] >= at) { r[s] += n; r[e] += n; } else if (r[e] > at) r[e] += n;
       } else {
@@ -92,11 +93,13 @@ class FakeBook {
       sheet = this.sheet(named.range.sheetId);
       ({ startRowIndex: r0, endRowIndex: r1, startColumnIndex: c0, endColumnIndex: c1 } = named.range);
     } else {
-      const m = /^'((?:[^']|'')+)'!([A-Z]*)(\d*):([A-Z]*)(\d*)$/.exec(rangeText) || bad(`Unable to parse range: ${rangeText}`);
+      const m = /^'((?:[^']|'')+)'!([A-Z]*)(\d*)(?::([A-Z]*)(\d*))?$/.exec(rangeText) || bad(`Unable to parse range: ${rangeText}`);
       sheet = this.tab(m[1].replace(/''/g, "'")) || bad(`Unable to parse range: ${rangeText}`);
       const g = sheet.properties.gridProperties;
+      const one = m[4] === undefined && m[5] === undefined;
       c0 = m[2] ? colIndex(m[2]) : 0; r0 = m[3] ? Number(m[3]) - 1 : 0;
-      c1 = m[4] ? colIndex(m[4]) + 1 : g.columnCount; r1 = m[5] ? Number(m[5]) : g.rowCount;
+      c1 = one ? c0 + 1 : m[4] ? colIndex(m[4]) + 1 : g.columnCount;
+      r1 = one ? r0 + 1 : m[5] ? Number(m[5]) : g.rowCount;
     }
     const out = [];
     for (let r = r0; r < Math.min(r1, sheet.grid.length); r += 1) {
@@ -261,6 +264,13 @@ class FakeBook {
   do_addConditionalFormatRule({ rule, index = 0 }) {
     const sheet = this.sheet(rule.ranges[0].sheetId);
     rule.ranges.forEach((r) => this.check(r, 'conditional format'));
+    // Found on a real spreadsheet: an empty textFormat is refused.
+    const f = rule.booleanRule.format;
+    const textKeys = Object.keys(f.textFormat || {});
+    if (Object.keys(f).some((k) => !['backgroundColorStyle', 'textFormat'].includes(k))
+      || ('textFormat' in f && (!textKeys.length || textKeys.some((k) => !['bold', 'italic', 'strikethrough', 'foregroundColorStyle'].includes(k))))) {
+      bad('ConditionalFormatRule.format only supports bold, italic, strikethrough, foreground color and background color.');
+    }
     if (index > sheet.conditionalFormats.length) bad(`index ${index}`);
     sheet.conditionalFormats.splice(index, 0, structuredClone(rule));
   }
@@ -284,7 +294,9 @@ class FakeBook {
 
   do_addProtectedRange({ protectedRange: p }) {
     const sheet = this.check(p.range, 'protected range');
-    for (const u of p.unprotectedRanges || []) { this.check(u, 'unprotected range'); if (!inside(u, p.range)) bad('unprotected range outside'); }
+    // Found on a real spreadsheet: holes need a whole-sheet protection.
+    if (p.unprotectedRanges?.length && Object.keys(p.range).some((k) => k !== 'sheetId')) bad('unprotectedRanges are only allowed on ProtectedRanges covering a whole sheet.');
+    for (const u of p.unprotectedRanges || []) this.check(u, 'unprotected range');
     sheet.protectedRanges.push({ ...structuredClone(p), protectedRangeId: (this.seq += 1) });
   }
 
@@ -527,24 +539,25 @@ const valueAt = (book, name) => {
   return n ? book.read(name)[0]?.[0] : undefined;
 };
 
-// The two spreadsheets as they are today: the hand-built v2 design, the
-// owner's inputs, an order only the old sheet knows, hidden old tabs.
+// The two spreadsheets as they are on 19 Oct 2026: the hand-built v2 design
+// (period picker in B5 and stock in B30, neither named), an order only the
+// old sheet knows, hidden old tabs.
 function todaysBooks() {
   const header = ORDER_COLUMNS.map((c) => c.header);
   const oldOnly = Array(ORDER_COLUMNS.length).fill('');
   oldOnly[O('Order ID')] = 'SMF-20260801-1111'; oldOnly[O('Status')] = 'Delivered'; oldOnly[O('Name')] = 'From the old sheet';
   oldOnly[O('Notes')] = 'typed by the owner';
   const orders = new FakeBook([
-    { title: 'Dashboard', sheetId: 1001, rows: 60, cols: 18, values: [['SMELLOFF'], ['Last synced …'], ['', 'Showing', 'Last 30 days']] },
+    { title: 'Dashboard', sheetId: 1001, rows: 200, cols: 18, values: [['Smelloff orders'], ['Waiting for the first website sync.'], [], [], ['Period', 'Last 30 days']] },
     { title: 'Orders', sheetId: 1002, rows: 1000, cols: 28, values: [header, oldOnly] },
     { title: 'Old orders log', sheetId: 1005, hidden: true, values: [['Timestamp', 'Order ID'], ['2026-08-01', 'SMF-20260801-1111']] },
   ]);
-  const dash = orders.tab('Dashboard');
-  orders.cell(dash, 11, 16).v = { numberValue: 120 };
-  for (const [name, r, c] of [['Period', 2, 2], ['SyncStatus', 1, 0], ['BottlesReceived', 11, 16], ['PeriodStart', 12, 16], ['PeriodEnd', 13, 16]]) {
-    orders.do_addNamedRange({ namedRange: { name, range: { sheetId: 1001, startRowIndex: r, endRowIndex: r + 1, startColumnIndex: c, endColumnIndex: c + 1 } } });
+  orders.cell(orders.tab('Dashboard'), 29, 1).v = { numberValue: 120 };
+  const range = (r0, r1, c) => ({ sheetId: 1001, startRowIndex: r0, endRowIndex: r1, startColumnIndex: c, endColumnIndex: c + 1 });
+  for (const [name, r] of [['SyncStatus', range(1, 2, 0)], ['SaleStatuses', range(5, 11, 15)], ['ToShipStatuses', range(5, 8, 16)],
+    ['OnTheWayStatuses', range(5, 7, 17)], ['PeriodStart', range(12, 13, 16)], ['PeriodEnd', range(13, 14, 16)]]) {
+    orders.do_addNamedRange({ namedRange: { name, range: r } });
   }
-  orders.do_addNamedRange({ namedRange: { name: 'SaleStatuses', range: { sheetId: 1001, startRowIndex: 2, endRowIndex: 8, startColumnIndex: 15, endColumnIndex: 16 } } });
   orders.do_mergeCells({ range: { sheetId: 1001, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 6 }, mergeType: 'MERGE_ALL' });
   orders.do_addChart({ chart: { spec: { basicChart: { domains: [{ domain: { sourceRange: { sources: [{ sheetId: 1001, startRowIndex: 20, endRowIndex: 33, startColumnIndex: 0, endColumnIndex: 1 }] } } }], series: [] } }, position: { overlayPosition: { anchorCell: { sheetId: 1001, rowIndex: 35, columnIndex: 0 } } } } });
   for (const sheetId of [1001, 1002]) {
@@ -649,8 +662,8 @@ test('a COD order placed on the website lands in both sheets, and the sheets get
   assert.deepEqual(orders.s.sheets.map((x) => [x.properties.title, Boolean(x.properties.hidden)]),
     [['Dashboard', false], ['To do', false], ['Orders', false], ['Settings', false], ['Old orders log', true]]);
   assert.equal(orders.s.developerMetadata.find((m) => m.metadataKey === 'smelloff_layout')?.metadataValue, LAYOUT_VERSION);
-  assert.equal(valueAt(orders, 'Period'), 'Last 30 days', 'the period picker keeps the owner\'s choice');
-  assert.equal(valueAt(orders, 'BottlesReceived'), 120, 'stock typed by the owner moves to Settings');
+  assert.equal(valueAt(orders, 'Period'), 'Last 30 days', 'the period picked in the old B5 is kept');
+  assert.equal(valueAt(orders, 'BottlesReceived'), 120, 'stock typed in the old B30 moves to Settings');
   assert.equal(orders.s.namedRanges.find((n) => n.name === 'BottlesReceived').range.sheetId, orders.tab('Settings').properties.sheetId);
   assert.match(valueAt(orders, 'SyncStatus'), /^Last synced by the website: .* \(2 new, 0 updated\)/);
   assert.equal(orders.tab('Dashboard').charts.length, 1, 'one chart: the old one is replaced');
