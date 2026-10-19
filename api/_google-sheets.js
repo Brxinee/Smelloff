@@ -1,0 +1,292 @@
+// Minimal Google Sheets client for the Worker: a service-account token signed
+// with WebCrypto (no SDK), one read and one batchUpdate per tab, and the
+// reconcile plan that turns "rows the database says exist" into the fewest
+// cell writes. Setup: docs/GOOGLE-SHEETS-SETUP.md.
+
+const TOKEN_URL = 'https://oauth2.googleapis.com/token';
+const SHEETS_API = 'https://sheets.googleapis.com/v4/spreadsheets';
+const SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
+const TIMEOUT_MS = 10000;
+
+let cachedToken = null; // { token, exp, email }
+let pendingToken = null; // shared by the parallel reads of one run
+
+// GOOGLE_SERVICE_ACCOUNT_JSON is the key file Google downloads, pasted as is.
+// Base64 of it is accepted too, since dashboards sometimes mangle newlines.
+export function readServiceAccount() {
+  const raw = String(process.env.GOOGLE_SERVICE_ACCOUNT_JSON || '').trim();
+  if (!raw) return null;
+  let text = raw;
+  if (!raw.startsWith('{')) {
+    try { text = Buffer.from(raw, 'base64').toString('utf8'); } catch { return null; }
+  }
+  try {
+    const sa = JSON.parse(text);
+    return sa.client_email && sa.private_key ? sa : null;
+  } catch {
+    return null;
+  }
+}
+
+export const isSheetsConfigured = () => Boolean(readServiceAccount());
+
+const b64url = (bytes) => Buffer.from(bytes).toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+
+function pemToDer(pem) {
+  const body = String(pem).replace(/-----[^-]+-----/g, '').replace(/\s+/g, '');
+  return Buffer.from(body, 'base64');
+}
+
+async function signJwt(sa, nowSec) {
+  const header = b64url(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
+  const claims = b64url(JSON.stringify({
+    iss: sa.client_email, scope: SCOPE, aud: TOKEN_URL, iat: nowSec, exp: nowSec + 3600,
+  }));
+  const input = `${header}.${claims}`;
+  const key = await crypto.subtle.importKey(
+    'pkcs8', pemToDer(sa.private_key), { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['sign'],
+  );
+  const sig = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', key, new TextEncoder().encode(input));
+  return `${input}.${b64url(new Uint8Array(sig))}`;
+}
+
+function getAccessToken() {
+  const sa = readServiceAccount();
+  if (!sa) return Promise.reject(new Error('GOOGLE_SERVICE_ACCOUNT_JSON is missing or not a service-account key.'));
+  const now = Math.floor(Date.now() / 1000);
+  if (cachedToken && cachedToken.email === sa.client_email && cachedToken.exp - 120 > now) return Promise.resolve(cachedToken.token);
+  if (!pendingToken) pendingToken = fetchAccessToken(sa, now).finally(() => { pendingToken = null; });
+  return pendingToken;
+}
+
+async function fetchAccessToken(sa, now) {
+  const assertion = await signJwt(sa, now);
+  const res = await fetch(TOKEN_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion }).toString(),
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.access_token) throw new Error(`Google token error ${res.status}: ${data.error_description || data.error || 'no token'}`);
+  cachedToken = { token: data.access_token, exp: now + Number(data.expires_in || 3600), email: sa.client_email };
+  return cachedToken.token;
+}
+
+async function sheetsFetch(path, { method = 'GET', body } = {}) {
+  const token = await getAccessToken();
+  const res = await fetch(`${SHEETS_API}/${path}`, {
+    method,
+    headers: { Authorization: `Bearer ${token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const hint = res.status === 403 || res.status === 404
+      ? ' (is the sheet shared with the service account as Editor?)' : '';
+    throw new Error(`Google Sheets ${res.status}: ${data?.error?.message || 'request failed'}${hint}`);
+  }
+  return data;
+}
+
+// Raw values: numbers stay numbers, dates come back as serial numbers and
+// formula cells as their formula text, so the plan can compare each cell with
+// what the database says.
+export async function readTab(spreadsheetId, tab, lastColumn) {
+  const range = encodeURIComponent(`'${tab.replace(/'/g, "''")}'!A1:${lastColumn}`);
+  const data = await sheetsFetch(`${spreadsheetId}/values/${range}?valueRenderOption=FORMULA&dateTimeRenderOption=SERIAL_NUMBER`);
+  return Array.isArray(data.values) ? data.values : [];
+}
+
+export async function getSheetProps(spreadsheetId, tab) {
+  const data = await sheetsFetch(`${spreadsheetId}?fields=sheets.properties`);
+  const sheet = (data.sheets || []).find((s) => s?.properties?.title === tab);
+  if (!sheet) throw new Error(`Tab "${tab}" not found in spreadsheet ${spreadsheetId}.`);
+  return { sheetId: sheet.properties.sheetId, rowCount: sheet.properties.gridProperties?.rowCount || 0 };
+}
+
+// "Updated by the website …" line in each spreadsheet, so the owner can see
+// the sync is alive. Lives in the named range SyncStatus; skipped if absent.
+export async function writeStamp(spreadsheetId, text) {
+  try {
+    await sheetsFetch(`${spreadsheetId}/values/SyncStatus?valueInputOption=RAW`, {
+      method: 'PUT', body: { range: 'SyncStatus', values: [[text]] },
+    });
+  } catch (err) {
+    console.error('[sheets] status line not written:', err?.message || err);
+  }
+}
+
+// Everything the layout step needs to know about a spreadsheet, in one read.
+const META_FIELDS = 'developerMetadata,namedRanges,sheets(properties,conditionalFormats(ranges),charts(chartId),bandedRanges(bandedRangeId),protectedRanges(protectedRangeId,description))';
+export async function getSpreadsheetMeta(spreadsheetId) {
+  return sheetsFetch(`${spreadsheetId}?fields=${encodeURIComponent(META_FIELDS)}`);
+}
+
+// Values of several ranges (A1 or named); a range that doesn't exist reads as [].
+export async function readRanges(spreadsheetId, ranges) {
+  return Promise.all(ranges.map((range) => sheetsFetch(`${spreadsheetId}/values/${encodeURIComponent(range)}?valueRenderOption=UNFORMATTED_VALUE`)
+    .then((d) => d.values || [])
+    .catch(() => [])));
+}
+
+export async function batchUpdate(spreadsheetId, requests) {
+  if (!requests.length) return null;
+  return sheetsFetch(`${spreadsheetId}:batchUpdate`, { method: 'POST', body: { requests } });
+}
+
+// Dates go in as serial numbers in IST (the sheet's columns carry the date
+// format), so the sheet can sort, filter and sum by them.
+const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
+export function toSheetDate(value) {
+  const ms = Date.parse(value || '');
+  if (!Number.isFinite(ms)) return '';
+  const seconds = Math.round((ms + IST_OFFSET_MS) / 1000);
+  return seconds / 86400 + 25569;
+}
+
+// Strings are sent as stringValue, which Sheets stores as literal text: a name
+// like "=IMPORTXML(…)" can never run as a formula, and phone numbers and
+// pincodes keep their digits. Only links the code builds itself ({ formula })
+// go in as formulas; see link() in sheets-sync.js.
+function cell(value) {
+  if (value === undefined || value === null || value === '') return {};
+  if (typeof value === 'object' && value.formula) return { userEnteredValue: { formulaValue: value.formula } };
+  if (typeof value === 'number' && Number.isFinite(value)) return { userEnteredValue: { numberValue: value } };
+  return { userEnteredValue: { stringValue: String(value) } };
+}
+
+const isBlank = (v) => v === undefined || v === null || v === '';
+
+function sameValue(have, want) {
+  if (want && typeof want === 'object') return String(have ?? '') === want.formula;
+  if (isBlank(have) && isBlank(want)) return true;
+  if (typeof have === 'number' && typeof want === 'number') return Math.abs(have - want) < 1e-6;
+  return String(have ?? '') === String(want ?? '');
+}
+
+// Column kinds:
+//   sync   — the database owns it; rewritten when it changes
+//   insert — written once when the row is added, then left to the owner
+//   owner  — never written (COD call, notes)
+// The plan never deletes a row the database no longer knows, never blanks a
+// cell the database has no value for, and only removes an exact duplicate key
+// whose owner cells are empty (two order events racing to insert one order).
+// rowCount is the tab's grid size: new rows copy formats and dropdowns from
+// its last row, which every tab keeps formatted and empty.
+export function planTabSync({ sheetId, rowCount = 0, columns, existing, rows, keyOf, merge }) {
+  const headers = columns.map((c) => c.header);
+  const requests = [];
+  const header = existing[0] || [];
+
+  if (!header.length) {
+    requests.push({
+      updateCells: {
+        start: { sheetId, rowIndex: 0, columnIndex: 0 },
+        rows: [{ values: headers.map(cell) }],
+        fields: 'userEnteredValue',
+      },
+    });
+  } else {
+    const mismatch = headers.findIndex((h, i) => String(header[i] ?? '').trim() !== h);
+    if (mismatch !== -1) {
+      throw new Error(`Header mismatch in column ${mismatch + 1}: sheet has "${header[mismatch] ?? ''}", sync expects "${headers[mismatch]}". Nothing was written.`);
+    }
+  }
+
+  const ownerCols = columns.map((c, i) => (c.kind === 'owner' ? i : -1)).filter((i) => i >= 0);
+
+  const rowOf = new Map();
+  const duplicates = [];
+  for (let r = 1; r < existing.length; r += 1) {
+    const key = keyOf(existing[r] || []);
+    if (!key) continue;
+    if (!rowOf.has(key)) { rowOf.set(key, r); continue; }
+    const ownerEmpty = ownerCols.every((c) => isBlank(existing[r]?.[c]));
+    if (ownerEmpty) duplicates.push(r);
+  }
+
+  let updated = 0;
+  const fresh = [];
+  for (const row of rows) {
+    const key = keyOf(row);
+    if (!key) continue;
+    if (!rowOf.has(key)) { fresh.push(row); continue; }
+    const r = rowOf.get(key);
+    const have = existing[r] || [];
+    // Only cells whose value changed are written, in contiguous runs.
+    const changed = columns.map((col, i) => {
+      if (col.kind !== 'sync') return null;
+      const want = merge ? merge(col, have[i], row[i]) : row[i];
+      return isBlank(want) || sameValue(have[i], want) ? null : { want };
+    });
+    if (!changed.some(Boolean)) continue;
+    updated += 1;
+    for (let i = 0; i < changed.length; i += 1) {
+      if (!changed[i]) continue;
+      let end = i;
+      while (end + 1 < changed.length && changed[end + 1]) end += 1;
+      requests.push({
+        updateCells: {
+          start: { sheetId, rowIndex: r, columnIndex: i },
+          rows: [{ values: changed.slice(i, end + 1).map((c) => cell(c.want)) }],
+          fields: 'userEnteredValue',
+        },
+      });
+      i = end;
+    }
+  }
+
+  for (const r of duplicates.sort((a, b) => b - a)) {
+    requests.push({ deleteDimension: { range: { sheetId, dimension: 'ROWS', startIndex: r, endIndex: r + 1 } } });
+  }
+
+  if (fresh.length) {
+    // Newest first: new rows go in under the header. Formulas elsewhere use
+    // whole columns (Orders!C:C) because a range starting at row 2 would
+    // shift down past every row inserted here.
+    requests.push({
+      insertDimension: {
+        range: { sheetId, dimension: 'ROWS', startIndex: 1, endIndex: 1 + fresh.length },
+        inheritFromBefore: false,
+      },
+    });
+    const template = rowCount - duplicates.length + fresh.length - 1;
+    if (rowCount > existing.length) {
+      requests.push({
+        copyPaste: {
+          source: { sheetId, startRowIndex: template, endRowIndex: template + 1, startColumnIndex: 0, endColumnIndex: columns.length },
+          destination: { sheetId, startRowIndex: 1, endRowIndex: 1 + fresh.length, startColumnIndex: 0, endColumnIndex: columns.length },
+          pasteType: 'PASTE_FORMAT',
+        },
+      });
+    }
+    requests.push({
+      updateCells: {
+        start: { sheetId, rowIndex: 1, columnIndex: 0 },
+        rows: fresh.map((row) => ({ values: columns.map((col, i) => cell(col.kind === 'owner' ? '' : row[i])) })),
+        fields: 'userEnteredValue',
+      },
+    });
+  }
+
+  return { requests, inserted: fresh.length, updated, removed: duplicates.length };
+}
+
+export function columnLetter(n) {
+  let s = '';
+  for (let x = n; x > 0; x = Math.floor((x - 1) / 26)) s = String.fromCharCode(65 + ((x - 1) % 26)) + s;
+  return s;
+}
+
+// props ({ sheetId, rowCount }) comes from ensureLayout's read when available.
+export async function syncTab({ spreadsheetId, tab, columns, rows, keyOf, merge, props }) {
+  const [{ sheetId, rowCount }, existing] = await Promise.all([
+    props || getSheetProps(spreadsheetId, tab),
+    readTab(spreadsheetId, tab, columnLetter(columns.length)),
+  ]);
+  const plan = planTabSync({ sheetId, rowCount, columns, existing, rows, keyOf, merge });
+  await batchUpdate(spreadsheetId, plan.requests);
+  return { inserted: plan.inserted, updated: plan.updated, removed: plan.removed };
+}

@@ -12,6 +12,7 @@ import { isValidEmail } from './_email.js';
 import { sendAdminNewOrderEmail } from './_email-dispatch.js';
 import { pushOrderToShiprocketNow } from './shiprocket-sync.js';
 import { runAfterResponse } from './_background.js';
+import { syncSheetsNow } from './sheets-sync.js';
 
 function getSupabaseUrl() {
   return (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
@@ -534,13 +535,15 @@ export default async function handler(req, res) {
 
     if (isCod) {
       const localOrder = await ensureCodLocalOrder(sanitizedPayload, owned.existing);
-      // A COD order is real the moment it exists: alert the owner and book it
-      // in Shiprocket now. Both run after the response (waitUntil on Workers),
-      // so checkout doesn't wait. The alert's idempotency key absorbs retries;
-      // the 15-minute sync retries any Shiprocket create that fails here.
+      // A COD order is real the moment it exists: alert the owner, book it
+      // in Shiprocket and copy it into the Google Sheet. All run after the
+      // response (waitUntil on Workers), so checkout doesn't wait. The alert's
+      // idempotency key absorbs retries; the 15-minute cron retries any
+      // Shiprocket create or sheet write that fails here.
       await runAfterResponse('create-order', () => Promise.all([
         sendAdminNewOrderEmail(localOrder, { route: '/api/create-order' }),
-        pushOrderToShiprocketNow(localOrder, { route: '/api/create-order' }),
+        pushOrderToShiprocketNow(localOrder, { route: '/api/create-order' })
+          .then(() => syncSheetsNow('/api/create-order')),
       ]));
       return res.status(200).json(responseForCod(localOrder));
     }

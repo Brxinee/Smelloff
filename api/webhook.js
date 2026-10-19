@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import { dispatchPrepaidPaymentEmails, sendPaymentFailedEmail, sendRefundProcessedEmail } from './_email-dispatch.js';
 import { pushOrderToShiprocketNow } from './shiprocket-sync.js';
 import { runAfterResponse } from './_background.js';
+import { syncSheetsNow } from './sheets-sync.js';
 import resendWebhookHandler, { readRawBody } from './_resend-webhook.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
@@ -216,7 +217,8 @@ export default async function handler(req, res) {
         console.error('[webhook] Email dispatch exception (payment remains confirmed):', emailErr?.message || emailErr);
       }
       await runAfterResponse('webhook', () =>
-        pushOrderToShiprocketNow(orderForEmail, { route: '/api/webhook' }));
+        pushOrderToShiprocketNow(orderForEmail, { route: '/api/webhook' })
+          .then(() => syncSheetsNow('/api/webhook')));
 
       return res.status(200).json({
         received: true,

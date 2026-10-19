@@ -17,6 +17,7 @@ import webhookHandler from "../api/webhook.js";
 import shiprocketSyncHandler from "../api/shiprocket-sync.js";
 import adminHandler from "../api/admin.js";
 import supportChatHandler from "../api/support-chat.js";
+import { syncSheetsNow } from "../api/sheets-sync.js";
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.get("/api/health", (_req, res) => {
       shiprocket: has("SHIPROCKET_EMAIL", "SHIPROCKET_PASSWORD"),
       metaCapi: has("META_CAPI_TOKEN"),
       supportChat: has("GEMINI_API_KEY"),
+      sheets: has("GOOGLE_SERVICE_ACCOUNT_JSON"),
     },
   });
 });
@@ -238,6 +240,8 @@ export default {
     }
     if (cron === "*/15 * * * *") {
       await runScheduled(shiprocketSyncHandler);
+      // After Shiprocket, so new statuses and AWBs reach the sheet this pass.
+      await syncSheetsNow("cron");
       return;
     }
   },

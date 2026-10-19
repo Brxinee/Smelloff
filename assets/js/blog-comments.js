@@ -19,7 +19,8 @@
  *
  * Submission flow:
  *   name + comment  -> public `blog_comments` table (rendered on the post)
- *   email           -> `waitlist` table + Google Sheet (NOT stored in comments)
+ *   email           -> `waitlist` table (NOT stored in comments); the server
+ *                      copies it into the owner's Google Sheet
  * ============================================================================= */
 (function () {
   'use strict';
@@ -31,7 +32,6 @@
   // --- Config (all public / already exposed elsewhere on the site) ------------
   var SUPABASE_URL = 'https://tnuqjydmoxczdjnsgpci.supabase.co';
   var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudXFqeWRtb3hjemRqbnNncGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzI2NDgsImV4cCI6MjA5MzEwODY0OH0.6qyyo-1lpntK7FC3H9j_oqWp0W_R1XydVG_IxVUd6F4';
-  var SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwvZamMivX4MF_jM83VjO3f8GDYmitlOxKkkXS2mSnivZ1wzps9ZolIQG2tvKMATIoh2Q/exec';
 
   var NAME_MAX = 60, BODY_MAX = 2000, COOLDOWN_MS = 30000, TOP_N = 3;
   var COOLDOWN_KEY = 'os_comment_last';
@@ -289,7 +289,7 @@
       });
   }
 
-  // --- Capture email into the waitlist (Supabase table + Google Sheet) --------
+  // --- Capture email into the waitlist table ---------------------------------
   // Fire-and-forget; failures here (e.g. duplicate email) must never block the
   // comment itself.
   function captureEmail(email) {
@@ -305,16 +305,6 @@
         body: JSON.stringify({ email: email, source: 'blog-comment' }),
         keepalive: true
       }).catch(function () {});
-    } catch (e) { /* ignore */ }
-
-    try {
-      var img = new Image();
-      img.src = SHEETS_ENDPOINT + '?email=' + encodeURIComponent(email);
-      if (navigator.sendBeacon) {
-        var fd = new FormData();
-        fd.append('email', email);
-        navigator.sendBeacon(SHEETS_ENDPOINT, fd);
-      }
     } catch (e) { /* ignore */ }
   }
 

@@ -155,9 +155,35 @@ async function overview() {
         <div class="card"><h2 style="margin-top:0">Orders by status</h2><div class="bars">${
           Object.entries(s.byStatus).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<div><span>${pill(k)}</span><i style="width:${Math.max(4, v / total * 100)}%"></i><span class="right mono">${v}</span></div>`).join('') || '<div class="empty">No orders yet</div>'
         }</div></div>
+      </div>
+      <div class="card"><h2 style="margin-top:0">Google Sheets</h2>
+        <p style="color:var(--muted);font-size:13px">Orders and customers copy into your sheets after every order and every 15 minutes.</p>
+        <div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap">
+          <a class="btn ghost" href="https://docs.google.com/spreadsheets/d/1VY0Jkrj0CTjrEmamE2qLpPXF8qcUhNG5ZToWcCn1AKc/edit" target="_blank" rel="noopener">Orders data</a>
+          <a class="btn ghost" href="https://docs.google.com/spreadsheets/d/1qe8Y2DY0kKr7jVLCit9F9Xr1L3rMO1CS3ClPAMpTjJc/edit" target="_blank" rel="noopener">Customers &amp; Emails</a>
+          <button class="btn" id="syncSheets">Sync now</button>
+          <button class="btn ghost" id="rebuildSheets" title="Redraws tabs, colours and formulas from the website's design. Your data, COD call, Notes and Settings stay.">Rebuild design</button>
+        </div>
+        <p id="syncResult" style="color:var(--muted);font-size:13px"></p>
       </div>`;
     bindRows(latest);
+    $('#syncSheets').addEventListener('click', syncSheetsNow);
+    $('#rebuildSheets').addEventListener('click', syncSheetsNow);
   } catch (e) { fail(e); }
+}
+
+async function syncSheetsNow(e) {
+  const btn = e.currentTarget; btn.disabled = true;
+  const rebuild = btn.id === 'rebuildSheets';
+  const out = $('#syncResult'); out.textContent = rebuild ? 'Rebuilding the design and syncing…' : 'Syncing…';
+  const part = (r) => (r ? `${r.inserted} new, ${r.updated} updated` : 'not written');
+  const err = (x) => (x ? ` (${x})` : '');
+  try {
+    const { sheets: r } = await api('syncSheets', { rebuild });
+    if (r.status === 'not_configured') out.textContent = 'Not set up yet: add the GOOGLE_SERVICE_ACCOUNT_JSON secret in Cloudflare (docs/GOOGLE-SHEETS-SETUP.md).';
+    else out.textContent = `Orders: ${part(r.orders)}${err(r.ordersError || r.ordersLayoutError)}. Customers: ${part(r.contacts)}${err(r.contactsError || r.contactsLayoutError)}.${r.rebuilt ? ` Design rebuilt: ${r.rebuilt.join(', ')}.` : ''}`;
+  } catch (err) { out.textContent = err.message; }
+  finally { btn.disabled = false; }
 }
 
 /* ── orders ── */

@@ -3,6 +3,7 @@ import { isValidTransition, BASE_PRODUCT } from '../shared/products-config-worke
 import { dispatchPrepaidPaymentEmails } from './_email-dispatch.js';
 import { pushOrderToShiprocketNow } from './shiprocket-sync.js';
 import { runAfterResponse } from './_background.js';
+import { syncSheetsNow } from './sheets-sync.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -206,7 +207,8 @@ export default async function handler(req, res) {
             console.error('[payment-status] Confirmation email exception (payment remains confirmed):', emailErr?.message || emailErr);
           }
           await runAfterResponse('payment-status', () =>
-            pushOrderToShiprocketNow({ ...order, ...confirmedOrder, status: 'confirmed' }, { route: '/api/payment-status' }));
+            pushOrderToShiprocketNow({ ...order, ...confirmedOrder, status: 'confirmed' }, { route: '/api/payment-status' })
+              .then(() => syncSheetsNow('/api/payment-status')));
         }
         return res.status(200).json({
           ok: true,

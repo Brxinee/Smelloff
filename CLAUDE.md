@@ -7,7 +7,7 @@ Smelloff is a D2C e-commerce site selling **ODORSTRIKE** — pocket-sized fabric
 - Static HTML + vanilla JS (no framework)
 - Cloudflare Workers deployment (`wrangler.jsonc`, `src/index.js`); redirects + headers live in `config/routing.json` — see below
 - Supabase (orders/data)
-- Google Sheets webhook (order backup)
+- Google Sheets mirror of orders + customers (`api/sheets-sync.js`)
 - GA4 + Meta Pixel (consent-gated)
 - Resend transactional email via `/api/send-email`
 - Self-hosted fonts (Fraunces + JetBrains Mono + Inter Tight + Barlow Condensed)
@@ -44,6 +44,46 @@ the move silently dropped, now restored:
 - The Worker parses JSON with a `verify` hook that keeps `req.rawBody`: the
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
+
+## Google Sheets: orders + customers, written by the server (2026-10-18, owner: "organise my sheets", "proper sync and data flow")
+The browser's Apps Script beacon is gone (it wrote most orders twice, never
+sent Razorpay-paid orders, kept every status at "NEW" and took rows from
+anyone). `api/sheets-sync.js` mirrors Supabase into two sheets after every COD
+order / prepaid confirmation (`syncSheetsNow`, after the Shiprocket push),
+after an /admin order edit, on the 15-minute cron and from /admin's **Sync
+now** (`syncSheets` action). Setup, columns and rules:
+`docs/GOOGLE-SHEETS-SETUP.md`.
+- **Orders data** (`1VY0…`): Dashboard (period picker, needs-action counts,
+  12-month combo chart, state/source tables, review and to-ship lists; status
+  lists and `PeriodStart`/`PeriodEnd` are named ranges) + Orders A–Z synced
+  (WhatsApp "Confirm COD" link with a prefilled message, Track link, courier
+  status, shipped/delivered dates, refund, review, source), AA–AB the owner's.
+  **Smelloff Customers & Emails** (`1qe8…`): Summary + Contacts A–N ("Email
+  offers" Yes only after a signup, never taken away). Old tabs are hidden.
+- `api/_google-sheets.js`: service-account JWT via WebCrypto (secret
+  `GOOGLE_SERVICE_ACCOUNT_JSON`, `/api/health` → `configured.sheets`) and
+  `planTabSync`: upsert by key, reads with `valueRenderOption=FORMULA`, writes
+  only changed cells, inserts at row 2 and copies formats from the grid's last
+  row, never deletes or blanks, stops on a header mismatch, customer text as
+  `stringValue`. Each run writes the named range `SyncStatus`.
+- **Sheet formulas must use whole columns** (`Orders!C:C`): inserting at row 2
+  shifts any `C2:C` range past the new row. `SUMIFS` with a list criterion
+  doesn't expand in Sheets; use `SUM(IFERROR(FILTER(…),0))`, and
+  `SUMPRODUCT(COUNTIFS(…,list,…))` for counts.
+- **Change a column in `ORDER_COLUMNS` / `CONTACT_COLUMNS` and the sheet
+  header together** (insert the sheet column so rules move with it).
+- Test orders and the business WhatsApp number's checkouts are left out.
+- **The design is code** (`api/sheets-layout.js`, 2026-10-19, owner: "autopilot,
+  not one time use"): every sync compares the `smelloff_layout` stamp with
+  `LAYOUT_VERSION` and rebuilds the generated tabs in place when they differ,
+  keeping data, owner columns and inputs. Bump the version after any design
+  edit; /admin **Rebuild design** forces it. Google rejects an empty
+  `textFormat` in a CF rule and `unprotectedRanges` on a non-whole-sheet
+  protection.
+- `test/sheets-sync.test.mjs`, `test/sheets-e2e.test.mjs` (COD order through
+  `create-order` into a strict fake Sheets API) + `test/admin-api.test.mjs` pin
+  all of the above. Verified on staging copies in Google on 2026-10-19.
+- A live test order also books a Shiprocket shipment (no test filter there).
 
 ## Security check-up (2026-10-18, owner: "vibe coded via various models, security check up")
 Reviewed every `/api/*` handler, the admin dashboard, client-side rendering,
