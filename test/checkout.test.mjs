@@ -2,7 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
-import createOrderHandler from '../api/create-order.js';
+import createOrderHandlerRaw from '../api/create-order.js';
+
+// create-order throttles per client IP (10 / 10 min). Each test request gets
+// its own address so the suite exercises pricing, not the throttle; the
+// throttle has its own test below.
+let testIp = 0;
+const createOrderHandler = (req, res) => createOrderHandlerRaw(
+  { ...req, headers: { 'cf-connecting-ip': `198.51.100.${++testIp % 250}-${testIp}`, ...(req.headers || {}) } },
+  res,
+);
 import verifyPaymentHandler from '../api/verify-payment.js';
 import webhookHandler from '../api/webhook.js';
 import sendEmailHandler, { getOrderConfirmationIdempotencyKey } from '../api/send-email.js';
@@ -548,6 +557,22 @@ test('Step 4 Backend: webhook raw body HMAC verification and replay protection',
   await webhookHandler(reqTampered, resTampered);
   assert.equal(resTampered.statusCode, 400);
   assert.ok(resTampered.body.error.includes('Invalid webhook signature'));
+});
+
+test('webhook: a forged request cannot mark a real event id as already processed', async () => {
+  const secret = 'test_webhook_secret_xyz';
+  process.env.RAZORPAY_WEBHOOK_SECRET = secret;
+  const rawBody = JSON.stringify({ event: 'payment.authorized', payload: { payment: { entity: { id: 'pay_x', order_id: 'order_x' } } } });
+
+  const forged = createMockRes();
+  await webhookHandler({ method: 'POST', headers: { 'x-razorpay-signature': 'ab'.repeat(32), 'x-razorpay-event-id': 'evt_planted_1' }, body: rawBody }, forged);
+  assert.equal(forged.statusCode, 400, 'an unsigned request is rejected before dedup');
+
+  const real = createMockRes();
+  const signature = crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
+  await webhookHandler({ method: 'POST', headers: { 'x-razorpay-signature': signature, 'x-razorpay-event-id': 'evt_planted_1' }, body: rawBody }, real);
+  assert.equal(real.statusCode, 200);
+  assert.notEqual(real.body.duplicate, true, 'the genuine delivery is processed, not skipped as a repeat');
 });
 
 test('Step 4 Backend: webhook handles payment.failed without downgrading confirmed state', async () => {
@@ -2387,4 +2412,17 @@ test('create-order prices two bottles at the pair price (2 for ₹419)', async (
     if (prevKey === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY; else process.env.SUPABASE_SERVICE_ROLE_KEY = prevKey;
     if (prevResend === undefined) delete process.env.RESEND_API_KEY; else process.env.RESEND_API_KEY = prevResend;
   }
+});
+
+test('create-order throttles one client to 10 attempts per 10 minutes', async () => {
+  const statuses = [];
+  for (let i = 0; i < 11; i++) {
+    let status = 0;
+    const res = { setHeader() {}, status(c) { status = c; return this; }, json() { return this; }, end() { return this; } };
+    // An invalid body: the throttle must run before any validation or database work.
+    await createOrderHandlerRaw({ method: 'POST', headers: { 'cf-connecting-ip': '203.0.113.77' }, body: {} }, res);
+    statuses.push(status);
+  }
+  assert.equal(statuses.slice(0, 10).includes(429), false, 'the first 10 attempts are not throttled');
+  assert.equal(statuses[10], 429, 'the 11th attempt is throttled');
 });

@@ -117,12 +117,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing webhook signature or secret.' });
   }
 
-  // Deduplicate by event ID if supplied by Razorpay
-  const eventId = String(req.headers['x-razorpay-event-id'] || '').trim();
-  if (eventId && isDuplicateEvent(eventId)) {
-    return res.status(200).json({ received: true, duplicate: true, eventId });
-  }
-
   let rawBody = '';
   try {
     rawBody = await readRawBody(req);
@@ -152,6 +146,14 @@ export default async function handler(req, res) {
 
   if (!signatureValid) {
     return res.status(400).json({ error: 'Invalid webhook signature.' });
+  }
+
+  // Deduplicate only after the signature checks out: an unsigned request must
+  // not be able to plant an event id and make Razorpay's real delivery look
+  // like a repeat.
+  const eventId = String(req.headers['x-razorpay-event-id'] || '').trim();
+  if (eventId && isDuplicateEvent(eventId)) {
+    return res.status(200).json({ received: true, duplicate: true, eventId });
   }
 
   try {

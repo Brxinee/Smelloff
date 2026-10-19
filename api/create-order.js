@@ -2,6 +2,8 @@ import crypto from 'node:crypto';
 import { createRazorpayOrder } from './_razorpay.js';
 import {
   isAllowedOrigin,
+  clientIp,
+  checkRateLimit,
   generateOrderToken,
   generateOrderConfirmationToken,
 } from './_security.js';
@@ -165,8 +167,11 @@ async function insertPendingOrder(payload) {
 
   const data = await readJsonResponse(response);
   if (!response.ok) {
-    const error = new Error(data?.message || data?.error || `Order database returned HTTP ${response.status}`);
-    error.statusCode = response.status;
+    // Log the database's own message; the shopper gets a generic one, so table
+    // and constraint names never reach the browser.
+    console.error('[api/create-order] order insert failed:', response.status, data?.message || data?.error || '');
+    const error = new Error('Order database is temporarily unavailable. Please try again.');
+    error.statusCode = 503;
     error.isDuplicate = response.status === 409 || data?.code === '23505';
     throw error;
   }
@@ -191,8 +196,11 @@ async function insertCodOrder(payload) {
 
   const data = await readJsonResponse(response);
   if (!response.ok) {
-    const error = new Error(data?.message || data?.error || `Order database returned HTTP ${response.status}`);
-    error.statusCode = response.status;
+    // Log the database's own message; the shopper gets a generic one, so table
+    // and constraint names never reach the browser.
+    console.error('[api/create-order] order insert failed:', response.status, data?.message || data?.error || '');
+    const error = new Error('Order database is temporarily unavailable. Please try again.');
+    error.statusCode = 503;
     error.isDuplicate = response.status === 409 || data?.code === '23505';
     throw error;
   }
@@ -408,6 +416,13 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Every COD order emails the owner and books a Shiprocket shipment, so an
+  // unthrottled endpoint lets a script fill the courier queue with fake
+  // parcels. A real shopper retries a handful of times at most.
+  if (!checkRateLimit(`create-order:${clientIp(req)}`, 10, 10 * 60 * 1000)) {
+    return res.status(429).json({ error: 'Too many order attempts. Please wait a few minutes and try again.' });
+  }
 
   try {
     const body = req.body && typeof req.body === 'object' ? req.body : {};

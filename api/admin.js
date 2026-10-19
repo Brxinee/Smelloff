@@ -183,6 +183,9 @@ const actions = {
     const patch = {};
     for (const field of ORDER_EDITABLE) if (field in body) patch[field] = body[field] === '' ? null : String(body[field]).slice(0, 300);
     if (patch.status && !ORDER_STATUSES.includes(patch.status)) throw new HttpError(400, 'Invalid status.');
+    // The link is shown to the customer on /track-order and in emails: only a
+    // real https URL, never javascript: or data:.
+    if (patch.tracking_url && !/^https:\/\/[^\s"'<>]+$/i.test(patch.tracking_url)) throw new HttpError(400, 'Tracking link must start with https://');
     if (!Object.keys(patch).length) throw new HttpError(400, 'Nothing to update.');
     const rows = await db(`orders?id=eq.${id}&select=${ORDER_COLUMNS}`, { method: 'PATCH', body: patch });
     if (!rows?.length) throw new HttpError(404, 'Order not found.');

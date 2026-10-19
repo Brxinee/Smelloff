@@ -75,6 +75,37 @@ now** (`syncSheets` action). Setup, columns and rules:
 - Test orders and the business WhatsApp number's checkouts are left out.
 - `test/sheets-sync.test.mjs` + `test/admin-api.test.mjs` pin all of the above.
 
+## Security check-up (2026-10-18, owner: "vibe coded via various models, security check up")
+Reviewed every `/api/*` handler, the admin dashboard, client-side rendering,
+committed keys, `npm audit` (0 vulnerabilities), the live Supabase policies and
+the four deployed edge functions. Most of the Worker was already sound (HMAC
+webhooks, Razorpay amount/capture checks against the API, admin session cookie,
+escaped admin/comment/review rendering, CSP + HSTS). The only Supabase key in
+the repo is the public `anon` one. Fixed:
+- **Live edge functions were older than the repo.** `submit-review` (v1)
+  accepted any order UUID with no token and any non-cancelled status, so anyone
+  could create an order via `/api/create-order` (it returns the UUID) and post
+  a "Verified buyer" review. The hardened repo version (HMAC `review_token`
+  from `track-order`, COD only once delivered) had never been deployed, and the
+  live `track-order` didn't return the token, so the site's review flow was
+  broken too. **Deploy `supabase/functions/*` whenever they change.**
+- **Edge `create-order` (v5) and `cancel-order` are retired** to 410 stubs. The
+  first wrote orders with the service-role key from any caller at ₹299/₹60, and
+  its COD rows were booked into Shiprocket by the 15-minute sync. The second
+  depended on Supabase Auth, which the site doesn't use (0 users). Delete both
+  in the Supabase dashboard; tests fail if they come back as real code.
+- `orders` policy `users_select_own_orders` dropped and anon/authenticated
+  grants revoked (`20261018_security_hardening.sql`).
+- `/api/create-order` is throttled per IP (10 / 10 min): each COD order emails
+  the owner and books a shipment. DB error text no longer reaches the browser.
+- Razorpay webhook dedups by event id only after the signature verifies.
+- `/api/admin` refuses a non-https tracking link.
+- Not changed, owner's call: blog comments publish instantly (`approved`
+  defaults true, by design); `prelaunch_leads` accepts any anon insert;
+  rate limits are per Worker instance (see the Ponytail note).
+- **Owner, in Supabase → Authentication → Providers: turn off email sign-ups**
+  (the site has no logins), so no one can mint a session for a customer's email.
+
 ## Checkout summary: MRP and saving (2026-10-18)
 The checkout summary shows the struck MRP on the item, **MRP / Discount /
 Shipping** rows and a "You save ₹X on MRP" line (MRP × qty from
@@ -192,6 +223,28 @@ delivery copy consistent. Fixed:
   "No verified buyer reviews yet".
 Tests in `test/ux-guardrails.test.mjs`.
 
+## In-article photos and diagrams (2026-10-18, owner: "photos or diagrams in the blogs, for engagement")
+Every post (78) has **one photo and one diagram** in the body, stamped by
+`scripts/blog/apply-figures.mjs` from **`scripts/blog/figures.config.mjs`**
+between `<!-- FIG:START n -->` / `<!-- FIG:END n -->` markers, right after the
+first paragraph of the section named by `after` (an `<h2>` id or prefix).
+`--check` is in `npm run build`; `npm run figures` builds missing photos and
+stamps. **A new post needs an entry** (test/blog-figures.test.mjs fails).
+- **Diagrams are HTML, not images** (blog.css "In-article diagrams (.fx)"):
+  steps, compare, zones (garment outline + numbered spots: shirt, tee, kurta,
+  hoodie, jacket, sweater, trousers), timeline, stats, scale, decide, bars.
+  They reflow on phones and their text is real text. Copy restates the post;
+  product facts only from `config/product.json`.
+- **Photos**: Pexels (free licence, no attribution) or owner photos (`file:`,
+  used on the product posts). `build-figure-photos.mjs` crops 3:2 at `focal`
+  into `blog/assets/inline/<slug>@{640,1200}.{avif,webp}` (sources cached in
+  `.thumbnail-sources/`, fetched with curl). Bump `PHOTO_V` when pixels change.
+  Every frame was checked by eye for the clothing-only rule (rejected: shoes on
+  a rail, a sports bag, a shirtless beach shot, a liquor brand, another
+  brand's spray label).
+- Fixed on the way: `how-to-use-odorstrike` had a sprays table whose cells were
+  `<>` (the `dd86e68` corruption).
+
 ## 20 guides for Indian buyers (2026-10-15, owner: "20 more blogs")
 Blog is **78**; sitemap 92. Topics chosen to not duplicate any live or retired
 slug: Diwali smoke, gifts under ₹500, wears per shirt, interview sweat,
@@ -201,8 +254,11 @@ heatwave, food and sweat, washing less, all-day freshness, office to evening,
 sweaters. Each is answer-first with question H2s, a primary source and an
 "Honest limits" callout; facts only from `config/product.json`.
 - New CLUSTERS topic `everyday` in `apply-reader.mjs`.
-- Thumbnails for these use the owner's photos: `file:` in
-  `thumbnails.config.mjs` (repo path) instead of an Adobe `photo` id.
+- Thumbnails: each of the twenty has its own **Pexels** photo since 2026-10-18
+  (`pexels:` id in `thumbnails.config.mjs`; free licence, no attribution).
+  `build-thumbnails.mjs` fetches the source into `.thumbnail-sources/` on demand.
+  They first shipped on ten owner photos shared between twenty posts. `V` in
+  `apply-thumbnails.mjs` is 5. See `docs/BLOG-THUMBNAILS.md` "Pexels".
 - Seven retired slugs (ironing, bike rider, how long, winter sweaters, Indian
   summer, cotton kurtas, pre-date) now 301 to the matching new post.
 - Keyword tools (Semrush, Ahrefs) had no quota; topics came from the existing
