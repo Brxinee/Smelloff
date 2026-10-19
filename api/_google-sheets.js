@@ -118,6 +118,19 @@ export async function writeStamp(spreadsheetId, text) {
   }
 }
 
+// Everything the layout step needs to know about a spreadsheet, in one read.
+const META_FIELDS = 'developerMetadata,namedRanges,sheets(properties,conditionalFormats(ranges),charts(chartId),bandedRanges(bandedRangeId),protectedRanges(protectedRangeId,description))';
+export async function getSpreadsheetMeta(spreadsheetId) {
+  return sheetsFetch(`${spreadsheetId}?fields=${encodeURIComponent(META_FIELDS)}`);
+}
+
+// Values of several ranges (A1 or named); a range that doesn't exist reads as [].
+export async function readRanges(spreadsheetId, ranges) {
+  return Promise.all(ranges.map((range) => sheetsFetch(`${spreadsheetId}/values/${encodeURIComponent(range)}?valueRenderOption=UNFORMATTED_VALUE`)
+    .then((d) => d.values || [])
+    .catch(() => [])));
+}
+
 export async function batchUpdate(spreadsheetId, requests) {
   if (!requests.length) return null;
   return sheetsFetch(`${spreadsheetId}:batchUpdate`, { method: 'POST', body: { requests } });
@@ -267,9 +280,10 @@ export function columnLetter(n) {
   return s;
 }
 
-export async function syncTab({ spreadsheetId, tab, columns, rows, keyOf, merge }) {
+// props ({ sheetId, rowCount }) comes from ensureLayout's read when available.
+export async function syncTab({ spreadsheetId, tab, columns, rows, keyOf, merge, props }) {
   const [{ sheetId, rowCount }, existing] = await Promise.all([
-    getSheetProps(spreadsheetId, tab),
+    props || getSheetProps(spreadsheetId, tab),
     readTab(spreadsheetId, tab, columnLetter(columns.length)),
   ]);
   const plan = planTabSync({ sheetId, rowCount, columns, existing, rows, keyOf, merge });

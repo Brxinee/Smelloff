@@ -12,55 +12,9 @@ const ORDERS_SHEET_ID = () => process.env.SHEETS_ORDERS_ID || '1VY0Jkrj0CTjrEmam
 const CONTACTS_SHEET_ID = () => process.env.SHEETS_CONTACTS_ID || '1qe8Y2DY0kKr7jVLCit9F9Xr1L3rMO1CS3ClPAMpTjJc';
 const SUPABASE_URL = () => (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
 
-export const ORDER_COLUMNS = [
-  { header: 'Order date', kind: 'sync' },
-  { header: 'Order ID', kind: 'sync' },
-  { header: 'Status', kind: 'sync' },
-  { header: 'Payment', kind: 'sync' },
-  { header: 'Name', kind: 'sync' },
-  { header: 'Phone', kind: 'sync' },
-  { header: 'WhatsApp', kind: 'sync' },
-  { header: 'Email', kind: 'sync' },
-  { header: 'Bottles', kind: 'sync' },
-  { header: 'Subtotal (₹)', kind: 'sync' },
-  { header: 'COD fee (₹)', kind: 'sync' },
-  { header: 'Total (₹)', kind: 'sync' },
-  { header: 'Address', kind: 'sync' },
-  { header: 'City', kind: 'sync' },
-  { header: 'State', kind: 'sync' },
-  { header: 'Pincode', kind: 'sync' },
-  { header: 'Courier', kind: 'sync' },
-  { header: 'AWB', kind: 'sync' },
-  { header: 'Tracking', kind: 'sync' },
-  { header: 'Courier status', kind: 'sync' },
-  { header: 'Shipped on', kind: 'sync' },
-  { header: 'Delivered on', kind: 'sync' },
-  { header: 'Refund', kind: 'sync' },
-  { header: 'Review (stars)', kind: 'sync' },
-  { header: 'Source', kind: 'sync' },
-  { header: 'Last update', kind: 'sync' },
-  { header: 'COD call', kind: 'owner' },
-  { header: 'Notes', kind: 'owner' },
-];
-
-export const CONTACT_COLUMNS = [
-  { header: 'Email', kind: 'sync' },
-  { header: 'Name', kind: 'sync' },
-  { header: 'Phone', kind: 'sync' },
-  { header: 'WhatsApp', kind: 'sync' },
-  { header: 'City', kind: 'sync' },
-  { header: 'State', kind: 'sync' },
-  { header: 'Type', kind: 'sync' },
-  { header: 'Paid orders', kind: 'sync' },
-  { header: 'Bottles', kind: 'sync' },
-  { header: 'Order value (₹)', kind: 'sync' },
-  { header: 'Last order', kind: 'sync' },
-  { header: 'Last order status', kind: 'sync' },
-  { header: 'Email offers', kind: 'sync' },
-  { header: 'First seen', kind: 'insert' },
-  { header: 'Source', kind: 'insert' },
-  { header: 'Notes', kind: 'owner' },
-];
+export { ORDER_COLUMNS, CONTACT_COLUMNS } from './_sheet-columns.js';
+import { ORDER_COLUMNS, CONTACT_COLUMNS } from './_sheet-columns.js';
+import { ensureLayout } from './sheets-layout.js';
 
 export const STATUS_LABELS = {
   placed: 'New',
@@ -329,7 +283,21 @@ export function stampText({ inserted = 0, updated = 0 } = {}, now = new Date()) 
   return `Last synced by the website: ${when} (${inserted} new, ${updated} updated). Syncs after every order and every 15 minutes.`;
 }
 
-export async function syncSheets({ route = 'cron' } = {}) {
+// The design lives in api/sheets-layout.js and is rebuilt in place when its
+// version changes (or from /admin). A design problem is reported but never
+// stops the orders reaching the sheet.
+async function layoutFor(result, key, spreadsheetId, rebuild) {
+  try {
+    const out = await ensureLayout(spreadsheetId, key, { force: rebuild });
+    if (out.rebuilt) result.rebuilt = [...(result.rebuilt || []), key];
+    return out.dataTab;
+  } catch (err) {
+    result[`${key}LayoutError`] = String(err?.message || err).slice(0, 300);
+    return undefined;
+  }
+}
+
+export async function syncSheets({ route = 'cron', rebuild = false } = {}) {
   if (!isSheetsConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) return { status: 'not_configured' };
   const [allOrders, waitlist, messages, reviews] = await Promise.all([
     supabaseGet(`orders?select=${ORDER_FIELDS}&order=created_at.desc&limit=5000`),
@@ -344,9 +312,10 @@ export async function syncSheets({ route = 'cron' } = {}) {
   const result = { status: 'ok', route };
   // One tab failing (unshared, renamed) must not stop the other.
   try {
+    const props = await layoutFor(result, 'orders', ORDERS_SHEET_ID(), rebuild);
     result.orders = await syncTab({
       spreadsheetId: ORDERS_SHEET_ID(), tab: 'Orders', columns: ORDER_COLUMNS,
-      rows: orders.map((o) => orderRow(o, { ratings })), keyOf: orderKey,
+      rows: orders.map((o) => orderRow(o, { ratings })), keyOf: orderKey, props,
     });
     await writeStamp(ORDERS_SHEET_ID(), stampText(result.orders));
   } catch (err) {
@@ -354,18 +323,18 @@ export async function syncSheets({ route = 'cron' } = {}) {
     result.ordersError = String(err?.message || err).slice(0, 300);
   }
   try {
+    const props = await layoutFor(result, 'contacts', CONTACTS_SHEET_ID(), rebuild);
     result.contacts = await syncTab({
       spreadsheetId: CONTACTS_SHEET_ID(), tab: 'Contacts', columns: CONTACT_COLUMNS,
-      rows: buildContactRows({ orders, waitlist, messages, skipEmails }), keyOf: contactKey, merge: mergeContact,
+      rows: buildContactRows({ orders, waitlist, messages, skipEmails }), keyOf: contactKey, merge: mergeContact, props,
     });
     await writeStamp(CONTACTS_SHEET_ID(), stampText(result.contacts));
   } catch (err) {
     result.status = result.status === 'partial' ? 'failed' : 'partial';
     result.contactsError = String(err?.message || err).slice(0, 300);
   }
-  if (result.ordersError || result.contactsError) {
-    console.error(`[sheets-sync] ${route}:`, result.ordersError || '', result.contactsError || '');
-  }
+  const errors = ['ordersError', 'contactsError', 'ordersLayoutError', 'contactsLayoutError'].map((k) => result[k]).filter(Boolean);
+  if (errors.length) console.error(`[sheets-sync] ${route}:`, errors.join(' | '));
   return result;
 }
 

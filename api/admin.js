@@ -15,7 +15,8 @@
  *   messages                       → contact form inbox
  *   updateMessage {id, status}
  *   reviews                        → every review; only ones with an order show
- *   syncSheets                     → copy orders + contacts into the Google Sheets now
+ *   syncSheets {rebuild?}          → copy orders + contacts into the Google Sheets now
+ *                                    (rebuild: redraw the sheets' design too)
  */
 import crypto from 'node:crypto';
 import { checkRateLimit, clientIp } from './_security.js';
@@ -212,9 +213,9 @@ const actions = {
   async reviews() {
     return { reviews: await db('reviews?select=id,created_at,name,city,rating,body,anonymous,order_id&order=created_at.desc&limit=300') };
   },
-  async syncSheets(_body, req) {
+  async syncSheets(body, req) {
     if (!checkRateLimit(`admin-sheets:${clientIp(req)}`, 10, 10 * 60 * 1000)) throw new HttpError(429, 'Synced recently. Wait a few minutes.');
-    return { sheets: await syncSheets({ route: '/api/admin' }) };
+    return { sheets: await syncSheets({ route: '/api/admin', rebuild: body.rebuild === true }) };
   },
 };
 
