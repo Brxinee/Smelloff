@@ -30,7 +30,7 @@ export const ORDER_COLUMNS = [
   { header: 'Refund', kind: 'sync', type: 'plain', width: 90 },
   { header: 'Review (stars)', kind: 'sync', type: 'int', width: 95 },
   { header: 'Source', kind: 'sync', type: 'plain', width: 120,
-    note: 'Where the buyer came from: utm_source or a partner ref on the checkout page, "Meta ad" for a Facebook/Instagram ad click, "Website" otherwise. Blank for older orders.' },
+    note: 'Where the buyer came from: the channel of their latest campaign or referral visit (Meta ads, Creator, Google Search, WhatsApp, Referral…) and the utm_campaign. "Direct / unknown" when the visit named nothing. Orders before 20 Oct 2026: utm_source on the checkout page, "Meta ad" or "Website".' },
   { header: 'Last update', kind: 'sync', type: 'datetime', width: 135 },
   { header: 'COD call', kind: 'owner', type: 'choice', width: 150,
     choices: ['Confirmed on call', 'Confirmed on WhatsApp', 'No answer', 'Call back later', 'Cancelled by customer'],

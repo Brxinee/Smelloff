@@ -24,7 +24,10 @@ const ALLOWED_EVENTS = new Set([
   'whatsapp_share', 'copy_link', 'page_scroll_50', 'page_scroll_90',
   // Support chat (assets/js/support-chat.js): opens, messages, answer
   // ratings, card taps and the one-per-session teaser.
-  'chat_open', 'chat_message', 'chat_feedback', 'chat_card_click', 'chat_teaser'
+  'chat_open', 'chat_message', 'chat_feedback', 'chat_card_click', 'chat_teaser',
+  // assets/js/track.js: a landing with utm_* / an ad click id / ?ref=, and a
+  // tap on a link to the business WhatsApp (meta.intent order|chat, meta.ref).
+  'campaign_landing', 'whatsapp_click'
 ]);
 
 const CART_EVENTS = new Set(['add_to_cart', 'remove_from_cart', 'cart', 'cart_update', 'checkout_start']);

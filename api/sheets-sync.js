@@ -119,9 +119,16 @@ function firstAt(order, status, { last = false } = {}) {
   return h ? toSheetDate(h.at) : '';
 }
 
-// Where the buyer came from: utm_source or a partner ?ref= on the checkout
-// page, or a Meta ad click.
+// Where the buyer came from. Orders since 2026-10-20 carry `attribution`
+// (assets/js/track.js → api/_attribution.js): its channel, plus the campaign
+// name. Older orders: utm_source or a partner ?ref= on the checkout page, or
+// a Meta ad click.
 export function orderSource(order) {
+  const a = order.attribution;
+  if (a && typeof a.channel === 'string' && a.channel) {
+    const campaign = String(a.last?.campaign || '');
+    return (campaign && !a.channel.includes(campaign) ? `${a.channel} · ${campaign}` : a.channel).slice(0, 60);
+  }
   let params = null;
   try { params = order.event_source_url ? new URL(order.event_source_url).searchParams : null; } catch { params = null; }
   const utm = params?.get('utm_source');
@@ -273,7 +280,7 @@ async function supabaseGet(path) {
   return res.json();
 }
 
-const ORDER_FIELDS = 'id,order_code,created_at,updated_at,status,status_history,payment_method,amount,cod_fee,customer_email,customer_phone,address,items,courier,tracking_id,tracking_url,shiprocket_awb,shiprocket_courier,shiprocket_status,refund_status,event_source_url,fbc';
+const ORDER_FIELDS = 'id,order_code,created_at,updated_at,status,status_history,payment_method,amount,cod_fee,customer_email,customer_phone,address,items,courier,tracking_id,tracking_url,shiprocket_awb,shiprocket_courier,shiprocket_status,refund_status,event_source_url,fbc,attribution';
 
 export function stampText({ inserted = 0, updated = 0 } = {}, now = new Date()) {
   const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);

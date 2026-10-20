@@ -170,29 +170,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   };
 </script>
 
-<!-- Attribution: capture utm_source on landing, persist across the session -->
-<script>
-  (function captureSource(){
-    try {
-      var params = new URLSearchParams(window.location.search);
-      var utm = (params.get('utm_source') || '').toLowerCase().trim();
-      var map = {
-        'meta':'Meta','facebook':'Meta','fb':'Meta','instagram':'Meta','ig':'Meta',
-        'google':'Google','googleads':'Google','google_ads':'Google','adwords':'Google',
-        'organic':'Organic','seo':'Organic',
-        'direct':'Direct',
-        'influencer':'Influencer','creator':'Influencer',
-        'whatsapp':'WhatsApp','wa':'WhatsApp'
-      };
-      if (utm) {
-        localStorage.setItem('os_source', map[utm] || 'Direct');
-      } else if (!localStorage.getItem('os_source')) {
-        localStorage.setItem('os_source', 'Direct');
-      }
-    } catch (e) { /* localStorage may be blocked */ }
-  })();
-</script>
-
 <!-- Resource hints: Supabase is hit at checkout (order mirror) → preconnect.
      Pincode + QR APIs are on-demand (checkout) → dns-prefetch only.
      Analytics/Meta origins are intentionally NOT hinted — they are
@@ -237,15 +214,11 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- Analytics (GA4 + Meta Pixel) — loaded only after explicit consent. -->
 <script>
   function loadAnalytics(){
-    // Never load GA4 / Meta Pixel for automated browsers (headless/scraper
-    // bots auto-click "Accept all", which was inflating both platforms).
-    if(window.smfIsBot?window.smfIsBot():navigator.webdriver===true)return;
+    if(!primeAnalytics())return;
     if(window.__smelloffAnalyticsLoaded)return;
     window.__smelloffAnalyticsLoaded=true;
     var g=document.createElement('script');g.src='https://www.googletagmanager.com/gtag/js?id=G-S1MJ58PD89';g.async=true;document.head.appendChild(g);
-    g.onload=function(){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-S1MJ58PD89');var aiR=(document.referrer||'').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);if(aiR){gtag('event','ai_referral',{ai_source:aiR[2],landing_page:location.pathname});}};
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init','1455100092891684');fbq('track','PageView');
+    var p=document.createElement('script');p.src='https://connect.facebook.net/en_US/fbevents.js';p.async=true;document.head.appendChild(p);
     /* Microsoft Clarity — paste the project ID from clarity.microsoft.com to
        switch it on. Empty means the tag is never requested. Consent-gated and
        bot-guarded with GA4/Pixel above; this constant lives in FOUR places
@@ -254,8 +227,27 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     var CLARITY_ID='';
     if(CLARITY_ID&&!window.clarity){(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,'clarity','script',CLARITY_ID);}
   }
+  /* The queues (2026-10-20): once consent is stored, gtag and fbq exist from
+     the top of the page and hold every call until their scripts arrive at
+     window load. gtag used to be defined only when its script loaded, so
+     anything earlier (?buy=1 opens checkout before load) was dropped by the
+     `typeof gtag` checks. Never for automated browsers (headless/scraper bots
+     auto-click "Accept all"); track.js's smfIsBot loads later, so the same
+     test is inlined. Same block in index.html, faq.html, odorstrike.html and
+     assets/js/consent-analytics.js. */
+  function primeAnalytics(){
+    if(window.__smfAnalyticsPrimed)return true;
+    var n=navigator;if(window.smfIsBot?window.smfIsBot():(n.webdriver===true||/Headless|PhantomJS|Puppeteer|Playwright|Electron\//i.test(n.userAgent||'')))return false;
+    window.__smfAnalyticsPrimed=true;
+    window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments);};
+    gtag('js',new Date());gtag('config','G-S1MJ58PD89');var aiR=(document.referrer||'').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);if(aiR){gtag('event','ai_referral',{ai_source:aiR[2],landing_page:location.pathname});}
+    if(!window.fbq){var q=window.fbq=function(){q.callMethod?q.callMethod.apply(q,arguments):q.queue.push(arguments)};if(!window._fbq)window._fbq=q;q.push=q;q.loaded=!0;q.version='2.0';q.queue=[];}
+    fbq('init','1455100092891684');fbq('track','PageView');
+    return true;
+  }
   // Only auto-load analytics if user has already accepted consent
   if(localStorage.getItem('smelloff_consent_v1')==='accepted'){
+    primeAnalytics();
     if(document.readyState==='complete'){loadAnalytics();}
     else{window.addEventListener('load',loadAnalytics,{once:true});}
   }
@@ -1671,8 +1663,8 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
 </script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=e4cc28eb" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=e4cc28eb"></noscript>
-<script src="/assets/js/chrome.js?v=19af8484" defer></script>
+<link rel="preload" href="/assets/css/chrome.css?v=3eafab25" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=3eafab25"></noscript>
+<script src="/assets/js/chrome.js?v=ce244b64" defer></script>
 <script src="/assets/js/support-chat.js?v=c16c518c" defer></script>
 </head>
 <body>
@@ -2025,7 +2017,7 @@ function soAttachOrder(orderRef, amount, qty, paymentMethod) {
         <p class="r30-body">On the collar, underarm fabric, or chest. Not for skin.</p>
       </li>
       <li class="r30-step r30-step--timer">
-        <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/pdp-step-03-dried-clear@400.avif 400w, /assets/photos/pdp-step-03-dried-clear.avif 580w" sizes="(min-width:768px) 460px, 100vw"><img class="ph-photo" src="/assets/photos/pdp-step-03-dried-clear.webp" srcset="/assets/photos/pdp-step-03-dried-clear@400.webp 400w, /assets/photos/pdp-step-03-dried-clear.webp 580w" sizes="(min-width:768px) 460px, 100vw" width="580" height="580" alt="The same black shirt collar after spraying, dried clear." loading="lazy" decoding="async"></picture>
+        <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/pdp-step-03-dried-clear@400.avif 400w, /assets/photos/pdp-step-03-dried-clear.avif 580w" sizes="(min-width:960px) 260px, (min-width:768px) 45vw, 50vw"><img class="ph-photo" src="/assets/photos/pdp-step-03-dried-clear.webp" srcset="/assets/photos/pdp-step-03-dried-clear@400.webp 400w, /assets/photos/pdp-step-03-dried-clear.webp 580w" sizes="(min-width:960px) 260px, (min-width:768px) 45vw, 50vw" width="580" height="580" alt="The same black shirt collar after spraying, dried clear." loading="lazy" decoding="async"></picture>
         <div class="r30-step-head">
           <span class="r30-num">03 · WAIT</span>
           <!-- The ring is aria-hidden; the heading and body carry the meaning. -->
@@ -3290,8 +3282,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     const shipping = t.shipping;
     const sv = SHEET_VARIANT[currentVariant] || { variant: currentVariant, label: v.title || currentVariant, bottles: 1 };
     const isCod = payMethod === 'cod';
-    let source = 'Direct';
-    try { source = localStorage.getItem('os_source') || 'Direct'; } catch (e) {}
     return {
       orderId,
       name: document.getElementById('f_name').value.trim(),
@@ -3316,7 +3306,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       city: document.getElementById('f_city').value.trim(),
       state: document.getElementById('f_state').value.trim(),
       pincode: document.getElementById('f_pin').value.trim(),
-      source: source,
       notes: ''
     };
   }
@@ -3512,6 +3501,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   async function submitOrder() {
     hideError();
     if (!validateForm()) return;
+    trackShippingInfo();
 
     if (payMethod === 'prepaid') {
       if (typeof window.startRazorpay === 'function') {
@@ -3572,7 +3562,14 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         pincode: order.pincode || ''
       },
       upi_ref: null,
-      order_code: order.orderId
+      order_code: order.orderId,
+      // Where the order came from (assets/js/track.js) and, with consent, the
+      // Meta click cookies the server-side Purchase matches on. COD orders
+      // sent none of these before 2026-10-20.
+      event_source_url: location.href,
+      attribution: (typeof window.smfAttribution === 'function' && window.smfAttribution()) || null,
+      fbp: _consented() ? _ck('_fbp') : '',
+      fbc: _consented() ? _fbc() : ''
     };
 
     showLoadingScreen(
@@ -3898,6 +3895,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   //      browser Pixel against its Conversions API mirror instead of double-
   //      counting. Everything here is consent-gated (no Pixel → no CAPI) and
   //      fire-and-forget (a tracking failure can never affect checkout). ----
+  function _consented(){ try { return localStorage.getItem('smelloff_consent_v1') === 'accepted'; } catch (e) { return false; } }
   function _ck(n){ var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]+)')); return m ? decodeURIComponent(m[1]) : ''; }
   function _eid(){ try { return crypto.randomUUID ? crypto.randomUUID() : (String(Date.now()) + Math.random().toString(16).slice(2)); } catch (e) { return String(Date.now()) + Math.random().toString(16).slice(2); } }
   function _fbclid(){ try { return new URLSearchParams(location.search).get('fbclid') || ''; } catch (e) { return ''; } }
@@ -3944,6 +3942,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (ctaLocation) gaData.cta_location = ctaLocation;
     if (typeof gtag !== 'undefined') gtag('event', 'begin_checkout', gaData);
     metaCapi('InitiateCheckout', eid, { custom: c });
+    _shipInfoSent = false;
     // First-party funnel: checkout_start (snapshot keeps the live cart current).
     smfCartBeacon('checkout_start');
   }
@@ -3956,6 +3955,23 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   // unpaid/COD order as a sale and train Meta to find people who don't pay.
   // (Kept the name `trackPurchase` so existing call sites are untouched.)
   var _placedOrders = {};
+  // Orders already reported from this browser, so a reload, a second tab or a
+  // repeated payment callback never sends a second purchase for one order.
+  var TRACKED_KEY = 'smf_tracked_orders';
+  function _trackedBefore(code) {
+    try { return (JSON.parse(localStorage.getItem(TRACKED_KEY) || '[]') || []).indexOf(code) !== -1; } catch (e) { return false; }
+  }
+  function _markTracked(code) {
+    try {
+      var list = (JSON.parse(localStorage.getItem(TRACKED_KEY) || '[]') || []).filter(function (c) { return c !== code; });
+      list.push(code);
+      localStorage.setItem(TRACKED_KEY, JSON.stringify(list.slice(-20)));
+    } catch (e) {}
+  }
+  // `amount` is what the buyer pays, in rupees: the product subtotal plus the
+  // COD handling charge on COD. GA4 gets value = that amount, items priced so
+  // they add up to the subtotal (5 bottles = ₹899, not 5 × ₹229) and the COD
+  // charge as `shipping`. Meta's server-side Purchase uses the same amount.
   function trackPurchase(amount, orderId, qty, paymentMethod) {
     amount = Number(amount) || osValue();
     var unitPrice = osValue();
@@ -3963,6 +3979,10 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     paymentMethod = paymentMethod || (typeof window.payMethod === 'string' ? window.payMethod : 'prepaid');
     if (orderId && _placedOrders[orderId]) return;
     if (orderId) _placedOrders[orderId] = true;
+    if (orderId && _trackedBefore(orderId)) return;
+    if (orderId) _markTracked(orderId);
+    var subtotal = window.smfSubtotal ? window.smfSubtotal(qty) : unitPrice * qty;
+    var fee = Math.max(0, Math.round((amount - subtotal) * 100) / 100);
     // First-party funnel (unchanged): marks this session's cart converted.
     if (typeof window.smfTrack === 'function') {
       try { window.smfTrack({ type: 'purchase', value: amount * 100, order_code: orderId, qty: qty, payment_method: paymentMethod }); } catch (e) {}
@@ -3970,8 +3990,9 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     // GA4: preserves the merchant's report with payment_type.
     if (typeof gtag !== 'undefined') {
       var gaData = {
-        transaction_id: orderId, value: amount, currency: 'INR', items: gaItems(unitPrice, qty)
+        transaction_id: orderId, value: amount, currency: 'INR', items: gaItems(subtotal / qty, qty)
       };
+      if (fee) gaData.shipping = fee;
       if (paymentMethod) gaData.payment_type = paymentMethod;
       gtag('event', 'purchase', gaData);
     }
@@ -3986,26 +4007,48 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         city: pii.city, state: pii.state, pincode: pii.pincode, country: 'in' });
     }
   }
+
+  // add_shipping_info: the address passed validation and the order is on its
+  // way to the server. Once per checkout opening (trackInitCheckout resets it),
+  // so a retry after a failed payment doesn't send it again.
+  var _shipInfoSent = false;
+  function trackShippingInfo() {
+    if (_shipInfoSent || typeof gtag === 'undefined') return;
+    _shipInfoSent = true;
+    var t = orderTotals();
+    gtag('event', 'add_shipping_info', { currency: 'INR', value: t.subtotal, shipping_tier: 'standard', items: gaItems(t.subtotal / t.qty, t.qty) });
+  }
+  window.trackShippingInfo = trackShippingInfo;
   window.trackInitCheckout = trackInitCheckout;
 
-  // ViewContent fires when #buy section enters viewport
+  // view_item / ViewContent: once per product-page view (2026-10-20). They
+  // fired only when the #buy box scrolled into view, so most visitors, who buy
+  // from the hero, never sent one while their begin_checkout did. If consent
+  // comes later on this page, they fire then ('smf:analytics').
+  (function(){
+    var sent = false;
+    function viewItem(){
+      if (sent || typeof gtag === 'undefined') return;
+      sent = true;
+      var vcPrice = osValue(); var eid = _eid(); var c = fbContents(vcPrice);
+      if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', c, { eventID: eid });
+      gtag('event', 'view_item', { currency: 'INR', value: vcPrice, items: gaItems(vcPrice) });
+      metaCapi('ViewContent', eid, { custom: c });
+    }
+    viewItem();
+    document.addEventListener('smf:analytics', viewItem);
+  })();
+
+  // First-party funnel: the #buy section entering the viewport is this
+  // store's product_view (unchanged).
   (function(){
     var buySection = document.getElementById('buy');
     if (!buySection || !('IntersectionObserver' in window)) return;
-    var fired = false;
     var obs = new IntersectionObserver(function(entries){
-      if (fired) return;
-      if (entries[0].isIntersecting) {
-        fired = true;
-        var vcPrice = osValue(); var eid = _eid(); var c = fbContents(vcPrice);
-        if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', c, { eventID: eid });
-        if (typeof gtag !== 'undefined') gtag('event', 'view_item', { currency: 'INR', value: vcPrice, items: gaItems(vcPrice) });
-        metaCapi('ViewContent', eid, { custom: c });
-        // First-party funnel: the #buy section is this store's product view.
-        if (typeof window.smfTrack === 'function') {
-          try { window.smfTrack({ type: 'product_view', label: 'ODORSTRIKE Fabric Mist', value: vcPrice * 100 }); } catch (e) {}
-        }
-        obs.disconnect();
+      if (!entries[0].isIntersecting) return;
+      obs.disconnect();
+      if (typeof window.smfTrack === 'function') {
+        try { window.smfTrack({ type: 'product_view', label: 'ODORSTRIKE Fabric Mist', value: osValue() * 100 }); } catch (e) {}
       }
     }, { threshold: 0.3 });
     obs.observe(buySection);
@@ -4291,20 +4334,20 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   var KEY='smelloff_consent_v1';
   function setBottomOffset(px){
     // Push mobile bar above the consent bar
+    // `translate`, not `bottom`: moving a fixed element by `bottom` is a layout
+    // shift (CLS 0.23 on a phone's first visit, 2026-10-20); a transform isn't.
     var mb = document.getElementById('mobileBar');
-    if (mb) mb.style.bottom = px ? (px + 10) + 'px' : ''; // keep the strip's 10px float gap
+    if (mb) mb.style.setProperty('--mb-lift', (px || 0) + 'px');
   }
   function hideBar(){
     var b=document.getElementById('smelloff-consent-bar');
     if(b)b.style.display='none';
     setBottomOffset(0);
-    var mb = document.getElementById('mobileBar');
-    if (mb) mb.style.bottom = '';
   }
   window.smelloffSetConsent=function(v){
     try{localStorage.setItem(KEY,v);}catch(e){}
     hideBar();
-    if(v==='accepted')loadAnalytics();
+    if(v==='accepted'){loadAnalytics();try{document.dispatchEvent(new Event('smf:analytics'));}catch(e){}}
   };
   var existing;
   try{existing=localStorage.getItem(KEY);}catch(e){}
@@ -4379,6 +4422,6 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
 <script src="/assets/js/reviews-system.js?v=6" defer></script>
-<script src="/assets/js/track.js?v=801e292b" defer></script>
+<script src="/assets/js/track.js?v=8591ad00" defer></script>
 </body>
 </html>

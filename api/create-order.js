@@ -13,6 +13,7 @@ import { sendAdminNewOrderEmail } from './_email-dispatch.js';
 import { pushOrderToShiprocketNow } from './shiprocket-sync.js';
 import { runAfterResponse } from './_background.js';
 import { syncSheetsNow } from './sheets-sync.js';
+import { orderAttribution } from './_attribution.js';
 
 function getSupabaseUrl() {
   return (process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co').replace(/\/$/, '');
@@ -130,6 +131,7 @@ function buildPrepaidOrderRecord(payload) {
     fbp: payload.fbp || null,
     fbc: payload.fbc || null,
     event_source_url: payload.event_source_url || null,
+    ...(payload.attribution ? { attribution: payload.attribution } : {}),
     ...(payload.payment_attempt_id ? { payment_attempt_id: payload.payment_attempt_id } : {}),
   };
 }
@@ -149,65 +151,54 @@ function buildCodOrderRecord(payload) {
     fbp: payload.fbp || null,
     fbc: payload.fbc || null,
     event_source_url: payload.event_source_url || null,
+    ...(payload.attribution ? { attribution: payload.attribution } : {}),
   };
+}
+
+// POST one order row. `attribution` is the newest column (2026-10-20); if the
+// database hasn't got it yet, PostgREST answers 400 PGRST204 naming it, and
+// the row goes in without it rather than losing the order.
+async function postOrderRow(record) {
+  const send = (body) => fetch(`${getSupabaseUrl()}/rest/v1/orders`, {
+    method: 'POST',
+    headers: {
+      ...supabaseHeaders(),
+      Prefer: 'return=representation',
+    },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(10000),
+  });
+  let response = await send(record);
+  let data = await readJsonResponse(response);
+  if (!response.ok && 'attribution' in record && data?.code === 'PGRST204' && /attribution/.test(String(data?.message || ''))) {
+    console.error('[api/create-order] orders.attribution is missing; saving the order without it. Apply supabase/migrations/20261020_order_attribution.sql.');
+    const { attribution, ...rest } = record;
+    response = await send(rest);
+    data = await readJsonResponse(response);
+  }
+  if (!response.ok) {
+    // Log the database's own message; the shopper gets a generic one, so table
+    // and constraint names never reach the browser.
+    console.error('[api/create-order] order insert failed:', response.status, data?.message || data?.error || '');
+    const error = new Error('Order database is temporarily unavailable. Please try again.');
+    error.statusCode = 503;
+    error.isDuplicate = response.status === 409 || data?.code === '23505';
+    throw error;
+  }
+
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row?.id) fail('Order database returned an invalid response.');
+  return row;
 }
 
 async function insertPendingOrder(payload) {
   if (!getServiceKey()) fail('Order database credentials are not configured.');
-
-  const response = await fetch(`${getSupabaseUrl()}/rest/v1/orders`, {
-    method: 'POST',
-    headers: {
-      ...supabaseHeaders(),
-      Prefer: 'return=representation',
-    },
-    body: JSON.stringify(buildPrepaidOrderRecord(payload)),
-    signal: AbortSignal.timeout(10000),
-  });
-
-  const data = await readJsonResponse(response);
-  if (!response.ok) {
-    // Log the database's own message; the shopper gets a generic one, so table
-    // and constraint names never reach the browser.
-    console.error('[api/create-order] order insert failed:', response.status, data?.message || data?.error || '');
-    const error = new Error('Order database is temporarily unavailable. Please try again.');
-    error.statusCode = 503;
-    error.isDuplicate = response.status === 409 || data?.code === '23505';
-    throw error;
-  }
-
-  const row = Array.isArray(data) ? data[0] : data;
-  if (!row?.id) fail('Order database returned an invalid response.');
-  return row;
+  return postOrderRow(buildPrepaidOrderRecord(payload));
 }
 
 async function insertCodOrder(payload) {
   if (!getServiceKey()) fail('Order database credentials are not configured.');
-
-  const response = await fetch(`${getSupabaseUrl()}/rest/v1/orders`, {
-    method: 'POST',
-    headers: {
-      ...supabaseHeaders(),
-      Prefer: 'return=representation',
-    },
-    body: JSON.stringify(buildCodOrderRecord(payload)),
-    signal: AbortSignal.timeout(10000),
-  });
-
-  const data = await readJsonResponse(response);
-  if (!response.ok) {
-    // Log the database's own message; the shopper gets a generic one, so table
-    // and constraint names never reach the browser.
-    console.error('[api/create-order] order insert failed:', response.status, data?.message || data?.error || '');
-    const error = new Error('Order database is temporarily unavailable. Please try again.');
-    error.statusCode = 503;
-    error.isDuplicate = response.status === 409 || data?.code === '23505';
-    throw error;
-  }
-
-  const row = Array.isArray(data) ? data[0] : data;
-  if (!row?.id) fail('Order database returned an invalid response.');
-  return row;
+  return postOrderRow(buildCodOrderRecord(payload));
 }
 
 async function updatePendingOrder(orderCode, payload) {
@@ -532,6 +523,7 @@ export default async function handler(req, res) {
       fbc: String(body.fbc || '').trim().slice(0, 256),
       event_source_url: String(body.event_source_url || '').trim().slice(0, 512),
     };
+    sanitizedPayload.attribution = orderAttribution(body.attribution, { fbc: sanitizedPayload.fbc });
 
     if (isCod) {
       const localOrder = await ensureCodLocalOrder(sanitizedPayload, owned.existing);

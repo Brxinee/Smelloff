@@ -246,6 +246,7 @@ function openOrder(o) {
       <dt>Items</dt><dd>${items} <span class="muted">(${qty(o)} total)</span></dd>
       <dt>Amount</dt><dd>${inr(o.amount)}${o.cod_fee ? ` <span class="muted">incl. COD fee ${inr(o.cod_fee)}</span>` : ''}</dd>
       <dt>Payment</dt><dd>${esc(String(o.payment_method || '').toUpperCase())}${o.upi_ref ? ` · UTR <span class="mono">${esc(o.upi_ref)}</span>` : ''}</dd>
+      ${o.attribution && o.attribution.channel ? `<dt>Source</dt><dd>${esc(o.attribution.channel)}${o.attribution.last && o.attribution.last.campaign ? ` <span class="muted">· ${esc(o.attribution.last.campaign)}</span>` : ''}${o.attribution.first && o.attribution.last && o.attribution.first.at !== o.attribution.last.at ? ` <span class="muted">(first visit: ${esc(o.attribution.first.source || o.attribution.first.referrer || o.attribution.first.click_id || '')})</span>` : ''}</dd>` : ''}
       ${!o.tracking_id && o.shiprocket_awb ? `<dt>Shiprocket</dt><dd>${esc(o.shiprocket_courier || '')} AWB <span class="mono">${esc(o.shiprocket_awb)}</span>${o.shiprocket_status ? ` · ${esc(o.shiprocket_status)}` : ''}</dd>` : ''}
       ${o.tracking_id ? `<dt>Tracking</dt><dd>${esc(o.courier || '')} <span class="mono">${esc(o.tracking_id)}</span>${o.tracking_url ? ` · <a href="${esc(o.tracking_url)}" target="_blank" rel="noopener">track</a>` : ''}</dd>` : ''}
     </dl>
@@ -267,9 +268,15 @@ function openOrder(o) {
   $('#orderForm').addEventListener('submit', (e) => { e.preventDefault(); save(Object.fromEntries(new FormData(e.target))); });
 }
 
+// Where the order came from (orders.attribution, since 2026-10-20): the channel
+// and the latest visit's five UTM fields.
+function attrCols(o) {
+  const at = o.attribution || {}; const l = at.last || {};
+  return [at.channel || '', l.source || '', l.medium || '', l.campaign || '', l.content || '', l.term || ''];
+}
 function downloadCsv(list) {
-  const cols = ['order_code','created_at','status','payment_method','amount_inr','cod_fee_inr','name','phone','email','city','state','pincode','address','items','courier','tracking_id'];
-  const rows = list.map((o) => { const a = addr(o); return [o.order_code, o.created_at, o.status, o.payment_method, o.amount / 100, (o.cod_fee || 0) / 100, custName(o), o.customer_phone, o.customer_email, a.city, a.state, a.pincode || a.pin, [a.line || a.line1 || a.address || a.address1, a.line2 || a.address2].filter(Boolean).join(' '), (o.items || []).map((i) => `${i.name || i.id} x${i.quantity || i.qty || 1}`).join('; '), o.courier, o.tracking_id]; });
+  const cols = ['order_code','created_at','status','payment_method','amount_inr','cod_fee_inr','name','phone','email','city','state','pincode','address','items','courier','tracking_id','source','utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+  const rows = list.map((o) => { const a = addr(o); return [o.order_code, o.created_at, o.status, o.payment_method, o.amount / 100, (o.cod_fee || 0) / 100, custName(o), o.customer_phone, o.customer_email, a.city, a.state, a.pincode || a.pin, [a.line || a.line1 || a.address || a.address1, a.line2 || a.address2].filter(Boolean).join(' '), (o.items || []).map((i) => `${i.name || i.id} x${i.quantity || i.qty || 1}`).join('; '), o.courier, o.tracking_id, ...attrCols(o)]; });
   const csv = [cols, ...rows].map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
   const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })), download: `smelloff-orders-${new Date().toISOString().slice(0, 10)}.csv` });
   link.click();
