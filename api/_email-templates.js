@@ -757,7 +757,7 @@ export function welcomeEmail({ customerName = 'there' } = {}) {
   const inner = `
     ${hero("You're in.", 'Welcome to Smelloff')}
     ${para(`Hey ${escape(firstName(name))}. Welcome to Smelloff.`)}
-    ${muted('ODORSTRIKE is a 50ml fabric-only odor reset spray. Not perfume. Not deodorant. One pocket-sized bottle for clothes — sweat, smoke, food, day-two shirts.')}
+    ${muted('ODORSTRIKE is a 50ml fabric-only odor reset spray. Not perfume. Not body deodorant. One pocket-sized bottle for clothes — sweat, smoke, food, day-two shirts.')}
     ${table(`<tr><td style="padding:8px 0 0 0;">${productRow({ price: `&#8377;${PRICE}&nbsp;<span class="smf-muted" style="font-size:13px;font-weight:400;color:${MUTED};text-decoration:line-through;">&#8377;${MRP}</span>` })}</td></tr>`)}
     ${button(SITE_URL, 'Shop now')}
   `;

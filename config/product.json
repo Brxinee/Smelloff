@@ -45,16 +45,17 @@
     "shortName": "ODORSTRIKE",
     "shortTitle": "ODORSTRIKE 50ml",
     "category": "Home & Garden > Household Supplies > Laundry Supplies > Fabric Refreshers",
-    "categoryDisplay": "Fabric Odor Eliminator Spray for Clothes",
-    "definition": "ODORSTRIKE is a fabric odor spray for clothes made by Smelloff in Hyderabad, India: a 50ml pocket mist that traps and neutralizes sweat, food and smoke odor in the fabric instead of covering it with perfume. It is not a perfume, not a body deodorant and not a room spray. It dries in 15–30 seconds and gives up to 8 hours of odor protection on fabric under normal office/commute conditions.",
+    "categoryDisplay": "Clothing Deodorant (Fabric Odor Spray for Clothes)",
+    "definition": "ODORSTRIKE is a clothing deodorant made by Smelloff in Hyderabad, India: a 50ml pocket fabric odor spray that traps and neutralizes sweat, food and smoke odor in the fabric instead of covering it with perfume, and leaves a light fresh scent. It goes on clothes, never on skin: it is not a body deodorant, not a perfume and not a room spray. It dries in 15–30 seconds and gives up to 8 hours of odor protection on fabric under normal office/commute conditions.",
     "alternateNames": [
       "ODORSTRIKE",
       "Smelloff ODORSTRIKE",
+      "ODORSTRIKE Clothing Deodorant",
       "Fabric Odor Spray India",
       "Fabric Refresher Spray for Clothes",
       "Pocket Fabric Freshener"
     ],
-    "description": "A pocket-sized fabric odor remover spray for clothes. 50ml mist that targets trapped sweat odor, gym smell, and shirt odor in fabric — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA helps neutralize them, Triethyl Citrate helps prevent odor formation, and Zinc Gluconate supports long-lasting fabric freshness. Up to 8 hours odor protection on fabric under normal office/commute conditions. Glycerine-free and fast-drying; dries clear with no stiff residue when sprayed from 15–20 cm. Has a light, fresh fabric scent that fades — not a perfume. Not a deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
+    "description": "A pocket-sized clothing deodorant: a fabric odor remover spray for clothes. 50ml mist that targets trapped sweat odor, gym smell, and shirt odor in fabric — HPβCD (cyclodextrin) traps odor molecules, Zinc PCA helps neutralize them, Triethyl Citrate helps prevent odor formation, and Zinc Gluconate supports long-lasting fabric freshness. Up to 8 hours odor protection on fabric under normal office/commute conditions. Glycerine-free and fast-drying; dries clear with no stiff residue when sprayed from 15–20 cm. Has a light, fresh fabric scent that fades — not a perfume. Not a body deodorant. Fabric-only. Works on cotton, polyester, denim, and wool.",
     "size": "50ml",
     "netQuantity": "50ml / 1.69 fl oz",
     "format": "Liquid spray",
@@ -190,7 +191,7 @@
   },
   "claims": {
     "approved": [
-      "Pocket fabric odor spray for clothing — not a perfume, not a deodorant.",
+      "Clothing deodorant: a pocket fabric odor spray for clothing — not a perfume, not a body deodorant.",
       "Light fresh fabric scent — not a perfume. ODORSTRIKE is a fabric odor-control mist with a light, crisp fabric scent that provides sensory confirmation of clean fabric while targeting unwanted odor in the weave.",
       "Targets and traps sweat and environmental odor molecules at the clothing fabric weave.",
       "Up to 8 hours of odor protection on fabric under normal office/commute conditions*.",

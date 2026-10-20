@@ -1,6 +1,6 @@
 # Smelloff — product reference
 
-ODORSTRIKE is a fabric odor spray for clothes made by Smelloff in Hyderabad, India: a 50ml pocket mist that traps and neutralizes sweat, food and smoke odor in the fabric instead of covering it with perfume. It is not a perfume, not a body deodorant and not a room spray. It dries in 15–30 seconds and gives up to 8 hours of odor protection on fabric under normal office/commute conditions.
+ODORSTRIKE is a clothing deodorant made by Smelloff in Hyderabad, India: a 50ml pocket fabric odor spray that traps and neutralizes sweat, food and smoke odor in the fabric instead of covering it with perfume, and leaves a light fresh scent. It goes on clothes, never on skin: it is not a body deodorant, not a perfume and not a room spray. It dries in 15–30 seconds and gives up to 8 hours of odor protection on fabric under normal office/commute conditions.
 
 ## Brand
 - Brand: Smelloff (also "Smell Off")
@@ -13,7 +13,7 @@ ODORSTRIKE is a fabric odor spray for clothes made by Smelloff in Hyderabad, Ind
 
 ## Product
 - Name: ODORSTRIKE Fabric Odor Remover Spray (ODORSTRIKE)
-- Category: Fabric Odor Eliminator Spray for Clothes
+- Category: Clothing Deodorant (Fabric Odor Spray for Clothes)
 - Size: 50ml / 1.69 fl oz
 - SKU: OS-001-50ML · MPN: SMLF-ODST-50
 - Price: ₹229 prepaid · MRP ₹499 (54% off)
@@ -43,7 +43,7 @@ ODORSTRIKE is a fabric odor spray for clothes made by Smelloff in Hyderabad, Ind
 - Returns: 7-day return window from delivery. Bottle must be at least 80% full and in original packaging. Reverse pickup where serviceable. Refund within 5–7 business days.
 
 ## Approved claims
-- Pocket fabric odor spray for clothing — not a perfume, not a deodorant.
+- Clothing deodorant: a pocket fabric odor spray for clothing — not a perfume, not a body deodorant.
 - Light fresh fabric scent — not a perfume. ODORSTRIKE is a fabric odor-control mist with a light, crisp fabric scent that provides sensory confirmation of clean fabric while targeting unwanted odor in the weave.
 - Targets and traps sweat and environmental odor molecules at the clothing fabric weave.
 - Up to 8 hours of odor protection on fabric under normal office/commute conditions.
