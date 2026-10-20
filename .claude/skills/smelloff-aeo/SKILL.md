@@ -14,7 +14,7 @@ Before writing or editing content, read `config/product.json` (the single source
 3. Question-shaped H2s that match how people actually ask ("Does fabric spray actually remove smoke smell?"), one topic per section, each section opening with its own 1–2 sentence direct answer.
 4. Proof signals in every post (these are what measurably move AI citation rate — Princeton/Allen GEO study: quotes +27.8%, statistics +25.9%, cited sources +24.9%): at least one concrete statistic with a real number, at least one outbound citation to an authoritative primary source (study, standards body, regulator), and where honest, a first-party bench-test observation or expert line.
 5. Self-contained chunks: each paragraph must make sense lifted out of context (retrieval pulls passages, not pages). No "as mentioned above."
-6. Entity clarity: define the thing plainly and consistently — "ODORSTRIKE is a fabric odor eliminator mist, a third spray distinct from deodorant (skin) and perfume (scent)."
+6. Entity clarity: define the thing plainly and consistently — "ODORSTRIKE is a clothing deodorant: a fabric odor eliminator mist, distinct from body deodorant (skin) and perfume (scent)." Since 2026-10-20 the category is "clothing deodorant"; never write "not a deodorant", write "not a body deodorant".
 7. Scannable structure: short paragraphs, bullets/numbered lists where natural, clean H1 -> H2 -> H3, one topic per section.
 8. Freshness: visible "Last updated" date; bump dateModified on every edit.
 9. FAQ block of 3–6 real questions with concise standalone answers. No FAQPage JSON-LD: it was removed site-wide on 2026-09-18 (Google limits FAQ rich results to government and health sites).

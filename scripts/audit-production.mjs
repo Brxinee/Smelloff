@@ -109,7 +109,7 @@ const indexPath = path.join(ROOT, 'index.html');
 if (fs.existsSync(indexPath)) {
   const indexHtml = read(indexPath);
   if (!indexHtml.includes('Your shirt smells.')) fail('index.html missing critical marker: "Your shirt smells."');
-  if (!indexHtml.includes('FABRIC ODOR CONTROL · FOR CLOTHES')) fail('index.html missing critical marker: "FABRIC ODOR CONTROL · FOR CLOTHES"');
+  if (!indexHtml.includes('CLOTHING DEODORANT · FABRIC ONLY')) fail('index.html missing critical marker: "CLOTHING DEODORANT · FABRIC ONLY"');
   if (!indexHtml.includes('Built for the gap') && !indexHtml.includes('Jogdhande Nikhil Patil')) {
     fail('index.html missing current founder heading');
   }

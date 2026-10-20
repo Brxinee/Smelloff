@@ -47,8 +47,8 @@ const src = (slug) => {
 // Answers engines can lift. Facts from config only; each cites a live post.
 const ANSWERS = [
   ['What is ODORSTRIKE?', P.definition, null],
-  ['Is ODORSTRIKE a perfume or a deodorant?', 'No. Deodorant is for skin and perfume is a personal scent. ODORSTRIKE is a fabric odor spray for clothes only, with a light fresh fabric scent that fades.', 'deodorant-vs-fabric-mist'],
-  ['Can deodorant be used on clothes?', 'It is made for skin. On a shirt it can leave marks and does not reach odor held in the fibres. Use a fabric odor spray on clothing instead.', 'deodorant-vs-fabric-mist'],
+  ['Is ODORSTRIKE a perfume or a deodorant?', 'It is a clothing deodorant, not a body deodorant or a perfume. Body deodorant is for skin and perfume is a personal scent. ODORSTRIKE is a fabric odor spray for clothes only, with a light fresh fabric scent that fades.', 'deodorant-vs-fabric-mist'],
+  ['Can deodorant be used on clothes?', 'Body deodorant is made for skin. On a shirt it can leave marks and does not reach odor held in the fibres. Use a clothing deodorant, a fabric odor spray made for cloth, instead.', 'deodorant-vs-fabric-mist'],
   ['How do I get curry or cooking smell out of clothes without washing?', 'Take the garment out of the kitchen, air it in moving air for about 20 minutes, then mist the front panel, forearms and shoulders with a water-based fabric odor spray and let it dry. Oil splashes are stains and need a wash.', 'remove-cooking-smell-from-clothes'],
   ['Why do dri-fit and gym clothes still smell after washing?', 'Polyester holds skin oils, and the bacteria that break them down into odor, more than cotton does, and a quick cool wash does not fully lift them. Wash inside out soon after training, skip fabric softener and dry fully.', 'gym-clothes-smell-after-washing'],
   ['What is cyclodextrin in deodorant and fabric spray?', 'Cyclodextrins are ring-shaped sugar molecules that hold odor molecules inside the ring. ODORSTRIKE uses HPβCD (hydroxypropyl beta-cyclodextrin) on fabric, not as a skin deodorant.', 'hpbcd-cyclodextrin-fabric-odor'],

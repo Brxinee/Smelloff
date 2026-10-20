@@ -166,8 +166,10 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   assert.ok(h1[0][1].includes('Your shirt smells') && h1[0][1].includes('Fix it.'), 'H1 must be "Your shirt smells. Fix it."');
 
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
-  assert.ok(hero.includes('FABRIC ODOR CONTROL · FOR CLOTHES'));
-  assert.ok(hero.includes('ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin.'));
+  // 2026-10-20: the category is "clothing deodorant"; the eyebrow says fabric only and the
+  // sub says not on skin, so it never reads as a body product. One line at 320–390px.
+  assert.ok(hero.includes('CLOTHING DEODORANT · FABRIC ONLY'));
+  assert.ok(hero.includes('ODORSTRIKE is a pocket clothing deodorant: it neutralizes odor trapped in your clothes, not on your skin.'));
   for (const tag of ['Not perfume', 'Not body deodorant', 'Fabric only']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
   assert.ok(hero.includes('<b>₹229</b>'), 'Hero must show ₹229');
   assert.ok(hero.includes('M.R.P. ₹499') && hero.includes('54% OFF'), 'MRP and discount must agree with the PDP');
@@ -270,7 +272,7 @@ test('odorstrike.html PDP hero and primary buy area: positioning, canonical pric
   const pInfo = html.slice(pInfoStart, html.indexOf('<div id="heroProofMount">', pInfoStart));
 
   assert.equal([...html.matchAll(/<h1\b/g)].length, 1, 'PDP must have exactly one <h1>');
-  assert.ok(/<h1[^>]*>ODORSTRIKE <span class="pd-title__cat">[^<]*fabric odor spray for clothes<\/span><\/h1>/.test(pInfo), 'H1 must be the product name plus its category');
+  assert.ok(/<h1[^>]*>ODORSTRIKE <span class="pd-title__cat">[^<]*clothing deodorant spray<\/span><\/h1>/.test(pInfo), 'H1 must be the product name plus its category');
   assert.ok(pInfo.includes('FABRIC ODOR CONTROL · 50ML'), 'Eyebrow must declare fabric odor control');
   assert.ok(pInfo.includes('up to 8 hours'), 'Tagline must carry the locked protection claim');
   for (const tag of ['Not perfume', 'Not body deodorant', 'Fabric only']) assert.ok(pInfo.includes(tag), `Must say ${tag}`);

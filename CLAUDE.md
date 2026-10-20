@@ -45,6 +45,47 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## "Clothing deodorant" category (2026-10-20, owner's SEO brief)
+ODORSTRIKE is described as a **clothing deodorant** (primary keyword); "deodorant
+for clothes", "fabric odor spray" and "fabric odor neutralizer" are secondary
+wording. It is **not a body deodorant**: never write "not a deodorant".
+`test/claims-consistency.test.mjs` fails on that phrasing in any page, feed or
+llms file ("not a body deodorant" passes). Supersedes the category name in
+"Positioning: clothing only" below; the clothing-only scope is unchanged.
+- Titles: `/` "Smelloff — Clothing Deodorant That Neutralizes Fabric Odor";
+  `/odorstrike` "ODORSTRIKE Clothing Deodorant Spray, 50ml ₹229 | Smelloff".
+  PDP H1 span "Pocket-sized clothing deodorant spray" (same height as the old
+  one at 320–1280). Eyebrows: home "CLOTHING DEODORANT · FABRIC ONLY", PDP
+  unchanged. The brief's "· FABRIC ODOR CONTROL" wrapped to two lines on every
+  phone (+17px to Buy). Primary CTA stays "Buy now — ₹229" (tests, audit, labels).
+- Homepage sub names the category. Measured on a production build: 390px
+  unchanged; one more line at 360px (Buy 657→679 at 360×740) and at ≥768
+  (Buy 584→611 at 1280×800; the quote still ends inside the fold, 794/800).
+  The sub's column, not its `42ch`, sets the width, so CSS can't win it back.
+- `product.definition` (the "What is ODORSTRIKE?" answer on `/`, `/odorstrike`,
+  `/faq`, the chat prompt, llms) leads with "a clothing deodorant" and keeps
+  "never on skin … not a body deodorant". The three page copies must equal the
+  config string (test). The first approved claim and the llms deodorant answers
+  say the same.
+- PDP `#why`: one paragraph under the H2 ("Think of it as deodorant for
+  clothes…"), saying it doesn't replace your own deodorant.
+- Product schema `name` unchanged (Merchant listing stability); "ODORSTRIKE
+  Clothing Deodorant" is an `alternateName` and the description leads with the
+  category. PDP WebPage JSON-LD: `primaryImageOfPage` is the gallery hero (it
+  was the 56px cart thumb); speakable selectors match real elements (two of
+  three matched nothing since the PDP rebuild).
+- Internal links: one descriptive in-body link to `/odorstrike` in each of the
+  clothes-deodorant, deodorant-vs-fabric-mist, alternative-to-deodorant,
+  3-hours and smell-hub guides, plus `/about`, each with a different anchor.
+  Don't repeat one anchor across posts.
+- `best-deodorant-spray-for-clothes-not-skin` argued "deodorant for clothes is
+  the wrong search"; rewritten to the category. Its invented "half a million
+  searches a year", "under 15 seconds" dry time, "no stain or residue" and
+  "7-day return on unopened bottles" were corrected to config facts.
+- No keyword-volume data was available; nothing on the site claims a volume.
+  Schema.org validator: 0 errors / 0 warnings on `/` and `/odorstrike`; the
+  Rich Results Test needs the live URL after deploy.
+
 ## Google Sheets: orders + customers, written by the server (2026-10-18, owner: "organise my sheets", "proper sync and data flow")
 The browser's Apps Script beacon is gone (it wrote most orders twice, never
 sent Razorpay-paid orders, kept every status at "NEW" and took rows from
@@ -491,8 +532,9 @@ aggregateRating", which needs real verified-buyer reviews (never beta quotes).
   post list. Its ANSWERS cite post slugs and throw if one disappears.
   `product.definition` in the config is the one definition passage, used as the
   first FAQ ("What is ODORSTRIKE?") on `/`, `/odorstrike` and `/faq`.
-- **PDP H1** is `ODORSTRIKE <span class="pd-title__cat">Pocket-sized fabric odor
-  spray for clothes</span>` (replaced the tagline; hero no taller).
+- **PDP H1** is `ODORSTRIKE <span class="pd-title__cat">…</span>` (replaced the
+  tagline; hero no taller). The span reads "Pocket-sized clothing deodorant
+  spray" since 2026-10-20.
 - **Schema:** Offer MRP is `StrikethroughPrice` (Google: "no other values are
   supported"); `returnPolicyCountry` IN; `validFrom` 2026-10-11 (₹229 returned);
   product images are tiles the PDP shows; `category` is the Google taxonomy
