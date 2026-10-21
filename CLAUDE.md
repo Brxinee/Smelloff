@@ -50,8 +50,9 @@ Only `index.html`'s `.hero` changed; every other section and page is as it was.
 Supersedes "Homepage hero v4" below for the look, not for what the hero says.
 - **Look (from `a1a132e`, live on 15 Aug):** H1 "Don't let them notice your
   sweat." in Fraunces 900, the bottle cutout on a lime disc with a rotated mono
-  caption, a hairline-topped mono price block, mono uppercase buttons, and the
-  three clothing zone cards (Shirt collar / Hoodie / Blazer & jacket). Fraunces
+  caption, a hairline-topped mono price block and mono uppercase buttons. The
+  three Aug zone cards (Shirt collar / Hoodie / Blazer & jacket) came back too
+  and were removed the same day (owner: "remove these 3 cards"). Fraunces
   and JetBrains Mono are declared inline for the hero only (`--hero-display`,
   `--hero-mono`); Fraunces and the cutout are preloaded.
 - **Kept from today:** the eyebrow and sub (clothing-deodorant brief), ₹229 /
