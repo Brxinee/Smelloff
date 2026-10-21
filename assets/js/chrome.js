@@ -358,8 +358,28 @@
         pincode: textValue('f_pin')
       },
       order_code: clientOrderCode(),
-      event_source_url: window.location.href
+      event_source_url: window.location.href,
+      // Where the order came from (assets/js/track.js) and, with consent, the
+      // Meta click cookies the server-side Purchase matches on.
+      attribution: (typeof window.smfAttribution === 'function' && window.smfAttribution()) || null,
+      fbp: metaCookie('_fbp'),
+      fbc: metaCookie('_fbc') || fbcFromUrl()
     };
+  }
+
+  function consented() {
+    try { return localStorage.getItem('smelloff_consent_v1') === 'accepted'; } catch (e) { return false; }
+  }
+  function metaCookie(name) {
+    if (!consented()) return '';
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]+)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+  // The Pixel sets _fbc from ?fbclid=; if it hadn't loaded yet, build it the
+  // same way (fb.1.<ms>.<fbclid>) so a paid click isn't lost.
+  function fbcFromUrl() {
+    if (!consented()) return '';
+    try { var f = new URLSearchParams(location.search).get('fbclid'); return f ? 'fb.1.' + Date.now() + '.' + f : ''; } catch (e) { return ''; }
   }
 
   // `loading` is false, true ("Opening secure payment…") or a label to show
@@ -440,10 +460,14 @@
     }
   }
 
+  // verify-payment and create-order return amounts in paise (the database's
+  // unit); the success screen and the purchase event take rupees. Passing the
+  // paise through showed "Total paid ₹22900" for a ₹229 order (2026-10-20).
   function markSuccess(orderCode, qty, payload, verification) {
     if (typeof window.showSuccess !== 'function') return;
+    var paise = Number((verification && verification.amount) || (payload && payload.amount) || 0);
     window.showSuccess(orderCode, 'razorpay', {
-      amount: Number((verification && verification.amount) || (payload && payload.amount) || 0),
+      amount: paise > 0 ? paise / 100 : undefined,
       qty: qty,
       email: payload && payload.email,
       name: payload && payload.address && payload.address.name,

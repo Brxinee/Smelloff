@@ -20,28 +20,45 @@
   var CLARITY_ID = '';
 
   function loadAnalytics() {
-    // Never load GA4 / Meta Pixel for automated browsers (headless/scraper bots
-    // auto-click "Accept all", which was inflating both platforms).
-    if (window.smfIsBot ? window.smfIsBot() : navigator.webdriver === true) return;
+    if (!primeAnalytics()) return;
     if (window.__smelloffAnalyticsLoaded) return;
     window.__smelloffAnalyticsLoaded = true;
     var g = document.createElement('script');
     g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
     g.async = true;
     document.head.appendChild(g);
-    g.onload = function () {
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      window.gtag = gtag;
-      gtag('js', new Date());
-      gtag('config', GA4_ID);
-      var aiR = (document.referrer || '').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);
-      if (aiR) { gtag('event', 'ai_referral', { ai_source: aiR[2], landing_page: location.pathname }); }
-    };
-    !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', META_PIXEL_ID);
-    fbq('track', 'PageView');
+    var p = document.createElement('script');
+    p.src = 'https://connect.facebook.net/en_US/fbevents.js';
+    p.async = true;
+    document.head.appendChild(p);
     loadClarity();
+  }
+
+  // The queues (2026-10-20): gtag and fbq exist as soon as consent is known
+  // and hold every call until their scripts arrive. gtag used to be defined
+  // only when its script loaded, so earlier events were dropped by the
+  // `typeof gtag` checks. Never for automated browsers (headless/scraper bots
+  // auto-click "Accept all", which was inflating both platforms). Same block
+  // inline in index.html, faq.html and odorstrike.html.
+  function primeAnalytics() {
+    if (window.__smfAnalyticsPrimed) return true;
+    var n = navigator;
+    if (window.smfIsBot ? window.smfIsBot() : (n.webdriver === true || /Headless|PhantomJS|Puppeteer|Playwright|Electron\//i.test(n.userAgent || ''))) return false;
+    window.__smfAnalyticsPrimed = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA4_ID);
+    var aiR = (document.referrer || '').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);
+    if (aiR) { window.gtag('event', 'ai_referral', { ai_source: aiR[2], landing_page: location.pathname }); }
+    if (!window.fbq) {
+      var q = window.fbq = function () { q.callMethod ? q.callMethod.apply(q, arguments) : q.queue.push(arguments); };
+      if (!window._fbq) window._fbq = q;
+      q.push = q; q.loaded = !0; q.version = '2.0'; q.queue = [];
+    }
+    window.fbq('init', META_PIXEL_ID);
+    window.fbq('track', 'PageView');
+    return true;
   }
 
   // Kept separate from loadAnalytics() so the bot guard and the consent gate
@@ -118,6 +135,7 @@
   function init() {
     var consent = getConsent();
     if (consent === 'accepted') {
+      primeAnalytics();
       if (document.readyState === 'complete') loadAnalytics();
       else window.addEventListener('load', loadAnalytics, { once: true });
     } else if (!consent) {

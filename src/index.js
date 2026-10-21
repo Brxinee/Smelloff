@@ -42,6 +42,12 @@ app.get("/api/health", (_req, res) => {
       database: has("SUPABASE_SERVICE_ROLE_KEY"),
       email: has("RESEND_API_KEY"),
       razorpay: has("RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET"),
+      // The key id is public (checkout hands it to the browser); its prefix
+      // says which Razorpay environment the live site charges in. "test"
+      // means Razorpay's window shows "Test Mode" and no real money moves.
+      razorpayMode: /^rzp_live_/.test(process.env.RAZORPAY_KEY_ID || "") ? "live"
+        : /^rzp_test_/.test(process.env.RAZORPAY_KEY_ID || "") ? "test"
+        : process.env.RAZORPAY_KEY_ID ? "unknown" : "unset",
       razorpayWebhook: has("RAZORPAY_WEBHOOK_SECRET"),
       admin: has("ADMIN_PASSWORD"),
       cron: has("CRON_SECRET"),

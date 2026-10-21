@@ -66,30 +66,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
      scripts/seo/apply-structured-data.mjs — edit the config, re-run, commit. -->
 <script type="application/ld+json" id="org-jsonld">{"@context":"https://schema.org","@type":"OnlineStore","@id":"https://smelloff.in/#organization","name":"Smelloff","alternateName":["Smell Off","Smelloff India","Smelloff Grooming"],"legalName":"Smelloff","url":"https://smelloff.in","logo":{"@type":"ImageObject","url":"https://smelloff.in/apple-touch-icon.png","width":180,"height":180},"image":"https://smelloff.in/assets/og/smelloff-share.jpg","email":"info@smelloff.in","telephone":"+919392974031","foundingDate":"2026","foundingLocation":{"@type":"Place","name":"Hyderabad, India"},"founder":[{"@type":"Person","@id":"https://smelloff.in/#founder","name":"Jogdhande Nikhil Patil","jobTitle":"Founder","url":"https://smelloff.in/about"},{"@type":"Person","@id":"https://smelloff.in/#cofounder","name":"Vineeth Kumar Duggepogu","jobTitle":"Co-founder","url":"https://smelloff.in/about"}],"description":"Indian odor-control brand for men. Goes after the smell trapped in your clothes instead of covering it with fragrance. Maker of ODORSTRIKE, a pocket-sized fabric odor neutralizer mist for clothes.","slogan":"Traps and neutralizes clothing odor molecules on fabric","knowsAbout":["fabric odor","sweat smell in clothes","fabric odor neutralizer","cyclodextrin","zinc pca","shirt collar odor","polyester odor"],"address":{"@type":"PostalAddress","streetAddress":"Sanathnagar, Erragadda","addressLocality":"Hyderabad","addressRegion":"Telangana","postalCode":"500018","addressCountry":"IN"},"areaServed":{"@type":"Country","name":"India"},"contactPoint":[{"@type":"ContactPoint","telephone":"+919392974031","contactType":"customer service","email":"info@smelloff.in","areaServed":"IN","availableLanguage":["English","Hindi","Telugu"]}],"hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","@id":"https://smelloff.in/#return-policy","applicableCountry":"IN","returnPolicyCountry":"IN","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":7,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/FreeReturn","refundType":"https://schema.org/FullRefund","merchantReturnLink":"https://smelloff.in/returns"},"sameAs":["https://www.instagram.com/smelloffx/","https://x.com/smelloffindia","https://t.me/smelloffindia","https://www.linkedin.com/company/smelloff","https://www.facebook.com/profile.php?id=61574290776912"]}</script>
 <script type="application/ld+json" id="website-jsonld">{"@context":"https://schema.org","@type":"WebSite","@id":"https://smelloff.in/#website","name":"Smelloff","alternateName":["Smell Off","smelloff.in"],"url":"https://smelloff.in/","inLanguage":"en-IN","publisher":{"@id":"https://smelloff.in/#organization"}}</script>
-<!-- Attribution: capture utm_source on landing, persist across the session
-     (the /odorstrike checkout reads this at order time) -->
-<script>
-  (function captureSource(){
-    try {
-      var params = new URLSearchParams(window.location.search);
-      var utm = (params.get('utm_source') || '').toLowerCase().trim();
-      var map = {
-        'meta':'Meta','facebook':'Meta','fb':'Meta','instagram':'Meta','ig':'Meta',
-        'google':'Google','googleads':'Google','google_ads':'Google','adwords':'Google',
-        'organic':'Organic','seo':'Organic',
-        'direct':'Direct',
-        'influencer':'Influencer','creator':'Influencer',
-        'whatsapp':'WhatsApp','wa':'WhatsApp'
-      };
-      if (utm) {
-        localStorage.setItem('os_source', map[utm] || 'Direct');
-      } else if (!localStorage.getItem('os_source')) {
-        localStorage.setItem('os_source', 'Direct');
-      }
-    } catch (e) { /* localStorage may be blocked */ }
-  })();
-</script>
-
 <!-- Smelloff Partner Network attribution (partners.smelloff.in) — /r/:code lands
      here as /?ref=CODE; the click is logged and the code stored for 7 days so the
      /odorstrike checkout can attach it to the order -->
@@ -135,15 +111,11 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- Analytics (GA4 + Meta Pixel) — loaded only after explicit consent. -->
 <script>
   function loadAnalytics(){
-    // Never load GA4 / Meta Pixel for automated browsers (headless/scraper
-    // bots auto-click "Accept all", which was inflating both platforms).
-    if(window.smfIsBot?window.smfIsBot():navigator.webdriver===true)return;
+    if(!primeAnalytics())return;
     if(window.__smelloffAnalyticsLoaded)return;
     window.__smelloffAnalyticsLoaded=true;
     var g=document.createElement('script');g.src='https://www.googletagmanager.com/gtag/js?id=G-S1MJ58PD89';g.async=true;document.head.appendChild(g);
-    g.onload=function(){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-S1MJ58PD89');var aiR=(document.referrer||'').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);if(aiR){gtag('event','ai_referral',{ai_source:aiR[2],landing_page:location.pathname});}};
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init','1455100092891684');fbq('track','PageView');
+    var p=document.createElement('script');p.src='https://connect.facebook.net/en_US/fbevents.js';p.async=true;document.head.appendChild(p);
     /* Microsoft Clarity — paste the project ID from clarity.microsoft.com to
        switch it on. Empty means the tag is never requested. Consent-gated and
        bot-guarded with GA4/Pixel above; this constant lives in FOUR places
@@ -152,8 +124,27 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     var CLARITY_ID='';
     if(CLARITY_ID&&!window.clarity){(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,'clarity','script',CLARITY_ID);}
   }
+  /* The queues (2026-10-20): once consent is stored, gtag and fbq exist from
+     the top of the page and hold every call until their scripts arrive at
+     window load. gtag used to be defined only when its script loaded, so
+     anything earlier (?buy=1 opens checkout before load) was dropped by the
+     `typeof gtag` checks. Never for automated browsers (headless/scraper bots
+     auto-click "Accept all"); track.js's smfIsBot loads later, so the same
+     test is inlined. Same block in index.html, faq.html, odorstrike.html and
+     assets/js/consent-analytics.js. */
+  function primeAnalytics(){
+    if(window.__smfAnalyticsPrimed)return true;
+    var n=navigator;if(window.smfIsBot?window.smfIsBot():(n.webdriver===true||/Headless|PhantomJS|Puppeteer|Playwright|Electron\//i.test(n.userAgent||'')))return false;
+    window.__smfAnalyticsPrimed=true;
+    window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments);};
+    gtag('js',new Date());gtag('config','G-S1MJ58PD89');var aiR=(document.referrer||'').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);if(aiR){gtag('event','ai_referral',{ai_source:aiR[2],landing_page:location.pathname});}
+    if(!window.fbq){var q=window.fbq=function(){q.callMethod?q.callMethod.apply(q,arguments):q.queue.push(arguments)};if(!window._fbq)window._fbq=q;q.push=q;q.loaded=!0;q.version='2.0';q.queue=[];}
+    fbq('init','1455100092891684');fbq('track','PageView');
+    return true;
+  }
   // Only auto-load analytics if user has already accepted consent
   if(localStorage.getItem('smelloff_consent_v1')==='accepted'){
+    primeAnalytics();
     if(document.readyState==='complete'){loadAnalytics();}
     else{window.addEventListener('load',loadAnalytics,{once:true});}
   }
@@ -761,8 +752,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <style id="a11y-utility-css">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=e4cc28eb" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=e4cc28eb"></noscript>
-<script src="/assets/js/chrome.js?v=19af8484" defer></script>
+<link rel="preload" href="/assets/css/chrome.css?v=3eafab25" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=3eafab25"></noscript>
+<script src="/assets/js/chrome.js?v=ce244b64" defer></script>
 <script src="/assets/js/support-chat.js?v=c16c518c" defer></script>
 </head>
 <body>
@@ -1414,6 +1405,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
 <script src="/assets/js/reviews-system.js?v=6" defer></script>
-<script src="/assets/js/track.js?v=801e292b" defer></script>
+<script src="/assets/js/track.js?v=8591ad00" defer></script>
 </body>
 </html>

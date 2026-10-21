@@ -45,6 +45,67 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Measurement, attribution, checkout amount (2026-10-20, owner: "reliable, measurable, ready for acquisition")
+Audited by driving real checkouts against a production build with every
+service faked (no real order or payment). Found and fixed:
+- **Prepaid success screen read "Total paid ₹22900" for a ₹229 order.**
+  verify-payment / create-order return paise; `markSuccess()` in chrome.js
+  passed them to `showSuccess()` as rupees, so GA4 `purchase` and the Meta
+  Lead were 100× too. It now divides by 100. COD was always right.
+- **GA4 lost every event fired before gtag.js loaded**: `gtag` was defined in
+  the script's onload, and the loader waits for window load, so `?buy=1`'s
+  begin_checkout (every homepage Buy) and view_item never arrived; Meta lost
+  InitiateCheckout the same way. `primeAnalytics()` now defines the gtag and
+  fbq queues at the top of the page once consent is stored (scripts still
+  load at window load). Four copies: inline in index/faq/odorstrike and
+  consent-analytics.js; change them together. Bots never get the queues.
+- view_item / ViewContent fire on the PDP view (they waited for `#buy` to
+  scroll into view); `add_shipping_info` once the form validates; purchase
+  items are priced from the pack subtotal (5 = ₹899) with the COD charge as
+  GA4 `shipping`, value = what the buyer pays (as the server Purchase), and a
+  localStorage list (`smf_tracked_orders`) stops a second purchase per order.
+- **GA4 `purchase` = order saved**: COD when create-order stores it, prepaid
+  when verify-payment confirms. Meta: `Lead` then; `Purchase` only server-side
+  (meta-capi-drain) on confirmation. A click is never a purchase.
+- **Attribution.** track.js (every page) keeps the first and latest
+  non-direct visit for 30 days in `smf_attr`: utm source/medium/campaign/
+  content/term, the click id *type* (gclid, fbclid… never the value), the
+  external referrer host (own host and razorpay.com excluded), partner ?ref=,
+  landing path. Every first-party event carries the UTMs; a campaign landing
+  logs `campaign_landing`. Both checkout paths send it as `attribution`;
+  create-order keeps only known fields (api/_attribution.js, which also strips
+  leading = + - @) and adds a `channel`: Meta ads / Meta social / Creator /
+  Google Ads / Google Search / Organic search / AI assistant / Social referral
+  / WhatsApp / Partner / `Campaign: <source>` (unknown sources as they came) /
+  `Referral: <host>` / **Direct / unknown** (never guessed). Stored in
+  `orders.attribution` (migration `20261020_order_attribution.sql`, applied to
+  production the same day); an insert retries without it if the column is
+  missing. Sheets "Source" and /admin (drawer + CSV) show it. The old
+  `os_source` snippet (unknown utm_source became "Direct") is gone.
+- **COD orders sent no `fbp`/`fbc`/`event_source_url`** (only prepaid did), so
+  the server Purchase for COD couldn't match the ad click. Both paths send them
+  now, `fbp`/`fbc` only with consent.
+- **WhatsApp**: a tap on a link to the business number logs `whatsapp_click`
+  (meta.intent order|chat, meta.ref, the UTMs) plus GA4 `whatsapp_click` and
+  Meta `Contact`. Order-intent messages ("…to order ODORSTRIKE") get
+  "(Ref WA-XXXXX)" appended once per session. To reconcile a WhatsApp order:
+  `select created_at, path, meta from events where type = 'whatsapp_click' and
+  meta->>'ref' = 'WA-XXXXX'`. A WhatsApp click never makes a site order
+  "WhatsApp"; only `utm_source=whatsapp` does.
+- **Razorpay "Test Mode"** is Razorpay's own label for an `rzp_test_` key; the
+  site never renders it. `/api/health` → `configured.razorpayMode`
+  (live / test / unknown / unset, from the public key id's prefix).
+- **PDP CLS 0.238 (live, mobile)**: the buy strip was lifted above the consent
+  bar by changing `bottom`; it now uses `translate` (`--mb-lift`, chrome.css).
+  Step-03 photo `sizes` matched its siblings (it said 100vw at ~140px).
+- `test/attribution-analytics.test.mjs` pins all of the above (9 of its 11
+  tests fail on the code before this pass).
+- **Found missing on live `/api/health` (owner):** `metaCapi: false`
+  (`META_CAPI_TOKEN` unset, so Meta gets no Purchase at all) and `sheets:
+  false` (`GOOGLE_SERVICE_ACCOUNT_JSON` unset).
+- Not done: GA4 campaign params when consent comes on a later page than the
+  landing (GA4 then sees that session as direct; the order still has it).
+
 ## "Clothing deodorant" category (2026-10-20, owner's SEO brief)
 ODORSTRIKE is described as a **clothing deodorant** (primary keyword); "deodorant
 for clothes", "fabric odor spray" and "fabric odor neutralizer" are secondary

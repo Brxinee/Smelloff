@@ -109,7 +109,7 @@ async function db(path, { method = 'GET', body } = {}) {
   return data;
 }
 
-const ORDER_COLUMNS = 'id,created_at,order_code,customer_email,customer_phone,items,amount,cod_fee,payment_method,status,upi_ref,courier,tracking_id,tracking_url,address,status_history,shiprocket_awb,shiprocket_courier,shiprocket_status';
+const ORDER_COLUMNS = 'id,created_at,order_code,customer_email,customer_phone,items,amount,cod_fee,payment_method,status,upi_ref,courier,tracking_id,tracking_url,address,status_history,shiprocket_awb,shiprocket_courier,shiprocket_status,attribution';
 
 function sanitizeSearch(q) {
   return String(q || '').replace(/[^\w@.+\- ]/g, '').trim().slice(0, 80);

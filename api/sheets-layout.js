@@ -7,7 +7,7 @@
 import { ORDER_COLUMNS, CONTACT_COLUMNS } from './_sheet-columns.js';
 import { getSpreadsheetMeta, readRanges, batchUpdate, columnLetter } from './_google-sheets.js';
 
-export const LAYOUT_VERSION = '2026-10-19.4';
+export const LAYOUT_VERSION = '2026-10-20.1';
 const STAMP_KEY = 'smelloff_layout';
 
 // Brand: Carbon Black · Ice White · Signal Lime (CLAUDE.md "Brand palette").

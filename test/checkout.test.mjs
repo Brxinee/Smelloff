@@ -438,7 +438,10 @@ test('Step 3: COD flow reaches showSuccess(orderId, "cod") and does not touch Ra
 test('Step 3: trackPurchase correctly maps unitPrice, item quantity, and payment method to GA4 purchase event', () => {
   const html = fs.readFileSync('odorstrike.html', 'utf8');
   assert.ok(html.includes('function trackPurchase(amount, orderId, qty, paymentMethod)'), 'trackPurchase must accept qty and paymentMethod parameters');
-  assert.ok(html.includes('items: gaItems(unitPrice, qty)'), 'GA4 purchase event must use unit price and item quantity');
+  // Items add up to the product subtotal (5 bottles = ₹899, not 5 × ₹229),
+  // like add_payment_info; the COD charge is GA4's `shipping`.
+  assert.ok(html.includes('items: gaItems(subtotal / qty, qty)'), 'GA4 purchase items must be priced from the pack subtotal');
+  assert.ok(html.includes('if (fee) gaData.shipping = fee;'), 'GA4 purchase carries the COD charge as shipping');
   assert.ok(html.includes('if (paymentMethod) gaData.payment_type = paymentMethod;'), 'GA4 purchase event must record payment_type');
 });
 

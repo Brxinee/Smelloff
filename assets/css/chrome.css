@@ -254,7 +254,10 @@ html.sf-menu-open #smelloff-consent-bar,html.sf-menu-open .mobile-bar{display:no
   border:1px solid var(--rule);border-radius:18px;
   box-shadow:0 14px 34px rgba(0,0,0,.6);
   transform:translateY(calc(100% + 24px));
-  transition:transform .35s var(--ease);
+  /* Lifted above the consent bar by the page (--mb-lift) with `translate`:
+     changing `bottom` on a fixed element counts as a layout shift. */
+  translate:0 calc(-1 * var(--mb-lift, 0px));
+  transition:transform .35s var(--ease),translate .35s var(--ease);
 }
 .mobile-bar.visible{transform:none}
 .mobile-bar .mb-thumb{width:44px;height:48px;flex:0 0 auto;object-fit:cover;border-radius:11px;background:#fff}

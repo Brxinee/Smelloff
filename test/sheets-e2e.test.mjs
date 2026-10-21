@@ -604,6 +604,12 @@ test('a COD order placed on the website lands in both sheets, and the sheets get
     payment_method: 'cod', name: 'Priya Sharma', email: 'Priya.S@example.com', phone: '+91 98765 01234',
     items: [{ quantity: 2, price: 229 }], amount: 50800, event_source_url: 'https://smelloff.in/odorstrike?buy=1&qty=2',
     address: { name: 'Priya Sharma', line: 'Flat 4B, Lake View Apts\nMG Road', city: 'Bengaluru', state: 'Karnataka', pincode: '560001' },
+    // What assets/js/track.js keeps: she came from a creator's link on the
+    // homepage, then bought from /odorstrike?buy=1 (no UTMs on that URL).
+    attribution: {
+      first: { source: 'instagram', medium: 'creator', campaign: 'rahul_reel', landing: '/', at: '2026-10-19T09:00:00Z' },
+      last: { source: 'instagram', medium: 'creator', campaign: 'rahul_reel', landing: '/', at: '2026-10-19T09:00:00Z', email: 'not@kept.in' },
+    },
   });
   assert.equal(res.statusCode, 200, JSON.stringify(res.body));
   code = res.body.order_code || res.body.orderCode;
@@ -612,6 +618,9 @@ test('a COD order placed on the website lands in both sheets, and the sheets get
   assert.equal(saved.status, 'placed');
   assert.equal(saved.amount, 50800, '2 for ₹419 + ₹89 COD, in paise');
   assert.equal(saved.cod_fee, 8900);
+  assert.equal(saved.attribution.channel, 'Creator', 'the order keeps where it came from');
+  assert.equal(saved.attribution.last.campaign, 'rahul_reel');
+  assert.equal(saved.attribution.last.email, undefined, 'only the attribution fields are kept');
 
   // The handler syncs after the response (awaited here: no waitUntil in tests).
   const orders = books[ORDERS_ID];
@@ -636,7 +645,7 @@ test('a COD order placed on the website lands in both sheets, and the sheets get
   assert.equal(row[O('City')], 'Bengaluru');
   assert.equal(row[O('State')], 'Karnataka');
   assert.equal(row[O('Pincode')], '560001');
-  assert.equal(row[O('Source')], 'Website');
+  assert.equal(row[O('Source')], 'Creator · rahul_reel');
   assert.equal(row[O('COD call')] ?? '', '', 'the owner column starts empty');
   assert.equal(rows.length, 4, 'header, the new order, the old order from the database, the old-sheet-only order');
   assert.equal(rows[2][O('Order ID')], 'SMF-20260905-2222');
