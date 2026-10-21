@@ -179,7 +179,7 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   assert.ok(hero.includes('Cash on Delivery') && !/₹\s*(89|318)\b/.test(hero), 'Hero names COD availability without the COD amount');
   assert.ok(hero.includes('2–3 sprays') && hero.includes('15–30 sec'), 'Usage microcopy must match the PDP');
   assert.ok(hero.includes('/assets/odorstrike-bottle-cutout'), 'Hero must show the bottle (Aug 15 design: cutout on the lime disc)');
-  assert.ok(['Shirt collar', 'Hoodie', 'Blazer &amp; jacket'].every((z) => hero.includes(z)), 'Hero zones must be clothing only');
+  assert.ok(!hero.includes('class="zones"'), 'the zone cards were removed (owner, 2026-10-21)');
 });
 
 test('index.html homepage: every section ends in a route to checkout', () => {
