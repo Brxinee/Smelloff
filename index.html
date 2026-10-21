@@ -640,7 +640,10 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
      4:5 panel on phones, fills the column from 768. Skeleton until loaded. */
   /* Phones: a 3:2 black panel (the whole photo, contained) so the pack
      choice starts ~190px sooner; it was a 4:5 panel ~410px tall. */
-  .offer-art{position:relative;overflow:hidden;background:#000;aspect-ratio:3/2}
+  /* Owner, 2026-10-21: the white studio shot (PDP gallery tile 1), not the
+     in-hand photo. The panel's light gradient matches the photo's own edges
+     (left ~#F8F8F9, right ~#EAE9ED), so `contain` shows no bars. */
+  .offer-art{position:relative;overflow:hidden;background:linear-gradient(90deg,#F8F8F9,#EAE9ED);aspect-ratio:3/2}
   .offer-art .offer-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
   .offer-body{padding:28px 24px 30px}
   .offer-body .hm-h2{font-size:clamp(30px,4.6vw,48px)}
@@ -1095,7 +1098,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     <div class="wrap">
       <div class="offer reveal">
         <div class="offer-art">
-          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/offer-in-hand-black@400.avif 400w, /assets/photos/offer-in-hand-black@640.avif 640w, /assets/photos/offer-in-hand-black@960.avif 960w, /assets/photos/offer-in-hand-black.avif 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 40vw"><img class="ph-photo offer-photo" src="/assets/photos/offer-in-hand-black@960.webp" srcset="/assets/photos/offer-in-hand-black@400.webp 400w, /assets/photos/offer-in-hand-black@640.webp 640w, /assets/photos/offer-in-hand-black@960.webp 960w, /assets/photos/offer-in-hand-black.webp 1152w" sizes="(min-width:1160px) 320px, (min-width:768px) 45vw, 40vw" width="1152" height="2048" alt="A hand holding the ODORSTRIKE 50ml fabric odor spray bottle against a black background" loading="lazy" decoding="async"></picture>
+          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/offer-studio-white@400.avif 400w, /assets/photos/offer-studio-white@640.avif 640w, /assets/photos/offer-studio-white@960.avif 960w, /assets/photos/offer-studio-white.avif 1196w" sizes="(min-width:1160px) 460px, (min-width:768px) 45vw, 60vw"><img class="ph-photo offer-photo" src="/assets/photos/offer-studio-white@960.webp" srcset="/assets/photos/offer-studio-white@400.webp 400w, /assets/photos/offer-studio-white@640.webp 640w, /assets/photos/offer-studio-white@960.webp 960w, /assets/photos/offer-studio-white.webp 1196w" sizes="(min-width:1160px) 460px, (min-width:768px) 45vw, 60vw" width="1196" height="1315" alt="The ODORSTRIKE 50ml clothing deodorant spray bottle on a white background" loading="lazy" decoding="async"></picture>
         </div>
         <div class="offer-body">
           <p class="hm-eyebrow">ODORSTRIKE · 50ML POCKET MIST</p>

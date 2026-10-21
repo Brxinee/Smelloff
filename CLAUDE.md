@@ -62,6 +62,11 @@ Supersedes "Homepage hero v4" below for the look, not for what the hero says.
 - The Aug pill said "Smell Proof. Always."; the audit blocks smell-proof claims,
   so the pill reads "Smell Khatam. Confidence Qaayam.".
 - The cutout ban (owner, 2026-10-12) now exempts the homepage hero only.
+- **Homepage `#buy` offer box** shows the white studio shot (PDP gallery tile 1,
+  re-encoded as `assets/photos/offer-studio-white*`, AVIF + WebP 400–1196), not
+  the in-hand photo (owner, same day). Still `contain`, on a light gradient that
+  matches the photo's edges. The PDP offer box, cart and blog cards keep the
+  in-hand photo.
 - Measured on a production build: Buy bottom 1175px at 390×844 (the sticky buy
   strip covers it), 929px at 1280×800.
 
