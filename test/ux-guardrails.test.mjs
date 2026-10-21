@@ -129,24 +129,24 @@ test('slot photos are responsive, AVIF-first and network-aware', () => {
   }
 });
 
-// Homepage hero v4 (2026-10-11): photo first — the product in use, one static
-// image, one buy button. The photo is the LCP image, so it must never be lazy,
-// and the head preload must ask for the same sizes the <picture> will.
-test('homepage hero is a fast, static, product-in-use photo', () => {
+// Homepage hero (2026-10-21, owner: "bring back the Aug 15 design, only the top
+// section"): Fraunces headline, the bottle on a lime disc, mono price and
+// buttons, three zone cards. The bottle is an LCP candidate: eager, preloaded,
+// one static image, one buy button.
+test('homepage hero is the Aug 15 design: static bottle on the lime disc', () => {
   const html = fs.readFileSync('index.html', 'utf8');
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
-  const img = hero.match(/<img [^>]*hero-spray-collar[^>]*>/);
-  assert.ok(img, 'hero photo missing');
+  const img = hero.match(/<img [^>]*odorstrike-bottle-cutout[^>]*>/);
+  assert.ok(img, 'hero bottle missing');
   assert.match(img[0], /fetchpriority="high"/);
   assert.doesNotMatch(img[0], /loading="lazy"/, 'the LCP image must load eagerly');
-  assert.match(img[0], /alt="[^"]*fabric, not the skin"/, 'alt must say what the photo shows');
-  assert.doesNotMatch(img[0], /data-no-skel|data:image/, 'the hero shows the skeleton while loading, not a blurred preview');
-  assert.match(hero, /<source type="image\/avif" srcset="[^"]+"/);
-  const picSizes = hero.match(/<source type="image\/avif" srcset="[^"]+" sizes="([^"]+)"/)[1];
-  const preload = html.match(/<link rel="preload" as="image" type="image\/avif" fetchpriority="high"\s+imagesrcset="[^"]+"\s+imagesizes="([^"]+)">/);
-  assert.ok(preload, 'hero AVIF preload missing');
-  assert.equal(preload[1], picSizes, 'preload imagesizes must match the <picture> sizes, or the photo downloads twice');
-  for (const f of hero.match(/\/assets\/photos\/hero-spray-collar[^ "]*\.(avif|webp)/g)) assert.ok(fs.existsSync(f.slice(1)), `${f} missing`);
+  assert.match(img[0], /width="241" height="915"/, 'explicit size keeps CLS at 0');
+  assert.match(img[0], /data-no-skel/, 'a transparent cutout gets no skeleton shimmer');
+  assert.match(html, /<link rel="preload" as="image" type="image\/webp" href="\/assets\/odorstrike-bottle-cutout\.webp" fetchpriority="high">/, 'hero bottle preload missing');
+  assert.match(html, /<link rel="preload" as="font" type="font\/woff2" href="\/assets\/fonts\/fraunces-normal-latin-400\.woff2" crossorigin>/, 'the H1 face must be preloaded');
+  assert.match(html, /\.hero h1\{[^}]*font-family:var\(--hero-display\);font-weight:900/, 'hero H1 is Fraunces 900');
+  assert.match(html, /\.hero-visual::before\{[^}]*background:var\(--acid\);border-radius:50%/, 'bottle sits on the lime disc');
+  for (const f of ['assets/odorstrike-bottle-cutout.webp', 'assets/odorstrike-bottle-cutout.png', 'assets/fonts/fraunces-normal-latin-400.woff2', 'assets/fonts/jetbrains-mono-normal-latin-400.woff2']) assert.ok(fs.existsSync(f), `${f} missing`);
   assert.ok(!/carousel|swiper|slick/i.test(hero), 'one static hero image, not a carousel');
   assert.equal((hero.match(/class="hm-btn"/g) || []).length, 1, 'one primary action in the hero');
 });
@@ -154,12 +154,18 @@ test('homepage hero is a fast, static, product-in-use photo', () => {
 // Sharp images (2026-10-12, owner): no cut-out bottles and no cropping. The
 // old 241px cutout looked blurry; the owner then asked for real photos shown
 // whole instead of cutouts. Offer boxes, cart and blog cards use the in-hand
-// photo on black with `contain`.
-test('no page uses a bottle cutout; the in-hand photo is shown whole', () => {
+// photo on black with `contain`. One exception since 2026-10-21: the homepage
+// hero is the Aug 15 design again (owner's call), bottle cutout on a lime disc.
+test('no page uses a bottle cutout outside the homepage hero; the in-hand photo is shown whole', () => {
   const pages = ['index.html', 'odorstrike.html', 'blog/index.html',
     ...fs.readdirSync('blog').filter((f) => f.endsWith('.html')).map((f) => `blog/${f}`)];
   for (const f of pages) {
-    assert.doesNotMatch(fs.readFileSync(f, 'utf8'), /odorstrike-bottle-(cutout|studio)/, `${f}: use the in-hand photo, not a cutout`);
+    let html = fs.readFileSync(f, 'utf8');
+    if (f === 'index.html') {
+      const a = html.indexOf('<section class="hero"');
+      html = html.slice(html.indexOf('<body'), a) + html.slice(html.indexOf('</section>', a));
+    }
+    assert.doesNotMatch(html, /odorstrike-bottle-(cutout|studio)/, `${f}: use the in-hand photo, not a cutout`);
   }
   assert.doesNotMatch(fs.readFileSync('scripts/blog/apply-reader.mjs', 'utf8'), /odorstrike-bottle-(cutout|studio)/);
   const home = fs.readFileSync('index.html', 'utf8');

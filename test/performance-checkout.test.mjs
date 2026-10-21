@@ -31,8 +31,8 @@ test('production performance hardening configuration', () => {
     'homepage must not preconnect to checkout-only Supabase',
   );
   assert.ok(
-    /<link rel="preload" as="image" type="image\/avif" fetchpriority="high"\s+imagesrcset="[^"]*hero-spray-collar/.test(homepage),
-    'the hero photo (LCP) must be preloaded as AVIF at high priority',
+    /<link rel="preload" as="image" type="image\/webp" href="\/assets\/odorstrike-bottle-cutout\.webp" fetchpriority="high">/.test(homepage),
+    'the hero bottle (LCP) must be preloaded at high priority',
   );
   const levels = [...homepage.matchAll(/<h([1-6])[\s>]/g)].map((m) => Number(m[1]));
   levels.forEach((level, i) => {

@@ -86,17 +86,14 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <link rel="dns-prefetch" href="https://connect.facebook.net">
 <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
-<!-- Fonts: self-hosted WOFF2. Preload the two above-the-fold faces — Fraunces
-     (the hero H1 / LCP text) and Inter Tight (the hero sub-line). Preloading
-     both keeps CLS at 0 (the swap happens before the sub-line settles). -->
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/space-grotesk-normal-latin-wght.woff2" crossorigin>
+<!-- Fonts: self-hosted WOFF2. The hero (Aug 15 design) sets its H1 — the LCP
+     text — in Fraunces, so that face is preloaded; Inter carries the hero
+     sub-line and the rest of the page. -->
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-normal-latin-wght.woff2" crossorigin>
 
-<!-- The hero photo is the LCP image. Preload the AVIF set with the same sizes
-     as the <picture>, so the browser fetches exactly the file it will paint. -->
-<link rel="preload" as="image" type="image/avif" fetchpriority="high"
-      imagesrcset="/assets/photos/hero-spray-collar@480.avif 480w, /assets/photos/hero-spray-collar@720.avif 720w, /assets/photos/hero-spray-collar@960.avif 960w, /assets/photos/hero-spray-collar.avif 1254w"
-      imagesizes="(min-width:1160px) 540px, (min-width:768px) 46vw, 100vw">
+<!-- The hero bottle (transparent cutout on the lime disc) is an LCP candidate. -->
+<link rel="preload" as="image" type="image/webp" href="/assets/odorstrike-bottle-cutout.webp" fetchpriority="high">
 
 <!-- AI/LLM context files (answer-engine discovery hint) -->
 <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
@@ -169,6 +166,14 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   @font-face{font-family:'Space Grotesk Fallback';src:local('Arial'),local('Liberation Sans');size-adjust:105.79%;ascent-override:93.02%;descent-override:27.60%;line-gap-override:0%;}
   @font-face{font-family:'Space Grotesk Fallback';font-weight:600 900;src:local('Arial Bold'),local('Arial-BoldMT'),local('Liberation Sans Bold');size-adjust:100.3%;ascent-override:98.11%;descent-override:29.11%;line-gap-override:0%;}
   @font-face{font-family:'Inter Fallback';src:local('Arial'),local('Liberation Sans');size-adjust:105.86%;ascent-override:91.51%;descent-override:22.79%;line-gap-override:0%;}
+  /* Hero only (Aug 15 design, restored 2026-10-21): Fraunces 900 for the
+     headline, price and zone titles; JetBrains Mono for labels and buttons.
+     JetBrains has no ₹, so the hero's mono stack falls through to Inter's. */
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 900;font-display:swap;src:url('/assets/fonts/fraunces-normal-latin-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 900;font-display:swap;src:url('/assets/fonts/fraunces-normal-rupee-400.woff2') format('woff2');unicode-range:U+20B9;}
+  @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/jetbrains-mono-normal-latin-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+  @font-face{font-family:'Fraunces Fallback';src:local('Georgia');size-adjust:109.93%;ascent-override:88.96%;descent-override:23.20%;line-gap-override:0%;}
+  @font-face{font-family:'JetBrains Mono Fallback';src:local('Courier New');size-adjust:99.98%;ascent-override:102.02%;descent-override:30.00%;line-gap-override:0%;}
 
   /* ============ TOKENS v1 ============
      Byte-identical copy of the :root block in /assets/css/tokens.css, which
@@ -321,123 +326,154 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .hm-btn--ghost:hover{background:var(--surface-2);border-color:var(--text)}
   .hm-btn--ghost .ic{color:var(--acid)}
 
-  /* ============ 1 · Hero (v4, 2026-10-11) ============
-     Photo first. What it rests on:
-     - NN/g eyetracking: people study photos of the real product and real
-       use, and skip decorative imagery. So the hero is the owner's photo
-       of the bottle misting a shirt collar (product + use + "fabric, not
-       skin" in one frame), not a cutout on a glow.
-     - NN/g "Image-focused design": a big image works only when the buy
-       action keeps equal weight. One filled button, price beside it.
-     - Static, not a carousel; one headline; restraint over abundance.
-     - Trust (COD, free prepaid shipping, returns) and one real quote sit
-       by the button; the three "what it is / isn't" chips ride on the
-       photo instead of taking a row.
-     Phones: the photo is full-bleed (no gutters) and the headline overlaps
-     its faded bottom edge. CTA bottom ~690px on 390x844 (v3: 706).
-     >=768: copy left, the photo as a large card right.
-     The photo is the LCP image: eager, fetchpriority high, AVIF preloaded in
-     <head>, skeleton shimmer while it loads (soft.css §10), and the settle-in is transform-only so
-     it never delays LCP. Re-measure if you add anything above the CTA. */
-  .hero{position:relative;padding:0 0 32px}
-  .hero-media{position:relative;margin:0;aspect-ratio:390/350;overflow:hidden;background:var(--surface)}
-  .hero-media picture{display:contents}
-  .hero-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:35% 40%}
-  .hero-media::after{content:"";position:absolute;left:0;right:0;bottom:0;height:44%;pointer-events:none;
-    background:linear-gradient(to bottom,rgba(10,10,10,0),rgba(10,10,10,.74) 62%,var(--ink))}
-  .hero-not{position:absolute;z-index:1;top:12px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
-  .hero-not li{
-    display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
-    font-family:var(--body);font-size:11.5px;font-weight:500;letter-spacing:.01em;color:var(--text);
-    background:rgba(10,10,10,.58);border:1px solid rgba(242,245,239,.18);border-radius:var(--r-pill);padding:5px 10px;
-    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  /* ============ 1 · Hero (Aug 15 design, restored 2026-10-21) ============
+     Owner: "bring back the Aug 15 design … only the top section". The look is
+     the Aug 15 hero: a Fraunces 900 headline, the bottle on a lime disc with a
+     rotated mono caption, a mono price block with a hairline above it, mono
+     uppercase buttons, and the three "where smell hides" zone cards. What it
+     says is today's: the category eyebrow and sub (SEO brief, 2026-10-20),
+     ₹229 / M.R.P. ₹499 / 54% OFF, the 2-for-₹419 link, the COD / shipping /
+     returns row (no COD amount outside checkout), the fabric-only chips and
+     Rohit's quote. The rest of the page keeps Space Grotesk + Inter.
+     Phones read headline → bottle → price (DOM order); >=960 the copy and
+     price sit left and the bottle spans both rows on the right, bleeding past
+     the container edge. The sticky buy strip covers the CTA when it is off
+     screen (it watches .hero-ctas). */
+  .hero{
+    --hero-display:'Fraunces','Fraunces Fallback',Georgia,serif;
+    --hero-mono:'JetBrains Mono','JetBrains Mono Fallback','Inter',ui-monospace,monospace;
+    padding:clamp(32px,5vw,64px) 0 clamp(44px,6vw,72px);overflow:hidden;
   }
-  .hero-not li.on{color:var(--on-acid);background:var(--acid);border-color:var(--acid)}
-  .hero-not .ic{width:12px;height:12px;stroke-width:2.6}
-  .hero-not li.on .ic{width:14px;height:14px;stroke-width:2}
-
-  .hero-body{position:relative;z-index:1;margin-top:-58px;padding:0 var(--gutter)}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(20px,4vw,36px)}
   .hero-eyebrow{
-    margin:0 0 8px;font-family:var(--body);font-size:11px;font-weight:600;
-    letter-spacing:.16em;text-transform:uppercase;color:var(--acid);
+    margin:0 0 18px;font-family:var(--hero-mono);font-size:12px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--acid);
   }
-  .hero-title{
-    font-family:var(--display);font-weight:700;
-    font-size:clamp(33px,9vw,44px);line-height:1;letter-spacing:-.03em;text-wrap:balance;
+  .hero h1{
+    font-family:var(--hero-display);font-weight:900;
+    font-size:clamp(58px,11vw,120px);line-height:.86;letter-spacing:-.028em;
+    color:var(--text);
   }
-  .hero-title .acid{display:block}
-  .hero-sub{margin-top:12px;font-size:15px;line-height:1.45;color:var(--text-2);max-width:42ch}
-  .hero-sub strong{color:var(--text);font-weight:500}
+  .hero h1 .acid{color:var(--acid)}
+  .hero-sub{max-width:36ch;margin-top:24px;font-size:clamp(17px,1.5vw,21px);line-height:1.5;color:var(--text)}
+  .hero-sub strong{font-weight:600}
+  .hero-hook{
+    display:inline-block;margin-top:20px;padding:8px 16px;
+    background:var(--acid);color:var(--on-acid);border-radius:999px;
+    font-family:var(--body);font-weight:600;font-size:16px;letter-spacing:-.01em;
+  }
+  .hero-not{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0;padding:0;list-style:none}
+  .hero-not li{
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+    font-family:var(--hero-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--text-2);border:1px solid var(--border-strong);border-radius:999px;padding:6px 11px;
+  }
+  .hero-not li.on{color:var(--acid);border-color:var(--acid)}
+  .hero-not .ic{width:14px;height:14px;stroke-width:2}
 
-  .hero-buy{margin-top:16px}
-  .hero-price{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px}
-  .hero-price b{font-family:var(--display);font-weight:700;font-size:32px;line-height:1;letter-spacing:-.02em;color:var(--text)}
-  .hero-price s{font-size:13px;color:var(--muted)}
-  .hero-price .off{
-    font-family:var(--body);font-size:12px;letter-spacing:.02em;font-weight:600;
-    color:var(--on-acid);background:var(--acid);border-radius:var(--r-pill);padding:4px 10px;
+  /* Bottle: an acid disc behind it, the product overshooting the disc top and
+     bottom. Sized by height (a tall 241×915 cutout) so the overlap holds as
+     the disc scales; explicit width/height keep CLS at 0. */
+  .hero-visual{
+    position:relative;margin:0;
+    display:flex;align-items:center;justify-content:center;
+    min-height:clamp(340px,70vw,480px);
   }
-  .hero-price .size{display:none;flex-basis:100%;margin-top:6px;font-size:12.5px;color:var(--muted);letter-spacing:.01em}
-  /* Two routes, one row: on the old homepage 38 phone visitors tapped
-     "See ODORSTRIKE" and ~14 tapped Buy (events, 120 days). Buy stays filled
-     and wider; the product route is a real button, not a footnote. */
-  .hero-ctas{display:flex;flex-wrap:nowrap;align-items:stretch;gap:10px;margin-top:12px}
-  .hero-ctas .hm-btn{flex:1.35 1 0;min-width:0;padding-inline:12px;white-space:nowrap}
-  .hero-ctas .hero-more{flex:1 1 0}
-  .hero-pair{margin-top:6px;text-align:center;font-size:13.5px;line-height:1.4}
+  .hero-visual::before{
+    content:'';position:absolute;top:50%;left:50%;z-index:0;
+    width:clamp(210px,52vw,340px);aspect-ratio:1;
+    transform:translate(-50%,-50%);background:var(--acid);border-radius:50%;
+  }
+  .hero-visual picture{display:contents}
+  .hero-visual img{
+    position:relative;z-index:1;display:block;
+    height:clamp(300px,62vw,430px);width:auto;max-width:none;
+    filter:drop-shadow(0 22px 44px rgba(0,0,0,.7));
+  }
+  /* Rotated mono caption riding the disc edge. */
+  .hero-visual figcaption{
+    position:absolute;z-index:2;right:-4px;top:50%;
+    transform:translateY(-50%) rotate(90deg);transform-origin:right center;
+    font-family:var(--hero-mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--muted);white-space:nowrap;
+  }
+
+  .hero-offer{
+    display:flex;align-items:center;flex-wrap:wrap;gap:10px 16px;
+    padding-top:22px;border-top:1px solid var(--border-default);
+  }
+  .hero-price{display:contents}
+  .hero-price b{
+    font-family:var(--hero-display);font-weight:900;
+    font-size:clamp(44px,7vw,58px);line-height:1;letter-spacing:-.03em;color:var(--acid);
+  }
+  .hero-price s{font-family:var(--hero-mono);font-size:13px;letter-spacing:.06em;color:var(--muted)}
+  .hero-price .off{
+    font-family:var(--hero-mono);font-size:12px;letter-spacing:.08em;
+    color:var(--on-acid);background:var(--acid);border-radius:999px;padding:4px 10px;
+  }
+  .hero-price .size{
+    flex-basis:100%;font-family:var(--hero-mono);font-size:12px;line-height:1.7;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  }
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px}
+  .hero .hm-btn{
+    min-height:54px;padding:16px 28px;border-radius:11px !important;
+    font-family:var(--hero-mono) !important;font-weight:600 !important;font-size:15px !important;
+    letter-spacing:.08em !important;text-transform:uppercase !important;white-space:nowrap;
+  }
+  .hero .hm-btn--ghost{background:transparent;color:var(--text);border:2px solid var(--border-strong)}
+  .hero .hm-btn--ghost:hover{background:transparent;color:var(--acid);border-color:var(--acid)}
+  .hero-pair{margin-top:12px;font-size:14px;line-height:1.4}
   .hero-pair a{color:var(--text-2);text-decoration:underline;text-decoration-color:var(--border-strong);text-underline-offset:4px;display:inline-block;padding:6px 0}
   .hero-pair b{color:var(--acid);font-weight:600}
-  .hero-ship{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin-top:12px;list-style:none;font-size:12.5px;color:var(--text-2)}
-  .hero-ship li{display:inline-flex;align-items:center;gap:6px}
+  .hero-ship{
+    display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;list-style:none;
+    font-family:var(--hero-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  }
+  .hero-ship li{display:inline-flex;align-items:center;gap:7px}
   .hero-ship .ic{width:16px;height:16px;color:var(--acid)}
-  .hero-ship b{color:var(--text);font-weight:600}
-  .hero-quote{margin:18px 0 0;padding:14px 16px;border:1px solid var(--border-subtle);border-radius:var(--r-md);background:var(--surface)}
+  .hero-ship b{color:var(--text);font-weight:400}
+  .hero-quote{margin:22px 0 0;padding:16px 18px;border:1px solid var(--border-default);border-radius:20px;background:var(--surface);max-width:46ch}
   .hero-quote blockquote{margin:0;font-size:15px;line-height:1.45;color:var(--text)}
-  .hero-quote figcaption{margin-top:6px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted)}
+  .hero-quote figcaption{margin-top:8px;font-family:var(--hero-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
   .hero-quote figcaption span{color:var(--acid)}
 
-  @media(prefers-reduced-motion:no-preference){
-    .hero-media img{animation:hero-settle 1.8s cubic-bezier(.2,.7,.2,1) both}
-    @keyframes hero-settle{from{transform:scale(1.07)}}
+  /* Where smell hides — all three are clothing. */
+  .zones{margin-top:clamp(40px,6vw,56px);display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+  .hero .zone{
+    display:flex;align-items:center;gap:18px;padding:20px;
+    background:var(--surface);border:1px solid var(--border-default) !important;border-radius:24px !important;
   }
+  /* flex:none — the zone is a row on phones and a column at >=768, where a
+     flex-basis would resolve against the cross axis. */
+  .zone svg{flex:none;width:64px;height:64px}
+  .z-ico{fill:none;stroke:var(--acid);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+  .z-num{display:block;margin-bottom:4px;font-family:var(--hero-mono);font-size:13px;letter-spacing:.18em;color:var(--acid)}
+  .zone .z-title{font-family:var(--hero-display);font-weight:900;font-size:27px;line-height:1.02;letter-spacing:-.01em;color:var(--text)}
+  .zone p{font-size:15px;color:var(--muted);margin-top:6px}
 
-  @media(min-width:768px){
-    .hero{padding:40px 0 64px}
-    .hero-inner{
-      max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter);
-      display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-      column-gap:clamp(32px,5vw,72px);align-items:center;
-    }
-    .hero-media{
-      order:2;aspect-ratio:1/1;border-radius:var(--r-xl);border:1px solid var(--border-subtle);
-      box-shadow:0 60px 120px -70px rgba(var(--acid-rgb),.45);
-    }
-    .hero-media::after{height:34%;background:linear-gradient(to bottom,rgba(10,10,10,0),rgba(10,10,10,.6))}
-    .hero-not{top:auto;bottom:12px;left:12px;right:12px;gap:5px}
-    .hero-not li{font-size:10.5px;padding:4px 9px;gap:4px}
-    .hero-body{margin-top:0;padding:0}
-    .hero-eyebrow{font-size:12px;margin-bottom:16px}
-    .hero-title{font-size:clamp(44px,5vw,72px)}
-    .hero-sub{margin-top:18px;font-size:clamp(16px,1.5vw,19px)}
-    .hero-buy{margin-top:26px}
-    .hero-price b{font-size:clamp(40px,3.6vw,52px)}
-    .hero-price .size{display:block}
-    .hero-ctas{margin-top:16px}
-    .hero-ctas .hm-btn{flex:0 1 auto;padding-inline:34px}
-    .hero-pair{text-align:left}
-    .hero-ship{justify-content:flex-start}
-    .hero-quote{max-width:46ch}
-  }
-  @media(min-width:1160px){
-    .hero{padding:56px 0 80px}
-    .hero-not{bottom:18px;left:18px;right:18px}
-    .hero-not li{font-size:12.5px;padding:7px 13px}
-  }
-  /* Narrow phones: keep the three chips on one row, clear of the nozzle. */
   @media(max-width:389px){
-    .hero-not{top:10px;left:10px;right:10px;gap:5px}
-    .hero-not li{font-size:10.5px;padding:4px 8px;gap:4px}
-    .hero-not .ic{width:11px;height:11px}
+    .hero h1{font-size:50px}
+    .hero-ctas .hm-btn{flex:1 1 100%}
+  }
+  @media(min-width:768px){
+    .zones{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+    .hero .zone{flex-direction:column;align-items:flex-start;padding:26px}
+    .zone svg{width:72px;height:72px}
+  }
+  @media(min-width:960px){
+    .hero-grid{
+      grid-template-columns:1.1fr .9fr;
+      grid-template-areas:"copy visual" "buy visual";
+      align-content:center;
+      gap:clamp(28px,3vw,44px) clamp(32px,4vw,56px);
+    }
+    .hero-copy{grid-area:copy;align-self:end}
+    .hero-buy{grid-area:buy;align-self:start}
+    .hero-visual{grid-area:visual;align-self:center;margin-right:calc(var(--gutter) * -3);min-height:560px}
+    .hero-visual img{height:clamp(420px,42vw,540px)}
+    .hero-visual figcaption{right:-18px}
   }
 
   /* Decorative acid ticker (aria-hidden) */
@@ -834,37 +870,46 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 
 <main id="sf-main" tabindex="-1">
 
-  <!-- ============ 1 · HERO ============
-       One photo of the product in use, one claim, one price, one button. On a
-       390×844 phone the CTA sits above the fold under a full-bleed photo. COD availability is stated here; its handling
-       charge is shown only on the COD option in checkout (owner's call,
-       2026-10-11 — see CLAUDE.md "Price ₹229"). -->
+  <!-- ============ 1 · HERO (Aug 15 design) ============
+       Headline, bottle on the lime disc, price, buy. COD availability is stated
+       here; its handling charge is shown only on the COD option in checkout
+       (owner's call, 2026-10-11 — see CLAUDE.md "Price ₹229"). -->
   <section class="hero" aria-labelledby="heroTitle">
-    <div class="hero-inner">
-      <figure class="hero-media">
-        <picture>
-          <source type="image/avif" srcset="/assets/photos/hero-spray-collar@480.avif 480w, /assets/photos/hero-spray-collar@720.avif 720w, /assets/photos/hero-spray-collar@960.avif 960w, /assets/photos/hero-spray-collar.avif 1254w" sizes="(min-width:1160px) 540px, (min-width:768px) 46vw, 100vw">
-          <img src="/assets/photos/hero-spray-collar@960.webp" srcset="/assets/photos/hero-spray-collar@480.webp 480w, /assets/photos/hero-spray-collar@720.webp 720w, /assets/photos/hero-spray-collar@960.webp 960w, /assets/photos/hero-spray-collar.webp 1254w" sizes="(min-width:1160px) 540px, (min-width:768px) 46vw, 100vw" width="1254" height="1254" alt="ODORSTRIKE being sprayed onto the collar of a black shirt: a fine mist on the fabric, not the skin" fetchpriority="high" decoding="async">
-        </picture>
-        <ul class="hero-not" aria-label="What ODORSTRIKE is and is not">
-          <li>Not perfume</li>
-          <li>Not body deodorant</li>
-          <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-shirt"/></svg>Fabric only</li>
-        </ul>
-      </figure>
+    <div class="wrap">
+      <!-- Three children, not two, so the order can differ per breakpoint:
+           phones read headline → bottle → price (DOM order); desktop puts copy
+           and price on the left with the bottle spanning both rows. -->
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="hero-eyebrow">CLOTHING DEODORANT · FABRIC ONLY</p>
+          <h1 id="heroTitle">Don't let them notice your <span class="acid">sweat.</span></h1>
+          <p class="hero-sub">ODORSTRIKE is a pocket clothing deodorant: it neutralizes odor trapped in your clothes, not on your skin. <strong>2–3 sprays. Dry in 15–30 sec. Wear.</strong></p>
+          <p><span class="hero-hook">Smell Proof. Always.</span></p>
+          <ul class="hero-not" aria-label="What ODORSTRIKE is and is not">
+            <li>Not perfume</li>
+            <li>Not body deodorant</li>
+            <li class="on"><svg class="ic" aria-hidden="true"><use href="#i-shirt"/></svg>Fabric only</li>
+          </ul>
+        </div>
 
-      <div class="hero-body">
-        <p class="hero-eyebrow">CLOTHING DEODORANT · FABRIC ONLY</p>
-        <h1 id="heroTitle" class="hero-title">Your shirt smells. <span class="acid">Fix it.</span></h1>
-        <p class="hero-sub">ODORSTRIKE is a pocket clothing deodorant: it neutralizes odor trapped in your clothes, not on your skin. <strong>2–3 sprays. Dry in 15–30 sec. Wear.</strong></p>
+        <!-- The product, above the fold: eager + high priority (preloaded in <head>). -->
+        <figure class="hero-visual">
+          <picture>
+            <source srcset="/assets/odorstrike-bottle-cutout.webp" type="image/webp">
+            <img src="/assets/odorstrike-bottle-cutout.png" alt="ODORSTRIKE 50ml pocket clothing deodorant spray bottle" width="241" height="915" fetchpriority="high" decoding="async" data-no-skel>
+          </picture>
+          <figcaption>50ml · ~250 sprays</figcaption>
+        </figure>
 
         <div class="hero-buy">
-          <p class="hero-price">
-            <b>₹229</b>
-            <s>M.R.P. ₹499</s>
-            <span class="off">54% OFF</span>
-            <span class="size">50ml pocket bottle · ~250 sprays · up to 8 hours on fabric</span>
-          </p>
+          <div class="hero-offer">
+            <p class="hero-price">
+              <b>₹229</b>
+              <s>M.R.P. ₹499</s>
+              <span class="off">54% OFF</span>
+              <span class="size">50ml pocket bottle · ~250 sprays · up to 8 hours on fabric</span>
+            </p>
+          </div>
           <div class="hero-ctas">
             <a class="hm-btn" href="/odorstrike?buy=1" id="heroBuyBtn">Buy now — ₹229</a>
             <a class="hm-btn hm-btn--ghost hero-more" href="/odorstrike" data-track="home_hero_view">See the product</a>
@@ -879,6 +924,45 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
             <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
             <figcaption>Rohit, 26 · Bengaluru · <span>Beta tester</span></figcaption>
           </figure>
+        </div>
+      </div>
+
+      <!-- Where smell hides — all three are clothing. Inline SVG line art. -->
+      <div class="zones">
+        <div class="zone">
+          <svg class="z-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 3 4.5 5 3 9.5l3 1.4V21h12V10.9l3-1.4L19.5 5 16 3l-1.5 2.2a3.2 3.2 0 0 1-5 0Z"/>
+          </svg>
+          <div>
+            <span class="z-num">01</span>
+            <p class="z-title">Shirt collar</p>
+            <p>Nine hours against your neck.</p>
+          </div>
+        </div>
+        <div class="zone">
+          <svg class="z-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 5.6 4.5 7.4 3 11.6l3 1.2V21.4h12v-8.6l3-1.2-1.5-4.2L15 5.6"/>
+            <path d="M8.8 6.4C8.8 3.6 10.2 2.4 12 2.4s3.2 1.2 3.2 4"/>
+            <path d="M9.8 6.6c.4 1.6 1.2 2.4 2.2 2.4s1.8-.8 2.2-2.4"/>
+            <path d="M11 9.2 10.6 13M13 9.2l.4 3.8"/>
+          </svg>
+          <div>
+            <span class="z-num">02</span>
+            <p class="z-title">Hoodie</p>
+            <p>Worn all week. Washed once.</p>
+          </div>
+        </div>
+        <div class="zone">
+          <svg class="z-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8.4 3.4 4.4 5.4 3 10l2.6 1.2V21h13V11.2L21.2 10l-1.4-4.6-4-2"/>
+            <path d="m8.4 3.4 3.7 6.2 3.7-6.2M12.1 9.6V21"/>
+            <path d="M7.6 15.2h2.2M14.6 15.2h2.2"/>
+          </svg>
+          <div>
+            <span class="z-num">03</span>
+            <p class="z-title">Blazer &amp; jacket</p>
+            <p>Too good to wash. Still remembers.</p>
+          </div>
         </div>
       </div>
     </div>

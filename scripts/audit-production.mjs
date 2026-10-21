@@ -108,7 +108,7 @@ if (fs.existsSync(webhook) && /payu-webhook/i.test(read(webhook))) fail('Legacy 
 const indexPath = path.join(ROOT, 'index.html');
 if (fs.existsSync(indexPath)) {
   const indexHtml = read(indexPath);
-  if (!indexHtml.includes('Your shirt smells.')) fail('index.html missing critical marker: "Your shirt smells."');
+  if (!indexHtml.includes("Don't let them notice your")) fail('index.html missing critical marker: "Don\'t let them notice your"');
   if (!indexHtml.includes('CLOTHING DEODORANT · FABRIC ONLY')) fail('index.html missing critical marker: "CLOTHING DEODORANT · FABRIC ONLY"');
   if (!indexHtml.includes('Built for the gap') && !indexHtml.includes('Jogdhande Nikhil Patil')) {
     fail('index.html missing current founder heading');
