@@ -172,7 +172,9 @@ test('no page uses a bottle cutout outside the homepage hero; the in-hand photo 
   const pdp = fs.readFileSync('odorstrike.html', 'utf8');
   assert.match(home, /\.offer-art \.offer-photo\{[^}]*object-fit:contain/, 'homepage offer photo must not be cropped');
   assert.match(pdp, /\.pd-offer-art \.pd-offer-photo\{[^}]*object-fit:contain/, 'PDP offer photo must not be cropped');
-  for (const html of [home, pdp]) assert.match(html, /offer-in-hand-black@960\.webp/, 'offer box photo missing');
+  assert.match(pdp, /offer-in-hand-black@960\.webp/, 'PDP offer box photo missing');
+  // Owner, 2026-10-21: the homepage offer box shows the white studio shot instead.
+  assert.match(home, /class="ph-photo offer-photo" src="\/assets\/photos\/offer-studio-white@960\.webp"/, 'homepage offer box photo missing');
 });
 
 // Competitor research (2026-10-15, docs/audits/competitor-conversion-2026-10.md).
