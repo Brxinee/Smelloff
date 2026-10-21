@@ -45,6 +45,25 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Homepage hero back to the Aug 15 design (2026-10-21, owner: "bring back the aug 15 design … only top section")
+Only `index.html`'s `.hero` changed; every other section and page is as it was.
+Supersedes "Homepage hero v4" below for the look, not for what the hero says.
+- **Look (from `a1a132e`, live on 15 Aug):** H1 "Don't let them notice your
+  sweat." in Fraunces 900, the bottle cutout on a lime disc with a rotated mono
+  caption, a hairline-topped mono price block, mono uppercase buttons, and the
+  three clothing zone cards (Shirt collar / Hoodie / Blazer & jacket). Fraunces
+  and JetBrains Mono are declared inline for the hero only (`--hero-display`,
+  `--hero-mono`); Fraunces and the cutout are preloaded.
+- **Kept from today:** the eyebrow and sub (clothing-deodorant brief), ₹229 /
+  M.R.P. ₹499 / 54% OFF, `#heroBuyBtn` + "See the product" ghost (classes the
+  tests and the sticky-bar observer use), the 2-for-₹419 link, the shipping /
+  COD / returns row with no COD amount, the fabric-only chips, Rohit's quote.
+- The Aug pill said "Smell Proof. Always."; the audit blocks smell-proof claims,
+  so the pill reads "Smell Khatam. Confidence Qaayam.".
+- The cutout ban (owner, 2026-10-12) now exempts the homepage hero only.
+- Measured on a production build: Buy bottom 1175px at 390×844 (the sticky buy
+  strip covers it), 929px at 1280×800.
+
 ## Measurement, attribution, checkout amount (2026-10-20, owner: "reliable, measurable, ready for acquisition")
 Audited by driving real checkouts against a production build with every
 service faked (no real order or payment). Found and fixed:
