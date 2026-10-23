@@ -498,7 +498,16 @@
   input.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit', { cancelable: true })); }
   });
-  function grow() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 120) + 'px'; }
+  var lastLen = 0;
+  function grow() {
+    var len = input.value.length;
+    // Prevent layout thrashing by only recalculating when text shrinks, is replaced, or overflows
+    if (len <= lastLen || input.scrollHeight > input.clientHeight) {
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+    }
+    lastLen = len;
+  }
   input.addEventListener('input', grow);
 
   // ---------------------------------------------------------- open / close
