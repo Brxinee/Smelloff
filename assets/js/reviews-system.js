@@ -208,6 +208,7 @@
     }
 
     btn.disabled = true;
+    btn.setAttribute('aria-busy', 'true');
     btn.textContent = 'Verifying…';
 
     fetch(SUPA_URL + '/functions/v1/track-order/', {
@@ -218,6 +219,7 @@
     .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
     .then(function(res){
       btn.disabled = false;
+      btn.removeAttribute('aria-busy');
       btn.textContent = 'Verify order';
       if (!res.ok) {
         err.textContent = (res.j && res.j.error) || 'Order not found. Please check your Order ID and Phone number.';
@@ -244,6 +246,7 @@
     })
     .catch(function(){
       btn.disabled = false;
+      btn.removeAttribute('aria-busy');
       btn.textContent = 'Verify order';
       err.textContent = 'Connection error. Please try again.';
       err.style.display = 'block';
@@ -293,7 +296,7 @@
     payload.review_token = reviewToken;
 
     var submitBtn = document.querySelector('#rvStepForm .rv-submit');
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Posting…'; }
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true'); submitBtn.textContent = 'Posting…'; }
 
     fetch(SUPA_URL + '/functions/v1/submit-review', {
       method: 'POST',
@@ -301,7 +304,7 @@
       body: JSON.stringify(payload)
     })
     .then(function(r){
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Post review'; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy'); submitBtn.textContent = 'Post review'; }
       if (!r.ok) {
         return r.json().catch(function(){ return {}; }).then(function(j){
           errEl.textContent = (j && j.error) || 'Could not post review. Please try again.';
@@ -314,7 +317,7 @@
       });
     })
     .catch(function(){
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Post review'; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy'); submitBtn.textContent = 'Post review'; }
       errEl.textContent = 'Network error. Please try again.';
       errEl.style.display = 'block';
     });

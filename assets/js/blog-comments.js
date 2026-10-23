@@ -345,6 +345,7 @@
     }
 
     submitEl.disabled = true;
+    submitEl.setAttribute('aria-busy', 'true');
     var originalLabel = submitEl.textContent;
     submitEl.textContent = 'Posting…';
 
@@ -382,6 +383,7 @@
       })
       .then(function () {
         submitEl.disabled = false;
+        submitEl.removeAttribute('aria-busy');
         submitEl.textContent = originalLabel;
       });
   });
