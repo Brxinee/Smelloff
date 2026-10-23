@@ -1,0 +1,4 @@
+## 2024-10-23 - Timing Side-Channel via Early Return in crypto.timingSafeEqual
+**Vulnerability:** Several security modules (`api/_security.js`, `api/admin.js`, `api/_resend-webhook.js`) used `crypto.timingSafeEqual` but performed early returns (either explicitly or via logical OR short-circuits) when length mismatches occurred.
+**Learning:** Even if a dummy comparison like `crypto.timingSafeEqual(expected, expected)` is performed during a length mismatch, an early `return` immediately after or an `||` short-circuit prevents the remainder of the function block from executing, creating a detectable timing variance depending on the outcome.
+**Prevention:** When comparing buffers securely in Node.js, always use a boolean flag (e.g., `let isValid = false;`) and do not return early or use short-circuiting logic that bypasses the dummy execution path. The overall code block must take an identical amount of time to execute regardless of the comparison's outcome.
