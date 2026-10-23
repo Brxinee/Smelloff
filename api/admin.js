@@ -58,7 +58,16 @@ export function verifySession(token, now = Date.now()) {
   if (!password() || typeof token !== 'string' || !token.includes('.')) return false;
   const [payload, mac] = token.split('.');
   const expected = sign(payload);
-  if (mac.length !== expected.length || !crypto.timingSafeEqual(Buffer.from(mac), Buffer.from(expected))) return false;
+  const macBuf = Buffer.from(mac);
+  const expectedBuf = Buffer.from(expected);
+  let isValid = false;
+  if (macBuf.length !== expectedBuf.length) {
+    // Prevent timing side-channel via early return by doing dummy comparison
+    crypto.timingSafeEqual(expectedBuf, expectedBuf);
+  } else {
+    isValid = crypto.timingSafeEqual(macBuf, expectedBuf);
+  }
+  if (!isValid) return false;
   try {
     return JSON.parse(Buffer.from(payload, 'base64url').toString()).exp > now;
   } catch { return false; }
