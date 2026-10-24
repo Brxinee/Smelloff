@@ -443,7 +443,7 @@
   function ask(text, source) {
     text = String(text || '').trim();
     if (!text || busy) return;
-    busy = true; sendBtn.disabled = true;
+    busy = true; sendBtn.disabled = true; sendBtn.setAttribute('aria-busy', 'true');
     setChips([]);
     var tiles = log.querySelector('.sfc-tiles'); if (tiles) tiles.remove();
     history.push({ role: 'user', text: text.slice(0, 1200) });
@@ -484,7 +484,7 @@
         var r = addMessage(msg, history.length - 1);
         setChips(msg.suggestions);
         reveal(r);
-        busy = false; sendBtn.disabled = false;
+        busy = false; sendBtn.disabled = false; sendBtn.removeAttribute('aria-busy');
       });
   }
 
