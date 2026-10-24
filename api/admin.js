@@ -58,7 +58,20 @@ export function verifySession(token, now = Date.now()) {
   if (!password() || typeof token !== 'string' || !token.includes('.')) return false;
   const [payload, mac] = token.split('.');
   const expected = sign(payload);
-  if (mac.length !== expected.length || !crypto.timingSafeEqual(Buffer.from(mac), Buffer.from(expected))) return false;
+
+  let isValidMac = false;
+  const macBuffer = Buffer.from(mac);
+  const expectedBuffer = Buffer.from(expected);
+
+  if (macBuffer.length !== expectedBuffer.length) {
+    crypto.timingSafeEqual(expectedBuffer, expectedBuffer);
+    isValidMac = false;
+  } else {
+    isValidMac = crypto.timingSafeEqual(macBuffer, expectedBuffer);
+  }
+
+  if (!isValidMac) return false;
+
   try {
     return JSON.parse(Buffer.from(payload, 'base64url').toString()).exp > now;
   } catch { return false; }
