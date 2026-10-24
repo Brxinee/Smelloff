@@ -97,6 +97,7 @@
       }
       input.removeAttribute('aria-invalid');
       btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true');
       var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRudXFqeWRtb3hjemRqbnNncGNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzI2NDgsImV4cCI6MjA5MzEwODY0OH0.6qyyo-1lpntK7FC3H9j_oqWp0W_R1XydVG_IxVUd6F4';
       fetch('https://tnuqjydmoxczdjnsgpci.supabase.co/rest/v1/waitlist', {
         method: 'POST',
@@ -104,11 +105,13 @@
           Prefer: 'return=minimal,resolution=ignore-duplicates' },
         body: JSON.stringify({ email: email, source: 'footer' })
       }).then(function (r) {
+        btn.removeAttribute('aria-busy');
         if (!r.ok) throw new Error('http ' + r.status);
         news.querySelector('.sf-ftr__news-row').hidden = true;
         say('You\u2019re on the list.', 'ok');
       }).catch(function () {
         btn.disabled = false;
+        btn.removeAttribute('aria-busy');
         say('That didn\u2019t go through. Try again, or email info@smelloff.in.', 'err');
       });
     });
