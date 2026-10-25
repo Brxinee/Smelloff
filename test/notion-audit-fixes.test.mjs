@@ -73,3 +73,22 @@ test('email docs quote the current COD total', () => {
   assert.ok(!doc.includes('₹289'));
   assert.ok(doc.includes(`₹${product.priceCod}`));
 });
+
+test('FAQ inhalation answer is an instruction, not a safety claim', () => {
+  const faq = read('faq.html');
+  assert.ok(!faq.includes('safe to wear against skin'));
+  assert.ok(!faq.includes('Yes, once dry.'));
+  assert.ok(faq.includes("Don't breathe in the mist."));
+});
+
+test('the 30-day review title says what the test was', () => {
+  for (const f of ['blog/odorstrike-review-30-day-india-test.html', 'feed.xml', 'sitemap.xml', 'llms.txt']) {
+    assert.ok(!read(f).includes('30-Day India Test'), f);
+  }
+});
+
+test('internal scripts quote the current COD amounts', () => {
+  for (const f of ['scripts/render-email-previews.mjs', 'scripts/generate_audit_reports.mjs']) {
+    assert.ok(!/₹289|₹60 COD|codFee: 60\b/.test(read(f)), f);
+  }
+});
