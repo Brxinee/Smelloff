@@ -66,20 +66,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
      scripts/seo/apply-structured-data.mjs — edit the config, re-run, commit. -->
 <script type="application/ld+json" id="org-jsonld">{"@context":"https://schema.org","@type":"OnlineStore","@id":"https://smelloff.in/#organization","name":"Smelloff","alternateName":["Smell Off","Smelloff India","Smelloff Grooming"],"legalName":"Smelloff","url":"https://smelloff.in","logo":{"@type":"ImageObject","url":"https://smelloff.in/apple-touch-icon.png","width":180,"height":180},"image":"https://smelloff.in/assets/og/smelloff-share.jpg","email":"info@smelloff.in","telephone":"+919392974031","foundingDate":"2026","foundingLocation":{"@type":"Place","name":"Hyderabad, India"},"founder":[{"@type":"Person","@id":"https://smelloff.in/#founder","name":"Jogdhande Nikhil Patil","jobTitle":"Founder","url":"https://smelloff.in/about"},{"@type":"Person","@id":"https://smelloff.in/#cofounder","name":"Vineeth Kumar Duggepogu","jobTitle":"Co-founder","url":"https://smelloff.in/about"}],"description":"Indian odor-control brand for men. Goes after the smell trapped in your clothes instead of covering it with fragrance. Maker of ODORSTRIKE, a pocket-sized fabric odor neutralizer mist for clothes.","slogan":"Traps and neutralizes clothing odor molecules on fabric","knowsAbout":["fabric odor","sweat smell in clothes","fabric odor neutralizer","cyclodextrin","zinc pca","shirt collar odor","polyester odor"],"address":{"@type":"PostalAddress","streetAddress":"Sanathnagar, Erragadda","addressLocality":"Hyderabad","addressRegion":"Telangana","postalCode":"500018","addressCountry":"IN"},"areaServed":{"@type":"Country","name":"India"},"contactPoint":[{"@type":"ContactPoint","telephone":"+919392974031","contactType":"customer service","email":"info@smelloff.in","areaServed":"IN","availableLanguage":["English","Hindi","Telugu"]}],"hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","@id":"https://smelloff.in/#return-policy","applicableCountry":"IN","returnPolicyCountry":"IN","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":7,"returnMethod":"https://schema.org/ReturnByMail","returnFees":"https://schema.org/FreeReturn","refundType":"https://schema.org/FullRefund","merchantReturnLink":"https://smelloff.in/returns"},"sameAs":["https://www.instagram.com/smelloffx/","https://x.com/smelloffindia","https://t.me/smelloffindia","https://www.linkedin.com/company/smelloff","https://www.facebook.com/profile.php?id=61574290776912"]}</script>
 <script type="application/ld+json" id="website-jsonld">{"@context":"https://schema.org","@type":"WebSite","@id":"https://smelloff.in/#website","name":"Smelloff","alternateName":["Smell Off","smelloff.in"],"url":"https://smelloff.in/","inLanguage":"en-IN","publisher":{"@id":"https://smelloff.in/#organization"}}</script>
-<!-- Smelloff Partner Network attribution (partners.smelloff.in) — /r/:code lands
-     here as /?ref=CODE; the click is logged and the code stored for 7 days so the
-     /odorstrike checkout can attach it to the order -->
-<script>
-(function(){
-  var r = new URLSearchParams(location.search).get('ref');
-  if (r) {
-    var v = JSON.stringify({ c: r, t: Date.now() });
-    try { localStorage.setItem('so_ref', v); } catch (e) {} /* dual-write: WebViews differ */
-    document.cookie = 'so_ref=' + encodeURIComponent(v) + ';max-age=604800;path=/;SameSite=Lax';
-    try { navigator.sendBeacon('https://partners.smelloff.in/api/click', JSON.stringify({ ref: r })); } catch (e) {}
-  }
-})();
-</script>
 
 <!-- Resource Hints for Slow Mobile Networks in India -->
 <link rel="dns-prefetch" href="https://tnuqjydmoxczdjnsgpci.supabase.co">
@@ -1087,7 +1073,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           <div class="rv-who"><cite>Karan, 29 · Delhi</cite><span class="rv-tag">Beta tester</span></div>
         </li>
       </ul>
-      <p class="rv-more reveal">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review</a> — worn, sweated and stain-tested across India.</p>
+      <p class="rv-more reveal">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review</a> — one founder, four shirts, 30 days of Hyderabad heat.</p>
     </div>
   </section>
 

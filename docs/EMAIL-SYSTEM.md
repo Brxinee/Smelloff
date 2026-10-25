@@ -150,7 +150,7 @@ No `List-Unsubscribe`. No emoji. No “odor killer” / “kills odor” claims.
 | Type | Subject | Preheader |
 |---|---|---|
 | Prepaid confirm | `Order confirmed — #SMF-…` | `₹229 paid. Your ODORSTRIKE order #SMF-… is confirmed.` |
-| COD confirm | `COD order confirmed — #SMF-…` | `Pay ₹289 on delivery. Nothing charged yet. Order #SMF-….` |
+| COD confirm | `COD order confirmed — #SMF-…` | `Pay ₹318 on delivery. Nothing charged yet. Order #SMF-….` |
 | Failed payment | `Payment didn't go through — #SMF-…` | `Nothing was charged for order #SMF-…. You can try again.` |
 | Shipped | `Shipped — #SMF-… · AWB` | `{Courier} has your ODORSTRIKE. Tracking is live.` |
 | Out for delivery | `Out for delivery today — #SMF-…` | `Your ODORSTRIKE is out for delivery. Keep your phone close.` |
@@ -159,7 +159,7 @@ No `List-Unsubscribe`. No emoji. No “odor killer” / “kills odor” claims.
 | Cancelled | `Order cancelled — #SMF-…` | `Your ODORSTRIKE order #SMF-… was cancelled.` |
 | Refund | `Refund processed — #SMF-…` | `Your refund of ₹229 for order #SMF-… is on its way.` |
 
-Opening lines stay short: “Payment received. Your ODORSTRIKE is locked in.” / “Nothing has been charged — pay ₹289 in cash or UPI when it arrives.”
+Opening lines stay short: “Payment received. Your ODORSTRIKE is locked in.” / “Nothing has been charged — pay ₹318 in cash or UPI when it arrives.”
 
 ---
 

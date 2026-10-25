@@ -385,7 +385,9 @@ test('Step 3: Success ownership is deduplicated, idempotent, and single-source',
   // showSuccess in odorstrike.html owns side effects and has idempotency guard
   assert.ok(html.includes('_processedOrders'), 'showSuccess must use _processedOrders set for idempotency');
   assert.ok(html.includes("trackPurchase(amount, orderId, qty, method === 'cod' ? 'cod' : 'razorpay')"), 'showSuccess must trigger trackPurchase with qty and method');
-  assert.ok(html.includes("soAttachOrder(orderId, amount, qty, method === 'cod' ? 'cod' : 'razorpay')"), 'showSuccess must trigger soAttachOrder');
+  // Partner attribution rides track.js -> create-order (attribution.partner);
+  // the old partners.smelloff.in webhook had no DNS record (removed 2026-10-25).
+  assert.ok(!html.includes('soAttachOrder('), 'no order ping to the retired partner host');
   assert.ok(html.includes('setCartQty(0)'), 'showSuccess must clear cart');
 
   // Email confirmation is sent in showSuccess only for verified razorpay orders with idempotency guard
@@ -396,14 +398,12 @@ test('Step 3: Success ownership is deduplicated, idempotent, and single-source',
 test('Step 3: Idempotent success coordinator logic behaves correctly', () => {
   const processedOrders = new Set();
   let trackPurchaseCount = 0;
-  let soAttachCount = 0;
   let emailCount = 0;
 
   function mockShowSuccess(orderId, method, email) {
     if (!processedOrders.has(orderId)) {
       processedOrders.add(orderId);
       trackPurchaseCount++;
-      soAttachCount++;
       if (method === 'razorpay' && email) {
         emailCount++;
       }
@@ -413,19 +413,16 @@ test('Step 3: Idempotent success coordinator logic behaves correctly', () => {
   // First invocation
   mockShowSuccess('SMF-TEST-1', 'razorpay', 'user@example.com');
   assert.equal(trackPurchaseCount, 1);
-  assert.equal(soAttachCount, 1);
   assert.equal(emailCount, 1);
 
   // Duplicate invocation (e.g. webhook + frontend callback or retry)
   mockShowSuccess('SMF-TEST-1', 'razorpay', 'user@example.com');
   assert.equal(trackPurchaseCount, 1, 'trackPurchase must not be duplicated');
-  assert.equal(soAttachCount, 1, 'soAttachOrder must not be duplicated');
   assert.equal(emailCount, 1, 'email must not be duplicated');
 
   // Distinct second order
   mockShowSuccess('SMF-TEST-2', 'razorpay', 'user2@example.com');
   assert.equal(trackPurchaseCount, 2);
-  assert.equal(soAttachCount, 2);
   assert.equal(emailCount, 2);
 });
 
