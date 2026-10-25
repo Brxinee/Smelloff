@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebPage","@id":"https://smelloff.in/odorstrike#webpage","name":"Smelloff ODORSTRIKE — Clothing Deodorant Spray","url":"https://smelloff.in/odorstrike","description":"A pocket-sized clothing deodorant: a fabric odor mist that neutralizes trapped sweat and fabric odor in clothes. Not a perfume, not a body deodorant.","inLanguage":"en-IN","isPartOf":{"@id":"https://smelloff.in/#website"},"mainEntity":{"@id":"https://smelloff.in/#odorstrike"},"about":{"@type":"Thing","name":"Fabric Odor Elimination"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://smelloff.in/assets/pdp-01-hero.webp"},"speakable":{"@type":"SpeakableSpecification","cssSelector":["#pdTitle",".pd-highlights","#whyTitle","#whyLede"]}}
 </script>
-<!-- JSON-LD Product (single SKU — ₹229, no bundles) -->
+<!-- JSON-LD Product (one product; the Offer is one bottle at ₹229 — packs are priced in checkout) -->
 <!-- RATING IS GATED — no "aggregateRating" is emitted right now.
      The only testimonials so far are pre-launch beta quotes, and a SERP star
      rating not computed from real verified-purchase reviews is a Google
@@ -2634,8 +2634,8 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   // if the RTO cost of COD ever outweighs the completed orders it wins.
   let payMethod = 'prepaid';
   window.payMethod = payMethod;
-  // Quantity being checked out — sourced from the cart. Unit price stays ₹229
-  // (single SKU); the order pipeline multiplies by this.
+  // Quantity being checked out — sourced from the cart. Unit price stays ₹229;
+  // the total is priced as fives, pairs, then an odd bottle (subtotalFor).
   let cartQty = 1;
   function unitPrice() { return Number(VARIANTS[currentVariant].amount) || 0; }
 

@@ -45,6 +45,32 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Notion task pass (2026-10-25, owner: "check notion and fix … ask permission")
+The owner's Notion **Tasks** database (Brainee HQ → 01 Today & Tasks) holds the
+open work. Each fix was approved first; finished tasks are marked Done there
+with a note. Several Notion notes were stale: live `/api/health` reports
+`build.commit` = main (Cloudflare, not Vercel); `/shipping` and `/terms` already
+show the ₹89 COD charge and Razorpay; `/about` has no "10 seconds" claim; no
+page lists Zinc Ricinoleate as an ingredient (posts name it only as what we
+don't use). Repo migration files use 8-digit dates on purpose; the live
+history is timestamped by the tool that applies them.
+- **Blog comments ask for no email.** The form required one and posted it to
+  `waitlist` with no opt-in; the waitlist policy only accepts `footer` / `pdp`
+  / `popup`, so it also failed silently. Newsletter signup is the footer form.
+  `blog-comments.js?v=3` in every post.
+- **Refunds for packs:** a returned bottle is refunded at what was paid per
+  bottle in that order (product amount ÷ bottles: ₹229 / ₹209.50 / ₹179.80),
+  never ₹229 for a pack bottle. `/refund` "Refund amount" + "Partial refunds".
+- **Reviews are order-linked at the database level**
+  (`20261025_reviews_verified_only.sql`): SELECT policy `order_id is not null`,
+  browser roles get SELECT only.
+- `/about` says 2–3 sprays (was "Two sprays"); the PDP's "single SKU, no
+  bundles" schema comment is gone (the Product Offer stays one bottle at ₹229
+  on purpose, see "2 for ₹419").
+- Still open, owner's call: the dosage differs across pages (1–2, 2–3, 4–5
+  sprays, "2–3 each" on three zones); pick one from the label, then align.
+- `test/notion-audit-fixes.test.mjs` pins the above.
+
 ## Homepage hero back to the Aug 15 design (2026-10-21, owner: "bring back the aug 15 design … only top section")
 Only `index.html`'s `.hero` changed; every other section and page is as it was.
 Supersedes "Homepage hero v4" below for the look, not for what the hero says.
@@ -232,7 +258,9 @@ the repo is the public `anon` one. Fixed:
   depended on Supabase Auth, which the site doesn't use (0 users). Delete both
   in the Supabase dashboard; tests fail if they come back as real code.
 - `orders` policy `users_select_own_orders` dropped and anon/authenticated
-  grants revoked (`20261018_security_hardening.sql`).
+  grants revoked (`20261018_security_hardening.sql`). **It was not applied to
+  production until the 2026-10-25 pass below**: the file was committed but the
+  live migration list skipped it.
 - `/api/create-order` is throttled per IP (10 / 10 min): each COD order emails
   the owner and books a shipment. DB error text no longer reaches the browser.
 - Razorpay webhook dedups by event id only after the signature verifies.
