@@ -69,6 +69,17 @@ history is timestamped by the tool that applies them.
   on purpose, see "2 for ₹419").
 - Still open, owner's call: the dosage differs across pages (1–2, 2–3, 4–5
   sprays, "2–3 each" on three zones); pick one from the label, then align.
+- **Second pass (same day, owner approved each):** the homepage/PDP no longer
+  call the 30-day review "stain-tested across India" (it was one founder,
+  four shirts, Hyderabad); `/reviews` hides "No reviews yet" until the list
+  has loaded (crawlers saw it beside "every review is verified"); the FAQ
+  kids/pets answer says "let it dry fully before you wear it" instead of the
+  unsupported "fine for normal contact"; `docs/EMAIL-SYSTEM.md` says ₹318;
+  the partner pings (`soAttachOrder`, the `/api/click` beacon) are gone.
+- Search Console (export 2026-10-25): 91 pages indexed; nine sitemap posts
+  not yet indexed; every smelloff.in URL with impressions answers 200 or one
+  301. Most high-impression posts were retitled on 15 Oct, so judge CTR from
+  data after that date before retitling again.
 - `test/notion-audit-fixes.test.mjs` pins the above.
 
 ## Homepage hero back to the Aug 15 design (2026-10-21, owner: "bring back the aug 15 design … only top section")
@@ -377,9 +388,9 @@ delivery copy consistent. Fixed:
   `local('Liberation Sans')` added for Linux. Blog index H1 `max-width` is
   `10.4em`, not `16ch` (`ch` changes with the font).
 - **Dead footer link:** "Partners" → `partners.smelloff.in`, which has no DNS
-  record. Removed. The partner `?ref=` beacons in `index.html` /
-  `odorstrike.html` still post to that host and fail silently; referral
-  attribution is broken until the owner restores the subdomain.
+  record. Removed. The partner `?ref=` beacons to that host were removed on
+  2026-10-25 (owner); `?ref=` codes still reach the order via track.js
+  attribution (channel "Partner").
 - **Checkout quantity.** It was fixed once checkout opened. A stepper under the
   item line (`ckStepQty`) updates the cart, PDP stepper and every total; at one
   bottle an "Add a second · 2 for ₹419" button (never pre-applied).

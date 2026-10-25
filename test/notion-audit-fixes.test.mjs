@@ -44,3 +44,32 @@ test('database: reviews are readable only when tied to an order', () => {
   assert.match(sql, /using \(order_id is not null\)/);
   assert.match(sql, /revoke all on table public\.reviews from anon, authenticated/);
 });
+
+test('no page pings the retired partners.smelloff.in host', () => {
+  for (const f of ['index.html', 'odorstrike.html']) {
+    assert.ok(!read(f).includes('partners.smelloff.in'), f);
+  }
+  // ?ref= codes still reach the order through track.js attribution.
+  assert.match(read('assets/js/track.js'), /t\.partner = /);
+});
+
+test('the 30-day review is described as what it was', () => {
+  for (const f of ['index.html', 'odorstrike.html']) {
+    assert.ok(!read(f).includes('stain-tested across India'), f);
+  }
+  assert.match(read('blog/odorstrike-review-30-day-india-test.html'), /One person \(me\)\. Hyderabad/);
+});
+
+test('/reviews never ships "No reviews yet" as visible static text', () => {
+  assert.match(read('reviews.html'), /<div class="empty" id="empty" style="display:none">/);
+});
+
+test('FAQ makes no "fine for normal contact" safety claim', () => {
+  assert.ok(!read('faq.html').includes('fine for normal contact'));
+});
+
+test('email docs quote the current COD total', () => {
+  const doc = read('docs/EMAIL-SYSTEM.md');
+  assert.ok(!doc.includes('₹289'));
+  assert.ok(doc.includes(`₹${product.priceCod}`));
+});
