@@ -87,6 +87,17 @@ history is timestamped by the tool that applies them.
   into related cards, chat guides, llms, sitemap and feed; email-preview and
   audit-report scripts quote ₹89 / ₹318.
 - `test/notion-audit-fixes.test.mjs` pins the above.
+- **Fourth pass: the "Verified buyer" review wasn't a buyer.** The one
+  order-linked review (homepage `#reviews`, `/reviews`) was on
+  SMF-20260811-9912, a COD order cancelled 11 h after it was placed and never
+  delivered (that customer has no other order). Removed from the homepage;
+  `20261025_reviews_buyers_only.sql` makes the reviews SELECT policy use the
+  edge function's own rule (COD once delivered, prepaid once confirmed) via the
+  security-definer `review_order_bought()`; /admin labels such reviews hidden.
+  Hidden, not deleted: mark the order delivered and it shows again. **Not
+  applied to production** (apply_migration timed out on the approval prompt);
+  the owner runs it in the Supabase SQL editor. Homepage `#reviews` is beta
+  testers only until a real buyer reviews.
 
 ## Homepage hero back to the Aug 15 design (2026-10-21, owner: "bring back the aug 15 design … only top section")
 Only `index.html`'s `.hero` changed; every other section and page is as it was.
@@ -451,7 +462,8 @@ Write-up: `docs/audits/homepage-conversion-2026-10.md`. India homepage traffic i
 mostly phones (239 mobile / 141 desktop in 90 days); 32% of them open the PDP.
 - New sections: `#moments` (six smell situations), `#compare` (vs deodorant,
   clothes perfume spray, washing; the deodorant column hides <520px), the one
-  order-linked review first in `#reviews` ("Verified buyer"), and the `#buy`
+  order-linked review first in `#reviews` ("Verified buyer"; removed
+  2026-10-25, its order was cancelled), and the `#buy`
   box is a **pack picker** (1 bottle checked by default, or 2 for ₹419). Never
   pre-select the pair. The hero has one pair line under the button.
 - `/odorstrike?buy=1&qty=N` opens checkout on N bottles (1–10).
