@@ -1,0 +1,4 @@
+## 2024-05-24 - [Timing Attack in verifySession]
+**Vulnerability:** [The `verifySession` function in `api/admin.js` performs an early return when comparing MAC lengths (`mac.length !== expected.length`), enabling a timing attack.]
+**Learning:** [An early return in MAC length comparisons leaks information about whether the length is correct. When comparing buffers with `crypto.timingSafeEqual` in Node.js, we must ensure constant-time execution by performing a dummy comparison when lengths differ and using a boolean flag instead of returning early.]
+**Prevention:** [Always execute `crypto.timingSafeEqual(expected, expected)` when lengths don't match, and never return early; use a boolean flag (e.g., `let isValid = false`) to ensure the overall code block always takes an identical amount of time to execute regardless of the comparison's outcome.]
