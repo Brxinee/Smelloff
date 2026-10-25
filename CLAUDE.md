@@ -80,6 +80,12 @@ history is timestamped by the tool that applies them.
   not yet indexed; every smelloff.in URL with impressions answers 200 or one
   301. Most high-impression posts were retitled on 15 Oct, so judge CTR from
   data after that date before retitling again.
+- **Third pass (owner: "allow everything"):** the FAQ inhalation answer is an
+  instruction ("Don't breathe in the mist… let it dry fully before you wear
+  it"), not "safe to wear against skin"; the 30-day review's title is its H1
+  ("30 Days, 4 Shirts, Real Results", not "30-Day India Test"), re-stamped
+  into related cards, chat guides, llms, sitemap and feed; email-preview and
+  audit-report scripts quote ₹89 / ₹318.
 - `test/notion-audit-fixes.test.mjs` pins the above.
 
 ## Homepage hero back to the Aug 15 design (2026-10-21, owner: "bring back the aug 15 design … only top section")
