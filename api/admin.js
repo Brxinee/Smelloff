@@ -211,7 +211,7 @@ const actions = {
     return { message: rows?.[0] || null };
   },
   async reviews() {
-    return { reviews: await db('reviews?select=id,created_at,name,city,rating,body,anonymous,order_id&order=created_at.desc&limit=300') };
+    return { reviews: await db('reviews?select=id,created_at,name,city,rating,body,anonymous,order_id,order:orders(status,payment_method)&order=created_at.desc&limit=300') };
   },
   async syncSheets(body, req) {
     if (!checkRateLimit(`admin-sheets:${clientIp(req)}`, 10, 10 * 60 * 1000)) throw new HttpError(429, 'Synced recently. Wait a few minutes.');

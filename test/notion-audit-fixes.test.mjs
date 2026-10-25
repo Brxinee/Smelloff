@@ -92,3 +92,33 @@ test('internal scripts quote the current COD amounts', () => {
     assert.ok(!/₹289|₹60 COD|codFee: 60\b/.test(read(f)), f);
   }
 });
+
+test('database: a review shows only when its order was bought', () => {
+  const sql = read('supabase/migrations/20261025_reviews_buyers_only.sql');
+  assert.match(sql, /security definer/);
+  assert.match(sql, /then o\.status = 'delivered'/);
+  assert.match(sql, /using \(order_id is not null and public\.review_order_bought\(order_id\)\)/);
+  // Same rule as the edge function that accepts reviews.
+  const edge = read('supabase/functions/_shared/security.ts');
+  for (const s of ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered']) {
+    assert.ok(edge.includes(`"${s}"`) && sql.includes(`'${s}'`), s);
+  }
+});
+
+test('admin marks a review on an unbought order as hidden', () => {
+  assert.match(read('api/admin.js'), /order:orders\(status,payment_method\)/);
+  assert.match(read('admin/index.html'), /hidden on site`, 'tagged'\]/);
+});
+
+test('one delivery promise: emails and fallbacks carry the remote band', async () => {
+  const { DELIVERY_COPY } = await import('../shared/products-config-workers.js');
+  const ship = JSON.parse(read('config/product.json')).shipping;
+  assert.equal(DELIVERY_COPY, '3–5 business days to metros, 5–7 to tier 2/3 cities, 7–10 to remote areas');
+  assert.ok(ship.transitRemote.startsWith('7–10'));
+  assert.ok(read('shipping.html').includes('Remote / North-East India: 7–10 business days'));
+  const emails = read('api/_email-templates.js');
+  assert.ok(!emails.includes('5–7 elsewhere'));
+  assert.match(emails, /kvRow\('Expected', ETA_COPY\)/);
+  for (const f of ['odorstrike.html', 'index.html']) assert.ok(!read(f).includes('5–7 elsewhere'), f);
+  assert.ok(read('odorstrike.html').includes("'3–5 business days to metros, 5–7 to tier 2/3 cities, 7–10 to remote areas'"));
+});

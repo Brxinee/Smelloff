@@ -735,7 +735,7 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
     } else if (tier === 'tier23') {
       text = 'Estimated arrival: ' + fmt(lo) + ' – ' + fmt(hi) + ' (5–7 business days outside metros)';
     } else {
-      text = 'Estimated arrival: ' + fmt(lo) + ' – ' + fmt(hi) + ' (metro, 3–5 business days) · 5–7 outside metros';
+      text = 'Estimated arrival: ' + fmt(lo) + ' – ' + fmt(hi) + ' (metro, 3–5 business days) · 5–10 outside metros';
     }
 
     return {
@@ -770,43 +770,43 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
   const monEst = calculateDeliveryEstimate(new Date('2026-09-07T12:00:00Z'));
   assert.equal(monEst.loDay, 'Thu');
   assert.equal(monEst.hiDay, 'Mon');
-  assert.equal(monEst.text, 'Estimated arrival: Thu 10 Sep – Mon 14 Sep (metro, 3–5 business days) · 5–7 outside metros');
+  assert.equal(monEst.text, 'Estimated arrival: Thu 10 Sep – Mon 14 Sep (metro, 3–5 business days) · 5–10 outside metros');
 
   // 2. Tuesday confirmation (2026-09-08) -> Fri 11 Sep – Tue 15 Sep
   const tueEst = calculateDeliveryEstimate(new Date('2026-09-08T12:00:00Z'));
   assert.equal(tueEst.loDay, 'Fri');
   assert.equal(tueEst.hiDay, 'Tue');
-  assert.equal(tueEst.text, 'Estimated arrival: Fri 11 Sep – Tue 15 Sep (metro, 3–5 business days) · 5–7 outside metros');
+  assert.equal(tueEst.text, 'Estimated arrival: Fri 11 Sep – Tue 15 Sep (metro, 3–5 business days) · 5–10 outside metros');
 
   // 3. Wednesday confirmation (2026-09-09) -> Mon 14 Sep – Wed 16 Sep
   const wedEst = calculateDeliveryEstimate(new Date('2026-09-09T12:00:00Z'));
   assert.equal(wedEst.loDay, 'Mon');
   assert.equal(wedEst.hiDay, 'Wed');
-  assert.equal(wedEst.text, 'Estimated arrival: Mon 14 Sep – Wed 16 Sep (metro, 3–5 business days) · 5–7 outside metros');
+  assert.equal(wedEst.text, 'Estimated arrival: Mon 14 Sep – Wed 16 Sep (metro, 3–5 business days) · 5–10 outside metros');
 
   // 4. Thursday confirmation (2026-09-10) -> Tue 15 Sep – Thu 17 Sep
   const thuEst = calculateDeliveryEstimate(new Date('2026-09-10T12:00:00Z'));
   assert.equal(thuEst.loDay, 'Tue');
   assert.equal(thuEst.hiDay, 'Thu');
-  assert.equal(thuEst.text, 'Estimated arrival: Tue 15 Sep – Thu 17 Sep (metro, 3–5 business days) · 5–7 outside metros');
+  assert.equal(thuEst.text, 'Estimated arrival: Tue 15 Sep – Thu 17 Sep (metro, 3–5 business days) · 5–10 outside metros');
 
   // 5. Friday confirmation (2026-09-11) -> Wed 16 Sep – Fri 18 Sep
   const friEst = calculateDeliveryEstimate(new Date('2026-09-11T12:00:00Z'));
   assert.equal(friEst.loDay, 'Wed');
   assert.equal(friEst.hiDay, 'Fri');
-  assert.equal(friEst.text, 'Estimated arrival: Wed 16 Sep – Fri 18 Sep (metro, 3–5 business days) · 5–7 outside metros');
+  assert.equal(friEst.text, 'Estimated arrival: Wed 16 Sep – Fri 18 Sep (metro, 3–5 business days) · 5–10 outside metros');
 
   // 6. Saturday confirmation (2026-09-12) -> Wed 16 Sep – Fri 18 Sep
   const satEst = calculateDeliveryEstimate(new Date('2026-09-12T12:00:00Z'));
   assert.equal(satEst.loDay, 'Wed');
   assert.equal(satEst.hiDay, 'Fri');
-  assert.equal(satEst.text, 'Estimated arrival: Wed 16 Sep – Fri 18 Sep (metro, 3–5 business days) · 5–7 outside metros');
+  assert.equal(satEst.text, 'Estimated arrival: Wed 16 Sep – Fri 18 Sep (metro, 3–5 business days) · 5–10 outside metros');
 
   // 7. Sunday confirmation (2026-09-13) -> Thu 17 Sep – Mon 21 Sep
   const sunEst = calculateDeliveryEstimate(new Date('2026-09-13T12:00:00Z'));
   assert.equal(sunEst.loDay, 'Thu');
   assert.equal(sunEst.hiDay, 'Mon');
-  assert.equal(sunEst.text, 'Estimated arrival: Thu 17 Sep – Mon 21 Sep (metro, 3–5 business days) · 5–7 outside metros');
+  assert.equal(sunEst.text, 'Estimated arrival: Thu 17 Sep – Mon 21 Sep (metro, 3–5 business days) · 5–10 outside metros');
 
   // 8. Month rollover test: February 26 (Thursday) -> March
   const monthRollEst = calculateDeliveryEstimate(new Date('2026-02-26T12:00:00Z'));
@@ -857,7 +857,7 @@ test('Deterministic Delivery Date Estimate calculation and Sunday exclusion matr
   assert.equal(unknownEst.tier, 'unknown', 'Without authoritative tiering, tier must be unknown');
   assert.notEqual(unknownEst.text, 'Estimated arrival: Thu 10 Sep – Mon 14 Sep', 'UI estimate must NOT silently output unqualified metro 3–5 day window');
   assert.ok(unknownEst.text.includes('(metro, 3–5 business days)'), 'Estimate must explicitly qualify metro baseline');
-  assert.ok(unknownEst.text.includes('5–7 outside metros'), 'Estimate must disclose 5–7 day SLA for other destinations');
+  assert.ok(unknownEst.text.includes('5–10 outside metros'), 'Estimate must disclose the tier 2/3 and remote bands (5–7, 7–10) for other destinations');
 
   // Explicit tier testing when tier is authoritatively known:
   const metroEst = calculateDeliveryEstimate(new Date('2026-09-07T12:00:00Z'), { tier: 'metro' });
