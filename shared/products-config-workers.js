@@ -8,6 +8,11 @@ const { product: P, brand: B, shipping: S, formula: F } = rawConfig;
 // approved claims, order states, and server calculation logic.
 // Customer-facing facts live in /config/product.json (and shared/product-truth.js).
 
+// One delivery promise for emails and fallbacks, built from the /shipping
+// bands: "3–5 business days to metros, 5–7 to tier 2/3 cities, 7–10 to remote areas".
+const band = (s) => String(s).replace(/\s*business days$/, '');
+export const DELIVERY_COPY = `${S.transitMetros} to metros, ${band(S.transitTier23)} to tier 2/3 cities, ${band(S.transitRemote)} to remote areas`;
+
 export const BASE_PRODUCT = {
   id: 'odorstrike-50ml',
   sku: P.sku,

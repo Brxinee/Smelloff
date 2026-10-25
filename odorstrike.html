@@ -1921,7 +1921,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         <ul class="pd-assure" aria-label="Delivery and returns">
           <li><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><span><b>Free shipping</b>Prepaid, pan-India</span></li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-cash"/></svg><span><b>Cash on Delivery</b>Pay when it arrives</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-package"/></svg><span><b>3–5 days</b>Metros · 5–7 elsewhere</span></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-package"/></svg><span><b>3–5 days</b>Metros · 5–10 elsewhere</span></li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span><b>7-day returns</b>If it isn't for you</span></li>
         </ul>
 
@@ -2192,7 +2192,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </details>
     <details>
       <summary><h3>How long does shipping take?</h3></summary>
-      <p class="faq-answer">Orders dispatch from Hyderabad within 48 hours of confirmation. Delivery takes 3–5 business days for major metros and 5–7 business days for tier 2 and tier 3 cities. Prepaid orders ship free nationwide.</p>
+      <p class="faq-answer">Orders dispatch from Hyderabad within 48 hours of confirmation. Delivery takes 3–5 business days for major metros, 5–7 business days for tier 2 and tier 3 cities and 7–10 for remote areas. Prepaid orders ship free nationwide.</p>
     </details>
     <details>
       <summary><h3>What is the return policy?</h3></summary>
@@ -3413,7 +3413,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       var D = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       var f = function (d) { return D[d.getDay()] + ' ' + d.getDate() + ' ' + M[d.getMonth()]; };
       var est = typeof window.calculateDeliveryEstimate === 'function' ? window.calculateDeliveryEstimate() : null;
-      eta.textContent = est ? f(est.loDate) + ' – ' + f(est.hiDate) : '3–5 business days to metros, 5–7 elsewhere';
+      eta.textContent = est ? f(est.loDate) + ' – ' + f(est.hiDate) : '3–5 business days to metros, 5–7 to tier 2/3 cities, 7–10 to remote areas';
       var small = document.createElement('span');
       small.style.cssText = 'display:block;color:var(--muted);font-size:13px;margin-top:2px';
       small.textContent = 'Ships from Hyderabad within 48 hours';
@@ -3693,7 +3693,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       } else if (tier === 'tier23') {
         text = 'Estimated arrival: ' + fmt(lo) + ' – ' + fmt(hi) + ' (5–7 business days outside metros)';
       } else {
-        text = 'Estimated arrival: ' + fmt(lo) + ' – ' + fmt(hi) + ' (metro, 3–5 business days) · 5–7 outside metros';
+        text = 'Estimated arrival: ' + fmt(lo) + ' – ' + fmt(hi) + ' (metro, 3–5 business days) · 5–10 outside metros';
       }
 
       return {

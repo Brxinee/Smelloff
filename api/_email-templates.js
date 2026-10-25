@@ -1,4 +1,4 @@
-import { BASE_PRODUCT } from '../shared/products-config-workers.js';
+import { BASE_PRODUCT, DELIVERY_COPY } from '../shared/products-config-workers.js';
 
 // Email design system (2026-10-11): the site's palette on a light receipt.
 // Light canvas because Gmail's apps invert colours and ignore
@@ -35,7 +35,7 @@ const PRODUCT_NAME = 'ODORSTRIKE 50ml';
 const PRODUCT_IMAGE = `${SITE_URL}/assets/email/odorstrike-bottle-thumb.png`;
 const LOGO = `${SITE_URL}/assets/email/logo-on-ink.png`;
 const SHIPPING_LABEL = 'Free';
-const ETA_COPY = '3–5 business days to metros, 5–7 elsewhere';
+const ETA_COPY = DELIVERY_COPY;
 
 export const trackUrl = (orderId = '') =>
   `${SITE_URL}/track-order?code=${encodeURIComponent(String(orderId).replace(/[\r\n]+/g, '').trim())}`;
@@ -460,7 +460,7 @@ export function orderShipped({
     ${panel(summaryTable(`
       ${kvRow('Courier', escape(courier || 'Assigned'))}
       ${kvRow('Tracking number', `<span style="font-weight:600;letter-spacing:0.4px;">${escape(trackingId || 'Updating shortly')}</span>`)}
-      ${kvRow('Expected', '3–5 business days to metros, 5–7 elsewhere')}
+      ${kvRow('Expected', ETA_COPY)}
     `))}
     ${muted('Delivery time depends on your city. You will get another email when it is out for delivery.')}
   `;
