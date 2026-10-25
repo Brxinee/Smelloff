@@ -237,7 +237,7 @@ test('odorstrike.html ?buy=1&qty=N opens checkout on N bottles', () => {
   assert.match(pdp, /if \(_n >= 1 && _n <= _max\) \{ pdpQty = _n; renderPdpQty\(\); \}\s*buyNow\(/);
 });
 
-test('index.html homepage: moments, an honest comparison and the verified buyer', () => {
+test('index.html homepage: moments, an honest comparison, no unverified buyer', () => {
   const html = readFileSync('index.html', 'utf8');
   const sec = (id) => html.slice(html.indexOf(`id="${id}"`), html.indexOf('</section>', html.indexOf(`id="${id}"`)));
   assert.equal((sec('moments').match(/class="mo reveal"/g) || []).length, 6);
@@ -246,8 +246,11 @@ test('index.html homepage: moments, an honest comparison and the verified buyer'
   assert.ok(cmp.includes('No, wash for that'), 'the table admits ODORSTRIKE does not remove dirt or stains');
   assert.ok(cmp.includes('15–30 sec') && cmp.includes('dries clear') === false && cmp.includes('Dries clear with no stiff residue'));
   const rv = sec('reviews');
-  assert.equal((rv.match(/Verified buyer/g) || []).length, 1, 'only the one review tied to an order is labelled verified');
-  assert.ok(rv.includes('tbh this product is amazing'), 'verified review is quoted as written');
+  // The only order-linked review was on a cancelled, never-delivered order
+  // (SMF-20260811-9912). Label a review "Verified buyer" only when its order
+  // was delivered (COD) or paid (prepaid).
+  assert.equal((rv.match(/Verified buyer/g) || []).length, 0, 'no review here has a bought order behind it');
+  assert.ok(!rv.includes('tbh this product is amazing'), 'the cancelled-order review is not shown');
 });
 
 test('index.html homepage claims discipline and formula secrecy', () => {

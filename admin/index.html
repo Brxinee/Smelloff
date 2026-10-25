@@ -325,9 +325,14 @@ async function messages() {
 }
 
 /* ── reviews ── */
-// The site shows and rates only reviews tied to an order (verified buyers).
+// The site shows and rates only reviews whose order was bought: COD once
+// delivered, prepaid once confirmed (the reviews_select_verified policy).
+const PREPAID_BOUGHT = ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered'];
 function reviewSource(r) {
-  return r.order_id ? ['Verified buyer · shown', 'counts'] : ['No order · hidden on site', 'tagged'];
+  if (!r.order_id) return ['No order · hidden on site', 'tagged'];
+  const o = r.order || {};
+  const bought = String(o.payment_method || '').toLowerCase() === 'cod' ? o.status === 'delivered' : PREPAID_BOUGHT.includes(o.status);
+  return bought ? ['Verified buyer · shown', 'counts'] : [`Order ${o.status || 'unknown'} · hidden on site`, 'tagged'];
 }
 
 async function reviews() {
@@ -339,7 +344,7 @@ async function reviews() {
     $('#list').innerHTML = `
       <div class="grid">
         <div class="card kpi"><div class="label">Star rating</div><div class="value">${avg}</div><div class="sub">from ${n(counted.length, 'verified buyer review')}</div></div>
-        <div class="card kpi"><div class="label">All reviews</div><div class="value">${list.length}</div><div class="sub">${list.length - counted.length} hidden (no order)</div></div>
+        <div class="card kpi"><div class="label">All reviews</div><div class="value">${list.length}</div><div class="sub">${list.length - counted.length} hidden (no bought order)</div></div>
       </div>
       <div class="card">${list.length ? list.map((r) => { const [label, cls] = reviewSource(r); return `
         <div style="border-bottom:1px solid var(--line);padding:10px 0">

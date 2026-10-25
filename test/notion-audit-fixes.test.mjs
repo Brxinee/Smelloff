@@ -92,3 +92,20 @@ test('internal scripts quote the current COD amounts', () => {
     assert.ok(!/₹289|₹60 COD|codFee: 60\b/.test(read(f)), f);
   }
 });
+
+test('database: a review shows only when its order was bought', () => {
+  const sql = read('supabase/migrations/20261025_reviews_buyers_only.sql');
+  assert.match(sql, /security definer/);
+  assert.match(sql, /then o\.status = 'delivered'/);
+  assert.match(sql, /using \(order_id is not null and public\.review_order_bought\(order_id\)\)/);
+  // Same rule as the edge function that accepts reviews.
+  const edge = read('supabase/functions/_shared/security.ts');
+  for (const s of ['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered']) {
+    assert.ok(edge.includes(`"${s}"`) && sql.includes(`'${s}'`), s);
+  }
+});
+
+test('admin marks a review on an unbought order as hidden', () => {
+  assert.match(read('api/admin.js'), /order:orders\(status,payment_method\)/);
+  assert.match(read('admin/index.html'), /hidden on site`, 'tagged'\]/);
+});
