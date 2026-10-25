@@ -13,14 +13,17 @@
  * Why direct REST (not the supabase-js CDN client): the site's Content-Security
  * -Policy `script-src` does not allow cdn.jsdelivr.net, so the CDN client would
  * be blocked at load time. `connect-src` DOES allow the Supabase origin, so we
- * call the auto-generated REST + waitlist endpoints directly — the same pattern
- * the existing reviews/waitlist features already use. The anon key is safe to
+ * call the auto-generated REST endpoint directly — the same pattern the
+ * existing reviews/waitlist features already use. The anon key is safe to
  * ship in client code: Row Level Security protects the table.
  *
  * Submission flow:
  *   name + comment  -> public `blog_comments` table (rendered on the post)
- *   email           -> `waitlist` table (NOT stored in comments); the server
- *                      copies it into the owner's Google Sheet
+ *
+ * No email is asked for. The form used to require one and post it to the
+ * `waitlist` table with no opt-in (and the waitlist policy rejected the
+ * 'blog-comment' source, so it failed silently anyway). Newsletter signup is
+ * the footer form, where people choose it.
  * ============================================================================= */
 (function () {
   'use strict';
@@ -35,7 +38,6 @@
 
   var NAME_MAX = 60, BODY_MAX = 2000, COOLDOWN_MS = 30000, TOP_N = 3;
   var COOLDOWN_KEY = 'os_comment_last';
-  var EMAIL_RE = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
 
   // post_slug: explicit attribute wins; fall back to the URL filename.
   var slug = (mount.getAttribute('data-post-slug') || '').trim();
@@ -145,15 +147,11 @@
       '<div class="bc-modal-card" role="dialog" aria-modal="true" aria-labelledby="bc-modal-title">' +
         '<button type="button" class="bc-x" id="bc-close" aria-label="Close">&times;</button>' +
         '<h3 class="bc-modal-title" id="bc-modal-title">Add a comment</h3>' +
-        '<p class="bc-modal-sub">Your email is private — only your name shows on the post.</p>' +
+        '<p class="bc-modal-sub">Your name and comment show on the post.</p>' +
         '<form id="bc-form" novalidate>' +
           '<div class="bc-field">' +
             '<label class="bc-label" for="bc-name">Name</label>' +
             '<input class="bc-input" id="bc-name" name="name" type="text" maxlength="' + NAME_MAX + '" autocomplete="name" required>' +
-          '</div>' +
-          '<div class="bc-field">' +
-            '<label class="bc-label" for="bc-email">Email</label>' +
-            '<input class="bc-input" id="bc-email" name="email" type="email" maxlength="120" autocomplete="email" inputmode="email" required>' +
           '</div>' +
           '<div class="bc-field">' +
             '<label class="bc-label" for="bc-body">Comment</label>' +
@@ -177,7 +175,6 @@
   var closeBtn = document.getElementById('bc-close');
   var form = document.getElementById('bc-form');
   var nameEl = document.getElementById('bc-name');
-  var emailEl = document.getElementById('bc-email');
   var bodyEl = document.getElementById('bc-body');
   var hpEl = document.getElementById('bc-website');
   var submitEl = document.getElementById('bc-submit');
@@ -289,25 +286,6 @@
       });
   }
 
-  // --- Capture email into the waitlist table ---------------------------------
-  // Fire-and-forget; failures here (e.g. duplicate email) must never block the
-  // comment itself.
-  function captureEmail(email) {
-    try {
-      fetch(SUPABASE_URL + '/rest/v1/waitlist', {
-        method: 'POST',
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: 'Bearer ' + SUPABASE_KEY,
-          'Content-Type': 'application/json',
-          Prefer: 'return=minimal,resolution=ignore-duplicates'
-        },
-        body: JSON.stringify({ email: email, source: 'blog-comment' }),
-        keepalive: true
-      }).catch(function () {});
-    } catch (e) { /* ignore */ }
-  }
-
   // --- Submit ----------------------------------------------------------------
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -323,14 +301,10 @@
     }
 
     var name = nameEl.value.trim();
-    var email = emailEl.value.trim();
     var body = bodyEl.value.trim();
 
     if (!name || name.length > NAME_MAX) {
       showMsg('Please enter your name (1–' + NAME_MAX + ' characters).', 'err'); nameEl.focus(); return;
-    }
-    if (!email || !EMAIL_RE.test(email) || email.length > 120) {
-      showMsg('Please enter a valid email address.', 'err'); emailEl.focus(); return;
     }
     if (!body || body.length > BODY_MAX) {
       showMsg('Please enter a comment (1–' + BODY_MAX + ' characters).', 'err'); bodyEl.focus(); return;
@@ -347,9 +321,6 @@
     submitEl.disabled = true;
     var originalLabel = submitEl.textContent;
     submitEl.textContent = 'Posting…';
-
-    // Email -> waitlist / sheet (private, not stored in comments).
-    captureEmail(email);
 
     // Name + comment -> public blog_comments.
     fetch(SUPABASE_URL + '/rest/v1/blog_comments', {
