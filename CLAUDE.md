@@ -99,6 +99,25 @@ history is timestamped by the tool that applies them.
   the owner runs it in the Supabase SQL editor. Homepage `#reviews` is beta
   testers only until a real buyer reviews.
 
+## COD shipping by pincode replaces the ₹89 handling fee (2026-10-26, owner: "no cod handling fee just the shipping charges as per the pincode … add max of it")
+Prepaid ships free. COD orders pay a shipping charge by delivery pincode, set at
+the top of Shiprocket's usual 0.5 kg ranges: **Telangana (50xxxx) ₹60, remote
+(North-East 78/79/737, J&K and Ladakh 18/19, Andaman 744, Lakshadweep 68255)
+₹130, rest of India ₹90**. `codFee` (90) is the rest-of-India default;
+`priceCod` 319. Supersedes every ₹89 / ₹318 note below.
+- One table: `config/product.json` → `product.codShipping.zones`; copied as
+  `CFG.COD_ZONES` in `odorstrike.html` (a test compares them). Server:
+  `codFeeForPincode()` in `shared/products-config-workers.js`; `create-order`
+  prices COD from `body.address.pincode` and rejects any other total.
+  Client: `codFeeNow()` (odorstrike.html) and `codFeeRupees()` (chrome.js)
+  read `#f_pin` and re-price on input. Before a pincode is typed the COD
+  option reads "+₹60–130 shipping by pincode".
+- `orders.cod_fee` holds the charge per order, so Shiprocket
+  (`transaction_charges`), Sheets ("COD fee (₹)" column, header unchanged),
+  /admin and emails ("COD shipping") show what that order paid.
+- Outside checkout the site still says only "Cash on Delivery available";
+  `/shipping`, `/refund`, `/faq`, `/terms`, `/privacy` state the three zones.
+
 ## Sales pass: payment recovery + blog citation pass (2026-10-26, owner: "I need sells … rank … traffic")
 Live data (30 days): ~200 visitors/week, ~60 in India, ~30 on `/odorstrike`;
 139 product viewers → 7 checkouts → 4 purchases; 277 blog visitors but only 45

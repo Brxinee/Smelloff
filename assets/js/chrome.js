@@ -265,11 +265,24 @@
     return Math.floor(q / 5) * five + Math.floor(r / 2) * pair + (r % 2) * unit;
   }
 
+  // COD pays a shipping charge by delivery pincode (prepaid ships free); the
+  // server prices it the same way (codFeeForPincode) and rejects a mismatch.
   function codFeeRupees() {
-    var n = Number(window.SMELLOFF_CONFIG && window.SMELLOFF_CONFIG.COD_FEE);
+    var C = window.SMELLOFF_CONFIG || {};
+    var T = window.SMELLOFF_PRODUCT_TRUTH || {};
+    var zones = C.COD_ZONES || (T.codShipping && T.codShipping.zones) || [];
+    var pinEl = document.getElementById('f_pin');
+    var pin = String(pinEl ? pinEl.value : '').replace(/\D/g, '').slice(-6);
+    if (pin.length === 6) {
+      for (var i = 0; i < zones.length; i++) {
+        var pre = zones[i].prefixes || [];
+        for (var j = 0; j < pre.length; j++) if (pin.indexOf(pre[j]) === 0) return Number(zones[i].fee);
+      }
+    }
+    var n = Number(C.COD_FEE);
     if (Number.isFinite(n) && n >= 0) return n;
-    n = Number(window.SMELLOFF_PRODUCT_TRUTH && window.SMELLOFF_PRODUCT_TRUTH.codFee);
-    return Number.isFinite(n) && n >= 0 ? n : 89;
+    n = Number(T.codFee);
+    return Number.isFinite(n) && n >= 0 ? n : 90;
   }
 
   function currentPaymentMethod() {
@@ -429,6 +442,13 @@
   function installCheckoutOverrides() {
     ensurePaymentUi();
     renderPaymentUi();
+    // COD shipping depends on the pincode: re-price as it is typed.
+    var pinInput = document.getElementById('f_pin');
+    if (pinInput && !pinInput.dataset.codBound) {
+      pinInput.dataset.codBound = '1';
+      pinInput.addEventListener('input', function () { renderPaymentUi(); });
+      pinInput.addEventListener('change', function () { renderPaymentUi(); });
+    }
 
     checkoutButton.onclick = function () {
       if (typeof window.submitOrder === 'function') return window.submitOrder();

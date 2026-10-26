@@ -21,10 +21,16 @@ test('checkout exposes optional COD without replacing the working Razorpay path'
   assert.doesNotMatch(chrome, /\[50, 150, 300, 750, 1500\]\.forEach/);
 });
 
-test('product pricing keeps prepaid at ₹229 and COD fee at ₹89', () => {
-  assert.equal(product.product.price, 229);
-  assert.equal(product.product.codFee, 89);
-  assert.equal(product.product.priceCod, 318);
+// Owner's call (2026-10-26): no COD handling fee; COD orders pay shipping by
+// delivery pincode (Telangana ₹60, rest of India ₹90, remote ₹130). Prepaid
+// ships free.
+test('product pricing keeps prepaid at ₹229 and COD shipping at ₹60 / ₹90 / ₹130 by pincode', () => {
+  const p = product.product;
+  assert.equal(p.price, 229);
+  assert.equal(p.codFee, 90);
+  assert.equal(p.priceCod, 319);
+  const fees = Object.fromEntries(p.codShipping.zones.map((z) => [z.name.split(' ')[0], z.fee]));
+  assert.deepEqual(fees, { Telangana: 60, Remote: 130 });
 });
 
 test('no stale price or COD figure survives anywhere a customer or crawler can read', () => {
@@ -32,12 +38,15 @@ test('no stale price or COD figure survives anywhere a customer or crawler can r
   // Every hard-coded copy of the numbers matches config/product.json.
   assert.match(checkout, new RegExp('PRICES: \\{ solo: ' + price + ', pair: ' + product.product.pairPrice + ', five: ' + product.product.fivePackPrice + ' \\}'));
   assert.match(checkout, new RegExp('COD_FEE: ' + codFee + ','));
+  // The page's zone table is the config's.
+  const zones = product.product.codShipping.zones.map((z) => ({ fee: z.fee, prefixes: z.prefixes }));
+  assert.ok(checkout.includes('COD_ZONES: ' + JSON.stringify(zones) + ','), 'CFG.COD_ZONES matches config codShipping');
   assert.match(chrome, new RegExp('\\|\\| ' + price + ';'));
   assert.match(chrome, new RegExp('n : ' + codFee + ';'));
-  // Retired prices (₹299 / 40% off, ₹60 fee → ₹289 / ₹359) are not even in
-  // comments: answer engines read the raw HTML and quote them as live.
-  for (const stale of ['₹299', '₹289', '₹359', '₹60', '40% off']) {
-    assert.ok(!checkout.includes(stale), `odorstrike.html still says ${stale}`);
+  // Retired prices (₹299 / 40% off, the ₹89 handling fee → ₹318) are not even
+  // in comments: answer engines read the raw HTML and quote them as live.
+  for (const stale of [/₹299(?!\d)/, /₹89(?!\d)/, /₹318(?!\d)/, /handling charge/, /40% off/]) {
+    assert.ok(!stale.test(checkout), `odorstrike.html still says ${stale}`);
   }
   assert.ok(checkout.includes('₹' + priceCod));
 });
@@ -45,14 +54,13 @@ test('no stale price or COD figure survives anywhere a customer or crawler can r
 test('the summary shows the COD row whenever its Total includes the fee', () => {
   const fn = checkout.match(/function renderCheckoutPrices\(\) \{[\s\S]*?\n  \}/)[0];
   assert.match(fn, /feeRow\.style\.display = t\.codFee \? 'flex' : 'none'/);
-  assert.match(fn, /set\('codFeeAmount', '₹' \+ COD_FEE\)/);
+  assert.match(fn, /set\('codFeeAmount', '₹' \+ codFeeNow\(\)\)/);
 });
 
 test('Order API has an explicit COD branch and preserves prepaid Razorpay', () => {
-  assert.match(api, /const COD_FEE_RUPEES = Number\(BASE_PRODUCT\.codFee\);/);
   assert.match(api, /const COD_PAYMENT_METHOD = 'cod';/);
   assert.match(api, /const COD_INITIAL_STATUS = 'placed';/);
-  assert.match(api, /const codFeePaise = isCod \? Math\.round\(COD_FEE_RUPEES \* 100\) : 0;/);
+  assert.match(api, /const codFeePaise = isCod \? Math\.round\(codFeeForPincode\(feePincode\) \* 100\) : 0;/);
   assert.match(api, /const totalPaise = subtotalPaise \+ codFeePaise;/);
   assert.match(api, /payment_method: COD_PAYMENT_METHOD/);
   assert.match(api, /status: COD_INITIAL_STATUS/);
@@ -73,9 +81,10 @@ test('COD never requires Razorpay credentials before creating the local order', 
   assert.ok(codBranchIndex > credentialGuardIndex);
 });
 
-test('COD fee is one order-level charge, not a per-bottle charge', () => {
-  assert.match(api, /const codFeePaise = isCod \? Math\.round\(COD_FEE_RUPEES \* 100\) : 0;/);
-  assert.doesNotMatch(api, /COD_FEE_RUPEES \* quantity/);
+test('COD shipping is one order-level charge by delivery pincode, not per bottle', () => {
+  assert.match(api, /const feePincode = String\(\(body\.address && body\.address\.pincode\) \|\| ''\)/);
+  assert.match(api, /const codFeePaise = isCod \? Math\.round\(codFeeForPincode\(feePincode\) \* 100\) : 0;/);
+  assert.doesNotMatch(api, /codFeeForPincode\([^)]*\) \* quantity/);
 });
 
 // Owner's call (2026-10-11): outside checkout the site says COD is available
@@ -84,6 +93,7 @@ test('COD fee is one order-level charge, not a per-bottle charge', () => {
 test('COD amount appears only in checkout and on /shipping, /refund, /faq', () => {
   const { codFee, priceCod } = product.product;
   const amount = new RegExp(`(₹|&#8377;)\\s*(${codFee}|${priceCod})\\b`);
+  const zoneLine = '₹60 in Telangana, ₹90 across the rest of India and ₹130 to remote areas';
   // Policies, plus the post-purchase pages that show what an order was charged.
   const policy = new Set(['shipping.html', 'refund.html', 'faq.html', 'terms.html', 'privacy.html', 'track-order.html', 'payment-failed.html']);
   const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html'))
@@ -101,9 +111,9 @@ test('COD amount appears only in checkout and on /shipping, /refund, /faq', () =
   }
   for (const f of ['shipping.html', 'refund.html', 'faq.html']) {
     const html = fs.readFileSync(f, 'utf8');
-    assert.ok(html.includes(`₹${codFee}`) && html.includes(`₹${priceCod}`), `${f} must state the ₹${codFee} COD charge and ₹${priceCod} total`);
+    assert.ok(html.includes(zoneLine) && html.includes(`₹${priceCod}`), `${f} must state the COD shipping by pincode and the ₹${priceCod} total`);
   }
   const pdp = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.match(pdp, new RegExp(`data-method="cod"[\\s\\S]{0,300}\\+₹${codFee} handling[\\s\\S]{0,120}class="pay-opt-price">₹${priceCod}<`),
+  assert.match(pdp, new RegExp(`data-method="cod"[\\s\\S]{0,300}\\+₹60–130 shipping by pincode[\\s\\S]{0,120}class="pay-opt-price">₹${priceCod}<`),
     'the COD option in checkout must state the charge and its own total before the order is placed');
 });

@@ -66,10 +66,20 @@
     "discountPercent": 54,
     "currency": "INR",
     "currencySymbol": "₹",
-    "codFee": 89,
-    "codFeePaise": 8900,
-    "priceCod": 318,
-    "priceCodPaise": 31800,
+    "codFee": 90,
+    "codFeePaise": 9000,
+    "priceCod": 319,
+    "priceCodPaise": 31900,
+    "codShipping": {
+      "note": "COD orders pay a shipping charge by delivery pincode; prepaid ships free. codFee above is the rest-of-India charge. First matching prefix wins (longest listed first).",
+      "label": "COD shipping",
+      "min": 60,
+      "max": 130,
+      "zones": [
+        { "name": "Telangana", "fee": 60, "prefixes": ["50"] },
+        { "name": "Remote (North-East, J&K, Ladakh, Andaman & Nicobar, Lakshadweep)", "fee": 130, "prefixes": ["68255", "744", "737", "78", "79", "18", "19"] }
+      ]
+    },
     "pairPrice": 419,
     "pairPricePaise": 41900,
     "pairSaving": 39,
@@ -103,9 +113,9 @@
       "description": "Free shipping pan-India on prepaid UPI / card / netbanking orders"
     },
     "cod": {
-      "fee": 89,
+      "fee": 90,
       "currency": "INR",
-      "description": "₹89 handling charge on Cash on Delivery orders (collectable total ₹318 for one bottle)"
+      "description": "Cash on Delivery orders pay shipping by delivery pincode: ₹60 in Telangana, ₹90 across the rest of India and ₹130 to remote areas (North-East, J&K, Ladakh, Andaman & Nicobar, Lakshadweep). Prepaid orders ship free."
     },
     "destinationCountry": "IN",
     "dispatchWindow": "Within 48 hours of confirmation",

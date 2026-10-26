@@ -28,6 +28,7 @@ export const BASE_PRODUCT = {
   currency: P.currency,
   shippingCost: S.prepaid.rate,
   codFee: P.codFee,
+  codShipping: P.codShipping,
   allowedQuantities: P.allowedQuantities,
   minQuantity: P.minQuantity,
   maxQuantity: P.maxQuantity,
@@ -212,7 +213,20 @@ export function subtotalForQuantity(qty) {
   return Math.floor(q / 5) * five + Math.floor(r / 2) * pair + (r % 2) * unit;
 }
 
-export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {
+// COD shipping charge for a delivery pincode (prepaid ships free). Unknown or
+// partial pincodes get the rest-of-India charge, BASE_PRODUCT.codFee.
+export function codFeeForPincode(pincode) {
+  const pin = String(pincode || '').replace(/\D/g, '');
+  const zones = (BASE_PRODUCT.codShipping && BASE_PRODUCT.codShipping.zones) || [];
+  if (pin.length === 6) {
+    for (const zone of zones) {
+      if ((zone.prefixes || []).some((pre) => pin.startsWith(pre))) return Number(zone.fee);
+    }
+  }
+  return Number(BASE_PRODUCT.codFee);
+}
+
+export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid', pincode = '') {
   let qty = parseInt(quantity, 10);
   if (isNaN(qty) || qty < 1) qty = 1;
   if (qty > BASE_PRODUCT.maxQuantity) qty = BASE_PRODUCT.maxQuantity;
@@ -224,7 +238,7 @@ export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {
   const mrpTotal = qty * unitMrp;
   const shipping = BASE_PRODUCT.shippingCost;
   const isCod = String(paymentMethod || '').toLowerCase() === 'cod';
-  const codFee = isCod ? BASE_PRODUCT.codFee : 0;
+  const codFee = isCod ? codFeeForPincode(pincode) : 0;
   const total = subtotal + shipping + codFee;
   const amountPaise = total * 100;
 

@@ -289,7 +289,7 @@ export function buildWebSiteJsonLd() {
 /**
  * Calculate order total with strict server validation.
  */
-export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {
+export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid', pincode = '') {
   const cfg = getProductConfig();
   const p = cfg.product;
   const isCod = String(paymentMethod || '').toLowerCase() === 'cod';
@@ -311,7 +311,12 @@ export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid') {
   const subtotal = Math.floor(qty / 5) * fivePrice + Math.floor(rest / 2) * pairPrice + (rest % 2) * unitPrice;
   const mrpTotal = qty * unitMrp;
   const shipping = cfg.shipping.prepaid.rate;
-  const codFee = isCod ? p.codFee : 0;
+  let codFee = 0;
+  if (isCod) {
+    const pin = String(pincode || '').replace(/\D/g, '');
+    const zone = pin.length === 6 ? ((p.codShipping && p.codShipping.zones) || []).find((z) => (z.prefixes || []).some((pre) => pin.startsWith(pre))) : null;
+    codFee = zone ? Number(zone.fee) : p.codFee;
+  }
   const total = subtotal + shipping + codFee;
   const amountPaise = total * 100;
 

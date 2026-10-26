@@ -65,9 +65,9 @@ test('checkout markup is semantic, static, and discloses COD before the button',
   assert.equal(/id="f_phone"[^>]*maxlength/.test(form), false, 'no maxlength on phone — it truncated pasted "+91 …" numbers');
   assert.ok(html.includes('onclick="selectPay(\'prepaid\')"'), 'prepaid must be directly actionable');
   assert.ok(html.includes('onclick="selectPay(\'cod\')"'), 'COD must be directly actionable');
-  assert.ok(html.includes('id="codFeeRow"'), 'COD handling fee must be explicit in the summary');
-  assert.ok(/data-method="cod"[\s\S]{0,300}\+₹89 handling[\s\S]{0,120}class="pay-opt-price">₹318</.test(html), 'COD option must state the ₹89 and its own ₹318 total');
-  assert.ok(html.includes("price.textContent = '₹' + (t.subtotal + t.shipping + (b.dataset.method === 'cod' ? COD_FEE : 0));"), 'option totals must follow the quantity');
+  assert.ok(html.includes('id="codFeeRow"'), 'COD shipping charge must be explicit in the summary');
+  assert.ok(/data-method="cod"[\s\S]{0,300}\+₹60–130 shipping by pincode[\s\S]{0,120}class="pay-opt-price">₹319</.test(html), 'COD option must state the COD shipping by pincode and its own ₹319 total');
+  assert.ok(html.includes("price.textContent = '₹' + (t.subtotal + t.shipping + (b.dataset.method === 'cod' ? codFeeNow() : 0));"), 'option totals must follow the quantity');
   assert.ok(html.includes('checkout-action-bar'), 'primary checkout action should remain reachable on long mobile forms');
 
   const chrome = fs.readFileSync('assets/js/chrome.js', 'utf8');

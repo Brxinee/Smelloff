@@ -7,7 +7,7 @@ import {
   generateOrderToken,
   generateOrderConfirmationToken,
 } from './_security.js';
-import { BASE_PRODUCT, subtotalForQuantity } from '../shared/products-config-workers.js';
+import { BASE_PRODUCT, subtotalForQuantity, codFeeForPincode } from '../shared/products-config-workers.js';
 import { isValidEmail } from './_email.js';
 import { sendAdminNewOrderEmail } from './_email-dispatch.js';
 import { pushOrderToShiprocketNow } from './shiprocket-sync.js';
@@ -32,7 +32,6 @@ function getRazorpayKeySecret() {
 }
 
 const UNIT_PRICE_RUPEES = Number(BASE_PRODUCT.price);
-const COD_FEE_RUPEES = Number(BASE_PRODUCT.codFee);
 const MAX_QUANTITY = Number(BASE_PRODUCT.maxQuantity);
 const PRODUCT_NAME = String(BASE_PRODUCT.title || BASE_PRODUCT.name || 'ODORSTRIKE Fabric Mist');
 const PRODUCT_SIZE = String(BASE_PRODUCT.size || '50ml');
@@ -454,7 +453,9 @@ export default async function handler(req, res) {
 
     // Fives at product.fivePackPrice ("5 for ₹899"), pairs at product.pairPrice ("2 for ₹419"); items[].price stays the unit price.
     const subtotalPaise = Math.round(subtotalForQuantity(quantity) * 100);
-    const codFeePaise = isCod ? Math.round(COD_FEE_RUPEES * 100) : 0;
+    // COD pays a shipping charge by delivery pincode (prepaid ships free).
+    const feePincode = String((body.address && body.address.pincode) || '').replace(/\D/g, '').slice(-6);
+    const codFeePaise = isCod ? Math.round(codFeeForPincode(feePincode) * 100) : 0;
     const totalPaise = subtotalPaise + codFeePaise;
     if (!Number.isSafeInteger(totalPaise) || totalPaise < 100) {
       return res.status(400).json({ error: 'Invalid order amount.' });
