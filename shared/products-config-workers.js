@@ -213,17 +213,29 @@ export function subtotalForQuantity(qty) {
   return Math.floor(q / 5) * five + Math.floor(r / 2) * pair + (r % 2) * unit;
 }
 
-// COD shipping charge for a delivery pincode (prepaid ships free). Unknown or
-// partial pincodes get the rest-of-India charge, BASE_PRODUCT.codFee.
-export function codFeeForPincode(pincode) {
+// COD charges for a delivery pincode (prepaid ships free): shipping + COD
+// handling, from the zone with the longest matching prefix (Lakshadweep's
+// 68255 beats Kerala's 68). Unknown or partial pincodes get the rest-of-India
+// default.
+export function codChargesForPincode(pincode) {
+  const table = BASE_PRODUCT.codShipping || {};
   const pin = String(pincode || '').replace(/\D/g, '');
-  const zones = (BASE_PRODUCT.codShipping && BASE_PRODUCT.codShipping.zones) || [];
+  let zone = table.default || { shipping: Number(BASE_PRODUCT.codFee), handling: 0 };
+  let best = 0;
   if (pin.length === 6) {
-    for (const zone of zones) {
-      if ((zone.prefixes || []).some((pre) => pin.startsWith(pre))) return Number(zone.fee);
+    for (const z of table.zones || []) {
+      for (const pre of z.prefixes || []) {
+        if (pre.length > best && pin.startsWith(pre)) { zone = z; best = pre.length; }
+      }
     }
   }
-  return Number(BASE_PRODUCT.codFee);
+  const shipping = Number(zone.shipping) || 0;
+  const handling = Number(zone.handling) || 0;
+  return { zone: zone.name || '', shipping, handling, total: shipping + handling };
+}
+
+export function codFeeForPincode(pincode) {
+  return codChargesForPincode(pincode).total;
 }
 
 export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid', pincode = '') {

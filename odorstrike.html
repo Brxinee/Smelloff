@@ -143,9 +143,10 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     // the bottle label; a reference price that was never on the pack and never
     // charged is a misleading-price risk under the Consumer Protection Act 2019.
     MRP:    { solo: 499 },
-    // COD_FEE = the COD shipping charge for the rest of India; COD_ZONES (the same
-    // table as config/product.json codShipping) set it by delivery pincode:
-    // Telangana ₹60, remote ₹130. Prepaid ships free. It is a charge on the payment method, not on the product: the product
+    // COD pays two charges by delivery pincode, shipping and COD handling.
+    // COD_DEFAULT is the rest of India; COD_ZONES (the same table as
+    // config/product.json codShipping, a test compares them) set them by the
+    // longest matching pincode prefix. COD_FEE = the default total. Prepaid ships free. It is a charge on the payment method, not on the product: the product
     // price stays ₹229 and that is what Product schema and products.json declare.
     // Owner's call (2026-10-11): outside checkout the site says only that COD
     // is available; the amount appears on the COD payment option in the
@@ -154,8 +155,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     // final summary or after "Place order" — that is drip pricing under the
     // CCPA's 2023 dark-pattern guidelines. Keep COD_FEE_RUPEES in
     // supabase/functions/create-order in step (it reads config/product.json).
-    COD_FEE: 90,
-    COD_ZONES: [{"fee":60,"prefixes":["50"]},{"fee":130,"prefixes":["68255","744","737","78","79","18","19"]}],
+    COD_FEE: 149,
+    COD_DEFAULT: {"shipping":99,"handling":50},
+    COD_ZONES: [{"shipping":59,"handling":30,"prefixes":["50"]},{"shipping":79,"handling":40,"prefixes":["51","52","53","56","57","58","59","60","61","62","63","64","67","68","69","40","41","42","43","44"]},{"shipping":129,"handling":50,"prefixes":["68255","744","737","78","79","18","19"]}],
     MAX_QTY: 10,
     // ==== SOCIAL PROOF — ALL GATED. Components render NOTHING until real data ====
     // Verified-purchase reviews ONLY. The site computes the visible count, average
@@ -1631,7 +1633,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
 <link rel="preload" href="/assets/css/chrome.css?v=3eafab25" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=3eafab25"></noscript>
-<script src="/assets/js/chrome.js?v=ae7cf658" defer></script>
+<script src="/assets/js/chrome.js?v=e7fcfc15" defer></script>
 <script src="/assets/js/support-chat.js?v=c16c518c" defer></script>
 </head>
 <body>
@@ -2190,7 +2192,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </details>
     <details>
       <summary><h3>Is COD available?</h3></summary>
-      <p class="faq-answer">Yes. Cash on Delivery is available across India. The COD total, including its shipping charge by pincode, is shown on the Cash on Delivery option at checkout before you place the order. Prepaid orders are ₹229 with free shipping. COD orders are confirmed via a quick phone call before dispatch.</p>
+      <p class="faq-answer">Yes. Cash on Delivery is available across India. The COD total, including its shipping and COD handling charges by pincode, is shown on the Cash on Delivery option at checkout before you place the order. Prepaid orders are ₹229 with free shipping. COD orders are confirmed via a quick phone call before dispatch.</p>
     </details>
     <details>
       <summary><h3>How long does shipping take?</h3></summary>
@@ -2343,8 +2345,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           <span class="amt free" id="checkoutShipping">Free</span>
         </div>
         <div class="summary" id="codFeeRow" style="display:none">
-          <span>COD shipping</span>
-          <span class="amt fee" id="codFeeAmount">₹90</span>
+          <span>COD handling</span>
+          <span class="amt fee" id="codFeeAmount">₹50</span>
         </div>
         <div class="summary total">
           <span>Total</span>
@@ -2425,8 +2427,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           </button>
           <button type="button" class="pay-opt" data-method="cod" role="radio" aria-checked="false" onclick="selectPay('cod')">
             <span class="pay-radio" aria-hidden="true"></span>
-            <span class="pay-opt-copy"><strong>Cash on Delivery</strong><small>+₹60–130 shipping by pincode · pay when it arrives</small></span>
-            <span class="pay-opt-price">₹319</span>
+            <span class="pay-opt-copy"><strong>Cash on Delivery</strong><small>+₹89–179 shipping &amp; handling by pincode · pay when it arrives</small></span>
+            <span class="pay-opt-price">₹378</span>
           </button>
         </div>
         <div class="ck-pay-badges" aria-label="Accepted online"><span>UPI</span><span>GPay</span><span>PhonePe</span><span>Paytm</span><span>Visa</span><span>Mastercard</span><span>RuPay</span></div>
@@ -2578,19 +2580,25 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   };
   // Surcharge for choosing Cash on Delivery. Read once here so the whole page has
   // one number; the static markup that quotes it is listed at CFG.COD_FEE.
-  // COD shipping by the pincode typed in checkout (the server prices it the
-  // same way and rejects a mismatch); rest of India until a pincode is typed.
-  function codFeeNow() {
+  // COD shipping + COD handling by the pincode typed in checkout (the server
+  // prices it the same way, codChargesForPincode, and rejects a mismatch);
+  // rest of India until a pincode is typed. Longest matching prefix wins.
+  function codChargesNow() {
     var el = document.getElementById('f_pin');
     var pin = String(el ? el.value : '').replace(/\D/g, '').slice(-6);
+    var zone = CFG.COD_DEFAULT || { shipping: Number(CFG.COD_FEE) || 0, handling: 0 };
+    var best = 0;
     if (pin.length === 6) {
-      var zones = CFG.COD_ZONES || [];
-      for (var i = 0; i < zones.length; i++) {
-        if ((zones[i].prefixes || []).some(function (pre) { return pin.indexOf(pre) === 0; })) return Number(zones[i].fee);
-      }
+      (CFG.COD_ZONES || []).forEach(function (z) {
+        (z.prefixes || []).forEach(function (pre) {
+          if (pre.length > best && pin.indexOf(pre) === 0) { zone = z; best = pre.length; }
+        });
+      });
     }
-    return Number(CFG.COD_FEE) || 0;
+    var ship = Number(zone.shipping) || 0, handling = Number(zone.handling) || 0;
+    return { shipping: ship, handling: handling, total: ship + handling };
   }
+  function codFeeNow() { return codChargesNow().total; }
   function codPinKnown() {
     var el = document.getElementById('f_pin');
     return String(el ? el.value : '').replace(/\D/g, '').length === 6;
@@ -2951,20 +2959,28 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       if (up === 2) pairBtn.textContent = 'Add a second · 2 for ' + inr(subtotalFor(2));
       if (up === 5) pairBtn.textContent = 'Make it 5 · only ' + inr(subtotalFor(5) - t.subtotal) + ' more';
     }
-    set('checkoutShipping', 'Free');
+    // Shipping is free on prepaid; COD pays it by pincode, with COD handling
+    // on its own line.
+    var charges = t.codFee ? codChargesNow() : null;
+    set('checkoutShipping', charges ? '₹' + charges.shipping : 'Free');
+    var shipEl = document.getElementById('checkoutShipping');
+    if (shipEl) shipEl.classList.toggle('free', !charges);
     // Each payment option states the total that choice means, for the
     // quantity actually in the order (they were hard-coded to one bottle).
     document.querySelectorAll('.pay-opt[data-method]').forEach(function (b) {
       var price = b.querySelector('.pay-opt-price');
       if (price) price.textContent = '₹' + (t.subtotal + t.shipping + (b.dataset.method === 'cod' ? codFeeNow() : 0));
       var note = b.dataset.method === 'cod' ? b.querySelector('small') : null;
-      if (note) note.textContent = codPinKnown() ? '+₹' + codFeeNow() + ' shipping to your pincode · pay when it arrives' : '+₹60–130 shipping by pincode · pay when it arrives';
+      var cc = codChargesNow();
+      if (note) note.textContent = codPinKnown()
+        ? '+₹' + cc.shipping + ' shipping + ₹' + cc.handling + ' COD handling to your pincode · pay when it arrives'
+        : '+₹89–179 shipping & handling by pincode · pay when it arrives';
     });
     set('checkoutTotal', '₹' + t.total);
     set('submitText', t.codFee ? 'Place COD order · ₹' + t.total : 'Pay ₹' + t.total + ' securely');
     // The summary names the COD charge whenever the total includes it, so the
     // Total line never carries a fee the rows above it don't show.
-    set('codFeeAmount', '₹' + codFeeNow());
+    set('codFeeAmount', '₹' + codChargesNow().handling);
     var feeRow = document.getElementById('codFeeRow');
     if (feeRow) feeRow.style.display = t.codFee ? 'flex' : 'none';
   }
@@ -3413,8 +3429,13 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         rows.appendChild(dt); rows.appendChild(dd);
       };
       add('Subtotal', '₹' + subtotal);
-      add('Shipping', 'Free');
-      if (fee) add('COD handling', '₹' + fee);
+      var cc = fee ? codChargesNow() : null;
+      if (cc && cc.total === fee) {
+        add('Shipping', '₹' + cc.shipping);
+        add('COD handling', '₹' + cc.handling);
+      } else {
+        add('Shipping', fee ? '₹' + fee : 'Free');
+      }
       add(cod ? 'Pay on delivery' : 'Total paid', '₹' + amount, true);
     }
 

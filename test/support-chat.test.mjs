@@ -35,7 +35,7 @@ test('the system prompt carries the config facts and pack ladder, not copies', (
   const prompt = buildSystemPrompt();
   // COD shipping amounts live only in checkout (owner, 2026-10-26): the chat
   // names the pincode-based charge and never quotes it.
-  assert.ok(prompt.includes('shipping charge based on the delivery pincode, shown at checkout'));
+  assert.ok(prompt.includes('shipping charge and a COD handling charge based on the delivery pincode, shown at checkout'));
   assert.ok(!prompt.includes(`₹${P.priceCod}`) && !prompt.includes(`₹${product.shipping.cod.fee} `));
   for (const fact of [`₹${P.price}`, `₹${P.pairPrice}`, `₹${P.fivePackPrice}`,
     product.usage.dryTimeShort, product.returns.summary, product.brand.supportEmail, product.brand.whatsappDisplay,

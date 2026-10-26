@@ -602,7 +602,7 @@ test('a COD order placed on the website lands in both sheets, and the sheets get
 
   const res = await placeOrder({
     payment_method: 'cod', name: 'Priya Sharma', email: 'Priya.S@example.com', phone: '+91 98765 01234',
-    items: [{ quantity: 2, price: 229 }], amount: 50900, event_source_url: 'https://smelloff.in/odorstrike?buy=1&qty=2',
+    items: [{ quantity: 2, price: 229 }], amount: 53800, event_source_url: 'https://smelloff.in/odorstrike?buy=1&qty=2',
     address: { name: 'Priya Sharma', line: 'Flat 4B, Lake View Apts\nMG Road', city: 'Bengaluru', state: 'Karnataka', pincode: '560001' },
     // What assets/js/track.js keeps: she came from a creator's link on the
     // homepage, then bought from /odorstrike?buy=1 (no UTMs on that URL).
@@ -616,8 +616,8 @@ test('a COD order placed on the website lands in both sheets, and the sheets get
   const saved = db.orders.find((o) => o.order_code === code);
   assert.ok(saved, 'the order is saved in the database');
   assert.equal(saved.status, 'placed');
-  assert.equal(saved.amount, 50900, '2 for ₹419 + ₹90 COD shipping to Bengaluru, in paise');
-  assert.equal(saved.cod_fee, 9000);
+  assert.equal(saved.amount, 53800, '2 for ₹419 + ₹79 shipping + ₹40 COD handling to Bengaluru, in paise');
+  assert.equal(saved.cod_fee, 11900);
   assert.equal(saved.attribution.channel, 'Creator', 'the order keeps where it came from');
   assert.equal(saved.attribution.last.campaign, 'rahul_reel');
   assert.equal(saved.attribution.last.email, undefined, 'only the attribution fields are kept');
@@ -634,13 +634,13 @@ test('a COD order placed on the website lands in both sheets, and the sheets get
   assert.equal(row[O('Name')], 'Priya Sharma');
   assert.equal(row[O('Phone')], '9876501234');
   assert.match(row[O('WhatsApp')], /^=HYPERLINK\("https:\/\/wa\.me\/919876501234\?text=Hi%20Priya%2C/);
-  assert.match(row[O('WhatsApp')], new RegExp(`${code}%20for%20%E2%82%B9509%2C%20delivering%20to%20Bengaluru`));
+  assert.match(row[O('WhatsApp')], new RegExp(`${code}%20for%20%E2%82%B9538%2C%20delivering%20to%20Bengaluru`));
   assert.match(row[O('WhatsApp')], /"Confirm COD"\)$/);
   assert.equal(row[O('Email')], 'priya.s@example.com');
   assert.equal(row[O('Bottles')], 2);
   assert.equal(row[O('Subtotal (₹)')], 419);
-  assert.equal(row[O('COD fee (₹)')], 90);
-  assert.equal(row[O('Total (₹)')], 509);
+  assert.equal(row[O('COD fee (₹)')], 119);
+  assert.equal(row[O('Total (₹)')], 538);
   assert.equal(row[O('Address')], 'Flat 4B, Lake View Apts, MG Road');
   assert.equal(row[O('City')], 'Bengaluru');
   assert.equal(row[O('State')], 'Karnataka');
@@ -690,7 +690,7 @@ test('a COD order placed on the website lands in both sheets, and the sheets get
   assert.equal(priya[K('Type')], 'Customer');
   assert.equal(priya[K('Paid orders')], 1);
   assert.equal(priya[K('Bottles')], 2);
-  assert.equal(priya[K('Order value (₹)')], 509);
+  assert.equal(priya[K('Order value (₹)')], 538);
   assert.equal(priya[K('Email offers')], 'No', 'a checkout is not consent to offers');
   assert.equal(people.find((p) => p[K('Email')] === 'april@example.com')[K('Email offers')], 'Yes');
   assert.deepEqual(contacts.s.sheets.map((x) => x.properties.title), ['Summary', 'Follow up', 'Contacts']);

@@ -66,18 +66,20 @@
     "discountPercent": 54,
     "currency": "INR",
     "currencySymbol": "₹",
-    "codFee": 90,
-    "codFeePaise": 9000,
-    "priceCod": 319,
-    "priceCodPaise": 31900,
+    "codFee": 149,
+    "codFeePaise": 14900,
+    "priceCod": 378,
+    "priceCodPaise": 37800,
     "codShipping": {
-      "note": "COD orders pay a shipping charge by delivery pincode; prepaid ships free. codFee above is the rest-of-India charge. First matching prefix wins (longest listed first).",
-      "label": "COD shipping",
-      "min": 60,
-      "max": 130,
+      "note": "COD orders pay two charges by delivery pincode, shipping and COD handling, set so a COD order never costs the business more than it collects (owner, 2026-10-26: North India COD costs ₹130–150). Prepaid ships free. default = the rest of India (codFee above is its total). The longest matching prefix wins. fee = shipping + handling.",
+      "label": "Shipping + COD handling",
+      "min": 89,
+      "max": 179,
+      "default": { "name": "Rest of India (North, Central & East)", "shipping": 99, "handling": 50, "fee": 149 },
       "zones": [
-        { "name": "Telangana", "fee": 60, "prefixes": ["50"] },
-        { "name": "Remote (North-East, J&K, Ladakh, Andaman & Nicobar, Lakshadweep)", "fee": 130, "prefixes": ["68255", "744", "737", "78", "79", "18", "19"] }
+        { "name": "Telangana", "shipping": 59, "handling": 30, "fee": 89, "prefixes": ["50"] },
+        { "name": "South & West (Andhra Pradesh, Karnataka, Tamil Nadu, Kerala, Puducherry, Maharashtra, Goa)", "shipping": 79, "handling": 40, "fee": 119, "prefixes": ["51", "52", "53", "56", "57", "58", "59", "60", "61", "62", "63", "64", "67", "68", "69", "40", "41", "42", "43", "44"] },
+        { "name": "Remote (North-East, Sikkim, J&K, Ladakh, Andaman & Nicobar, Lakshadweep)", "shipping": 129, "handling": 50, "fee": 179, "prefixes": ["68255", "744", "737", "78", "79", "18", "19"] }
       ]
     },
     "pairPrice": 419,
@@ -113,9 +115,9 @@
       "description": "Free shipping pan-India on prepaid UPI / card / netbanking orders"
     },
     "cod": {
-      "fee": 90,
+      "fee": 149,
       "currency": "INR",
-      "description": "Cash on Delivery orders pay a shipping charge based on the delivery pincode, shown at checkout before the order is placed. Prepaid orders ship free."
+      "description": "Cash on Delivery orders pay a shipping charge and a COD handling charge based on the delivery pincode, shown at checkout before the order is placed. Prepaid orders ship free."
     },
     "destinationCountry": "IN",
     "dispatchWindow": "Within 48 hours of confirmation",

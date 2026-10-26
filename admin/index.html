@@ -244,7 +244,7 @@ function openOrder(o) {
       <dt>Address</dt><dd>${full || '—'}</dd>
       ${a.customer_note ? `<dt>Note</dt><dd>${esc(a.customer_note)}</dd>` : ''}
       <dt>Items</dt><dd>${items} <span class="muted">(${qty(o)} total)</span></dd>
-      <dt>Amount</dt><dd>${inr(o.amount)}${o.cod_fee ? ` <span class="muted">incl. COD fee ${inr(o.cod_fee)}</span>` : ''}</dd>
+      <dt>Amount</dt><dd>${inr(o.amount)}${o.cod_fee ? ` <span class="muted">incl. COD shipping + handling ${inr(o.cod_fee)}</span>` : ''}</dd>
       <dt>Payment</dt><dd>${esc(String(o.payment_method || '').toUpperCase())}${o.upi_ref ? ` · UTR <span class="mono">${esc(o.upi_ref)}</span>` : ''}</dd>
       ${o.attribution && o.attribution.channel ? `<dt>Source</dt><dd>${esc(o.attribution.channel)}${o.attribution.last && o.attribution.last.campaign ? ` <span class="muted">· ${esc(o.attribution.last.campaign)}</span>` : ''}${o.attribution.first && o.attribution.last && o.attribution.first.at !== o.attribution.last.at ? ` <span class="muted">(first visit: ${esc(o.attribution.first.source || o.attribution.first.referrer || o.attribution.first.click_id || '')})</span>` : ''}</dd>` : ''}
       ${!o.tracking_id && o.shiprocket_awb ? `<dt>Shiprocket</dt><dd>${esc(o.shiprocket_courier || '')} AWB <span class="mono">${esc(o.shiprocket_awb)}</span>${o.shiprocket_status ? ` · ${esc(o.shiprocket_status)}` : ''}</dd>` : ''}
