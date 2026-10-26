@@ -265,25 +265,36 @@
     return Math.floor(q / 5) * five + Math.floor(r / 2) * pair + (r % 2) * unit;
   }
 
-  // COD pays a shipping charge by delivery pincode (prepaid ships free); the
-  // server prices it the same way (codFeeForPincode) and rejects a mismatch.
-  function codFeeRupees() {
+  // COD pays shipping + COD handling by delivery pincode (prepaid ships free);
+  // the server prices it the same way (codChargesForPincode) and rejects a
+  // mismatch. Longest matching prefix wins; rest of India until a pincode is typed.
+  function codChargesRupees() {
     var C = window.SMELLOFF_CONFIG || {};
     var T = window.SMELLOFF_PRODUCT_TRUTH || {};
-    var zones = C.COD_ZONES || (T.codShipping && T.codShipping.zones) || [];
+    var table = T.codShipping || {};
+    var zones = C.COD_ZONES || table.zones || [];
+    var zone = C.COD_DEFAULT || table['default'] || null;
     var pinEl = document.getElementById('f_pin');
     var pin = String(pinEl ? pinEl.value : '').replace(/\D/g, '').slice(-6);
+    var best = 0;
     if (pin.length === 6) {
       for (var i = 0; i < zones.length; i++) {
         var pre = zones[i].prefixes || [];
-        for (var j = 0; j < pre.length; j++) if (pin.indexOf(pre[j]) === 0) return Number(zones[i].fee);
+        for (var j = 0; j < pre.length; j++) {
+          if (pre[j].length > best && pin.indexOf(pre[j]) === 0) { zone = zones[i]; best = pre[j].length; }
+        }
       }
     }
+    if (zone) {
+      var ship = Number(zone.shipping) || 0, handling = Number(zone.handling) || 0;
+      return { shipping: ship, handling: handling, total: ship + handling };
+    }
     var n = Number(C.COD_FEE);
-    if (Number.isFinite(n) && n >= 0) return n;
-    n = Number(T.codFee);
-    return Number.isFinite(n) && n >= 0 ? n : 90;
+    if (!(Number.isFinite(n) && n >= 0)) n = Number(T.codFee);
+    n = Number.isFinite(n) && n >= 0 ? n : 149;
+    return { shipping: n, handling: 0, total: n };
   }
+  function codFeeRupees() { return codChargesRupees().total; }
 
   function currentPaymentMethod() {
     var method = String(window.payMethod || 'prepaid').toLowerCase();
@@ -322,8 +333,15 @@
 
     var feeRow = document.getElementById('codFeeRow');
     var feeAmount = document.getElementById('codFeeAmount');
-    if (feeRow) feeRow.style.display = method === 'cod' ? 'flex' : 'none';
-    if (feeAmount) feeAmount.textContent = '₹' + fee;
+    var charges = method === 'cod' ? codChargesRupees() : null;
+    if (feeRow) feeRow.style.display = charges ? 'flex' : 'none';
+    if (feeAmount) feeAmount.textContent = '₹' + (charges ? charges.handling : 0);
+    // Prepaid ships free; COD pays shipping by pincode on the Shipping line.
+    var shipEl = document.getElementById('checkoutShipping');
+    if (shipEl) {
+      shipEl.textContent = charges ? '₹' + charges.shipping : 'Free';
+      shipEl.classList.toggle('free', !charges);
+    }
 
     var reassure = document.querySelector('.checkout-reassure');
     if (reassure) reassure.textContent = method === 'cod'
@@ -442,7 +460,7 @@
   function installCheckoutOverrides() {
     ensurePaymentUi();
     renderPaymentUi();
-    // COD shipping depends on the pincode: re-price as it is typed.
+    // COD shipping + handling depend on the pincode: re-price as it is typed.
     var pinInput = document.getElementById('f_pin');
     if (pinInput && !pinInput.dataset.codBound) {
       pinInput.dataset.codBound = '1';

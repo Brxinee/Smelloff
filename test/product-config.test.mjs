@@ -18,7 +18,7 @@ test('product.json schema and authoritative values', () => {
   assert.equal(PRODUCT.title, 'Smelloff ODORSTRIKE Fabric Odor Eliminator Spray (50ml)');
   assert.equal(PRODUCT.price, 229);
   assert.equal(PRODUCT.mrp, 499);
-  assert.equal(PRODUCT.codFee, 90);
+  assert.equal(PRODUCT.codFee, 149);
   assert.equal(PRODUCT.size, '50ml');
   assert.equal(PRODUCT.spraysApprox, 250);
   assert.equal(PRODUCT.sku, 'OS-001-50ML');
@@ -45,13 +45,16 @@ test('commercial pricing math via calculateOrderTotal()', () => {
   const c1 = calculateOrderTotal(1, 'cod');
   assert.equal(c1.subtotal, 229);
   assert.equal(c1.shipping, 0);
-  assert.equal(c1.codFee, 90);
-  assert.equal(c1.total, 319);
-  assert.equal(c1.totalPaise, 31900);
+  assert.equal(c1.codFee, 149);
+  assert.equal(c1.total, 378);
+  assert.equal(c1.totalPaise, 37800);
 
-  // COD shipping by delivery pincode: Telangana ₹60, remote ₹130
-  assert.equal(calculateOrderTotal(1, 'cod', '500018').total, 289);
-  assert.equal(calculateOrderTotal(1, 'cod', '781001').total, 359);
+  // COD shipping + handling by delivery pincode (longest prefix wins)
+  assert.equal(calculateOrderTotal(1, 'cod', '500018').total, 318); // Telangana ₹59 + ₹30
+  assert.equal(calculateOrderTotal(1, 'cod', '560001').total, 348); // South & West ₹79 + ₹40
+  assert.equal(calculateOrderTotal(1, 'cod', '110001').total, 378); // Delhi ₹99 + ₹50
+  assert.equal(calculateOrderTotal(1, 'cod', '781001').total, 408); // North-East ₹129 + ₹50
+  assert.equal(calculateOrderTotal(1, 'cod', '682555').total, 408); // Lakshadweep, not Kerala
   assert.equal(calculateOrderTotal(1, 'prepaid', '781001').total, 229);
 
   // 2 units prepaid
@@ -65,9 +68,9 @@ test('commercial pricing math via calculateOrderTotal()', () => {
   // 2 units COD
   const c2 = calculateOrderTotal(2, 'cod');
   assert.equal(c2.subtotal, 419);
-  assert.equal(c2.codFee, 90);
-  assert.equal(c2.total, 509);
-  assert.equal(c2.totalPaise, 50900);
+  assert.equal(c2.codFee, 149);
+  assert.equal(c2.total, 568);
+  assert.equal(c2.totalPaise, 56800);
 
   // 3 units: one pair + one bottle
   assert.equal(calculateOrderTotal(3, 'prepaid').subtotal, 648);
@@ -77,7 +80,7 @@ test('commercial pricing math via calculateOrderTotal()', () => {
 test('shared/product-truth.js is synchronized with product.json', () => {
   assert.equal(SMELLOFF_PRODUCT_TRUTH.pricePrepaid, 229);
   assert.equal(SMELLOFF_PRODUCT_TRUTH.mrp, 499);
-  assert.equal(SMELLOFF_PRODUCT_TRUTH.codFee, 90);
+  assert.equal(SMELLOFF_PRODUCT_TRUTH.codFee, 149);
   assert.equal(SMELLOFF_PRODUCT_TRUTH.size, '50ml');
   assert.equal(SMELLOFF_PRODUCT_TRUTH.formulaVersion, 'v3.1');
   assert.equal(SMELLOFF_PRODUCT_TRUTH.sku, 'OS-001-50ML');
@@ -87,7 +90,7 @@ test('shared/product-truth.js is synchronized with product.json', () => {
 test('shared/products-config.js BASE_PRODUCT is synchronized with product.json', () => {
   assert.equal(BASE_PRODUCT.price, 229);
   assert.equal(BASE_PRODUCT.mrp, 499);
-  assert.equal(BASE_PRODUCT.codFee, 90);
+  assert.equal(BASE_PRODUCT.codFee, 149);
   assert.equal(BASE_PRODUCT.sku, 'OS-001-50ML');
   assert.equal(BASE_PRODUCT.minQuantity, 1);
   assert.equal(BASE_PRODUCT.maxQuantity, 10);

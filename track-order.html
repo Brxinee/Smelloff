@@ -190,7 +190,7 @@
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f">
 <link rel="stylesheet" href="/assets/css/chrome.css?v=3eafab25">
-<script src="/assets/js/chrome.js?v=ae7cf658" defer></script>
+<script src="/assets/js/chrome.js?v=e7fcfc15" defer></script>
 <script src="/assets/js/support-chat.js?v=c16c518c" defer></script>
 </head>
 <body>
@@ -541,12 +541,12 @@
       var label = (it.label || it.name || 'ODORSTRIKE') + (it.quantity > 1 ? ' × ' + it.quantity : '');
       rows += '<div class="row"><span>' + esc(label) + '</span></div>';
     });
-    // The COD handling charge is already inside `amount`. Show it on its own row
-    // so a customer looking up a ₹318 COD order against a ₹229 product can see where
-    // the difference came from rather than reading it as a billing error.
+    // The COD charge (shipping + COD handling, by pincode) is already inside
+    // `amount`. Show it on its own row so a COD total above the ₹229 product
+    // price reads as the charge it is, not a billing error.
     var codFee = Math.round((o.cod_fee || 0) / 100);
     if (codFee > 0) {
-      rows += '<div class="row"><span>COD handling charge</span><span>₹' + codFee + '</span></div>';
+      rows += '<div class="row"><span>Shipping + COD handling</span><span>₹' + codFee + '</span></div>';
     }
     rows += '<div class="row total"><span>Total</span><span>₹' + Math.round((o.amount || 0) / 100) + '</span></div>';
     itemsEl.innerHTML = rows;

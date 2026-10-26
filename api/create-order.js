@@ -453,7 +453,7 @@ export default async function handler(req, res) {
 
     // Fives at product.fivePackPrice ("5 for ₹899"), pairs at product.pairPrice ("2 for ₹419"); items[].price stays the unit price.
     const subtotalPaise = Math.round(subtotalForQuantity(quantity) * 100);
-    // COD pays a shipping charge by delivery pincode (prepaid ships free).
+    // COD pays shipping + COD handling by delivery pincode (prepaid ships free).
     const feePincode = String((body.address && body.address.pincode) || '').replace(/\D/g, '').slice(-6);
     const codFeePaise = isCod ? Math.round(codFeeForPincode(feePincode) * 100) : 0;
     const totalPaise = subtotalPaise + codFeePaise;

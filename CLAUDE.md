@@ -99,24 +99,45 @@ history is timestamped by the tool that applies them.
   the owner runs it in the Supabase SQL editor. Homepage `#reviews` is beta
   testers only until a real buyer reviews.
 
-## COD shipping by pincode replaces the ₹89 handling fee (2026-10-26, owner: "no cod handling fee just the shipping charges as per the pincode … add max of it")
-Prepaid ships free. COD orders pay a shipping charge by delivery pincode, set at
-the top of Shiprocket's usual 0.5 kg ranges: **Telangana (50xxxx) ₹60, remote
-(North-East 78/79/737, J&K and Ladakh 18/19, Andaman 744, Lakshadweep 68255)
-₹130, rest of India ₹90**. `codFee` (90) is the rest-of-India default;
-`priceCod` 319. Supersedes every ₹89 / ₹318 note below.
-- One table: `config/product.json` → `product.codShipping.zones`; copied as
-  `CFG.COD_ZONES` in `odorstrike.html` (a test compares them). Server:
-  `codFeeForPincode()` in `shared/products-config-workers.js`; `create-order`
-  prices COD from `body.address.pincode` and rejects any other total.
-  Client: `codFeeNow()` (odorstrike.html) and `codFeeRupees()` (chrome.js)
-  read `#f_pin` and re-price on input. Before a pincode is typed the COD
-  option reads "+₹60–130 shipping by pincode".
-- `orders.cod_fee` holds the charge per order, so Shiprocket
-  (`transaction_charges`), Sheets ("COD fee (₹)" column, header unchanged),
-  /admin and emails ("COD shipping") show what that order paid.
-- **Amounts only in checkout** (owner, same day: "it should only happen in the checkout page"): every other page, the policies and the chat say only "a shipping charge based on your pincode, shown at checkout";
-  `test/cod-checkout-regression.test.mjs` fails on a COD amount anywhere else.
+## COD: shipping + COD handling by pincode (2026-10-26, owner: "there should be 2 charges shipping and handling … add whatevers makes me no loss")
+Second pass the same day. Supersedes the single "COD shipping" charge
+(#548: Telangana ₹60 / rest ₹90 / remote ₹130). Owner: COD to Delhi, UP,
+Uttarakhand costs ₹130–150, so COD pays two charges by delivery pincode,
+**shipping** and **COD handling**, set so a COD order covers its own cost.
+Prepaid still ships free; the charge is once per order (1, 2 or 5 bottles).
+
+| Zone (pincode prefix) | Shipping | Handling | Total | 1 bottle COD |
+|---|---|---|---|---|
+| Telangana (50) | ₹59 | ₹30 | ₹89 | ₹318 |
+| South & West: AP 51–53, Karnataka 56–59, TN/Puducherry 60–64, Kerala 67–69, Maharashtra/Goa 40–44 | ₹79 | ₹40 | ₹119 | ₹348 |
+| Rest of India (North, Central, East): default | ₹99 | ₹50 | ₹149 | ₹378 |
+| Remote: North-East 78/79, Sikkim 737, J&K/Ladakh 18/19, Andaman 744, Lakshadweep 68255 | ₹129 | ₹50 | ₹179 | ₹408 |
+
+- One table: `config/product.json` → `product.codShipping` (`default` +
+  `zones`, each `shipping` / `handling` / `fee` = their sum; `min`/`max` are
+  the totals' range). **The longest matching prefix wins** (Lakshadweep
+  68255 beats Kerala 68). `codFee` 149 / `priceCod` 378 = the default.
+  Copied as `CFG.COD_DEFAULT` + `CFG.COD_ZONES` in `odorstrike.html` (a test
+  compares them). Server: `codChargesForPincode()` / `codFeeForPincode()` in
+  `shared/products-config-workers.js`; `create-order` prices COD from
+  `body.address.pincode` and rejects any other total. Client:
+  `codChargesNow()` (odorstrike.html) and `codChargesRupees()` (chrome.js,
+  which re-renders the same rows) read `#f_pin` and re-price on input.
+- **Checkout summary:** Shipping row = "Free" on prepaid, the zone's
+  shipping on COD; "COD handling" row (`#codFeeRow`) = the handling. The COD
+  option reads "+₹89–179 shipping & handling by pincode" until a pincode is
+  typed, then "+₹X shipping + ₹Y COD handling to your pincode", with its own
+  total.
+- `orders.cod_fee` holds the order's total COD charge (shipping + handling;
+  no new column). Shiprocket gets it as `transaction_charges` (the verified
+  path, so the courier collects the right total); Sheets "COD fee (₹)",
+  /admin, track-order and emails ("Shipping + COD handling") show it.
+- **Amounts only in checkout** (owner, #549): every other page, the
+  policies and the chat say only "a shipping charge and a COD handling charge
+  based on your pincode, shown at checkout"; `test/cod-checkout-regression.test.mjs`
+  fails on a COD amount anywhere else. Neither charge is refunded on a return.
+- Change a rate: edit the config, then copy `COD_DEFAULT` / `COD_ZONES` into
+  `odorstrike.html` (the test prints what it expects).
 
 ## Sales pass: payment recovery + blog citation pass (2026-10-26, owner: "I need sells … rank … traffic")
 Live data (30 days): ~200 visitors/week, ~60 in India, ~30 on `/odorstrike`;

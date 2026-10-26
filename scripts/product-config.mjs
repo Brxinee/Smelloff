@@ -314,8 +314,15 @@ export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid', pin
   let codFee = 0;
   if (isCod) {
     const pin = String(pincode || '').replace(/\D/g, '');
-    const zone = pin.length === 6 ? ((p.codShipping && p.codShipping.zones) || []).find((z) => (z.prefixes || []).some((pre) => pin.startsWith(pre))) : null;
-    codFee = zone ? Number(zone.fee) : p.codFee;
+    // Longest matching prefix wins; shipping + COD handling.
+    let zone = (p.codShipping && p.codShipping.default) || { shipping: p.codFee, handling: 0 };
+    let best = 0;
+    if (pin.length === 6) {
+      for (const z of (p.codShipping && p.codShipping.zones) || []) {
+        for (const pre of z.prefixes || []) if (pre.length > best && pin.startsWith(pre)) { zone = z; best = pre.length; }
+      }
+    }
+    codFee = Number(zone.shipping) + Number(zone.handling || 0);
   }
   const total = subtotal + shipping + codFee;
   const amountPaise = total * 100;
