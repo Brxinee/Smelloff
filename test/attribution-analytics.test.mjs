@@ -73,7 +73,7 @@ async function placeCod({ columnMissing = false } = {}) {
       method: 'POST',
       headers: { origin: 'https://smelloff.in', 'x-forwarded-for': `203.0.113.${columnMissing ? 7 : 8}` },
       body: {
-        payment_method: 'cod', amount: 31800, email: 'buyer@smelloff.test', phone: '9392974031',
+        payment_method: 'cod', amount: 28900, email: 'buyer@smelloff.test', phone: '9392974031',
         items: [{ name: 'ODORSTRIKE Fabric Mist', variant: '50ml', quantity: 1, price: 229 }],
         address: { name: 'Test Buyer', line: '1 Test Street', city: 'Hyderabad', state: 'Telangana', pincode: '500018' },
         order_code: 'SMF-20261020-4321',

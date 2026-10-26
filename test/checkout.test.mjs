@@ -19,7 +19,7 @@ import { Resend } from 'resend';
 import { generateOrderToken, generateOrderConfirmationToken, isAdminAuthorized, isCronAuthorized } from '../api/_security.js';
 import { isValidTransition } from '../shared/products-config.js';
 import { claimShiprocketFulfillment } from '../api/_shiprocket.js';
-import { subtotalForQuantity } from '../shared/products-config-workers.js';
+import { subtotalForQuantity, codFeeForPincode } from '../shared/products-config-workers.js';
 import adminVerifyPaymentHandler from '../api/admin/verify-payment.js';
 import shiprocketSyncHandler from '../api/shiprocket-sync.js';
 import metaCapiDrainHandler from '../api/meta-capi-drain.js';
@@ -198,7 +198,7 @@ test('create-order: an order number taken by another customer gets a fresh one',
       headers: {},
       body: {
         payment_method: 'cod', order_code: taken, email: 'second@example.com', phone: '9000000002',
-        items: [{ quantity: 1, price: 229 }], amount: 31800,
+        items: [{ quantity: 1, price: 229 }], amount: 28900,
         address: { name: 'B', line: '1 Road', city: 'Hyderabad', state: 'Telangana', pincode: '500018' },
       },
     }, res);
@@ -239,7 +239,7 @@ test('create-order: a COD order emails the owner a new-order alert', async () =>
       headers: {},
       body: {
         payment_method: 'cod', order_code: 'SMF-20261011-4321', name: 'Asha', email: 'asha@example.com', phone: '9000000003',
-        items: [{ quantity: 1, price: 229 }], amount: 31800,
+        items: [{ quantity: 1, price: 229 }], amount: 31900,
         address: { name: 'Asha', line: '1 Road', city: 'Pune', state: 'Maharashtra', pincode: '411001' },
       },
     }, res);
@@ -247,7 +247,7 @@ test('create-order: a COD order emails the owner a new-order alert', async () =>
     const alert = sent.find((p) => /^New order/.test(p.subject || ''));
     assert.ok(alert, `owner alert must be sent; got ${JSON.stringify(sent.map((p) => p.subject))}`);
     assert.deepEqual([].concat(alert.to), ['info@smelloff.in']);
-    assert.match(alert.subject, /₹318 COD/);
+    assert.match(alert.subject, /₹319 COD/);
     assert.match(alert.subject, /Pune/);
     assert.match(alert.html, /tel:\+919000000003/);
     assert.match(alert.html, /wa\.me\/919000000003/);
@@ -292,7 +292,7 @@ test('create-order: a COD order is booked in Shiprocket straight away', async ()
       headers: {},
       body: {
         payment_method: 'cod', order_code: 'SMF-20261011-5555', name: 'Ravi', email: 'ravi@example.com', phone: '9000000004',
-        items: [{ quantity: 1, price: 229 }], amount: 31800,
+        items: [{ quantity: 1, price: 229 }], amount: 28900,
         address: { name: 'Ravi', line: '2 Road', city: 'Hyderabad', state: 'Telangana', pincode: '500018' },
       },
     }, res);
@@ -607,7 +607,7 @@ test('Step 4 Backend: webhook handles payment.failed without downgrading confirm
 
 test('Step 4 Backend: amount validation logic strictly enforces paise integrity', () => {
   const unitPrice = 229;
-  const codFee = 89;
+  const codFee = 90; // COD shipping, rest of India (Telangana ₹60, remote ₹130)
 
   // Prepaid 1 unit = 22900 paise
   const prepaid1 = unitPrice * 1 * 100;
@@ -617,13 +617,23 @@ test('Step 4 Backend: amount validation logic strictly enforces paise integrity'
   const prepaid2 = subtotalForQuantity(2) * 100;
   assert.equal(prepaid2, 41900);
 
-  // COD 1 unit = 31800 paise
+  // COD 1 unit = 31900 paise
   const cod1 = (unitPrice * 1 + codFee) * 100;
-  assert.equal(cod1, 31800);
+  assert.equal(cod1, 31900);
 
-  // COD 2 units = 50800 paise
+  // COD 2 units = 50900 paise
   const cod2 = (subtotalForQuantity(2) + codFee) * 100;
-  assert.equal(cod2, 50800);
+  assert.equal(cod2, 50900);
+
+  // COD shipping by delivery pincode: Telangana ₹60, remote ₹130, rest of India ₹90
+  assert.equal(codFeeForPincode('500018'), 60);
+  assert.equal(codFeeForPincode('411001'), 90);
+  assert.equal(codFeeForPincode('781001'), 130);
+  assert.equal(codFeeForPincode('190001'), 130);
+  assert.equal(codFeeForPincode('744101'), 130);
+  assert.equal(codFeeForPincode('682555'), 130);
+  assert.equal(codFeeForPincode('682001'), 90);
+  assert.equal(codFeeForPincode(''), 90);
 
   // An odd bottle on top of the pairs is at the unit price
   assert.equal(subtotalForQuantity(3), 648);
@@ -648,7 +658,7 @@ test('Multi-quantity orderPayload calculation integrity in chrome.js', () => {
 
   // Exhaustive quantity testing: 1, 2, 3, 4, 5, 10
   const unitPrice = 229;
-  const codFee = 89;
+  const codFee = 90;
   const testQuantities = [1, 2, 3, 4, 5, 10];
 
   for (const q of testQuantities) {
@@ -2400,13 +2410,13 @@ test('create-order prices two bottles at the pair price (2 for ₹419)', async (
     assert.equal(old.statusCode, 400, 'the old 2 × ₹229 + ₹89 total is rejected');
 
     const pair = createMockRes();
-    await createOrderHandler(order('SMF-20261015-5102', 2, 50800), pair);
+    await createOrderHandler(order('SMF-20261015-5102', 2, 50900), pair);
     assert.equal(pair.statusCode, 200, JSON.stringify(pair.body));
 
     const three = createMockRes();
-    await createOrderHandler(order('SMF-20261015-5103', 3, 73700), three);
+    await createOrderHandler(order('SMF-20261015-5103', 3, 73800), three);
     assert.equal(three.statusCode, 200, JSON.stringify(three.body));
-    assert.deepEqual(rows.map((r) => r.amount), [50800, 73700]);
+    assert.deepEqual(rows.map((r) => r.amount), [50900, 73800]);
   } finally {
     globalThis.fetch = prevFetch;
     if (prevKey === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY; else process.env.SUPABASE_SERVICE_ROLE_KEY = prevKey;

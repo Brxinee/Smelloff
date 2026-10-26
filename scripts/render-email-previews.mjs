@@ -53,7 +53,7 @@ const SAMPLE = {
 
 const TEMPLATES = [
   { file: '01-order-confirmed-prepaid', type: 'orderConfirmation', label: 'Order confirmed (prepaid)', audience: 'Customer · sends', data: SAMPLE },
-  { file: '02-order-confirmed-cod', type: 'codConfirmation', label: 'COD order confirmed', audience: 'Customer · sends', data: { ...SAMPLE, amount: '318', paymentMethod: 'Cash on Delivery', codFee: 89, paymentStatus: 'Confirmed · pay on delivery', transactionRef: '' } },
+  { file: '02-order-confirmed-cod', type: 'codConfirmation', label: 'COD order confirmed', audience: 'Customer · sends', data: { ...SAMPLE, amount: '319', paymentMethod: 'Cash on Delivery', codFee: 90, paymentStatus: 'Confirmed · pay on delivery', transactionRef: '' } },
   { file: '03-payment-failed', type: 'paymentFailed', label: "Payment didn't go through", audience: 'Customer · sends', data: SAMPLE },
   { file: '04-shipped', type: 'orderShipped', label: 'Shipped', audience: 'Customer · sends', data: SAMPLE },
   { file: '05-out-for-delivery', type: 'outForDelivery', label: 'Out for delivery today', audience: 'Customer · sends', data: SAMPLE },

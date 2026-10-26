@@ -116,7 +116,7 @@ function priceBreakdown({ quantity = 1, amount = '', codFee = 0 } = {}) {
   return summaryTable(`
     ${kvRow(`Subtotal (${qty} item${qty > 1 ? 's' : ''})`, `&#8377;${escape(String(subtotal))}`)}
     ${kvRow('Shipping', escape(SHIPPING_LABEL))}
-    ${fee > 0 ? kvRow('COD handling', `&#8377;${escape(String(fee))}`) : ''}
+    ${fee > 0 ? kvRow('COD shipping', `&#8377;${escape(String(fee))}`) : ''}
     ${kvRow(fee > 0 ? 'Amount due' : 'Total paid', `&#8377;${escape(String(total || subtotal))}`, true)}
   `);
 }
@@ -372,7 +372,7 @@ export function orderConfirmation({
     `Product: ${PRODUCT_NAME}`,
     `Quantity: ${qty}`,
     `Shipping: ${SHIPPING_LABEL}`,
-    fee > 0 ? `COD handling: ₹${fee}` : null,
+    fee > 0 ? `COD shipping: ₹${fee}` : null,
     `${fee > 0 ? 'Amount due' : 'Total paid'}: ₹${rupee(amount)}`,
     `Payment method: ${methodLabel}`,
     `Status: ${statusLabel}`,

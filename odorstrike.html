@@ -143,8 +143,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     // the bottle label; a reference price that was never on the pack and never
     // charged is a misleading-price risk under the Consumer Protection Act 2019.
     MRP:    { solo: 499 },
-    // COD_FEE = the handling charge added when the buyer chooses Cash on Delivery.
-    // It is a surcharge on the payment method, not on the product: the product
+    // COD_FEE = the COD shipping charge for the rest of India; COD_ZONES (the same
+    // table as config/product.json codShipping) set it by delivery pincode:
+    // Telangana ₹60, remote ₹130. Prepaid ships free. It is a charge on the payment method, not on the product: the product
     // price stays ₹229 and that is what Product schema and products.json declare.
     // Owner's call (2026-10-11): outside checkout the site says only that COD
     // is available; the amount appears on the COD payment option in the
@@ -153,7 +154,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     // final summary or after "Place order" — that is drip pricing under the
     // CCPA's 2023 dark-pattern guidelines. Keep COD_FEE_RUPEES in
     // supabase/functions/create-order in step (it reads config/product.json).
-    COD_FEE: 89,
+    COD_FEE: 90,
+    COD_ZONES: [{"fee":60,"prefixes":["50"]},{"fee":130,"prefixes":["68255","744","737","78","79","18","19"]}],
     MAX_QTY: 10,
     // ==== SOCIAL PROOF — ALL GATED. Components render NOTHING until real data ====
     // Verified-purchase reviews ONLY. The site computes the visible count, average
@@ -1629,7 +1631,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
 <link rel="preload" href="/assets/css/chrome.css?v=3eafab25" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=3eafab25"></noscript>
-<script src="/assets/js/chrome.js?v=ce244b64" defer></script>
+<script src="/assets/js/chrome.js?v=ae7cf658" defer></script>
 <script src="/assets/js/support-chat.js?v=c16c518c" defer></script>
 </head>
 <body>
@@ -2188,7 +2190,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </details>
     <details>
       <summary><h3>Is COD available?</h3></summary>
-      <p class="faq-answer">Yes. Cash on Delivery is available across India. The COD total, including its handling charge, is shown on the Cash on Delivery option at checkout before you place the order. Prepaid orders are ₹229 with free shipping. COD orders are confirmed via a quick phone call before dispatch.</p>
+      <p class="faq-answer">Yes. Cash on Delivery is available across India. The COD total, including its shipping charge by pincode, is shown on the Cash on Delivery option at checkout before you place the order. Prepaid orders are ₹229 with free shipping. COD orders are confirmed via a quick phone call before dispatch.</p>
     </details>
     <details>
       <summary><h3>How long does shipping take?</h3></summary>
@@ -2341,8 +2343,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           <span class="amt free" id="checkoutShipping">Free</span>
         </div>
         <div class="summary" id="codFeeRow" style="display:none">
-          <span>COD handling</span>
-          <span class="amt fee" id="codFeeAmount">₹89</span>
+          <span>COD shipping</span>
+          <span class="amt fee" id="codFeeAmount">₹90</span>
         </div>
         <div class="summary total">
           <span>Total</span>
@@ -2411,20 +2413,20 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
       </fieldset>
 
       <!-- 3 · PAYMENT — after the address, as Baymard's flow has it. Each option
-           states the total it means, so nobody meets the ₹89 for the first time
+           states the total it means, so nobody meets the COD charge for the first time
            on the button. -->
       <fieldset class="pay-toggle checkout-payment ck-step">
         <legend><span class="ck-num" aria-hidden="true">3</span>Payment</legend>
         <div class="ck-pay-grid" role="radiogroup" aria-label="Payment method">
           <button type="button" class="pay-opt active" data-method="prepaid" role="radio" aria-checked="true" onclick="selectPay('prepaid')">
             <span class="pay-radio" aria-hidden="true"></span>
-            <span class="pay-opt-copy"><strong>Pay online</strong><small>UPI · Cards · Net banking · saves the ₹89 COD charge</small></span>
+            <span class="pay-opt-copy"><strong>Pay online</strong><small>UPI · Cards · Net banking · free shipping</small></span>
             <span class="pay-opt-price">₹229</span>
           </button>
           <button type="button" class="pay-opt" data-method="cod" role="radio" aria-checked="false" onclick="selectPay('cod')">
             <span class="pay-radio" aria-hidden="true"></span>
-            <span class="pay-opt-copy"><strong>Cash on Delivery</strong><small>+₹89 handling · pay when it arrives</small></span>
-            <span class="pay-opt-price">₹318</span>
+            <span class="pay-opt-copy"><strong>Cash on Delivery</strong><small>+₹60–130 shipping by pincode · pay when it arrives</small></span>
+            <span class="pay-opt-price">₹319</span>
           </button>
         </div>
         <div class="ck-pay-badges" aria-label="Accepted online"><span>UPI</span><span>GPay</span><span>PhonePe</span><span>Paytm</span><span>Visa</span><span>Mastercard</span><span>RuPay</span></div>
@@ -2576,7 +2578,23 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   };
   // Surcharge for choosing Cash on Delivery. Read once here so the whole page has
   // one number; the static markup that quotes it is listed at CFG.COD_FEE.
-  const COD_FEE = Number(CFG.COD_FEE) || 0;
+  // COD shipping by the pincode typed in checkout (the server prices it the
+  // same way and rejects a mismatch); rest of India until a pincode is typed.
+  function codFeeNow() {
+    var el = document.getElementById('f_pin');
+    var pin = String(el ? el.value : '').replace(/\D/g, '').slice(-6);
+    if (pin.length === 6) {
+      var zones = CFG.COD_ZONES || [];
+      for (var i = 0; i < zones.length; i++) {
+        if ((zones[i].prefixes || []).some(function (pre) { return pin.indexOf(pre) === 0; })) return Number(zones[i].fee);
+      }
+    }
+    return Number(CFG.COD_FEE) || 0;
+  }
+  function codPinKnown() {
+    var el = document.getElementById('f_pin');
+    return String(el ? el.value : '').replace(/\D/g, '').length === 6;
+  }
   // Product subtotal for a quantity: fives at CFG.PRICES.five, pairs left at
   // CFG.PRICES.pair, an odd bottle at the unit price. The same rule as
   // subtotalForQuantity() on the server.
@@ -2897,7 +2915,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     const unit = Number(v.amount) || CFG.PRICES.solo;
     const subtotal = subtotalFor(qty);
     const shipping = Number(calcShipping(subtotal)) || 0;
-    const codFee = (typeof payMethod !== 'undefined' && payMethod === 'cod') ? COD_FEE : 0;
+    const codFee = (typeof payMethod !== 'undefined' && payMethod === 'cod') ? codFeeNow() : 0;
     return { qty: qty, unit: unit, subtotal: subtotal, shipping: shipping,
              codFee: codFee, total: subtotal + shipping + codFee };
   }
@@ -2938,13 +2956,15 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     // quantity actually in the order (they were hard-coded to one bottle).
     document.querySelectorAll('.pay-opt[data-method]').forEach(function (b) {
       var price = b.querySelector('.pay-opt-price');
-      if (price) price.textContent = '₹' + (t.subtotal + t.shipping + (b.dataset.method === 'cod' ? COD_FEE : 0));
+      if (price) price.textContent = '₹' + (t.subtotal + t.shipping + (b.dataset.method === 'cod' ? codFeeNow() : 0));
+      var note = b.dataset.method === 'cod' ? b.querySelector('small') : null;
+      if (note) note.textContent = codPinKnown() ? '+₹' + codFeeNow() + ' shipping to your pincode · pay when it arrives' : '+₹60–130 shipping by pincode · pay when it arrives';
     });
     set('checkoutTotal', '₹' + t.total);
     set('submitText', t.codFee ? 'Place COD order · ₹' + t.total : 'Pay ₹' + t.total + ' securely');
     // The summary names the COD charge whenever the total includes it, so the
     // Total line never carries a fee the rows above it don't show.
-    set('codFeeAmount', '₹' + COD_FEE);
+    set('codFeeAmount', '₹' + codFeeNow());
     var feeRow = document.getElementById('codFeeRow');
     if (feeRow) feeRow.style.display = t.codFee ? 'flex' : 'none';
   }
@@ -3101,7 +3121,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     var codPanel = document.getElementById('codPayPanel');
     if (upiPanel) upiPanel.style.display = method === 'cod' ? 'none' : 'block';
     if (codPanel) codPanel.style.display = method === 'cod' ? 'block' : 'none';
-    // Switching method changes the total (COD carries the handling charge), so
+    // Switching method changes the total (COD carries its shipping charge), so
     // every price in the modal is re-rendered from the one source of truth.
     renderCheckoutPrices();
     const v = VARIANTS[currentVariant];
@@ -3179,6 +3199,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (pinEl) pinEl.addEventListener('input', function () {
       var d = pinEl.value.replace(/\D/g, '').slice(0, 6);
       if (pinEl.value !== d) pinEl.value = d; // the lookup listener runs after this one
+      renderCheckoutPrices(); // COD shipping depends on the pincode
     });
     Object.keys(CK_RULES).forEach(function (id) {
       var el = document.getElementById(id);
@@ -3369,7 +3390,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   // name and address are what the buyer typed.
   function renderSuccessDetails(orderId, method, amount, qty, name, phone, buyerEmail) {
     var cod = method === 'cod';
-    var fee = cod ? (Number(CFG.COD_FEE) || 0) : 0;
+    var fee = cod ? codFeeNow() : 0;
     var subtotal = Math.max(0, amount - fee);
     var first = String(name || '').trim().split(/\s+/)[0];
     var set = function (id, text) { var el = document.getElementById(id); if (el) el.textContent = text; };
@@ -3933,7 +3954,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     } catch (e) {}
   }
   // `amount` is what the buyer pays, in rupees: the product subtotal plus the
-  // COD handling charge on COD. GA4 gets value = that amount, items priced so
+  // COD shipping charge on COD. GA4 gets value = that amount, items priced so
   // they add up to the subtotal (5 bottles = ₹899, not 5 × ₹229) and the COD
   // charge as `shipping`. Meta's server-side Purchase uses the same amount.
   function trackPurchase(amount, orderId, qty, paymentMethod) {
