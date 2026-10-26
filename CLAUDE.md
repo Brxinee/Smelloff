@@ -99,30 +99,18 @@ history is timestamped by the tool that applies them.
   the owner runs it in the Supabase SQL editor. Homepage `#reviews` is beta
   testers only until a real buyer reviews.
 
-## Homepage hero back to the Aug 15 design (2026-10-21, owner: "bring back the aug 15 design … only top section")
-Only `index.html`'s `.hero` changed; every other section and page is as it was.
-Supersedes "Homepage hero v4" below for the look, not for what the hero says.
-- **Look (from `a1a132e`, live on 15 Aug):** H1 "Don't let them notice your
-  sweat." in Fraunces 900, the bottle cutout on a lime disc with a rotated mono
-  caption, a hairline-topped mono price block and mono uppercase buttons. The
-  three Aug zone cards (Shirt collar / Hoodie / Blazer & jacket) came back too
-  and were removed the same day (owner: "remove these 3 cards"). Fraunces
-  and JetBrains Mono are declared inline for the hero only (`--hero-display`,
-  `--hero-mono`); Fraunces and the cutout are preloaded.
-- **Kept from today:** the eyebrow and sub (clothing-deodorant brief), ₹229 /
-  M.R.P. ₹499 / 54% OFF, `#heroBuyBtn` + "See the product" ghost (classes the
-  tests and the sticky-bar observer use), the 2-for-₹419 link, the shipping /
-  COD / returns row with no COD amount, the fabric-only chips, Rohit's quote.
-- The Aug pill said "Smell Proof. Always."; the audit blocks smell-proof claims,
-  so the pill reads "Smell Khatam. Confidence Qaayam.".
-- The cutout ban (owner, 2026-10-12) now exempts the homepage hero only.
-- **Homepage `#buy` offer box** shows the white studio shot (PDP gallery tile 1,
-  re-encoded as `assets/photos/offer-studio-white*`, AVIF + WebP 400–1196), not
-  the in-hand photo (owner, same day). Still `contain`, on a light gradient that
-  matches the photo's edges. The PDP offer box, cart and blog cards keep the
-  in-hand photo.
-- Measured on a production build: Buy bottom 1175px at 390×844 (the sticky buy
-  strip covers it), 929px at 1280×800.
+## Homepage hero: photo-first v4 again (2026-10-26, owner: "bring back the previous hero")
+The Aug 15 hero (#524, Fraunces headline, bottle cutout on a lime disc, mono
+price block; zone cards removed in #525) is reverted. `index.html`'s `.hero`
+is the photo-first hero as it stood on 2026-10-20 ("Homepage hero v4" below,
+with the clothing-deodorant eyebrow and sub): H1 "Your shirt smells. Fix it.",
+the collar-spray photo (`hero-spray-collar`, AVIF preloaded with the same
+`imagesizes`), Space Grotesk + Inter preloaded, no hero-only Fraunces/JetBrains.
+- Kept from after the Aug 15 pass: the homepage `#buy` white studio shot
+  (#526) and everything in the Notion passes.
+- The cutout ban covers every page again, the homepage hero included.
+- Measured on the source page (no build transforms): Buy bottom 689px at
+  390×844, 611px at 1280×800.
 
 ## Measurement, attribution, checkout amount (2026-10-20, owner: "reliable, measurable, ready for acquisition")
 Audited by driving real checkouts against a production build with every
