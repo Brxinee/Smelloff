@@ -115,8 +115,8 @@ the top of Shiprocket's usual 0.5 kg ranges: **Telangana (50xxxx) ₹60, remote
 - `orders.cod_fee` holds the charge per order, so Shiprocket
   (`transaction_charges`), Sheets ("COD fee (₹)" column, header unchanged),
   /admin and emails ("COD shipping") show what that order paid.
-- Outside checkout the site still says only "Cash on Delivery available";
-  `/shipping`, `/refund`, `/faq`, `/terms`, `/privacy` state the three zones.
+- **Amounts only in checkout** (owner, same day: "it should only happen in the checkout page"): every other page, the policies and the chat say only "a shipping charge based on your pincode, shown at checkout";
+  `test/cod-checkout-regression.test.mjs` fails on a COD amount anywhere else.
 
 ## Sales pass: payment recovery + blog citation pass (2026-10-26, owner: "I need sells … rank … traffic")
 Live data (30 days): ~200 visitors/week, ~60 in India, ~30 on `/odorstrike`;

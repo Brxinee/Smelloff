@@ -115,7 +115,7 @@
     "cod": {
       "fee": 90,
       "currency": "INR",
-      "description": "Cash on Delivery orders pay shipping by delivery pincode: ₹60 in Telangana, ₹90 across the rest of India and ₹130 to remote areas (North-East, J&K, Ladakh, Andaman & Nicobar, Lakshadweep). Prepaid orders ship free."
+      "description": "Cash on Delivery orders pay a shipping charge based on the delivery pincode, shown at checkout before the order is placed. Prepaid orders ship free."
     },
     "destinationCountry": "IN",
     "dispatchWindow": "Within 48 hours of confirmation",
