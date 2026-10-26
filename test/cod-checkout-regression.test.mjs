@@ -87,33 +87,35 @@ test('COD shipping is one order-level charge by delivery pincode, not per bottle
   assert.doesNotMatch(api, /codFeeForPincode\([^)]*\) \* quantity/);
 });
 
-// Owner's call (2026-10-11): outside checkout the site says COD is available
-// and nothing more. The amount lives on the COD payment option in checkout
-// (its own total, before the order is placed) and in the three policies.
-test('COD amount appears only in checkout and on /shipping, /refund, /faq', () => {
-  const { codFee, priceCod } = product.product;
-  const amount = new RegExp(`(₹|&#8377;)\\s*(${codFee}|${priceCod})\\b`);
-  const zoneLine = '₹60 in Telangana, ₹90 across the rest of India and ₹130 to remote areas';
-  // Policies, plus the post-purchase pages that show what an order was charged.
-  const policy = new Set(['shipping.html', 'refund.html', 'faq.html', 'terms.html', 'privacy.html', 'track-order.html', 'payment-failed.html']);
+// Owner's call (2026-10-26): the COD shipping amounts (₹60 / ₹90 / ₹130 and
+// the ₹319 total) appear only in checkout, on the COD option, before the
+// order is placed. Policies and every other page say a pincode-based charge
+// is shown at checkout. Post-purchase pages may show what an order paid.
+test('COD shipping amounts appear only in checkout', () => {
+  const { priceCod } = product.product;
+  const fees = [...new Set([product.product.codFee, ...product.product.codShipping.zones.map((z) => z.fee)])];
+  const amount = new RegExp(`(₹|&#8377;)\\s*(${fees.join('|')}|${priceCod})(?!\\d)`);
+  const postPurchase = new Set(['track-order.html', 'payment-failed.html']);
   const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html'))
     .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
   for (const f of pages) {
-    if (policy.has(f)) continue;
+    if (postPurchase.has(f)) continue;
     let html = fs.readFileSync(f, 'utf8');
     if (f === 'odorstrike.html') {
-      // The checkout modal (and the payment-failed policy overlay after it)
-      // may state it; nothing else on the page.
+      // Only the checkout modal (and the payment-failed overlay after it) may state it.
       html = html.replace(/<div class="overlay" id="checkoutOverlay"[\s\S]*?<!-- DPDP Consent Bar -->/, '');
-      html = html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<!--[\s\S]*?-->/g, '');
+      html = html.replace(/<script[\s\S]*?<\/script>/g, '');
     }
-    assert.doesNotMatch(html.replace(/<!--[\s\S]*?-->/g, ''), amount, `${f} must not state the COD amount outside checkout`);
+    html = html.replace(/<!--[\s\S]*?-->/g, '');
+    const cod = /cash on delivery|\bCOD\b/i;
+    for (const para of html.split(/<\/(?:p|li|div|td)>/)) {
+      if (cod.test(para)) assert.doesNotMatch(para, amount, `${f} must not state a COD amount outside checkout`);
+    }
   }
-  for (const f of ['shipping.html', 'refund.html', 'faq.html']) {
-    const html = fs.readFileSync(f, 'utf8');
-    assert.ok(html.includes(zoneLine) && html.includes(`₹${priceCod}`), `${f} must state the COD shipping by pincode and the ₹${priceCod} total`);
+  for (const f of ['shipping.html', 'refund.html', 'faq.html', 'terms.html']) {
+    assert.match(fs.readFileSync(f, 'utf8'), /shipping charge based on (?:your|the delivery) pincode/, `${f} names the pincode-based COD charge`);
   }
   const pdp = fs.readFileSync('odorstrike.html', 'utf8');
   assert.match(pdp, new RegExp(`data-method="cod"[\\s\\S]{0,300}\\+₹60–130 shipping by pincode[\\s\\S]{0,120}class="pay-opt-price">₹${priceCod}<`),
-    'the COD option in checkout must state the charge and its own total before the order is placed');
+    'the COD option in checkout states the charge and its own total before the order is placed');
 });

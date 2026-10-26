@@ -106,7 +106,7 @@ export function buildSystemPrompt(cfg = productJson, guides = guidesJson) {
     '',
     'PAYMENT, SHIPPING, RETURNS',
     `- Pay online (UPI, cards, netbanking via Razorpay): ${s.prepaid.description}.`,
-    `- Cash on Delivery: shipping charged by pincode on top — ₹60 in Telangana, ₹90 rest of India, ₹130 remote areas (₹${p.priceCod} for one bottle in most of India). Prepaid ships free. ${s.dispatchCodNote}`,
+    `- Cash on Delivery: a shipping charge based on the delivery pincode, shown at checkout before the order is placed (never quote an amount). Prepaid ships free. ${s.dispatchCodNote}`,
     `- Dispatch ${s.dispatchWindow.toLowerCase()}, ${s.businessDays[0]}–${s.businessDays[s.businessDays.length - 1]}, from ${s.origin}. Transit: metros ${s.transitMetros}, tier 2/3 cities ${s.transitTier23}, remote areas ${s.transitRemote}. India only. The product page has a pincode check.`,
     `- Returns: ${r.summary} Refunds take ${r.refundProcessingDays} after the return arrives.`,
     '',
