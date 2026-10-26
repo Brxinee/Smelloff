@@ -1225,6 +1225,341 @@ export const FIGURES = {
       ],
     }),
   ],
+
+  // 2026-10-26: twenty guides chosen from Indian search demand (Google autocomplete, gl=in).
+  'kapdon-se-pasine-ki-badbu-kaise-hataye': [
+    photo('badbu-kapde-mein-kahan-rehti-hai', 21835293,
+      'Clothes hang on a line to air outside a house, in daylight',
+      'Hawa pehla kadam hai: ulta karke 20–30 minute.', '50% 50%'),
+    dia('kapdon-mein-pasine-ki-badbu-kyon-aati-hai', 'zones', {
+      kicker: 'Teen zones',
+      title: 'Badbu poore shirt mein nahi, yahan rehti hai',
+      garment: 'shirt',
+      zones: [
+        { zone: 'collar', label: 'Collar ka andar', text: 'Gardan ka tel aur pasina har baar.' },
+        { zone: 'underarms', label: 'Bagal', text: 'Sabse garam aur geela kapda.' },
+        { zone: 'upper back', label: 'Upar ki peeth', text: 'Kursi ya seat se dabta hai.' },
+      ],
+      note: 'Sirf in hisson par 2–3 spray, 15–20 cm door se.',
+    }),
+  ],
+
+  'remove-smell-from-winter-jacket-without-washing': [
+    photo('how-do-you-refresh-a-jacket-between-washes', 6045058,
+      'A black padded winter jacket hangs alone on a metal clothes rack in a bright room',
+      'Air it open on a wide hanger before you treat the lining.', '50% 45%'),
+    dia('where-does-the-smell-sit-in-a-jacket', 'zones', {
+      kicker: 'Four spots',
+      title: 'Where a winter jacket holds smell',
+      garment: 'jacket',
+      zones: [
+        { zone: 'collar', label: 'Inside collar', text: 'Neck and hair oil every day.' },
+        { zone: 'underarm lining', label: 'Underarm lining', text: 'The warmest fabric in the jacket.' },
+        { zone: 'back lining', label: 'Back lining', text: 'Pressed against seats for hours.' },
+        { zone: 'cuffs', label: 'Cuffs', text: 'Hands, food and the bus rail.' },
+      ],
+      note: 'A whole jacket takes 5–6 sprays, on the lining only.',
+    }),
+  ],
+
+  'remove-smell-from-saree-and-blouse-without-washing': [
+    photo('how-do-you-remove-storage-smell-from-a-saree', 11733651,
+      'A neat stack of folded olive-green fabric lengths in warm light',
+      'Unfold, air in shade, refold along new lines.', '50% 50%'),
+    dia('which-sarees-should-you-not-spray', 'decide', {
+      kicker: 'Before you spray',
+      title: 'Which fabric, which fix',
+      rows: [
+        ['Cotton, linen, georgette, chiffon, blends', 'Air, then treat inside', 'refresh'],
+        ['Pure silk (Kanjivaram, Banarasi)', 'Air; patch-test or skip', 'air'],
+        ['Zari or heavy embroidery', 'Spot-test or skip', 'air'],
+        ['Labelled dry-clean only', 'Leave to the cleaner', 'stop'],
+        ['Stained, oily or damp', 'Wash or clean', 'wash'],
+      ],
+    }),
+  ],
+
+  'why-does-sweat-smell-like-onions-vinegar-ammonia': [
+    photo('why-does-sweat-smell-like-onions', 4197445,
+      'A small ceramic bowl of brown onions on a white marble table',
+      'The onion note in sweat is a sulphur compound, the same family that gives onions their smell.', '50% 50%'),
+    dia('why-does-the-smell-stay-in-my-shirt-after-i-shower', 'compare', {
+      kicker: 'Three smells',
+      title: 'Three molecules, three sources',
+      cols: [
+        {
+          name: 'Onion',
+          tag: 'Thioalcohols',
+          lines: ['Bacteria release sulphur compounds', 'From underarm (apocrine) sweat', 'Worse with stress'],
+        },
+        { name: 'Vinegar', tag: 'Fatty acids', lines: ['Acetic, propionic, isovaleric acid', 'Sour, cheesy notes', 'Cling to polyester'] },
+        {
+          name: 'Ammonia',
+          tag: 'From the blood',
+          lines: ['Rises with long, hard exercise', 'Volatile, fades from skin', 'Lingers in a shirt that dried sweaty'],
+        },
+      ],
+      note: 'All three can stay in fabric after you shower.',
+    }),
+  ],
+
+  'clothes-left-in-washing-machine-overnight-smell': [
+    photo('how-do-you-save-a-load-that-smells-sour', 5591460,
+      'A hand presses the controls of a front-loading washing machine with clothes in the drum',
+      'Rewash warm, then get the load out the moment it finishes.', '50% 50%'),
+    dia('why-do-clothes-smell-after-sitting-in-the-washing-machine', 'decide', {
+      kicker: 'Sniff test',
+      title: 'Rewash or just dry?',
+      rows: [
+        ['A few hours, smells clean or faintly damp', 'Rinse and spin, dry now', 'air'],
+        ['Overnight, smells sour or musty', 'Rewash with detergent', 'wash'],
+        ['A day or more, or visible spots', 'Rewash, check for mildew', 'wash'],
+        ['Machine smells even when emptied on time', 'Clean the seal, drawer, filter', 'stop'],
+      ],
+    }),
+  ],
+
+  'how-to-tell-someone-they-have-body-odour': [
+    photo('how-do-you-bring-it-up-without-hurting-them', 7156231,
+      'Two colleagues talk across a desk in a quiet office, one holding a sheet of paper',
+      'Private and short: one conversation, not a campaign.', '50% 45%'),
+    dia('what-exactly-can-you-say', 'decide', {
+      kicker: 'Who should say it',
+      title: 'Pick the right person and the right setting',
+      rows: [
+        ['Close colleague or friend', 'You, privately, once', 'ok'],
+        ['Peer you barely know', 'Their manager or HR', 'air'],
+        ['Your team member', 'You, linked to policy, in private', 'ok'],
+        ['Flatmate', 'You, about the laundry and the room', 'ok'],
+        ['Anyone, by note or group chat', 'Don\'t', 'stop'],
+      ],
+    }),
+  ],
+
+  'how-to-know-if-you-smell-bad': [
+    photo('where-does-the-smell-usually-come-from', 16664908,
+      'A man in a white shirt adjusts his collar in a room with clothes on a rail behind him',
+      'If you shower daily, the collar and underarms of your shirts are the usual suspects.', '50% 40%'),
+    dia('how-can-you-check-your-own-smell', 'steps', {
+      kicker: 'Five checks',
+      title: 'Better than sniffing your own arm',
+      items: [
+        ['Shirt test', 'Away 15–20 minutes, then smell collar and underarms.'],
+        ['Laundry pile', 'Yesterday\'s shirt is roughly you by evening.'],
+        ['Second wear', 'A worn, hung-up shirt shows tomorrow\'s problem.'],
+        ['Room test', 'Notice your car or cupboard after a few hours away.'],
+        ['Ask one person', 'A direct question to someone honest.'],
+      ],
+    }),
+  ],
+
+  'dog-smell-on-clothes': [
+    photo('why-does-dog-smell-stick-to-clothes', 10892514,
+      'A small black curly-coated dog sits on a warm wooden floor, looking up',
+      'Every cuddle moves hair and coat oils onto fabric.', '50% 55%'),
+    dia('how-do-you-remove-dog-smell-before-you-leave-the-house', 'steps', {
+      kicker: 'Before you leave',
+      title: 'The one-minute pet-smell reset',
+      items: [
+        ['Hair off', 'Lint roller, tape or a damp rubber glove.'],
+        ['Shake and air', 'At a window or outdoors.'],
+        ['Treat contact zones', 'Chest, lap, forearms: 2–3 sprays each, 15–20 cm.'],
+        ['Dry', '15–30 seconds, then go.'],
+      ],
+      note: 'Drool, mud or urine: wash it instead.',
+    }),
+  ],
+
+  'teenage-son-body-odour-clothes-parents-guide': [
+    photo('how-do-you-deal-with-the-bedroom-and-the-laundry-pile', 19881985,
+      'Two laundry baskets full of clothes stand by a wooden door at home',
+      'A basket the clothes can breathe in, not a bag and not the floor.', '50% 55%'),
+    dia('what-daily-routine-actually-works-for-a-teenager', 'steps', {
+      kicker: 'Five minutes',
+      title: 'A routine a teenager will follow',
+      items: [
+        ['Shower', 'Daily, and after sport.'],
+        ['Deodorant', 'On clean, dry underarms.'],
+        ['Fresh vest and shirt', 'Every day.'],
+        ['Sports kit to the wash', 'Same day, never back in the bag.'],
+        ['Refresh the layers', 'Hoodie and blazer: collar and underarms.'],
+      ],
+    }),
+  ],
+
+  'should-you-wear-a-vest-under-your-shirt': [
+    photo('which-vest-should-you-buy', 11612797,
+      'An older man in a white cotton vest smiles on a sunny porch',
+      'The cotton banian: an old answer to an old problem.', '50% 35%'),
+    dia('what-does-a-vest-actually-do-under-a-shirt', 'bars', {
+      kicker: 'ASTM D1909',
+      title: 'How much moisture each fibre holds (commercial regain)',
+      items: [['Cotton', 8.5, '8.5%', true], ['Polyester', 0.4, '0.4%']],
+      note: 'Cotton next to the skin pulls sweat in; polyester leaves it on the surface.',
+    }),
+  ],
+
+  'how-many-shirts-should-a-man-own-for-office': [
+    photo('does-rotating-shirts-make-them-last-longer', 102129,
+      'A long row of shirts on wooden hangers in warm, low light',
+      'Rotation means fewer washes for every shirt on the rail.', '50% 50%'),
+    dia('how-many-work-shirts-do-you-actually-need', 'bars', {
+      kicker: 'Quick count',
+      title: 'Office shirts for your week',
+      items: [
+        ['Five-day week, weekly wash', 7, '7'],
+        ['Six-day week, weekly wash', 9, '8–9', true],
+        ['Hot commute or field work', 11, '9–11'],
+        ['Washing twice a week', 6, '5–6'],
+      ],
+      note: 'Working days plus two or three spares.',
+    }),
+  ],
+
+  'remove-perfume-smell-from-clothes': [
+    photo('how-do-you-get-perfume-out-without-washing', 1122167,
+      'White clothes pegged on a line under a blue sky with trees behind',
+      'Moving air and time do most of the work.', '50% 50%'),
+    dia('why-does-perfume-cling-to-clothes', 'timeline', {
+      kicker: 'Fragrance layers',
+      title: 'Why perfume lingers on fabric',
+      items: [
+        ['Minutes', 'Top notes evaporate first: citrus, light florals.'],
+        ['Hours', 'Middle notes carry the main character.'],
+        ['A day or more', 'Base notes such as musks and resins cling, longest on synthetics and wool.'],
+      ],
+      note: 'Airing clears the top and middle; a wash clears most of the rest.',
+    }),
+  ],
+
+  'new-clothes-chemical-smell-wash-before-wearing': [
+    photo('which-new-clothes-need-washing-most', 12960395,
+      'Close-up of a small white care label on a striped cotton t-shirt',
+      'Non-iron, wrinkle-free, easy-care: wash these before the first wear.', '50% 45%'),
+    dia('is-formaldehyde-in-clothes-a-concern', 'stats', {
+      kicker: 'GAO-10-875, 2010',
+      title: 'What a test of 180 textiles found',
+      items: [
+        ['180', 'items tested: 165 clothing, 15 bed linens'],
+        ['10', 'exceeded the strictest industry limits'],
+        ['206 ppm', 'the highest: a 100% cotton wrinkle-free dress shirt'],
+      ],
+      note: 'Washing before wearing often reduces formaldehyde levels.',
+    }),
+  ],
+
+  'how-often-to-wash-pajamas-nightwear': [
+    photo('how-do-you-keep-nightwear-fresh-between-washes', 18063446,
+      'Laundry baskets with folded and loose clothes beside a bed in a bedroom',
+      'Hang it up in the morning; folded warm under a pillow, it cannot dry.', '50% 55%'),
+    dia('what-wear-count-fits-your-nightwear', 'decide', {
+      kicker: 'Wear count',
+      title: 'When to wash your nightwear',
+      rows: [
+        ['Cotton, AC, shower before bed', '3–4 wears', 'ok'],
+        ['Cotton, fan only, summer', '1–2 wears', 'refresh'],
+        ['Polyester or satin', '1–2 wears', 'refresh'],
+        ['Heavy night sweats or unwell', 'Every night', 'wash'],
+      ],
+    }),
+  ],
+
+  'grooming-essentials-for-men-india': [
+    photo('where-should-you-keep-each-item', 9456810,
+      'A straight razor with a wooden handle lies open on a grey surface',
+      'Skin and hair stay home; the clothes item travels with you.', '50% 50%'),
+    dia('what-is-the-minimum-grooming-kit-for-indian-weather', 'compare', {
+      kicker: 'Four jobs',
+      title: 'The kit, by job',
+      cols: [
+        { name: 'Skin', tag: 'Morning and night', lines: ['Face wash', 'Sunscreen, SPF 30+', 'Gel moisturiser, lip balm'] },
+        { name: 'Sweat', tag: 'At night', lines: ['Antiperspirant on dry skin', 'Cotton vest under the shirt'] },
+        { name: 'Face and hair', tag: 'As needed', lines: ['Trimmer or razor', 'Comb and one product', 'Nail clippers'] },
+        { name: 'Clothes', tag: 'In your pocket', pick: true, lines: ['Fabric odour spray', 'Collar and underarms', 'Never on skin'] },
+      ],
+    }),
+  ],
+
+  'return-gifts-for-men-indian-wedding': [
+    photo('how-do-you-plan-quantity-and-delivery', 7410461,
+      'Small kraft-paper gift boxes tied with pink and green ribbons on a white table',
+      'A plain kraft box and a thank-you tag beat shiny packaging.', '50% 55%'),
+    dia('what-are-good-return-gift-ideas-for-men', 'decide', {
+      kicker: 'By budget',
+      title: 'Return gift ideas for men',
+      rows: [
+        ['Under ₹200: handkerchiefs, dry fruits, notebook, small plant', 'Useful', 'ok'],
+        ['₹200–500: travel pouch, card holder, pocket fabric spray', 'Useful', 'ok'],
+        ['Names printed large on the item', 'Rarely used', 'air'],
+        ['Glass, heavy boxes, strong perfume', 'Avoid', 'stop'],
+      ],
+    }),
+  ],
+
+  'secret-santa-gift-ideas-for-coworkers-india': [
+    photo('how-do-you-wrap-and-present-it', 29873592,
+      'Two presents wrapped in green and patterned blue paper, tied with white string',
+      'Simple wrapping and a one-line note.', '50% 50%'),
+    dia('what-should-you-avoid', 'decide', {
+      kicker: 'Gift check',
+      title: 'Safe or awkward?',
+      rows: [
+        ['Mug, plant, notebook, tea, cable organiser', 'Safe', 'ok'],
+        ['Pocket fabric spray, with a "for the commute" note', 'Safe', 'ok'],
+        ['Deodorant, soap or perfume as a joke', 'Awkward', 'stop'],
+        ['Diet or appearance-related gifts', 'Awkward', 'stop'],
+        ['Alcohol or religious items, if you do not know them', 'Risky', 'air'],
+      ],
+    }),
+  ],
+
+  'first-job-essentials-checklist-freshers-india': [
+    photo('why-do-the-first-weeks-matter-so-much', 4308091,
+      'Two young Indian colleagues work together at a desk with a laptop and notebook',
+      'In the first weeks, impressions form in lifts, meetings and the canteen.', '50% 45%'),
+    dia('what-should-you-keep-in-your-desk-drawer', 'steps', {
+      kicker: 'Desk drawer',
+      title: 'The fresher\'s drawer kit',
+      items: [
+        ['Work', 'Notebook, two pens, charger, power bank.'],
+        ['Water', 'Bottle and mug.'],
+        ['Fresh', 'Mints, handkerchief, comb.'],
+        ['Shirt', 'Pocket fabric odour spray for the collar.'],
+      ],
+    }),
+  ],
+
+  'remove-sweat-smell-from-cap': [
+    photo('how-do-you-refresh-a-cap-between-washes', 25324620,
+      'A young man in a dark cap and a striped t-shirt stands among trees, looking up',
+      'Dry the sweatband first; treat it second.', '50% 30%'),
+    dia('where-does-the-smell-sit-in-a-cap', 'decide', {
+      kicker: 'Refresh or wash',
+      title: 'What your cap needs',
+      rows: [
+        ['Smells stale, band dry and clean', 'Air, then treat the band', 'refresh'],
+        ['Damp from sweat or rain', 'Dry fully first', 'air'],
+        ['Band stained or stiff', 'Hand-wash the band', 'wash'],
+        ['Leather or suede cap', 'Not for a fabric spray', 'stop'],
+      ],
+    }),
+  ],
+
+  'why-do-sun-dried-clothes-smell-good': [
+    photo('when-is-sun-drying-a-bad-idea', 5084825,
+      'A woman hangs washed clothes on a line in a green garden',
+      'Spread clothes out with space between them; moving air does most of the work.', '50% 45%'),
+    dia('what-actually-creates-the-sun-dried-smell', 'compare', {
+      kicker: 'Copenhagen, 2020',
+      title: 'Same towels, three places to dry',
+      cols: [
+        { name: 'Dark room', tag: 'Indoors', lines: ['Fewest new scent molecules', 'Slowest to dry'] },
+        { name: 'Shaded balcony', tag: 'Outdoors', lines: ['Some new compounds', 'Moving air helps'] },
+        { name: 'Sunlit balcony', tag: 'Sun', pick: true, lines: ['Most aldehydes and ketones', 'Pentanal, octanal, nonanal'] },
+      ],
+      note: 'The fresh smell is made by sunlight on wet fabric.',
+    }),
+  ],
 };
 
 export default FIGURES;

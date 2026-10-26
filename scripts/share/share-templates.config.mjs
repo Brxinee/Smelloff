@@ -256,6 +256,87 @@ export const POSTS = {
     x: 'Wool absorbs moisture vapour and resists body odor; most budget sweaters in India are acrylic, which holds it like polyester. That decides how often you refresh.',
   },
 
+  // 2026-10-26: twenty guides chosen from Indian search demand (Google autocomplete, gl=in).
+  'kapdon-se-pasine-ki-badbu-kaise-hataye': {
+    wa: 'Kapdon se pasine ki badbu, bina dhoye kaise hataye — simple Hinglish mein 10 minute ka tareeka: {url}',
+    x: 'Pasine ki badbu skin par nahi, kapde ke collar, bagal aur peeth mein baithti hai. Hawa do, sirf un zones ko treat karo, sukhne do.',
+  },
+  'remove-smell-from-winter-jacket-without-washing': {
+    wa: 'If your winter jacket smells of the commute and dinner: the lining is the problem, not the shell. How to refresh it without washing: {url}',
+    x: 'Jacket smell sits in four places: collar, underarm lining, back lining and cuffs. Air it inside out, treat the lining, let it dry before you zip up.',
+  },
+  'remove-smell-from-saree-and-blouse-without-washing': {
+    wa: 'For anyone with a blouse that smells after one wear, or a saree that smells of the almirah: what to do without washing, and which silks to leave alone: {url}',
+    x: 'Blouse smell is sweat, held tight against the underarms. Saree smell is usually storage air. Different fixes: treat the blouse panels, air the saree in shade.',
+  },
+  'why-does-sweat-smell-like-onions-vinegar-ammonia': {
+    wa: 'Ever wondered why sweat sometimes smells like onions and sometimes like vinegar? Three different molecules, three reasons: {url}',
+    x: 'Onion-smelling sweat is a thioalcohol bacteria release from underarm sweat. Vinegar is short-chain fatty acids. Ammonia rises with long, hard exercise. All three stick to polyester.',
+  },
+  'clothes-left-in-washing-machine-overnight-smell': {
+    wa: 'Left a wash in the machine overnight? This tells you when you must rewash and how to stop the sour smell coming back: {url}',
+    x: 'The "wet dishcloth" laundry smell has been traced to one bacterium, Moraxella osloensis, which survives drying and UV. A load left wet overnight is ideal for it.',
+  },
+  'how-to-tell-someone-they-have-body-odour': {
+    wa: 'If you have ever needed to tell someone they smell and didn\'t know how: kind scripts for colleagues, flatmates and family: {url}',
+    x: 'People usually cannot smell their own body odour: the nose adapts to constant smells. Telling them once, privately and kindly, is the considerate thing.',
+  },
+  'how-to-know-if-you-smell-bad': {
+    wa: 'Can\'t tell if you smell? You are the worst person to judge, because your nose adapts. Five honest checks that actually work: {url}',
+    x: 'You cannot reliably smell yourself: the nose habituates to constant odours. The better check is your shirt, after 15 minutes away from it.',
+  },
+  'dog-smell-on-clothes': {
+    wa: 'For dog people: how to get the dog off your office clothes in a minute before you leave, and what needs a real wash: {url}',
+    x: 'Dog smell travels on hair and coat oils, and is strongest when the dog is damp. Hair first, then air, then treat the chest and lap. Never spray the dog.',
+  },
+  'teenage-son-body-odour-clothes-parents-guide': {
+    wa: 'For parents of teenage boys: why the smell starts, how to bring it up without a fight, and a 5-minute routine he will actually follow: {url}',
+    x: 'Teenage body odour starts when puberty switches on the apocrine sweat glands. Most of the fix is the clothes: fresh vest daily, sports kit straight to the wash, hoodies aired.',
+  },
+  'should-you-wear-a-vest-under-your-shirt': {
+    wa: 'The old banian advice holds up: a cotton vest takes the sweat before your shirt does. Which vest to buy and when to skip it: {url}',
+    x: 'Cotton\'s moisture regain is about 8.5%; polyester\'s is 0.4%. That is why a cotton vest under a poly-blend shirt keeps the shirt drier and less smelly.',
+  },
+  'how-many-shirts-should-a-man-own-for-office': {
+    wa: 'Running out of clean office shirts by Thursday? A simple way to count how many you need for Indian weather and your laundry day: {url}',
+    x: 'Working days plus two or three spares. Spares cover the monsoon week, the stain and the tailor. Rotation also halves the washes on every good shirt.',
+  },
+  'remove-perfume-smell-from-clothes': {
+    wa: 'Too much perfume on a shirt, or a jacket that smells of someone else\'s cologne? What actually gets it out: {url}',
+    x: 'Perfume base notes are designed to cling, and on fabric they cling longer than on skin. Moving air, time and a wash without conditioner do the work. Another spray on top does not.',
+  },
+  'new-clothes-chemical-smell-wash-before-wearing': {
+    wa: 'That sharp smell on new clothes is finishing chemicals, not the cotton. What a US government test of 180 garments found, and why to wash first: {url}',
+    x: 'In a GAO test of 180 textiles, 10 exceeded the strictest industry formaldehyde limits; the highest was a 100% cotton wrinkle-free dress shirt. Wash new clothes before wearing.',
+  },
+  'how-often-to-wash-pajamas-nightwear': {
+    wa: 'Same night suit all week? Here is a sensible wear count for Indian weather, and how to keep nightwear fresh between washes: {url}',
+    x: 'The US cleaning industry says wash pajamas every 3–4 wears. In an Indian summer without AC, it is 1–2. Folding a warm night shirt under the pillow is the real mistake.',
+  },
+  'grooming-essentials-for-men-india': {
+    wa: 'A short, honest grooming list for Indian weather: nine things, what each is for, and what to skip: {url}',
+    x: 'Most men\'s grooming kits cover skin and hair and miss the clothes. In Indian heat, the afternoon smell is usually the shirt, not the man.',
+  },
+  'return-gifts-for-men-indian-wedding': {
+    wa: 'Planning return gifts for the men at a wedding? Ideas they will actually use, by budget, and how to plan quantity and delivery: {url}',
+    x: 'Gift research: givers focus on the unwrapping, recipients on how useful a gift is over time. For wedding return gifts, that means practical, everyday, decent quality.',
+  },
+  'secret-santa-gift-ideas-for-coworkers-india': {
+    wa: 'Drew someone you barely know for office Secret Santa? Ten gifts under ₹500 that suit almost anyone, and what to avoid: {url}',
+    x: 'Secret Santa rule: useful and neutral beats funny and personal. Recipients value how useful a gift is over time more than givers expect.',
+  },
+  'first-job-essentials-checklist-freshers-india': {
+    wa: 'Joining your first office job soon? A practical checklist: documents, clothes, desk drawer, and how to stay fresh after a long commute: {url}',
+    x: 'People judge competence and trustworthiness from a face seen for a tenth of a second. In your first weeks, looking put-together at 5 pm is part of the impression.',
+  },
+  'remove-sweat-smell-from-cap': {
+    wa: 'If your cap smells sour inside: it is the sweatband. How to freshen it without washing, and how to wash it without wrecking the brim: {url}',
+    x: 'Cap smell comes from one strip of fabric: the sweatband, which soaks up forehead sweat and hair oil and is hung up damp. Dry it first, then treat it.',
+  },
+  'why-do-sun-dried-clothes-smell-good': {
+    wa: 'The sun-dried laundry smell is real chemistry: sunlight on wet fabric makes new scent molecules. What the study found, and which clothes to keep out of the sun: {url}',
+    x: 'Copenhagen chemists dried towels in sun, shade and indoors. The sun-dried ones gave off aldehydes and ketones like octanal and nonanal: the "sunshine smell" is made, not uncovered.',
+  },
 };
 
 /**
