@@ -163,7 +163,8 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   const html = readFileSync('index.html', 'utf8');
   const h1 = [...html.matchAll(/<h1\b[^>]*>(.*?)<\/h1>/gis)];
   assert.equal(h1.length, 1, 'Homepage must contain exactly one <h1>');
-  assert.ok(h1[0][1].includes('Your shirt smells') && h1[0][1].includes('Fix it.'), 'H1 must be "Your shirt smells. Fix it."');
+  // 2026-10-26 (owner): photo hero, Aug 15 headline.
+  assert.ok(h1[0][1].includes("Don't let them notice your") && h1[0][1].includes('sweat.'), 'H1 must be "Don\'t let them notice your sweat."');
 
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
   // 2026-10-20: the category is "clothing deodorant"; the eyebrow says fabric only and the
