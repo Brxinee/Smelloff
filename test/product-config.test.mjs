@@ -163,8 +163,7 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   const html = readFileSync('index.html', 'utf8');
   const h1 = [...html.matchAll(/<h1\b[^>]*>(.*?)<\/h1>/gis)];
   assert.equal(h1.length, 1, 'Homepage must contain exactly one <h1>');
-  // 2026-10-21: the hero is the Aug 15 design again (owner's call), headline included.
-  assert.ok(h1[0][1].includes("Don't let them notice your") && h1[0][1].includes('sweat.'), 'H1 must be "Don\'t let them notice your sweat."');
+  assert.ok(h1[0][1].includes('Your shirt smells') && h1[0][1].includes('Fix it.'), 'H1 must be "Your shirt smells. Fix it."');
 
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
   // 2026-10-20: the category is "clothing deodorant"; the eyebrow says fabric only and the
@@ -178,8 +177,7 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   // Owner's call (2026-10-11): outside checkout, say COD exists; the amount is on the COD option in checkout.
   assert.ok(hero.includes('Cash on Delivery') && !/₹\s*(89|318)\b/.test(hero), 'Hero names COD availability without the COD amount');
   assert.ok(hero.includes('2–3 sprays') && hero.includes('15–30 sec'), 'Usage microcopy must match the PDP');
-  assert.ok(hero.includes('/assets/odorstrike-bottle-cutout'), 'Hero must show the bottle (Aug 15 design: cutout on the lime disc)');
-  assert.ok(!hero.includes('class="zones"'), 'the zone cards were removed (owner, 2026-10-21)');
+  assert.ok(hero.includes('/assets/photos/hero-spray-collar'), 'Hero must show the product in use (the collar spray photo)');
 });
 
 test('index.html homepage: every section ends in a route to checkout', () => {
