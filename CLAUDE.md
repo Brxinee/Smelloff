@@ -103,7 +103,8 @@ history is timestamped by the tool that applies them.
 The Aug 15 hero (#524, Fraunces headline, bottle cutout on a lime disc, mono
 price block; zone cards removed in #525) is reverted. `index.html`'s `.hero`
 is the photo-first hero as it stood on 2026-10-20 ("Homepage hero v4" below,
-with the clothing-deodorant eyebrow and sub): H1 "Your shirt smells. Fix it.",
+with the clothing-deodorant eyebrow and sub): H1 "Don't let them notice your
+sweat." (owner, same day; the Aug 15 line on the photo hero),
 the collar-spray photo (`hero-spray-collar`, AVIF preloaded with the same
 `imagesizes`), Space Grotesk + Inter preloaded, no hero-only Fraunces/JetBrains.
 - Kept from after the Aug 15 pass: the homepage `#buy` white studio shot
