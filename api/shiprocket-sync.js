@@ -11,7 +11,7 @@ import {
   findShiprocketOrderByOrderCode,
   isDuplicateOrderError
 } from './_shiprocket.js';
-import { sendFulfillmentEmail, dispatchDueReviewRequests } from './_email-dispatch.js';
+import { sendFulfillmentEmail, dispatchDueReviewRequests, dispatchDuePaymentReminders } from './_email-dispatch.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -333,11 +333,19 @@ export default async function handler(req, res) {
       console.error('[shiprocket-sync] Review request dispatch exception:', reviewErr?.message || reviewErr);
     }
 
+    let paymentReminders = { scanned: 0, sent: 0, results: [] };
+    try {
+      paymentReminders = await dispatchDuePaymentReminders({ route: '/api/shiprocket-sync' });
+    } catch (reminderErr) {
+      console.error('[shiprocket-sync] Payment reminder dispatch exception:', reminderErr?.message || reminderErr);
+    }
+
     return res.status(200).json({
       ok: true,
       scanned,
       results,
       reviews,
+      paymentReminders,
       shiprocketConfigured: isShiprocketConfigured(),
     });
   } catch (err) {

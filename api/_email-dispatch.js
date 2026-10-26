@@ -240,17 +240,17 @@ export async function sendRefundProcessedEmail(order, { route, amount, method } 
   }, { route, orderId: ctx.orderId });
 }
 
-// True when email_events already holds a non-failed reviewRequest for the
-// order. Fails closed (returns true) if the log can't be read, so a database
-// hiccup skips one ask instead of repeating it.
-async function reviewRequestAlreadySent(orderCode) {
+// True when email_events already holds a non-failed email of this type for
+// the order. Fails closed (returns true) if the log can't be read, so a
+// database hiccup skips one email instead of repeating it.
+async function emailAlreadySent(orderCode, emailType) {
   if (!orderCode || typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') return false;
   const supabaseUrl = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
   if (!serviceKey) return true;
   try {
     const res = await fetch(
-      `${supabaseUrl}/rest/v1/email_events?order_code=eq.${encodeURIComponent(orderCode)}&email_type=eq.reviewRequest&status=neq.FAILED&select=id&limit=1`,
+      `${supabaseUrl}/rest/v1/email_events?order_code=eq.${encodeURIComponent(orderCode)}&email_type=eq.${encodeURIComponent(emailType)}&status=neq.FAILED&select=id&limit=1`,
       { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` }, signal: AbortSignal.timeout(10000) }
     );
     if (!res.ok) return true;
@@ -295,11 +295,131 @@ export async function dispatchDueReviewRequests({ route } = {}, now = Date.now()
   const results = [];
   for (const order of due) {
     // One ask per order: the cron runs every 15 minutes across a 9-day window.
-    if (await reviewRequestAlreadySent(order.order_code)) {
+    if (await emailAlreadySent(order.order_code, 'reviewRequest')) {
       results.push({ ok: true, skipped: true, reason: 'ALREADY_SENT', orderId: order.order_code });
       continue;
     }
     results.push(await sendReviewRequestEmail(order, { route }));
+  }
+  return {
+    scanned: orders.length,
+    due: due.length,
+    sent: results.filter((r) => r.ok && !r.skipped).length,
+    results,
+  };
+}
+
+// --- Payment reminder: a prepaid checkout that opened Razorpay and never paid.
+// One email per order, sent 45 minutes to 24 hours after the order was made.
+// Skipped when Razorpay shows a payment on the order (the webhook or
+// payment-status will confirm it), when the same customer has since placed a
+// real order, and for test/internal orders.
+const REMINDER_MIN_AGE = 45 * 60 * 1000;
+const REMINDER_MAX_AGE = 24 * 60 * 60 * 1000;
+const SALE_STATUSES = new Set(['placed', 'confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered']);
+const PAID_PAYMENT_STATES = new Set(['authorized', 'captured']);
+
+export function isPaymentReminderDue(order, now = Date.now()) {
+  if (String(order?.status || '').toLowerCase() !== 'upi_pending') return false;
+  if (isCod(order)) return false;
+  if (!isValidEmail(String(order?.customer_email || '').trim().toLowerCase())) return false;
+  const created = new Date(order.created_at || 0).getTime();
+  if (!Number.isFinite(created) || created <= 0) return false;
+  const age = now - created;
+  return age >= REMINDER_MIN_AGE && age <= REMINDER_MAX_AGE;
+}
+
+// The same person ordered again after this attempt (paid, or switched to COD).
+export function hasLaterSale(order, allOrders = []) {
+  const email = String(order?.customer_email || '').trim().toLowerCase();
+  const phone = String(order?.customer_phone || '').replace(/\D/g, '').slice(-10);
+  const created = new Date(order?.created_at || 0).getTime();
+  return allOrders.some((o) => {
+    if (!o || o.order_code === order.order_code) return false;
+    if (!SALE_STATUSES.has(String(o.status || '').toLowerCase())) return false;
+    if (new Date(o.created_at || 0).getTime() < created) return false;
+    const sameEmail = email && String(o.customer_email || '').trim().toLowerCase() === email;
+    const samePhone = phone && String(o.customer_phone || '').replace(/\D/g, '').slice(-10) === phone;
+    return Boolean(sameEmail || samePhone);
+  });
+}
+
+export function paymentRetryUrl(order) {
+  const qty = Math.min(10, Math.max(1, Math.round(Number(quantityFromOrder(order)) || 1)));
+  return `https://smelloff.in/odorstrike?buy=1&qty=${qty}`;
+}
+
+export async function sendPaymentReminderEmail(order, { route } = {}) {
+  const ctx = orderEmailContext(order);
+  if (!isValidEmail(ctx.email)) {
+    return { ok: false, errorCode: 'INVALID_RECIPIENT', errorMessage: 'Order has no valid customer email' };
+  }
+  return sendRendered('paymentReminder', ctx.email, {
+    orderId: ctx.orderId,
+    customerName: ctx.customerName,
+    amount: ctx.amount,
+    retryUrl: paymentRetryUrl(order),
+  }, { route, orderId: ctx.orderId });
+}
+
+// Razorpay says the order already has an authorized or captured payment.
+// Fails closed: if Razorpay can't be asked, assume it may be paid and skip.
+async function razorpayShowsPayment(order, fetchPayments) {
+  const rzpOrderId = String(order?.payment_attempt_id || '').trim();
+  if (!rzpOrderId) return false;
+  try {
+    const data = await fetchPayments(rzpOrderId);
+    const items = Array.isArray(data?.items) ? data.items : [];
+    return items.some((p) => PAID_PAYMENT_STATES.has(String(p?.status || '').toLowerCase()));
+  } catch {
+    return true;
+  }
+}
+
+export async function dispatchDuePaymentReminders({ route } = {}, now = Date.now(), deps = {}) {
+  let orders = [];
+  if (typeof globalThis.__MOCK_ORDER_DB__ !== 'undefined') {
+    const db = globalThis.__MOCK_ORDER_DB__;
+    orders = Array.isArray(db) ? db : [...(db.values?.() || [])];
+  } else {
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+    if (!serviceKey || process.env.EMAIL_SIDE_EFFECTS === '0') return { scanned: 0, sent: 0, results: [] };
+    const since = new Date(now - REMINDER_MAX_AGE).toISOString();
+    try {
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/orders?created_at=gte.${encodeURIComponent(since)}&select=*`,
+        {
+          headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, 'Content-Type': 'application/json' },
+          signal: AbortSignal.timeout(15000),
+        }
+      );
+      const data = await res.json().catch(() => []);
+      orders = Array.isArray(data) ? data : [];
+    } catch (err) {
+      console.error('[email] payment-reminder query failed', { message: err?.message || String(err) });
+      return { scanned: 0, sent: 0, results: [], error: 'QUERY_FAILED' };
+    }
+  }
+
+  const isInternal = deps.isInternal || (await import('./sheets-sync.js')).isTestOrInternal;
+  const fetchPayments = deps.fetchPayments || (await import('./_razorpay.js')).fetchRazorpayOrderPayments;
+  const due = orders.filter((order) => isPaymentReminderDue(order, now) && !isInternal(order));
+  const results = [];
+  for (const order of due) {
+    if (hasLaterSale(order, orders)) {
+      results.push({ ok: true, skipped: true, reason: 'ORDERED_AGAIN', orderId: order.order_code });
+      continue;
+    }
+    if (await emailAlreadySent(order.order_code, 'paymentReminder')) {
+      results.push({ ok: true, skipped: true, reason: 'ALREADY_SENT', orderId: order.order_code });
+      continue;
+    }
+    if (await razorpayShowsPayment(order, fetchPayments)) {
+      results.push({ ok: true, skipped: true, reason: 'PAYMENT_ON_RAZORPAY', orderId: order.order_code });
+      continue;
+    }
+    results.push(await sendPaymentReminderEmail(order, { route }));
   }
   return {
     scanned: orders.length,

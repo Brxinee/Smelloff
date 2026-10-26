@@ -809,9 +809,11 @@ export function paymentReminder({
   orderId = '',
   customerName = 'there',
   amount = String(PRICE),
+  retryUrl = '',
 } = {}) {
   const cleanOrderId = String(orderId).replace(/[\r\n]+/g, '').trim();
   const name = customerName || 'there';
+  const finishUrl = retryUrl || trackUrl(cleanOrderId);
   const inner = `
     ${hero('One step left.', 'Payment pending')}
     ${para(`${escape(firstName(name))}, order #${escape(cleanOrderId)} is reserved. Payment has not landed yet.`)}
@@ -819,7 +821,8 @@ export function paymentReminder({
       ${kvRow('Order', `#${escape(cleanOrderId)}`)}
       ${kvRow('Amount due', `&#8377;${escape(rupee(amount))}`, true)}
     `))}
-    ${button(trackUrl(cleanOrderId), 'Complete order')}
+    ${muted('Nothing has been charged. You can pay by UPI or card, or choose Cash on Delivery at checkout.')}
+    ${button(finishUrl, 'Complete order')}
   `;
   return {
     subject: cleanHeader(`Payment pending — complete your order #${cleanOrderId}`),
@@ -829,8 +832,9 @@ export function paymentReminder({
       '',
       `${name}, payment for order #${cleanOrderId} is still pending.`,
       `Amount due: ₹${rupee(amount)}`,
+      'Nothing has been charged. Pay by UPI or card, or choose Cash on Delivery at checkout.',
       '',
-      `Complete order: ${trackUrl(cleanOrderId)}`,
+      `Complete order: ${finishUrl}`,
       '',
       `Need help? ${SUPPORT_EMAIL}`,
     ]),

@@ -68,7 +68,7 @@ const TEMPLATES = [
   { file: '14-payment-received-unused', type: 'paymentConfirmation', label: 'Payment received (not sent — folded into confirmation)', audience: 'Unused', unused: true, data: SAMPLE },
   { file: '15-welcome', type: 'welcomeEmail', label: 'Welcome', audience: 'Unused draft', unused: true, data: SAMPLE },
   { file: '16-abandoned-cart', type: 'abandonedCart', label: 'Abandoned cart', audience: 'Unused draft', unused: true, data: SAMPLE },
-  { file: '17-payment-reminder', type: 'paymentReminder', label: 'Payment reminder', audience: 'Unused draft', unused: true, data: SAMPLE },
+  { file: '17-payment-reminder', type: 'paymentReminder', label: 'Payment reminder (prepaid not paid, 45 min–24 h)', audience: 'Customer · sends', data: { ...SAMPLE, retryUrl: 'https://smelloff.in/odorstrike?buy=1&qty=1' } },
 ];
 
 const rendered = TEMPLATES.map((entry) => {
