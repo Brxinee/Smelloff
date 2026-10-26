@@ -657,7 +657,7 @@ export const FIGURES = {
     dia('what-s-the-verdict-for-an-indian-buyer', 'compare', {
       kicker: 'Head to head', title: 'Febreze or ODORSTRIKE?',
       cols: [
-        { name: 'Febreze', tag: 'Home surfaces', lines: ['250–370 ml bottle on a shelf', 'Strong fragrance options', 'Couches, curtains, car upholstery'] },
+        { name: 'Febreze', tag: 'Home surfaces', lines: ['Home-size bottle that stays on a shelf', 'Made for household fabrics', 'Couches, curtains, car upholstery'] },
         { name: 'ODORSTRIKE', tag: 'Clothes you are wearing', pick: true, lines: ['50ml, jeans or shirt pocket', 'Light scent that fades', 'Dries in 15–30 seconds on cotton'] },
       ],
       note: 'If the problem is at home, Febreze is still the answer. If it is the shirt on you, carry a pocket mist.',

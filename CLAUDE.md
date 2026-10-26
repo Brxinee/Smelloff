@@ -119,9 +119,9 @@ design, is the ceiling.
 - Agents removed invented numbers and unsourced competitor prices/claims
   (Febreze/Ambi Pur sizes and MRPs, "0.3% of the surface", "20–50%", "100ml
   cabin limit", helmets/shoes), and fixed two unclosed callout `<div>`s.
-- Still open: WRAP "up to 20%" in the office-shirts post is unverified;
-  `figures.config.mjs` Febreze diagram says "250–370 ml bottle" and "Strong
-  fragrance options" (unverified); Ambi Pur end card says "linen".
+- Fixed after merge: WRAP now quotes its published "around 20–30% each";
+  the Febreze diagram no longer states bottle sizes or "strong fragrance";
+  the Ambi Pur end card lists config fabrics (no linen).
 - Owner, outside the repo: `META_CAPI_TOKEN` and `GOOGLE_SERVICE_ACCOUNT_JSON`
   are unset on live; add the Merchant Center feed; paid/creator traffic.
 
