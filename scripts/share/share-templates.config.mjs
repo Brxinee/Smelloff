@@ -277,14 +277,6 @@ export const POSTS = {
     wa: 'Left a wash in the machine overnight? This tells you when you must rewash and how to stop the sour smell coming back: {url}',
     x: 'The "wet dishcloth" laundry smell has been traced to one bacterium, Moraxella osloensis, which survives drying and UV. A load left wet overnight is ideal for it.',
   },
-  'remove-deodorant-marks-yellow-sweat-stains': {
-    wa: 'White marks on black shirts and yellow underarms on white ones are two different stains. How to remove each and stop them coming back: {url}',
-    x: 'White deodorant marks are undried antiperspirant sitting on the fabric. Yellow underarms are sweat proteins and aluminium salts bonded over many wears. Different fixes.',
-  },
-  'laundry-perfume-vs-fabric-odor-spray': {
-    wa: 'If your clothes smell of conditioner at 9 am and sweat at 3 pm: wash-day products and wear-day products do different jobs. This explains which is which: {url}',
-    x: 'Conditioner and laundry perfume both work in the wash. Sweat smell is made after you put the shirt on. That is why the lily fades and the sweat does not.',
-  },
   'how-to-tell-someone-they-have-body-odour': {
     wa: 'If you have ever needed to tell someone they smell and didn\'t know how: kind scripts for colleagues, flatmates and family: {url}',
     x: 'People usually cannot smell their own body odour: the nose adapts to constant smells. Telling them once, privately and kindly, is the considerate thing.',
@@ -336,6 +328,14 @@ export const POSTS = {
   'first-job-essentials-checklist-freshers-india': {
     wa: 'Joining your first office job soon? A practical checklist: documents, clothes, desk drawer, and how to stay fresh after a long commute: {url}',
     x: 'People judge competence and trustworthiness from a face seen for a tenth of a second. In your first weeks, looking put-together at 5 pm is part of the impression.',
+  },
+  'remove-sweat-smell-from-cap': {
+    wa: 'If your cap smells sour inside: it is the sweatband. How to freshen it without washing, and how to wash it without wrecking the brim: {url}',
+    x: 'Cap smell comes from one strip of fabric: the sweatband, which soaks up forehead sweat and hair oil and is hung up damp. Dry it first, then treat it.',
+  },
+  'why-do-sun-dried-clothes-smell-good': {
+    wa: 'The sun-dried laundry smell is real chemistry: sunlight on wet fabric makes new scent molecules. What the study found, and which clothes to keep out of the sun: {url}',
+    x: 'Copenhagen chemists dried towels in sun, shade and indoors. The sun-dried ones gave off aldehydes and ketones like octanal and nonanal: the "sunshine smell" is made, not uncovered.',
   },
 };
 

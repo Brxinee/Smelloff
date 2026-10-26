@@ -386,8 +386,6 @@ const PAGES = [
     'remove-smell-from-saree-and-blouse-without-washing',
     'why-does-sweat-smell-like-onions-vinegar-ammonia',
     'clothes-left-in-washing-machine-overnight-smell',
-    'remove-deodorant-marks-yellow-sweat-stains',
-    'laundry-perfume-vs-fabric-odor-spray',
     'how-to-tell-someone-they-have-body-odour',
     'how-to-know-if-you-smell-bad',
     'dog-smell-on-clothes',
@@ -401,6 +399,8 @@ const PAGES = [
     'return-gifts-for-men-indian-wedding',
     'secret-santa-gift-ideas-for-coworkers-india',
     'first-job-essentials-checklist-freshers-india',
+    'remove-sweat-smell-from-cap',
+    'why-do-sun-dried-clothes-smell-good',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
   // 2026-10-10: thirty posts that were never in this table. Their header was
   // an older stamp (a "Buy ODORSTRIKE — ₹229" button to /#buy, extra classes,

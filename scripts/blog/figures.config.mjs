@@ -1319,58 +1319,6 @@ export const FIGURES = {
     }),
   ],
 
-  'remove-deodorant-marks-yellow-sweat-stains': [
-    photo('why-do-white-shirts-get-yellow-underarm-stains', 6276005,
-      'Close-up of a crisp white button-up shirt with its collar and metal buttons',
-      'Yellowing builds up over many wears, fastest in white cotton.', '50% 50%'),
-    dia('what-causes-white-deodorant-marks-on-dark-clothes', 'compare', {
-      kicker: 'Two stains',
-      title: 'White marks and yellow underarms are different problems',
-      cols: [
-        {
-          name: 'White marks',
-          tag: 'Dark clothes',
-          lines: ['Undried antiperspirant on the surface', 'Rub or wipe off', 'Prevent: let it dry before dressing'],
-        },
-        {
-          name: 'Yellow underarms',
-          tag: 'White clothes',
-          lines: [
-            'Sweat proteins plus residue, over months',
-            'Enzyme soak or baking soda paste',
-            'Prevent: wash after sweaty wears',
-          ],
-        },
-      ],
-      note: 'A fabric odor spray treats smell, not stains.',
-    }),
-  ],
-
-  'laundry-perfume-vs-fabric-odor-spray': [
-    photo('what-do-laundry-perfume-conditioner-and-sanitiser-actually-d', 5591581,
-      'A hand pours liquid from a measuring cap into the drawer of a washing machine',
-      'Conditioner, perfume and sanitiser all go in here, on wash day.', '50% 50%'),
-    dia('what-does-a-fabric-odor-spray-do-differently', 'compare', {
-      kicker: 'Wash day vs wear day',
-      title: 'What each product is for',
-      cols: [
-        { name: 'Fabric conditioner', tag: 'In the wash', lines: ['Softness, less static', 'Adds fragrance', 'Can reduce wicking on synthetics'] },
-        {
-          name: 'Laundry perfume',
-          tag: 'In the wash',
-          lines: ['Adds more fragrance', 'Covers stale smell for a while', 'Nothing for tomorrow\'s sweat'],
-        },
-        {
-          name: 'Fabric odor spray',
-          tag: 'On wear day',
-          pick: true,
-          lines: ['On a clean, dry shirt', 'Collar, underarms, upper back', 'Works on odor in the fabric'],
-        },
-      ],
-      note: 'Dirty clothes still need a proper wash.',
-    }),
-  ],
-
   'how-to-tell-someone-they-have-body-odour': [
     photo('how-do-you-bring-it-up-without-hurting-them', 7156231,
       'Two colleagues talk across a desk in a quiet office, one holding a sheet of paper',
@@ -1578,6 +1526,38 @@ export const FIGURES = {
         ['Fresh', 'Mints, handkerchief, comb.'],
         ['Shirt', 'Pocket fabric odour spray for the collar.'],
       ],
+    }),
+  ],
+
+  'remove-sweat-smell-from-cap': [
+    photo('how-do-you-refresh-a-cap-between-washes', 25324620,
+      'A young man in a dark cap and a striped t-shirt stands among trees, looking up',
+      'Dry the sweatband first; treat it second.', '50% 30%'),
+    dia('where-does-the-smell-sit-in-a-cap', 'decide', {
+      kicker: 'Refresh or wash',
+      title: 'What your cap needs',
+      rows: [
+        ['Smells stale, band dry and clean', 'Air, then treat the band', 'refresh'],
+        ['Damp from sweat or rain', 'Dry fully first', 'air'],
+        ['Band stained or stiff', 'Hand-wash the band', 'wash'],
+        ['Leather or suede cap', 'Not for a fabric spray', 'stop'],
+      ],
+    }),
+  ],
+
+  'why-do-sun-dried-clothes-smell-good': [
+    photo('when-is-sun-drying-a-bad-idea', 5084825,
+      'A woman hangs washed clothes on a line in a green garden',
+      'Spread clothes out with space between them; moving air does most of the work.', '50% 45%'),
+    dia('what-actually-creates-the-sun-dried-smell', 'compare', {
+      kicker: 'Copenhagen, 2020',
+      title: 'Same towels, three places to dry',
+      cols: [
+        { name: 'Dark room', tag: 'Indoors', lines: ['Fewest new scent molecules', 'Slowest to dry'] },
+        { name: 'Shaded balcony', tag: 'Outdoors', lines: ['Some new compounds', 'Moving air helps'] },
+        { name: 'Sunlit balcony', tag: 'Sun', pick: true, lines: ['Most aldehydes and ketones', 'Pentanal, octanal, nonanal'] },
+      ],
+      note: 'The fresh smell is made by sunlight on wet fabric.',
     }),
   ],
 };
