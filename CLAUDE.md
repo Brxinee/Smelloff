@@ -99,6 +99,38 @@ history is timestamped by the tool that applies them.
   the owner runs it in the Supabase SQL editor. Homepage `#reviews` is beta
   testers only until a real buyer reviews.
 
+## 20 guides from Indian search demand (2026-10-26, owner: "deep research … 20 blogs that bring sales … stock pics, not from the Smelloff website")
+Blog is **98**; sitemap 112. Ahrefs (no plan) and Semrush (0 units) had no
+data, so topics came from Google autocomplete with `gl=in` (real Indian
+queries: "kapdo se pasine ki badbu kaise hataye", "clothes left in washing
+machine smell", "return gift for men in wedding", "how to tell someone they
+have body odor"…), de-duplicated against every live and retired slug.
+- Topics: Hinglish sweat-smell guide, winter jacket, saree and blouse, onion/
+  vinegar/ammonia sweat, clothes left in the machine, deodorant marks and
+  yellow stains, laundry perfume vs fabric spray, telling someone they smell,
+  checking your own smell, dog smell on clothes, teenage son's body odour,
+  vest under a shirt, how many office shirts, perfume smell removal, new-clothes
+  chemical smell, pajamas, grooming essentials, wedding return gifts, office
+  Secret Santa, first-job checklist. Same template as the 2026-10-15 batch:
+  answer-first, question H2s, primary sources (GAO-10-875, Kubota 2012,
+  Troccaz 2004, Czarnowski 1992, Callewaert 2014, NHS, SHRM, Gino & Flynn 2011,
+  Willis & Todorov 2006, ASTM D1909…), an "Honest limits" callout, facts only
+  from `config/product.json`. Posts that cannot be fixed by the product (new
+  clothes, perfume, a sour machine load, stains) say so.
+- **Every photo is Pexels** (thumbnail `pexels:` in `thumbnails.config.mjs`,
+  inline `photo()` in `figures.config.mjs`), none from the site. Checked by eye
+  at full size: frames with footwear, bags or another brand's label were
+  rejected (a Tide shelf, an Atkinsons bottle, a plush slipper beside a dog).
+  Thumbnail overlays describe the clothes or the situation, never a person's
+  smell (Pexels: no identifiable person in a bad light).
+- `kapdon-se-pasine-ki-badbu-kaise-hataye` is written in Hinglish (Roman
+  script); its H2 ids are Hinglish slugs.
+- Gift posts quote the pack ladder (2 = ₹419, 5 = ₹899 = ₹179.80 each) and the
+  10-bottle order cap; they promise no bulk deal.
+- Thumbnails render with `CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`
+  in the cloud container (no system Chromium). Run `apply-reader.mjs` before
+  `apply-figures.mjs` on a new post: figures anchor to the H2 ids it writes.
+
 ## Homepage hero: photo-first v4 again (2026-10-26, owner: "bring back the previous hero")
 The Aug 15 hero (#524, Fraunces headline, bottle cutout on a lime disc, mono
 price block; zone cards removed in #525) is reverted. `index.html`'s `.hero`
