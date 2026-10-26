@@ -128,7 +128,7 @@ test('FAQ competitor answers need no unsourced prices', () => {
   for (const s of ['Febreze uses fragrance to mask odor', 'Febreze at ₹300+', '₹349–449', 'no odor active at all', 'free shipping across India']) {
     assert.ok(!faq.includes(s), s);
   }
-  // Our own comparison post says Febreze traps odor with cyclodextrin.
-  assert.match(read('blog/odorstrike-vs-febreze-india.html'), /Febreze's hero molecule is cyclodextrin/);
+  // Our own comparison post says Febreze traps odor with cyclodextrin, citing Febreze's ingredient page.
+  assert.match(read('blog/odorstrike-vs-febreze-india.html'), /Febreze's own ingredient page lists <a [^>]*>hydroxypropyl cyclodextrin/);
   assert.ok(faq.includes("Febreze's fabric spray also traps odor with a cyclodextrin"));
 });

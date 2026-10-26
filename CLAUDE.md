@@ -99,6 +99,32 @@ history is timestamped by the tool that applies them.
   the owner runs it in the Supabase SQL editor. Homepage `#reviews` is beta
   testers only until a real buyer reviews.
 
+## Sales pass: payment recovery + blog citation pass (2026-10-26, owner: "I need sells … rank … traffic")
+Live data (30 days): ~200 visitors/week, ~60 in India, ~30 on `/odorstrike`;
+139 product viewers → 7 checkouts → 4 purchases; 277 blog visitors but only 45
+in India (US/SG dominate), 5% of blog readers reach the PDP. Traffic, not
+design, is the ceiling.
+- **Payment reminder** (`dispatchDuePaymentReminders` in `api/_email-dispatch.js`,
+  on the 15-minute sync): one email per `upi_pending` prepaid order 45 min–24 h
+  old, linking `/odorstrike?buy=1&qty=N` and naming COD. Skipped for COD,
+  test/internal orders, a customer who ordered again, and any order Razorpay
+  shows authorized/captured (fails closed). No discount/urgency copy
+  (`test/payment-reminder.test.mjs`).
+- **Blog pass by topic-cluster agents** (brief: quick answer, question H2s with
+  ids kept, a fetched primary source with a number, one descriptive in-body
+  `/odorstrike` link, 2–4 guide links, `dateModified`). Finished: refresh (16),
+  category (9), buying (12). Stopped part-way at the owner's request to save
+  usage: sweat, laundry, smells, fabric/product; everyday not started. Their
+  partial edits passed every test and were kept.
+- Agents removed invented numbers and unsourced competitor prices/claims
+  (Febreze/Ambi Pur sizes and MRPs, "0.3% of the surface", "20–50%", "100ml
+  cabin limit", helmets/shoes), and fixed two unclosed callout `<div>`s.
+- Still open: WRAP "up to 20%" in the office-shirts post is unverified;
+  `figures.config.mjs` Febreze diagram says "250–370 ml bottle" and "Strong
+  fragrance options" (unverified); Ambi Pur end card says "linen".
+- Owner, outside the repo: `META_CAPI_TOKEN` and `GOOGLE_SERVICE_ACCOUNT_JSON`
+  are unset on live; add the Merchant Center feed; paid/creator traffic.
+
 ## 20 guides from Indian search demand (2026-10-26, owner: "deep research … 20 blogs that bring sales … stock pics, not from the Smelloff website")
 Blog is **98**; sitemap 112. Ahrefs (no plan) and Semrush (0 units) had no
 data, so topics came from Google autocomplete with `gl=in` (real Indian

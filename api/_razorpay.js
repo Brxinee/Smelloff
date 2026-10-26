@@ -56,3 +56,7 @@ export function createRazorpayOrder(payload) {
 export function fetchRazorpayPayment(paymentId) {
   return request('GET', `/payments/${encodeURIComponent(paymentId)}`);
 }
+
+export function fetchRazorpayOrderPayments(orderId) {
+  return request('GET', `/orders/${encodeURIComponent(orderId)}/payments`);
+}
