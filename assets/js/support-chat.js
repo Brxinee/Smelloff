@@ -498,7 +498,21 @@
   input.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit', { cancelable: true })); }
   });
-  function grow() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 120) + 'px'; }
+  var lastValue = '';
+  function grow() {
+    var v = input.value;
+    var currentHeight = input.clientHeight;
+    // ⚡ Bolt: Prevent layout thrashing in auto-expanding textarea.
+    // Avoid unconditional `style.height = 'auto'` followed by `scrollHeight` read.
+    if (!v.startsWith(lastValue) || v === '') {
+      input.style.height = 'auto';
+    }
+    var scrollH = input.scrollHeight;
+    if (scrollH > currentHeight || input.style.height === 'auto') {
+      input.style.height = Math.min(scrollH, 120) + 'px';
+    }
+    lastValue = v;
+  }
   input.addEventListener('input', grow);
 
   // ---------------------------------------------------------- open / close
