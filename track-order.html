@@ -429,7 +429,7 @@
       show(err, true); return;
     }
 
-    btn.disabled = true; btn.textContent = 'Checking…';
+    btn.disabled = true; btn.setAttribute('aria-busy', 'true'); btn.textContent = 'Checking…';
     fetch(SUPA_URL + '/functions/v1/track-order/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -437,7 +437,7 @@
     })
     .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
     .then(function(res){
-      btn.disabled = false; btn.textContent = 'Track order';
+      btn.disabled = false; btn.setAttribute('aria-busy', 'false'); btn.textContent = 'Track order';
       if (!res.ok) {
         err.textContent = (res.j && res.j.error) || 'No order found. Check the ID and phone and try again.';
         show(err, true); return;
@@ -445,7 +445,7 @@
       render(res.j);
     })
     .catch(function(){
-      btn.disabled = false; btn.textContent = 'Track order';
+      btn.disabled = false; btn.setAttribute('aria-busy', 'false'); btn.textContent = 'Track order';
       err.textContent = 'Network hiccup — try again in a few seconds.';
       show(err, true);
     });

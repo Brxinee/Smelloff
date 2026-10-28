@@ -3538,6 +3538,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     const btnText = document.getElementById('submitText');
     const originalBtnText = btnText.innerHTML;
     btn.disabled = true;
+    btn.setAttribute('aria-busy', 'true');
     btnText.innerHTML = '<span class="loader"></span>Processing...';
 
     const orderId = genOrderId();
@@ -3616,6 +3617,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       }
 
       btn.disabled = false;
+      btn.setAttribute('aria-busy', 'false');
       btnText.innerHTML = originalBtnText;
       hideLoadingScreen();
 
@@ -3633,6 +3635,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
       console.error('[Smelloff] PDP checkout failed:', error);
       hideLoadingScreen();
       btn.disabled = false;
+      btn.setAttribute('aria-busy', 'false');
       btnText.innerHTML = originalBtnText;
       showError(error.message || 'We could not place your order. Please try again.');
     }
