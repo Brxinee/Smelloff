@@ -488,6 +488,7 @@
       });
   }
 
+  var lastVal = '';
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var v = input.value;
@@ -498,7 +499,17 @@
   input.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit', { cancelable: true })); }
   });
-  function grow() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 120) + 'px'; }
+  // Optimization: Prevent layout thrashing by avoiding DOM reads/writes on every keystroke
+  function grow() {
+    var v = input.value;
+    if (v.startsWith(lastVal) && input.scrollHeight <= input.clientHeight && input.clientHeight < 120) {
+      lastVal = v;
+      return;
+    }
+    lastVal = v;
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+  }
   input.addEventListener('input', grow);
 
   // ---------------------------------------------------------- open / close
