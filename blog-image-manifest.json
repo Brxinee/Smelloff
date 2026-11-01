@@ -518,29 +518,6 @@
       ]
     },
     {
-      "slug": "how-to-freshen-clothes-stored-for-months",
-      "family": "laundry",
-      "grade": "D",
-      "sourceKind": "editorial-still",
-      "imagePurpose": "hero + index card + og:image + schema image",
-      "filename": "blog/assets/how-to-freshen-clothes-stored-for-months.jpg",
-      "width": 1920,
-      "height": 1080,
-      "format": [
-        "jpg",
-        "webp",
-        "avif"
-      ],
-      "alt": "Hands lifting folded winter clothes from a stored steel trunk in a dim Indian storeroom",
-      "focal": "50% 55%",
-      "fit": "cover",
-      "hero": "/blog/assets/how-to-freshen-clothes-stored-for-months.jpg?v=5",
-      "thumbnail": "/blog/assets/how-to-freshen-clothes-stored-for-months.jpg?v=5",
-      "ogImage": "https://smelloff.in/blog/assets/how-to-freshen-clothes-stored-for-months.jpg?v=5",
-      "schemaImage": "https://smelloff.in/blog/assets/how-to-freshen-clothes-stored-for-months.jpg?v=5",
-      "inlineImages": []
-    },
-    {
       "slug": "wash-refresh-or-wear",
       "family": "real-life",
       "grade": "D",

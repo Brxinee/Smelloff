@@ -1182,6 +1182,11 @@
       "statusCode": 301
     },
     {
+      "source": "/blog/how-to-freshen-clothes-stored-for-months",
+      "destination": "/blog/why-clothes-smell-musty-after-being-stored",
+      "statusCode": 301
+    },
+    {
       "source": "/(.*)\\.html",
       "destination": "/$1",
       "statusCode": 301

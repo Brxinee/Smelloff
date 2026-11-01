@@ -2458,3 +2458,27 @@ or unscented Febreze and ask for something portable and not perfumy.
   that an "alcohol carrier reaches where detergent can't" (unsupported; the base is
   water). The "why gym clothes smell after washing" note says the same. New question:
   "Can't I just spray vodka or rubbing alcohol on my clothes?"
+
+## SEO / AEO / GEO pass (2026-11-01, owner: "research everything, then implement")
+Google's own AI-features page: no special files or schema for AI Overviews/AI Mode;
+crawlability, structured data that matches the page, snippet eligibility and a current
+Merchant Center are what count. ChatGPT search rides on Bing's index (IndexNow is
+already wired: `.github/workflows/indexnow.yml`). So this pass fixed content and
+facts, not markup tricks.
+- **Merged** `how-to-freshen-clothes-stored-for-months` (598 words) into
+  `why-clothes-smell-musty-after-being-stored` (same intent): the 5-step reset, the US
+  EPA humidity line (below 60%, ideally 30–50%; dried within 24–48 h) and the 2024
+  fibre-release study (PMID 39552794), plus a "store so it doesn't come back" section.
+  301 in `config/routing.json`; removed from apply-chrome PAGES, CLUSTERS,
+  figures.config, blog-image-manifest, the blog index (cards, ItemList, counts: **97**
+  posts, How-to 52), feed.xml. Sitemap is **111** URLs.
+- Question-shaped H2s (ids unchanged, so figures and links hold) in
+  `how-odor-neutralizer-works-on-fabric`, `vinegar-baking-soda-fabric-softener`,
+  `why-clothes-smell-stale-in-ac-room`, `why-traffic-fumes-cling-to-clothes`.
+- `build-llms.mjs`: pack ladder (2 = ₹419, 5 = ₹899) in both files; new answers
+  "smells again as soon as I sweat" (→ `why-clothes-smell-bad-again-after-sweating`)
+  and the vodka/rubbing-alcohol question; the stored-clothes answer cites the EPA.
+- Sitemap lastmod for `/`, `/odorstrike`, `/faq` set to 2026-11-01 by hand: those pages
+  carry no `dateModified`, so build-sitemap keeps the stored value (max()).
+- Homepage hero sub: "ODORSTRIKE neutralizes sweat, smoke and food smell in clothes —
+  not on skin." (product name back; still two lines, buy button unchanged).

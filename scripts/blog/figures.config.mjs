@@ -425,21 +425,6 @@ export const FIGURES = {
     }),
   ],
 
-  'how-to-freshen-clothes-stored-for-months': [
-    photo('step-1-empty-the-storage-space', 4498143,
-      'A hand lifts folded jeans out of an open cardboard storage box',
-      'Take everything out first. The box needs air as much as the clothes do.'),
-    dia('step-2-inspect-before-spraying', 'steps', {
-      kicker: 'Five steps', title: 'Freshen stored clothes without washing everything',
-      items: [
-        ['Empty', 'Take it all out and let the box or wardrobe breathe.'],
-        ['Inspect', 'Damp spots, mould, stains or soil mean clean first.'],
-        ['Air', 'Hang or spread so air reaches seams, cuffs and collars.'],
-        ['Decide', 'Wash what is dirty. Clean but stale can be refreshed.'],
-        ['Treat', 'Mist the strongest zones and let it dry before folding.'],
-      ],
-    }),
-  ],
 
   'how-to-pack-sweaty-clothes-without-bag-smell': [
     photo('what-is-the-best-packing-order', 7368261,

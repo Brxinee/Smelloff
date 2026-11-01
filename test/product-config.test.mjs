@@ -176,7 +176,7 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   assert.ok(h1[0][1].includes('Your shirt smells.') && h1[0][1].includes('Fix it.'), 'H1 must be the Sep 19 "Your shirt smells. Fix it."');
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
   assert.ok(hero.includes('FABRIC ODOR CONTROL · FOR CLOTHES'));
-  assert.ok(hero.includes('Neutralizes sweat, smoke and food smell in your clothes — not on your skin.'));
+  assert.ok(hero.includes('ODORSTRIKE neutralizes sweat, smoke and food smell in clothes — not on skin.'));
   for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
   assert.ok(hero.includes('<span class="hero-price">₹229</span>'), 'Hero must show ₹229');
   assert.ok(hero.includes('M.R.P. ₹499'), 'MRP must agree with the PDP');

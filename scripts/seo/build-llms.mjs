@@ -52,7 +52,9 @@ const ANSWERS = [
   ['How do I get curry or cooking smell out of clothes without washing?', 'Take the garment out of the kitchen, air it in moving air for about 20 minutes, then mist the front panel, forearms and shoulders with a water-based fabric odor spray and let it dry. Oil splashes are stains and need a wash.', 'remove-cooking-smell-from-clothes'],
   ['Why do dri-fit and gym clothes still smell after washing?', 'Polyester holds skin oils, and the bacteria that break them down into odor, more than cotton does, and a quick cool wash does not fully lift them. Wash inside out soon after training, skip fabric softener and dry fully.', 'gym-clothes-smell-after-washing'],
   ['What is cyclodextrin in deodorant and fabric spray?', 'Cyclodextrins are ring-shaped sugar molecules that hold odor molecules inside the ring. ODORSTRIKE uses HPβCD (hydroxypropyl beta-cyclodextrin) on fabric, not as a skin deodorant.', 'hpbcd-cyclodextrin-fabric-odor'],
-  ['Why do clean clothes smell after being stored?', 'Closed, humid storage lets clothes take on a musty smell. Air them, make sure they are fully dry, then treat what is left with a fabric odor spray.', 'why-clothes-smell-musty-after-being-stored'],
+  ['Why do clean clothes smell after being stored?', 'Closed, humid storage lets clothes take on a musty smell; the US EPA advises keeping indoor humidity below 60 percent. Air them, make sure they are fully dry, wash anything mouldy or dirty, then treat what is left with a fabric odor spray.', 'why-clothes-smell-musty-after-being-stored'],
+  ['Why does my shirt smell again as soon as I sweat, even after washing?', 'Old sweat and body oil have built up inside the fibres, most often in polyester and in the underarms, and fresh sweat brings the smell back. A spray will not fix that: wash it with an enzyme detergent, skip fabric softener and dry it fully.', 'why-clothes-smell-bad-again-after-sweating'],
+  ['Can I spray vodka or rubbing alcohol on clothes to remove smell?', 'It is an old theatre-costume trick and can take the edge off a smell because alcohol dries fast. A fabric odor spray like ODORSTRIKE traps odor molecules with HPβCD instead of only evaporating, comes in a 50ml pocket bottle and leaves a light scent instead of an alcohol smell. Test any spray on a hidden seam first.', null],
   ['Does polyester hold odor longer than cotton?', 'Yes. Polyester attracts the oily part of sweat, which a normal wash does not fully remove, so synthetic clothes hold body odor longer.', 'which-fabrics-hold-odor-most'],
   ['Why do clothes smell bad after drying?', 'Usually slow drying, damp seams, detergent build-up or a washing machine that smells. Dry fully in moving air and skip fabric softener.', 'why-clothes-smell-bad-after-drying'],
   ['How do I get smell out of a hoodie without washing it?', 'Turn it inside out, hang it open in moving air for 20–30 minutes, then mist the underarms, collar and hood lining, cuffs and front pocket with a fabric odor spray. Let it dry fully before folding.', 'remove-smell-from-hoodie-without-washing'],
@@ -69,7 +71,7 @@ const ANSWERS = [
   ['What should I do if clothes were left in the washing machine overnight?', 'Smell them. If they smell clean or faintly damp, dry them straight away; if they smell sour, rewash with detergent and dry fast. A fabric spray does not fix a sour wet load.', 'clothes-left-in-washing-machine-overnight-smell'],
   ['How do I get sweat smell out of a cap without washing it?', 'Dry it upside down in moving air, then mist the sweatband and crown lining with a fabric odor spray from 15–20 cm and let it dry before wearing. Hand-wash a stained band; never use it on leather or suede.', 'remove-sweat-smell-from-cap'],
   ['Is ODORSTRIKE for sofas, bedding, rooms or shoes?', 'No. Clothes only. Not for rooms, sofas, curtains, bedding, shoes, helmets, bags, skin, hair or pets.', null],
-  ['Where can I buy ODORSTRIKE in India?', `Only at ${SITE}/odorstrike: 50ml, ₹${P.price} prepaid with free shipping; Cash on Delivery available across India. It is not listed on Amazon or Flipkart.`, null],
+  ['Where can I buy ODORSTRIKE in India?', `Only at ${SITE}/odorstrike: 50ml, ₹${P.price} prepaid with free shipping, 2 for ₹${P.pairPrice} or 5 for ₹${P.fivePackPrice}; Cash on Delivery available across India. It is not listed on Amazon or Flipkart.`, null],
 ];
 
 const PAGES = [
@@ -94,6 +96,7 @@ function llms() {
   L.push(`## Product: ${P.name}`,
     `- Size: ${P.size} liquid spray (about ${P.spraysApprox} sprays, about ${P.refreshesApprox} refreshes)`,
     `- Price: ₹${P.price} prepaid (MRP ₹${P.mrp}). ${S.prepaid.description}`,
+    `- Packs: 1 bottle ₹${P.price} · 2 for ₹${P.pairPrice} (save ₹${P.pairSaving}) · 5 for ₹${P.fivePackPrice} (save ₹${P.fivePackSaving}); up to 10 bottles per order`,
     '- Cash on Delivery: available across India (the COD total is shown at checkout)',
     '- Availability: in stock',
     `- Key actives: ${heroActives}`,
@@ -128,6 +131,7 @@ function llmsFull() {
   L.push('## Product',
     `- Name: ${P.name} (${P.shortName})`, `- Category: ${P.categoryDisplay}`, `- Size: ${P.netQuantity}`,
     `- SKU: ${P.sku} · MPN: ${P.mpn}`, `- Price: ₹${P.price} prepaid · MRP ₹${P.mrp} (${P.discountPercent}% off)`,
+    `- Packs: 2 for ₹${P.pairPrice} (save ₹${P.pairSaving}) · 5 for ₹${P.fivePackPrice} (save ₹${P.fivePackSaving})`,
     `- Cash on Delivery: available across India; the COD total is shown at checkout`,
     `- Quantity per order: ${P.minQuantity}–${P.maxQuantity}`,
     `- About ${P.spraysApprox} sprays per bottle (about ${P.refreshesApprox} refreshes)`, '');
