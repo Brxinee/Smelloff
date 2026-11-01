@@ -2509,3 +2509,14 @@ positive); checked all 95 outbound source links. Fixed:
   "GI since 2014" line now just says registered); news.ku.dk → the University of
   Copenhagen research portal page for Pugliese et al. 2020; Woolmark's moved URL.
 - 403s from ScienceDirect/Wiley/DOI/ACS/MDPI etc. are bot blocks, not dead links.
+
+## Sales-first wording (2026-11-01, owner: "don't make customers question my product … I want sales")
+Facts stay accurate, but copy on the money pages answers a doubt and points to the
+product; it never plants one. Supersedes parts of the two passes above:
+- `/` and `/odorstrike` "Does it replace washing?" no longer carry the rebloom line.
+  `/faq` keeps it as a **tip**: one enzyme wash resets an old shirt, then ODORSTRIKE
+  keeps it fresh. Gym/polyester and monsoon answers lead with "yes" and how to use it.
+- The `/faq` vodka question is **removed** (it introduced a free alternative). The
+  llms answer stays, reframed: alcohol evaporates, it doesn't trap or neutralise odor.
+- Don't add FAQ questions that name a cheaper substitute, and keep limits to the
+  safety lines (fabric only; never leather, suede or dry-clean-only; patch-test silk).
