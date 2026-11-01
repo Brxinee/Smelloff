@@ -416,6 +416,19 @@ html.sf-menu-open #smelloff-consent-bar,html.sf-menu-open .mobile-bar{display:no
 #smelloff-consent-bar button{min-height:44px}
 #smelloff-consent-bar{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 html.sf-modal-open #smelloff-consent-bar{display:none !important}
+/* Compact consent bar on phones (2026-11-01, UI/UX audit). At 148px it covered
+   the homepage hero buy button (665–716px on 390×844) for every first-time phone
+   visitor, and the PDP price. `html` raises specificity over the four page/JS
+   copies (the JS copy is appended after this file). Buttons stay 44px tall. */
+@media(max-width:519px){
+  html #smelloff-consent-bar{padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px))}
+  html #smelloff-consent-bar .cb-inner{gap:8px}
+  html #smelloff-consent-bar p{font-size:12.5px;line-height:1.4}
+  html #smelloff-consent-bar .cb-actions{gap:8px}
+  /* Explicit line-height: with `normal`, the fallback face made the buttons 52px
+     until the web font loaded, so the bar shrank 26px at swap (CLS). */
+  html #smelloff-consent-bar button{min-height:44px;padding-block:8px;font-size:14px;line-height:1.2}
+}
 
 /* =====================================================================
    6 · VERIFIED BUYER REVIEW MODAL & GOOGLE REVIEW AGGREGATOR

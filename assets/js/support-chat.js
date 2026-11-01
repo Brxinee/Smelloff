@@ -59,7 +59,8 @@
 
   var R = 'var(--rule,rgba(242,245,239,.14))';
   var css =
-    '.sfc-launch{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px) + var(--sfc-lift,0px));z-index:65;display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 18px 0 14px;border-radius:100px;border:1px solid ' + R + ';background:var(--surface-2,#1A1A1A);color:var(--text,#F2F5EF);font:500 15px/1 var(--body,system-ui,sans-serif);cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.5);transition:bottom .3s var(--ease,ease),opacity .2s ease}' +
+    '.sfc-launch{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px) + var(--sfc-lift,0px));z-index:65;display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 18px 0 14px;border-radius:100px;border:1px solid ' + R + ';background:var(--surface-2,#1A1A1A);color:var(--text,#F2F5EF);font:500 15px/1 var(--body,system-ui,sans-serif);cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.5);transition:bottom .3s var(--ease,ease),opacity .2s ease,visibility .2s}' +
+    'html.sf-chat-yield .sfc-launch,html.sf-chat-yield .sfc-tease{opacity:0;pointer-events:none;visibility:hidden}' +
     '.sfc-launch svg{width:22px;height:22px;color:var(--acid,#B8FF57);fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}' +
     '.sfc-launch[data-dot]::after{content:"";position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:50%;background:var(--acid,#B8FF57);box-shadow:0 0 0 2px var(--surface-2,#1A1A1A)}' +
     // Phones: an icon-only 48px circle, so the label doesn't sit over headings and prices.
@@ -591,6 +592,34 @@
       if (r.height && r.top < window.innerHeight) h = Math.max(h, window.innerHeight - r.top);
     }
     document.documentElement.style.setProperty('--sfc-lift', h ? (h - 6) + 'px' : '0px');
+    yieldToButtons();
+  }
+
+  // Never sit on top of a page button (2026-11-01, UI/UX audit): on phones the
+  // launcher covered the right edge of the hero "FIX MY SHIRT" and the PDP
+  // "Buy now"; on desktop the "Ask us" pill covered "Add to cart". While the
+  // launcher's box overlaps a visible button it fades out, and it comes back as
+  // soon as that button scrolls away. Buttons inside the chat, the sticky buy
+  // strip and the consent bar are excluded (lift() already clears those).
+  var BTN_SEL = '#sf-main a[class*="btn"], #sf-main button[class*="btn"], main a[class*="btn"], main button[class*="btn"], .pd-pk, #pdpQtyMinus, #pdpQtyPlus';
+  function yieldToButtons() {
+    var root = document.documentElement;
+    var lr = launch.getBoundingClientRect();
+    if (!lr.width) { root.classList.remove('sf-chat-yield'); return; }
+    var pad = 8, hit = false;
+    // Phones: while the consent bar is up, the screen already carries it and the
+    // buy strip; the launcher waits until the visitor has answered it.
+    var cb = document.getElementById('smelloff-consent-bar');
+    if (window.innerWidth < 520 && cb && getComputedStyle(cb).display !== 'none' && cb.getBoundingClientRect().height) hit = true;
+    var list = document.querySelectorAll(BTN_SEL);
+    for (var i = 0; i < list.length && !hit; i++) {
+      var el = list[i];
+      if (el.closest('.sfc-panel, .mobile-bar, #smelloff-consent-bar')) continue;
+      var r = el.getBoundingClientRect();
+      if (!r.width || !r.height || r.bottom < 0 || r.top > window.innerHeight) continue;
+      hit = r.left < lr.right + pad && r.right > lr.left - pad && r.top < lr.bottom + pad && r.bottom > lr.top - pad;
+    }
+    root.classList.toggle('sf-chat-yield', hit);
   }
   var queued = false;
   function queueLift() { if (queued) return; queued = true; requestAnimationFrame(function () { queued = false; lift(); }); }

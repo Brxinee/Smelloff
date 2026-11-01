@@ -19,6 +19,6 @@
 @font-face{font-family:'Fraunces';font-style:italic;font-weight:400 900;font-display:swap;src:url('/assets/fonts/fraunces-italic-rupee-400.woff2') format('woff2');unicode-range:U+20B9;}
 @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 900;font-display:swap;src:url('/assets/fonts/fraunces-normal-rupee-400.woff2') format('woff2');unicode-range:U+20B9;}
 @font-face{font-family:'Inter Tight';font-style:normal;font-weight:400 500;font-display:swap;src:url('/assets/fonts/inter-tight-normal-rupee-400.woff2') format('woff2');unicode-range:U+20B9;}
-@font-face{font-family:'Fraunces Fallback';src:local('Georgia'),local('Liberation Serif');size-adjust:109.93%;ascent-override:88.96%;descent-override:23.20%;line-gap-override:0%;}
-@font-face{font-family:'Inter Tight Fallback';src:local('Arial'),local('Liberation Sans');size-adjust:136.95%;ascent-override:70.74%;descent-override:17.61%;line-gap-override:0%;}
+@font-face{font-family:'Fraunces Fallback';src:local('Georgia'),local('Liberation Serif');size-adjust:101.13%;ascent-override:96.91%;descent-override:25.71%;line-gap-override:0%;}
+@font-face{font-family:'Inter Tight Fallback';src:local('Arial'),local('Liberation Sans');size-adjust:95.32%;ascent-override:101.76%;descent-override:25.18%;line-gap-override:0%;}
 @font-face{font-family:'JetBrains Mono Fallback';src:local('Courier New'),local('Liberation Mono');size-adjust:99.98%;ascent-override:102.02%;descent-override:30.00%;line-gap-override:0%;}

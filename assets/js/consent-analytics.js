@@ -108,7 +108,7 @@
     bar.setAttribute('role', 'dialog');
     bar.setAttribute('aria-label', 'Cookie and tracking consent');
     bar.innerHTML = '<div class="cb-inner">' +
-      '<p>We use analytics cookies (Google Analytics, Meta Pixel) to see how the site is used. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>' +
+      '<p>Analytics cookies (Google Analytics, Meta Pixel) help us improve the site. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>' +
       '<div class="cb-actions">' +
       '<button class="cb-accept" onclick="window.smelloffSetConsent(\'accepted\')">Accept all</button>' +
       '<button class="cb-reject" onclick="window.smelloffSetConsent(\'rejected\')">Reject non-essential</button>' +

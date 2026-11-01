@@ -166,8 +166,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 900;font-display:swap;src:url('/assets/fonts/fraunces-normal-rupee-400.woff2') format('woff2');unicode-range:U+20B9;}
   @font-face{font-family:'Inter Tight';font-style:normal;font-weight:400 500;font-display:swap;src:url('/assets/fonts/inter-tight-normal-rupee-400.woff2') format('woff2');unicode-range:U+20B9;}
   @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/jetbrains-mono-normal-latin-ext-400.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20B8, U+20BA-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
-  @font-face{font-family:'Fraunces Fallback';src:local('Georgia');size-adjust:109.93%;ascent-override:88.96%;descent-override:23.20%;line-gap-override:0%;}
-  @font-face{font-family:'Inter Tight Fallback';src:local('Arial');size-adjust:136.95%;ascent-override:70.74%;descent-override:17.61%;line-gap-override:0%;}
+  @font-face{font-family:'Fraunces Fallback';src:local('Georgia');size-adjust:101.13%;ascent-override:96.91%;descent-override:25.71%;line-gap-override:0%;}
+  @font-face{font-family:'Inter Tight Fallback';src:local('Arial');size-adjust:95.32%;ascent-override:101.76%;descent-override:25.18%;line-gap-override:0%;}
   @font-face{font-family:'JetBrains Mono Fallback';src:local('Courier New');size-adjust:99.98%;ascent-override:102.02%;descent-override:30.00%;line-gap-override:0%;}
 
   /* ============ TOKENS v1 ============
@@ -1520,9 +1520,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <style id="a11y-utility-css">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=3eafab25" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=3eafab25"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=4ae6f709" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=4ae6f709"></noscript>
 <script src="/assets/js/chrome.js?v=e7fcfc15" defer></script>
-<script src="/assets/js/support-chat.js?v=c16c518c" defer></script>
+<script src="/assets/js/support-chat.js?v=aa488a44" defer></script>
 </head>
 <body>
 
@@ -1877,8 +1877,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
       <div class="product-grid">
         <div class="product-visual reveal">
           <picture>
-            <source srcset="/assets/optimized/odorstrike-bottle-720.avif 720w, /assets/optimized/odorstrike-bottle-1080.avif 1080w" sizes="(min-width:900px) 360px, 50vw" type="image/avif">
-            <source srcset="/assets/optimized/odorstrike-bottle-720.webp 720w, /assets/optimized/odorstrike-bottle-1080.webp 1080w" sizes="(min-width:900px) 360px, 50vw" type="image/webp">
+            <source srcset="/assets/optimized/odorstrike-bottle-720.avif 720w, /assets/optimized/odorstrike-bottle-1080.avif 1080w" sizes="(min-width:900px) 360px, calc(100vw - 74px)" type="image/avif">
+            <source srcset="/assets/optimized/odorstrike-bottle-720.webp 720w, /assets/optimized/odorstrike-bottle-1080.webp 1080w" sizes="(min-width:900px) 360px, calc(100vw - 74px)" type="image/webp">
             <img src="/assets/optimized/odorstrike-bottle-720.webp" alt="ODORSTRIKE 50ml pocket fabric odor eliminator mist bottle" width="720" height="720" loading="lazy" decoding="async">
           </picture>
         </div>
@@ -2201,7 +2201,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- DPDP Consent Bar -->
 <div id="smelloff-consent-bar" role="dialog" aria-label="Cookie and tracking consent">
   <div class="cb-inner">
-    <p>We use analytics cookies (Google Analytics, Meta Pixel) to see how the site is used. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>
+    <p>Analytics cookies (Google Analytics, Meta Pixel) help us improve the site. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>
     <div class="cb-actions">
       <button class="cb-accept" onclick="window.smelloffSetConsent('accepted')">Accept all</button>
       <button class="cb-reject" onclick="window.smelloffSetConsent('rejected')">Reject non-essential</button>
@@ -2247,7 +2247,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     var observer = new IntersectionObserver(function(entries){
       entries.forEach(function(e){ seen.set(e.target, e.isIntersecting); });
       show(!targets.some(function(t){ return seen.get(t); }));
-    }, { threshold: 0 });
+    // Bottom 120px = where this strip and the consent bar sit (2026-11-01).
+    }, { threshold: 0, rootMargin: '0px 0px -120px 0px' });
     targets.forEach(function(t){ observer.observe(t); });
   } else {
     function onScroll(){

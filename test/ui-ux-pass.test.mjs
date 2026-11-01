@@ -1,0 +1,55 @@
+// 2026-11-01 UI/UX pass (ui-ux-pro-max checklist: fixed elements must not hide
+// the primary action; reserve space so fonts don't shift layout).
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+
+const read = (f) => readFileSync(f, 'utf8');
+const face = (css, family) => {
+  const m = css.match(new RegExp(`font-family:'${family}';[^}]*size-adjust:([\\d.]+)%`));
+  return m ? Number(m[1]) : null;
+};
+
+test('fallback faces are metric-matched (no 37% oversized Inter Tight fallback)', () => {
+  for (const f of ['assets/fonts.css', 'index.html']) {
+    const css = read(f);
+    const it = face(css, 'Inter Tight Fallback');
+    const fr = face(css, 'Fraunces Fallback');
+    // Inter Tight is narrower than Arial; Fraunces 900 is ~Liberation Serif Bold.
+    assert.ok(it > 90 && it < 100, `${f}: Inter Tight Fallback size-adjust ${it}% (measured 95.32%)`);
+    assert.ok(fr > 96 && fr < 106, `${f}: Fraunces Fallback size-adjust ${fr}% (measured 101.13%)`);
+  }
+});
+
+test('phone consent bar is compact and its buttons keep 44px with an explicit line-height', () => {
+  const css = read('assets/css/chrome.css');
+  const block = css.slice(css.indexOf('Compact consent bar on phones'));
+  assert.match(block, /@media\(max-width:519px\)/);
+  assert.match(block, /html #smelloff-consent-bar button\{min-height:44px;[^}]*line-height:1\.2/);
+  for (const f of ['index.html', 'odorstrike.html', 'faq.html', 'assets/js/consent-analytics.js']) {
+    assert.ok(read(f).includes('Analytics cookies (Google Analytics, Meta Pixel) help us improve the site.'), `${f}: consent copy in sync`);
+  }
+});
+
+test('chat launcher yields to page buttons and to the open consent bar on phones', () => {
+  const js = read('assets/js/support-chat.js');
+  assert.match(js, /function yieldToButtons\(\)/);
+  assert.match(js, /html\.sf-chat-yield \.sfc-launch/);
+  assert.match(js, /window\.innerWidth < 520 && cb/);
+});
+
+test('sticky buy strips treat the bottom 120px as covered', () => {
+  assert.match(read('odorstrike.html'), /threshold: 0\.1, rootMargin: '0px 0px -120px 0px'/);
+  assert.match(read('index.html'), /threshold: 0, rootMargin: '0px 0px -120px 0px'/);
+});
+
+test('PDP phones: fabric chips sit under the buy row so Buy is in the first screen', () => {
+  const html = read('odorstrike.html');
+  assert.match(html, /\.pd-kicker,\.pd-title,\.pd-highlights\{order:-2\}/);
+  assert.match(html, /\.pd-price,\.buy-actions\{order:-1\}/);
+});
+
+test('homepage product-block image sizes match its rendered width on phones', () => {
+  const html = read('index.html');
+  assert.equal((html.match(/sizes="\(min-width:900px\) 360px, calc\(100vw - 74px\)"/g) || []).length, 2);
+});
