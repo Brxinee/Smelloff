@@ -1459,6 +1459,10 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   #sf-main .hero-visual{border-radius:0 !important}
   #founders .f-role{font-family:var(--mono) !important;font-size:var(--fs-eyebrow) !important;letter-spacing:var(--ls-eyebrow) !important;text-transform:uppercase !important}
   #faq details.faq-item > summary{font-weight:900}
+  /* Today's header (offer strip + 84px bar) is 55px taller than Sep 19's, which
+     pushed the hero buy button under the first-visit consent bar at 1280x800.
+     Less top padding on desktop puts the hero where it sat on Sep 19. */
+  @media(min-width:768px){#sf-main .hero{padding-top:clamp(24px,2.5vw,32px)}}
   #faq details.faq-item > summary :is(h2,h3,h4){font-weight:inherit}
   @media(max-width:767px){
     #sf-main .hero{overflow:visible;padding-top:84px}
@@ -2262,9 +2266,18 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <script>
 (function(){
   var KEY='smelloff_consent_v1';
+  /* The buy bar rides above the consent bar while it is open (as on the PDP),
+     so a first-time phone visitor always has a buy route on screen. */
+  function liftBuyBar(){
+    var b=document.getElementById('smelloff-consent-bar'), mb=document.getElementById('homeMobileBar');
+    if(!mb)return;
+    var px=b&&b.style.display==='block'?b.offsetHeight:0;
+    mb.style.setProperty('--mb-lift',px+'px');
+  }
   function hideBar(){
     var b=document.getElementById('smelloff-consent-bar');
     if(b)b.style.display='none';
+    liftBuyBar();
   }
   window.smelloffSetConsent=function(v){
     try{localStorage.setItem(KEY,v);}catch(e){}
@@ -2276,6 +2289,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   if(!existing){
     var bar=document.getElementById('smelloff-consent-bar');
     if(bar)bar.style.display='block';
+    liftBuyBar();
+    window.addEventListener('resize',liftBuyBar,{passive:true});
   }
 })();
 </script>

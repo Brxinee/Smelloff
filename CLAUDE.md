@@ -68,6 +68,11 @@ picker, #moments/#compare, offer box) and "Type: Space Grotesk + Inter".
   review line, today's FAQ answers + "What is ODORSTRIKE?" + the guide links.
 - The cutout ban no longer covers the homepage (owner's call); it still covers
   the PDP and the blog.
+- Two UX fixes on top of Sep 19 (re-check the same day): desktop hero top
+  padding is `clamp(24px,2.5vw,32px)` so today's taller header doesn't push
+  the hero buy button under the first-visit consent bar at 1280×800 (buy
+  668–719, bar 727; Sep 19 was 657–708); and the phone buy bar rides above the
+  open consent bar (`--mb-lift`, as on the PDP), which on Sep 19 covered it.
 - **Type everywhere = Sep 19**: `--display` Fraunces, `--body` Inter Tight,
   `--mono` JetBrains Mono, `--lh-display` 1.02, `--ls-display` -.02em,
   `--ls-eyebrow` .1em — in tokens.css, both inline TOKENS copies, fonts.css
