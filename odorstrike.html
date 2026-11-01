@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
          fetched at top priority to render nothing. -->
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=429b67cb">
+<link rel="stylesheet" href="/assets/fonts.css?v=8ae495df">
 
 <!-- AI/LLM context files (answer-engine discovery hint) -->
 <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
@@ -1382,6 +1382,13 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     .gal-mobile-indicator{margin-top:6px}
     .buy-actions .pd-btn{font-size:13px;letter-spacing:.06em;padding:0 14px}
     .buy-actions .pd-btn .ic{display:none}
+    /* 2026-11-01 UI/UX audit: the Sep 19 type made the H1 taller and pushed Buy
+       to 830–886px on 390×844. The three chips move from above the price to
+       right under the buy row (still beside the CTA); everything above them
+       keeps its order. product-info is a flex column. */
+    .pd-kicker,.pd-title,.pd-highlights{order:-2}
+    .pd-price,.buy-actions{order:-1}
+    .pd-not{margin-top:12px;margin-bottom:2px}
     .pd-title{font-size:44px}
     .pd-title__cat{font-size:15.5px}
   }
@@ -1632,9 +1639,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=3eafab25" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=3eafab25"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=4ae6f709" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=4ae6f709"></noscript>
 <script src="/assets/js/chrome.js?v=e7fcfc15" defer></script>
-<script src="/assets/js/support-chat.js?v=c16c518c" defer></script>
+<script src="/assets/js/support-chat.js?v=aa488a44" defer></script>
 </head>
 <body>
 
@@ -2547,7 +2554,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- DPDP Consent Bar -->
 <div id="smelloff-consent-bar" role="dialog" aria-label="Cookie and tracking consent">
   <div class="cb-inner">
-    <p>We use analytics cookies (Google Analytics, Meta Pixel) to see how the site is used. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>
+    <p>Analytics cookies (Google Analytics, Meta Pixel) help us improve the site. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>
     <div class="cb-actions">
       <button class="cb-accept" onclick="window.smelloffSetConsent('accepted')">Accept all</button>
       <button class="cb-reject" onclick="window.smelloffSetConsent('rejected')">Reject non-essential</button>
@@ -4308,7 +4315,9 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
         });
         scrolledEnough = true;
         update();
-      }, { threshold: 0.1 });
+      // The bottom 120px is where the sticky strip and the consent bar sit, so a
+      // Buy button there can't be tapped: count it as off screen (2026-11-01).
+      }, { threshold: 0.1, rootMargin: '0px 0px -120px 0px' });
 
       purchaseTargets.forEach(function(target){
         observer.observe(target);

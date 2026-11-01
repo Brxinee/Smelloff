@@ -2520,3 +2520,37 @@ product; it never plants one. Supersedes parts of the two passes above:
   llms answer stays, reframed: alcohol evaporates, it doesn't trap or neutralise odor.
 - Don't add FAQ questions that name a cheaper substitute, and keep limits to the
   safety lines (fabric only; never leather, suede or dry-clean-only; patch-test silk).
+
+## UI/UX pass with the ui-ux-pro-max skill (2026-11-01, owner: "fix my website's UI and UX … I need sales")
+Skill: github.com/nextlevelbuilder/ui-ux-pro-max-skill (read-only clone; its search
+script is stdlib-only and reads its own CSVs). Used its "review existing UI" path:
+the priority checklist + `--domain ux/landing/product` searches, not a new design
+system (the Sep 19 look stays). Audited the production build at 390×844, 390×664
+(iPhone Safari's visible height), 360×740, 414×896 and 1280×800, first visit and
+returning: axe WCAG 2.2 AA (0 violations before and after), tap targets, what sits on
+top of each buy button (`elementFromPoint`), CLS/LCP on throttled 4G. Checkout already
+met every forms rule (autocomplete, inputmode, labels, inline errors, focus). Fixed:
+- **Fallback fonts were wrong since #554 today.** `Inter Tight Fallback` had
+  `size-adjust:136.95%` (Inter Tight is *narrower* than Arial): every iPhone painted
+  text 37% too big until the web font arrived. Measured in Chromium against Liberation
+  Sans/Serif: Inter Tight 95.32% / ascent 101.76% / descent 25.18%; Fraunces (900 vs
+  serif bold) 101.13% / 96.91% / 25.71%. In `assets/fonts.css` and inline in
+  `index.html`. Throttled-4G CLS, live → fixed: blog post 0.224 → 0.004, /about
+  0.107 → 0.004, /blog 0.055 → 0.005, /faq 0.038 → 0.002. Re-measure before changing.
+- **Consent bar covered the homepage "FIX MY SHIRT" (665–716) on a first phone visit**
+  (bar top 696). chrome.css §5 compact phone block (`html #smelloff-consent-bar`, beats
+  the JS copy appended later): 148 → 108px, top 736. Shorter copy in all four copies:
+  "Analytics cookies (Google Analytics, Meta Pixel) help us improve the site." Buttons
+  get `line-height:1.2` (with `normal` the fallback face made them 52px → CLS at swap).
+- **Chat launcher sat on buy buttons** (phone hero CTA's right edge, PDP Buy, desktop
+  "Add to cart"). `support-chat.js` `yieldToButtons()`: while the launcher's box
+  overlaps a visible page button (`.btn`-class links/buttons in main, pack cards, qty)
+  it fades (`html.sf-chat-yield`); on phones it also waits while the consent bar is open
+  (consent + buy strip + chat took ~250 of 664px).
+- **PDP phone Buy had slipped to 830–886px** (Sep 19 H1). Phones reorder the flex
+  column so the three fabric chips sit right under the buy row: Buy 759–815.
+- **Sticky buy strips** (PDP and home) treat the bottom 120px as covered
+  (`rootMargin '0px 0px -120px 0px'`): a Buy under the consent bar or at the screen
+  edge no longer hides the strip. There is always one tappable buy route on screen.
+- Homepage product-block `<picture>` `sizes` said 50vw for a ~81vw image.
+- `test/ui-ux-pass.test.mjs` pins all of it (the font test fails on the #554 values).
