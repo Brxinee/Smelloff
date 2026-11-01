@@ -201,9 +201,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
          font-display:swap and the metric-matched fallback holding the layout.
        · barlow-condensed-900 — not used on this page at all. It was being
          fetched at top priority to render nothing. -->
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/space-grotesk-normal-latin-wght.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-normal-latin-wght.woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=fc635713">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-normal-latin-400.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-tight-normal-latin-400.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css?v=429b67cb">
 
 <!-- AI/LLM context files (answer-engine discovery hint) -->
 <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
@@ -294,14 +294,14 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     --overlay:rgba(0,0,0,.75);
 
     /* ---- Type families ---- */
-    --display:'Space Grotesk','Space Grotesk Fallback',system-ui,sans-serif;
-    --mono:'Inter','Inter Fallback',system-ui,sans-serif;
-    --body:'Inter','Inter Fallback',system-ui,sans-serif;
+    --display:'Fraunces','Fraunces Fallback',serif;
+    --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;
+    --body:'Inter Tight','Inter Tight Fallback',sans-serif;
 
     /* ---- Type scale & rhythm ---- */
-    --lh-display:1.08;
+    --lh-display:1.02;
     --lh-body:1.55;
-    --ls-display:-.025em;
+    --ls-display:-.02em;
 
     --fs-h1:clamp(36px,5.6vw,68px);
     --fs-h2:clamp(28px,4vw,46px);
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     --fs-body:16px;
     --fs-sm:14px;
     --fs-eyebrow:11.5px;
-    --ls-eyebrow:.16em;
+    --ls-eyebrow:.1em;
     --ls-mono:.06em;
 
     /* ---- Rhythm ---- */

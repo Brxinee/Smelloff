@@ -167,44 +167,45 @@ test('production backend endpoints derive from canonical BASE_PRODUCT without fa
 // Homepage rebuilt 2026-10-10 as a conversion page (dudewipes-style: few
 // sections, one claim each, a buy CTA under every one). These tests pin the
 // guardrails rather than the old section-by-section copy.
+// 2026-11-01 (owner): the homepage is the Sep 19 design again (git c059abb),
+// with today's facts. These pin the facts and the Sep 19 structure.
 test('index.html homepage hero: one H1, fabric positioning, price and COD disclosed before checkout', () => {
   const html = readFileSync('index.html', 'utf8');
   const h1 = [...html.matchAll(/<h1\b[^>]*>(.*?)<\/h1>/gis)];
   assert.equal(h1.length, 1, 'Homepage must contain exactly one <h1>');
-  // 2026-10-26 (owner): photo hero, Aug 15 headline.
-  assert.ok(h1[0][1].includes("Don't let them notice your") && h1[0][1].includes('sweat.'), 'H1 must be "Don\'t let them notice your sweat."');
-
+  assert.ok(h1[0][1].includes('Your shirt smells.') && h1[0][1].includes('Fix it.'), 'H1 must be the Sep 19 "Your shirt smells. Fix it."');
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
-  // 2026-10-20: the category is "clothing deodorant"; the eyebrow says fabric only and the
-  // sub says not on skin, so it never reads as a body product. One line at 320–390px.
-  assert.ok(hero.includes('CLOTHING DEODORANT · FABRIC ONLY'));
-  assert.ok(hero.includes('ODORSTRIKE is a pocket clothing deodorant: it neutralizes odor trapped in your clothes, not on your skin.'));
-  for (const tag of ['Not perfume', 'Not body deodorant', 'Fabric only']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
-  assert.ok(hero.includes('<b>₹229</b>'), 'Hero must show ₹229');
-  assert.ok(hero.includes('M.R.P. ₹499') && hero.includes('54% OFF'), 'MRP and discount must agree with the PDP');
-  assert.ok(hero.includes('Buy now — ₹229') && hero.includes('href="/odorstrike?buy=1"'), 'Primary CTA must open checkout');
-  // Owner's call (2026-10-11): outside checkout, say COD exists; the amount is on the COD option in checkout.
-  assert.ok(hero.includes('Cash on Delivery') && !/₹\s*(60|90|130|319)\b/.test(hero), 'Hero names COD availability without the COD amount');
+  assert.ok(hero.includes('FABRIC ODOR CONTROL · FOR CLOTHES'));
+  assert.ok(hero.includes('ODORSTRIKE neutralizes odor trapped in your clothes — not on your skin.'));
+  for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
+  assert.ok(hero.includes('<span class="hero-price">₹229</span>'), 'Hero must show ₹229');
+  assert.ok(hero.includes('M.R.P. ₹499'), 'MRP must agree with the PDP');
+  assert.ok(hero.includes('FIX MY SHIRT — ₹229') && hero.includes('href="/odorstrike?buy=1"'), 'Primary CTA must open checkout');
+  // Prepaid ships free; COD pays shipping + handling by pincode, shown only in checkout.
+  assert.ok(hero.includes('Free shipping on prepaid') && !hero.includes('Free shipping across India'), 'free shipping is for prepaid');
+  assert.ok(!/₹\s*(60|89|90|119|130|149|179|289|318|319)\b/.test(hero), 'Hero carries no COD amount');
   assert.ok(hero.includes('2–3 sprays') && hero.includes('15–30 sec'), 'Usage microcopy must match the PDP');
-  assert.ok(hero.includes('/assets/photos/hero-spray-collar'), 'Hero must show the product in use (the collar spray photo)');
+  assert.ok(hero.includes('/assets/odorstrike-bottle-cutout.webp'), 'Sep 19 hero: the bottle on the acid disc');
 });
 
 test('index.html homepage: every section ends in a route to checkout', () => {
   const html = readFileSync('index.html', 'utf8');
   const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
   const ctas = main.match(/href="\/odorstrike\?buy=1"/g) || [];
-  assert.ok(ctas.length >= 6, `expected a buy CTA in most sections, found ${ctas.length}`);
-  for (const id of ['how', 'why', 'reviews', 'buy', 'faq']) assert.ok(main.includes(`id="${id}"`), `section #${id} must exist`);
-  assert.ok(html.includes('id="homeMobileBar"') && html.includes('id="offerBuyBtn"'), 'sticky bar must track the hero and offer CTAs');
+  assert.ok(ctas.length >= 3, `expected buy CTAs in the hero, the day story and the product block, found ${ctas.length}`);
+  for (const id of ['remembers', 'odorstrike-featured', 'reviews', 'founders', 'how-it-works', 'faq']) assert.ok(main.includes(`id="${id}"`), `section #${id} must exist`);
+  assert.ok(html.includes('id="homeMobileBar"') && html.includes("document.querySelector('.hero-cta-group')"), 'sticky bar must track the hero CTA');
 });
 
-test('index.html homepage offer box: canonical price, COD, shipping, returns', () => {
+test('index.html homepage product block: canonical price, prepaid shipping, returns, locked claims', () => {
   const html = readFileSync('index.html', 'utf8');
-  const offer = html.slice(html.indexOf('id="buy"'), html.indexOf('</section>', html.indexOf('id="buy"')));
-  assert.ok(offer.includes('<b>₹229</b>'));
-  assert.ok(offer.includes('Cash on Delivery') && !/₹\s*(60|90|130|319)\b/.test(offer), 'Offer box names COD availability without the COD amount');
-  assert.ok(offer.includes('Free shipping') && offer.includes('7-day returns'));
-  assert.ok(offer.includes('Up to 8 hours') && offer.includes('on fabric'), 'Protection claim must stay the locked one');
+  const cfg = JSON.parse(readFileSync('config/product.json', 'utf8')).product;
+  const prod = html.slice(html.indexOf('id="odorstrike-featured"'), html.indexOf('</section>', html.indexOf('id="odorstrike-featured"')));
+  assert.ok(prod.includes(`<span class="prod-price">₹${cfg.price}</span>`) && prod.includes(`${cfg.discountPercent}% OFF`));
+  assert.ok(prod.includes('FREE SHIPPING ON PREPAID') && prod.includes('7-DAY RETURNS'));
+  assert.ok(prod.includes('up to 8 hours of fabric odor protection'), 'Protection claim must stay the locked one');
+  assert.ok(prod.includes('Dries clear in 15–30s · No stiff residue') && !/zero residue/i.test(html), 'no absolute residue claim');
+  assert.ok(!/₹\s*(60|89|90|119|130|149|179|289|318|319)\b/.test(html.slice(html.indexOf('<main'), html.indexOf('</main>'))), 'no COD amount on the homepage');
 });
 
 test('index.html homepage reviews: beta-tester quotes only, verbatim, labelled', () => {
@@ -217,47 +218,25 @@ test('index.html homepage reviews: beta-tester quotes only, verbatim, labelled',
   assert.equal(/★|\d\.\d\s*\/\s*5|\d[\d,]*\+\s*(customers|reviews)/i.test(html.slice(html.indexOf('<main'), html.indexOf('</main>'))), false, 'no ratings or customer counts until real verified reviews exist');
 });
 
-// Homepage redesign (2026-10-15, docs/audits/homepage-conversion-2026-10.md):
-// the placeholder combos are gone; the offer box sells the real "2 for ₹419".
-test('index.html homepage pack picker: the three real packs at checkout prices, one bottle by default', () => {
-  const html = readFileSync('index.html', 'utf8');
-  const cfg = JSON.parse(readFileSync('config/product.json', 'utf8')).product;
-  assert.equal(html.includes('id="combos"'), false, 'placeholder combos must not come back');
-  const offer = html.slice(html.indexOf('id="buy"'), html.indexOf('</section>', html.indexOf('id="buy"')));
-  const opts = [...offer.matchAll(/<input type="radio" name="pack" value="(\d)"( checked)?>/g)];
-  assert.deepEqual(opts.map((m) => m[1]), ['1', '2', '5']);
-  assert.equal(opts.filter((m) => m[2]).map((m) => m[1]).join(), '1', 'one bottle is pre-selected; the buyer opts in to more');
-  assert.ok(offer.includes(`<b>₹${cfg.price}</b>`) && offer.includes(`<b>₹${cfg.pairPrice}</b>`) && offer.includes(`<b>₹${cfg.fivePackPrice}</b>`));
-  assert.ok(offer.includes(`Save ₹${cfg.pairSaving}`) && offer.includes(`<s>₹${cfg.price * 2}</s>`), 'pair saving is against two single bottles');
-  assert.equal(cfg.fivePackSaving, cfg.price * 5 - cfg.fivePackPrice);
-  assert.ok(offer.includes(`Save ₹${cfg.fivePackSaving}`) && offer.includes(`<s>₹${(cfg.price * 5).toLocaleString('en-IN')}</s>`), 'five-pack saving is against five single bottles');
-  assert.ok(offer.includes(`₹${(cfg.fivePackPrice / 5).toFixed(2)} each`) && offer.includes(`₹${(cfg.pairPrice / 2).toFixed(2)} each`), 'per-bottle price on each card');
-  assert.match(html, /'2': \{ href: '\/odorstrike\?buy=1&qty=2', label: 'Buy 2 — ₹419' \}/);
-  assert.match(html, /'5': \{ href: '\/odorstrike\?buy=1&qty=5', label: 'Buy 5 — ₹899' \}/);
-  assert.ok(/\/odorstrike\?buy=1&amp;qty=2/.test(html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')))), 'hero names the pair offer');
-  assert.equal(/Duo|Trio|₹399|₹549/.test(html), false, 'retired bundle prices never return');
-});
-
 test('odorstrike.html ?buy=1&qty=N opens checkout on N bottles', () => {
   const pdp = readFileSync('odorstrike.html', 'utf8');
   assert.match(pdp, /parseInt\(_q\.get\('qty'\), 10\)/);
   assert.match(pdp, /if \(_n >= 1 && _n <= _max\) \{ pdpQty = _n; renderPdpQty\(\); \}\s*buyNow\(/);
 });
 
-test('index.html homepage: moments, an honest comparison, no unverified buyer', () => {
+test('index.html homepage: no unverified buyer, founders named, key actives only', () => {
   const html = readFileSync('index.html', 'utf8');
   const sec = (id) => html.slice(html.indexOf(`id="${id}"`), html.indexOf('</section>', html.indexOf(`id="${id}"`)));
-  assert.equal((sec('moments').match(/class="mo reveal"/g) || []).length, 6);
-  const cmp = sec('compare');
-  for (const col of ['ODORSTRIKE', 'Deodorant', 'Clothes perfume spray', 'Washing again']) assert.ok(cmp.includes(`>${col}</th>`), `compare column ${col}`);
-  assert.ok(cmp.includes('No, wash for that'), 'the table admits ODORSTRIKE does not remove dirt or stains');
-  assert.ok(cmp.includes('15–30 sec') && cmp.includes('dries clear') === false && cmp.includes('Dries clear with no stiff residue'));
   const rv = sec('reviews');
-  // The only order-linked review was on a cancelled, never-delivered order
-  // (SMF-20260811-9912). Label a review "Verified buyer" only when its order
-  // was delivered (COD) or paid (prepaid).
+  // The only order-linked review was on a cancelled, never-delivered order.
   assert.equal((rv.match(/Verified buyer/g) || []).length, 0, 'no review here has a bought order behind it');
   assert.ok(!rv.includes('tbh this product is amazing'), 'the cancelled-order review is not shown');
+  assert.ok(rv.includes('one founder, four shirts'), 'the 30-day review is described honestly');
+  const f = sec('founders');
+  assert.ok(f.includes('Jogdhande Nikhil Patil') && f.includes('Vineeth Kumar Duggepogu'));
+  const sci = sec('how-it-works');
+  for (const gone of ['Isopropyl Alcohol', 'Polysorbate 20', 'PE9010', 'Ethylhexylglycerin', 'Citric Acid', 'ANTI-REGROWTH']) assert.ok(!sci.includes(gone), `${gone} is not published`);
+  assert.ok(sci.includes('8 more') && sci.includes('info@smelloff.in'));
 });
 
 test('index.html homepage claims discipline and formula secrecy', () => {
@@ -542,13 +521,9 @@ test('odorstrike.html PDP buy box (#buy): showcaseBuyBtn → buyNow(), canonical
 test('pages give a route to the product page that does not open checkout', () => {
   const home = readFileSync('index.html', 'utf8');
   const main = home.slice(home.indexOf('<main'), home.indexOf('</main>'));
-  const pdpLinks = main.match(/href="\/odorstrike"/g) || [];
-  assert.ok(pdpLinks.length >= 4, `homepage needs plain /odorstrike links beside the buy CTAs, found ${pdpLinks.length}`);
+  assert.ok(/href="\/odorstrike"/.test(main), 'homepage links the product page without opening checkout');
   const hero = home.slice(home.indexOf('<section class="hero"'), home.indexOf('</section>', home.indexOf('<section class="hero"')));
-  // Events (120 days): phone visitors chose "see the product" ~3:1 over buy on
-  // the homepage, so the product route is a ghost button beside Buy.
-  assert.ok(/class="hm-btn hm-btn--ghost hero-more" href="\/odorstrike"/.test(hero), 'hero must offer a route to the product page beside buy');
-  assert.equal((hero.match(/class="hm-btn"/g) || []).length, 1, 'one filled (primary) button in the hero');
+  assert.equal((hero.match(/class="btn hero-btn-primary"/g) || []).length, 1, 'one filled (primary) button in the hero');
   const pdp = readFileSync('odorstrike.html', 'utf8');
   assert.equal(/\.pay-modes'\)/.test(readFileSync('assets/js/chrome.js', 'utf8')), false, 'chrome.js must not overwrite the PDP COD disclosure');
   for (const id of new Set([...pdp.matchAll(/<use href="#(i-[a-z-]+)"/g)].map(m => m[1]))) assert.ok(pdp.includes(`<symbol id="${id}"`), `icon ${id} must exist in the sprite`);
@@ -748,14 +723,12 @@ test('phone menu: build-time critical CSS cannot trap the drawer shut', () => {
   assert.ok(/\.sf-hdr__menu\.is-open\{[^}]*transform:none/.test(css), 'open drawer slides in');
 });
 
-test('index.html: <picture> wrappers never add a grid cell, and section reach is measured', () => {
+test('index.html: section reach is measured; the PDP <picture> wrappers never add a grid cell', () => {
   const html = readFileSync('index.html', 'utf8');
-  // display:contents on .ph-pic made its <source> a grid item, so every #why
-  // photo sat a row below its copy on desktop.
-  assert.match(html, /\.ph-pic>source\{display:none\}/);
   assert.match(readFileSync('odorstrike.html', 'utf8'), /\.ph-pic>source\{display:none\}/);
-  for (const id of ['moments', 'how', 'why', 'compare', 'reviews', 'buy', 'founders', 'faq', 'final']) {
+  for (const id of ['remembers', 'odorstrike-featured', 'reviews', 'founders', 'how-it-works', 'faq']) {
     assert.ok(html.includes(`id="${id}"`), `section #${id} must exist for the reach beacon`);
+    assert.ok(html.includes(`'${id}'`), `#${id} is observed`);
   }
   assert.match(html, /type: 'view_content', label: 'home_sec_' \+ id/);
 });

@@ -45,16 +45,16 @@
   --overlay:rgba(0,0,0,.75);
 
   /* ---- Type families ------------------------------------------------ */
-  --display:'Space Grotesk','Space Grotesk Fallback',system-ui,sans-serif;
-  --mono:'Inter','Inter Fallback',system-ui,sans-serif;  /* label face — the body sans, tracked uppercase */
-  --body:'Inter','Inter Fallback',system-ui,sans-serif;
+  --display:'Fraunces','Fraunces Fallback',serif;
+  --mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;  /* label face — JetBrains Mono, tracked uppercase (Sep 19 type) */
+  --body:'Inter Tight','Inter Tight Fallback',sans-serif;
 
   /* ---- Type scale & rhythm -------------------------------------------
      Display line-height is tuned so multi-line headlines breathe naturally
      without excessive vertical sprawling. Tracking is restrained and confident. */
-  --lh-display:1.08;
+  --lh-display:1.02;
   --lh-body:1.55;
-  --ls-display:-.025em;
+  --ls-display:-.02em;
 
   --fs-h1:clamp(36px,5.6vw,68px);
   --fs-h2:clamp(28px,4vw,46px);
@@ -64,7 +64,7 @@
   --fs-body:16px;
   --fs-sm:14px;
   --fs-eyebrow:11.5px;
-  --ls-eyebrow:.16em;
+  --ls-eyebrow:.1em;
   --ls-mono:.06em;
 
   /* ---- Rhythm ------------------------------------------------------- */
