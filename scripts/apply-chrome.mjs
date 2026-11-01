@@ -408,7 +408,7 @@ const PAGES = [
   ...[
     'alternative-to-deodorant-for-clothes-smell', 'best-body-odor-remover-spray-for-men-india',
     'deodorant-perfume-on-fabric', 'dry-air-clothes-indian-home',
-    'how-odor-neutralizer-works-on-fabric', 'how-to-freshen-clothes-stored-for-months',
+    'how-odor-neutralizer-works-on-fabric',
     'how-to-pack-sweaty-clothes-without-bag-smell', 'mumbai-humidity-sweat-smell-survival-guide',
     'odor-on-clothes-vs-odor-in-clothes', 'office-ac-trap-why-rewear-shirts-smell-worse',
     'perfume-plus-sweat-chemical-reaction', 'remove-incense-agarbatti-dhoop-smell',

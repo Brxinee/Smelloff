@@ -33,7 +33,9 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
     const sitemapXml = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
     const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
 
-    it('sitemap contains exactly 112 canonical URLs', () => {
+    it('sitemap contains exactly 111 canonical URLs', () => {
+      // 112 → 111 (2026-11-01): how-to-freshen-clothes-stored-for-months merged
+      // into why-clothes-smell-musty-after-being-stored (same intent).
       // 75 → 76 (2026-10-11): the -instantly duplicate merged into -quickly;
       // the hoodie and blazer guides deleted by dd86e68 were restored.
       // 76 → 71 (same day): the /solutions hub and its four thin city pages
@@ -41,7 +43,7 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
       // 71 → 72 (2026-10-12): the remove-smell-from-clothes-without-washing hub.
       // 72 → 92 (2026-10-15): twenty guides for Indian buyers.
       // 92 → 112 (2026-10-26): twenty guides chosen from Indian search demand.
-      assert.equal(sitemapUrls.length, 112);
+      assert.equal(sitemapUrls.length, 111);
     });
 
     for (const url of sitemapUrls) {
@@ -171,6 +173,12 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
         description: 'the -instantly duplicate (same article) 301s to -quickly',
         url: 'https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-instantly',
         expectedFinal: 'https://smelloff.in/blog/spray-to-remove-sweat-smell-from-clothes-quickly',
+        maxHops: 1,
+      },
+      {
+        description: 'the stored-clothes duplicate 301s to the merged musty-storage guide',
+        url: 'https://smelloff.in/blog/how-to-freshen-clothes-stored-for-months',
+        expectedFinal: 'https://smelloff.in/blog/why-clothes-smell-musty-after-being-stored',
         maxHops: 1,
       },
     ];

@@ -5,13 +5,13 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://smelloff.in/</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://smelloff.in/odorstrike</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -55,7 +55,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/attar-on-clothes-vs-fabric-odor-spray</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -131,7 +131,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/damp-clothes-musty-smell-monsoon-fix</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -164,7 +164,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/does-fabric-spray-stain-clothes</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -197,7 +197,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/dog-smell-on-clothes</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -318,7 +318,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/how-many-times-wear-shirt-before-washing</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -329,7 +329,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/how-odor-neutralizer-works-on-fabric</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -358,17 +358,6 @@
       <image:loc>https://smelloff.in/blog/assets/how-often-to-wash-pajamas-nightwear.jpg?v=5</image:loc>
       <image:title>How Often Should You Wash Pajamas and Nightwear?</image:title>
       <image:caption>A woman in white sleepwear stands at a bright bedroom window in the morning</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://smelloff.in/blog/how-to-freshen-clothes-stored-for-months</loc>
-    <lastmod>2026-09-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://smelloff.in/blog/assets/how-to-freshen-clothes-stored-for-months.jpg?v=5</image:loc>
-      <image:title>How to Freshen Clothes Stored for Months</image:title>
-      <image:caption>Hands lifting folded winter clothes from a stored steel trunk in a dim Indian storeroom</image:caption>
     </image:image>
   </url>
   <url>
@@ -461,7 +450,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/keep-clothes-fresh-while-travelling</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -483,7 +472,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/keep-linen-shirts-cotton-kurtas-fresh-summer</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -548,7 +537,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/odorstrike-ingredients</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -656,7 +645,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/remove-smell-from-blazer-without-dry-cleaning</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -667,7 +656,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/remove-smell-from-clothes-without-washing</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -689,7 +678,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/remove-smell-from-saree-and-blouse-without-washing</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -700,7 +689,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/remove-smell-from-sweater-without-washing</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -810,7 +799,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/teenage-son-body-odour-clothes-parents-guide</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -821,7 +810,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/vinegar-baking-soda-fabric-softener</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -886,7 +875,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/which-fabrics-hold-odor-most</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -952,7 +941,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/why-clothes-smell-musty-after-being-stored</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -963,7 +952,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/why-clothes-smell-stale-in-ac-room</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -984,7 +973,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/why-do-sun-dried-clothes-smell-good</loc>
-    <lastmod>2026-10-26</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -1006,7 +995,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/why-i-built-odorstrike</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <image:image>
@@ -1050,7 +1039,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/blog/why-traffic-fumes-cling-to-clothes</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -1112,7 +1101,7 @@
   </url>
   <url>
     <loc>https://smelloff.in/faq</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

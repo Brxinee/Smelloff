@@ -2442,3 +2442,81 @@ content only. Kept: `why-i-built-odorstrike`, `odorstrike-review-30-day-india-te
 - Self-hosted fonts with preload
 - Lazy loading on all images
 - Consent-gated analytics
+
+## Copy pass from Reddit research (2026-11-01, owner: "implement the best")
+Research: r/laundry, r/CleaningTips, r/HerOneBag, r/IndianFood, r/DesiFragranceAddicts.
+The biggest complaint is "rebloom" (a washed shirt smells again the moment you sweat:
+old oil/residue in the fibres, worst in polyester, worse with fabric softener). A spray
+does not fix it; an enzyme wash does. People who want a between-wash fix use cheap vodka
+or unscented Febreze and ask for something portable and not perfumy.
+- Homepage hero sub: "Neutralizes sweat, smoke and food smell in your clothes — not on
+  your skin." (kept to two lines on phones; buy button bottom unchanged: 716px at
+  390×844, 724 at 360×740).
+- "Does it replace washing?" on `/`, `/odorstrike` and `/faq` ends with the rebloom line
+  (enzyme detergent, "a spray won't fix that").
+- `/faq`: the gym/polyester answer no longer says "especially effective on polyester" or
+  that an "alcohol carrier reaches where detergent can't" (unsupported; the base is
+  water). The "why gym clothes smell after washing" note says the same. New question:
+  "Can't I just spray vodka or rubbing alcohol on my clothes?"
+
+## SEO / AEO / GEO pass (2026-11-01, owner: "research everything, then implement")
+Google's own AI-features page: no special files or schema for AI Overviews/AI Mode;
+crawlability, structured data that matches the page, snippet eligibility and a current
+Merchant Center are what count. ChatGPT search rides on Bing's index (IndexNow is
+already wired: `.github/workflows/indexnow.yml`). So this pass fixed content and
+facts, not markup tricks.
+- **Merged** `how-to-freshen-clothes-stored-for-months` (598 words) into
+  `why-clothes-smell-musty-after-being-stored` (same intent): the 5-step reset, the US
+  EPA humidity line (below 60%, ideally 30–50%; dried within 24–48 h) and the 2024
+  fibre-release study (PMID 39552794), plus a "store so it doesn't come back" section.
+  301 in `config/routing.json`; removed from apply-chrome PAGES, CLUSTERS,
+  figures.config, blog-image-manifest, the blog index (cards, ItemList, counts: **97**
+  posts, How-to 52), feed.xml. Sitemap is **111** URLs.
+- Question-shaped H2s (ids unchanged, so figures and links hold) in
+  `how-odor-neutralizer-works-on-fabric`, `vinegar-baking-soda-fabric-softener`,
+  `why-clothes-smell-stale-in-ac-room`, `why-traffic-fumes-cling-to-clothes`.
+- `build-llms.mjs`: pack ladder (2 = ₹419, 5 = ₹899) in both files; new answers
+  "smells again as soon as I sweat" (→ `why-clothes-smell-bad-again-after-sweating`)
+  and the vodka/rubbing-alcohol question; the stored-clothes answer cites the EPA.
+- Sitemap lastmod for `/`, `/odorstrike`, `/faq` set to 2026-11-01 by hand: those pages
+  carry no `dateModified`, so build-sitemap keeps the stored value (max()).
+- Homepage hero sub: "ODORSTRIKE neutralizes sweat, smoke and food smell in clothes —
+  not on skin." (product name back; still two lines, buy button unchanged).
+
+## Full-site audit for stale facts and misinformation (2026-11-01, owner: "audit everything … merge and make live")
+Swept every public page, llms file, feed and email template against
+`config/product.json`; rendered all 113 pages at 390 and 1280 (no JS errors, one H1
+each, no dead anchors; the "broken" footer Facebook icon was a lazy-load timing false
+positive); checked all 95 outbound source links. Fixed:
+- **Shipping was promised free for everyone.** `/shipping` (at-a-glance + charges
+  list) and the PDP empty cart said "Free shipping across India"; COD pays shipping +
+  handling by pincode. Now "free on prepaid". FAQ "ship outside India?" too; the
+  founder note's link says "free shipping on prepaid orders".
+- **Fabric rule = config `restrictedFabrics`:** never leather, suede or
+  **dry-clean-only**; **patch-test silk**, zari, heavy embroidery. `/faq` banned silk;
+  the PDP and five posts (+ the stain-guide diagram) said "spot-test dry-clean-only".
+  The blazer guide now says: check the care label, never spray dry-clean-only.
+- **Dose = config `usage.doses`:** "2–3 sprays each" on three zones (6–9) in six posts
+  and two diagrams → "4–5 sprays in total" (fullShirt).
+- `/faq`: "most users get 4–6 weeks per bottle" (no data) → ~100 refreshes; the monsoon
+  answer no longer claims "particularly effective in humid cities" (links the damp-clothes
+  guide instead). PDP "Tested safe on" → "Made for". Homepage science card: HPβCD
+  "so less of the smell reaches your nose" (was "cannot escape").
+- `/refund`: both COD charges (shipping + handling) are non-refundable, as `/returns` says.
+- Policy footers said "Last updated: August 2026" after the 26–27 Oct COD edits →
+  October (November for shipping, refund, PDP).
+- Dead/moved sources: GI registry deep link (404) → the official state-wise GI PDF (the
+  "GI since 2014" line now just says registered); news.ku.dk → the University of
+  Copenhagen research portal page for Pugliese et al. 2020; Woolmark's moved URL.
+- 403s from ScienceDirect/Wiley/DOI/ACS/MDPI etc. are bot blocks, not dead links.
+
+## Sales-first wording (2026-11-01, owner: "don't make customers question my product … I want sales")
+Facts stay accurate, but copy on the money pages answers a doubt and points to the
+product; it never plants one. Supersedes parts of the two passes above:
+- `/` and `/odorstrike` "Does it replace washing?" no longer carry the rebloom line.
+  `/faq` keeps it as a **tip**: one enzyme wash resets an old shirt, then ODORSTRIKE
+  keeps it fresh. Gym/polyester and monsoon answers lead with "yes" and how to use it.
+- The `/faq` vodka question is **removed** (it introduced a free alternative). The
+  llms answer stays, reframed: alcohol evaporates, it doesn't trap or neutralise odor.
+- Don't add FAQ questions that name a cheaper substitute, and keep limits to the
+  safety lines (fabric only; never leather, suede or dry-clean-only; patch-test silk).

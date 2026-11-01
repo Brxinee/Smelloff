@@ -67,7 +67,7 @@ const CLUSTERS = {
     'should-you-wear-a-vest-under-your-shirt'],
   laundry: ['why-clothes-smell-bad-after-drying', 'why-washing-machine-makes-clothes-smell',
     'dry-air-clothes-indian-home', 'damp-clothes-musty-smell-monsoon-fix',
-    'why-clothes-smell-musty-after-being-stored', 'how-to-freshen-clothes-stored-for-months',
+    'why-clothes-smell-musty-after-being-stored',
     'why-clothes-smell-in-wardrobe-even-when-clean', 'remove-mothball-almirah-smell-from-clothes',
     'vinegar-baking-soda-fabric-softener', 'why-clothes-smell-stale-in-ac-room',
     'does-ironing-remove-smell-from-clothes', 'wash-clothes-less-save-water-india',
