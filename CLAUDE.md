@@ -2442,3 +2442,19 @@ content only. Kept: `why-i-built-odorstrike`, `odorstrike-review-30-day-india-te
 - Self-hosted fonts with preload
 - Lazy loading on all images
 - Consent-gated analytics
+
+## Copy pass from Reddit research (2026-11-01, owner: "implement the best")
+Research: r/laundry, r/CleaningTips, r/HerOneBag, r/IndianFood, r/DesiFragranceAddicts.
+The biggest complaint is "rebloom" (a washed shirt smells again the moment you sweat:
+old oil/residue in the fibres, worst in polyester, worse with fabric softener). A spray
+does not fix it; an enzyme wash does. People who want a between-wash fix use cheap vodka
+or unscented Febreze and ask for something portable and not perfumy.
+- Homepage hero sub: "Neutralizes sweat, smoke and food smell in your clothes — not on
+  your skin." (kept to two lines on phones; buy button bottom unchanged: 716px at
+  390×844, 724 at 360×740).
+- "Does it replace washing?" on `/`, `/odorstrike` and `/faq` ends with the rebloom line
+  (enzyme detergent, "a spray won't fix that").
+- `/faq`: the gym/polyester answer no longer says "especially effective on polyester" or
+  that an "alcohol carrier reaches where detergent can't" (unsupported; the base is
+  water). The "why gym clothes smell after washing" note says the same. New question:
+  "Can't I just spray vodka or rubbing alcohol on my clothes?"
