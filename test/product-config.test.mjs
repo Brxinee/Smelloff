@@ -183,8 +183,10 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   assert.ok(hero.includes('FIX MY SHIRT — ₹229') && hero.includes('href="/odorstrike?buy=1"'), 'Primary CTA must open checkout');
   // Prepaid ships free; COD pays shipping + handling by pincode, shown only in checkout.
   assert.ok(hero.includes('Free shipping on prepaid') && !hero.includes('Free shipping across India'), 'free shipping is for prepaid');
-  assert.ok(!/₹\s*(60|89|90|119|130|149|179|289|318|319)\b/.test(hero), 'Hero carries no COD amount');
-  assert.ok(hero.includes('2–3 sprays') && hero.includes('15–30 sec'), 'Usage microcopy must match the PDP');
+  assert.ok(!/₹\s*(60|89|90|119|130|149|179|289|318|319)\b(?![.,]\d)/.test(hero), 'Hero carries no COD amount');
+  assert.ok(hero.includes('2–3 pumps') && hero.includes('WAIT 15–30 SEC'), 'Usage microcopy (how-it-works card) must match the PDP');
+  // Risk reducers sit by the button (2026-11-01): COD first, then shipping and returns.
+  assert.ok(/<div class="hero-trust-mini">\s*<span>Cash on Delivery<\/span>/.test(hero), 'hero names COD by the button');
   assert.ok(hero.includes('/assets/odorstrike-bottle-cutout.webp'), 'Sep 19 hero: the bottle on the acid disc');
 });
 
@@ -193,7 +195,10 @@ test('index.html homepage: every section ends in a route to checkout', () => {
   const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
   const ctas = main.match(/href="\/odorstrike\?buy=1"/g) || [];
   assert.ok(ctas.length >= 3, `expected buy CTAs in the hero, the day story and the product block, found ${ctas.length}`);
-  for (const id of ['remembers', 'odorstrike-featured', 'reviews', 'founders', 'how-it-works', 'faq']) assert.ok(main.includes(`id="${id}"`), `section #${id} must exist`);
+  for (const id of ['remembers', 'odorstrike-featured', 'reviews', 'founders', 'how-it-works', 'faq', 'final']) assert.ok(main.includes(`id="${id}"`), `section #${id} must exist`);
+  // Proof sits just before the offer box; the page closes on a buy route after the FAQ.
+  assert.ok(main.indexOf('id="reviews"') < main.indexOf('id="odorstrike-featured"'), 'reviews come right before the offer');
+  assert.ok(main.indexOf('id="final"') > main.indexOf('id="faq"') && main.includes('id="finalBuyBtn" ') === false && /id="finalBuyBtn">FIX MY SHIRT — ₹229</.test(main));
   assert.ok(html.includes('id="homeMobileBar"') && html.includes("document.querySelector('.hero-cta-group')"), 'sticky bar must track the hero CTA');
 });
 
@@ -205,7 +210,12 @@ test('index.html homepage product block: canonical price, prepaid shipping, retu
   assert.ok(prod.includes('FREE SHIPPING ON PREPAID') && prod.includes('7-DAY RETURNS'));
   assert.ok(prod.includes('up to 8 hours of fabric odor protection'), 'Protection claim must stay the locked one');
   assert.ok(prod.includes('Dries clear in 15–30s · No stiff residue') && !/zero residue/i.test(html), 'no absolute residue claim');
-  assert.ok(!/₹\s*(60|89|90|119|130|149|179|289|318|319)\b/.test(html.slice(html.indexOf('<main'), html.indexOf('</main>'))), 'no COD amount on the homepage');
+  assert.ok(!/₹\s*(60|89|90|119|130|149|179|289|318|319)\b(?![.,]\d)/.test(html.slice(html.indexOf('<main'), html.indexOf('</main>'))), 'no COD amount on the homepage');
+  // Packs (2026-11-01): opt-in links at checkout prices, per-bottle price shown, one bottle stays the default.
+  assert.ok(prod.includes(`href="/odorstrike?buy=1&amp;qty=2"><b>2 for ₹${cfg.pairPrice}</b><span>₹${(cfg.pairPrice / 2).toFixed(2)} each</span><small>Save ₹${cfg.pairSaving}</small>`));
+  assert.ok(prod.includes(`href="/odorstrike?buy=1&amp;qty=5"><b>5 for ₹${cfg.fivePackPrice}</b><span>₹${(cfg.fivePackPrice / 5).toFixed(2)} each</span><small>Save ₹${cfg.fivePackSaving}</small>`));
+  assert.ok(prod.includes('CASH ON DELIVERY'));
+  assert.equal(/Duo|Trio|₹399|₹549/.test(html), false, 'retired bundle prices never return');
 });
 
 test('index.html homepage reviews: beta-tester quotes only, verbatim, labelled', () => {
@@ -726,7 +736,7 @@ test('phone menu: build-time critical CSS cannot trap the drawer shut', () => {
 test('index.html: section reach is measured; the PDP <picture> wrappers never add a grid cell', () => {
   const html = readFileSync('index.html', 'utf8');
   assert.match(readFileSync('odorstrike.html', 'utf8'), /\.ph-pic>source\{display:none\}/);
-  for (const id of ['remembers', 'odorstrike-featured', 'reviews', 'founders', 'how-it-works', 'faq']) {
+  for (const id of ['remembers', 'reviews', 'odorstrike-featured', 'founders', 'how-it-works', 'faq', 'final']) {
     assert.ok(html.includes(`id="${id}"`), `section #${id} must exist for the reach beacon`);
     assert.ok(html.includes(`'${id}'`), `#${id} is observed`);
   }

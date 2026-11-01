@@ -675,6 +675,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .ico-truck{-webkit-mask-image:url(/assets/icons/truck.png);mask-image:url(/assets/icons/truck.png)}
   .ico-cod{-webkit-mask-image:url(/assets/icons/cod.png);mask-image:url(/assets/icons/cod.png)}
   .ico-hyderabad{-webkit-mask-image:url(/assets/icons/hyderabad.png);mask-image:url(/assets/icons/hyderabad.png)}
+  /* 7-day returns: the owner's shield-check (it had no mask, so it drew a solid lime square) */
+  .ico-shield{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2.8 19 5.5v5.7c0 4.8-3.2 8.2-7 9.9-3.8-1.7-7-5.1-7-9.9V5.5zM8.2 12.1l2.4 2.4 5.1-5.2'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2.8 19 5.5v5.7c0 4.8-3.2 8.2-7 9.9-3.8-1.7-7-5.1-7-9.9V5.5zM8.2 12.1l2.4 2.4 5.1-5.2'/%3E%3C/svg%3E")}
   .zone .z-content{flex:1;min-width:0}
   .zone .z-head{
     display:flex;align-items:center;justify-content:space-between;gap:8px;
@@ -1465,9 +1467,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   @media(min-width:768px){#sf-main .hero{padding-top:clamp(24px,2.5vw,32px)}}
   #faq details.faq-item > summary :is(h2,h3,h4){font-weight:inherit}
   @media(max-width:767px){
-    #sf-main .hero{overflow:visible;padding-top:84px}
-    #sf-main .hero-visual{min-height:clamp(300px,78vw,360px);overflow:visible}
-    #sf-main .hero-visual img{height:clamp(300px,72vw,340px);width:auto;max-width:none;object-fit:contain}
+    #sf-main .hero{overflow:visible;padding-top:24px}
+    #sf-main .hero-visual{min-height:clamp(184px,50vw,236px);overflow:visible}
+    #sf-main .hero-visual img{height:clamp(172px,47vw,224px);width:auto;max-width:none;object-fit:contain}
   }
   #homeMobileBar.mobile-bar{left:0;right:0;bottom:0;gap:0;border-radius:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0;border-top:1px solid rgba(244,241,234,.1);background:var(--ink);
     padding:12px max(20px,env(safe-area-inset-left,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-right,0px));
@@ -1477,6 +1479,43 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   #homeMobileBar .mb-btn{background:var(--acid) !important;color:var(--ink) !important;min-height:44px;padding:12px 24px;font-family:var(--mono) !important;font-size:12px;font-weight:700 !important;letter-spacing:.15em !important;text-transform:uppercase !important;border-radius:8px !important}
   #homeMobileBar .mb-label{white-space:normal}
   @media(max-width:767px){body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
+
+  /* ============ Homepage pass (2026-11-01) ============
+     Research-led changes on the Sep 19 design; see
+     docs/audits/homepage-sep19-research-2026-11.md. */
+  /* Phones: price + buy on the first screen. The how-it-works card follows
+     the button instead of sitting between the bottle and the price. */
+  @media(max-width:959px){
+    #sf-main .hero-visual-wrap{display:contents}
+    #sf-main .hero-visual{order:2;margin:0}
+    #sf-main .hero-buy{order:3}
+    #sf-main .hero-demo-slot{order:4}
+    #sf-main .hero-grid{gap:14px}
+    #sf-main .hero-sub{margin-bottom:0}
+    #sf-main .hero-offer{padding:4px 0 8px}
+    #sf-main .hero-trust-mini{order:3;margin-top:0}
+    #sf-main .hero-clarify--mobile{order:4}
+  }
+  /* Packs: opt-in links under the price, per-bottle price first. */
+  .prod-packs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 18px}
+  .prod-pack{display:flex;flex-direction:column;gap:3px;padding:12px 14px;border:1px solid var(--border-default);border-radius:var(--r-sm);background:var(--surface);color:var(--text);text-decoration:none;transition:border-color .18s ease,background-color .18s ease}
+  .prod-pack b{font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.01em;line-height:1.1}
+  .prod-pack span{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--acid)}
+  .prod-pack small{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .prod-pack:hover{border-color:var(--acid);background:var(--surface-2)}
+  .prod-pack:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
+  /* Close: one last route to checkout after the FAQ. */
+  .close{padding:0 0 var(--section-y)}
+  .close-box{border:1px solid var(--border-default);border-radius:var(--r-lg);background:var(--surface);padding:clamp(28px,5vw,56px) clamp(20px,5vw,56px);text-align:center;
+    background-image:radial-gradient(60% 80% at 50% 0%,rgba(var(--acid-rgb),.10),transparent 70%)}
+  .close-box .eyebrow{justify-content:center}
+  .close-box h2{font-family:var(--display);font-weight:900;font-size:var(--fs-h2);line-height:var(--lh-display);letter-spacing:var(--ls-display);margin:0 auto 18px;max-width:none}
+  .close-price{display:flex;align-items:baseline;justify-content:center;gap:12px;margin:0 0 20px}
+  .close-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:0 0 18px}
+  .close-ctas .btn{min-width:min(100%,260px)}
+  .close-trust{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .close-trust span{color:var(--rule-strong);margin:0 6px}
+  @media(max-width:520px){.close-ctas .btn{width:100%}}
 </style>
 <style id="a11y-utility-css">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
@@ -1546,7 +1585,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- /SF-CHROME:HEADER -->
 
 <div class="mobile-bar" id="homeMobileBar" aria-hidden="true">
-  <span class="mb-label">ODORSTRIKE 50ml · ₹229</span>
+  <span class="mb-label">ODORSTRIKE · ₹229<br>Cash on Delivery</span>
   <a class="mb-btn" href="/odorstrike?buy=1" tabindex="-1">GET ODORSTRIKE</a>
 </div>
 
@@ -1632,7 +1671,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 
           <div class="hero-cta-group">
             <a class="btn hero-btn-primary" href="/odorstrike?buy=1" id="heroBuyBtn">FIX MY SHIRT — ₹229</a>
-            <a class="btn btn-ghost hero-btn-secondary" href="#remembers" id="heroHowBtn">See how it works</a>
+            <a class="btn btn-ghost hero-btn-secondary" href="/odorstrike" id="heroHowBtn">View product details</a>
           </div>
 
           <div class="hero-clarify hero-clarify--mobile" aria-label="Product classification">
@@ -1643,17 +1682,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
             <span class="hero-clarify-tag hero-clarify-highlight">FABRIC ONLY</span>
           </div>
 
-          <div class="hero-usage" aria-label="Usage guide">
-            <span class="hero-usage-label">HOW TO USE:</span>
-            <span class="hero-usage-pill">2–3 sprays</span>
-            <span class="hero-usage-arrow" aria-hidden="true">→</span>
-            <span class="hero-usage-pill">wait 15–30 sec</span>
-            <span class="hero-usage-arrow" aria-hidden="true">→</span>
-            <span class="hero-usage-pill">wear</span>
-          </div>
-
           <div class="hero-trust-mini">
-            <span>Made in India</span>
+            <span>Cash on Delivery</span>
             <span class="htm-dot">/</span>
             <span>Free shipping on prepaid</span>
             <span class="htm-dot">/</span>
@@ -1726,15 +1756,15 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         </li>
         <li>
           <span class="mask-ico ico-truck" role="img" aria-hidden="true"></span>
-          Ships across India
+          Free prepaid shipping
         </li>
         <li>
           <span class="mask-ico ico-shield" role="img" aria-hidden="true"></span>
           7-Day Returns
         </li>
         <li>
-          <span class="mask-ico ico-hyderabad" role="img" aria-hidden="true"></span>
-          Based in Hyderabad
+          <span class="mask-ico ico-cod" role="img" aria-hidden="true"></span>
+          Cash on Delivery
         </li>
       </ul>
     </div>
@@ -1801,6 +1831,46 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </div>
   </section>
 
+  <!-- ============ 3b · VOICES ============
+       The same three beta-tester quotes that run on the ODORSTRIKE product
+       page, kept word-for-word and labelled as beta testers. These are the
+       only first-hand accounts that exist — do not add invented ones here.
+       When real verified customer reviews land, swap these and update the
+       Product schema on /odorstrike at the same time. -->
+  <section class="voices" id="reviews" aria-labelledby="voicesTitle">
+    <div class="wrap">
+      <p class="eyebrow reveal">Early testers</p>
+      <h2 id="voicesTitle" class="reveal">What it's like to carry one</h2>
+      <ul class="voice-grid">
+        <li class="voice reveal">
+          <div class="voice-head">
+            <cite class="v-person">Rohit, 26 · Bengaluru</cite>
+            <span class="v-tag">Beta tester</span>
+          </div>
+          <p class="v-situation">2-hour bike ride → client meeting</p>
+          <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
+        </li>
+        <li class="voice reveal">
+          <div class="voice-head">
+            <cite class="v-person">Aakash, 24 · Pune</cite>
+            <span class="v-tag">Beta tester</span>
+          </div>
+          <p class="v-situation">Gym bag · Post-workout to office</p>
+          <blockquote>“Lives in my gym bag now. Post-workout, pre-Uber, no more ‘should I shower at office’ anxiety.”</blockquote>
+        </li>
+        <li class="voice reveal">
+          <div class="voice-head">
+            <cite class="v-person">Karan, 29 · Delhi</cite>
+            <span class="v-tag">Beta tester</span>
+          </div>
+          <p class="v-situation">Dinner jacket · Biryani odor reset</p>
+          <blockquote>“Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger.”</blockquote>
+        </li>
+      </ul>
+      <p class="voices-note reveal">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review</a> — one founder, four shirts, 30 days of Hyderabad heat.</p>
+    </div>
+  </section>
+
   <!-- ============ 3 · FEATURED PRODUCT ============ -->
   <section class="product" id="odorstrike-featured" aria-labelledby="productTitle">
     <div class="wrap">
@@ -1851,10 +1921,17 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
             <div class="prod-price-meta">
               <span>FREE SHIPPING ON PREPAID</span>
               <span class="prod-dot" aria-hidden="true">·</span>
-              <span>7-DAY RETURNS</span>
+              <span>CASH ON DELIVERY</span>
               <span class="prod-dot" aria-hidden="true">·</span>
-              <span>SECURE CHECKOUT</span>
+              <span>7-DAY RETURNS</span>
             </div>
+          </div>
+
+          <!-- Packs at checkout prices (config/product.json pairPrice / fivePackPrice).
+               One bottle stays the default; these are opt-in links. -->
+          <div class="prod-packs" aria-label="Save with a pack">
+            <a class="prod-pack" href="/odorstrike?buy=1&amp;qty=2"><b>2 for ₹419</b><span>₹209.50 each</span><small>Save ₹39</small></a>
+            <a class="prod-pack" href="/odorstrike?buy=1&amp;qty=5"><b>5 for ₹899</b><span>₹179.80 each</span><small>Save ₹246</small></a>
           </div>
 
           <div class="prod-cta-group">
@@ -1881,45 +1958,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </div>
   </section>
 
-  <!-- ============ 3b · VOICES ============
-       The same three beta-tester quotes that run on the ODORSTRIKE product
-       page, kept word-for-word and labelled as beta testers. These are the
-       only first-hand accounts that exist — do not add invented ones here.
-       When real verified customer reviews land, swap these and update the
-       Product schema on /odorstrike at the same time. -->
-  <section class="voices" id="reviews" aria-labelledby="voicesTitle">
-    <div class="wrap">
-      <p class="eyebrow reveal">Early testers</p>
-      <h2 id="voicesTitle" class="reveal">What it's like to carry one</h2>
-      <ul class="voice-grid">
-        <li class="voice reveal">
-          <div class="voice-head">
-            <cite class="v-person">Rohit, 26 · Bengaluru</cite>
-            <span class="v-tag">Beta tester</span>
-          </div>
-          <p class="v-situation">2-hour bike ride → client meeting</p>
-          <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
-        </li>
-        <li class="voice reveal">
-          <div class="voice-head">
-            <cite class="v-person">Aakash, 24 · Pune</cite>
-            <span class="v-tag">Beta tester</span>
-          </div>
-          <p class="v-situation">Gym bag · Post-workout to office</p>
-          <blockquote>“Lives in my gym bag now. Post-workout, pre-Uber, no more ‘should I shower at office’ anxiety.”</blockquote>
-        </li>
-        <li class="voice reveal">
-          <div class="voice-head">
-            <cite class="v-person">Karan, 29 · Delhi</cite>
-            <span class="v-tag">Beta tester</span>
-          </div>
-          <p class="v-situation">Dinner jacket · Biryani odor reset</p>
-          <blockquote>“Smell is gone in one spray. Biryani jacket — fixed. Only wish the bottle was a bit bigger.”</blockquote>
-        </li>
-      </ul>
-      <p class="voices-note reveal">Want the long version? Read the <a href="/blog/odorstrike-review-30-day-india-test">30-day ODORSTRIKE review</a> — one founder, four shirts, 30 days of Hyderabad heat.</p>
-    </div>
-  </section>
 
   <!-- ============ 3c · FOUNDER ============
        Refined founder trust hierarchy:
@@ -1946,7 +1984,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         <div class="founder-body reveal">
           <p>Smelloff started from an everyday problem in 41°C Hyderabad heat: morning deodorant had worked on skin, but the shirt had trapped the sweat. Deodorant takes care of skin, but the odor people notice mid-day lives in the fabric weave — and layering perfume over it only makes it worse.</p>
           <p>That gap is why Smelloff was built. Instead of launching another fragrance brand, we spent six months testing prototypes to create ODORSTRIKE — a pocket-sized mist formulated specifically to neutralize trapped odor compounds inside clothing fibres rather than masking them.</p>
-          <p>Built and tested in Hyderabad around the actual heat, humidity, and daily commutes Indian clothes go through every day. Made in India, focused entirely on fabric odor control.</p>
           <p><a class="founder-link" href="/about">Read the full founder story →</a></p>
         </div>
       </div>
@@ -2060,6 +2097,23 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         </details>
       </div>
       <p class="faq-guides reveal">More in the guides: <a href="/blog/what-is-fabric-odor-eliminator">what a fabric odor eliminator is</a> · <a href="/blog/odorstrike-vs-febreze-india">ODORSTRIKE vs Febreze</a> · <a href="/blog/why-i-built-odorstrike">why it was built</a> · <a href="/blog">all guides</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============ 6 · CLOSE ============
+       The page used to end on the FAQ with no buy route but the sticky bar. -->
+  <section class="close" id="final" aria-labelledby="finalTitle">
+    <div class="wrap">
+      <div class="close-box reveal">
+        <p class="eyebrow">ONE POCKET BOTTLE · EVERY SHIRT</p>
+        <h2 id="finalTitle">Your shirt smells. <span class="acid">Fix it.</span></h2>
+        <div class="close-price"><span class="hero-price">₹229</span><span class="hero-mrp">M.R.P. ₹499</span></div>
+        <div class="close-ctas">
+          <a class="btn" href="/odorstrike?buy=1" id="finalBuyBtn">FIX MY SHIRT — ₹229</a>
+          <a class="btn btn-ghost" href="/odorstrike">View product details</a>
+        </div>
+        <p class="close-trust">Cash on Delivery <span aria-hidden="true">/</span> Free shipping on prepaid <span aria-hidden="true">/</span> 7-day returns</p>
+      </div>
     </div>
   </section>
 
@@ -2180,6 +2234,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   var bar = document.getElementById('homeMobileBar');
   var heroCta = document.querySelector('.hero-cta-group');
   if (!bar || !heroCta) return;
+  // Every on-page buy route: the bar shows only while none of them is on screen.
+  var targets = [heroCta, document.querySelector('#odorstrike-featured .prod-cta-group'), document.getElementById('finalBuyBtn')].filter(Boolean);
   var link = bar.querySelector('a');
   function show(on){
     bar.classList.toggle('visible', !!on);
@@ -2187,15 +2243,15 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     if (link) link.tabIndex = on ? 0 : -1;
   }
   if ('IntersectionObserver' in window) {
+    var seen = new Map();
     var observer = new IntersectionObserver(function(entries){
-      var inView = entries.some(function(e){ return e.isIntersecting; });
-      show(!inView);
+      entries.forEach(function(e){ seen.set(e.target, e.isIntersecting); });
+      show(!targets.some(function(t){ return seen.get(t); }));
     }, { threshold: 0 });
-    observer.observe(heroCta);
+    targets.forEach(function(t){ observer.observe(t); });
   } else {
     function onScroll(){
-      var rect = heroCta.getBoundingClientRect();
-      show(rect.bottom < 0 || rect.top > window.innerHeight);
+      show(!targets.some(function(t){ var r = t.getBoundingClientRect(); return r.bottom > 0 && r.top < window.innerHeight; }));
     }
     window.addEventListener('scroll', onScroll, {passive:true});
     onScroll();
@@ -2256,7 +2312,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
       try { window.smfTrack({ type: 'view_content', label: 'home_sec_' + id }); } catch (err) {}
     });
   }, { rootMargin: "0px 0px -40% 0px" });
-  ['remembers','odorstrike-featured','reviews','founders','how-it-works','faq'].forEach(function(id){
+  ['remembers','reviews','odorstrike-featured','founders','how-it-works','faq','final'].forEach(function(id){
     var el = document.getElementById(id); if (el) io.observe(el);
   });
 })();

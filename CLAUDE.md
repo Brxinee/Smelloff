@@ -80,6 +80,20 @@ picker, #moments/#compare, offer box) and "Type: Space Grotesk + Inter".
   Nothing else changed on other pages: their heading weights stay as each page
   sets them (mostly 700; Sep 19 used 900).
 
+## Homepage research pass on the Sep 19 design (2026-11-01, owner: "research what works … implement … just home page")
+Write-up with sources: `docs/audits/homepage-sep19-research-2026-11.md`. Sep 19
+look kept; order and first screen changed. On 390×844 the hero buy button ends
+at 716px (was 1101): smaller bottle on phones, 24px top padding, how-it-works
+card after the button (CSS `order`, `.hero-visual-wrap{display:contents}` <960).
+Hero secondary = "View product details" → /odorstrike. "Cash on Delivery /
+Free shipping on prepaid / 7-day returns" under the hero button, in the trust
+strip (replaced "Based in Hyderabad") and the offer box (never a COD amount).
+Reviews (`#reviews`) sit directly above the offer (`#odorstrike-featured`),
+which has opt-in pack links (2 for ₹419, 5 for ₹899, per-bottle price first).
+Founders two paragraphs; closing buy box `#final` after the FAQ; the hero
+usage pills are gone. Sticky bar shows only while hero, offer and close CTAs
+are all off screen. Section reach includes `final`. Tests pin all of it.
+
 ## Notion task pass (2026-10-25, owner: "check notion and fix … ask permission")
 The owner's Notion **Tasks** database (Brainee HQ → 01 Today & Tasks) holds the
 open work. Each fix was approved first; finished tasks are marked Done there
