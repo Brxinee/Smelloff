@@ -2482,3 +2482,30 @@ facts, not markup tricks.
   carry no `dateModified`, so build-sitemap keeps the stored value (max()).
 - Homepage hero sub: "ODORSTRIKE neutralizes sweat, smoke and food smell in clothes —
   not on skin." (product name back; still two lines, buy button unchanged).
+
+## Full-site audit for stale facts and misinformation (2026-11-01, owner: "audit everything … merge and make live")
+Swept every public page, llms file, feed and email template against
+`config/product.json`; rendered all 113 pages at 390 and 1280 (no JS errors, one H1
+each, no dead anchors; the "broken" footer Facebook icon was a lazy-load timing false
+positive); checked all 95 outbound source links. Fixed:
+- **Shipping was promised free for everyone.** `/shipping` (at-a-glance + charges
+  list) and the PDP empty cart said "Free shipping across India"; COD pays shipping +
+  handling by pincode. Now "free on prepaid". FAQ "ship outside India?" too; the
+  founder note's link says "free shipping on prepaid orders".
+- **Fabric rule = config `restrictedFabrics`:** never leather, suede or
+  **dry-clean-only**; **patch-test silk**, zari, heavy embroidery. `/faq` banned silk;
+  the PDP and five posts (+ the stain-guide diagram) said "spot-test dry-clean-only".
+  The blazer guide now says: check the care label, never spray dry-clean-only.
+- **Dose = config `usage.doses`:** "2–3 sprays each" on three zones (6–9) in six posts
+  and two diagrams → "4–5 sprays in total" (fullShirt).
+- `/faq`: "most users get 4–6 weeks per bottle" (no data) → ~100 refreshes; the monsoon
+  answer no longer claims "particularly effective in humid cities" (links the damp-clothes
+  guide instead). PDP "Tested safe on" → "Made for". Homepage science card: HPβCD
+  "so less of the smell reaches your nose" (was "cannot escape").
+- `/refund`: both COD charges (shipping + handling) are non-refundable, as `/returns` says.
+- Policy footers said "Last updated: August 2026" after the 26–27 Oct COD edits →
+  October (November for shipping, refund, PDP).
+- Dead/moved sources: GI registry deep link (404) → the official state-wise GI PDF (the
+  "GI since 2014" line now just says registered); news.ku.dk → the University of
+  Copenhagen research portal page for Pugliese et al. 2020; Woolmark's moved URL.
+- 403s from ScienceDirect/Wiley/DOI/ACS/MDPI etc. are bot blocks, not dead links.

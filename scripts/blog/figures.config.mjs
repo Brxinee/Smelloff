@@ -226,7 +226,7 @@ export const FIGURES = {
         ['2–3 light passes per zone', 'Do this', 'refresh'],
         ['Closer than 15 cm, bottle held still', 'Wet patch', 'stop'],
         ['Silk, wool, zari, heavy embroidery', 'Spot-test first', 'air'],
-        ['Anything labelled dry-clean only', 'Spot-test first', 'air'],
+        ['Anything labelled dry-clean only', 'Do not spray', 'stop'],
       ],
       note: 'ODORSTRIKE is a fast-drying water base with no oils, dyes or glycerine. It dries clear in 15–30 seconds.',
     }),
@@ -767,7 +767,7 @@ export const FIGURES = {
       items: [
         ['Decide', 'Refresh if it is clean but smells. Wash if stained, soiled or damp.'],
         ['Air it', 'Hang it open in moving air for 20–30 minutes.'],
-        ['Treat the zones', 'Collar, underarms, upper back: 2–3 sprays each.'],
+        ['Treat the zones', 'Collar, underarms, upper back: 4–5 sprays in total.'],
         ['Let it dry', '15–30 seconds before you wear it.'],
       ],
     }),
@@ -1348,7 +1348,7 @@ export const FIGURES = {
       items: [
         ['Hair off', 'Lint roller, tape or a damp rubber glove.'],
         ['Shake and air', 'At a window or outdoors.'],
-        ['Treat contact zones', 'Chest, lap, forearms: 2–3 sprays each, 15–20 cm.'],
+        ['Treat contact zones', 'Chest, lap, forearms: 4–5 sprays in total, 15–20 cm.'],
         ['Dry', '15–30 seconds, then go.'],
       ],
       note: 'Drool, mud or urine: wash it instead.',
