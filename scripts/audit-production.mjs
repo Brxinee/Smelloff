@@ -108,8 +108,9 @@ if (fs.existsSync(webhook) && /payu-webhook/i.test(read(webhook))) fail('Legacy 
 const indexPath = path.join(ROOT, 'index.html');
 if (fs.existsSync(indexPath)) {
   const indexHtml = read(indexPath);
-  if (!indexHtml.includes("Don't let them notice your")) fail('index.html missing critical marker: "Don\'t let them notice your"');
-  if (!indexHtml.includes('CLOTHING DEODORANT · FABRIC ONLY')) fail('index.html missing critical marker: "CLOTHING DEODORANT · FABRIC ONLY"');
+  // The Sep 19 homepage (owner, 2026-11-01).
+  if (!indexHtml.includes('Your shirt smells. <span class="acid">Fix it.</span>')) fail('index.html missing critical marker: "Your shirt smells. Fix it."');
+  if (!indexHtml.includes('FABRIC ODOR CONTROL · FOR CLOTHES')) fail('index.html missing critical marker: "FABRIC ODOR CONTROL · FOR CLOTHES"');
   if (!indexHtml.includes('Built for the gap') && !indexHtml.includes('Jogdhande Nikhil Patil')) {
     fail('index.html missing current founder heading');
   }
