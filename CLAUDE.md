@@ -45,6 +45,36 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Sep 19 homepage + Sep 19 type everywhere (2026-11-01, owner: "bring back the sep 19 design … only homepage … sep 19 typo everywhere")
+Supersedes every homepage design note below (hero v4, the Oct 15 redesign, pack
+picker, #moments/#compare, offer box) and "Type: Space Grotesk + Inter".
+- **Homepage = the Sep 19 page (git `c059abb`)**: hero "Your shirt smells. Fix
+  it." with the bottle cutout on the acid disc + how-it-works card, zone cards,
+  benefits strip, ticker, "Your shirt remembers" scrubber, product block + band,
+  beta voices, founders, the science (4 layers), FAQ. Its inline `<style>` and
+  scripts are the Sep 19 ones; a scoped **"Sep 19 fidelity layer"** at the end
+  of that `<style>` undoes what today's soft.css/chrome.css change on this page
+  (FAQ weight 900, no `text-wrap` balance/pretty, hero 84px top on phones,
+  founder role labels, the Sep 19 mobile bar). Verified by computed-style diff
+  against a `c059abb` render at 390 and 1280: no differences in `<main>` but
+  content.
+- **Kept from today, on purpose:** the whole `<head>` (titles, descriptions,
+  schema, analytics queues), the shared header/footer (apply-chrome), consent
+  bar, section-reach beacon (ids remembers, odorstrike-featured, reviews,
+  founders, how-it-works, faq) and every fact: free shipping on *prepaid*, no
+  COD amount, "dries clear / no stiff residue" (not "zero residue"), "Not body
+  deodorant", "SUSTAIN" (not anti-regrowth), three named actives + "8 more"
+  (the Sep 19 full INCI is not published), both founders, the honest 30-day
+  review line, today's FAQ answers + "What is ODORSTRIKE?" + the guide links.
+- The cutout ban no longer covers the homepage (owner's call); it still covers
+  the PDP and the blog.
+- **Type everywhere = Sep 19**: `--display` Fraunces, `--body` Inter Tight,
+  `--mono` JetBrains Mono, `--lh-display` 1.02, `--ls-display` -.02em,
+  `--ls-eyebrow` .1em — in tokens.css, both inline TOKENS copies, fonts.css
+  (+ inline in index.html), blog.css fallbacks, PDP preloads and sw.js (v35).
+  Nothing else changed on other pages: their heading weights stay as each page
+  sets them (mostly 700; Sep 19 used 900).
+
 ## Notion task pass (2026-10-25, owner: "check notion and fix … ask permission")
 The owner's Notion **Tasks** database (Brainee HQ → 01 Today & Tasks) holds the
 open work. Each fix was approved first; finished tasks are marked Done there

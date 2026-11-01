@@ -186,7 +186,7 @@ test('labels come in two tiers and buttons in one size, with nothing in between'
 test('beta-tester cites read the same on / and /odorstrike', () => {
   const home = read('index.html'), pdp = read('odorstrike.html');
   for (const who of ['Rohit, 26 · Bengaluru', 'Aakash, 24 · Pune', 'Karan, 29 · Delhi']) {
-    assert.ok(home.includes(`<cite>${who}</cite>`), `/ must cite "${who}"`);
+    assert.ok(home.includes(`<cite>${who}</cite>`) || home.includes(`<cite class="v-person">${who}</cite>`), `/ must cite "${who}"`);
     assert.ok(pdp.includes(`<cite>${who}</cite>`), `/odorstrike must cite "${who}"`);
   }
 });

@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const money = ['index.html', 'odorstrike.html'];
+// The homepage is the Sep 19 design again (owner, 2026-11-01): it has no
+// photo slots, so the slot tests cover the PDP only.
+const money = ['odorstrike.html'];
 
 // Owner's call (2026-10-11): the photo slots stay visible as briefs until the
 // photography lands (reverses the earlier "hide them" fix). Swap each .ph-img
@@ -129,46 +131,35 @@ test('slot photos are responsive, AVIF-first and network-aware', () => {
   }
 });
 
-// Homepage hero v4 (2026-10-11): photo first — the product in use, one static
-// image, one buy button. The photo is the LCP image, so it must never be lazy,
-// and the head preload must ask for the same sizes the <picture> will.
-test('homepage hero is a fast, static, product-in-use photo', () => {
+// Homepage hero (2026-11-01, owner: "bring back the sep 19 design"): the
+// bottle on the acid disc, loaded eagerly and preloaded as the LCP image.
+test('homepage hero is the Sep 19 bottle, fast and static', () => {
   const html = fs.readFileSync('index.html', 'utf8');
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
-  const img = hero.match(/<img [^>]*hero-spray-collar[^>]*>/);
-  assert.ok(img, 'hero photo missing');
+  const img = hero.match(/<img [^>]*odorstrike-bottle-cutout\.webp[^>]*>/);
+  assert.ok(img, 'hero bottle missing');
   assert.match(img[0], /fetchpriority="high"/);
   assert.doesNotMatch(img[0], /loading="lazy"/, 'the LCP image must load eagerly');
-  assert.match(img[0], /alt="[^"]*fabric, not the skin"/, 'alt must say what the photo shows');
-  assert.doesNotMatch(img[0], /data-no-skel|data:image/, 'the hero shows the skeleton while loading, not a blurred preview');
-  assert.match(hero, /<source type="image\/avif" srcset="[^"]+"/);
-  const picSizes = hero.match(/<source type="image\/avif" srcset="[^"]+" sizes="([^"]+)"/)[1];
-  const preload = html.match(/<link rel="preload" as="image" type="image\/avif" fetchpriority="high"\s+imagesrcset="[^"]+"\s+imagesizes="([^"]+)">/);
-  assert.ok(preload, 'hero AVIF preload missing');
-  assert.equal(preload[1], picSizes, 'preload imagesizes must match the <picture> sizes, or the photo downloads twice');
-  for (const f of hero.match(/\/assets\/photos\/hero-spray-collar[^ "]*\.(avif|webp)/g)) assert.ok(fs.existsSync(f.slice(1)), `${f} missing`);
+  assert.match(img[0], /alt="[^"]{20,}"/);
+  assert.match(html, /<link rel="preload" as="image" type="image\/webp" href="\/assets\/odorstrike-bottle-cutout\.webp" fetchpriority="high">/);
+  assert.ok(fs.existsSync('assets/odorstrike-bottle-cutout.webp'));
   assert.ok(!/carousel|swiper|slick/i.test(hero), 'one static hero image, not a carousel');
-  assert.equal((hero.match(/class="hm-btn"/g) || []).length, 1, 'one primary action in the hero');
+  assert.equal((hero.match(/class="btn hero-btn-primary"/g) || []).length, 1, 'one primary action in the hero');
 });
 
 // Sharp images (2026-10-12, owner): no cut-out bottles and no cropping. The
-// old 241px cutout looked blurry; the owner then asked for real photos shown
-// whole instead of cutouts. Offer boxes, cart and blog cards use the in-hand
-// photo on black with `contain`.
-test('no page uses a bottle cutout; the in-hand photo is shown whole', () => {
-  const pages = ['index.html', 'odorstrike.html', 'blog/index.html',
+// homepage is the exception since 2026-11-01: the owner asked for the Sep 19
+// homepage as it was, cutout hero included.
+test('no page but the homepage uses a bottle cutout; the in-hand photo is shown whole', () => {
+  const pages = ['odorstrike.html', 'blog/index.html',
     ...fs.readdirSync('blog').filter((f) => f.endsWith('.html')).map((f) => `blog/${f}`)];
   for (const f of pages) {
     assert.doesNotMatch(fs.readFileSync(f, 'utf8'), /odorstrike-bottle-(cutout|studio)/, `${f}: use the in-hand photo, not a cutout`);
   }
   assert.doesNotMatch(fs.readFileSync('scripts/blog/apply-reader.mjs', 'utf8'), /odorstrike-bottle-(cutout|studio)/);
-  const home = fs.readFileSync('index.html', 'utf8');
   const pdp = fs.readFileSync('odorstrike.html', 'utf8');
-  assert.match(home, /\.offer-art \.offer-photo\{[^}]*object-fit:contain/, 'homepage offer photo must not be cropped');
   assert.match(pdp, /\.pd-offer-art \.pd-offer-photo\{[^}]*object-fit:contain/, 'PDP offer photo must not be cropped');
   assert.match(pdp, /offer-in-hand-black@960\.webp/, 'PDP offer box photo missing');
-  // Owner, 2026-10-21: the homepage offer box shows the white studio shot instead.
-  assert.match(home, /class="ph-photo offer-photo" src="\/assets\/photos\/offer-studio-white@960\.webp"/, 'homepage offer box photo missing');
 });
 
 // Competitor research (2026-10-15, docs/audits/competitor-conversion-2026-10.md).
@@ -212,9 +203,24 @@ test('shared CSS blocks paint on every page except the two self-contained ones',
   assert.doesNotMatch(fs.readFileSync('blog/index.html', 'utf8'), /\.b-hero h1\{[^}]*max-width:\d+ch/);
 });
 
-test('headings fall back to a real bold face sized for Space Grotesk 700', () => {
-  for (const f of ['assets/fonts.css', 'index.html']) {
-    assert.match(fs.readFileSync(f, 'utf8'), /font-family:'Space Grotesk Fallback';font-weight:600 900;src:local\('Arial Bold'\)[^}]*size-adjust:100\.3%/, f);
+// Type (2026-11-01, owner: "the sep 19 typo everywhere"): Fraunces display,
+// Inter Tight body, JetBrains Mono labels, each with a metric-matched fallback.
+test('every page uses the Sep 19 type: Fraunces, Inter Tight, JetBrains Mono', () => {
+  const fonts = fs.readFileSync('assets/fonts.css', 'utf8');
+  for (const fam of ['Fraunces', 'Inter Tight', 'JetBrains Mono']) {
+    assert.match(fonts, new RegExp(`font-family:'${fam}';font-style:normal`), `fonts.css: ${fam}`);
+    assert.match(fonts, new RegExp(`font-family:'${fam} Fallback'`), `fonts.css: ${fam} fallback`);
+  }
+  for (const f of ['assets/css/tokens.css', 'index.html', 'odorstrike.html']) {
+    const src = fs.readFileSync(f, 'utf8');
+    assert.ok(src.includes("--display:'Fraunces','Fraunces Fallback',serif;"), `${f}: display face`);
+    assert.ok(src.includes("--body:'Inter Tight','Inter Tight Fallback',sans-serif;"), `${f}: body face`);
+    assert.ok(src.includes("--mono:'JetBrains Mono','JetBrains Mono Fallback',ui-monospace,monospace;"), `${f}: label face`);
+    assert.doesNotMatch(src, /Space Grotesk|'Inter',/, `${f}: no Oct type left`);
+  }
+  for (const f of ['index.html', 'odorstrike.html', 'sw.js']) {
+    const src = fs.readFileSync(f, 'utf8');
+    assert.ok(src.includes('/assets/fonts/fraunces-normal-latin-400.woff2') && src.includes('/assets/fonts/inter-tight-normal-latin-400.woff2'), `${f}: preloads the Sep 19 faces`);
   }
 });
 
