@@ -186,11 +186,11 @@
   .p-cta{font-family:var(--mono,system-ui,sans-serif);font-weight:500;font-size:13px;letter-spacing:.01em;background:var(--cta,#B8FF57);color:var(--on-cta,#0A0A0A);border-radius:var(--sq-sm,8px);padding:8px 16px}
 </style>
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
-<script src="/assets/js/consent-analytics.js?v=76231306" defer></script>
+<script src="/assets/js/consent-analytics.js?v=3f9201cc" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f">
 <link rel="stylesheet" href="/assets/css/chrome.css?v=5c04b85d">
-<script src="/assets/js/chrome.js?v=e7fcfc15" defer></script>
+<script src="/assets/js/chrome.js?v=2bd21262" defer></script>
 <script src="/assets/js/support-chat.js?v=3c26359d" defer></script>
 </head>
 <body>
@@ -440,8 +440,10 @@
       btn.disabled = false; btn.textContent = 'Track order';
       if (!res.ok) {
         err.textContent = (res.j && res.j.error) || 'No order found. Check the ID and phone and try again.';
+        try { if (typeof window.gtag === 'function') window.gtag('event', 'track_order', { result: 'not_found' }); } catch (e) {}
         show(err, true); return;
       }
+      try { if (typeof window.gtag === 'function') window.gtag('event', 'track_order', { result: 'found', order_status: String(res.j && res.j.status || '').slice(0, 30) }); } catch (e) {}
       render(res.j);
     })
     .catch(function(){
@@ -585,6 +587,6 @@
 })();
 </script>
 <script src="/assets/js/reviews-system.js?v=7" defer></script>
-<script src="/assets/js/track.js?v=8591ad00" defer></script>
+<script src="/assets/js/track.js?v=401732c0" defer></script>
 </body>
 </html>

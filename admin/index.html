@@ -694,6 +694,10 @@ function showLogin(message = '') {
   $('#loginErr').textContent = message; $('#password').focus();
 }
 function showApp() {
+  // This device is the owner's: the shop's GA4, Meta Pixel and first-party
+  // beacon leave it out from now on (smelloff_owner, read by track.js and the
+  // GA4 loader). Undo with ?smf_owner=0 on any shop page.
+  try { localStorage.setItem('smelloff_owner', '1'); } catch (e) {}
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
   swReady().then(refreshAlertState).then((sub) => { if (sub) api('pushSubscribe', { subscription: sub.toJSON(), label: deviceLabel() }).catch(() => {}); route(); });
   route(); startPulse();

@@ -44,11 +44,13 @@
     if (window.__smfAnalyticsPrimed) return true;
     var n = navigator;
     if (window.smfIsBot ? window.smfIsBot() : (n.webdriver === true || /Headless|PhantomJS|Puppeteer|Playwright|Electron\//i.test(n.userAgent || ''))) return false;
+    if (smfGaExcluded()) return false;
     window.__smfAnalyticsPrimed = true;
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+    window.gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' });
     window.gtag('js', new Date());
-    window.gtag('config', GA4_ID);
+    window.gtag('config', GA4_ID, smfGaConfig());
     var aiR = (document.referrer || '').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);
     if (aiR) { window.gtag('event', 'ai_referral', { ai_source: aiR[2], landing_page: location.pathname }); }
     if (!window.fbq) {
@@ -59,6 +61,29 @@
     window.fbq('init', META_PIXEL_ID);
     window.fbq('track', 'PageView');
     return true;
+  }
+
+  // GA4 config (2026-11-02): the owner's own devices send nothing (the same
+  // smelloff_owner flag track.js uses; /admin sets it on login), every page
+  // carries a content_group, and ?ga_debug=1 turns on DebugView for that tab.
+  // Same block inline in index.html, faq.html and odorstrike.html.
+  function smfGaExcluded() {
+    try {
+      var s = location.search;
+      if (/[?&]smf_owner=1(&|$)/.test(s)) return true;
+      if (/[?&]smf_owner=0(&|$)/.test(s)) return false;
+      return localStorage.getItem('smelloff_owner') === '1';
+    } catch (e) { return false; }
+  }
+  function smfGaConfig() {
+    var p = location.pathname.replace(/\.html$/, '').replace(/\/+$/, '') || '/';
+    var cg = p === '/' ? 'home' : p === '/odorstrike' ? 'product' : p === '/blog' ? 'blog_index' : /^\/blog\//.test(p) ? 'blog_post' : /^\/(shipping|returns|refund|privacy|terms|cancellation)$/.test(p) ? 'policy' : p.slice(1).split('/')[0];
+    var c = { content_group: cg };
+    try {
+      if (/[?&]ga_debug=1(&|$)/.test(location.search)) sessionStorage.setItem('smf_ga_debug', '1');
+      if (sessionStorage.getItem('smf_ga_debug') === '1') c.debug_mode = true;
+    } catch (e) {}
+    return c;
   }
 
   // Kept separate from loadAnalytics() so the bot guard and the consent gate
@@ -116,21 +141,8 @@
     document.body.appendChild(bar);
   }
 
-  // Track clicks on buy CTAs (links to /#buy or /odorstrike) so blog → buy
-  // intent is attributable per page in GA4.
-  document.addEventListener('click', function (ev) {
-    var a = ev.target && ev.target.closest ? ev.target.closest('a[href]') : null;
-    if (!a) return;
-    var href = a.getAttribute('href') || '';
-    if (href.indexOf('#buy') === -1 && href.indexOf('/odorstrike') === -1) return;
-    if (typeof window.gtag === 'function') {
-      window.gtag('event', 'buy_cta_click', {
-        link_url: href,
-        link_text: (a.textContent || '').trim().slice(0, 80),
-        page_path: location.pathname
-      });
-    }
-  }, true);
+  // buy_cta_click moved to assets/js/track.js (2026-11-02): this file isn't on
+  // index, faq or odorstrike, so those pages never sent it.
 
   function init() {
     var consent = getConsent();
