@@ -7,6 +7,10 @@
 <meta name="theme-color" content="#0A0A0A">
 <title>Smelloff Admin</title>
 <link rel="icon" href="/favicon-32.png">
+<link rel="manifest" href="/admin/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/admin/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Smelloff Admin">
 <link rel="preload" href="/assets/fonts/inter-tight-normal-latin-400.woff2" as="font" type="font/woff2" crossorigin>
 <script>
 /* Theme before first paint: saved choice, else the device's. */
@@ -353,6 +357,27 @@ kbd{font:12px var(--mono);padding:2px 6px;border-radius:5px;border:1px solid var
 .more-list > :last-child{border-bottom:0}
 .more-list .count{margin-left:auto}
 
+/* ── Order alerts: banner + ring screen ── */
+.alert-banner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;margin-bottom:16px;border-radius:var(--r);background:color-mix(in srgb,var(--acid) 10%,var(--panel));border:1px solid color-mix(in srgb,var(--acid) 35%,transparent)}
+.alert-banner p{margin:0;flex:1;min-width:200px;font-size:14px}
+.alert-banner strong{display:block;font-weight:500;font-size:15px}
+.ring{position:fixed;inset:0;z-index:9600;display:grid;place-items:center;padding:24px;background:rgba(0,0,0,.72);animation:fade .2s}
+.ring-card{width:min(420px,100%);border-radius:20px;background:var(--acid);color:var(--on-acid);padding:28px 24px 20px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:ringpop .5s cubic-bezier(.2,.9,.3,1.4)}
+.ring-bell{width:64px;height:64px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:#0A0A0A;color:var(--acid);animation:ringshake 1.1s infinite}
+.ring-bell .ic{width:30px;height:30px}
+.ring-card h2{font:600 26px/1.15 var(--display);margin:0 0 6px;color:var(--on-acid)}
+.ring-card p{margin:0 0 20px;font-size:15px}
+.ring-card .btn{width:100%;min-height:50px;font-size:16px;border:0}
+.ring-card .btn + .btn{margin-top:8px}
+.ring-card .btn--dark{background:#0A0A0A;color:#F2F5EF}
+.ring-card .btn--clear{background:transparent;color:var(--on-acid);text-decoration:underline}
+@keyframes ringpop{from{transform:scale(.85);opacity:0}}
+@keyframes ringshake{0%,100%{transform:rotate(0)}10%,30%{transform:rotate(-14deg)}20%,40%{transform:rotate(14deg)}50%{transform:rotate(0)}}
+@media (prefers-reduced-motion:reduce){.ring-card,.ring-bell{animation:none}}
+.devices{display:grid}
+.devices div{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.devices div:first-child{border-top:0}
+
 /* ── Toasts ── */
 .toasts{position:fixed;z-index:9500;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom));display:grid;gap:8px;width:min(440px,calc(100% - 32px))}
 @media (max-width:959px){.toasts{bottom:calc(84px + env(safe-area-inset-bottom))}}
@@ -385,6 +410,7 @@ kbd{font:12px var(--mono);padding:2px 6px;border-radius:5px;border:1px solid var
   <symbol id="i-out" viewBox="0 0 24 24"><path d="M9 21H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4M16 17l5-5-5-5M21 12H9"/></symbol>
   <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"/><circle cx="12" cy="12" r="3"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m14 6 4 4"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
@@ -454,6 +480,7 @@ kbd{font:12px var(--mono);padding:2px 6px;border-radius:5px;border:1px solid var
 </div>
 
 <div id="drawerRoot"></div>
+<div id="ringRoot"></div>
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 <div class="tip hidden" id="tip" role="presentation"></div>
 
@@ -666,7 +693,11 @@ function showLogin(message = '') {
   $('#app').classList.add('hidden'); $('#login').classList.remove('hidden');
   $('#loginErr').textContent = message; $('#password').focus();
 }
-function showApp() { $('#login').classList.add('hidden'); $('#app').classList.remove('hidden'); route(); startPulse(); }
+function showApp() {
+  $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
+  swReady().then(refreshAlertState).then((sub) => { if (sub) api('pushSubscribe', { subscription: sub.toJSON(), label: deviceLabel() }).catch(() => {}); route(); });
+  route(); startPulse();
+}
 $('#pwToggle').addEventListener('click', (e) => {
   const input = $('#password'), show = input.type === 'password';
   input.type = show ? 'text' : 'password';
@@ -775,6 +806,7 @@ function renderHome(d) {
 
   $('#view').innerHTML = `<div id="homeRoot">
     <div class="page-head"><div><p class="eyebrow">${esc(today)}</p><h1>${greet}</h1></div>${periodSeg(days)}</div>
+    ${alertBanner()}
     <section aria-label="Needs your attention"><div class="queue">${queue}</div></section>
     <section class="kpis" aria-label="Key numbers for ${esc(periodName(days))}">
       ${kpi('Sales', inr(c.revenue), delta(c.revenue, p.revenue, days), sparkline(series.map((s) => s.revenue)))}
@@ -1500,6 +1532,7 @@ async function viewSettings({ token }) {
         <section class="card"><div class="card-head"><h2>Live version</h2></div><div class="card-body"><dl class="kv"><dt>Commit</dt><dd class="mono">${esc(String(h?.build?.commit || 'unknown').slice(0, 12))}</dd>${h?.build?.builtAt ? `<dt>Built</dt><dd>${esc(when(h.build.builtAt))}</dd>` : ''}</dl></div></section>
       </div>
       <div class="stack">
+        ${await alertsCard()}
         <section class="card"><div class="card-head"><div><h2>Google Sheets</h2><div class="card-sub">Orders and customers copy over after every order and every 15 minutes.</div></div></div><div class="card-body" style="display:grid;gap:12px">
           <div class="actions-row">${SHEETS.map(([l, u]) => `<a class="btn btn--sm" href="${u}" target="_blank" rel="noopener">${ic('ext')}${esc(l)}</a>`).join('')}</div>
           <div class="actions-row"><button class="btn btn--sm btn--primary" data-act="sheets" data-rebuild="0">Sync now</button><button class="btn btn--sm" data-act="sheets" data-rebuild="1" title="Redraws tabs, colours and formulas. Your data and notes stay.">Rebuild design</button></div>
@@ -1524,11 +1557,133 @@ function viewMore() {
     <button type="button" data-act="logout">${ic('out')}Sign out</button></div>`;
 }
 
+
+/* ════════════════════════ ORDER ALERTS ════════════════════════
+   Push (admin-sw.js) rings the phone when the app is closed: the system
+   notification sound + a long vibration. While the dashboard is open it
+   rings out loud itself (Web Audio, repeating until "Got it"), from the
+   push or from the 60-second pulse. */
+const alerts = { supported: 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window, reg: null, on: false, install: null };
+const b64uToBytes = (s) => { const b = atob(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4)); return Uint8Array.from(b, (c) => c.charCodeAt(0)); };
+async function swReady() {
+  if (!('serviceWorker' in navigator)) return null;
+  try { alerts.reg ||= await navigator.serviceWorker.register('/admin-sw.js', { scope: '/admin' }); return alerts.reg; } catch { return null; }
+}
+async function currentSub() { const r = await swReady(); return r && r.pushManager ? r.pushManager.getSubscription().catch(() => null) : null; }
+function deviceLabel() {
+  const ua = navigator.userAgent, m = ua.match(/Android [\d.]+; ([^;)]+)/);
+  const name = m ? m[1].replace(/ Build.*/, '').trim() : /iPhone|iPad/.test(ua) ? 'iPhone' : /Mac/.test(ua) ? 'Mac' : /Windows/.test(ua) ? 'Windows PC' : 'This device';
+  return `${name}${matchMedia('(display-mode: standalone)').matches ? ' · app' : ' · browser'}`;
+}
+async function refreshAlertState() {
+  const sub = alerts.supported && Notification.permission === 'granted' ? await currentSub() : null;
+  alerts.on = Boolean(sub);
+  return sub;
+}
+async function enableAlerts() {
+  if (!alerts.supported) throw new Error('This browser can\'t receive alerts. On Android, use Chrome or the installed app.');
+  const perm = await Notification.requestPermission();
+  if (perm !== 'granted') throw new Error('Notifications are blocked. Allow them in the app\'s notification settings, then try again.');
+  const reg = await swReady(); if (!reg) throw new Error('Could not start the alert service. Reload and try again.');
+  await navigator.serviceWorker.ready;
+  const { publicKey } = await api('pushKey');
+  let sub = await reg.pushManager.getSubscription();
+  const same = sub?.options?.applicationServerKey && b64uToBytes(publicKey).every((v, i) => v === new Uint8Array(sub.options.applicationServerKey)[i]);
+  if (sub && !same) { await sub.unsubscribe().catch(() => {}); sub = null; }
+  sub ||= await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64uToBytes(publicKey) });
+  await api('pushSubscribe', { subscription: sub.toJSON(), label: deviceLabel() });
+  alerts.on = true;
+  audioCtx();
+  return sub;
+}
+async function disableAlerts() {
+  const sub = await currentSub();
+  if (sub) { await api('pushUnsubscribe', { endpoint: sub.endpoint }).catch(() => {}); await sub.unsubscribe().catch(() => {}); }
+  alerts.on = false;
+}
+
+/* The ring: two bright notes, twice, every 2.2 s, plus vibration. */
+const ring = { ctx: null, timer: null, stopAt: 0, seen: new Set() };
+function audioCtx() {
+  try { ring.ctx ||= new (window.AudioContext || window.webkitAudioContext)(); if (ring.ctx.state === 'suspended') ring.ctx.resume(); } catch {}
+  return ring.ctx;
+}
+['pointerdown', 'keydown'].forEach((t) => document.addEventListener(t, () => audioCtx(), { capture: true, once: true }));
+function ringBurst() {
+  const c = audioCtx(); if (!c) return;
+  const t0 = c.currentTime + 0.02, out = c.createDynamicsCompressor(); out.connect(c.destination);
+  [[0, 988], [0.2, 1319], [0.5, 988], [0.7, 1319]].forEach(([at, f]) => {
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = 'triangle'; o.frequency.value = f;
+    g.gain.setValueAtTime(0, t0 + at); g.gain.linearRampToValueAtTime(0.6, t0 + at + 0.015); g.gain.exponentialRampToValueAtTime(0.001, t0 + at + 0.19);
+    o.connect(g).connect(out); o.start(t0 + at); o.stop(t0 + at + 0.2);
+  });
+  navigator.vibrate?.([400, 150, 400]);
+}
+function stopRing() { clearInterval(ring.timer); ring.timer = null; navigator.vibrate?.(0); $('#ringRoot').innerHTML = ''; }
+function ringAlert(alert = {}) {
+  const tag = alert.tag || '';
+  if (tag && ring.seen.has(tag)) return;
+  if (tag) ring.seen.add(tag);
+  if (alert.kind !== 'test') { store.ordersAt = 0; store.dash = {}; }
+  if (prefs.ring === false) { toast(alert.title || 'New order'); return; }
+  $('#ringRoot').innerHTML = `<div class="ring" role="alertdialog" aria-modal="true" aria-labelledby="ringTitle"><div class="ring-card">
+    <div class="ring-bell">${ic('bell')}</div><h2 id="ringTitle"></h2><p id="ringBody"></p>
+    <button class="btn btn--dark" data-act="ring-open">Open order</button><button class="btn btn--clear" data-act="ring-stop">Got it</button></div></div>`;
+  $('#ringTitle').textContent = alert.title || 'New order';
+  $('#ringBody').textContent = alert.body || '';
+  $('[data-act="ring-open"]').dataset.url = alert.url || '/admin#orders';
+  $('[data-act="ring-open"]').focus();
+  ringBurst(); clearInterval(ring.timer);
+  ring.stopAt = Date.now() + 90000;
+  ring.timer = setInterval(() => { if (Date.now() > ring.stopAt) { clearInterval(ring.timer); return; } ringBurst(); }, 2200);
+}
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', (e) => {
+    const m = e.data || {};
+    if (m.type === 'smf-alert' && document.visibilityState === 'visible') { ringAlert(m.alert); if (m.alert?.kind !== 'test') route(); }
+    if (m.type === 'smf-open' && m.url) { stopRing(); location.href = m.url; }
+    if (m.type === 'smf-resubscribe' && Notification.permission === 'granted') enableAlerts().catch(() => {});
+  });
+}
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); alerts.install = e; });
+function alertBanner() {
+  if (!alerts.supported || alerts.on || prefs.alertBannerOff) return '';
+  return `<div class="alert-banner">${ic('bell')}<p><strong>Ring this phone for every new order</strong>Get a notification and a ring, even when the app is closed.</p>
+    <button class="btn btn--primary btn--sm" data-act="alerts-on">Turn on</button><button class="btn btn--ghost btn--sm" data-act="alerts-later" aria-label="Hide this">Not now</button></div>`;
+}
+async function alertsCard() {
+  await refreshAlertState();
+  const perm = alerts.supported ? Notification.permission : 'unsupported';
+  let devices = [];
+  try { devices = (await api('pushDevices')).devices; } catch {}
+  const mine = (await currentSub())?.endpoint;
+  const state = !alerts.supported ? ['Not available here', 'muted'] : perm === 'denied' ? ['Blocked', 'bad'] : alerts.on ? ['On for this phone', 'ok'] : ['Off for this phone', 'warn'];
+  return `<section class="card" id="alertsCard"><div class="card-head"><div><h2>Order alerts</h2><div class="card-sub">A notification and a ring for every new order</div></div>${pill(state)}</div><div class="card-body" style="display:grid;gap:14px">
+    <div class="actions-row">${alerts.on ? `<button class="btn btn--sm btn--primary" data-act="alerts-test">${ic('bell')}Send a test alert</button><button class="btn btn--sm" data-act="alerts-off">Turn off on this phone</button>`
+      : alerts.supported && perm !== 'denied' ? `<button class="btn btn--sm btn--primary" data-act="alerts-on">${ic('bell')}Turn on for this phone</button>` : ''}
+      <button class="btn btn--sm" data-act="ring-test">Play the ring</button>${alerts.install ? `<button class="btn btn--sm" data-act="install">${ic('down')}Install the app</button>` : ''}</div>
+    ${perm === 'denied' ? '<p class="cell-sub" style="margin:0">Notifications are blocked. In the app: long-press its icon → App info → Notifications → Allow. In Chrome: tap the icon left of the address → Permissions → Notifications → Allow. Then come back.</p>' : ''}
+    <label class="chip" style="justify-self:start"><input type="checkbox" data-act="ring-pref" ${prefs.ring === false ? '' : 'checked'}>Ring out loud while the dashboard is open</label>
+    <p class="cell-sub" style="margin:0">Closed app: Android plays its notification sound with a long vibration. For a different sound: long-press the app icon → App info → Notifications → Sound.</p>
+    ${devices.length ? `<div><div class="kpi-label" style="margin-bottom:4px">Phones that ring (${devices.length})</div><div class="devices">${devices.map((d) => `<div><span>${esc(d.label || d.service)}${d.endpoint === mine ? ' <span class="tag">This one</span>' : ''}<br><span class="cell-sub">Added ${esc(dateOnly(d.created_at))}${d.last_sent_at ? ` · last alert ${esc(ago(d.last_sent_at))}` : ''}${d.failures ? ` · ${d.failures} failed` : ''}</span></span><button class="btn btn--sm btn--ghost btn--danger" data-act="device-remove" data-id="${esc(d.id)}" aria-label="Remove ${esc(d.label || 'device')}">${ic('trash')}</button></div>`).join('')}</div></div>` : ''}
+  </div></section>`;
+}
+
 /* ════════════════════════ Events (one delegated listener) ════════════════════════ */
 const ACTS = {
   'open-order': (el, e) => { if (e.target.closest('input,button,a')) return; const { view, params } = parseHash(); setHash(view === 'orders' ? 'orders' : 'orders', view === 'orders' ? Object.fromEntries(params) : {}, el.dataset.code); route(); },
   'open-customer': (el, e) => { if (e.target.closest('input,button,a')) return; setHash('customers', Object.fromEntries(parseHash().params), el.dataset.key); openCustomer(el.dataset.key); },
   close: () => closeDrawer(),
+  'alerts-on': async (el) => { el.disabled = true; try { await enableAlerts(); toast('Alerts on. Sending a test…'); await api('pushTest', { endpoint: (await currentSub())?.endpoint }).catch(() => {}); route(); } catch (e) { toast(e.message, { error: true }); } finally { el.disabled = false; } },
+  'alerts-off': async (el) => { el.disabled = true; await disableAlerts(); toast('Alerts off on this phone'); route(); },
+  'alerts-later': () => { prefs.alertBannerOff = true; savePrefs(); $('.alert-banner')?.remove(); },
+  'alerts-test': async (el) => { el.disabled = true; try { const r = await api('pushTest', {}); toast(`Test alert sent to ${plural(r.sent, 'phone')}${r.failed ? ` · ${r.failed} failed` : ''}`); } catch (e) { toast(e.message, { error: true }); } finally { el.disabled = false; } },
+  'ring-test': () => { ring.seen.delete('ring-test'); ringAlert({ kind: 'test', title: 'New order · ₹318 COD', body: 'This is the ring. Tap "Got it" to stop it.', tag: 'ring-test' }); },
+  'ring-stop': () => stopRing(),
+  'ring-open': (el) => { stopRing(); location.href = el.dataset.url; },
+  'device-remove': async (el) => { if (!confirm('Stop alerts on that phone?')) return; try { await api('pushRemove', { id: el.dataset.id }); toast('Removed'); route(); } catch (e) { toast(e.message, { error: true }); } },
+  install: async () => { if (!alerts.install) return; alerts.install.prompt(); await alerts.install.userChoice.catch(() => {}); alerts.install = null; route(); },
   'edit-order': (el) => { const o = findOrder(el.dataset.code); if (o) openOrderForm(o); },
   'edit-cancel': (el) => openOrder(el.dataset.code),
   'test-order': () => openOrderForm(null, { test: true }),
@@ -1575,12 +1730,13 @@ const ACTS = {
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.menu')) $$('.menu-list').forEach((m) => m.classList.add('hidden'));
   const el = e.target.closest('[data-act]');
-  if (!el || el.dataset.act === 'theme') return;
+  if (!el || el.dataset.act === 'theme' || el.dataset.act === 'ring-pref') return;
   ACTS[el.dataset.act]?.(el, e);
 });
 document.addEventListener('change', (e) => {
   const el = e.target;
   if (el.dataset.filter) { listLimit = 50; updateParams({ [el.dataset.filter]: el.type === 'checkbox' ? (el.checked ? '1' : '') : el.value }); }
+  if (el.dataset.act === 'ring-pref') { prefs.ring = el.checked; savePrefs(); return; }
   if (el.dataset.act === 'theme') {
     if (el.value === 'auto') { delete document.documentElement.dataset.theme; try { localStorage.removeItem('sfa_theme'); } catch {} }
     else { document.documentElement.dataset.theme = el.value; try { localStorage.setItem('sfa_theme', el.value); } catch {} }
@@ -1588,6 +1744,7 @@ document.addEventListener('change', (e) => {
 });
 document.addEventListener('keydown', (e) => {
   if (e.target.closest('.menu') && e.key === 'Escape') { $$('.menu-list').forEach((m) => m.classList.add('hidden')); return; }
+  if (e.key === 'Escape' && $('#ringRoot').children.length) { stopRing(); return; }
   if (e.key === 'Escape' && $('#drawerRoot').children.length) { closeDrawer(); return; }
   if ($('.drawer') && e.key === 'Tab') { // keep focus inside the open panel
     const f = $$('.drawer a[href],.drawer button:not([disabled]),.drawer input,.drawer select').filter((x) => x.offsetParent);
@@ -1624,7 +1781,7 @@ async function pulse() {
     setBadges({ ...(store.queue || {}), ...queue });
     if (latest && store.newest && latest.id !== store.newest) {
       store.newest = latest.id; store.ordersAt = 0; store.dash = {};
-      toast(`New order ${latest.order_code}`);
+      ringAlert({ title: 'New order', body: latest.order_code, tag: latest.order_code, url: `/admin#orders/${latest.order_code}` });
       if (!$('#drawerRoot').children.length) route(); else getOrders(true).catch(() => {});
     } else if (latest && !store.newest) store.newest = latest.id;
   } catch {}
