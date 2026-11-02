@@ -2719,3 +2719,14 @@ sources: `docs/audits/admin-redesign-2026-11.md`; owner guide:
   ship" in name or address line) makes `createMissingShiprocketOrder` skip
   them. The dashboard's test order adds `[TEST · do not ship]`. Orders that are
   only "internal" (owner email / business phone) still ship.
+- **System check reads real activity (same day, owner: "shiprocket and google
+  sheets aren't connected!").** Shiprocket *was* connected (last sync that hour,
+  an order In Transit); the check said "Not tested" because it never logs in.
+  It now reads the 15-minute sync's results (`shiprocket_synced_at`, any
+  `shiprocket_error` on open orders, non-test orders unbooked after 30 min).
+  Email showed "Problem" because the Resend key is **send-only** (it can't list
+  domains, which is the safer setup); it is now judged by `email_events` (last
+  email's status, failures in 7 days). Google Sheets really is unconnected
+  (`GOOGLE_SERVICE_ACCOUNT_JSON` unset): it shows "Not connected" with the
+  setup steps inline.
+

@@ -680,15 +680,21 @@ const actions = {
     if (!checkRateLimit(`admin-check:${clientIp(req)}`, 20, 10 * 60 * 1000)) throw new HttpError(429, 'Checked many times just now. Wait a few minutes.');
     const env = process.env;
     const skip = (detail) => Promise.resolve({ ok: null, ms: 0, detail });
-    const [database, analytics, email, razorpay, sheets] = await Promise.all([
+    const minsAgo = (iso) => { const m = Math.round((Date.now() - Date.parse(iso)) / 60000); return m < 60 ? `${m} min ago` : m < 2880 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`; };
+    const [database, analytics, email, razorpay, sheets, shiprocket] = await Promise.all([
       timed(async () => { const r = await db('orders?select=id&limit=1'); return `Orders table answered (${r.length ? 'has rows' : 'empty'}).`; }),
       timed(async () => { const n = await db('rpc/site_realtime', { method: 'POST', body: {} }); return `${Number(n) || 0} visitor(s) on the site in the last 5 minutes.`; }),
+      // Judged by what was actually sent: the Resend key is send-only on
+      // purpose, so it can't list domains (that refusal is not a fault).
       env.RESEND_API_KEY ? timed(async () => {
-        const d = await getJson('https://api.resend.com/domains', { Authorization: `Bearer ${env.RESEND_API_KEY}` });
-        const list = (d.data || []).map((x) => `${x.name}: ${x.status}`);
-        if (!list.length) throw new Error('No sending domain in Resend.');
-        if (!(d.data || []).some((x) => x.status === 'verified')) throw new Error(`No verified domain (${list.join(', ')}).`);
-        return list.join(', ');
+        const since = new Date(Date.now() - 7 * DAY).toISOString();
+        const [[last], failed] = await Promise.all([
+          db('email_events?select=created_at,email_type,status,error_message&order=created_at.desc&limit=1'),
+          db(`email_events?select=id&status=in.(FAILED,BOUNCED,COMPLAINED)&created_at=gte.${since}&limit=100`),
+        ]);
+        if (!last) return 'Key set. No email sent yet: use "Send" below to test.';
+        if (/FAIL|BOUNCE|COMPLAIN/i.test(last.status)) throw new Error(`Last email (${last.email_type}, ${minsAgo(last.created_at)}) ${String(last.status).toLowerCase()}: ${last.error_message || 'no reason given'}`);
+        return `Last email ${minsAgo(last.created_at)} (${last.email_type}): ${String(last.status).toLowerCase()}.${failed.length ? ` ${failed.length} failed in 7 days.` : ' None failed in 7 days.'}`;
       }) : skip('RESEND_API_KEY is not set.'),
       env.RAZORPAY_KEY_ID && env.RAZORPAY_KEY_SECRET ? timed(async () => {
         await getJson('https://api.razorpay.com/v1/payments?count=1', { Authorization: `Basic ${Buffer.from(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`).toString('base64')}` });
@@ -698,9 +704,22 @@ const actions = {
         const g = await import('./_google-sheets.js');
         const meta = await g.getSpreadsheetMeta(env.SHEETS_ORDERS_ID || '1VY0Jkrj0CTjrEmamE2qLpPXF8qcUhNG5ZToWcCn1AKc');
         return `Opened "${meta?.properties?.title || 'Orders data'}".`;
-      }) : skip('GOOGLE_SERVICE_ACCOUNT_JSON is not set.'),
+      }) : Promise.resolve({ ok: null, missing: true, ms: 0, detail: 'Not connected yet: the GOOGLE_SERVICE_ACCOUNT_JSON secret is missing in Cloudflare. Steps below.' }),
+      // Judged by the 15-minute sync's own results in the database. Never logs
+      // in from here: a failed Shiprocket login blocks the API user.
+      env.SHIPROCKET_EMAIL && env.SHIPROCKET_PASSWORD ? timed(async () => {
+        const stale = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+        const [[last], errors, waiting] = await Promise.all([
+          db('orders?select=order_code,shiprocket_synced_at,shiprocket_status&shiprocket_synced_at=not.is.null&order=shiprocket_synced_at.desc&limit=1'),
+          db('orders?select=order_code,shiprocket_error&shiprocket_error=not.is.null&status=in.(placed,confirmed,packed)&limit=5'),
+          db(`orders?select=order_code,address&shiprocket_order_id=is.null&status=in.(placed,confirmed,packed)&created_at=lt.${stale}&limit=20`),
+        ]);
+        if (errors.length) throw new Error(`${errors[0].order_code}: ${errors[0].shiprocket_error}`);
+        const stuck = waiting.filter((o) => !isMarkedTest(o));
+        if (stuck.length) throw new Error(`${stuck.length} order(s) not booked after 30 minutes: ${stuck.slice(0, 3).map((o) => o.order_code).join(', ')}.`);
+        return last ? `Last update from Shiprocket ${minsAgo(last.shiprocket_synced_at)} (${last.order_code}: ${last.shiprocket_status || 'booked'}). No booking errors.` : 'Connected. No order booked yet.';
+      }) : skip('SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD are not set.'),
     ]);
-    const shiprocket = { ok: env.SHIPROCKET_EMAIL && env.SHIPROCKET_PASSWORD ? null : false, ms: 0, detail: env.SHIPROCKET_EMAIL && env.SHIPROCKET_PASSWORD ? 'Set. Not logged in from here: a failed login blocks the API user. The 15-minute sync shows real errors on orders.' : 'SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD are not set.' };
     return { checkedAt: new Date().toISOString(), checks: { database, analytics, email, razorpay, sheets, shiprocket } };
   },
   async sendTestEmail(body, req) {

@@ -193,3 +193,33 @@ test('the dashboard has the tools a store needs', () => {
   assert.match(page, /sandbox=""/, 'email previews render with scripts off');
   assert.doesNotMatch(fs.readFileSync(new URL('../api/admin.js', import.meta.url), 'utf8'), /apiv2\.shiprocket\.in\/v1\/external\/auth\/login/, 'the system check never logs in to Shiprocket');
 });
+
+test('the system check reads real Shiprocket and email activity, never a login', async () => {
+  const saved = { ...process.env }; const realFetch = globalThis.fetch;
+  Object.assign(process.env, { SUPABASE_SERVICE_ROLE_KEY: 'k', RESEND_API_KEY: 're_send_only', SHIPROCKET_EMAIL: 'api@x.in', SHIPROCKET_PASSWORD: 'p' });
+  delete process.env.GOOGLE_SERVICE_ACCOUNT_JSON; delete process.env.RAZORPAY_KEY_ID;
+  const hits = [];
+  globalThis.fetch = async (url) => {
+    const u = String(url); hits.push(u);
+    const json = (b) => new Response(JSON.stringify(b), { status: 200 });
+    if (u.includes('email_events') && u.includes('FAILED')) return json([]);
+    if (u.includes('email_events')) return json([{ created_at: new Date().toISOString(), email_type: 'orderShipped', status: 'DELIVERED' }]);
+    if (u.includes('shiprocket_synced_at=not.is.null')) return json([{ order_code: 'SMF-20261029-9689', shiprocket_synced_at: new Date().toISOString(), shiprocket_status: 'In Transit' }]);
+    if (u.includes('shiprocket_error=not.is.null')) return json([]);
+    if (u.includes('shiprocket_order_id=is.null')) return json([{ order_code: 'SMF-20261102-0001', address: { name: 'Test order', line: 'x [TEST · do not ship]' } }]);
+    if (u.includes('rpc/site_realtime')) return json(2);
+    return json([{ id: 1 }]);
+  };
+  try {
+    const login = await call({ action: 'login', password: 'correct horse' }, { 'cf-connecting-ip': '4.4.4.4' });
+    const cookie = login.headers['set-cookie'].split(';')[0];
+    const { body } = await call({ action: 'systemCheck' }, { cookie, 'cf-connecting-ip': '4.4.4.4' });
+    const c = body.checks;
+    assert.equal(c.shiprocket.ok, true, 'a recent sync and no errors = working');
+    assert.match(c.shiprocket.detail, /In Transit/);
+    assert.equal(c.email.ok, true, 'a send-only Resend key is fine: judged by delivered emails');
+    assert.match(c.email.detail, /delivered/);
+    assert.deepEqual([c.sheets.ok, c.sheets.missing], [null, true], 'Sheets shows "Not connected" with setup steps');
+    assert.ok(!hits.some((h) => /shiprocket\.in|api\.resend\.com/.test(h)), 'no Shiprocket login, no Resend admin call');
+  } finally { globalThis.fetch = realFetch; for (const k of Object.keys(process.env)) if (!(k in saved)) delete process.env[k]; Object.assign(process.env, saved); }
+});
