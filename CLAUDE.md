@@ -2894,3 +2894,35 @@ open-licence pictures (Openverse, Wikimedia, Met, AIC, archive.org, NASA).
 - In the cloud container set `CHROME_PATH=/opt/pw-browsers/chromium` (the
   skill looks in `/usr/bin` only). Node 22+.
 - Update: re-copy `skills/taste-skill` from upstream; don't hand-edit it.
+
+## Homepage design pass with five skills (2026-11-02, owner: "improve my Smelloff design … remove or edit the homepage sections … deeply research")
+Write-up with sources: `docs/audits/homepage-design-pass-2026-11-02.md`. The
+Sep 19 look stays; structure, copy, legibility and motion changed.
+- **Order:** hero → `#remembers` → **`#in-use`** (new: four owner photos on
+  real clothes, "Spray the shirt, not you.", link to /odorstrike) →
+  `#reviews` → `#odorstrike-featured` → `#how-it-works` ("What's in the
+  bottle", now before the founders) → `#founders` ("Built for 41°C days") →
+  `#faq` → `#final`. Section reach includes `in-use`.
+- **Gone:** the ticker strip and the Hinglish marquee (endless motion, no
+  pause: WCAG 2.2.2; the line "Smell Khatam. Confidence Qaayam." stays still),
+  eyebrow labels on every section but the hero, the offer box's third set of
+  fabric-only badges and its "Made in Hyderabad · Dries Clear" line, the 01–04
+  numbers on the four layers.
+- **One name for the buy action:** "Fix my shirt" on every homepage button and
+  the phone bar; secondary links read "View product details".
+- Labels ≥12px (`#sf-main :is(…){font-size:12px !important}`),
+  `color-scheme:dark`, `touch-action:manipulation`, `scroll-margin-top` on
+  sections. Buy button unchanged (665–716 at 390×844, 669–720 at 1280×800).
+- Not on the homepage on purpose: `pdp-size-in-hand` (iPhone logo) and
+  `pdp-jacket-lining` (a bag on the hook).
+- `test/homepage-design-pass.test.mjs` pins it.
+- **Skills added (`.claude/skills/`):** `web-design-guidelines` (Vercel, MIT;
+  `command.md` is a local copy of the rules it would fetch),
+  `frontend-design` (Anthropic, Apache-2.0), `playwright-cli` (Microsoft,
+  Apache-2.0; needs `npm i -g @playwright/cli` on the owner's machine; in the
+  cloud container use the preinstalled Playwright library instead, the CLI
+  pins an alpha Playwright with its own browsers). Taste skill's inspector
+  needs `--no-sandbox` here: point `CHROME_PATH` at a two-line wrapper script
+  that runs `/opt/pw-browsers/chromium --no-sandbox "$@"`.
+- Where a skill's house style contradicts an owner decision, the owner wins:
+  mono labels, three faces, lime on black and the cream text are the brand.
