@@ -2564,3 +2564,18 @@ image and its preload. Disc (`.hero-visual::before`) `clamp(150px,36vw,240px)` (
 `margin-block` (−14 / −17px) so the layout box and the buy button don't move: Buy
 665–716 at 390×844, 671–722 at 1280×800 (consent bar 736 / 727). The old
 `odorstrike-bottle-cutout.webp` stays for the build's 160/240 variants and emails.
+
+## Conversion research + delivery date under Buy (2026-11-02, owner: "conversion, trust, sales … research, think, implement")
+First-party data, 30 days: 292 product_view sessions → 11 checkout_start → 7
+purchase events, but most orders were the owner's tests (one phone hash on ~20 rows,
+"smelloff"/name in address). Real customers: 2 paid orders (one via ChatGPT), 1
+abandoned UPI payment (via ChatGPT), 1 failed payment. The leak is PDP → checkout.
+- **Built:** `#pdEta` under the PDP Buy button, "Order today, arrives <dates> in
+  metros · check your pincode", from checkout's own `calculateDeliveryEstimate()`
+  (dispatch ≤48 h + metro transit), hidden until filled; joins the phone `order:-1`
+  group. Buy unchanged (759–815 at 390×844). Baymard: shoppers act on dates, not
+  speeds.
+- **Owner's calls (not built; policy/pricing):** COD charge ₹89–179 on a ₹229 product
+  (+39–78%) while ~62–65% of Indian first-time buyers prefer COD and marketplaces
+  charge ₹7–10; and a try-it guarantee (returns now need the bottle ≥80% full, so a
+  buyer can't actually try it). Both are likely bigger levers than any page change.
