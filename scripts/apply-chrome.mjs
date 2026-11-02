@@ -685,7 +685,8 @@ function ensureFavicon(html) {
  * nodes must not survive just because a page is absent from PAGES. */
 function walkHtmlFiles(dir, out = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === 'public') continue;
+    // personal-site/ is a separate site (own domain, own design); never stamp Smelloff markup into it.
+    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === 'public' || entry.name === 'personal-site') continue;
     const full = join(dir, entry.name);
     if (entry.isDirectory()) walkHtmlFiles(full, out);
     else if (entry.name.endsWith('.html')) out.push(full);

@@ -51,6 +51,8 @@ const SKIP_DIRS = new Set([
   // The build output (prepare-public.mjs). A second local build used to list
   // every page again as https://smelloff.in/public/… in the committed sitemap.
   'public',
+  // Nikhil Patil's personal site: its own domain, sitemap and build.
+  'personal-site',
 ]);
 
 /* Ranking hints. First matching rule wins, so order matters. */

@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildHeaders, buildRedirects } from './cloudflare-routing.mjs';
+import { build as buildPersonalSite } from '../personal-site/build.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = path.join(ROOT, 'public');
@@ -67,6 +68,15 @@ function copyDir(relativePath) {
 resetPublic();
 for (const file of ROOT_FILES) copyFile(file);
 for (const dir of DIRECTORIES) copyDir(dir);
+
+// Nikhil Patil's own pages: https://smelloff.in/NikhilPatil (personal-site/).
+// Built here, not committed, so they never pass through the Smelloff page
+// generators; their sitemap sits at the root and robots.txt names it.
+const personal = buildPersonalSite({
+  outDir: path.join(PUBLIC, 'NikhilPatil'),
+  sitemapFile: path.join(PUBLIC, 'sitemap-nikhil-patil.xml'),
+});
+console.log(`Personal site: ${personal.pages.length} pages at ${personal.site}`);
 
 // Cloudflare's asset server answers a path containing "@" (pdp-01-hero@640.webp,
 // every blog thumbnail) with a 307 to the %40-encoded path, so each of those

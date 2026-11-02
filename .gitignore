@@ -31,3 +31,6 @@ scan-results.json
 
 # taste-skill working files (direction sheets, screenshots, inspector reports)
 .taste-skill/
+
+# Personal site build output (personal-site/build.mjs)
+personal-site/dist/

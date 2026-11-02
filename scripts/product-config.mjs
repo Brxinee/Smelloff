@@ -260,7 +260,8 @@ export function buildOrganizationJsonLd() {
         '@id': FOUNDER_ID,
         'name': b.founder,
         'jobTitle': b.jobTitle,
-        'url': `${b.website}/about`
+        // His own page (personal-site/, served at /NikhilPatil) is where this Person lives.
+        'url': `${b.website}/NikhilPatil`
       },
       {
         '@type': 'Person',

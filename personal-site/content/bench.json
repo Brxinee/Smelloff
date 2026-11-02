@@ -1,0 +1,32 @@
+{
+  "_readme": "Things I've made. `status` is one of NOW, LIVE, NEW, PARKED, RETIRED (it becomes the rubber stamp). `body` is Markdown and optional.",
+  "items": [
+    {
+      "id": "startup",
+      "title": "My startup",
+      "status": "NOW",
+      "kicker": "Smelloff · Hyderabad",
+      "summary": "My first startup, a small brand I run from Hyderabad. I do most of it myself: the product, the packaging, the website, the shipping and the customer inbox.",
+      "body": "I started it with my friend Vineeth Kumar Duggepogu. We met at a job interview in Hyderabad and later worked together at Zomato Everyday.",
+      "links": [{ "label": "smelloff.in", "url": "https://smelloff.in" }]
+    },
+    {
+      "id": "store",
+      "title": "A website I built",
+      "status": "LIVE",
+      "kicker": "HTML · CSS · JavaScript · Cloudflare",
+      "summary": "My startup’s store, built with AI coding tools: plain pages on Cloudflare, a checkout, shipping, a help desk, and a phone app that rings when an order comes in.",
+      "body": "No framework. Most of what I know about websites I learned by breaking this one and fixing it again.",
+      "links": []
+    },
+    {
+      "id": "this-site",
+      "title": "This site",
+      "status": "NEW",
+      "kicker": "A zine about one person",
+      "summary": "A photocopied zine about me, made the same way: static pages, no framework, no trackers.",
+      "body": "",
+      "links": [{ "label": "How this site is made", "url": "/notes/how-this-site-is-made" }]
+    }
+  ]
+}

@@ -71,9 +71,18 @@ export function canonicalRedirect(requestUrl) {
 export function lowercaseCandidate(requestUrl) {
   const { pathname } = new URL(requestUrl);
   if (pathname.startsWith("/api/") || pathname.startsWith("/r/")) return null; // referral codes keep their case
-  const lower = pathname.toLowerCase();
+  const lower = withPersonalCase(pathname.toLowerCase());
   if (lower === pathname) return null;
   return resolveStaticRedirect(canonicalPath(lower));
+}
+
+// Nikhil Patil's own pages (personal-site/, built into public/NikhilPatil) are
+// the one mixed-case path on the site, so /nikhilpatil, /NIKHILPATIL/About and
+// friends 301 to /NikhilPatil… instead of lowercasing to a 404.
+export const PERSONAL_PATH = "/NikhilPatil";
+function withPersonalCase(lowerPath) {
+  const p = PERSONAL_PATH.toLowerCase();
+  return lowerPath === p || lowerPath.startsWith(p + "/") ? PERSONAL_PATH + lowerPath.slice(p.length) : lowerPath;
 }
 
 /**

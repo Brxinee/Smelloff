@@ -1,0 +1,26 @@
+{
+  "_readme": "Who the site is about. Every fact here is public or approved by Nikhil (see docs/PERSONAL-CONTENT-SOURCE-MAP.md). The site is served at url + basePath.",
+  "name": "Nikhil Patil",
+  "alternateName": ["Jogdhande Nikhil Patil"],
+  "givenName": "Nikhil",
+  "familyName": "Patil",
+  "url": "https://smelloff.in",
+  "basePath": "/NikhilPatil",
+  "personId": "https://smelloff.in/#founder",
+  "lang": "en-IN",
+  "ogLocale": "en_IN",
+  "location": { "city": "Hyderabad", "region": "Telangana", "country": "India", "countryCode": "IN" },
+  "jobTitle": "Founder",
+  "worksFor": { "name": "Smelloff", "url": "https://smelloff.in", "id": "https://smelloff.in/#organization" },
+  "dek": "I’m Nikhil Patil, a self-taught builder in Hyderabad. I left school after Class 10 and learned the rest on the job: shop counters, deliveries, cloud kitchens, and now my own startup.",
+  "description": "Nikhil Patil is a self-taught builder in Hyderabad, India: school to Class 10, then shop counters, deliveries, cloud kitchens and now his own startup.",
+  "photo": { "src": "/assets/img/me/portrait.webp", "avif": "/assets/img/me/portrait.avif", "width": 720, "height": 720, "alt": "Nikhil Patil, smiling, in a black t-shirt." },
+  "email": { "address": "info@smelloff.in", "note": "My startup’s inbox. It comes straight to me." },
+  "profiles": [
+    { "label": "X", "handle": "@Nikhilxpatil", "url": "https://x.com/Nikhilxpatil", "sameAs": true },
+    { "label": "LinkedIn", "handle": "in/jogdhande", "url": "https://www.linkedin.com/in/jogdhande", "sameAs": true },
+    { "label": "Product Hunt", "handle": "@nikhilpatil", "url": "https://www.producthunt.com/@nikhilpatil", "sameAs": true },
+    { "label": "My startup", "handle": "smelloff.in", "url": "https://smelloff.in", "sameAs": false }
+  ],
+  "knowsAbout": ["Self-taught web development", "Cloudflare Workers", "Search engine optimization", "Selling", "Product formulation", "E-commerce operations", "AI-assisted software development"]
+}
