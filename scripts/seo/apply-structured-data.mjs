@@ -2,6 +2,7 @@
  * config/product.json → the site's commerce structured data and feeds.
  *
  *   index.html, odorstrike.html   #org-jsonld, #website-jsonld (+ #product-jsonld on the PDP)
+ *   shipping.html                 #shipping-policy-jsonld (organization-level ShippingService + returns)
  *   products.json                 JSON Feed catalog (AI agents, shopping crawlers)
  *   merchant-feed.xml             Google Merchant Center product feed (RSS 2.0 + g:)
  *
@@ -15,7 +16,7 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import {
-  getProductConfig, buildProductJsonLd, buildOrganizationJsonLd, buildWebSiteJsonLd,
+  getProductConfig, buildProductJsonLd, buildOrganizationJsonLd, buildWebSiteJsonLd, buildShippingServiceJsonLd,
   buildProductsCatalogFeed,
 } from '../product-config.mjs';
 
@@ -99,6 +100,10 @@ write('index.html', home);
 let pdp = readFileSync('odorstrike.html', 'utf8');
 pdp = stamp(stamp(stamp(pdp, 'org-jsonld', org), 'website-jsonld', site), 'product-jsonld', buildProductJsonLd());
 write('odorstrike.html', pdp);
+
+let ship = readFileSync('shipping.html', 'utf8');
+ship = stamp(ship, 'shipping-policy-jsonld', buildShippingServiceJsonLd());
+write('shipping.html', ship);
 
 write('products.json', json(buildProductsCatalogFeed()) + '\n');
 write('merchant-feed.xml', buildMerchantFeedXml());

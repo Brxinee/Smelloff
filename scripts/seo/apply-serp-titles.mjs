@@ -29,6 +29,24 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const CHECK = process.argv.includes('--check');
 
 export const SERP = {
+  'best-deodorant-spray-for-clothes-not-skin': {
+    title: "Cloth Deodorant: Best Deodorant Spray for Clothes in India",
+    h1: "Cloth Deodorant: The Best <em>Deodorant Spray</em> for Clothes (Not Skin) in India",
+    desc: "Want a deodorant spray for clothes, not skin? How a cloth deodorant differs from body deo, the 4 things to look for in one, and where ODORSTRIKE fits.",
+  },
+  'why-clothes-smell-bad-again-after-sweating': {
+    title: "Why Do Clothes Smell Bad Again After You Start Sweating?",
+    h1: "Why Do Clothes Smell <em>Bad Again After You Start Sweating?</em>",
+  },
+  'why-body-odor-comes-back-on-clothes-so-quickly': {
+    title: "Why Does Body Odor Come Back on Clothes So Quickly?",
+    h1: "Why Does Body Odor Come Back on Clothes <em>So Quickly?</em>",
+  },
+  'deodorant-vs-fabric-mist': {
+    title: "Can You Use Deodorant on Clothes? Deodorant vs Fabric Mist",
+    h1: "Can You Use Deodorant on Clothes? <em>Deodorant vs Fabric Mist</em>",
+    desc: "Not as a fix. Body deodorant is made for skin: on a shirt it adds scent over the smell and can leave white marks or yellow pits. What to use on clothes.",
+  },
   'remove-smell-from-clothes-without-washing': {
     title: 'How to Remove Smell From Clothes Without Washing (by Smell)',
     h1: 'How to Remove Smell From Clothes <em>Without Washing</em>',
@@ -40,14 +58,14 @@ export const SERP = {
     desc: 'Clean when wet, sour once dry? Slow drying, damp seams and a load left in the machine. What to change in the drying step before you rewash it all.',
   },
   'gym-clothes-smell-after-washing': {
-    title: 'Gym Clothes Still Smell After Washing? 5 Reasons + the Fix',
-    h1: 'Gym Clothes Still Smell After Washing? <em>5 Reasons and the Fix</em>',
-    desc: 'Dri-fit and polyester gym clothes keep body oils that a cool, short wash leaves behind. The 5 habits that keep the smell in, and what gets it out.',
+    title: "Why Do Dri-Fit Gym Clothes Smell After Washing? 5 Reasons",
+    h1: "Why Do Dri-Fit Gym Clothes Smell After Washing? <em>5 Reasons and the Fix</em>",
+    desc: "Dri-fit and polyester hold body oil that a cool, quick wash leaves behind, so the smell is back as soon as you warm up. The 5 causes, and how to get it out.",
   },
   'why-clothes-smell-musty-after-being-stored': {
-    title: 'Clothes Smell Musty After Storage? Why, and How to Fix It',
-    h1: 'Clothes Smell Musty After Storage? <em>Why, and How to Fix It</em>',
-    desc: 'Winter clothes or a stored suitcase smelling musty? Damp trapped in a closed cupboard is the cause. How to reset them without rewashing the whole pile.',
+    title: "Why Do Clothes Smell After Being Stored? Causes and Fix",
+    h1: "Why Do Clothes Smell After Being Stored? <em>Causes and the Fix</em>",
+    desc: "Clean clothes from a closed cupboard or suitcase smelling musty? Trapped damp is the cause. Why it happens, the reset without a rewash, and how to store them.",
   },
   'why-clothes-smell-in-wardrobe-even-when-clean': {
     title: 'Why Clean Clothes Smell in the Wardrobe (and the Fix)',
@@ -60,7 +78,9 @@ export const SERP = {
     desc: 'Gasket, detergent drawer, drum, drain filter, the forgotten wet load and the room: six places a washing machine turns clothes sour, and how to fix each.',
   },
   'best-fabric-odor-spray-india-2026-body-odor': {
-    desc: 'Choosing a fabric freshener for clothes in India? The 5 checks before you buy, five spray types compared, and whether cheap refreshers match big brands.',
+    title: "Best Fabric Freshener for Clothes in India: 5 Types Compared",
+    h1: "Best Fabric Freshener for Clothes in India: <em>5 Types Compared</em>",
+    desc: "Which fabric freshener works on clothes in India? Five spray types compared, the 5 checks before you buy, and whether cheap refreshers match big brands.",
   },
   'remove-cigarette-smoke-smell-from-clothes': {
     title: 'How to Get Cigarette Smoke Smell Out of Clothes Tonight',
@@ -68,9 +88,9 @@ export const SERP = {
     desc: 'Back from a party smelling of smoke? Six approaches compared by what they do and how long they take, from brushing and airing to a mist or a wash.',
   },
   'remove-cooking-smell-from-clothes': {
-    title: 'Get Curry and Cooking Smell Out of Clothes in 10 Minutes',
-    h1: 'Get Curry and Cooking Smell <em>Out of Clothes in 10 Minutes</em>',
-    desc: 'Tadka, frying or curry smell on your shirt? Why it clings, what airing does and doesn\'t do, a ten-minute reset without washing, and when to wash.',
+    title: "How to Get Curry Smell Out of Clothes Without Washing",
+    h1: "How to Get Curry Smell Out of Clothes <em>Without Washing</em>",
+    desc: "Tadka or curry smell stuck in your shirt? Why it clings to the fibres, a 10-minute reset that works without a wash, and when only washing will fix it.",
   },
   'remove-mothball-almirah-smell-from-clothes': {
     title: 'How to Get Mothball (Naphthalene) Smell Out of Clothes',
