@@ -2877,3 +2877,20 @@ code kept the lock in place, now fixed in `api/_shiprocket.js`:
 - Courier auto-assignment for "External API" orders is on in the Shiprocket
   panel (owner, 2026-11-02), so booked orders get a courier + AWB there; the
   site's code never assigns couriers itself.
+
+## Taste skill (2026-11-02, owner: "install … taste skill")
+`.claude/skills/taste-skill/` is Leonxlnx/taste-skill v2.1.5 (MIT, commit
+`12af471`), copied unchanged (plus its LICENSE). It is art-direction help for
+pages and app screens: `draw.mjs` deals design directions, `inspect.mjs`
+screenshots a page in Chromium and checks its house rules, `assets.mjs` finds
+open-licence pictures (Openverse, Wikimedia, Met, AIC, archive.org, NASA).
+- **The owner's design rules in this file win over the skill's.** The Sep 19
+  homepage, the type, the palette, the clothing-only photo rule and the
+  "no cutouts" rule are decided; use the skill to review or polish within
+  them, never to re-deal a direction for `/` or `/odorstrike` unless the
+  owner asks for a redesign. Use `--keep palette,type` when you draw.
+- Working files go to `.taste-skill/` (gitignored); `draw.mjs` also keeps a
+  history in `~/.taste-skill/`.
+- In the cloud container set `CHROME_PATH=/opt/pw-browsers/chromium` (the
+  skill looks in `/usr/bin` only). Node 22+.
+- Update: re-copy `skills/taste-skill` from upstream; don't hand-edit it.

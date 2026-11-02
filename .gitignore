@@ -28,3 +28,6 @@ assets/optimized/
 
 # output of scripts/scan-repo.mjs
 scan-results.json
+
+# taste-skill working files (direction sheets, screenshots, inspector reports)
+.taste-skill/
