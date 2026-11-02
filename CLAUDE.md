@@ -2787,3 +2787,25 @@ sources: `docs/audits/admin-redesign-2026-11.md`; owner guide:
   dots never spin forever.
 - Not done: streaming replies (needs the Worker's response streaming tested on
   Cloudflare first). Live Gemini latency wasn't measured from the container.
+
+## Fit every screen (2026-11-02, owner: "it looks small … fit perfectly on any screen … whole website too")
+- **Chat panel** (`assets/js/support-chat.js`): phones full screen as before;
+  ≥520px it is `min(100vw−32, max(420px, 30vw), 520px)` wide and
+  `min(100dvh−32, max(660px, 80dvh), 900px)` tall (was a fixed 400×660 card;
+  520×864 on 1920×1080). ≥1440×820 the type and controls step up; that block
+  is the LAST rule in the CSS string so it beats the base rules.
+- **Large screens** (chrome.css §16): `--maxw` 1160 → 1320px from 1600px and
+  1480px from 2000px, with larger h1/h2/h3/lead (and 17px body from 2000).
+  Under 1600 nothing changes. CSS `zoom` was tried and rejected: it scales
+  `100vh`, so drawers and the chat panel ran past the screen. Blog posts keep
+  their 720px reading column on purpose.
+- Homepage hero: "Fix it." is `white-space:nowrap` (the wider column split
+  it as "…Fix / it."), the H1 grows to 84–108px from 1600px, and the
+  sideways "50ml · ~250 sprays" figcaption is hidden under 960px (it ran over
+  the sub line at 360px; the price line says the same).
+- `test/screen-fit.test.mjs` pins it.
+- **Cloudflare "Workers Builds" can fail transiently** (2026-11-02: the
+  preview and the production build of #571 failed ~70 s in; the identical
+  tree built fine 15 minutes later). If a build fails and `npm run build` +
+  `npx wrangler deploy --dry-run` pass locally, push the same tree again
+  before hunting for a cause; production only rebuilds on a new push to main.
