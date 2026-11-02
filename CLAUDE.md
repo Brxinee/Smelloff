@@ -2554,3 +2554,13 @@ met every forms rule (autocomplete, inputmode, labels, inline errors, focus). Fi
   edge no longer hides the strip. There is always one tappable buy route on screen.
 - Homepage product-block `<picture>` `sizes` said 50vw for a ~81vw image.
 - `test/ui-ux-pass.test.mjs` pins all of it (the font test fails on the #554 values).
+
+## Hero bottle: new cutout, bigger bottle, smaller disc (2026-11-02, owner: "make the bottle bigger and the green circle smaller and use this cut out")
+`assets/odorstrike-bottle-cutout-v2.webp` (owner's transparent cutout, cropped to the
+bottle, 230×900, 32KB; new name because `/assets` is cached immutable) is the hero
+image and its preload. Disc (`.hero-visual::before`) `clamp(150px,36vw,240px)` (was
+200–320). Bottle: phones `clamp(200px,54vw,256px)` (211 at 390, was 183), desktop
+`clamp(400px,40vw,520px)` (512 at 1280, was 486), each with a negative
+`margin-block` (−14 / −17px) so the layout box and the buy button don't move: Buy
+665–716 at 390×844, 671–722 at 1280×800 (consent bar 736 / 727). The old
+`odorstrike-bottle-cutout.webp` stays for the build's 160/240 variants and emails.
