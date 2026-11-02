@@ -9,7 +9,7 @@ file so the footer/related links exist as real `<a>` tags in the initial HTML re
 (critical for SEO/crawlability). JS only enhances (progress bar, year, service worker).
 
 ## Files here
-- `nav.html` — canonical sticky nav (wordmark + `BUY ₹229` pill).
+- `nav.html` — canonical sticky nav (wordmark + `BUY` pill).
 - `end-of-post.html` — canonical end-of-post stack: Product CTA → optional Read Next → 3-card Related Guides grid.
 - `footer.html` — canonical multi-column footer (Brand / Shop / Guides / Company + bottom bar).
 

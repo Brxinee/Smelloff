@@ -215,7 +215,7 @@ export const POSTS = [
     slug: 'odorstrike-review-30-day-india-test',
     kicker: '30-day India test',
     top: '30 days.',
-    hi: 'Worth ₹229?',
+    hi: 'Worth it?',
     photo: 278644495,
     focal: '50% 22%',
     alt: 'A man stands with his arms folded in a striped t-shirt after a 30-day test of ODORSTRIKE in India',
@@ -380,7 +380,7 @@ export const POSTS = [
   {
     slug: 'is-fabric-odor-spray-worth-it-india',
     kicker: 'Worth it?',
-    top: '₹229 a bottle.',
+    top: 'A pocket spray.',
     hi: 'Worth it?',
     pexels: 6901511,
     focal: '50% 50%',

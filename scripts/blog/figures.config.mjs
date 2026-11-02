@@ -12,7 +12,8 @@
  * Rules:
  *  - Diagram copy restates the post. Product facts only from
  *    config/product.json: 50ml, about 250 sprays / 100 refreshes, dries in
- *    15–30 s, up to 8 hours on fabric, ₹229 / 2 for ₹419, fabric only.
+ *    15–30 s, up to 8 hours on fabric, fabric only. No prices: the price
+ *    lives only on / and /odorstrike (owner, 2026-11-02).
  *    test/claims-consistency.test.mjs scans the stamped HTML.
  *  - Photos follow the clothing-only rule: no spray on skin, no shoes,
  *    helmets, bags or gym gear in frame. Pexels licence: free commercial
@@ -333,7 +334,7 @@ export const FIGURES = {
     dia('which-everyday-gifts-work-under-500', 'bars', {
       kicker: 'Typical spend', title: 'Everyday gifts under ₹500',
       items: [
-        ['Pocket fabric odor spray (2 for ₹419)', 229, '₹229', true],
+        ['Pocket fabric odor spray', 500, 'Under ₹500', true],
         ['Cotton handkerchief set', 400, '₹200–400'],
         ['Pocket notebook and a good pen', 450, '₹200–450'],
         ['Insulated steel water bottle', 500, '₹300–500'],
@@ -492,10 +493,10 @@ export const FIGURES = {
     dia('what-does-a-fabric-odor-spray-cost-per-use', 'stats', {
       kicker: 'From the bottle', title: 'What one bottle works out to',
       items: [
-        ['₹229', 'for 50ml (2 for ₹419)'],
+        ['50ml', 'pocket bottle'],
         ['~250', 'sprays per bottle'],
-        ['~₹2.29', 'per refresh of one garment'],
-        ['~₹0.92', 'per spray'],
+        ['~100', 'refreshes of one garment'],
+        ['2–3', 'sprays per zone'],
       ],
       note: 'A refresh is the zones that hold smell, not a soaked garment: about 2–3 sprays per zone.',
     }),
@@ -946,9 +947,9 @@ export const FIGURES = {
       'A hand holds the ODORSTRIKE 50ml bottle against a black background',
       'Sold direct at smelloff.in, shipped from Hyderabad.', '50% 50%'),
     dia('shipping-across-india', 'stats', {
-      kicker: 'Buying direct', title: 'Price, shipping and returns at a glance',
+      kicker: 'Buying direct', title: 'Shipping and returns at a glance',
       items: [
-        ['₹229', '50ml bottle · 2 for ₹419'],
+        ['1, 2, 5', 'bottles per pack; bigger packs cost less per bottle'],
         ['Free', 'shipping on prepaid orders; Cash on Delivery available'],
         ['48 h', 'dispatch from Hyderabad after confirmation'],
         ['7 days', 'to return from delivery'],
@@ -1104,7 +1105,7 @@ export const FIGURES = {
         ['50ml', 'pocket size'],
         ['~250', 'sprays per bottle'],
         ['15–30 s', 'to dry on fabric'],
-        ['₹229', 'per bottle'],
+        ['~100', 'refreshes per bottle'],
       ],
     }),
   ],

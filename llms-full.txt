@@ -16,8 +16,8 @@ ODORSTRIKE is a clothing deodorant made by Smelloff in Hyderabad, India: a 50ml 
 - Category: Clothing Deodorant (Fabric Odor Spray for Clothes)
 - Size: 50ml / 1.69 fl oz
 - SKU: OS-001-50ML · MPN: SMLF-ODST-50
-- Price: ₹229 prepaid · MRP ₹499 (54% off)
-- Packs: 2 for ₹419 (save ₹39) · 5 for ₹899 (save ₹246)
+- Price: shown on https://smelloff.in/odorstrike
+- Packs: 1, 2 or 5 bottles; bigger packs cost less per bottle
 - Cash on Delivery: available across India; the COD total is shown at checkout
 - Quantity per order: 1–10
 - About 250 sprays per bottle (about 100 refreshes)
@@ -160,7 +160,7 @@ ODORSTRIKE is a clothing deodorant made by Smelloff in Hyderabad, India: a 50ml 
 - Why Deodorant Stops Working After 3 Hours (and What Helps): https://smelloff.in/blog/why-deodorant-stops-working-after-3-hours
 - Why Do Sun-Dried Clothes Smell So Good?: https://smelloff.in/blog/why-do-sun-dried-clothes-smell-good
 - Why Does My Sweat Smell Like Onions, Vinegar or Ammonia?: https://smelloff.in/blog/why-does-sweat-smell-like-onions-vinegar-ammonia
-- Why I Built ODORSTRIKE — India's ₹229 Pocket Fabric Spray: https://smelloff.in/blog/why-i-built-odorstrike
+- Why I Built ODORSTRIKE, India's Pocket Fabric Spray: https://smelloff.in/blog/why-i-built-odorstrike
 - Does Polyester Hold Odor Longer Than Cotton?: https://smelloff.in/blog/why-polyester-holds-odor-longer-than-cotton
 - Why Collar and Armpits Still Smell After Washing: https://smelloff.in/blog/why-shirt-zones-smell-after-washing
 - Why Sweat Smells Stronger on Some Shirts Than Others: https://smelloff.in/blog/why-sweat-smells-stronger-on-some-shirts

@@ -2611,3 +2611,25 @@ appears). Traffic is too small for A/B tests, so the store now asks.
   ₹3 a refresh"). Never a single "₹2.29 a refresh" on the PDP (the PDP specs say
   83–125 refreshes; `odorstrike-pdp-claims.test.mjs` forbids it).
 - `test/conversion-pass.test.mjs` pins both.
+
+## Prices only on the homepage and product page (2026-11-02, owner: "don't reveal the price everywhere except the homepage and product page … people need product")
+Supersedes every older note that puts a price on another surface (blog end cards
+"Buy now — ₹229", the inner-page closing card's price row, the menu card, gift posts
+quoting the pack ladder, per-spray/per-refresh rupee maths, llms "Price:" lines, the
+refund policy's per-bottle amounts, the "Worth it?" thumbnail).
+- **`/` and `/odorstrike` (checkout included) are the only pages with a price.**
+  Everywhere else the product is named with its facts and perks (50ml, ~250 sprays /
+  ~100 refreshes, free shipping on prepaid, COD available, 7-day returns) and buttons
+  read "Buy now". Packs are described as "packs of 2 and 5 cost less per bottle";
+  cost talk is "a few rupees a refresh" pointing to the product page.
+- Kept on purpose: `merchant-feed.xml`, `products.json` and the PDP Product schema
+  (Google Shopping needs the price and lands on the PDP), order emails and
+  `/track-order` (the buyer's own amounts), and gift-budget phrases like "under ₹500"
+  (a budget, not our price).
+- Generators changed with it: `apply-chrome.mjs` (menu card, closing card),
+  `figures.config.mjs` (no ₹ in diagrams), `build-llms.mjs` ("Price: shown on
+  /odorstrike"), share templates, the worth-it thumbnail (`V` = 6). Support chat:
+  the PRICES rule says a price or shows a pack card only when asked about price,
+  packs or buying, or on `/` and `/odorstrike`. `reviews-system.js?v=7`.
+- `test/price-placement.test.mjs` fails on any product/pack/MRP/per-use amount in a
+  tracked page, feed, llms or chat-guide file other than the allowed ones.

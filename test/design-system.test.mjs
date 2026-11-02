@@ -42,12 +42,14 @@ test('policy pages: plain summary first, and "On this page" matches the headings
   for (const f of ['returns.html', 'cancellation.html']) assert.doesNotMatch(read(f), /₹\s*(89|318)\b/);
 });
 
-test('the closing product card is generated, priced from config, and only where it belongs', () => {
+test('the closing product card is generated, shows no price, and only where it belongs', () => {
   for (const f of ENDCAP) {
     const html = read(f);
     const cap = html.match(/<!-- SF-CHROME:ENDCAP[\s\S]*?<!-- \/SF-CHROME:ENDCAP -->/);
     assert.ok(cap, `${f}: closing card missing (apply-chrome endcap:true)`);
-    assert.ok(cap[0].includes(`Buy now — ₹${product.price}`) && cap[0].includes(`M.R.P. ₹${product.mrp}`), `${f}: card price must come from config`);
+    // Prices only on / and /odorstrike (owner, 2026-11-02).
+    assert.ok(cap[0].includes('>Buy now</a>'), `${f}: card buy button`);
+    assert.doesNotMatch(cap[0], /₹/, `${f}: no price on the closing card`);
     assert.doesNotMatch(cap[0], /₹\s*(89|318)\b/, `${f}: no COD amount outside checkout/policies`);
     assert.ok(html.indexOf('SF-CHROME:ENDCAP') < html.indexOf('SF-CHROME:FOOTER'), `${f}: card sits above the footer`);
   }
@@ -59,8 +61,8 @@ test('the closing product card is generated, priced from config, and only where 
 test('buttons say the same thing the same way across the site', () => {
   for (const f of fs.readdirSync('blog').filter((x) => x.endsWith('.html'))) {
     const html = read(`blog/${f}`);
-    assert.doesNotMatch(html, />\s*BUY (NOW|ODORSTRIKE)\b/, `blog/${f}: buttons are sentence case ("Buy now — ₹${product.price}")`);
-    for (const m of html.matchAll(/class="buy-btn"[^>]*>([^<]*)</g)) assert.equal(m[1], `Buy now — ₹${product.price}`, `blog/${f}`);
+    assert.doesNotMatch(html, />\s*BUY (NOW|ODORSTRIKE)\b/, `blog/${f}: buttons are sentence case ("Buy now")`);
+    for (const m of html.matchAll(/class="buy-btn"[^>]*>([^<]*)</g)) assert.equal(m[1], 'Buy now', `blog/${f}`);
   }
   assert.ok(!read('faq.html').includes('class="faq-cta"'), 'FAQ ends with the shared card, not its own lime bar');
   assert.ok(!read('reviews.html').includes('class="buy-band"'), 'Reviews ends with the shared card');
