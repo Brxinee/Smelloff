@@ -205,7 +205,7 @@ test('index.html homepage product block: canonical price, prepaid shipping, retu
   const html = readFileSync('index.html', 'utf8');
   const cfg = JSON.parse(readFileSync('config/product.json', 'utf8')).product;
   const prod = html.slice(html.indexOf('id="odorstrike-featured"'), html.indexOf('</section>', html.indexOf('id="odorstrike-featured"')));
-  assert.ok(prod.includes(`<span class="prod-price">₹${cfg.price}</span>`) && prod.includes(`${cfg.discountPercent}% OFF`));
+  assert.ok(new RegExp(`<span class="prod-price"[^>]*>₹${cfg.price}</span>`).test(prod) && prod.includes(`${cfg.discountPercent}% OFF`));
   assert.ok(prod.includes('FREE SHIPPING ON PREPAID') && prod.includes('7-DAY RETURNS'));
   assert.ok(prod.includes('up to 8 hours of fabric odor protection'), 'Protection claim must stay the locked one');
   assert.ok(prod.includes('Dries clear in 15–30s · No stiff residue') && !/zero residue/i.test(html), 'no absolute residue claim');
@@ -532,7 +532,7 @@ test('pages give a route to the product page that does not open checkout', () =>
   const main = home.slice(home.indexOf('<main'), home.indexOf('</main>'));
   assert.ok(/href="\/odorstrike"/.test(main), 'homepage links the product page without opening checkout');
   const hero = home.slice(home.indexOf('<section class="hero"'), home.indexOf('</section>', home.indexOf('<section class="hero"')));
-  assert.equal((hero.match(/class="btn hero-btn-primary"/g) || []).length, 1, 'one filled (primary) button in the hero');
+  assert.equal((hero.match(/class="cl-btn"/g) || []).length, 1, 'one filled (primary) button in the hero');
   const pdp = readFileSync('odorstrike.html', 'utf8');
   assert.equal(/\.pay-modes'\)/.test(readFileSync('assets/js/chrome.js', 'utf8')), false, 'chrome.js must not overwrite the PDP COD disclosure');
   for (const id of new Set([...pdp.matchAll(/<use href="#(i-[a-z-]+)"/g)].map(m => m[1]))) assert.ok(pdp.includes(`<symbol id="${id}"`), `icon ${id} must exist in the sprite`);
