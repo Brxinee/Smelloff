@@ -464,14 +464,21 @@
       if (m.role === 'model' && m.cards) o.cards = m.cards.map(cardKey);
       return o;
     });
+    // Never spin forever: the server gives up on the models after ~16 s, so
+    // 25 s means the network itself is stuck. A slow answer says so.
+    var ctl = window.AbortController ? new AbortController() : null;
+    var giveUp = setTimeout(function () { if (ctl) ctl.abort(); }, 25000);
+    var slow = setTimeout(function () { var em = tb.querySelector('em'); if (em) em.textContent = 'Still on it…'; }, 5000);
     fetch('/api/support-chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: payload, page: { path: path, title: document.title.slice(0, 120) } })
+      body: JSON.stringify({ messages: payload, page: { path: path, title: document.title.slice(0, 120) } }),
+      signal: ctl ? ctl.signal : undefined
     })
       .then(function (r) { return r.json().catch(function () { return {}; }); })
       .catch(function () { return {}; })
       .then(function (j) {
+        clearTimeout(giveUp); clearTimeout(slow);
         typing.remove();
         var msg = {
           role: 'model',
