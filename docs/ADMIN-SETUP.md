@@ -161,6 +161,34 @@ host serves only the dashboard.
   they're negative.
 
 
+### The app and order alerts (ring on every new order)
+
+**Install it (Android, 1 minute).** Open **smelloff.in/admin** in **Chrome**,
+sign in, then Chrome menu (⋮) → **Install app** (or "Add to Home screen" →
+Install). Chrome builds a real Android app for it: its own icon in the app
+drawer, opens full screen, and its own notification settings.
+
+**Turn on alerts.** In the app: Home → "Ring this phone for every new order" →
+**Turn on** (or Settings → Order alerts). Allow notifications. A test alert
+arrives straight away. Do this on every phone that should ring.
+
+- **App closed or phone locked:** a notification with Android's notification
+  sound and a long vibration, which stays until you tap it. Tap → that order.
+- **App open:** a full-screen "New order" card that rings out loud every 2
+  seconds until you tap **Got it** (Settings can turn the in-app ring off).
+- **Choose the ringtone:** long-press the app icon → App info → Notifications
+  → Sound.
+- Every path that emails you about a new order also rings (a COD order when
+  it's placed, a prepaid order when the payment confirms), once per order.
+
+**A separate .apk file** (to share or sideload) can be made from the installed
+web app at <https://www.pwabuilder.com>: enter `https://smelloff.in/admin` →
+Package for stores → **Android** → Download. To make it open full screen
+without a browser bar, send the `assetlinks.json` from that download so it can
+be served at `smelloff.in/.well-known/assetlinks.json` (the header rule for that
+path is already in `config/routing.json`). Keep the signing key from the
+download: app updates must be signed with the same key.
+
 ### Rotating the password / revoking access
 Change the `ADMIN_PASSWORD` Worker secret (it takes effect on the next request). Because sessions are signed from
 it (unless you set a separate `ADMIN_SESSION_SECRET`), every existing session is

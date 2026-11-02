@@ -112,6 +112,17 @@ export async function sendCustomerPaymentConfirmation(order, { route } = {}) {
 }
 
 export async function sendAdminNewOrderEmail(order, { route } = {}) {
+  // The owner's phone rings too (api/_order-alerts.js), whatever the email does.
+  const ring = import('./_order-alerts.js').then((m) => m.alertNewOrder(order)).catch((err) => {
+    console.error('[order-alert]', order?.order_code, err?.message || err);
+    return null;
+  });
+  const email = await sendAdminNewOrderEmailOnly(order, { route });
+  await ring;
+  return email;
+}
+
+async function sendAdminNewOrderEmailOnly(order, { route } = {}) {
   const ctx = orderEmailContext(order);
   const sender = getSenderConfig();
   if (!isValidEmail(sender.adminNotify)) {

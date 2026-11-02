@@ -2730,3 +2730,38 @@ sources: `docs/audits/admin-redesign-2026-11.md`; owner guide:
   (`GOOGLE_SERVICE_ACCOUNT_JSON` unset): it shows "Not connected" with the
   setup steps inline.
 
+## Admin app + order alerts that ring (2026-11-02, owner: "make it apk … if I get new order it should notify me and ring")
+- **The dashboard is an installable app** (`admin/manifest.webmanifest`, scope
+  and id `/admin`, icons `admin/icon-{192,512}.png` from the brand icon, status
+  badge `admin/badge-96.png`). Chrome → Install app makes a WebAPK (a real
+  Android app). Its own worker **`/admin-sw.js`** (repo root, scope `/admin`,
+  in prepare-public's file list, `no-cache`) only handles push and an offline
+  notice; it caches nothing. The shop's `sw.js` is untouched.
+- **Web Push without a library or secret:** `api/_push.js` = VAPID (RFC 8292,
+  ES256 JWT) + RFC 8291 aes128gcm encryption on WebCrypto. Verified against the
+  reference `http_ece` decrypt and a JWT signature check; `test/order-alerts`
+  decrypts it the way a browser does. The VAPID key pair is made on first use
+  and kept in `admin_settings` (key `vapid`); devices in
+  `admin_push_subscriptions` (both tables service-role only, migration
+  `20261102_admin_push.sql`, applied to production the same day). 404/410 from
+  a push service deletes that device.
+- **`alertNewOrder()` (`api/_order-alerts.js`) runs inside
+  `sendAdminNewOrderEmail`**, so every path that emails the owner also rings
+  (COD on save, prepaid on confirmation via webhook / verify-payment /
+  payment-status / admin verify). One claim row per order
+  (`admin_settings` `order-alert:<code>`) = one ring per order. Best-effort:
+  never blocks the email or the order.
+- Notification: `requireInteraction`, long `vibrate`, `renotify`, tag = order
+  code, tap → `/admin#orders/<code>`. In the open app, the worker posts the
+  alert and the page rings (Web Audio, two-note burst every 2.2 s, vibration,
+  90 s max) on a full-screen card until "Got it"; the 60 s pulse rings the same
+  way when push is off; `ring.seen` stops a double ring. Custom ringtone =
+  Android's per-app notification sound setting.
+- Admin actions: `pushKey`, `pushSubscribe`, `pushUnsubscribe`, `pushDevices`,
+  `pushRemove`, `pushTest`. Settings → Order alerts card; Home banner until on.
+- **No .apk was built here**: downloading and running JDK 17 + the Android SDK
+  (for Bubblewrap) was blocked by the session's permission rules. Routes:
+  Chrome's Install app (WebAPK), or PWABuilder → Android package; its
+  `assetlinks.json` then goes at `/.well-known/assetlinks.json` (header rule
+  already in routing.json; add the file to prepare-public's list with it).
+

@@ -32,6 +32,7 @@ const ROOT_FILES = [
   'merchant-feed.xml',
   'manifest.json',
   'sw.js',
+  'admin-sw.js',
   'favicon.ico',
   'favicon-32.png',
   'apple-touch-icon.png',

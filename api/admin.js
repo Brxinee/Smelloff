@@ -36,6 +36,10 @@
  *   systemCheck                    → live read-only checks of each service
  *   sendTestEmail {to?}            → the diagnostic email (default: the owner)
  *   emailPreview {type}            → a customer email rendered with sample data
+ *   pushKey                        → the store's public VAPID key (made on first use)
+ *   pushSubscribe {subscription, label} · pushUnsubscribe {endpoint}
+ *   pushDevices · pushRemove {id}  → phones that ring on a new order
+ *   pushTest {endpoint?}           → ring one device, or all of them
  *
  * Every order the API returns carries `view`: the customer name, city, bottles,
  * the fulfilment stage, the payment state, the next status and whether it is a
@@ -751,6 +755,41 @@ const actions = {
     const ctx = orderEmailContext(sample);
     const r = renderTemplate(body.type, { ...ctx, city: 'Pune', retryUrl: 'https://smelloff.in/odorstrike?buy=1&qty=2', reviewUrl: 'https://smelloff.in/reviews', method: 'original payment method', reason: '' });
     return { subject: r.subject, html: r.html };
+  },
+  async pushKey() {
+    const alerts = await import('./_order-alerts.js');
+    return { publicKey: (await alerts.getVapidKeys()).publicKey };
+  },
+  async pushSubscribe(body) {
+    const alerts = await import('./_order-alerts.js');
+    const row = await alerts.saveSubscription(body.subscription, clean(body.label, 80));
+    return { device: { id: row?.id, label: row?.label } };
+  },
+  async pushUnsubscribe(body) {
+    const endpoint = String(body.endpoint || '');
+    if (!/^https:\/\//.test(endpoint)) throw new HttpError(400, 'Invalid device.');
+    await (await import('./_order-alerts.js')).removeSubscription(endpoint);
+    return { ok: true };
+  },
+  async pushDevices() {
+    const rows = await (await import('./_order-alerts.js')).listDevices();
+    return { devices: rows.map((d) => ({ id: d.id, label: d.label, created_at: d.created_at, last_sent_at: d.last_sent_at, failures: d.failures, service: new URL(d.endpoint).host, endpoint: d.endpoint })) };
+  },
+  async pushRemove(body) {
+    await (await import('./_order-alerts.js')).removeDevice(idOf(body.id, 'device'));
+    return { ok: true };
+  },
+  async pushTest(body, req) {
+    if (!checkRateLimit(`admin-pushtest:${clientIp(req)}`, 10, 10 * 60 * 1000)) throw new HttpError(429, 'Rang a lot just now. Wait a few minutes.');
+    const alerts = await import('./_order-alerts.js');
+    let devices;
+    if (body.endpoint) {
+      devices = (await db(`admin_push_subscriptions?select=id,endpoint,p256dh,auth,failures&endpoint=eq.${encodeURIComponent(String(body.endpoint))}`));
+      if (!devices.length) throw new HttpError(404, 'This phone is not signed up for alerts yet.');
+    }
+    const r = await alerts.pushToAdmins({ kind: 'test', title: 'Test alert · Smelloff', body: 'This is how a new order will ring. Tap to open the dashboard.', tag: `test-${Date.now()}`, url: '/admin#orders' }, { devices });
+    if (!r.devices) throw new HttpError(404, 'No phone is signed up for alerts yet.');
+    return r;
   },
   async syncSheets(body, req) {
     if (!checkRateLimit(`admin-sheets:${clientIp(req)}`, 10, 10 * 60 * 1000)) throw new HttpError(429, 'Synced recently. Wait a few minutes.');
