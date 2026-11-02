@@ -2633,3 +2633,13 @@ refund policy's per-bottle amounts, the "Worth it?" thumbnail).
   packs or buying, or on `/` and `/odorstrike`. `reviews-system.js?v=7`.
 - `test/price-placement.test.mjs` fails on any product/pack/MRP/per-use amount in a
   tracked page, feed, llms or chat-guide file other than the allowed ones.
+- **Where the price is needed, it stays** (owner, same day: "if it's mandatory in
+  some blogs or anywhere keep it"). Legally that is the product page and checkout
+  (total price + MRP before purchase), which already show it. In content: posts whose
+  title or a heading/FAQ question asks about the price answer it, in the body only,
+  never in `<head>` (search snippet, share text), the menu or end card:
+  `is-fabric-odor-spray-worth-it-india` ("Cost per Use", cost table + diagram),
+  `clothes-perfume-spray-vs-fabric-odor-spray` ("Is a fabric odor spray more
+  expensive?", "What does ODORSTRIKE cost?"), `gifts-for-men-under-500-india`
+  (FAQ "How much does ODORSTRIKE cost?") and `why-i-built-odorstrike` ("Why this
+  price?" + its FAQ). Add a post there only with the same reason; the test lists them.
