@@ -2877,3 +2877,56 @@ code kept the lock in place, now fixed in `api/_shiprocket.js`:
 - Courier auto-assignment for "External API" orders is on in the Shiprocket
   panel (owner, 2026-11-02), so booked orders get a courier + AWB there; the
   site's code never assigns couriers itself.
+
+## Taste skill (2026-11-02, owner: "install … taste skill")
+`.claude/skills/taste-skill/` is Leonxlnx/taste-skill v2.1.5 (MIT, commit
+`12af471`), copied unchanged (plus its LICENSE). It is art-direction help for
+pages and app screens: `draw.mjs` deals design directions, `inspect.mjs`
+screenshots a page in Chromium and checks its house rules, `assets.mjs` finds
+open-licence pictures (Openverse, Wikimedia, Met, AIC, archive.org, NASA).
+- **The owner's design rules in this file win over the skill's.** The Sep 19
+  homepage, the type, the palette, the clothing-only photo rule and the
+  "no cutouts" rule are decided; use the skill to review or polish within
+  them, never to re-deal a direction for `/` or `/odorstrike` unless the
+  owner asks for a redesign. Use `--keep palette,type` when you draw.
+- Working files go to `.taste-skill/` (gitignored); `draw.mjs` also keeps a
+  history in `~/.taste-skill/`.
+- In the cloud container set `CHROME_PATH=/opt/pw-browsers/chromium` (the
+  skill looks in `/usr/bin` only). Node 22+.
+- Update: re-copy `skills/taste-skill` from upstream; don't hand-edit it.
+
+## Homepage design pass with five skills (2026-11-02, owner: "improve my Smelloff design … remove or edit the homepage sections … deeply research")
+Write-up with sources: `docs/audits/homepage-design-pass-2026-11-02.md`. The
+Sep 19 look stays; structure, copy, legibility and motion changed.
+- **Order:** hero → `#remembers` → **`#in-use`** (new: four owner photos on
+  real clothes, "Spray the shirt, not you.", link to /odorstrike) →
+  `#reviews` → `#odorstrike-featured` → `#how-it-works` ("What's in the
+  bottle", now before the founders) → `#founders` ("Built for 41°C days") →
+  `#faq` → `#final`. Section reach includes `in-use`.
+- **Gone:** the ticker strip and the Hinglish marquee (endless motion, no
+  pause: WCAG 2.2.2; the line "Smell Khatam. Confidence Qaayam." stays still),
+  eyebrow labels on every section but the hero, the offer box's third set of
+  fabric-only badges and its "Made in Hyderabad · Dries Clear" line, the 01–04
+  numbers on the four layers.
+- **One name for the buy action:** "Fix my shirt" on every homepage button and
+  the phone bar; secondary links read "View product details".
+- Labels ≥12px (`#sf-main :is(…){font-size:12px !important}`),
+  `color-scheme:dark`, `touch-action:manipulation`, `scroll-margin-top` on
+  sections. Buy button unchanged (665–716 at 390×844, 669–720 at 1280×800).
+- Not on the homepage on purpose: `pdp-size-in-hand` (iPhone logo) and
+  `pdp-jacket-lining` (a bag on the hook).
+- `test/homepage-design-pass.test.mjs` pins it.
+- **Skills added (`.claude/skills/`):** `web-design-guidelines` (Vercel, MIT;
+  `command.md` is a local copy of the rules it would fetch),
+  `frontend-design` (Anthropic, Apache-2.0), `playwright-cli` (Microsoft,
+  Apache-2.0; needs `npm i -g @playwright/cli` on the owner's machine; in the
+  cloud container use the preinstalled Playwright library instead, the CLI
+  pins an alpha Playwright with its own browsers). Taste skill's inspector
+  needs `--no-sandbox` here: point `CHROME_PATH` at a two-line wrapper script
+  that runs `/opt/pw-browsers/chromium --no-sandbox "$@"`.
+- Where a skill's house style contradicts an owner decision, the owner wins:
+  mono labels, three faces, lime on black and the cream text are the brand.
+- **Owner: don't base design decisions on behaviour data** ("I have less,
+  most of it mine"). First-party `events` / `page_views` are mostly the
+  owner's own visits; use published research and the skill audits, and don't
+  cite click or scroll counts as evidence (older notes that do are history).

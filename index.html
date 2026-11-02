@@ -790,23 +790,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   }
   .product-visual img{display:block;width:100%;height:auto}
   .product-info{display:flex;flex-direction:column}
-  .prod-badge-row{
-    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-    margin-bottom:12px;
-  }
-  .prod-badge{
-    font-family:var(--mono);font-size:10px;font-weight:700;
-    letter-spacing:.14em;text-transform:uppercase;
-    color:var(--ink);background:var(--acid);
-    padding:3px 7px;border-radius:2px;
-  }
-  .prod-badge-dim{
-    font-family:var(--mono);font-size:9.5px;font-weight:700;
-    letter-spacing:.12em;text-transform:uppercase;
-    color:var(--text);background:var(--surface-2);
-    border:1px solid var(--rule-strong);
-    padding:2px 6px;border-radius:2px;
-  }
   .product-info #productTitle{
     font-family:var(--display);font-weight:900;
     font-size:clamp(32px,5vw,46px);line-height:1.06;
@@ -872,12 +855,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     display:flex;gap:12px;flex-wrap:wrap;align-items:center;
     margin-bottom:12px;
   }
-  .prod-trust-sub{
-    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-    font-family:var(--mono);font-size:11px;letter-spacing:.08em;
-    color:var(--muted);
-  }
-  .pts-dot{color:var(--rule-strong)}
   @media(min-width:768px){
     .product-grid{grid-template-columns:5fr 6fr;gap:44px;align-items:start}
     .product-visual{max-width:none;margin:0}
@@ -1252,47 +1229,11 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   /* uses transform/opacity only, so it never shifts layout (CLS stays 0). */
   /* ===================================================================== */
 
-  /* Technical editorial ticker strip (sits under the hero) */
-  .ticker{
-    background:var(--surface);color:var(--text);
-    border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);
-    overflow:hidden;white-space:nowrap;
-  }
-  .ticker-track{
-    display:inline-block;
-    font-family:var(--display);font-weight:700;
-    font-size:clamp(16px,2.2vw,22px);letter-spacing:-.01em;
-    padding:12px 0;
-  }
-  .ticker-track span{padding:0 24px}
-  .ticker-track .dot{color:var(--acid);opacity:.8}
-
-  /* Hinglish band as a moving marquee (static, centred fallback below) */
-  .band-marquee{display:none}
+  /* The ticker strip and the moving Hinglish marquee were removed on
+     2026-11-02 (endless motion with no pause control). The band is static. */
   .band .band-static{margin:0}
 
   @media (prefers-reduced-motion: no-preference){
-    .ticker-track{animation:ticker 28s linear infinite;will-change:transform}
-    @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-    /* Keep the static line in the accessibility tree (screen readers still
-       get the phrase) but hide it visually; the marquee is aria-hidden. */
-    .band .band-static{
-      position:absolute;width:1px;height:1px;padding:0;margin:-1px;
-      overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
-    }
-    .band-marquee{
-      display:block;overflow:hidden;white-space:nowrap;
-    }
-    .bm-track{
-      display:inline-block;
-      font-family:var(--display);font-weight:900;
-      font-size:clamp(26px,5.5vw,48px);line-height:1.1;letter-spacing:-.01em;
-      color:var(--text);
-      animation:ticker 30s linear infinite;will-change:transform;
-    }
-    .bm-track span{padding:0 32px}
-
     /* Scroll-reveal — only when JS is on AND motion is allowed. Never on the
        hero (LCP), so the headline paints immediately. Transform-only (no
        opacity fade): the text stays fully opaque, so contrast is always valid
@@ -1433,6 +1374,44 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .close-trust span{color:var(--rule-strong);margin:0 6px}
   @media(max-width:520px){.close-ctas .btn{width:100%}}
   .prod-per-use{margin:6px 0 0;font-size:14px;line-height:1.4;color:var(--text-2)}
+
+  /* ============ Homepage pass 2 (2026-11-02) ============
+     Audit with taste-skill's inspector, Vercel's Web Interface Guidelines and
+     ui-ux-pro-max; write-up in docs/audits/homepage-design-pass-2026-11-02.md. */
+  :root{color-scheme:dark}
+  #sf-main :is(a,button,summary,input),#homeMobileBar a{touch-action:manipulation}
+  #sf-main section[id]{scroll-margin-top:var(--sticky-top,112px)}
+
+  /* In use: four real photos, 2×2 on phones, one row from 960px. */
+  .inuse-grid{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(min-width:960px){.inuse-grid{grid-template-columns:repeat(4,1fr);gap:18px}}
+  .inuse-item{margin:0;min-width:0}
+  .inuse .ph-pic{display:block}
+  .inuse .ph-photo{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r-md);background:var(--surface)}
+  .inuse .inuse-spray{object-position:28% 50%}
+  .inuse-item p{margin:10px 0 0;font-size:15px;line-height:1.4;color:var(--text-2)}
+  .inuse-link{display:inline-block;margin-top:22px;padding:10px 0;color:var(--acid);font-weight:600;text-decoration:underline;text-underline-offset:4px}
+  .inuse-link:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+
+  /* What's in the bottle: tighter cards on phones. */
+  @media(max-width:639px){
+    #how-it-works .science-grid{margin-top:28px;gap:10px}
+    #how-it-works .science-card{padding:18px 18px 20px}
+  }
+
+  /* Legibility floor: nothing meant to be read is set below 12px (mono
+     labels) — 44 text blocks were 9.5–11.5px. */
+  #sf-main :is(.hero-clarify,.hero-trust-mini,.hero-visual figcaption,.rm-state,.rm-axis,.ps-label,.prod-discount,.prod-price-meta,.sc-role,.science-inci-summary,.inci-row .i-pct,.inci-row .i-role,.voice .v-tag,.voice .v-situation,.founder-identity .f-role,.prod-pack span,.prod-pack small,.close-trust){font-size:12px !important}
+  #homeMobileBar .mb-label{font-size:12px}
+
+  /* No one-word last lines on the new headings and captions. */
+  #sf-main :is(#remembersTitle,#inuseTitle,#voicesTitle,#proofTitle,#founderTitle){text-wrap:balance}
+  #sf-main .inuse-item p{text-wrap:pretty}
+  /* The offer's trust line wraps on phones: drop the dots there, keep the gap. */
+  @media(max-width:519px){
+    #odorstrike-featured .prod-price-meta{column-gap:14px;row-gap:6px}
+    #odorstrike-featured .prod-price-meta .prod-dot{display:none}
+  }
 </style>
 <style id="a11y-utility-css">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
@@ -1503,7 +1482,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 
 <div class="mobile-bar" id="homeMobileBar" aria-hidden="true">
   <span class="mb-label">ODORSTRIKE · ₹229<br>Cash on Delivery</span>
-  <a class="mb-btn" href="/odorstrike?buy=1" tabindex="-1">GET ODORSTRIKE</a>
+  <a class="mb-btn" href="/odorstrike?buy=1" tabindex="-1">FIX MY SHIRT</a>
 </div>
 
 <main id="sf-main" tabindex="-1">
@@ -1577,12 +1556,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     </div>
   </section>
 
-  <!-- Acid ticker strip (decorative brand phrases; hidden from AT) -->
-  <div class="ticker" aria-hidden="true">
-    <div class="ticker-track">
-      <span>Fresh On The Go.</span><span class="dot">/</span><span>Built For Fabric.</span><span class="dot">/</span><span>Shirts · Hoodies · Jackets · Jeans</span><span class="dot">/</span><span>Fresh On The Go.</span><span class="dot">/</span><span>Built For Fabric.</span><span class="dot">/</span><span>Shirts · Hoodies · Jackets · Jeans</span><span class="dot">/</span>
-    </div>
-  </div>
+  <!-- 2026-11-02: the moving ticker strip is gone (endless motion with no
+       pause control, WCAG 2.2.2; its phrases said nothing the hero doesn't). -->
 
   <!-- ============ 2 · YOUR SHIRT REMEMBERS ============
        Walks the visitor through their own day so they recognize that odor lives
@@ -1590,8 +1565,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
        Sequence: PROBLEM -> WHY IT HAPPENS -> REAL-LIFE MOMENT -> ODORSTRIKE MAKES SENSE. -->
   <section class="remembers" id="remembers" aria-labelledby="remembersTitle" data-step="0">
     <div class="wrap">
-      <p class="eyebrow reveal">THE CLOTHING ODOR PROBLEM</p>
-      <h2 id="remembersTitle" class="reveal">Your shirt remembers<br>everything you did today.</h2>
+      <h2 id="remembersTitle" class="reveal">Your shirt remembers your day.</h2>
       <p class="rm-intro reveal">Deodorant works on your skin. But sweat and daily odors get trapped inside the weave of your clothes — where body sprays can't fix them. Drag through the day to see why odor builds up in fabric.</p>
 
       <div class="rm-stage reveal">
@@ -1634,7 +1608,37 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
       </div>
 
       <p class="rm-foot reveal">These are everyday moments, not lab tests. Deodorant takes care of your skin — ODORSTRIKE neutralizes odor trapped in your clothes without replacing regular laundry.</p>
-      <a class="rm-cta reveal" href="/odorstrike?buy=1">Fix your shirt — ₹229</a>
+      <a class="rm-cta reveal" href="/odorstrike?buy=1">Fix my shirt — ₹229</a>
+    </div>
+  </section>
+
+  <!-- ============ 2b · IN USE (2026-11-02) ============
+       The owner's own photos of the bottle on real clothes: the page had no
+       picture of it in use.
+       Real-use photos are what people study (NN/g eyetracking); decorative
+       ones get skipped. Clothing only: no bags, no other brand's logo. -->
+  <section class="inuse" id="in-use" aria-labelledby="inuseTitle">
+    <div class="wrap">
+      <h2 id="inuseTitle" class="reveal">Spray the shirt, not you.</h2>
+      <ul class="inuse-grid">
+        <li class="inuse-item reveal">
+          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/home-01-collar-check@400.avif 400w, /assets/photos/home-01-collar-check@640.avif 640w, /assets/photos/home-01-collar-check@960.avif 960w" sizes="(min-width:960px) 270px, (min-width:520px) 44vw, calc(50vw - 26px)"><img class="ph-photo" src="/assets/photos/home-01-collar-check@640.webp" srcset="/assets/photos/home-01-collar-check@400.webp 400w, /assets/photos/home-01-collar-check@640.webp 640w, /assets/photos/home-01-collar-check@960.webp 960w" sizes="(min-width:960px) 270px, (min-width:520px) 44vw, calc(50vw - 26px)" width="640" height="800" alt="A man on his commute pulls his shirt collar up to check how it smells." loading="lazy" decoding="async"></picture>
+          <p>Mid-day, the collar is holding the commute.</p>
+        </li>
+        <li class="inuse-item reveal">
+          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/hero-spray-collar@480.avif 480w, /assets/photos/hero-spray-collar@720.avif 720w, /assets/photos/hero-spray-collar@960.avif 960w" sizes="(min-width:960px) 270px, (min-width:520px) 44vw, calc(50vw - 26px)"><img class="ph-photo inuse-spray" src="/assets/photos/hero-spray-collar@480.webp" srcset="/assets/photos/hero-spray-collar@480.webp 480w, /assets/photos/hero-spray-collar@720.webp 720w, /assets/photos/hero-spray-collar@960.webp 960w" sizes="(min-width:960px) 270px, (min-width:520px) 44vw, calc(50vw - 26px)" width="480" height="480" alt="ODORSTRIKE misting the collar of a black shirt." loading="lazy" decoding="async"></picture>
+          <p>2–3 light mists on the fabric, from 15–20&nbsp;cm.</p>
+        </li>
+        <li class="inuse-item reveal">
+          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/home-04-dried-clear@400.avif 400w, /assets/photos/home-04-dried-clear.avif 580w" sizes="(min-width:960px) 270px, (min-width:520px) 44vw, calc(50vw - 26px)"><img class="ph-photo" src="/assets/photos/home-04-dried-clear@400.webp" srcset="/assets/photos/home-04-dried-clear@400.webp 400w, /assets/photos/home-04-dried-clear.webp 580w" sizes="(min-width:960px) 270px, (min-width:520px) 44vw, calc(50vw - 26px)" width="400" height="500" alt="Close-up of a black shirt collar after spraying: dry, with no marks." loading="lazy" decoding="async"></picture>
+          <p>Dries clear in 15–30 seconds. Then wear&nbsp;it.</p>
+        </li>
+        <li class="inuse-item reveal">
+          <picture class="ph-pic"><source type="image/avif" srcset="/assets/photos/pocket-trousers@400.avif 400w, /assets/photos/pocket-trousers@640.avif 640w, /assets/photos/pocket-trousers@960.avif 960w" sizes="(min-width:960px) 270px, (min-width:520px) 44vw, calc(50vw - 26px)"><img class="ph-photo" src="/assets/photos/pocket-trousers@640.webp" srcset="/assets/photos/pocket-trousers@400.webp 400w, /assets/photos/pocket-trousers@640.webp 640w, /assets/photos/pocket-trousers@960.webp 960w" sizes="(min-width:960px) 270px, (min-width:520px) 44vw, calc(50vw - 26px)" width="640" height="800" alt="The 50ml ODORSTRIKE bottle going into a trouser pocket." loading="lazy" decoding="async"></picture>
+          <p>50ml, about 250 sprays. It fits a trouser pocket.</p>
+        </li>
+      </ul>
+      <a class="inuse-link reveal" href="/odorstrike">View product details</a>
     </div>
   </section>
 
@@ -1646,8 +1650,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
        Product schema on /odorstrike at the same time. -->
   <section class="voices" id="reviews" aria-labelledby="voicesTitle">
     <div class="wrap">
-      <p class="eyebrow reveal">Early testers</p>
-      <h2 id="voicesTitle" class="reveal">What it's like to carry one</h2>
+      <h2 id="voicesTitle" class="reveal">What beta testers say</h2>
       <ul class="voice-grid">
         <li class="voice reveal">
           <div class="voice-head">
@@ -1690,13 +1693,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           </picture>
         </div>
         <div class="product-info reveal">
-          <div class="prod-badge-row">
-            <span class="prod-badge">FABRIC ONLY</span>
-            <span class="prod-badge-dim">NOT FOR SKIN</span>
-            <span class="prod-badge-dim">NOT PERFUME</span>
-          </div>
-          <p class="eyebrow">FABRIC ODOR CONTROL · 50ML</p>
-          <h2 id="productTitle">ODORSTRIKE</h2>
+          <h2 id="productTitle" translate="no">ODORSTRIKE</h2>
           <p class="prod-lead">A pocket-sized fabric odor eliminator mist for the clothes you're already wearing. Neutralizes sweat and trapped ambient odor in the weave — giving you up to 8 hours of fabric odor protection under normal office/commute conditions.</p>
           
           <ul class="prod-specs" aria-label="Product features and specifications">
@@ -1744,29 +1741,74 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           </div>
 
           <div class="prod-cta-group">
-            <a class="btn" href="/odorstrike?buy=1">GET ODORSTRIKE — ₹229</a>
-            <a class="btn-ghost" href="/odorstrike">View Full Specs →</a>
-          </div>
-          <div class="prod-trust-sub">
-            <span>Made in Hyderabad</span>
-            <span class="pts-dot" aria-hidden="true">·</span>
-            <span>Dries Clear</span>
-            <span class="pts-dot" aria-hidden="true">·</span>
-            <span>Non-Aerosol Mist</span>
+            <a class="btn" href="/odorstrike?buy=1">FIX MY SHIRT — ₹229</a>
+            <a class="btn-ghost" href="/odorstrike">View product details</a>
           </div>
         </div>
       </div>
     </div>
+    <!-- The Hinglish line stays, still: it no longer scrolls forever. -->
     <div class="band">
       <p class="band-static">Smell Khatam. Confidence Qaayam.</p>
-      <div class="band-marquee" aria-hidden="true">
-        <div class="bm-track">
-          <span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span><span>Smell Khatam. Confidence Qaayam.</span>
-        </div>
-      </div>
     </div>
   </section>
 
+
+  <!-- ============ 4 · BRAND PROOF / THE SCIENCE ============ -->
+  <section class="proof" id="how-it-works" aria-labelledby="proofTitle">
+    <div class="wrap">
+      <h2 id="proofTitle" class="reveal">What's in the bottle</h2>
+      <div class="section-body reveal">
+        <p>Not perfume. Not body deodorant. Those sit on top of the fabric and add scent over the smell; ODORSTRIKE goes after the odor trapped in the fibres, so it is neutralized instead of masked.</p>
+      </div>
+
+      <!-- Four layers that work together, not a sequence: no 01–04 numbers. -->
+      <ul class="science-grid reveal" aria-label="4-layer fabric odor control mechanism">
+        <li class="science-card">
+          <div class="sc-head">
+            <span class="sc-role">Trap</span>
+          </div>
+          <h3 class="sc-name">HPβCD</h3>
+          <p class="sc-desc">A hollow ring-shaped molecule that cages odor compounds in the fibres, so less of the smell reaches your nose.</p>
+        </li>
+        <li class="science-card">
+          <div class="sc-head">
+            <span class="sc-role">Neutralize</span>
+          </div>
+          <h3 class="sc-name">Zinc PCA</h3>
+          <p class="sc-desc">A zinc salt that binds the captured odor compounds and neutralizes them at the fabric instead of masking them.</p>
+        </li>
+        <li class="science-card">
+          <div class="sc-head">
+            <span class="sc-role">Prevent</span>
+          </div>
+          <h3 class="sc-name">Triethyl Citrate</h3>
+          <p class="sc-desc">Slows the breakdown of fresh sweat in the fibres before new odor forms: up to 8 hours of protection on fabric.</p>
+        </li>
+        <li class="science-card">
+          <div class="sc-head">
+            <span class="sc-role">Sustain</span>
+          </div>
+          <h3 class="sc-name">Zinc Gluconate</h3>
+          <p class="sc-desc">Helps keep odor from building back up in the fibres between wears, so the reset holds through the day.</p>
+        </li>
+      </ul>
+
+      <details class="science-inci reveal">
+        <summary class="science-inci-summary">
+          <span>Formula v3.1 — key actives + 8 more</span>
+          <span class="science-inci-arrow" aria-hidden="true">▾</span>
+        </summary>
+        <div class="science-inci-table">
+          <div class="inci-row"><span class="i-pct" aria-hidden="true"></span><span class="i-name">HPβCD (hydroxypropyl-β-cyclodextrin)</span><span class="i-role">Trap</span></div>
+          <div class="inci-row"><span class="i-pct" aria-hidden="true"></span><span class="i-name">Zinc PCA</span><span class="i-role">Neutralize</span></div>
+          <div class="inci-row"><span class="i-pct" aria-hidden="true"></span><span class="i-name">Triethyl Citrate</span><span class="i-role">Prevent</span></div>
+          <div class="inci-row"><span class="i-pct">+8</span><span class="i-name">8 more in a fast-drying water base</span><span class="i-role">Proprietary</span></div>
+          <p class="inci-note">Exact concentrations are proprietary. Need the full list for an allergy check? Write to <a href="mailto:info@smelloff.in">info@smelloff.in</a>.</p>
+        </div>
+      </details>
+    </div>
+  </section>
 
   <!-- ============ 3c · FOUNDER ============
        Refined founder trust hierarchy:
@@ -1779,8 +1821,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     <div class="wrap">
       <div class="founder-grid">
         <div class="founder-meta reveal">
-          <p class="eyebrow">FOUNDERS · HYDERABAD</p>
-          <h2 id="founderTitle">Built for the gap<br>deodorant leaves behind</h2>
+          <h2 id="founderTitle">Built for 41°C days</h2>
           <div class="founder-identity">
             <span class="f-name">Jogdhande Nikhil Patil</span>
             <span class="f-role">Founder, Smelloff · Hyderabad</span>
@@ -1791,69 +1832,14 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           </div>
         </div>
         <div class="founder-body reveal">
-          <p>Smelloff started from an everyday problem in 41°C Hyderabad heat: morning deodorant had worked on skin, but the shirt had trapped the sweat. Deodorant takes care of skin, but the odor people notice mid-day lives in the fabric weave — and layering perfume over it only makes it worse.</p>
-          <p>That gap is why Smelloff was built. Instead of launching another fragrance brand, we spent six months testing prototypes to create ODORSTRIKE — a pocket-sized mist formulated specifically to neutralize trapped odor compounds inside clothing fibres rather than masking them.</p>
+          <p>Smelloff started on a 41°C day in Hyderabad: the morning deodorant had worked on skin, but the shirt had trapped the sweat. The smell people notice mid-day lives in the fabric, and perfume on top only makes it worse.</p>
+          <p>So instead of another fragrance, we spent six months testing prototypes for ODORSTRIKE: a pocket mist made to neutralize the odor trapped in clothing fibres, not to cover it.</p>
           <p><a class="founder-link" href="/about">Read the full founder story →</a></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ 4 · BRAND PROOF / THE SCIENCE ============ -->
-  <section class="proof" id="how-it-works" aria-labelledby="proofTitle">
-    <div class="wrap">
-      <p class="eyebrow reveal">FABRIC ODOR CONTROL · THE SCIENCE</p>
-      <h2 id="proofTitle" class="reveal">Not perfume. Not body deodorant.<br>Odor control for clothes.</h2>
-      <div class="section-body reveal">
-        <p>Sweat and daily odors get trapped inside the weave of your clothes. Perfumes and body sprays only sit on top of the fabric and layer heavy scent over the smell. ODORSTRIKE targets trapped odor directly in the fibres — neutralizing it at the source instead of masking.</p>
-      </div>
-
-      <ol class="science-grid reveal" aria-label="4-layer fabric odor control mechanism">
-        <li class="science-card">
-          <div class="sc-head">
-            <span class="sc-role">01 — TRAP</span>
-          </div>
-          <h3 class="sc-name">HPβCD</h3>
-          <p class="sc-desc">Hollow ring-shaped molecule physically cages trapped odor compounds inside fabric fibres so less of the smell reaches your nose.</p>
-        </li>
-        <li class="science-card">
-          <div class="sc-head">
-            <span class="sc-role">02 — NEUTRALIZE</span>
-          </div>
-          <h3 class="sc-name">Zinc PCA</h3>
-          <p class="sc-desc">Zinc salt binds to captured odor compounds and neutralizes them directly at the fabric source instead of masking.</p>
-        </li>
-        <li class="science-card">
-          <div class="sc-head">
-            <span class="sc-role">03 — PREVENT</span>
-          </div>
-          <h3 class="sc-name">Triethyl Citrate</h3>
-          <p class="sc-desc">Slows the breakdown of fresh sweat in fibres before new odor can form, maintaining up to 8 hours of fabric protection.</p>
-        </li>
-        <li class="science-card">
-          <div class="sc-head">
-            <span class="sc-role">04 — SUSTAIN</span>
-          </div>
-          <h3 class="sc-name">Zinc Gluconate</h3>
-          <p class="sc-desc">Helps prevent odor from re-developing in garment fibres between wears so the reset holds throughout your day.</p>
-        </li>
-      </ol>
-
-      <details class="science-inci reveal">
-        <summary class="science-inci-summary">
-          <span>Formula v3.1 — key actives + 8 more</span>
-          <span class="science-inci-arrow" aria-hidden="true">▾</span>
-        </summary>
-        <div class="science-inci-table">
-          <div class="inci-row"><span class="i-pct">01</span><span class="i-name">HPβCD (hydroxypropyl-β-cyclodextrin)</span><span class="i-role">Trap</span></div>
-          <div class="inci-row"><span class="i-pct">02</span><span class="i-name">Zinc PCA</span><span class="i-role">Neutralize</span></div>
-          <div class="inci-row"><span class="i-pct">03</span><span class="i-name">Triethyl Citrate</span><span class="i-role">Prevent</span></div>
-          <div class="inci-row"><span class="i-pct">+8</span><span class="i-name">8 more in a fast-drying water base</span><span class="i-role">Proprietary</span></div>
-          <p class="inci-note">Exact concentrations are proprietary. Need the full list for an allergy check? Write to <a href="mailto:info@smelloff.in">info@smelloff.in</a>.</p>
-        </div>
-      </details>
-    </div>
-  </section>
 
   <!-- ============ 5 · FAQ ============ -->
   <section class="faq" id="faq" aria-labelledby="faqTitle">
@@ -1914,7 +1900,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   <section class="close" id="final" aria-labelledby="finalTitle">
     <div class="wrap">
       <div class="close-box reveal">
-        <p class="eyebrow">ONE POCKET BOTTLE · EVERY SHIRT</p>
         <h2 id="finalTitle">Your shirt smells. <span class="acid">Fix it.</span></h2>
         <div class="close-price"><span class="hero-price">₹229</span><span class="hero-mrp">M.R.P. ₹499</span></div>
         <div class="close-ctas">
@@ -2122,7 +2107,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
       try { window.smfTrack({ type: 'view_content', label: 'home_sec_' + id }); } catch (err) {}
     });
   }, { rootMargin: "0px 0px -40% 0px" });
-  ['remembers','reviews','odorstrike-featured','founders','how-it-works','faq','final'].forEach(function(id){
+  ['remembers','in-use','reviews','odorstrike-featured','how-it-works','founders','faq','final'].forEach(function(id){
     var el = document.getElementById(id); if (el) io.observe(el);
   });
 })();
