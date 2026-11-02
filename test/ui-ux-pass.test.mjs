@@ -46,10 +46,18 @@ test('sticky buy strips treat the bottom 120px as covered', () => {
 test('PDP phones: fabric chips sit under the buy row so Buy is in the first screen', () => {
   const html = read('odorstrike.html');
   assert.match(html, /\.pd-kicker,\.pd-title,\.pd-highlights\{order:-2\}/);
-  assert.match(html, /\.pd-price,\.buy-actions\{order:-1\}/);
+  assert.match(html, /\.pd-price,\.buy-actions,\.pd-eta\{order:-1\}/);
 });
 
 test('homepage product-block image sizes match its rendered width on phones', () => {
   const html = read('index.html');
   assert.equal((html.match(/sizes="\(min-width:900px\) 360px, calc\(100vw - 74px\)"/g) || []).length, 2);
+});
+
+test('PDP shows a delivery date under Buy, from the checkout estimate', () => {
+  const html = read('odorstrike.html');
+  const buy = html.indexOf('id="pdpBuyBtn"'), eta = html.indexOf('id="pdEta"'), cart = html.indexOf('id="pdpCartBtn"');
+  assert.ok(buy > 0 && eta > buy && eta < cart, 'delivery line sits between Buy and Add to cart');
+  assert.match(html, /id="pdEta" hidden/, 'hidden until the script fills it');
+  assert.match(html, /var e = calculateDeliveryEstimate\(\);/, 'same window as checkout');
 });
