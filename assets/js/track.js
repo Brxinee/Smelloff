@@ -95,6 +95,44 @@
     }
   } catch (e) {}
 
+  // GA4 (2026-11-02). gtag exists only after the visitor accepted analytics
+  // (and never for bots or the owner's devices), so this is a no-op otherwise:
+  // nothing reaches Google without consent. smfGa() is for any page script.
+  function ga(name, params) {
+    try { if (typeof window.gtag === 'function') window.gtag('event', name, params || {}); } catch (e) {}
+  }
+  window.smfGa = ga;
+  // First-party events that GA4 should see too, renamed to read well in its
+  // reports. Only the short label goes over, never meta (a chat question can
+  // hold a phone number). Ecommerce, WhatsApp and buy clicks are sent by their
+  // own code, so they are not mirrored here (that would count them twice).
+  var GA_MIRROR = {
+    view_content: function (l) { var m = /^home_sec_(.+)$/.exec(l); return m ? ['section_view', { section: m[1] }] : null; },
+    chat_open: function (l) { return ['chat_open', { chat_action: l || 'launcher' }]; },
+    chat_message: function (l) { return ['chat_message', { chat_action: l || 'typed' }]; },
+    chat_feedback: function (l) { return ['chat_feedback', { rating: l }]; },
+    chat_card_click: function (l) { return ['chat_card_click', { card: l }]; },
+    chat_teaser: function (l) { return ['chat_teaser', { chat_action: l }]; },
+    checkout_exit: function (l) { return ['checkout_exit', { reason: l }]; },
+    click: function (l) { return l === 'pdp_pin_check' ? ['pincode_check', {}] : null; }
+  };
+  function mirror(payload) {
+    var f = GA_MIRROR[payload.type];
+    if (!f || typeof window.gtag !== 'function') return;
+    var r = f(clip(payload.label, 100));
+    if (r) ga(r[0], r[1]);
+  }
+  // Which part of the page a link sits in, for buy_cta_click.
+  function zone(el) {
+    if (el.closest('.sf-hdr__menu')) return 'menu';
+    if (el.closest('.sf-hdr,header.sf-hdr')) return 'header';
+    if (el.closest('.sf-ftr,footer')) return 'footer';
+    if (el.closest('.sf-endcap,.end-cta')) return 'end_card';
+    if (el.closest('.sfc,[class*="sfc-"]')) return 'chat';
+    var sec = el.closest('[id]');
+    return sec && sec.id !== 'sf-main' ? sec.id.slice(0, 60) : 'body';
+  }
+
   function send(payload) {
     try {
       payload = payload || {};
@@ -108,6 +146,7 @@
           if (la.last[k] && !payload.meta['utm_' + k]) payload.meta['utm_' + k] = la.last[k];
         });
       }
+      mirror(payload);
       var body = JSON.stringify(payload);
       if (navigator.sendBeacon) navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }));
       else fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(noop);
@@ -133,7 +172,14 @@
     addEventListener('click', function (e) {
       if (e.isTrusted === false) return;
       var el = e.target && e.target.closest ? e.target.closest('a,button,[data-track]') : null;
-      if (!el || (el.closest && el.closest('#smelloff-consent-bar'))) return;
+      if (!el) return;
+      // The consent answer itself, so the share of visitors GA4 can see is
+      // known (GA4 only counts those who accept).
+      if (el.closest && el.closest('#smelloff-consent-bar')) {
+        var cl = el.classList;
+        if (cl && (cl.contains('cb-accept') || cl.contains('cb-reject'))) send({ type: 'consent_choice', label: cl.contains('cb-accept') ? 'accepted' : 'rejected' });
+        return;
+      }
       // A tap that opens a chat with the business number. Counted as a click,
       // never as an order: WhatsApp orders are entered by hand.
       var href = el.tagName === 'A' ? el.getAttribute('href') || '' : '';
@@ -150,6 +196,11 @@
         try { if (typeof window.fbq === 'function') window.fbq('track', 'Contact', { content_category: intent }); } catch (er) {}
       }
       var label = (el.getAttribute('data-track') || el.innerText || el.getAttribute('aria-label') || '').trim().replace(/\s+/g, ' ').slice(0, 120);
+      // A link to the product page or a #buy box, on any page: GA4 sees which
+      // page and which part of it sent the visitor to buy.
+      if (href && (href.indexOf('#buy') !== -1 || /^(https?:\/\/(www\.)?smelloff\.in)?\/odorstrike(\/|\?|#|$)/.test(href))) {
+        ga('buy_cta_click', { link_url: href.slice(0, 100), link_text: label.slice(0, 80), link_location: zone(el) });
+      }
       if (!label) return;
       send({ type: 'click', label: label, meta: el.getAttribute('href') ? { href: el.getAttribute('href') } : {} });
     }, true);

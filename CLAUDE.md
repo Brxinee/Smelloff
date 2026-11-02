@@ -2787,3 +2787,31 @@ sources: `docs/audits/admin-redesign-2026-11.md`; owner guide:
   dots never spin forever.
 - Not done: streaming replies (needs the Worker's response streaming tested on
   Cloudflare first). Live Gemini latency wasn't measured from the container.
+
+## GA4 coverage pass (2026-11-02, owner: "every bit of info should be in Google Analytics")
+Event list, the owner's GA4 admin checklist and how to verify: `docs/GA4-SETUP.md`.
+Live GA4 data couldn't be read from the container (Windsor licence expired,
+Supermetrics not logged in to GA4); verified with a real browser against the
+local server, every GA4 hit intercepted.
+- **Loader (four copies: index, faq, odorstrike inline + consent-analytics.js):**
+  `smfGaExcluded()` stops GA4/Pixel on the owner's devices (`smelloff_owner`,
+  `?smf_owner=1`; `/admin` login sets it), `gtag('consent','default',granted…)`
+  before config (it only runs after "Accept all"), `smfGaConfig()` = a
+  `content_group` per page type + `debug_mode` with `?ga_debug=1` (per tab).
+- **track.js** (every page): `window.smfGa()`, `GA_MIRROR` sends section reach
+  (`section_view`), chat events, `checkout_exit` and `pincode_check` to GA4,
+  label only (never meta); `buy_cta_click` moved here from consent-analytics.js
+  (index/faq/odorstrike never sent it), with `link_location`; the consent
+  answer is a first-party `consent_choice` event (allowed in `api/track.js`).
+- **PDP/checkout:** richer items (brand, category, variant), `select_item`
+  (pack cards), `view_cart`, `add_to_cart`/`remove_from_cart` on every
+  quantity change (`gaCartChange`), `checkout_error`, `order_error`; chrome.js
+  `payment_window_open` / `payment_cancelled` / `payment_failed` /
+  `payment_error`. `purchase` skips test-marked orders and `@smelloff.in` emails.
+- Homepage offer box = GA4 list `home_offer` (`view_item_list`, `select_item`;
+  `PACKS` must match config prices, a test compares). `sign_up` (footer, blog
+  newsletter), `generate_lead` (contact), `track_order`.
+- Still the owner's: custom dimensions, key events, unwanted referral
+  razorpay.com, 14-month retention (doc). Consent Mode advanced and
+  Measurement Protocol purchase/refund are possible next steps, not built.
+- `test/ga4-tracking.test.mjs` pins all of it (runs track.js in a vm).

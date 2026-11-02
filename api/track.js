@@ -30,7 +30,10 @@ const ALLOWED_EVENTS = new Set([
   'campaign_landing', 'whatsapp_click',
   // odorstrike.html: the one-tap "what held you back?" after checkout closes
   // without an order (label = shown | dismissed | cod | price | unsure | delivery | looking | other).
-  'checkout_exit'
+  'checkout_exit',
+  // assets/js/track.js: the consent bar answer (label accepted | rejected), so
+  // the share of visitors GA4 can count is known.
+  'consent_choice'
 ]);
 
 const CART_EVENTS = new Set(['add_to_cart', 'remove_from_cart', 'cart', 'cart_update', 'checkout_start']);

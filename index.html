@@ -116,12 +116,26 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
      auto-click "Accept all"); track.js's smfIsBot loads later, so the same
      test is inlined. Same block in index.html, faq.html, odorstrike.html and
      assets/js/consent-analytics.js. */
+  /* GA4 config (2026-11-02): the owner's own devices send nothing (the same
+     smelloff_owner flag track.js uses; /admin sets it on login), every page
+     carries a content_group, and ?ga_debug=1 turns on DebugView for that tab.
+     Same block in index.html, faq.html, odorstrike.html and
+     assets/js/consent-analytics.js; change them together. */
+  function smfGaExcluded(){try{var s=location.search;if(/[?&]smf_owner=1(&|$)/.test(s))return true;if(/[?&]smf_owner=0(&|$)/.test(s))return false;return localStorage.getItem('smelloff_owner')==='1';}catch(e){return false;}}
+  function smfGaConfig(){
+    var p=location.pathname.replace(/\.html$/,'').replace(/\/+$/,'')||'/';
+    var cg=p==='/'?'home':p==='/odorstrike'?'product':p==='/blog'?'blog_index':/^\/blog\//.test(p)?'blog_post':/^\/(shipping|returns|refund|privacy|terms|cancellation)$/.test(p)?'policy':p.slice(1).split('/')[0];
+    var c={content_group:cg};
+    try{if(/[?&]ga_debug=1(&|$)/.test(location.search))sessionStorage.setItem('smf_ga_debug','1');if(sessionStorage.getItem('smf_ga_debug')==='1')c.debug_mode=true;}catch(e){}
+    return c;
+  }
   function primeAnalytics(){
     if(window.__smfAnalyticsPrimed)return true;
     var n=navigator;if(window.smfIsBot?window.smfIsBot():(n.webdriver===true||/Headless|PhantomJS|Puppeteer|Playwright|Electron\//i.test(n.userAgent||'')))return false;
+    if(smfGaExcluded())return false;
     window.__smfAnalyticsPrimed=true;
     window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments);};
-    gtag('js',new Date());gtag('config','G-S1MJ58PD89');var aiR=(document.referrer||'').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);if(aiR){gtag('event','ai_referral',{ai_source:aiR[2],landing_page:location.pathname});}
+    gtag('consent','default',{analytics_storage:'granted',ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted'});gtag('js',new Date());gtag('config','G-S1MJ58PD89',smfGaConfig());var aiR=(document.referrer||'').match(/https?:\/\/([^\/]*\.)?(chatgpt\.com|perplexity\.ai|claude\.ai|copilot\.microsoft\.com|gemini\.google\.com)/);if(aiR){gtag('event','ai_referral',{ai_source:aiR[2],landing_page:location.pathname});}
     if(!window.fbq){var q=window.fbq=function(){q.callMethod?q.callMethod.apply(q,arguments):q.queue.push(arguments)};if(!window._fbq)window._fbq=q;q.push=q;q.loaded=!0;q.version='2.0';q.queue=[];}
     fbq('init','1455100092891684');fbq('track','PageView');
     return true;
@@ -1419,7 +1433,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
 <link rel="preload" href="/assets/css/chrome.css?v=4ae6f709" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=4ae6f709"></noscript>
-<script src="/assets/js/chrome.js?v=e7fcfc15" defer></script>
+<script src="/assets/js/chrome.js?v=2bd21262" defer></script>
 <script src="/assets/js/support-chat.js?v=5308fa93" defer></script>
 </head>
 <body>
@@ -2109,6 +2123,40 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 })();
 </script>
 
+<!-- GA4 ecommerce on the homepage (2026-11-02): the offer box is a product
+     list (1, 2 or 5 bottles), so GA4 sees it seen (view_item_list) and which
+     option was tapped (select_item) before the product page's own events.
+     Prices = config/product.json price / pairPrice / fivePackPrice (a test
+     compares them). Nothing is sent without consent (gtag undefined). -->
+<script>
+(function(){
+  var PACKS = [[1, 229], [2, 419], [5, 899]];
+  function items(){
+    return PACKS.map(function(p, i){
+      return { item_id: 'OS-001-50ML', item_name: 'ODORSTRIKE Fabric Odor Mist', item_brand: 'Smelloff', item_category: 'Clothing deodorant', item_variant: '50ml', item_list_id: 'home_offer', item_list_name: 'Homepage offer', index: i, price: Math.round(p[1] / p[0] * 100) / 100, quantity: p[0] };
+    });
+  }
+  var box = document.getElementById('odorstrike-featured');
+  if (box && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(en){
+      if (!en[0].isIntersecting || typeof window.gtag !== 'function') return;
+      io.disconnect();
+      window.gtag('event', 'view_item_list', { item_list_id: 'home_offer', item_list_name: 'Homepage offer', items: items() });
+    }, { threshold: 0.3 });
+    io.observe(box);
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href*="/odorstrike?buy=1"]') : null;
+    if (!a || typeof window.gtag !== 'function') return;
+    var m = /[?&]qty=(\d+)/.exec(a.getAttribute('href') || '');
+    var q = m ? Number(m[1]) : 1;
+    var it = items().filter(function(x){ return x.quantity === q; });
+    if (!it.length) return;
+    window.gtag('event', 'select_item', { item_list_id: 'home_offer', item_list_name: 'Homepage offer', items: it });
+  }, true);
+})();
+</script>
+
 <!-- Consent bar logic -->
 <script>
 (function(){
@@ -2167,6 +2215,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1455100092891684&ev=PageView&noscript=1" alt=""/></noscript>
 <script src="/assets/js/reviews-system.js?v=7" defer></script>
-<script src="/assets/js/track.js?v=8591ad00" defer></script>
+<script src="/assets/js/track.js?v=401732c0" defer></script>
 </body>
 </html>
