@@ -76,11 +76,7 @@
     // Panel.
     '.sfc-panel{position:fixed;z-index:9000;display:flex;flex-direction:column;background:var(--ink,#0A0A0A);color:var(--text,#F2F5EF);font-family:var(--body,system-ui,sans-serif);inset:0;height:100%;height:100dvh}' +
     '.sfc-panel[hidden]{display:none}' +
-    // Tablets and up: a card that grows with the screen (it was a fixed
-    // 400×660 corner on every screen, tiny on a 1080p monitor). 420px wide
-    // up to ~1400px screens, then 30% of the width up to 520px; 660px tall
-    // or 80% of the height up to 900px, never taller than the screen.
-    '@media(min-width:520px){.sfc-panel{inset:auto max(16px,env(safe-area-inset-right,0px)) 16px auto;width:min(calc(100vw - 32px),max(420px,30vw),520px);height:min(calc(100vh - 32px),max(660px,80vh),900px);height:min(calc(100dvh - 32px),max(660px,80dvh),900px);border:1px solid ' + R + ';border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6);overflow:hidden}}' +
+    '@media(min-width:520px){.sfc-panel{inset:auto max(16px,env(safe-area-inset-right,0px)) 16px auto;width:400px;height:min(660px,calc(100vh - 32px));border:1px solid ' + R + ';border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6);overflow:hidden}}' +
     '.sfc-head{display:flex;align-items:center;gap:10px;padding:10px 6px 10px 14px;padding-top:max(10px,env(safe-area-inset-top,0px));border-bottom:1px solid ' + R + ';background:var(--surface,#121212)}' +
     '.sfc-ava{flex:0 0 auto;width:40px;height:40px;border-radius:50%;overflow:hidden;background:#000;display:block}' +
     '.sfc-ava img{display:block;width:100%;height:100%;object-fit:cover}' +
@@ -155,9 +151,7 @@
     '.sfc-send{background:var(--cta,#B8FF57);color:var(--on-cta,#0A0A0A)}.sfc-send:disabled{opacity:.5;cursor:default}' +
     '.sfc-send svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}' +
     '.sfc-foot{margin:0;padding:0 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface,#121212);font-size:12px;line-height:1.45;color:var(--muted,#9DA398)}' +
-    '.sfc-foot a{color:var(--text-2,#CDD3C8);text-decoration:underline;text-underline-offset:2px}' +
-    // Big screens: type and controls step up with the card (last, so it wins).
-    '@media(min-width:1440px) and (min-height:820px){.sfc-panel{inset:auto max(24px,env(safe-area-inset-right,0px)) 24px auto}.sfc-msg{font-size:16px;padding:12px 16px}.sfc-tile{font-size:15px;min-height:56px}.sfc-chip{font-size:15px;min-height:40px}.sfc-title{font-size:17px}.sfc-card__t{font-size:15.5px}.sfc-log{padding:20px}}';
+    '.sfc-foot a{color:var(--text-2,#CDD3C8);text-decoration:underline;text-underline-offset:2px}';
 
   function svg(d) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + d + '</svg>'; }
   var I = {

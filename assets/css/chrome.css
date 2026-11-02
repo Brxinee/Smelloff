@@ -911,16 +911,3 @@ section.final small,section.final .final-reassurance{display:block;margin-top:16
    mark takes the link's own colour. */
 a[href^="https://wa.me/"]:not(:has(svg,img))::before{content:"";display:inline-block;width:1.05em;height:1.05em;margin-right:.3em;
   vertical-align:-.17em;background:currentColor;-webkit-mask:url(/assets/icons/whatsapp.svg) center/contain no-repeat;mask:url(/assets/icons/whatsapp.svg) center/contain no-repeat}
-
-/* §16 Large screens (owner, 2026-11-02: "fit the screen properly, any
-   screen"). Every page was a 1160px column, so on a 1920 or 2560 monitor
-   it filled half the width and read small. From 1600px the shared column
-   widens and the heading / lead sizes step up with it; under 1600 nothing
-   changes. Page-zoom (`zoom`) was tried and rejected: it scales 100vh too,
-   so full-height drawers and the chat panel ran past the screen. */
-@media (min-width:1600px){
-  :root{--maxw:1320px;--gutter:32px;--fs-h1:clamp(36px,4.4vw,76px);--fs-h2:clamp(28px,3.1vw,52px);--fs-h3:clamp(21px,1.75vw,30px);--fs-lead:20px}
-}
-@media (min-width:2000px){
-  :root{--maxw:1480px;--gutter:40px;--fs-h1:clamp(36px,4vw,86px);--fs-h2:clamp(28px,2.8vw,58px);--fs-h3:32px;--fs-lead:21px;--fs-body:17px}
-}
