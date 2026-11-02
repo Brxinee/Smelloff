@@ -29,8 +29,86 @@ async function parseResponse(response) {
   try { return JSON.parse(text); } catch { return { raw: text.slice(0, 2000) }; }
 }
 
-async function login() {
+/* ── Login state shared by every Worker instance ─────────────────────────
+ * The token used to live only in this isolate's memory, so nearly every
+ * 15-minute run and every order on a fresh isolate logged in again. Worse,
+ * after a rejected login every run and every order tried the same password
+ * again, which keeps Shiprocket's "User blocked due to too many failed login
+ * attempts" lock in place (2026-11-02). Both now live in `admin_settings`
+ * (service role only):
+ *   shiprocket-token       { token, exp, fp }   reused until it expires
+ *   shiprocket-auth-pause  { until, fp, message } no login until `until`
+ * `fp` is a SHA-256 of the email + password, so saving a new password in
+ * Cloudflare ignores the old token and the old pause and logs in at once.
+ * All of it is best-effort: without the database it behaves as before. */
+const TOKEN_KEY = 'shiprocket-token';
+const PAUSE_KEY = 'shiprocket-auth-pause';
+const TOKEN_TTL_MS = 9 * 24 * 60 * 60 * 1000; // Shiprocket tokens last 240 h
+export const AUTH_PAUSE_MS = 60 * 60 * 1000;
+
+async function credentialFingerprint() {
+  const bytes = new TextEncoder().encode(`${process.env.SHIPROCKET_EMAIL || ''}\n${process.env.SHIPROCKET_PASSWORD || ''}`);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+}
+
+async function settings(path, { method = 'GET', body, prefer } = {}) {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key) return null;
+  const base = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
+  try {
+    const res = await fetch(`${base}/rest/v1/${path}`, {
+      method,
+      headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', ...(prefer ? { Prefer: prefer } : {}) },
+      body: body ? JSON.stringify(body) : undefined,
+      signal: AbortSignal.timeout(5000)
+    });
+    if (!res.ok) return null;
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  } catch {
+    return null;
+  }
+}
+
+async function readSetting(name) {
+  const rows = await settings(`admin_settings?key=eq.${encodeURIComponent(name)}&select=value`);
+  return Array.isArray(rows) && rows[0] ? rows[0].value : null;
+}
+
+function writeSetting(name, value) {
+  return settings('admin_settings?on_conflict=key', {
+    method: 'POST',
+    prefer: 'resolution=merge-duplicates,return=minimal',
+    body: { key: name, value, updated_at: new Date().toISOString() }
+  });
+}
+
+function deleteSetting(name) {
+  return settings(`admin_settings?key=eq.${encodeURIComponent(name)}`, { method: 'DELETE', prefer: 'return=minimal' });
+}
+
+function authError(message, status, extra = {}) {
+  const err = new Error(message);
+  err.code = 'SHIPROCKET_AUTH_FAILED';
+  err.status = status;
+  Object.assign(err, extra);
+  return err;
+}
+
+async function login(fp) {
   if (!isShiprocketConfigured()) throw missingConfigError();
+
+  const pause = await readSetting(PAUSE_KEY);
+  if (pause && pause.fp === fp && Date.parse(pause.until) > Date.now()) {
+    // Same password that was just rejected: don't try it again yet.
+    throw authError(
+      `Shiprocket authentication failed: ${pause.message || 'login rejected'} (paused until ${pause.until}; save a new SHIPROCKET_PASSWORD to retry now)`,
+      pause.status || 403,
+      { paused: true }
+    );
+  }
+
   const response = await fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -39,19 +117,36 @@ async function login() {
   });
   const data = await parseResponse(response);
   if (!response.ok || !data.token) {
-    const err = new Error(`Shiprocket authentication failed: ${data.message || data.error || `Authentication failed (${response.status})`}`);
-    err.code = 'SHIPROCKET_AUTH_FAILED';
-    err.status = response.status;
-    throw err;
+    const message = String(data.message || data.error || `Authentication failed (${response.status})`).slice(0, 300);
+    // A 4xx means Shiprocket refused these credentials (wrong password or a
+    // locked user). A 5xx is their outage: retry on the next run as before.
+    if (response.status < 500) {
+      await writeSetting(PAUSE_KEY, { until: new Date(Date.now() + AUTH_PAUSE_MS).toISOString(), fp, message, status: response.status });
+    }
+    throw authError(`Shiprocket authentication failed: ${message}`, response.status);
   }
   tokenCache = data.token;
-  tokenExpiresAt = Date.now() + 9 * 24 * 60 * 60 * 1000;
+  tokenExpiresAt = Date.now() + TOKEN_TTL_MS;
+  await Promise.all([
+    writeSetting(TOKEN_KEY, { token: tokenCache, exp: new Date(tokenExpiresAt).toISOString(), fp }),
+    pause ? deleteSetting(PAUSE_KEY) : null
+  ]);
   return tokenCache;
 }
 
 async function getToken(forceRefresh = false) {
   if (!forceRefresh && tokenCache && Date.now() < tokenExpiresAt) return tokenCache;
-  return login();
+  const fp = await credentialFingerprint();
+  if (!forceRefresh) {
+    const saved = await readSetting(TOKEN_KEY);
+    const exp = saved ? Date.parse(saved.exp) : 0;
+    if (saved?.token && saved.fp === fp && exp > Date.now()) {
+      tokenCache = saved.token;
+      tokenExpiresAt = exp;
+      return tokenCache;
+    }
+  }
+  return login(fp);
 }
 
 export async function shiprocketRequest(path, options = {}, retried = false) {
