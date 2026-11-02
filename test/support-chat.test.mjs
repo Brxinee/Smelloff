@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 
 import handler, {
   buildSystemPrompt, sanitizeHistory, lookupOrder, runConversation,
-  findOrderRef, normalizeReply, packCard, pageContext,
+  findOrderRef, normalizeReply, packCard, pageContext, instantAnswer, parseModelJson,
 } from '../api/support-chat.js';
 
 const product = JSON.parse(fs.readFileSync('config/product.json', 'utf8'));
@@ -226,4 +226,83 @@ test('the widget is on every page, renders text safely and follows the NN/g chat
   assert.match(fs.readFileSync('src/index.js', 'utf8'), /app\.all\("\/api\/support-chat"/);
   const trackSrc = fs.readFileSync('api/track.js', 'utf8');
   for (const ev of ['chat_open', 'chat_message', 'chat_feedback', 'chat_card_click', 'chat_teaser']) assert.ok(trackSrc.includes(`'${ev}'`), ev);
+});
+
+test('welcome tiles and fixed chips are answered instantly from config, with no model call', async () => {
+  process.env.GEMINI_API_KEY = 'k';
+  const js = fs.readFileSync('assets/js/support-chat.js', 'utf8');
+  const noFetch = async () => { throw new Error('no network call expected'); };
+  for (const q of ['Which pack should I buy?', 'Which pack is right for me?', 'Is Cash on Delivery available?',
+    'How fast is delivery?', 'How long does a bottle last?', 'Will it leave marks?', 'Where’s my order?',
+    'Change my address', 'Cancel my order', 'How do I use it?', 'Which fabrics is it for?']) {
+    const out = await runConversation(sanitizeHistory([{ role: 'user', text: q }]), { fetchImpl: noFetch });
+    assert.ok(out && out.reply, q);
+    // Never a price or a COD amount in these answers.
+    assert.ok(!/₹/.test(out.reply), `${q}: ${out.reply}`);
+    for (const sug of out.suggestions) assert.ok(sug.length <= 32, sug);
+  }
+  // Every non-order tile in the widget has an instant answer.
+  for (const tile of ['Which pack should I buy?', 'Which pack is right for me?', 'How long does a bottle last?', 'Will it leave marks?',
+    'Is Cash on Delivery available?', 'How fast is delivery?', 'Where’s my order?', 'Change my address', 'Cancel my order']) {
+    assert.ok(js.includes(`'${tile}'`), `tile ${tile} is still in the widget`);
+  }
+  const cod = instantAnswer(sanitizeHistory([{ role: 'user', text: 'is cash on delivery available' }]));
+  assert.match(cod.reply, /pincode/);
+  assert.equal(instantAnswer(sanitizeHistory([{ role: 'user', text: 'Cancel my order' }])).cards[0].kind, 'whatsapp');
+  assert.match(instantAnswer(sanitizeHistory([{ role: 'user', text: 'How long does a bottle last?' }])).reply, new RegExp(`about ${P.refreshesApprox} refreshes`));
+
+  // The pack question's answers become a pack card, only right after it.
+  const ask = instantAnswer(sanitizeHistory([{ role: 'user', text: 'Which pack should I buy?' }]));
+  const follow = (a) => instantAnswer(sanitizeHistory([
+    { role: 'user', text: 'Which pack should I buy?' }, { role: 'model', text: ask.reply }, { role: 'user', text: a },
+  ]));
+  assert.deepEqual(ask.suggestions.map((x) => follow(x).cards[0].qty), [1, 2, 5]);
+  assert.equal(instantAnswer(sanitizeHistory([{ role: 'user', text: 'Two of us' }])), null, 'out of context it goes to the model');
+  // Free text still goes to the model.
+  assert.equal(instantAnswer(sanitizeHistory([{ role: 'user', text: 'my kurta smells of smoke' }])), null);
+});
+
+test('a slow main model is hedged: the fallback starts in parallel and the first answer wins', async () => {
+  process.env.GEMINI_API_KEY = 'k';
+  const seen = [];
+  let aborted = false;
+  const fetchImpl = (url, init) => {
+    const model = String(url).match(/models\/([^:]+)/)[1];
+    seen.push(model);
+    if (seen.length === 1) {
+      return new Promise((_, reject) => init.signal.addEventListener('abort', () => { aborted = true; reject(new Error('aborted')); }));
+    }
+    return Promise.resolve(gemini({ reply: 'from fallback', cards: [], suggestions: [] }));
+  };
+  const t0 = Date.now();
+  const out = await runConversation(sanitizeHistory([{ role: 'user', text: 'hello there' }]), { fetchImpl, hedgeMs: 20 });
+  assert.equal(out.reply, 'from fallback');
+  assert.equal(seen.length, 2);
+  assert.notEqual(seen[0], seen[1]);
+  assert.ok(aborted, 'the slow request is aborted once the other answers');
+  assert.ok(Date.now() - t0 < 2000);
+});
+
+test('cut-off or empty JSON never reaches the customer as raw JSON; the fallback model gets a turn', async () => {
+  assert.equal(parseModelJson('{"reply":"Air it, then **mist** it.","cards":[{"kind":"gui').reply, 'Air it, then **mist** it.');
+  assert.equal(parseModelJson('{"cards":[{"kind"'), null);
+  assert.equal(normalizeReply('{"cards":[').reply, '');
+
+  process.env.GEMINI_API_KEY = 'k';
+  let n = 0;
+  const fetchImpl = async () => {
+    n += 1;
+    if (n === 1) return new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: '{"cards":[' }] } }] }));
+    return gemini({ reply: 'second model', cards: [], suggestions: [] });
+  };
+  const out = await runConversation(sanitizeHistory([{ role: 'user', text: 'hello there' }]), { fetchImpl });
+  assert.equal(out.reply, 'second model');
+  assert.equal(n, 2);
+});
+
+test('the prompt asks for full-chat memory and carries worked examples with real guide slugs', () => {
+  const prompt = buildSystemPrompt();
+  assert.match(prompt, /never ask for something the customer already told you/);
+  for (const m of prompt.matchAll(/cards: \[guide ([a-z0-9-]+)\]/g)) assert.ok(guides.some((g) => g.slug === m[1]), m[1]);
+  assert.ok(/EXAMPLES/.test(prompt));
 });
