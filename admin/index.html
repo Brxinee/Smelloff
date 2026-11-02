@@ -1421,7 +1421,15 @@ async function viewComments({ params, token }) {
 }
 
 /* ════════════════════════ TOOLS & TESTS ════════════════════════ */
-const CHECK_LABELS = { database: ['Database', 'Supabase: orders, reviews, messages'], analytics: ['Site analytics', 'Visitor tracking'], email: ['Email sending', 'Resend: sending domain verified'], razorpay: ['Payments', 'Razorpay keys accepted'], sheets: ['Google Sheets', 'Order mirror opens'], shiprocket: ['Shipping', 'Shiprocket'] };
+const CHECK_LABELS = { database: ['Database', 'Supabase: orders, reviews, messages'], analytics: ['Site analytics', 'Visitor tracking'], email: ['Email sending', 'Resend: recent emails delivered'], razorpay: ['Payments', 'Razorpay keys accepted'], sheets: ['Google Sheets', 'Order + customer mirror'], shiprocket: ['Shipping', 'Shiprocket: bookings and tracking'] };
+const sheetsSteps = () => `<details class="as-table" style="grid-column:1/-1;margin-top:4px"><summary>How to connect Google Sheets (about 10 minutes)</summary><ol style="margin:8px 0 0;padding-left:20px;display:grid;gap:6px;font-size:13.5px;color:var(--text-2)">
+  <li>Open <a class="link" href="https://console.cloud.google.com/" target="_blank" rel="noopener">console.cloud.google.com</a> (your Google account) and create a project, e.g. "smelloff-sheets".</li>
+  <li>APIs &amp; Services → Library → "Google Sheets API" → <b>Enable</b>.</li>
+  <li>IAM &amp; Admin → Service Accounts → <b>Create service account</b>, name it <span class="mono">smelloff-sheets</span>, skip the optional steps → Done.</li>
+  <li>Open it → Keys → Add key → Create new key → <b>JSON</b>. A file downloads: keep it private, it works like a password.</li>
+  <li>Copy the account's email (…@….iam.gserviceaccount.com). In <a class="link" href="${SHEETS[0][1]}" target="_blank" rel="noopener">Orders data</a> and <a class="link" href="${SHEETS[1][1]}" target="_blank" rel="noopener">Customers &amp; Emails</a>: Share → paste it → <b>Editor</b> → untick "Notify" → Share.</li>
+  <li>Cloudflare → Workers &amp; Pages → smelloff → Settings → Variables and Secrets → Add → type <b>Secret</b>, name <span class="mono">GOOGLE_SERVICE_ACCOUNT_JSON</span>, value: everything in the JSON file → Save and deploy.</li>
+  <li>Come back here and press <b>Run again</b>, then Settings → <b>Sync now</b>.</li></ol></details>`;
 const PREVIEWS = [['orderConfirmation', 'Order confirmation'], ['orderShipped', 'Shipped'], ['outForDelivery', 'Out for delivery'], ['orderDelivered', 'Delivered'], ['reviewRequest', 'Review request'], ['paymentReminder', 'Payment reminder'], ['paymentFailed', 'Payment failed'], ['orderCancelled', 'Order cancelled'], ['refundProcessed', 'Refund processed'], ['adminNewOrder', 'New order alert (to you)']];
 let lastCheck = null;
 async function viewTools({ token }) {
@@ -1465,8 +1473,8 @@ function renderChecks(r) {
   box.classList.remove('is-refreshing');
   box.innerHTML = Object.entries(r.checks).map(([k, c]) => {
     const [label, sub] = CHECK_LABELS[k] || [k, ''];
-    const status = c.ok === true ? ['Working', 'ok'] : c.ok === false ? ['Problem', 'bad'] : ['Not tested', 'muted'];
-    return `<div><span>${esc(label)} <span class="muted" style="font-size:12.5px">· ${esc(sub)}</span></span>${pill(status)}<small>${esc(c.detail)}${c.ms ? ` · ${c.ms} ms` : ''}</small></div>`;
+    const status = c.ok === true ? ['Working', 'ok'] : c.ok === false ? ['Problem', 'bad'] : c.missing ? ['Not connected', 'warn'] : ['Not tested', 'muted'];
+    return `<div><span>${esc(label)} <span class="muted" style="font-size:12.5px">· ${esc(sub)}</span></span>${pill(status)}<small>${esc(c.detail)}${c.ms ? ` · ${c.ms} ms` : ''}</small>${k === 'sheets' && c.missing ? sheetsSteps() : ''}</div>`;
   }).join('') + `<div><small>Checked ${esc(when(new Date(r.at).toISOString()))}</small></div>`;
 }
 
