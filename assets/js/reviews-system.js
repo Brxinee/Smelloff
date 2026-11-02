@@ -49,7 +49,7 @@
               '<div id="rvAuthError" class="rv-error-msg"></div>' +
             '</form>' +
             '<div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);font-size:13px;color:rgba(255,255,255,0.6);text-align:center">' +
-              'Haven’t ordered yet? <a href="/odorstrike?buy=1" class="rv-buy-link">Buy now — ₹229</a>' +
+              'Haven’t ordered yet? <a href="/odorstrike?buy=1" class="rv-buy-link">Buy now</a>' +
             '</div>' +
           '</div>' +
 

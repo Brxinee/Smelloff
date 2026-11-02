@@ -216,8 +216,8 @@ export const POSTS = {
     x: 'A two-wheeler commute hits your shirt with sun, engine heat, a pressed-on backpack, a damp helmet collar and exhaust. Keep the office shirt off your body for the ride.',
   },
   'is-fabric-odor-spray-worth-it-india': {
-    wa: 'Did the maths on a fabric spray vs rewashing: about ₹2.29 per refresh, and when it\'s NOT worth buying: {url}',
-    x: 'A ₹229 fabric spray works out to about ₹2.29 per refresh. A top-loader is allowed up to 23 litres of water per kg per cycle under BEE rules. Different jobs, but the gap is real.',
+    wa: 'Did the maths on a fabric spray vs rewashing: a few rupees a refresh, and when it\'s NOT worth buying: {url}',
+    x: 'A pocket fabric spray works out to a few rupees a refresh. A top-loader is allowed up to 23 litres of water per kg per cycle under BEE rules. Different jobs, but the gap is real.',
   },
   'how-long-does-fabric-odor-spray-last': {
     wa: 'Straight answer on how long a fabric spray lasts on a shirt, what shortens it, and how long the bottle lasts: {url}',

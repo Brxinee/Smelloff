@@ -59,9 +59,9 @@ const ANSWERS = [
   ['Why do clothes smell bad after drying?', 'Usually slow drying, damp seams, detergent build-up or a washing machine that smells. Dry fully in moving air and skip fabric softener.', 'why-clothes-smell-bad-after-drying'],
   ['How do I get smell out of a hoodie without washing it?', 'Turn it inside out, hang it open in moving air for 20–30 minutes, then mist the underarms, collar and hood lining, cuffs and front pocket with a fabric odor spray. Let it dry fully before folding.', 'remove-smell-from-hoodie-without-washing'],
   ['How do I remove smoke smell from a blazer without dry cleaning?', 'Air it open on a wide hanger in moving air, brush the shoulders and back, then treat the back lining, underarms and inside collar with a fabric odor spray. Spot-test a hidden area first.', 'remove-smell-from-blazer-without-dry-cleaning'],
-  ['Is there a Febreze alternative in India for clothes?', `Febreze-style bottles are made for rooms and upholstery. For clothes, ODORSTRIKE is a 50ml pocket fabric odor spray at ₹${P.price}.`, 'odorstrike-vs-febreze-india'],
+  ['Is there a Febreze alternative in India for clothes?', `Febreze-style bottles are made for rooms and upholstery. For clothes, ODORSTRIKE is a 50ml pocket fabric odor spray made for the clothes you wear.`, 'odorstrike-vs-febreze-india'],
   ['How long does a fabric odor spray last on clothes?', `ODORSTRIKE gives up to 8 hours of odor protection on fabric under normal office/commute conditions. Heat, heavy sweating and polyester shorten it; a 50ml bottle gives about ${P.refreshesApprox} refreshes.`, 'how-long-does-fabric-odor-spray-last'],
-  ['Is a fabric odor spray worth it in India?', `For clothes that look clean but smell, yes: one ₹${P.price} bottle gives about ${P.refreshesApprox} refreshes. It does not clean dirty clothes, so it is not a substitute for washing.`, 'is-fabric-odor-spray-worth-it-india'],
+  ['Is a fabric odor spray worth it in India?', `For clothes that look clean but smell, yes: one bottle gives about ${P.refreshesApprox} refreshes. It does not clean dirty clothes, so it is not a substitute for washing.`, 'is-fabric-odor-spray-worth-it-india'],
   ['How do I get Diwali firecracker smoke smell out of clothes?', 'Brush off ash outdoors, air the clothes in moving air, then treat the front, sleeves and shoulders with a fabric odor spray and let it dry. Wash anything with soot marks or burns.', 'firecracker-smoke-smell-out-of-clothes-diwali'],
   ['Is a clothes perfume spray the same as a fabric odor spray?', 'No. A clothes perfume spray adds scent on top of odor. A fabric odor spray like ODORSTRIKE traps and neutralises odor in the fibres, with a light fabric scent that fades.', 'clothes-perfume-spray-vs-fabric-odor-spray'],
   ['How many times can I wear a shirt before washing?', 'In Indian heat, usually once. An office shirt worn over a vest in AC can manage two wears if it passes a sniff test at the collar and underarms after airing overnight.', 'how-many-times-wear-shirt-before-washing'],
@@ -71,11 +71,11 @@ const ANSWERS = [
   ['What should I do if clothes were left in the washing machine overnight?', 'Smell them. If they smell clean or faintly damp, dry them straight away; if they smell sour, rewash with detergent and dry fast. A fabric spray does not fix a sour wet load.', 'clothes-left-in-washing-machine-overnight-smell'],
   ['How do I get sweat smell out of a cap without washing it?', 'Dry it upside down in moving air, then mist the sweatband and crown lining with a fabric odor spray from 15–20 cm and let it dry before wearing. Hand-wash a stained band; never use it on leather or suede.', 'remove-sweat-smell-from-cap'],
   ['Is ODORSTRIKE for sofas, bedding, rooms or shoes?', 'No. Clothes only. Not for rooms, sofas, curtains, bedding, shoes, helmets, bags, skin, hair or pets.', null],
-  ['Where can I buy ODORSTRIKE in India?', `Only at ${SITE}/odorstrike: 50ml, ₹${P.price} prepaid with free shipping, 2 for ₹${P.pairPrice} or 5 for ₹${P.fivePackPrice}; Cash on Delivery available across India. It is not listed on Amazon or Flipkart.`, null],
+  ['Where can I buy ODORSTRIKE in India?', `Only at ${SITE}/odorstrike, which shows the current price: 50ml, one bottle or packs of 2 and 5 (bigger packs cost less per bottle), free shipping on prepaid; Cash on Delivery available across India. It is not listed on Amazon or Flipkart.`, null],
 ];
 
 const PAGES = [
-  ['ODORSTRIKE product page', '/odorstrike', `Buy ODORSTRIKE 50ml. ₹${P.price} prepaid with free shipping; Cash on Delivery available. How to use, key actives, checkout.`],
+  ['ODORSTRIKE product page', '/odorstrike', `Buy ODORSTRIKE 50ml: current price and packs, free shipping on prepaid; Cash on Delivery available. How to use, key actives, checkout.`],
   ['Home', '/', 'Brand homepage.'],
   ['Guides', '/blog', 'Every guide on clothing odor, sweat smell and keeping clothes fresh.'],
   ['FAQ', '/faq', 'Skin, perfume, stains, fabrics, COD, shipping and returns.'],
@@ -95,8 +95,8 @@ function llms() {
     `Also searched as "${B.alternateNames[0]}". Clothing only: shirts, t-shirts, hoodies, jackets, blazers, jeans, trousers, kurtas and uniforms. ${notFor}`, '');
   L.push(`## Product: ${P.name}`,
     `- Size: ${P.size} liquid spray (about ${P.spraysApprox} sprays, about ${P.refreshesApprox} refreshes)`,
-    `- Price: ₹${P.price} prepaid (MRP ₹${P.mrp}). ${S.prepaid.description}`,
-    `- Packs: 1 bottle ₹${P.price} · 2 for ₹${P.pairPrice} (save ₹${P.pairSaving}) · 5 for ₹${P.fivePackPrice} (save ₹${P.fivePackSaving}); up to 10 bottles per order`,
+    `- Price: shown on ${SITE}/odorstrike. ${S.prepaid.description}`,
+    '- Packs: 1, 2 or 5 bottles (bigger packs cost less per bottle); up to 10 bottles per order',
     '- Cash on Delivery: available across India (the COD total is shown at checkout)',
     '- Availability: in stock',
     `- Key actives: ${heroActives}`,
@@ -130,8 +130,8 @@ function llmsFull() {
     `- Profiles: ${B.sameAs.filter((u) => !u.includes('wa.me')).join(' · ')}`, '');
   L.push('## Product',
     `- Name: ${P.name} (${P.shortName})`, `- Category: ${P.categoryDisplay}`, `- Size: ${P.netQuantity}`,
-    `- SKU: ${P.sku} · MPN: ${P.mpn}`, `- Price: ₹${P.price} prepaid · MRP ₹${P.mrp} (${P.discountPercent}% off)`,
-    `- Packs: 2 for ₹${P.pairPrice} (save ₹${P.pairSaving}) · 5 for ₹${P.fivePackPrice} (save ₹${P.fivePackSaving})`,
+    `- SKU: ${P.sku} · MPN: ${P.mpn}`, `- Price: shown on ${SITE}/odorstrike`,
+    '- Packs: 1, 2 or 5 bottles; bigger packs cost less per bottle',
     `- Cash on Delivery: available across India; the COD total is shown at checkout`,
     `- Quantity per order: ${P.minQuantity}–${P.maxQuantity}`,
     `- About ${P.spraysApprox} sprays per bottle (about ${P.refreshesApprox} refreshes)`, '');

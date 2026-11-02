@@ -26,9 +26,8 @@ test('refund policy prices a returned pack bottle at what was paid for it', () =
   const html = read('refund.html');
   assert.ok(!html.includes('single 50ml unit'), 'packs exist; the SKU is not "single"');
   assert.ok(!html.includes('₹229 per bottle'), 'a pack bottle cost less than ₹229');
-  const each = (paise, n) => (paise / n / 100).toFixed(2).replace(/\.00$/, '');
-  assert.ok(html.includes(`₹${each(product.pairPricePaise, 2)} from a pair`));
-  assert.ok(html.includes(`₹${each(product.fivePackPricePaise, 5)} from a pack of 5`));
+  // The rule, without amounts: prices appear only on / and /odorstrike (2026-11-02).
+  assert.ok(html.includes('refunded at the price you paid per bottle in that order: the product amount on your order divided by the number of bottles'));
 });
 
 test('no page offers ODORSTRIKE as a zinc ricinoleate spray', () => {
