@@ -107,6 +107,7 @@
         if (!r.ok) throw new Error('http ' + r.status);
         news.querySelector('.sf-ftr__news-row').hidden = true;
         say('You\u2019re on the list.', 'ok');
+        try { if (typeof window.gtag === 'function') window.gtag('event', 'sign_up', { method: 'newsletter_footer' }); } catch (e) {}
       }).catch(function () {
         btn.disabled = false;
         say('That didn\u2019t go through. Try again, or email info@smelloff.in.', 'err');
@@ -552,6 +553,12 @@
     return true;
   }
 
+  // GA4 (2026-11-02): what happens inside the payment window, which the
+  // ecommerce events can't see. No-op without consent (gtag undefined).
+  function gaPay(name, params) {
+    try { if (typeof window.gtag === 'function') window.gtag('event', name, Object.assign({ payment_type: 'prepaid' }, params || {})); } catch (e) {}
+  }
+
   async function startRazorpay() {
     if (razorpayInFlight) return;
     hidePaymentError();
@@ -640,6 +647,7 @@
           confirm_close: true,
           ondismiss: function () {
             if (!finalizedThisCheckout) {
+              gaPay('payment_cancelled', { value: Number(created.amount) / 100, currency: 'INR' });
               razorpayInFlight = false;
               setButtonState(false);
               setPayNote('Payment not completed, and nothing was charged. Tap Pay to try again, or choose Cash on Delivery.');
@@ -653,10 +661,14 @@
         razorpayInFlight = false;
         setButtonState(false);
         var description = failure && failure.error && failure.error.description;
+        var fe = (failure && failure.error) || {};
+        gaPay('payment_failed', { error_code: String(fe.code || '').slice(0, 40), error_reason: String(fe.reason || '').slice(0, 60), error_source: String(fe.source || '').slice(0, 40), error_step: String(fe.step || '').slice(0, 40), value: Number(created.amount) / 100, currency: 'INR' });
         showPaymentError(description || 'Payment failed. You can try again.');
       });
       rzp.open();
+      gaPay('payment_window_open', { value: Number(created.amount) / 100, currency: 'INR' });
     } catch (error) {
+      gaPay('payment_error', { error_message: String((error && error.message) || '').slice(0, 100) });
       razorpayInFlight = false;
       setButtonState(false);
       showPaymentError(error.message || 'Unable to start secure checkout. Please try again.');
