@@ -412,7 +412,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     margin:0 0 18px;
     max-width:14ch;
   }
-  .hero-title .acid{color:var(--acid)}
+  .hero-title .acid{color:var(--acid);white-space:nowrap}
+  /* Large screens: the column widens (chrome.css §16); the headline grows with it. */
+  @media(min-width:1600px){.hero-title{font-size:clamp(84px,5.2vw,108px)}}
 
   .hero-sub{
     max-width:38ch;
@@ -1385,6 +1387,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   @media(max-width:959px){
     #sf-main .hero-visual-wrap{display:contents}
     #sf-main .hero-visual{order:2;margin:0}
+    /* The sideways size tag ran up over the sub line on phones (the figure is
+       short there); the same fact is in the price line right below. */
+    #sf-main .hero-visual figcaption{display:none}
     #sf-main .hero-buy{order:3}
 
     #sf-main .hero-grid{gap:14px}
@@ -1418,9 +1423,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <style id="a11y-utility-css">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
-<link rel="preload" href="/assets/css/chrome.css?v=4ae6f709" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=4ae6f709"></noscript>
+<link rel="preload" href="/assets/css/chrome.css?v=5c04b85d" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=5c04b85d"></noscript>
 <script src="/assets/js/chrome.js?v=e7fcfc15" defer></script>
-<script src="/assets/js/support-chat.js?v=5308fa93" defer></script>
+<script src="/assets/js/support-chat.js?v=3c26359d" defer></script>
 </head>
 <body>
 
