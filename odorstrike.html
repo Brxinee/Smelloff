@@ -3079,6 +3079,10 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (co) co.classList.remove('active');
     syncModalState();
     var lsEl = document.getElementById('loadingScreen');
+    // An order or payment still in flight (loading screen up, or the pay
+    // button disabled by the COD request / Razorpay) is not an abandonment.
+    var sbEl = document.getElementById('submitBtn');
+    var ckBusy = !!((lsEl && lsEl.classList.contains('active')) || (sbEl && sbEl.disabled));
     if (lsEl) { lsEl.classList.remove('active'); lsEl.style.display = 'none'; }
     // Re-enable sticky buy bar on mobile
     var mb = document.getElementById('mobileBar');
@@ -3088,7 +3092,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (_checkoutTrigger && typeof _checkoutTrigger.focus === 'function') {
       setTimeout(function() { _checkoutTrigger.focus(); _checkoutTrigger = null; }, 50);
     }
-    if (typeof window.smfAskWhy === 'function') window.smfAskWhy();
+    if (!ckBusy && typeof window.smfAskWhy === 'function') window.smfAskWhy();
   }
   var _overlayFocusTrapHandler = null;
   function trapFocusInOverlay() {

@@ -18,7 +18,9 @@ test('checkout exit question: once per session, only after a real visit, never a
   assert.match(html, /if \(window\.__smfOrdered \|\| box\) return;/);
   assert.match(html, /Date\.now\(\) - window\.__smfCkOpenedAt < 4000/);
   assert.match(html, /sessionStorage\.getItem\(KEY\)/);
-  assert.match(html, /if \(typeof window\.smfAskWhy === 'function'\) window\.smfAskWhy\(\);/);
+  // Never while an order or payment is in flight (Codex review on #561).
+  assert.match(html, /var ckBusy = !!\(\(lsEl && lsEl\.classList\.contains\('active'\)\) \|\| \(sbEl && sbEl\.disabled\)\);/);
+  assert.match(html, /if \(!ckBusy && typeof window\.smfAskWhy === 'function'\) window\.smfAskWhy\(\);/);
   for (const k of ['cod', 'price', 'unsure', 'delivery', 'looking', 'other']) assert.ok(html.includes(`k: '${k}'`), k);
   // Built with textContent only, and no COD amount outside checkout.
   const block = html.slice(html.indexOf('CHECKOUT EXIT QUESTION'), html.indexOf('CONSENT BAR LOGIC'));
