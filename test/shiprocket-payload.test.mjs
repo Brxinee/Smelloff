@@ -53,3 +53,21 @@ test('createShiprocketOrder sends the COD fee as transaction_charges; prepaid se
     globalThis.fetch = realFetch;
   }
 });
+
+// Shiprocket answers "Oops! Invalid Data." for an address field over 190
+// characters (2026-11-02: SMF-20261102-9285's 200-character line, while an
+// 84-character one went through). Long lines spill into address_2.
+test('long or multi-line addresses are split under Shiprocket\'s 190-character limit', async () => {
+  const { splitAddressForShiprocket, SR_ADDRESS_MAX } = await import('../api/_shiprocket.js');
+  assert.equal(SR_ADDRESS_MAX, 190);
+  const long = ('Flat 402, Sunshine Residency, Lane 7 near the old temple, Kothrud ').repeat(4);
+  const cut = (long + '\n😀').slice(0, 200).replace(/.$/, '\uD83D'); // checkout's 200-char cut splitting an emoji
+  const r = splitAddressForShiprocket(cut);
+  assert.ok(r.line1.length <= 190 && r.line2.length <= 190, `${r.line1.length}/${r.line2.length}`);
+  assert.ok(r.line2.length > 0, 'overflow kept in address_2');
+  const words = (t) => t.replace(/[,\s]+/g, ' ').trim(); // the comma at the split point is dropped on purpose
+  assert.equal(words(`${r.line1} ${r.line2}`), words(cut.replace(/\uD83D$/, '')), 'no text lost');
+  assert.doesNotMatch(r.line1 + r.line2, /[\uD800-\uDFFF]/, 'no lone surrogate');
+  assert.deepEqual(splitAddressForShiprocket('H.No 4-56\nMain road,\n\nNear school'), { line1: 'H.No 4-56, Main road, Near school', line2: '' });
+  assert.deepEqual(splitAddressForShiprocket('Short street'), { line1: 'Short street', line2: '' });
+});

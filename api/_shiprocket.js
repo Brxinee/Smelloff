@@ -204,7 +204,8 @@ export async function shiprocketRequest(path, options = {}, retried = false) {
   }
   if (!response.ok) {
     const message = data.message || data.error || data.errors || data.raw || `HTTP ${response.status}`;
-    const err = new Error(`Shiprocket API error: ${typeof message === 'string' ? message : JSON.stringify(message)}`);
+    const detail = data.message && data.errors ? ` ${JSON.stringify(data.errors).slice(0, 400)}` : '';
+    const err = new Error(`Shiprocket API error: ${typeof message === 'string' ? message : JSON.stringify(message)}${detail}`);
     err.code = 'SHIPROCKET_API_ERROR';
     err.status = response.status;
     err.data = data;
@@ -255,6 +256,28 @@ export async function resolvePickupLocation() {
   return pickupLocationCache;
 }
 
+// Shiprocket rejects an address field over 190 characters with only "Oops!
+// Invalid Data." (2026-11-02: SMF-20261102-9285's 200-character line). Join
+// the customer's lines with ", ", drop control characters and lone surrogates
+// (the checkout's 200-character cut can split an emoji), and spill anything
+// past the first field into address_2 at a word boundary.
+export const SR_ADDRESS_MAX = 190;
+export function splitAddressForShiprocket(raw) {
+  const clean = String(raw || '')
+    .replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '')
+    .replace(/[\r\n\t]+/g, ', ')
+    .replace(/[\u0000-\u001F\u007F]/g, ' ')
+    .replace(/\s*,\s*(,\s*)*/g, ', ')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/^[\s,]+|[\s,]+$/g, '');
+  if (clean.length <= SR_ADDRESS_MAX) return { line1: clean, line2: '' };
+  let cut = clean.lastIndexOf(' ', SR_ADDRESS_MAX);
+  if (cut < SR_ADDRESS_MAX / 2) cut = SR_ADDRESS_MAX;
+  const line1 = clean.slice(0, cut).replace(/[\s,]+$/, '');
+  const line2 = clean.slice(cut).replace(/^[\s,]+/, '').slice(0, SR_ADDRESS_MAX).replace(/[\s,]+$/, '');
+  return { line1, line2 };
+}
+
 export async function createShiprocketOrder(order) {
   const address = order.address || {};
   const item = Array.isArray(order.items) && order.items.length ? order.items[0] : {};
@@ -296,6 +319,7 @@ export async function createShiprocketOrder(order) {
     ]
     : [line(itemName, itemSku, quantity, unitPrice)];
 
+  const addressLines = splitAddressForShiprocket(address.line);
   const payload = {
     order_id: String(order.order_code),
     order_date: new Date(order.created_at || Date.now()).toISOString().slice(0, 10),
@@ -304,8 +328,8 @@ export async function createShiprocketOrder(order) {
     comment: `Smelloff order ${order.order_code}`,
     billing_customer_name: String(address.name || '').trim(),
     billing_last_name: '',
-    billing_address: String(address.line || '').trim(),
-    billing_address_2: '',
+    billing_address: addressLines.line1,
+    billing_address_2: addressLines.line2,
     billing_isd_code: '91',
     billing_city: String(address.city || '').trim(),
     billing_pincode: String(address.pincode || '').trim(),
@@ -317,8 +341,8 @@ export async function createShiprocketOrder(order) {
     shipping_is_billing: true,
     shipping_customer_name: String(address.name || '').trim(),
     shipping_last_name: '',
-    shipping_address: String(address.line || '').trim(),
-    shipping_address_2: '',
+    shipping_address: addressLines.line1,
+    shipping_address_2: addressLines.line2,
     shipping_city: String(address.city || '').trim(),
     shipping_pincode: String(address.pincode || '').trim(),
     shipping_state: String(address.state || '').trim(),
