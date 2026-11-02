@@ -2837,3 +2837,27 @@ local server, every GA4 hit intercepted.
   tree built fine 15 minutes later). If a build fails and `npm run build` +
   `npx wrangler deploy --dry-run` pass locally, push the same tree again
   before hunting for a cause; production only rebuilds on a new push to main.
+
+## Shiprocket login: shared token + pause after a rejected login (2026-11-02, owner: "Shiprocket isn't connected")
+Live orders showed `shiprocket_error` "Shiprocket authentication failed: User
+blocked due to too many failed login attempts." from ~14:45 UTC: a paid order
+(SMF-20261102-9285) wasn't booked and tracking stopped. The code only logs in
+with `SHIPROCKET_EMAIL` / `SHIPROCKET_PASSWORD`, so the password stopped
+matching the API user (changed or reset outside the repo). Two things in the
+code kept the lock in place, now fixed in `api/_shiprocket.js`:
+- **The token is shared**: `admin_settings` key `shiprocket-token`
+  `{token, exp, fp}`. It used to be in isolate memory only, so almost every
+  15-minute run and every order on a fresh isolate logged in again.
+- **A rejected login (4xx) pauses logins for 60 min** (`shiprocket-auth-pause`
+  `{until, fp, message}`). Every run and every order used to retry the same
+  password. The error still reads "authentication failed" so the sync loop
+  stops at the first order. A 5xx (outage) does not pause.
+- `fp` = SHA-256 of email + password: **saving a new `SHIPROCKET_PASSWORD` in
+  Cloudflare skips the pause and logs in at once.** A good login clears it.
+- Fix on the owner's side: Shiprocket → Settings → API → API users → reset
+  the password for info@smelloff.in (if Shiprocket asks, unblock the user / wait
+  for the lock to lift), then Cloudflare → smelloff → Variables and Secrets →
+  `SHIPROCKET_PASSWORD`. The next sync books every placed/confirmed/packed
+  order still missing a Shiprocket id. Only the API user works, never the
+  main login.
+- `test/shiprocket-auth.test.mjs` pins it.
