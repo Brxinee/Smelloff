@@ -2848,7 +2848,8 @@ code kept the lock in place, now fixed in `api/_shiprocket.js`:
 - **The token is shared**: `admin_settings` key `shiprocket-token`
   `{token, exp, fp}`. It used to be in isolate memory only, so almost every
   15-minute run and every order on a fresh isolate logged in again.
-- **A rejected login (4xx) pauses logins for 60 min** (`shiprocket-auth-pause`
+- **A rejected login (4xx) pauses logins for 55 min** (not 60: a pause set at
+  16:00:14 still held at the 17:00:12 run, so retries came 75 min apart) (`shiprocket-auth-pause`
   `{until, fp, message}`). Every run and every order used to retry the same
   password. The error still reads "authentication failed" so the sync loop
   stops at the first order. A 5xx (outage) does not pause.

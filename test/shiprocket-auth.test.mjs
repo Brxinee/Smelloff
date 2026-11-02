@@ -42,6 +42,9 @@ test('a rejected login pauses further logins with the same password', async () =
     await assert.rejects(sr.shiprocketRequest('/settings/company/pickup'), /authentication failed: User blocked/i);
     assert.equal(h.calls.login, 1);
     assert.ok(h.store.get('shiprocket-auth-pause'), 'pause is stored');
+    // Shorter than an hour, so the hourly cron run after it actually retries.
+    const left = Date.parse(h.store.get('shiprocket-auth-pause').until) - Date.now();
+    assert.ok(left > 50 * 60 * 1000 && left <= 55 * 60 * 1000, `pause is ~55 min, got ${Math.round(left / 60000)} min`);
 
     // Next run / next order: no second attempt with the same password, and the
     // error still reads "authentication failed" so the sync loop stops.

@@ -44,7 +44,10 @@ async function parseResponse(response) {
 const TOKEN_KEY = 'shiprocket-token';
 const PAUSE_KEY = 'shiprocket-auth-pause';
 const TOKEN_TTL_MS = 9 * 24 * 60 * 60 * 1000; // Shiprocket tokens last 240 h
-export const AUTH_PAUSE_MS = 60 * 60 * 1000;
+// 55, not 60: the cron runs every 15 min, and a pause set a few seconds into
+// one run would otherwise still hold at the run an hour later (17:00:12 vs a
+// pause until 17:00:14 on 2026-11-02), making every retry 75 min apart.
+export const AUTH_PAUSE_MS = 55 * 60 * 1000;
 
 async function credentialFingerprint() {
   const bytes = new TextEncoder().encode(`${process.env.SHIPROCKET_EMAIL || ''}\n${process.env.SHIPROCKET_PASSWORD || ''}`);
