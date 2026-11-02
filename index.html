@@ -482,57 +482,19 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     border:1px solid var(--rule);
   }
 
-  /* Isolated config-gated demo slot (SPRAY -> WAIT 15–30 SEC -> WEAR FRESH) */
-  .hero-demo-slot{
-    width:100%;
-    max-width:390px;
-    z-index:2;
-  }
-  .hero-demo-card{
-    background:var(--surface);
-    border:1px solid var(--border-default);
-    border-radius:var(--r-sm);
-    padding:10px 12px;
-  }
-  .hero-demo-tagline{
-    display:flex;align-items:center;justify-content:space-between;gap:8px;
-    padding-bottom:8px;margin-bottom:8px;
-    border-bottom:1px solid var(--rule);
-  }
-  .hdt-title{
-    font-family:var(--mono);font-size:10px;font-weight:700;
-    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-  }
-  .hdt-badge{
-    font-family:var(--mono);font-size:9.5px;font-weight:700;
-    letter-spacing:.12em;text-transform:uppercase;
-    color:var(--acid);background:rgba(184,255,87,.08);
-    border:1px solid rgba(184,255,87,.3);padding:2px 6px;border-radius:2px;
-    white-space:nowrap;
-  }
-  .hero-demo-steps{
-    list-style:none;margin:0;padding:0;
-    display:grid;grid-template-columns:1fr auto 1.15fr auto 1.15fr;
-    align-items:center;gap:4px;
-  }
-  .hero-demo-step{display:flex;flex-direction:column;gap:2px}
-  .hds-top{display:flex;align-items:baseline;gap:3px;flex-wrap:wrap}
-  .hds-num{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--acid);letter-spacing:.12em}
-  .hds-action{
-    font-family:var(--mono);font-size:11.5px;font-weight:700;
-    color:var(--text);letter-spacing:.06em;text-transform:uppercase;
-    white-space:nowrap;
-  }
-  .hds-desc{
-    font-family:var(--body);font-size:10.5px;line-height:1.2;
-    color:var(--muted);
-  }
-  .hds-sep{
-    color:var(--acid);font-family:var(--mono);font-size:13px;font-weight:700;
-    opacity:.85;user-select:none;padding:0 2px;
-  }
-  .hero-demo-step.hds-result .hds-action{color:var(--acid)}
-  .hero-demo-step.hds-result .hds-desc{color:var(--text)}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   /* Offer & Pricing */
   .hero-offer{
@@ -621,7 +583,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     .hero-buy{grid-area:buy;align-self:start}
     .hero-visual{min-height:480px}
     .hero-visual img{height:clamp(400px,40vw,520px);margin-block:-17px}
-    .hero-demo-slot{max-width:400px}
+
   }
 
   /* Mobile Conversion Stack (< 960px) */
@@ -640,25 +602,12 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     .hero-trust-mini{order:6;justify-content:center;text-align:center;margin-top:2px}
     .hero-visual{min-height:clamp(280px,72vw,360px)}
     .hero-visual img{height:clamp(270px,68vw,340px)}
-    .hero-demo-steps{padding:10px 12px}
-    .hds-desc{font-size:10px}
+
+
   }
 
-  /* Hero zones — where smell hides: collar, hoodie, blazer (all clothing) */
-  .zones{
-    margin-top:clamp(40px,5vw,56px);
-    display:grid;grid-template-columns:1fr;gap:16px;
-  }
-  .zone{
-    border:1px solid var(--border-default);
-    border-radius:var(--r-md);
-    padding:18px 16px;
-    display:flex;align-items:flex-start;gap:16px;
-    background:var(--surface);
-    transition:border-color .18s ease,background-color .18s ease,transform .18s ease;
-  }
-  /* Sizing lives on `.zone svg`; stroke styling on .z-ico */
-  .zone svg{flex:none;width:56px;height:56px}
+
+
   .mask-ico{
     display:inline-block;flex:0 0 auto;
     background-color:var(--acid);
@@ -666,52 +615,20 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     -webkit-mask-position:center;mask-position:center;
     -webkit-mask-size:contain;mask-size:contain;
   }
-  /* Zone garment icons: line art, so they read crisp on retina without shipping bitmaps */
-  .z-ico{
-    fill:none;stroke:var(--acid);
-    stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;
-  }
+
   .ico-india{-webkit-mask-image:url(/assets/icons/india.png);mask-image:url(/assets/icons/india.png)}
   .ico-truck{-webkit-mask-image:url(/assets/icons/truck.png);mask-image:url(/assets/icons/truck.png)}
   .ico-cod{-webkit-mask-image:url(/assets/icons/cod.png);mask-image:url(/assets/icons/cod.png)}
   .ico-hyderabad{-webkit-mask-image:url(/assets/icons/hyderabad.png);mask-image:url(/assets/icons/hyderabad.png)}
   /* 7-day returns: the owner's shield-check (it had no mask, so it drew a solid lime square) */
   .ico-shield{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2.8 19 5.5v5.7c0 4.8-3.2 8.2-7 9.9-3.8-1.7-7-5.1-7-9.9V5.5zM8.2 12.1l2.4 2.4 5.1-5.2'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2.8 19 5.5v5.7c0 4.8-3.2 8.2-7 9.9-3.8-1.7-7-5.1-7-9.9V5.5zM8.2 12.1l2.4 2.4 5.1-5.2'/%3E%3C/svg%3E")}
-  .zone .z-content{flex:1;min-width:0}
-  .zone .z-head{
-    display:flex;align-items:center;justify-content:space-between;gap:8px;
-    margin-bottom:4px;
-  }
-  .zone .z-num{
-    display:inline-block;
-    font-family:var(--mono);font-weight:700;
-    font-size:12px;color:var(--acid);letter-spacing:.16em;
-  }
-  .zone .z-tag{
-    font-family:var(--mono);font-size:9.5px;font-weight:700;
-    letter-spacing:.12em;text-transform:uppercase;
-    color:var(--text);background:var(--surface-2);
-    border:1px solid var(--rule-strong);padding:2px 6px;border-radius:2px;
-    white-space:nowrap;
-  }
-  .zone .z-title{
-    font-family:var(--display);font-weight:900;
-    font-size:22px;letter-spacing:-.01em;
-    line-height:1.1;
-    color:var(--text);
-    margin:0 0 6px;
-  }
-  .zone p.z-desc{
-    font-size:13.5px;line-height:1.45;color:var(--muted);margin:0;
-  }
-  @media(min-width:768px){
-    .zones{grid-template-columns:repeat(3,1fr);gap:20px}
-    .zone{flex-direction:column;align-items:flex-start;padding:24px 22px}
-    .zone svg{width:64px;height:64px;margin-bottom:14px}
-    .zone .z-head{margin-bottom:6px}
-    .zone .z-title{font-size:24px;margin-bottom:8px}
-    .zone p.z-desc{font-size:14px}
-  }
+
+
+
+
+
+
+  
 
   /* ============ Sections ============ */
   section{padding:var(--section-y) 0}
@@ -1131,30 +1048,10 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     .trust-row li{padding:22px 18px;font-size:13px}
   }
 
-  /* ============ Benefits strip ============
-     Was buried above the FAQ as part of the "proof" section. Promoted to
-     directly under the hero: these four facts (made in India, ships
-     pan-India, COD, Hyderabad) are the objection-killers, and they were
-     doing no work eight screens down. */
-  .benefits-strip{
-    border-top:1px solid var(--border-default);
-    border-bottom:1px solid var(--border-default);
-    background:var(--surface);
-    padding:0;
-  }
-  .benefits-strip .trust-row{margin:0;border:0;gap:0}
-  .benefits-strip .trust-row li{
-    border:0;
-    border-radius:0;
-    border-right:1px solid var(--rule);
-    padding:20px 16px;
-    justify-content:center;
-  }
-  .benefits-strip .trust-row li:last-child{border-right:0}
-  @media(max-width:767px){
-    .benefits-strip .trust-row li:nth-child(2n){border-right:0}
-    .benefits-strip .trust-row li:nth-child(-n+2){border-bottom:1px solid var(--rule)}
-  }
+
+
+
+  
 
   /* ============ Problem ============
      Names why the alternatives fail before pitching the fix. Four blunt
@@ -1390,13 +1287,13 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   }
 
   /* Controlled technical hovers (pointer devices only) */
-  .zone,.faq-item,.trust-row li,.product-visual,.voice{transition:transform .18s ease,border-color .18s ease,background-color .18s ease}
+  .faq-item,.trust-row li,.product-visual,.voice{transition:transform .18s ease,border-color .18s ease,background-color .18s ease}
   @media(hover:hover){
-    .zone:hover{transform:translateY(-1px);border-color:var(--border-strong);background:var(--surface-2)}
+
     .faq-item:hover{border-color:var(--border-strong);background:var(--surface-2)}
     .product-visual:hover{transform:translateY(-1px);border-color:var(--border-strong)}
     .voice:hover{transform:translateY(-1px);border-color:var(--border-strong);background:var(--surface-2)}
-    .benefits-strip .trust-row li:hover{background:var(--surface-2);color:var(--text)}
+
   }
 
   /* Sticky mobile buy bar — homepage only (Sep 19). Hidden until the hero CTA
@@ -1489,7 +1386,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     #sf-main .hero-visual-wrap{display:contents}
     #sf-main .hero-visual{order:2;margin:0}
     #sf-main .hero-buy{order:3}
-    #sf-main .hero-demo-slot{order:4}
+
     #sf-main .hero-grid{gap:14px}
     #sf-main .hero-sub{margin-bottom:0}
     #sf-main .hero-offer{padding:4px 0 8px}
@@ -1610,7 +1507,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           </div>
         </div>
 
-        <!-- The product visual + isolated config-gated demo slot -->
+        <!-- The product visual -->
         <div class="hero-visual-wrap">
           <figure class="hero-visual" id="heroVisual">
             <picture>
@@ -1618,41 +1515,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
             </picture>
             <figcaption>50ml · ~250 sprays</figcaption>
           </figure>
-
-          <!-- Isolated demonstration slot (graceful fallback to structured action sequence) -->
-          <div class="hero-demo-slot" id="heroDemoSlot" data-demo-state="fallback">
-            <div class="hero-demo-card">
-              <div class="hero-demo-tagline">
-                <span class="hdt-title">HOW IT WORKS</span>
-                <span class="hdt-badge">FABRIC ONLY</span>
-              </div>
-              <ol class="hero-demo-steps" aria-label="3-step odor neutralization workflow">
-                <li class="hero-demo-step">
-                  <div class="hds-top">
-                    <span class="hds-num">01</span>
-                    <strong class="hds-action">SPRAY</strong>
-                  </div>
-                  <span class="hds-desc">2–3 pumps on fabric</span>
-                </li>
-                <li class="hds-sep" aria-hidden="true">→</li>
-                <li class="hero-demo-step">
-                  <div class="hds-top">
-                    <span class="hds-num">02</span>
-                    <strong class="hds-action">WAIT 15–30 SEC</strong>
-                  </div>
-                  <span class="hds-desc">Fast dry · binds odor</span>
-                </li>
-                <li class="hds-sep" aria-hidden="true">→</li>
-                <li class="hero-demo-step hds-result">
-                  <div class="hds-top">
-                    <span class="hds-num">03</span>
-                    <strong class="hds-action">WEAR FRESH</strong>
-                  </div>
-                  <span class="hds-desc">Clean shirt · fresh fabric</span>
-                </li>
-              </ol>
-            </div>
-          </div>
         </div>
 
         <!-- Price, CTAs, clarification tag on mobile, usage microcopy, and trust badges -->
@@ -1692,83 +1554,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         </div>
       </div>
 
-      <!-- Where smell hides — all three are clothing situations. -->
-      <h2 class="sr-only">Where odor hides</h2>
-      <div class="zones">
-        <div class="zone">
-          <svg class="z-ico" viewBox="0 0 24 24" role="img" aria-hidden="true">
-            <path d="M8 3 4.5 5 3 9.5l3 1.4V21h12V10.9l3-1.4L19.5 5 16 3l-1.5 2.2a3.2 3.2 0 0 1-5 0Z"/>
-          </svg>
-          <div class="z-content">
-            <div class="z-head">
-              <span class="z-num">01</span>
-              <span class="z-tag">HEAT &amp; SWEAT</span>
-            </div>
-            <h3 class="z-title">Shirt collar</h3>
-            <p class="z-desc">Sits tight against your neck all day. Sweat and body heat soak directly into the cotton weave where skin deodorant cannot reach.</p>
-          </div>
-        </div>
-        <div class="zone">
-          <svg class="z-ico" viewBox="0 0 24 24" role="img" aria-hidden="true">
-            <path d="M9 5.6 4.5 7.4 3 11.6l3 1.2V21.4h12v-8.6l3-1.2-1.5-4.2L15 5.6"/>
-            <path d="M8.8 6.4C8.8 3.6 10.2 2.4 12 2.4s3.2 1.2 3.2 4"/>
-            <path d="M9.8 6.6c.4 1.6 1.2 2.4 2.2 2.4s1.8-.8 2.2-2.4"/>
-            <path d="M11 9.2 10.6 13M13 9.2l.4 3.8"/>
-          </svg>
-          <div class="z-content">
-            <div class="z-head">
-              <span class="z-num">02</span>
-              <span class="z-tag">REPEAT WEAR</span>
-            </div>
-            <h3 class="z-title">Hoodie &amp; tees</h3>
-            <p class="z-desc">Worn through long hours and crowded commutes. Heavier fabric absorbs daily sweat and ambient odor, holding it between washes.</p>
-          </div>
-        </div>
-        <div class="zone">
-          <svg class="z-ico" viewBox="0 0 24 24" role="img" aria-hidden="true">
-            <path d="M8.4 3.4 4.4 5.4 3 10l2.6 1.2V21h13V11.2L21.2 10l-1.4-4.6-4-2"/>
-            <path d="m8.4 3.4 3.7 6.2 3.7-6.2M12.1 9.6V21"/>
-            <path d="M7.6 15.2h2.2M14.6 15.2h2.2"/>
-          </svg>
-          <div class="z-content">
-            <div class="z-head">
-              <span class="z-num">03</span>
-              <span class="z-tag">BETWEEN WASHES</span>
-            </div>
-            <h3 class="z-title">Blazer &amp; jacket</h3>
-            <p class="z-desc">Can't be washed after every wear. Sits over your shirt all day and carries accumulated odor right into evening meetings.</p>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
-
-  <!-- ============ 1b · BENEFITS STRIP ============
-       Promoted from the old "proof" section further down the page — these
-       are the objection-killers (COD, free shipping, made in India) and
-       they belong immediately under the buy CTA, not eight screens away. -->
-  <div class="benefits-strip">
-    <div class="wrap">
-      <ul class="trust-row">
-        <li>
-          <span class="mask-ico ico-india" role="img" aria-hidden="true"></span>
-          Made in India
-        </li>
-        <li>
-          <span class="mask-ico ico-truck" role="img" aria-hidden="true"></span>
-          Free prepaid shipping
-        </li>
-        <li>
-          <span class="mask-ico ico-shield" role="img" aria-hidden="true"></span>
-          7-Day Returns
-        </li>
-        <li>
-          <span class="mask-ico ico-cod" role="img" aria-hidden="true"></span>
-          Cash on Delivery
-        </li>
-      </ul>
-    </div>
-  </div>
 
   <!-- Acid ticker strip (decorative brand phrases; hidden from AT) -->
   <div class="ticker" aria-hidden="true">

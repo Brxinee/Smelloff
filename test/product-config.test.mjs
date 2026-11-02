@@ -184,7 +184,6 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   // Prepaid ships free; COD pays shipping + handling by pincode, shown only in checkout.
   assert.ok(hero.includes('Free shipping on prepaid') && !hero.includes('Free shipping across India'), 'free shipping is for prepaid');
   assert.ok(!/₹\s*(60|89|90|119|130|149|179|289|318|319)\b(?![.,]\d)/.test(hero), 'Hero carries no COD amount');
-  assert.ok(hero.includes('2–3 pumps') && hero.includes('WAIT 15–30 SEC'), 'Usage microcopy (how-it-works card) must match the PDP');
   // Risk reducers sit by the button (2026-11-01): COD first, then shipping and returns.
   assert.ok(/<div class="hero-trust-mini">\s*<span>Cash on Delivery<\/span>/.test(hero), 'hero names COD by the button');
   assert.ok(hero.includes('/assets/odorstrike-bottle-cutout-v2.webp'), 'Sep 19 hero: the bottle on the acid disc');
