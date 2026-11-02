@@ -190,6 +190,44 @@ export function buildProductJsonLd(options = {}) {
  * Organization subtype Google recommends for merchants; the store-wide return
  * policy lives on it.
  */
+/**
+ * Organization-level shipping policy (Google, Nov 2025: `ShippingService`
+ * nested under `Organization` via `hasShippingService`, placed on the page
+ * that describes the policy). It can show free delivery and transit times in
+ * knowledge panels and product results. Same numbers as the Offer's
+ * shippingDetails: free on prepaid (the checkout default); COD charges by
+ * pincode are a payment-method charge, named in the description.
+ */
+export function buildShippingServiceJsonLd() {
+  const cfg = getProductConfig();
+  const s = cfg.shipping;
+  const days = s.businessDays.map((d) => `https://schema.org/${d}`);
+  const range = (r) => ({ '@type': 'QuantitativeValue', 'minValue': r.min, 'maxValue': r.max, 'unitCode': 'DAY' });
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'OnlineStore',
+    '@id': ORG_ID,
+    'name': cfg.brand.name,
+    'url': cfg.brand.website,
+    'hasShippingService': {
+      '@type': 'ShippingService',
+      '@id': `${cfg.brand.website}/shipping#standard`,
+      'name': 'Standard shipping across India',
+      'description': `${s.prepaid.description}. ${s.cod.description} Dispatch ${s.dispatchWindow.toLowerCase()} from ${s.origin}.`,
+      'fulfillmentType': 'https://schema.org/FulfillmentTypeDelivery',
+      'handlingTime': { '@type': 'ServicePeriod', 'businessDays': days, 'duration': range(s.handlingTimeDays) },
+      'shippingConditions': [{
+        '@type': 'ShippingConditions',
+        'shippingOrigin': { '@type': 'DefinedRegion', 'addressCountry': s.destinationCountry },
+        'shippingDestination': { '@type': 'DefinedRegion', 'addressCountry': s.destinationCountry },
+        'shippingRate': { '@type': 'MonetaryAmount', 'value': s.prepaid.rate, 'currency': s.prepaid.currency },
+        'transitTime': { '@type': 'ServicePeriod', 'businessDays': days, 'duration': range(s.transitTimeDays) }
+      }]
+    },
+    'hasMerchantReturnPolicy': buildReturnPolicyJsonLd()
+  };
+}
+
 export function buildOrganizationJsonLd() {
   const cfg = getProductConfig();
   const b = cfg.brand;

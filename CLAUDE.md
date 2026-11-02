@@ -2643,3 +2643,26 @@ refund policy's per-bottle amounts, the "Worth it?" thumbnail).
   expensive?", "What does ODORSTRIKE cost?"), `gifts-for-men-under-500-india`
   (FAQ "How much does ODORSTRIKE cost?") and `why-i-built-odorstrike` ("Why this
   price?" + its FAQ). Add a post there only with the same reason; the test lists them.
+
+## SEO / AEO / GEO pass from Search Console data (2026-11-02, owner: "improve seo, aeo, geo, llm … better ctr … sales and traffic")
+Write-up with sources and owner actions: `docs/audits/seo-aeo-geo-2026-11.md`. The
+owner's GSC export (12 months): brand 36.5% CTR, non-brand 0.4%; impressions doubling
+monthly; India = 716 of 928 clicks. Research: AI Overviews cut CTR, citation softens it
+(Seer 2026); AI citations come from crawlability, Bing indexing, answer-first pages,
+one product name and off-site mentions; schema is hygiene and llms.txt does nothing
+measurable.
+- `/shipping` carries organization-level `ShippingService` + return policy JSON-LD
+  (`#shipping-policy-jsonld`, `buildShippingServiceJsonLd()` in
+  `scripts/product-config.mjs`, stamped by `apply-structured-data.mjs`). Free on
+  prepaid, COD charges named in the description, no amounts.
+- Eight guides retitled to the searched words via `apply-serp-titles.mjs` (curry
+  smell, dri-fit, "after being stored", "can you use deodorant on clothes", "best
+  fabric freshener … 5 types compared", "cloth deodorant", two question titles =
+  their H1s). Judge them on a fresh 28-day export around 1 Dec; don't retitle sooner.
+- PDP description: "ODORSTRIKE clothing deodorant: a pocket smell remover spray for
+  clothes …". Product `alternateName` adds "Odor Strike" / "ODORSTRIKE spray".
+- Live India SERPs: #1 for "smell off" and "odorstrike spray"; for "best fabric
+  freshener for clothes" Amazon/Flipkart hold #1–2, Reddit #3, us #6. The big levers
+  left are the owner's: Merchant Center feed, Amazon listing, real reviews, Bing
+  Webmaster, chatgpt.com/merchants, honest founder replies on Reddit.
+- `test/seo-geo-pass.test.mjs` pins it.
