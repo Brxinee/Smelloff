@@ -2765,3 +2765,25 @@ sources: `docs/audits/admin-redesign-2026-11.md`; owner guide:
   `assetlinks.json` then goes at `/.well-known/assetlinks.json` (header rule
   already in routing.json; add the file to prepare-public's list with it).
 
+
+## AI assistant: faster and sturdier (2026-11-02, owner: "make it faster and better at its work")
+- **Instant answers** (`instantAnswer()` in `api/support-chat.js`): the welcome
+  tiles and fixed chips (which pack, COD, delivery speed, how long a bottle
+  lasts, marks, how to use, fabrics, where's my order, change address, cancel)
+  are answered from `config/product.json` with no Gemini call. "Which pack?"
+  asks "Who is it for?" with three chips that return the 1 / 2 / 5 pack card.
+  Typed text that doesn't match exactly still goes to the model. No ₹ in these
+  answers (test). **A tile renamed in the widget needs its key renamed here.**
+- **Hedged fallback:** if the main model is silent after 6 s (`HEDGE_MS`), the
+  fallback model runs in parallel and the first usable answer wins (the other
+  request is aborted). Per-attempt timeout 10 s; worst case ~16 s (was 24 s+).
+- `maxOutputTokens` 900 → 2048: Gemini counts thinking tokens against it, so
+  long answers could be cut mid-JSON and show the "can't answer" fallback.
+  Cut-off JSON keeps a readable `reply` (`parseModelJson`) or counts as a
+  failure that hands over to the fallback model; raw JSON never reaches a customer.
+- Prompt: read the whole chat (never re-ask), short replies to "ok/thanks",
+  and three worked examples built from config values.
+- Widget: "Still on it…" after 5 s; the request is aborted at 25 s so the
+  dots never spin forever.
+- Not done: streaming replies (needs the Worker's response streaming tested on
+  Cloudflare first). Live Gemini latency wasn't measured from the container.
