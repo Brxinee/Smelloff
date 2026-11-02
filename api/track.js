@@ -27,7 +27,10 @@ const ALLOWED_EVENTS = new Set([
   'chat_open', 'chat_message', 'chat_feedback', 'chat_card_click', 'chat_teaser',
   // assets/js/track.js: a landing with utm_* / an ad click id / ?ref=, and a
   // tap on a link to the business WhatsApp (meta.intent order|chat, meta.ref).
-  'campaign_landing', 'whatsapp_click'
+  'campaign_landing', 'whatsapp_click',
+  // odorstrike.html: the one-tap "what held you back?" after checkout closes
+  // without an order (label = shown | dismissed | cod | price | unsure | delivery | looking | other).
+  'checkout_exit'
 ]);
 
 const CART_EVENTS = new Set(['add_to_cart', 'remove_from_cart', 'cart', 'cart_update', 'checkout_start']);

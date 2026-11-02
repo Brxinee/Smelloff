@@ -1413,6 +1413,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .close-trust{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
   .close-trust span{color:var(--rule-strong);margin:0 6px}
   @media(max-width:520px){.close-ctas .btn{width:100%}}
+  .prod-per-use{margin:6px 0 0;font-size:14px;line-height:1.4;color:var(--text-2)}
 </style>
 <style id="a11y-utility-css">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
@@ -1705,6 +1706,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
               <span class="prod-mrp">MRP ₹499</span>
               <span class="prod-discount">54% OFF</span>
             </div>
+            <!-- Per-use price (2026-11-02): ₹229 ÷ ~250 sprays = ₹0.92; 2–3 sprays a refresh = ₹1.83–2.76. -->
+            <p class="prod-per-use">Under ₹3 a refresh: about ₹0.92 a spray, 2–3 sprays each time</p>
             <div class="prod-price-meta">
               <span>FREE SHIPPING ON PREPAID</span>
               <span class="prod-dot" aria-hidden="true">·</span>
