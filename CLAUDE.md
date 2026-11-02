@@ -2926,3 +2926,7 @@ Sep 19 look stays; structure, copy, legibility and motion changed.
   that runs `/opt/pw-browsers/chromium --no-sandbox "$@"`.
 - Where a skill's house style contradicts an owner decision, the owner wins:
   mono labels, three faces, lime on black and the cream text are the brand.
+- **Owner: don't base design decisions on behaviour data** ("I have less,
+  most of it mine"). First-party `events` / `page_views` are mostly the
+  owner's own visits; use published research and the skill audits, and don't
+  cite click or scroll counts as evidence (older notes that do are history).

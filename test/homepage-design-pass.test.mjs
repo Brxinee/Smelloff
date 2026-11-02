@@ -42,7 +42,7 @@ test('in-use section: four of the owner\'s photos, clothing only, sized and lazy
   // The in-hand shot has an iPhone (Apple logo) and the jacket shot a bag: not used here.
   assert.ok(!/pdp-size-in-hand|pdp-jacket-lining/.test(s));
   assert.ok(/class="ph-pic"/.test(s), 'network-aware sizes apply (lazy .ph-pic)');
-  assert.ok(s.includes('href="/odorstrike">View product details</a>'), 'the route visitors pick most');
+  assert.ok(s.includes('href="/odorstrike">View product details</a>'), 'a route to the product page');
 });
 
 test('one action, one name: every homepage buy button says "Fix my shirt"', () => {

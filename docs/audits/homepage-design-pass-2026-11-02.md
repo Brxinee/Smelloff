@@ -24,18 +24,17 @@ wins: Taste skill bans monospace labels, three typefaces, cream text and lime
 glow; Anthropic's skill calls black + acid green a default look. Those are the
 Sep 19 brand (owner, 2026-11-01) and stay.
 
-## Our data (first-party events, `/`)
-Since the Sep 19 homepage went live (1–2 Nov): about 10 visitors reached each
-section (remembers 10, reviews 12, offer 9, how-it-works 8, founders 10, FAQ
-10, close 10). Clicks: "View product details" 6 visitors, the buy buttons 4,
-"Ask us" (chat) 5, menu 4. In October the earlier pass measured ~3:1 for the
-product route on phones. The sample is far too small to A/B test; it says one
-thing consistently: people want to see the product before they buy.
+## No behaviour data
+The owner, 2026-11-02: most of the site's first-party events are the owner's
+own visits, and real traffic is small. **Design decisions here rest only on
+published research and the skill audits, never on our own click or scroll
+counts.** Don't cite `events` / `page_views` as evidence for a design change
+until real traffic is large and owner devices are excluded.
 
 ## What the audit found (before)
 | Finding | Source | Measured |
 |---|---|---|
-| Only 2 photos on the page (bottle cutout, studio shot), none of it in use | Taste `few-pictures`; NN/g: people study real-use product photos, skip decorative ones | 2 |
+| Only 2 photos on the page (bottle cutout, studio shot), none of it in use | Taste `few-pictures`; NN/g eyetracking: people look at photos that carry information about the product and ignore decorative ones ([Photos as Web Content](https://www.nngroup.com/articles/photos-as-web-content/)) | 2 |
 | Two strips scroll forever with no pause control (ticker, Hinglish marquee) | WCAG 2.2.2 Pause, Stop, Hide; Vercel "autoplay motion > 5 s needs pause" | 28 s / 30 s loops |
 | 10 small labels above headings | Taste `eyebrow`; Anthropic "unnecessary labels above content" | 10 |
 | Headings wrap to 3–4 lines | Taste `headline-lines` | 3 H2s at 390 and 1280 |
@@ -50,7 +49,7 @@ thing consistently: people want to see the product before they buy.
 1. **New "Spray the shirt, not you."** (`#in-use`) after the day story: four of
    the owner's photos (collar check on a commute, the mist on a collar, dried
    clear, the bottle going into a trouser pocket), each with one line of fact
-   from `config/product.json`, and a "View product details" link. Left out on
+   from `config/product.json`, and a "View product details" link (NN/g: product photos that show real use get looked at). Left out on
    purpose: the in-hand shot (an iPhone with its logo) and the jacket-lining
    shot (a bag on the hook).
 2. **Ticker removed; the Hinglish line is still** (no marquee).
@@ -89,8 +88,8 @@ thing consistently: people want to see the product before they buy.
 `test/homepage-design-pass.test.mjs` pins it (all 7 tests fail on the page
 before this pass).
 
-## Measure next
-`events` → `view_content` `home_sec_in-use` (new) and the clicks on its "View
-product details"; homepage → `/odorstrike?buy=1` sessions before/after
-2026-11-02 once there are a few hundred real phone visits. Judge the photo
-section by whether the offer's reach (`home_sec_odorstrike-featured`) holds.
+## Measure later
+Only once real traffic is in the hundreds of phone visits a week, with the
+owner's devices excluded: reach of `home_sec_in-use` and homepage →
+`/odorstrike?buy=1` sessions before/after 2026-11-02. Until then, judge the
+page against the research above, not the numbers.
