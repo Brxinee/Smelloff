@@ -1622,6 +1622,69 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   #sf-main.cl .cl-card--comp .inci-row :is(.i-name,.i-role){color:#080808}
   #sf-main.cl .cl-card--comp .inci-row .i-role{color:var(--ink-2)}
   @media(min-width:960px){#sf-main.cl .cl-split{grid-template-columns:1fr 1fr;gap:64px}#sf-main.cl .cl-split .cl-h2{max-width:none}}
+
+  /* ============ v2: premium, modern, conservative (owner, 2026-11-02) ============
+     Same care-label idea, with restraint: straight cards (no tilt), one torn
+     edge (the receipt), a thin lime stripe instead of a shouting band, body
+     type instead of monospace for everything that isn't a receipt or a time,
+     sentence-case buttons, a shorter phone page. */
+  #sf-main.cl{--cl-display:clamp(36px,4.6vw,70px);--cl-h2:clamp(30px,3.4vw,50px)}
+  #sf-main.cl .cl-band{min-height:6px;height:6px;padding:0}
+  #sf-main.cl .cl-card-body{gap:14px}
+  #sf-main.cl :is(.cl-cat,.cl-not,.cl-price-meta,.cl-made,.cl-slip-head,.cl-comp-head){font-family:var(--body) !important;letter-spacing:0 !important;text-transform:none}
+  #sf-main.cl :is(.cl-cat,.cl-not){text-transform:lowercase !important}
+  #sf-main.cl :is(.cl-cat,.cl-not)::first-letter{text-transform:uppercase}
+  #sf-main.cl .cl-cat{font-size:14px;font-weight:600;color:var(--ink-2);margin:2px 0 0}
+  #sf-main.cl .cl-not{font-size:14px;font-weight:500}
+  #sf-main.cl .cl-not-hi{background:none;color:#080808;padding:0;font-weight:700}
+  #sf-main.cl .cl-price-meta{font-size:14px}
+  #sf-main.cl .cl-made{font-size:13px;font-weight:600}
+  #sf-main.cl .cl-card .hero-trust-mini{font:500 14px/1.4 var(--body) !important;letter-spacing:0;color:#080808}
+  #sf-main.cl .cl-card .hero-trust-mini span:not(.htm-dot){display:inline-flex;align-items:center;gap:6px}
+  #sf-main.cl .cl-card .hero-trust-mini span:not(.htm-dot)::before{content:"";width:7px;height:7px;background:var(--acid);box-shadow:0 0 0 1px #080808}
+  #sf-main.cl .cl-card .htm-dot{display:none}
+  #sf-main.cl .cl-card .hero-trust-mini{gap:6px 18px}
+  /* Buttons: one shape, sentence case, the text face. */
+  #sf-main.cl .cl-btn{display:inline-block;text-align:center;line-height:54px;min-height:54px;padding:0 30px;font:600 16px/54px var(--body);letter-spacing:0;text-transform:lowercase}
+  #sf-main.cl .cl-btn::first-letter{text-transform:uppercase}
+  /* No tilt anywhere; one torn edge, on the receipt. */
+  #sf-main.cl :is(.cl-plate,.cl-quote,.cl-reply-card){transform:none !important}
+  #sf-main.cl .cl-slip{padding-bottom:28px}
+  #sf-main.cl .cl-slip-total{margin-top:22px}
+  #sf-main.cl .cl-slip-head{font-size:14px;font-weight:600}
+  /* Quotes: three straight cards on one grid. */
+  #sf-main.cl .cl-quotes{display:grid;gap:14px;padding:0}
+  @media(min-width:960px){#sf-main.cl .cl-quotes{grid-template-columns:repeat(3,1fr);gap:20px}}
+  #sf-main.cl .cl-quote{width:auto;margin:0 !important;padding:26px 24px 28px !important;justify-self:stretch !important;text-align:left}
+  #sf-main.cl .cl-quote .v-person{text-align:left;font-size:16px}
+  #sf-main.cl .cl-quote .v-tag{margin:8px 0 0;background:var(--acid);color:#080808;font:700 12px/1.4 var(--body) !important;letter-spacing:.06em}
+  #sf-main.cl .cl-quote .v-situation{text-align:left;font:500 14px/1.4 var(--body) !important;letter-spacing:0;margin:10px 0 14px}
+  #sf-main.cl .cl-quote blockquote{font-size:18px}
+  /* Offer: the 5-pack is the lowest price per bottle, so it says so. */
+  #sf-main.cl .prod-pack{position:relative}
+  #sf-main.cl .prod-pack[href*="qty=5"]::after{content:"Best value";position:absolute;top:-10px;right:8px;padding:2px 7px;background:var(--acid);color:#080808;font:700 11px/1.4 var(--body);letter-spacing:.04em}
+  #sf-main.cl .prod-pack b{font-family:var(--body);font-weight:700;font-size:16px}
+  #sf-main.cl .prod-pack :is(span,small){font-family:var(--body) !important;font-size:13px !important}
+  #sf-main.cl .cl-r-specs .ps-label{font-family:var(--body) !important;font-size:13px !important}
+  /* Composition: a quiet heading line inside the label. */
+  #sf-main.cl .cl-comp-head{margin:0 0 6px;font-size:14px;font-weight:700;color:#080808}
+  #sf-main.cl .cl-comp .sc-role{font:700 12px/1.4 var(--body) !important;letter-spacing:.06em}
+  #sf-main.cl .cl-card--comp .science-inci-summary{font:600 14px var(--body) !important;letter-spacing:0;text-transform:none}
+  #sf-main.cl .cl-card--comp .inci-row .i-role{font:600 13px var(--body) !important}
+  /* Letter: perforated stub, no scallops; roles in the text face. */
+  #sf-main.cl .cl-letter-stub{-webkit-mask:none;mask:none;padding-bottom:20px;font:600 14px var(--body);letter-spacing:0;text-transform:none}
+  #sf-main.cl .cl-sign .f-role{font-family:var(--body) !important;letter-spacing:0 !important;text-transform:none !important;font-size:14px !important}
+  #sf-main.cl .cl-letter .founder-link{font-family:var(--body)}
+  /* FAQ: photos only where there is room beside the questions. */
+  @media(max-width:959px){#sf-main.cl .cl-faq-photos{display:none}}
+  /* Close: a straight card, fully visible. */
+  #sf-main.cl .cl-sec.close{padding-bottom:var(--section-y)}
+  #sf-main.cl .cl-reply-card{margin-bottom:0;padding-bottom:clamp(28px,4vw,48px)}
+  #sf-main.cl .cl-reply-card .close-trust{font:500 14px/1.5 var(--body) !important;letter-spacing:0}
+  #sf-main.cl .cl-card .hero-trust-mini{text-transform:none !important;justify-content:flex-start !important;text-align:left}
+  #sf-main.cl .cl-card .hero-trust-mini span{text-transform:none !important;letter-spacing:0 !important}
+  #sf-main.cl :is(#inuseTitle,#voicesTitle,#faqTitle){max-width:none}
+  #sf-main.cl .cl-receipt .cl-r-meta{font:600 13px/1.5 var(--body) !important;letter-spacing:.02em}
 </style>
 <style id="a11y-utility-css">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
@@ -1708,7 +1771,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   <section class="hero" aria-labelledby="heroTitle">
     <div class="cl-hero">
       <div class="cl-card">
-        <div class="cl-band" aria-hidden="true"><span>Office wear</span><span>Casual wear</span><span>Everyday clothes</span></div>
+        <div class="cl-band" aria-hidden="true"></div>
         <div class="cl-card-body">
           <div class="cl-card-top">
             <img class="cl-logo" src="/assets/brand/logo-smelloff-white-320.webp" alt="Smelloff" width="320" height="64" decoding="async">
@@ -1757,7 +1820,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 
       <!-- The room beside the label: one real-use photo, static (one hero image: NN/g). -->
       <figure class="cl-photo">
-        <picture class="cl-frame"><source type="image/avif" srcset="/assets/photos/hero-spray-collar@720.avif 720w, /assets/photos/hero-spray-collar@960.avif 960w, /assets/photos/hero-spray-collar.avif 1254w" sizes="(min-width:960px) 50vw, 100vw"><img src="/assets/photos/hero-spray-collar@720.webp" srcset="/assets/photos/hero-spray-collar@720.webp 720w, /assets/photos/hero-spray-collar@960.webp 960w, /assets/photos/hero-spray-collar.webp 1254w" sizes="(min-width:960px) 50vw, 100vw" width="720" height="720" alt="ODORSTRIKE misting the collar of a black shirt." decoding="async"></picture>
+        <picture class="cl-frame"><source type="image/avif" srcset="/assets/photos/hero-spray-collar@720.avif 720w, /assets/photos/hero-spray-collar@960.avif 960w, /assets/photos/hero-spray-collar.avif 1254w" sizes="(min-width:960px) 50vw, 100vw"><img src="/assets/photos/hero-spray-collar@720.webp" srcset="/assets/photos/hero-spray-collar@720.webp 720w, /assets/photos/hero-spray-collar@960.webp 960w, /assets/photos/hero-spray-collar.webp 1254w" sizes="(min-width:960px) 50vw, 100vw" width="720" height="720" alt="ODORSTRIKE misting the collar of a black shirt." fetchpriority="high" decoding="async"></picture>
       </figure>
     </div>
   </section>
@@ -1770,7 +1833,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         <p class="cl-lead">Deodorant works on your skin. Sweat and daily odors get trapped in the weave of your clothes, where body sprays can't reach. Here is one ordinary day, from the shirt's side.</p>
         <a class="cl-btn cl-btn--lime" href="/odorstrike?buy=1">Fix my shirt — ₹229</a>
       </div>
-      <div class="cl-slip cl-zig-b">
+      <div class="cl-slip">
         <p class="cl-slip-head">One shirt · one working day</p>
         <h3 class="cl-itin-h">Morning</h3>
         <ul class="cl-rows">
@@ -1826,19 +1889,19 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     <div class="wrap">
       <h2 id="voicesTitle" class="cl-h2">What beta testers say</h2>
       <ul class="cl-quotes">
-        <li class="cl-quote cl-zig-tb">
+        <li class="cl-quote">
           <cite class="v-person">Rohit, 26 · Bengaluru</cite>
           <span class="v-tag">Beta tester</span>
           <p class="v-situation">2-hour bike ride → client meeting</p>
           <blockquote>“Sprayed it on my shirt before a client meeting after a 2hr bike ride. Nobody flinched.”</blockquote>
         </li>
-        <li class="cl-quote cl-zig-tb">
+        <li class="cl-quote">
           <cite class="v-person">Aakash, 24 · Pune</cite>
           <span class="v-tag">Beta tester</span>
           <p class="v-situation">Gym bag · Post-workout to office</p>
           <blockquote>“Lives in my gym bag now. Post-workout, pre-Uber, no more ‘should I shower at office’ anxiety.”</blockquote>
         </li>
-        <li class="cl-quote cl-zig-tb">
+        <li class="cl-quote">
           <cite class="v-person">Karan, 29 · Delhi</cite>
           <span class="v-tag">Beta tester</span>
           <p class="v-situation">Dinner jacket · Biryani odor reset</p>
@@ -1903,8 +1966,9 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         </div>
       </div>
       <div class="cl-card cl-card--comp">
-        <div class="cl-band" aria-hidden="true"><span>Composition</span><span>Formula v3.1</span></div>
+        <div class="cl-band" aria-hidden="true"></div>
         <div class="cl-card-body">
+          <p class="cl-comp-head">Composition · Formula v3.1</p>
           <!-- Four layers that work together, not a sequence: no 01–04 numbers. -->
           <ul class="science-grid cl-comp" aria-label="4-layer fabric odor control mechanism">
             <li class="science-card"><span class="sc-role">Trap</span><h3 class="sc-name">HPβCD</h3><p class="sc-desc">A hollow ring-shaped molecule that cages odor compounds in the fibres, so less of the smell reaches your nose.</p></li>
