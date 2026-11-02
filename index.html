@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 
 <!-- Hero bottle is above the fold and an LCP candidate (the Sep 19 hero:
      the background-removed cutout on the acid disc). -->
-<link rel="preload" as="image" type="image/webp" href="/assets/odorstrike-bottle-cutout.webp" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" href="/assets/odorstrike-bottle-cutout-v2.webp" fetchpriority="high">
 
 <!-- AI/LLM context files (answer-engine discovery hint) -->
 <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
@@ -456,7 +456,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .hero-visual::before{
     content:'';
     position:absolute;top:50%;left:50%;
-    width:clamp(200px,46vw,320px);aspect-ratio:1;
+    width:clamp(150px,36vw,240px);aspect-ratio:1;
     transform:translate(-50%,-50%);
     background:var(--acid);
     border-radius:50%;
@@ -620,7 +620,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
     .hero-visual-wrap{grid-area:visual;align-self:center;margin-right:calc(var(--gutter) * -2)}
     .hero-buy{grid-area:buy;align-self:start}
     .hero-visual{min-height:480px}
-    .hero-visual img{height:clamp(380px,38vw,500px)}
+    .hero-visual img{height:clamp(400px,40vw,520px);margin-block:-17px}
     .hero-demo-slot{max-width:400px}
   }
 
@@ -1469,7 +1469,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   @media(max-width:767px){
     #sf-main .hero{overflow:visible;padding-top:24px}
     #sf-main .hero-visual{min-height:clamp(184px,50vw,236px);overflow:visible}
-    #sf-main .hero-visual img{height:clamp(172px,47vw,224px);width:auto;max-width:none;object-fit:contain}
+    #sf-main .hero-visual img{height:clamp(200px,54vw,256px);margin-block:-14px;width:auto;max-width:none;object-fit:contain}
   }
   #homeMobileBar.mobile-bar{left:0;right:0;bottom:0;gap:0;border-radius:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0;border-top:1px solid rgba(244,241,234,.1);background:var(--ink);
     padding:12px max(20px,env(safe-area-inset-left,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-right,0px));
@@ -1614,7 +1614,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         <div class="hero-visual-wrap">
           <figure class="hero-visual" id="heroVisual">
             <picture>
-              <img src="/assets/odorstrike-bottle-cutout.webp" alt="ODORSTRIKE 50ml pocket fabric odor eliminator spray bottle for clothes" width="241" height="915" fetchpriority="high" decoding="async">
+              <img src="/assets/odorstrike-bottle-cutout-v2.webp" alt="ODORSTRIKE 50ml pocket fabric odor eliminator spray bottle for clothes" width="230" height="900" fetchpriority="high" decoding="async">
             </picture>
             <figcaption>50ml · ~250 sprays</figcaption>
           </figure>

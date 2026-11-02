@@ -136,13 +136,13 @@ test('slot photos are responsive, AVIF-first and network-aware', () => {
 test('homepage hero is the Sep 19 bottle, fast and static', () => {
   const html = fs.readFileSync('index.html', 'utf8');
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
-  const img = hero.match(/<img [^>]*odorstrike-bottle-cutout\.webp[^>]*>/);
+  const img = hero.match(/<img [^>]*odorstrike-bottle-cutout-v2\.webp[^>]*>/);
   assert.ok(img, 'hero bottle missing');
   assert.match(img[0], /fetchpriority="high"/);
   assert.doesNotMatch(img[0], /loading="lazy"/, 'the LCP image must load eagerly');
   assert.match(img[0], /alt="[^"]{20,}"/);
-  assert.match(html, /<link rel="preload" as="image" type="image\/webp" href="\/assets\/odorstrike-bottle-cutout\.webp" fetchpriority="high">/);
-  assert.ok(fs.existsSync('assets/odorstrike-bottle-cutout.webp'));
+  assert.match(html, /<link rel="preload" as="image" type="image\/webp" href="\/assets\/odorstrike-bottle-cutout-v2\.webp" fetchpriority="high">/);
+  assert.ok(fs.existsSync('assets/odorstrike-bottle-cutout-v2.webp'));
   assert.ok(!/carousel|swiper|slick/i.test(hero), 'one static hero image, not a carousel');
   assert.equal((hero.match(/class="btn hero-btn-primary"/g) || []).length, 1, 'one primary action in the hero');
 });

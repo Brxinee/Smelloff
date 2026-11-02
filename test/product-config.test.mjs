@@ -187,7 +187,7 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   assert.ok(hero.includes('2–3 pumps') && hero.includes('WAIT 15–30 SEC'), 'Usage microcopy (how-it-works card) must match the PDP');
   // Risk reducers sit by the button (2026-11-01): COD first, then shipping and returns.
   assert.ok(/<div class="hero-trust-mini">\s*<span>Cash on Delivery<\/span>/.test(hero), 'hero names COD by the button');
-  assert.ok(hero.includes('/assets/odorstrike-bottle-cutout.webp'), 'Sep 19 hero: the bottle on the acid disc');
+  assert.ok(hero.includes('/assets/odorstrike-bottle-cutout-v2.webp'), 'Sep 19 hero: the bottle on the acid disc');
 });
 
 test('index.html homepage: every section ends in a route to checkout', () => {
