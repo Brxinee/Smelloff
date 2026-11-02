@@ -12,8 +12,9 @@
  * Rules:
  *  - Diagram copy restates the post. Product facts only from
  *    config/product.json: 50ml, about 250 sprays / 100 refreshes, dries in
- *    15–30 s, up to 8 hours on fabric, fabric only. No prices: the price
- *    lives only on / and /odorstrike (owner, 2026-11-02).
+ *    15–30 s, up to 8 hours on fabric, fabric only. No prices (owner, 2026-11-02),
+ *    except in a section whose heading asks about price or cost
+ *    (is-fabric-odor-spray-worth-it-india, why-i-built-odorstrike).
  *    test/claims-consistency.test.mjs scans the stamped HTML.
  *  - Photos follow the clothing-only rule: no spray on skin, no shoes,
  *    helmets, bags or gym gear in frame. Pexels licence: free commercial
@@ -493,10 +494,10 @@ export const FIGURES = {
     dia('what-does-a-fabric-odor-spray-cost-per-use', 'stats', {
       kicker: 'From the bottle', title: 'What one bottle works out to',
       items: [
-        ['50ml', 'pocket bottle'],
+        ['₹229', 'for 50ml (2 for ₹419)'],
         ['~250', 'sprays per bottle'],
-        ['~100', 'refreshes of one garment'],
-        ['2–3', 'sprays per zone'],
+        ['~₹2.29', 'per refresh of one garment'],
+        ['~₹0.92', 'per spray'],
       ],
       note: 'A refresh is the zones that hold smell, not a soaked garment: about 2–3 sprays per zone.',
     }),
@@ -1105,7 +1106,7 @@ export const FIGURES = {
         ['50ml', 'pocket size'],
         ['~250', 'sprays per bottle'],
         ['15–30 s', 'to dry on fabric'],
-        ['~100', 'refreshes per bottle'],
+        ['₹229', 'per bottle'],
       ],
     }),
   ],
