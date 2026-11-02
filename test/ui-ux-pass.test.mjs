@@ -49,9 +49,10 @@ test('PDP phones: fabric chips sit under the buy row so Buy is in the first scre
   assert.match(html, /\.pd-price,\.buy-actions,\.pd-eta\{order:-1\}/);
 });
 
-test('homepage product-block image sizes match its rendered width on phones', () => {
+test('homepage in-use photo sizes match their rendered width (care-label homepage, 2026-11-02)', () => {
   const html = read('index.html');
-  assert.equal((html.match(/sizes="\(min-width:900px\) 360px, calc\(100vw - 74px\)"/g) || []).length, 2);
+  // 2 columns on phones (≈148px at 390), 4 from 960 (≈240px at 1280).
+  assert.equal((html.match(/sizes="\(min-width:960px\) 250px, calc\(50vw - 40px\)"/g) || []).length, 8);
 });
 
 test('PDP shows a delivery date under Buy, from the checkout estimate', () => {

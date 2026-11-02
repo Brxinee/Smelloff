@@ -22,7 +22,7 @@ test('section order: story, photos, proof, offer, contents, founders, FAQ, close
 test('no endless motion: the ticker and the Hinglish marquee are gone, the line stays still', () => {
   assert.ok(!/class="ticker"|ticker-track|band-marquee|bm-track/.test(main), 'no moving strips in the markup');
   assert.ok(!/@keyframes ticker|animation:ticker/.test(html), 'no ticker animation in the CSS');
-  assert.ok(sec('odorstrike-featured').includes('<p class="band-static">Smell Khatam. Confidence Qaayam.</p>'));
+  assert.match(sec('odorstrike-featured'), /<p class="band-static[^"]*">Smell Khatam\. Confidence Qaayam\.<\/p>/);
 });
 
 test('in-use section: four of the owner\'s photos, clothing only, sized and lazy', () => {

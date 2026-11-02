@@ -144,7 +144,8 @@ test('homepage hero is the Sep 19 bottle, fast and static', () => {
   assert.match(html, /<link rel="preload" as="image" type="image\/webp" href="\/assets\/odorstrike-bottle-cutout-v2\.webp" fetchpriority="high">/);
   assert.ok(fs.existsSync('assets/odorstrike-bottle-cutout-v2.webp'));
   assert.ok(!/carousel|swiper|slick/i.test(hero), 'one static hero image, not a carousel');
-  assert.equal((hero.match(/class="btn hero-btn-primary"/g) || []).length, 1, 'one primary action in the hero');
+  assert.equal((hero.match(/class="cl-btn"/g) || []).length, 1, 'one primary action in the hero');
+  assert.equal((hero.match(/<picture\b/g) || []).length, 1, 'one hero photo');
 });
 
 // Sharp images (2026-10-12, owner): no cut-out bottles and no cropping. The
