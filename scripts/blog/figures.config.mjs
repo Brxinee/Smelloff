@@ -496,10 +496,10 @@ export const FIGURES = {
       items: [
         ['₹229', 'for 50ml (2 for ₹419)'],
         ['~250', 'sprays per bottle'],
-        ['~₹2.29', 'per refresh of one garment'],
+        ['~₹2.29', 'per refresh (2–3 sprays, one spot)'],
         ['~₹0.92', 'per spray'],
       ],
-      note: 'A refresh is the zones that hold smell, not a soaked garment: about 2–3 sprays per zone.',
+      note: 'A refresh is one spot that holds smell, such as the collar: 2–3 sprays. A full shirt takes 4–5.',
     }),
   ],
 
