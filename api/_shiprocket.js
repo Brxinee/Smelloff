@@ -44,7 +44,10 @@ async function parseResponse(response) {
 const TOKEN_KEY = 'shiprocket-token';
 const PAUSE_KEY = 'shiprocket-auth-pause';
 const TOKEN_TTL_MS = 9 * 24 * 60 * 60 * 1000; // Shiprocket tokens last 240 h
-export const AUTH_PAUSE_MS = 60 * 60 * 1000;
+// 55, not 60: the cron runs every 15 min, and a pause set a few seconds into
+// one run would otherwise still hold at the run an hour later (17:00:12 vs a
+// pause until 17:00:14 on 2026-11-02), making every retry 75 min apart.
+export const AUTH_PAUSE_MS = 55 * 60 * 1000;
 
 async function credentialFingerprint() {
   const bytes = new TextEncoder().encode(`${process.env.SHIPROCKET_EMAIL || ''}\n${process.env.SHIPROCKET_PASSWORD || ''}`);
@@ -96,6 +99,32 @@ function authError(message, status, extra = {}) {
   return err;
 }
 
+function isNetworkBlock(status, data) {
+  if (status === 429) return true;
+  return status >= 400 && status < 500 && /block|too many/i.test(String(data?.message || data?.error || ''));
+}
+
+// Supabase Edge Function `shiprocket-login` (supabase/functions/shiprocket-login).
+// Returns { token } or { error }; never throws.
+async function loginViaRelay() {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key) return { error: 'relay not configured' };
+  const base = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
+  try {
+    const res = await fetch(`${base}/functions/v1/shiprocket-login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-service-key': key },
+      body: JSON.stringify({ email: process.env.SHIPROCKET_EMAIL, password: process.env.SHIPROCKET_PASSWORD }),
+      signal: AbortSignal.timeout(20000)
+    });
+    const out = await parseResponse(res);
+    if (res.ok && typeof out.token === 'string' && out.token) return { token: out.token };
+    return { error: String(out.error || out.message || `relay ${res.status}`).slice(0, 200) };
+  } catch (err) {
+    return { error: String(err?.message || 'relay unreachable').slice(0, 200) };
+  }
+}
+
 async function login(fp) {
   if (!isShiprocketConfigured()) throw missingConfigError();
 
@@ -115,8 +144,17 @@ async function login(fp) {
     body: JSON.stringify({ email: process.env.SHIPROCKET_EMAIL, password: process.env.SHIPROCKET_PASSWORD }),
     signal: AbortSignal.timeout(15000)
   });
-  const data = await parseResponse(response);
-  if (!response.ok || !data.token) {
+  let data = await parseResponse(response);
+  if ((!response.ok || !data.token) && isNetworkBlock(response.status, data)) {
+    // Shiprocket blocks the shared Cloudflare egress address, not the user
+    // (2026-11-02: a brand-new API user was "blocked" on its first login from
+    // the Worker and logged in fine from elsewhere). Ask the Supabase relay,
+    // which runs on another network, to log in once; the token then lasts 9 days.
+    const relayed = await loginViaRelay();
+    if (relayed.token) data = { token: relayed.token };
+    else if (relayed.error) data = { ...data, message: `${data.message || 'Login blocked'} (relay: ${relayed.error})` };
+  }
+  if (!data.token) {
     const message = String(data.message || data.error || `Authentication failed (${response.status})`).slice(0, 300);
     // A 4xx means Shiprocket refused these credentials (wrong password or a
     // locked user). A 5xx is their outage: retry on the next run as before.

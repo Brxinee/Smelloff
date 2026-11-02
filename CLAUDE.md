@@ -2848,7 +2848,8 @@ code kept the lock in place, now fixed in `api/_shiprocket.js`:
 - **The token is shared**: `admin_settings` key `shiprocket-token`
   `{token, exp, fp}`. It used to be in isolate memory only, so almost every
   15-minute run and every order on a fresh isolate logged in again.
-- **A rejected login (4xx) pauses logins for 60 min** (`shiprocket-auth-pause`
+- **A rejected login (4xx) pauses logins for 55 min** (not 60: a pause set at
+  16:00:14 still held at the 17:00:12 run, so retries came 75 min apart) (`shiprocket-auth-pause`
   `{until, fp, message}`). Every run and every order used to retry the same
   password. The error still reads "authentication failed" so the sync loop
   stops at the first order. A 5xx (outage) does not pause.
@@ -2861,3 +2862,18 @@ code kept the lock in place, now fixed in `api/_shiprocket.js`:
   order still missing a Shiprocket id. Only the API user works, never the
   main login.
 - `test/shiprocket-auth.test.mjs` pins it.
+- **Root cause, same evening: Shiprocket blocks the Cloudflare egress address,
+  not the user.** A brand-new API user (`smelloffpartners@gmail.com`, now in
+  `SHIPROCKET_EMAIL`) was "User blocked" on its very first login from the
+  Worker, and the same credentials logged in fine (company 11447397) from the
+  dev container. Fix: when a direct login is refused as blocked / too many /
+  429, `login()` asks the Supabase Edge Function **`shiprocket-login`**
+  (`supabase/functions/shiprocket-login`, deployed with `verify_jwt` off) to
+  log in from Supabase's network, then stores that token as usual (9 days). The
+  function calls only Shiprocket's fixed login URL, stores and logs nothing,
+  and accepts only a caller whose `x-service-key` can read `admin_settings`
+  (works for both service-key formats). A plain wrong password is never
+  relayed. **Redeploy the function whenever it changes.**
+- Courier auto-assignment for "External API" orders is on in the Shiprocket
+  panel (owner, 2026-11-02), so booked orders get a courier + AWB there; the
+  site's code never assigns couriers itself.
