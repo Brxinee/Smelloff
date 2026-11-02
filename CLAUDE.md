@@ -2930,3 +2930,10 @@ Sep 19 look stays; structure, copy, legibility and motion changed.
   most of it mine"). First-party `events` / `page_views` are mostly the
   owner's own visits; use published research and the skill audits, and don't
   cite click or scroll counts as evidence (older notes that do are history).
+- **Addresses over 190 characters fail with "Oops! Invalid Data."** (same
+  night: SMF-20261102-9285's 200-character line; an 84-character one went
+  through). `splitAddressForShiprocket()` joins the customer's lines with ", ",
+  drops control characters and lone surrogates (the checkout's 200-character
+  cut can split an emoji) and spills the rest into `*_address_2` at a word
+  boundary (`SR_ADDRESS_MAX` 190, per Shiprocket integration guides, not
+  official docs). API errors now include Shiprocket's per-field `errors`.
