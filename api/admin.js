@@ -24,6 +24,18 @@
  *   traffic {days}                 → visitors, funnel, sources, pages, devices,
  *                                    checkout-exit answers (first-party analytics)
  *   pulse                          → newest order + open counts, for the 60 s poll
+ *   createOrder {…}                → a WhatsApp / phone / test order, priced from
+ *                                    config/product.json unless a custom total is given
+ *   editOrder {id, …}              → contact, address, bottles, payment, total
+ *   deleteOrder {id, confirm}      → test, cancelled, failed or unpaid orders only;
+ *                                    `confirm` must be the order code
+ *   notifyCustomer {id, kind}      → one customer email for an order
+ *   deleteMessage / deleteReview {id}
+ *   subscribers · addSubscriber {email} · deleteSubscriber {id}
+ *   comments · updateComment {id, approved} · deleteComment {id}
+ *   systemCheck                    → live read-only checks of each service
+ *   sendTestEmail {to?}            → the diagnostic email (default: the owner)
+ *   emailPreview {type}            → a customer email rendered with sample data
  *
  * Every order the API returns carries `view`: the customer name, city, bottles,
  * the fulfilment stage, the payment state, the next status and whether it is a
@@ -33,7 +45,8 @@
 import crypto from 'node:crypto';
 import { checkRateLimit, clientIp } from './_security.js';
 import { runAfterResponse } from './_background.js';
-import { syncSheets, syncSheetsNow, isTestOrInternal } from './sheets-sync.js';
+import { syncSheets, syncSheetsNow, isTestOrInternal, isMarkedTest } from './sheets-sync.js';
+import { BASE_PRODUCT, calculateOrderTotal } from '../shared/products-config-workers.js';
 
 const COOKIE = 'sf_admin';
 const SESSION_MS = 12 * 60 * 60 * 1000;
@@ -118,7 +131,11 @@ async function db(path, { method = 'GET', body } = {}) {
   }
   const text = await response.text();
   const data = text ? JSON.parse(text) : null;
-  if (!response.ok) throw new HttpError(response.status === 404 ? 404 : 502, data?.message || `Database error ${response.status}`);
+  if (!response.ok) {
+    const err = new HttpError(response.status === 404 ? 404 : response.status === 409 ? 409 : 502, data?.message || `Database error ${response.status}`);
+    err.code = data?.code || '';
+    throw err;
+  }
   return data;
 }
 
@@ -354,6 +371,90 @@ function rpcArgs(days, now = Date.now()) {
 }
 
 const UUID = /^[0-9a-f-]{36}$/i;
+const EMAIL = /^[^\s@<>"']+@[^\s@<>"']+\.[a-z]{2,}$/i;
+const clean = (v, n = 120) => String(v ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, n);
+const idOf = (v, what = 'record') => { const id = String(v || ''); if (!UUID.test(id)) throw new HttpError(400, `Invalid ${what} id.`); return id; };
+
+/* ── manual orders (WhatsApp, phone, in person, tests) ───────────────── */
+
+export const PRODUCT = {
+  name: String(BASE_PRODUCT.title || BASE_PRODUCT.name || 'ODORSTRIKE'),
+  size: String(BASE_PRODUCT.size || '50ml'),
+  unit: Number(BASE_PRODUCT.price),
+  max: Number(BASE_PRODUCT.maxQuantity) || 10,
+};
+export const ORDER_CHANNELS = ['WhatsApp', 'Phone', 'Instagram', 'In person', 'Website', 'Other'];
+export const TEST_MARK = '[TEST · do not ship]';
+
+// Validates the order form and prices it the way checkout does
+// (calculateOrderTotal: packs + the COD charge for the pincode). A custom
+// total (a discount agreed on WhatsApp) replaces the price, never the rules.
+export function orderFromForm(body, existing = null) {
+  const a = existing?.address || {};
+  const pick = (k, n) => clean(body[k] !== undefined ? body[k] : (k === 'phone' ? existing?.customer_phone : k === 'email' ? existing?.customer_email : a[k === 'note' ? 'customer_note' : k]), n);
+  const name = pick('name', 80);
+  const phone = pick('phone', 20).replace(/\D/g, '').slice(-10);
+  const email = pick('email', 120).toLowerCase();
+  let line = pick('line', 200);
+  const city = pick('city', 60);
+  const state = pick('state', 60);
+  const pincode = pick('pincode', 10).replace(/\D/g, '');
+  const note = pick('note', 300);
+  const bottles = Math.floor(Number(body.bottles ?? (existing ? (existing.items || []).reduce((s, i) => s + (Number(i?.quantity) || 0), 0) : 1)));
+  const payment = (body.payment ?? existing?.payment_method) === 'cod' ? 'cod' : 'upi';
+
+  if (!name) throw new HttpError(400, 'Enter the customer\'s name.');
+  if (!/^[6-9]\d{9}$/.test(phone)) throw new HttpError(400, 'Enter a 10-digit Indian mobile number.');
+  if (email && !EMAIL.test(email)) throw new HttpError(400, 'That email address doesn\'t look right.');
+  if (!line || !city || !state) throw new HttpError(400, 'Enter the full address: street, city and state.');
+  if (!/^[1-9]\d{5}$/.test(pincode)) throw new HttpError(400, 'Enter a 6-digit pincode.');
+  if (!(bottles >= 1 && bottles <= PRODUCT.max)) throw new HttpError(400, `Bottles must be 1 to ${PRODUCT.max}.`);
+
+  const wasTest = existing ? isMarkedTest(existing) : false;
+  if ((body.test === true || wasTest) && !/do not ship/i.test(line)) line = `${line} ${TEST_MARK}`.slice(0, 220);
+
+  const priced = calculateOrderTotal(bottles, payment === 'cod' ? 'cod' : 'prepaid', pincode);
+  let amount = priced.amountPaise;
+  let codFee = priced.codFee * 100;
+  const custom = body.customTotal;
+  if (custom !== undefined && custom !== null && custom !== '') {
+    const t = Math.round(Number(custom) * 100);
+    if (!(t >= 0 && t <= 10000000)) throw new HttpError(400, 'Custom total must be between ₹0 and ₹1,00,000.');
+    amount = t;
+    codFee = Math.min(codFee, amount);
+  }
+  return {
+    customer_phone: phone,
+    customer_email: email || null,
+    payment_method: payment,
+    items: [{ name: PRODUCT.name, variant: PRODUCT.size, quantity: bottles, price: PRODUCT.unit }],
+    amount,
+    cod_fee: payment === 'cod' ? codFee : 0,
+    address: { ...a, name, line, city, state, pincode, ...(note ? { customer_note: note } : { customer_note: undefined }) },
+  };
+}
+
+export function newOrderCode(now = Date.now()) {
+  return `SMF-${istDay(now).replace(/-/g, '')}-${String(crypto.randomInt(10000)).padStart(4, '0')}`;
+}
+
+/* ── live checks (read-only; never logs in to Shiprocket: a failed login
+   there blocks the API user) ──────────────────────────────────────────── */
+
+async function timed(fn) {
+  const t = Date.now();
+  try { const detail = await fn(); return { ok: true, ms: Date.now() - t, detail: detail || '' }; }
+  catch (e) { return { ok: false, ms: Date.now() - t, detail: String(e?.message || e).slice(0, 200) }; }
+}
+async function getJson(url, headers) {
+  const r = await fetch(url, { headers, signal: AbortSignal.timeout(8000) });
+  const body = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(body?.error?.description || body?.message || body?.name || `HTTP ${r.status}`);
+  return body;
+}
+
+const PREVIEW_TYPES = ['orderConfirmation', 'orderShipped', 'outForDelivery', 'orderDelivered', 'orderCancelled', 'refundProcessed', 'paymentReminder', 'paymentFailed', 'reviewRequest', 'adminNewOrder'];
+const NOTIFY_KINDS = ['confirmation', 'dispatched', 'out_for_delivery', 'delivered', 'cancelled', 'review', 'payment_reminder', 'refund'];
 
 /* ── actions ─────────────────────────────────────────────────────────── */
 
@@ -462,6 +563,175 @@ const actions = {
   },
   async reviews() {
     return { reviews: await db('reviews?select=id,created_at,name,city,rating,body,anonymous,order_id,order:orders(status,payment_method)&order=created_at.desc&limit=300') };
+  },
+  quote(body) {
+    const bottles = Math.min(PRODUCT.max, Math.max(1, Math.floor(Number(body.bottles) || 1)));
+    const t = calculateOrderTotal(bottles, body.payment === 'cod' ? 'cod' : 'prepaid', String(body.pincode || '').replace(/\D/g, ''));
+    return { bottles, subtotal: t.subtotal * 100, codFee: t.codFee * 100, total: t.amountPaise, max: PRODUCT.max, channels: ORDER_CHANNELS };
+  },
+  async createOrder(body, req) {
+    if (!checkRateLimit(`admin-create:${clientIp(req)}`, 30, 10 * 60 * 1000)) throw new HttpError(429, 'Too many new orders at once. Wait a few minutes.');
+    const fields = orderFromForm(body);
+    const status = body.status === 'confirmed' || fields.payment_method === 'upi' ? 'confirmed' : 'placed';
+    const channel = ORDER_CHANNELS.includes(body.channel) ? body.channel : 'Other';
+    let row = null;
+    for (let i = 0; i < 6 && !row; i++) {
+      try {
+        [row] = await db(`orders?select=${ORDER_COLUMNS}`, { method: 'POST', body: {
+          ...fields, status, order_code: newOrderCode(),
+          attribution: { channel: body.test === true ? 'Test' : channel, source: 'admin', at: new Date().toISOString() },
+        } });
+      } catch (e) { if (!/duplicate key|23505/.test(`${e.code} ${e.message}`)) throw e; }
+    }
+    if (!row) throw new HttpError(503, 'Could not pick a free order number. Try again.');
+    await runAfterResponse('admin', () => syncSheetsNow('/api/admin'));
+    let email = null;
+    if (body.emailCustomer === true && row.customer_email && !isMarkedTest(row)) {
+      const { sendOrderConfirmationForOrder } = await import('./send-email.js');
+      email = await sendOrderConfirmationForOrder(row, { route: '/api/admin' }).catch((e) => ({ ok: false, errorMessage: e?.message }));
+    }
+    return { order: decorate(row), email };
+  },
+  async editOrder(body) {
+    const id = idOf(body.id, 'order');
+    const [existing] = await db(`orders?id=eq.${id}&select=${ORDER_COLUMNS}`);
+    if (!existing) throw new HttpError(404, 'Order not found.');
+    const fields = orderFromForm(body, existing);
+    // Keep the price as it was unless the form asked to re-price or set one.
+    if (body.reprice !== true && (body.customTotal === undefined || body.customTotal === '' || body.customTotal === null)) {
+      delete fields.amount; delete fields.cod_fee; delete fields.items; delete fields.payment_method;
+    }
+    const rows = await db(`orders?id=eq.${id}&select=${ORDER_COLUMNS}`, { method: 'PATCH', body: fields });
+    await runAfterResponse('admin', () => syncSheetsNow('/api/admin'));
+    return { order: decorate(rows[0]), shiprocketBooked: Boolean(existing.shiprocket_order_id) };
+  },
+  async deleteOrder(body) {
+    const id = idOf(body.id, 'order');
+    const [o] = await db(`orders?id=eq.${id}&select=id,order_code,status,address,customer_email,customer_phone`);
+    if (!o) throw new HttpError(404, 'Order not found.');
+    if (String(body.confirm || '').trim().toUpperCase() !== String(o.order_code || '').toUpperCase()) throw new HttpError(400, 'Type the order number to confirm.');
+    const deletable = isTestOrInternal(o) || ['cancelled', 'failed', 'payment_not_verified', 'upi_pending'].includes(o.status);
+    if (!deletable) throw new HttpError(409, 'Only test, cancelled, failed or unpaid orders can be deleted. Cancel it first; a real sale stays on record.');
+    try { await db(`orders?id=eq.${id}`, { method: 'DELETE' }); }
+    catch (e) {
+      if (e.code === '23503' || /foreign key/i.test(e.message)) throw new HttpError(409, 'This order has a review or an invoice linked to it, so it stays on record. Cancel it instead.');
+      throw e;
+    }
+    return { deleted: o.order_code };
+  },
+  async notifyCustomer(body, req) {
+    const id = idOf(body.id, 'order');
+    if (!NOTIFY_KINDS.includes(body.kind)) throw new HttpError(400, 'Unknown email.');
+    if (!checkRateLimit(`admin-notify:${clientIp(req)}`, 30, 10 * 60 * 1000)) throw new HttpError(429, 'Many emails sent just now. Wait a few minutes.');
+    const [o] = await db(`orders?id=eq.${id}&select=*`);
+    if (!o) throw new HttpError(404, 'Order not found.');
+    if (!o.customer_email) throw new HttpError(400, 'This order has no email address. Add one with Edit, or use WhatsApp.');
+    const m = await import('./_email-dispatch.js');
+    const route = '/api/admin';
+    const r = body.kind === 'confirmation' ? await (await import('./send-email.js')).sendOrderConfirmationForOrder(o, { route })
+      : body.kind === 'cancelled' ? await m.sendOrderCancelledEmail(o, { route, reason: clean(body.reason, 200) })
+      : body.kind === 'review' ? await m.sendReviewRequestEmail(o, { route })
+      : body.kind === 'payment_reminder' ? await m.sendPaymentReminderEmail(o, { route })
+      : body.kind === 'refund' ? await m.sendRefundProcessedEmail(o, { route })
+      : await m.sendFulfillmentEmail(o, body.kind, { route });
+    if (!r?.ok) throw new HttpError(502, r?.errorMessage || 'The email did not send.');
+    return { ok: true, skipped: Boolean(r.skipped), reason: r.reason || '', to: o.customer_email };
+  },
+  async deleteMessage(body) {
+    await db(`contact_messages?id=eq.${idOf(body.id, 'message')}`, { method: 'DELETE' });
+    return { ok: true };
+  },
+  async deleteReview(body) {
+    // For spam and duplicates. Never remove a review because it is negative
+    // (CCPA dark-pattern guidelines); the page says so next to the button.
+    await db(`reviews?id=eq.${idOf(body.id, 'review')}`, { method: 'DELETE' });
+    return { ok: true };
+  },
+  async subscribers() {
+    return { subscribers: await db('waitlist?select=id,created_at,email,source&order=created_at.desc&limit=2000') };
+  },
+  async addSubscriber(body) {
+    const email = clean(body.email, 120).toLowerCase();
+    if (!EMAIL.test(email)) throw new HttpError(400, 'Enter a valid email address.');
+    try {
+      const [row] = await db('waitlist?select=id,created_at,email,source', { method: 'POST', body: { email, source: 'admin' } });
+      return { subscriber: row };
+    } catch (e) {
+      if (/duplicate key|23505/.test(`${e.code} ${e.message}`)) throw new HttpError(409, 'That email is already on the list.');
+      throw e;
+    }
+  },
+  async deleteSubscriber(body) {
+    await db(`waitlist?id=eq.${idOf(body.id, 'subscriber')}`, { method: 'DELETE' });
+    return { ok: true };
+  },
+  async comments() {
+    return { comments: await db('blog_comments?select=id,created_at,post_slug,author_name,body,approved&order=created_at.desc&limit=500') };
+  },
+  async updateComment(body) {
+    const rows = await db(`blog_comments?id=eq.${idOf(body.id, 'comment')}&select=id,created_at,post_slug,author_name,body,approved`, { method: 'PATCH', body: { approved: body.approved === true } });
+    return { comment: rows?.[0] || null };
+  },
+  async deleteComment(body) {
+    await db(`blog_comments?id=eq.${idOf(body.id, 'comment')}`, { method: 'DELETE' });
+    return { ok: true };
+  },
+  async systemCheck(body, req) {
+    if (!checkRateLimit(`admin-check:${clientIp(req)}`, 20, 10 * 60 * 1000)) throw new HttpError(429, 'Checked many times just now. Wait a few minutes.');
+    const env = process.env;
+    const skip = (detail) => Promise.resolve({ ok: null, ms: 0, detail });
+    const [database, analytics, email, razorpay, sheets] = await Promise.all([
+      timed(async () => { const r = await db('orders?select=id&limit=1'); return `Orders table answered (${r.length ? 'has rows' : 'empty'}).`; }),
+      timed(async () => { const n = await db('rpc/site_realtime', { method: 'POST', body: {} }); return `${Number(n) || 0} visitor(s) on the site in the last 5 minutes.`; }),
+      env.RESEND_API_KEY ? timed(async () => {
+        const d = await getJson('https://api.resend.com/domains', { Authorization: `Bearer ${env.RESEND_API_KEY}` });
+        const list = (d.data || []).map((x) => `${x.name}: ${x.status}`);
+        if (!list.length) throw new Error('No sending domain in Resend.');
+        if (!(d.data || []).some((x) => x.status === 'verified')) throw new Error(`No verified domain (${list.join(', ')}).`);
+        return list.join(', ');
+      }) : skip('RESEND_API_KEY is not set.'),
+      env.RAZORPAY_KEY_ID && env.RAZORPAY_KEY_SECRET ? timed(async () => {
+        await getJson('https://api.razorpay.com/v1/payments?count=1', { Authorization: `Basic ${Buffer.from(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`).toString('base64')}` });
+        return `Keys accepted (${/^rzp_live_/.test(env.RAZORPAY_KEY_ID) ? 'live' : 'test'} mode).`;
+      }) : skip('Razorpay keys are not set.'),
+      env.GOOGLE_SERVICE_ACCOUNT_JSON ? timed(async () => {
+        const g = await import('./_google-sheets.js');
+        const meta = await g.getSpreadsheetMeta(env.SHEETS_ORDERS_ID || '1VY0Jkrj0CTjrEmamE2qLpPXF8qcUhNG5ZToWcCn1AKc');
+        return `Opened "${meta?.properties?.title || 'Orders data'}".`;
+      }) : skip('GOOGLE_SERVICE_ACCOUNT_JSON is not set.'),
+    ]);
+    const shiprocket = { ok: env.SHIPROCKET_EMAIL && env.SHIPROCKET_PASSWORD ? null : false, ms: 0, detail: env.SHIPROCKET_EMAIL && env.SHIPROCKET_PASSWORD ? 'Set. Not logged in from here: a failed login blocks the API user. The 15-minute sync shows real errors on orders.' : 'SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD are not set.' };
+    return { checkedAt: new Date().toISOString(), checks: { database, analytics, email, razorpay, sheets, shiprocket } };
+  },
+  async sendTestEmail(body, req) {
+    if (!checkRateLimit(`admin-testmail:${clientIp(req)}`, 5, 10 * 60 * 1000)) throw new HttpError(429, 'Sent a few test emails just now. Wait 10 minutes.');
+    const mail = await import('./_email.js');
+    const { renderTemplate } = await import('./_email-templates.js');
+    const sender = mail.getSenderConfig();
+    const to = clean(body.to, 120).toLowerCase() || sender.adminNotify;
+    if (!EMAIL.test(to)) throw new HttpError(400, 'Enter a valid email address.');
+    const timestamp = new Date().toISOString();
+    const rendered = renderTemplate('diagnosticTest', { emailId: 'pending', environment: sender.appEnv, timestamp });
+    const r = await mail.sendTransactionalEmail({
+      type: 'diagnosticTest', orderId: '', to, subject: rendered.subject, html: rendered.html, text: rendered.text,
+      idempotencyKey: mail.getIdempotencyKey('diagnosticTest', '', `${to}:${timestamp}`), originatingRoute: '/api/admin', notifyFailure: false,
+    });
+    if (!r?.ok) throw new HttpError(502, r?.errorMessage || 'The test email did not send.');
+    return { ok: true, to, emailId: r.emailId || '', from: sender.from || '' };
+  },
+  async emailPreview(body) {
+    if (!PREVIEW_TYPES.includes(body.type)) throw new HttpError(400, 'Unknown email.');
+    const { renderTemplate } = await import('./_email-templates.js');
+    const { orderEmailContext } = await import('./_email-dispatch.js');
+    const sample = {
+      order_code: 'SMF-20261102-1234', created_at: new Date().toISOString(), customer_email: 'asha@example.com', customer_phone: '9876543210',
+      items: [{ name: PRODUCT.name, quantity: 2, price: PRODUCT.unit }], amount: 41900 + 8900, cod_fee: 8900, payment_method: 'cod', status: 'dispatched',
+      address: { name: 'Asha Rao', line: '12, MG Road', city: 'Pune', state: 'Maharashtra', pincode: '411001' },
+      shiprocket_courier: 'Delhivery', shiprocket_awb: '14896012345', tracking_url: 'https://smelloff.in/track-order',
+    };
+    const ctx = orderEmailContext(sample);
+    const r = renderTemplate(body.type, { ...ctx, city: 'Pune', retryUrl: 'https://smelloff.in/odorstrike?buy=1&qty=2', reviewUrl: 'https://smelloff.in/reviews', method: 'original payment method', reason: '' });
+    return { subject: r.subject, html: r.html };
   },
   async syncSheets(body, req) {
     if (!checkRateLimit(`admin-sheets:${clientIp(req)}`, 10, 10 * 60 * 1000)) throw new HttpError(429, 'Synced recently. Wait a few minutes.');

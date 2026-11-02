@@ -88,6 +88,17 @@ link, advance + undo, search keeping focus, phone search, bulk update, deep
 link + reload, WhatsApp templates, Escape, keyboard `g t`, customer → order,
 CSV export. `test/admin-dashboard.test.mjs` pins the rules.
 
+## Second pass: add, edit, delete, test
+
+| Need | Research / rule | Built |
+|---|---|---|
+| Orders come in on WhatsApp and the phone | Shopify's admin "Create order" (draft orders) | **New order** form: contact, address with pincode autofill, bottles stepper, COD / paid online, channel, live price from the same rules as checkout, optional agreed total, optional confirmation email. |
+| Mistakes need fixing without breaking the books | Price changes must be deliberate | **Edit** keeps the price unless bottles, payment or pincode change; a notice when Shiprocket already has the old address. |
+| Deleting is destructive | NN/g: confirm destructive actions with the object's name; offer undo where possible | Delete only test / cancelled / failed / unpaid orders, after typing the order number; real sales are cancelled, not deleted. Status changes keep Undo. |
+| Customers need to hear about changes | — | Per-order email menu and an "Email the customer" option on status changes, using the existing Resend templates. |
+| "Does everything work?" without risking real customers | Test in production with markers, never real side effects | **Tools & tests**: read-only live checks, test email, sandboxed email previews, a test order that Shiprocket never books. |
+| Reviews | CCPA dark-pattern guidelines, IS 19000:2022 | Delete for spam/duplicates only; no add or edit. |
+
 ## Not done (owner's call or needs data)
 
 - Shopify-style saved custom views and per-order notes need a new column.

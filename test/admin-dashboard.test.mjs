@@ -120,3 +120,76 @@ test('the dashboard page: no third-party code, safe output, phone-first', () => 
   assert.match(page, /aria-live="polite"/);
   assert.match(page, /api\('pulse'\)/, 'new orders show up without a reload');
 });
+
+/* ── Add / edit / delete / test (2026-11-02, second pass) ── */
+const { orderFromForm, newOrderCode, TEST_MARK, PRODUCT } = api;
+const form = (o = {}) => ({ name: 'Ravi Teja', phone: '+91 98480 22338', email: 'ravi@example.com', line: '4-1, Road 2', city: 'Pune', state: 'Maharashtra', pincode: '411001', bottles: 2, payment: 'cod', ...o });
+
+test('manual orders are priced exactly like checkout', () => {
+  const cod = orderFromForm(form());
+  assert.equal(cod.amount, (419 + 119) * 100, '2 for ₹419 + South & West COD charges');
+  assert.equal(cod.cod_fee, 119 * 100);
+  assert.equal(cod.customer_phone, '9848022338');
+  assert.deepEqual(cod.items, [{ name: PRODUCT.name, variant: PRODUCT.size, quantity: 2, price: PRODUCT.unit }], 'items[].price stays the unit price');
+  const prepaid = orderFromForm(form({ payment: 'upi', bottles: 5 }));
+  assert.deepEqual([prepaid.amount, prepaid.cod_fee, prepaid.payment_method], [89900, 0, 'upi'], '5 for ₹899, free shipping');
+  const discounted = orderFromForm(form({ customTotal: 400 }));
+  assert.equal(discounted.amount, 40000, 'an agreed total replaces the price list');
+  assert.ok(discounted.cod_fee <= discounted.amount);
+  assert.match(newOrderCode(), /^SMF-\d{8}-\d{4}$/, 'matches the orders_order_code_check constraint');
+});
+
+test('the order form says what is wrong', () => {
+  const bad = (o, re) => assert.throws(() => orderFromForm(form(o)), re);
+  bad({ name: ' ' }, /name/);
+  bad({ phone: '12345' }, /mobile/);
+  bad({ phone: '5848022338' }, /mobile/, 'Indian mobiles start 6–9');
+  bad({ email: 'nope' }, /email/);
+  bad({ pincode: '0110' }, /pincode/);
+  bad({ bottles: 0 }, /Bottles/);
+  bad({ bottles: 11 }, /Bottles/);
+  bad({ customTotal: -5 }, /Custom total/);
+  assert.equal(orderFromForm(form({ email: '' })).customer_email, null, 'email is optional');
+});
+
+test('editing keeps what was not changed', () => {
+  const existing = order({ customer_phone: '9876543210', customer_email: 'a@b.in', address: { name: 'Asha', line: '12 MG Rd', city: 'Pune', state: 'MH', pincode: '411001', customer_note: 'gate 2' }, items: [{ quantity: 2 }] });
+  const f = orderFromForm({ line: '14 MG Rd' }, existing);
+  assert.equal(f.address.line, '14 MG Rd');
+  assert.equal(f.address.customer_note, 'gate 2');
+  assert.equal(f.customer_phone, '9876543210');
+  assert.equal(f.items[0].quantity, 2);
+  const t = orderFromForm({}, order({ address: { name: 'Asha', line: `12 MG Rd ${TEST_MARK}`, city: 'Pune', state: 'MH', pincode: '411001' } }));
+  assert.match(t.address.line, /do not ship/, 'a test order stays a test order');
+});
+
+test('test orders are marked so nothing ships or counts', async () => {
+  const t = orderFromForm(form({ test: true }));
+  assert.ok(t.address.line.endsWith(TEST_MARK));
+  assert.equal(decorate(order(t)).view.test, true, 'left out of KPIs');
+  const src = fs.readFileSync(new URL('../api/shiprocket-sync.js', import.meta.url), 'utf8');
+  assert.match(src, /if \(isMarkedTest\(order\)\) return \{ status: 'skipped', reason: 'test_order' \}/, 'Shiprocket never books a test order');
+  const { isMarkedTest } = await import('../api/sheets-sync.js');
+  assert.equal(isMarkedTest(order(t)), true);
+  assert.equal(isMarkedTest(order({ customer_email: 'me@smelloff.in' })), false, 'an internal (owner) order still ships');
+});
+
+test('deleting needs the order number and never removes a real sale', async () => {
+  const login = await call({ action: 'login', password: 'correct horse' }, { 'cf-connecting-ip': '3.3.3.3' });
+  const cookie = login.headers['set-cookie'].split(';')[0];
+  assert.equal((await call({ action: 'deleteOrder', id: 'x' }, { cookie })).status, 400);
+  const src = fs.readFileSync(new URL('../api/admin.js', import.meta.url), 'utf8');
+  assert.match(src, /isTestOrInternal\(o\) \|\| \['cancelled', 'failed', 'payment_not_verified', 'upi_pending'\]\.includes\(o\.status\)/);
+  assert.match(src, /Type the order number to confirm/);
+  assert.match(page, /Real sales can't be deleted/);
+  assert.doesNotMatch(src, /action === 'createReview'|async createReview|async editReview/, 'reviews are never written or edited by the shop');
+  assert.match(page, /never a review because it's negative/);
+});
+
+test('the dashboard has the tools a store needs', () => {
+  for (const a of ['createOrder', 'editOrder', 'deleteOrder', 'notifyCustomer', 'quote', 'deleteMessage', 'deleteReview', 'subscribers', 'addSubscriber', 'deleteSubscriber', 'comments', 'updateComment', 'deleteComment', 'systemCheck', 'sendTestEmail', 'emailPreview']) {
+    assert.match(page, new RegExp(`api\\('${a}'`), `${a} is wired into the page`);
+  }
+  assert.match(page, /sandbox=""/, 'email previews render with scripts off');
+  assert.doesNotMatch(fs.readFileSync(new URL('../api/admin.js', import.meta.url), 'utf8'), /apiv2\.shiprocket\.in\/v1\/external\/auth\/login/, 'the system check never logs in to Shiprocket');
+});

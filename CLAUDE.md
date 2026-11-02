@@ -2701,3 +2701,21 @@ sources: `docs/audits/admin-redesign-2026-11.md`; owner guide:
 - WhatsApp templates in the order panel: confirm COD (the Sheets wording),
   payment didn't finish, shipped update, ask for a review.
 - `test/admin-dashboard.test.mjs` pins all of it.
+- **Second pass, same day (owner: "add, edit, delete, test … merge and make it live"):**
+  `createOrder` / `editOrder` (`orderFromForm()`: validates, prices with
+  `calculateOrderTotal` like checkout; a custom total replaces the price,
+  `items[].price` stays the unit price; edit keeps the old price unless
+  bottles, payment or pincode change), `deleteOrder` (only test, cancelled,
+  failed or unpaid orders, `confirm` = the order code; a review or invoice FK
+  blocks it), `notifyCustomer` (one email: confirmation, shipped, out for
+  delivery, delivered, review, payment reminder, cancelled, refund), `quote`,
+  delete for messages and reviews (spam only; reviews are never written or
+  edited), Subscribers (`waitlist`, source `admin`), Blog comments
+  (show/hide/delete), and **Tools & tests**: `systemCheck` (read-only:
+  database, analytics, Resend domains, Razorpay keys, Sheets; never logs in to
+  Shiprocket, a failed login blocks the API user), `sendTestEmail`,
+  `emailPreview` (sandboxed iframe), and a test order.
+- **Test orders never ship:** `isMarkedTest()` (sheets-sync; "test" / "do not
+  ship" in name or address line) makes `createMissingShiprocketOrder` skip
+  them. The dashboard's test order adds `[TEST · do not ship]`. Orders that are
+  only "internal" (owner email / business phone) still ship.

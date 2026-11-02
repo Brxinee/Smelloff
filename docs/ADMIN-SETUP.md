@@ -142,6 +142,23 @@ host serves only the dashboard.
 - **Shortcuts (laptop):** `/` search · `g h` Home · `g o` Orders · `g c`
   Customers · `g t` Traffic · `r` refresh · `Esc` close a panel.
 - **Exports:** Orders (respects the current tab and filters) and Customers.
+- **An order from WhatsApp or the phone:** Orders → **New order**. The price
+  is worked out like checkout (packs + COD charges for the pincode); tick "Set
+  a different total" for an agreed discount. Shiprocket books it within 15
+  minutes once it is confirmed or paid.
+- **Fix a mistake:** open the order → **Edit** (contact, address, bottles,
+  payment). The price only changes if bottles, payment or pincode change.
+  If Shiprocket already booked it, change the address there too.
+- **Delete:** only test, cancelled, failed or unpaid orders, after typing the
+  order number. Real sales stay on record: cancel them instead.
+- **Email a customer:** in the order, Email → pick one (confirmation, shipped,
+  delivered, review request…). Or tick "Email the customer" when changing status.
+- **Tools & tests:** a live check of every service, a test email, previews of
+  every customer email, and a test order (marked "[TEST · do not ship]", never
+  booked with the courier, left out of the numbers; delete it when done).
+- **Subscribers** (add, remove, export) and **Blog comments** (hide, show,
+  delete). Reviews can only be deleted, for spam or duplicates, never because
+  they're negative.
 
 
 ### Rotating the password / revoking access

@@ -292,6 +292,23 @@ details.as-table table{margin-top:8px}
 .sec{border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
 .sec-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 16px 0;font-size:12.5px;font-weight:500;color:var(--muted)}
 .sec-b{padding:10px 16px 14px}
+.sec--danger{border-color:color-mix(in srgb,var(--bad) 35%,transparent)}
+.sec--danger .sec-h{color:var(--bad)}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line-2);border-radius:var(--r-sm);overflow:hidden}
+.stepper button{width:44px;height:42px;border:0;background:var(--panel-2);font-size:18px;cursor:pointer}
+.stepper input{width:56px;height:42px;border:0;text-align:center;background:var(--panel);font-size:16px;-moz-appearance:textfield}
+.stepper input::-webkit-inner-spin-button{-webkit-appearance:none}
+.radios{display:flex;gap:8px;flex-wrap:wrap}
+.quote{display:grid;gap:4px;padding:12px 14px;border-radius:var(--r-sm);background:var(--panel-2);font-size:14px}
+.quote div{display:flex;justify-content:space-between;gap:12px}
+.quote .total{font-weight:500;font-size:16px;border-top:1px solid var(--line);padding-top:6px;margin-top:2px}
+.form-row3{display:grid;grid-template-columns:120px 1fr 1fr;gap:10px}
+@media (max-width:520px){.form-row3{grid-template-columns:1fr 1fr}.form-row3 label:first-child{grid-column:1/-1}}
+.checks{display:grid}
+.checks div{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 0;border-top:1px solid var(--line);font-size:14px}
+.checks div:first-child{border-top:0}
+.checks small{grid-column:1/-1;color:var(--muted);font-size:12.5px}
+iframe.preview{width:100%;height:640px;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 0;font-size:14px;margin:0}
 .kv dt{color:var(--muted);padding-right:16px}.kv dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;word-break:break-word}
 .kv .total{font-weight:500;padding-top:8px;border-top:1px solid var(--line)}
@@ -368,6 +385,13 @@ kbd{font:12px var(--mono);padding:2px 6px;border-radius:5px;border:1px solid var
   <symbol id="i-out" viewBox="0 0 24 24"><path d="M9 21H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4M16 17l5-5-5-5M21 12H9"/></symbol>
   <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"/><circle cx="12" cy="12" r="3"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m14 6 4 4"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+  <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L3 18l3 3 6.2-6.2a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m3 11 18-8-8 18-2-8z"/></symbol>
+  <symbol id="i-mails" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="m3 8 9 6 9-6M7 3h10"/></symbol>
 </svg>
 
 <!-- ───────────── Sign in ───────────── -->
@@ -398,6 +422,9 @@ kbd{font:12px var(--mono);padding:2px 6px;border-radius:5px;border:1px solid var
     <a class="nav-link" href="#traffic" data-nav="traffic"><svg class="ic"><use href="#i-chart"/></svg>Traffic</a>
     <a class="nav-link" href="#messages" data-nav="messages"><svg class="ic"><use href="#i-inbox"/></svg>Messages<span class="count hidden" data-badge="messages"></span></a>
     <a class="nav-link" href="#reviews" data-nav="reviews"><svg class="ic"><use href="#i-star"/></svg>Reviews</a>
+    <a class="nav-link" href="#subscribers" data-nav="subscribers"><svg class="ic"><use href="#i-mails"/></svg>Subscribers</a>
+    <a class="nav-link" href="#comments" data-nav="comments"><svg class="ic"><use href="#i-chat"/></svg>Blog comments</a>
+    <a class="nav-link" href="#tools" data-nav="tools"><svg class="ic"><use href="#i-tool"/></svg>Tools &amp; tests</a>
     <div class="side-foot">
       <a class="nav-link" href="#settings" data-nav="settings"><svg class="ic"><use href="#i-gear"/></svg>Settings</a>
       <a class="nav-link" href="/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-ext"/></svg>View store</a>
@@ -657,7 +684,8 @@ $('#loginForm').addEventListener('submit', async (e) => {
 
 /* ── Router: #view[/id][?params] ── */
 let routeToken = 0;
-const TITLES = { home: 'Home', orders: 'Orders', customers: 'Customers', traffic: 'Traffic', messages: 'Messages', reviews: 'Reviews', settings: 'Settings', more: 'More' };
+const TITLES = { home: 'Home', orders: 'Orders', customers: 'Customers', traffic: 'Traffic', messages: 'Messages', reviews: 'Reviews', subscribers: 'Subscribers', comments: 'Blog comments', tools: 'Tools & tests', settings: 'Settings', more: 'More' };
+const MORE_VIEWS = ['messages', 'reviews', 'subscribers', 'comments', 'tools', 'settings'];
 function parseHash() {
   const [path, query = ''] = location.hash.slice(1).split('?');
   const [view = 'home', id = ''] = path.split('/');
@@ -672,15 +700,16 @@ let lastView = '';
 async function route() {
   const { view, id, params } = parseHash();
   const token = ++routeToken;
-  for (const a of $$('[data-nav]')) a.dataset.nav === view || (view === 'messages' || view === 'reviews' || view === 'settings') && a.dataset.nav === 'more' && a.closest('.tabbar') ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
+  for (const a of $$('[data-nav]')) a.dataset.nav === view || MORE_VIEWS.includes(view) && a.dataset.nav === 'more' && a.closest('.tabbar') ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
   $('#topTitle').textContent = TITLES[view];
-  const views = { home: viewHome, orders: viewOrders, customers: viewCustomers, traffic: viewTraffic, messages: viewMessages, reviews: viewReviews, settings: viewSettings, more: viewMore };
+  const views = { home: viewHome, orders: viewOrders, customers: viewCustomers, traffic: viewTraffic, messages: viewMessages, reviews: viewReviews, subscribers: viewSubscribers, comments: viewComments, tools: viewTools, settings: viewSettings, more: viewMore };
   if (view !== lastView) { $('#view').innerHTML = skeleton(view); window.scrollTo(0, 0); }
   lastView = view;
   await views[view]({ id, params, token });
   if (token !== routeToken) return;
   // Detail drawers are part of the URL, so a link or a refresh reopens them.
-  if (view === 'orders' && id) openOrder(id); else if (view === 'customers' && id) openCustomer(id); else closeDrawer(true);
+  if (view === 'orders' && id === 'new') openOrderForm();
+  else if (view === 'orders' && id) openOrder(id); else if (view === 'customers' && id) openCustomer(id); else closeDrawer(true);
 }
 const current = (token) => token === routeToken;
 function skeleton(view) {
@@ -822,7 +851,7 @@ function filterOrders(params) {
 function keepFocus(fn) {
   const a = document.activeElement, id = a?.id, pos = a?.selectionStart;
   fn();
-  if (id && (id === 'orderQ' || id === 'custQ')) { const el = document.getElementById(id); el?.focus(); try { el.setSelectionRange(pos, pos); } catch {} }
+  if (id && ['orderQ', 'custQ', 'subQ'].includes(id)) { const el = document.getElementById(id); el?.focus(); try { el.setSelectionRange(pos, pos); } catch {} }
 }
 function renderOrders(params) { keepFocus(() => drawOrders(params)); }
 function drawOrders(params) {
@@ -835,7 +864,7 @@ function drawOrders(params) {
   const stageNote = p('stage') ? ` · ${STAGE[p('stage')]?.[0] || ''} <a class="link" href="#orders?view=${esc(view)}">show all to do</a>` : '';
   $('#view').innerHTML = `
     <div class="page-head"><div><h1>Orders</h1></div>
-      <div class="actions-row"><button class="btn" data-act="export-orders">${ic('down')}Export CSV</button></div></div>
+      <div class="actions-row"><button class="btn" data-act="export-orders">${ic('down')}Export CSV</button><a class="btn btn--primary" href="#orders/new">${ic('plus')}New order</a></div></div>
     <nav class="tabs" aria-label="Order views">${ORDER_VIEWS.map(([id, label, fn]) => {
       const n = base.filter(fn).length;
       return `<a href="#orders?view=${id}${p('test') ? '&test=1' : ''}" ${id === view ? 'aria-current="page"' : ''}>${label}${id !== 'all' && n ? ` <span class="count ${id === 'todo' ? '' : 'count--quiet'}">${n}</span>` : ''}</a>`;
@@ -956,6 +985,7 @@ async function openOrder(code, { keepScroll = false } = {}) {
   drawer(`
     <div class="d-head"><div style="flex:1;min-width:0"><h2 id="dTitle">${esc(v.name || 'Order')}${testTag(o)}</h2>
       <div class="cell-sub"><button class="btn btn--ghost btn--sm mono" style="padding:0 6px;margin-left:-6px" data-act="copy" data-text="${esc(o.order_code)}" title="Copy order ID">${esc(o.order_code)} ${ic('copy')}</button> · ${esc(when(o.created_at))}</div></div>
+      <button class="btn btn--sm" data-act="edit-order" data-code="${esc(o.order_code)}">${ic('edit')}Edit</button>
       <button class="icon-btn" data-act="close" aria-label="Close">${ic('x')}</button></div>
     <div class="d-body">
       <div class="actions-row">${stagePill(o)}${payPill(o)}<span class="pill t-muted">${esc(STATUS[o.status] || o.status)}</span></div>
@@ -965,7 +995,7 @@ async function openOrder(code, { keepScroll = false } = {}) {
         <div class="actions-row">
           ${digits10(o.customer_phone) ? `<a class="btn btn--sm" href="tel:+91${digits10(o.customer_phone)}">${ic('phone')}Call</a>` : ''}
           ${wa ? `<div class="menu"><button class="btn btn--sm" data-act="wa-menu" aria-expanded="false" aria-haspopup="true">${ic('wa')}WhatsApp</button><div class="menu-list hidden" role="menu">${tpl.map(([l, s, text]) => `<a role="menuitem" href="${esc(waLink(o.customer_phone, text))}" target="_blank" rel="noopener">${esc(l)}<small>${esc(s)}</small></a>`).join('')}</div></div>` : ''}
-          ${o.customer_email ? `<a class="btn btn--sm" href="mailto:${esc(o.customer_email)}?subject=${encodeURIComponent(`Your Smelloff order ${o.order_code}`)}">${ic('mail')}Email</a>` : ''}
+          ${o.customer_email ? `<div class="menu"><button class="btn btn--sm" data-act="wa-menu" aria-expanded="false" aria-haspopup="true">${ic('mail')}Email</button><div class="menu-list hidden" role="menu">${mailKinds(o).map(([k, l, s]) => `<a role="menuitem" href="#" data-act="notify" data-id="${esc(o.id)}" data-kind="${k}" data-label="${esc(l)}">${esc(l)}<small>${esc(s)}</small></a>`).join('')}<a role="menuitem" href="mailto:${esc(o.customer_email)}?subject=${encodeURIComponent(`Your Smelloff order ${o.order_code}`)}">Write your own<small>Opens your email app</small></a></div></div>` : ''}
           ${others.length ? `<a class="btn btn--sm btn--ghost" href="#customers/${esc(digits10(o.customer_phone))}">${plural(others.length + 1, 'order')} ${ic('chev')}</a>` : ''}
         </div></div></section>
 
@@ -1000,8 +1030,15 @@ async function openOrder(code, { keepScroll = false } = {}) {
 
       <section class="sec"><div class="sec-h">Change status</div><div class="sec-b"><form class="form" id="statusForm" style="grid-template-columns:1fr auto;align-items:end">
         <label class="field"><span class="sr">Status</span><select class="input" name="status">${STATUS_ORDER.map((s) => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${esc(STATUS[s])}</option>`).join('')}</select></label>
-        <button class="btn" type="submit">Set</button></form>
-        <div class="cell-sub" style="margin-top:8px">For corrections. The button below moves the order one step on.</div></div></section>
+        <button class="btn" type="submit">Set</button>
+        ${o.customer_email ? `<label class="chip" style="grid-column:1/-1;justify-self:start"><input type="checkbox" name="notify">Email the customer when it's shipped, out for delivery, delivered or cancelled</label>` : ''}</form>
+        <div class="cell-sub" style="margin-top:8px">For corrections. The button at the bottom moves the order one step on.</div></div></section>
+
+      ${canDelete(o) ? `<section class="sec sec--danger"><div class="sec-h">Delete order</div><div class="sec-b form">
+        <p class="cell-sub" style="margin:0">Removes it for good. Rows already copied to Google Sheets stay there.</p>
+        <label class="field">Type <span class="mono">${esc(o.order_code)}</span> to confirm<input class="input mono" id="delConfirm" autocomplete="off" spellcheck="false"></label>
+        <div><button class="btn btn--sm btn--danger" type="button" data-act="delete-order" data-id="${esc(o.id)}" data-code="${esc(o.order_code)}" disabled>${ic('trash')}Delete order</button></div></div></section>`
+      : `<p class="cell-sub" style="margin:0">Real sales can't be deleted; they stay on record. To stop one, set it to Cancelled.</p>`}
     </div>
     ${next ? `<div class="d-foot"><button class="btn btn--primary" data-act="advance" data-id="${esc(o.id)}" data-to="${esc(next)}">${esc(ACTION[next])}</button></div>` : ''}
   `, `Order ${o.order_code}`);
@@ -1012,7 +1049,149 @@ async function openOrder(code, { keepScroll = false } = {}) {
     try { const { order } = await api('updateOrder', { id: o.id, ...Object.fromEntries(new FormData(e.target)) }); mergeOrders([order]); toast('Shipment saved'); refreshCurrent(); }
     catch (err) { toast(err.message, { error: true }); } finally { btn.disabled = false; }
   });
-  $('#statusForm').addEventListener('submit', (e) => { e.preventDefault(); const s = new FormData(e.target).get('status'); if (s !== o.status) setStatus([o.id], s); });
+  $('#statusForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target), s = fd.get('status');
+    if (s === o.status) return;
+    const ok = await setStatus([o.id], s);
+    if (ok && fd.get('notify') && ['dispatched', 'out_for_delivery', 'delivered', 'cancelled'].includes(s)) sendNotify(o.id, s, STATUS[s] + ' email');
+  });
+  $('#delConfirm')?.addEventListener('input', (e) => { $('[data-act="delete-order"]').disabled = e.target.value.trim().toUpperCase() !== o.order_code; });
+}
+
+// Which customer emails make sense for this order right now.
+function mailKinds(o) {
+  const st = o.view.stage, k = [['confirmation', 'Order confirmation', 'Re-sends it if it went missing']];
+  if (st === 'unpaid') k.push(['payment_reminder', 'Payment reminder', 'Link back to checkout']);
+  if (st === 'transit' || st === 'delivered') k.push(['dispatched', 'Shipped', 'With the tracking link']);
+  if (st === 'transit') k.push(['out_for_delivery', 'Out for delivery', '']);
+  if (st === 'delivered') k.push(['delivered', 'Delivered', ''], ['review', 'Ask for a review', 'Goes to /reviews']);
+  if (o.status === 'cancelled') k.push(['cancelled', 'Order cancelled', '']);
+  if (o.view.payment === 'refund_due') k.push(['refund', 'Refund processed', 'Send once the money is back']);
+  return k;
+}
+const canDelete = (o) => o.view.test || ['cancelled', 'failed', 'payment_not_verified', 'upi_pending'].includes(o.status);
+async function sendNotify(id, kind, label) {
+  try {
+    const r = await api('notifyCustomer', { id, kind });
+    toast(r.skipped ? `${label}: already sent recently` : `${label} sent to ${r.to}`);
+  } catch (e) { toast(e.message, { error: true }); }
+}
+
+/* ── New / edit order form ── */
+const CHANNELS = ['WhatsApp', 'Phone', 'Instagram', 'In person', 'Website', 'Other'];
+const TEST_SAMPLE = { name: 'Test order', phone: '9000000000', line: 'Test address, Sanathnagar', city: 'Hyderabad', state: 'Telangana', pincode: '500018' };
+function openOrderForm(o = null, { test = false } = {}) {
+  const editing = Boolean(o);
+  if (!editing && !test) setHash('orders', Object.fromEntries(parseHash().params), 'new');
+  const back = editing ? `data-act="edit-cancel" data-code="${esc(o.order_code)}"` : 'data-act="close"';
+  drawer(`
+    <div class="d-head"><div style="flex:1;min-width:0"><h2>${editing ? 'Edit order' : test ? 'New test order' : 'New order'}</h2>
+      <div class="cell-sub">${editing ? esc(o.order_code) : test ? 'Never booked with the courier, left out of every number' : 'For orders taken on WhatsApp, on the phone or in person'}</div></div>
+      <button class="icon-btn" ${back} aria-label="Close">${ic('x')}</button></div>
+    <form class="d-body" id="orderForm" novalidate>
+      <section class="sec"><div class="sec-h">Customer</div><div class="sec-b form">
+        <label class="field">Full name<input class="input" name="name" autocomplete="off" required></label>
+        <div class="form-row"><label class="field">Mobile<input class="input" name="phone" inputmode="tel" autocomplete="off" placeholder="10 digits" required></label>
+        <label class="field"><span>Email <span class="muted">(optional)</span></span><input class="input" name="email" type="email" inputmode="email" autocomplete="off"></label></div>
+      </div></section>
+      <section class="sec"><div class="sec-h">Delivery address</div><div class="sec-b form">
+        <label class="field">House, street, area<input class="input" name="line" autocomplete="off" required></label>
+        <div class="form-row3"><label class="field">Pincode<input class="input" name="pincode" inputmode="numeric" maxlength="6" autocomplete="off" required></label>
+          <label class="field">City<input class="input" name="city" autocomplete="off" required></label>
+          <label class="field">State<input class="input" name="state" autocomplete="off" required></label></div>
+        <label class="field"><span>Note for delivery <span class="muted">(optional)</span></span><input class="input" name="note" autocomplete="off"></label>
+      </div></section>
+      <section class="sec"><div class="sec-h">Order</div><div class="sec-b form">
+        <div class="field">Bottles (50ml)<span class="stepper"><button type="button" data-act="qty" data-d="-1" aria-label="One less">−</button><input name="bottles" type="number" min="1" max="10" inputmode="numeric" aria-label="Bottles"><button type="button" data-act="qty" data-d="1" aria-label="One more">+</button></span></div>
+        <div class="field">Payment<div class="radios">
+          <label class="chip"><input type="radio" name="payment" value="cod">Cash on Delivery</label>
+          <label class="chip"><input type="radio" name="payment" value="upi">Paid online (money received)</label></div></div>
+        ${editing ? '' : `<div class="field" id="codStatus">COD confirmation<div class="radios">
+          <label class="chip"><input type="radio" name="status" value="placed" checked>Still to confirm</label>
+          <label class="chip"><input type="radio" name="status" value="confirmed">Customer already confirmed</label></div></div>
+        <label class="field">Came in through<select class="input" name="channel">${CHANNELS.map((c) => `<option>${c}</option>`).join('')}</select></label>`}
+        <label class="chip" style="justify-self:start"><input type="checkbox" name="useCustom">Set a different total (an agreed discount)</label>
+        <label class="field hidden" id="customWrap">Total to charge (₹)<input class="input" name="customTotal" type="number" min="0" step="1" inputmode="numeric"></label>
+        <div class="quote" id="quote" aria-live="polite"><div><span class="muted">Working out the price…</span></div></div>
+        ${editing ? '' : `<label class="chip" style="justify-self:start"><input type="checkbox" name="emailCustomer" ${test ? 'disabled' : ''}>Email the order confirmation to the customer</label>`}
+      </div></section>
+      ${editing && o.shiprocket_order_id ? `<p class="cell-sub" style="margin:0">Already booked with Shiprocket${o.shiprocket_awb ? ` (AWB ${esc(o.shiprocket_awb)})` : ''}. Changes here don't reach Shiprocket: change the address there too.</p>` : ''}
+      ${!editing ? `<p class="cell-sub" style="margin:0">${test ? 'Marked "[TEST · do not ship]". Delete it from the order panel when you are done.' : 'Shiprocket books the courier within 15 minutes once the order is confirmed or paid.'}</p>` : ''}
+      <div class="err" id="formErr" role="alert"></div>
+    </form>
+    <div class="d-foot"><button class="btn" type="button" ${back}>Cancel</button><button class="btn btn--primary" type="submit" form="orderForm">${editing ? 'Save changes' : test ? 'Create test order' : 'Create order'}</button></div>`, editing ? `Edit ${o.order_code}` : 'New order');
+
+  const f = $('#orderForm'), a = o?.address || {};
+  const init = editing
+    ? { name: o.view.name, phone: digits10(o.customer_phone), email: o.customer_email || '', line: a.line || '', city: a.city || '', state: a.state || '', pincode: a.pincode || '', note: a.customer_note || '', bottles: o.view.bottles, payment: o.payment_method === 'cod' ? 'cod' : 'upi' }
+    : { ...(test ? TEST_SAMPLE : {}), bottles: 1, payment: 'cod' };
+  for (const [k, v] of Object.entries(init)) { if (k === 'payment') f.querySelector(`[name=payment][value="${v}"]`).checked = true; else if (f.elements[k]) f.elements[k].value = v ?? ''; }
+  const orig = editing ? { bottles: String(init.bottles), payment: init.payment, pincode: init.pincode } : null;
+  const changedPrice = () => editing && (f.elements.bottles.value !== orig.bottles || f.querySelector('[name=payment]:checked').value !== orig.payment || f.elements.pincode.value !== orig.pincode);
+
+  let qt;
+  const requote = () => {
+    clearTimeout(qt);
+    qt = setTimeout(async () => {
+      const pay = f.querySelector('[name=payment]:checked').value;
+      $('#codStatus')?.classList.toggle('hidden', pay !== 'cod');
+      const custom = f.elements.useCustom.checked ? f.elements.customTotal.value : '';
+      try {
+        const q = await api('quote', { bottles: f.elements.bottles.value, payment: pay, pincode: f.elements.pincode.value });
+        const rows = [[`${q.bottles} × 50ml`, inr(q.subtotal)]];
+        if (pay === 'cod') rows.push([/^\d{6}$/.test(f.elements.pincode.value) ? 'COD shipping + handling' : 'COD charges (enter pincode)', inr(q.codFee)]);
+        else rows.push(['Shipping', 'Free']);
+        let html = rows.map(([l, v]) => `<div><span>${esc(l)}</span><span>${esc(v)}</span></div>`).join('');
+        if (editing && !changedPrice() && custom === '') html = `<div class="total"><span>Total stays</span><span>${inr(o.amount)}</span></div><div><span class="muted">Change bottles, payment or pincode to re-price.</span></div>`;
+        else html += custom !== '' ? `<div><span class="muted">Price list total</span><span class="muted">${inr(q.total)}</span></div><div class="total"><span>Total to charge</span><span>${inr(Number(custom) * 100)}</span></div>` : `<div class="total"><span>Total${pay === 'cod' ? ' to collect' : ''}</span><span>${inr(q.total)}</span></div>`;
+        $('#quote').innerHTML = html;
+      } catch (e) { $('#quote').textContent = e.message; }
+    }, 200);
+  };
+  f.addEventListener('input', (e) => {
+    if (e.target.name === 'phone') e.target.value = e.target.value.replace(/[^\d+ ]/g, '');
+    if (e.target.name === 'pincode') {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+      if (e.target.value.length === 6) lookupPincode(e.target.value, f);
+    }
+    if (['bottles', 'pincode', 'customTotal'].includes(e.target.name)) requote();
+  });
+  f.addEventListener('change', (e) => {
+    if (e.target.name === 'useCustom') { $('#customWrap').classList.toggle('hidden', !e.target.checked); if (e.target.checked) f.elements.customTotal.focus(); }
+    if (['payment', 'useCustom'].includes(e.target.name)) requote();
+  });
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('.d-foot .btn--primary'); const err = $('#formErr'); err.textContent = '';
+    const v = Object.fromEntries(new FormData(f));
+    const body = { name: v.name, phone: v.phone, email: v.email, line: v.line, city: v.city, state: v.state, pincode: v.pincode, note: v.note, bottles: Number(v.bottles), payment: v.payment };
+    if (f.elements.useCustom.checked) { if (v.customTotal === '') { err.textContent = 'Enter the total to charge, or untick "Set a different total".'; return; } body.customTotal = Number(v.customTotal); }
+    btn.disabled = true;
+    try {
+      if (editing) {
+        const r = await api('editOrder', { id: o.id, ...body, reprice: changedPrice() });
+        mergeOrders([r.order]); toast(r.shiprocketBooked ? 'Saved. Update the address in Shiprocket too.' : 'Order updated');
+        setHash('orders', Object.fromEntries(parseHash().params), o.order_code); refreshCurrent();
+      } else {
+        const r = await api('createOrder', { ...body, status: v.status, channel: v.channel, test, emailCustomer: Boolean(v.emailCustomer) });
+        if (store.orders) store.orders.unshift(r.order); store.dash = {};
+        toast(`${test ? 'Test order' : 'Order'} ${r.order.order_code} created${r.email ? (r.email.ok ? ' · confirmation emailed' : ' · email not sent') : ''}`);
+        setHash('orders', { view: test ? 'all' : 'todo', ...(test ? { test: '1' } : {}) }, r.order.order_code); route();
+      }
+    } catch (ex) { err.textContent = ex.message; } finally { btn.disabled = false; }
+  });
+  requote();
+  setTimeout(() => f.elements.name.focus(), 60);
+}
+async function lookupPincode(pin, f) {
+  try {
+    const r = await fetch(`https://api.postalpincode.in/pincode/${pin}`, { signal: AbortSignal.timeout(5000) }).then((x) => x.json());
+    const po = r?.[0]?.PostOffice?.[0];
+    if (!po || f.elements.pincode.value !== pin) return;
+    if (!f.elements.city.value) f.elements.city.value = po.District || '';
+    if (!f.elements.state.value) f.elements.state.value = po.State || '';
+  } catch {}
 }
 
 /* ── Drawer ── */
@@ -1168,7 +1347,8 @@ async function viewMessages({ params, token }) {
       return `<article class="msg"><div class="msg-top"><div><strong>${esc(m.name || 'Anonymous')}</strong> <span class="cell-sub">· ${esc(ago(m.created_at))}${m.topic ? ` · ${esc(m.topic)}` : ''}</span></div>${pill([m.status === 'replied' ? 'Replied' : m.status === 'closed' ? 'Closed' : 'New', m.status === 'replied' ? 'info' : m.status === 'closed' ? 'muted' : 'warn'])}</div>
         <p>${esc(m.message || m.body || '')}</p>
         <div class="actions-row">${m.email ? `<a class="btn btn--sm" href="mailto:${esc(m.email)}?subject=${encodeURIComponent('Re: your message to Smelloff')}">${ic('mail')}Reply by email</a>` : ''}${wa ? `<a class="btn btn--sm" href="${esc(wa)}" target="_blank" rel="noopener">${ic('wa')}WhatsApp</a>` : ''}
-        ${['replied', 'closed', 'new'].filter((s) => s !== (m.status || 'new')).map((s) => `<button class="btn btn--sm btn--ghost" data-act="msg-status" data-id="${esc(m.id)}" data-s="${s}">Mark ${s}</button>`).join('')}</div></article>`;
+        ${['replied', 'closed', 'new'].filter((s) => s !== (m.status || 'new')).map((s) => `<button class="btn btn--sm btn--ghost" data-act="msg-status" data-id="${esc(m.id)}" data-s="${s}">Mark ${s}</button>`).join('')}
+        <button class="btn btn--sm btn--ghost btn--danger" data-act="msg-delete" data-id="${esc(m.id)}">${ic('trash')}Delete</button></div></article>`;
     }).join('') : `<div class="empty"><strong>${f === 'new' ? 'Inbox zero' : 'Nothing here'}</strong>${f === 'new' ? 'No unread messages from the contact form.' : ''}</div>`}</div>`;
 }
 
@@ -1188,13 +1368,106 @@ async function viewReviews({ token }) {
   if (!current(token)) return;
   const counted = list.filter((r) => reviewSource(r)[1] === 'counts');
   const avg = counted.length ? (counted.reduce((s, r) => s + Number(r.rating), 0) / counted.length).toFixed(1) : '—';
-  $('#view').innerHTML = `<div class="page-head"><div><h1>Reviews</h1><p class="card-sub" style="margin-top:6px">Only reviews tied to a bought order show on the site and count toward stars.</p></div></div>
+  $('#view').innerHTML = `<div class="page-head"><div><h1>Reviews</h1><p class="card-sub" style="margin-top:6px">Only reviews tied to a bought order show on the site and count toward stars. Reviews can't be written or edited here: a review is the customer's own words. Delete only spam or duplicates, never a review because it's negative (that's illegal under India's consumer rules).</p></div></div>
     <div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
       <div class="kpi"><span class="kpi-label">Star rating</span><span class="kpi-val">${avg}</span><span class="delta muted">from ${plural(counted.length, 'verified buyer review')}</span></div>
       <div class="kpi"><span class="kpi-label">All reviews</span><span class="kpi-val">${list.length}</span><span class="delta muted">${list.length - counted.length} hidden on the site</span></div></div>
     <div class="card">${list.length ? list.map((r) => { const [label, cls] = reviewSource(r); return `<article class="msg">
       <div class="msg-top"><div><span class="stars" aria-label="${r.rating} of 5 stars">${'★'.repeat(r.rating)}<span>${'★'.repeat(5 - r.rating)}</span></span> <strong>${esc(r.anonymous ? 'Anonymous' : r.name)}</strong>${r.city ? ` <span class="cell-sub">· ${esc(r.city)}</span>` : ''}</div>${pill([label, cls === 'counts' ? 'ok' : 'muted'])}</div>
-      <p>${esc(r.body)}</p><div class="cell-sub">${esc(dateOnly(r.created_at))}</div></article>`; }).join('') : '<div class="empty"><strong>No reviews yet</strong>Delivered buyers can review from Track order. Ask with the WhatsApp template on a delivered order.</div>'}</div>`;
+      <p>${esc(r.body)}</p><div class="msg-top"><span class="cell-sub">${esc(dateOnly(r.created_at))}</span><button class="btn btn--sm btn--ghost btn--danger" data-act="review-delete" data-id="${esc(r.id)}">${ic('trash')}Delete</button></div></article>`; }).join('') : '<div class="empty"><strong>No reviews yet</strong>Delivered buyers can review from Track order. Ask with the WhatsApp template on a delivered order.</div>'}</div>`;
+}
+
+
+/* ════════════════════════ SUBSCRIBERS ════════════════════════ */
+const SOURCE_LABEL = { footer: 'Footer signup', pdp: 'Product page', popup: 'Popup', blog: 'Blog', admin: 'Added here', 'blog-comment': 'Blog comment' };
+let subCache = null;
+async function viewSubscribers({ params, token }) {
+  try { if (!subCache) subCache = (await api('subscribers')).subscribers; } catch (e) { if (current(token)) $('#view').innerHTML = errorBox(e); return; }
+  if (!current(token)) return;
+  const q = (params.get('q') || '').toLowerCase();
+  const list = subCache.filter((x) => !q || x.email.toLowerCase().includes(q));
+  const recent = subCache.filter((x) => Date.now() - Date.parse(x.created_at) < 30 * 864e5).length;
+  const bySource = {}; for (const x of subCache) bySource[x.source] = (bySource[x.source] || 0) + 1;
+  $('#view').innerHTML = `<div class="page-head"><div><h1>Subscribers</h1><p class="card-sub" style="margin-top:6px">People who asked for news by email. Add only people who said yes.</p></div><button class="btn" data-act="export-subs">${ic('down')}Export CSV</button></div>
+    <div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+      <div class="kpi"><span class="kpi-label">Subscribers</span><span class="kpi-val">${num(subCache.length)}</span><span class="delta muted">${num(recent)} in the last 30 days</span></div>
+      <div class="kpi"><span class="kpi-label">Where they signed up</span><span class="delta" style="font-weight:400;color:var(--text-2)">${Object.entries(bySource).map(([k, n]) => `${esc(SOURCE_LABEL[k] || k)} ${n}`).join(' · ') || '—'}</span></div></div>
+    <section class="card" style="margin-bottom:16px"><div class="card-body"><form id="subForm" class="toolbar" style="margin:0" novalidate>
+      <label class="search"><span class="sr">Email address</span>${ic('mail')}<input class="input" name="email" type="email" inputmode="email" placeholder="name@example.com" autocomplete="off" required></label>
+      <button class="btn btn--primary" type="submit">${ic('plus')}Add subscriber</button></form><div class="err" id="subErr" role="alert"></div></div></section>
+    <div class="toolbar"><label class="search"><span class="sr">Search</span>${ic('search')}<input class="input" id="subQ" type="search" value="${esc(params.get('q') || '')}" placeholder="Search emails"></label></div>
+    <div class="card">${list.length ? `<table class="tbl"><thead><tr><th>Email</th><th>Signed up from</th><th>Joined</th><th><span class="sr">Delete</span></th></tr></thead><tbody>${list.map((x) => `<tr><td class="cell-main" style="word-break:break-all">${esc(x.email)}</td><td class="cell-sub">${esc(SOURCE_LABEL[x.source] || x.source)}</td><td class="cell-sub">${esc(dateOnly(x.created_at))}</td><td class="r"><button class="btn btn--sm btn--ghost btn--danger" data-act="sub-delete" data-id="${esc(x.id)}" data-email="${esc(x.email)}" aria-label="Remove ${esc(x.email)}">${ic('trash')}</button></td></tr>`).join('')}</tbody></table>` : '<div class="empty"><strong>No subscribers yet</strong>Signups from the site footer appear here.</div>'}</div>`;
+  $('#subForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); const email = e.target.email.value.trim(); $('#subErr').textContent = '';
+    try { const { subscriber } = await api('addSubscriber', { email }); subCache.unshift(subscriber); toast(`${email} added`); route(); }
+    catch (ex) { $('#subErr').textContent = ex.message; }
+  });
+  let t; $('#subQ').addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(() => { const q = e.target.value.trim(); setHash('subscribers', { q }); keepFocus(() => viewSubscribers({ params: new URLSearchParams(q ? { q } : {}), token: routeToken })); }, 200); });
+}
+
+/* ════════════════════════ BLOG COMMENTS ════════════════════════ */
+let comCache = null;
+async function viewComments({ params, token }) {
+  try { if (!comCache) comCache = (await api('comments')).comments; } catch (e) { if (current(token)) $('#view').innerHTML = errorBox(e); return; }
+  if (!current(token)) return;
+  const f = params.get('f') || 'all';
+  const list = comCache.filter((c) => f === 'all' || (f === 'shown') === c.approved);
+  const n = (v) => comCache.filter((c) => c.approved === v).length;
+  $('#view').innerHTML = `<div class="page-head"><div><h1>Blog comments</h1><p class="card-sub" style="margin-top:6px">Comments go live as soon as they're posted. Hide anything spammy or rude.</p></div></div>
+    <nav class="tabs">${[['all', 'All', comCache.length], ['shown', 'Shown', n(true)], ['hidden', 'Hidden', n(false)]].map(([id, l, c]) => `<a href="#comments?f=${id}" ${f === id ? 'aria-current="page"' : ''}>${l} <span class="count count--quiet">${c}</span></a>`).join('')}</nav>
+    <div class="card">${list.length ? list.map((c) => `<article class="msg"><div class="msg-top"><div><strong>${esc(c.author_name)}</strong> <span class="cell-sub">· ${esc(ago(c.created_at))} · on <a class="link" href="/blog/${encodeURIComponent(c.post_slug)}" target="_blank" rel="noopener">${esc(c.post_slug.replace(/-/g, ' '))}</a></span></div>${pill(c.approved ? ['Shown', 'ok'] : ['Hidden', 'muted'])}</div>
+      <p>${esc(c.body)}</p><div class="actions-row"><button class="btn btn--sm" data-act="comment-toggle" data-id="${esc(c.id)}" data-approved="${c.approved ? '0' : '1'}">${c.approved ? 'Hide' : 'Show again'}</button><button class="btn btn--sm btn--ghost btn--danger" data-act="comment-delete" data-id="${esc(c.id)}">${ic('trash')}Delete</button></div></article>`).join('')
+      : '<div class="empty"><strong>No comments here</strong></div>'}</div>`;
+}
+
+/* ════════════════════════ TOOLS & TESTS ════════════════════════ */
+const CHECK_LABELS = { database: ['Database', 'Supabase: orders, reviews, messages'], analytics: ['Site analytics', 'Visitor tracking'], email: ['Email sending', 'Resend: sending domain verified'], razorpay: ['Payments', 'Razorpay keys accepted'], sheets: ['Google Sheets', 'Order mirror opens'], shiprocket: ['Shipping', 'Shiprocket'] };
+const PREVIEWS = [['orderConfirmation', 'Order confirmation'], ['orderShipped', 'Shipped'], ['outForDelivery', 'Out for delivery'], ['orderDelivered', 'Delivered'], ['reviewRequest', 'Review request'], ['paymentReminder', 'Payment reminder'], ['paymentFailed', 'Payment failed'], ['orderCancelled', 'Order cancelled'], ['refundProcessed', 'Refund processed'], ['adminNewOrder', 'New order alert (to you)']];
+let lastCheck = null;
+async function viewTools({ token }) {
+  $('#view').innerHTML = `<div class="page-head"><div><h1>Tools &amp; tests</h1><p class="card-sub" style="margin-top:6px">Check that every part of the store works, without touching real customers.</p></div></div>
+    <div class="grid g-2">
+      <div class="stack">
+        <section class="card"><div class="card-head"><div><h2>System check</h2><div class="card-sub">Live, read-only checks of each service</div></div><button class="btn btn--sm" data-act="run-check">${ic('refresh')}Run again</button></div><div class="card-body checks" id="checks"><div class="sk" style="height:220px"></div></div></section>
+        <section class="card"><div class="card-head"><div><h2>Test order</h2><div class="card-sub">Walk an order through every step</div></div></div><div class="card-body" style="display:grid;gap:10px">
+          <p class="cell-sub" style="margin:0">Creates an order marked "[TEST · do not ship]". Shiprocket never books it and it's left out of every number. Move it through Confirm → Packed → Shipped, try the emails on it (to your own address), then delete it.</p>
+          <div><button class="btn btn--primary" data-act="test-order">${ic('plus')}Create a test order</button></div></div></section>
+        <section class="card"><div class="card-head"><div><h2>Test email</h2><div class="card-sub">Is email reaching inboxes?</div></div></div><div class="card-body"><form id="mailForm" class="toolbar" style="margin:0" novalidate>
+          <label class="search"><span class="sr">Send to</span>${ic('mail')}<input class="input" name="to" type="email" inputmode="email" placeholder="Leave empty to send to your owner address" autocomplete="off"></label>
+          <button class="btn" type="submit">${ic('send')}Send</button></form><p class="cell-sub" id="mailOut" aria-live="polite" style="margin:8px 0 0">Not in the inbox after a minute? Check Spam and Promotions, and mark it "Not spam".</p></div></section>
+      </div>
+      <section class="card"><div class="card-head"><div><h2>Email previews</h2><div class="card-sub">What customers get, with sample data. Nothing is sent.</div></div></div><div class="card-body" style="display:grid;gap:12px">
+        <label><span class="sr">Email</span><select class="input" id="previewType">${PREVIEWS.map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join('')}</select></label>
+        <p class="cell-sub" id="previewSubject" style="margin:0"></p>
+        <iframe class="preview" id="previewFrame" title="Email preview" sandbox="" referrerpolicy="no-referrer"></iframe></div></section>
+    </div>`;
+  $('#mailForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); const btn = e.submitter; btn.disabled = true; $('#mailOut').textContent = 'Sending…';
+    try { const r = await api('sendTestEmail', { to: e.target.to.value.trim() }); $('#mailOut').textContent = `Sent to ${r.to}${r.from ? ` from ${r.from}` : ''}. Check the inbox, then Spam and Promotions.`; }
+    catch (ex) { $('#mailOut').textContent = ex.message; } finally { btn.disabled = false; }
+  });
+  $('#previewType').addEventListener('change', loadPreview);
+  loadPreview();
+  if (lastCheck && Date.now() - lastCheck.at < 120000) renderChecks(lastCheck); else runCheck(token);
+}
+async function loadPreview() {
+  const type = $('#previewType')?.value; if (!type) return;
+  try { const r = await api('emailPreview', { type }); $('#previewSubject').textContent = `Subject: ${r.subject}`; $('#previewFrame').srcdoc = r.html; }
+  catch (e) { $('#previewSubject').textContent = e.message; }
+}
+async function runCheck(token = routeToken) {
+  const box = $('#checks'); if (box) box.classList.add('is-refreshing');
+  try { const r = await api('systemCheck'); r.at = Date.now(); lastCheck = r; if (current(token)) renderChecks(r); }
+  catch (e) { if ($('#checks')) $('#checks').innerHTML = `<div class="cell-sub">${esc(e.message)}</div>`; }
+}
+function renderChecks(r) {
+  const box = $('#checks'); if (!box) return;
+  box.classList.remove('is-refreshing');
+  box.innerHTML = Object.entries(r.checks).map(([k, c]) => {
+    const [label, sub] = CHECK_LABELS[k] || [k, ''];
+    const status = c.ok === true ? ['Working', 'ok'] : c.ok === false ? ['Problem', 'bad'] : ['Not tested', 'muted'];
+    return `<div><span>${esc(label)} <span class="muted" style="font-size:12.5px">· ${esc(sub)}</span></span>${pill(status)}<small>${esc(c.detail)}${c.ms ? ` · ${c.ms} ms` : ''}</small></div>`;
+  }).join('') + `<div><small>Checked ${esc(when(new Date(r.at).toISOString()))}</small></div>`;
 }
 
 /* ════════════════════════ SETTINGS / MORE ════════════════════════ */
@@ -1235,6 +1508,9 @@ function viewMore() {
   $('#view').innerHTML = `<div class="page-head"><h1>More</h1></div><div class="card more-list">
     <a href="#messages">${ic('inbox')}Messages${q.messages ? `<span class="count">${q.messages}</span>` : ''}</a>
     <a href="#reviews">${ic('star')}Reviews</a>
+    <a href="#subscribers">${ic('mails')}Subscribers</a>
+    <a href="#comments">${ic('chat')}Blog comments</a>
+    <a href="#tools">${ic('tool')}Tools &amp; tests</a>
     <a href="#settings">${ic('gear')}Settings</a>
     <a href="/" target="_blank" rel="noopener">${ic('ext')}View store</a>
     <button type="button" data-act="logout">${ic('out')}Sign out</button></div>`;
@@ -1245,6 +1521,24 @@ const ACTS = {
   'open-order': (el, e) => { if (e.target.closest('input,button,a')) return; const { view, params } = parseHash(); setHash(view === 'orders' ? 'orders' : 'orders', view === 'orders' ? Object.fromEntries(params) : {}, el.dataset.code); route(); },
   'open-customer': (el, e) => { if (e.target.closest('input,button,a')) return; setHash('customers', Object.fromEntries(parseHash().params), el.dataset.key); openCustomer(el.dataset.key); },
   close: () => closeDrawer(),
+  'edit-order': (el) => { const o = findOrder(el.dataset.code); if (o) openOrderForm(o); },
+  'edit-cancel': (el) => openOrder(el.dataset.code),
+  'test-order': () => openOrderForm(null, { test: true }),
+  qty: (el) => { const i = el.parentNode.querySelector('input'); i.value = Math.min(10, Math.max(1, (Number(i.value) || 1) + Number(el.dataset.d))); i.dispatchEvent(new Event('input', { bubbles: true })); },
+  notify: (el, e) => { e.preventDefault(); $$('.menu-list').forEach((m) => m.classList.add('hidden')); const o = store.orders?.find((x) => x.id === el.dataset.id); if (confirm(`Email "${el.dataset.label}" to ${o?.customer_email || 'the customer'}?`)) sendNotify(el.dataset.id, el.dataset.kind, el.dataset.label); },
+  'delete-order': async (el) => {
+    el.disabled = true;
+    try { await api('deleteOrder', { id: el.dataset.id, confirm: el.dataset.code }); store.orders = store.orders.filter((o) => o.id !== el.dataset.id); store.dash = {}; closeDrawer(); refreshCurrent(); toast(`${el.dataset.code} deleted`); }
+    catch (e) { toast(e.message, { error: true }); el.disabled = false; }
+  },
+  'msg-delete': async (el) => { if (!confirm('Delete this message for good?')) return; try { await api('deleteMessage', { id: el.dataset.id }); msgCache = msgCache.filter((m) => m.id !== el.dataset.id); toast('Message deleted'); route(); } catch (e) { toast(e.message, { error: true }); } },
+  'review-delete': async (el) => { if (!confirm('Delete this review for good?\n\nOnly for spam or duplicates. Never delete a review because it is negative.')) return; try { await api('deleteReview', { id: el.dataset.id }); toast('Review deleted'); route(); } catch (e) { toast(e.message, { error: true }); } },
+  'sub-delete': async (el) => { if (!confirm(`Remove ${el.dataset.email} from the list?`)) return; try { await api('deleteSubscriber', { id: el.dataset.id }); subCache = subCache.filter((x) => x.id !== el.dataset.id); toast('Removed'); route(); } catch (e) { toast(e.message, { error: true }); } },
+  'export-subs': () => csv([['email', 'source', 'joined'], ...(subCache || []).map((x) => [x.email, SOURCE_LABEL[x.source] || x.source, dateOnly(x.created_at)])], `smelloff-subscribers-${new Date().toISOString().slice(0, 10)}.csv`),
+  'comment-toggle': async (el) => { try { const { comment } = await api('updateComment', { id: el.dataset.id, approved: el.dataset.approved === '1' }); comCache = comCache.map((c) => (c.id === comment.id ? comment : c)); toast(comment.approved ? 'Shown on the blog' : 'Hidden from the blog'); route(); } catch (e) { toast(e.message, { error: true }); } },
+  'comment-delete': async (el) => { if (!confirm('Delete this comment for good?')) return; try { await api('deleteComment', { id: el.dataset.id }); comCache = comCache.filter((c) => c.id !== el.dataset.id); toast('Comment deleted'); route(); } catch (e) { toast(e.message, { error: true }); } },
+  'run-check': () => runCheck(),
+
   advance: async (el) => { el.disabled = true; await setStatus([el.dataset.id], el.dataset.to); el.disabled = false; },
   select: (el) => { el.checked ? sel.add(el.dataset.id) : sel.delete(el.dataset.id); el.closest('tr').setAttribute('aria-selected', el.checked); $('#bulkSlot').innerHTML = bulkBar(); },
   'select-all': (el) => { for (const cb of $$('tbody input[data-act="select"]')) { cb.checked = el.checked; el.checked ? sel.add(cb.dataset.id) : sel.delete(cb.dataset.id); cb.closest('tr').setAttribute('aria-selected', el.checked); } $('#bulkSlot').innerHTML = bulkBar(); },
@@ -1252,7 +1546,7 @@ const ACTS = {
   'bulk-apply': async (el) => { el.disabled = true; if (await setStatus([...sel], $('#bulkStatus').value)) sel.clear(); refreshCurrent(); },
   more: () => { listLimit += 50; renderOrders(parseHash().params); },
   period: (el) => { prefs.days = Number(el.dataset.days); savePrefs(); route(); },
-  refresh: async () => { store.ordersAt = 0; store.dash = {}; store.traffic = {}; msgCache = null; await route(); toast('Refreshed', { ms: 1500 }); },
+  refresh: async () => { store.ordersAt = 0; store.dash = {}; store.traffic = {}; msgCache = null; subCache = null; comCache = null; await route(); toast('Refreshed', { ms: 1500 }); },
   copy: (el) => copy(el.dataset.text, 'Copied'),
   'wa-menu': (el) => { const m = el.nextElementSibling; const open = m.classList.toggle('hidden') === false; el.setAttribute('aria-expanded', open); if (open) m.querySelector('a')?.focus(); },
   'export-orders': exportOrders,

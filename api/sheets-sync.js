@@ -41,12 +41,16 @@ const businessPhone = digits(BASE_PRODUCT.manufacturer.phone);
 
 // Test orders and the owner's own checkouts (placed from the business
 // WhatsApp number) stay out of the sheets; /admin still lists them.
+// Marked as a test in the name or address line (the dashboard's "Test order"
+// adds "[TEST · do not ship]"). Shiprocket never books these.
+export function isMarkedTest(order) {
+  return /\btest\b|key check|do not ship/i.test(`${order?.address?.name || ''} ${order?.address?.line || ''}`);
+}
+
 export function isTestOrInternal(order) {
-  const name = String(order?.address?.name || '');
-  const line = String(order?.address?.line || '');
   const email = lower(order?.customer_email);
   const phone = digits(order?.customer_phone);
-  if (/\btest\b|key check|do not ship/i.test(`${name} ${line}`)) return true;
+  if (isMarkedTest(order)) return true;
   if (email.endsWith('@smelloff.in')) return true;
   if (/^(\d)\1{9}$/.test(phone) || /^900000\d{4}$/.test(phone)) return true;
   return Boolean(businessPhone) && phone === businessPhone;

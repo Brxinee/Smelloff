@@ -12,6 +12,7 @@ import {
   isDuplicateOrderError
 } from './_shiprocket.js';
 import { sendFulfillmentEmail, dispatchDueReviewRequests, dispatchDuePaymentReminders } from './_email-dispatch.js';
+import { isMarkedTest } from './sheets-sync.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://tnuqjydmoxczdjnsgpci.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -106,6 +107,9 @@ async function createMissingShiprocketOrder(order) {
   if (!CREATE_STATUSES.includes(String(order.status || '').toLowerCase())) {
     return null;
   }
+  // A test order ("test" / "do not ship" in the name or address) is never
+  // booked: a real courier would come to collect it.
+  if (isMarkedTest(order)) return { status: 'skipped', reason: 'test_order' };
 
   const claimId = `claim_sr_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
   const claimResult = await claimShiprocketFulfillment(order.order_code, claimId);
