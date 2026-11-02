@@ -2590,3 +2590,24 @@ the ticker and "Your shirt remembers". The same trust facts stay under the hero 
 (`.hero-trust-mini`) and in the offer box. Buy unchanged: 665–716 at 390×844,
 668–719 at 1280×800. Don't bring these back. (The `#how-it-works` id is the science
 section, not this card.)
+
+## Conversion pass: data first, an exit question, per-use price (2026-11-02, owner: "super duper D2C … I need sales")
+Behaviour data (45 days, India, unique visitors; owner tests included): homepage
+most-clicked = menu (25), chat "Ask us" (14), Buy (16), View product details (8);
+section reach falls 46 → 25 with no cliff. PDP: 9 opened checkout and closed it, 10
+opened the cart and closed it, 8 tapped the COD option (where the charge first
+appears). Traffic is too small for A/B tests, so the store now asks.
+- **Checkout exit question** (`odorstrike.html`, "CHECKOUT EXIT QUESTION" script +
+  `.ck-why` CSS): after checkout was open ≥4 s and closed (✕, backdrop, Escape)
+  without an order, once per session, one tap: COD charge / price / not sure it works /
+  delivery time / just looking / something else. Each answer points back to buying
+  (pay online → reopens checkout; price → packs; unsure → WhatsApp; delivery → the
+  `calculateDeliveryEstimate()` window). Logs `checkout_exit` (label shown | dismissed |
+  cod | price | unsure | delivery | looking | other; allowed in `api/track.js`). Read it:
+  `select label, count(*) from events where type='checkout_exit' group by 1;`
+  (bots/headless and owner devices send nothing, by track.js design).
+- **Per-use price**: "Under ₹3 a refresh: about ₹0.92 a spray, 2–3 sprays each time"
+  in the PDP offer box, the homepage offer box and the PDP desktop pack line ("under
+  ₹3 a refresh"). Never a single "₹2.29 a refresh" on the PDP (the PDP specs say
+  83–125 refreshes; `odorstrike-pdp-claims.test.mjs` forbids it).
+- `test/conversion-pass.test.mjs` pins both.

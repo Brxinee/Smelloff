@@ -1326,6 +1326,18 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   #pdpCartBtn{width:100%;margin-top:10px}
   /* Pack cards (1 · 2 · 5) under the hero buttons and in #buy. Each sets the
      page quantity; the pack of 5 carries the badge. */
+  /* Checkout exit question (2026-11-02). Above the buy strip and chat, below the
+     consent/modal ladder; lifted over bottom bars by the chat's --sfc-lift. */
+  .ck-why{position:fixed;z-index:9990;left:12px;right:12px;bottom:calc(12px + var(--sfc-lift,0px) + env(safe-area-inset-bottom,0px));max-width:440px;margin-inline:auto;padding:18px 16px 16px;background:var(--surface-2,#1A1A1A);border:1px solid var(--rule);border-radius:16px;box-shadow:0 18px 44px rgba(0,0,0,.6);color:var(--text)}
+  .ck-why__t{margin:0 36px 12px 2px;font-size:15.5px;line-height:1.45;font-weight:600}
+  .ck-why__opts{display:flex;flex-wrap:wrap;gap:8px}
+  .ck-why__opt{min-height:44px;padding:8px 14px;border:1px solid var(--rule-strong,rgba(242,245,239,.22));border-radius:999px;background:transparent;color:var(--text);font:500 14px/1.2 var(--body);cursor:pointer}
+  .ck-why__opt:hover{border-color:var(--acid)}
+  .ck-why__cta{display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:4px;padding:0 18px;border:0;border-radius:8px;background:var(--acid);color:var(--ink);font:600 15px/1 var(--body);text-decoration:none;cursor:pointer}
+  .ck-why__x{position:absolute;top:8px;right:8px;width:44px;height:44px;border:0;background:transparent;color:var(--muted);font-size:24px;line-height:1;cursor:pointer}
+  @media(prefers-reduced-motion:no-preference){.ck-why{animation:ckWhyIn .25s ease-out}}
+  @keyframes ckWhyIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .pd-per-use{margin-top:8px;font-size:14px;color:var(--text-2)}
   .pd-eta{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;line-height:1.4;color:var(--text-2)}
   .pd-eta .ic{flex:none;width:18px;height:18px;color:var(--acid)}
   .pd-eta b{color:var(--text);font-weight:600}
@@ -1910,7 +1922,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
             <s>MRP ₹499</s>
             <span class="pd-off">54% OFF</span>
           </div>
-          <p class="pd-pack">1 × 50ml bottle · ~250 sprays</p>
+          <p class="pd-pack">1 × 50ml bottle · ~250 sprays · under ₹3 a refresh</p>
           <p class="price-note"><span>Free shipping on prepaid · <strong>Cash on Delivery</strong> available</span></p>
         </div>
 
@@ -2137,6 +2149,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
              and CFG.PRICES.solo — a discount % that doesn't match the two prices
              shown on the same card is a misleading-price claim. -->
         <div class="pd-price-row"><span class="pd-amt">₹229</span><s>M.R.P. ₹499</s><span class="pd-off">54% OFF</span></div>
+        <!-- Per-use price (2026-11-02): ₹229 ÷ ~250 sprays = ₹0.92; 2–3 sprays a refresh = ₹1.83–2.76. -->
+        <p class="pd-per-use">Under ₹3 a refresh: about ₹0.92 a spray, 2–3 sprays each time</p>
         <div class="pd-pks" role="group" aria-label="Choose a pack">
           <button type="button" class="pd-pk" data-qty="1" onclick="pdpPickPack(1)" aria-pressed="true"><span class="pd-pk__n">1 bottle</span><b>₹229</b><span class="pd-pk__each">₹229 each</span><span class="pd-pk__off">54% OFF</span></button>
           <button type="button" class="pd-pk" data-qty="2" onclick="pdpPickPack(2)" aria-pressed="false"><span class="pd-pk__n">2 bottles</span><b>₹419</b><span class="pd-pk__each">₹209.50 each</span><span class="pd-pk__off">Save ₹39</span></button>
@@ -3022,6 +3036,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   window.ckUpsell = ckUpsell;
 
   function openCheckout(variant, ctaLocation) {
+    window.__smfCkOpenedAt = Date.now();
     if (typeof window.smfWarmRazorpay === 'function') window.smfWarmRazorpay();
     _checkoutTrigger = document.activeElement;
     currentVariant = variant;
@@ -3073,6 +3088,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     if (_checkoutTrigger && typeof _checkoutTrigger.focus === 'function') {
       setTimeout(function() { _checkoutTrigger.focus(); _checkoutTrigger = null; }, 50);
     }
+    if (typeof window.smfAskWhy === 'function') window.smfAskWhy();
   }
   var _overlayFocusTrapHandler = null;
   function trapFocusInOverlay() {
@@ -3350,6 +3366,7 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
   var _processedOrders = new Set();
 
   function showSuccess(orderId, method, details) {
+    window.__smfOrdered = true;
     hideLoadingScreen();
     var cff = document.getElementById('checkoutForm');
     if (cff) cff.style.display = 'none';
@@ -4356,6 +4373,78 @@ function _metaFbc(){ var c = _metaCk('_fbc'); if (c) return c; try { var f = new
     window.addEventListener('resize', onScroll, {passive:true});
     onScroll();
   })();
+</script>
+
+<!-- ============================= -->
+<!-- CHECKOUT EXIT QUESTION        -->
+<!-- ============================= -->
+<script>
+/* 2026-11-02 (owner: "I need sales … research what works"). With ~300 product
+   visitors a month an A/B test can't read, so the store asks the people who
+   leave. Once per session, only after checkout was open ≥4 s and closed
+   without an order: one tap logs `checkout_exit` (label = reason) to the
+   first-party events table, and each answer points back to buying. No COD
+   amount here (amounts live in checkout only). */
+(function(){
+  var KEY = 'smf_ck_why', WA = 'https://wa.me/919392974031?text=' + encodeURIComponent("Hi Smelloff, I have a question about ODORSTRIKE before I order.");
+  function track(label){ try { if (typeof window.smfTrack === 'function') window.smfTrack({ type: 'checkout_exit', label: label }); } catch (e) {} }
+  function eta(){
+    try { var e = window.calculateDeliveryEstimate && window.calculateDeliveryEstimate(); if (e && e.text) return 'It ships from Hyderabad within 48 hours. ' + e.text + '.'; } catch (x) {}
+    return 'It ships from Hyderabad within 48 hours: 3–5 business days to metros, 5–10 elsewhere.';
+  }
+  var WHY = [
+    { k: 'cod', t: 'The Cash on Delivery charge', a: function(){ return 'Pay online by UPI, card or net banking and shipping is free: ₹229 for one bottle.'; }, cta: 'Pay online — ₹229', act: 'checkout' },
+    { k: 'price', t: 'The price', a: function(){ return 'One 50ml bottle works out to under ₹3 a refresh: about ₹0.92 a spray, 2–3 sprays each time. Two bottles are ₹419.'; }, cta: 'See the packs', act: 'packs' },
+    { k: 'unsure', t: 'Not sure it works', a: function(){ return 'It goes on the fabric, not your skin: HPβCD traps the smell in the weave and Zinc PCA neutralises it. And there are 7-day returns if it isn’t for you.'; }, cta: 'Ask us on WhatsApp', act: 'wa' },
+    { k: 'delivery', t: 'Delivery time', a: eta, cta: 'Continue to checkout', act: 'checkout' },
+    { k: 'looking', t: 'Just looking', a: function(){ return 'No problem. It’s here whenever your shirt needs it.'; }, cta: null },
+    { k: 'other', t: 'Something else', a: function(){ return 'Tell us, and a real person replies on WhatsApp.'; }, cta: 'Message us on WhatsApp', act: 'wa' }
+  ];
+  var box = null;
+  function close(label){
+    if (!box) return;
+    if (label) track(label);
+    box.remove(); box = null;
+    document.removeEventListener('keydown', onKey);
+  }
+  function onKey(e){ if (e.key === 'Escape') close('dismissed'); }
+  function el(tag, cls, text){ var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function answer(w){
+    track(w.k);
+    var opts = box.querySelector('.ck-why__opts'); if (opts) opts.remove();
+    var t = box.querySelector('.ck-why__t'); t.textContent = w.a();
+    if (w.cta) {
+      var c;
+      if (w.act === 'wa') { c = el('a', 'ck-why__cta', w.cta); c.href = WA; c.target = '_blank'; c.rel = 'noopener'; c.addEventListener('click', function(){ close(); }); }
+      else {
+        c = el('button', 'ck-why__cta', w.cta); c.type = 'button';
+        c.addEventListener('click', function(){
+          close();
+          if (w.act === 'checkout' && typeof window.buyNow === 'function') window.buyNow();
+          else if (w.act === 'packs') { var b = document.getElementById('buy'); if (b) b.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        });
+      }
+      box.appendChild(c); setTimeout(function(){ c.focus(); }, 30);
+    } else {
+      setTimeout(function(){ close(); }, 2600);
+    }
+  }
+  window.smfAskWhy = function(){
+    if (window.__smfOrdered || box) return;
+    if (!window.__smfCkOpenedAt || Date.now() - window.__smfCkOpenedAt < 4000) return;
+    try { if (sessionStorage.getItem(KEY)) return; sessionStorage.setItem(KEY, '1'); } catch (e) { return; }
+    box = el('div', 'ck-why'); box.setAttribute('role', 'dialog'); box.setAttribute('aria-labelledby', 'ckWhyT');
+    var x = el('button', 'ck-why__x', '×'); x.type = 'button'; x.setAttribute('aria-label', 'Close'); x.addEventListener('click', function(){ close('dismissed'); });
+    var t = el('p', 'ck-why__t', 'Before you go: what held you back?'); t.id = 'ckWhyT';
+    var opts = el('div', 'ck-why__opts');
+    WHY.forEach(function(w){ var b = el('button', 'ck-why__opt', w.t); b.type = 'button'; b.addEventListener('click', function(){ answer(w); }); opts.appendChild(b); });
+    box.appendChild(x); box.appendChild(t); box.appendChild(opts);
+    document.body.appendChild(box);
+    document.addEventListener('keydown', onKey);
+    track('shown');
+    setTimeout(function(){ var f = box && box.querySelector('.ck-why__opt'); if (f) f.focus(); }, 80);
+  };
+})();
 </script>
 
 <!-- ============================= -->
