@@ -1,25 +1,29 @@
-# ODORSTRIKE — Admin Dashboard ("Mission Control")
+# ODORSTRIKE — Owner dashboard (/admin)
 
-A private, password-protected admin site for **admin.smelloff.in**. It gives you
-one place to see and edit *everything* about the store:
+A private, password-protected dashboard at **https://smelloff.in/admin**
+(redesigned 2026-11-02; research and reasoning in
+`docs/audits/admin-redesign-2026-11.md`). It works on a phone (bottom tabs,
+full-screen order panel) and on a laptop (sidebar, tables), in dark or light.
 
-- **Overview** — 30-day revenue & orders (with vs-prior-period deltas), AOV,
-  order-status and payment-method breakdowns, top cities, "needs attention"
-  counter, and the latest orders.
-- **Orders** — full search/filter table, CSV export, and a click-to-edit panel
-  for every order: change status, add courier + tracking, fix the address,
-  adjust the amount, or create/delete an order.
-- **Analytics** — Google Analytics 4 built straight into the dashboard (users,
-  sessions, pageviews time-series, live "active now", channels, devices, top
-  pages, top cities) — no more logging into GA separately.
-- **Reviews / Messages / Comments / Waitlist** — moderate reviews, reply to and
-  triage contact messages, approve/hide/delete blog comments, export the email
-  waitlist.
-- **Settings** — connection status for every integration and session controls.
+- **Home** — what needs you now (COD orders to confirm, orders to pack, packed
+  but not shipped, refunds due, shipments over 7 days, unfinished payments, new
+  messages), then sales, orders, average order value, visitors and visitor →
+  order for Today / 7 / 30 / 90 days, each compared with the period before.
+  Sales chart, checkout funnel, latest orders, where sales come from, prepaid vs
+  COD, top states. **Test and internal orders are left out of every number.**
+- **Orders** — tabs (To do · Unpaid · In transit · Delivered · Closed · All),
+  instant search, filters, bulk "Mark as …" with Undo, CSV. Each order shows a
+  fulfilment stage and a payment state, Call / WhatsApp (ready messages) /
+  Email, the address to copy, courier + tracking, source and history, and one
+  button that moves it a step on.
+- **Customers** — buyers, repeat rate, spend; each customer's orders.
+- **Traffic** — first-party visitors, pages, sources, funnel and the
+  checkout-exit answers.
+- **Messages / Reviews / Settings** — the contact inbox, reviews (verified-buyer
+  rule), which Cloudflare secrets are set, Sheets sync, theme, shortcuts.
 
-It reuses the existing site infrastructure — same Cloudflare Worker, same Supabase
-database, same brand design — so there is **nothing new to host and no second
-repo to maintain.**
+Nothing extra to host: it ships with the storefront Worker and reads the same
+Supabase database.
 
 ---
 
@@ -121,18 +125,24 @@ host serves only the dashboard.
 
 ## 4. Using it day-to-day
 
-- Go to **admin.smelloff.in** (or **smelloff.in/admin**), enter the password.
-  Sessions last 12 hours per device.
-- **Fulfilling an order:** Orders tab → click the order → set status to
-  `dispatched`, fill in **Courier** + **Tracking ID** (and optional tracking
-  URL) → Save. The customer's Track-Order page reads these same fields.
-- **Verifying a UPI payment:** the Overview "needs attention" tile and the
-  Orders badge count `upi_pending` orders. Open one, confirm the UPI ref, set
-  status to `confirmed`.
-- **Revenue** counts orders in `placed / confirmed / dispatched / delivered`;
-  `cancelled` and `upi_pending` are excluded.
-- **Exports:** Orders and Waitlist both have CSV export (respects current
-  filters on Orders).
+- Go to **smelloff.in/admin** and enter the password. Sessions last 12 hours.
+- **Start on Home.** The tiles at the top are your to-do list; tap one to see
+  those orders. "All caught up" means nothing is waiting.
+- **A COD order:** open it → WhatsApp → "Confirm COD order" (asks them to reply
+  YES) → when they confirm, tap **Confirm order**. Then **Mark as packed**.
+  Shiprocket books the courier on its own within 15 minutes; the courier
+  status and AWB appear in the order.
+- **A prepaid order** arrives already paid ("To pack").
+- **Unpaid tab:** online checkouts that never finished. "Payment didn't finish"
+  on WhatsApp sends them back to checkout or offers COD.
+- **Several at once:** tick the orders → "Mark as …" → Apply. Every change has
+  **Undo** for a few seconds. Cancelling asks first and does not tell the customer.
+- **Numbers:** Sales = orders placed in the period minus cancelled, failed and
+  unpaid ones. "In hand" = paid online, or COD delivered. Times are IST.
+- **Shortcuts (laptop):** `/` search · `g h` Home · `g o` Orders · `g c`
+  Customers · `g t` Traffic · `r` refresh · `Esc` close a panel.
+- **Exports:** Orders (respects the current tab and filters) and Customers.
+
 
 ### Rotating the password / revoking access
 Change the `ADMIN_PASSWORD` Worker secret (it takes effect on the next request). Because sessions are signed from

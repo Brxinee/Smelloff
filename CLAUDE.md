@@ -2666,3 +2666,38 @@ measurable.
   left are the owner's: Merchant Center feed, Amazon listing, real reviews, Bing
   Webmaster, chatgpt.com/merchants, honest founder replies on Reddit.
 - `test/seo-geo-pass.test.mjs` pins it.
+
+## Owner dashboard redesign (2026-11-02, owner: "design the admin better … research … UI, UX, layout, structure, data passing")
+Supersedes "Owner dashboard at /admin" above on the page and its API surface
+(login, cookie, allow-list and Supabase rules unchanged). Write-up with
+sources: `docs/audits/admin-redesign-2026-11.md`; owner guide:
+`docs/ADMIN-SETUP.md` §4.
+- **Stages, computed once in `api/admin.js`:** `orderStage()` (confirm → pack →
+  ship → transit → delivered, unpaid, closed; COD `placed` = confirm, prepaid
+  `placed` = pack) and `paymentState()` (paid, cod_due, collected, pending,
+  failed, refund_due = prepaid confirmed then cancelled/returned, none).
+  `decorate()` adds `view` {name, city, state, pincode, bottles, stage, payment,
+  next, test, changedAt} to every order the API returns; the page reads it and
+  never re-derives. `failed` and `returned` (allowed by the DB) are in
+  `ORDER_STATUSES` and out of revenue.
+- **KPIs leave test/internal orders out** (`isTestOrInternal` from
+  sheets-sync, the same rule as the Sheets). Lists show them only with the
+  "Test orders" toggle, tagged.
+- **Actions:** `dashboard {days}` (1 = today since IST midnight, 7/30/90;
+  current vs previous period, zero-filled IST series, `workQueue()`, channels,
+  states, latest, traffic + funnel from the `site_analytics` / `site_events`
+  RPCs, which may fail without breaking sales), `traffic {days}` (adds
+  `site_analytics_segments` and `checkout_exit` answers), `pulse` (60 s poll:
+  newest order + queue), `bulkUpdateOrders {ids ≤ 100 UUIDs, status}`.
+- **Page** (`admin/index.html`, still one file, no libraries): sidebar ≥960,
+  bottom tab bar below; hash routes with deep-linkable panels
+  (`#orders/SMF-…`, `#customers/<last-10-digits>`); filters live in the hash.
+  One shared order cache, local search/filter, edits merge the returned row,
+  Undo on every status change, cancel asks first. Rows become cards under
+  760px; `.col{min-width:0}` is what stops sideways scroll on phones. Dark
+  (brand) and light themes (`sfa_theme`), charts lime on dark / `#4D7C0F` on
+  light, tooltips via textContent, "Show as table" under each chart, CSV cells
+  starting `= + - @` are neutralised.
+- WhatsApp templates in the order panel: confirm COD (the Sheets wording),
+  payment didn't finish, shipped update, ask for a review.
+- `test/admin-dashboard.test.mjs` pins all of it.
