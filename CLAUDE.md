@@ -2579,3 +2579,14 @@ abandoned UPI payment (via ChatGPT), 1 failed payment. The leak is PDP → check
   (+39–78%) while ~62–65% of Indian first-time buyers prefer COD and marketplaces
   charge ₹7–10; and a try-it guarantee (returns now need the bottle ≥80% full, so a
   buyer can't actually try it). Both are likely bigger levers than any page change.
+
+## Homepage: three blocks removed for good (2026-11-02, owner: "remove permanently", marked screenshot)
+Gone from `index.html`, markup and CSS: the hero **how-it-works card**
+(`.hero-demo-slot`: Spray → Wait 15–30 sec → Wear fresh), the **zone cards**
+(`.zones`: Shirt collar / Hoodie & tees / Blazer & jacket, with the sr-only "Where
+odor hides" H2) and the **benefits strip** (`.benefits-strip`: Made in India / Free
+prepaid shipping / 7-day returns / Cash on Delivery). The hero now runs straight into
+the ticker and "Your shirt remembers". The same trust facts stay under the hero button
+(`.hero-trust-mini`) and in the offer box. Buy unchanged: 665–716 at 390×844,
+668–719 at 1280×800. Don't bring these back. (The `#how-it-works` id is the science
+section, not this card.)
