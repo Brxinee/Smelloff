@@ -19,9 +19,9 @@ One long cover page that reads like an issue, plus four inner pages.
 | Cover | Name as the H1, one-sentence dek, collage of his photos and things, toys (Stamp, Tidy, Ring), printed table of contents |
 | 01 Now | One main thing + at most two on the side (his own rule) |
 | 02 Clocked in | Work journey as a time card |
-| 03 Self-taught syllabus | What he taught himself after Class 10, each with where it shows |
-| 04 Shelf | Interests |
-| 05 Things I've made | Startup (one card), the store's website, this site |
+| 03 Self-taught syllabus | Selling, operations and web: what he taught himself after Class 10, each with where it shows |
+| 04 Shelf | The anime cassette (the interests list was removed on 3 Nov 2026) |
+| 05 Things I've made | Startup (one card; the store-website and this-site cards were removed on 3 Nov 2026) |
 | 06 Take a card | Visiting card + .vcf download; every profile |
 
 Inner pages: `/about` (the fact page for search and for people), `/now` (notes at `/notes/<slug>` if any are added; the colophon note was removed on 3 Nov 2026 and its credits moved to About). (The dated log and its RSS feed were removed on 3 Nov 2026 at his request; `/NikhilPatil/log` and `/NikhilPatil/feed.xml` 301 to the cover.)

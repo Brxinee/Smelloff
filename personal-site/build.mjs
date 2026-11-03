@@ -386,15 +386,15 @@ ${syllabus.subjects.map((s) => `    <li class="subject">
 
 <section class="sec shelf" id="shelf" aria-labelledby="shelf-h">
 ${secHead('04', 'shelf-h', 'Shelf', 'when I’m not working')}
-<div class="shelf__grid">
+<div class="shelf__grid${shelf.items.length ? '' : ' shelf__grid--solo'}">
   <figure class="tape" aria-labelledby="tape-cap">
     <img class="tape__img" src="/assets/img/cassette.webp" width="354" height="235" alt="" loading="lazy" decoding="async">
     <figcaption id="tape-cap" class="tape__label">${esc(shelf.tape.label)}</figcaption>
     <ol class="tape__tracks">${shelf.tape.tracks.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>
   </figure>
-  <ul class="shelf__items">
+${shelf.items.length ? `  <ul class="shelf__items">
 ${shelf.items.map((it) => `    <li><span class="shelf__label">${esc(it.label)}</span> ${esc(it.text)}</li>`).join('\n')}
-  </ul>
+  </ul>` : ''}
 </div>
 </section>
 
@@ -508,7 +508,7 @@ function aboutPage(c, ctx) {
       </ul>
 
       <h2 id="likes">When I’m not working</h2>
-      <p>Anime (Hajime no Ippo, Attack on Titan, Mob Psycho 100, Dandadan, Sakamoto Days), Clash of Clans, stories about selling and strategy, and trying new web and AI tools the week they come out.</p>
+      <p>Anime: Hajime no Ippo, Attack on Titan, Mob Psycho 100, Dandadan and Sakamoto Days.</p>
 
       <h2 id="questions">Questions people ask</h2>
       <div class="qa">

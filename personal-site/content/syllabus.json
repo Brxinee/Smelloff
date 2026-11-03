@@ -3,12 +3,23 @@
   "intro": "School stopped at Class 10. Everything on this page I picked up because something I was doing needed it.",
   "remark": "Prefers to find out how things work by building them.",
   "subjects": [
-    { "subject": "Selling", "topics": "Talking to customers, pricing, why people say yes", "proof": "A shop counter first, my own store now", "status": "Ongoing" },
-    { "subject": "Operations", "topics": "Floors, registers, spreadsheets, running a team", "proof": "The jobs on my time card", "status": "Done" },
-    { "subject": "Web", "topics": "HTML, CSS, vanilla JavaScript, Cloudflare Workers, Supabase", "proof": "My startup’s store and this site", "status": "Ongoing" },
-    { "subject": "Search", "topics": "SEO, Search Console, structured data, GA4", "proof": "Nearly a hundred guides I published", "status": "Ongoing" },
-    { "subject": "Chemistry, sort of", "topics": "Why fabric holds smell, what traps it", "proof": "Six months of prototypes for my first product", "status": "Passed, eventually" },
-    { "subject": "Design", "topics": "Branding, labels, packaging, interfaces", "proof": "A product label and two websites", "status": "Ongoing" },
-    { "subject": "Working with AI", "topics": "Claude Code, Gemini, rules a machine can follow", "proof": "A help desk, a store, and this site", "status": "Ongoing" }
+    {
+      "subject": "Selling",
+      "topics": "Talking to customers, pricing, why people say yes",
+      "proof": "A shop counter first, my own store now",
+      "status": "Ongoing"
+    },
+    {
+      "subject": "Operations",
+      "topics": "Floors, registers, spreadsheets, running a team",
+      "proof": "The jobs on my time card",
+      "status": "Done"
+    },
+    {
+      "subject": "Web",
+      "topics": "HTML, CSS, vanilla JavaScript, Cloudflare Workers, Supabase",
+      "proof": "My startup’s store and this site",
+      "status": "Ongoing"
+    }
   ]
 }

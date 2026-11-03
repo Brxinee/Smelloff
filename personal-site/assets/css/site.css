@@ -690,3 +690,4 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 .bio blockquote { margin: 0; border: 0; padding: 0; font-style: normal; }
 .bio__copy { margin-top: var(--s3); min-height: 40px; padding: 0 14px; background: none; border: 1.5px solid var(--rule-2); border-radius: 999px; cursor: pointer; font: 700 12px/1 var(--f-mono); text-transform: uppercase; letter-spacing: .08em; }
 .bio__copy:hover { border-color: var(--ink); }
+.shelf__grid--solo { grid-template-columns: minmax(0, 1fr) !important; }

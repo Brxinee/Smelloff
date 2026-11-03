@@ -72,6 +72,10 @@ one small halftone of the bottle. Docs: `personal-site/README.md`, `docs/PERSONA
 - **No colophon page** (owner, same day): `/NikhilPatil/notes/how-this-site-is-made` is gone
   and 301s to the cover; picture credits moved to `/NikhilPatil/about#credits`. The notes
   folder can stay empty (`content/notes/*.md` still become pages if added).
+- **Trimmed cover** (owner, same day, circled screenshots): the Shelf shows only the anime
+  cassette (no Plays / Reads into / Tries / Likes list; About's interests line is anime only),
+  "Things I've made" has only the Smelloff card (no "A website I built" / "This site"), and
+  the syllabus keeps Selling, Operations and Web (no Search, Chemistry, Design, Working with AI).
 
 ## Sep 19 homepage + Sep 19 type everywhere (2026-11-01, owner: "bring back the sep 19 design … only homepage … sep 19 typo everywhere")
 Supersedes every homepage design note below (hero v4, the Oct 15 redesign, pack
