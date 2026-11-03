@@ -2,12 +2,13 @@
   "_readme": "The shelf: things I like that aren't work. Titles only; no artwork from anyone else.",
   "tape": {
     "label": "Side A · watched, recommended",
-    "tracks": ["Hajime no Ippo", "Attack on Titan", "Mob Psycho 100", "Dandadan", "Sakamoto Days"]
+    "tracks": [
+      "Hajime no Ippo",
+      "Attack on Titan",
+      "Mob Psycho 100",
+      "Dandadan",
+      "Sakamoto Days"
+    ]
   },
-  "items": [
-    { "label": "Plays", "text": "Clash of Clans." },
-    { "label": "Reads into", "text": "Stories about selling, persuasion and strategy: how people actually decide things." },
-    { "label": "Tries", "text": "New web and AI tools, usually the week they come out." },
-    { "label": "Likes", "text": "Personal websites with a bit of punk in them. You're standing in one." }
-  ]
+  "items": []
 }
