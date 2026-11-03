@@ -24,7 +24,7 @@ One long cover page that reads like an issue, plus four inner pages.
 | 05 Things I've made | Startup (one card), the store's website, this site |
 | 06 Take a card | Visiting card + .vcf download; every profile |
 
-Inner pages: `/about` (the fact page for search and for people), `/now`, `/notes/<slug>`. (The dated log and its RSS feed were removed on 3 Nov 2026 at his request; `/NikhilPatil/log` and `/NikhilPatil/feed.xml` 301 to the cover.)
+Inner pages: `/about` (the fact page for search and for people), `/now` (notes at `/notes/<slug>` if any are added; the colophon note was removed on 3 Nov 2026 and its credits moved to About). (The dated log and its RSS feed were removed on 3 Nov 2026 at his request; `/NikhilPatil/log` and `/NikhilPatil/feed.xml` 301 to the cover.)
 Navigation is always visible and labelled (Now · About), plus the brand link home. Toys are
 optional; all content is in the HTML and readable without JavaScript.
 

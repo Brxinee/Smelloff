@@ -22,8 +22,8 @@ Everything the site says is in `content/`:
 | `syllabus.json` | The self-taught syllabus |
 | `bench.json` | "Things I've made" cards; `status` becomes the rubber stamp |
 | `shelf.json` | Interests |
-| `credits.json` | Credits for pictures that aren't his |
-| `notes/*.md` | Notes (Markdown with front matter); each gets a page |
+| `credits.json` | Credits for pictures that aren't his (shown on About) |
+| `notes/*.md` | Optional notes (Markdown with front matter); each gets a page. None today |
 
 Facts must come from `docs/PERSONAL-CONTENT-SOURCE-MAP.md` category 1, or be approved by Nikhil.
 

@@ -69,6 +69,9 @@ one small halftone of the bottle. Docs: `personal-site/README.md`, `docs/PERSONA
 - **No log** (owner, 2026-11-03: "remove the log"): the home Log section, `/NikhilPatil/log`,
   its RSS feed and `content/log.json` are gone; both old URLs 301 to `/NikhilPatil`
   (`config/routing.json`; the routing test checks personal destinations against a real build).
+- **No colophon page** (owner, same day): `/NikhilPatil/notes/how-this-site-is-made` is gone
+  and 301s to the cover; picture credits moved to `/NikhilPatil/about#credits`. The notes
+  folder can stay empty (`content/notes/*.md` still become pages if added).
 
 ## Sep 19 homepage + Sep 19 type everywhere (2026-11-01, owner: "bring back the sep 19 design … only homepage … sep 19 typo everywhere")
 Supersedes every homepage design note below (hero v4, the Oct 15 redesign, pack

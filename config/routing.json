@@ -1205,6 +1205,11 @@
       "source": "/NikhilPatil/feed.xml",
       "destination": "/NikhilPatil",
       "statusCode": 301
+    },
+    {
+      "source": "/NikhilPatil/notes/how-this-site-is-made",
+      "destination": "/NikhilPatil",
+      "statusCode": 301
     }
   ],
   "rewrites": [
