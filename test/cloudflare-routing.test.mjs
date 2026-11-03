@@ -122,6 +122,12 @@ test('/public copies, capitalised paths and common guessed URLs reach a live pag
   // Capitals 404 on the case-sensitive asset server; the Worker tries lowercase.
   assert.equal(lowercaseCandidate('https://smelloff.in/Odorstrike'), '/odorstrike');
   assert.equal(lowercaseCandidate('https://smelloff.in/Blog/Why-I-Built-Odorstrike/'), '/blog/why-i-built-odorstrike');
+  // Nikhil's own pages keep their capitals; every other spelling finds them.
+  assert.equal(lowercaseCandidate('https://smelloff.in/nikhilpatil'), '/NikhilPatil');
+  assert.equal(lowercaseCandidate('https://smelloff.in/NIKHILPATIL/About'), '/NikhilPatil/about');
+  assert.equal(lowercaseCandidate('https://smelloff.in/nikhilpatil/'), '/NikhilPatil');
+  assert.equal(lowercaseCandidate('https://smelloff.in/NikhilPatil'), null);
+  assert.equal(lowercaseCandidate('https://smelloff.in/NikhilPatil/about'), null);
   assert.equal(lowercaseCandidate('https://smelloff.in/Solutions'), '/blog');
   assert.equal(lowercaseCandidate('https://smelloff.in/odorstrike'), null);
   assert.equal(lowercaseCandidate('https://smelloff.in/r/ABC123'), null, 'referral codes keep their case');

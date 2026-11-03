@@ -45,6 +45,28 @@ the move silently dropped, now restored:
   Razorpay and Resend webhooks HMAC the exact bytes, and the fallback of
   re-serialising `req.body` does not reproduce them.
 
+## Nikhil Patil's personal site at /NikhilPatil (2026-11-02, owner: "my personal website … rank my name … don't promote Smelloff too much")
+`personal-site/` is a separate site that ships inside the smelloff.in deploy:
+`scripts/prepare-public.mjs` runs `personal-site/build.mjs` into `public/NikhilPatil` (pages are
+generated at deploy, never committed) and writes `/sitemap-nikhil-patil.xml` (named in
+`robots.txt`). It is about him, not the store: a photocopied-zine design (Archivo, Courier Prime,
+Reenie Beanie; newsprint, toner, ballpoint blue, stamp red), his own photos, CC0 Commons cut-outs,
+one small halftone of the bottle. Docs: `personal-site/README.md`, `docs/PERSONAL-SITE-*.md`,
+`docs/PERSONAL-CONTENT-SOURCE-MAP.md`.
+- **Smelloff's generators skip `personal-site/`** (apply-chrome's walker, build-sitemap,
+  audit-production's canonical check). Never stamp Smelloff chrome or claims into it, and keep
+  prices off it (`test/price-placement.test.mjs` scans it too).
+- **One Person:** his pages use `@id https://smelloff.in/#founder`; the founder schema `url`
+  (`scripts/product-config.mjs`, `apply-reader.mjs`), every blog byline (`rel="author"`), `/about`
+  and the homepage founder strip point to `/NikhilPatil`. `test/structured-data.test.mjs` pins the byline.
+- `/NikhilPatil` is the only mixed-case path: `lowercaseCandidate()` in `src/canonical.js` sends
+  `/nikhilpatil`, `/NIKHILPATIL/About`… to it (test in `test/cloudflare-routing.test.mjs`).
+- **Content rules:** facts only from the source map's "published" list. Approved by him on
+  2 Nov 2026: work journey (no dates) and "school up to Class 10". Not approved: side projects and
+  his creator nickname. This repo is public: never write private details into it.
+  `personal-site/test/site.test.mjs` (run by the root `npm test`) fails on phone numbers, unknown
+  emails, prices, percentages, personal dates and the unapproved items.
+
 ## Sep 19 homepage + Sep 19 type everywhere (2026-11-01, owner: "bring back the sep 19 design … only homepage … sep 19 typo everywhere")
 Supersedes every homepage design note below (hero v4, the Oct 15 redesign, pack
 picker, #moments/#compare, offer box) and "Type: Space Grotesk + Inter".

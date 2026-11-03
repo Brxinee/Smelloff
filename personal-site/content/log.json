@@ -1,0 +1,14 @@
+{
+  "_readme": "The log, newest first. `date` is YYYY-MM-DD or YYYY-MM. `kind`: shipped | note | elsewhere | milestone. `href` is optional (a /notes/ path or a full URL). Dated, checkable facts only; no sales numbers.",
+  "entries": [
+    { "date": "2026-11-02", "kind": "note", "text": "How this site is made.", "href": "/notes/how-this-site-is-made" },
+    { "date": "2026-11-02", "kind": "shipped", "text": "Printed the first copy of this site." },
+    { "date": "2026-11-02", "kind": "shipped", "text": "Turned my store’s order dashboard into a phone app that rings when someone orders." },
+    { "date": "2026-10-26", "kind": "shipped", "text": "Wrote twenty new guides, picked from what people in India actually search, Hinglish included." },
+    { "date": "2026-10-18", "kind": "shipped", "text": "Built an AI help desk on Gemini. It answers from real facts and hands people to WhatsApp when it can’t." },
+    { "date": "2026-10-10", "kind": "shipped", "text": "Cut a checkout down to seven fields, after reading the research on why people give up on carts." },
+    { "date": "2026-09-26", "kind": "shipped", "text": "Moved my store from Vercel to Cloudflare Workers. Parts of it quietly broke for two weeks. The build checks itself before every deploy now." },
+    { "date": "2026-08", "kind": "milestone", "text": "First customer orders delivered." },
+    { "date": "2026-04-17", "kind": "elsewhere", "text": "Wrote down why I started my first product.", "href": "https://smelloff.in/blog/why-i-built-odorstrike" }
+  ]
+}

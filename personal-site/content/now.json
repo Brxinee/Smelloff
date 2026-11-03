@@ -1,0 +1,12 @@
+{
+  "_readme": "The /now page and the pinned note on the cover. One main thing, at most two side things (that's the rule). Change `updated` whenever you edit it.",
+  "updated": "2026-11-02",
+  "main": "Building my first startup, and learning whatever it needs next.",
+  "sticky": "Building my first startup",
+  "supporting": [
+    "Getting its first product to real customers, and listening to what they say after.",
+    "Building this site, so a search for my name finds me and not another Nikhil."
+  ],
+  "parked": "Everything else is parked on purpose. Ideas wait in a list until this one works.",
+  "place": "Hyderabad"
+}

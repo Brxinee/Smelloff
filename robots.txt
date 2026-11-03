@@ -166,3 +166,4 @@ Disallow: /outreach/
 
 # IndexNow key (Bing/Copilot/Yandex): https://smelloff.in/163974d1a8d940cf89b0ec712246c779.txt
 Sitemap: https://smelloff.in/sitemap.xml
+Sitemap: https://smelloff.in/sitemap-nikhil-patil.xml

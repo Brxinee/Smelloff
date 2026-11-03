@@ -156,7 +156,7 @@ test('every post: one founder Person, one publisher, speakable on the Article, v
     assert.ok(a.dateModified <= new Date().toISOString().slice(0, 10), `${f}: dateModified in the future`);
     const shown = (html.match(/<span class="article-date">Updated <time datetime="([\d-]+)">/) || [])[1];
     assert.equal(shown, a.dateModified.slice(0, 10), `${f}: visible date`);
-    assert.ok(html.includes('<a href="/about" rel="author">'), `${f}: byline links the Person's url`);
+    assert.ok(html.includes('<a href="/NikhilPatil" rel="author">'), `${f}: byline links the Person's url`);
   }
 });
 

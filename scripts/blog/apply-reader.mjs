@@ -48,7 +48,7 @@ const AUTHOR = BRAND.founder;
 const ORG = { '@type': 'Organization', '@id': 'https://smelloff.in/#organization', name: BRAND.name, url: `${BRAND.website}/` };
 const PERSON = {
   '@type': 'Person', '@id': 'https://smelloff.in/#founder', name: AUTHOR, jobTitle: BRAND.jobTitle,
-  url: `${BRAND.website}/about`, worksFor: ORG,
+  url: `${BRAND.website}/NikhilPatil`, worksFor: ORG,
 };
 const PUBLISHER = { ...ORG, logo: { '@type': 'ImageObject', url: BRAND.logo, width: 180, height: 180 } };
 // Topic clusters by search intent. Order matters: post i links to the next
@@ -220,10 +220,10 @@ function transform(html, slug) {
     html = html.slice(0, at) + toc + html.slice(at);
   }
 
-  // 4 · Byline → the Person's url, like the schema.
+  // 4 · Byline → the Person's url, like the schema: his own page, /NikhilPatil.
   html = html.replace(/\n\s*<span class="article-author">[\s\S]*?<\/span>(?=\s*<span class="article-)/, '');
   html = html.replace(/(<div class="article-meta">\s*<span class="article-category">[\s\S]*?<\/span>)/,
-    `$1\n        <span class="article-author">By <a href="/about" rel="author">${AUTHOR}</a></span>`);
+    `$1\n        <span class="article-author">By <a href="/NikhilPatil" rel="author">${AUTHOR}</a></span>`);
 
   // 4b · Schema entities, speakable, dates.
   html = normalizeSchema(html);

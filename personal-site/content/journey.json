@@ -1,0 +1,15 @@
+{
+  "_readme": "The time card: every job, roughly in order, no dates (approved by Nikhil, Nov 2026). The last row is always today.",
+  "title": "Clocked in",
+  "lede": "Every job I’ve had, roughly in order. No dates on this card, just what each one taught me.",
+  "photo": { "src": "/assets/img/me/nikhil-patil-early-jobs.webp", "avif": "/assets/img/me/nikhil-patil-early-jobs.avif", "width": 440, "height": 640, "alt": "An older selfie of Nikhil in a blue work polo, from his early jobs.", "caption": "a few jobs ago" },
+  "rows": [
+    { "job": "School, up to Class 10", "note": "Then I stopped. Everything below this line I learned on the job." },
+    { "job": "Mobile shop counter", "note": "Selling across a counter, one customer at a time." },
+    { "job": "Deliveries", "note": "A city, a deadline, repeat." },
+    { "job": "Cloud kitchens", "note": "Operations at Zomato Everyday for about a year and a half." },
+    { "job": "Asked for a chance at the computer", "note": "Went from cleaning and floor work to registers and spreadsheets, because I asked." },
+    { "job": "Team lead", "note": "Later, I was the one supervising the team." },
+    { "job": "Founder", "note": "Started my own startup. Still clocked in.", "today": true }
+  ]
+}

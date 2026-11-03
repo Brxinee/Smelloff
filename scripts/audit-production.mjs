@@ -217,7 +217,7 @@ const indexableHtmlFiles = [];
 
 for (const p of htmlFiles) {
   const relPath = rel(p).replace(/\\/g, '/');
-  if (relPath.startsWith('node_modules/') || relPath.startsWith('public/') || relPath.startsWith('.git/') || relPath.startsWith('_shared/') || relPath.startsWith('api/') || relPath.startsWith('supabase/') || relPath.startsWith('emails/') || relPath.startsWith('admin/') || relPath.startsWith('outreach/')) continue;
+  if (relPath.startsWith('node_modules/') || relPath.startsWith('public/') || relPath.startsWith('.git/') || relPath.startsWith('_shared/') || relPath.startsWith('api/') || relPath.startsWith('supabase/') || relPath.startsWith('emails/') || relPath.startsWith('admin/') || relPath.startsWith('outreach/') || relPath.startsWith('personal-site/')) continue;
   if (relPath === '404.html' || relPath === 'payment-failed.html' || /^google[0-9a-f]{16,}\.html$/i.test(relPath)) continue;
 
   const html = read(p);
