@@ -206,3 +206,16 @@
     card?.classList.add('is-taken');
   });
 })();
+
+/* --------------------------------------------------------- bio copy buttons */
+(() => {
+  if (!navigator.clipboard) return;
+  for (const btn of document.querySelectorAll('[data-copy]')) {
+    btn.hidden = false;
+    btn.addEventListener('click', async () => {
+      const text = btn.closest('.bio').querySelector('[data-bio]').textContent;
+      try { await navigator.clipboard.writeText(text); btn.textContent = 'Copied'; } catch { btn.textContent = 'Select and copy'; }
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    });
+  }
+})();

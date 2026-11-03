@@ -3,12 +3,21 @@
   "items": [
     {
       "id": "startup",
-      "title": "My startup",
+      "title": "Smelloff, my startup",
       "status": "NOW",
-      "kicker": "Smelloff · Hyderabad",
-      "summary": "My first startup, a small brand I run from Hyderabad. I do most of it myself: the product, the packaging, the website, the shipping and the customer inbox.",
+      "kicker": "Founder · Hyderabad · since 2026",
+      "summary": "My startup. Its first product is ODORSTRIKE, a pocket spray for clothes. I do most of the work myself: the product, the packaging, the website, the shipping and the customer inbox.",
       "body": "I started it with my friend Vineeth Kumar Duggepogu. We met at a job interview in Hyderabad and later worked together at Zomato Everyday.",
-      "links": [{ "label": "smelloff.in", "url": "https://smelloff.in" }]
+      "links": [
+        {
+          "label": "smelloff.in",
+          "url": "https://smelloff.in"
+        },
+        {
+          "label": "Why I started it",
+          "url": "https://smelloff.in/blog/why-i-built-odorstrike"
+        }
+      ]
     },
     {
       "id": "store",
@@ -26,7 +35,12 @@
       "kicker": "A zine about one person",
       "summary": "A photocopied zine about me, made the same way: static pages, no framework, no trackers.",
       "body": "",
-      "links": [{ "label": "How this site is made", "url": "/notes/how-this-site-is-made" }]
+      "links": [
+        {
+          "label": "How this site is made",
+          "url": "/notes/how-this-site-is-made"
+        }
+      ]
     }
   ]
 }

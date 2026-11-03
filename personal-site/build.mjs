@@ -145,7 +145,13 @@ function personLd(c, ctx) {
     mainEntityOfPage: `${ctx.site}`,
     image: { '@type': 'ImageObject', url: ctx.abs(s.photo.src), width: s.photo.width, height: s.photo.height },
     description: s.description,
+    disambiguatingDescription: s.disambiguation,
     jobTitle: s.jobTitle,
+    hasOccupation: { '@type': 'Occupation', name: 'Founder', occupationLocation: { '@type': 'City', name: s.location.city } },
+    subjectOf: [
+      { '@type': 'ProfilePage', url: ctx.site },
+      { '@type': 'Article', url: 'https://smelloff.in/blog/why-i-built-odorstrike', headline: 'Why I Built ODORSTRIKE: A Founder’s Note', author: { '@id': s.personId } },
+    ],
     worksFor: { '@type': 'Organization', '@id': s.worksFor.id, name: s.worksFor.name, url: s.worksFor.url },
     homeLocation: {
       '@type': 'Place',
@@ -179,6 +185,7 @@ function layout(c, ctx, page) {
 <title>${esc(page.title)}</title>
 <meta name="description" content="${attr(page.description)}">
 <link rel="canonical" href="${url}">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="${attr(s.name)}">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F2EDE3" media="(prefers-color-scheme: light)">
@@ -297,8 +304,12 @@ ${j.rows.map((r, i) => `      <li class="punch${r.today ? ' punch--today' : ''}"
 </div>`;
 }
 
+// rel="me" tells crawlers (and IndieWeb tools) these profiles belong to the
+// person this page is about.
+const meLink = (p) => `<a href="${attr(p.url)}" rel="${p.sameAs ? 'me ' : ''}noopener">${esc(p.handle)}<span class="ext" aria-hidden="true">↗</span><span class="sr"> (opens another site)</span></a>`;
+
 function profileLinks(site, cls = 'links') {
-  return `<ul class="${cls}">${site.profiles.map((p) => `<li><span class="links__label">${esc(p.label)}</span> ${linkTo(p.url, p.handle)}</li>`).join('')}
+  return `<ul class="${cls}">${site.profiles.map((p) => `<li><span class="links__label">${esc(p.label)}</span> ${meLink(p)}</li>`).join('')}
 <li><span class="links__label">Email</span> <a href="mailto:${attr(site.email.address)}">${esc(site.email.address)}</a> <span class="links__note">${esc(site.email.note)}</span></li></ul>`;
 }
 
@@ -319,7 +330,7 @@ function homePage(c, ctx) {
       <figcaption class="hand">that’s me</figcaption>
     </figure>
     <figure class="piece piece--beach" data-drag>
-      ${picture({ src: '/assets/img/me/beach.webp', avif: '/assets/img/me/beach.avif', width: 560, height: 430, alt: 'Nikhil taking a selfie on a beach.' })}
+      ${picture({ src: '/assets/img/me/nikhil-patil-beach.webp', avif: '/assets/img/me/nikhil-patil-beach.avif', width: 560, height: 430, alt: 'Nikhil Patil on a beach, in a pink striped shirt.' })}
       <figcaption class="hand">out of office</figcaption>
     </figure>
     <figure class="piece piece--bottle" data-drag>
@@ -443,20 +454,33 @@ ${secHead('07', 'card-h', 'Take a card', 'like the ones on a shop counter')}
 
   return {
     path: '/',
-    title: `${site.name}: a self-taught builder in Hyderabad`,
+    title: `${site.name}: self-taught founder of Smelloff, Hyderabad`,
     ogTitle: `${site.name}, Hyderabad`,
     description: site.description,
     bodyClass: 'home',
     body,
     ld: [
       { '@type': 'WebSite', '@id': `${ctx.site}#website`, url: ctx.site, name: site.name, inLanguage: site.lang, publisher: { '@id': site.personId } },
-      { '@type': 'ProfilePage', '@id': `${ctx.site}#profile`, url: ctx.site, name: site.name, dateModified: ctx.printed, isPartOf: { '@id': `${ctx.site}#website` }, mainEntity: personLd(c, ctx) },
+      { '@type': 'ProfilePage', '@id': `${ctx.site}#profile`, url: ctx.site, name: site.name, dateCreated: site.created, dateModified: ctx.printed, isPartOf: { '@id': `${ctx.site}#website` }, mainEntity: personLd(c, ctx) },
     ],
   };
 }
 
+function faq(s) {
+  return [
+    ['Who is Nikhil Patil?', `Nikhil Patil (full name ${s.alternateName[0]}) is a self-taught builder based in Hyderabad, India, and the founder of his startup, Smelloff.`],
+    ['Which Nikhil Patil is this?', `There are many people named Nikhil Patil. This one lives in Hyderabad and founded Smelloff. His accounts are X @Nikhilxpatil, LinkedIn in/jogdhande and Product Hunt @nikhilpatil; any other profile isn’t him.`],
+    ['Where is Nikhil Patil based?', 'Hyderabad, Telangana, India.'],
+    ['What does Nikhil Patil do?', 'He runs his startup, Smelloff, and does most of the work himself: the product, the packaging, the website (built with AI coding tools), the shipping and the customer inbox.'],
+    ['Did Nikhil Patil go to college?', 'No. He studied up to Class 10 and has taught himself everything since, on the job and by building things.'],
+    ['What did Nikhil Patil do before Smelloff?', 'He worked a mobile shop counter, did deliveries, worked in cloud-kitchen operations at Zomato Everyday for about a year and a half, and became a team lead.'],
+    ['How do I contact Nikhil Patil?', `Email ${s.email.address} or message @Nikhilxpatil on X.`],
+  ];
+}
+
 function aboutPage(c, ctx) {
   const s = c.site;
+  const qa = faq(s);
   const body = `
 <article class="page about" aria-labelledby="about-h">
   <header class="page__head page__head--photo">
@@ -466,7 +490,7 @@ function aboutPage(c, ctx) {
       <p class="lede">I’m Nikhil Patil, a self-taught builder in Hyderabad, India. My full name is Jogdhande Nikhil Patil. I stopped school after Class 10, worked my way through a lot of jobs, and now run my own startup.</p>
     </div>
     <figure class="print print--about">
-      ${picture({ src: '/assets/img/me/yellow.webp', avif: '/assets/img/me/yellow.avif', width: 480, height: 480, alt: 'Nikhil Patil in a yellow jacket, smiling.' }, { priority: true })}
+      ${picture({ src: '/assets/img/me/nikhil-patil-yellow-jacket.webp', avif: '/assets/img/me/nikhil-patil-yellow-jacket.avif', width: 480, height: 480, alt: 'Nikhil Patil in a yellow jacket, smiling.' }, { priority: true })}
       <figcaption class="hand">me, in my yellow jacket era</figcaption>
     </figure>
   </header>
@@ -484,6 +508,9 @@ function aboutPage(c, ctx) {
       <p class="facts__stamp" aria-hidden="true">Checked copy</p>
     </aside>
     <div class="prose">
+      <h2 id="who">Who is Nikhil Patil?</h2>
+      <p class="answer"><strong>${esc(qa[0][1])}</strong> He left school after Class 10 and learned the rest on the job.</p>
+
       <h2 id="school">School stopped at Class 10</h2>
       <p>I didn’t go the usual school and college route. After Class 10 I started working, and everything I know since then I learned because a job, or something I was building, needed it. My <a href="/#syllabus">self-taught syllabus</a> lists the subjects.</p>
 
@@ -504,6 +531,18 @@ function aboutPage(c, ctx) {
       <h2 id="likes">When I’m not working</h2>
       <p>Anime (Hajime no Ippo, Attack on Titan, Mob Psycho 100, Dandadan, Sakamoto Days), Clash of Clans, stories about selling and strategy, and trying new web and AI tools the week they come out.</p>
 
+      <h2 id="questions">Questions people ask</h2>
+      <div class="qa">
+${qa.slice(1).map(([q, a]) => `        <h3>${esc(q)}</h3>\n        <p>${esc(a)}</p>`).join('\n')}
+      </div>
+
+      <h2 id="bio">Bio to copy</h2>
+      <p>For a post, an interview or an introduction. Please use these words as they are.</p>
+      <div class="bios">
+        <figure class="bio"><figcaption>One line</figcaption><blockquote><p data-bio>${esc(s.bios.line)}</p></blockquote><button type="button" class="bio__copy" data-copy hidden>Copy</button></figure>
+        <figure class="bio"><figcaption>Short</figcaption><blockquote><p data-bio>${esc(s.bios.short)}</p></blockquote><button type="button" class="bio__copy" data-copy hidden>Copy</button></figure>
+      </div>
+
       <h2 id="elsewhere">Find me elsewhere</h2>
       <p>These are my accounts. If a profile isn’t listed here, it isn’t me: there are a lot of Nikhil Patils.</p>
       ${profileLinks(s)}
@@ -518,6 +557,7 @@ function aboutPage(c, ctx) {
     bodyClass: 'inner',
     body,
     ld: [
+      { '@type': 'FAQPage', '@id': `${ctx.url('/about')}#faq`, mainEntity: qa.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
       { '@type': 'AboutPage', '@id': `${ctx.url('/about')}#page`, url: ctx.url('/about'), name: `About ${s.name}`, dateModified: ctx.printed, about: { '@id': s.personId }, isPartOf: { '@id': `${ctx.site}#website` } },
       breadcrumbLd(ctx, [[s.name, '/'], ['About', '/about']]),
     ],
@@ -616,7 +656,7 @@ ${n.html}
 
 const sitemap = (ctx, pages) => `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-${pages.map((p) => `  <url><loc>${ctx.url(p.path)}</loc><lastmod>${p.lastmod}</lastmod>${p.path === '/' ? `<image:image><image:loc>${ctx.abs('/assets/img/me/portrait.webp')}</image:loc></image:image>` : ''}</url>`).join('\n')}
+${pages.map((p) => `  <url><loc>${ctx.url(p.path)}</loc><lastmod>${p.lastmod}</lastmod>${p.path === '/' ? `<image:image><image:loc>${ctx.abs('/assets/img/me/nikhil-patil.webp')}</image:loc></image:image>` : ''}</url>`).join('\n')}
 </urlset>
 `;
 
@@ -659,6 +699,26 @@ function vcard(c, ctx) {
     'NOTE:Self-taught builder in Hyderabad.',
     'END:VCARD',
   ].join('\r\n') + '\r\n';
+}
+
+// A plain-text fact sheet for language models (llmstxt.org format).
+function llms(c, ctx) {
+  const s = c.site;
+  return `# ${s.name}
+
+> ${s.disambiguation} ${s.description}
+
+${faq(s).map(([q, a]) => `- **${q}** ${a}`).join('\n')}
+
+## Pages
+- [${s.name}](${ctx.site}): the cover page
+- [About ${s.name}](${ctx.url('/about')}): facts, jobs, how he works, questions
+- [Now](${ctx.url('/now')}): what he is working on, updated ${c.now.updated}
+- [Log](${ctx.url('/log')}): dated list of what he has shipped
+
+## Profiles (these are his; others with the same name are not)
+${s.profiles.map((p) => `- ${p.label}: ${p.url}`).join('\n')}
+`;
 }
 
 /* ---------- build */
@@ -704,6 +764,7 @@ export function build({ outDir = path.join(ROOT, 'dist', 'NikhilPatil'), sitemap
   fs.writeFileSync(sitemapFile, sitemap(ctx, pages));
   fs.writeFileSync(path.join(outDir, 'feed.xml'), feed(c, ctx));
   fs.writeFileSync(path.join(outDir, 'nikhil-patil.vcf'), vcard(c, ctx));
+  fs.writeFileSync(path.join(outDir, 'llms.txt'), llms(c, ctx));
   return { outDir, sitemapFile, site, pages: pages.map((p) => p.path), printed };
 }
 

@@ -71,7 +71,7 @@ test('structured data parses and describes one person consistently', () => {
   assert.equal(person.url, BASE);
   assert.ok(person.alternateName.includes('Jogdhande Nikhil Patil'));
   assert.equal(person.worksFor['@id'], 'https://smelloff.in/#organization');
-  assert.match(person.image.url, new RegExp(`^${BASE}/assets/img/me/portrait\\.[0-9a-f]{10}\\.webp$`));
+  assert.match(person.image.url, new RegExp(`^${BASE}/assets/img/me/nikhil-patil\\.[0-9a-f]{10}\\.webp$`));
   assert.ok(fs.existsSync(path.join(out, person.image.url.slice(BASE.length))), 'person image exists');
   assert.ok(person.sameAs.length >= 1 && person.sameAs.every((u) => /^https:\/\//.test(u)));
   assert.ok(!person.sameAs.includes('https://smelloff.in'), 'the startup is not the person');
@@ -114,7 +114,7 @@ test('internal links and #anchors resolve', () => {
 test('external links are marked and safe', () => {
   for (const f of htmlFiles()) {
     for (const [tag] of read(f).matchAll(/<a [^>]*href="https?:[^"]+"[^>]*>/g)) {
-      assert.match(tag, /rel="noopener"/, `${f}: ${tag}`);
+      assert.match(tag, /rel="(me )?noopener"/, `${f}: ${tag}`);
     }
   }
 });
@@ -172,7 +172,7 @@ test('images have alt text and the cover image has its size', () => {
 test('sitemap and feed point at the site url', () => {
   const sm = fs.readFileSync(sitemapFile, 'utf8');
   for (const p of ['', '/about', '/now', '/log', '/notes/how-this-site-is-made']) assert.ok(sm.includes(`<loc>${BASE}${p}</loc>`), p || 'cover');
-  assert.match(sm, /<image:loc>[^<]+portrait/);
+  assert.match(sm, /<image:loc>[^<]+nikhil-patil/);
   const feed = read('feed.xml');
   assert.match(feed, /<rss version="2.0"/);
   assert.equal((feed.match(/<item>/g) || []).length, JSON.parse(fs.readFileSync(path.join(ROOT, 'content/log.json'), 'utf8')).entries.length);

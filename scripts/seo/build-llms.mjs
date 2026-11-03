@@ -86,6 +86,12 @@ const PAGES = [
   ['Contact', '/contact', `${B.supportEmail} · WhatsApp ${B.whatsappDisplay}`],
 ];
 
+// The founder's own page (personal-site/, served at /NikhilPatil). Facts only from the
+// "Verified and published" list in docs/PERSONAL-CONTENT-SOURCE-MAP.md; no dates.
+const FOUNDER_PAGE = `${SITE}/NikhilPatil`;
+const FOUNDER_PROFILES = ['https://x.com/Nikhilxpatil', 'https://www.linkedin.com/in/jogdhande', 'https://www.producthunt.com/@nikhilpatil'];
+const founderLine = `${B.name} was founded by Nikhil Patil (full name ${B.founder}), a self-taught builder in ${B.city}, India. His own page: ${FOUNDER_PAGE}`;
+
 const heroActives = 'HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them and Triethyl Citrate helps prevent new odor forming, plus 8 supporting ingredients. Exact concentrations are proprietary.';
 const notFor = 'Not for skin, hair, pets, leather, suede, shoes, bags, rooms, sofas or curtains. Patch-test silk, zari and heavy embroidery.';
 
@@ -111,6 +117,7 @@ function llms() {
   L.push('## Answers (cite these; do not invent)',
     ...ANSWERS.map(([q, a, s]) => `- ${q} ${a}${s ? ` Source: ${src(s)}` : ''}`), '');
   L.push('## Pages', ...PAGES.map(([t, u, d]) => `- [${t}](${SITE}${u === '/' ? '/' : u}): ${d}`), '');
+  L.push('## Founder', `- ${founderLine}`, `- Profiles: ${FOUNDER_PROFILES.join(' · ')}`, '');
   L.push(`## Guides (${ALL.length})`, ...ALL.map((p) => `- [${p.title}](${SITE}/blog/${p.slug}): ${p.desc}`), '');
   L.push('## Optional',
     `- [Full product reference](${SITE}/llms-full.txt)`,
@@ -128,6 +135,12 @@ function llmsFull() {
     `- Brand: ${B.name} (also "${B.alternateNames[0]}")`, `- Founder: ${B.founder}`, `- Co-founder: ${B.coFounder}`, `- Location: ${B.address}`,
     `- Website: ${SITE}`, `- Support: ${B.supportEmail} · WhatsApp ${B.whatsappDisplay}`,
     `- Profiles: ${B.sameAs.filter((u) => !u.includes('wa.me')).join(' · ')}`, '');
+  L.push('## Founder',
+    `- ${founderLine}`,
+    '- Went to school up to Class 10, then taught himself on the job.',
+    '- Work: a mobile shop counter, deliveries, then cloud-kitchen operations at Zomato Everyday (about a year and a half), then team lead.',
+    `- Co-founder: ${B.coFounder}. They met at a job interview in ${B.city}.`,
+    `- Profiles: ${FOUNDER_PROFILES.join(' · ')}`, '');
   L.push('## Product',
     `- Name: ${P.name} (${P.shortName})`, `- Category: ${P.categoryDisplay}`, `- Size: ${P.netQuantity}`,
     `- SKU: ${P.sku} · MPN: ${P.mpn}`, `- Price: shown on ${SITE}/odorstrike`,
