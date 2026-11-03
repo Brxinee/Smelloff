@@ -22,11 +22,10 @@ One long cover page that reads like an issue, plus four inner pages.
 | 03 Self-taught syllabus | What he taught himself after Class 10, each with where it shows |
 | 04 Shelf | Interests |
 | 05 Things I've made | Startup (one card), the store's website, this site |
-| 06 Log | Latest shipped items; full list on /log |
-| 07 Take a card | Visiting card + .vcf download; every profile |
+| 06 Take a card | Visiting card + .vcf download; every profile |
 
-Inner pages: `/about` (the fact page for search and for people), `/now`, `/log`, `/notes/<slug>`.
-Navigation is always visible and labelled (Now · Log · About), plus the brand link home. Toys are
+Inner pages: `/about` (the fact page for search and for people), `/now`, `/notes/<slug>`. (The dated log and its RSS feed were removed on 3 Nov 2026 at his request; `/NikhilPatil/log` and `/NikhilPatil/feed.xml` 301 to the cover.)
+Navigation is always visible and labelled (Now · About), plus the brand link home. Toys are
 optional; all content is in the HTML and readable without JavaScript.
 
 ## Tokens (`assets/css/site.css` §1)
@@ -86,5 +85,5 @@ reduced motion everything shows its finished state.
   (mainEntity Person); About: `AboutPage`; notes: `BlogPosting` by the same Person.
 - smelloff.in points back: the founder schema `url`, all 97 blog bylines (`rel="author"`), the
   About page and the homepage founder strip link to `/NikhilPatil`.
-- Own sitemap with the portrait as an image entry; RSS for the log.
+- Own sitemap with the portrait as an image entry.
 - "Nikhil" alone is one of the most common first names in India; no page can promise that query.

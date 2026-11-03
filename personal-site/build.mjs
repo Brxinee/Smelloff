@@ -32,7 +32,6 @@ export function humanDate(iso, long = false) {
 }
 
 const STATUS_WORD = { NOW: 'Now', LIVE: 'Live', NEW: 'New', PARKED: 'Parked', RETIRED: 'Retired' };
-const KIND_WORD = { shipped: 'Shipped', note: 'Note', elsewhere: 'Elsewhere', milestone: 'Milestone' };
 
 // The one inline script: sets the theme before first paint so the shutter
 // never flashes.
@@ -56,7 +55,6 @@ function loadContent() {
     journey: json('content/journey.json'),
     bench: json('content/bench.json').items,
     syllabus: json('content/syllabus.json'),
-    log: json('content/log.json').entries,
     shelf: json('content/shelf.json'),
     credits: json('content/credits.json').items,
     notes,
@@ -206,7 +204,6 @@ ${page.ogType === 'profile' ? `<meta property="profile:first_name" content="${at
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
-<link rel="alternate" type="application/rss+xml" title="${attr(s.name)}: log" href="/feed.xml">
 <script>${THEME_SCRIPT}</script>
 ${page.ld ? ldScript(page.ld) + '\n' : ''}<script src="/assets/js/site.js" defer></script>
 </head>
@@ -218,7 +215,6 @@ ${SPRITE}
     <a class="brand" href="/"${current('/')}><span class="brand__mark" aria-hidden="true">NP</span><span class="brand__name">${esc(s.name)}</span></a>
     <nav class="nav" aria-label="Main">
       <a href="/now"${current('/now')}>Now</a>
-      <a href="/log"${current('/log')}>Log</a>
       <a href="/about"${current('/about')}>About</a>
     </nav>
     <p class="clock" aria-label="Local time in Hyderabad"><span class="clock__place">Hyd</span> <time class="clock__time" data-clock>IST</time></p>
@@ -232,7 +228,7 @@ ${page.body}
   <div class="foot__in">
     <p class="foot__printed">${esc(s.name)} · printed in ${esc(s.location.city)} · <time datetime="${ctx.printed}">${humanDate(ctx.printed)}</time></p>
     <nav class="foot__nav" aria-label="Footer">
-      <a href="/">Cover</a><a href="/now">Now</a><a href="/log">Log</a><a href="/about">About</a><a href="/notes/how-this-site-is-made">Colophon</a><a href="/feed.xml">${icon('rss')}RSS</a>
+      <a href="/">Cover</a><a href="/now">Now</a><a href="/about">About</a><a href="/notes/how-this-site-is-made">Colophon</a>
     </nav>
     <p class="foot__small">No cookies, no trackers. Words and photos © ${ctx.printed.slice(0, 4)} ${esc(s.name)}; cut-outs from Wikimedia Commons (CC0), see the colophon. Fonts under the SIL Open Font License.</p>
   </div>
@@ -251,14 +247,6 @@ const secHead = (num, id, title, aside) => `<header class="sec__head">
   ${aside ? `<p class="sec__aside hand" aria-hidden="true">${aside}</p>` : ''}
 </header>`;
 
-function logEntry(e) {
-  const body = e.href ? linkTo(e.href, e.text, 'entry__link') : esc(e.text);
-  return `<li class="entry entry--${e.kind}">
-  <time class="entry__date" datetime="${e.date}">${humanDate(e.date)}</time>
-  <span class="entry__kind">${KIND_WORD[e.kind]}</span>
-  <p class="entry__text">${body}</p>
-</li>`;
-}
 
 function benchCard(item, i) {
   const body = item.body ? markdown(item.body).html : '';
@@ -316,8 +304,8 @@ function profileLinks(site, cls = 'links') {
 /* ---------- pages */
 
 function homePage(c, ctx) {
-  const { site, now, journey, bench, syllabus, log, shelf } = c;
-  const sections = [['now', 'Now'], ['clocked-in', journey.title], ['syllabus', 'Self-taught syllabus'], ['shelf', 'Shelf'], ['made', 'Things I’ve made'], ['log', 'Log'], ['card', 'Take a card']];
+  const { site, now, journey, bench, syllabus, shelf } = c;
+  const sections = [['now', 'Now'], ['clocked-in', journey.title], ['syllabus', 'Self-taught syllabus'], ['shelf', 'Shelf'], ['made', 'Things I’ve made'], ['card', 'Take a card']];
   const body = `
 <section class="cover" id="cover" aria-labelledby="cover-title" data-cover>
   <p class="issue"><span><span class="issue__no">Issue ${esc(humanDate(ctx.printed).replace(/^\d+ /, ''))}</span> <span class="issue__sep" aria-hidden="true">·</span> ${esc(site.location.city)}</span> <span class="issue__what">A zine about one person</span></p>
@@ -417,17 +405,8 @@ ${bench.map(benchCard).join('\n')}
 </ul>
 </section>
 
-<section class="sec log" id="log" aria-labelledby="log-h">
-${secHead('06', 'log-h', 'Log', 'dated, checkable')}
-<p class="sec__lede">What I shipped, in order. No numbers, no hype, just the dates.</p>
-<ol class="register">
-${log.slice(0, 6).map(logEntry).join('\n')}
-</ol>
-<p class="more"><a class="btn" href="/log">The full log ${icon('arrow')}</a></p>
-</section>
-
 <section class="sec card-sec" id="card" aria-labelledby="card-h">
-${secHead('07', 'card-h', 'Take a card', 'like the ones on a shop counter')}
+${secHead('06', 'card-h', 'Take a card', 'like the ones on a shop counter')}
 <div class="share" data-share>
   <div class="share__prompt" role="group" aria-labelledby="share-title">
     <p class="share__app" aria-hidden="true">${icon('card')} Visiting card</p>
@@ -574,7 +553,7 @@ function nowPage(c, ctx) {
   </header>
   ${nowBlock(c.now, { full: true })}
   <div class="prose now-page__foot">
-    <p>This is a <a href="https://nownownow.com/about" rel="noopener">/now page<span class="ext" aria-hidden="true">↗</span></a>: a short note on what I’m focused on, updated when it changes. For what already shipped, see the <a href="/log">log</a>.</p>
+    <p>This is a <a href="https://nownownow.com/about" rel="noopener">/now page<span class="ext" aria-hidden="true">↗</span></a>: a short note on what I’m focused on, updated when it changes.</p>
   </div>
 </article>`;
   return {
@@ -584,37 +563,6 @@ function nowPage(c, ctx) {
     bodyClass: 'inner',
     body,
     ld: [breadcrumbLd(ctx, [[c.site.name, '/'], ['Now', '/now']])],
-  };
-}
-
-function logPage(c, ctx) {
-  const byMonth = new Map();
-  for (const e of c.log) {
-    const key = e.date.slice(0, 7);
-    if (!byMonth.has(key)) byMonth.set(key, []);
-    byMonth.get(key).push(e);
-  }
-  const groups = [...byMonth].map(([m, entries]) => `<section class="log-month" aria-labelledby="m-${m}">
-  <h2 class="log-month__title" id="m-${m}">${humanDate(m, true)}</h2>
-  <ol class="register">${entries.map(logEntry).join('\n')}</ol>
-</section>`).join('\n');
-  const body = `
-<article class="page log-page" aria-labelledby="log-title">
-  <header class="page__head">
-    <p class="kicker">Log</p>
-    <h1 id="log-title" class="page__title">Log</h1>
-    <p class="lede">What I shipped and wrote, newest first. Every line has a date you can check. Notes I write here show up in this list too.</p>
-    <p class="page__meta"><a href="/feed.xml">${icon('rss')} Follow by RSS</a></p>
-  </header>
-  ${groups}
-</article>`;
-  return {
-    path: '/log',
-    title: `Log: what ${c.site.name} has built and written`,
-    description: `A dated list of what ${c.site.name} has shipped and written, newest first.`,
-    bodyClass: 'inner',
-    body,
-    ld: [breadcrumbLd(ctx, [[c.site.name, '/'], ['Log', '/log']])],
   };
 }
 
@@ -629,14 +577,14 @@ function notePage(c, ctx, n) {
   const body = `
 <article class="page note" aria-labelledby="note-title">
   <header class="page__head">
-    <p class="kicker"><a href="/log">Log</a> · Note</p>
+    <p class="kicker"><a href="/">Cover</a> · Note</p>
     <h1 id="note-title" class="page__title">${esc(n.title)}</h1>
     <p class="page__meta"><time datetime="${n.date}">${humanDate(n.date)}</time> · ${n.minutes} min read · by ${esc(c.site.name)}</p>
   </header>
   <div class="prose note__body">
 ${n.html}
   </div>${credits}
-  <p class="more"><a class="btn" href="/log">Back to the log ${icon('arrow')}</a></p>
+  <p class="more"><a class="btn" href="/">Back to the cover ${icon('arrow')}</a></p>
 </article>`;
   return {
     path: p,
@@ -647,7 +595,7 @@ ${n.html}
     body,
     ld: [
       { '@type': 'BlogPosting', '@id': `${ctx.url(p)}#post`, headline: n.title, description: n.description, datePublished: n.date, dateModified: n.updated || n.date, inLanguage: c.site.lang, url: ctx.url(p), mainEntityOfPage: ctx.url(p), author: { '@type': 'Person', '@id': c.site.personId, name: c.site.name, url: ctx.site }, image: ctx.abs('/assets/img/og.jpg') },
-      breadcrumbLd(ctx, [[c.site.name, '/'], ['Log', '/log'], [n.title, p]]),
+      breadcrumbLd(ctx, [[c.site.name, '/'], [n.title, p]]),
     ],
   };
 }
@@ -659,33 +607,6 @@ const sitemap = (ctx, pages) => `<?xml version="1.0" encoding="UTF-8"?>
 ${pages.map((p) => `  <url><loc>${ctx.url(p.path)}</loc><lastmod>${p.lastmod}</lastmod>${p.path === '/' ? `<image:image><image:loc>${ctx.abs('/assets/img/me/nikhil-patil.webp')}</image:loc></image:image>` : ''}</url>`).join('\n')}
 </urlset>
 `;
-
-function feed(c, ctx) {
-  const items = c.log.map((e) => {
-    const link = e.href ? (ext(e.href) ? e.href : ctx.url(e.href)) : ctx.url('/log');
-    const [y, m, d] = e.date.split('-').map(Number);
-    const date = new Date(Date.UTC(y, m - 1, d || 1, 6, 0, 0)).toUTCString();
-    return `  <item>
-    <title>${esc(`${KIND_WORD[e.kind]}: ${e.text}`)}</title>
-    <link>${esc(link)}</link>
-    <guid isPermaLink="false">${esc(`${ctx.url('/log')}#${e.date}-${crypto.createHash('sha1').update(e.text).digest('hex').slice(0, 8)}`)}</guid>
-    <pubDate>${date}</pubDate>
-  </item>`;
-  }).join('\n');
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-<channel>
-  <title>${esc(c.site.name)}: log</title>
-  <link>${ctx.url('/log')}</link>
-  <description>${esc(`What ${c.site.name} ships and writes, newest first.`)}</description>
-  <language>${c.site.lang}</language>
-  <lastBuildDate>${new Date(ctx.printed + 'T06:00:00Z').toUTCString()}</lastBuildDate>
-  <atom:link href="${ctx.url('/feed.xml')}" rel="self" type="application/rss+xml"/>
-${items}
-</channel>
-</rss>
-`;
-}
 
 function vcard(c, ctx) {
   const s = c.site;
@@ -714,7 +635,6 @@ ${faq(s).map(([q, a]) => `- **${q}** ${a}`).join('\n')}
 - [${s.name}](${ctx.site}): the cover page
 - [About ${s.name}](${ctx.url('/about')}): facts, jobs, how he works, questions
 - [Now](${ctx.url('/now')}): what he is working on, updated ${c.now.updated}
-- [Log](${ctx.url('/log')}): dated list of what he has shipped
 
 ## Profiles (these are his; others with the same name are not)
 ${s.profiles.map((p) => `- ${p.label}: ${p.url}`).join('\n')}
@@ -751,7 +671,6 @@ export function build({ outDir = path.join(ROOT, 'dist', 'NikhilPatil'), sitemap
     { ...homePage(c, ctx), lastmod: printed },
     { ...aboutPage(c, ctx), lastmod: printed },
     { ...nowPage(c, ctx), lastmod: c.now.updated },
-    { ...logPage(c, ctx), lastmod: c.log[0].date.length === 10 ? c.log[0].date : printed },
     ...c.notes.map((n) => ({ ...notePage(c, ctx, n), lastmod: n.updated || n.date })),
   ];
   for (const page of pages) {
@@ -762,7 +681,6 @@ export function build({ outDir = path.join(ROOT, 'dist', 'NikhilPatil'), sitemap
   }
   fs.mkdirSync(path.dirname(sitemapFile), { recursive: true });
   fs.writeFileSync(sitemapFile, sitemap(ctx, pages));
-  fs.writeFileSync(path.join(outDir, 'feed.xml'), feed(c, ctx));
   fs.writeFileSync(path.join(outDir, 'nikhil-patil.vcf'), vcard(c, ctx));
   fs.writeFileSync(path.join(outDir, 'llms.txt'), llms(c, ctx));
   return { outDir, sitemapFile, site, pages: pages.map((p) => p.path), printed };

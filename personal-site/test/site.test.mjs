@@ -35,9 +35,9 @@ before(() => {
 });
 
 test('builds every page', () => {
-  assert.deepEqual(pages.sort(), ['/', '/about', '/log', '/notes/how-this-site-is-made', '/now'].sort());
+  assert.deepEqual(pages.sort(), ['/', '/about', '/notes/how-this-site-is-made', '/now'].sort());
   assert.ok(fs.existsSync(sitemapFile), 'sitemap');
-  for (const f of ['index.html', 'about.html', 'now.html', 'log.html', 'notes/how-this-site-is-made.html', 'feed.xml', 'nikhil-patil.vcf']) {
+  for (const f of ['index.html', 'about.html', 'now.html', 'notes/how-this-site-is-made.html', 'nikhil-patil.vcf', 'llms.txt']) {
     assert.ok(fs.existsSync(path.join(out, f)), `missing ${f}`);
   }
 });
@@ -121,7 +121,7 @@ test('external links are marked and safe', () => {
 
 test('nothing private, priced or formula-ish ships', () => {
   const allowedEmails = new Set(['info@smelloff.in']);
-  for (const f of [...htmlFiles(), 'feed.xml', 'nikhil-patil.vcf', sitemapFile]) {
+  for (const f of [...htmlFiles(), 'llms.txt', 'nikhil-patil.vcf', sitemapFile]) {
     const raw = path.isAbsolute(f) ? fs.readFileSync(f, 'utf8') : read(f);
     const text = f.endsWith('.html') ? textOf(raw) : raw;
     for (const [email] of raw.matchAll(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}/g)) {
@@ -169,13 +169,13 @@ test('images have alt text and the cover image has its size', () => {
   }
 });
 
-test('sitemap and feed point at the site url', () => {
+test('sitemap points at the site url; the log is gone', () => {
   const sm = fs.readFileSync(sitemapFile, 'utf8');
-  for (const p of ['', '/about', '/now', '/log', '/notes/how-this-site-is-made']) assert.ok(sm.includes(`<loc>${BASE}${p}</loc>`), p || 'cover');
+  for (const p of ['', '/about', '/now', '/notes/how-this-site-is-made']) assert.ok(sm.includes(`<loc>${BASE}${p}</loc>`), p || 'cover');
   assert.match(sm, /<image:loc>[^<]+nikhil-patil/);
-  const feed = read('feed.xml');
-  assert.match(feed, /<rss version="2.0"/);
-  assert.equal((feed.match(/<item>/g) || []).length, JSON.parse(fs.readFileSync(path.join(ROOT, 'content/log.json'), 'utf8')).entries.length);
+  assert.ok(!sm.includes('/log'), 'no log page in the sitemap');
+  assert.ok(!fs.existsSync(path.join(out, 'log.html')) && !fs.existsSync(path.join(out, 'feed.xml')));
+  for (const f of htmlFiles()) assert.doesNotMatch(read(f), /href="\/NikhilPatil\/(log|feed\.xml)"/, `${f}: link to the removed log`);
 });
 
 test('the name is clear: title, h1 and first words say Nikhil Patil', () => {
@@ -200,10 +200,7 @@ test('content files follow their own rules', () => {
   for (const b of bench) assert.ok(['NOW', 'LIVE', 'NEW', 'PARKED', 'RETIRED'].includes(b.status), b.id);
   const now = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/now.json'), 'utf8'));
   assert.ok(now.supporting.length <= 2, 'one main thing, at most two on the side');
-  const log = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/log.json'), 'utf8')).entries;
-  for (const e of log) assert.match(e.date, /^\d{4}-\d{2}(-\d{2})?$/);
-  const keys = log.map((e) => e.date.padEnd(10, '-99'));
-  assert.deepEqual(keys, [...keys].sort().reverse(), 'log is newest first');
+
 });
 
 test('markdown and dates render as expected', () => {

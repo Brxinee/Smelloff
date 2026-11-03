@@ -1195,6 +1195,16 @@
       "source": "/:path+/",
       "destination": "/:path+",
       "statusCode": 301
+    },
+    {
+      "source": "/NikhilPatil/log",
+      "destination": "/NikhilPatil",
+      "statusCode": 301
+    },
+    {
+      "source": "/NikhilPatil/feed.xml",
+      "destination": "/NikhilPatil",
+      "statusCode": 301
     }
   ],
   "rewrites": [
