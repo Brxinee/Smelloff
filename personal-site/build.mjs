@@ -40,7 +40,7 @@ export const THEME_SCRIPT = "(function(){var d=document.documentElement;d.classL
 function loadContent() {
   const site = json('content/site.json');
   const notesDir = path.join(ROOT, 'content/notes');
-  const notes = fs.readdirSync(notesDir)
+  const notes = (fs.existsSync(notesDir) ? fs.readdirSync(notesDir) : [])
     .filter((f) => f.endsWith('.md'))
     .map((f) => {
       const { data, body } = frontMatter(fs.readFileSync(path.join(notesDir, f), 'utf8'));
@@ -228,9 +228,9 @@ ${page.body}
   <div class="foot__in">
     <p class="foot__printed">${esc(s.name)} · printed in ${esc(s.location.city)} · <time datetime="${ctx.printed}">${humanDate(ctx.printed)}</time></p>
     <nav class="foot__nav" aria-label="Footer">
-      <a href="/">Cover</a><a href="/now">Now</a><a href="/about">About</a><a href="/notes/how-this-site-is-made">Colophon</a>
+      <a href="/">Cover</a><a href="/now">Now</a><a href="/about">About</a>
     </nav>
-    <p class="foot__small">No cookies, no trackers. Words and photos © ${ctx.printed.slice(0, 4)} ${esc(s.name)}; cut-outs from Wikimedia Commons (CC0), see the colophon. Fonts under the SIL Open Font License.</p>
+    <p class="foot__small">No cookies, no trackers. Words and photos © ${ctx.printed.slice(0, 4)} ${esc(s.name)}; cut-outs from Wikimedia Commons (CC0), credited on the <a href="/about#credits">About page</a>. Fonts under the SIL Open Font License.</p>
   </div>
 </footer>
 <div class="shutter" aria-hidden="true"></div>
@@ -525,6 +525,10 @@ ${qa.slice(1).map(([q, a]) => `        <h3>${esc(q)}</h3>\n        <p>${esc(a)}<
       <h2 id="elsewhere">Find me elsewhere</h2>
       <p>These are my accounts. If a profile isn’t listed here, it isn’t me: there are a lot of Nikhil Patils.</p>
       ${profileLinks(s)}
+
+      <h2 id="credits">Picture credits</h2>
+      <p>The photos of me are mine. The cut-outs on the cover are free-licence photos from Wikimedia Commons:</p>
+      <ul>${c.credits.map((k) => `<li>${esc(k.what)}: <a href="${attr(k.url)}" rel="noopener">“${esc(k.title)}”<span class="ext" aria-hidden="true">↗</span></a> by ${esc(k.author)}, ${esc(k.licence)}.</li>`).join('')}</ul>
     </div>
   </div>
 </article>`;

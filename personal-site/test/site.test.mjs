@@ -35,9 +35,9 @@ before(() => {
 });
 
 test('builds every page', () => {
-  assert.deepEqual(pages.sort(), ['/', '/about', '/notes/how-this-site-is-made', '/now'].sort());
+  assert.deepEqual(pages.sort(), ['/', '/about', '/now'].sort());
   assert.ok(fs.existsSync(sitemapFile), 'sitemap');
-  for (const f of ['index.html', 'about.html', 'now.html', 'notes/how-this-site-is-made.html', 'nikhil-patil.vcf', 'llms.txt']) {
+  for (const f of ['index.html', 'about.html', 'now.html', 'nikhil-patil.vcf', 'llms.txt']) {
     assert.ok(fs.existsSync(path.join(out, f)), `missing ${f}`);
   }
 });
@@ -81,9 +81,8 @@ test('structured data parses and describes one person consistently', () => {
   const about = ldOf(read('about.html'))[0]['@graph'];
   assert.equal(about.find((n) => n['@type'] === 'AboutPage').about['@id'], person['@id']);
 
-  const note = ldOf(read('notes/how-this-site-is-made.html'))[0]['@graph'].find((n) => n['@type'] === 'BlogPosting');
-  assert.equal(note.author['@id'], person['@id']);
-  assert.match(note.datePublished, /^\d{4}-\d{2}-\d{2}$/);
+  assert.match(read('about.html'), /id="credits"/, 'picture credits live on About');
+  assert.ok(!fs.existsSync(path.join(out, 'notes')), 'no notes pages');
   for (const f of htmlFiles().filter((x) => x !== 'index.html')) {
     assert.ok(!read(f).includes('"@type":"WebSite"'), `${f}: WebSite markup only on the cover`);
   }
@@ -171,7 +170,7 @@ test('images have alt text and the cover image has its size', () => {
 
 test('sitemap points at the site url; the log is gone', () => {
   const sm = fs.readFileSync(sitemapFile, 'utf8');
-  for (const p of ['', '/about', '/now', '/notes/how-this-site-is-made']) assert.ok(sm.includes(`<loc>${BASE}${p}</loc>`), p || 'cover');
+  for (const p of ['', '/about', '/now']) assert.ok(sm.includes(`<loc>${BASE}${p}</loc>`), p || 'cover');
   assert.match(sm, /<image:loc>[^<]+nikhil-patil/);
   assert.ok(!sm.includes('/log'), 'no log page in the sitemap');
   assert.ok(!fs.existsSync(path.join(out, 'log.html')) && !fs.existsSync(path.join(out, 'feed.xml')));
