@@ -21,10 +21,9 @@ Everything the site says is in `content/`:
 | `journey.json` | The "Clocked in" time card: jobs in order, no dates |
 | `syllabus.json` | The self-taught syllabus |
 | `bench.json` | "Things I've made" cards; `status` becomes the rubber stamp |
-| `log.json` | The dated log, newest first; also the RSS feed |
 | `shelf.json` | Interests |
 | `credits.json` | Credits for pictures that aren't his |
-| `notes/*.md` | Notes (Markdown with front matter); each gets a page and a log entry by date |
+| `notes/*.md` | Notes (Markdown with front matter); each gets a page |
 
 Facts must come from `docs/PERSONAL-CONTENT-SOURCE-MAP.md` category 1, or be approved by Nikhil.
 

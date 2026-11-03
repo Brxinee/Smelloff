@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import path from 'node:path';
 import { buildHeaders, buildRedirects } from '../scripts/cloudflare-routing.mjs';
 
 const routing = JSON.parse(fs.readFileSync('config/routing.json', 'utf8'));
@@ -143,9 +144,19 @@ test('/public copies, capitalised paths and common guessed URLs reach a live pag
     '/privacy-policy /privacy 301', '/return-policy /returns 301', '/track /track-order 301', '/sitemap_index.xml /sitemap.xml 301']) {
     assert.ok(out.includes(line), `missing _redirects line: ${line}`);
   }
+  // /NikhilPatil pages are generated at deploy from personal-site/ (never committed).
+  const { build } = await import('../personal-site/build.mjs');
+  const os = await import('node:os');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'np-routes-'));
+  const personal = new Set(build({ outDir: path.join(tmp, 'NikhilPatil'), printed: '2026-11-03' }).pages
+    .map((p) => '/NikhilPatil' + (p === '/' ? '' : p)));
   for (const r of routing.redirects.filter((r) => !r.has && !/[(:*]/.test(r.source))) {
     const dest = r.destination.split('?')[0];
     if (!dest.startsWith('/') || dest === '/') continue;
+    if (dest === '/NikhilPatil' || dest.startsWith('/NikhilPatil/')) {
+      assert.ok(personal.has(dest), `${r.source} → ${r.destination}: no such personal page`);
+      continue;
+    }
     const file = dest.replace(/^\//, '');
     assert.ok([file, `${file}.html`, `${file}/index.html`].some((f) => fs.existsSync(f)), `${r.source} → ${r.destination}: no such page`);
   }
