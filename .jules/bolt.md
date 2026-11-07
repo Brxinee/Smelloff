@@ -1,0 +1,3 @@
+## 2024-05-24 - Prevent Layout Thrashing in Auto-expanding Textareas
+**Learning:** Setting `element.style.height = 'auto'` followed immediately by reading `element.scrollHeight` unconditionally on every keystroke causes severe layout thrashing. This is a common pattern for auto-expanding textareas but recalculates layout synchronously on every input event.
+**Action:** Conditionally execute the resize logic only when the text length shrinks (where height might need to decrease) or when the content overflows its current height (`element.scrollHeight > element.clientHeight`). This drastically reduces the number of layout recalculations while maintaining the expected visual behavior.
