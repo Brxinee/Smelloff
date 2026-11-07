@@ -457,7 +457,7 @@
     if (msg.length < 10) { showErr('Tell us a little more — at least 10 characters.'); return; }
 
     var btn = document.getElementById('cBtn');
-    btn.disabled = true; btn.textContent = 'Sending…';
+    btn.disabled = true; btn.setAttribute('aria-busy', 'true'); btn.textContent = 'Sending…';
 
     fetch(SUPA_URL + '/rest/v1/contact_messages/', {
       method: 'POST',
@@ -476,7 +476,7 @@
       })
     })
     .then(function(r){
-      btn.disabled = false; btn.textContent = 'Send message';
+      btn.disabled = false; btn.setAttribute('aria-busy', 'false'); btn.textContent = 'Send message';
       if (!r.ok) { showErr('Couldn’t send — try again, or WhatsApp us instead.'); return; }
       try { if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { lead_source: 'contact_form', topic: String(topic || '').slice(0, 40) }); } catch (e) {}
       document.getElementById('contactForm').style.display = 'none';
@@ -484,7 +484,7 @@
       document.getElementById('cDone').scrollIntoView({ behavior:'smooth', block:'center' });
     })
     .catch(function(){
-      btn.disabled = false; btn.textContent = 'Send message';
+      btn.disabled = false; btn.setAttribute('aria-busy', 'false'); btn.textContent = 'Send message';
       showErr('Network hiccup — try again, or WhatsApp us instead.');
     });
   };
