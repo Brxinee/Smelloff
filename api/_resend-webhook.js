@@ -49,11 +49,15 @@ export function verifySvixSignature(rawBody, headers, secret) {
     for (const candidate of candidates) {
       const receivedBuf = Buffer.from(candidate, 'utf8');
       // Prevent timing side-channel via early return by doing dummy comparison
+      let isValid = false;
       if (expectedBuf.length !== receivedBuf.length) {
         crypto.timingSafeEqual(expectedBuf, expectedBuf);
-        continue;
+      } else {
+        isValid = crypto.timingSafeEqual(expectedBuf, receivedBuf);
       }
-      if (crypto.timingSafeEqual(expectedBuf, receivedBuf)) return true;
+      if (isValid) return true;
+      continue;
+
     }
   } catch {
     return false;
