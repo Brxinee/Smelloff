@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { httpServerHandler } from "cloudflare:node";
 import express from "express";
 
-import { canonicalRedirect, lowercaseCandidate, notFoundStatus, upgradeTemporaryRedirect, verificationAssetPath } from "./canonical.js";
+import { canonicalRedirect, lowercaseCandidate, notFoundStatus, upgradeTemporaryRedirect, verificationAssetPath, withUtf8Text } from "./canonical.js";
 import { BUILD } from "./build-info.js";
 
 import sendEmailHandler from "../api/send-email.js";
@@ -211,7 +211,7 @@ async function handleFetch(request, workerEnv, ctx) {
       if (file.status === 200) return file;
     }
     const asset = await workerEnv.ASSETS.fetch(request);
-    if (asset.status !== 404) return notFoundStatus(request.url, upgradeTemporaryRedirect(request.url, asset));
+    if (asset.status !== 404) return withUtf8Text(notFoundStatus(request.url, upgradeTemporaryRedirect(request.url, asset)));
     const lower = await lowercaseRedirect(request, workerEnv);
     if (lower) return lower;
   }

@@ -183,6 +183,7 @@ function layout(c, ctx, page) {
 <title>${esc(page.title)}</title>
 <meta name="description" content="${attr(page.description)}">
 <link rel="canonical" href="${url}">
+<link rel="alternate" type="text/markdown" href="${ctx.site + mdPath(page.path)}">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="${attr(s.name)}">
 <meta name="color-scheme" content="light dark">
@@ -626,6 +627,79 @@ function vcard(c, ctx) {
   ].join('\r\n') + '\r\n';
 }
 
+// Markdown twins of the pages, for AI assistants and agents that read text
+// (llmstxt.org suggests a .md next to each page). Built from the same HTML, so
+// they can never say something the page doesn't. Decorative bits (aria-hidden,
+// ballpoint notes, toys, in-page nav) are dropped.
+function dropElements(html, test) {
+  const open = /<([a-z][a-z0-9]*)\b([^>]*)>/gi;
+  let out = html, m;
+  open.lastIndex = 0;
+  while ((m = open.exec(out))) {
+    const [tagText, tag, attrs] = m;
+    if (!test(tag.toLowerCase(), attrs) || /\/>$/.test(tagText) || /^(img|br|source|input|meta|link)$/i.test(tag)) continue;
+    const re = new RegExp(`<(/?)${tag}\\b[^>]*>`, 'gi');
+    re.lastIndex = m.index + tagText.length;
+    let depth = 1, r;
+    while (depth && (r = re.exec(out))) depth += r[1] ? -1 : 1;
+    const end = r ? r.index + r[0].length : out.length;
+    out = out.slice(0, m.index) + out.slice(end);
+    open.lastIndex = m.index;
+  }
+  return out;
+}
+
+const decode = (t) => t.replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+
+export function htmlToMarkdown(html, ctx) {
+  const abs = (h) => (/^https?:|^mailto:/.test(h) ? h : h.startsWith('/') ? ctx.origin + h : null);
+  let t = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<(script|style|svg|button|template)\b[\s\S]*?<\/\1>/gi, '');
+  t = dropElements(t, (tag, a) => /aria-hidden="true"/.test(a) || /role="toolbar"/.test(a) || tag === 'nav'
+    || /class="(sr|issue|[^"]*\bpiece--sticky)\b/.test(a));
+  t = t.replace(/<dt\b[^>]*>([\s\S]*?)<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/gi, (_, k, v) => `<li>**${k.trim()}:** ${v.trim()}</li>`);
+  t = t.replace(/\s+/g, ' ');
+  t = t.replace(/<img\b[^>]*>/gi, (img) => {
+    const alt = (img.match(/\balt="([^"]*)"/) || [])[1];
+    const src = abs((img.match(/\bsrc="([^"]*)"/) || [])[1] || '');
+    return alt && src ? `\n\n![${alt}](${src})\n\n` : '';
+  });
+  t = t.replace(/<a\b[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, (_, h, txt) => {
+    const u = abs(h); const inner = txt.replace(/<[^>]+>/g, '').trim();
+    return u && inner ? `[${inner}](${u})` : inner;
+  });
+  t = t.replace(/<h([1-4])\b[^>]*>([\s\S]*?)<\/h\1>/gi, (_, n, x) => `\n\n${'#'.repeat(+n)} ${x.replace(/<[^>]+>/g, '').trim()}\n\n`);
+  t = t.replace(/<(strong|b)\b[^>]*>([\s\S]*?)<\/\1>/gi, '**$2**').replace(/<(em|i)\b[^>]*>([\s\S]*?)<\/\1>/gi, '*$2*');
+  t = t.replace(/<li\b[^>]*>/gi, '\n- ').replace(/<blockquote\b[^>]*>/gi, '\n\n> ');
+  t = t.replace(/<br\s*\/?>/gi, '\n').replace(/<\/?(p|div|section|header|footer|figure|figcaption|ul|ol|dl|dt|dd|table|tr|article|aside|details|summary|blockquote)\b[^>]*>/gi, '\n\n');
+  t = decode(t.replace(/<\/(span|time|mark|small|abbr|code)>/gi, ' ').replace(/<[^>]+>/g, ''));
+  return t.split('\n').map((l) => l.replace(/[ \t]+/g, ' ').trim()).join('\n')
+    .split('\n').filter((l) => l !== '-').join('\n')
+    .replace(/ +([.,:;!?)])/g, '$1').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+}
+
+const mdPath = (pagePath) => (pagePath === '/' ? '/index.md' : pagePath + '.md');
+
+function pageMarkdown(c, ctx, page, html) {
+  const main = (html.match(/<main\b[^>]*>([\s\S]*)<\/main>/) || [])[1] || '';
+  return `---
+title: ${JSON.stringify(page.title)}
+description: ${JSON.stringify(page.description)}
+url: ${ctx.url(page.path)}
+author: ${c.site.name}
+---
+
+${htmlToMarkdown(main, ctx)}`;
+}
+
+// Everything on the site as one text file (the llms-full.txt convention).
+function llmsFull(c, ctx, docs) {
+  return `# ${c.site.name}: the whole site as text
+
+> ${c.site.disambiguation} ${c.site.description} Source: ${ctx.site}. Updated ${ctx.printed}.
+
+${docs.map(({ page, md }) => `\n---\n\n<!-- ${ctx.url(page.path)} -->\n\n${md.replace(/^---[\s\S]*?---\n\n/, '')}`).join('\n')}`;
+}
+
 // A plain-text fact sheet for language models (llmstxt.org format).
 function llms(c, ctx) {
   const s = c.site;
@@ -639,6 +713,10 @@ ${faq(s).map(([q, a]) => `- **${q}** ${a}`).join('\n')}
 - [${s.name}](${ctx.site}): the cover page
 - [About ${s.name}](${ctx.url('/about')}): facts, jobs, how he works, questions
 - [Now](${ctx.url('/now')}): what he is working on, updated ${c.now.updated}
+
+## Optional
+- [The whole site as one text file](${ctx.url('/llms-full.txt')})
+- Each page as Markdown: ${['/', '/about', '/now'].map((p) => ctx.site + mdPath(p)).join(' · ')}
 
 ## Profiles (these are his; others with the same name are not)
 ${s.profiles.map((p) => `- ${p.label}: ${p.url}`).join('\n')}
@@ -677,12 +755,18 @@ export function build({ outDir = path.join(ROOT, 'dist', 'NikhilPatil'), sitemap
     { ...nowPage(c, ctx), lastmod: c.now.updated },
     ...c.notes.map((n) => ({ ...notePage(c, ctx, n), lastmod: n.updated || n.date })),
   ];
+  const docs = [];
   for (const page of pages) {
     const file = page.path === '/' ? 'index.html' : page.path.slice(1) + '.html';
     const target = path.join(outDir, file);
     fs.mkdirSync(path.dirname(target), { recursive: true });
-    fs.writeFileSync(target, withBase(layout(c, ctx, page), basePath, assets));
+    const html = withBase(layout(c, ctx, page), basePath, assets);
+    fs.writeFileSync(target, html);
+    const md = pageMarkdown(c, ctx, page, html);
+    fs.writeFileSync(path.join(outDir, mdPath(page.path).slice(1)), md);
+    docs.push({ page, md });
   }
+  fs.writeFileSync(path.join(outDir, 'llms-full.txt'), llmsFull(c, ctx, docs));
   fs.mkdirSync(path.dirname(sitemapFile), { recursive: true });
   fs.writeFileSync(sitemapFile, sitemap(ctx, pages));
   fs.writeFileSync(path.join(outDir, 'nikhil-patil.vcf'), vcard(c, ctx));

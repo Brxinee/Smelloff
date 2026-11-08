@@ -120,7 +120,7 @@ test('external links are marked and safe', () => {
 
 test('nothing private, priced or formula-ish ships', () => {
   const allowedEmails = new Set(['info@smelloff.in']);
-  for (const f of [...htmlFiles(), 'llms.txt', 'nikhil-patil.vcf', sitemapFile]) {
+  for (const f of [...htmlFiles(), 'llms.txt', 'llms-full.txt', 'index.md', 'about.md', 'now.md', 'nikhil-patil.vcf', sitemapFile]) {
     const raw = path.isAbsolute(f) ? fs.readFileSync(f, 'utf8') : read(f);
     const text = f.endsWith('.html') ? textOf(raw) : raw;
     for (const [email] of raw.matchAll(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}/g)) {
@@ -211,4 +211,22 @@ test('markdown and dates render as expected', () => {
   assert.match(html, /<ul><li>one<\/li><li><strong>two<\/strong><\/li><\/ul>/);
   assert.match(html, /<a href="\/x">link<\/a>/);
   assert.equal(headings[0].id, 'hi-there');
+});
+
+test('every page has a Markdown twin, linked from its head and listed in llms.txt; llms-full.txt holds them all', () => {
+  const llmsTxt = read('llms.txt');
+  const full = read('llms-full.txt');
+  assert.match(llmsTxt, /llms-full\.txt/);
+  for (const [html, md] of [['index.html', 'index.md'], ['about.html', 'about.md'], ['now.html', 'now.md']]) {
+    const page = read(html);
+    const twin = read(md);
+    const href = (page.match(/<link rel="alternate" type="text\/markdown" href="([^"]+)">/) || [])[1];
+    assert.equal(href, `${BASE}/${md}`, `${html} links its twin`);
+    assert.ok(llmsTxt.includes(href), `llms.txt lists ${md}`);
+    const canon = page.match(/<link rel="canonical" href="([^"]+)"/)[1];
+    assert.match(twin, new RegExp(`^url: ${canon.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}$`, 'm'));
+    const h1 = textOf(page.match(/<h1\b[\s\S]*?<\/h1>/)[0]).replace(/\s+/g, " ").trim();
+    assert.ok(twin.includes(`# ${h1}`) && full.includes(`# ${h1}`), `${md} and llms-full carry the H1 "${h1}"`);
+    assert.doesNotMatch(twin, /<[a-z][^>]*>|opens another site|Stamp|Tidy/, `${md} is clean text`);
+  }
 });
