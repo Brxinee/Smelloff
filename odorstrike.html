@@ -1585,6 +1585,39 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .pay-modes{display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;
     font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
   .pay-modes .ic{width:14px;height:14px;flex:0 0 auto}
+  /* Shown by script to visitors outside India; no display rule here, so [hidden] holds. */
+  .pd-intl{font-size:14px;line-height:1.45;color:var(--text);padding-left:12px;border-left:2px solid var(--acid)}
+
+  /* ---------- After you order (under the #buy box) ---------- */
+  .pd-after{margin-top:clamp(16px,2.5vw,24px);padding:clamp(20px,3.5vw,32px);border:1px solid var(--rule);
+    border-radius:var(--sq-xl);background:var(--surface)}
+  .pd-after__title{font-family:var(--display);font-weight:700;font-size:var(--fs-h4);line-height:1.15;color:var(--text)}
+  .pd-after__steps{list-style:none;display:grid;gap:16px;margin-top:18px}
+  @media(min-width:768px){.pd-after__steps{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}}
+  @media(min-width:1160px){.pd-after__steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  .pd-after__steps li{display:flex;align-items:flex-start;gap:12px;font-size:14.5px;line-height:1.5;color:var(--text-2)}
+  .pd-after__n{flex:none;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--acid);padding-top:3px}
+  .pd-after__steps strong{display:block;margin-bottom:2px;font-size:15px;color:var(--text)}
+  .pd-after__note{margin-top:18px;padding-top:14px;border-top:1px solid var(--rule-soft);font-size:13.5px;color:var(--muted)}
+
+  /* ---------- When to reach for it ---------- */
+  .pd-when__list{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .pd-when__list .pd-when__item:last-child:nth-child(odd){grid-column:1/-1}
+  @media(min-width:768px){
+    .pd-when__list{grid-template-columns:repeat(6,minmax(0,1fr))}
+    .pd-when__list .pd-when__item{grid-column:span 2}
+    .pd-when__list .pd-when__item:nth-child(n+4),.pd-when__list .pd-when__item:last-child:nth-child(odd){grid-column:span 3}
+  }
+  @media(min-width:1160px){
+    .pd-when__list{grid-template-columns:repeat(5,minmax(0,1fr))}
+    .pd-when__list .pd-when__item,.pd-when__list .pd-when__item:nth-child(n+4),.pd-when__list .pd-when__item:last-child:nth-child(odd){grid-column:auto}
+  }
+  .pd-when__item{display:flex;flex-direction:column;gap:8px;min-width:0;padding:18px 16px;border:1px solid var(--rule);
+    border-radius:var(--sq-lg);background:var(--surface)}
+  .pd-when__k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid)}
+  .pd-when__item h3{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.2;color:var(--text)}
+  .pd-when__item p{font-size:14px;line-height:1.5;color:var(--text-2)}
+  @media(min-width:768px){.pd-when__item{padding:22px 20px}.pd-when__item h3{font-size:var(--fs-h4)}}
 
   /* ---------- FAQ: the accordion itself is soft.css §3 + the FAQ block above ---------- */
   .pd .faq{padding-block:var(--section-y);border-top:1px solid var(--rule-soft);background:var(--ink)}
@@ -1670,7 +1703,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="preload" href="/assets/css/soft.css?v=6dd2740f" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f"></noscript>
 <link rel="preload" href="/assets/css/chrome.css?v=5c04b85d" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/assets/css/chrome.css?v=5c04b85d"></noscript>
-<script src="/assets/js/chrome.js?v=2bd21262" defer></script>
+<script src="/assets/js/chrome.js?v=f176b73b" defer></script>
 <script src="/assets/js/support-chat.js?v=3c26359d" defer></script>
 </head>
 <body>
@@ -2046,6 +2079,27 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   </div>
 </section>
 
+<!-- WHEN TO REACH FOR IT (2026-11-08) — the pocket, on-the-go job, in Indian
+     everyday moments. Only the claims the site already makes: sweat, smoke and
+     food odor in clothes, between washes. No icons (they'd only decorate).
+     Below the fold: it doesn't move the hero Buy button. -->
+<section class="pd-sec pd-when" id="when" aria-labelledby="whenTitle">
+  <div class="pd-wrap">
+    <div class="pd-head">
+      <div class="section-tag">When to use it</div>
+      <h2 id="whenTitle" class="pd-h2">When to reach <span class="acid">for it.</span></h2>
+      <p class="pd-lede">It fits a trouser pocket, so you can freshen your clothes where the smell happens, not back home.</p>
+    </div>
+    <ul class="pd-when__list">
+      <li class="pd-when__item"><span class="pd-when__k">Commute</span><h3>Bike, metro or auto in the heat</h3><p>Mist the collar and underarm fabric before you walk into office.</p></li>
+      <li class="pd-when__item"><span class="pd-when__k">Kitchen</span><h3>After the tadka or frying</h3><p>Cooked, then heading out? Take the food smell off your shirt or kurta first.</p></li>
+      <li class="pd-when__item"><span class="pd-when__k">Smoke</span><h3>A function, Diwali or a smoky dhaba</h3><p>Spray the shirt or jacket that soaked up the smoke.</p></li>
+      <li class="pd-when__item"><span class="pd-when__k">Second wear</span><h3>Office shirt or kurta, day two</h3><p>Worn once and not dirty? Freshen it between washes.</p></li>
+      <li class="pd-when__item"><span class="pd-when__k">Travel</span><h3>After a long train or flight</h3><p>Freshen the clothes you travelled in before you meet anyone.</p></li>
+    </ul>
+  </div>
+</section>
+
 <!-- WHY IT WORKS — one lifestyle image, three short reasons, and the
      comparison as a small table. -->
 <section class="pd-sec pd-sec--alt showcase" id="why" aria-labelledby="whyTitle">
@@ -2176,6 +2230,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           <li><span><strong>Ships from Hyderabad</strong> in 48 hours · 3–5 days to metros</span></li>
           <li><span><strong>7-day returns</strong> if it isn't for you</span></li>
         </ul>
+        <p class="pd-intl" hidden>We deliver within India only.</p>
         <button type="button" class="pd-btn" id="showcaseBuyBtn" onclick="buyNow()">Buy now — ₹229</button>
         <p class="cod-line"><s>₹499</s> ₹229 prepaid · Free shipping · Cash on Delivery available</p>
         <!-- Gated proof (adjacent to buy tile): rating summary renders here ONLY when
@@ -2189,6 +2244,20 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         </dl>
         <p class="pay-modes"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>UPI, cards and net banking — free shipping · Cash on Delivery</p>
       </div>
+    </div>
+    <!-- WHAT HAPPENS AFTER YOU ORDER (2026-11-08) — for a first-time buyer
+         from a new brand. Every step is true per config/product.json
+         (shipping.dispatchWindow, dispatchCodNote) and /shipping, /returns.
+         Never a COD amount here: amounts live only in the checkout modal. -->
+    <div class="pd-after">
+      <h3 id="afterTitle" class="pd-after__title">What happens after you order</h3>
+      <ol class="pd-after__steps">
+        <li><span class="pd-after__n" aria-hidden="true">01</span><span><strong>Confirmation by email</strong>Your order number and summary arrive as soon as you order.</span></li>
+        <li><span class="pd-after__n" aria-hidden="true">02</span><span><strong>Cash on Delivery? We call first</strong>COD orders are confirmed by a phone call before dispatch. Prepaid orders go straight to packing.</span></li>
+        <li><span class="pd-after__n" aria-hidden="true">03</span><span><strong>Dispatched from Hyderabad</strong>Within 48 hours of order confirmation (excluding Sundays and public holidays).</span></li>
+        <li><span class="pd-after__n" aria-hidden="true">04</span><span><strong>Track it to your door</strong>A tracking link arrives by email once it ships, or look it up on <a href="/track-order">Track order</a>.</span></li>
+      </ol>
+      <p class="pd-after__note">Not for you? Returns are open for 7 days from delivery. <a href="/returns">Read the returns policy</a>.</p>
     </div>
   </div>
 </section>

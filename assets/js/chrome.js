@@ -20,6 +20,20 @@
   });
   Array.prototype.forEach.call(document.images, function (img) { if (img.complete) markImg(img); });
 
+  // India only: ODORSTRIKE ships within India, and a third of search
+  // impressions come from abroad (US, UK, Canada readers of the guides).
+  // A device whose clock isn't on India time sees "We deliver within India
+  // only." beside the buy routes (.pd-intl on /odorstrike, .pcard__intl in the
+  // guides' product card). The markup ships hidden, so Indian visitors and
+  // crawlers get the page as written and nothing moves for them.
+  try {
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (tz && tz !== 'Asia/Kolkata' && tz !== 'Asia/Calcutta') {
+      document.documentElement.setAttribute('data-sf-abroad', '');
+      document.querySelectorAll('.pd-intl, .pcard__intl').forEach(function (el) { el.hidden = false; });
+    }
+  } catch (e) { /* no Intl: leave the notes hidden */ }
+
   var burger = document.querySelector('.sf-burger');
   var menu = document.getElementById('sfMenu');
   // Phone menu = a drawer from the left. The dimmed page beside it is a

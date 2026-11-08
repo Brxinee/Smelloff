@@ -2994,3 +2994,32 @@ Sep 19 look stays; structure, copy, legibility and motion changed.
   SMF-20261102-9285 (paid) was marked dispatched on 5 Nov with no Shiprocket
   id or AWB, so the sync no longer retries it: book it by hand, or set it
   back to `packed` in /admin and the next sync books it.
+
+## India sales pass (2026-11-08, owner: "I want sales from my website … from only India … research Reddit, competitors, Notion")
+Write-up with data and sources: `docs/audits/india-sales-pass-2026-11-08.md`.
+Search Console (3 months): ~90% of traffic lands on guides, which sent ~5% of
+readers to /odorstrike; India 14.3k impressions vs US 10k. Flipkart (Amazon.in
+was down): no Indian odor spray for clothes is pocket size (smallest 200 ml),
+none shows a demo or explains neutralise vs mask; per ml ODORSTRIKE is the
+dearest, so it sells the job, not the price. Reddit is blocked for every fetch
+and search tool in the cloud container; the Notion Reddit passes were used.
+- **Product card in the guides** (`scripts/blog/product-card.config.mjs`,
+  stamped by `apply-reader.mjs` between `<!-- PCARD:START/END -->`, right after
+  the quick answer, before the TOC): in-hand photo (never a cutout), what it is,
+  a "Use it when …" line per cluster with per-slug overrides, COD / free
+  prepaid shipping / ships from Hyderabad within 48 hours, one ghost link to
+  /odorstrike (`id="blog_pcard"`, so `buy_cta_click` reports that location).
+  **Never a price in it.** 83 posts carry it; SKIP (with reasons) holds the
+  product posts and the posts whose honest answer is "wash it". A new post gets
+  it through its cluster unless added to SKIP. `test/blog-product-card.test.mjs`.
+- **PDP** `#when` ("When to reach for it": commute, after cooking, smoke,
+  second wear, travel; after `#how`) and `.pd-after` (four after-order steps +
+  returns line under the `#buy` box; never a COD amount). Buy unchanged
+  (759–815 at 390×844, 624–680 at 1280×800). `test/pdp-occasions.test.mjs`.
+- **India only:** chrome.js un-hides `.pd-intl` / `.pcard__intl` ("We deliver
+  within India only.") when the device's time zone isn't Asia/Kolkata and sets
+  `data-sf-abroad` on `<html>`. Markup ships hidden, so India and crawlers see
+  no change. `test/india-only-note.test.mjs`.
+- Images on the LIVE site don't load in the container's Chromium (`%40` URLs
+  307 to themselves through the session proxy); real browsers in India load
+  them (checked 8 Nov). Test visuals against a local build of `public/`.
