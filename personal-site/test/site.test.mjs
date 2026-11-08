@@ -230,3 +230,20 @@ test('every page has a Markdown twin, linked from its head and listed in llms.tx
     assert.doesNotMatch(twin, /<[a-z][^>]*>|opens another site|Stamp|Tidy/, `${md} is clean text`);
   }
 });
+
+test('structured data passes Google’s ProfilePage checks: one ProfilePage with a mainEntity, full ISO date-times', () => {
+  const all = [];
+  const walk = (n) => {
+    if (Array.isArray(n)) return n.forEach(walk);
+    if (n && typeof n === 'object') { all.push(n); Object.values(n).forEach(walk); }
+  };
+  for (const f of htmlFiles()) walk(ldOf(read(f)));
+  const profiles = all.filter((n) => n['@type'] === 'ProfilePage');
+  assert.equal(profiles.length, 1, 'exactly one ProfilePage (a stray one in subjectOf shows as "Unnamed item, missing mainEntity")');
+  assert.ok(profiles[0].mainEntity && profiles[0].mainEntity['@type'] === 'Person');
+  for (const n of all) {
+    for (const k of ['dateCreated', 'dateModified', 'datePublished']) {
+      if (n[k] !== undefined) assert.match(n[k], /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/, `${k} "${n[k]}" is a full date-time`);
+    }
+  }
+});

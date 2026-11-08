@@ -90,6 +90,11 @@ one small halftone of the bottle. Docs: `personal-site/README.md`, `docs/PERSONA
   header to their page (`config/routing.json`). `withUtf8Text()` (`src/canonical.js`) adds
   `charset=utf-8` to text/plain and text/markdown responses (the asset server sends none, and
   `_headers` can't set Content-Type).
+- **Google ProfilePage report** (2026-11-08, owner's URL Inspection screenshots): the Person's
+  `subjectOf` held a bare `ProfilePage`, which Google listed as a second "Unnamed item, missing
+  field 'mainEntity'" (critical); it's gone. Dates in the JSON-LD are full ISO date-times in IST
+  (`isoDateTime()`; a bare "2026-11-02" was "Invalid datetime value"). A personal-site test
+  pins one ProfilePage with a Person mainEntity and full date-times.
 
 ## Sep 19 homepage + Sep 19 type everywhere (2026-11-01, owner: "bring back the sep 19 design … only homepage … sep 19 typo everywhere")
 Supersedes every homepage design note below (hero v4, the Oct 15 redesign, pack
