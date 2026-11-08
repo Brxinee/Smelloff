@@ -21,18 +21,27 @@
 const KEY = '163974d1a8d940cf89b0ec712246c779';
 const HOST = 'smelloff.in';
 
-const sitemapUrl = `https://${HOST}/sitemap.xml`;
-const res0 = await fetch(sitemapUrl, { redirect: 'manual' });
-if (res0.status >= 300 && res0.status < 400) {
-  throw new Error(
-    `${sitemapUrl} redirected to ${res0.headers.get('location')} — ` +
-    `submitting redirecting URLs to IndexNow wastes the submission. Fix HOST.`
-  );
-}
-const sitemap = await res0.text();
+// The store's sitemap and the personal site's (both named in robots.txt). The
+// personal one was never submitted before 2026-11-08, so Bing (and ChatGPT
+// search, which uses Bing's index) never heard about /NikhilPatil.
+const SITEMAPS = [`https://${HOST}/sitemap.xml`, `https://${HOST}/sitemap-nikhil-patil.xml`];
 
-const urlList = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-if (!urlList.length) throw new Error('No URLs found in sitemap');
+const urlList = [];
+for (const sitemapUrl of SITEMAPS) {
+  const res0 = await fetch(sitemapUrl, { redirect: 'manual' });
+  if (res0.status >= 300 && res0.status < 400) {
+    throw new Error(
+      `${sitemapUrl} redirected to ${res0.headers.get('location')} — ` +
+      `submitting redirecting URLs to IndexNow wastes the submission. Fix HOST.`
+    );
+  }
+  if (!res0.ok) throw new Error(`${sitemapUrl} answered HTTP ${res0.status}`);
+  const sitemap = await res0.text();
+  // `<loc>` only: `<image:loc>` entries are images, not pages.
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  if (!locs.length) throw new Error(`No URLs found in ${sitemapUrl}`);
+  for (const u of locs) if (!urlList.includes(u)) urlList.push(u);
+}
 
 const offHost = urlList.filter((u) => new URL(u).host !== HOST);
 if (offHost.length) {
