@@ -207,6 +207,44 @@ h1 em { font-style: normal; color: var(--acid); }
 }
 
 /* ---------------------------------------------------------------------
+   In-article product card, right after the quick answer (stamped by
+   apply-reader.mjs from scripts/blog/product-card.config.mjs). Compact:
+   the owner's in-hand photo shown whole (contain on a black panel, never a
+   cutout), what it is, when to use it, India perks, one route to the
+   product page in the site's ghost button. Never a price (CLAUDE.md).
+   --------------------------------------------------------------------- */
+.pcard {
+  display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 10px 14px; align-items: start;
+  margin: 0 0 28px; padding: 12px 14px 14px 12px;
+  border: 1px solid var(--border-default); border-radius: var(--sq-lg, 16px);
+  background: var(--surface);
+}
+.quick-answer + .pcard { margin-top: -14px; }
+.pcard__pic { display: block; grid-row: 1; }
+.pcard .pcard__img {
+  width: 52px; height: 92px; object-fit: contain;
+  background: black; border: 1px solid var(--border-subtle); border-radius: var(--sq-sm, 8px);
+}
+.pcard__body { min-width: 0; display: grid; gap: 2px; }
+.article-wrap .pcard p { margin: 0; max-width: none; font-size: 14px; line-height: 1.38; color: var(--text-2); text-wrap: pretty; }
+.article-wrap .pcard .pcard__use { margin-top: 3px; }
+.article-wrap .pcard .pcard__name { font-size: 15px; line-height: 1.3; color: var(--text); }
+.pcard__name strong { font-family: var(--font-display); font-weight: 700; letter-spacing: .01em; }
+.pcard__name span { font-size: 13px; color: var(--muted); }
+.pcard__use strong { color: var(--text); font-weight: 600; }
+.pcard__foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.article-wrap .pcard .pcard__perks, .article-wrap .pcard .pcard__intl { flex: 1 1 260px; font-size: 12.5px; line-height: 1.4; color: var(--muted); }
+.article-wrap .pcard .pcard__intl { color: var(--text-2); }
+.pcard .pcard__cta { flex: 1 1 100%; min-height: 44px; padding: 0 18px; font-size: 14.5px; }
+@media (min-width: 640px) {
+  .pcard { grid-template-columns: 64px minmax(0, 1fr); gap: 4px 18px; padding: 16px 18px; }
+  .pcard__pic { grid-row: 1 / span 2; }
+  .pcard .pcard__img { width: 64px; height: 114px; }
+  .pcard__foot { grid-column: 2; }
+  .pcard .pcard__cta { flex: 0 0 auto; }
+}
+
+/* ---------------------------------------------------------------------
    Prose
    --------------------------------------------------------------------- */
 .article-wrap h2 {
