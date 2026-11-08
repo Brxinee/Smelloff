@@ -256,26 +256,41 @@ export async function resolvePickupLocation() {
   return pickupLocationCache;
 }
 
-// Shiprocket rejects an address field over 190 characters with only "Oops!
-// Invalid Data." (2026-11-02: SMF-20261102-9285's 200-character line). Join
-// the customer's lines with ", ", drop control characters and lone surrogates
-// (the checkout's 200-character cut can split an emoji), and spill anything
-// past the first field into address_2 at a word boundary.
+// Shiprocket caps address + address_2 COMBINED at 190 characters. Over it, a
+// single field fails with "Oops! Invalid Data." (2026-11-02: SMF-20261102-9285's
+// 200-character line) and a split fails with "Address 1 and Address 2 combined
+// cannot be greater 190 than characters" (same order, 2026-11-05, after the
+// first fix spilled the tail into address_2). Join the customer's lines with
+// ", ", drop control characters and lone surrogates (the checkout's
+// 200-character cut can split an emoji). If it is still too long, drop the
+// parts that repeat the city, state, pincode or "India" (each goes to Shiprocket
+// in its own field), and only then cut at a word boundary. Everything goes in
+// address_1; address_2 stays empty.
 export const SR_ADDRESS_MAX = 190;
-export function splitAddressForShiprocket(raw) {
-  const clean = String(raw || '')
-    .replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '')
-    .replace(/[\r\n\t]+/g, ', ')
-    .replace(/[\u0000-\u001F\u007F]/g, ' ')
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+export function splitAddressForShiprocket(raw, { city = '', state = '', pincode = '' } = {}) {
+  const tidy = (s) => s
     .replace(/\s*,\s*(,\s*)*/g, ', ')
     .replace(/\s{2,}/g, ' ')
-    .replace(/^[\s,]+|[\s,]+$/g, '');
+    .replace(/^[\s,.-]+|[\s,.-]+$/g, '');
+  let clean = tidy(String(raw || '')
+    .replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '')
+    .replace(/[\r\n\t]+/g, ', ')
+    .replace(/[\u0000-\u001F\u007F]/g, ' '));
+  if (clean.length > SR_ADDRESS_MAX) {
+    const pin = String(pincode || '').replace(/\D/g, '');
+    if (pin.length === 6) clean = tidy(clean.replace(new RegExp(`(^|[^0-9])${pin}(?![0-9])`, 'g'), '$1'));
+    for (const word of [state, city, 'India'].map((w) => String(w || '').trim()).filter((w) => w.length >= 3)) {
+      if (clean.length <= SR_ADDRESS_MAX) break;
+      // Only a whole comma-separated part (or the text after the last comma)
+      // that equals the name, so "Hyderabad Road" in a street name stays.
+      clean = tidy(clean.replace(new RegExp(`(^|,)\\s*${escapeRe(word)}\\s*(?=,|$)`, 'gi'), '$1'));
+    }
+  }
   if (clean.length <= SR_ADDRESS_MAX) return { line1: clean, line2: '' };
   let cut = clean.lastIndexOf(' ', SR_ADDRESS_MAX);
   if (cut < SR_ADDRESS_MAX / 2) cut = SR_ADDRESS_MAX;
-  const line1 = clean.slice(0, cut).replace(/[\s,]+$/, '');
-  const line2 = clean.slice(cut).replace(/^[\s,]+/, '').slice(0, SR_ADDRESS_MAX).replace(/[\s,]+$/, '');
-  return { line1, line2 };
+  return { line1: clean.slice(0, cut).replace(/[\s,]+$/, ''), line2: '' };
 }
 
 export async function createShiprocketOrder(order) {
@@ -319,7 +334,7 @@ export async function createShiprocketOrder(order) {
     ]
     : [line(itemName, itemSku, quantity, unitPrice)];
 
-  const addressLines = splitAddressForShiprocket(address.line);
+  const addressLines = splitAddressForShiprocket(address.line, address);
   const payload = {
     order_id: String(order.order_code),
     order_date: new Date(order.created_at || Date.now()).toISOString().slice(0, 10),

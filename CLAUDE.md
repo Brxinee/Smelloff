@@ -2981,10 +2981,16 @@ Sep 19 look stays; structure, copy, legibility and motion changed.
   most of it mine"). First-party `events` / `page_views` are mostly the
   owner's own visits; use published research and the skill audits, and don't
   cite click or scroll counts as evidence (older notes that do are history).
-- **Addresses over 190 characters fail with "Oops! Invalid Data."** (same
-  night: SMF-20261102-9285's 200-character line; an 84-character one went
-  through). `splitAddressForShiprocket()` joins the customer's lines with ", ",
-  drops control characters and lone surrogates (the checkout's 200-character
-  cut can split an emoji) and spills the rest into `*_address_2` at a word
-  boundary (`SR_ADDRESS_MAX` 190, per Shiprocket integration guides, not
-  official docs). API errors now include Shiprocket's per-field `errors`.
+- **Shiprocket caps address + address_2 COMBINED at 190 characters.** A
+  200-character line failed with "Oops! Invalid Data." (2026-11-02); the first
+  fix spilled the tail into `*_address_2`, and the same order then failed with
+  "Address 1 and Address 2 combined cannot be greater 190 than characters"
+  (2026-11-05). `splitAddressForShiprocket(line, {city, state, pincode})` now
+  joins the customer's lines with ", ", drops control characters and lone
+  surrogates, then (only if still over 190) drops parts that repeat the
+  pincode, state, city or "India" (each has its own Shiprocket field), and
+  only then cuts at a word boundary. Everything goes in address_1;
+  address_2 stays empty. API errors include Shiprocket's per-field `errors`.
+  SMF-20261102-9285 (paid) was marked dispatched on 5 Nov with no Shiprocket
+  id or AWB, so the sync no longer retries it: book it by hand, or set it
+  back to `packed` in /admin and the next sync books it.
