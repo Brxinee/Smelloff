@@ -128,6 +128,10 @@ const SPRITE = `<svg class="sprite" aria-hidden="true" focusable="false" xmlns="
 
 /* ---------- structured data */
 
+// Google's ProfilePage report wants full ISO 8601 date-times ("Invalid datetime
+// value" for a bare date). Pages are dated in IST.
+const isoDateTime = (d) => (/T/.test(d) ? d : `${d}T00:00:00+05:30`);
+
 function personLd(c, ctx) {
   const s = c.site;
   return {
@@ -147,7 +151,6 @@ function personLd(c, ctx) {
     jobTitle: s.jobTitle,
     hasOccupation: { '@type': 'Occupation', name: 'Founder', occupationLocation: { '@type': 'City', name: s.location.city } },
     subjectOf: [
-      { '@type': 'ProfilePage', url: ctx.site },
       { '@type': 'Article', url: 'https://smelloff.in/blog/why-i-built-odorstrike', headline: 'Why I Built ODORSTRIKE: A Founder’s Note', author: { '@id': s.personId } },
     ],
     worksFor: { '@type': 'Organization', '@id': s.worksFor.id, name: s.worksFor.name, url: s.worksFor.url },
@@ -441,7 +444,7 @@ ${secHead('06', 'card-h', 'Take a card', 'like the ones on a shop counter')}
     body,
     ld: [
       { '@type': 'WebSite', '@id': `${ctx.site}#website`, url: ctx.site, name: site.name, inLanguage: site.lang, publisher: { '@id': site.personId } },
-      { '@type': 'ProfilePage', '@id': `${ctx.site}#profile`, url: ctx.site, name: site.name, dateCreated: site.created, dateModified: ctx.printed, isPartOf: { '@id': `${ctx.site}#website` }, mainEntity: personLd(c, ctx) },
+      { '@type': 'ProfilePage', '@id': `${ctx.site}#profile`, url: ctx.site, name: site.name, dateCreated: isoDateTime(site.created), dateModified: isoDateTime(ctx.printed), isPartOf: { '@id': `${ctx.site}#website` }, mainEntity: personLd(c, ctx) },
     ],
   };
 }
@@ -542,7 +545,7 @@ ${qa.slice(1).map(([q, a]) => `        <h3>${esc(q)}</h3>\n        <p>${esc(a)}<
     body,
     ld: [
       { '@type': 'FAQPage', '@id': `${ctx.url('/about')}#faq`, mainEntity: qa.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
-      { '@type': 'AboutPage', '@id': `${ctx.url('/about')}#page`, url: ctx.url('/about'), name: `About ${s.name}`, dateModified: ctx.printed, about: { '@id': s.personId }, isPartOf: { '@id': `${ctx.site}#website` } },
+      { '@type': 'AboutPage', '@id': `${ctx.url('/about')}#page`, url: ctx.url('/about'), name: `About ${s.name}`, dateModified: isoDateTime(ctx.printed), about: { '@id': s.personId }, isPartOf: { '@id': `${ctx.site}#website` } },
       breadcrumbLd(ctx, [[s.name, '/'], ['About', '/about']]),
     ],
   };
@@ -599,7 +602,7 @@ ${n.html}
     bodyClass: 'inner',
     body,
     ld: [
-      { '@type': 'BlogPosting', '@id': `${ctx.url(p)}#post`, headline: n.title, description: n.description, datePublished: n.date, dateModified: n.updated || n.date, inLanguage: c.site.lang, url: ctx.url(p), mainEntityOfPage: ctx.url(p), author: { '@type': 'Person', '@id': c.site.personId, name: c.site.name, url: ctx.site }, image: ctx.abs('/assets/img/og.jpg') },
+      { '@type': 'BlogPosting', '@id': `${ctx.url(p)}#post`, headline: n.title, description: n.description, datePublished: isoDateTime(n.date), dateModified: isoDateTime(n.updated || n.date), inLanguage: c.site.lang, url: ctx.url(p), mainEntityOfPage: ctx.url(p), author: { '@type': 'Person', '@id': c.site.personId, name: c.site.name, url: ctx.site }, image: ctx.abs('/assets/img/og.jpg') },
       breadcrumbLd(ctx, [[c.site.name, '/'], [n.title, p]]),
     ],
   };
