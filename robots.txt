@@ -78,9 +78,12 @@ Disallow: /api/
 Disallow: /admin
 Disallow: /outreach/
 
-# Google — Gemini / AI Overviews (Google-Extended) + the AI-features crawler
+# Google — Gemini / AI Overviews / AI Mode (Google-Extended), the AI-features
+# crawler, and Gemini Notebook (formerly NotebookLM) user-triggered fetches
 User-agent: Google-Extended
 User-agent: GoogleOther
+User-agent: Google-GeminiNotebook
+User-agent: Google-NotebookLM
 Allow: /
 Disallow: /api/
 Disallow: /admin
@@ -121,10 +124,15 @@ Disallow: /api/
 Disallow: /admin
 Disallow: /outreach/
 
-# xAI / Grok, DeepSeek, Brave, Kagi, Phind, TikTok, Vertex
+# xAI / Grok (no official list from xAI; every reported token), DeepSeek,
+# Brave, Kagi, Phind, TikTok, Vertex
 User-agent: Grok
+User-agent: GrokBot
+User-agent: Grok-DeepSearch
 User-agent: xAI
 User-agent: xAI-Bot
+User-agent: xAI-Grok
+User-agent: xAI-SearchBot
 User-agent: DeepseekBot
 User-agent: DeepSeekBot
 User-agent: Bravebot
