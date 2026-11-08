@@ -54,20 +54,38 @@ test('createShiprocketOrder sends the COD fee as transaction_charges; prepaid se
   }
 });
 
-// Shiprocket answers "Oops! Invalid Data." for an address field over 190
-// characters (2026-11-02: SMF-20261102-9285's 200-character line, while an
-// 84-character one went through). Long lines spill into address_2.
-test('long or multi-line addresses are split under Shiprocket\'s 190-character limit', async () => {
+// Shiprocket caps address + address_2 COMBINED at 190 characters
+// (SMF-20261102-9285: "Oops! Invalid Data." for a 200-character line on
+// 2026-11-02, then "Address 1 and Address 2 combined cannot be greater 190
+// than characters" on 2026-11-05 once the tail was spilled into address_2).
+test('long or multi-line addresses fit Shiprocket\'s 190-character combined limit', async () => {
   const { splitAddressForShiprocket, SR_ADDRESS_MAX } = await import('../api/_shiprocket.js');
   assert.equal(SR_ADDRESS_MAX, 190);
+  const fits = (r) => assert.ok(r.line1.length + r.line2.length <= 190, `${r.line1.length}+${r.line2.length}`);
+
+  // City, state, pincode and "India" repeated in the line are dropped first
+  // (they travel in their own fields), so nothing else is lost.
+  const street = 'Flat 402, Sunshine Residency, Lane 7 near the old temple behind the bus depot, Opp. Ganesh Medicals, Ward 12, Kothrud Gaon, Paud Road Extension, Sector 3, near Kumar Park bus stop';
+  const withTail = `${street}, Pune, Maharashtra, 411038, India`;
+  assert.ok(withTail.length > 190);
+  const a = splitAddressForShiprocket(withTail, { city: 'Pune', state: 'Maharashtra', pincode: '411038' });
+  fits(a);
+  assert.equal(a.line1, `${street}, India`, "stops dropping as soon as it fits");
+  assert.equal(a.line2, '');
+
+  // A street name containing the city stays intact.
+  const b = splitAddressForShiprocket('12 Hyderabad Road, Kukatpally', { city: 'Hyderabad' });
+  assert.equal(b.line1, '12 Hyderabad Road, Kukatpally');
+
+  // Still too long: cut at a word boundary, never over the combined limit.
   const long = ('Flat 402, Sunshine Residency, Lane 7 near the old temple, Kothrud ').repeat(4);
   const cut = (long + '\n😀').slice(0, 200).replace(/.$/, '\uD83D'); // checkout's 200-char cut splitting an emoji
   const r = splitAddressForShiprocket(cut);
-  assert.ok(r.line1.length <= 190 && r.line2.length <= 190, `${r.line1.length}/${r.line2.length}`);
-  assert.ok(r.line2.length > 0, 'overflow kept in address_2');
-  const words = (t) => t.replace(/[,\s]+/g, ' ').trim(); // the comma at the split point is dropped on purpose
-  assert.equal(words(`${r.line1} ${r.line2}`), words(cut.replace(/\uD83D$/, '')), 'no text lost');
+  fits(r);
+  assert.ok(r.line1.length > 150, 'keeps as much as fits');
+  assert.ok(cut.startsWith(r.line1.replace(/,$/, '')), 'a prefix of the original');
   assert.doesNotMatch(r.line1 + r.line2, /[\uD800-\uDFFF]/, 'no lone surrogate');
+
   assert.deepEqual(splitAddressForShiprocket('H.No 4-56\nMain road,\n\nNear school'), { line1: 'H.No 4-56, Main road, Near school', line2: '' });
-  assert.deepEqual(splitAddressForShiprocket('Short street'), { line1: 'Short street', line2: '' });
+  assert.deepEqual(splitAddressForShiprocket('Short street, Hyderabad, 500018', { city: 'Hyderabad', pincode: '500018' }), { line1: 'Short street, Hyderabad, 500018', line2: '' }, 'short lines are left alone');
 });
