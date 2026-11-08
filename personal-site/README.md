@@ -7,8 +7,14 @@ nothing with the store's design.
 ```
 node build.mjs     # preview build → dist/NikhilPatil (+ dist/sitemap-nikhil-patil.xml)
 node serve.mjs     # http://localhost:4321/NikhilPatil
-node --test        # 14 tests (also run by the repo's root `npm test`)
+node --test        # 15 tests (also run by the repo's root `npm test`)
 ```
+
+## Files for AI assistants
+
+Each page also ships as Markdown (`index.md`, `about.md`, `now.md`), and `llms.txt` (fact sheet) and
+`llms-full.txt` (every page in one file) sit beside them. All are generated from the built pages;
+never edit them by hand.
 
 ## Edit the content
 

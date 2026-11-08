@@ -1353,6 +1353,91 @@
       ]
     },
     {
+      "source": "/NikhilPatil/llms.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow"
+        }
+      ]
+    },
+    {
+      "source": "/NikhilPatil/llms-full.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow"
+        }
+      ]
+    },
+    {
+      "source": "/NikhilPatil/index.md",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        },
+        {
+          "key": "Link",
+          "value": "<https://smelloff.in/NikhilPatil>; rel=\"canonical\""
+        }
+      ]
+    },
+    {
+      "source": "/NikhilPatil/about.md",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        },
+        {
+          "key": "Link",
+          "value": "<https://smelloff.in/NikhilPatil/about>; rel=\"canonical\""
+        }
+      ]
+    },
+    {
+      "source": "/NikhilPatil/now.md",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        },
+        {
+          "key": "Link",
+          "value": "<https://smelloff.in/NikhilPatil/now>; rel=\"canonical\""
+        }
+      ]
+    },
+    {
       "source": "/feed.xml",
       "headers": [
         {

@@ -179,3 +179,13 @@ test('every page footer links the smell-by-smell hub guide', () => {
     assert.ok(fs.readFileSync(f, 'utf8').includes(hub), `${f} footer is missing the hub link`);
   }
 });
+
+test('text files are served as UTF-8 (llms files, /NikhilPatil Markdown twins)', async () => {
+  const { withUtf8Text } = await import('../src/canonical.js');
+  const ct = (type, status = 200) => withUtf8Text(new Response('’', { status, headers: { 'content-type': type } })).headers.get('content-type');
+  assert.equal(ct('text/plain'), 'text/plain; charset=utf-8');
+  assert.equal(ct('text/markdown'), 'text/markdown; charset=utf-8');
+  assert.equal(ct('text/plain; charset=iso-8859-1'), 'text/plain; charset=iso-8859-1');
+  assert.equal(ct('text/html; charset=utf-8'), 'text/html; charset=utf-8');
+  assert.equal(ct('text/plain', 206), 'text/plain');
+});

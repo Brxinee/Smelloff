@@ -82,6 +82,14 @@ one small halftone of the bottle. Docs: `personal-site/README.md`, `docs/PERSONA
   reports the pushed commit. The Person `knowsAbout` matches the trimmed syllabus. Google needs
   the owner: Search Console → Sitemaps → add `sitemap-nikhil-patil.xml`, URL Inspection →
   Request indexing for the three pages; profile links back from X, LinkedIn, Product Hunt.
+- **AI-readable copies** (2026-11-08, owner: "aeo, geo, seo, LLMs, llms-plus"; no "llms-plus"
+  standard exists): the build writes a Markdown twin of each page (`index.md`, `about.md`,
+  `now.md`, converted from the built HTML by `htmlToMarkdown()`, so they can't drift), linked by
+  `<link rel="alternate" type="text/markdown">` and from `/NikhilPatil/llms.txt`, plus
+  `/NikhilPatil/llms-full.txt` (all pages in one file). The .md files carry a `Link: rel="canonical"`
+  header to their page (`config/routing.json`). `withUtf8Text()` (`src/canonical.js`) adds
+  `charset=utf-8` to text/plain and text/markdown responses (the asset server sends none, and
+  `_headers` can't set Content-Type).
 
 ## Sep 19 homepage + Sep 19 type everywhere (2026-11-01, owner: "bring back the sep 19 design … only homepage … sep 19 typo everywhere")
 Supersedes every homepage design note below (hero v4, the Oct 15 redesign, pack

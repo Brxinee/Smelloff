@@ -110,6 +110,20 @@ export function notFoundStatus(requestUrl, response) {
 }
 
 /**
+ * The asset server sends .txt and .md as "text/plain" / "text/markdown" with no
+ * charset, and _headers can't set Content-Type. The llms files and the
+ * /NikhilPatil Markdown pages are UTF-8 (’, ₹, ·), so a reader that falls back
+ * to Latin-1 shows mojibake. Name the charset.
+ */
+export function withUtf8Text(response) {
+  const type = response.headers.get("content-type") || "";
+  if (response.status !== 200 || !/^text\/(plain|markdown)\b/i.test(type) || /charset=/i.test(type)) return response;
+  const headers = new Headers(response.headers);
+  headers.set("content-type", `${type.split(";")[0].trim()}; charset=utf-8`);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
+/**
  * Search Console's HTML-file verification fetches /google<token>.html. The
  * asset server would 307 (and we 301) it to the extensionless URL; serve it
  * where Google looks instead, so ownership never depends on a redirect.
