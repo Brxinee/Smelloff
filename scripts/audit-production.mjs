@@ -114,7 +114,7 @@ if (fs.existsSync(indexPath)) {
   const indexHtml = read(indexPath);
   // The Sep 19 homepage (owner, 2026-11-01).
   if (!indexHtml.includes('Your shirt smells. <span class="acid">Fix it.</span>')) fail('index.html missing critical marker: "Your shirt smells. Fix it."');
-  if (!indexHtml.includes('CLOTHING DEODORANT SPRAY')) fail('index.html missing critical marker: "CLOTHING DEODORANT SPRAY" (the hero eyebrow, one product name since 2026-11-08)');
+  if (!indexHtml.includes('FABRIC FRESHENER SPRAY')) fail('index.html missing critical marker: "FABRIC FRESHENER SPRAY" (the hero eyebrow, one product name since 2026-11-09)');
   if (!indexHtml.includes('Built for the gap') && !indexHtml.includes('Jogdhande Nikhil Patil')) {
     fail('index.html missing current founder heading');
   }

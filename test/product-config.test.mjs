@@ -178,7 +178,7 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   assert.equal(h1.length, 1, 'Homepage must contain exactly one <h1>');
   assert.ok(h1[0][1].includes('Your shirt smells.') && h1[0][1].includes('Fix it.'), 'H1 must be the Sep 19 "Your shirt smells. Fix it."');
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
-  assert.ok(hero.includes('CLOTHING DEODORANT SPRAY'), 'one product name: clothing deodorant spray (owner, 2026-11-08)');
+  assert.ok(hero.includes('FABRIC FRESHENER SPRAY'), 'one product name: fabric freshener spray (owner, 2026-11-09)');
   assert.ok(hero.includes('ODORSTRIKE neutralizes sweat, smoke and food smell in clothes — not on skin.'));
   for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
   assert.ok(hero.includes('<span class="hero-price">₹229</span>'), 'Hero must show ₹229');
@@ -275,9 +275,9 @@ test('odorstrike.html PDP hero and primary buy area: positioning, canonical pric
   const pInfo = html.slice(pInfoStart, html.indexOf('<div id="heroProofMount">', pInfoStart));
 
   assert.equal([...html.matchAll(/<h1\b/g)].length, 1, 'PDP must have exactly one <h1>');
-  assert.ok(/<h1[^>]*>ODORSTRIKE <span class="pd-title__cat">[^<]*clothing deodorant spray<\/span><\/h1>/.test(pInfo), 'H1 must be the product name plus its category');
-  // One product name on the PDP (owner, 2026-11-08): "clothing deodorant spray".
-  assert.ok(pInfo.includes('CLOTHING DEODORANT SPRAY · 50ML'), 'Eyebrow must name the category');
+  assert.ok(/<h1[^>]*>ODORSTRIKE <span class="pd-title__cat">[^<]*fabric freshener for clothes<\/span><\/h1>/.test(pInfo), 'H1 must be the product name plus its category');
+  // One product name on the PDP (owner, 2026-11-09): "fabric freshener spray".
+  assert.ok(pInfo.includes('FABRIC FRESHENER SPRAY · 50ML'), 'Eyebrow must name the category');
   assert.ok(pInfo.includes('up to 8 hours'), 'Tagline must carry the locked protection claim');
   for (const tag of ['Not perfume', 'Not body deodorant', 'Fabric only']) assert.ok(pInfo.includes(tag), `Must say ${tag}`);
 
@@ -464,12 +464,13 @@ test('odorstrike.html PDP FAQ objection-first hierarchy, schema deprecation, and
   const qMatches = [...faqSection.matchAll(/<summary><h3>([\s\S]*?)<\/h3><\/summary>/g)].map(m => m[1].trim());
   const aMatches = [...faqSection.matchAll(/<p class="faq-answer">([\s\S]*?)<\/p>/g)].map(m => m[1].trim());
 
-  assert.equal(qMatches.length, 11, 'Must have exactly 11 visible FAQ questions');
-  assert.equal(aMatches.length, 11, 'Must have exactly 11 visible FAQ answers');
+  assert.equal(qMatches.length, 12, 'Must have exactly 12 visible FAQ questions');
+  assert.equal(aMatches.length, 12, 'Must have exactly 12 visible FAQ answers');
 
   // 4. The definition first (the passage answer engines quote), then the objections in order
   const expectedQuestions = [
     'What is ODORSTRIKE?',
+    'How is it different from other fabric fresheners?',
     'Is ODORSTRIKE safe on skin?',
     'Will it stain my clothes?',
     'How do I use it?',

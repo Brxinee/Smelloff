@@ -92,7 +92,7 @@ export const POSTS = {
     x: 'The three key actives in ODORSTRIKE, plus the three ingredients that were deliberately left out — glycerine among them, because on fabric a humectant leaves a tacky patch that then collects dust.',
   },
   'what-is-fabric-odor-eliminator': {
-    wa: 'Turns out this is a third category — deodorant for clothes, not for your body, and not perfume. Goes on the shirt, not on you: {url}',
+    wa: 'Turns out this is a third category — a fabric freshener that works on the cloth, not a body deodorant and not perfume. Goes on the shirt, not on you: {url}',
     x: 'A fabric odor eliminator is a third spray: body deodorant works on skin, perfume adds scent, this one works on the cloth. Confusing the three is why people buy the wrong thing and blame the category.',
   },
 

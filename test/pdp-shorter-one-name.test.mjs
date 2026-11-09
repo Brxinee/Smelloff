@@ -1,7 +1,8 @@
 // Product page (owner, 2026-11-08): one shorter page and one product name.
 // #why, #compare, #science and #size became one section; the gallery's second
 // tile is the in-hand photo on black (shown whole); every descriptor on the
-// PDP, cart, checkout and success screen says "clothing deodorant spray".
+// PDP, cart, checkout and success screen says "fabric freshener spray"
+// (was "clothing deodorant spray" until 2026-11-09).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -21,13 +22,13 @@ test('#why holds the comparison, the four layers and the key-ingredients note', 
   assert.equal((html.match(/class="pd-scroll" id="compare"/g) || []).length, 1);
 });
 
-test('the PDP uses one product name: clothing deodorant spray', () => {
+test('the PDP uses one product name: fabric freshener spray', () => {
   const visible = html.replace(/<script[\s\S]*?<\/script>/g, (m) => (/application\/ld\+json/.test(m) ? '' : m));
   assert.doesNotMatch(visible, /Fabric odor (mist|spray) ·|FABRIC ODOR CONTROL|POCKET MIST/, 'old descriptors are gone');
-  assert.ok(html.includes('<p class="pd-eyebrow">CLOTHING DEODORANT SPRAY · 50ML</p>'));
-  assert.ok(html.includes('· Clothing deodorant spray</p>'), 'checkout item line');
-  assert.ok(html.includes('<div class="cart-line-unit">Clothing deodorant spray · 50ml</div>'), 'cart drawer');
-  assert.ok(html.includes("'Clothing deodorant spray · Qty ' + qty"), 'success screen');
+  assert.ok(html.includes('<p class="pd-eyebrow">FABRIC FRESHENER SPRAY · 50ML</p>'));
+  assert.ok(html.includes('· Fabric freshener spray</p>'), 'checkout item line');
+  assert.ok(html.includes('<div class="cart-line-unit">Fabric freshener spray · 50ml</div>'), 'cart drawer');
+  assert.ok(html.includes("'Fabric freshener spray · Qty ' + qty"), 'success screen');
   assert.doesNotMatch(visible, /not a deodorant/i);
 });
 

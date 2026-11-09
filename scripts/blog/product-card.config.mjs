@@ -117,7 +117,7 @@ if (!DISPATCH) throw new Error('product-card: config shipping.dispatchWindow nam
 export const CARD = {
   name: product.shortName,
   kind: `${product.size} · pocket size`,
-  what: 'Clothing deodorant: neutralizes sweat, smoke and food smell in the fabric. Never on skin.',
+  what: 'Pocket fabric freshener for clothes: neutralizes sweat, smoke and food smell in the fabric. Never on skin.',
   perks: ['Cash on Delivery', 'Free shipping on prepaid', `Ships from ${brand.city} within ${DISPATCH}`],
   intl: 'We deliver within India only.',
   cta: `See how ${product.shortName} works`,

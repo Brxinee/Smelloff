@@ -2010,7 +2010,7 @@ export const FIGURES = {
           ]
         },
         {
-          "name": "Clothing deodorant",
+          "name": "Fabric freshener",
           "tag": "Fabric",
           "pick": true,
           "lines": [

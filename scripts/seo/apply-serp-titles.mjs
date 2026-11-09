@@ -77,6 +77,14 @@ export const SERP = {
     h1: 'Why Does the Washing Machine Make Clothes Smell? <em>6 Spots to Check</em>',
     desc: 'Gasket, detergent drawer, drum, drain filter, the forgotten wet load and the room: six places a washing machine turns clothes sour, and how to fix each.',
   },
+  // 2026-11-09 (owner: market it as a fabric freshener): "fabric odor
+  // eliminator" has next to no searches in India (Google Trends, 5 years);
+  // "what is fabric freshener used for" is a real query.
+  'what-is-fabric-odor-eliminator': {
+    title: "What Is a Fabric Freshener? How It Works on Clothes",
+    h1: "What Is a <em>Fabric Freshener</em>? How It Works on Clothes",
+    desc: "Some fabric fresheners only add perfume; others neutralise the smell in the fibre. How to tell them apart, which ingredients work and how to use one.",
+  },
   'best-fabric-odor-spray-india-2026-body-odor': {
     title: "Best Fabric Freshener for Clothes in India: 5 Types Compared",
     h1: "Best Fabric Freshener for Clothes in India: <em>5 Types Compared</em>",
