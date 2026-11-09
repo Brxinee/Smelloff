@@ -3272,10 +3272,15 @@ photos and his full legal name on About.
   prints: the Mumbai selfie in the Shelf section ("Mumbai, day off") and him with a bronze bull
   on About under "When I'm not working" (`PHOTOS` + `photoPrint()` in `build.mjs`). Three
   stickers, 54–120px wide, `aria-hidden`, no caption, not draggable (`STICKERS` + `sticker()`,
-  `.sticker` in `site.css`): standing on the bottom edge of the time card, the bull beside the
-  Shelf heading, the selfie peeking over the footer rule on every page. A test caps sticker
+  `.sticker` in `site.css`): standing on the bottom edge of the time card, and one standing on
+  the footer rule (the bull on the cover, the selfie on About and Now). A test caps sticker
   width at 130px and fails if one becomes a captioned figure. Never use a cut-out as a section's
   main image.
+- **Two collage rules** (owner: "think and research"; scrapbook and collage guides agree the
+  focal photo is the largest piece and small pieces touch an edge): a sticker always sits on an
+  edge (time card, footer rule), never loose in open space; and a page never shows one picture
+  as both its main photo and a sticker. The first pass broke both (a bull floating beside the
+  Shelf heading; the Mumbai selfie twice on the cover). Tests pin both rules.
 - **How they were cut:** a segmentation model run locally (rembg's `isnet-general-use` /
   `u2net_human_seg` ONNX files with onnxruntime), then `scripts/sticker.py MATTE.png OUT` for the
   edge. Nothing was uploaded to a service; the originals are not in the repo.

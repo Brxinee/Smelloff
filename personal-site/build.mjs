@@ -115,6 +115,9 @@ function withBase(html, basePath, assets) {
 // Main pictures are real photos in a taped print frame (`photoPrint`). The
 // cut-outs (scripts/sticker.py) are small stickers stuck here and there: they
 // decorate, so they carry no caption and are hidden from screen readers.
+// Two rules from collage practice: a sticker always sits on an edge (the time
+// card, the footer rule), never alone in open space; and a page never shows
+// the same picture as both its main photo and a sticker.
 const PHOTOS = {
   mumbai: { src: '/assets/img/me/nikhil-patil-mumbai-photo.webp', avif: '/assets/img/me/nikhil-patil-mumbai-photo.avif', width: 560, height: 560, alt: 'A selfie of Nikhil Patil in front of a grand domed building in Mumbai.', caption: 'Mumbai, day off' },
   bull: { src: '/assets/img/me/nikhil-patil-bull-photo.webp', avif: '/assets/img/me/nikhil-patil-bull-photo.avif', width: 520, height: 703, alt: 'Nikhil Patil standing with his hand on a bronze bull statue on a street.', caption: 'met a bull in Mumbai' },
@@ -251,7 +254,7 @@ ${SPRITE}
 ${page.body}
 </main>
 <footer class="foot">
-  ${sticker('mumbai')}
+  ${sticker(page.path === '/' ? 'bull' : 'mumbai')}
   <div class="foot__in">
     <p class="foot__printed">${esc(s.name)} · printed in ${esc(s.location.city)} · <time datetime="${ctx.printed}">${humanDate(ctx.printed)}</time></p>
     <nav class="foot__nav" aria-label="Footer">
@@ -410,7 +413,6 @@ ${syllabus.subjects.map((s) => `    <li class="subject">
 
 <section class="sec shelf" id="shelf" aria-labelledby="shelf-h">
 ${secHead('04', 'shelf-h', 'Shelf', 'when I’m not working')}
-${sticker('bull')}
 <div class="shelf__grid">
   <figure class="tape" aria-labelledby="tape-cap">
     <img class="tape__img" src="/assets/img/cassette.webp" width="354" height="235" alt="" loading="lazy" decoding="async">

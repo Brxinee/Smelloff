@@ -490,17 +490,16 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 /* Standing on the bottom edge of the time card. */
 .timecard { position: relative; margin-bottom: 84px; }
 .sticker--standing { width: 54px; right: 14px; bottom: -106px; rotate: 4deg; }
-/* Beside the Shelf heading. */
-.shelf { position: relative; }
-.sticker--bull { width: 88px; right: 12px; top: calc(var(--s8) + 4px); rotate: 5deg; }
-/* Peeking over the footer rule, on every page. */
+/* Standing on the footer rule: the bull on the cover, the selfie elsewhere. */
 .foot { position: relative; }
-.sticker--mumbai { width: 96px; right: max(var(--gutter), 6%); bottom: calc(100% - 4px); rotate: -2deg; z-index: 0; }
+.foot .sticker { right: max(var(--gutter), 6%); z-index: 0; }
+.foot .sticker--bull { width: 92px; bottom: calc(100% - 7px); rotate: 0deg; }
+.foot .sticker--mumbai { width: 96px; bottom: calc(100% - 4px); rotate: -2deg; }
 @media (min-width: 900px) {
   .timecard { margin-bottom: 40px; }
   .sticker--standing { width: 78px; right: auto; left: 748px; bottom: -34px; }
-  .sticker--bull { width: 112px; right: 3%; top: calc(var(--s8) + 104px); }
-  .sticker--mumbai { width: 118px; }
+  .foot .sticker--bull { width: 116px; }
+  .foot .sticker--mumbai { width: 118px; }
 }
 /* The two real photos. */
 .print--mumbai { width: min(72vw, 280px); max-width: none; rotate: -2deg; }
