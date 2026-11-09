@@ -461,6 +461,7 @@ function faq(s) {
     ['Who is NikhilxPatil?', `NikhilxPatil is the handle of Nikhil Patil, the Hyderabad founder of Smelloff, on X and Instagram. His own site is smelloff.in/NikhilPatil.`],
     ['Where is Nikhil Patil based?', 'Hyderabad, Telangana, India.'],
     ['What does Nikhil Patil do?', 'He runs his startup, Smelloff, and does most of the work himself: the product, the packaging, the website (built with AI coding tools), the shipping and the customer inbox.'],
+    ['Why did Nikhil Patil start Smelloff?', 'On a hot day in Hyderabad he noticed that the smell he was worried about was in his shirt, not on his skin, and that nothing he owned was made for that. He learned the chemistry from scratch, spent about six months on prototypes, and started Smelloff with the one that worked.'],
     ['What did Nikhil Patil do before Smelloff?', 'He worked in retail and then in cloud-kitchen operations at Zomato Everyday for about a year and a half, where he became a team lead.'],
     ['How do I contact Nikhil Patil?', `Email ${s.email.address} or message @${s.handle} on X or Instagram.`],
   ];
@@ -508,6 +509,18 @@ function aboutPage(c, ctx) {
       <h2 id="now">What I do now</h2>
       <p>I run my own startup, Smelloff, from Hyderabad, with my friend Vineeth Kumar Duggepogu, whom I met at a job interview. I do most of the work myself: the product, the packaging, the website, the shipping and the customer inbox. I built its website too, with AI coding tools.</p>
 
+      <h2 id="why">Why I started Smelloff</h2>
+      <p>One hot afternoon in Hyderabad I walked into an office after a long cab ride and realised my shirt smelled, even though I had showered and used deodorant that morning. Nobody said anything, which was the uncomfortable part.</p>
+      <p>I went looking for a fix and found that the smell was sitting in the fabric, and nothing I owned was made for that. I’m not a chemist, so I learned from scratch. It took about six months of prototypes, most of which failed, before one worked. That one became my startup’s first product. The ${linkTo('https://smelloff.in/blog/why-i-built-odorstrike', 'longer version')} is on the store’s blog.</p>
+
+      <h2 id="learned">What building it has taught me</h2>
+      <ul>
+        <li><strong>Say what it won’t do.</strong> Every page about my product lists its limits. People trust a thing more when you tell them where it stops.</li>
+        <li><strong>Do the unglamorous jobs yourself first.</strong> I pack the orders and answer the inbox. That is where I find out what is actually wrong.</li>
+        <li><strong>Most attempts fail, and that is the work.</strong> Most of my prototypes went in the bin. The one that worked only exists because of the ones that didn’t.</li>
+        <li><strong>Small and finished beats big and half done.</strong> One product, made properly, before a second one.</li>
+      </ul>
+
       <h2 id="how">How I work</h2>
       <ul>
         <li><strong>One main thing at a time.</strong> Everything else waits in a parking lot. My <a href="/now">/now page</a> says what the one thing is.</li>
@@ -518,6 +531,15 @@ function aboutPage(c, ctx) {
 
       <h2 id="likes">When I’m not working</h2>
       <p>Anime: Hajime no Ippo, Attack on Titan, Mob Psycho 100, Dandadan and Sakamoto Days.</p>
+
+      <h2 id="talk">Talk to me</h2>
+      <p>I like hearing from:</p>
+      <ul>
+        <li><strong>Customers</strong>, with feedback of either kind. The honest kind helps most.</li>
+        <li><strong>People building a small brand in India</strong> who want to compare notes on making, shipping and selling.</li>
+        <li><strong>Writers and podcasters</strong> who want a founder’s side of a story.</li>
+      </ul>
+      <p>Email <a href="mailto:${attr(s.email.address)}">${esc(s.email.address)}</a> or message @${esc(s.handle)} on X or Instagram. I read every message myself.</p>
 
       <h2 id="questions">Questions people ask</h2>
       <div class="qa">

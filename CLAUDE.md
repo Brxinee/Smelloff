@@ -3226,3 +3226,9 @@ photos and his full legal name on About.
 - The store's `llms-full.txt` founder block says the same (`build-llms.mjs`).
 - `personal-site/test/site.test.mjs` fails if school, college, deliveries, cleaning/floor work
   or the mobile shop come back on any page, Markdown twin or llms file.
+- **Added the same day (owner: "I want you to come up with content, removing was optional"):**
+  About has "Why I started Smelloff" (the hot-day shirt story and about six months of failed
+  prototypes, from his own founder note; the product is not named or sold), "What building it has
+  taught me" (four lessons, each backed by something the store does), "Talk to me" (customers,
+  small-brand builders, writers) and the question "Why did Nikhil Patil start Smelloff?". New
+  facts still come only from the source map or his founder note; never invent biography.

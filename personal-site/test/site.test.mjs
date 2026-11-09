@@ -298,3 +298,13 @@ test('the handle NikhilxPatil points at this person: profiles, schema, title, qu
     assert.ok(d.length <= 160, `${f} description ${d.length}`);
   }
 });
+
+test('About tells the founder story, what he learned and who should write to him', () => {
+  const html = read('about.html');
+  for (const id of ['why', 'learned', 'talk']) assert.match(html, new RegExp(`<h2 id="${id}"`), `#${id}`);
+  const text = textOf(html);
+  assert.match(text, /Why did Nikhil Patil start Smelloff\?/);
+  assert.match(text, /I read every message myself/);
+  // His page is about him: the product is not named or sold here.
+  assert.doesNotMatch(text.slice(text.indexOf('Why I started Smelloff'), text.indexOf('How I work')), /ODORSTRIKE|Buy now|₹/);
+});
