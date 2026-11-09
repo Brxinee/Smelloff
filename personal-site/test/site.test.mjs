@@ -81,7 +81,9 @@ test('structured data parses and describes one person consistently', () => {
   const about = ldOf(read('about.html'))[0]['@graph'];
   assert.equal(about.find((n) => n['@type'] === 'AboutPage').about['@id'], person['@id']);
 
-  assert.match(read('about.html'), /id="credits"/, 'picture credits live on About');
+  // Owner, 10 Nov 2026: no picture credits, footer fine print or "zine about one person" line.
+  // (The cut-outs are CC0 and the fonts ship with OFL.txt, so no credit line is required.)
+  for (const f of htmlFiles()) assert.doesNotMatch(textOf(read(f)), /Picture credits|No cookies, no trackers|zine about one person|Wikimedia|Open Font License/i, `${f}: removed boilerplate`);
   assert.ok(!fs.existsSync(path.join(out, 'notes')), 'no notes pages');
   for (const f of htmlFiles().filter((x) => x !== 'index.html')) {
     assert.ok(!read(f).includes('"@type":"WebSite"'), `${f}: WebSite markup only on the cover`);
@@ -307,6 +309,20 @@ test('About tells the founder story, what he learned and who should write to him
   assert.match(text, /I read every message myself/);
   // His page is about him: the product is not named or sold here.
   assert.doesNotMatch(text.slice(text.indexOf('Why I started Smelloff'), text.indexOf('How I work')), /ODORSTRIKE|Buy now|₹/);
+});
+
+test('his cut-out photos are on the cover and About, as stickers', () => {
+  const home = read('index.html');
+  const about = read('about.html');
+  for (const [html, name] of [[home, 'standing'], [home, 'bull'], [about, 'mumbai']]) {
+    const fig = new RegExp(`<figure class="sticker sticker--${name}">[\\s\\S]*?</figure>`).exec(html);
+    assert.ok(fig, `sticker ${name}`);
+    const src = /<img src="([^"]+)"/.exec(fig[0])[1];
+    assert.match(src, new RegExp(`nikhil-patil-${name}\\.[0-9a-f]{10}\\.webp$`));
+    assert.ok(fs.existsSync(path.join(out, src.replace('/NikhilPatil/', ''))), `${name} file exists`);
+    assert.match(fig[0], /alt="[^"]{20,}"/, 'described for screen readers');
+    assert.match(fig[0], /loading="lazy"/);
+  }
 });
 
 test('a swipe that starts on a collage piece scrolls the page; holding lifts the piece', () => {

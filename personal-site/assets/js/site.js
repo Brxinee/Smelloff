@@ -52,7 +52,7 @@
   });
 
   /* Reveal sections as they arrive (once). */
-  const reveal = $$('.sec .sec__head, .note-paper, .cards > li, .notebook, .register, .tape, .shelf__items, .share');
+  const reveal = $$('.sec .sec__head, .note-paper, .cards > li, .notebook, .register, .tape, .shelf__items, .share, .sticker');
   if ('IntersectionObserver' in window && !reduce()) {
     reveal.forEach((el) => el.setAttribute('data-reveal', ''));
     const io = new IntersectionObserver((entries) => {

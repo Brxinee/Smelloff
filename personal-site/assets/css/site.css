@@ -1,4 +1,4 @@
-/* Nikhil Patil: a photocopied zine about one person.
+/* Nikhil Patil: a photocopied zine.
  *
  * One stylesheet. Sections, in order:
  *   1 tokens (light = paper, dark = "shutter down")
@@ -467,6 +467,19 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 /* time card ----------------------------------------------------------- */
 .timecard { display: grid; gap: var(--s6); align-items: start; }
 .timecard__card { max-width: 760px; }
+@media (min-width: 900px) { .timecard { grid-template-columns: minmax(0, 760px) auto; column-gap: var(--s7); align-items: end; } }
+
+/* Stickers: his own photos, cut out with a white edge (scripts/sticker.py). */
+.sticker { margin: 0; display: grid; justify-items: center; gap: 2px; justify-self: center; }
+.sticker img { width: 100%; height: auto; filter: drop-shadow(0 8px 10px rgb(40 30 10 / .28)); }
+.sticker figcaption { font-size: 24px; white-space: nowrap; rotate: -3deg; }
+.sticker--standing { width: 132px; rotate: 3deg; }
+.sticker--bull { width: min(74%, 290px); rotate: -3deg; }
+.sticker--mumbai { width: min(72%, 290px); rotate: 2deg; margin: var(--s5) auto var(--s6); }
+@media (min-width: 900px) {
+  .sticker--standing { width: 150px; margin-bottom: calc(-1 * var(--s3)); }
+  .sticker--bull { width: min(100%, 330px); align-self: center; }
+}
 .timecard__card {
   background: #E9DDBF; color: #1A1917; padding: var(--s4) var(--s4) var(--s5); box-shadow: var(--shadow); rotate: -.4deg;
   background-image: repeating-linear-gradient(90deg, transparent 0 calc(100% - 1px), rgb(26 25 23 / .12) calc(100% - 1px));

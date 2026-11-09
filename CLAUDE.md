@@ -3265,3 +3265,21 @@ photos and his full legal name on About.
 - **Measured, not changed:** swapping the SVG paper grain for a bitmap tile made no difference
   to scroll paint time in a throttled trace (and cost 20KB+), so the grain stays SVG. The page
   is ~250KB with fonts; there was no heavy asset to cut.
+
+## Personal site: sticker cut-outs of his photos; boilerplate lines removed (2026-11-10, owner sent ten photos: "cutout some useful photos and make it zine … add here and there"; then circled screenshots: "remove these too, I want it to sound personal not ai")
+- **Three stickers** (his photos, cut out, white sticker edge, `assets/img/me/`): standing figure
+  beside the time card ("still clocked in"), him with a bronze bull in the Shelf section ("met a
+  bull in Mumbai"), a Mumbai selfie on About under "When I'm not working" ("Mumbai, day off").
+  `STICKERS` + `sticker()` in `build.mjs`, `.sticker` in `site.css`. They are not draggable.
+- **How they were cut:** a segmentation model run locally (rembg's `isnet-general-use` /
+  `u2net_human_seg` ONNX files with onnxruntime), then `scripts/sticker.py MATTE.png OUT` for the
+  edge. Nothing was uploaded to a service; the originals are not in the repo.
+- **Photos not used, on purpose:** the two dated ones (a mobile-shop selfie: he removed that job
+  detail on 9 Nov; a group selfie: other people's faces), the event selfies whose backgrounds
+  show other attendees or sponsor boards, a cave selfie, and two already on the site. The
+  standing sticker keeps an event lanyard; its text is unreadable at the size shown.
+- **Removed for good:** the footer fine print ("No cookies, no trackers … Open Font License"),
+  the "Picture credits" section on About (the glove and cassette are CC0 and the fonts ship with
+  `OFL.txt`, so no credit line is required; `content/credits.json` stays as the record), and
+  "A zine about one person" in the cover strip and the share image (now `@NikhilxPatil`). A test
+  fails if any of them return. Supersedes "picture credits moved to /NikhilPatil/about#credits".
