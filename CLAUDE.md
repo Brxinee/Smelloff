@@ -3100,3 +3100,19 @@ October). Breadcrumbs and HTTPS reports are clean; no page carries review/rating
   (18 sentences in 17 posts) plus six new rows in the smell hub's table.
 - Owner: resubmit `sitemap.xml` (GSC still counts 92 submitted pages, now 131), request
   indexing for the new guides, Test live URL for a real-Googlebot 403 check.
+
+## Citations pass (2026-11-09, owner: "cited everywhere like AI, browsers … traffic from India … sales")
+Brief: `docs/plans/growth-brief-2026-11-09.md`; off-site kit: `docs/marketing/citation-kit-2026-11.md`.
+On-site was already sound (robots.txt names every AI search crawler, IndexNow on each push,
+answer-first guides with sources, schema, llms files). The gap is off-site: GSC Links shows only
+7 linking sites, and Product Hunt's copy contradicts the site ("clothes & gear", "not a deo",
+"kills sweat smell in seconds").
+- Organization `sameAs` adds Pinterest (`in.pinterest.com/smell_off`) and Crunchbase
+  (`crunchbase.com/organization/smelloff`), both already linking to smelloff.in.
+- llms files answer five more questions from the round-2 guides (deodorant vs antiperspirant,
+  shirt colour, bonfire smoke, fish smell, rented sherwani/lehenga).
+- The kit holds the one description to use on every profile, the profile fixes, four
+  founder-disclosed answers, a video script, and the owner's list (Cloudflare AI Crawl Control,
+  Bing Webmaster Tools, Product Hunt, Merchant Center, ChatGPT merchants, reviews).
+- #591 merged but Cloudflare Workers Builds never started for `ebb9fea` (no check run); the
+  next push to main deploys it.
