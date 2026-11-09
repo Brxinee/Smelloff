@@ -3267,10 +3267,15 @@ photos and his full legal name on About.
   is ~250KB with fonts; there was no heavy asset to cut.
 
 ## Personal site: sticker cut-outs of his photos; boilerplate lines removed (2026-11-10, owner sent ten photos: "cutout some useful photos and make it zine … add here and there"; then circled screenshots: "remove these too, I want it to sound personal not ai")
-- **Three stickers** (his photos, cut out, white sticker edge, `assets/img/me/`): standing figure
-  beside the time card ("still clocked in"), him with a bronze bull in the Shelf section ("met a
-  bull in Mumbai"), a Mumbai selfie on About under "When I'm not working" ("Mumbai, day off").
-  `STICKERS` + `sticker()` in `build.mjs`, `.sticker` in `site.css`. They are not draggable.
+- **Main pictures are real photos; cut-outs are small stickers** (owner, same day: "main images
+  should be in the main places and cutouts should be small and here and there"). Two taped
+  prints: the Mumbai selfie in the Shelf section ("Mumbai, day off") and him with a bronze bull
+  on About under "When I'm not working" (`PHOTOS` + `photoPrint()` in `build.mjs`). Three
+  stickers, 54–120px wide, `aria-hidden`, no caption, not draggable (`STICKERS` + `sticker()`,
+  `.sticker` in `site.css`): standing on the bottom edge of the time card, the bull beside the
+  Shelf heading, the selfie peeking over the footer rule on every page. A test caps sticker
+  width at 130px and fails if one becomes a captioned figure. Never use a cut-out as a section's
+  main image.
 - **How they were cut:** a segmentation model run locally (rembg's `isnet-general-use` /
   `u2net_human_seg` ONNX files with onnxruntime), then `scripts/sticker.py MATTE.png OUT` for the
   edge. Nothing was uploaded to a service; the originals are not in the repo.

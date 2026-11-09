@@ -112,16 +112,23 @@ function withBase(html, basePath, assets) {
   });
 }
 
-// His own photos, cut out and given a sticker edge (scripts/sticker.py).
-const STICKERS = {
-  standing: { src: '/assets/img/me/nikhil-patil-standing.webp', avif: '/assets/img/me/nikhil-patil-standing.avif', width: 377, height: 1090, alt: 'Nikhil Patil standing, in a striped shirt and dark trousers, cut out like a sticker.', caption: 'still clocked in' },
-  bull: { src: '/assets/img/me/nikhil-patil-bull.webp', avif: '/assets/img/me/nikhil-patil-bull.avif', width: 639, height: 898, alt: 'Nikhil Patil with his hand on a bronze bull statue, cut out like a sticker.', caption: 'met a bull in Mumbai' },
-  mumbai: { src: '/assets/img/me/nikhil-patil-mumbai.webp', avif: '/assets/img/me/nikhil-patil-mumbai.avif', width: 578, height: 459, alt: 'A selfie of Nikhil Patil with a red backpack, cut out like a sticker.', caption: 'Mumbai, day off' },
+// Main pictures are real photos in a taped print frame (`photoPrint`). The
+// cut-outs (scripts/sticker.py) are small stickers stuck here and there: they
+// decorate, so they carry no caption and are hidden from screen readers.
+const PHOTOS = {
+  mumbai: { src: '/assets/img/me/nikhil-patil-mumbai-photo.webp', avif: '/assets/img/me/nikhil-patil-mumbai-photo.avif', width: 560, height: 560, alt: 'A selfie of Nikhil Patil in front of a grand domed building in Mumbai.', caption: 'Mumbai, day off' },
+  bull: { src: '/assets/img/me/nikhil-patil-bull-photo.webp', avif: '/assets/img/me/nikhil-patil-bull-photo.avif', width: 520, height: 703, alt: 'Nikhil Patil standing with his hand on a bronze bull statue on a street.', caption: 'met a bull in Mumbai' },
 };
-const sticker = (name) => `<figure class="sticker sticker--${name}">
-    ${picture(STICKERS[name])}
-    <figcaption class="hand">${esc(STICKERS[name].caption)}</figcaption>
+const photoPrint = (name) => `<figure class="print print--${name}">
+    ${picture(PHOTOS[name])}
+    <figcaption class="hand">${esc(PHOTOS[name].caption)}</figcaption>
   </figure>`;
+const STICKERS = {
+  standing: { src: '/assets/img/me/nikhil-patil-standing.webp', avif: '/assets/img/me/nikhil-patil-standing.avif', width: 182, height: 518 },
+  bull: { src: '/assets/img/me/nikhil-patil-bull.webp', avif: '/assets/img/me/nikhil-patil-bull.avif', width: 293, height: 410 },
+  mumbai: { src: '/assets/img/me/nikhil-patil-mumbai.webp', avif: '/assets/img/me/nikhil-patil-mumbai.avif', width: 261, height: 210 },
+};
+const sticker = (name) => `<span class="sticker sticker--${name}" aria-hidden="true">${picture({ ...STICKERS[name], alt: '' })}</span>`;
 
 const picture = (img, { cls = '', priority = false, sizes } = {}) => `<picture${cls ? ` class="${cls}"` : ''}>
   <source type="image/avif" srcset="${img.avif}">
@@ -244,6 +251,7 @@ ${SPRITE}
 ${page.body}
 </main>
 <footer class="foot">
+  ${sticker('mumbai')}
   <div class="foot__in">
     <p class="foot__printed">${esc(s.name)} · printed in ${esc(s.location.city)} · <time datetime="${ctx.printed}">${humanDate(ctx.printed)}</time></p>
     <nav class="foot__nav" aria-label="Footer">
@@ -402,13 +410,14 @@ ${syllabus.subjects.map((s) => `    <li class="subject">
 
 <section class="sec shelf" id="shelf" aria-labelledby="shelf-h">
 ${secHead('04', 'shelf-h', 'Shelf', 'when I’m not working')}
+${sticker('bull')}
 <div class="shelf__grid">
   <figure class="tape" aria-labelledby="tape-cap">
     <img class="tape__img" src="/assets/img/cassette.webp" width="354" height="235" alt="" loading="lazy" decoding="async">
     <figcaption id="tape-cap" class="tape__label">${esc(shelf.tape.label)}</figcaption>
     <ol class="tape__tracks">${shelf.tape.tracks.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>
   </figure>
-  ${sticker('bull')}
+  ${photoPrint('mumbai')}
 ${shelf.items.length ? `  <ul class="shelf__items">
 ${shelf.items.map((it) => `    <li><span class="shelf__label">${esc(it.label)}</span> ${esc(it.text)}</li>`).join('\n')}
   </ul>` : ''}
@@ -544,7 +553,7 @@ function aboutPage(c, ctx) {
 
       <h2 id="likes">When I’m not working</h2>
       <p>Anime: Hajime no Ippo, Attack on Titan, Mob Psycho 100, Dandadan and Sakamoto Days. And a trip now and then, when the work allows.</p>
-      ${sticker('mumbai')}
+      ${photoPrint('bull')}
 
       <h2 id="talk">Talk to me</h2>
       <p>I like hearing from:</p>

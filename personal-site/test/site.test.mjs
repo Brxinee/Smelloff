@@ -311,17 +311,31 @@ test('About tells the founder story, what he learned and who should write to him
   assert.doesNotMatch(text.slice(text.indexOf('Why I started Smelloff'), text.indexOf('How I work')), /ODORSTRIKE|Buy now|₹/);
 });
 
-test('his cut-out photos are on the cover and About, as stickers', () => {
+test('real photos are the main pictures; the cut-outs are small stickers here and there', () => {
   const home = read('index.html');
   const about = read('about.html');
-  for (const [html, name] of [[home, 'standing'], [home, 'bull'], [about, 'mumbai']]) {
-    const fig = new RegExp(`<figure class="sticker sticker--${name}">[\\s\\S]*?</figure>`).exec(html);
-    assert.ok(fig, `sticker ${name}`);
-    const src = /<img src="([^"]+)"/.exec(fig[0])[1];
-    assert.match(src, new RegExp(`nikhil-patil-${name}\\.[0-9a-f]{10}\\.webp$`));
-    assert.ok(fs.existsSync(path.join(out, src.replace('/NikhilPatil/', ''))), `${name} file exists`);
+  const css = fs.readFileSync(new URL('../assets/css/site.css', import.meta.url), 'utf8');
+  // Main pictures: taped prints with a caption and alt text.
+  for (const [html, name] of [[home, 'mumbai'], [about, 'bull']]) {
+    const fig = new RegExp(`<figure class="print print--${name}">[\\s\\S]*?</figure>`).exec(html);
+    assert.ok(fig, `photo ${name}`);
     assert.match(fig[0], /alt="[^"]{20,}"/, 'described for screen readers');
-    assert.match(fig[0], /loading="lazy"/);
+    assert.match(fig[0], /<figcaption class="hand">/);
+    const src = /<img src="([^"]+)"/.exec(fig[0])[1];
+    assert.ok(fs.existsSync(path.join(out, src.replace('/NikhilPatil/', ''))), `${name} photo exists`);
+  }
+  // Stickers: decoration, small, never a figure with a caption.
+  for (const [html, name] of [[home, 'standing'], [home, 'bull'], [home, 'mumbai'], [about, 'mumbai']]) {
+    const el = new RegExp(`<span class="sticker sticker--${name}" aria-hidden="true">[\\s\\S]*?</span>`).exec(html);
+    assert.ok(el, `sticker ${name}`);
+    assert.match(el[0], /alt=""/);
+    const src = /<img src="([^"]+)"/.exec(el[0])[1];
+    assert.ok(fs.existsSync(path.join(out, src.replace('/NikhilPatil/', ''))), `${name} sticker exists`);
+  }
+  assert.doesNotMatch(home + about, /<figure class="sticker/);
+  for (const name of ['standing', 'bull', 'mumbai']) {
+    const widths = [...css.matchAll(new RegExp(`\\.sticker--${name} \\{[^}]*?width: (\\d+)px`, 'g'))].map((m) => Number(m[1]));
+    assert.ok(widths.length && Math.max(...widths) <= 130, `${name} sticker stays small (${widths})`);
   }
 });
 

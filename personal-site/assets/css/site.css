@@ -467,19 +467,6 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 /* time card ----------------------------------------------------------- */
 .timecard { display: grid; gap: var(--s6); align-items: start; }
 .timecard__card { max-width: 760px; }
-@media (min-width: 900px) { .timecard { grid-template-columns: minmax(0, 760px) auto; column-gap: var(--s7); align-items: end; } }
-
-/* Stickers: his own photos, cut out with a white edge (scripts/sticker.py). */
-.sticker { margin: 0; display: grid; justify-items: center; gap: 2px; justify-self: center; }
-.sticker img { width: 100%; height: auto; filter: drop-shadow(0 8px 10px rgb(40 30 10 / .28)); }
-.sticker figcaption { font-size: 24px; white-space: nowrap; rotate: -3deg; }
-.sticker--standing { width: 132px; rotate: 3deg; }
-.sticker--bull { width: min(74%, 290px); rotate: -3deg; }
-.sticker--mumbai { width: min(72%, 290px); rotate: 2deg; margin: var(--s5) auto var(--s6); }
-@media (min-width: 900px) {
-  .sticker--standing { width: 150px; margin-bottom: calc(-1 * var(--s3)); }
-  .sticker--bull { width: min(100%, 330px); align-self: center; }
-}
 .timecard__card {
   background: #E9DDBF; color: #1A1917; padding: var(--s4) var(--s4) var(--s5); box-shadow: var(--shadow); rotate: -.4deg;
   background-image: repeating-linear-gradient(90deg, transparent 0 calc(100% - 1px), rgb(26 25 23 / .12) calc(100% - 1px));
@@ -495,6 +482,31 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 .punch--today { background: linear-gradient(transparent 0 6px, rgb(255 228 90 / .55) 6px calc(100% - 6px), transparent 0); }
 .punch--today .punch__stamp { color: #2340C8; }
 .print { position: relative; rotate: 3deg; max-width: 260px; justify-self: center; }
+
+/* Stickers: small cut-outs of his photos (scripts/sticker.py), stuck on the edge
+ * of things. Decoration only: the real photos are the taped prints. */
+.sticker { position: absolute; display: block; pointer-events: none; z-index: 2; }
+.sticker img { display: block; width: 100%; height: auto; filter: drop-shadow(0 5px 7px rgb(40 30 10 / .3)); }
+/* Standing on the bottom edge of the time card. */
+.timecard { position: relative; margin-bottom: 84px; }
+.sticker--standing { width: 54px; right: 14px; bottom: -106px; rotate: 4deg; }
+/* Beside the Shelf heading. */
+.shelf { position: relative; }
+.sticker--bull { width: 88px; right: 12px; top: calc(var(--s8) + 4px); rotate: 5deg; }
+/* Peeking over the footer rule, on every page. */
+.foot { position: relative; }
+.sticker--mumbai { width: 96px; right: max(var(--gutter), 6%); bottom: calc(100% - 4px); rotate: -2deg; z-index: 0; }
+@media (min-width: 900px) {
+  .timecard { margin-bottom: 40px; }
+  .sticker--standing { width: 78px; right: auto; left: 748px; bottom: -34px; }
+  .sticker--bull { width: 112px; right: 3%; top: calc(var(--s8) + 104px); }
+  .sticker--mumbai { width: 118px; }
+}
+/* The two real photos. */
+.print--mumbai { width: min(72vw, 280px); max-width: none; rotate: -2deg; }
+.print--bull { width: min(66vw, 250px); max-width: none; rotate: 2deg; margin: var(--s5) auto var(--s6); }
+@media (min-width: 900px) { .print--mumbai { width: 300px; align-self: center; } }
+@media print { .sticker { display: none; } }
 
 /* 8 ----------------------------------------------------------------- bench */
 .cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
