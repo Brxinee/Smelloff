@@ -38,6 +38,7 @@ export const SKIP = {
   'remove-perfume-smell-from-clothes': 'the answer is airing and a wash; it warns against spraying more on top',
   'clothes-left-in-washing-machine-overnight-smell': 'says outright that a spray cannot fix a sour wet load',
   'why-washing-machine-makes-clothes-smell': 'the machine is the source; the fix is cleaning the machine',
+  'washing-machine-se-badbu-kaise-hataye': "the machine is the source; the fix is cleaning the machine (Hinglish twin of why-washing-machine-makes-clothes-smell)",
   'why-shirt-zones-smell-after-washing': 'smell that survives a wash: the answer is a better wash; it calls a mist a narrow stopgap',
   'vinegar-baking-soda-fabric-softener': 'laundry additives; its answer to sweat odor is a proper wash',
   'dry-air-clothes-indian-home': 'a drying routine; a spray plays no part in it',
@@ -79,6 +80,10 @@ export const SLUG_LINES = {
   'wedding-festive-wear-odor-guide': 'a sherwani or kurta from one function has to go to the next. Patch-test silk and zari first.',
   'keep-clothes-fresh-while-travelling': 'a shirt has to do a second day on a trip with no laundry.',
   'kapdon-se-pasine-ki-badbu-kaise-hataye': { lead: 'Kaam aata hai jab', text: 'office shirt ya kurta dobara pehenna ho aur dhone ka time na ho.' },
+  'kapdo-se-seelan-ki-badbu-kaise-dur-kare': { lead: "Kaam aata hai jab", text: "barish mein sukha hua shirt saaf hai par office tak halka baasi lagne lage." },
+  'pasine-ki-badbu-kaise-dur-kare': { lead: "Kaam aata hai jab", text: "garam din aur lambe commute ke baad shirt ko shaam tak fresh rehna ho." },
+  'how-to-make-clothes-smell-good': "a clean shirt has to stay fresh through a long, hot day.",
+  'kapdo-me-khushbu-kaise-laye': { lead: "Kaam aata hai jab", text: "saaf shirt ko lambe, garam din tak fresh rehna ho." },
   // fabric / laundry
   'gym-clothes-smell-after-washing': 'a washed tee is clean but its underarms still smell once you warm up.',
   'does-food-change-sweat-smell-garlic-methi': 'a meal in a smoky restaurant or kitchen has stayed in your shirt.',

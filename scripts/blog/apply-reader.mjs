@@ -78,7 +78,9 @@ const CLUSTERS = {
     'vinegar-baking-soda-fabric-softener', 'why-clothes-smell-stale-in-ac-room',
     'does-ironing-remove-smell-from-clothes', 'wash-clothes-less-save-water-india',
     'clothes-left-in-washing-machine-overnight-smell', 'how-often-to-wash-pajamas-nightwear', 'why-do-sun-dried-clothes-smell-good',
-    'why-does-my-raincoat-smell', 'coconut-hair-oil-smell-on-clothes', 'how-to-wash-clothes-by-hand-without-smell'],
+    'why-does-my-raincoat-smell', 'coconut-hair-oil-smell-on-clothes', 'how-to-wash-clothes-by-hand-without-smell',
+    'how-to-make-clothes-smell-good', 'kapdo-me-khushbu-kaise-laye',
+    'washing-machine-se-badbu-kaise-hataye', 'kapdo-se-seelan-ki-badbu-kaise-dur-kare'],
   smells: ['remove-cooking-smell-from-clothes', 'remove-cigarette-smoke-smell-from-clothes',
     'remove-incense-agarbatti-dhoop-smell', 'why-traffic-fumes-cling-to-clothes',
     'remove-smell-from-blazer-without-dry-cleaning',
@@ -110,7 +112,8 @@ const CLUSTERS = {
     'stay-fresh-in-heatwave-north-india', 'how-to-smell-good-all-day-men-india',
     'freshen-up-after-work-before-going-out',
     'how-to-tell-someone-they-have-body-odour', 'how-to-know-if-you-smell-bad', 'teenage-son-body-odour-clothes-parents-guide', 'first-job-essentials-checklist-freshers-india',
-    'how-to-stay-fresh-without-bathing', 'old-age-body-odour-nonenal'],
+    'how-to-stay-fresh-without-bathing', 'old-age-body-odour-nonenal',
+    'pasine-ki-badbu-kaise-dur-kare'],
 };
 const RELATED = 3;
 const clusterOf = (slug) => Object.keys(CLUSTERS).find((k) => CLUSTERS[k].includes(slug));
