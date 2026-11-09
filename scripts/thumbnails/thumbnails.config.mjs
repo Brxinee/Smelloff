@@ -865,6 +865,25 @@ export const POSTS = [
     focal: '50% 50%',
     alt: "White shirts hanging on black hangers in a wardrobe, soft daylight on the fabric",
   },
+  // 2026-11-09 (round 2): Hinglish laundry long tails from autocomplete, gl=in. Pexels photos, each checked by eye for the clothing-only rule.
+  {
+    slug: 'washing-machine-se-badbu-kaise-hataye',
+    kicker: "Hinglish guide",
+    top: "Machine se badbu?",
+    hi: "Aise hatao.",
+    pexels: 27376258,
+    focal: '50% 50%',
+    alt: "Clothes turning in a washing machine drum, seen through the wet glass door",
+  },
+  {
+    slug: 'kapdo-se-seelan-ki-badbu-kaise-dur-kare',
+    kicker: "Hinglish guide",
+    top: "Barish ki seelan?",
+    hi: "Kapde fresh rakho.",
+    pexels: 10565607,
+    focal: '50% 45%',
+    alt: "Hands hang plain cotton clothes on a white indoor drying rack in a bright room",
+  },
 ];
 
 /**

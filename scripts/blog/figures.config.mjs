@@ -2391,6 +2391,38 @@ export const FIGURES = {
       note: 'Khushbu sabse aakhir mein. Badbu ke upar woh smell aur bigaadti hai.',
     }),
   ],
+
+  // 2026-11-09 (round 2): Hinglish laundry long tails from autocomplete, gl=in.
+  "washing-machine-se-badbu-kaise-hataye": [
+    photo('badbu-dobara-na-aaye-uske-liye-kya-kare', 5591840,
+      'Two people load a front-loading washing machine at home from a laundry basket',
+      'Har wash ke baad darwaza aur drawer thoda khula.', '72% 60%'),
+    dia('washing-machine-se-badbu-kyon-aati-hai', 'steps', {
+      kicker: 'Machine ki safai', title: 'Badbu ki jad tak, isi kram mein',
+      items: [
+        ['Rubber seal', 'Kheench kar andar ke modh tak pochho.'],
+        ['Drum', 'Saabun wale kapde se andar se pochho.'],
+        ['Detergent drawer', 'Nikal kar dhoo, jagah bhi pochho.'],
+        ['Sukhne do', 'Darwaza aur drawer khule chhodo.'],
+      ],
+      note: 'Phir badbu wale kapde dobara dhoo. Spray machine ki badbu nahi hatata.',
+    }),
+  ],
+  "kapdo-se-seelan-ki-badbu-kaise-dur-kare": [
+    photo('barish-mein-kapde-kaise-sukhaye-taaki-badbu-na-aaye', 10565610,
+      'Cotton clothes hung with wooden pegs on a white indoor drying rack',
+      'Kapdon ke beech jagah, taaki hawa har parat tak pahunche.', '50% 50%'),
+    dia('seelan-ki-badbu-kyon-aati-hai', 'steps', {
+      kicker: 'Barish ki routine', title: 'Seelan ki badbu se pehle hi bacho',
+      items: [
+        ['Turant nikalo', 'Cycle khatam hote hi kapde bahar.'],
+        ['Chhote load', 'Stand par jitni jagah, utne kapde.'],
+        ['Chalti hawa', 'Pankha, khuli khidki, hangers ke beech jagah.'],
+        ['Poora sukha', 'Silai aur collar tak, tabhi almari mein.'],
+      ],
+      note: 'Khatti smell aa gayi? Dobara dhoo. Spray seelan nahi hatata.',
+    }),
+  ],
 };
 
 export default FIGURES;

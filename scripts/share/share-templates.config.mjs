@@ -434,6 +434,15 @@ export const POSTS = {
     wa: "Kapdo me khushbu kaise laye — dhulai me kya dale, kaise sukhaye, almari me kaise rakhe, simple Hinglish mein: {url}",
     x: "Kapdon ki khushbu pehle badbu hatane se aati hai: sahi detergent, jaldi sukhana, sukhi almari, aur beech mein fabric freshener. Badbu ke upar perfume smell bigaadta hai.",
   },
+  // 2026-11-09 (round 2): Hinglish laundry long tails from autocomplete, gl=in.
+  "washing-machine-se-badbu-kaise-hataye": {
+    wa: "Washing machine se badbu kaise hataye — rubber seal, detergent drawer aur khula darwaza, simple Hinglish mein: {url}",
+    x: "Har load se khatti smell aaye toh machine dekho: rubber seal kheench kar pochho, drawer dhoo, darwaza khula chhodo. Phir kapde dobara dhoo aur jaldi sukhao.",
+  },
+  "kapdo-se-seelan-ki-badbu-kaise-dur-kare": {
+    wa: "Barish mein kapdo se seelan ki badbu kaise dur kare — kab dobara dhoye, kaise sukhaye, almari kaise bachaye, simple Hinglish mein: {url}",
+    x: "Seelan ki badbu ka ilaaj sukhana hai, khushbu nahi. Chhote load, chalti hawa, 24–48 ghante mein poora sukha. Khatti smell aa gayi toh dobara dhoo.",
+  },
 };
 
 /**
