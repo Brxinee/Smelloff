@@ -204,7 +204,7 @@ function layout(c, ctx, page) {
 <meta property="og:image" content="${og}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="${attr(`${s.name}, a self-taught builder in Hyderabad.`)}">
+<meta property="og:image:alt" content="${attr(`${s.name}, a self-taught founder in Hyderabad.`)}">
 ${page.ogType === 'profile' ? `<meta property="profile:first_name" content="${attr(s.givenName)}">\n<meta property="profile:last_name" content="${attr(s.familyName)}">\n` : ''}<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@NikhilxPatil">
 <link rel="preload" href="/assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
@@ -425,7 +425,7 @@ ${secHead('06', 'card-h', 'Take a card', 'like the ones on a shop counter')}
       <img class="vcard__photo" src="${site.photo.src}" width="${site.photo.width}" height="${site.photo.height}" alt="" loading="lazy" decoding="async">
       <div>
         <p class="vcard__name">${esc(site.name)}</p>
-        <p class="vcard__role">Self-taught builder · ${esc(site.jobTitle)}, ${linkTo(site.worksFor.url, site.worksFor.name)}</p>
+        <p class="vcard__role">${esc(site.jobTitle)}, ${linkTo(site.worksFor.url, site.worksFor.name)}</p>
         <p class="vcard__place">${esc(site.location.city)}, ${esc(site.location.country)}</p>
       </div>
     </div>
@@ -456,11 +456,11 @@ function accounts(s) {
 
 function faq(s) {
   return [
-    ['Who is Nikhil Patil?', `Nikhil Patil (full name ${s.alternateName[0]}) is a self-taught builder based in Hyderabad, India, and the founder of his startup, Smelloff.`],
+    ['Who is Nikhil Patil?', `Nikhil Patil (full name ${s.alternateName[0]}) is a self-taught founder based in Hyderabad, India. He runs his startup, Smelloff.`],
     ['Which Nikhil Patil is this?', `There are many people named Nikhil Patil: a cricketer, doctors, engineers. This one lives in Hyderabad and founded Smelloff. His accounts are ${accounts(s)}; any other profile isn’t him.`],
     ['Who is NikhilxPatil?', `NikhilxPatil is the handle of Nikhil Patil, the Hyderabad founder of Smelloff, on X and Instagram. His own site is smelloff.in/NikhilPatil.`],
     ['Where is Nikhil Patil based?', 'Hyderabad, Telangana, India.'],
-    ['What does Nikhil Patil do?', 'He runs his startup, Smelloff, and does most of the work himself: the product, the packaging, the website (built with AI coding tools), the shipping and the customer inbox.'],
+    ['What does Nikhil Patil do?', 'He runs his startup, Smelloff, and does most of the work himself: the product, the packaging, the website, the shipping and the customer inbox.'],
     ['Why did Nikhil Patil start Smelloff?', 'On a hot day in Hyderabad he noticed that the smell he was worried about was in his shirt, not on his skin, and that nothing he owned was made for that. He learned the chemistry from scratch, spent about six months on prototypes, and started Smelloff with the one that worked.'],
     ['What did Nikhil Patil do before Smelloff?', 'He worked in retail and then in cloud-kitchen operations at Zomato Everyday for about a year and a half, where he became a team lead.'],
     ['How do I contact Nikhil Patil?', `Email ${s.email.address} or message @${s.handle} on X or Instagram.`],
@@ -476,7 +476,7 @@ function aboutPage(c, ctx) {
     <div>
       <p class="kicker">About</p>
       <h1 id="about-h" class="page__title">About Nikhil Patil</h1>
-      <p class="lede">I’m Nikhil Patil, a self-taught builder in Hyderabad, India. My full name is Jogdhande Nikhil Patil, and online I’m NikhilxPatil (X and Instagram). I worked in retail and cloud-kitchen operations before starting my own company, and most of what I know I learned by doing it.</p>
+      <p class="lede">I’m Nikhil Patil, a self-taught founder in Hyderabad, India. My full name is Jogdhande Nikhil Patil, and online I’m NikhilxPatil (X and Instagram). I worked in retail and cloud-kitchen operations before starting my own company, and most of what I know I learned by doing it.</p>
     </div>
     <figure class="print print--about">
       ${picture({ src: '/assets/img/me/nikhil-patil-yellow-jacket.webp', avif: '/assets/img/me/nikhil-patil-yellow-jacket.avif', width: 480, height: 480, alt: 'Nikhil Patil in a yellow jacket, smiling.' }, { priority: true })}
@@ -507,7 +507,7 @@ function aboutPage(c, ctx) {
       <p>I worked in retail, then in cloud-kitchen operations at Zomato Everyday for about a year and a half, where I later led a team. Those years taught me how a business runs day to day, and what customers notice when it doesn’t. The <a href="/#clocked-in">time card</a> on the cover page has the short list.</p>
 
       <h2 id="now">What I do now</h2>
-      <p>I run my own startup, Smelloff, from Hyderabad, with my friend Vineeth Kumar Duggepogu, whom I met at a job interview. I do most of the work myself: the product, the packaging, the website, the shipping and the customer inbox. I built its website too, with AI coding tools.</p>
+      <p>I run my own startup, Smelloff, from Hyderabad, with my friend Vineeth Kumar Duggepogu, whom I met at a job interview. I do most of the work myself: the product, the packaging, the website, the shipping and the customer inbox.</p>
 
       <h2 id="why">Why I started Smelloff</h2>
       <p>One hot afternoon in Hyderabad I walked into an office after a long cab ride and realised my shirt smelled, even though I had showered and used deodorant that morning. Nobody said anything, which was the uncomfortable part.</p>
@@ -525,8 +525,7 @@ function aboutPage(c, ctx) {
       <ul>
         <li><strong>One main thing at a time.</strong> Everything else waits in a parking lot. My <a href="/now">/now page</a> says what the one thing is.</li>
         <li><strong>I learn by building.</strong> If I don’t understand how something works, I build a small version of it until I do.</li>
-        <li><strong>Facts live in one place.</strong> An AI rebuild once put wrong information on my store. Since then every claim is checked against one source of truth before it ships.</li>
-        <li><strong>I build with AI, and I write its rules.</strong> Most of my code is written with Claude Code. I decide what goes in and check what comes out.</li>
+        <li><strong>Facts live in one place.</strong> My store once went out with a wrong detail on it. Since then every claim is checked against one source of truth before it ships.</li>
       </ul>
 
       <h2 id="likes">When I’m not working</h2>
@@ -652,7 +651,7 @@ function vcard(c, ctx) {
     `EMAIL;TYPE=INTERNET,WORK:${s.email.address}`,
     `URL:${ctx.site}`, ...s.profiles.filter((p) => p.sameAs).map((p) => `URL:${p.url}`),
     `ADR;TYPE=WORK:;;;${s.location.city};${s.location.region};;${s.location.country}`,
-    'NOTE:Self-taught builder in Hyderabad.',
+    'NOTE:Self-taught founder in Hyderabad.',
     'END:VCARD',
   ].join('\r\n') + '\r\n';
 }

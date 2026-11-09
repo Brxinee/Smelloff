@@ -3232,3 +3232,21 @@ photos and his full legal name on About.
   taught me" (four lessons, each backed by something the store does), "Talk to me" (customers,
   small-brand builders, writers) and the question "Why did Nikhil Patil start Smelloff?". New
   facts still come only from the source map or his founder note; never invent biography.
+
+## Personal site: no AI or tooling talk; collage and dark-mode fixes (2026-11-09, owner: "don't over share what I do like using ai and coding with ai … look at the design … you can remove or add things too")
+- **Never say how he builds things** on `/NikhilPatil` or in the store's founder lines: no AI,
+  Claude, Gemini, Cloudflare, Supabase, JavaScript or "coding tools". Gone: "I build with AI" in
+  How I work, "built with AI coding tools" (About, the questions, the short bio), the tech list
+  in the syllabus (the subject is now "E-commerce: building and running an online store") and
+  the tech `knowsAbout` entries (now Selling, Operations, E-commerce). A test fails on those words.
+- He is "a self-taught founder" everywhere (it said "builder" in some places); the visiting card
+  role is "Founder, Smelloff". The /now side note about ranking his name is replaced by
+  "Answering every customer message myself, while I still can."
+- **Bugs fixed:** in dark mode by system setting the "SELF-TAUGHT" stamp and the stamps a
+  visitor adds were invisible (`mix-blend-mode: multiply` was only reset for the manual toggle).
+  Cover collage: the stamp sat on the portrait's tape on phones and over the "Ippo energy"
+  caption on desktop; the bottle and glove captions were hidden under the sticky note and the
+  cassette on phones; "out of office" was cut off behind the portrait at 900–1199px. Positions
+  are per breakpoint in `site.css`; check 360, 390, 700, 1000 and 1280 after moving a piece.
+- Checked and clean: no overflow, console errors, failed requests or small tap targets on the
+  three pages at 320/390/768/1280 in both themes.
