@@ -10,13 +10,30 @@ const html = fs.readFileSync('index.html', 'utf8');
 const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
 const sec = (id) => main.slice(main.indexOf(`id="${id}"`), main.indexOf('</section>', main.indexOf(`id="${id}"`)));
 
-test('section order: story, photos, proof, offer, contents, founders, FAQ, close', () => {
-  const order = ['remembers', 'in-use', 'reviews', 'odorstrike-featured', 'how-it-works', 'founders', 'faq', 'final'];
+test('section order: hero, photos, proof, offer, contents, founders, FAQ, close', () => {
+  // 2026-11-08 (owner): the real photos sit directly under the hero.
+  const order = ['in-use', 'reviews', 'odorstrike-featured', 'how-it-works', 'founders', 'faq', 'final'];
   const at = order.map((id) => main.indexOf(`id="${id}"`));
   assert.ok(at.every((i) => i > 0), 'every section exists');
   assert.deepEqual([...at].sort((a, b) => a - b), at, `sections in order: ${order.join(' → ')}`);
   // Section reach covers every section, in page order.
-  assert.match(html, /\['remembers','in-use','reviews','odorstrike-featured','how-it-works','founders','faq','final'\]\.forEach/);
+  assert.match(html, /\['in-use','reviews','odorstrike-featured','how-it-works','founders','faq','final'\]\.forEach/);
+  const heroEnd = main.indexOf('</section>', main.indexOf('<section class="hero"'));
+  assert.ok(heroEnd > 0 && main.indexOf('<section', heroEnd) === main.indexOf('<section class="inuse" id="in-use"'), 'the in-use photos come straight after the hero');
+});
+
+test('"Your shirt remembers" (the drag-the-day timeline) is gone for good (owner, 2026-11-08)', () => {
+  assert.ok(!/id="remembers"|remembersTitle|rmScrub|class="rm-|\.rm-|\.remembers|var DAY\b/.test(html), 'no markup, CSS or script left');
+  assert.ok(!/'remembers'/.test(html), 'not observed by section reach or the sticky bar');
+  assert.ok(!/Your shirt remembers/.test(main.replace(/<!--[\s\S]*?-->/g, '')), 'no copy left');
+});
+
+test('one product name on the homepage: "clothing deodorant spray" (owner, 2026-11-08)', () => {
+  assert.ok(main.includes('<span class="hero-eyebrow-pill">CLOTHING DEODORANT SPRAY</span>'), 'hero eyebrow');
+  const visible = main.replace(/<!--[\s\S]*?-->/g, '').replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.ok(!/FABRIC ODOR CONTROL|[Ff]abric odor eliminator (mist|spray)/.test(visible), 'the other two names are gone from the visible copy');
+  assert.ok(sec('odorstrike-featured').includes('A pocket-sized clothing deodorant spray'));
+  assert.ok(!/not a deodorant/i.test(html), 'never "not a deodorant" ("not a body deodorant" is fine)');
 });
 
 test('no endless motion: the ticker and the Hinglish marquee are gone, the line stays still', () => {
@@ -48,16 +65,16 @@ test('in-use section: four of the owner\'s photos, clothing only, sized and lazy
 test('one action, one name: every homepage buy button says "Fix my shirt"', () => {
   assert.ok(!/GET ODORSTRIKE|Fix your shirt|View Full Specs/.test(html), 'old labels are gone');
   assert.ok(sec('odorstrike-featured').includes('>FIX MY SHIRT — ₹229</a>'));
-  assert.ok(sec('remembers').includes('>Fix my shirt — ₹229</a>'));
+  assert.ok(sec('final').includes('>FIX MY SHIRT — ₹229</a>'));
   assert.match(html, /class="mb-btn" href="\/odorstrike\?buy=1" tabindex="-1">FIX MY SHIRT</);
 });
 
 test('fewer labels above headings, short headings, nothing below 12px', () => {
   // Only the hero keeps its pill (and its test); section H2s stand alone.
-  for (const id of ['remembers', 'in-use', 'reviews', 'odorstrike-featured', 'how-it-works', 'founders', 'final']) {
+  for (const id of ['in-use', 'reviews', 'odorstrike-featured', 'how-it-works', 'founders', 'final']) {
     assert.ok(!/<p class="eyebrow/.test(sec(id)), `#${id} has no eyebrow label`);
   }
-  for (const [id, h] of [['remembersTitle', 'Your shirt remembers your day.'], ['inuseTitle', 'Spray the shirt, not you.'], ['voicesTitle', 'What beta testers say'], ['proofTitle', "What's in the bottle"], ['founderTitle', 'Built for 41°C days']]) {
+  for (const [id, h] of [['inuseTitle', 'Spray the shirt, not you.'], ['voicesTitle', 'What beta testers say'], ['proofTitle', "What's in the bottle"], ['founderTitle', 'Built for 41°C days']]) {
     assert.ok(main.includes(`id="${id}"`) && main.includes(`>${h}</h2>`), `${id}: "${h}"`);
     assert.ok(h.split(' ').length <= 6, `${id} is a title, not a sentence`);
   }

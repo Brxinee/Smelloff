@@ -175,7 +175,7 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   assert.equal(h1.length, 1, 'Homepage must contain exactly one <h1>');
   assert.ok(h1[0][1].includes('Your shirt smells.') && h1[0][1].includes('Fix it.'), 'H1 must be the Sep 19 "Your shirt smells. Fix it."');
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
-  assert.ok(hero.includes('FABRIC ODOR CONTROL · FOR CLOTHES'));
+  assert.ok(hero.includes('CLOTHING DEODORANT SPRAY'), 'one product name: clothing deodorant spray (owner, 2026-11-08)');
   assert.ok(hero.includes('ODORSTRIKE neutralizes sweat, smoke and food smell in clothes — not on skin.'));
   for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
   assert.ok(hero.includes('<span class="hero-price">₹229</span>'), 'Hero must show ₹229');
@@ -193,8 +193,8 @@ test('index.html homepage: every section ends in a route to checkout', () => {
   const html = readFileSync('index.html', 'utf8');
   const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
   const ctas = main.match(/href="\/odorstrike\?buy=1"/g) || [];
-  assert.ok(ctas.length >= 3, `expected buy CTAs in the hero, the day story and the product block, found ${ctas.length}`);
-  for (const id of ['remembers', 'odorstrike-featured', 'reviews', 'founders', 'how-it-works', 'faq', 'final']) assert.ok(main.includes(`id="${id}"`), `section #${id} must exist`);
+  assert.ok(ctas.length >= 3, `expected buy CTAs in the hero, the product block and the close, found ${ctas.length}`);
+  for (const id of ['in-use', 'odorstrike-featured', 'reviews', 'founders', 'how-it-works', 'faq', 'final']) assert.ok(main.includes(`id="${id}"`), `section #${id} must exist`);
   // Proof sits just before the offer box; the page closes on a buy route after the FAQ.
   assert.ok(main.indexOf('id="reviews"') < main.indexOf('id="odorstrike-featured"'), 'reviews come right before the offer');
   assert.ok(main.indexOf('id="final"') > main.indexOf('id="faq"') && main.includes('id="finalBuyBtn" ') === false && /id="finalBuyBtn">FIX MY SHIRT — ₹229</.test(main));
@@ -739,7 +739,7 @@ test('phone menu: build-time critical CSS cannot trap the drawer shut', () => {
 test('index.html: section reach is measured; the PDP <picture> wrappers never add a grid cell', () => {
   const html = readFileSync('index.html', 'utf8');
   assert.match(readFileSync('odorstrike.html', 'utf8'), /\.ph-pic>source\{display:none\}/);
-  for (const id of ['remembers', 'reviews', 'odorstrike-featured', 'founders', 'how-it-works', 'faq', 'final']) {
+  for (const id of ['in-use', 'reviews', 'odorstrike-featured', 'founders', 'how-it-works', 'faq', 'final']) {
     assert.ok(html.includes(`id="${id}"`), `section #${id} must exist for the reach beacon`);
     assert.ok(html.includes(`'${id}'`), `#${id} is observed`);
   }

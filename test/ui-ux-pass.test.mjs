@@ -25,10 +25,19 @@ test('phone consent bar is compact and its buttons keep 44px with an explicit li
   const css = read('assets/css/chrome.css');
   const block = css.slice(css.indexOf('Compact consent bar on phones'));
   assert.match(block, /@media\(max-width:519px\)/);
-  assert.match(block, /html #smelloff-consent-bar button\{min-height:44px;[^}]*line-height:1\.2/);
+  assert.match(block, /html #smelloff-consent-bar \.cb-actions button\{[^}]*min-height:44px;[^}]*line-height:1\.2/);
+  // 2026-11-08 (owner: smaller cookie bar): 4px padding around one 44px row,
+  // and the tracker names drop out of the phone sentence (/privacy names them).
+  assert.match(block, /html #smelloff-consent-bar\{padding:4px 12px calc\(4px \+ env\(safe-area-inset-bottom,0px\)\)\}/);
+  assert.match(block, /html #smelloff-consent-bar \.cb-who\{display:none\}/);
+  const copy = 'Analytics cookies<span class="cb-who"> (Google Analytics, Meta Pixel)</span> help us improve the site. <a href="/privacy">Privacy Policy</a>';
   for (const f of ['index.html', 'odorstrike.html', 'faq.html', 'assets/js/consent-analytics.js']) {
-    assert.ok(read(f).includes('Analytics cookies (Google Analytics, Meta Pixel) help us improve the site.'), `${f}: consent copy in sync`);
+    assert.ok(read(f).includes(copy), `${f}: consent copy in sync`);
+    assert.ok(read(f).includes('#smelloff-consent-bar .cb-who{display:none}'), `${f}: carries the CONSENT-COMPACT block`);
+    assert.ok(!read(f).includes('Shopping works either way'), `${f}: one short sentence`);
   }
+  // Accept stays Ice White, never lime (it must not out-weigh Reject).
+  assert.match(read('index.html'), /#smelloff-consent-bar \.cb-accept\{background:var\(--text\)/);
 });
 
 test('chat launcher yields to page buttons and to the open consent bar on phones', () => {

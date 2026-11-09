@@ -152,6 +152,16 @@
   #smelloff-consent-bar button{font-family:var(--body);font-size:14px;font-weight:500;letter-spacing:.01em;padding:9px 18px;border-radius:var(--sq-sm,8px);cursor:pointer}
   #smelloff-consent-bar .cb-accept{background:var(--text,#F2F5EF);color:var(--ink,#0A0A0A);border:none}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--rule)}
+  /* CONSENT-COMPACT (2026-11-08): phones get one row, sentence beside two equal
+     44px buttons; same block in all four copies and chrome.css §5 (which wins). */
+  @media(max-width:519px){
+    #smelloff-consent-bar{padding:4px 12px calc(4px + env(safe-area-inset-bottom,0px))}
+    #smelloff-consent-bar .cb-inner{gap:6px 8px;flex-wrap:wrap}
+    #smelloff-consent-bar p{flex:999 1 150px;min-width:150px;max-width:none;margin:0;font-size:12px;line-height:1.25}
+    #smelloff-consent-bar .cb-who{display:none}
+    #smelloff-consent-bar .cb-actions{flex:1 0 198px;width:auto;gap:6px;flex-wrap:nowrap}
+    #smelloff-consent-bar .cb-actions button{flex:1 1 96px;min-height:44px;padding:4px 6px;font-size:13px;line-height:1.2}
+  }
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
 </style>
 <link rel="alternate" hreflang="en-IN" href="https://smelloff.in/faq">
@@ -453,7 +463,7 @@
 <!-- DPDP Consent Bar -->
 <div id="smelloff-consent-bar" role="dialog" aria-label="Cookie and tracking consent">
   <div class="cb-inner">
-    <p>Analytics cookies (Google Analytics, Meta Pixel) help us improve the site. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>
+    <p>Analytics cookies<span class="cb-who"> (Google Analytics, Meta Pixel)</span> help us improve the site. <a href="/privacy">Privacy Policy</a></p>
     <div class="cb-actions">
       <button class="cb-accept" onclick="window.smelloffSetConsent('accepted')">Accept all</button>
       <button class="cb-reject" onclick="window.smelloffSetConsent('rejected')">Reject non-essential</button>
