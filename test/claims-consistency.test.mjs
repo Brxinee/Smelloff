@@ -45,23 +45,25 @@ test('no pasted AI-tool residue (citation tokens, private-use or zero-width char
   }
 });
 
-// 2026-10-20: ODORSTRIKE is a "clothing deodorant". Pages that still said
+// 2026-10-20: ODORSTRIKE was a "clothing deodorant"; since 2026-11-09 it is a
+// "fabric freshener" (owner; the category India searches). Pages that still said
 // "not a deodorant" contradicted it, and an engine quoting either line gets
 // the category wrong. It is not a BODY deodorant, and every page says that.
-test('category: a clothing deodorant, never "not a deodorant"', () => {
+test('category: a fabric freshener, never "not a deodorant"', () => {
   for (const f of pages) {
     const m = fs.readFileSync(f, 'utf8').match(/\bnot (?:a |an )?deo(?:dorant)?\b(?=\s*(?:[.,;:)—–-]|and\b|or\b|nor\b|$))/i);
     assert.ok(!m, `${f}: "${m && m.input.slice(Math.max(0, m.index - 40), m.index + 40).replace(/\s+/g, ' ')}" — say "not a body deodorant"`);
   }
   const def = product.product.definition;
-  assert.ok(def.includes('clothing deodorant') && def.includes('not a body deodorant') && def.includes('never on skin'), 'definition names the category and keeps it off skin');
+  assert.ok(def.includes('fabric freshener') && def.includes('not a body deodorant') && def.includes('never on skin'), 'definition names the category and keeps it off skin');
   for (const f of ['index.html', 'odorstrike.html', 'faq.html']) {
     assert.ok(fs.readFileSync(f, 'utf8').includes(def), `${f}: "What is ODORSTRIKE?" must quote product.definition verbatim`);
   }
   for (const f of ['index.html', 'odorstrike.html']) {
     const html = fs.readFileSync(f, 'utf8');
     const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
-    assert.match(title, /Clothing Deodorant/, `${f}: title names the category`);
+    assert.match(title, /Fabric Freshener/, `${f}: title names the category`);
+    assert.doesNotMatch(html.replace(/<!--[\s\S]*?-->/g, ''), /clothing deodorant/i, `${f}: the old category name is gone`);
     assert.match(html, /Not body deodorant/, `${f}: keeps the "Not body deodorant" chip`);
   }
 });

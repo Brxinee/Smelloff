@@ -20,7 +20,7 @@ export const BASE_PRODUCT = {
   title: P.title,
   shortTitle: P.shortTitle,
   brand: B.name,
-  category: P.categoryDisplay || 'Clothing Deodorant (Fabric Odor Spray for Clothes)',
+  category: P.categoryDisplay || 'Fabric Freshener for Clothes (Pocket Fabric Odor Spray)',
   size: P.size,
   netQuantity: P.netQuantity,
   price: P.price,
@@ -57,7 +57,7 @@ export const BUNDLES_CONFIG = {
  */
 export const APPROVED_CLAIMS = {
   CATEGORY_CLARITY: {
-    claim: 'Clothing deodorant: a pocket fabric odor spray for clothing — not a perfume, not a body deodorant.',
+    claim: 'Fabric freshener for clothes: a pocket fabric odor spray that neutralizes odor instead of covering it with perfume — not a perfume, not a body deodorant.',
     status: 'VERIFIED',
     source: 'Product Specification & Formulation Design'
   },

@@ -50,7 +50,7 @@ test('high-impression guides use the words people search, title = H1 territory',
 
 test('the PDP snippet names the searched category and the trust facts', () => {
   const d = read('odorstrike.html').match(/<meta name="description" content="([^"]*)"/)[1];
-  assert.match(d, /clothing deodorant/);
+  assert.match(d, /fabric freshener/);
   assert.match(d, /smell remover spray for clothes/);
   assert.match(d, /COD/);
   assert.ok(d.length <= 160);

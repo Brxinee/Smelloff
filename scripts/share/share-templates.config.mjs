@@ -92,7 +92,7 @@ export const POSTS = {
     x: 'The three key actives in ODORSTRIKE, plus the three ingredients that were deliberately left out — glycerine among them, because on fabric a humectant leaves a tacky patch that then collects dust.',
   },
   'what-is-fabric-odor-eliminator': {
-    wa: 'Turns out this is a third category — deodorant for clothes, not for your body, and not perfume. Goes on the shirt, not on you: {url}',
+    wa: 'Turns out this is a third category — a fabric freshener that works on the cloth, not a body deodorant and not perfume. Goes on the shirt, not on you: {url}',
     x: 'A fabric odor eliminator is a third spray: body deodorant works on skin, perfume adds scent, this one works on the cloth. Confusing the three is why people buy the wrong thing and blame the category.',
   },
 
@@ -416,6 +416,10 @@ export const POSTS = {
   "petrol-smell-out-of-clothes": {
     wa: "Petrol splashed on your clothes at the pump? Why it is a fire risk, and the safe order to get it out: air first, then wash: {url}",
     x: "Clothes that touched petrol or similar solvents should be laid outside to dry before washing, and never go in a dryer. Wash them alone. No spray fixes fuel.",
+  },
+  "how-to-use-fabric-freshener-spray-on-clothes": {
+    wa: "How to use a fabric freshener spray on clothes without stains: where to spray, how many sprays, and when to wash instead: {url}",
+    x: "Fabric freshener goes on dry, washable clothes from 15–20 cm, never on skin, and the garment dries before you wear it. It does not kill germs and it is not a fabric conditioner.",
   },
 };
 

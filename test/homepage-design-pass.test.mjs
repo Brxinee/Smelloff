@@ -28,11 +28,11 @@ test('"Your shirt remembers" (the drag-the-day timeline) is gone for good (owner
   assert.ok(!/Your shirt remembers/.test(main.replace(/<!--[\s\S]*?-->/g, '')), 'no copy left');
 });
 
-test('one product name on the homepage: "clothing deodorant spray" (owner, 2026-11-08)', () => {
-  assert.ok(main.includes('<span class="hero-eyebrow-pill">CLOTHING DEODORANT SPRAY</span>'), 'hero eyebrow');
+test('one product name on the homepage: "fabric freshener spray" (owner, 2026-11-08; renamed 2026-11-09)', () => {
+  assert.ok(main.includes('<span class="hero-eyebrow-pill">FABRIC FRESHENER SPRAY</span>'), 'hero eyebrow');
   const visible = main.replace(/<!--[\s\S]*?-->/g, '').replace(/<script[\s\S]*?<\/script>/g, '');
   assert.ok(!/FABRIC ODOR CONTROL|[Ff]abric odor eliminator (mist|spray)/.test(visible), 'the other two names are gone from the visible copy');
-  assert.ok(sec('odorstrike-featured').includes('A pocket-sized clothing deodorant spray'));
+  assert.ok(sec('odorstrike-featured').includes('A pocket-sized fabric freshener spray'));
   assert.ok(!/not a deodorant/i.test(html), 'never "not a deodorant" ("not a body deodorant" is fine)');
 });
 

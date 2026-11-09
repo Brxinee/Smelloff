@@ -386,6 +386,8 @@ service faked (no real order or payment). Found and fixed:
   landing (GA4 then sees that session as direct; the order still has it).
 
 ## "Clothing deodorant" category (2026-10-20, owner's SEO brief)
+**Superseded on 2026-11-09: the category is "fabric freshener"** (see "Fabric freshener
+positioning" at the end). The "not a deodorant" ban below still holds.
 ODORSTRIKE is described as a **clothing deodorant** (primary keyword); "deodorant
 for clothes", "fabric odor spray" and "fabric odor neutralizer" are secondary
 wording. It is **not a body deodorant**: never write "not a deodorant".
@@ -3043,7 +3045,8 @@ Indian visitors/month, ~2–3% buy, ~7 real orders in 60 days); page speed is fi
   never an amount; 2 and 5 pack cards/links carry "Free COD".
   `audit-production.mjs` flags only free COD on every order / one bottle.
   `test/free-cod.test.mjs`.
-- **One product name: "clothing deodorant spray"** on every visible label (home
+- **One product name: "clothing deodorant spray"** (renamed "fabric freshener spray" on
+  2026-11-09, see the end of this file) on every visible label (home
   hero eyebrow "CLOTHING DEODORANT SPRAY", PDP eyebrow "CLOTHING DEODORANT SPRAY ·
   50ML", offer labels, cart, checkout item line, success screen). Unchanged on
   purpose: Product schema `name`, GA4/Meta item name "ODORSTRIKE Fabric Odor Mist"
@@ -3134,4 +3137,39 @@ Write-up: `docs/audits/gsc-check-2026-11-09.md` ("Second pass").
   (`test/gsc-coverage-2026-11.test.mjs`).
 - "Page with redirect" (91) was re-crawled live: every one is a single 301 to a 200 or
   a 200; nothing on the site links to them. No action.
+
+## Fabric freshener positioning (2026-11-09, owner: "market it as a fabric freshener not a clothing deodorant … whatever makes me better do that … deep research")
+Write-up with data and sources: `docs/audits/fabric-freshener-positioning-2026-11.md`.
+Google Trends India (Ahrefs/Semrush had no data): "fabric freshener" ~4× "clothing
+deodorant" over 12 months and rising; our biggest non-brand GSC cluster is "fabric freshener
+/ refresher / spray for clothes". Amazon.in's fabric freshener bestsellers (Softouch 350 ml,
+Febreze 500 ml, Savlon 230 ml, TetraClean, Astonish) are big perfumed bottles for sofas and
+curtains; the only pocket one (ACO 40 ml) is a perfume. **Position: a pocket fabric freshener
+for the clothes you wear, that neutralizes odor instead of perfuming over it.**
+- **One name: "fabric freshener (spray)"** on every visible label: `/` title "Smelloff —
+  Pocket Fabric Freshener Spray for Clothes", `/odorstrike` title "ODORSTRIKE Fabric Freshener
+  for Clothes, 50ml ₹229", hero eyebrow "FABRIC FRESHENER SPRAY", PDP H1 span "Pocket fabric
+  freshener for clothes", eyebrows/offer "FABRIC FRESHENER SPRAY · 50ML", cart/checkout/success
+  "Fabric freshener spray", footer pitch, menu card, closing card, guides' product card and
+  end card ("ODORSTRIKE — Pocket Fabric Freshener"). Tests pin them;
+  `test/claims-consistency.test.mjs` fails on "clothing deodorant" in `/` or `/odorstrike`.
+- `product.definition` / `categoryDisplay` / first approved claim / description lead with the
+  new category and keep "not a body deodorant" and "never on skin". Product schema `name`
+  unchanged (Merchant stability); `alternateName` has "ODORSTRIKE Fabric Freshener".
+- PDP `#why` H2 "Most fabric fresheners stay home. This one goes with you."; the compare
+  table is ODORSTRIKE · Home fabric freshener · Clothes perfume spray · Deodorant, competitor
+  cells modest. FAQ "How is it different from other fabric fresheners?" on `/`, `/odorstrike`
+  (12 questions now) and `/faq`. The homepage `<main>` still may not say sofa/curtains
+  (clothing-only test), so its answer says "home furnishings".
+- 105 guides say "fabric freshener" where they said "clothing deodorant". Posts whose titles
+  target "cloth deodorant" / "deodorant for clothes" queries keep those titles (2 Nov retitles).
+  `what-is-fabric-odor-eliminator` is retitled "What Is a Fabric Freshener? How It Works on
+  Clothes" (apply-serp-titles).
+- New guide `how-to-use-fabric-freshener-spray-on-clothes` (blog **118**, sitemap 132):
+  use, doses, stains, germs (EPA: germ claims make a product an antimicrobial; ODORSTRIKE
+  makes none), vs fabric conditioner (ACI), choosing one (Steinemann 2016). Pexels thumbnail
+  4153098, inline 17293343 (two candidates rejected: a café brand print, a shirt label).
+- GA4/Meta `item_category` is "Fabric freshener"; `item_name` stays "ODORSTRIKE Fabric Odor
+  Mist" for reporting continuity.
+- Share copy can't say "disinfect" even in a negation (`BANNED` in share-templates config).
 

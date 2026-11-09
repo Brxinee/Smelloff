@@ -139,7 +139,7 @@ test('PDP and checkout send the full GA4 ecommerce funnel', () => {
   for (const ev of ['view_item', 'select_item', 'add_to_cart', 'remove_from_cart', 'view_cart', 'begin_checkout', 'add_shipping_info', 'add_payment_info', 'purchase', 'checkout_error', 'order_error']) {
     assert.match(s, new RegExp(`'${ev}'`), `odorstrike.html: ${ev}`);
   }
-  assert.match(s, /item_brand: 'Smelloff', item_category: 'Clothing deodorant', item_variant: '50ml'/);
+  assert.match(s, /item_brand: 'Smelloff', item_category: 'Fabric freshener', item_variant: '50ml'/);
   assert.match(s, /function gaCartChange\(oldQ, newQ, where\)/);
   for (const fn of ['cartInc', 'cartDec', 'cartRemove', 'cartAddFromEmpty']) {
     const body = s.slice(s.indexOf(`function ${fn}()`), s.indexOf('\n', s.indexOf(`function ${fn}()`)));
