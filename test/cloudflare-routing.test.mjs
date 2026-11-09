@@ -189,3 +189,22 @@ test('text files are served as UTF-8 (llms files, /NikhilPatil Markdown twins)',
   assert.equal(ct('text/html; charset=utf-8'), 'text/html; charset=utf-8');
   assert.equal(ct('text/plain', 206), 'text/plain');
 });
+
+test('other spellings of the founder\'s name 301 to his page; the store calls him Nikhil Patil', async () => {
+  const fs = await import('node:fs');
+  const routing = JSON.parse(fs.readFileSync(new URL('../config/routing.json', import.meta.url), 'utf8'));
+  for (const src of ['/nikhilxpatil', '/nikhil-patil', '/patil-nikhil', '/nikhil']) {
+    const r = routing.redirects.find((x) => x.source === src);
+    assert.ok(r && r.destination === '/NikhilPatil' && r.statusCode === 301, src);
+  }
+  const { lowercaseCandidate } = await import('../src/canonical.js');
+  assert.equal(lowercaseCandidate('https://smelloff.in/NikhilxPatil'), '/NikhilPatil');
+  const home = fs.readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const org = JSON.parse(/<script type="application\/ld\+json" id="org-jsonld">([\s\S]*?)<\/script>/.exec(home)[1]);
+  const founder = org.founder.find((p) => p['@id'] === 'https://smelloff.in/#founder');
+  assert.equal(founder.name, 'Nikhil Patil');
+  assert.ok(founder.alternateName.includes('Jogdhande Nikhil Patil'));
+  assert.ok(founder.sameAs.includes('https://x.com/NikhilxPatil') && founder.sameAs.includes('https://www.instagram.com/NikhilxPatil'));
+  const post = fs.readFileSync(new URL('../blog/why-i-built-odorstrike.html', import.meta.url), 'utf8');
+  assert.match(post, /<a href="\/NikhilPatil" rel="author">Nikhil Patil<\/a>/);
+});

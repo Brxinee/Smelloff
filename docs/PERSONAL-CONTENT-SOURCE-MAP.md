@@ -12,7 +12,7 @@ details. The details stay in Nikhil's Notion.
 |---|---|---|
 | Notion workspace (Brainee HQ): personal profile page, creator-studio pages, projects parking lot | Read through the Notion connector | Interests, work history, school, working style (only what he approved; see below) |
 | smelloff.in `/about` and `/blog/why-i-built-odorstrike` (his byline) | Public | Founder role, co-founder, how they met, Zomato Everyday, the 41°C story |
-| X `@Nikhilxpatil` | Public profile metadata (posts need a login) | `sameAs`; bio says "Founder @Smelloffindia", Hyderabad, links smelloff.in |
+| X `@NikhilxPatil` | Public profile metadata (posts need a login) | `sameAs`; bio says "Founder @Smelloffindia", Hyderabad, links smelloff.in |
 | Product Hunt `@nikhilpatil` | Public | `sameAs`; headline "Founder at Smelloff". Its bio is out of date and is not quoted |
 | LinkedIn `in/jogdhande` | Profile blocked to bots (HTTP 999). Smelloff's public company page lists him and links this URL | `sameAs`; listed as his. Confirm by opening it while logged in |
 | GitHub `Brxinee` | Public | Not linked (no name/bio on the profile; side projects not approved) |
@@ -25,7 +25,7 @@ No connector exists for LinkedIn, Instagram or X in this session; nothing was lo
 
 - Name **Nikhil Patil**; full name **Jogdhande Nikhil Patil** (used publicly on smelloff.in, X, LinkedIn).
 - Based in **Hyderabad, Telangana, India** (city level only).
-- Self-taught; **school up to Class 10**, then learned on the job (approved 2 Nov 2026).
+- Self-taught. **Withdrawn on 9 Nov 2026 (his call: he doesn't want to share too much):** school history (Class 10, no college) and the job-by-job detail (mobile shop counter, deliveries, cleaning and floor work, the early-jobs photo). The site says only: retail, cloud-kitchen operations at Zomato Everyday, team lead, founder.
 - Work journey, **no dates**: mobile shop counter, deliveries, cloud-kitchen operations at Zomato
   Everyday (~1.5 years, public), asked for a chance at the computer (registers, spreadsheets), team
   lead (approved 2 Nov 2026).
@@ -35,7 +35,7 @@ No connector exists for LinkedIn, Instagram or X in this session; nothing was lo
 - Dated log entries: taken from this repository's history and `CLAUDE.md`. No sales numbers.
 - Interests: the anime he listed, Clash of Clans, stories about selling and strategy, trying new web
   and AI tools, punk-ish personal websites (from his own profile notes; low sensitivity).
-- Profiles: X `@Nikhilxpatil`, LinkedIn `in/jogdhande`, Product Hunt `@nikhilpatil`.
+- Profiles: X `@NikhilxPatil`, Instagram `@NikhilxPatil` (owner, 9 Nov 2026), LinkedIn `in/jogdhande`, Product Hunt `@nikhilpatil`.
 - Contact: `info@smelloff.in` (his startup's inbox, forwarded to him).
 
 ## 2. Verified, waiting for his approval (not published)

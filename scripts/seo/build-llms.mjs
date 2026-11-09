@@ -107,7 +107,7 @@ const PAGES = [
 // "Verified and published" list in docs/PERSONAL-CONTENT-SOURCE-MAP.md; no dates.
 const FOUNDER_PAGE = `${SITE}/NikhilPatil`;
 const FOUNDER_PROFILES = ['https://x.com/Nikhilxpatil', 'https://www.linkedin.com/in/jogdhande', 'https://www.producthunt.com/@nikhilpatil'];
-const founderLine = `${B.name} was founded by Nikhil Patil (full name ${B.founder}), a self-taught builder in ${B.city}, India. His own page: ${FOUNDER_PAGE}`;
+const founderLine = `${B.name} was founded by Nikhil Patil (full name ${B.founder}; NikhilxPatil on X and Instagram), a self-taught builder in ${B.city}, India. His own page: ${FOUNDER_PAGE}`;
 
 const heroActives = 'HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them and Triethyl Citrate helps prevent new odor forming, plus 8 supporting ingredients. Exact concentrations are proprietary.';
 const notFor = 'Not for skin, hair, pets, leather, suede, shoes, bags, rooms, sofas or curtains. Patch-test silk, zari and heavy embroidery.';
@@ -154,8 +154,7 @@ function llmsFull() {
     `- Profiles: ${B.sameAs.filter((u) => !u.includes('wa.me')).join(' · ')}`, '');
   L.push('## Founder',
     `- ${founderLine}`,
-    '- Went to school up to Class 10, then taught himself on the job.',
-    '- Work: a mobile shop counter, deliveries, then cloud-kitchen operations at Zomato Everyday (about a year and a half), then team lead.',
+    '- Self-taught. Before Smelloff: retail, then cloud-kitchen operations at Zomato Everyday (about a year and a half), where he became a team lead.',
     `- Co-founder: ${B.coFounder}. They met at a job interview in ${B.city}.`,
     `- Profiles: ${FOUNDER_PROFILES.join(' · ')}`, '');
   L.push('## Product',

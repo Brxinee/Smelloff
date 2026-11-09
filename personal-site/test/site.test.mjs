@@ -194,6 +194,16 @@ test('private items Nikhil did not approve stay off the site', () => {
   }
 });
 
+test('no school history or job-by-job detail (owner, 9 Nov 2026)', () => {
+  const files = [...htmlFiles(), 'llms.txt', 'llms-full.txt', 'index.md', 'about.md'];
+  for (const f of files) {
+    const text = f.endsWith('.html') ? textOf(read(f)) : read(f);
+    assert.doesNotMatch(text, /Class 10|college|left school|school stopped|deliver(y|ies)|cleaning|floor work|mobile shop/i, `${f}: withdrawn detail`);
+  }
+  assert.doesNotMatch(read('index.html'), /early-jobs/, 'the early-jobs photo is gone');
+  assert.match(textOf(read('about.html')), /Before Smelloff/);
+});
+
 test('content files follow their own rules', () => {
   const bench = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/bench.json'), 'utf8')).items;
   for (const b of bench) assert.ok(['NOW', 'LIVE', 'NEW', 'PARKED', 'RETIRED'].includes(b.status), b.id);
@@ -268,4 +278,33 @@ test('the printed date / dateModified is the last content change, not the build 
   const src = fs.readFileSync(path.join(ROOT, 'build.mjs'), 'utf8');
   assert.match(src, /printed = printed \|\| process\.env\.PRINTED_DATE \|\| contentDate\(/, 'build() defaults to the content date');
   assert.doesNotMatch(src, /printed = printed \|\| process\.env\.PRINTED_DATE \|\| new Date\(\)/, 'not the build day');
+});
+
+test('the handle NikhilxPatil points at this person: profiles, schema, title, questions', () => {
+  const home = read('index.html');
+  const person = ldOf(home)[0]['@graph'].find((n) => n['@type'] === 'ProfilePage').mainEntity;
+  assert.ok(person.sameAs.includes('https://x.com/NikhilxPatil'), 'X profile');
+  assert.ok(person.sameAs.includes('https://www.instagram.com/NikhilxPatil'), 'Instagram profile');
+  assert.ok(person.alternateName.includes('NikhilxPatil'));
+  assert.equal(person.identifier.value, 'NikhilxPatil');
+  assert.match(/<title>([^<]+)<\/title>/.exec(home)[1], /^Nikhil Patil \(NikhilxPatil\)/);
+  assert.match(home, /rel="me noopener">@NikhilxPatil/);
+  assert.doesNotMatch(home + read('about.html'), /Nikhilxpatil/, 'the handle is spelled NikhilxPatil');
+  assert.match(textOf(read('about.html')), /Who is NikhilxPatil\?/);
+  for (const f of ['index.html', 'about.html', 'now.html']) {
+    const t = /<title>([^<]+)<\/title>/.exec(read(f))[1];
+    const d = /<meta name="description" content="([^"]+)"/.exec(read(f))[1];
+    assert.ok(t.length <= 60, `${f} title ${t.length}`);
+    assert.ok(d.length <= 160, `${f} description ${d.length}`);
+  }
+});
+
+test('About tells the founder story, what he learned and who should write to him', () => {
+  const html = read('about.html');
+  for (const id of ['why', 'learned', 'talk']) assert.match(html, new RegExp(`<h2 id="${id}"`), `#${id}`);
+  const text = textOf(html);
+  assert.match(text, /Why did Nikhil Patil start Smelloff\?/);
+  assert.match(text, /I read every message myself/);
+  // His page is about him: the product is not named or sold here.
+  assert.doesNotMatch(text.slice(text.indexOf('Why I started Smelloff'), text.indexOf('How I work')), /ODORSTRIKE|Buy now|₹/);
 });

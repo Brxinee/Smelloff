@@ -3195,3 +3195,40 @@ good" are the top related queries for "clothes smell".
   `kapdo-se-seelan-ki-badbu-kaise-dur-kare` (Kubota, EPA). Blog **123**; sitemap 137.
 - Next, only if these earn impressions: almari se badbu; "underarm smell" (big in English)
   needs an overlap check first.
+
+## Rank the name "Nikhil Patil" (2026-11-09, owner: "I want my short name only Nikhil Patil to rank … Instagram and X are NikhilxPatil")
+The first page for "Nikhil Patil" is a Wikipedia cricketer, doctors and directory profiles; the
+handle "NikhilxPatil" has no competition. "Nikhil" and "N" alone can't be ranked for.
+- **The store calls him "Nikhil Patil" too** (`brand.founderName`; the legal name is
+  `brand.founder`, kept on "Manufactured by", Grievance Officer and policy lines). It had named
+  the same `#founder` Person "Jogdhande Nikhil Patil" on every page, against his own site.
+  Founder schema (`alternateName`, `sameAs` from `brand.founderSameAs`), all post bylines and
+  author metas, the homepage founder strip, `/about` and the blog index (now links) use the short name.
+- **Handle `NikhilxPatil`** (`site.json` `handle`): X `x.com/NikhilxPatil`, Instagram
+  `instagram.com/NikhilxPatil` (both `sameAs` + `rel="me"`), Person `alternateName` /
+  `identifier`, titles "Nikhil Patil (NikhilxPatil): …", an "Online" fact and the question
+  "Who is NikhilxPatil?" on About and in llms.txt.
+- `/nikhilxpatil`, `/nikhil-patil`, `/nikhil_patil`, `/patil-nikhil`, `/patilnikhil`, `/nikhil`
+  301 to `/NikhilPatil` (`config/routing.json`).
+- Owner, off-site (the larger half): the same name, photo, one-line bio and
+  `smelloff.in/NikhilPatil` link on X, Instagram, LinkedIn, Product Hunt, GitHub, Crunchbase;
+  display name "Nikhil Patil" on each; GSC → Request indexing for the three pages.
+
+## Personal site: founder-level detail only (2026-11-09, owner: "info what a founder keep, don't wanna share too much … more professional and more human")
+He chose what to drop: **school history** (Class 10, no college) and the **job-by-job detail**
+(mobile shop counter, deliveries, cleaning and floor work, the early-jobs photo). This reverses
+the 2 Nov approval of "school up to Class 10". Kept by his choice: the anime shelf, the casual
+photos and his full legal name on About.
+- The work history is four lines: Retail → Cloud-kitchen operations (Zomato Everyday, about a
+  year and a half) → Team lead → Founder (`content/journey.json`, no photo; the time card is one
+  column). About has "Self-taught" and "Before Smelloff" instead of the school and jobs sections;
+  the college question is gone; `og.jpg` was re-rendered without the school line.
+- The store's `llms-full.txt` founder block says the same (`build-llms.mjs`).
+- `personal-site/test/site.test.mjs` fails if school, college, deliveries, cleaning/floor work
+  or the mobile shop come back on any page, Markdown twin or llms file.
+- **Added the same day (owner: "I want you to come up with content, removing was optional"):**
+  About has "Why I started Smelloff" (the hot-day shirt story and about six months of failed
+  prototypes, from his own founder note; the product is not named or sold), "What building it has
+  taught me" (four lessons, each backed by something the store does), "Talk to me" (customers,
+  small-brand builders, writers) and the question "Why did Nikhil Patil start Smelloff?". New
+  facts still come only from the source map or his founder note; never invent biography.

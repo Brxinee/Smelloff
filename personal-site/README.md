@@ -7,7 +7,7 @@ nothing with the store's design.
 ```
 node build.mjs     # preview build → dist/NikhilPatil (+ dist/sitemap-nikhil-patil.xml)
 node serve.mjs     # http://localhost:4321/NikhilPatil
-node --test        # 15 tests (also run by the repo's root `npm test`)
+node --test        # tests (also run by the repo's root `npm test`)
 ```
 
 ## Files for AI assistants

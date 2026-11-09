@@ -1197,6 +1197,36 @@
       "statusCode": 301
     },
     {
+      "source": "/nikhilxpatil",
+      "destination": "/NikhilPatil",
+      "statusCode": 301
+    },
+    {
+      "source": "/nikhil-patil",
+      "destination": "/NikhilPatil",
+      "statusCode": 301
+    },
+    {
+      "source": "/nikhil_patil",
+      "destination": "/NikhilPatil",
+      "statusCode": 301
+    },
+    {
+      "source": "/patil-nikhil",
+      "destination": "/NikhilPatil",
+      "statusCode": 301
+    },
+    {
+      "source": "/patilnikhil",
+      "destination": "/NikhilPatil",
+      "statusCode": 301
+    },
+    {
+      "source": "/nikhil",
+      "destination": "/NikhilPatil",
+      "statusCode": 301
+    },
+    {
       "source": "/NikhilPatil/log",
       "destination": "/NikhilPatil",
       "statusCode": 301

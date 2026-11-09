@@ -258,8 +258,11 @@ export function buildOrganizationJsonLd() {
       {
         '@type': 'Person',
         '@id': FOUNDER_ID,
-        'name': b.founder,
+        // The name he goes by (and is searched by); the legal name is an alternate.
+        'name': b.founderName,
+        'alternateName': b.founderAlternateNames,
         'jobTitle': b.jobTitle,
+        'sameAs': b.founderSameAs,
         // His own page (personal-site/, served at /NikhilPatil) is where this Person lives.
         'url': `${b.website}/NikhilPatil`
       },
