@@ -3066,3 +3066,25 @@ Indian visitors/month, ~2–3% buy, ~7 real orders in 60 days); page speed is fi
   change all five together.
 - Open from the audit, owner's: a 15–20 s demo video on a real shirt, asking the
   delivered buyers for reviews, Merchant Center, Amazon.in, `META_CAPI_TOKEN`.
+
+## 20 guides from Indian search demand, round 2 (2026-11-09, owner: "20 more blogs … no over claims … India only … no duplicates")
+Blog is **117**; sitemap 131. Ahrefs (no plan) and Semrush had no data, so topics came from
+~1,500 Google autocomplete queries with `gl=in`, then every candidate was checked against all 97
+live posts' titles and H2s. Dropped as intent duplicates: collar smell, best summer shirt fabric,
+"make clothes smell good", wearing a shirt two days, train travel, monsoon office wear, DIY fabric
+spray (also against the sales-first rule). 5-gram overlap with any existing post tops out at 5.7%.
+- Topics: shirt colour that hides sweat, rayon/viscose kurtis, lehenga, rented sherwani/lehenga,
+  dry-cleaning solvent smell, Lohri bonfire smoke, Kedarnath clothes, raincoat smell, fish smell,
+  hair/coconut oil on collars, fresh without a bath, deodorant vs antiperspirant, advocate's black
+  coat, Durga Puja, garba, old-age odour (2-nonenal), Rakhi gift for brother, hand-washing,
+  sweaty back while driving, petrol on clothes.
+- Sources fetched and checked: Lekner & Dorf 1988, McQueen 2024 (TRJ), DOJ/FTC bamboo-rayon 2022,
+  Neely & Maley 2000, NYC DOH perc, EPA wood smoke + mould guide, BKTC, Park 2020 (TMA), Ramos 2019
+  (coconut oil), NHS BO, FDA antiperspirant guidelines (20%/30%), NCI, Delhi HC dress notice, LiveLaw
+  (Karnataka 2024 black-coat exemption), UNESCO (Durga Puja 2021, Garba 2023), Haze 2001, Mitro 2012,
+  Baskin 2014, Kubota 2012, Baker 2019, Idaho DOI dryer safety.
+- No prices (Rakhi uses only the "under ₹500" budget phrase). Never spray dry-clean-only, leather,
+  suede; patch-test silk, zari, embroidery, mirror work. No footwear, bags or helmets anywhere.
+- Product card skipped (SKIP) on dry-cleaning, hair oil and petrol: their honest fix is airing or a wash.
+- Every photo is Pexels, checked by eye: a Durga Puja frame with a soft-drink banner was swapped;
+  a bathing shot was rejected; thumbnails with people describe the clothes, never the person's smell.

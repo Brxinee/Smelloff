@@ -1547,6 +1547,788 @@ export const FIGURES = {
       note: 'The fresh smell is made by sunlight on wet fabric.',
     }),
   ],
+
+  // 2026-11-09 series.
+  "what-colour-shirt-hides-sweat": [
+    {
+      "kind": "photo",
+      "after": "do-patterns-and-fabric-help-hide-sweat",
+      "pexels": 38907642,
+      "alt": "A man buttons a cream cotton shirt, seen from the chest down",
+      "caption": "Light and mid-tone shirts show a wet patch most clearly.",
+      "focal": "50% 40%"
+    },
+    {
+      "kind": "diagram",
+      "after": "which-colours-hide-sweat-best-and-worst",
+      "type": "decide",
+      "kicker": "Shirt colour",
+      "title": "How much a sweat patch shows",
+      "rows": [
+        [
+          "Mid grey, heather grey",
+          "Shows it most",
+          "stop"
+        ],
+        [
+          "Light blue, pastels, khaki",
+          "Shows it clearly",
+          "wash"
+        ],
+        [
+          "Bright solid colours",
+          "Shows it",
+          "wash"
+        ],
+        [
+          "Maroon, darker blues",
+          "Shows up close",
+          "air"
+        ],
+        [
+          "White",
+          "Hides the colour change; wear a vest",
+          "ok"
+        ],
+        [
+          "Black, navy, charcoal, fine checks",
+          "Hides it best",
+          "ok"
+        ]
+      ],
+      "note": "Colour hides the mark, not the smell: the sweat is still in the fabric."
+    }
+  ],
+
+  "does-rayon-viscose-smell-when-you-sweat": [
+    {
+      "kind": "photo",
+      "after": "is-rayon-or-cotton-better-for-indian-summer",
+      "pexels": 39287856,
+      "alt": "A woman in a blue printed kurti stands by a lake with trees behind her",
+      "caption": "Printed summer kurtis are often rayon or viscose.",
+      "focal": "50% 35%"
+    },
+    {
+      "kind": "diagram",
+      "after": "do-viscose-and-rayon-hold-sweat-smell-like-polyester",
+      "type": "compare",
+      "kicker": "Fibre by fibre",
+      "title": "How they handle sweat smell",
+      "cols": [
+        {
+          "name": "Cotton",
+          "tag": "Cellulose",
+          "lines": [
+            "Absorbs sweat",
+            "Holds less odour than synthetics",
+            "Tough enough to wash hard"
+          ]
+        },
+        {
+          "name": "Viscose, rayon, modal",
+          "tag": "Cellulose",
+          "lines": [
+            "Absorbs sweat, feels cool",
+            "Held less odour than polyester in a 2024 study",
+            "Weaker when wet: wash gently"
+          ]
+        },
+        {
+          "name": "Polyester",
+          "tag": "Synthetic",
+          "lines": [
+            "Attracts oily odour compounds",
+            "Can keep smelling after a wash",
+            "Dries fast"
+          ]
+        }
+      ]
+    }
+  ],
+
+  "remove-smell-from-lehenga-without-washing": [
+    {
+      "kind": "photo",
+      "after": "how-do-you-store-a-lehenga-so-it-does-not-smell",
+      "pexels": 12959396,
+      "alt": "A bride in a red embroidered lehenga stands in front of a patterned backdrop",
+      "caption": "Heavy work and long storage: air it before it is packed away.",
+      "focal": "50% 35%"
+    },
+    {
+      "kind": "diagram",
+      "after": "how-do-you-air-a-lehenga-after-the-function",
+      "type": "steps",
+      "kicker": "After the function",
+      "title": "Air a lehenga in four steps",
+      "items": [
+        [
+          "Separate",
+          "Skirt, blouse, dupatta and can-can apart."
+        ],
+        [
+          "Inside out",
+          "Blouse inside out on a padded hanger."
+        ],
+        [
+          "Shade and fan",
+          "Several hours of moving air, out of direct sun."
+        ],
+        [
+          "Check",
+          "Smell the underarms and waistband the next morning."
+        ]
+      ]
+    }
+  ],
+
+  "rented-sherwani-lehenga-smell": [
+    {
+      "kind": "photo",
+      "after": "how-do-you-air-a-rented-outfit-before-the-function",
+      "pexels": 37396063,
+      "alt": "A cream embroidered sherwani displayed on a stand outdoors among trees",
+      "caption": "Out of the cover and into moving air before the function.",
+      "focal": "50% 40%"
+    },
+    {
+      "kind": "diagram",
+      "after": "what-should-you-check-when-you-pick-it-up",
+      "type": "decide",
+      "kicker": "At pickup",
+      "title": "Check before you sign",
+      "rows": [
+        [
+          "Underarms or collar smell of sweat",
+          "Ask for another piece",
+          "stop"
+        ],
+        [
+          "Musty or damp smell",
+          "Ask for it to be cleaned",
+          "stop"
+        ],
+        [
+          "Stains or loose work",
+          "Get it noted against the deposit",
+          "air"
+        ],
+        [
+          "Label says dry clean only",
+          "Air it; do not spray it",
+          "air"
+        ],
+        [
+          "Fresh and clean",
+          "Air it at home anyway",
+          "ok"
+        ]
+      ]
+    }
+  ],
+
+  "dry-cleaned-clothes-chemical-smell": [
+    {
+      "kind": "photo",
+      "after": "why-do-some-dry-cleaned-clothes-smell-so-strongly",
+      "pexels": 8774520,
+      "alt": "Laundry in large white bags at a professional laundry with industrial washing machines",
+      "caption": "A strong solvent smell means a garment was not dried and aired enough.",
+      "focal": "40% 50%"
+    },
+    {
+      "kind": "diagram",
+      "after": "how-do-you-air-out-dry-cleaned-clothes",
+      "type": "steps",
+      "kicker": "Back from the cleaner",
+      "title": "Air it before it goes in the cupboard",
+      "items": [
+        [
+          "Plastic off",
+          "The cover traps solvent against the fabric."
+        ],
+        [
+          "Hang outside",
+          "Balcony in shade, or an open window with a fan."
+        ],
+        [
+          "Wait",
+          "A few hours; overnight for a lined coat."
+        ],
+        [
+          "Check the lining",
+          "Still strong after a day? Take it back."
+        ]
+      ]
+    }
+  ],
+
+  "bonfire-smoke-smell-out-of-clothes": [
+    {
+      "kind": "photo",
+      "after": "what-should-you-do-the-same-night",
+      "pexels": 15191196,
+      "alt": "People in warm clothes stand close around a fire burning in a metal pit",
+      "caption": "Whatever faces the fire takes the most smoke.",
+      "focal": "50% 50%"
+    },
+    {
+      "kind": "diagram",
+      "after": "which-parts-of-your-clothes-hold-the-most-smoke",
+      "type": "zones",
+      "kicker": "Where smoke settles",
+      "title": "Treat these three first",
+      "garment": "jacket",
+      "zones": [
+        {
+          "zone": "front panel",
+          "label": "Front panel",
+          "text": "Faces the fire the whole evening."
+        },
+        {
+          "zone": "cuffs",
+          "label": "Cuffs and sleeves",
+          "text": "Held out to warm your hands."
+        },
+        {
+          "zone": "collar",
+          "label": "Collar",
+          "text": "Sits in the smoke around your face."
+        }
+      ]
+    }
+  ],
+
+  "what-to-wear-for-kedarnath-yatra": [
+    {
+      "kind": "photo",
+      "after": "how-cold-is-kedarnath",
+      "pexels": 33677268,
+      "alt": "A paved path lined with tents leads towards snow-capped peaks near Kedarnath",
+      "caption": "Warm on the climb, cold at the top: dress in layers.",
+      "focal": "50% 50%"
+    },
+    {
+      "kind": "diagram",
+      "after": "what-layers-should-you-wear-on-the-trek",
+      "type": "stats",
+      "kicker": "The climb",
+      "title": "Why layers matter",
+      "items": [
+        [
+          "~3,580 m",
+          "altitude of the temple"
+        ],
+        [
+          "~16 km",
+          "walk from Gaurikund, each way"
+        ],
+        [
+          "3 layers",
+          "base, warm, waterproof"
+        ]
+      ]
+    }
+  ],
+
+  "why-does-my-raincoat-smell": [
+    {
+      "kind": "photo",
+      "after": "why-does-a-raincoat-smell-musty",
+      "pexels": 1686861,
+      "alt": "A person in a yellow raincoat stands in a green field under grey skies, seen from behind",
+      "caption": "Rain stays out; sweat stays in.",
+      "focal": "50% 40%"
+    },
+    {
+      "kind": "diagram",
+      "after": "why-is-my-raincoat-sticky-and-sour-inside",
+      "type": "decide",
+      "kicker": "Raincoat check",
+      "title": "What the smell is telling you",
+      "rows": [
+        [
+          "Musty, coat still smooth inside",
+          "Dry it open, then wash gently",
+          "wash"
+        ],
+        [
+          "Sticky, peeling, sour inside",
+          "Coating is breaking down: replace it",
+          "stop"
+        ],
+        [
+          "Shirt underneath smells",
+          "Air it, then refresh the fabric",
+          "refresh"
+        ]
+      ]
+    }
+  ],
+
+  "fish-smell-on-clothes-after-cooking": [
+    {
+      "kind": "photo",
+      "after": "which-cooking-puts-the-most-fish-smell-on-clothes",
+      "pexels": 33865326,
+      "alt": "A fish fillet frying in a pan of hot oil on a stove",
+      "caption": "Frying sends oil and smell into the air, and onto your clothes.",
+      "focal": "50% 50%"
+    },
+    {
+      "kind": "diagram",
+      "after": "how-do-you-get-fish-smell-out-of-clothes-today",
+      "type": "steps",
+      "kicker": "Same day",
+      "title": "Fish smell out of a shirt",
+      "items": [
+        [
+          "Change",
+          "Out of the clothes you cooked in."
+        ],
+        [
+          "Air",
+          "Outdoors or by an open window, away from other clothes."
+        ],
+        [
+          "Wash",
+          "Normal dose of detergent, as warm as the label allows."
+        ],
+        [
+          "Dry fast",
+          "Sun or moving air, then smell the collar."
+        ]
+      ]
+    }
+  ],
+
+  "coconut-hair-oil-smell-on-clothes": [
+    {
+      "kind": "photo",
+      "after": "where-does-hair-oil-end-up-on-clothes",
+      "pexels": 8668081,
+      "alt": "Close-up of the collar of a beige cotton shirt",
+      "caption": "The collar fold is where hair oil and skin oil build up.",
+      "focal": "50% 40%"
+    },
+    {
+      "kind": "diagram",
+      "after": "how-do-you-wash-oil-out-of-a-shirt-collar",
+      "type": "steps",
+      "kicker": "Oily collar",
+      "title": "Wash the oil out, and the smell goes",
+      "items": [
+        [
+          "Pre-treat",
+          "Rub liquid detergent into the collar."
+        ],
+        [
+          "Wait",
+          "10–15 minutes to break up the oil."
+        ],
+        [
+          "Brush",
+          "Gently along the collar fold."
+        ],
+        [
+          "Wash warm",
+          "As warm as the label allows, no softener."
+        ]
+      ]
+    }
+  ],
+
+  "how-to-stay-fresh-without-bathing": [
+    {
+      "kind": "photo",
+      "after": "what-if-you-do-not-have-a-clean-shirt",
+      "pexels": 39655920,
+      "alt": "A man buttons a fresh white shirt in a bright room",
+      "caption": "Fresh innerwear and a fresh shirt do half the work of a bath.",
+      "focal": "50% 30%"
+    },
+    {
+      "kind": "diagram",
+      "after": "what-is-the-five-minute-no-bath-routine",
+      "type": "steps",
+      "kicker": "No-bath morning",
+      "title": "Five minutes, one mug of water",
+      "items": [
+        [
+          "Underarms",
+          "Soapy cloth, rinse, dry."
+        ],
+        [
+          "Groin and feet",
+          "Separate cloth, then dry well."
+        ],
+        [
+          "Deodorant",
+          "On fully dry skin."
+        ],
+        [
+          "Fresh layers",
+          "Clean innerwear and vest, and a fresh or freshened shirt."
+        ]
+      ]
+    }
+  ],
+
+  "deodorant-vs-antiperspirant-india": [
+    {
+      "kind": "photo",
+      "after": "what-does-neither-of-them-do",
+      "pexels": 17251204,
+      "alt": "A man in a short-sleeved cream shirt stands with his hands in his pockets",
+      "caption": "Skin products stay on skin; the shirt needs its own fix.",
+      "focal": "50% 30%"
+    },
+    {
+      "kind": "diagram",
+      "after": "what-is-the-difference-between-deodorant-and-antiperspirant",
+      "type": "compare",
+      "kicker": "Three products, three jobs",
+      "title": "Which one does what",
+      "cols": [
+        {
+          "name": "Deodorant",
+          "tag": "Smell",
+          "lines": [
+            "Slows odour-causing bacteria on skin",
+            "Usually adds fragrance",
+            "You still sweat"
+          ]
+        },
+        {
+          "name": "Antiperspirant",
+          "tag": "Sweat",
+          "lines": [
+            "Aluminium salts plug sweat ducts for a while",
+            "Must cut sweat by 20% or more in FDA testing",
+            "Best applied at night on dry skin"
+          ]
+        },
+        {
+          "name": "Clothing deodorant",
+          "tag": "Fabric",
+          "pick": true,
+          "lines": [
+            "Goes on the shirt, never skin",
+            "Works on sweat already in the fabric",
+            "Use alongside either of the others"
+          ]
+        }
+      ],
+      "note": "Skin products work on skin. The shirt needs its own fix."
+    }
+  ],
+
+  "advocate-black-coat-summer-fresh": [
+    {
+      "kind": "photo",
+      "after": "what-does-the-dress-code-require",
+      "pexels": 8112145,
+      "alt": "A man in a dark suit jacket writes at a desk beside a small statue of Lady Justice",
+      "caption": "Worn daily, lined and rarely cleaned: the coat holds a week of sweat.",
+      "focal": "50% 35%"
+    },
+    {
+      "kind": "diagram",
+      "after": "why-does-a-black-coat-smell-so-fast",
+      "type": "zones",
+      "kicker": "Where it holds smell",
+      "title": "The three spots on a black coat",
+      "garment": "jacket",
+      "zones": [
+        {
+          "zone": "underarm lining",
+          "label": "Underarm lining",
+          "text": "Pressed against the shirt all day."
+        },
+        {
+          "zone": "back lining",
+          "label": "Back lining",
+          "text": "Takes sweat through every hearing you sit through."
+        },
+        {
+          "zone": "collar",
+          "label": "Collar",
+          "text": "Sits on the neck and the bands."
+        }
+      ]
+    }
+  ],
+
+  "durga-puja-pandal-hopping-outfit-fresh": [
+    {
+      "kind": "photo",
+      "after": "what-should-you-do-when-you-get-home-each-night",
+      "pexels": 40254641,
+      "alt": "An ornate Durga Puja pandal lit up in gold against a deep blue night sky",
+      "caption": "Five nights of crowds: give each outfit an evening to air.",
+      "focal": "50% 50%"
+    },
+    {
+      "kind": "diagram",
+      "after": "how-should-you-plan-outfits-for-five-days",
+      "type": "timeline",
+      "kicker": "Shashthi to Dashami",
+      "title": "One outfit plan for five days",
+      "items": [
+        [
+          "Shashthi",
+          "Cotton or handloom for the first long night."
+        ],
+        [
+          "Saptami",
+          "A second cotton outfit; air the first."
+        ],
+        [
+          "Ashtami",
+          "Silk for the morning anjali, cotton for the night."
+        ],
+        [
+          "Navami",
+          "Repeat an aired, refreshed outfit."
+        ],
+        [
+          "Dashami",
+          "Washable clothes for sindoor khela."
+        ]
+      ]
+    }
+  ],
+
+  "garba-sweat-chaniya-choli-fresh": [
+    {
+      "kind": "photo",
+      "after": "how-many-outfits-do-you-need-for-navratri",
+      "pexels": 17264037,
+      "alt": "Many hands in bangles hold colourful dandiya sticks together in a circle",
+      "caption": "Nine nights of dancing: rotate outfits so each one dries.",
+      "focal": "50% 50%"
+    },
+    {
+      "kind": "diagram",
+      "after": "what-should-you-do-after-each-night",
+      "type": "steps",
+      "kicker": "After each night",
+      "title": "Dry the sweat out before you sleep",
+      "items": [
+        [
+          "Off",
+          "Choli or kediyu off as soon as you are home."
+        ],
+        [
+          "Inside out",
+          "Under a fan, away from the cupboard."
+        ],
+        [
+          "Chaniya",
+          "Hang it by the waistband to air."
+        ],
+        [
+          "Next day",
+          "Check the lining; treat it once dry, after a patch test."
+        ]
+      ]
+    }
+  ],
+
+  "old-age-body-odour-nonenal": [
+    {
+      "kind": "photo",
+      "after": "why-does-it-cling-to-clothes-and-bedding",
+      "pexels": 40341347,
+      "alt": "Close-up of a cream kurta with embroidered panels down the front",
+      "caption": "Oily odour clings to kurtas, vests and shawls more than to skin.",
+      "focal": "50% 45%"
+    },
+    {
+      "kind": "diagram",
+      "after": "what-is-old-age-smell",
+      "type": "stats",
+      "kicker": "What the studies found",
+      "title": "Age and body odour",
+      "items": [
+        [
+          "40+",
+          "the only ages in which a 2001 study found 2-nonenal"
+        ],
+        [
+          "26–75",
+          "age range of the 2001 study's volunteers"
+        ],
+        [
+          "75–95",
+          "donor ages whose odour was rated less intense in 2012"
+        ]
+      ]
+    }
+  ],
+
+  "rakhi-gift-for-brother": [
+    {
+      "kind": "photo",
+      "after": "what-makes-a-rakhi-gift-useful",
+      "pexels": 18231729,
+      "alt": "A rakhi of beads and threads tied on a wrist next to another hand",
+      "caption": "Useful beats impressive more often than givers expect.",
+      "focal": "50% 50%"
+    },
+    {
+      "kind": "diagram",
+      "after": "which-rakhi-gifts-suit-which-kind-of-brother",
+      "type": "decide",
+      "kicker": "By brother",
+      "title": "Gift ideas he will use",
+      "rows": [
+        [
+          "College or hostel",
+          "Power bank, steel bottle, clothing spray",
+          "refresh"
+        ],
+        [
+          "Office-going",
+          "Card holder, umbrella, grooming kit",
+          "ok"
+        ],
+        [
+          "Fitness",
+          "Shaker, quick-dry towel, earphones",
+          "ok"
+        ],
+        [
+          "In another city",
+          "Deliver to his address, with a note",
+          "ok"
+        ],
+        [
+          "Younger",
+          "Books, a watch, a hobby kit",
+          "ok"
+        ]
+      ]
+    }
+  ],
+
+  "how-to-wash-clothes-by-hand-without-smell": [
+    {
+      "kind": "photo",
+      "after": "how-long-should-you-soak-clothes",
+      "pexels": 38602906,
+      "alt": "Hands scrub a light blue shirt with an orange brush",
+      "caption": "Scrub the collar, cuffs and underarms; the rest just needs squeezing.",
+      "focal": "50% 50%"
+    },
+    {
+      "kind": "diagram",
+      "after": "why-do-hand-washed-clothes-smell",
+      "type": "steps",
+      "kicker": "Bucket wash",
+      "title": "Four steps that stop the sour smell",
+      "items": [
+        [
+          "Dissolve",
+          "Detergent fully mixed into the water first."
+        ],
+        [
+          "Soak",
+          "20–30 minutes, never overnight."
+        ],
+        [
+          "Rinse",
+          "Two or three changes of water, until clear."
+        ],
+        [
+          "Dry same day",
+          "Spread out, in sun or moving air."
+        ]
+      ]
+    }
+  ],
+
+  "sweaty-back-while-driving-shirt-smell": [
+    {
+      "kind": "photo",
+      "after": "why-does-the-shirt-smell-by-lunch",
+      "pexels": 4606335,
+      "alt": "A man in a white shirt sits in the driver's seat with his seat belt on",
+      "caption": "An hour against the seat back leaves sweat with nowhere to go.",
+      "focal": "50% 40%"
+    },
+    {
+      "kind": "diagram",
+      "after": "why-does-your-back-sweat-so-much-in-the-car",
+      "type": "zones",
+      "kicker": "Seat contact",
+      "title": "Where a driving shirt holds sweat",
+      "garment": "shirt",
+      "zones": [
+        {
+          "zone": "upper back",
+          "label": "Upper back",
+          "text": "Pressed flat against the seat back."
+        },
+        {
+          "zone": "lower back",
+          "label": "Lower back",
+          "text": "Traps heat where the seat curves in."
+        },
+        {
+          "zone": "underarms",
+          "label": "Underarms",
+          "text": "Arms up on the wheel for an hour."
+        }
+      ]
+    }
+  ],
+
+  "petrol-smell-out-of-clothes": [
+    {
+      "kind": "photo",
+      "after": "what-should-you-do-right-away",
+      "pexels": 29370541,
+      "alt": "A hand holds a green fuel nozzle in a car's fuel inlet",
+      "caption": "Most splashes happen at the pump.",
+      "focal": "50% 50%"
+    },
+    {
+      "kind": "diagram",
+      "after": "how-do-you-wash-petrol-out-of-clothes",
+      "type": "decide",
+      "kicker": "Fuel on clothes",
+      "title": "What to do with each",
+      "rows": [
+        [
+          "Small petrol splash",
+          "Air outdoors, then wash it alone",
+          "wash"
+        ],
+        [
+          "Diesel",
+          "Pre-treat with detergent, wash twice",
+          "wash"
+        ],
+        [
+          "Soaked through",
+          "Dispose of it safely",
+          "stop"
+        ],
+        [
+          "Tumble dryer",
+          "Never",
+          "stop"
+        ],
+        [
+          "Perfume or spray on top",
+          "No: it hides nothing and adds risk",
+          "stop"
+        ]
+      ]
+    }
+  ],
 };
 
 export default FIGURES;
