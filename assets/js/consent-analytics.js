@@ -118,13 +118,23 @@
       // flex-wrap + shrink: this row was `flex-shrink:0` with no wrap, so at
       // 320px the two buttons measured 315px inside a 300px content box and
       // "Reject non-essential" hung off the right edge of the screen. Below
-      // the phone breakpoint they take a row each instead. Kept in sync with
-      // chrome.css §5.2 and the two inline copies in index/odorstrike.
+      // the phone breakpoint they wrap. Kept in sync with chrome.css §5 and
+      // the three inline copies in index/odorstrike/faq.
       '#smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}' +
       '#smelloff-consent-bar button{font-family:var(--body,system-ui,sans-serif);font-size:14px;font-weight:500;letter-spacing:.01em;padding:9px 18px;min-height:44px;border-radius:8px;cursor:pointer}' +
-      '@media(max-width:520px){#smelloff-consent-bar .cb-actions{width:100%}#smelloff-consent-bar .cb-actions button{flex:1 1 130px;padding-inline:10px}}' +
       '#smelloff-consent-bar .cb-accept{background:#F2F5EF;color:#0A0A0A;border:none}' +
-      '#smelloff-consent-bar .cb-reject{background:transparent;color:#F2F5EF;border:1px solid rgba(242,245,239,.25)}';
+      '#smelloff-consent-bar .cb-reject{background:transparent;color:#F2F5EF;border:1px solid rgba(242,245,239,.25)}' +
+      // CONSENT-COMPACT (2026-11-08, owner: smaller cookie bar): phones get one
+      // row, the sentence beside two equal 44px buttons; under ~370px of room
+      // the buttons wrap under the sentence and share that row.
+      '@media(max-width:519px){' +
+      '#smelloff-consent-bar{padding:4px 12px calc(4px + env(safe-area-inset-bottom,0px))}' +
+      '#smelloff-consent-bar .cb-inner{gap:6px 8px;flex-wrap:wrap}' +
+      '#smelloff-consent-bar p{flex:999 1 150px;min-width:150px;max-width:none;margin:0;font-size:12px;line-height:1.25}' +
+      '#smelloff-consent-bar .cb-who{display:none}' +
+      '#smelloff-consent-bar .cb-actions{flex:1 0 198px;width:auto;gap:6px;flex-wrap:nowrap}' +
+      '#smelloff-consent-bar .cb-actions button{flex:1 1 96px;min-height:44px;padding:4px 6px;font-size:13px;line-height:1.2}' +
+      '}';
     var style = document.createElement('style');
     style.textContent = css;
     document.head.appendChild(style);
@@ -133,7 +143,7 @@
     bar.setAttribute('role', 'dialog');
     bar.setAttribute('aria-label', 'Cookie and tracking consent');
     bar.innerHTML = '<div class="cb-inner">' +
-      '<p>Analytics cookies (Google Analytics, Meta Pixel) help us improve the site. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>' +
+      '<p>Analytics cookies<span class="cb-who"> (Google Analytics, Meta Pixel)</span> help us improve the site. <a href="/privacy">Privacy Policy</a></p>' +
       '<div class="cb-actions">' +
       '<button class="cb-accept" onclick="window.smelloffSetConsent(\'accepted\')">Accept all</button>' +
       '<button class="cb-reject" onclick="window.smelloffSetConsent(\'rejected\')">Reject non-essential</button>' +

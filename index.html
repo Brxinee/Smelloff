@@ -665,116 +665,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   .section-body{max-width:640px;font-size:var(--fs-lead)}
   .section-body p+p{margin-top:16px}
 
-  /* ============ Your shirt remembers ============
-     Every visual state keys off [data-step] on the section, so dragging the
-     slider changes one attribute and CSS does the rest — no per-frame JS, no
-     layout thrash. Transitions are on opacity/transform only. */
-  .remembers{border-top:2px solid var(--rule)}
-  .rm-intro{max-width:560px;font-size:var(--fs-lead);color:var(--text-2);margin-top:18px}
-
-  .rm-stage{
-    display:grid;grid-template-columns:1fr;gap:22px;align-items:center;
-    margin-top:44px;
-    border:1px solid var(--rule);border-radius:28px;
-    background:var(--surface);
-    padding:32px 24px;
-  }
-  .rm-shirt-wrap{position:relative;justify-self:center;width:150px;height:162px}
-  .rm-shirt{width:100%;height:100%;overflow:visible}
-  .rm-outline{
-    fill:none;stroke:var(--muted);stroke-width:2.4;
-    stroke-linejoin:round;
-    transition:stroke .45s ease;
-  }
-  /* The haze is the day's load. It never carries a number — it just grows. */
-  .rm-haze{opacity:0;transition:opacity .5s ease,transform .5s ease;transform-origin:60px 60px}
-  .remembers[data-step="1"] .rm-haze{opacity:.20;transform:scale(.72)}
-  .remembers[data-step="2"] .rm-haze{opacity:.42;transform:scale(.84)}
-  .remembers[data-step="3"] .rm-haze{opacity:.58;transform:scale(.92)}
-  .remembers[data-step="4"] .rm-haze{opacity:.78;transform:scale(1)}
-  .remembers[data-step="5"] .rm-haze{opacity:1;transform:scale(1.06)}
-  .remembers[data-step="6"] .rm-haze{opacity:0;transform:scale(.55)}
-  .remembers[data-step="6"] .rm-outline{stroke:var(--acid)}
-
-  /* One-shot sweep when the day resets — the reward for reaching the end. */
-  .rm-flash{
-    position:absolute;inset:0;border-radius:50%;
-    background:radial-gradient(circle,var(--acid) 0%,transparent 68%);
-    opacity:0;pointer-events:none;
-  }
-  .remembers[data-step="6"] .rm-flash{animation:rmFlash .7s ease-out}
-  @keyframes rmFlash{0%{opacity:0;transform:scale(.5)}35%{opacity:.30}100%{opacity:0;transform:scale(1.5)}}
-
-  .rm-readout{min-height:132px}
-  .rm-time{
-    font-family:var(--mono);font-size:13px;letter-spacing:.2em;
-    color:var(--acid);margin-bottom:10px;
-  }
-  .rm-event{
-    font-family:var(--display);font-weight:900;
-    font-size:clamp(23px,5.2vw,32px);line-height:1.12;
-    letter-spacing:-.01em;color:var(--text);
-  }
-  .rm-state{
-    display:inline-block;margin-top:14px;
-    font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--muted);
-    border:1px solid var(--rule);border-radius:999px;padding:6px 13px;
-  }
-  .remembers[data-step="6"] .rm-state{color:var(--ink);background:var(--acid);border-color:var(--acid)}
-
-  /* Native range input: keyboard, touch and AT support with no library. */
-  .rm-control{margin-top:26px}
-  .rm-scrub{
-    -webkit-appearance:none;appearance:none;
-    width:100%;height:44px;background:transparent;cursor:grab;display:block;
-  }
-  .rm-scrub:active{cursor:grabbing}
-  .rm-scrub::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--rule-strong,rgba(244,241,234,.28))}
-  .rm-scrub::-moz-range-track{height:4px;border-radius:2px;background:rgba(244,241,234,.28)}
-  .rm-scrub::-webkit-slider-thumb{
-    -webkit-appearance:none;appearance:none;
-    width:24px;height:24px;margin-top:-10px;border-radius:50%;
-    background:var(--acid);border:2px solid var(--ink);
-    box-shadow:0 0 0 1px var(--acid);
-    transition:transform .15s ease;
-  }
-  .rm-scrub::-moz-range-thumb{
-    width:24px;height:24px;border-radius:50%;
-    background:var(--acid);border:2px solid var(--ink);
-  }
-  .rm-scrub:hover::-webkit-slider-thumb{transform:scale(1.14)}
-  .rm-scrub:focus-visible{outline:none}
-  .rm-scrub:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px rgba(184,255,87,.4)}
-  .rm-axis{
-    display:flex;justify-content:space-between;
-    font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);
-    padding:0 2px;
-  }
-  .rm-foot{margin-top:26px;max-width:560px;font-size:var(--fs-sm);color:var(--muted)}
-  .rm-cta{
-    display:inline-block;margin-top:22px;
-    background:var(--acid);color:var(--ink);text-decoration:none;
-    font-family:var(--mono);font-size:13px;font-weight:700;
-    letter-spacing:.14em;text-transform:uppercase;
-    padding:16px 26px;border-radius:999px;
-    transition:transform .15s ease;
-  }
-  .rm-cta:hover{transform:translateY(-2px)}
-
-  @media(min-width:768px){
-    .rm-stage{grid-template-columns:auto 1fr;gap:44px;padding:40px}
-    .rm-shirt-wrap{width:180px;height:196px}
-    .rm-control{max-width:640px}
-  }
-  /* The whole section is a story, not a required control — if someone has
-     asked for less motion, hold every state still and let the copy carry it. */
-  @media(prefers-reduced-motion:reduce){
-    .rm-haze,.rm-outline{transition:none}
-    .remembers[data-step="6"] .rm-flash{animation:none}
-    .rm-cta:hover{transform:none}
-  }
-
   /* ============ Featured product ============ */
   .product{border-top:1px solid var(--border-default);padding:clamp(56px,7vw,80px) 0 0}
   .product-grid{display:grid;grid-template-columns:1fr;gap:36px;align-items:center}
@@ -1211,10 +1101,6 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   /* Wraps rather than overflowing: at 320px these two buttons measured
      315px inside a 300px content box. See chrome.css §5.2. */
   #smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}
-  @media(max-width:520px){
-    #smelloff-consent-bar .cb-actions{width:100%}
-    #smelloff-consent-bar .cb-actions button{flex:1 1 130px;padding-inline:10px}
-  }
   #smelloff-consent-bar button{
     font-family:var(--body);font-size:14px;font-weight:500;
     padding:11px 16px;min-height:44px;cursor:pointer;
@@ -1222,6 +1108,19 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   }
   #smelloff-consent-bar .cb-accept{background:var(--text);color:var(--ink);border:0}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
+  /* CONSENT-COMPACT (2026-11-08, owner: smaller cookie bar). Phones: one row,
+     the sentence beside two equal 44px buttons. When the row has no room
+     (under ~370px) the buttons wrap under the sentence and share that row.
+     Same block in index.html, odorstrike.html, faq.html,
+     consent-analytics.js and chrome.css §5 (which wins). */
+  @media(max-width:519px){
+    #smelloff-consent-bar{padding:4px 12px calc(4px + env(safe-area-inset-bottom,0px))}
+    #smelloff-consent-bar .cb-inner{gap:6px 8px;flex-wrap:wrap}
+    #smelloff-consent-bar p{flex:999 1 150px;min-width:150px;max-width:none;margin:0;font-size:12px;line-height:1.25}
+    #smelloff-consent-bar .cb-who{display:none}
+    #smelloff-consent-bar .cb-actions{flex:1 0 198px;width:auto;gap:6px;flex-wrap:nowrap}
+    #smelloff-consent-bar .cb-actions button{flex:1 1 96px;min-height:44px;padding:4px 6px;font-size:13px;line-height:1.2}
+  }
 
   /* ===================================================================== */
   /* MOTION + EDITORIAL PASS                                               */
@@ -1382,7 +1281,10 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   #sf-main :is(a,button,summary,input),#homeMobileBar a{touch-action:manipulation}
   #sf-main section[id]{scroll-margin-top:var(--sticky-top,112px)}
 
-  /* In use: four real photos, 2×2 on phones, one row from 960px. */
+  /* In use: four real photos, 2×2 on phones, one row from 960px. Since
+     2026-11-08 it sits right under the hero ("Your shirt remembers" is gone),
+     so it carries the 2px rule that section drew under the hero. */
+  .inuse{border-top:2px solid var(--rule)}
   .inuse-grid{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
   @media(min-width:960px){.inuse-grid{grid-template-columns:repeat(4,1fr);gap:18px}}
   .inuse-item{margin:0;min-width:0}
@@ -1401,11 +1303,11 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 
   /* Legibility floor: nothing meant to be read is set below 12px (mono
      labels) — 44 text blocks were 9.5–11.5px. */
-  #sf-main :is(.hero-clarify,.hero-trust-mini,.hero-visual figcaption,.rm-state,.rm-axis,.ps-label,.prod-discount,.prod-price-meta,.sc-role,.science-inci-summary,.inci-row .i-pct,.inci-row .i-role,.voice .v-tag,.voice .v-situation,.founder-identity .f-role,.prod-pack span,.prod-pack small,.close-trust){font-size:12px !important}
+  #sf-main :is(.hero-clarify,.hero-trust-mini,.hero-visual figcaption,.ps-label,.prod-discount,.prod-price-meta,.sc-role,.science-inci-summary,.inci-row .i-pct,.inci-row .i-role,.voice .v-tag,.voice .v-situation,.founder-identity .f-role,.prod-pack span,.prod-pack small,.close-trust){font-size:12px !important}
   #homeMobileBar .mb-label{font-size:12px}
 
   /* No one-word last lines on the new headings and captions. */
-  #sf-main :is(#remembersTitle,#inuseTitle,#voicesTitle,#proofTitle,#founderTitle){text-wrap:balance}
+  #sf-main :is(#inuseTitle,#voicesTitle,#proofTitle,#founderTitle){text-wrap:balance}
   #sf-main .inuse-item p{text-wrap:pretty}
   /* The offer's trust line wraps on phones: drop the dots there, keep the gap. */
   @media(max-width:519px){
@@ -1494,7 +1396,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
            Communicates in 3 seconds: product, fabric location, problem solved, not perfume/deo, price, and CTA. -->
       <div class="hero-grid">
         <div class="hero-header">
-          <p class="hero-eyebrow"><span class="hero-eyebrow-pill">FABRIC ODOR CONTROL · FOR CLOTHES</span></p>
+          <p class="hero-eyebrow"><span class="hero-eyebrow-pill">CLOTHING DEODORANT SPRAY</span></p>
           <h1 id="heroTitle" class="hero-title">Your shirt smells. <span class="acid">Fix it.</span></h1>
           <p class="hero-sub">ODORSTRIKE neutralizes sweat, smoke and food smell in clothes — not on skin.</p>
           <div class="hero-clarify hero-clarify--desktop" aria-label="Product classification">
@@ -1510,7 +1412,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
         <div class="hero-visual-wrap">
           <figure class="hero-visual" id="heroVisual">
             <picture>
-              <img src="/assets/odorstrike-bottle-cutout-v2.webp" alt="ODORSTRIKE 50ml pocket fabric odor eliminator spray bottle for clothes" width="230" height="900" fetchpriority="high" decoding="async">
+              <img src="/assets/odorstrike-bottle-cutout-v2.webp" alt="ODORSTRIKE 50ml pocket clothing deodorant spray bottle" width="230" height="900" fetchpriority="high" decoding="async">
             </picture>
             <figcaption>50ml · ~250 sprays</figcaption>
           </figure>
@@ -1559,60 +1461,11 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
   <!-- 2026-11-02: the moving ticker strip is gone (endless motion with no
        pause control, WCAG 2.2.2; its phrases said nothing the hero doesn't). -->
 
-  <!-- ============ 2 · YOUR SHIRT REMEMBERS ============
-       Walks the visitor through their own day so they recognize that odor lives
-       in fabric, not just on skin.
-       Sequence: PROBLEM -> WHY IT HAPPENS -> REAL-LIFE MOMENT -> ODORSTRIKE MAKES SENSE. -->
-  <section class="remembers" id="remembers" aria-labelledby="remembersTitle" data-step="0">
-    <div class="wrap">
-      <h2 id="remembersTitle" class="reveal">Your shirt remembers your day.</h2>
-      <p class="rm-intro reveal">Deodorant works on your skin. But sweat and daily odors get trapped inside the weave of your clothes — where body sprays can't fix them. Drag through the day to see why odor builds up in fabric.</p>
+  <!-- 2026-11-08 (owner): "Your shirt remembers" (the drag-the-day timeline
+       with an outline T-shirt) is removed for good; the real photos below
+       moved up to sit directly under the hero. -->
 
-      <div class="rm-stage reveal">
-        <!-- The garment. Three zones (collar, both underarms) gain a soft
-             haze as the day loads up; the whole shirt strokes acid on reset. -->
-        <div class="rm-shirt-wrap">
-          <svg class="rm-shirt" viewBox="0 0 120 130" role="img" aria-hidden="true">
-            <defs>
-              <radialGradient id="rmHaze">
-                <stop offset="0%" stop-color="var(--muted)" stop-opacity=".85"/>
-                <stop offset="100%" stop-color="var(--muted)" stop-opacity="0"/>
-              </radialGradient>
-            </defs>
-            <g class="rm-haze">
-              <circle cx="60" cy="26" r="17" fill="url(#rmHaze)"/>
-              <circle cx="27" cy="52" r="15" fill="url(#rmHaze)"/>
-              <circle cx="93" cy="52" r="15" fill="url(#rmHaze)"/>
-              <circle cx="60" cy="66" r="20" fill="url(#rmHaze)"/>
-            </g>
-            <path class="rm-outline" d="M40 12 20 24 12 50l16 7v62h64V57l16-7-8-26-20-12-8 11a16 16 0 0 1-24 0Z"/>
-          </svg>
-          <span class="rm-flash" aria-hidden="true"></span>
-        </div>
-
-        <!-- aria-live so the story is announced as the slider moves; the
-             slider itself carries the accessible name and value text. -->
-        <div class="rm-readout" aria-live="polite">
-          <p class="rm-time" id="rmTime">07:30</p>
-          <p class="rm-event" id="rmEvent">Fresh shirt on. Morning deodorant applied to skin.</p>
-          <p class="rm-state" id="rmState">Clean start</p>
-        </div>
-      </div>
-
-      <div class="rm-control reveal">
-        <input class="rm-scrub" id="rmScrub" type="range" min="0" max="6" step="1" value="0"
-               aria-labelledby="remembersTitle" aria-describedby="rmEvent">
-        <div class="rm-axis" aria-hidden="true">
-          <span>07:30 Morning</span><span>19:45 Evening</span><span>Reset with ODORSTRIKE</span>
-        </div>
-      </div>
-
-      <p class="rm-foot reveal">These are everyday moments, not lab tests. Deodorant takes care of your skin — ODORSTRIKE neutralizes odor trapped in your clothes without replacing regular laundry.</p>
-      <a class="rm-cta reveal" href="/odorstrike?buy=1">Fix my shirt — ₹229</a>
-    </div>
-  </section>
-
-  <!-- ============ 2b · IN USE (2026-11-02) ============
+  <!-- ============ 2 · IN USE (2026-11-02; under the hero since 2026-11-08) ============
        The owner's own photos of the bottle on real clothes: the page had no
        picture of it in use.
        Real-use photos are what people study (NN/g eyetracking); decorative
@@ -1689,12 +1542,12 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
           <picture>
             <source srcset="/assets/optimized/odorstrike-bottle-720.avif 720w, /assets/optimized/odorstrike-bottle-1080.avif 1080w" sizes="(min-width:900px) 360px, calc(100vw - 74px)" type="image/avif">
             <source srcset="/assets/optimized/odorstrike-bottle-720.webp 720w, /assets/optimized/odorstrike-bottle-1080.webp 1080w" sizes="(min-width:900px) 360px, calc(100vw - 74px)" type="image/webp">
-            <img src="/assets/optimized/odorstrike-bottle-720.webp" alt="ODORSTRIKE 50ml pocket fabric odor eliminator mist bottle" width="720" height="720" loading="lazy" decoding="async">
+            <img src="/assets/optimized/odorstrike-bottle-720.webp" alt="ODORSTRIKE 50ml clothing deodorant spray bottle" width="720" height="720" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="product-info reveal">
           <h2 id="productTitle" translate="no">ODORSTRIKE</h2>
-          <p class="prod-lead">A pocket-sized fabric odor eliminator mist for the clothes you're already wearing. Neutralizes sweat and trapped ambient odor in the weave — giving you up to 8 hours of fabric odor protection under normal office/commute conditions.</p>
+          <p class="prod-lead">A pocket-sized clothing deodorant spray for what you're already wearing. Neutralizes sweat and trapped ambient odor in the weave — giving you up to 8 hours of fabric odor protection under normal office/commute conditions.</p>
           
           <ul class="prod-specs" aria-label="Product features and specifications">
             <li class="prod-spec">
@@ -1996,7 +1849,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 <!-- DPDP Consent Bar -->
 <div id="smelloff-consent-bar" role="dialog" aria-label="Cookie and tracking consent">
   <div class="cb-inner">
-    <p>Analytics cookies (Google Analytics, Meta Pixel) help us improve the site. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>
+    <p>Analytics cookies<span class="cb-who"> (Google Analytics, Meta Pixel)</span> help us improve the site. <a href="/privacy">Privacy Policy</a></p>
     <div class="cb-actions">
       <button class="cb-accept" onclick="window.smelloffSetConsent('accepted')">Accept all</button>
       <button class="cb-reject" onclick="window.smelloffSetConsent('rejected')">Reject non-essential</button>
@@ -2055,45 +1908,8 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
 })();
 </script>
 
-<!-- "Your shirt remembers" — the whole interaction is one listener writing an
-     attribute. Everything visual is CSS keyed off [data-step], so dragging
-     costs no layout and there is no animation library on this page.
-     The copy lives here rather than in the markup so the seven states can't
-     drift out of sync with the slider's range. -->
-<script>
-(function(){
-  var scrub = document.getElementById('rmScrub');
-  var sec   = document.getElementById('remembers');
-  if (!scrub || !sec) return;
-  var DAY = [
-    ['07:30', 'Fresh shirt on. Morning deodorant applied to skin.',               'Clean start'],
-    ['09:30', 'Commute heat. Sweat and humidity soak into fabric fibers.',        'Absorbing in weave'],
-    ['13:00', 'Deodorant is on skin. Odor stays trapped in the cotton.',          'Holding odor'],
-    ['15:30', 'Lunch steam & afternoon activity settle into the collar.',         'Building up'],
-    ['18:30', 'Full workday in. Stepping into a crowded lift on the way out.',    'Noticeable'],
-    ['19:45', 'Evening meeting or dinner. No time to wash or change shirts.',     'Trapped in fabric'],
-    ['RESET', '2–3 sprays of ODORSTRIKE. 15–30 sec dry time. Odor neutralized.', 'Fresh fabric']
-  ];
-  var elTime  = document.getElementById('rmTime');
-  var elEvent = document.getElementById('rmEvent');
-  var elState = document.getElementById('rmState');
-  function paint(){
-    var i = Math.max(0, Math.min(DAY.length - 1, parseInt(scrub.value, 10) || 0));
-    sec.setAttribute('data-step', String(i));
-    elTime.textContent  = DAY[i][0];
-    elEvent.textContent = DAY[i][1];
-    elState.textContent = DAY[i][2];
-    // Screen readers announce a slider by its value, and "4 of 6" says
-    // nothing here — give it the actual moment instead.
-    scrub.setAttribute('aria-valuetext', DAY[i][0] + ' — ' + DAY[i][1]);
-  }
-  scrub.addEventListener('input', paint);
-  paint();
-})();
-</script>
-
 <!-- Section reach: one first-party view_content event per section per page
-     view ("home_sec_remembers" …), so the admin can see where phone visitors
+     view ("home_sec_in-use" …), so the admin can see where phone visitors
      stop scrolling. Cookieless, same beacon as clicks (track.js). -->
 <script>
 (function(){
@@ -2108,7 +1924,7 @@ document.addEventListener('DOMContentLoaded',function(){mo.disconnect();fix(docu
       try { window.smfTrack({ type: 'view_content', label: 'home_sec_' + id }); } catch (err) {}
     });
   }, { rootMargin: "0px 0px -40% 0px" });
-  ['remembers','in-use','reviews','odorstrike-featured','how-it-works','founders','faq','final'].forEach(function(id){
+  ['in-use','reviews','odorstrike-featured','how-it-works','founders','faq','final'].forEach(function(id){
     var el = document.getElementById(id); if (el) io.observe(el);
   });
 })();
