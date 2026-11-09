@@ -421,6 +421,19 @@ export const POSTS = {
     wa: "How to use a fabric freshener spray on clothes without stains: where to spray, how many sprays, and when to wash instead: {url}",
     x: "Fabric freshener goes on dry, washable clothes from 15–20 cm, never on skin, and the garment dries before you wear it. It does not kill germs and it is not a fabric conditioner.",
   },
+  // 2026-11-09: Indian-language and "smell good" demand (Google Trends + autocomplete, gl=in).
+  "pasine-ki-badbu-kaise-dur-kare": {
+    wa: "Pasine ki badbu kaise dur kare — body aur kapde dono ke liye, NHS ki salah ke saath, simple Hinglish mein: {url}",
+    x: "Pasine ki badbu do jagah se aati hai: skin aur kapde. Skin ke liye sabun aur antiperspirant, kapde ke liye hawa aur fabric freshener. Doctor kab dikhaye, woh bhi.",
+  },
+  "how-to-make-clothes-smell-good": {
+    wa: "How to make clothes smell good: wash, dry, store and refresh, plus which laundry liquid adds scent and which removes odor: {url}",
+    x: "Clothes smell good when the odor goes first. Measured detergent, fast drying, dry storage, and a fabric freshener between washes. Scent on top of odor smells worse.",
+  },
+  "kapdo-me-khushbu-kaise-laye": {
+    wa: "Kapdo me khushbu kaise laye — dhulai me kya dale, kaise sukhaye, almari me kaise rakhe, simple Hinglish mein: {url}",
+    x: "Kapdon ki khushbu pehle badbu hatane se aati hai: sahi detergent, jaldi sukhana, sukhi almari, aur beech mein fabric freshener. Badbu ke upar perfume smell bigaadta hai.",
+  },
 };
 
 /**

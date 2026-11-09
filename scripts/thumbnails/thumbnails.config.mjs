@@ -837,6 +837,34 @@ export const POSTS = [
     focal: '50% 50%',
     alt: "Pastel cotton shirts on mint-green hangers in a white wardrobe",
   },
+  // 2026-11-09: Indian-language and "smell good" demand (Google Trends + autocomplete, gl=in). Pexels photos, each checked by eye for the clothing-only rule.
+  {
+    slug: 'pasine-ki-badbu-kaise-dur-kare',
+    kicker: "Hinglish guide",
+    top: "Garmi aur pasina?",
+    hi: "Body aur kapde.",
+    pexels: 4720240,
+    focal: '45% 40%',
+    alt: "A man in a grey T-shirt wipes his head with a towel in a green park on a warm day",
+  },
+  {
+    slug: 'how-to-make-clothes-smell-good',
+    kicker: "Laundry",
+    top: "Clothes that",
+    hi: "smell good?",
+    pexels: 4049148,
+    focal: '70% 50%',
+    alt: "A neat stack of folded T-shirts and tops in blues, purples and reds against a white wall",
+  },
+  {
+    slug: 'kapdo-me-khushbu-kaise-laye',
+    kicker: "Hinglish guide",
+    top: "Kapdo me khushbu?",
+    hi: "Aise laao.",
+    pexels: 2112648,
+    focal: '50% 50%',
+    alt: "White shirts hanging on black hangers in a wardrobe, soft daylight on the fabric",
+  },
 ];
 
 /**

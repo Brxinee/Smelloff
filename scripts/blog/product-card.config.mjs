@@ -79,6 +79,9 @@ export const SLUG_LINES = {
   'wedding-festive-wear-odor-guide': 'a sherwani or kurta from one function has to go to the next. Patch-test silk and zari first.',
   'keep-clothes-fresh-while-travelling': 'a shirt has to do a second day on a trip with no laundry.',
   'kapdon-se-pasine-ki-badbu-kaise-hataye': { lead: 'Kaam aata hai jab', text: 'office shirt ya kurta dobara pehenna ho aur dhone ka time na ho.' },
+  'pasine-ki-badbu-kaise-dur-kare': { lead: "Kaam aata hai jab", text: "garam din aur lambe commute ke baad shirt ko shaam tak fresh rehna ho." },
+  'how-to-make-clothes-smell-good': "a clean shirt has to stay fresh through a long, hot day.",
+  'kapdo-me-khushbu-kaise-laye': { lead: "Kaam aata hai jab", text: "saaf shirt ko lambe, garam din tak fresh rehna ho." },
   // fabric / laundry
   'gym-clothes-smell-after-washing': 'a washed tee is clean but its underarms still smell once you warm up.',
   'does-food-change-sweat-smell-garlic-methi': 'a meal in a smoky restaurant or kitchen has stayed in your shirt.',

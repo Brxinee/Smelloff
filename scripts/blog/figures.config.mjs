@@ -2346,6 +2346,51 @@ export const FIGURES = {
       note: 'Never on skin, leather, suede or dry-clean-only clothes.',
     }),
   ],
+
+  // 2026-11-09: Indian-language and "smell good" demand (Google Trends + autocomplete, gl=in).
+  "pasine-ki-badbu-kaise-dur-kare": [
+    photo('roz-pasine-ki-badbu-kaise-roke', 11671964,
+      'A plain white cotton T-shirt on a hanger against a white wall',
+      'Roz saaf, natural kapda: NHS ki salah ka hissa.', '50% 45%'),
+    dia('pasine-ki-badbu-kyon-aati-hai', 'compare', {
+      kicker: 'Do jagah, do ilaaj', title: 'Skin ki badbu aur kapde ki badbu alag hain',
+      cols: [
+        { name: 'Skin', tag: 'Body', lines: ['Din mein do baar sabun se dhona', 'Antiperspirant ya deodorant', 'Cotton jaise natural kapde'] },
+        { name: 'Kapda', tag: 'Fabric', pick: true, lines: ['Collar, bagal aur peeth mein badbu', 'Hawa do, phir fabric freshener', 'Sirf kapde par, kabhi skin par nahi'] },
+      ],
+      note: 'Fabric freshener pasina nahi rokta; woh kapde ki badbu ke liye hai.',
+    }),
+  ],
+  "how-to-make-clothes-smell-good": [
+    photo('how-do-you-dry-clothes-so-they-dont-smell', 20375484,
+      'Shirts and tops drying on a line on a sunny rooftop terrace',
+      'Fast, open-air drying does more for the smell than any liquid.', '60% 50%'),
+    dia('why-do-clean-clothes-sometimes-smell-bad', 'steps', {
+      kicker: 'Four steps, in order', title: 'How clothes end up smelling good',
+      items: [
+        ['Wash right', 'Measured detergent, room in the drum.'],
+        ['Dry fast', 'Sun or moving air, all the way through.'],
+        ['Store dry', 'Fully dry clothes, a cupboard that breathes.'],
+        ['Refresh between washes', 'Fabric freshener on the collar, underarms and back.'],
+      ],
+      note: 'Scent goes on last. On top of odor, it makes the smell worse.',
+    }),
+  ],
+  "kapdo-me-khushbu-kaise-laye": [
+    photo('almari-me-kapde-kaise-rakhe-taaki-khushbu-bani-rahe', 28576622,
+      'A hand holds a clean white shirt on grey hangers against a pale wall',
+      'Almari mein sirf poore sukhe kapde.', '50% 45%'),
+    dia('dhule-kapdo-se-khushbu-kyon-nahi-aati', 'steps', {
+      kicker: 'Chaar kadam, isi order mein', title: 'Kapdon mein khushbu aise aati hai',
+      items: [
+        ['Sahi dhulai', 'Label jitna detergent, machine mein jagah.'],
+        ['Jaldi sukhao', 'Dhoop ya hawa, poori tarah.'],
+        ['Sukha rakho', 'Sukhe kapde, hawa wali almari.'],
+        ['Beech mein fresh karo', 'Collar, bagal, peeth par fabric freshener.'],
+      ],
+      note: 'Khushbu sabse aakhir mein. Badbu ke upar woh smell aur bigaadti hai.',
+    }),
+  ],
 };
 
 export default FIGURES;

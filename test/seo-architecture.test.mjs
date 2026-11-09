@@ -33,9 +33,10 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
     const sitemapXml = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
     const sitemapUrls = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
 
-    it('sitemap contains exactly 132 canonical URLs', () => {
+    it('sitemap contains exactly 135 canonical URLs', () => {
       // 111 → 131 (2026-11-09): twenty guides from Indian search demand.
       // 131 → 132 (2026-11-09): how to use fabric freshener spray on clothes.
+      // 132 → 135 (2026-11-09): pasine ki badbu, how to make clothes smell good, kapdo me khushbu.
       // 112 → 111 (2026-11-01): how-to-freshen-clothes-stored-for-months merged
       // into why-clothes-smell-musty-after-being-stored (same intent).
       // 75 → 76 (2026-10-11): the -instantly duplicate merged into -quickly;
@@ -45,7 +46,7 @@ describe('SEO Architecture & Canonical Infrastructure', () => {
       // 71 → 72 (2026-10-12): the remove-smell-from-clothes-without-washing hub.
       // 72 → 92 (2026-10-15): twenty guides for Indian buyers.
       // 92 → 112 (2026-10-26): twenty guides chosen from Indian search demand.
-      assert.equal(sitemapUrls.length, 132);
+      assert.equal(sitemapUrls.length, 135);
     });
 
     for (const url of sitemapUrls) {
