@@ -351,7 +351,9 @@ export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid', pin
   const mrpTotal = qty * unitMrp;
   const shipping = cfg.shipping.prepaid.rate;
   let codFee = 0;
-  if (isCod) {
+  // Free COD on 2+ bottles (codShipping.freeFromQuantity, owner 2026-11-08).
+  const freeFrom = Number(p.codShipping && p.codShipping.freeFromQuantity) || 0;
+  if (isCod && !(freeFrom > 0 && qty >= freeFrom)) {
     const pin = String(pincode || '').replace(/\D/g, '');
     // Longest matching prefix wins; shipping + COD handling.
     let zone = (p.codShipping && p.codShipping.default) || { shipping: p.codFee, handling: 0 };

@@ -152,14 +152,24 @@
   #smelloff-consent-bar button{font-family:var(--body);font-size:14px;font-weight:500;letter-spacing:.01em;padding:9px 18px;border-radius:var(--sq-sm,8px);cursor:pointer}
   #smelloff-consent-bar .cb-accept{background:var(--text,#F2F5EF);color:var(--ink,#0A0A0A);border:none}
   #smelloff-consent-bar .cb-reject{background:transparent;color:var(--text);border:1px solid var(--rule)}
+  /* CONSENT-COMPACT (2026-11-08): phones get one row, sentence beside two equal
+     44px buttons; same block in all four copies and chrome.css §5 (which wins). */
+  @media(max-width:519px){
+    #smelloff-consent-bar{padding:4px 12px calc(4px + env(safe-area-inset-bottom,0px))}
+    #smelloff-consent-bar .cb-inner{gap:6px 8px;flex-wrap:wrap}
+    #smelloff-consent-bar p{flex:999 1 150px;min-width:150px;max-width:none;margin:0;font-size:12px;line-height:1.25}
+    #smelloff-consent-bar .cb-who{display:none}
+    #smelloff-consent-bar .cb-actions{flex:1 0 198px;width:auto;gap:6px;flex-wrap:nowrap}
+    #smelloff-consent-bar .cb-actions button{flex:1 1 96px;min-height:44px;padding:4px 6px;font-size:13px;line-height:1.2}
+  }
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
 </style>
 <link rel="alternate" hreflang="en-IN" href="https://smelloff.in/faq">
 <link rel="alternate" hreflang="x-default" href="https://smelloff.in/faq">
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=5c04b85d">
-<script src="/assets/js/chrome.js?v=f176b73b" defer></script>
+<link rel="stylesheet" href="/assets/css/chrome.css?v=55edabb7">
+<script src="/assets/js/chrome.js?v=d3e685c9" defer></script>
 <script src="/assets/js/support-chat.js?v=3c26359d" defer></script>
 </head>
 <body>
@@ -256,7 +266,7 @@
         <p class="faq-answer faq-answer__h">Cash on Delivery</p>
         <ol class="faq-steps">
           <li>Tap <b>Buy now</b> and enter your address.</li>
-          <li>Choose <b>Cash on Delivery</b> — no advance payment; a shipping charge and a COD handling charge based on your pincode apply, shown at checkout before you place the order.</li>
+          <li>Choose <b>Cash on Delivery</b> — no advance payment. COD is free on orders of 2 or more bottles; a single bottle pays a shipping charge and a COD handling charge based on your pincode, shown at checkout before you place the order.</li>
           <li>Pay the amount shown at checkout in cash to the delivery agent when it arrives.</li>
         </ol>
         <p class="faq-answer">Either way, you get 7-day returns if the bottle is at least 80% full and in its original packaging.</p>
@@ -293,7 +303,7 @@
     </details>
     <details>
       <summary>Is COD available? How fast does it ship?</summary>
-      <div class="faq-answer-wrap"><p class="faq-answer">Yes, Cash on Delivery is available pan-India, with a shipping charge and a COD handling charge based on your pincode, shown at checkout before you place the order. Prepaid orders (UPI, card or net banking) ship free. Orders ship from Hyderabad within 48 hours of confirmation. Metro delivery: 3–5 days. Tier 2 and Tier 3 cities: 5–7 days. A 7-day return window applies to all orders — bottle must be 80%+ full and in original packaging.</p></div>
+      <div class="faq-answer-wrap"><p class="faq-answer">Yes, Cash on Delivery is available pan-India, and it is free on orders of 2 or more bottles. A single-bottle COD order pays a shipping charge and a COD handling charge based on your pincode, shown at checkout before you place the order. Prepaid orders (UPI, card or net banking) ship free. Orders ship from Hyderabad within 48 hours of confirmation. Metro delivery: 3–5 days. Tier 2 and Tier 3 cities: 5–7 days. A 7-day return window applies to all orders — bottle must be 80%+ full and in original packaging.</p></div>
     </details>
     <details>
       <summary>Does it ship outside India?</summary>
@@ -453,7 +463,7 @@
 <!-- DPDP Consent Bar -->
 <div id="smelloff-consent-bar" role="dialog" aria-label="Cookie and tracking consent">
   <div class="cb-inner">
-    <p>Analytics cookies (Google Analytics, Meta Pixel) help us improve the site. Shopping works either way. <a href="/privacy">Privacy Policy</a></p>
+    <p>Analytics cookies<span class="cb-who"> (Google Analytics, Meta Pixel)</span> help us improve the site. <a href="/privacy">Privacy Policy</a></p>
     <div class="cb-actions">
       <button class="cb-accept" onclick="window.smelloffSetConsent('accepted')">Accept all</button>
       <button class="cb-reject" onclick="window.smelloffSetConsent('rejected')">Reject non-essential</button>

@@ -65,10 +65,12 @@ test('money pages carry no prohibited product claims', () => {
 });
 
 // The bar covered ~200px of an 844px phone screen with two stacked buttons.
+// 2026-11-08 (owner): one compact row on phones, the two buttons the same size.
 test('consent bar puts Accept and Reject side by side on phones, equal weight', () => {
-  for (const f of ['index.html', 'odorstrike.html', 'assets/css/chrome.css', 'assets/js/consent-analytics.js']) {
+  for (const f of ['index.html', 'odorstrike.html', 'faq.html', 'assets/css/chrome.css', 'assets/js/consent-analytics.js']) {
     const src = fs.readFileSync(f, 'utf8');
-    assert.ok(src.includes('#smelloff-consent-bar .cb-actions button{flex:1 1 130px'), `${f}: buttons must share one row`);
+    assert.ok(src.includes('#smelloff-consent-bar .cb-actions button{flex:1 1 96px;min-height:44px;'), `${f}: two equal 44px buttons in one row`);
+    assert.ok(src.includes('#smelloff-consent-bar .cb-actions{flex:1 0 198px;width:auto;gap:6px;flex-wrap:nowrap}'), `${f}: the buttons never wrap apart`);
     assert.ok(!src.includes('#smelloff-consent-bar .cb-actions button{flex:1 1 100%}'), `${f}: stacked buttons are back`);
   }
 });

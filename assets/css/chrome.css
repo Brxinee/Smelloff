@@ -408,26 +408,28 @@ html.sf-menu-open #smelloff-consent-bar,html.sf-menu-open .mobile-bar{display:no
    ===================================================================== */
 .sf-wrap{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));padding-right:max(var(--gutter),env(safe-area-inset-right,0px))}
 #smelloff-consent-bar .cb-actions{display:flex;flex-wrap:wrap;gap:10px;flex-shrink:1;min-width:0}
-@media(max-width:520px){
-  #smelloff-consent-bar .cb-inner{gap:12px}
-  #smelloff-consent-bar .cb-actions{width:100%}
-  #smelloff-consent-bar .cb-actions button{flex:1 1 130px;padding-inline:10px}
-}
 #smelloff-consent-bar button{min-height:44px}
 #smelloff-consent-bar{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 html.sf-modal-open #smelloff-consent-bar{display:none !important}
-/* Compact consent bar on phones (2026-11-01, UI/UX audit). At 148px it covered
-   the homepage hero buy button (665–716px on 390×844) for every first-time phone
-   visitor, and the PDP price. `html` raises specificity over the four page/JS
-   copies (the JS copy is appended after this file). Buttons stay 44px tall. */
+/* Compact consent bar on phones. 2026-11-01 (UI/UX audit): 148 → 108px, it
+   covered the homepage hero buy button (665–716px on 390×844) for every
+   first-time phone visitor. 2026-11-08 (owner: "smaller cookie bar"): one row,
+   the sentence beside two equal 44px buttons, ~55px at 390 (108 before). When
+   the row has no room (under ~370px) the buttons wrap under the sentence and
+   share that row (~84px at 320, no overflow). The sentence drops the tracker
+   names on phones (.cb-who; /privacy names them). `html` raises specificity
+   over the four page/JS copies (the JS copy is appended after this file);
+   they carry the same CONSENT-COMPACT block so the bar never changes height
+   when this file arrives late. */
 @media(max-width:519px){
-  html #smelloff-consent-bar{padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px))}
-  html #smelloff-consent-bar .cb-inner{gap:8px}
-  html #smelloff-consent-bar p{font-size:12.5px;line-height:1.4}
-  html #smelloff-consent-bar .cb-actions{gap:8px}
+  html #smelloff-consent-bar{padding:4px 12px calc(4px + env(safe-area-inset-bottom,0px))}
+  html #smelloff-consent-bar .cb-inner{gap:6px 8px;flex-wrap:wrap}
+  html #smelloff-consent-bar p{flex:999 1 150px;min-width:150px;max-width:none;margin:0;font-size:12px;line-height:1.25}
+  html #smelloff-consent-bar .cb-who{display:none}
+  html #smelloff-consent-bar .cb-actions{flex:1 0 198px;width:auto;gap:6px;flex-wrap:nowrap}
   /* Explicit line-height: with `normal`, the fallback face made the buttons 52px
      until the web font loaded, so the bar shrank 26px at swap (CLS). */
-  html #smelloff-consent-bar button{min-height:44px;padding-block:8px;font-size:14px;line-height:1.2}
+  html #smelloff-consent-bar .cb-actions button{flex:1 1 96px;min-height:44px;padding:4px 6px;font-size:13px;line-height:1.2}
 }
 
 /* =====================================================================

@@ -3023,3 +3023,46 @@ and search tool in the cloud container; the Notion Reddit passes were used.
 - Images on the LIVE site don't load in the container's Chromium (`%40` URLs
   307 to themselves through the session proxy); real browsers in India load
   them (checked 8 Nov). Test visuals against a local build of `public/`.
+
+## Design audit choices (2026-11-09, owner picked from options after the "why no orders" audit)
+Audit (8 Nov, local build + live data): traffic is the main limit (~150 real
+Indian visitors/month, ~2–3% buy, ~7 real orders in 60 days); page speed is fine
+(LCP 1.2–2.0 s on throttled 4G). The owner chose; email at checkout stays required.
+- **Free COD on 2+ bottles** (`product.codShipping.freeFromQuantity: 2`): a COD
+  order of 2+ bottles pays no shipping and no handling; one bottle keeps its zone
+  charges (₹318 / ₹348 / ₹378 / ₹408). Every COD calculation takes the quantity:
+  `codChargesForPincode(pin, qty)` / `codFeeForPincode`, both
+  `calculateOrderTotal`s, admin `orderFromForm`/`quote`, `CFG.COD_FREE_FROM` +
+  `codChargesNow(q)` in odorstrike.html, chrome.js `codChargesRupees(qty)`.
+  `create-order` refuses a 2+ total that carries a fee and stores `cod_fee` 0
+  (Shiprocket `transaction_charges` 0). Emails read the fee with
+  `codFeeRupeesFromOrder()` (0 is real; it used to fall back to ₹149). Checkout:
+  1-bottle COD option adds "· free with 2 bottles"; with COD selected the
+  `#ckPairBtn` upsell reads "Add a second · 2 for ₹419 · free COD" (never
+  pre-applied). Outside checkout say "Free COD" / "free on 2 or more bottles",
+  never an amount; 2 and 5 pack cards/links carry "Free COD".
+  `audit-production.mjs` flags only free COD on every order / one bottle.
+  `test/free-cod.test.mjs`.
+- **One product name: "clothing deodorant spray"** on every visible label (home
+  hero eyebrow "CLOTHING DEODORANT SPRAY", PDP eyebrow "CLOTHING DEODORANT SPRAY ·
+  50ML", offer labels, cart, checkout item line, success screen). Unchanged on
+  purpose: Product schema `name`, GA4/Meta item name "ODORSTRIKE Fabric Odor Mist"
+  (reporting continuity), titles/meta, the shared footer pitch line.
+- **Homepage:** `#remembers` (the drag-the-day timeline, "Your shirt remembers")
+  is removed for good; `#in-use` sits directly under the hero. Order: hero →
+  in-use → reviews → offer → how-it-works → founders → FAQ → final. 9,368 → 8,365px
+  at 390. Supersedes the Sep 19 order above.
+- **PDP shorter:** `#why`, `#compare`, `#science` and `#size` are one `#why`
+  section (lede, the compare table with id `compare`, the four layers one line
+  each, the key-ingredients note verbatim); `#science` / `#size` stay as empty
+  anchors; lifestyle photo only ≥768. Gallery tile 2 = `offer-in-hand-black`
+  shown whole (`.gal-tile--fit`, contain on black); `pdp-04-in-hand` (iPhone
+  logo) is off the site incl. `product.images`. 11,285 → 9,725px at 390; Buy
+  unchanged (759–815 / 624–680). `test/pdp-shorter-one-name.test.mjs`.
+- **Compact cookie bar:** under 520px one row (sentence beside two equal 44px
+  buttons; Accept Ice White): 53px at 390 (was 108), 74px at 320/360. Tracker
+  names show from 520px (`.cb-who`) and on /privacy. The `CONSENT-COMPACT` block
+  is in index, odorstrike, faq, consent-analytics.js and chrome.css §5 (wins);
+  change all five together.
+- Open from the audit, owner's: a 15–20 s demo video on a real shirt, asking the
+  delivered buyers for reviews, Merchant Center, Amazon.in, `META_CAPI_TOKEN`.

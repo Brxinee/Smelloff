@@ -217,7 +217,18 @@ export function subtotalForQuantity(qty) {
 // handling, from the zone with the longest matching prefix (Lakshadweep's
 // 68255 beats Kerala's 68). Unknown or partial pincodes get the rest-of-India
 // default.
-export function codChargesForPincode(pincode) {
+// Free COD (owner, 2026-11-08): an order of codShipping.freeFromQuantity
+// bottles or more (2+) pays no shipping and no COD handling; one bottle pays
+// its zone's charges. Every caller passes the order's quantity; without one
+// the single-bottle charge comes back.
+export const COD_FREE_FROM_QUANTITY = Number((P.codShipping || {}).freeFromQuantity) || 0;
+
+export function codIsFree(quantity) {
+  const q = Math.floor(Number(quantity) || 0);
+  return COD_FREE_FROM_QUANTITY > 0 && q >= COD_FREE_FROM_QUANTITY;
+}
+
+export function codChargesForPincode(pincode, quantity = 1) {
   const table = BASE_PRODUCT.codShipping || {};
   const pin = String(pincode || '').replace(/\D/g, '');
   let zone = table.default || { shipping: Number(BASE_PRODUCT.codFee), handling: 0 };
@@ -229,13 +240,29 @@ export function codChargesForPincode(pincode) {
       }
     }
   }
+  if (codIsFree(quantity)) return { zone: zone.name || '', shipping: 0, handling: 0, total: 0 };
   const shipping = Number(zone.shipping) || 0;
   const handling = Number(zone.handling) || 0;
   return { zone: zone.name || '', shipping, handling, total: shipping + handling };
 }
 
-export function codFeeForPincode(pincode) {
-  return codChargesForPincode(pincode).total;
+export function codFeeForPincode(pincode, quantity = 1) {
+  return codChargesForPincode(pincode, quantity).total;
+}
+
+// Rupee COD charge (shipping + handling) a saved order carries, for emails.
+// orders.cod_fee is paise; 0 is a real value since free COD on 2+ bottles, so
+// it must never fall back to the default charge. Older rows that folded the
+// fee into amount read it back from amount − the pack subtotal.
+export function codFeeRupeesFromOrder(order = {}) {
+  if (String(order.payment_method || '').toLowerCase() !== 'cod') return 0;
+  const saved = Number(order.cod_fee);
+  if (Number.isFinite(saved) && saved > 0) return Math.round(saved / 100);
+  const items = Array.isArray(order.items) ? order.items : [];
+  const qty = items.reduce((s, i) => s + (Number(i?.quantity) || 0), 0) || 1;
+  const amount = Number(order.amount);
+  if (Number.isFinite(amount) && amount > 0) return Math.max(0, Math.round(amount / 100) - subtotalForQuantity(qty));
+  return codIsFree(qty) ? 0 : Number(BASE_PRODUCT.codFee) || 0;
 }
 
 export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid', pincode = '') {
@@ -250,7 +277,7 @@ export function calculateOrderTotal(quantity = 1, paymentMethod = 'prepaid', pin
   const mrpTotal = qty * unitMrp;
   const shipping = BASE_PRODUCT.shippingCost;
   const isCod = String(paymentMethod || '').toLowerCase() === 'cod';
-  const codFee = isCod ? codFeeForPincode(pincode) : 0;
+  const codFee = isCod ? codFeeForPincode(pincode, qty) : 0;
   const total = subtotal + shipping + codFee;
   const amountPaise = total * 100;
 

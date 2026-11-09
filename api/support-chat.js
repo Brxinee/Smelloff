@@ -117,7 +117,7 @@ export function buildSystemPrompt(cfg = productJson, guides = guidesJson) {
     '',
     'PAYMENT, SHIPPING, RETURNS',
     `- Pay online (UPI, cards, netbanking via Razorpay): ${s.prepaid.description}.`,
-    `- Cash on Delivery: a shipping charge and a COD handling charge based on the delivery pincode, shown at checkout before the order is placed (never quote an amount). Prepaid ships free. ${s.dispatchCodNote}`,
+    `- Cash on Delivery: free on orders of ${p.codShipping.freeFromQuantity} or more bottles (no shipping, no handling). A single bottle on COD pays a shipping charge and a COD handling charge based on the delivery pincode, shown at checkout before the order is placed (never quote an amount). Prepaid ships free. ${s.dispatchCodNote}`,
     `- Dispatch ${s.dispatchWindow.toLowerCase()}, ${s.businessDays[0]}–${s.businessDays[s.businessDays.length - 1]}, from ${s.origin}. Transit: metros ${s.transitMetros}, tier 2/3 cities ${s.transitTier23}, remote areas ${s.transitRemote}. India only. The product page has a pincode check.`,
     `- Returns: ${r.summary} Refunds take ${r.refundProcessingDays} after the return arrives.`,
     '',
@@ -495,7 +495,7 @@ function instantTable(cfg = productJson) {
     'which pack should i buy': askPack,
     'which pack is right for me': askPack,
     'is cash on delivery available': () => ({
-      reply: `Yes, **Cash on Delivery is available** across India. COD adds a shipping charge and a COD handling charge based on your pincode, shown at checkout before you place the order. Paying online ships free.`,
+      reply: `Yes, **Cash on Delivery is available** across India, and it's **free on ${p.codShipping.freeFromQuantity} or more bottles**. For a single bottle, COD adds a shipping charge and a COD handling charge based on your pincode, shown at checkout before you place the order. Paying online ships free.`,
       cards: [],
       suggestions: ['How fast is delivery?', 'Which pack should I buy?'],
     }),

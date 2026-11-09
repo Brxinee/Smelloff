@@ -283,9 +283,18 @@
   // COD pays shipping + COD handling by delivery pincode (prepaid ships free);
   // the server prices it the same way (codChargesForPincode) and rejects a
   // mismatch. Longest matching prefix wins; rest of India until a pincode is typed.
-  function codChargesRupees() {
+  // Free COD on 2+ bottles (CFG.COD_FREE_FROM / codShipping.freeFromQuantity,
+  // owner 2026-11-08): no shipping and no COD handling for that order.
+  function codIsFreeFor(qty) {
     var C = window.SMELLOFF_CONFIG || {};
     var T = window.SMELLOFF_PRODUCT_TRUTH || {};
+    var from = Number(C.COD_FREE_FROM) || Number((T.codShipping || {}).freeFromQuantity) || 0;
+    return from > 0 && Math.floor(Number(qty) || 0) >= from;
+  }
+  function codChargesRupees(qty) {
+    var C = window.SMELLOFF_CONFIG || {};
+    var T = window.SMELLOFF_PRODUCT_TRUTH || {};
+    if (codIsFreeFor(qty === undefined ? quantityFromCheckout() : qty)) return { shipping: 0, handling: 0, total: 0, free: true };
     var table = T.codShipping || {};
     var zones = C.COD_ZONES || table.zones || [];
     var zone = C.COD_DEFAULT || table['default'] || null;
@@ -309,7 +318,7 @@
     n = Number.isFinite(n) && n >= 0 ? n : 149;
     return { shipping: n, handling: 0, total: n };
   }
-  function codFeeRupees() { return codChargesRupees().total; }
+  function codFeeRupees(qty) { return codChargesRupees(qty).total; }
 
   function currentPaymentMethod() {
     var method = String(window.payMethod || 'prepaid').toLowerCase();
@@ -332,7 +341,7 @@
     var method = currentPaymentMethod();
     var qty = quantityFromCheckout();
     var subtotal = subtotalRupees(qty);
-    var fee = method === 'cod' ? codFeeRupees() : 0;
+    var fee = method === 'cod' ? codFeeRupees(qty) : 0;
     var total = subtotal + fee;
 
     document.querySelectorAll('.checkout-payment .pay-opt').forEach(function (button) {
@@ -348,7 +357,9 @@
 
     var feeRow = document.getElementById('codFeeRow');
     var feeAmount = document.getElementById('codFeeAmount');
-    var charges = method === 'cod' ? codChargesRupees() : null;
+    // Free COD (2+ bottles) shows like prepaid: Shipping Free, no handling row.
+    var charges = method === 'cod' ? codChargesRupees(qty) : null;
+    if (charges && charges.free) charges = null;
     if (feeRow) feeRow.style.display = charges ? 'flex' : 'none';
     if (feeAmount) feeAmount.textContent = '₹' + (charges ? charges.handling : 0);
     // Prepaid ships free; COD pays shipping by pincode on the Shipping line.
@@ -440,7 +451,7 @@
     if (label) label.textContent = loading
       ? (typeof loading === 'string' ? loading : 'Opening secure payment…')
       : (currentPaymentMethod() === 'cod'
-        ? 'Place COD order · ₹' + (subtotalRupees(quantityFromCheckout()) + codFeeRupees())
+        ? 'Place COD order · ₹' + (subtotalRupees(quantityFromCheckout()) + codFeeRupees(quantityFromCheckout()))
         : 'Pay ₹' + subtotalRupees(quantityFromCheckout()) + ' securely');
   }
 
@@ -499,6 +510,11 @@
         return result;
       };
     }
+
+    // A quantity change inside checkout can switch COD between charged (one
+    // bottle) and free (2+): the page's ckStepQty calls this to re-render the
+    // rows this file owns too.
+    window.smfRenderPaymentUi = renderPaymentUi;
 
     if (typeof window.openCheckout === 'function' && !window.__smfPaymentOpenInstalled) {
       var originalOpenCheckout = window.openCheckout;

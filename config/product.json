@@ -75,6 +75,8 @@
     "codShipping": {
       "note": "COD orders pay two charges by delivery pincode, shipping and COD handling, set so a COD order never costs the business more than it collects (owner, 2026-10-26: North India COD costs ₹130–150). Prepaid ships free. default = the rest of India (codFee above is its total). The longest matching prefix wins. fee = shipping + handling.",
       "label": "Shipping + COD handling",
+      "freeFromQuantity": 2,
+      "freeNote": "Owner, 2026-11-08: COD is free (no shipping, no handling) on orders of 2 or more bottles; a single bottle pays its zone's shipping + handling. min/max below are the single-bottle range.",
       "min": 89,
       "max": 179,
       "default": { "name": "Rest of India (North, Central & East)", "shipping": 99, "handling": 50, "fee": 149 },
@@ -105,7 +107,7 @@
     "buyUrl": "https://smelloff.in/odorstrike#buy",
     "images": [
       "https://smelloff.in/assets/pdp-01-hero.webp",
-      "https://smelloff.in/assets/pdp-04-in-hand.webp",
+      "https://smelloff.in/assets/photos/offer-in-hand-black.webp",
       "https://smelloff.in/assets/photos/hero-spray-collar.webp"
     ]
   },
@@ -119,7 +121,7 @@
     "cod": {
       "fee": 149,
       "currency": "INR",
-      "description": "Cash on Delivery orders pay a shipping charge and a COD handling charge based on the delivery pincode, shown at checkout before the order is placed. Prepaid orders ship free."
+      "description": "Cash on Delivery is free on orders of 2 or more bottles. A single-bottle COD order pays a shipping charge and a COD handling charge based on the delivery pincode, shown at checkout before the order is placed. Prepaid orders ship free."
     },
     "destinationCountry": "IN",
     "dispatchWindow": "Within 48 hours of confirmation",

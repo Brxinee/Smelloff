@@ -65,12 +65,15 @@ test('commercial pricing math via calculateOrderTotal()', () => {
   assert.equal(p2.total, 419);
   assert.equal(p2.totalPaise, 41900);
 
-  // 2 units COD
+  // 2 units COD: free COD on 2+ bottles (owner, 2026-11-08), any pincode
   const c2 = calculateOrderTotal(2, 'cod');
   assert.equal(c2.subtotal, 419);
-  assert.equal(c2.codFee, 149);
-  assert.equal(c2.total, 568);
-  assert.equal(c2.totalPaise, 56800);
+  assert.equal(c2.codFee, 0);
+  assert.equal(c2.total, 419);
+  assert.equal(c2.totalPaise, 41900);
+  assert.equal(calculateOrderTotal(2, 'cod', '781001').total, 419);
+  assert.equal(calculateOrderTotal(3, 'cod', '110001').total, 648);
+  assert.equal(calculateOrderTotal(5, 'cod', '500018').total, 899);
 
   // 3 units: one pair + one bottle
   assert.equal(calculateOrderTotal(3, 'prepaid').subtotal, 648);
@@ -175,7 +178,7 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   assert.equal(h1.length, 1, 'Homepage must contain exactly one <h1>');
   assert.ok(h1[0][1].includes('Your shirt smells.') && h1[0][1].includes('Fix it.'), 'H1 must be the Sep 19 "Your shirt smells. Fix it."');
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
-  assert.ok(hero.includes('FABRIC ODOR CONTROL · FOR CLOTHES'));
+  assert.ok(hero.includes('CLOTHING DEODORANT SPRAY'), 'one product name: clothing deodorant spray (owner, 2026-11-08)');
   assert.ok(hero.includes('ODORSTRIKE neutralizes sweat, smoke and food smell in clothes — not on skin.'));
   for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
   assert.ok(hero.includes('<span class="hero-price">₹229</span>'), 'Hero must show ₹229');
@@ -193,8 +196,8 @@ test('index.html homepage: every section ends in a route to checkout', () => {
   const html = readFileSync('index.html', 'utf8');
   const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
   const ctas = main.match(/href="\/odorstrike\?buy=1"/g) || [];
-  assert.ok(ctas.length >= 3, `expected buy CTAs in the hero, the day story and the product block, found ${ctas.length}`);
-  for (const id of ['remembers', 'odorstrike-featured', 'reviews', 'founders', 'how-it-works', 'faq', 'final']) assert.ok(main.includes(`id="${id}"`), `section #${id} must exist`);
+  assert.ok(ctas.length >= 3, `expected buy CTAs in the hero, the product block and the close, found ${ctas.length}`);
+  for (const id of ['in-use', 'odorstrike-featured', 'reviews', 'founders', 'how-it-works', 'faq', 'final']) assert.ok(main.includes(`id="${id}"`), `section #${id} must exist`);
   // Proof sits just before the offer box; the page closes on a buy route after the FAQ.
   assert.ok(main.indexOf('id="reviews"') < main.indexOf('id="odorstrike-featured"'), 'reviews come right before the offer');
   assert.ok(main.indexOf('id="final"') > main.indexOf('id="faq"') && main.includes('id="finalBuyBtn" ') === false && /id="finalBuyBtn">FIX MY SHIRT — ₹229</.test(main));
@@ -273,7 +276,8 @@ test('odorstrike.html PDP hero and primary buy area: positioning, canonical pric
 
   assert.equal([...html.matchAll(/<h1\b/g)].length, 1, 'PDP must have exactly one <h1>');
   assert.ok(/<h1[^>]*>ODORSTRIKE <span class="pd-title__cat">[^<]*clothing deodorant spray<\/span><\/h1>/.test(pInfo), 'H1 must be the product name plus its category');
-  assert.ok(pInfo.includes('FABRIC ODOR CONTROL · 50ML'), 'Eyebrow must declare fabric odor control');
+  // One product name on the PDP (owner, 2026-11-08): "clothing deodorant spray".
+  assert.ok(pInfo.includes('CLOTHING DEODORANT SPRAY · 50ML'), 'Eyebrow must name the category');
   assert.ok(pInfo.includes('up to 8 hours'), 'Tagline must carry the locked protection claim');
   for (const tag of ['Not perfume', 'Not body deodorant', 'Fabric only']) assert.ok(pInfo.includes(tag), `Must say ${tag}`);
 
@@ -306,13 +310,14 @@ test('odorstrike.html PDP gallery information hierarchy, asset order, accessibil
   // fabric-only and comparison creatives on 2026-10-11; the page says all
   // three in markup: #how, the fabric-only chips and #compare):
   // Tile 1: Product hero / bottle
-  // Tile 2: Size in the hand, next to a phone
+  // Tile 2: The bottle in one hand, on black (owner, 2026-11-08: replaced the
+  //         phone photo; shown whole, object-fit:contain)
   // Tile 3: Dark fabric, just sprayed → dried clear
   // Tile 4: Trapped garment odor problem
   // Tile 5: Science & molecular neutralizer
   const expectedOrder = [
     'pdp-01-hero.webp',
-    'pdp-04-in-hand.webp',
+    'photos/offer-in-hand-black.webp',
     'pdp-05-dried-clear.webp',
     'pdp-02-problem.webp',
     'pdp-06-science.webp'
@@ -345,7 +350,9 @@ test('odorstrike.html PDP gallery information hierarchy, asset order, accessibil
 
   // 4. Accessibility: zoom buttons with descriptive aria-label
   assert.ok(galHtml.includes('aria-label="Enlarge image 1 of 5: ODORSTRIKE 50ml bottle"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 2 of 5: Size in the hand, next to a phone"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 2 of 5: The bottle in one hand"'));
+  assert.ok(!html.includes('pdp-04-in-hand'), 'the phone photo is off the PDP (owner, 2026-11-08)');
+  assert.ok(/<figure class="gal-tile[^"]*gal-tile--fit"/.test(galHtml) && /\.gal-tile--fit img,\.pd-thumb--fit img\{aspect-ratio:1196\/1315;object-fit:contain/.test(html), 'tile 2 shows the in-hand photo whole (contain), never cropped');
   assert.ok(galHtml.includes('aria-label="Enlarge image 3 of 5: Black collar just sprayed, then dried clear"'));
   assert.ok(galHtml.includes('aria-label="Enlarge image 4 of 5: Why clothes trap odor"'));
   assert.ok(galHtml.includes('aria-label="Enlarge image 5 of 5: Molecular odor trap and neutralization science"'));
@@ -735,7 +742,7 @@ test('phone menu: build-time critical CSS cannot trap the drawer shut', () => {
 test('index.html: section reach is measured; the PDP <picture> wrappers never add a grid cell', () => {
   const html = readFileSync('index.html', 'utf8');
   assert.match(readFileSync('odorstrike.html', 'utf8'), /\.ph-pic>source\{display:none\}/);
-  for (const id of ['remembers', 'reviews', 'odorstrike-featured', 'founders', 'how-it-works', 'faq', 'final']) {
+  for (const id of ['in-use', 'reviews', 'odorstrike-featured', 'founders', 'how-it-works', 'faq', 'final']) {
     assert.ok(html.includes(`id="${id}"`), `section #${id} must exist for the reach beacon`);
     assert.ok(html.includes(`'${id}'`), `#${id} is observed`);
   }

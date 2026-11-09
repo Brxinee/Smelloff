@@ -1040,7 +1040,7 @@ async function openOrder(code, { keepScroll = false } = {}) {
 
       <section class="sec"><div class="sec-h">Items and payment</div><div class="sec-b"><dl class="kv">
         <dt>ODORSTRIKE 50ml × ${v.bottles}</dt><dd>${inr(subtotal)}</dd>
-        ${o.cod_fee ? `<dt>COD shipping + handling</dt><dd>${inr(o.cod_fee)}</dd>` : `<dt>Shipping</dt><dd>${o.payment_method === 'cod' ? 'Included' : 'Free'}</dd>`}
+        ${o.cod_fee ? `<dt>COD shipping + handling</dt><dd>${inr(o.cod_fee)}</dd>` : `<dt>Shipping</dt><dd>${o.payment_method === 'cod' ? (v.bottles >= 2 ? 'Free COD (2+ bottles)' : 'Included') : 'Free'}</dd>`}
         <dt class="total">Total</dt><dd class="total">${inr(o.amount)}</dd>
         <dt>Payment</dt><dd>${o.payment_method === 'cod' ? 'Cash on Delivery' : 'Paid online (Razorpay)'}</dd>
         ${o.upi_ref ? `<dt>Payment ref</dt><dd class="mono">${esc(o.upi_ref)}</dd>` : ''}
@@ -1176,7 +1176,8 @@ function openOrderForm(o = null, { test = false } = {}) {
       try {
         const q = await api('quote', { bottles: f.elements.bottles.value, payment: pay, pincode: f.elements.pincode.value });
         const rows = [[`${q.bottles} × 50ml`, inr(q.subtotal)]];
-        if (pay === 'cod') rows.push([/^\d{6}$/.test(f.elements.pincode.value) ? 'COD shipping + handling' : 'COD charges (enter pincode)', inr(q.codFee)]);
+        if (pay === 'cod' && q.bottles >= 2) rows.push(['COD shipping + handling', 'Free (2+ bottles)']);
+        else if (pay === 'cod') rows.push([/^\d{6}$/.test(f.elements.pincode.value) ? 'COD shipping + handling' : 'COD charges (enter pincode)', inr(q.codFee)]);
         else rows.push(['Shipping', 'Free']);
         let html = rows.map(([l, v]) => `<div><span>${esc(l)}</span><span>${esc(v)}</span></div>`).join('');
         if (editing && !changedPrice() && custom === '') html = `<div class="total"><span>Total stays</span><span>${inr(o.amount)}</span></div><div><span class="muted">Change bottles, payment or pincode to re-price.</span></div>`;

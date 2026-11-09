@@ -748,7 +748,7 @@ const actions = {
     const { orderEmailContext } = await import('./_email-dispatch.js');
     const sample = {
       order_code: 'SMF-20261102-1234', created_at: new Date().toISOString(), customer_email: 'asha@example.com', customer_phone: '9876543210',
-      items: [{ name: PRODUCT.name, quantity: 2, price: PRODUCT.unit }], amount: 41900 + 8900, cod_fee: 8900, payment_method: 'cod', status: 'dispatched',
+      items: [{ name: PRODUCT.name, quantity: 1, price: PRODUCT.unit }], amount: 22900 + 11900, cod_fee: 11900, payment_method: 'cod', status: 'dispatched',
       address: { name: 'Asha Rao', line: '12, MG Road', city: 'Pune', state: 'Maharashtra', pincode: '411001' },
       shiprocket_courier: 'Delhivery', shiprocket_awb: '14896012345', tracking_url: 'https://smelloff.in/track-order',
     };

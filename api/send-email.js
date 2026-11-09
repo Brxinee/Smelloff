@@ -23,7 +23,7 @@ import {
   verifyOrderConfirmationToken,
   checkRateLimit,
 } from './_security.js';
-import { BASE_PRODUCT } from '../shared/products-config-workers.js';
+import { BASE_PRODUCT, codFeeRupeesFromOrder } from '../shared/products-config-workers.js';
 import { sendTransactionalEmail, getIdempotencyKey, getSenderConfig, getEmailDiagnostics } from './_email.js';
 
 const FROM = 'ODORSTRIKE <info@smelloff.in>';
@@ -407,9 +407,8 @@ export async function sendOrderConfirmationForOrder(order, { route = 'internal' 
   const amountRupees = order.amount
     ? String(Math.round(order.amount / 100))
     : String(BASE_PRODUCT.price);
-  const codFeeRupees = paymentMethod === 'cod'
-    ? (order.cod_fee ? Math.round(order.cod_fee / 100) : BASE_PRODUCT.codFee)
-    : 0;
+  // 0 is real since free COD on 2+ bottles: never fall back to the default charge.
+  const codFeeRupees = codFeeRupeesFromOrder(order);
   const paymentMethodLabel = paymentMethod === 'cod' ? 'Cash on Delivery' : 'Prepaid (Razorpay)';
   const quantity = Array.isArray(order.items) && order.items[0]?.quantity
     ? Number(order.items[0].quantity) || 1

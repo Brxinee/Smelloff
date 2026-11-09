@@ -1,6 +1,6 @@
 import { sendTransactionalEmail, getIdempotencyKey, getSenderConfig, isValidEmail, maskEmail } from './_email.js';
 import { renderTemplate, formatAddress } from './_email-templates.js';
-import { BASE_PRODUCT } from '../shared/products-config-workers.js';
+import { BASE_PRODUCT, codFeeRupeesFromOrder } from '../shared/products-config-workers.js';
 
 const TERMINAL_CONFIRMED = new Set(['confirmed', 'packed', 'dispatched', 'out_for_delivery', 'delivered']);
 
@@ -54,9 +54,8 @@ export function orderEmailContext(order = {}) {
   const quantity = quantityFromOrder(order);
   const customerName = customerNameFromOrder(order);
   const paymentMethod = paymentLabel(order);
-  const codFee = isCod(order)
-    ? (order.cod_fee ? Math.round(Number(order.cod_fee) / 100) : BASE_PRODUCT.codFee)
-    : 0;
+  // 0 is real since free COD on 2+ bottles: never fall back to the default charge.
+  const codFee = codFeeRupeesFromOrder(order);
   return {
     orderId,
     customerName,

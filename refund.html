@@ -164,11 +164,11 @@
   .p-cta{font-family:var(--mono,system-ui,sans-serif);font-weight:500;font-size:13px;letter-spacing:.01em;background:var(--cta,#B8FF57);color:var(--on-cta,#0A0A0A);border-radius:var(--sq-sm,8px);padding:8px 16px}
 </style>
 <!-- Analytics (GA4 + Meta Pixel) — consent-gated, nothing loads before opt-in -->
-<script src="/assets/js/consent-analytics.js?v=3f9201cc" defer></script>
+<script src="/assets/js/consent-analytics.js?v=9febda64" defer></script>
 <!-- Shared layers load LAST so they win on source order; ?v= is a content hash (cache busting). See scripts/apply-chrome.mjs. -->
 <link rel="stylesheet" href="/assets/css/soft.css?v=6dd2740f">
-<link rel="stylesheet" href="/assets/css/chrome.css?v=5c04b85d">
-<script src="/assets/js/chrome.js?v=f176b73b" defer></script>
+<link rel="stylesheet" href="/assets/css/chrome.css?v=55edabb7">
+<script src="/assets/js/chrome.js?v=d3e685c9" defer></script>
 <script src="/assets/js/support-chat.js?v=3c26359d" defer></script>
 </head>
 <body>
@@ -245,7 +245,7 @@
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Timeline</b>5–7 business days after the return is received and checked</span></li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Cancelled before dispatch</b>Refund started within 24 hours</span></li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>COD orders</b>Refunded by bank transfer (NEFT/IMPS) in 5–7 business days</span></li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Amount</b>The full product amount. The COD shipping and handling charges are not refunded</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Amount</b>The full product amount. COD shipping and handling charges, paid only on single-bottle COD orders, are not refunded</span></li>
         </ul>
       </section>
       <details class="p-toc" id="pToc">
@@ -280,7 +280,7 @@
         </ul>
 
         <h2 id="refund-amount">Refund amount</h2>
-        <p>The full product amount is refunded. Prepaid shipping is free, so nothing is deducted for it. Cash on Delivery orders carry a shipping charge and a COD handling charge based on the delivery pincode, shown at checkout before you order. Those charges pay for delivering and collecting cash on delivery and are not refunded: a returned COD order is refunded the product amount you paid, without them.</p>
+        <p>The full product amount is refunded. Prepaid shipping is free, so nothing is deducted for it. Cash on Delivery is free on orders of 2 or more bottles. A single-bottle Cash on Delivery order carries a shipping charge and a COD handling charge based on the delivery pincode, shown at checkout before you order. Those charges pay for delivering and collecting cash on delivery and are not refunded: a returned COD order is refunded the product amount you paid, without them.</p>
 
         <h2 id="partial-refunds">Partial refunds</h2>
         <p>Bottles bought together in a pack cost less each. If you return only some bottles from an order, each returned bottle is refunded at the price you paid per bottle in that order: the product amount on your order divided by the number of bottles. The bottles you keep are not affected.</p>
