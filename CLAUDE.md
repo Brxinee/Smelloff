@@ -3088,3 +3088,15 @@ spray (also against the sales-first rule). 5-gram overlap with any existing post
 - Product card skipped (SKIP) on dry-cleaning, hair oil and petrol: their honest fix is airing or a wash.
 - Every photo is Pexels, checked by eye: a Durga Puja frame with a soft-drink banner was swapped;
   a bathing shot was rejected; thumbnails with people describe the clothes, never the person's smell.
+
+## Search Console check (2026-11-09, owner: "check all the GSC things … no mistakes or errors")
+Write-up: `docs/audits/gsc-check-2026-11-09.md`. The exports' Coverage data stop on 23 Oct
+and list counts only; the live crawl (`audit-live-seo.mjs --live --all-known`, 1,021 URLs)
+found 0 errors: 131 × 200, 890 × one 301, no chains, 404s, canonical or sitemap defects. All
+169 Performance URLs answer 200 or one 301, except 3 `partners.smelloff.in` URLs (no DNS since
+October). Breadcrumbs and HTTPS reports are clean; no page carries review/rating markup.
+- The 8 guides retitled on 2 Nov were not touched again (judge around 1 Dec).
+- Hub → spoke links for the 20 guides from #590: one in-text link from the closest older guide
+  (18 sentences in 17 posts) plus six new rows in the smell hub's table.
+- Owner: resubmit `sitemap.xml` (GSC still counts 92 submitted pages, now 131), request
+  indexing for the new guides, Test live URL for a real-Googlebot 403 check.
