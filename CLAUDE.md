@@ -3173,3 +3173,22 @@ for the clothes you wear, that neutralizes odor instead of perfuming over it.**
   Mist" for reporting continuity.
 - Share copy can't say "disinfect" even in a negation (`BANNED` in share-templates config).
 
+
+## Indian-language demand: three guides (2026-11-09, owner: "deep research and improve the traffic and visibility")
+Write-up with data: `docs/audits/traffic-visibility-2026-11-09.md`. No fresh GSC (Ahrefs plan,
+Windsor licence expired); demand from Google Trends India + autocomplete (`gl=in`). Technical SEO
+and internal linking were already sound. Smell searches in India are mostly Hinglish: "badbu" 67 vs
+"clothes smell" 4 (12 months); for clothes, "pasine ki badbu" ≈ a sixth of "clothes smell", top
+query "pasine ki badbu kaise dur kare" +350%. "clothes smell liquid" / "how to make clothes smell
+good" are the top related queries for "clothes smell". Blog **121**; sitemap 135.
+- `pasine-ki-badbu-kaise-dur-kare` (Hinglish, `everyday` cluster): body first (NHS self-care and
+  GP triggers, DermNet on lime juice + sun), clothes second; the spray only for the shirt, never
+  skin, and it says the spray does not stop sweat. Links both ways with
+  `kapdon-se-pasine-ki-badbu-kaise-hataye` (clothes only), which is not its intent duplicate.
+- `how-to-make-clothes-smell-good` + its Hinglish twin `kapdo-me-khushbu-kaise-laye` (`laundry`):
+  wash, dry, store, refresh, and a table of what each laundry liquid does (ACI, Kubota 2012, EPA).
+  They link out to the drying/softener/wardrobe/machine guides instead of repeating them.
+- Six older guides got one hub → spoke sentence (dates not bumped, as in #591).
+- Hinglish slugs use "kapdo" (the common spelling in autocomplete), not "kapdon".
+- Next, only if these earn impressions: washing machine se badbu, seelan/barish ki badbu,
+  almari se badbu; "underarm smell" (big in English) needs an overlap check first.
