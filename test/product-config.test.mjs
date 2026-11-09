@@ -273,7 +273,8 @@ test('odorstrike.html PDP hero and primary buy area: positioning, canonical pric
 
   assert.equal([...html.matchAll(/<h1\b/g)].length, 1, 'PDP must have exactly one <h1>');
   assert.ok(/<h1[^>]*>ODORSTRIKE <span class="pd-title__cat">[^<]*clothing deodorant spray<\/span><\/h1>/.test(pInfo), 'H1 must be the product name plus its category');
-  assert.ok(pInfo.includes('FABRIC ODOR CONTROL · 50ML'), 'Eyebrow must declare fabric odor control');
+  // One product name on the PDP (owner, 2026-11-08): "clothing deodorant spray".
+  assert.ok(pInfo.includes('CLOTHING DEODORANT SPRAY · 50ML'), 'Eyebrow must name the category');
   assert.ok(pInfo.includes('up to 8 hours'), 'Tagline must carry the locked protection claim');
   for (const tag of ['Not perfume', 'Not body deodorant', 'Fabric only']) assert.ok(pInfo.includes(tag), `Must say ${tag}`);
 
@@ -306,13 +307,14 @@ test('odorstrike.html PDP gallery information hierarchy, asset order, accessibil
   // fabric-only and comparison creatives on 2026-10-11; the page says all
   // three in markup: #how, the fabric-only chips and #compare):
   // Tile 1: Product hero / bottle
-  // Tile 2: Size in the hand, next to a phone
+  // Tile 2: The bottle in one hand, on black (owner, 2026-11-08: replaced the
+  //         phone photo; shown whole, object-fit:contain)
   // Tile 3: Dark fabric, just sprayed → dried clear
   // Tile 4: Trapped garment odor problem
   // Tile 5: Science & molecular neutralizer
   const expectedOrder = [
     'pdp-01-hero.webp',
-    'pdp-04-in-hand.webp',
+    'photos/offer-in-hand-black.webp',
     'pdp-05-dried-clear.webp',
     'pdp-02-problem.webp',
     'pdp-06-science.webp'
@@ -345,7 +347,9 @@ test('odorstrike.html PDP gallery information hierarchy, asset order, accessibil
 
   // 4. Accessibility: zoom buttons with descriptive aria-label
   assert.ok(galHtml.includes('aria-label="Enlarge image 1 of 5: ODORSTRIKE 50ml bottle"'));
-  assert.ok(galHtml.includes('aria-label="Enlarge image 2 of 5: Size in the hand, next to a phone"'));
+  assert.ok(galHtml.includes('aria-label="Enlarge image 2 of 5: The bottle in one hand"'));
+  assert.ok(!html.includes('pdp-04-in-hand'), 'the phone photo is off the PDP (owner, 2026-11-08)');
+  assert.ok(/<figure class="gal-tile[^"]*gal-tile--fit"/.test(galHtml) && /\.gal-tile--fit img,\.pd-thumb--fit img\{aspect-ratio:1196\/1315;object-fit:contain/.test(html), 'tile 2 shows the in-hand photo whole (contain), never cropped');
   assert.ok(galHtml.includes('aria-label="Enlarge image 3 of 5: Black collar just sprayed, then dried clear"'));
   assert.ok(galHtml.includes('aria-label="Enlarge image 4 of 5: Why clothes trap odor"'));
   assert.ok(galHtml.includes('aria-label="Enlarge image 5 of 5: Molecular odor trap and neutralization science"'));
