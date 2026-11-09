@@ -65,12 +65,15 @@ test('commercial pricing math via calculateOrderTotal()', () => {
   assert.equal(p2.total, 419);
   assert.equal(p2.totalPaise, 41900);
 
-  // 2 units COD
+  // 2 units COD: free COD on 2+ bottles (owner, 2026-11-08), any pincode
   const c2 = calculateOrderTotal(2, 'cod');
   assert.equal(c2.subtotal, 419);
-  assert.equal(c2.codFee, 149);
-  assert.equal(c2.total, 568);
-  assert.equal(c2.totalPaise, 56800);
+  assert.equal(c2.codFee, 0);
+  assert.equal(c2.total, 419);
+  assert.equal(c2.totalPaise, 41900);
+  assert.equal(calculateOrderTotal(2, 'cod', '781001').total, 419);
+  assert.equal(calculateOrderTotal(3, 'cod', '110001').total, 648);
+  assert.equal(calculateOrderTotal(5, 'cod', '500018').total, 899);
 
   // 3 units: one pair + one bottle
   assert.equal(calculateOrderTotal(3, 'prepaid').subtotal, 648);

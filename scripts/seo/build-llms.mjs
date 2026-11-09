@@ -21,6 +21,11 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'config/product.json'), 'utf8'));
 const { brand: B, product: P, usage: U, shipping: S, returns: R, claims: C } = cfg;
 const SITE = B.website;
+// Free COD on 2+ bottles (owner, 2026-11-08); a single bottle's COD charges are shown only at checkout.
+const COD_FREE = P.codShipping && P.codShipping.freeFromQuantity;
+const COD_LINE = COD_FREE
+  ? `available across India, free on orders of ${COD_FREE} or more bottles; a single bottle pays a shipping and COD handling charge by pincode, shown at checkout`
+  : 'available across India; the COD total is shown at checkout';
 const CHECK = process.argv.includes('--check');
 
 const decode = (s) => s.replace(/&amp;/g, '&').replace(/&#39;|&#x27;|&rsquo;|&#8217;/g, "'")
@@ -71,7 +76,7 @@ const ANSWERS = [
   ['What should I do if clothes were left in the washing machine overnight?', 'Smell them. If they smell clean or faintly damp, dry them straight away; if they smell sour, rewash with detergent and dry fast. A fabric spray does not fix a sour wet load.', 'clothes-left-in-washing-machine-overnight-smell'],
   ['How do I get sweat smell out of a cap without washing it?', 'Dry it upside down in moving air, then mist the sweatband and crown lining with a fabric odor spray from 15–20 cm and let it dry before wearing. Hand-wash a stained band; never use it on leather or suede.', 'remove-sweat-smell-from-cap'],
   ['Is ODORSTRIKE for sofas, bedding, rooms or shoes?', 'No. Clothes only. Not for rooms, sofas, curtains, bedding, shoes, helmets, bags, skin, hair or pets.', null],
-  ['Where can I buy ODORSTRIKE in India?', `Only at ${SITE}/odorstrike, which shows the current price: 50ml, one bottle or packs of 2 and 5 (bigger packs cost less per bottle), free shipping on prepaid; Cash on Delivery available across India. It is not listed on Amazon or Flipkart.`, null],
+  ['Where can I buy ODORSTRIKE in India?', `Only at ${SITE}/odorstrike, which shows the current price: 50ml, one bottle or packs of 2 and 5 (bigger packs cost less per bottle), free shipping on prepaid; Cash on Delivery available across India${COD_FREE ? `, free on ${COD_FREE} or more bottles` : ''}. It is not listed on Amazon or Flipkart.`, null],
 ];
 
 const PAGES = [
@@ -103,7 +108,7 @@ function llms() {
     `- Size: ${P.size} liquid spray (about ${P.spraysApprox} sprays, about ${P.refreshesApprox} refreshes)`,
     `- Price: shown on ${SITE}/odorstrike. ${S.prepaid.description}`,
     '- Packs: 1, 2 or 5 bottles (bigger packs cost less per bottle); up to 10 bottles per order',
-    '- Cash on Delivery: available across India (the COD total is shown at checkout)',
+    `- Cash on Delivery: ${COD_LINE}`,
     '- Availability: in stock',
     `- Key actives: ${heroActives}`,
     `- Dry time: ${U.dryTimeShort} (30–60 seconds in high humidity)`,
@@ -145,7 +150,7 @@ function llmsFull() {
     `- Name: ${P.name} (${P.shortName})`, `- Category: ${P.categoryDisplay}`, `- Size: ${P.netQuantity}`,
     `- SKU: ${P.sku} · MPN: ${P.mpn}`, `- Price: shown on ${SITE}/odorstrike`,
     '- Packs: 1, 2 or 5 bottles; bigger packs cost less per bottle',
-    `- Cash on Delivery: available across India; the COD total is shown at checkout`,
+    `- Cash on Delivery: ${COD_LINE}`,
     `- Quantity per order: ${P.minQuantity}–${P.maxQuantity}`,
     `- About ${P.spraysApprox} sprays per bottle (about ${P.refreshesApprox} refreshes)`, '');
   L.push('## How it works',
@@ -157,7 +162,7 @@ function llmsFull() {
     `- Protection: ${U.performanceWindow}`,
     `- Fabrics: ${(F.compatibleFabrics || ['cotton', 'polyester', 'denim', 'wool']).join(', ')}. ${notFor}`, '');
   L.push('## Shipping and returns',
-    `- ${S.prepaid.description}. Cash on Delivery available.`,
+    `- ${S.prepaid.description}. ${S.cod.description}`,
     `- Dispatch: ${S.dispatchWindow} (Monday–Saturday). ${S.dispatchCodNote}`,
     `- Delivery: metros ${S.transitMetros}; tier 2/3 cities ${S.transitTier23}; remote ${S.transitRemote}. India only. Ships from ${S.origin}.`,
     `- Returns: ${R.summary} Refund within ${R.refundProcessingDays}.`, '');

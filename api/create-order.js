@@ -453,9 +453,11 @@ export default async function handler(req, res) {
 
     // Fives at product.fivePackPrice ("5 for ₹899"), pairs at product.pairPrice ("2 for ₹419"); items[].price stays the unit price.
     const subtotalPaise = Math.round(subtotalForQuantity(quantity) * 100);
-    // COD pays shipping + COD handling by delivery pincode (prepaid ships free).
+    // COD pays shipping + COD handling by delivery pincode (prepaid ships
+    // free); an order of 2+ bottles gets COD free (codShipping.freeFromQuantity),
+    // so its total is the product subtotal and a client total with a fee is refused.
     const feePincode = String((body.address && body.address.pincode) || '').replace(/\D/g, '').slice(-6);
-    const codFeePaise = isCod ? Math.round(codFeeForPincode(feePincode) * 100) : 0;
+    const codFeePaise = isCod ? Math.round(codFeeForPincode(feePincode, quantity) * 100) : 0;
     const totalPaise = subtotalPaise + codFeePaise;
     if (!Number.isSafeInteger(totalPaise) || totalPaise < 100) {
       return res.status(400).json({ error: 'Invalid order amount.' });

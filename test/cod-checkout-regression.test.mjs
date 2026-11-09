@@ -71,7 +71,7 @@ test('the summary shows the COD row whenever its Total includes the fee', () => 
 test('Order API has an explicit COD branch and preserves prepaid Razorpay', () => {
   assert.match(api, /const COD_PAYMENT_METHOD = 'cod';/);
   assert.match(api, /const COD_INITIAL_STATUS = 'placed';/);
-  assert.match(api, /const codFeePaise = isCod \? Math\.round\(codFeeForPincode\(feePincode\) \* 100\) : 0;/);
+  assert.match(api, /const codFeePaise = isCod \? Math\.round\(codFeeForPincode\(feePincode, quantity\) \* 100\) : 0;/);
   assert.match(api, /const totalPaise = subtotalPaise \+ codFeePaise;/);
   assert.match(api, /payment_method: COD_PAYMENT_METHOD/);
   assert.match(api, /status: COD_INITIAL_STATUS/);
@@ -94,7 +94,7 @@ test('COD never requires Razorpay credentials before creating the local order', 
 
 test('COD shipping is one order-level charge by delivery pincode, not per bottle', () => {
   assert.match(api, /const feePincode = String\(\(body\.address && body\.address\.pincode\) \|\| ''\)/);
-  assert.match(api, /const codFeePaise = isCod \? Math\.round\(codFeeForPincode\(feePincode\) \* 100\) : 0;/);
+  assert.match(api, /const codFeePaise = isCod \? Math\.round\(codFeeForPincode\(feePincode, quantity\) \* 100\) : 0;/);
   assert.doesNotMatch(api, /codFeeForPincode\([^)]*\) \* quantity/);
 });
 
@@ -105,7 +105,9 @@ test('COD shipping is one order-level charge by delivery pincode, not per bottle
 test('COD shipping amounts appear only in checkout', () => {
   const { priceCod } = product.product;
   const fees = [...new Set([product.product.codFee, ...product.product.codShipping.zones.map((z) => z.fee)])];
-  const amount = new RegExp(`(₹|&#8377;)\\s*(${fees.join('|')}|${priceCod})(?!\\d)`);
+  // (?!\d|\.\d): "₹179.80 each" is the 5-pack's per-bottle price, not the
+  // ₹179 remote COD charge (the pack cards say "Free COD" beside it).
+  const amount = new RegExp(`(₹|&#8377;)\\s*(${fees.join('|')}|${priceCod})(?!\\d|\\.\\d)`);
   const postPurchase = new Set(['track-order.html', 'payment-failed.html']);
   const pages = fs.readdirSync('.').filter((f) => f.endsWith('.html'))
     .concat(['blog'].flatMap((d) => fs.readdirSync(d).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`)));
