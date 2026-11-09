@@ -3116,3 +3116,22 @@ answer-first guides with sources, schema, llms files). The gap is off-site: GSC 
   Bing Webmaster Tools, Product Hunt, Merchant Center, ChatGPT merchants, reviews).
 - #591 merged but Cloudflare Workers Builds never started for `ebb9fea` (no check run); the
   next push to main deploys it.
+
+## GSC drilldowns + ProfilePage email (2026-11-09, owner: "fix these … go deeper")
+Write-up: `docs/audits/gsc-check-2026-11-09.md` ("Second pass").
+- **ProfilePage email** (Missing 'mainEntity', invalid dateCreated/dateModified) was
+  Google's crawl from before #585; live `/NikhilPatil` passes. The personal site's
+  `printed` date (= ProfilePage/AboutPage `dateModified`, sitemap `lastmod`, the footer
+  "printed" line) is now `contentDate()`: the last commit touching
+  `personal-site/{content,src,assets,build.mjs}`, not the build day. `PRINTED_DATE` still
+  overrides it. Owner: Profile page report → Validate fix.
+- **No JS noindex on `?query` URLs.** `assets/js/track.js` rewrote the robots meta to
+  noindex on any URL with a query, so `/odorstrike?buy=1`, `?cart=open` and the
+  `?ref=` backlinks (Product Hunt, uicomet) showed as "Excluded by noindex" while also
+  carrying `rel=canonical`. Removed: canonical alone handles them (Google advises
+  against noindex for same-site duplicates); they move to "Alternate page with proper
+  canonical", as the 2026-10-14 note expected. Never set a robots meta from a script
+  (`test/gsc-coverage-2026-11.test.mjs`).
+- "Page with redirect" (91) was re-crawled live: every one is a single 301 to a 200 or
+  a 200; nothing on the site links to them. No action.
+

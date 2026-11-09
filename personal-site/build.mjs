@@ -14,6 +14,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { markdown, frontMatter, escapeHtml as esc, plainText, inline } from './src/markdown.mjs';
 
@@ -728,6 +729,24 @@ ${s.profiles.map((p) => `- ${p.label}: ${p.url}`).join('\n')}
 
 /* ---------- build */
 
+// The day the site's words, photos or look last changed, in IST: the last commit
+// that touched content/, src/, assets/ or this file. It is the "printed" date,
+// the ProfilePage/AboutPage dateModified and the sitemap lastmod. It used to be
+// the build date, so every deploy (several a day, most of them shop changes)
+// told Google the profile had changed; Google stops trusting a lastmod that is
+// always "today". No git (or a shallow clone without that commit): today, as before.
+export function contentDate(floor = '') {
+  const today = new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 10);
+  let day = today;
+  try {
+    const iso = execFileSync('git', ['log', '-1', '--format=%cI', '--', 'content', 'src', 'assets', 'build.mjs'], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    const t = Date.parse(iso);
+    if (Number.isFinite(t)) day = new Date(t + 5.5 * 3600e3).toISOString().slice(0, 10);
+  } catch { /* no git here */ }
+  if (day > today) day = today;
+  return floor && day < floor ? floor : day;
+}
+
 /**
  * @param {object} o
  * @param {string} o.outDir       where the pages go (index.html = the base path)
@@ -739,7 +758,7 @@ export function build({ outDir = path.join(ROOT, 'dist', 'NikhilPatil'), sitemap
   basePath = basePath ?? c.site.basePath;
   if (!/^https:\/\/[a-z0-9.-]+$/i.test(origin)) throw new Error(`site url must be https://host, got "${origin}"`);
   if (!/^\/[A-Za-z0-9-]+$/.test(basePath)) throw new Error(`basePath must look like /Name, got "${basePath}"`);
-  printed = printed || process.env.PRINTED_DATE || new Date().toISOString().slice(0, 10);
+  printed = printed || process.env.PRINTED_DATE || contentDate(c.site.created);
   sitemapFile = sitemapFile || path.join(path.dirname(outDir), 'sitemap-nikhil-patil.xml');
 
   fs.rmSync(outDir, { recursive: true, force: true });
