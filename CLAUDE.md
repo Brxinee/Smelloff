@@ -3250,3 +3250,18 @@ photos and his full legal name on About.
   are per breakpoint in `site.css`; check 360, 390, 700, 1000 and 1280 after moving a piece.
 - Checked and clean: no overflow, console errors, failed requests or small tap targets on the
   three pages at 320/390/768/1280 in both themes.
+
+## Personal site: swipes scroll over the collage; quicker motion (2026-11-10, owner's phone screenshot: "when I scroll it isn't scrolling … make it scrollable and touchable both … faster and smoother")
+- **Bug:** every draggable collage piece had `touch-action: none` and started a drag on
+  touch-down, and on a phone the collage fills the screen, so a swipe that began on a photo
+  never scrolled. Now `touch-action: pan-y`: a swipe scrolls; **press and hold (260 ms) lifts a
+  piece** (`HOLD_MS` in `site.js`; a non-passive `touchmove` stops the page moving while a piece
+  is carried). Mouse and pen still drag at once. Touch screens show "Hold a piece to move it"
+  under the tools. Verified with real touch events (CDP) on the portrait and glove: swipe
+  scrolls ~250px and the piece stays; hold-then-move moves the piece and the page stays.
+- **Motion:** scroll reveals 600 → 320 ms and start just before a section enters; page-change
+  fades 200/420 → 110/220 ms; the collage drop-in starts sooner. Same-site links are
+  prefetched on hover or touch-start (`speculationrules`), so Now/About open at once.
+- **Measured, not changed:** swapping the SVG paper grain for a bitmap tile made no difference
+  to scroll paint time in a throttled trace (and cost 20KB+), so the grain stays SVG. The page
+  is ~250KB with fonts; there was no heavy asset to cut.
