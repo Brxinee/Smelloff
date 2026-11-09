@@ -2390,7 +2390,9 @@ test('Supabase Production admin_alerts RLS and Grant Hardening Security Suite', 
 
 
 // 2 for ₹419 (owner's call, 2026-10-15): the Worker prices pairs at
-// product.pairPrice and rejects the old 2 × ₹229 total.
+// product.pairPrice and rejects the old 2 × ₹229 total. Free COD on 2+
+// bottles (owner, 2026-11-08): a pair on COD is ₹419 to any pincode, and a
+// total that still carries the COD charges is refused.
 test('create-order prices two bottles at the pair price (2 for ₹419)', async () => {
   const prevKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const prevResend = process.env.RESEND_API_KEY;
@@ -2418,17 +2420,21 @@ test('create-order prices two bottles at the pair price (2 for ₹419)', async (
   });
   try {
     const old = createMockRes();
-    await createOrderHandler(order('SMF-20261015-5101', 2, 54700), old);
-    assert.equal(old.statusCode, 400, 'the old 2 × ₹229 + ₹89 total is rejected');
+    await createOrderHandler(order('SMF-20261015-5101', 2, 45800), old);
+    assert.equal(old.statusCode, 400, 'the old 2 × ₹229 total is rejected');
+
+    const withFee = createMockRes();
+    await createOrderHandler(order('SMF-20261015-5104', 2, 53800), withFee);
+    assert.equal(withFee.statusCode, 400, 'a pair total that still adds ₹79 + ₹40 COD charges is rejected');
 
     const pair = createMockRes();
-    await createOrderHandler(order('SMF-20261015-5102', 2, 53800), pair);
+    await createOrderHandler(order('SMF-20261015-5102', 2, 41900), pair);
     assert.equal(pair.statusCode, 200, JSON.stringify(pair.body));
 
     const three = createMockRes();
-    await createOrderHandler(order('SMF-20261015-5103', 3, 76700), three);
+    await createOrderHandler(order('SMF-20261015-5103', 3, 64800), three);
     assert.equal(three.statusCode, 200, JSON.stringify(three.body));
-    assert.deepEqual(rows.map((r) => r.amount), [53800, 76700]);
+    assert.deepEqual(rows.map((r) => [r.amount, r.cod_fee]), [[41900, 0], [64800, 0]]);
   } finally {
     globalThis.fetch = prevFetch;
     if (prevKey === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY; else process.env.SUPABASE_SERVICE_ROLE_KEY = prevKey;

@@ -126,11 +126,14 @@ const { orderFromForm, newOrderCode, TEST_MARK, PRODUCT } = api;
 const form = (o = {}) => ({ name: 'Ravi Teja', phone: '+91 98480 22338', email: 'ravi@example.com', line: '4-1, Road 2', city: 'Pune', state: 'Maharashtra', pincode: '411001', bottles: 2, payment: 'cod', ...o });
 
 test('manual orders are priced exactly like checkout', () => {
-  const cod = orderFromForm(form());
-  assert.equal(cod.amount, (419 + 119) * 100, '2 for ₹419 + South & West COD charges');
+  const cod = orderFromForm(form({ bottles: 1 }));
+  assert.equal(cod.amount, (229 + 119) * 100, '1 bottle + South & West COD charges');
   assert.equal(cod.cod_fee, 119 * 100);
+  // Free COD on 2+ bottles (owner, 2026-11-08): the pair costs ₹419 on COD too.
+  const codPair = orderFromForm(form());
+  assert.deepEqual([codPair.amount, codPair.cod_fee, codPair.payment_method], [41900, 0, 'cod'], '2 for ₹419, free COD');
   assert.equal(cod.customer_phone, '9848022338');
-  assert.deepEqual(cod.items, [{ name: PRODUCT.name, variant: PRODUCT.size, quantity: 2, price: PRODUCT.unit }], 'items[].price stays the unit price');
+  assert.deepEqual(codPair.items, [{ name: PRODUCT.name, variant: PRODUCT.size, quantity: 2, price: PRODUCT.unit }], 'items[].price stays the unit price');
   const prepaid = orderFromForm(form({ payment: 'upi', bottles: 5 }));
   assert.deepEqual([prepaid.amount, prepaid.cod_fee, prepaid.payment_method], [89900, 0, 'upi'], '5 for ₹899, free shipping');
   const discounted = orderFromForm(form({ customTotal: 400 }));

@@ -108,7 +108,7 @@ const kvRow = (label, value, emphasize = false) => `
   <td class="smf-text${emphasize ? ' smf-rule-strong' : ' smf-rule'}" style="font-family:${emphasize ? HEADING_FONT : FONT};font-size:${emphasize ? '22px' : '14px'};font-weight:${emphasize ? '700' : '500'};color:${TEXT};padding:${emphasize ? '12px' : '10px'} 0 ${emphasize ? '4px' : '10px'} 12px;border-top:${emphasize ? `2px solid ${TEXT}` : `1px solid ${BORDER}`};text-align:right;">${value}</td>
 </tr>`;
 
-function priceBreakdown({ quantity = 1, amount = '', codFee = 0 } = {}) {
+function priceBreakdown({ quantity = 1, amount = '', codFee = 0, cod = false } = {}) {
   const qty = Number(quantity) || 1;
   const total = Number(String(amount).replace(/[^\d.]/g, '')) || 0;
   const fee = Number(codFee) || 0;
@@ -118,7 +118,7 @@ function priceBreakdown({ quantity = 1, amount = '', codFee = 0 } = {}) {
     ${fee > 0
       ? kvRow('Shipping + COD handling', `&#8377;${escape(String(fee))}`)
       : kvRow('Shipping', escape(SHIPPING_LABEL))}
-    ${kvRow(fee > 0 ? 'Amount due' : 'Total paid', `&#8377;${escape(String(total || subtotal))}`, true)}
+    ${kvRow(cod || fee > 0 ? 'Amount due' : 'Total paid', `&#8377;${escape(String(total || subtotal))}`, true)}
   `);
 }
 
@@ -336,7 +336,7 @@ export function orderConfirmation({
 
     ${sectionLabel('Your order')}
     ${productRow({ quantity: qty, price: subtotalRupees ? `&#8377;${escape(String(subtotalRupees))}` : '' })}
-    ${table(`<tr><td style="padding-top:16px;">${priceBreakdown({ quantity: qty, amount, codFee: fee })}</td></tr>`)}
+    ${table(`<tr><td style="padding-top:16px;">${priceBreakdown({ quantity: qty, amount, codFee: fee, cod })}</td></tr>`)}
 
     ${infoColumns(
       { label: 'Delivering to', value: escape(address || '—').replace(/\n/g, '<br>') },
@@ -373,7 +373,7 @@ export function orderConfirmation({
     `Product: ${PRODUCT_NAME}`,
     `Quantity: ${qty}`,
     fee > 0 ? `Shipping + COD handling: ₹${fee}` : `Shipping: ${SHIPPING_LABEL}`,
-    `${fee > 0 ? 'Amount due' : 'Total paid'}: ₹${rupee(amount)}`,
+    `${cod ? 'Amount due' : 'Total paid'}: ₹${rupee(amount)}`,
     `Payment method: ${methodLabel}`,
     `Status: ${statusLabel}`,
     !cod && transactionRef ? `Reference: ${transactionRef}` : null,
