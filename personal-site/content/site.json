@@ -27,7 +27,7 @@
     "id": "https://smelloff.in/#organization"
   },
   "dek": "I’m Nikhil Patil, a self-taught founder in Hyderabad. I spent years in retail and cloud-kitchen operations, led a team, and now build my own startup, Smelloff.",
-  "description": "Nikhil Patil (@NikhilxPatil) is a self-taught builder in Hyderabad, India and the founder of Smelloff. Before it: retail, cloud-kitchen operations, team lead.",
+  "description": "Nikhil Patil (@NikhilxPatil) is a self-taught founder in Hyderabad, India. He runs his startup, Smelloff. Before it: retail, cloud kitchens, team lead.",
   "photo": {
     "src": "/assets/img/me/nikhil-patil.webp",
     "avif": "/assets/img/me/nikhil-patil.avif",
@@ -72,15 +72,14 @@
     }
   ],
   "knowsAbout": [
-    "Self-taught web development",
-    "Cloudflare Workers",
     "Selling",
-    "E-commerce operations"
+    "Operations",
+    "E-commerce"
   ],
   "disambiguation": "Self-taught founder of Smelloff, based in Hyderabad, India; NikhilxPatil on X and Instagram.",
   "bios": {
     "line": "Nikhil Patil is a self-taught founder from Hyderabad who runs his startup, Smelloff.",
-    "short": "Nikhil Patil (Jogdhande Nikhil Patil; NikhilxPatil on X and Instagram) is a self-taught builder based in Hyderabad, India. He worked in retail and in cloud-kitchen operations at Zomato Everyday, where he became a team lead, and now runs his own startup, Smelloff, whose website he builds himself with AI coding tools."
+    "short": "Nikhil Patil (Jogdhande Nikhil Patil; NikhilxPatil on X and Instagram) is a self-taught founder based in Hyderabad, India. He worked in retail and in cloud-kitchen operations at Zomato Everyday, where he became a team lead, and now runs his own startup, Smelloff."
   },
   "created": "2026-11-02"
 }

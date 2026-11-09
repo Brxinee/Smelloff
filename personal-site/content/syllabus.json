@@ -16,9 +16,9 @@
       "status": "Done"
     },
     {
-      "subject": "Web",
-      "topics": "HTML, CSS, vanilla JavaScript, Cloudflare Workers, Supabase",
-      "proof": "My startup’s store and this site",
+      "subject": "E-commerce",
+      "topics": "Building and running an online store",
+      "proof": "My startup’s store",
       "status": "Ongoing"
     }
   ]

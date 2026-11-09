@@ -308,3 +308,12 @@ test('About tells the founder story, what he learned and who should write to him
   // His page is about him: the product is not named or sold here.
   assert.doesNotMatch(text.slice(text.indexOf('Why I started Smelloff'), text.indexOf('How I work')), /ODORSTRIKE|Buy now|₹/);
 });
+
+test('no AI or tooling talk, and dark-mode stamps stay visible (owner, 9 Nov 2026)', () => {
+  for (const f of [...htmlFiles(), 'llms.txt', 'llms-full.txt']) {
+    const text = f.endsWith('.html') ? textOf(read(f)) : read(f);
+    assert.doesNotMatch(text, /\bAI\b|Claude|Gemini|Cloudflare|Supabase|JavaScript|coding tools/, `${f}: tooling detail`);
+  }
+  const css = fs.readFileSync(new URL('../assets/css/site.css', import.meta.url), 'utf8');
+  assert.match(css, /prefers-color-scheme: dark\) \{ :root:not\(\[data-theme="light"\]\) :is\(\.piece--selfstamp, \.stamp-mark\) \{ mix-blend-mode: normal/);
+});
