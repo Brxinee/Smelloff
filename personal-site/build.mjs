@@ -292,10 +292,6 @@ ${j.rows.map((r, i) => `      <li class="punch${r.today ? ' punch--today' : ''}"
       </li>`).join('\n')}
     </ol>
   </div>
-  <figure class="print print--early">
-    ${picture(j.photo)}
-    <figcaption class="hand">${esc(j.photo.caption)}</figcaption>
-  </figure>
 </div>`;
 }
 
@@ -367,7 +363,7 @@ ${nowBlock(now)}
 </section>
 
 <section class="sec journey" id="clocked-in" aria-labelledby="journey-h">
-${secHead('02', 'journey-h', esc(journey.title), 'every job, in order')}
+${secHead('02', 'journey-h', esc(journey.title), 'where I’ve worked, in order')}
 <p class="sec__lede">${esc(journey.lede)}</p>
 ${timeCard(journey, site)}
 </section>
@@ -465,8 +461,7 @@ function faq(s) {
     ['Who is NikhilxPatil?', `NikhilxPatil is the handle of Nikhil Patil, the Hyderabad founder of Smelloff, on X and Instagram. His own site is smelloff.in/NikhilPatil.`],
     ['Where is Nikhil Patil based?', 'Hyderabad, Telangana, India.'],
     ['What does Nikhil Patil do?', 'He runs his startup, Smelloff, and does most of the work himself: the product, the packaging, the website (built with AI coding tools), the shipping and the customer inbox.'],
-    ['Did Nikhil Patil go to college?', 'No. He studied up to Class 10 and has taught himself everything since, on the job and by building things.'],
-    ['What did Nikhil Patil do before Smelloff?', 'He worked a mobile shop counter, did deliveries, worked in cloud-kitchen operations at Zomato Everyday for about a year and a half, and became a team lead.'],
+    ['What did Nikhil Patil do before Smelloff?', 'He worked in retail and then in cloud-kitchen operations at Zomato Everyday for about a year and a half, where he became a team lead.'],
     ['How do I contact Nikhil Patil?', `Email ${s.email.address} or message @${s.handle} on X or Instagram.`],
   ];
 }
@@ -480,7 +475,7 @@ function aboutPage(c, ctx) {
     <div>
       <p class="kicker">About</p>
       <h1 id="about-h" class="page__title">About Nikhil Patil</h1>
-      <p class="lede">I’m Nikhil Patil, a self-taught builder in Hyderabad, India. My full name is Jogdhande Nikhil Patil, and online I’m NikhilxPatil (X and Instagram). I stopped school after Class 10, worked my way through a lot of jobs, and now run my own startup.</p>
+      <p class="lede">I’m Nikhil Patil, a self-taught builder in Hyderabad, India. My full name is Jogdhande Nikhil Patil, and online I’m NikhilxPatil (X and Instagram). I worked in retail and cloud-kitchen operations before starting my own company, and most of what I know I learned by doing it.</p>
     </div>
     <figure class="print print--about">
       ${picture({ src: '/assets/img/me/nikhil-patil-yellow-jacket.webp', avif: '/assets/img/me/nikhil-patil-yellow-jacket.avif', width: 480, height: 480, alt: 'Nikhil Patil in a yellow jacket, smiling.' }, { priority: true })}
@@ -495,21 +490,20 @@ function aboutPage(c, ctx) {
         <div><dt>Full name</dt><dd>${esc(s.alternateName[0])}</dd></div>
         <div><dt>Online</dt><dd>${esc(s.handle)} on X and Instagram</dd></div>
         <div><dt>Based in</dt><dd>${esc(s.location.city)}, ${esc(s.location.region)}, ${esc(s.location.country)}</dd></div>
-        <div><dt>School</dt><dd>Up to Class 10. Self-taught since.</dd></div>
-        <div><dt>Before</dt><dd>Shop counter, deliveries, cloud kitchens, team lead</dd></div>
+        <div><dt>Before</dt><dd>Retail, cloud-kitchen operations, team lead</dd></div>
         <div><dt>Now</dt><dd>Founder of my startup, ${linkTo(s.worksFor.url, s.worksFor.name)}</dd></div>
       </dl>
       <p class="facts__stamp" aria-hidden="true">Checked copy</p>
     </aside>
     <div class="prose">
       <h2 id="who">Who is Nikhil Patil?</h2>
-      <p class="answer"><strong>${esc(qa[0][1])}</strong> He left school after Class 10 and learned the rest on the job.</p>
+      <p class="answer"><strong>${esc(qa[0][1])}</strong> Before that he worked in retail and in cloud-kitchen operations, where he led a team.</p>
 
-      <h2 id="school">School stopped at Class 10</h2>
-      <p>I didn’t go the usual school and college route. After Class 10 I started working, and everything I know since then I learned because a job, or something I was building, needed it. My <a href="/#syllabus">self-taught syllabus</a> lists the subjects.</p>
+      <h2 id="self-taught">Self-taught</h2>
+      <p>Most of what I know I learned because a job, or something I was building, needed it. Selling came from standing behind a counter, operations from running a kitchen floor, and the web from building my own store. My <a href="/#syllabus">self-taught syllabus</a> lists the subjects.</p>
 
-      <h2 id="jobs">The jobs</h2>
-      <p>I’ve worked behind a mobile shop counter, done deliveries, and worked in cloud-kitchen operations at Zomato Everyday for about a year and a half. Somewhere in there I asked for a chance at the computer, went from cleaning and floor work to registers and spreadsheets, and later led a team. The whole <a href="/#clocked-in">time card</a> is on the cover page.</p>
+      <h2 id="before">Before Smelloff</h2>
+      <p>I worked in retail, then in cloud-kitchen operations at Zomato Everyday for about a year and a half, where I later led a team. Those years taught me how a business runs day to day, and what customers notice when it doesn’t. The <a href="/#clocked-in">time card</a> on the cover page has the short list.</p>
 
       <h2 id="now">What I do now</h2>
       <p>I run my own startup, Smelloff, from Hyderabad, with my friend Vineeth Kumar Duggepogu, whom I met at a job interview. I do most of the work myself: the product, the packaging, the website, the shipping and the customer inbox. I built its website too, with AI coding tools.</p>
@@ -550,7 +544,7 @@ ${qa.slice(1).map(([q, a]) => `        <h3>${esc(q)}</h3>\n        <p>${esc(a)}<
   return {
     path: '/about',
     title: `About Nikhil Patil (NikhilxPatil), founder of Smelloff`,
-    description: `${s.name} (${s.alternateName[0]}) is a self-taught builder in Hyderabad. School to Class 10, then shops, deliveries, cloud kitchens, now his own startup.`,
+    description: `${s.name} (${s.alternateName[0]}) is a self-taught founder in Hyderabad. Before his startup, Smelloff: retail, cloud-kitchen operations, team lead.`,
     ogType: 'profile',
     bodyClass: 'inner',
     body,

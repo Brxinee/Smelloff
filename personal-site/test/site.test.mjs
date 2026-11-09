@@ -194,6 +194,16 @@ test('private items Nikhil did not approve stay off the site', () => {
   }
 });
 
+test('no school history or job-by-job detail (owner, 9 Nov 2026)', () => {
+  const files = [...htmlFiles(), 'llms.txt', 'llms-full.txt', 'index.md', 'about.md'];
+  for (const f of files) {
+    const text = f.endsWith('.html') ? textOf(read(f)) : read(f);
+    assert.doesNotMatch(text, /Class 10|college|left school|school stopped|deliver(y|ies)|cleaning|floor work|mobile shop/i, `${f}: withdrawn detail`);
+  }
+  assert.doesNotMatch(read('index.html'), /early-jobs/, 'the early-jobs photo is gone');
+  assert.match(textOf(read('about.html')), /Before Smelloff/);
+});
+
 test('content files follow their own rules', () => {
   const bench = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/bench.json'), 'utf8')).items;
   for (const b of bench) assert.ok(['NOW', 'LIVE', 'NEW', 'PARKED', 'RETIRED'].includes(b.status), b.id);

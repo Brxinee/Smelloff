@@ -453,7 +453,7 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 
 /* time card ----------------------------------------------------------- */
 .timecard { display: grid; gap: var(--s6); align-items: start; }
-@media (min-width: 900px) { .timecard { grid-template-columns: minmax(0, 1fr) 260px; gap: var(--s7); } }
+.timecard__card { max-width: 760px; }
 .timecard__card {
   background: #E9DDBF; color: #1A1917; padding: var(--s4) var(--s4) var(--s5); box-shadow: var(--shadow); rotate: -.4deg;
   background-image: repeating-linear-gradient(90deg, transparent 0 calc(100% - 1px), rgb(26 25 23 / .12) calc(100% - 1px));
@@ -469,8 +469,6 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 .punch--today { background: linear-gradient(transparent 0 6px, rgb(255 228 90 / .55) 6px calc(100% - 6px), transparent 0); }
 .punch--today .punch__stamp { color: #2340C8; }
 .print { position: relative; rotate: 3deg; max-width: 260px; justify-self: center; }
-.print--early { width: 220px; }
-@media (min-width: 900px) { .print--early { width: 240px; margin-top: var(--s6); } }
 
 /* 8 ----------------------------------------------------------------- bench */
 .cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }

@@ -154,8 +154,7 @@ function llmsFull() {
     `- Profiles: ${B.sameAs.filter((u) => !u.includes('wa.me')).join(' · ')}`, '');
   L.push('## Founder',
     `- ${founderLine}`,
-    '- Went to school up to Class 10, then taught himself on the job.',
-    '- Work: a mobile shop counter, deliveries, then cloud-kitchen operations at Zomato Everyday (about a year and a half), then team lead.',
+    '- Self-taught. Before Smelloff: retail, then cloud-kitchen operations at Zomato Everyday (about a year and a half), where he became a team lead.',
     `- Co-founder: ${B.coFounder}. They met at a job interview in ${B.city}.`,
     `- Profiles: ${FOUNDER_PROFILES.join(' · ')}`, '');
   L.push('## Product',

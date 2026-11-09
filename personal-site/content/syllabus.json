@@ -1,17 +1,17 @@
 {
   "_readme": "The self-taught syllabus: subjects I learned by doing, what they covered, and where it shows.",
-  "intro": "School stopped at Class 10. Everything on this page I picked up because something I was doing needed it.",
+  "intro": "Nobody set this syllabus. Everything on this page I picked up because something I was doing needed it.",
   "remark": "Prefers to find out how things work by building them.",
   "subjects": [
     {
       "subject": "Selling",
       "topics": "Talking to customers, pricing, why people say yes",
-      "proof": "A shop counter first, my own store now",
+      "proof": "Retail first, my own store now",
       "status": "Ongoing"
     },
     {
       "subject": "Operations",
-      "topics": "Floors, registers, spreadsheets, running a team",
+      "topics": "Registers, spreadsheets, stock, running a team",
       "proof": "The jobs on my time card",
       "status": "Done"
     },

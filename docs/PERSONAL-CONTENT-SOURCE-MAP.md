@@ -25,7 +25,7 @@ No connector exists for LinkedIn, Instagram or X in this session; nothing was lo
 
 - Name **Nikhil Patil**; full name **Jogdhande Nikhil Patil** (used publicly on smelloff.in, X, LinkedIn).
 - Based in **Hyderabad, Telangana, India** (city level only).
-- Self-taught; **school up to Class 10**, then learned on the job (approved 2 Nov 2026).
+- Self-taught. **Withdrawn on 9 Nov 2026 (his call: he doesn't want to share too much):** school history (Class 10, no college) and the job-by-job detail (mobile shop counter, deliveries, cleaning and floor work, the early-jobs photo). The site says only: retail, cloud-kitchen operations at Zomato Everyday, team lead, founder.
 - Work journey, **no dates**: mobile shop counter, deliveries, cloud-kitchen operations at Zomato
   Everyday (~1.5 years, public), asked for a chance at the computer (registers, spreadsheets), team
   lead (approved 2 Nov 2026).
