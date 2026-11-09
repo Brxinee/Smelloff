@@ -3180,7 +3180,7 @@ Windsor licence expired); demand from Google Trends India + autocomplete (`gl=in
 and internal linking were already sound. Smell searches in India are mostly Hinglish: "badbu" 67 vs
 "clothes smell" 4 (12 months); for clothes, "pasine ki badbu" ≈ a sixth of "clothes smell", top
 query "pasine ki badbu kaise dur kare" +350%. "clothes smell liquid" / "how to make clothes smell
-good" are the top related queries for "clothes smell". Blog **121**; sitemap 135.
+good" are the top related queries for "clothes smell".
 - `pasine-ki-badbu-kaise-dur-kare` (Hinglish, `everyday` cluster): body first (NHS self-care and
   GP triggers, DermNet on lime juice + sun), clothes second; the spray only for the shirt, never
   skin, and it says the spray does not stop sweat. Links both ways with
@@ -3190,5 +3190,8 @@ good" are the top related queries for "clothes smell". Blog **121**; sitemap 135
   They link out to the drying/softener/wardrobe/machine guides instead of repeating them.
 - Six older guides got one hub → spoke sentence (dates not bumped, as in #591).
 - Hinglish slugs use "kapdo" (the common spelling in autocomplete), not "kapdon".
-- Next, only if these earn impressions: washing machine se badbu, seelan/barish ki badbu,
-  almari se badbu; "underarm smell" (big in English) needs an overlap check first.
+- Round 2 (same day): `washing-machine-se-badbu-kaise-hataye` (no product card: SKIP, the
+  machine is the source; Furtwangen press release on Jacksch 2020, Haier India) and
+  `kapdo-se-seelan-ki-badbu-kaise-dur-kare` (Kubota, EPA). Blog **123**; sitemap 137.
+- Next, only if these earn impressions: almari se badbu; "underarm smell" (big in English)
+  needs an overlap check first.

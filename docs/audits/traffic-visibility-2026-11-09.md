@@ -74,12 +74,26 @@ the product card and llms answers. Facts only from `config/product.json`; no pri
   sun-dried, all-day-fresh, vinegar/softener and deodorant-vs-antiperspirant guides.
 - Not cited: Steinemann 2016 (Springer login wall, figures not verified this time).
 
-Blog **121**, sitemap **135**.
+### Round 2 (same day, owner: "continue")
+
+| Guide | Targets | Sources |
+|---|---|---|
+| `/blog/washing-machine-se-badbu-kaise-hataye` (Hinglish) | washing machine se badbu kaise hataye / kyon aati hai / aaye to kya kare (6 autocomplete variants) | Furtwangen University press release on Jacksch et al. 2020 (*Moraxella osloensis* in the seal of 9 of 13 machines), Haier India maintenance page, Kubota 2012, ACI |
+| `/blog/kapdo-se-seelan-ki-badbu-kaise-dur-kare` (Hinglish) | kapdo se seelan ki badbu, barish/barsat me kapdo se badbu (4 variants) | Kubota 2012, US EPA, ACI |
+
+- The machine guide has no product card (the machine is the source, as in its English
+  twin); its one product link says the spray is for worn clothes, not the machine.
+- Photos rejected on sight: a Minnie Mouse T-shirt print, a laundromat brand plate, a
+  tumble dryer (rare in Indian homes).
+- The 2021 Jacksch paper and the Extension answer on open washer doors could not be
+  fetched (403/503) and are not cited.
+
+Blog **123**, sitemap **137**.
 
 ## Next candidates (not built)
 
-- Hinglish long tails above, one at a time, only if the three new guides earn impressions
-  in the next export: washing machine se badbu, seelan/barish ki badbu, almari se badbu.
+- "almari se badbu kaise hataye" (one autocomplete variant; the khushbu and seelan guides
+  already cover the wardrobe in Hinglish). Build only if the export shows demand.
 - **"underarm smell"** is large in English (58 vs "pasine ki badbu" 15). The shirt side is
   covered by `why-shirt-zones-smell-after-washing`; a skin-side guide would overlap with
   `how-to-smell-good-all-day-men-india` and `deodorant-vs-antiperspirant-india`. Decide
