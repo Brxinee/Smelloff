@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { build, humanDate } from '../build.mjs';
+import { build, humanDate, contentDate } from '../build.mjs';
 import { markdown, inline } from '../src/markdown.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -246,4 +246,26 @@ test('structured data passes Google’s ProfilePage checks: one ProfilePage with
       if (n[k] !== undefined) assert.match(n[k], /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/, `${k} "${n[k]}" is a full date-time`);
     }
   }
+});
+
+test('ProfilePage carries what Google reads: name, url, Person with name/image/sameAs, created ≤ modified', () => {
+  const graph = ldOf(read('index.html')).flatMap((b) => b['@graph'] || [b]);
+  const p = graph.find((n) => n['@type'] === 'ProfilePage');
+  assert.ok(p.name && p.url === BASE, 'ProfilePage name + url');
+  const person = p.mainEntity;
+  assert.ok(person.name && person.image?.url && person.sameAs?.length, 'Person name, image, sameAs');
+  assert.ok(Date.parse(p.dateCreated) <= Date.parse(p.dateModified), `dateCreated ${p.dateCreated} ≤ dateModified ${p.dateModified}`);
+});
+
+test('the printed date / dateModified is the last content change, not the build day (2026-11-09)', () => {
+  const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'site.json'), 'utf8'));
+  const d = contentDate(site.created);
+  assert.match(d, /^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(d >= site.created, 'never before the site existed');
+  const today = new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 10);
+  assert.ok(d <= today, 'never in the future');
+  assert.equal(contentDate('2999-01-01'), '2999-01-01', 'the floor wins when later');
+  const src = fs.readFileSync(path.join(ROOT, 'build.mjs'), 'utf8');
+  assert.match(src, /printed = printed \|\| process\.env\.PRINTED_DATE \|\| contentDate\(/, 'build() defaults to the content date');
+  assert.doesNotMatch(src, /printed = printed \|\| process\.env\.PRINTED_DATE \|\| new Date\(\)/, 'not the build day');
 });

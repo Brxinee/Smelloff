@@ -18,16 +18,13 @@
     else if (op === '0') localStorage.removeItem('smelloff_owner');
   } catch (e) {}
 
-  if (window.location.search) {
-    var robots = document.querySelector('meta[name="robots"]') || document.createElement('meta');
-    robots.name = 'robots';
-    robots.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
-    if (!robots.parentNode) document.head.appendChild(robots);
-    var googlebot = document.querySelector('meta[name="googlebot"]') || document.createElement('meta');
-    googlebot.name = 'googlebot';
-    googlebot.content = 'noindex,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';
-    if (!googlebot.parentNode) document.head.appendChild(googlebot);
-  }
+  // No noindex on ?query URLs (removed 2026-11-09). This used to swap the
+  // page's robots meta to noindex whenever the URL had a query, so Google
+  // listed /odorstrike?buy=1, ?cart=open and the ?ref= links from Product Hunt
+  // as "Excluded by noindex". Every page already names its clean URL in
+  // rel=canonical; Google says not to mix noindex with canonical (the noindex
+  // can spill onto the canonical page, and a noindexed URL doesn't pass its
+  // links on). The canonical alone files them as duplicates of the real page.
 
   var owner = false;
   try { owner = localStorage.getItem('smelloff_owner') === '1'; } catch (e) {}
