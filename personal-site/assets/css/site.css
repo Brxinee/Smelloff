@@ -1,4 +1,4 @@
-/* Nikhil Patil: a photocopied zine about one person.
+/* Nikhil Patil: a photocopied zine.
  *
  * One stylesheet. Sections, in order:
  *   1 tokens (light = paper, dark = "shutter down")
@@ -482,6 +482,35 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 .punch--today { background: linear-gradient(transparent 0 6px, rgb(255 228 90 / .55) 6px calc(100% - 6px), transparent 0); }
 .punch--today .punch__stamp { color: #2340C8; }
 .print { position: relative; rotate: 3deg; max-width: 260px; justify-self: center; }
+
+/* Stickers: small cut-outs of his photos (scripts/sticker.py), stuck on the edge
+ * of things. Decoration only: the real photos are the taped prints. */
+.sticker { position: absolute; display: block; pointer-events: none; z-index: 2; }
+.sticker img { display: block; width: 100%; height: auto; filter: drop-shadow(0 5px 7px rgb(40 30 10 / .3)); }
+/* Standing on the bottom edge of the time card. */
+.timecard { position: relative; margin-bottom: 84px; }
+.sticker--standing { width: 54px; right: 14px; bottom: -106px; rotate: 4deg; }
+/* The cartoon avatars peek over the top edge of a card. */
+.sticker--avatar-curly, .sticker--avatar-glasses { width: 62px; right: 22px; bottom: calc(100% - 9px); z-index: 0; }
+.sticker--avatar-curly { rotate: 5deg; }
+.sticker--avatar-glasses { rotate: -4deg; right: 18px; }
+@media (min-width: 900px) { .sticker--avatar-curly, .sticker--avatar-glasses { width: 76px; right: 34px; } }
+/* Standing on the footer rule: the bull on the cover, the selfie elsewhere. */
+.foot { position: relative; }
+.foot .sticker { right: max(var(--gutter), 6%); z-index: 0; }
+.foot .sticker--bull { width: 92px; bottom: calc(100% - 7px); rotate: 0deg; }
+.foot .sticker--mumbai { width: 96px; bottom: calc(100% - 4px); rotate: -2deg; }
+@media (min-width: 900px) {
+  .timecard { margin-bottom: 40px; }
+  .sticker--standing { width: 78px; right: auto; left: 748px; bottom: -34px; }
+  .foot .sticker--bull { width: 116px; }
+  .foot .sticker--mumbai { width: 118px; }
+}
+/* The two real photos. */
+.print--mumbai { width: min(72vw, 280px); max-width: none; rotate: -2deg; }
+.print--bull { width: min(66vw, 250px); max-width: none; rotate: 2deg; margin: var(--s5) auto var(--s6); }
+@media (min-width: 900px) { .print--mumbai { width: 300px; align-self: center; } }
+@media print { .sticker { display: none; } }
 
 /* 8 ----------------------------------------------------------------- bench */
 .cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }

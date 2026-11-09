@@ -81,7 +81,9 @@ test('structured data parses and describes one person consistently', () => {
   const about = ldOf(read('about.html'))[0]['@graph'];
   assert.equal(about.find((n) => n['@type'] === 'AboutPage').about['@id'], person['@id']);
 
-  assert.match(read('about.html'), /id="credits"/, 'picture credits live on About');
+  // Owner, 10 Nov 2026: no picture credits, footer fine print or "zine about one person" line.
+  // (The cut-outs are CC0 and the fonts ship with OFL.txt, so no credit line is required.)
+  for (const f of htmlFiles()) assert.doesNotMatch(textOf(read(f)), /Picture credits|No cookies, no trackers|zine about one person|Wikimedia|Open Font License/i, `${f}: removed boilerplate`);
   assert.ok(!fs.existsSync(path.join(out, 'notes')), 'no notes pages');
   for (const f of htmlFiles().filter((x) => x !== 'index.html')) {
     assert.ok(!read(f).includes('"@type":"WebSite"'), `${f}: WebSite markup only on the cover`);
@@ -307,6 +309,43 @@ test('About tells the founder story, what he learned and who should write to him
   assert.match(text, /I read every message myself/);
   // His page is about him: the product is not named or sold here.
   assert.doesNotMatch(text.slice(text.indexOf('Why I started Smelloff'), text.indexOf('How I work')), /ODORSTRIKE|Buy now|₹/);
+});
+
+test('real photos are the main pictures; the cut-outs are small stickers here and there', () => {
+  const home = read('index.html');
+  const about = read('about.html');
+  const css = fs.readFileSync(new URL('../assets/css/site.css', import.meta.url), 'utf8');
+  // Main pictures: taped prints with a caption and alt text.
+  for (const [html, name] of [[home, 'mumbai'], [about, 'bull']]) {
+    const fig = new RegExp(`<figure class="print print--${name}">[\\s\\S]*?</figure>`).exec(html);
+    assert.ok(fig, `photo ${name}`);
+    assert.match(fig[0], /alt="[^"]{20,}"/, 'described for screen readers');
+    assert.match(fig[0], /<figcaption class="hand">/);
+    const src = /<img src="([^"]+)"/.exec(fig[0])[1];
+    assert.ok(fs.existsSync(path.join(out, src.replace('/NikhilPatil/', ''))), `${name} photo exists`);
+  }
+  // Stickers: decoration, small, never a figure with a caption.
+  for (const [html, name] of [[home, 'standing'], [home, 'bull'], [about, 'mumbai'], [read('now.html'), 'mumbai'], [home, 'avatar-curly'], [read('now.html'), 'avatar-curly'], [about, 'avatar-glasses']]) {
+    const el = new RegExp(`<span class="sticker sticker--${name}" aria-hidden="true">[\\s\\S]*?</span>`).exec(html);
+    assert.ok(el, `sticker ${name}`);
+    assert.match(el[0], /alt=""/);
+    const src = /<img src="([^"]+)"/.exec(el[0])[1];
+    assert.ok(fs.existsSync(path.join(out, src.replace('/NikhilPatil/', ''))), `${name} sticker exists`);
+  }
+  assert.doesNotMatch(home + about, /<figure class="sticker/);
+  // A page never shows one picture as both its main photo and a sticker.
+  assert.doesNotMatch(home, /sticker--mumbai/, 'the cover already has the Mumbai photo');
+  assert.doesNotMatch(about, /sticker--bull/, 'About already has the bull photo');
+  // Stickers sit on an edge (time card, footer rule), never loose in a section.
+  for (const html of [home, about]) for (const m of html.matchAll(/<span class="sticker /g)) {
+    const before = html.slice(Math.max(0, m.index - 400), m.index);
+    assert.match(before, /<footer class="foot">\s*$|<div class="note-paper now__paper">\s*$|<aside class="facts"[^>]*>\s*$|timecard__card|<\/ol>\s*<\/div>\s*$/, 'sticker is attached to a card or the footer');
+  }
+  assert.match(css, /\.sticker--avatar-curly, \.sticker--avatar-glasses \{ width: 62px;/);
+  for (const name of ['standing', 'bull', 'mumbai']) {
+    const widths = [...css.matchAll(new RegExp(`\\.sticker--${name} \\{[^}]*?width: (\\d+)px`, 'g'))].map((m) => Number(m[1]));
+    assert.ok(widths.length && Math.max(...widths) <= 130, `${name} sticker stays small (${widths})`);
+  }
 });
 
 test('a swipe that starts on a collage piece scrolls the page; holding lifts the piece', () => {

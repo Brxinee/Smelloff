@@ -112,6 +112,30 @@ function withBase(html, basePath, assets) {
   });
 }
 
+// Main pictures are real photos in a taped print frame (`photoPrint`). The
+// cut-outs (scripts/sticker.py) are small stickers stuck here and there: they
+// decorate, so they carry no caption and are hidden from screen readers.
+// Two rules from collage practice: a sticker always sits on an edge (the time
+// card, the footer rule), never alone in open space; and a page never shows
+// the same picture as both its main photo and a sticker.
+const PHOTOS = {
+  mumbai: { src: '/assets/img/me/nikhil-patil-mumbai-photo.webp', avif: '/assets/img/me/nikhil-patil-mumbai-photo.avif', width: 560, height: 560, alt: 'A selfie of Nikhil Patil in front of a grand domed building in Mumbai.', caption: 'Mumbai, day off' },
+  bull: { src: '/assets/img/me/nikhil-patil-bull-photo.webp', avif: '/assets/img/me/nikhil-patil-bull-photo.avif', width: 520, height: 703, alt: 'Nikhil Patil standing with his hand on a bronze bull statue on a street.', caption: 'met a bull in Mumbai' },
+};
+const photoPrint = (name) => `<figure class="print print--${name}">
+    ${picture(PHOTOS[name])}
+    <figcaption class="hand">${esc(PHOTOS[name].caption)}</figcaption>
+  </figure>`;
+const STICKERS = {
+  standing: { src: '/assets/img/me/nikhil-patil-standing.webp', avif: '/assets/img/me/nikhil-patil-standing.avif', width: 182, height: 518 },
+  bull: { src: '/assets/img/me/nikhil-patil-bull.webp', avif: '/assets/img/me/nikhil-patil-bull.avif', width: 293, height: 410 },
+  mumbai: { src: '/assets/img/me/nikhil-patil-mumbai.webp', avif: '/assets/img/me/nikhil-patil-mumbai.avif', width: 261, height: 210 },
+  // Two cartoon avatars of him (his own artwork files), cut out with scripts/cutout.py.
+  'avatar-curly': { src: '/assets/img/me/avatar-curly.webp', avif: '/assets/img/me/avatar-curly.avif', width: 218, height: 255 },
+  'avatar-glasses': { src: '/assets/img/me/avatar-glasses.webp', avif: '/assets/img/me/avatar-glasses.avif', width: 213, height: 263 },
+};
+const sticker = (name) => `<span class="sticker sticker--${name}" aria-hidden="true">${picture({ ...STICKERS[name], alt: '' })}</span>`;
+
 const picture = (img, { cls = '', priority = false, sizes } = {}) => `<picture${cls ? ` class="${cls}"` : ''}>
   <source type="image/avif" srcset="${img.avif}">
   <img src="${img.src}" width="${img.width}" height="${img.height}" alt="${attr(img.alt)}"${priority ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async" draggable="false"${sizes ? ` sizes="${sizes}"` : ''}>
@@ -233,12 +257,12 @@ ${SPRITE}
 ${page.body}
 </main>
 <footer class="foot">
+  ${sticker(page.path === '/' ? 'bull' : 'mumbai')}
   <div class="foot__in">
     <p class="foot__printed">${esc(s.name)} · printed in ${esc(s.location.city)} · <time datetime="${ctx.printed}">${humanDate(ctx.printed)}</time></p>
     <nav class="foot__nav" aria-label="Footer">
       <a href="/">Cover</a><a href="/now">Now</a><a href="/about">About</a>
     </nav>
-    <p class="foot__small">No cookies, no trackers. Words and photos © ${ctx.printed.slice(0, 4)} ${esc(s.name)}; cut-outs from Wikimedia Commons (CC0), credited on the <a href="/about#credits">About page</a>. Fonts under the SIL Open Font License.</p>
   </div>
 </footer>
 <div class="shutter" aria-hidden="true"></div>
@@ -271,6 +295,7 @@ function benchCard(item, i) {
 
 function nowBlock(now, { full = false } = {}) {
   return `<div class="note-paper now__paper">
+  ${sticker('avatar-curly')}
   <p class="now__label">The main thing</p>
   <p class="now__main">${inline(now.main)}</p>
   <p class="now__label">On the side <span class="now__rule">(two, max)</span></p>
@@ -293,6 +318,7 @@ ${j.rows.map((r, i) => `      <li class="punch${r.today ? ' punch--today' : ''}"
       </li>`).join('\n')}
     </ol>
   </div>
+  ${sticker('standing')}
 </div>`;
 }
 
@@ -312,7 +338,7 @@ function homePage(c, ctx) {
   const sections = [['now', 'Now'], ['clocked-in', journey.title], ['syllabus', 'Self-taught syllabus'], ['shelf', 'Shelf'], ['made', 'Things I’ve made'], ['card', 'Take a card']];
   const body = `
 <section class="cover" id="cover" aria-labelledby="cover-title" data-cover>
-  <p class="issue"><span><span class="issue__no">Issue ${esc(humanDate(ctx.printed).replace(/^\d+ /, ''))}</span> <span class="issue__sep" aria-hidden="true">·</span> ${esc(site.location.city)}</span> <span class="issue__what">A zine about one person</span></p>
+  <p class="issue"><span><span class="issue__no">Issue ${esc(humanDate(ctx.printed).replace(/^\d+ /, ''))}</span> <span class="issue__sep" aria-hidden="true">·</span> ${esc(site.location.city)}</span> <span class="issue__what">@${esc(site.handle)}</span></p>
   <h1 class="masthead" id="cover-title"><span class="masthead__a">Nikhil</span> <span class="masthead__b">Patil</span></h1>
   <p class="dek">${esc(site.dek).replace('self-taught', '<mark>self-taught</mark>')}</p>
 
@@ -391,12 +417,13 @@ ${syllabus.subjects.map((s) => `    <li class="subject">
 
 <section class="sec shelf" id="shelf" aria-labelledby="shelf-h">
 ${secHead('04', 'shelf-h', 'Shelf', 'when I’m not working')}
-<div class="shelf__grid${shelf.items.length ? '' : ' shelf__grid--solo'}">
+<div class="shelf__grid">
   <figure class="tape" aria-labelledby="tape-cap">
     <img class="tape__img" src="/assets/img/cassette.webp" width="354" height="235" alt="" loading="lazy" decoding="async">
     <figcaption id="tape-cap" class="tape__label">${esc(shelf.tape.label)}</figcaption>
     <ol class="tape__tracks">${shelf.tape.tracks.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>
   </figure>
+  ${photoPrint('mumbai')}
 ${shelf.items.length ? `  <ul class="shelf__items">
 ${shelf.items.map((it) => `    <li><span class="shelf__label">${esc(it.label)}</span> ${esc(it.text)}</li>`).join('\n')}
   </ul>` : ''}
@@ -487,6 +514,7 @@ function aboutPage(c, ctx) {
   </header>
   <div class="page__grid">
     <aside class="facts" aria-labelledby="facts-h">
+      ${sticker('avatar-glasses')}
       <h2 id="facts-h" class="facts__title">The short version</h2>
       <dl>
         <div><dt>Name</dt><dd>${esc(s.name)}</dd></div>
@@ -531,7 +559,8 @@ function aboutPage(c, ctx) {
       </ul>
 
       <h2 id="likes">When I’m not working</h2>
-      <p>Anime: Hajime no Ippo, Attack on Titan, Mob Psycho 100, Dandadan and Sakamoto Days.</p>
+      <p>Anime: Hajime no Ippo, Attack on Titan, Mob Psycho 100, Dandadan and Sakamoto Days. And a trip now and then, when the work allows.</p>
+      ${photoPrint('bull')}
 
       <h2 id="talk">Talk to me</h2>
       <p>I like hearing from:</p>
@@ -557,10 +586,6 @@ ${qa.slice(1).map(([q, a]) => `        <h3>${esc(q)}</h3>\n        <p>${esc(a)}<
       <h2 id="elsewhere">Find me elsewhere</h2>
       <p>These are my accounts. If a profile isn’t listed here, it isn’t me: there are a lot of Nikhil Patils.</p>
       ${profileLinks(s)}
-
-      <h2 id="credits">Picture credits</h2>
-      <p>The photos of me are mine. The cut-outs on the cover are free-licence photos from Wikimedia Commons:</p>
-      <ul>${c.credits.map((k) => `<li>${esc(k.what)}: <a href="${attr(k.url)}" rel="noopener">“${esc(k.title)}”<span class="ext" aria-hidden="true">↗</span></a> by ${esc(k.author)}, ${esc(k.licence)}.</li>`).join('')}</ul>
     </div>
   </div>
 </article>`;
