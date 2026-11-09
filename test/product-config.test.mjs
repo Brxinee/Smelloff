@@ -245,7 +245,7 @@ test('index.html homepage: no unverified buyer, founders named, key actives only
   assert.ok(!rv.includes('tbh this product is amazing'), 'the cancelled-order review is not shown');
   assert.ok(rv.includes('one founder, four shirts'), 'the 30-day review is described honestly');
   const f = sec('founders');
-  assert.ok(f.includes('Jogdhande Nikhil Patil') && f.includes('Vineeth Kumar Duggepogu'));
+  assert.ok(f.includes('Nikhil Patil') && f.includes('Vineeth Kumar Duggepogu'));
   const sci = sec('how-it-works');
   for (const gone of ['Isopropyl Alcohol', 'Polysorbate 20', 'PE9010', 'Ethylhexylglycerin', 'Citric Acid', 'ANTI-REGROWTH']) assert.ok(!sci.includes(gone), `${gone} is not published`);
   assert.ok(sci.includes('8 more') && sci.includes('info@smelloff.in'));

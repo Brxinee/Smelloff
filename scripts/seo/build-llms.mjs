@@ -107,7 +107,7 @@ const PAGES = [
 // "Verified and published" list in docs/PERSONAL-CONTENT-SOURCE-MAP.md; no dates.
 const FOUNDER_PAGE = `${SITE}/NikhilPatil`;
 const FOUNDER_PROFILES = ['https://x.com/Nikhilxpatil', 'https://www.linkedin.com/in/jogdhande', 'https://www.producthunt.com/@nikhilpatil'];
-const founderLine = `${B.name} was founded by Nikhil Patil (full name ${B.founder}), a self-taught builder in ${B.city}, India. His own page: ${FOUNDER_PAGE}`;
+const founderLine = `${B.name} was founded by Nikhil Patil (full name ${B.founder}; NikhilxPatil on X and Instagram), a self-taught builder in ${B.city}, India. His own page: ${FOUNDER_PAGE}`;
 
 const heroActives = 'HPβCD (cyclodextrin) traps odor molecules, Zinc PCA neutralizes them and Triethyl Citrate helps prevent new odor forming, plus 8 supporting ingredients. Exact concentrations are proprietary.';
 const notFor = 'Not for skin, hair, pets, leather, suede, shoes, bags, rooms, sofas or curtains. Patch-test silk, zari and heavy embroidery.';

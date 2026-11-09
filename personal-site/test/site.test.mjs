@@ -269,3 +269,22 @@ test('the printed date / dateModified is the last content change, not the build 
   assert.match(src, /printed = printed \|\| process\.env\.PRINTED_DATE \|\| contentDate\(/, 'build() defaults to the content date');
   assert.doesNotMatch(src, /printed = printed \|\| process\.env\.PRINTED_DATE \|\| new Date\(\)/, 'not the build day');
 });
+
+test('the handle NikhilxPatil points at this person: profiles, schema, title, questions', () => {
+  const home = read('index.html');
+  const person = ldOf(home)[0]['@graph'].find((n) => n['@type'] === 'ProfilePage').mainEntity;
+  assert.ok(person.sameAs.includes('https://x.com/NikhilxPatil'), 'X profile');
+  assert.ok(person.sameAs.includes('https://www.instagram.com/NikhilxPatil'), 'Instagram profile');
+  assert.ok(person.alternateName.includes('NikhilxPatil'));
+  assert.equal(person.identifier.value, 'NikhilxPatil');
+  assert.match(/<title>([^<]+)<\/title>/.exec(home)[1], /^Nikhil Patil \(NikhilxPatil\)/);
+  assert.match(home, /rel="me noopener">@NikhilxPatil/);
+  assert.doesNotMatch(home + read('about.html'), /Nikhilxpatil/, 'the handle is spelled NikhilxPatil');
+  assert.match(textOf(read('about.html')), /Who is NikhilxPatil\?/);
+  for (const f of ['index.html', 'about.html', 'now.html']) {
+    const t = /<title>([^<]+)<\/title>/.exec(read(f))[1];
+    const d = /<meta name="description" content="([^"]+)"/.exec(read(f))[1];
+    assert.ok(t.length <= 60, `${f} title ${t.length}`);
+    assert.ok(d.length <= 160, `${f} description ${d.length}`);
+  }
+});

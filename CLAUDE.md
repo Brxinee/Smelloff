@@ -3195,3 +3195,21 @@ good" are the top related queries for "clothes smell".
   `kapdo-se-seelan-ki-badbu-kaise-dur-kare` (Kubota, EPA). Blog **123**; sitemap 137.
 - Next, only if these earn impressions: almari se badbu; "underarm smell" (big in English)
   needs an overlap check first.
+
+## Rank the name "Nikhil Patil" (2026-11-09, owner: "I want my short name only Nikhil Patil to rank … Instagram and X are NikhilxPatil")
+The first page for "Nikhil Patil" is a Wikipedia cricketer, doctors and directory profiles; the
+handle "NikhilxPatil" has no competition. "Nikhil" and "N" alone can't be ranked for.
+- **The store calls him "Nikhil Patil" too** (`brand.founderName`; the legal name is
+  `brand.founder`, kept on "Manufactured by", Grievance Officer and policy lines). It had named
+  the same `#founder` Person "Jogdhande Nikhil Patil" on every page, against his own site.
+  Founder schema (`alternateName`, `sameAs` from `brand.founderSameAs`), all post bylines and
+  author metas, the homepage founder strip, `/about` and the blog index (now links) use the short name.
+- **Handle `NikhilxPatil`** (`site.json` `handle`): X `x.com/NikhilxPatil`, Instagram
+  `instagram.com/NikhilxPatil` (both `sameAs` + `rel="me"`), Person `alternateName` /
+  `identifier`, titles "Nikhil Patil (NikhilxPatil): …", an "Online" fact and the question
+  "Who is NikhilxPatil?" on About and in llms.txt.
+- `/nikhilxpatil`, `/nikhil-patil`, `/nikhil_patil`, `/patil-nikhil`, `/patilnikhil`, `/nikhil`
+  301 to `/NikhilPatil` (`config/routing.json`).
+- Owner, off-site (the larger half): the same name, photo, one-line bio and
+  `smelloff.in/NikhilPatil` link on X, Instagram, LinkedIn, Product Hunt, GitHub, Crunchbase;
+  display name "Nikhil Patil" on each; GSC → Request indexing for the three pages.

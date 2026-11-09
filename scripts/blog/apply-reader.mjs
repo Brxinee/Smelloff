@@ -48,10 +48,11 @@ const CHECK = process.argv.includes('--check');
 const hash = (rel) => createHash('sha256').update(readFileSync(join(ROOT, rel))).digest('hex').slice(0, 8);
 
 const BRAND = JSON.parse(readFileSync(join(ROOT, 'config', 'product.json'), 'utf8')).brand;
-const AUTHOR = BRAND.founder;
+// Bylines use the name he goes by; the legal name stays on the legal lines.
+const AUTHOR = BRAND.founderName;
 const ORG = { '@type': 'Organization', '@id': 'https://smelloff.in/#organization', name: BRAND.name, url: `${BRAND.website}/` };
 const PERSON = {
-  '@type': 'Person', '@id': 'https://smelloff.in/#founder', name: AUTHOR, jobTitle: BRAND.jobTitle,
+  '@type': 'Person', '@id': 'https://smelloff.in/#founder', name: AUTHOR, alternateName: BRAND.founderAlternateNames, jobTitle: BRAND.jobTitle,
   url: `${BRAND.website}/NikhilPatil`, worksFor: ORG,
 };
 const PUBLISHER = { ...ORG, logo: { '@type': 'ImageObject', url: BRAND.logo, width: 180, height: 180 } };
