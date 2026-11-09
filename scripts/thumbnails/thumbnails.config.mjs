@@ -828,6 +828,15 @@ export const POSTS = [
     focal: '50% 50%',
     alt: "A hand holds a green fuel nozzle at a petrol pump",
   },
+  {
+    slug: 'how-to-use-fabric-freshener-spray-on-clothes',
+    kicker: "Fabric freshener",
+    top: "Using it on",
+    hi: "clothes?",
+    pexels: 4153098,
+    focal: '50% 50%',
+    alt: "Pastel cotton shirts on mint-green hangers in a white wardrobe",
+  },
 ];
 
 /**

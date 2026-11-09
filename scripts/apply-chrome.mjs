@@ -423,6 +423,7 @@ const PAGES = [
     'how-to-wash-clothes-by-hand-without-smell',
     'sweaty-back-while-driving-shirt-smell',
     'petrol-smell-out-of-clothes',
+    'how-to-use-fabric-freshener-spray-on-clothes',
   ].map((s) => ({ file: `blog/${s}.html`, header: 'nav.blog-nav', footer: 'footer.blog-footer' })),
   // 2026-10-10: thirty posts that were never in this table. Their header was
   // an older stamp (a "Buy ODORSTRIKE — ₹229" button to /#buy, extra classes,

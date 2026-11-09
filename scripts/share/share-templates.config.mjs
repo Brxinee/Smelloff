@@ -417,6 +417,10 @@ export const POSTS = {
     wa: "Petrol splashed on your clothes at the pump? Why it is a fire risk, and the safe order to get it out: air first, then wash: {url}",
     x: "Clothes that touched petrol or similar solvents should be laid outside to dry before washing, and never go in a dryer. Wash them alone. No spray fixes fuel.",
   },
+  "how-to-use-fabric-freshener-spray-on-clothes": {
+    wa: "How to use a fabric freshener spray on clothes without stains: where to spray, how many sprays, and when to wash instead: {url}",
+    x: "Fabric freshener goes on dry, washable clothes from 15–20 cm, never on skin, and the garment dries before you wear it. It does not kill germs and it is not a fabric conditioner.",
+  },
 };
 
 /**

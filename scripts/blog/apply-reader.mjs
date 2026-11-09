@@ -101,7 +101,7 @@ const CLUSTERS = {
     'where-to-buy-odorstrike-india', 'odorstrike-review-30-day-india-test',
     'gifts-for-men-under-500-india', 'is-fabric-odor-spray-worth-it-india',
     'grooming-essentials-for-men-india', 'return-gifts-for-men-indian-wedding', 'secret-santa-gift-ideas-for-coworkers-india',
-    'rakhi-gift-for-brother'],
+    'rakhi-gift-for-brother', 'how-to-use-fabric-freshener-spray-on-clothes'],
   product: ['how-to-use-odorstrike', 'odorstrike-ingredients', 'hpbcd-cyclodextrin-fabric-odor',
     'zinc-pca-fabric-odor-ingredient-guide', 'how-odor-neutralizer-works-on-fabric', 'why-i-built-odorstrike',
     'how-long-does-fabric-odor-spray-last', 'are-fabric-sprays-safe-label-check-india'],

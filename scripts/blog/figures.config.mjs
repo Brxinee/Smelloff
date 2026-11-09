@@ -2329,6 +2329,23 @@ export const FIGURES = {
       ]
     }
   ],
+
+  "how-to-use-fabric-freshener-spray-on-clothes": [
+    photo('which-fabric-freshener-should-you-use-on-clothes', 17293343,
+      'A row of cream linen shirts on wooden hangers',
+      'Clothes you wear need a different freshener from the sofa.'),
+    dia('how-do-you-use-fabric-freshener-spray-on-clothes', 'steps', {
+      kicker: 'About a minute', title: 'Fabric freshener on a shirt, step by step',
+      items: [
+        ['Start dry', 'Let a sweaty shirt air for a few minutes first.'],
+        ['Find the zones', 'Inside collar, underarms, upper back.'],
+        ['15–20 cm away', 'A mist, not a wet spot.'],
+        ['4–5 sprays', 'For a whole shirt; 2–3 for one zone.'],
+        ['Let it dry', '15–30 seconds; longer when it is humid.'],
+      ],
+      note: 'Never on skin, leather, suede or dry-clean-only clothes.',
+    }),
+  ],
 };
 
 export default FIGURES;
