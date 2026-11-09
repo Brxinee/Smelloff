@@ -310,7 +310,8 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
  * so the composition scales with the box; drag offsets ride on `translate`. */
 .collage { position: relative; height: clamp(600px, 168vw, 700px); margin-inline: calc(-1 * var(--gutter) / 2); margin-bottom: 28px; }
 .piece { position: absolute; touch-action: auto; }
-.piece[data-drag] { cursor: grab; user-select: none; -webkit-user-select: none; touch-action: none; }
+/* pan-y: a swipe that starts on a piece scrolls the page; press and hold lifts it (site.js). */
+.piece[data-drag] { cursor: grab; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: pan-y; }
 .piece.is-dragging { cursor: grabbing; z-index: 20; }
 
 /* Prints: photos with a white border, taped on. Cut-outs: transparent
@@ -385,6 +386,9 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 .cover.is-stamping .piece { pointer-events: none; }
 
 .tools { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; position: relative; z-index: 3; }
+/* Touch screens only: a finger scrolls the page, so say how to pick a piece up. Needs the script. */
+.tools__hint { display: none; flex-basis: 100%; font: 400 13px/1.4 var(--f-mono); color: var(--muted); }
+@media (hover: none) and (pointer: coarse) { .js .tools__hint { display: block; } }
 .tool {
   display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px 0 12px;
   background: var(--card); border: 1.5px solid var(--rule-2); border-radius: 999px; cursor: pointer;
@@ -651,18 +655,18 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
   @view-transition { navigation: auto; }
-  ::view-transition-old(root) { animation: 200ms var(--ease) both vt-out; }
-  ::view-transition-new(root) { animation: 420ms var(--ease) both vt-in; }
+  ::view-transition-old(root) { animation: 110ms var(--ease) both vt-out; }
+  ::view-transition-new(root) { animation: 220ms var(--ease) both vt-in; }
 
   .shutter.is-down { animation: shutter-down 380ms var(--ease) both; }
   .shutter.is-up { animation: shutter-up 420ms var(--ease) both; }
 
   .js .masthead__a, .js .masthead__b { animation: print 700ms var(--ease) both; }
   .js .masthead__b { animation-delay: 90ms; }
-  .js .collage .piece { animation: drop 640ms var(--ease-spring) both; animation-delay: calc(240ms + var(--i, 0) * 80ms); }
+  .js .collage .piece { animation: drop 480ms var(--ease-spring) both; animation-delay: calc(80ms + var(--i, 0) * 45ms); }
   .piece--bottle { --i: 7; } .piece--beach { --i: 1; } .piece--glove { --i: 2; } .piece--cassette { --i: 3; } .piece--city { --i: 4; } .piece--sticky { --i: 5; } .piece--selfstamp { --i: 6; }
 
-  .js [data-reveal] { opacity: 0; translate: 0 18px; transition: opacity 600ms var(--ease), translate 600ms var(--ease); }
+  .js [data-reveal] { opacity: 0; translate: 0 10px; transition: opacity 320ms var(--ease), translate 320ms var(--ease); }
   .js [data-reveal].is-in { opacity: 1; translate: 0 0; }
 
   .stamp-mark { animation: thump 260ms var(--ease) both; }

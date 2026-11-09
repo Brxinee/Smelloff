@@ -213,6 +213,7 @@ ${page.ogType === 'profile' ? `<meta property="profile:first_name" content="${at
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <script>${THEME_SCRIPT}</script>
 ${page.ld ? ldScript(page.ld) + '\n' : ''}<script src="/assets/js/site.js" defer></script>
+<script type="speculationrules">${JSON.stringify({ prefetch: [{ where: { href_matches: `${s.basePath}/*` }, eagerness: 'moderate' }] })}</script>
 </head>
 <body class="${page.bodyClass || ''}">
 ${SPRITE}
@@ -349,6 +350,7 @@ function homePage(c, ctx) {
     <button type="button" class="tool" data-stamp-tool aria-pressed="false">${icon('stamp')}<span>Stamp</span></button>
     <button type="button" class="tool" data-tidy>${icon('tidy')}<span>Tidy</span></button>
     <button type="button" class="tool tool--bell" data-bell>${icon('bell')}<span>Ring</span></button>
+    <p class="tools__hint" aria-hidden="true">Hold a piece to move it</p>
     <p class="tools__status sr" role="status" aria-live="polite" data-tools-status></p>
   </div>
   <nav class="toc" aria-label="In this copy">

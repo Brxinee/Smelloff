@@ -57,7 +57,7 @@
     reveal.forEach((el) => el.setAttribute('data-reveal', ''));
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
-    }, { rootMargin: '0px 0px -8% 0px' });
+    }, { rootMargin: '0px 0px 6% 0px' });
     reveal.forEach((el) => io.observe(el));
   }
 
@@ -70,40 +70,71 @@
 
   // Drag: pointer events cover mouse, pen and touch. Offsets ride on the
   // `translate` property, so the CSS layout (rotation, position) is untouched.
+  // A mouse or pen picks a piece up at once. A finger has to press and hold
+  // (HOLD_MS) first: the collage fills a phone screen, and when every touch
+  // started a drag, a swipe that began on a photo could not scroll the page.
   const pieces = $$('[data-drag]', collage);
+  const HOLD_MS = 260, SLOP = 8;
   let z = 10;
   for (const el of pieces) {
     el.dataset.x = '0'; el.dataset.y = '0';
+    let dragging = false;
+    // While a finger is carrying a piece the page must not scroll under it.
+    el.addEventListener('touchmove', (ev) => { if (dragging && ev.cancelable) ev.preventDefault(); }, { passive: false });
+    // A drag that ends on the sticky note (a link) is not a tap on it.
+    el.addEventListener('click', (ev) => { if (el.dataset.moved) { ev.preventDefault(); delete el.dataset.moved; } });
+
     el.addEventListener('pointerdown', (ev) => {
       if (cover.classList.contains('is-stamping') || ev.button > 0) return;
-      ev.preventDefault();
-      el.setPointerCapture(ev.pointerId);
-      el.classList.remove('is-tidying');
-      el.classList.add('is-dragging');
-      el.style.zIndex = String(++z);
-      const sx = ev.clientX - Number(el.dataset.x);
-      const sy = ev.clientY - Number(el.dataset.y);
-      const box = collage.getBoundingClientRect();
-      const r = el.getBoundingClientRect();
-      // Keep at least 40px of the piece inside the collage.
-      const minX = box.left - r.right + 40 + Number(el.dataset.x), maxX = box.right - r.left - 40 + Number(el.dataset.x);
-      const minY = box.top - r.bottom + 40 + Number(el.dataset.y), maxY = box.bottom - r.top - 40 + Number(el.dataset.y);
-      const move = (e) => {
-        const x = Math.min(maxX, Math.max(minX, e.clientX - sx));
-        const y = Math.min(maxY, Math.max(minY, e.clientY - sy));
-        el.dataset.x = String(x); el.dataset.y = String(y);
-        el.style.translate = `${x}px ${y}px`;
+      const touch = ev.pointerType === 'touch';
+      const x0 = ev.clientX, y0 = ev.clientY;
+      let move = null, timer = 0;
+      delete el.dataset.moved;
+
+      const start = () => {
+        dragging = true;
+        try { el.setPointerCapture(ev.pointerId); } catch { /* the pointer already left */ }
+        el.classList.remove('is-tidying');
+        el.classList.add('is-dragging');
+        el.style.zIndex = String(++z);
+        const sx = x0 - Number(el.dataset.x);
+        const sy = y0 - Number(el.dataset.y);
+        const box = collage.getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+        // Keep at least 40px of the piece inside the collage.
+        const minX = box.left - r.right + 40 + Number(el.dataset.x), maxX = box.right - r.left - 40 + Number(el.dataset.x);
+        const minY = box.top - r.bottom + 40 + Number(el.dataset.y), maxY = box.bottom - r.top - 40 + Number(el.dataset.y);
+        move = (e) => {
+          const x = Math.min(maxX, Math.max(minX, e.clientX - sx));
+          const y = Math.min(maxY, Math.max(minY, e.clientY - sy));
+          if (Math.abs(e.clientX - x0) > SLOP || Math.abs(e.clientY - y0) > SLOP) el.dataset.moved = '1';
+          el.dataset.x = String(x); el.dataset.y = String(y);
+          el.style.translate = `${x}px ${y}px`;
+        };
+        if (touch) navigator.vibrate?.(8);
       };
-      const up = () => {
+      const onMove = (e) => {
+        if (move) return move(e);
+        // The finger moved before the hold was up: that is a scroll, not a pick-up.
+        if (Math.abs(e.clientX - x0) > SLOP || Math.abs(e.clientY - y0) > SLOP) end();
+      };
+      const end = () => {
+        clearTimeout(timer);
+        dragging = false;
         el.classList.remove('is-dragging');
-        el.removeEventListener('pointermove', move);
-        el.removeEventListener('pointerup', up);
-        el.removeEventListener('pointercancel', up);
+        el.removeEventListener('pointermove', onMove);
+        el.removeEventListener('pointerup', end);
+        el.removeEventListener('pointercancel', end);
       };
-      el.addEventListener('pointermove', move);
-      el.addEventListener('pointerup', up);
-      el.addEventListener('pointercancel', up);
+      el.addEventListener('pointermove', onMove);
+      el.addEventListener('pointerup', end);
+      el.addEventListener('pointercancel', end);
+
+      if (touch) timer = setTimeout(start, HOLD_MS);
+      else { ev.preventDefault(); start(); }
     });
+    // A long press must not open the image or link menu instead of lifting the piece.
+    el.addEventListener('contextmenu', (ev) => { if (dragging) ev.preventDefault(); });
   }
 
   // Stamp tool: arm it, then tap the cover. Enter on the armed button stamps a

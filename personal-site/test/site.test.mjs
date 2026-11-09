@@ -309,6 +309,19 @@ test('About tells the founder story, what he learned and who should write to him
   assert.doesNotMatch(text.slice(text.indexOf('Why I started Smelloff'), text.indexOf('How I work')), /ODORSTRIKE|Buy now|₹/);
 });
 
+test('a swipe that starts on a collage piece scrolls the page; holding lifts the piece', () => {
+  const css = fs.readFileSync(new URL('../assets/css/site.css', import.meta.url), 'utf8');
+  const js = fs.readFileSync(new URL('../assets/js/site.js', import.meta.url), 'utf8');
+  const rule = /\.piece\[data-drag\] \{[^}]*\}/.exec(css)[0];
+  assert.match(rule, /touch-action: pan-y/, 'vertical swipes on a piece belong to the page');
+  assert.doesNotMatch(rule, /touch-action: none/);
+  assert.match(js, /pointerType === 'touch'/);
+  assert.match(js, /if \(touch\) timer = setTimeout\(start, HOLD_MS\)/, 'a finger must hold before a drag starts');
+  assert.match(js, /addEventListener\('touchmove'[\s\S]{0,120}passive: false/, 'the page stays put while a piece is carried');
+  assert.match(read('index.html'), /Hold a piece to move it/);
+  assert.match(read('index.html'), /<script type="speculationrules">/);
+});
+
 test('no AI or tooling talk, and dark-mode stamps stay visible (owner, 9 Nov 2026)', () => {
   for (const f of [...htmlFiles(), 'llms.txt', 'llms-full.txt']) {
     const text = f.endsWith('.html') ? textOf(read(f)) : read(f);
