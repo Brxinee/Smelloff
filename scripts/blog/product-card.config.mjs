@@ -41,6 +41,10 @@ export const SKIP = {
   'why-shirt-zones-smell-after-washing': 'smell that survives a wash: the answer is a better wash; it calls a mist a narrow stopgap',
   'vinegar-baking-soda-fabric-softener': 'laundry additives; its answer to sweat odor is a proper wash',
   'dry-air-clothes-indian-home': 'a drying routine; a spray plays no part in it',
+  // 2026-11-09 series.
+  'dry-cleaned-clothes-chemical-smell': "dry-cleaning solvent smell: the answer is airing or a return to the cleaner, and dry-clean-only clothes must never be sprayed",
+  'coconut-hair-oil-smell-on-clothes': "oil needs detergent; a spray cannot lift oil out of fibres",
+  'petrol-smell-out-of-clothes': "petrol and diesel are fire risks; the answer is airing outdoors and a separate wash",
 };
 
 /* "Use it when" per topic cluster (CLUSTERS in apply-reader.mjs). */
@@ -91,6 +95,20 @@ export const SLUG_LINES = {
   'freshen-up-after-work-before-going-out': 'you are going out straight from office in the shirt you worked in.',
   'how-to-tell-someone-they-have-body-odour': { lead: 'An easy fix to hand over:', text: 'it goes on the shirt\'s collar and underarms, not on the person.' },
   'teenage-son-body-odour-clothes-parents-guide': 'his uniform shirt or hoodie has to last another day before wash day.',
+  // 2026-11-09 series.
+  'remove-smell-from-lehenga-without-washing': "a washable blouse lining has to go to one more function. Patch-test first; never on dry-clean-only pieces.",
+  'rented-sherwani-lehenga-smell': "the vest or kurta under a rented outfit has to stay fresh all evening.",
+  'bonfire-smoke-smell-out-of-clothes': "Lohri or barbeque smoke has come home in your jacket lining.",
+  'what-to-wear-for-kedarnath-yatra': "the fleece and jacket have to last a yatra with no laundry.",
+  'why-does-my-raincoat-smell': "the shirt under your raincoat arrives at office damp with sweat.",
+  'fish-smell-on-clothes-after-cooking': "a light fish-fry smell has stayed in a shirt you cannot wash today.",
+  'how-to-stay-fresh-without-bathing': "a lightly worn shirt has to do one more day.",
+  'advocate-black-coat-summer-fresh': "the white shirt under your coat has done a full morning in court.",
+  'durga-puja-pandal-hopping-outfit-fresh': "a cotton panjabi or blouse has to go pandal hopping again. Patch-test silk first.",
+  'garba-sweat-chaniya-choli-fresh': "a choli lining has to dance another night. Patch-test first and keep it away from mirror work.",
+  'old-age-body-odour-nonenal': "a parent's kurta or sweater will be worn again before wash day.",
+  'rakhi-gift-for-brother': "you want a small, useful Rakhi gift for a brother who commutes in the heat.",
+  'sweaty-back-while-driving-shirt-smell': "an hour pressed against the seat back has left sweat in your shirt.",
 };
 
 /* Facts, all from config/product.json. */

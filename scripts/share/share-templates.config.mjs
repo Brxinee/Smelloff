@@ -337,6 +337,86 @@ export const POSTS = {
     wa: 'The sun-dried laundry smell is real chemistry: sunlight on wet fabric makes new scent molecules. What the study found, and which clothes to keep out of the sun: {url}',
     x: 'Copenhagen chemists dried towels in sun, shade and indoors. The sun-dried ones gave off aldehydes and ketones like octanal and nonanal: the "sunshine smell" is made, not uncovered.',
   },
+  "what-colour-shirt-hides-sweat": {
+    wa: "Why sweat patches jump out on grey and light blue shirts but hide on navy, black and checks, and why hiding the patch does not hide the smell: {url}",
+    x: "Wet fabric looks darker because water fills the gaps between fibres and less light scatters back. Mid-tones show it most. Navy, black and busy checks hide it. The smell stays either way.",
+  },
+  "does-rayon-viscose-smell-when-you-sweat": {
+    wa: "Rayon kurtis and viscose shirts: do they hold sweat smell like polyester? What a 2024 fibre study found, and how to wash and refresh them: {url}",
+    x: "Viscose, rayon and modal are cellulose, like cotton. In a 2024 study, cotton and viscose took up and released less odour than polyester, nylon and wool. Wash them gently: rayon is weaker when wet.",
+  },
+  "remove-smell-from-lehenga-without-washing": {
+    wa: "Lehenga smelling of sweat, dhoop or the trunk? How to air it safely after the function, what you can and cannot spray, and how to store it: {url}",
+    x: "The blouse holds the sweat, the skirt holds the smoke and food. Air the pieces separately, inside out, in shade, the same night. Never soak heavy embroidery or zari at home.",
+  },
+  "rented-sherwani-lehenga-smell": {
+    wa: "Renting a sherwani or lehenga for a wedding? What to check at pickup, how to air it, and the one layer that keeps it fresh on you: {url}",
+    x: "A rented outfit has been worn before. Smell the underarms and collar at pickup, air it inside out at home, and wear your own clean cotton layer underneath. Never spray a dry-clean-only rental.",
+  },
+  "dry-cleaned-clothes-chemical-smell": {
+    wa: "Dry-cleaned clothes smelling of chemicals? That is leftover solvent. How to air them out, and when to take them back: {url}",
+    x: "Dry cleaning washes clothes in a solvent, often perchloroethylene. A strong smell afterwards means some was left in. Plastic off, hang it in moving air, and return it if the smell lasts a day.",
+  },
+  "bonfire-smoke-smell-out-of-clothes": {
+    wa: "Lohri bonfire or barbeque smoke still in your jacket? What to do the same night, and how to clear it the next morning without washing everything: {url}",
+    x: "Wood smoke is gases plus fine particles that lodge in fabric, more in wool and fleece than smooth cotton. Hang smoky layers outside the same night, never in the wardrobe.",
+  },
+  "what-to-wear-for-kedarnath-yatra": {
+    wa: "Going to Kedarnath? What to wear on the trek and at the temple, how many sets to pack, and how to keep clothes fresh with no laundry: {url}",
+    x: "Kedarnath: about 16 km up from Gaurikund to a temple at roughly 3,580 m. Warm on the climb, cold at the top. Quick-dry base, warm middle, waterproof outer, and no jeans.",
+  },
+  "why-does-my-raincoat-smell": {
+    wa: "Monsoon raincoat smelling musty or sour? Why it happens, how to dry and store it, and why the shirt under it smells too: {url}",
+    x: "Rolled up wet, a raincoat grows mildew. Sticky and sour inside means the polyurethane coating is breaking down, and no wash fixes that. And a raincoat traps sweat in your shirt.",
+  },
+  "fish-smell-on-clothes-after-cooking": {
+    wa: "Fish fry smell still in your kurta the next day? Why it is more stubborn than other cooking smells, and how to get it out: {url}",
+    x: "Fish smell comes from trimethylamine, and frying throws it into the air with oil droplets that cling to fabric. Change out of what you cooked in, air it and wash it the same day.",
+  },
+  "coconut-hair-oil-smell-on-clothes": {
+    wa: "Collar smells stale even after washing? Hair oil builds up in it. How to wash oil out properly, and how to oil your hair without oiling your shirt: {url}",
+    x: "Oil needs detergent, not just water. Pre-treat the collar with liquid detergent, wait 10-15 minutes, then wash as warm as the label allows. A quick cold wash leaves the oil, and the smell.",
+  },
+  "how-to-stay-fresh-without-bathing": {
+    wa: "Water cut, early train or no time for a bath? A five-minute routine with one mug of water, and why a fresh shirt matters as much: {url}",
+    x: "Body odour comes from bacteria breaking down sweat in a few places: underarms, groin, feet. Wash those, dry them, put on deodorant and fresh innerwear. Yesterday's shirt is often the real smell.",
+  },
+  "deodorant-vs-antiperspirant-india": {
+    wa: "Deodorant or antiperspirant? One fights smell, the other cuts sweat. Which you need in Indian heat, when to apply it, and what neither does: {url}",
+    x: "Deodorant controls odour; antiperspirant reduces sweat with aluminium salts. FDA testing requires at least a 20% cut in sweat. Apply antiperspirant at night on dry skin. Neither treats your shirt.",
+  },
+  "advocate-black-coat-summer-fresh": {
+    wa: "Black coat, white shirt and bands in a 40°C summer. What the dress code asks, the summer relaxations some courts announce, and how to keep it all fresh: {url}",
+    x: "An advocate's coat is worn daily, lined and cleaned far less often than the shirt under it. Air it inside out every evening, rotate two, and wear a cotton vest under the white shirt.",
+  },
+  "durga-puja-pandal-hopping-outfit-fresh": {
+    wa: "Five days of pandal hopping, dhunuchi smoke and phuchka stalls. How to keep your sarees, kurtas and panjabis fresh from Shashthi to Dashami: {url}",
+    x: "Durga Puja clothes face crowds, dhunuchi smoke and October humidity five nights running. Hang each outfit inside out under a fan the moment you are home, and keep silk for the morning anjali.",
+  },
+  "garba-sweat-chaniya-choli-fresh": {
+    wa: "Nine nights of garba in a heavy chaniya choli or kediyu? How to dry the sweat out each night and keep it fresh till Dussehra: {url}",
+    x: "Garba is hours of exercise in tight, heavy, embroidered outfits. Hang the choli inside out under a fan every night, rotate two or three outfits, and wear a cotton layer underneath.",
+  },
+  "old-age-body-odour-nonenal": {
+    wa: "That particular smell in a grandparent's shawl or kurta has a name: 2-nonenal. What research shows, and how to help kindly with a laundry routine: {url}",
+    x: "A 2001 study found 2-nonenal, a greasy, grassy-smelling compound, only in people aged 40 and over. A 2012 study found older people's odour less intense, not more. It clings to fabric, so wash clothes and bedding.",
+  },
+  "rakhi-gift-for-brother": {
+    wa: "Stuck on a Rakhi gift? Practical ideas he will actually use, by kind of brother, and how early to order so it arrives in time: {url}",
+    x: "A 2014 gift-giving study found givers chase impressive gifts while receivers value practical, easy-to-use ones. For Rakhi: pick what he will reach for every morning.",
+  },
+  "how-to-wash-clothes-by-hand-without-smell": {
+    wa: "Hand-washed clothes smelling sour once they dry? The soak, rinse and drying steps that fix it, for hostels, PGs and power cuts: {url}",
+    x: "Most sour smells on bucket-washed clothes come from leftover detergent and slow drying, not the wash. Dissolve detergent first, soak 20-30 minutes, rinse until clear, dry the same day.",
+  },
+  "sweaty-back-while-driving-shirt-smell": {
+    wa: "Back of your shirt soaked after an hour in traffic? Why car seats trap sweat, and a two-minute reset when you reach office: {url}",
+    x: "Sweat cools you only when it evaporates. Against a car seat it cannot, so it soaks into your shirt and your body keeps sweating. Cool the car first, use a mesh seat cover, wear a vest.",
+  },
+  "petrol-smell-out-of-clothes": {
+    wa: "Petrol splashed on your clothes at the pump? Why it is a fire risk, and the safe order to get it out: air first, then wash: {url}",
+    x: "Clothes that touched petrol or similar solvents should be laid outside to dry before washing, and never go in a dryer. Wash them alone. No spray fixes fuel.",
+  },
 };
 
 /**

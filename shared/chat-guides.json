@@ -1,5 +1,11 @@
 [
  {
+  "slug": "advocate-black-coat-summer-fresh",
+  "title": "Advocate's Black Coat in Summer: How to Keep It Fresh",
+  "desc": "A black coat over a white shirt and bands in 40°C. What the dress code asks, the summer relaxations some courts announce, and how to keep…",
+  "thumb": "/blog/assets/advocate-black-coat-summer-fresh%40640.webp"
+ },
+ {
   "slug": "alternative-to-deodorant-for-clothes-smell",
   "title": "Alternative to Deodorant for Clothes Smell",
   "desc": "Deodorant treats skin. The smell often lives in your shirt. Here's the deodorant alternative built for fabric — what it is and why it works.",
@@ -48,6 +54,12 @@
   "thumb": "/blog/assets/bike-commute-sweat-smell-office%40640.webp"
  },
  {
+  "slug": "bonfire-smoke-smell-out-of-clothes",
+  "title": "How to Get Bonfire Smoke Smell Out of Clothes (Lohri)",
+  "desc": "Lohri bonfires, barbeque nights and winter angithis leave wood smoke in jackets, shawls and kurtas. How to air it out the same night and…",
+  "thumb": "/blog/assets/bonfire-smoke-smell-out-of-clothes%40640.webp"
+ },
+ {
   "slug": "clothes-left-in-washing-machine-overnight-smell",
   "title": "Left Clothes in the Washing Machine Overnight? Fix the Smell",
   "desc": "Wet laundry left in the drum turns sour within hours. Why it happens, whether you need to rewash, how to save the load, and how to stop it…",
@@ -60,6 +72,12 @@
   "thumb": "/blog/assets/clothes-perfume-spray-vs-fabric-odor-spray%40640.webp"
  },
  {
+  "slug": "coconut-hair-oil-smell-on-clothes",
+  "title": "Coconut or Hair Oil Smell on Clothes? How to Remove It",
+  "desc": "Hair oil soaks into shirt collars and slowly turns stale. Why oils smell, how to wash oil out of a collar, and how to oil hair without…",
+  "thumb": "/blog/assets/coconut-hair-oil-smell-on-clothes%40640.webp"
+ },
+ {
   "slug": "damp-clothes-musty-smell-monsoon-fix",
   "title": "Why Clothes Smell Musty in Monsoon (And How to Fix It)",
   "desc": "Slow-drying clothes in the monsoon let mould and bacteria release musty compounds. Why a cold re-wash won't fix it, why softener seals it…",
@@ -70,6 +88,12 @@
   "title": "Why Deodorant and Perfume Fail on a Sweaty Shirt",
   "desc": "Why perfume on a sweaty shirt smells worse, why deodorant's aluminium salts yellow the pits, and what to do in the moment instead of…",
   "thumb": "/blog/assets/deodorant-perfume-on-fabric%40640.webp"
+ },
+ {
+  "slug": "deodorant-vs-antiperspirant-india",
+  "title": "Deodorant vs Antiperspirant: Which Do You Need in India?",
+  "desc": "Deodorant fights smell, antiperspirant cuts sweat. How each works, when to apply it for Indian heat, the cancer myth, and what neither does…",
+  "thumb": "/blog/assets/deodorant-vs-antiperspirant-india%40640.webp"
  },
  {
   "slug": "deodorant-vs-fabric-mist",
@@ -96,6 +120,12 @@
   "thumb": "/blog/assets/does-ironing-remove-smell-from-clothes%40640.webp"
  },
  {
+  "slug": "does-rayon-viscose-smell-when-you-sweat",
+  "title": "Does Rayon or Viscose Smell When You Sweat?",
+  "desc": "Rayon kurtis, viscose shirts, modal and \"bamboo\" tees: how they hold sweat smell compared with cotton and polyester, and how to keep them…",
+  "thumb": "/blog/assets/does-rayon-viscose-smell-when-you-sweat%40640.webp"
+ },
+ {
   "slug": "dog-smell-on-clothes",
   "title": "How to Get Dog Smell Out of Clothes (Without Rewashing)",
   "desc": "Pet hair, slobber and that wet-dog smell end up on your office clothes. How to clear them before you leave, what needs a wash, and why you…",
@@ -106,6 +136,18 @@
   "title": "How to Dry Clothes Indoors Without a Damp Smell (India)",
   "desc": "How to dry clothes in an Indian flat without a damp smell: space the garments, move the air, use the balcony hour, and check the seams…",
   "thumb": "/blog/assets/dry-air-clothes-indian-home%40640.webp"
+ },
+ {
+  "slug": "dry-cleaned-clothes-chemical-smell",
+  "title": "Why Do Dry-Cleaned Clothes Smell of Chemicals?",
+  "desc": "That sharp smell is usually leftover cleaning solvent. Why it happens, how long to air a dry-cleaned suit or saree, and when to take it…",
+  "thumb": "/blog/assets/dry-cleaned-clothes-chemical-smell%40640.webp"
+ },
+ {
+  "slug": "durga-puja-pandal-hopping-outfit-fresh",
+  "title": "Durga Puja Pandal Hopping: Keep Your Outfit Fresh",
+  "desc": "Five days of crowds, dhunuchi smoke, street food and October humidity. How to keep sarees, kurtas and panjabis fresh from Shashthi to…",
+  "thumb": "/blog/assets/durga-puja-pandal-hopping-outfit-fresh%40640.webp"
  },
  {
   "slug": "fabric-deodorizer-spray-india-guide-2026",
@@ -126,10 +168,22 @@
   "thumb": "/blog/assets/first-job-essentials-checklist-freshers-india%40640.webp"
  },
  {
+  "slug": "fish-smell-on-clothes-after-cooking",
+  "title": "How to Get Fish Smell Out of Clothes After Cooking",
+  "desc": "Frying fish leaves its smell in your shirt, kurta and dupatta. Why fish smell is so stubborn, how to clear it the same day, and when only a…",
+  "thumb": "/blog/assets/fish-smell-on-clothes-after-cooking%40640.webp"
+ },
+ {
   "slug": "freshen-up-after-work-before-going-out",
   "title": "Freshen Up After Work Before Going Out: 10-Minute Plan",
   "desc": "Office to dinner, a date or a family function with no time to go home. A washroom routine for your shirt, skin and hair, and what to carry…",
   "thumb": "/blog/assets/freshen-up-after-work-before-going-out%40640.webp"
+ },
+ {
+  "slug": "garba-sweat-chaniya-choli-fresh",
+  "title": "Garba Sweat: Keep Your Chaniya Choli Fresh for 9 Nights",
+  "desc": "Hours of dancing in a heavy chaniya choli or kediyu. How to dry the sweat out each night, which parts to treat, and how many outfits you…",
+  "thumb": "/blog/assets/garba-sweat-chaniya-choli-fresh%40640.webp"
  },
  {
   "slug": "gifts-for-men-under-500-india",
@@ -204,6 +258,12 @@
   "thumb": "/blog/assets/how-to-smell-good-all-day-men-india%40640.webp"
  },
  {
+  "slug": "how-to-stay-fresh-without-bathing",
+  "title": "How to Stay Fresh Without Bathing: Water Cuts and Travel",
+  "desc": "No water, an early train or a day you cannot bathe: a five-minute routine for the parts that matter, and why a fresh shirt does as much as…",
+  "thumb": "/blog/assets/how-to-stay-fresh-without-bathing%40640.webp"
+ },
+ {
   "slug": "how-to-tell-someone-they-have-body-odour",
   "title": "How to Tell Someone They Have Body Odour, Kindly",
   "desc": "A colleague, a flatmate or a family member smells, and no one wants to say it. How to raise it privately and kindly, with scripts, and how…",
@@ -214,6 +274,12 @@
   "title": "How to Use ODORSTRIKE: Sprays, Zones and Timing",
   "desc": "How many sprays per garment, which three zones actually hold odor, spray distance and dry time, when to reapply, and the things ODORSTRIKE…",
   "thumb": "/blog/assets/how-to-use-odorstrike%40640.webp"
+ },
+ {
+  "slug": "how-to-wash-clothes-by-hand-without-smell",
+  "title": "How to Wash Clothes by Hand So They Don't Smell",
+  "desc": "Bucket washing in a hostel, a PG or during a power cut: the soak, scrub, rinse and drying steps that stop hand-washed clothes smelling sour.",
+  "thumb": "/blog/assets/how-to-wash-clothes-by-hand-without-smell%40640.webp"
  },
  {
   "slug": "hpbcd-cyclodextrin-fabric-odor",
@@ -306,10 +372,28 @@
   "thumb": "/blog/assets/office-ac-trap-why-rewear-shirts-smell-worse%40640.webp"
  },
  {
+  "slug": "old-age-body-odour-nonenal",
+  "title": "Old Age Body Odour (Nonenal): Why It Happens, How to Help",
+  "desc": "Older skin produces 2-nonenal, a greasy, grassy-smelling compound. What research shows, why it sits in clothes and bedding, and how to help…",
+  "thumb": "/blog/assets/old-age-body-odour-nonenal%40640.webp"
+ },
+ {
   "slug": "perfume-plus-sweat-chemical-reaction",
   "title": "Perfume + Sweat: Why It Smells Worse on Your Shirt",
   "desc": "Perfume on sweaty clothes does not mask odor — it chemically reacts with sweat compounds to create a worse smell. The science of why, and…",
   "thumb": "/blog/assets/perfume-plus-sweat-chemical-reaction%40640.webp"
+ },
+ {
+  "slug": "petrol-smell-out-of-clothes",
+  "title": "How to Get Petrol Smell Out of Clothes (Safely)",
+  "desc": "Petrol or diesel splashed on your clothes at the pump or while fixing a bike. Why it is a fire risk, how to air it out first, and how to…",
+  "thumb": "/blog/assets/petrol-smell-out-of-clothes%40640.webp"
+ },
+ {
+  "slug": "rakhi-gift-for-brother",
+  "title": "Rakhi Gift for Brother: Useful Ideas He'll Actually Use",
+  "desc": "Practical Raksha Bandhan gifts for a brother who commutes, works or studies away from home, with budget ideas and how early to order so it…",
+  "thumb": "/blog/assets/rakhi-gift-for-brother%40640.webp"
  },
  {
   "slug": "remove-cigarette-smoke-smell-from-clothes",
@@ -360,6 +444,12 @@
   "thumb": "/blog/assets/remove-smell-from-hoodie-without-washing%40640.webp"
  },
  {
+  "slug": "remove-smell-from-lehenga-without-washing",
+  "title": "How to Remove Smell From a Lehenga Without Washing",
+  "desc": "Sweat in the blouse, food and dhoop from the function, a musty smell from the trunk. How to air and freshen a lehenga safely, and what to…",
+  "thumb": "/blog/assets/remove-smell-from-lehenga-without-washing%40640.webp"
+ },
+ {
   "slug": "remove-smell-from-saree-and-blouse-without-washing",
   "title": "How to Remove Smell From a Saree and Blouse Without Washing",
   "desc": "Blouse underarms hold sweat; stored sarees pick up mothball and almirah smell. How to air, treat and store each, and which silks to leave…",
@@ -388,6 +478,12 @@
   "title": "How to Remove Sweat Smell From a Cap Without Washing",
   "desc": "The sweatband of a cap holds forehead sweat and hair oil and starts to smell within weeks. How to air and refresh it, and how to hand-wash…",
   "thumb": "/blog/assets/remove-sweat-smell-from-cap%40640.webp"
+ },
+ {
+  "slug": "rented-sherwani-lehenga-smell",
+  "title": "Rented Sherwani or Lehenga Smells? What to Do",
+  "desc": "A rented outfit has been worn by others before you. What to check when you pick it up, how to air and freshen it safely, and what to wear…",
+  "thumb": "/blog/assets/rented-sherwani-lehenga-smell%40640.webp"
  },
  {
   "slug": "return-gifts-for-men-indian-wedding",
@@ -426,6 +522,12 @@
   "thumb": "/blog/assets/stop-sweat-smell-job-interview%40640.webp"
  },
  {
+  "slug": "sweaty-back-while-driving-shirt-smell",
+  "title": "Sweaty Back While Driving: Why Your Shirt Smells After",
+  "desc": "An hour in traffic with your back pressed to the seat leaves a wet patch that smells by lunch. Why seats trap sweat and how to arrive with…",
+  "thumb": "/blog/assets/sweaty-back-while-driving-shirt-smell%40640.webp"
+ },
+ {
   "slug": "teenage-son-body-odour-clothes-parents-guide",
   "title": "Teenage Son Body Odour: A Parent's Guide to Clothes",
   "desc": "Puberty switches on new sweat glands and school shirts, hoodies and rooms start to smell. Why it happens, how to talk about it, and a…",
@@ -456,10 +558,22 @@
   "thumb": "/blog/assets/wedding-festive-wear-odor-guide%40640.webp"
  },
  {
+  "slug": "what-colour-shirt-hides-sweat",
+  "title": "What Colour Shirt Hides Sweat Best? (Office Guide)",
+  "desc": "Grey and light blue show sweat most; white, black, navy and busy checks hide it. Why wet cotton darkens, and why hiding the patch does not…",
+  "thumb": "/blog/assets/what-colour-shirt-hides-sweat%40640.webp"
+ },
+ {
   "slug": "what-is-fabric-odor-eliminator",
   "title": "What Is a Fabric Odor Eliminator? (Not a Perfume)",
   "desc": "Fabric odor eliminators aren't perfume, air freshener or deodorant. What they do at the molecular level, which ingredients work, what to…",
   "thumb": "/blog/assets/what-is-fabric-odor-eliminator%40640.webp"
+ },
+ {
+  "slug": "what-to-wear-for-kedarnath-yatra",
+  "title": "What to Wear for Kedarnath: Clothes for the Trek and Temple",
+  "desc": "Layers for a high Himalayan temple and a long uphill trek: what to wear, how many sets to pack, and how to keep clothes fresh for days with…",
+  "thumb": "/blog/assets/what-to-wear-for-kedarnath-yatra%40640.webp"
  },
  {
   "slug": "where-to-buy-odorstrike-india",
@@ -526,6 +640,12 @@
   "title": "Why Do Sun-Dried Clothes Smell So Good?",
   "desc": "That fresh smell from clothes dried in the sun is real chemistry: sunlight on wet fabric makes new scent molecules. What a study found, and…",
   "thumb": "/blog/assets/why-do-sun-dried-clothes-smell-good%40640.webp"
+ },
+ {
+  "slug": "why-does-my-raincoat-smell",
+  "title": "Why Does My Raincoat Smell? (And the Shirt Under It)",
+  "desc": "Folded away wet, a raincoat grows a musty smell; an old coating turns sticky and sour. How to dry and store one, and why the shirt under it…",
+  "thumb": "/blog/assets/why-does-my-raincoat-smell%40640.webp"
  },
  {
   "slug": "why-does-sweat-smell-like-onions-vinegar-ammonia",
