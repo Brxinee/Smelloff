@@ -130,6 +130,9 @@ const STICKERS = {
   standing: { src: '/assets/img/me/nikhil-patil-standing.webp', avif: '/assets/img/me/nikhil-patil-standing.avif', width: 182, height: 518 },
   bull: { src: '/assets/img/me/nikhil-patil-bull.webp', avif: '/assets/img/me/nikhil-patil-bull.avif', width: 293, height: 410 },
   mumbai: { src: '/assets/img/me/nikhil-patil-mumbai.webp', avif: '/assets/img/me/nikhil-patil-mumbai.avif', width: 261, height: 210 },
+  // Two cartoon avatars of him (his own artwork files), cut out with scripts/cutout.py.
+  'avatar-curly': { src: '/assets/img/me/avatar-curly.webp', avif: '/assets/img/me/avatar-curly.avif', width: 218, height: 255 },
+  'avatar-glasses': { src: '/assets/img/me/avatar-glasses.webp', avif: '/assets/img/me/avatar-glasses.avif', width: 213, height: 263 },
 };
 const sticker = (name) => `<span class="sticker sticker--${name}" aria-hidden="true">${picture({ ...STICKERS[name], alt: '' })}</span>`;
 
@@ -292,6 +295,7 @@ function benchCard(item, i) {
 
 function nowBlock(now, { full = false } = {}) {
   return `<div class="note-paper now__paper">
+  ${sticker('avatar-curly')}
   <p class="now__label">The main thing</p>
   <p class="now__main">${inline(now.main)}</p>
   <p class="now__label">On the side <span class="now__rule">(two, max)</span></p>
@@ -510,6 +514,7 @@ function aboutPage(c, ctx) {
   </header>
   <div class="page__grid">
     <aside class="facts" aria-labelledby="facts-h">
+      ${sticker('avatar-glasses')}
       <h2 id="facts-h" class="facts__title">The short version</h2>
       <dl>
         <div><dt>Name</dt><dd>${esc(s.name)}</dd></div>

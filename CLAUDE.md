@@ -3281,6 +3281,9 @@ photos and his full legal name on About.
   edge (time card, footer rule), never loose in open space; and a page never shows one picture
   as both its main photo and a sticker. The first pass broke both (a bull floating beside the
   Shelf heading; the Mumbai selfie twice on the cover). Tests pin both rules.
+- **Two cartoon avatars of him** (owner sent them the same day: "use these too"), cut out with
+  `scripts/cutout.py` (plain grey background, no model needed), 62–76px: the curly-hair one peeks
+  over the top edge of the Now note (cover and /now), the glasses one over the facts card on About.
 - **How they were cut:** a segmentation model run locally (rembg's `isnet-general-use` /
   `u2net_human_seg` ONNX files with onnxruntime), then `scripts/sticker.py MATTE.png OUT` for the
   edge. Nothing was uploaded to a service; the originals are not in the repo.

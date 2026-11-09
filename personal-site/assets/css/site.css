@@ -490,6 +490,11 @@ mark { background: linear-gradient(100deg, transparent .2em, var(--hi) .2em 96%,
 /* Standing on the bottom edge of the time card. */
 .timecard { position: relative; margin-bottom: 84px; }
 .sticker--standing { width: 54px; right: 14px; bottom: -106px; rotate: 4deg; }
+/* The cartoon avatars peek over the top edge of a card. */
+.sticker--avatar-curly, .sticker--avatar-glasses { width: 62px; right: 22px; bottom: calc(100% - 9px); z-index: 0; }
+.sticker--avatar-curly { rotate: 5deg; }
+.sticker--avatar-glasses { rotate: -4deg; right: 18px; }
+@media (min-width: 900px) { .sticker--avatar-curly, .sticker--avatar-glasses { width: 76px; right: 34px; } }
 /* Standing on the footer rule: the bull on the cover, the selfie elsewhere. */
 .foot { position: relative; }
 .foot .sticker { right: max(var(--gutter), 6%); z-index: 0; }

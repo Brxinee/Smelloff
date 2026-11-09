@@ -325,7 +325,7 @@ test('real photos are the main pictures; the cut-outs are small stickers here an
     assert.ok(fs.existsSync(path.join(out, src.replace('/NikhilPatil/', ''))), `${name} photo exists`);
   }
   // Stickers: decoration, small, never a figure with a caption.
-  for (const [html, name] of [[home, 'standing'], [home, 'bull'], [about, 'mumbai'], [read('now.html'), 'mumbai']]) {
+  for (const [html, name] of [[home, 'standing'], [home, 'bull'], [about, 'mumbai'], [read('now.html'), 'mumbai'], [home, 'avatar-curly'], [read('now.html'), 'avatar-curly'], [about, 'avatar-glasses']]) {
     const el = new RegExp(`<span class="sticker sticker--${name}" aria-hidden="true">[\\s\\S]*?</span>`).exec(html);
     assert.ok(el, `sticker ${name}`);
     assert.match(el[0], /alt=""/);
@@ -339,8 +339,9 @@ test('real photos are the main pictures; the cut-outs are small stickers here an
   // Stickers sit on an edge (time card, footer rule), never loose in a section.
   for (const html of [home, about]) for (const m of html.matchAll(/<span class="sticker /g)) {
     const before = html.slice(Math.max(0, m.index - 400), m.index);
-    assert.match(before, /<footer class="foot">\s*$|timecard__card|<\/ol>\s*<\/div>\s*$/, 'sticker is attached to the time card or the footer');
+    assert.match(before, /<footer class="foot">\s*$|<div class="note-paper now__paper">\s*$|<aside class="facts"[^>]*>\s*$|timecard__card|<\/ol>\s*<\/div>\s*$/, 'sticker is attached to a card or the footer');
   }
+  assert.match(css, /\.sticker--avatar-curly, \.sticker--avatar-glasses \{ width: 62px;/);
   for (const name of ['standing', 'bull', 'mumbai']) {
     const widths = [...css.matchAll(new RegExp(`\\.sticker--${name} \\{[^}]*?width: (\\d+)px`, 'g'))].map((m) => Number(m[1]));
     assert.ok(widths.length && Math.max(...widths) <= 130, `${name} sticker stays small (${widths})`);
