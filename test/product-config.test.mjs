@@ -179,8 +179,9 @@ test('index.html homepage hero: one H1, fabric positioning, price and COD disclo
   assert.ok(h1[0][1].includes('Your shirt smells.') && h1[0][1].includes('Fix it.'), 'H1 must be the Sep 19 "Your shirt smells. Fix it."');
   const hero = html.slice(html.indexOf('<section class="hero"'), html.indexOf('</section>', html.indexOf('<section class="hero"')));
   assert.ok(hero.includes('FABRIC FRESHENER SPRAY'), 'one product name: fabric freshener spray (owner, 2026-11-09)');
-  assert.ok(hero.includes('ODORSTRIKE neutralizes sweat, smoke and food smell in clothes — not on skin.'));
-  for (const tag of ['NOT PERFUME', 'NOT BODY DEODORANT', 'FABRIC ONLY']) assert.ok(hero.includes(tag), `Hero must say ${tag}`);
+  assert.ok(hero.includes('ODORSTRIKE neutralizes sweat, smoke and food smell in clothes.</p>'));
+  // Owner, 2026-11-11: no fabric-only / not-perfume warning tags in the hero.
+  for (const tag of ['NOT PERFUME', 'FABRIC ONLY', 'not on skin']) assert.ok(!hero.includes(tag), `Hero must not say ${tag}`);
   assert.ok(hero.includes('<span class="hero-price">₹229</span>'), 'Hero must show ₹229');
   assert.ok(hero.includes('M.R.P. ₹499'), 'MRP must agree with the PDP');
   assert.ok(hero.includes('FIX MY SHIRT — ₹229') && hero.includes('href="/odorstrike?buy=1"'), 'Primary CTA must open checkout');
@@ -279,7 +280,7 @@ test('odorstrike.html PDP hero and primary buy area: positioning, canonical pric
   // One product name on the PDP (owner, 2026-11-09): "fabric freshener spray".
   assert.ok(pInfo.includes('FABRIC FRESHENER SPRAY · 50ML'), 'Eyebrow must name the category');
   assert.ok(pInfo.includes('up to 8 hours'), 'Tagline must carry the locked protection claim');
-  for (const tag of ['Not perfume', 'Not body deodorant', 'Fabric only']) assert.ok(pInfo.includes(tag), `Must say ${tag}`);
+  for (const tag of ['Not perfume', 'Fabric only', 'never on skin']) assert.ok(!pInfo.includes(tag), `No warning badge: ${tag}`);
 
   assert.ok(pInfo.includes('<span class="pd-amt">₹229</span>'), 'Price must display ₹229');
   assert.ok(pInfo.includes('MRP ₹499') && pInfo.includes('54% OFF'), 'MRP and discount must agree');
@@ -388,9 +389,9 @@ test('odorstrike.html PDP How to Use section UX hierarchy, canonical values, tim
   const reset30End = html.indexOf('</ol>', reset30Start) + 5;
   const reset30Html = html.slice(reset30Start, reset30End);
 
-  assert.ok(reset30Html.includes('class="section-tag">How to use · Fabric only</div>'), 'Must have fabric-only section tag');
+  assert.ok(reset30Html.includes('class="section-tag">How to use</div>'), 'Section tag');
   assert.ok(reset30Html.includes('Hold. Spray. Wait. Wear.'), 'Must state concise 4-step heading');
-  assert.ok(reset30Html.includes('htu-sub') && reset30Html.includes('never spray directly onto skin'), 'Must have subtitle with fabric-only clarity');
+  assert.ok(reset30Html.includes('htu-sub'), 'Must have subtitle');
 
   // 2. 4-step sequence inside ordered list <ol class="r30-steps">
   assert.ok(reset30Html.includes('<ol class="r30-steps">'), 'Must use semantic <ol class="r30-steps">');
@@ -406,7 +407,6 @@ test('odorstrike.html PDP How to Use section UX hierarchy, canonical values, tim
   assert.ok(reset30Html.includes('02 · SPRAY'), 'Step 2 must have action label SPRAY');
   assert.ok(reset30Html.includes('2–3 light sprays'), 'Step 2 must specify canonical 2–3 light sprays');
   assert.ok(reset30Html.includes('collar, underarm fabric, or chest'), 'Step 2 must identify key garment zones');
-  assert.ok(reset30Html.includes('Not for skin') || reset30Html.includes('never on skin'), 'Step 2 must reinforce fabric only / not for skin');
 
   // 5. Step 3: WAIT with 15–30 seconds and timer ring
   assert.ok(reset30Html.includes('03 · WAIT'), 'Step 3 must have action label WAIT');

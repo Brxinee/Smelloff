@@ -95,8 +95,8 @@ test('Web Interface Guidelines basics on the homepage', () => {
   assert.match(html, /<meta name="theme-color" content="#0A0A0A">/);
 });
 
-test('facts kept: "Not body deodorant", locked claims, beta testers labelled', () => {
-  assert.ok(sec('how-it-works').includes('Not perfume. Not body deodorant.'));
+test('facts kept: locked claims, beta testers labelled', () => {
+  assert.ok(sec('how-it-works').includes('Perfume and body deodorant sit on top of the fabric'));
   assert.ok(sec('how-it-works').includes('up to 8 hours of protection on fabric'));
   assert.equal((sec('reviews').match(/Beta tester/g) || []).length, 3);
   assert.ok(sec('in-use').includes('Dries clear in 15–30 seconds'));

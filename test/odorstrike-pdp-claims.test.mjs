@@ -134,11 +134,11 @@ describe('ODORSTRIKE PDP Claims & Architectural Guardrails', () => {
     assert.ok(!/\bskin\s+safe\b/i.test(html), 'Must not claim skin safe (product is fabric-only)');
   });
 
-  it('strictly enforces Fabric-Only distinction throughout UI', () => {
-    assert.ok(html.includes('Not perfume'), 'Must include NOT PERFUME badge');
-    assert.ok(html.includes('Not body deodorant'), 'Must include NOT BODY DEODORANT badge');
-    assert.ok(html.includes('Fabric only'), 'Must include FABRIC ONLY badge');
-    assert.ok(/never\s+(?:spray\s+directly\s+onto\s+skin|on\s+skin|for\s+skin)/i.test(html), 'Must explicitly state not for skin');
+  // Owner, 2026-11-11: no "Fabric only / Not perfume / not for skin" badges or
+  // warnings in the sales copy; the skin answer stays in the FAQ, optional.
+  it('keeps the skin line in the FAQ, not as badges', () => {
+    assert.ok(!html.includes('class="pd-not"'), 'No fabric-only badge row');
+    assert.ok(/never\s+on\s+skin/i.test(html), 'FAQ still answers it');
   });
 
   it('hedges duration / longevity claims with context and wear conditions', () => {
