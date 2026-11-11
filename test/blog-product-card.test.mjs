@@ -76,7 +76,8 @@ test('card copy keeps to the locked claims and the clothing-only rule', () => {
   assert.doesNotMatch(text, /₹|\d+\s*%|\bpH\b|10 ?sec|instant|kills?\b|bacteri|antimicrob|no residue|zero residue|residue-free|guarantee|best ?seller|only \d+ left|hurry|limited|rating|review|★/i);
   assert.doesNotMatch(text, /shoe|sneaker|helmet|\bbag\b|gym bag|sofa|curtain|room spray|car seat|luggage/i);
   assert.doesNotMatch(text, /\bnot (?:a |an )?deo(?:dorant)?\b(?=\s*(?:[.,;:)—–-]|and\b|or\b|nor\b|$))/i, 'say "not a body deodorant"');
-  assert.match(CARD.what, /never on skin/i);
+  // Owner, 2026-11-11: no skin warning on the card; the FAQ carries it.
+  assert.doesNotMatch(CARD.what, /never on skin|not for skin|fabric only/i);
 });
 
 test('the stamping is current (apply-reader --check)', () => {

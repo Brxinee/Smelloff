@@ -349,7 +349,7 @@ export function orderConfirmation({
       `The courier picks it up and the tracking link lands in your inbox. Delivery: ${escape(eta.charAt(0).toLowerCase() + eta.slice(1))}.`,
       cod
         ? `Keep <strong>&#8377;${escape(rupee(amount))}</strong> ready, cash or UPI, when it arrives.`
-        : 'Spray 15–20 cm from the fabric: collar, underarms, cuffs. Fabric only, never skin.',
+        : 'Spray 15–20 cm from the fabric: collar, underarms, cuffs.',
     ])}
   `;
 
@@ -545,7 +545,7 @@ export function orderDelivered({
     ${nextSteps([
       'Hold the bottle 15–20 cm from the fabric.',
       'Two or three sprays on the collar, underarms and cuffs.',
-      'Let it air for 30 seconds, then wear. Fabric only, never skin.',
+      'Let it air for 30 seconds, then wear.',
     ])}
     ${button(`${SITE_URL}/blog/how-to-use-odorstrike`, 'Read the full guide')}
   `;
@@ -559,7 +559,7 @@ export function orderDelivered({
       '',
       `Order: #${cleanOrderId}`,
       '',
-      'Hold 15–20cm from the fabric. Two or three sprays on collar, underarms, cuffs. Let it air for 30 seconds. Not for skin.',
+      'Hold 15–20cm from the fabric. Two or three sprays on collar, underarms, cuffs. Let it air for 30 seconds.',
       '',
       'How to use ODORSTRIKE:',
       `${SITE_URL}/blog/how-to-use-odorstrike`,
@@ -757,7 +757,7 @@ export function welcomeEmail({ customerName = 'there' } = {}) {
   const inner = `
     ${hero("You're in.", 'Welcome to Smelloff')}
     ${para(`Hey ${escape(firstName(name))}. Welcome to Smelloff.`)}
-    ${muted('ODORSTRIKE is a 50ml fabric-only odor reset spray. Not perfume. Not body deodorant. One pocket-sized bottle for clothes — sweat, smoke, food, day-two shirts.')}
+    ${muted('ODORSTRIKE is a 50ml fabric freshener spray. One pocket-sized bottle for clothes — sweat, smoke, food, day-two shirts.')}
     ${table(`<tr><td style="padding:8px 0 0 0;">${productRow({ price: `&#8377;${PRICE}&nbsp;<span class="smf-muted" style="font-size:13px;font-weight:400;color:${MUTED};text-decoration:line-through;">&#8377;${MRP}</span>` })}</td></tr>`)}
     ${button(SITE_URL, 'Shop now')}
   `;

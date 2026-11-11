@@ -64,6 +64,5 @@ test('category: a fabric freshener, never "not a deodorant"', () => {
     const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
     assert.match(title, /Fabric Freshener/, `${f}: title names the category`);
     assert.doesNotMatch(html.replace(/<!--[\s\S]*?-->/g, ''), /clothing deodorant/i, `${f}: the old category name is gone`);
-    assert.match(html, /Not body deodorant/, `${f}: keeps the "Not body deodorant" chip`);
   }
 });

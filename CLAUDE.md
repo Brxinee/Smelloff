@@ -3296,3 +3296,15 @@ photos and his full legal name on About.
   `OFL.txt`, so no credit line is required; `content/credits.json` stays as the record), and
   "A zine about one person" in the cover strip and the share image (now `@NikhilxPatil`). A test
   fails if any of them return. Supersedes "picture credits moved to /NikhilPatil/about#credits".
+
+## No "fabric only / not for skin" warnings in the sales copy (2026-11-11, owner: "remove only for fabric, fabric only, not for skin etc.. no warning, it should be optional not main thing")
+Removed: the homepage hero tags (NOT PERFUME / NOT BODY DEODORANT / FABRIC ONLY) and "— not on
+skin" in the hero sub; the PDP chip row (`.pd-not`), "Fabric only — never on skin" footnote,
+"How to use · Fabric only" tag, "never spray directly onto skin" / "Not for skin" in How to use,
+the spec row (now "Use on: Clothes"); "Fabric only." in the shared footer; "fabric only" /
+"not on your skin" on the closing card; "Never on skin." on the guides' product card; the
+same lines in order emails, the success screen and og:image alt text.
+- **Kept, as optional info:** the FAQ answers ("Can I spray it on skin?", fabrics, kids/pets),
+  `product.definition` (the "What is ODORSTRIKE?" answer), llms files, the chat and the blog
+  diagrams. Supersedes "State the limits, don't bury them" and the fabric-only chip notes above.
+  Don't bring the badges back.
