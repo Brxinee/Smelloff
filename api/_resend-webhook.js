@@ -44,6 +44,7 @@ export function verifySvixSignature(rawBody, headers, secret) {
     .filter(Boolean)
     .map((part) => (part.includes(',') ? part.split(',').slice(1).join(',') : part));
 
+  let isValid = false;
   try {
     const expectedBuf = Buffer.from(expected, 'utf8');
     for (const candidate of candidates) {
@@ -51,14 +52,17 @@ export function verifySvixSignature(rawBody, headers, secret) {
       // Prevent timing side-channel via early return by doing dummy comparison
       if (expectedBuf.length !== receivedBuf.length) {
         crypto.timingSafeEqual(expectedBuf, expectedBuf);
-        continue;
+        // Note: we don't 'continue' early; we just don't set isValid to true
+      } else {
+        if (crypto.timingSafeEqual(expectedBuf, receivedBuf)) {
+          isValid = true;
+        }
       }
-      if (crypto.timingSafeEqual(expectedBuf, receivedBuf)) return true;
     }
   } catch {
-    return false;
+    isValid = false;
   }
-  return false;
+  return isValid;
 }
 
 export async function readRawBody(req) {

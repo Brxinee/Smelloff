@@ -59,15 +59,18 @@ export function verifyOrderToken(orderCode, phone, token) {
   if (!token || typeof token !== 'string') return false;
   const expected = generateOrderToken(orderCode, phone);
   if (!expected) return false;
+  let isValid = false;
   try {
     const a = Buffer.from(expected, 'utf8');
     const b = Buffer.from(token, 'utf8');
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+      isValid = false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
-  } catch { return false; }
+  } catch { isValid = false; }
+  return isValid;
 }
 
 export function generateOrderConfirmationToken(orderCode, email, expiresInMs = 24 * 60 * 60 * 1000) {
@@ -95,17 +98,20 @@ export function verifyOrderConfirmationToken(orderCode, email, token) {
   const cleanEmail = String(email || '').trim().toLowerCase();
   const payload = `${cleanOrderCode}:${cleanEmail}:${expiry}`;
   const expectedSig = crypto.createHmac('sha256', secret).update(payload).digest('hex').slice(0, 32);
+  let isValid = false;
   try {
     const a = Buffer.from(expectedSig, 'utf8');
     const b = Buffer.from(sig, 'utf8');
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+      isValid = false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
   } catch {
-    return false;
+    isValid = false;
   }
+  return isValid;
 }
 
 export function isAdminAuthorized(req) {
@@ -117,15 +123,18 @@ export function isAdminAuthorized(req) {
   if (/^Bearer\s+/i.test(auth)) token = auth.replace(/^Bearer\s+/i, '').trim();
   else if (custom) token = custom;
   if (!token) return false;
+  let isValid = false;
   try {
     const a = Buffer.from(adminSecret.trim(), 'utf8');
     const b = Buffer.from(token, 'utf8');
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+      isValid = false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
-  } catch { return false; }
+  } catch { isValid = false; }
+  return isValid;
 }
 
 export function isCronAuthorized(req) {
@@ -137,15 +146,18 @@ export function isCronAuthorized(req) {
   if (/^Bearer\s+/i.test(auth)) token = auth.replace(/^Bearer\s+/i, '').trim();
   else if (custom) token = custom;
   if (!token) return false;
+  let isValid = false;
   try {
     const a = Buffer.from(cronSecret.trim(), 'utf8');
     const b = Buffer.from(token, 'utf8');
     if (a.length !== b.length) {
       crypto.timingSafeEqual(a, a);
-      return false;
+      isValid = false;
+    } else {
+      isValid = crypto.timingSafeEqual(a, b);
     }
-    return crypto.timingSafeEqual(a, b);
-  } catch { return false; }
+  } catch { isValid = false; }
+  return isValid;
 }
 
 export function validateAndNormalizeUtr(rawUtr) {
