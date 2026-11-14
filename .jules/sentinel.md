@@ -1,0 +1,4 @@
+## 2026-10-24 - Timing Side-Channel in Session Verification
+**Vulnerability:** `verifySession` in `api/admin.js` returned early if the MAC length didn't match the expected signature length before calling `crypto.timingSafeEqual`. This introduced a timing side-channel where an attacker could deduce the expected signature length or other properties by measuring the response time.
+**Learning:** While `crypto.timingSafeEqual` protects against timing attacks during buffer comparison, failing to reach the comparison in a constant amount of time (due to early length checks) defeats the purpose.
+**Prevention:** Always compare buffer lengths, but if they differ, perform a dummy `crypto.timingSafeEqual` operation (e.g., comparing the expected buffer to itself) and use a boolean flag to track validity instead of returning early. This ensures the total execution time remains constant regardless of input length.
